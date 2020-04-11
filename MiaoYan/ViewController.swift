@@ -69,7 +69,6 @@ class ViewController: NSViewController,
             titleLabel.addGestureRecognizer(clickGesture)
         }
     }
-    @IBOutlet weak var shareButton: NSButton!
     @IBOutlet weak var sortByOutlet: NSMenuItem!
     @IBOutlet weak var titleBarAdditionalView: NSVisualEffectView! {
         didSet {
@@ -100,16 +99,6 @@ class ViewController: NSViewController,
             titleBarView.onMouseEnteredClosure = { [weak self] in
                 DispatchQueue.main.async {
                     guard self?.titleLabel.isEnabled == false || self?.titleLabel.isEditable == false else { return }
-                    
-                    if let note = EditTextView.note {
-                        if note.isUnlocked() {
-                            self?.lockUnlock.image = NSImage(named: NSImage.lockUnlockedTemplateName)
-                        } else {
-                            self?.lockUnlock.image = NSImage(named: NSImage.lockLockedTemplateName)
-                        }
-                    }
-
-                    self?.lockUnlock.isHidden = (EditTextView.note == nil)
 
                     NSAnimationContext.runAnimationGroup({ context in
                         context.duration = 0.15
@@ -119,9 +108,6 @@ class ViewController: NSViewController,
             }
         }
     }
-
-    @IBOutlet weak var lockUnlock: NSButton!
-
     @IBOutlet weak var sidebarScrollView: NSScrollView!
     @IBOutlet weak var notesScrollView: NSScrollView!
 
@@ -266,8 +252,7 @@ class ViewController: NSViewController,
         if (UserDefaultsManagement.horizontalOrientation) {
             self.splitView.isVertical = false
         }
-        
-        self.shareButton.sendAction(on: .leftMouseDown)
+
         self.setTableRowHeight()
         self.storageOutlineView.sidebarItems = Sidebar().getList()
 
@@ -284,21 +269,6 @@ class ViewController: NSViewController,
             titleBarView.layer?.backgroundColor = UserDefaultsManagement.bgColor.cgColor
             titleLabel.backgroundColor = UserDefaultsManagement.bgColor
         }
-
-        NSWorkspace.shared.notificationCenter.addObserver(
-            self, selector: #selector(onSleepNote(note:)),
-            name: NSWorkspace.willSleepNotification, object: nil)
-
-        NSWorkspace.shared.notificationCenter.addObserver(
-            self, selector: #selector(onUserSwitch(note:)),
-            name: NSWorkspace.sessionDidBecomeActiveNotification, object: nil)
-
-        DistributedNotificationCenter.default().addObserver(
-            self,
-            selector: #selector(onScreenLocked(note:)),
-            name: NSNotification.Name(rawValue: "com.apple.screenIsLocked"),
-            object: nil
-        )
     }
 
     private func configureNotesList() {
@@ -1030,61 +1000,7 @@ class ViewController: NSViewController,
         NSApp.mainWindow?.makeFirstResponder(vc.notesTableView)
     }
     
-    @IBAction func archiveNote(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
-        
-        guard let notes = vc.notesTableView.getSelectedNotes() else {
-            return
-        }
-        
-        if let project = storage.getArchive() {
-            move(notes: notes, project: project)
-        }
-    }
 
-    @IBAction func tagNote(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
-        guard let notes = vc.notesTableView.getSelectedNotes() else { return }
-        guard let note = notes.first else { return }
-        guard let window = MainWindowController.shared() else { return }
-
-        vc.alert = NSAlert()
-        let field = NSTextField(frame: NSRect(x: 0, y: 0, width: 290, height: 20))
-
-        #if CLOUDKIT
-            field.placeholderString = "fun, health, life"
-        #else
-            field.placeholderString = "sex, drugs, rock and roll"
-        #endif
-
-        field.stringValue = note.getCommaSeparatedTags()
-        
-        vc.alert?.messageText = NSLocalizedString("Tags", comment: "Menu")
-        vc.alert?.informativeText = NSLocalizedString("Please enter tags (comma separated):", comment: "Menu")
-        vc.alert?.accessoryView = field
-        vc.alert?.alertStyle = .informational
-        vc.alert?.addButton(withTitle: "OK")
-        vc.alert?.beginSheetModal(for: window) { (returnCode: NSApplication.ModalResponse) -> Void in
-            if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
-                if let tags = TagList(tags: field.stringValue).get() {
-                    var removed = [String]()
-                    var deselected = [String]()
-                    
-                    for note in notes {
-                        let r = note.saveTags(tags)
-                        removed = r.0
-                        deselected = r.1
-                    }
-                    vc.storageOutlineView.reloadSidebar()
-                }
-            }
-            
-            vc.alert = nil
-        }
-        
-        field.becomeFirstResponder()
-    }
-    
     @IBAction func openInExternalEditor(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
         vc.external(selectedRow: vc.notesTableView.selectedRow)
@@ -1177,65 +1093,6 @@ class ViewController: NSViewController,
         operation.printPanel.options.insert(NSPrintPanel.Options.showsOrientation)
         operation.run()
     }
-    
-    @IBAction func toggleNotesLock(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
-        guard var notes = vc.notesTableView.getSelectedNotes() else { return }
-
-        notes = lockUnlocked(notes: notes)
-        guard notes.count > 0 else { return }
-
-        getMasterPassword() { password, isTypedByUser in
-            guard password.count > 0 else { return }
-
-            var isFirst = true
-            for note in notes {
-                var success = false
-
-                if note.container == .encryptedTextPack {
-                    success = note.unLock(password: password)
-                    if success && isFirst {
-                        self.refillEditArea()
-                    }
-                } else {
-                    success = note.encrypt(password: password)
-                    if success && isFirst {
-                        self.refillEditArea()
-                        self.focusTable()
-                    }
-                }
-
-                if success && isTypedByUser {
-                    self.save(password: password)
-                }
-
-                self.notesTableView.reloadRow(note: note)
-                isFirst = false
-            }
-        }
-    }
-
-    @IBAction func removeNoteEncryption(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
-        guard var notes = vc.notesTableView.getSelectedNotes() else { return }
-
-        notes = decryptUnlocked(notes: notes)
-        guard notes.count > 0 else { return }
-
-        getMasterPassword() { password, isTypedByUser in
-            var isFirst = true
-            for note in notes {
-                if note.container == .encryptedTextPack {
-                    let success = note.unEncrypt(password: password)
-                    if success && isFirst {
-                        self.refillEditArea()
-                    }
-                }
-                self.notesTableView.reloadRow(note: note)
-                isFirst = false
-            }
-        }
-    }
 
     @IBAction func openProjectViewSettings(_ sender: NSMenuItem) {
         guard let vc = ViewController.shared() else {
@@ -1251,18 +1108,6 @@ class ViewController: NSViewController,
                 controller.load(project: project)
             }
         }
-    }
-
-    @IBAction func lockAll(_ sender: Any) {
-        let notes = storage.noteList.filter({ $0.isUnlocked() })
-        for note in notes {
-            if note.lock() {
-                notesTableView.reloadRow(note: note)
-            }
-        }
-
-        editArea.clear()
-        refillEditArea()
     }
 
     func controlTextDidEndEditing(_ obj: Notification) {
@@ -1453,10 +1298,6 @@ class ViewController: NSViewController,
             let source = self.storage.noteList
             var notes = [Note]()
             
-            if let type = type, type == .Todo {
-                terms.append("- [ ]")
-            }
-            
             for note in source {
                 if operation.isCancelled {
                     completion()
@@ -1555,27 +1396,17 @@ class ViewController: NSViewController,
             
             filter = search.stringValue
             terms = search.stringValue.split(separator: " ")
-
-            if type == .Todo {
-                terms!.append("- [ ]")
-            }
         }
 
         return !note.name.isEmpty
-            && (
-                filter.isEmpty && type != .Todo
-                    || type == .Todo
-                    && self.isMatched(note: note, terms: ["- [ ]"])
-                    || self.isMatched(note: note, terms: terms!)
+            && ( filter.isEmpty || self.isMatched(note: note, terms: terms!)
             ) && (
-                type == .All && !note.project.isArchive && note.project.showInCommon
+                type == .All && note.project.showInCommon
                     || type != .Inbox && projects != nil && (
                         projects!.contains(note.project)
                         || (note.project.parent != nil && projects!.contains(note.project.parent!))
                     )
                     || type == .Trash
-                    || type == .Todo && note.project.showInCommon
-                    || type == .Archive && note.project.isArchive
                     || type == .Inbox && note.project.isRoot && note.project.isDefault
             ) && (
                 type == .Trash && note.isTrash()
@@ -1704,10 +1535,6 @@ class ViewController: NSViewController,
         let selectedProjects = vc.storageOutlineView.getSidebarProjects()
         var sidebarProject = project ?? selectedProjects?.first
         var text = content
-        
-        if let type = vc.getSidebarType(), type == .Todo, content.count == 0 {
-            text = "- [ ] "
-        }
         
         if sidebarProject == nil {
             let projects = storage.getProjects()
@@ -1875,15 +1702,7 @@ class ViewController: NSViewController,
         if UserDefaultsManagement.inlineTags, let tagsMenu = noteMenu.item(withTitle: NSLocalizedString("Tags", comment: "")) {
             noteMenu.removeItem(tagsMenu)
         }
-        
-        if !note.isInArchive() {
-            let archiveMenu = NSMenuItem()
-            archiveMenu.title = NSLocalizedString("Archive", comment: "Sidebar label")
-            archiveMenu.action = #selector(vc.archiveNote(_:))
-            moveMenu.addItem(archiveMenu)
-            moveMenu.addItem(NSMenuItem.separator())
-        }
-        
+       
         if !note.isTrash() {
             let trashMenu = NSMenuItem()
             trashMenu.title = NSLocalizedString("Trash", comment: "Sidebar label")
@@ -1895,7 +1714,7 @@ class ViewController: NSViewController,
                 
         let projects = storage.getProjects()
         for item in projects {
-            if note.project == item || item.isTrash || item.isArchive {
+            if note.project == item || item.isTrash {
                 continue
             }
             
@@ -1999,15 +1818,6 @@ class ViewController: NSViewController,
     @IBAction func duplicate(_ sender: Any) {
         if let notes = notesTableView.getSelectedNotes() {
             for note in notes {
-                if note.isUnlocked() {
-
-                }
-
-                if note.isTextBundle() || note.isEncrypted() {
-                    note.duplicate()
-                    continue
-                }
-
                 guard let name = note.getDupeName() else { continue }
 
                 let noteDupe = Note(name: name, project: note.project, type: note.type)
@@ -2292,38 +2102,5 @@ class ViewController: NSViewController,
         }
 
         return notes
-    }
-
-    private func decryptUnlocked(notes: [Note]) -> [Note] {
-        var notes = notes
-
-        for note in notes {
-            if note.isUnlocked() {
-                if note.unEncryptUnlocked() {
-                    notes.removeAll { $0 === note }
-                    notesTableView.reloadRow(note: note)
-                }
-            }
-        }
-
-        return notes
-    }
-
-    @objc func onSleepNote(note: NSNotification) {
-        if UserDefaultsManagement.lockOnSleep {
-            lockAll(self)
-        }
-    }
-
-    @objc func onScreenLocked(note: NSNotification) {
-        if UserDefaultsManagement.lockOnScreenActivated{
-            lockAll(self)
-        }
-    }
-
-    @objc func onUserSwitch(note: NSNotification) {
-        if UserDefaultsManagement.lockOnUserSwitch {
-            lockAll(self)
-        }
     }
 }

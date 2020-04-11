@@ -58,7 +58,7 @@ class SidebarProjectView: NSOutlineView,
                 menuItem.isHidden = project.isRoot
             }
 
-            if let project = sidebarItem.project, !project.isDefault, !project.isArchive {
+            if let project = sidebarItem.project, !project.isDefault {
                 return true
             }
         }
@@ -76,7 +76,7 @@ class SidebarProjectView: NSOutlineView,
                     : NSLocalizedString("Delete folder", comment: "")
             }
 
-            if let project = sidebarItem.project, !project.isDefault, !project.isArchive {
+            if let project = sidebarItem.project, !project.isDefault{
                 return true
             }
         }
@@ -94,7 +94,7 @@ class SidebarProjectView: NSOutlineView,
                 return false
             }
             
-            if let project = sidebarItem.project, !project.isArchive {
+            if let project = sidebarItem.project {
                 return true
             }
         }
@@ -148,7 +148,7 @@ class SidebarProjectView: NSOutlineView,
         guard let sidebarItem = item as? SidebarItem else { return false }
 
         switch sidebarItem.type {
-        case .Label, .Category, .Trash, .Archive, .Inbox:
+        case .Label, .Category, .Trash, .Inbox:
             if let data = board.data(forType: NSPasteboard.PasteboardType.init(rawValue: "notesTable")), let rows = NSKeyedUnarchiver.unarchiveObject(with: data) as? IndexSet {
 
                 var notes = [Note]()
@@ -213,7 +213,7 @@ class SidebarProjectView: NSOutlineView,
                 return .copy
             }
             break
-        case .Category, .Label, .Archive, .Inbox:
+        case .Category, .Label, .Inbox:
             guard sidebarItem.isSelectable() else { break }
             
             if let data = board.data(forType: NSPasteboard.PasteboardType.init(rawValue: "notesTable")), !data.isEmpty {
@@ -292,16 +292,6 @@ class SidebarProjectView: NSOutlineView,
                 cell.icon.isHidden = false
                 cell.label.frame.origin.x = 25
             
-            case .Archive:
-                cell.icon.image = NSImage(imageLiteralResourceName: "archive.png")
-                cell.icon.isHidden = false
-                cell.label.frame.origin.x = 25
-            
-            case .Todo:
-                cell.icon.image = NSImage(imageLiteralResourceName: "todo_sidebar.png")
-                cell.icon.isHidden = false
-                cell.label.frame.origin.x = 25
-
             case .Inbox:
                 cell.icon.image = NSImage(imageLiteralResourceName: "sidebarInbox")
                 cell.icon.isHidden = false
@@ -703,11 +693,5 @@ class SidebarProjectView: NSOutlineView,
         vc.storageOutlineView.reloadData()
         vc.storageOutlineView.selectRowIndexes([selected], byExtendingSelection: false)
         
-    }
-    
-    public func selectArchive() {
-        if let i = sidebarItems?.firstIndex(where: {($0 as? SidebarItem)?.type == .Archive }) {
-            selectRowIndexes([i], byExtendingSelection: false)
-        }
     }
 }
