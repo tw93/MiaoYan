@@ -33,25 +33,6 @@ class SidebarCellView: NSTableCellView {
         self.addTrackingArea(trackingArea)
     }
     
-    override func mouseEntered(with event: NSEvent) {
-        guard let vc = ViewController.shared() else { return }
-
-        guard let tag = objectValue as? Tag else { return }
-
-        if let note = vc.notesTableView.getSelectedNote() {
-            if UserDefaultsManagement.inlineTags {
-                plus.isHidden = true
-                return
-            }
-
-        }
-    }
-    
-    override func mouseExited(with event: NSEvent) {
-        if objectValue as? Tag != nil {
-            plus.isHidden = true
-        }
-    }
     
     @IBAction func projectName(_ sender: NSTextField) {
         let cell = sender.superview as? SidebarCellView

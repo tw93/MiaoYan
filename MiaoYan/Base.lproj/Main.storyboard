@@ -129,22 +129,6 @@ CA
                                                 <action selector="deleteNote:" target="L4m-js-agn" id="AiT-JP-62A"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Pin/unpin" keyEquivalent="8" id="You-zo-rbl">
-                                            <connections>
-                                                <action selector="pinMenu:" target="L4m-js-agn" id="uSp-AH-paW"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Remove encryption" keyEquivalent="7" identifier="fileMenu.toggleLock" id="fkH-Wf-n87">
-                                            <connections>
-                                                <action selector="removeNoteEncryption:" target="Ady-hI-5gd" id="nZq-wN-Jep"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Lock/unlock" keyEquivalent="l" id="RSs-wb-GNg">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="toggleNotesLock:" target="Ady-hI-5gd" id="VTr-hR-bSV"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem title="Open external" keyEquivalent="e" id="7MT-fy-lXN">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
@@ -154,11 +138,6 @@ CA
                                         <menuItem title="Reveal in Finder" keyEquivalent="R" id="rXU-X3-UjC">
                                             <connections>
                                                 <action selector="finderMenu:" target="Ady-hI-5gd" id="Ift-tc-85m"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Tags" keyEquivalent="t" identifier="fileMenu.tags" id="XZ6-FD-yro">
-                                            <connections>
-                                                <action selector="tagNote:" target="L4m-js-agn" id="QxF-4a-2pc"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="y7K-xq-tI8"/>
@@ -1646,12 +1625,6 @@ CA
                                 <action selector="removeNoteEncryption:" target="rPt-NT-nkU" id="5ga-uK-aSH"/>
                             </connections>
                         </menuItem>
-                        <menuItem title="Lock/unlock" keyEquivalent="l" id="kg2-3u-V99">
-                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                            <connections>
-                                <action selector="toggleNotesLock:" target="rPt-NT-nkU" id="tK5-CH-cx8"/>
-                            </connections>
-                        </menuItem>
                         <menuItem title="Open" keyEquivalent="e" id="3tV-h0-YEb">
                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                             <connections>
@@ -1664,12 +1637,6 @@ CA
                             </connections>
                         </menuItem>
                         <menuItem isSeparatorItem="YES" id="Fj3-MU-qJ9"/>
-                        <menuItem title="Tags" keyEquivalent="t" id="f2h-Tl-AHi">
-                            <connections>
-                                <action selector="tagNote:" target="XfG-lQ-9wD" id="Xu2-Mz-4PC"/>
-                            </connections>
-                        </menuItem>
-                        <menuItem isSeparatorItem="YES" id="06c-Up-wPq"/>
                         <menuItem title="Copy URL" identifier="noteMove.copyUrl" id="uQ1-ej-ufE">
                             <modifierMask key="keyEquivalentModifierMask"/>
                             <connections>

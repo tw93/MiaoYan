@@ -148,7 +148,7 @@ class SidebarProjectView: NSOutlineView,
         guard let sidebarItem = item as? SidebarItem else { return false }
 
         switch sidebarItem.type {
-        case .Label, .Category, .Trash, .Inbox:
+        case .Category, .Trash, .Inbox:
             if let data = board.data(forType: NSPasteboard.PasteboardType.init(rawValue: "notesTable")), let rows = NSKeyedUnarchiver.unarchiveObject(with: data) as? IndexSet {
 
                 var notes = [Note]()
@@ -213,7 +213,7 @@ class SidebarProjectView: NSOutlineView,
                 return .copy
             }
             break
-        case .Category, .Label, .Inbox:
+        case .Category,.Inbox:
             guard sidebarItem.isSelectable() else { break }
             
             if let data = board.data(forType: NSPasteboard.PasteboardType.init(rawValue: "notesTable")), !data.isEmpty {
@@ -241,8 +241,8 @@ class SidebarProjectView: NSOutlineView,
     }
     
     func outlineView(_ outlineView: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
-        if let si = item as? SidebarItem, si.type == .Label {
-            return 45
+        if let si = item as? SidebarItem {
+            return 35
         }
         return 25
     }
@@ -282,11 +282,6 @@ class SidebarProjectView: NSOutlineView,
                 cell.icon.isHidden = false
                 cell.label.frame.origin.x = 25
                 
-            case .Label:
-                if let cell = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "HeaderCell"), owner: self) as? SidebarHeaderCellView {
-                    cell.title.stringValue = si.name
-                    return cell
-                }
             case .Category:
                 cell.icon.image = NSImage(imageLiteralResourceName: "repository.png")
                 cell.icon.isHidden = false
@@ -632,12 +627,12 @@ class SidebarProjectView: NSOutlineView,
         guard let si = sidebarItems, si.indices.contains(i) else { return }
 
         if let next = si[i] as? SidebarItem {
-            if next.type == .Label && next.project == nil {
+            if next.project == nil {
                 let j = i + 1
 
                 guard let si = sidebarItems, si.indices.contains(j) else { return }
 
-                if let next = si[j] as? SidebarItem, next.type != .Label {
+                if let next = si[j] as? SidebarItem {
                     selectRowIndexes([j], byExtendingSelection: false)
                     return
                 }
@@ -654,12 +649,12 @@ class SidebarProjectView: NSOutlineView,
         guard let si = sidebarItems, si.indices.contains(i) else { return }
 
         if let next = si[i] as? SidebarItem {
-            if next.type == .Label && next.project == nil {
+            if next.project == nil {
                 let j = i - 1
 
                 guard let si = sidebarItems, si.indices.contains(j) else { return }
 
-                if let next = si[j] as? SidebarItem, next.type != .Label {
+                if let next = si[j] as? SidebarItem {
                     selectRowIndexes([j], byExtendingSelection: false)
                     return
                 }
