@@ -248,7 +248,7 @@ public class Note: NSObject  {
     }
 
     public func isEmpty() -> Bool {
-        return content.length == 0 && !isEncrypted()
+        return content.length == 0
     }
 
     #if os(iOS)
@@ -1026,7 +1026,7 @@ public class Note: NSObject  {
             return URL(string: imageName)
         }
 
-        if isEncrypted() && imageName.starts(with: "/i/") {
+        if imageName.starts(with: "/i/") {
             return project.url.appendingPathComponent(imageName)
         }
         
@@ -1500,37 +1500,8 @@ public class Note: NSObject  {
         }
     }
 
-    public func isUnlocked() -> Bool {
-        return (decryptedTemporarySrc != nil)
-    }
-
-    public func isEncrypted() -> Bool {
-        return (container == .encryptedTextPack || isUnlocked())
-    }
-
-    public func lock() -> Bool {
-        guard let temporaryURL = self.decryptedTemporarySrc else { return false }
-
-        while true {
-            if ciphertextWriter.operationCount == 0 {
-                print("Note \"\(title)\" successfully locked.")
-
-                container = .encryptedTextPack
-                cleanOut()
-                loadTitle()
-
-                try? FileManager.default.removeItem(at: temporaryURL)
-                self.decryptedTemporarySrc = nil
-
-                return true
-            }
-
-            usleep(100000)
-        }
-    }
-
     public func showIconInList() -> Bool {
-        return (isPinned || isEncrypted())
+        return isPinned
     }
 
     public func getFileName() -> String {
@@ -1550,10 +1521,7 @@ public class Note: NSObject  {
     }
 
     public func getTitle() -> String? {
-        if isEncrypted(){
-            return getFileName()
-        }
-
+        
         if title.count > 0 {
             return title
         }
