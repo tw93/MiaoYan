@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>FSNotes</string>
+	<string>MiaoYan</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
