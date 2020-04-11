@@ -92,7 +92,7 @@
 "History" = "历史";
 
 /* No comment provided by engineer. */
-"Inbox" = "收件箱";
+"Inbox" = "默认文件夹";
 
 /* No comment provided by engineer. */
 "Link" = "链接";
@@ -155,7 +155,7 @@
 "Rename folder" = "重命名文件夹";
 
 /* No comment provided by engineer. */
-"Search and create" = "搜索或创建（按下回车即可创建）";
+"Search and create" = "搜索或创建";
 
 /* No comment provided by engineer. */
 "Show in Finder" = "在Finder中显示";
