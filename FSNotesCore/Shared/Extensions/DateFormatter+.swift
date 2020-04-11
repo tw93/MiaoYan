@@ -17,7 +17,7 @@ public extension DateFormatter {
     }
 
     func formatTimeForDisplay(_ date: Date) -> String {
-        dateStyle = .none
+        dateStyle = .medium
         timeStyle = .short
         locale = NSLocale.autoupdatingCurrent
         return string(from: date)
