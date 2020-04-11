@@ -9,18 +9,10 @@
 import Cocoa
 
 class PreferencesUserInterfaceViewController: NSViewController {
-
-    @IBOutlet weak var horizontalRadio: NSButton!
-    @IBOutlet weak var verticalRadio: NSButton!
     @IBOutlet weak var fontPreview: NSTextField!
-    @IBOutlet weak var cellSpacing: NSSlider!
     @IBOutlet weak var noteFontColor: NSColorWell!
     @IBOutlet weak var backgroundColor: NSColorWell!
     @IBOutlet weak var backgroundLabel: NSTextField!
-    @IBOutlet weak var textMatchAutoSelection: NSButton!
-    @IBOutlet weak var previewFontSize: NSPopUpButton!
-    @IBOutlet weak var hideImagesPreview: NSButton!
-    @IBOutlet weak var hidePreview: NSButton!
     @IBOutlet weak var hideDate: NSButton!
     @IBOutlet weak var firstLineAsTitle: NSButton!
 
@@ -42,24 +34,8 @@ class PreferencesUserInterfaceViewController: NSViewController {
     override func viewDidAppear() {
         self.view.window!.title = NSLocalizedString("Preferences", comment: "")
 
-        if (UserDefaultsManagement.horizontalOrientation) {
-            horizontalRadio.cell?.state = NSControl.StateValue(rawValue: 1)
-        } else {
-            verticalRadio.cell?.state = NSControl.StateValue(rawValue: 1)
-        }
-
-        hidePreview.state = UserDefaultsManagement.hidePreview ? NSControl.StateValue.on : NSControl.StateValue.off
-
-        cellSpacing.doubleValue = Double(UserDefaultsManagement.cellSpacing)
-
         noteFontColor.color = UserDefaultsManagement.fontColor
         backgroundColor.color = UserDefaultsManagement.bgColor
-
-        textMatchAutoSelection.state = UserDefaultsManagement.textMatchAutoSelection ? .on : .off
-
-        previewFontSize.selectItem(withTag: UserDefaultsManagement.previewFontSize)
-
-        hideImagesPreview.state = UserDefaultsManagement.hidePreviewImages ? .on : .off
 
         hideDate.state = UserDefaultsManagement.hideDate ? .on : .off
 
@@ -88,12 +64,11 @@ class PreferencesUserInterfaceViewController: NSViewController {
 
         UserDefaultsManagement.horizontalOrientation = false
 
-        horizontalRadio.cell?.state = NSControl.StateValue(rawValue: 0)
         vc.splitView.isVertical = true
         vc.splitView.setPosition(215, ofDividerAt: 0)
 
         UserDefaultsManagement.cellSpacing = 38
-        cellSpacing.doubleValue = Double(UserDefaultsManagement.cellSpacing)
+   
         vc.setTableRowHeight()
     }
 
@@ -102,12 +77,10 @@ class PreferencesUserInterfaceViewController: NSViewController {
 
         UserDefaultsManagement.horizontalOrientation = true
 
-        verticalRadio.cell?.state = NSControl.StateValue(rawValue: 0)
         vc.splitView.isVertical = false
         vc.splitView.setPosition(145, ofDividerAt: 0)
 
         UserDefaultsManagement.cellSpacing = 12
-        cellSpacing.doubleValue = Double(UserDefaultsManagement.cellSpacing)
 
         vc.setTableRowHeight()
         vc.notesTableView.reloadData()
