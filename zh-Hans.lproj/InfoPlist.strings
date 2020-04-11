@@ -1,0 +1,24 @@
+/* Bundle display name */
+"CFBundleDisplayName" = "FSNotes";
+
+/* Bundle name */
+"CFBundleName" = "FSNotes";
+
+/* (No Comment) */
+"Encrypted Text Pack" = "加密文本包";
+
+/* (No Comment) */
+"Markdwon" = "Markdown";
+
+/* Copyright (human-readable) */
+"NSHumanReadableCopyright" = "Copyright © 2017-2019 Oleksandr Glushchenko. All rights reserved.";
+
+/* (No Comment) */
+"Plain Text" = "纯文本";
+
+/* (No Comment) */
+"Rich Text" = "富文本";
+
+/* (No Comment) */
+"TextBundle" = "TextBundle";
+
