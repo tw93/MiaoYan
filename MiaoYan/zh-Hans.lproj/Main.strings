@@ -161,7 +161,7 @@
 "AYu-sK-qS6.title" = "主菜单";
 
 /* Class = "NSSearchFieldCell"; placeholderString = "Search or create"; ObjectID = "B7t-9v-bSk"; */
-"B7t-9v-bSk.placeholderString" = "搜索或创建（按下回车即可创建）";
+"B7t-9v-bSk.placeholderString" = "搜索或创建";
 
 /* Class = "NSTextFieldCell"; title = "Note Font:"; ObjectID = "bJC-he-nDV"; */
 "bJC-he-nDV.title" = "笔记字体：";
@@ -347,7 +347,7 @@
 "gVA-U4-sdL.title" = "粘贴";
 
 /* Class = "NSTextFieldCell"; title = "FSNotes"; ObjectID = "gWb-su-EdI"; */
-"gWb-su-EdI.title" = "FSNotes";
+"gWb-su-EdI.title" = "妙言";
 
 /* Class = "NSTableColumn"; headerCell.title = "Library"; ObjectID = "Gwp-vX-YaR"; */
 "Gwp-vX-YaR.headerCell.title" = "Library";
@@ -371,7 +371,7 @@
 "hGi-4f-mtY.title" = "更改";
 
 /* Class = "NSMenuItem"; title = "Search and create"; ObjectID = "hPY-aY-QOE"; */
-"hPY-aY-QOE.title" = "搜索或创建（按下回车即可创建）";
+"hPY-aY-QOE.title" = "搜索或创建";
 
 /* Class = "NSMenuItem"; title = "Smart Quotes"; ObjectID = "hQb-2v-fYv"; */
 "hQb-2v-fYv.title" = "智能引号";

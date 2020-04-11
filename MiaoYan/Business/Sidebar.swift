@@ -19,28 +19,22 @@ class Sidebar {
         let inboxName = "sidebarInbox"
         var system = [SidebarItem]()
 
-        if let project = Storage.sharedInstance().getDefault() {
-            let inbox = SidebarItem(name: NSLocalizedString("Inbox", comment: ""), project: project, type: .Inbox, icon: getImage(named: inboxName))
-            system.append(inbox)
-        }
-
         let notes = SidebarItem(name: NSLocalizedString("Notes", comment: ""), type: .All, icon: getImage(named: "home\(night).png"))
         system.append(notes)
 
-        let trashProject = Storage.sharedInstance().getDefaultTrash()
-        let trash = SidebarItem(name: NSLocalizedString("Trash", comment: ""), project: trashProject, type: .Trash, icon: getImage(named: "trash\(night)"))
+        if let project = Storage.sharedInstance().getDefault() {
+                  let inbox = SidebarItem(name: NSLocalizedString("Inbox", comment: ""), project: project, type: .Inbox, icon: getImage(named: inboxName))
+                  system.append(inbox)
+          }
+           
         
-        system.append(trash)
         list = system
 
         let rootProjects = storage.getRootProjects()
 
         for project in rootProjects {
             let icon = getImage(named: "repository\(night).png")
-            let type: SidebarItemType = .Label
-            
-            list.append(SidebarItem(name: project.label, project: project, type: type, icon: icon))
-            
+    
             let childProjects = storage.getChildProjects(project: project)
             for childProject in childProjects {
                 if childProject.url == UserDefaultsManagement.archiveDirectory {
@@ -50,6 +44,12 @@ class Sidebar {
                 list.append(SidebarItem(name: childProject.label, project: childProject, type: .Category, icon: icon))
             }
         }
+        
+        
+        let trashProject = Storage.sharedInstance().getDefaultTrash()
+        let trash = SidebarItem(name: NSLocalizedString("Trash", comment: ""), project: trashProject, type: .Trash, icon: getImage(named: "trash\(night)"))
+               
+        list.append(trash)
     }
     
     public func getList() -> [Any] {
