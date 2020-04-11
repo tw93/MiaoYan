@@ -269,7 +269,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         let cell = makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "NoteCellView"), owner: self) as! NoteCellView
 
         cell.configure(note: note)
-        cell.loadImagesPreview()
         cell.attachHeaders(note: note)
 
         return cell
@@ -382,7 +381,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
                 if let row = self.rowView(atRow: i, makeIfNecessary: false) as? NoteRowView, let cell = row.subviews.first as? NoteCellView {
 
                     cell.date.stringValue = note.getDateForLabel()
-                    cell.loadImagesPreview(position: i, urls: urls)
                     cell.attachHeaders(note: note)
                     cell.renderPin()
 
