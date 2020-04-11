@@ -30,10 +30,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func applicationWillFinishLaunching(_ notification: Notification) {
         loadDockIcon()
         
-        if UserDefaultsManagement.showInMenuBar {
-            constructMenu()
-        }
-        
         if !UserDefaultsManagement.showDockIcon {
             let transformState = ProcessApplicationTransformState(kProcessTransformToUIElementApplication)
             var psn = ProcessSerialNumber(highLongOfPSN: 0, lowLongOfPSN: UInt32(kCurrentProcess))
@@ -171,36 +167,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             }
         }
     }
-    
-    func constructMenu() {
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        
-        if let button = statusItem?.button, let image = NSImage(named: "menuBar") {
-            image.size.width = 20
-            image.size.height = 20
-            button.image = image
-        }
 
-        let menu = NSMenu()
-        menu.addItem(NSMenuItem(title: NSLocalizedString("New", comment: ""), action: #selector(AppDelegate.new(_:)), keyEquivalent: "n"))
-        
-        let rtf = NSMenuItem(title: NSLocalizedString("New RTF", comment: ""), action: #selector(AppDelegate.newRTF(_:)), keyEquivalent: "n")
-        var modifier = NSEvent.modifierFlags
-        modifier.insert(.command)
-        modifier.insert(.shift)
-        rtf.keyEquivalentModifierMask = modifier
-        menu.addItem(rtf)
-        
-        menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: NSLocalizedString("Search and create", comment: ""), action: #selector(AppDelegate.searchAndCreate(_:)), keyEquivalent: "l"))
-        menu.addItem(NSMenuItem(title: NSLocalizedString("Preferences", comment: ""), action: #selector(AppDelegate.openPreferences(_:)), keyEquivalent: ","))
-        
-        menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: NSLocalizedString("Quit FSNotes", comment: ""), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
-
-        menu.delegate = self
-        statusItem?.menu = menu
-    }
     
     // MARK: IBActions
     
@@ -258,15 +225,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
     }
     
-    @IBAction func removeMenuBar(_ sender: Any?) {
-        guard let statusItem = statusItem else { return }
-        NSStatusBar.system.removeStatusItem(statusItem)
-    }
     
-    @IBAction func addMenuBar(_ sender: Any?) {
-        constructMenu()
-    }
-
     @IBAction func showAboutWindow(_ sender: AnyObject) {
         if aboutWindowController == nil {
             let storyboard = NSStoryboard(name: "Main", bundle: nil)
