@@ -1,0 +1,205 @@
+/* No comment provided by engineer. */
+"Add" = "添加";
+
+/* Sidebar label */
+"Archive" = "存档";
+
+/* No comment provided by engineer. */
+"Are you sure you want to irretrievably delete %d note(s)?" = "确定要永久删除%d个笔记？此操作无法恢复！";
+
+/* No comment provided by engineer. */
+"Are you sure you want to remove project \"%@\" and all files inside?" = "确定要删除项目\"%@\"吗 ？";
+
+/* No comment provided by engineer. */
+"Attach storage..." = "附加存储…";
+
+/* No comment provided by engineer. */
+"Back up storage" = "备份存储";
+
+/* Delete menu */
+"Cancel" = "取消";
+
+/* No comment provided by engineer. */
+"Check Grammar With Spelling" = "检查拼写和语法";
+
+/* No comment provided by engineer. */
+"Check Spelling While Typing" = "键入时检查拼写";
+
+/* No comment provided by engineer. */
+"Code Block" = "代码块";
+
+/* No comment provided by engineer. */
+"Code Span" = "代码缩进";
+
+/* No comment provided by engineer. */
+"Copy HTML" = "拷贝HTML";
+
+/* No comment provided by engineer. */
+"Copy Link" = "拷贝链接";
+
+/* No comment provided by engineer. */
+"Copy Plain Text" = "拷贝纯文本";
+
+/* No comment provided by engineer. */
+"Correct Spelling Automatically" = "自动纠正拼写";
+
+/* No comment provided by engineer. */
+"Current password does not match with password in keychain" = "当前密码与钥匙串中的密码不匹配";
+
+/* No comment provided by engineer. */
+"Data Detectors" = "数据检测器";
+
+/* No comment provided by engineer. */
+"Delete" = "删除";
+
+/* No comment provided by engineer. */
+"Delete folder" = "删除文件夹";
+
+/* No comment provided by engineer. */
+"Detach storage" = "Detach storage";
+
+/* No comment provided by engineer. */
+"Empty password" = "空密码";
+
+/* No comment provided by engineer. */
+"Enter Master Password" = "输入管理员密码";
+
+/* No comment provided by engineer. */
+"FSNotes [edit]" = "FSNotes [编辑]";
+
+/* No comment provided by engineer. */
+"FSNotes [preview]" = "FSNotes [预览]";
+
+/* Menu */
+"History" = "历史";
+
+/* No comment provided by engineer. */
+"Inbox" = "收件箱";
+
+/* No comment provided by engineer. */
+"Link" = "链接";
+
+/* No comment provided by engineer. */
+"Lock All Encrypted" = "锁定所有加密的笔记";
+
+/* No comment provided by engineer. */
+"Master password:" = "管理员密码：";
+
+/* Menu */
+"Move" = "移动";
+
+/* No comment provided by engineer. */
+"New" = "新建";
+
+/* No comment provided by engineer. */
+"New folder" = "新建文件夹";
+
+/* No comment provided by engineer. */
+"New project" = "新建项目";
+
+/* No comment provided by engineer. */
+"New RTF" = "新建RTF文件";
+
+/* Sidebar label */
+"Notes" = "笔记";
+
+/* No comment provided by engineer. */
+"OK" = "好的";
+
+/* Edit area */
+"Please enter image title:" = "请输入图像标题：";
+
+/* No comment provided by engineer. */
+"Please enter password for current note" = "请输入当前笔记的密码";
+
+/* No comment provided by engineer. */
+"Please enter project name:" = "请输入项目名称：";
+
+/* Menu */
+"Please enter tags (comma separated):" = "请输入标签（使用英文逗号分隔）：";
+
+/* No comment provided by engineer. */
+"Please try again" = "请再试一次";
+
+/* No comment provided by engineer. */
+"Preferences" = "偏好设置";
+
+/* No comment provided by engineer. */
+"Quit FSNotes" = "退出FSNotes";
+
+/* Delete menu */
+"Remove" = "移除";
+
+/* No comment provided by engineer. */
+"Remove note(s)" = "移除笔记";
+
+/* No comment provided by engineer. */
+"Rename folder" = "重命名文件夹";
+
+/* No comment provided by engineer. */
+"Search and create" = "搜索或创建（按下回车即可创建）";
+
+/* No comment provided by engineer. */
+"Show in Finder" = "在Finder中显示";
+
+/* No comment provided by engineer. */
+"Show view options" = "显示视图选项";
+
+/* No comment provided by engineer. */
+"Smart Copy/Paste" = "智能拷贝/粘贴";
+
+/* No comment provided by engineer. */
+"Smart Dashes" = "智能破折号";
+
+/* No comment provided by engineer. */
+"Smart Links" = "智能链接";
+
+/* No comment provided by engineer. */
+"Smart Quotes" = "智能引号";
+
+/* View menu */
+"Sort by" = "排序方式";
+
+/* No comment provided by engineer. */
+"Spelling and Grammar" = "拼写和语法";
+
+/* No comment provided by engineer. */
+"Strikethrough" = "删除线";
+
+/* No comment provided by engineer. */
+"Substitutions" = "替换";
+
+/* Menu
+   Sidebar label */
+"Tags" = "标签";
+
+/* No comment provided by engineer. */
+"Text Replacement" = "文本替换";
+
+/* Delete menu */
+"This action cannot be undone." = "此操作无法撤消。";
+
+/* No comment provided by engineer. */
+"Todo" = "待办事项";
+
+/* No comment provided by engineer. */
+"Toggle preview" = "切换预览";
+
+/* Sidebar label */
+"Trash" = "垃圾箱";
+
+/* No comment provided by engineer. */
+"Underline" = "下划线";
+
+/* Untitled Note */
+"Untitled Note" = "未命名笔记";
+
+/* No comment provided by engineer. */
+"URL has been copied to clipboard" = "URL已复制到剪贴板";
+
+/* Menu */
+"View" = "视图";
+
+/* No comment provided by engineer. */
+"Wrong repeated password" = "重复密码输入错误";
+

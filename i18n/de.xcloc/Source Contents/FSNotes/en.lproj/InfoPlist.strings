@@ -1,0 +1,6 @@
+/* Bundle display name */
+"CFBundleDisplayName" = "FSNotes";
+/* Bundle name */
+"CFBundleName" = "FSNotes";
+/* Copyright (human-readable) */
+"NSHumanReadableCopyright" = "Copyright © 2017-2018 Oleksandr Glushchenko. All rights reserved.";
