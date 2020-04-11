@@ -41,7 +41,6 @@ public class UserDefaultsManagement {
     static var DefaultBgColor = Color.white
 
     private struct Constants {
-        static let AllowTouchID = "allowTouchID"
         static let AppearanceTypeKey = "appearanceType"
         static let ArchiveDirectoryKey = "archiveDirectory"
         static let AutomaticSpellingCorrection = "automaticSpellingCorrection"
@@ -80,14 +79,8 @@ public class UserDefaultsManagement {
         static let LineSpacingEditorKey = "lineSpacingEditor"
         static let LineWidthKey = "lineWidth"
         static let LiveImagesPreview = "liveImagesPreview"
-        static let LockOnSleep = "lockOnSleep"
-        static let LockOnScreenActivated = "lockOnScreenActivated"
-        static let LockAfterIDLE = "lockAfterIdle"
-        static let LockAfterUserSwitch = "lockAfterUserSwitch"
         static let MarginSizeKey = "marginSize"
         static let MarkdownPreviewCSS = "markdownPreviewCSS"
-        static let MasterPasswordHint = "masterPasswordHint"
-        static let MathJaxPreview = "mathJaxPreview"
         static let NightModeType = "nightModeType"
         static let NightModeAuto = "nightModeAuto"
         static let NightModeBrightnessLevel = "nightModeBrightnessLevel"
@@ -100,7 +93,6 @@ public class UserDefaultsManagement {
         static let SaveInKeychain = "saveInKeychain"
         static let SharedContainerKey = "sharedContainer"
         static let ShowDockIcon = "showDockIcon"
-        static let ShowInMenuBar = "showInMenuBar"
         static let SmartInsertDelete = "smartInsertDelete"
         static let SnapshotsInterval = "snapshotsInterval"
         static let SnapshotsIntervalMinutes = "snapshotsIntervalMinutes"
@@ -849,18 +841,6 @@ public class UserDefaultsManagement {
         }
     }
     
-    static var showInMenuBar: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.ShowInMenuBar) as? Bool {
-                return result
-            }
-            return true
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.ShowInMenuBar)
-        }
-    }
-    
     static var fileContainer: NoteContainer {
         get {
             #if SHARE_EXT
@@ -953,82 +933,6 @@ public class UserDefaultsManagement {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.HidePreviewImages)
-        }
-    }
-
-    static var masterPasswordHint: String {
-        get {
-            if let hint = UserDefaults.standard.object(forKey: Constants.MasterPasswordHint) as? String {
-                return hint
-            }
-            return String()
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.MasterPasswordHint)
-        }
-    }
-
-    static var lockOnSleep: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.LockOnSleep) as? Bool {
-                return result
-            }
-            return true
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.LockOnSleep)
-        }
-    }
-
-    static var lockOnScreenActivated: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.LockOnScreenActivated) as? Bool {
-                return result
-            }
-            return true
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.LockOnScreenActivated)
-        }
-    }
-
-    static var lockOnUserSwitch: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.LockAfterUserSwitch) as? Bool {
-                return result
-            }
-            return true
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.LockAfterUserSwitch)
-        }
-    }
-
-    static var allowTouchID: Bool {
-        get {
-            if NSClassFromString("NSTouchBar") == nil {
-                return false
-            }
-
-            if let result = UserDefaults.standard.object(forKey: Constants.AllowTouchID) as? Bool {
-                return result
-            }
-            return true
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.AllowTouchID)
-        }
-    }
-
-    static var savePasswordInKeychain: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.SaveInKeychain) as? Bool {
-                return result
-            }
-            return true
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.SaveInKeychain)
         }
     }
 
@@ -1198,18 +1102,6 @@ public class UserDefaultsManagement {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.Welcome)
-        }
-    }
-
-    static var mathJaxPreview: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.MathJaxPreview) as? Bool {
-                return result
-            }
-            return true
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.MathJaxPreview)
         }
     }
 }

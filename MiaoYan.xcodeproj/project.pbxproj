@@ -9,14 +9,9 @@
 /* Begin PBXBuildFile section */
 		275592971F3AE9B5006B8988 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275592961F3AE9B5006B8988 /* MainWindowController.swift */; };
 		2799407C218484C900727B20 /* TitleBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799407B218484C900727B20 /* TitleBarView.swift */; };
-		41601C1E10E4A5EC50052E18 /* Pods_FSNotes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F2EBC009F0240F232497C56 /* Pods_FSNotes.framework */; };
-		6F13BB1620FEDDF50005E120 /* FSNotesCore_macOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F13BB0620FEDDF50005E120 /* FSNotesCore_macOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		6F13BB6A20FEE0450005E120 /* DateFormatter+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F13BB2820FEDE230005E120 /* DateFormatter+.swift */; };
-		6F13BB6C20FEE04A0005E120 /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F13BB2920FEDE230005E120 /* String+.swift */; };
-		6F13BB6E20FEE04F0005E120 /* URL+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F13BB2A20FEDE230005E120 /* URL+.swift */; };
-		6F13BB7120FEE0DD0005E120 /* UserDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F13BB3820FEDE230005E120 /* UserDataService.swift */; };
+		363205DB90CC8E8DE36EC1E4 /* Pods_MiaoYan.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D4AED6B28D1F5BDB15F4E76 /* Pods_MiaoYan.framework */; };
 		8F7136EE23490CBF004DFA6E /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7136ED23490CBF004DFA6E /* Markdown.swift */; };
-		AE29821E4750B1E65B616E40 /* Pods_FSNotesCore_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B22A82E1B99B4D5148437393 /* Pods_FSNotesCore_macOS.framework */; };
+		CCCBA3BDD67ECB3AE896915A /* Pods_MiaoYan__iCloud_Documents_.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 685AACFD072932BD692B5BD4 /* Pods_MiaoYan__iCloud_Documents_.framework */; };
 		D7038E1D20FA86C100A54E69 /* SharingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7038E1C20FA86C100A54E69 /* SharingService.swift */; };
 		D7038E1E20FA86C100A54E69 /* SharingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7038E1C20FA86C100A54E69 /* SharingService.swift */; };
 		D7038E2020FA957400A54E69 /* copy.png in Resources */ = {isa = PBXBuildFile; fileRef = D7038E1F20FA957300A54E69 /* copy.png */; };
@@ -29,11 +24,9 @@
 		D70A727523944847006AF320 /* checkbox1012.png in Resources */ = {isa = PBXBuildFile; fileRef = D70A727323944846006AF320 /* checkbox1012.png */; };
 		D70A7278239467C2006AF320 /* checkbox_empty1012.png in Resources */ = {isa = PBXBuildFile; fileRef = D70A7277239467C1006AF320 /* checkbox_empty1012.png */; };
 		D70A7279239467C2006AF320 /* checkbox_empty1012.png in Resources */ = {isa = PBXBuildFile; fileRef = D70A7277239467C1006AF320 /* checkbox_empty1012.png */; };
-		D70D6CDF225D16D800A07A01 /* NSAppearance+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7315ED4215ED95600AB49D4 /* NSAppearance+.swift */; };
 		D70FE13320FE198200813F9E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D70FE13120FE198200813F9E /* InfoPlist.strings */; };
 		D7104A64230BD8C500B6D8EE /* SortDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7104A63230BD8C500B6D8EE /* SortDirection.swift */; };
 		D7104A65230BD8C500B6D8EE /* SortDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7104A63230BD8C500B6D8EE /* SortDirection.swift */; };
-		D7104A69230BD8E600B6D8EE /* SortDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7104A63230BD8C500B6D8EE /* SortDirection.swift */; };
 		D7153DFD2285A93300A2C20F /* AboutWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7153DFC2285A93300A2C20F /* AboutWindowController.swift */; };
 		D7153DFE2285A93300A2C20F /* AboutWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7153DFC2285A93300A2C20F /* AboutWindowController.swift */; };
 		D7153E052285C09C00A2C20F /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7153E042285C09C00A2C20F /* AboutViewController.swift */; };
@@ -58,9 +51,6 @@
 		D720241622A9412B000A7691 /* TextBundle.icns in Resources */ = {isa = PBXBuildFile; fileRef = D720240B22A9412B000A7691 /* TextBundle.icns */; };
 		D720241922A941A3000A7691 /* EncryptedTextPack.icns in Resources */ = {isa = PBXBuildFile; fileRef = D720241822A941A3000A7691 /* EncryptedTextPack.icns */; };
 		D720241A22A941A3000A7691 /* EncryptedTextPack.icns in Resources */ = {isa = PBXBuildFile; fileRef = D720241822A941A3000A7691 /* EncryptedTextPack.icns */; };
-		D72189362102099B00FE3AF2 /* NSTextStorage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72189352102099B00FE3AF2 /* NSTextStorage+.swift */; };
-		D721894121020DDF00FE3AF2 /* UserDefaultsManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76447DB1F3A4F0700965F01 /* UserDefaultsManagement.swift */; };
-		D7218945210211D800FE3AF2 /* SortBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7679375201F0BFD000F7BBF /* SortBy.swift */; };
 		D730829223084340003185D1 /* MPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730829123084340003185D1 /* MPreviewView.swift */; };
 		D730829323084340003185D1 /* MPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730829123084340003185D1 /* MPreviewView.swift */; };
 		D730BD24222AA6B200E69C93 /* locked.png in Resources */ = {isa = PBXBuildFile; fileRef = D730BD23222AA6B200E69C93 /* locked.png */; };
@@ -69,16 +59,12 @@
 		D730BD28222BF30700E69C93 /* KeychainConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730BD26222BF30700E69C93 /* KeychainConfiguration.swift */; };
 		D730BD2A222BF32A00E69C93 /* KeychainPasswordItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730BD29222BF32A00E69C93 /* KeychainPasswordItem.swift */; };
 		D730BD2B222BF32A00E69C93 /* KeychainPasswordItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730BD29222BF32A00E69C93 /* KeychainPasswordItem.swift */; };
-		D730BD2C222DA97800E69C93 /* NoteType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D708AC662000EF5800A1760F /* NoteType.swift */; };
 		D730BD2E222DABA100E69C93 /* NoteContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730BD2D222DABA100E69C93 /* NoteContainer.swift */; };
 		D730BD2F222DABA100E69C93 /* NoteContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730BD2D222DABA100E69C93 /* NoteContainer.swift */; };
-		D730BD32222DABA100E69C93 /* NoteContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730BD2D222DABA100E69C93 /* NoteContainer.swift */; };
 		D730BD35222DB11E00E69C93 /* TextBundleInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730BD34222DB11E00E69C93 /* TextBundleInfo.swift */; };
 		D730BD36222DB11E00E69C93 /* TextBundleInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730BD34222DB11E00E69C93 /* TextBundleInfo.swift */; };
-		D730BD39222DB11E00E69C93 /* TextBundleInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730BD34222DB11E00E69C93 /* TextBundleInfo.swift */; };
 		D730BD3C222DB9FC00E69C93 /* NameHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730BD3B222DB9FC00E69C93 /* NameHelper.swift */; };
 		D730BD3D222DB9FC00E69C93 /* NameHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730BD3B222DB9FC00E69C93 /* NameHelper.swift */; };
-		D730BD42222EFFF900E69C93 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76E10C0215A55CE0017F4A3 /* Date+.swift */; };
 		D730BD482238365800E69C93 /* lock-closed.png in Resources */ = {isa = PBXBuildFile; fileRef = D730BD472238365700E69C93 /* lock-closed.png */; };
 		D730BD492238365800E69C93 /* lock-closed.png in Resources */ = {isa = PBXBuildFile; fileRef = D730BD472238365700E69C93 /* lock-closed.png */; };
 		D730BD4B223837F300E69C93 /* lock-open.png in Resources */ = {isa = PBXBuildFile; fileRef = D730BD4A223837F300E69C93 /* lock-open.png */; };
@@ -107,11 +93,8 @@
 		D7470D082170E890006B2A92 /* CustomTextStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7470D062170E890006B2A92 /* CustomTextStorage.swift */; };
 		D7487F922173503C00D09383 /* AttributedBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74B7B642137D3A1007F5331 /* AttributedBox.swift */; };
 		D7487F932173503C00D09383 /* AttributedBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74B7B642137D3A1007F5331 /* AttributedBox.swift */; };
-		D7487F952173535200D09383 /* NSFont+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7487F942173535200D09383 /* NSFont+.swift */; };
-		D7487FD6217389F800D09383 /* NSImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7487FD5217389F800D09383 /* NSImage+.swift */; };
 		D7487FD721738A1800D09383 /* NSImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7487FD5217389F800D09383 /* NSImage+.swift */; };
 		D7487FD821738A1900D09383 /* NSImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7487FD5217389F800D09383 /* NSImage+.swift */; };
-		D7487FE92174E5CB00D09383 /* NSAttributedStringKey+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7487FE82174E5CB00D09383 /* NSAttributedStringKey+.swift */; };
 		D7487FEC2174E62B00D09383 /* NSAttributedStringKey+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7487FE82174E5CB00D09383 /* NSAttributedStringKey+.swift */; };
 		D7487FED2174E62B00D09383 /* NSAttributedStringKey+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7487FE82174E5CB00D09383 /* NSAttributedStringKey+.swift */; };
 		D74DFBAC21661BA300F67D64 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76E10C0215A55CE0017F4A3 /* Date+.swift */; };
@@ -120,7 +103,6 @@
 		D7508FCE1F3438540047AB76 /* PrefsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7508FCD1F3438540047AB76 /* PrefsViewController.swift */; };
 		D752D80823454750006842F9 /* NSTextAttachment+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D752D80723454750006842F9 /* NSTextAttachment+.swift */; };
 		D752D80923454750006842F9 /* NSTextAttachment+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D752D80723454750006842F9 /* NSTextAttachment+.swift */; };
-		D752D80C23454750006842F9 /* NSTextAttachment+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D752D80723454750006842F9 /* NSTextAttachment+.swift */; };
 		D752D80F23463950006842F9 /* NSMutableAttributedString+Attachments.swift in Sources */ = {isa = PBXBuildFile; fileRef = D752D80E23463950006842F9 /* NSMutableAttributedString+Attachments.swift */; };
 		D752D81023463950006842F9 /* NSMutableAttributedString+Attachments.swift in Sources */ = {isa = PBXBuildFile; fileRef = D752D80E23463950006842F9 /* NSMutableAttributedString+Attachments.swift */; };
 		D759D1FA2276D25C00961E90 /* icon_alt.png in Resources */ = {isa = PBXBuildFile; fileRef = D759D1F92276D25C00961E90 /* icon_alt.png */; };
@@ -159,7 +141,6 @@
 		D77B9E9C20DE53E1003FAA27 /* archive.png in Resources */ = {isa = PBXBuildFile; fileRef = D77B9E9A20DE53E0003FAA27 /* archive.png */; };
 		D77CC041216A608500582B97 /* EditorScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77CC040216A608500582B97 /* EditorScrollView.swift */; };
 		D77CC042216A608500582B97 /* EditorScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77CC040216A608500582B97 /* EditorScrollView.swift */; };
-		D77F1820220F47FB00716DE3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D77F181E220F47FB00716DE3 /* InfoPlist.strings */; };
 		D783B505208A1BFD00328A41 /* EditorSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D783B504208A1BFD00328A41 /* EditorSplitView.swift */; };
 		D783B506208A1BFD00328A41 /* EditorSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D783B504208A1BFD00328A41 /* EditorSplitView.swift */; };
 		D78678CB2093AE10001A6620 /* UndoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D78678CA2093AE10001A6620 /* UndoData.swift */; };
@@ -247,7 +228,6 @@
 		D7CAD81C231D44C10006BE1C /* CodeTextProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CAD81A231D44C10006BE1C /* CodeTextProcessor.swift */; };
 		D7CB9905207E5AE300037E91 /* SidebarTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CB9904207E5AE300037E91 /* SidebarTableRowView.swift */; };
 		D7CB9906207E5AE300037E91 /* SidebarTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CB9904207E5AE300037E91 /* SidebarTableRowView.swift */; };
-		D7CD5CCB21820A380009D63B /* UserDefaultsManagement+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CD5CCA21820A380009D63B /* UserDefaultsManagement+.swift */; };
 		D7CD5CCC21820B7A0009D63B /* UserDefaultsManagement+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CD5CCA21820A380009D63B /* UserDefaultsManagement+.swift */; };
 		D7CD5CCD21820B7B0009D63B /* UserDefaultsManagement+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CD5CCA21820A380009D63B /* UserDefaultsManagement+.swift */; };
 		D7CD5F681F508E74006AA35D /* SourceCodePro-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D7CD5F671F508E6A006AA35D /* SourceCodePro-Bold.ttf */; };
@@ -259,7 +239,6 @@
 		D7CDE9DA2160C1D500DC5978 /* makeNote_white.png in Resources */ = {isa = PBXBuildFile; fileRef = D7CDE9D82160C1D500DC5978 /* makeNote_white.png */; };
 		D7CDE9DC2161767A00DC5978 /* AppearanceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CDE9DB2161767A00DC5978 /* AppearanceType.swift */; };
 		D7CDE9DD2161767B00DC5978 /* AppearanceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CDE9DB2161767A00DC5978 /* AppearanceType.swift */; };
-		D7CDE9DF2161791200DC5978 /* AppearanceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CDE9DB2161767A00DC5978 /* AppearanceType.swift */; };
 		D7CE196C1FA4BA5E004BF8EE /* PreviewTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CE196B1FA4BA5E004BF8EE /* PreviewTextField.swift */; };
 		D7D1DE68216D05A800AC1845 /* NameTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D1DE67216D05A800AC1845 /* NameTextField.swift */; };
 		D7D1DE69216D05A800AC1845 /* NameTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D1DE67216D05A800AC1845 /* NameTextField.swift */; };
@@ -281,7 +260,6 @@
 		D7DA9E2221033489001CF0BE /* NSMutableAttributedString+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA9E2021033489001CF0BE /* NSMutableAttributedString+.swift */; };
 		D7DCFECF2108CAC90059B37B /* CoreNote.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DCFECE2108CAC90059B37B /* CoreNote.swift */; };
 		D7DCFED02108CAC90059B37B /* CoreNote.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DCFECE2108CAC90059B37B /* CoreNote.swift */; };
-		D7DCFED12108D6910059B37B /* CoreNote.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DCFECE2108CAC90059B37B /* CoreNote.swift */; };
 		D7DCFED32108E3210059B37B /* Note+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DCFED22108E3210059B37B /* Note+.swift */; };
 		D7DCFED42108E3210059B37B /* Note+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DCFED22108E3210059B37B /* Note+.swift */; };
 		D7DD5A881F88D4EA00CE947E /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DD5A871F88D4EA00CE947E /* FileWatcher.swift */; };
@@ -374,18 +352,7 @@
 		D7FBBC2520F151F80014EC5B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D7FBBC2820F151F80014EC5B /* Localizable.strings */; };
 		D7FBBC2620F151F80014EC5B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D7FBBC2820F151F80014EC5B /* Localizable.strings */; };
 		D7FFD09C1FF677ED0064CBA6 /* NotesTextProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F95F391FF2759300E2A447 /* NotesTextProcessor.swift */; };
-		E876E42EFE068A053134C163 /* Pods_FSNotes__iCloud_Documents_.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20075972AA2A53C964752E5C /* Pods_FSNotes__iCloud_Documents_.framework */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		6F13BB1720FEDDF50005E120 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D7793C671F211C6000CA39B7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6F13BB0320FEDDF40005E120;
-			remoteInfo = "FSNotesCore macOS";
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		6F13BB1A20FEDDF50005E120 /* Embed Frameworks */ = {
@@ -431,27 +398,29 @@
 
 /* Begin PBXFileReference section */
 		15281A2CAF2CD031114BCE82 /* Pods-FSNotesCore macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FSNotesCore macOS.release.xcconfig"; path = "Target Support Files/Pods-FSNotesCore macOS/Pods-FSNotesCore macOS.release.xcconfig"; sourceTree = "<group>"; };
-		20075972AA2A53C964752E5C /* Pods_FSNotes__iCloud_Documents_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FSNotes__iCloud_Documents_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		267C288C6285BE9A6FAE0D0F /* Pods-FSNotes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FSNotes.debug.xcconfig"; path = "Target Support Files/Pods-FSNotes/Pods-FSNotes.debug.xcconfig"; sourceTree = "<group>"; };
 		275592961F3AE9B5006B8988 /* MainWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
 		2799407B218484C900727B20 /* TitleBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleBarView.swift; sourceTree = "<group>"; };
-		27A1212B244176470016A14B /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = MiaoYan.app; path = /Users/Tw93/www/iOS/MiaoYan/build/Debug/MiaoYan.app; sourceTree = "<absolute>"; };
-		27A1212C244176470016A14B /* FSNotesCore_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FSNotesCore_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		27A1212D244176470016A14B /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = MiaoYan.app; path = /Users/Tw93/www/iOS/MiaoYan/build/Debug/MiaoYan.app; sourceTree = "<absolute>"; };
+		27A1212E244227650016A14B /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiaoYan.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		27A1212F244227650016A14B /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiaoYan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		312443807E38E0E5C6679DC9 /* Pods-FSNotes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FSNotes.release.xcconfig"; path = "Target Support Files/Pods-FSNotes/Pods-FSNotes.release.xcconfig"; sourceTree = "<group>"; };
 		3CD37DA957EBBE76F7C571B5 /* Pods_FSNotes__Notarized_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FSNotes__Notarized_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D4AED6B28D1F5BDB15F4E76 /* Pods_MiaoYan.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MiaoYan.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F5CE55D61ADD91D70DAEB0D /* Pods-FSNotes (iCloud Documents).debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FSNotes (iCloud Documents).debug.xcconfig"; path = "Target Support Files/Pods-FSNotes (iCloud Documents)/Pods-FSNotes (iCloud Documents).debug.xcconfig"; sourceTree = "<group>"; };
+		685AACFD072932BD692B5BD4 /* Pods_MiaoYan__iCloud_Documents_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MiaoYan__iCloud_Documents_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F13BB0620FEDDF50005E120 /* FSNotesCore_macOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FSNotesCore_macOS.h; sourceTree = "<group>"; };
 		6F13BB0720FEDDF50005E120 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F13BB2820FEDE230005E120 /* DateFormatter+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+.swift"; sourceTree = "<group>"; };
 		6F13BB2920FEDE230005E120 /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
 		6F13BB2A20FEDE230005E120 /* URL+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+.swift"; sourceTree = "<group>"; };
 		6F13BB3820FEDE230005E120 /* UserDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataService.swift; sourceTree = "<group>"; };
-		8F2EBC009F0240F232497C56 /* Pods_FSNotes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FSNotes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A3A1646B15AD6086E1B481A /* Pods-MiaoYan (iCloud Documents).debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYan (iCloud Documents).debug.xcconfig"; path = "Target Support Files/Pods-MiaoYan (iCloud Documents)/Pods-MiaoYan (iCloud Documents).debug.xcconfig"; sourceTree = "<group>"; };
 		8F7136ED23490CBF004DFA6E /* Markdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Markdown.swift; sourceTree = "<group>"; };
 		932F95B6D89E83ED68221FE6 /* Pods-FSNotes (Notarized).debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FSNotes (Notarized).debug.xcconfig"; path = "Target Support Files/Pods-FSNotes (Notarized)/Pods-FSNotes (Notarized).debug.xcconfig"; sourceTree = "<group>"; };
 		9AA6F8CCDEB90F200DCC9790 /* Pods-FSNotesCore macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FSNotesCore macOS.debug.xcconfig"; path = "Target Support Files/Pods-FSNotesCore macOS/Pods-FSNotesCore macOS.debug.xcconfig"; sourceTree = "<group>"; };
+		9CA350BE056203AC40E511E2 /* Pods-MiaoYan.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYan.debug.xcconfig"; path = "Target Support Files/Pods-MiaoYan/Pods-MiaoYan.debug.xcconfig"; sourceTree = "<group>"; };
 		B22A82E1B99B4D5148437393 /* Pods_FSNotesCore_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FSNotesCore_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE784A2C7701AD88AEA08727 /* Pods-MiaoYan (iCloud Documents).release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYan (iCloud Documents).release.xcconfig"; path = "Target Support Files/Pods-MiaoYan (iCloud Documents)/Pods-MiaoYan (iCloud Documents).release.xcconfig"; sourceTree = "<group>"; };
 		D1924467F1578DE60F76C854 /* Pods-FSNotes (Notarized).release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FSNotes (Notarized).release.xcconfig"; path = "Target Support Files/Pods-FSNotes (Notarized)/Pods-FSNotes (Notarized).release.xcconfig"; sourceTree = "<group>"; };
 		D3E216DE8167EBE2F6D024DC /* Pods-FSNotes (iCloud Documents).release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FSNotes (iCloud Documents).release.xcconfig"; path = "Target Support Files/Pods-FSNotes (iCloud Documents)/Pods-FSNotes (iCloud Documents).release.xcconfig"; sourceTree = "<group>"; };
 		D70255FE2333CFA0003857AF /* quote.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = quote.png; sourceTree = "<group>"; };
@@ -703,22 +672,15 @@
 		D7F95F391FF2759300E2A447 /* NotesTextProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesTextProcessor.swift; sourceTree = "<group>"; };
 		D7FAE29922DDDCF2003874D1 /* inbox_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inbox_white.png; sourceTree = "<group>"; };
 		D7FAE29A22DDDCF2003874D1 /* inbox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inbox.png; sourceTree = "<group>"; };
+		DC1475E2A9640231EE69ACBB /* Pods-MiaoYan.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYan.release.xcconfig"; path = "Target Support Files/Pods-MiaoYan/Pods-MiaoYan.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		6F13BB0120FEDDF40005E120 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				AE29821E4750B1E65B616E40 /* Pods_FSNotesCore_macOS.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		D7793C6C1F211C6000CA39B7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				41601C1E10E4A5EC50052E18 /* Pods_FSNotes.framework in Frameworks */,
+				363205DB90CC8E8DE36EC1E4 /* Pods_MiaoYan.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -726,7 +688,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E876E42EFE068A053134C163 /* Pods_FSNotes__iCloud_Documents_.framework in Frameworks */,
+				CCCBA3BDD67ECB3AE896915A /* Pods_MiaoYan__iCloud_Documents_.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -744,6 +706,10 @@
 				D3E216DE8167EBE2F6D024DC /* Pods-FSNotes (iCloud Documents).release.xcconfig */,
 				9AA6F8CCDEB90F200DCC9790 /* Pods-FSNotesCore macOS.debug.xcconfig */,
 				15281A2CAF2CD031114BCE82 /* Pods-FSNotesCore macOS.release.xcconfig */,
+				9CA350BE056203AC40E511E2 /* Pods-MiaoYan.debug.xcconfig */,
+				DC1475E2A9640231EE69ACBB /* Pods-MiaoYan.release.xcconfig */,
+				7A3A1646B15AD6086E1B481A /* Pods-MiaoYan (iCloud Documents).debug.xcconfig */,
+				CE784A2C7701AD88AEA08727 /* Pods-MiaoYan (iCloud Documents).release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -828,10 +794,10 @@
 				D77671B71FACEDDE00DDF28D /* MASShortcut.framework */,
 				D74922111FACE9B100C45108 /* Down.framework */,
 				D72E05861F5220D300977D02 /* Down.framework */,
-				8F2EBC009F0240F232497C56 /* Pods_FSNotes.framework */,
 				3CD37DA957EBBE76F7C571B5 /* Pods_FSNotes__Notarized_.framework */,
-				20075972AA2A53C964752E5C /* Pods_FSNotes__iCloud_Documents_.framework */,
 				B22A82E1B99B4D5148437393 /* Pods_FSNotesCore_macOS.framework */,
+				3D4AED6B28D1F5BDB15F4E76 /* Pods_MiaoYan.framework */,
+				685AACFD072932BD692B5BD4 /* Pods_MiaoYan__iCloud_Documents_.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -959,7 +925,8 @@
 				D7793C711F211C6000CA39B7 /* MiaoYan */,
 				C5F4774EAA923C4003B182F8 /* Frameworks */,
 				32CE416A4DFCDD098D5DAF53 /* Pods */,
-				27A1212C244176470016A14B /* FSNotesCore_macOS.framework */,
+				27A1212E244227650016A14B /* MiaoYan.app */,
+				27A1212F244227650016A14B /* MiaoYan.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1195,38 +1162,7 @@
 		};
 /* End PBXGroup section */
 
-/* Begin PBXHeadersBuildPhase section */
-		6F13BAFF20FEDDF40005E120 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				6F13BB1620FEDDF50005E120 /* FSNotesCore_macOS.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
-
 /* Begin PBXNativeTarget section */
-		6F13BB0320FEDDF40005E120 /* FSNotesCore macOS */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 6F13BB2020FEDDF50005E120 /* Build configuration list for PBXNativeTarget "FSNotesCore macOS" */;
-			buildPhases = (
-				E455DB381CF1C8CED1820400 /* [CP] Check Pods Manifest.lock */,
-				6F13BAFF20FEDDF40005E120 /* Headers */,
-				6F13BB0020FEDDF40005E120 /* Sources */,
-				6F13BB0120FEDDF40005E120 /* Frameworks */,
-				6F13BB0220FEDDF40005E120 /* Resources */,
-				6F13BB7720FEE3500005E120 /* SwiftLint */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "FSNotesCore macOS";
-			productName = "FSNotesCore macOS";
-			productReference = 27A1212C244176470016A14B /* FSNotesCore_macOS.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 		D7793C6E1F211C6000CA39B7 /* MiaoYan */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D7793C951F211C6000CA39B7 /* Build configuration list for PBXNativeTarget "MiaoYan" */;
@@ -1242,11 +1178,10 @@
 			buildRules = (
 			);
 			dependencies = (
-				6F13BB1820FEDDF50005E120 /* PBXTargetDependency */,
 			);
 			name = MiaoYan;
 			productName = FSNotes;
-			productReference = 27A1212B244176470016A14B /* MiaoYan.app */;
+			productReference = 27A1212E244227650016A14B /* MiaoYan.app */;
 			productType = "com.apple.product-type.application";
 		};
 		D7E81C2B1F925B5F00416A91 /* MiaoYan (iCloud Documents) */ = {
@@ -1267,7 +1202,7 @@
 			);
 			name = "MiaoYan (iCloud Documents)";
 			productName = FSNotes;
-			productReference = 27A1212D244176470016A14B /* MiaoYan.app */;
+			productReference = 27A1212F244227650016A14B /* MiaoYan.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1280,11 +1215,6 @@
 				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Oleksandr Glushchenko";
 				TargetAttributes = {
-					6F13BB0320FEDDF40005E120 = {
-						CreatedOnToolsVersion = 10.0;
-						LastSwiftMigration = 1020;
-						ProvisioningStyle = Manual;
-					};
 					D7793C6E1F211C6000CA39B7 = {
 						CreatedOnToolsVersion = 9.0;
 						LastSwiftMigration = 0920;
@@ -1340,20 +1270,11 @@
 			targets = (
 				D7793C6E1F211C6000CA39B7 /* MiaoYan */,
 				D7E81C2B1F925B5F00416A91 /* MiaoYan (iCloud Documents) */,
-				6F13BB0320FEDDF40005E120 /* FSNotesCore macOS */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		6F13BB0220FEDDF40005E120 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D77F1820220F47FB00716DE3 /* InfoPlist.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		D7793C6D1F211C6000CA39B7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1548,26 +1469,12 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-FSNotes-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-MiaoYan-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
-		};
-		6F13BB7720FEE3500005E120 /* SwiftLint */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = SwiftLint;
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if which swiftlint >/dev/null; then\n    swiftlint\nelif which \"${PODS_ROOT}/SwiftLint/swiftlint\" >/dev/null; then\n    \"${PODS_ROOT}/SwiftLint/swiftlint\"\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 		87E69F0E68207EC309B3E16E /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1575,24 +1482,24 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FSNotes/Pods-FSNotes-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/MASShortcut/MASShortcut.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-MiaoYan/Pods-MiaoYan-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Highlightr/Highlightr.framework",
+				"${BUILT_PRODUCTS_DIR}/MASShortcut/MASShortcut.framework",
 				"${BUILT_PRODUCTS_DIR}/RNCryptor/RNCryptor.framework",
 				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
 				"${BUILT_PRODUCTS_DIR}/libcmark_gfm/libcmark_gfm.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MASShortcut.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Highlightr.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MASShortcut.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNCryptor.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libcmark_gfm.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FSNotes/Pods-FSNotes-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MiaoYan/Pods-MiaoYan-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		AA1F81879C8BEDA7FE7A2749 /* [CP] Check Pods Manifest.lock */ = {
@@ -1610,7 +1517,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-FSNotes (iCloud Documents)-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-MiaoYan (iCloud Documents)-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1623,78 +1530,29 @@
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-FSNotes (iCloud Documents)/Pods-FSNotes (iCloud Documents)-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/MASShortcut/MASShortcut.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-MiaoYan (iCloud Documents)/Pods-MiaoYan (iCloud Documents)-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Highlightr/Highlightr.framework",
+				"${BUILT_PRODUCTS_DIR}/MASShortcut/MASShortcut.framework",
 				"${BUILT_PRODUCTS_DIR}/RNCryptor/RNCryptor.framework",
 				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
 				"${BUILT_PRODUCTS_DIR}/libcmark_gfm/libcmark_gfm.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MASShortcut.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Highlightr.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MASShortcut.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNCryptor.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libcmark_gfm.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-FSNotes (iCloud Documents)/Pods-FSNotes (iCloud Documents)-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E455DB381CF1C8CED1820400 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-FSNotesCore macOS-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MiaoYan (iCloud Documents)/Pods-MiaoYan (iCloud Documents)-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		6F13BB0020FEDDF40005E120 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D730BD2C222DA97800E69C93 /* NoteType.swift in Sources */,
-				D7CDE9DF2161791200DC5978 /* AppearanceType.swift in Sources */,
-				D730BD32222DABA100E69C93 /* NoteContainer.swift in Sources */,
-				D7487FD6217389F800D09383 /* NSImage+.swift in Sources */,
-				D70D6CDF225D16D800A07A01 /* NSAppearance+.swift in Sources */,
-				D7DCFED12108D6910059B37B /* CoreNote.swift in Sources */,
-				D7218945210211D800FE3AF2 /* SortBy.swift in Sources */,
-				D7104A69230BD8E600B6D8EE /* SortDirection.swift in Sources */,
-				D721894121020DDF00FE3AF2 /* UserDefaultsManagement.swift in Sources */,
-				6F13BB6C20FEE04A0005E120 /* String+.swift in Sources */,
-				D7487F952173535200D09383 /* NSFont+.swift in Sources */,
-				D7487FE92174E5CB00D09383 /* NSAttributedStringKey+.swift in Sources */,
-				D752D80C23454750006842F9 /* NSTextAttachment+.swift in Sources */,
-				D730BD39222DB11E00E69C93 /* TextBundleInfo.swift in Sources */,
-				6F13BB7120FEE0DD0005E120 /* UserDataService.swift in Sources */,
-				D730BD42222EFFF900E69C93 /* Date+.swift in Sources */,
-				6F13BB6E20FEE04F0005E120 /* URL+.swift in Sources */,
-				D72189362102099B00FE3AF2 /* NSTextStorage+.swift in Sources */,
-				6F13BB6A20FEE0450005E120 /* DateFormatter+.swift in Sources */,
-				D7CD5CCB21820A380009D63B /* UserDefaultsManagement+.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		D7793C6B1F211C6000CA39B7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1891,14 +1749,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		6F13BB1820FEDDF50005E120 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 6F13BB0320FEDDF40005E120 /* FSNotesCore macOS */;
-			targetProxy = 6F13BB1720FEDDF50005E120 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
 		D70FE13120FE198200813F9E /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
@@ -1936,72 +1786,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		6F13BB1C20FEDDF50005E120 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9AA6F8CCDEB90F200DCC9790 /* Pods-FSNotesCore macOS.debug.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Manual;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = "FSNotesCore/Core macOS/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "co.fluder.FSNotesCore-macOS";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		6F13BB1D20FEDDF50005E120 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 15281A2CAF2CD031114BCE82 /* Pods-FSNotesCore macOS.release.xcconfig */;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Manual;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 866P6MTE92;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_NS_ASSERTIONS = NO;
-				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = "FSNotesCore/Core macOS/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "co.fluder.FSNotesCore-macOS";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
 		D7793C931F211C6000CA39B7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2121,7 +1905,7 @@
 		};
 		D7793C961F211C6000CA39B7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 267C288C6285BE9A6FAE0D0F /* Pods-FSNotes.debug.xcconfig */;
+			baseConfigurationReference = 9CA350BE056203AC40E511E2 /* Pods-MiaoYan.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2141,7 +1925,7 @@
 				INFOPLIST_FILE = MiaoYan/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_BUNDLE_IDENTIFIER = co.fluder.FSNotes;
+				PRODUCT_BUNDLE_IDENTIFIER = co.tw93.MiaoYan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
@@ -2153,7 +1937,7 @@
 		};
 		D7793C971F211C6000CA39B7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 312443807E38E0E5C6679DC9 /* Pods-FSNotes.release.xcconfig */;
+			baseConfigurationReference = DC1475E2A9640231EE69ACBB /* Pods-MiaoYan.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2175,7 +1959,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = co.fluder.FSNotes;
+				PRODUCT_BUNDLE_IDENTIFIER = co.tw93.MiaoYan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "MAS Distribution";
@@ -2187,7 +1971,7 @@
 		};
 		D7E81C581F925B5F00416A91 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5F5CE55D61ADD91D70DAEB0D /* Pods-FSNotes (iCloud Documents).debug.xcconfig */;
+			baseConfigurationReference = 7A3A1646B15AD6086E1B481A /* Pods-MiaoYan (iCloud Documents).debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "FSNotes/FSNotes (CloudKit).entitlements";
@@ -2221,7 +2005,7 @@
 		};
 		D7E81C591F925B5F00416A91 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D3E216DE8167EBE2F6D024DC /* Pods-FSNotes (iCloud Documents).release.xcconfig */;
+			baseConfigurationReference = CE784A2C7701AD88AEA08727 /* Pods-MiaoYan (iCloud Documents).release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "FSNotes/FSNotes (CloudKit).entitlements";
@@ -2257,15 +2041,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6F13BB2020FEDDF50005E120 /* Build configuration list for PBXNativeTarget "FSNotesCore macOS" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				6F13BB1C20FEDDF50005E120 /* Debug */,
-				6F13BB1D20FEDDF50005E120 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		D7793C6A1F211C6000CA39B7 /* Build configuration list for PBXProject "MiaoYan" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
