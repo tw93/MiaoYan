@@ -52,7 +52,6 @@ public class UserDefaultsManagement {
         static let AutomaticDashSubstitution = "automaticDashSubstitution"
         static let BackupManually = "backupManually"
         static let BgColorKey = "bgColorKeyed"
-        static let CellSpacing = "cellSpacing"
         static let CellFrameOriginY = "cellFrameOriginY"
         static let CodeFontNameKey = "codeFont"
         static let CodeFontSizeKey = "codeFontSize"
@@ -367,19 +366,7 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.HideOnDeactivate)
         }
     }
-    
-    static var cellSpacing: Int {
-        get {
-            if let cellSpacing = UserDefaults.standard.object(forKey: Constants.CellSpacing) {
-                return (cellSpacing as! NSNumber).intValue
-            } else {
-                return 33
-            }
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.CellSpacing)
-        }
-    }
+
         
     static var cellViewFrameOriginY: CGFloat? {        
         get {
@@ -1075,7 +1062,7 @@ public class UserDefaultsManagement {
                 return result
             }
 
-            return true
+            return false
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.FirstLineAsTitle)

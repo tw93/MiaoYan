@@ -16,10 +16,10 @@ class NoteCellView: NSTableCellView {
 
     public var note: Note?
     public var timestamp: Int64?
-
+    public let cellSpacing: CGFloat = 33
+    
     private let labelColor = NSColor(deviceRed: 0.6, green: 0.6, blue: 0.6, alpha: 1)
-    private var previewMaximumLineHeight: CGFloat = 14
-    private let previewLineSpacing: CGFloat = 2
+    
 
     public var tableView: NotesTableView? {
         get {
@@ -43,7 +43,7 @@ class NoteCellView: NSTableCellView {
         renderPin()
         udpateSelectionHighlight()
     
-        pin.frame.origin.y = CGFloat(-4) + CGFloat(UserDefaultsManagement.cellSpacing) + CGFloat(0)
+        pin.frame.origin.y = CGFloat(-4) + CGFloat(cellSpacing) + CGFloat(0)
     }
 
     public func configure(note: Note) {
