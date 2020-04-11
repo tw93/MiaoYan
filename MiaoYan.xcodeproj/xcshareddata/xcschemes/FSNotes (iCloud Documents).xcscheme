@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D7E81C2B1F925B5F00416A91"
                BuildableName = "FSNotes.app"
-               BlueprintName = "FSNotes (iCloud Documents)"
-               ReferencedContainer = "container:FSNotes.xcodeproj">
+               BlueprintName = "MiaoYan (iCloud Documents)"
+               ReferencedContainer = "container:MiaoYan.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -27,19 +27,17 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <Testables>
-      </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D7E81C2B1F925B5F00416A91"
             BuildableName = "FSNotes.app"
-            BlueprintName = "FSNotes (iCloud Documents)"
-            ReferencedContainer = "container:FSNotes.xcodeproj">
+            BlueprintName = "MiaoYan (iCloud Documents)"
+            ReferencedContainer = "container:MiaoYan.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
+      <Testables>
+      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -57,12 +55,10 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D7E81C2B1F925B5F00416A91"
             BuildableName = "FSNotes.app"
-            BlueprintName = "FSNotes (iCloud Documents)"
-            ReferencedContainer = "container:FSNotes.xcodeproj">
+            BlueprintName = "MiaoYan (iCloud Documents)"
+            ReferencedContainer = "container:MiaoYan.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -76,8 +72,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D7E81C2B1F925B5F00416A91"
             BuildableName = "FSNotes.app"
-            BlueprintName = "FSNotes (iCloud Documents)"
-            ReferencedContainer = "container:FSNotes.xcodeproj">
+            BlueprintName = "MiaoYan (iCloud Documents)"
+            ReferencedContainer = "container:MiaoYan.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

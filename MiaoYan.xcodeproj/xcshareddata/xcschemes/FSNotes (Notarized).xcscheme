@@ -17,7 +17,7 @@
                BlueprintIdentifier = "D75E337122462442006AD1C1"
                BuildableName = "FSNotes.app"
                BlueprintName = "FSNotes (Notarized)"
-               ReferencedContainer = "container:FSNotes.xcodeproj">
+               ReferencedContainer = "container:MiaoYan.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,7 +33,7 @@
             BlueprintIdentifier = "D75E337122462442006AD1C1"
             BuildableName = "FSNotes.app"
             BlueprintName = "FSNotes (Notarized)"
-            ReferencedContainer = "container:FSNotes.xcodeproj">
+            ReferencedContainer = "container:MiaoYan.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -56,7 +56,7 @@
             BlueprintIdentifier = "D75E337122462442006AD1C1"
             BuildableName = "FSNotes.app"
             BlueprintName = "FSNotes (Notarized)"
-            ReferencedContainer = "container:FSNotes.xcodeproj">
+            ReferencedContainer = "container:MiaoYan.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -73,7 +73,7 @@
             BlueprintIdentifier = "D75E337122462442006AD1C1"
             BuildableName = "FSNotes.app"
             BlueprintName = "FSNotes (Notarized)"
-            ReferencedContainer = "container:FSNotes.xcodeproj">
+            ReferencedContainer = "container:MiaoYan.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

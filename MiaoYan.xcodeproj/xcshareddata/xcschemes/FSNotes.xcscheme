@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D7793C6E1F211C6000CA39B7"
-               BuildableName = "FSNotes.app"
-               BlueprintName = "FSNotes"
-               ReferencedContainer = "container:FSNotes.xcodeproj">
+               BuildableName = "MiaoYan.app"
+               BlueprintName = "MiaoYan"
+               ReferencedContainer = "container:MiaoYan.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -31,9 +31,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D7793C6E1F211C6000CA39B7"
-            BuildableName = "FSNotes.app"
-            BlueprintName = "FSNotes"
-            ReferencedContainer = "container:FSNotes.xcodeproj">
+            BuildableName = "MiaoYan.app"
+            BlueprintName = "MiaoYan"
+            ReferencedContainer = "container:MiaoYan.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -54,9 +54,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D7793C6E1F211C6000CA39B7"
-            BuildableName = "FSNotes.app"
-            BlueprintName = "FSNotes"
-            ReferencedContainer = "container:FSNotes.xcodeproj">
+            BuildableName = "MiaoYan.app"
+            BlueprintName = "MiaoYan"
+            ReferencedContainer = "container:MiaoYan.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -71,9 +71,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D7793C6E1F211C6000CA39B7"
-            BuildableName = "FSNotes.app"
-            BlueprintName = "FSNotes"
-            ReferencedContainer = "container:FSNotes.xcodeproj">
+            BuildableName = "MiaoYan.app"
+            BlueprintName = "MiaoYan"
+            ReferencedContainer = "container:MiaoYan.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
