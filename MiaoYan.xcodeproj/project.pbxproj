@@ -447,9 +447,9 @@
 		267C288C6285BE9A6FAE0D0F /* Pods-FSNotes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FSNotes.debug.xcconfig"; path = "Target Support Files/Pods-FSNotes/Pods-FSNotes.debug.xcconfig"; sourceTree = "<group>"; };
 		275592961F3AE9B5006B8988 /* MainWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
 		2799407B218484C900727B20 /* TitleBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleBarView.swift; sourceTree = "<group>"; };
-		27CD79F7243B7C7F007327E0 /* FSNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = FSNotes.app; path = /Users/Tw93/www/MiaoYan/build/Debug/FSNotes.app; sourceTree = "<absolute>"; };
-		27CD79F8243B7C7F007327E0 /* FSNotesCore_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = FSNotesCore_macOS.framework; path = /Users/Tw93/www/MiaoYan/build/Debug/FSNotesCore_macOS.framework; sourceTree = "<absolute>"; };
-		27CD79F9243B7C7F007327E0 /* FSNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = FSNotes.app; path = /Users/Tw93/www/MiaoYan/build/Debug/FSNotes.app; sourceTree = "<absolute>"; };
+		27A1212B244176470016A14B /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiaoYan.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		27A1212C244176470016A14B /* FSNotesCore_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FSNotesCore_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		27A1212D244176470016A14B /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiaoYan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		312443807E38E0E5C6679DC9 /* Pods-FSNotes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FSNotes.release.xcconfig"; path = "Target Support Files/Pods-FSNotes/Pods-FSNotes.release.xcconfig"; sourceTree = "<group>"; };
 		3CD37DA957EBBE76F7C571B5 /* Pods_FSNotes__Notarized_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FSNotes__Notarized_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F5CE55D61ADD91D70DAEB0D /* Pods-FSNotes (iCloud Documents).debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FSNotes (iCloud Documents).debug.xcconfig"; path = "Target Support Files/Pods-FSNotes (iCloud Documents)/Pods-FSNotes (iCloud Documents).debug.xcconfig"; sourceTree = "<group>"; };
@@ -983,6 +983,9 @@
 				D7793C711F211C6000CA39B7 /* MiaoYan */,
 				C5F4774EAA923C4003B182F8 /* Frameworks */,
 				32CE416A4DFCDD098D5DAF53 /* Pods */,
+				27A1212B244176470016A14B /* MiaoYan.app */,
+				27A1212C244176470016A14B /* FSNotesCore_macOS.framework */,
+				27A1212D244176470016A14B /* MiaoYan.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1247,12 +1250,12 @@
 			);
 			name = "FSNotesCore macOS";
 			productName = "FSNotesCore macOS";
-			productReference = 27CD79F8243B7C7F007327E0 /* FSNotesCore_macOS.framework */;
+			productReference = 27A1212C244176470016A14B /* FSNotesCore_macOS.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		D7793C6E1F211C6000CA39B7 /* FSNotes */ = {
+		D7793C6E1F211C6000CA39B7 /* MiaoYan */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D7793C951F211C6000CA39B7 /* Build configuration list for PBXNativeTarget "FSNotes" */;
+			buildConfigurationList = D7793C951F211C6000CA39B7 /* Build configuration list for PBXNativeTarget "MiaoYan" */;
 			buildPhases = (
 				262A4AB937367FE4AA6909D2 /* [CP] Check Pods Manifest.lock */,
 				D7793C6B1F211C6000CA39B7 /* Sources */,
@@ -1267,14 +1270,14 @@
 			dependencies = (
 				6F13BB1820FEDDF50005E120 /* PBXTargetDependency */,
 			);
-			name = FSNotes;
+			name = MiaoYan;
 			productName = FSNotes;
-			productReference = 27CD79F7243B7C7F007327E0 /* FSNotes.app */;
+			productReference = 27A1212B244176470016A14B /* MiaoYan.app */;
 			productType = "com.apple.product-type.application";
 		};
-		D7E81C2B1F925B5F00416A91 /* FSNotes (iCloud Documents) */ = {
+		D7E81C2B1F925B5F00416A91 /* MiaoYan (iCloud Documents) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D7E81C571F925B5F00416A91 /* Build configuration list for PBXNativeTarget "FSNotes (iCloud Documents)" */;
+			buildConfigurationList = D7E81C571F925B5F00416A91 /* Build configuration list for PBXNativeTarget "MiaoYan (iCloud Documents)" */;
 			buildPhases = (
 				AA1F81879C8BEDA7FE7A2749 /* [CP] Check Pods Manifest.lock */,
 				D7E81C2D1F925B5F00416A91 /* Sources */,
@@ -1288,9 +1291,9 @@
 			);
 			dependencies = (
 			);
-			name = "FSNotes (iCloud Documents)";
+			name = "MiaoYan (iCloud Documents)";
 			productName = FSNotes;
-			productReference = 27CD79F9243B7C7F007327E0 /* FSNotes.app */;
+			productReference = 27A1212D244176470016A14B /* MiaoYan.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1347,7 +1350,7 @@
 					};
 				};
 			};
-			buildConfigurationList = D7793C6A1F211C6000CA39B7 /* Build configuration list for PBXProject "FSNotes" */;
+			buildConfigurationList = D7793C6A1F211C6000CA39B7 /* Build configuration list for PBXProject "MiaoYan" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -1361,8 +1364,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D7793C6E1F211C6000CA39B7 /* FSNotes */,
-				D7E81C2B1F925B5F00416A91 /* FSNotes (iCloud Documents) */,
+				D7793C6E1F211C6000CA39B7 /* MiaoYan */,
+				D7E81C2B1F925B5F00416A91 /* MiaoYan (iCloud Documents) */,
 				6F13BB0320FEDDF40005E120 /* FSNotesCore macOS */,
 			);
 		};
@@ -2244,7 +2247,7 @@
 				MARKETING_VERSION = 4.0.25;
 				OTHER_SWIFT_FLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = co.fluder.FSNotes;
-				PRODUCT_NAME = FSNotes;
+				PRODUCT_NAME = MiaoYan;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
@@ -2279,7 +2282,7 @@
 				MARKETING_VERSION = 4.0.25;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = co.fluder.FSNotes;
-				PRODUCT_NAME = FSNotes;
+				PRODUCT_NAME = MiaoYan;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
@@ -2301,7 +2304,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D7793C6A1F211C6000CA39B7 /* Build configuration list for PBXProject "FSNotes" */ = {
+		D7793C6A1F211C6000CA39B7 /* Build configuration list for PBXProject "MiaoYan" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D7793C931F211C6000CA39B7 /* Debug */,
@@ -2310,7 +2313,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D7793C951F211C6000CA39B7 /* Build configuration list for PBXNativeTarget "FSNotes" */ = {
+		D7793C951F211C6000CA39B7 /* Build configuration list for PBXNativeTarget "MiaoYan" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D7793C961F211C6000CA39B7 /* Debug */,
@@ -2319,7 +2322,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D7E81C571F925B5F00416A91 /* Build configuration list for PBXNativeTarget "FSNotes (iCloud Documents)" */ = {
+		D7E81C571F925B5F00416A91 /* Build configuration list for PBXNativeTarget "MiaoYan (iCloud Documents)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D7E81C581F925B5F00416A91 /* Debug */,
