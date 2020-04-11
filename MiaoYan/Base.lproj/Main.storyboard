@@ -685,20 +685,20 @@ CA
                         <outlet property="delegate" destination="Voe-Tx-rLC" id="PrD-fu-P6m"/>
                     </connections>
                 </application>
-                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="FSNotes" customModuleProvider="target"/>
+                <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="MiaoYan" customModuleProvider="target"/>
                 <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
-                <customObject id="N0L-g4-qwj" customClass="EditTextView" customModule="FSNotes" customModuleProvider="target">
+                <customObject id="N0L-g4-qwj" customClass="EditTextView" customModule="MiaoYan" customModuleProvider="target">
                     <connections>
                         <outlet property="previewMathJax" destination="KIz-OO-IQT" id="uaZ-ad-ayL"/>
                     </connections>
                 </customObject>
-                <customObject id="L4m-js-agn" customClass="ViewController" customModule="FSNotes" customModuleProvider="target">
+                <customObject id="L4m-js-agn" customClass="ViewController" customModule="MiaoYan" customModuleProvider="target">
                     <connections>
                         <outlet property="sortByOutlet" destination="rHB-xF-GgG" id="Z3o-fD-Poh"/>
                     </connections>
                 </customObject>
-                <customObject id="3kq-Pd-JKK" customClass="SidebarCellView" customModule="FSNotes" customModuleProvider="target"/>
-                <customObject id="yxb-XH-bXh" customClass="SidebarProjectView" customModule="FSNotes" customModuleProvider="target"/>
+                <customObject id="3kq-Pd-JKK" customClass="SidebarCellView" customModule="MiaoYan" customModuleProvider="target"/>
+                <customObject id="yxb-XH-bXh" customClass="SidebarProjectView" customModule="MiaoYan" customModuleProvider="target"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <userDefaultsController representsSharedInstance="YES" id="rlq-iU-PD6"/>
             </objects>
@@ -707,7 +707,7 @@ CA
         <!--Window Controller-->
         <scene sceneID="mVP-iC-cBD">
             <objects>
-                <windowController storyboardIdentifier="Preferences" showSeguePresentationStyle="single" id="Ozi-at-KZg" customClass="PrefsWindowController" customModule="FSNotes" customModuleProvider="target" sceneMemberID="viewController">
+                <windowController storyboardIdentifier="Preferences" showSeguePresentationStyle="single" id="Ozi-at-KZg" customClass="PrefsWindowController" customModule="MiaoYan" customModuleProvider="target" sceneMemberID="viewController">
                     <window key="window" title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="PrefsWindow" animationBehavior="default" id="ldu-U8-PD1">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
                         <rect key="contentRect" x="196" y="240" width="480" height="270"/>
@@ -727,7 +727,7 @@ CA
         <!--Preferences-->
         <scene sceneID="jPb-fQ-VKL">
             <objects>
-                <tabViewController title="Preferences" selectedTabViewItemIndex="0" tabStyle="toolbar" id="tR0-Uj-4tB" customClass="PrefsViewController" customModule="FSNotes" customModuleProvider="target" sceneMemberID="viewController">
+                <tabViewController title="Preferences" selectedTabViewItemIndex="0" tabStyle="toolbar" id="tR0-Uj-4tB" customClass="PrefsViewController" customModule="MiaoYan" customModuleProvider="target" sceneMemberID="viewController">
                     <tabViewItems>
                         <tabViewItem identifier="" image="NSPreferencesGeneral" id="rNR-GY-ptT" userLabel="General">
                             <nil key="label"/>
@@ -762,7 +762,7 @@ CA
         <!--General-->
         <scene sceneID="8BR-f0-7JZ">
             <objects>
-                <viewController title="General" id="NHv-lG-vxt" customClass="PreferencesGeneralViewController" customModule="FSNotes" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="General" id="NHv-lG-vxt" customClass="PreferencesGeneralViewController" customModule="MiaoYan" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="4Xk-4f-czc">
                         <rect key="frame" x="0.0" y="0.0" width="476" height="413"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -771,7 +771,7 @@ CA
                                 <rect key="frame" x="267" y="206" width="133" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" placeholderString="TextEdit" drawsBackground="YES" id="1XY-bI-DX7">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -784,7 +784,7 @@ CA
                                 <rect key="frame" x="51" y="208" width="192" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Open in external editor:" id="zcY-e5-gKs">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -793,7 +793,7 @@ CA
                                 <rect key="frame" x="266" y="272" width="180" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Format:" id="ctD-Qn-kDS">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -810,7 +810,7 @@ CA
                                 <rect key="frame" x="49" y="356" width="367" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Default storage:" id="fmS-eE-nne">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -820,7 +820,7 @@ CA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Change" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="nBn-aV-7mt">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="changeDefaultStorage:" target="NHv-lG-vxt" id="LS1-05-YQG"/>
@@ -830,7 +830,7 @@ CA
                                 <rect key="frame" x="53" y="317" width="269" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <pathCell key="cell" selectable="YES" editable="YES" alignment="left" id="3NY-lU-xWa">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <url key="url" string="file://localhost/Applications/"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </pathCell>
@@ -840,7 +840,7 @@ CA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Show icon in dock" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="bJv-E9-bwW">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="showDockIcon:" target="NHv-lG-vxt" id="yme-jU-zR0"/>
@@ -858,7 +858,7 @@ CA
                                 <rect key="frame" x="264" y="77" width="194" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Save clipboard shortcut:" id="gbE-yH-ECm">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -867,7 +867,7 @@ CA
                                 <rect key="frame" x="51" y="77" width="195" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Search shortcut:" id="a6n-hz-V8D">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -877,7 +877,7 @@ CA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Show icon in menu bar" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="SSY-US-gmJ">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="showInMenuBar:" target="NHv-lG-vxt" id="GvJ-V1-oZo"/>
@@ -888,7 +888,7 @@ CA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Recognize .txt as markdown" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="XDU-eb-M17">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="txtAsMarkdown:" target="NHv-lG-vxt" id="jh4-PN-lqJ"/>
@@ -899,7 +899,7 @@ CA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <popUpButtonCell key="cell" type="push" title="TextBundle" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="3" imageScaling="proportionallyDown" inset="2" selectedItem="MCR-1v-3Wc" id="u6Y-Is-Nwm">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <menu key="menu" id="kGi-nO-Y2a">
                                         <items>
                                             <menuItem title="TextBundle" state="on" tag="3" id="MCR-1v-3Wc"/>
@@ -920,7 +920,7 @@ CA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <popUpButtonCell key="cell" type="push" title="Markdown" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="1" imageScaling="proportionallyDown" inset="2" selectedItem="8yn-cx-Rtm" id="hn4-7g-SgF">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <menu key="menu" id="mhJ-sI-O6y">
                                         <items>
                                             <menuItem title="Markdown" state="on" tag="1" id="8yn-cx-Rtm"/>
@@ -939,7 +939,7 @@ CA
                                 <rect key="frame" x="51" y="272" width="92" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Container:" id="mXw-d9-js5">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -966,7 +966,7 @@ CA
         <!--Layout-->
         <scene sceneID="vmk-ef-Yif">
             <objects>
-                <viewController title="Layout" id="P2a-yk-5Rx" customClass="PreferencesUserInterfaceViewController" customModule="FSNotes" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Layout" id="P2a-yk-5Rx" customClass="PreferencesUserInterfaceViewController" customModule="MiaoYan" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="GGR-Nj-xCY">
                         <rect key="frame" x="0.0" y="0.0" width="467" height="460"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -975,7 +975,7 @@ CA
                                 <rect key="frame" x="53" y="287" width="68" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Note Font:" id="bJC-he-nDV">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -984,7 +984,7 @@ CA
                                 <rect key="frame" x="54" y="245" width="97" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Note Color:" id="8oP-79-BAN">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -997,7 +997,7 @@ CA
                                 <rect key="frame" x="127" y="282" width="184" height="26"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="Font preview" drawsBackground="YES" id="eKQ-lM-8Z4">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -1007,7 +1007,7 @@ CA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Set" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Ehk-CU-fbX">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="setFont:" target="P2a-yk-5Rx" id="WbJ-5i-YRP"/>
@@ -1018,7 +1018,7 @@ CA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Hide FSNotes when activating another application" bezelStyle="regularSquare" imagePosition="left" inset="2" id="M29-fW-FJa">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="changeHideOnDeactivate:" target="P2a-yk-5Rx" id="pLf-tU-K3P"/>
@@ -1030,7 +1030,7 @@ CA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Hide preview" bezelStyle="regularSquare" imagePosition="left" inset="2" id="F6G-ua-MNX">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="changePreview:" target="P2a-yk-5Rx" id="1AT-gZ-zaj"/>
@@ -1068,7 +1068,7 @@ CA
                                 <rect key="frame" x="243" y="245" width="81" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" baseWritingDirection="leftToRight" title="Background:" id="Psk-r4-JT5">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -1078,7 +1078,7 @@ CA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Note auto selection when body text matched" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="ZqK-gu-KdQ">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="textMatchAutoSelection:" target="P2a-yk-5Rx" id="6Zu-L1-DY5"/>
@@ -1093,7 +1093,7 @@ CA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Hide images preview" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="6AI-tL-TDI">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="hideImagesPreview:" target="P2a-yk-5Rx" id="yb9-xh-UFF"/>
@@ -1104,7 +1104,7 @@ CA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <popUpButtonCell key="cell" type="push" title="Small" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" tag="11" imageScaling="proportionallyDown" inset="2" selectedItem="8AQ-IN-Edm" id="Wo8-7N-6sB">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <menu key="menu" id="h03-jd-8ll">
                                         <items>
                                             <menuItem title="Big" tag="13" id="cUI-cw-eo5"/>
@@ -1122,7 +1122,7 @@ CA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="radio" title="Side" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="q7c-Fz-aaj">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="verticalOrientation:" target="P2a-yk-5Rx" id="mPR-KS-h3e"/>
@@ -1133,7 +1133,7 @@ CA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="radio" title="Top" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="K2F-dD-Jhr">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="horizontalOrientation:" target="P2a-yk-5Rx" id="7om-UR-dKS"/>
@@ -1143,7 +1143,7 @@ CA
                                 <rect key="frame" x="52" y="374" width="162" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Note list spacing:" id="bXK-wP-sZc">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -1153,7 +1153,7 @@ CA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Hide date" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="e15-ps-th1">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="hideDate:" target="P2a-yk-5Rx" id="ppm-oh-GQv"/>
@@ -1163,7 +1163,7 @@ CA
                                 <rect key="frame" x="52" y="347" width="165" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Preview font size:" id="xJQ-ch-Xlp">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -1173,7 +1173,7 @@ CA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="First line as title" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="tMJ-Dj-OZc">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="firstLineAsTitle:" target="P2a-yk-5Rx" id="xpg-88-OBx"/>
@@ -1187,7 +1187,7 @@ CA
                                 <rect key="frame" x="52" y="397" width="160" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Note list location:" id="54i-GK-spQ">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -1218,8 +1218,8 @@ CA
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
             <objects>
-                <windowController storyboardIdentifier="MainWindowController" id="B8D-0N-5wS" customClass="MainWindowController" customModule="FSNotes" customModuleProvider="target" sceneMemberID="viewController">
-                    <window key="window" title="FSNotes" allowsToolTipsWhenApplicationIsInactive="NO" restorable="NO" releasedWhenClosed="NO" frameAutosaveName="MainWindow" animationBehavior="default" tabbingMode="disallowed" titlebarAppearsTransparent="YES" id="IQv-IB-iLA" customClass="MainWindow" customModule="FSNotes" customModuleProvider="target">
+                <windowController storyboardIdentifier="MainWindowController" id="B8D-0N-5wS" customClass="MainWindowController" customModule="MiaoYan" customModuleProvider="target" sceneMemberID="viewController">
+                    <window key="window" title="FSNotes" allowsToolTipsWhenApplicationIsInactive="NO" restorable="NO" releasedWhenClosed="NO" frameAutosaveName="MainWindow" animationBehavior="default" tabbingMode="disallowed" titlebarAppearsTransparent="YES" id="IQv-IB-iLA" customClass="MainWindow" customModule="MiaoYan" customModuleProvider="target">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" texturedBackground="YES" fullSizeContentView="YES"/>
                         <rect key="contentRect" x="196" y="240" width="900" height="600"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
@@ -1238,15 +1238,15 @@ CA
         <!--View Controller-->
         <scene sceneID="hIz-AP-VOD">
             <objects>
-                <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="FSNotes" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="MiaoYan" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
                         <rect key="frame" x="0.0" y="0.0" width="951" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <splitView arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dO0-pK-Ktm" customClass="SidebarSplitView" customModule="FSNotes" customModuleProvider="target">
+                            <splitView arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dO0-pK-Ktm" customClass="SidebarSplitView" customModule="MiaoYan" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="951" height="600"/>
                                 <subviews>
-                                    <customView autoresizesSubviews="NO" misplaced="YES" id="5sB-7J-vgE" customClass="StorageView" customModule="FSNotes" customModuleProvider="target">
+                                    <customView autoresizesSubviews="NO" misplaced="YES" id="5sB-7J-vgE" customClass="StorageView" customModule="MiaoYan" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="144" height="600"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <subviews>
@@ -1255,9 +1255,9 @@ CA
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <clipView key="contentView" drawsBackground="NO" id="ceg-yR-Ncf">
                                                     <rect key="frame" x="0.0" y="0.0" width="144" height="600"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" autosaveColumns="NO" rowHeight="55" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="14" outlineTableColumn="Gwp-vX-YaR" id="urA-eK-bWB" customClass="SidebarProjectView" customModule="FSNotes" customModuleProvider="target">
+                                                        <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" autosaveColumns="NO" rowHeight="55" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="14" outlineTableColumn="Gwp-vX-YaR" id="urA-eK-bWB" customClass="SidebarProjectView" customModule="MiaoYan" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="144" height="562"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <size key="intercellSpacing" width="3" height="0.0"/>
@@ -1271,13 +1271,13 @@ CA
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                     </tableHeaderCell>
                                                                     <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="SFY-jB-hva">
-                                                                        <font key="font" metaFont="titleBar"/>
+                                                                        <font key="font" metaFont="system"/>
                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     </textFieldCell>
                                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                     <prototypeCellViews>
-                                                                        <tableCellView identifier="DataCell" id="I0q-sX-uBq" customClass="SidebarCellView" customModule="FSNotes" customModuleProvider="target">
+                                                                        <tableCellView identifier="DataCell" id="I0q-sX-uBq" customClass="SidebarCellView" customModule="MiaoYan" customModuleProvider="target">
                                                                             <rect key="frame" x="1" y="0.0" width="141" height="50"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <subviews>
@@ -1292,7 +1292,7 @@ CA
                                                                                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kTp-qw-RCd">
                                                                                     <rect key="frame" x="23" y="17" width="96" height="16"/>
                                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="2ZQ-YX-F9M">
-                                                                                        <font key="font" metaFont="titleBar"/>
+                                                                                        <font key="font" metaFont="system"/>
                                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                     </textFieldCell>
@@ -1328,7 +1328,7 @@ CA
                                                                                 <outlet property="textField" destination="kTp-qw-RCd" id="2KP-pc-Kir"/>
                                                                             </connections>
                                                                         </tableCellView>
-                                                                        <tableCellView identifier="HeaderCell" id="xN2-Aa-G21" customClass="SidebarHeaderCellView" customModule="FSNotes" customModuleProvider="target">
+                                                                        <tableCellView identifier="HeaderCell" id="xN2-Aa-G21" customClass="SidebarHeaderCellView" customModule="MiaoYan" customModuleProvider="target">
                                                                             <rect key="frame" x="1" y="50" width="141" height="55"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <subviews>
@@ -1336,7 +1336,7 @@ CA
                                                                                     <rect key="frame" x="1" y="20" width="141" height="16"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="aX0-yU-aew">
-                                                                                        <font key="font" metaFont="titleBar"/>
+                                                                                        <font key="font" metaFont="system"/>
                                                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                     </textFieldCell>
@@ -1367,7 +1367,7 @@ CA
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                             </scrollView>
-                                            <customView canDrawConcurrently="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vp7-cq-QSI" customClass="OutlineHeaderView" customModule="FSNotes" customModuleProvider="target">
+                                            <customView canDrawConcurrently="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vp7-cq-QSI" customClass="OutlineHeaderView" customModule="MiaoYan" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="562" width="144" height="38"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="38" id="9sA-Ak-h1e"/>
@@ -1381,21 +1381,21 @@ CA
                                             <constraint firstAttribute="width" relation="lessThanOrEqual" constant="250" id="tmy-ZK-4qh"/>
                                         </constraints>
                                     </customView>
-                                    <splitView fixedFrame="YES" arrangesAllSubviews="NO" autosaveName="" dividerStyle="thin" vertical="YES" id="yWu-3F-P62" customClass="EditorSplitView" customModule="FSNotes" customModuleProvider="target">
+                                    <splitView fixedFrame="YES" arrangesAllSubviews="NO" autosaveName="" dividerStyle="thin" vertical="YES" id="yWu-3F-P62" customClass="EditorSplitView" customModule="MiaoYan" customModuleProvider="target">
                                         <rect key="frame" x="145" y="0.0" width="806" height="600"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <subviews>
-                                            <customView autoresizesSubviews="NO" id="8ej-mX-KM6" customClass="SidebarNotesView" customModule="FSNotes" customModuleProvider="target">
+                                            <customView autoresizesSubviews="NO" id="8ej-mX-KM6" customClass="SidebarNotesView" customModule="MiaoYan" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="237" height="600"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                                 <subviews>
-                                                    <searchField wantsLayer="YES" verticalHuggingPriority="750" misplaced="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bd7-O3-GQF" customClass="SearchTextField" customModule="FSNotes" customModuleProvider="target">
+                                                    <searchField wantsLayer="YES" verticalHuggingPriority="750" misplaced="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bd7-O3-GQF" customClass="SearchTextField" customModule="MiaoYan" customModuleProvider="target">
                                                         <rect key="frame" x="8" y="550" width="220" height="22"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="22" id="Ptr-z2-0T0"/>
                                                         </constraints>
                                                         <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" placeholderString="Search or create" usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" sendsWholeSearchString="YES" id="B7t-9v-bSk">
-                                                            <font key="font" metaFont="titleBar"/>
+                                                            <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </searchFieldCell>
@@ -1404,9 +1404,9 @@ CA
                                                         <rect key="frame" x="0.0" y="0.0" width="237" height="542"/>
                                                         <clipView key="contentView" canDrawConcurrently="YES" focusRingType="none" drawsBackground="NO" id="MtJ-BC-rZB">
                                                             <rect key="frame" x="0.0" y="0.0" width="237" height="542"/>
-                                                            <autoresizingMask key="autoresizingMask"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" columnResizing="NO" autosaveColumns="NO" rowHeight="115" rowSizeStyle="automatic" viewBased="YES" id="8X8-yh-5EA" customClass="NotesTableView" customModule="FSNotes" customModuleProvider="target">
+                                                                <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" columnResizing="NO" autosaveColumns="NO" rowHeight="115" rowSizeStyle="automatic" viewBased="YES" id="8X8-yh-5EA" customClass="NotesTableView" customModule="MiaoYan" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="0.0" width="237" height="542"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <size key="intercellSpacing" width="1" height="1"/>
@@ -1419,20 +1419,20 @@ CA
                                                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                             </tableHeaderCell>
                                                                             <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="NiN-n8-Y4W">
-                                                                                <font key="font" metaFont="titleBar"/>
+                                                                                <font key="font" metaFont="system"/>
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             <prototypeCellViews>
-                                                                                <tableCellView identifier="NoteCellView" id="8qL-z4-nzh" customClass="NoteCellView" customModule="FSNotes" customModuleProvider="target">
+                                                                                <tableCellView identifier="NoteCellView" id="8qL-z4-nzh" customClass="NoteCellView" customModule="MiaoYan" customModuleProvider="target">
                                                                                     <rect key="frame" x="0.0" y="0.0" width="236" height="115"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <textField identifier="cellDate" autoresizesSubviews="NO" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="abw-Lq-K7d">
                                                                                             <rect key="frame" x="166" y="99" width="49" height="16"/>
                                                                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="2/23/11" id="9w3-fa-di3">
-                                                                                                <font key="font" metaFont="titleBar"/>
+                                                                                                <font key="font" metaFont="system"/>
                                                                                                 <color key="textColor" red="0.65995385362694303" green="0.1371187799261683" blue="0.15795969262071341" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                                 <color key="backgroundColor" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
                                                                                                 <connections>
@@ -1448,10 +1448,10 @@ CA
                                                                                             </constraints>
                                                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="pin" id="MIi-Yg-aUg"/>
                                                                                         </imageView>
-                                                                                        <textField autoresizesSubviews="NO" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EXQ-Ld-D5r" customClass="PreviewTextField" customModule="FSNotes" customModuleProvider="target">
+                                                                                        <textField autoresizesSubviews="NO" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EXQ-Ld-D5r" customClass="PreviewTextField" customModule="MiaoYan" customModuleProvider="target">
                                                                                             <rect key="frame" x="24" y="80" width="52" height="16"/>
                                                                                             <textFieldCell key="cell" continuous="YES" sendsActionOnEndEditing="YES" title="Preview" id="EC3-YF-sGZ">
-                                                                                                <font key="font" metaFont="titleBar"/>
+                                                                                                <font key="font" metaFont="system"/>
                                                                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                             </textFieldCell>
@@ -1480,10 +1480,10 @@ CA
                                                                                             </constraints>
                                                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="oaj-cY-2Rf"/>
                                                                                         </imageView>
-                                                                                        <textField identifier="cellName" autoresizesSubviews="NO" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UvD-jB-7Ok" customClass="NameTextField" customModule="FSNotes" customModuleProvider="target">
+                                                                                        <textField identifier="cellName" autoresizesSubviews="NO" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UvD-jB-7Ok" customClass="NameTextField" customModule="MiaoYan" customModuleProvider="target">
                                                                                             <rect key="frame" x="24" y="99" width="40" height="16"/>
                                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" state="on" alignment="left" title="Name" usesSingleLineMode="YES" id="y7T-Rc-etT">
-                                                                                                <font key="font" metaFont="titleBar"/>
+                                                                                                <font key="font" metaFont="system"/>
                                                                                                 <color key="textColor" name="mainText"/>
                                                                                                 <color key="backgroundColor" name="mainBackground"/>
                                                                                             </textFieldCell>
@@ -1551,17 +1551,17 @@ CA
                                                     <constraint firstItem="Kzf-Jh-YEb" firstAttribute="top" secondItem="bd7-O3-GQF" secondAttribute="bottom" constant="8" id="z4N-Ag-s6x"/>
                                                 </constraints>
                                             </customView>
-                                            <customView autoresizesSubviews="NO" misplaced="YES" id="at7-wA-VAS" customClass="EditorView" customModule="FSNotes" customModuleProvider="target">
+                                            <customView autoresizesSubviews="NO" misplaced="YES" id="at7-wA-VAS" customClass="EditorView" customModule="MiaoYan" customModuleProvider="target">
                                                 <rect key="frame" x="238" y="0.0" width="568" height="600"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
-                                                    <scrollView misplaced="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="qJO-7f-vkL" customClass="EditorScrollView" customModule="FSNotes" customModuleProvider="target">
+                                                    <scrollView misplaced="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="qJO-7f-vkL" customClass="EditorScrollView" customModule="MiaoYan" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="568" height="562"/>
                                                         <clipView key="contentView" canDrawConcurrently="YES" focusRingType="none" drawsBackground="NO" copiesOnScroll="NO" id="FJ2-Yo-v0A">
                                                             <rect key="frame" x="0.0" y="0.0" width="568" height="562"/>
-                                                            <autoresizingMask key="autoresizingMask"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <textView verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" allowsDocumentBackgroundColorChange="YES" allowsUndo="YES" allowsImageEditing="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" smartInsertDelete="YES" id="cmZ-KL-T9k" customClass="EditTextView" customModule="FSNotes" customModuleProvider="target">
+                                                                <textView verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" allowsDocumentBackgroundColorChange="YES" allowsUndo="YES" allowsImageEditing="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" linkDetection="YES" dataDetection="YES" dashSubstitution="YES" textReplacement="YES" smartInsertDelete="YES" id="cmZ-KL-T9k" customClass="EditTextView" customModule="MiaoYan" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="0.0" width="568" height="562"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -1586,13 +1586,13 @@ CA
                                                             <autoresizingMask key="autoresizingMask"/>
                                                         </scroller>
                                                     </scrollView>
-                                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="xSU-Mk-2F1" customClass="TitleBarView" customModule="FSNotes" customModuleProvider="target">
+                                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="xSU-Mk-2F1" customClass="TitleBarView" customModule="MiaoYan" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="562" width="462" height="38"/>
                                                         <subviews>
-                                                            <textField horizontalHuggingPriority="1" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="rZx-hk-GcJ" customClass="TitleTextField" customModule="FSNotes" customModuleProvider="target">
+                                                            <textField horizontalHuggingPriority="1" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="rZx-hk-GcJ" customClass="TitleTextField" customModule="MiaoYan" customModuleProvider="target">
                                                                 <rect key="frame" x="85" y="11" width="292" height="16"/>
                                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" enabled="NO" sendsActionOnEndEditing="YES" alignment="center" title="Title" drawsBackground="YES" id="O9K-a1-3eu">
-                                                                    <font key="font" metaFont="titleBar"/>
+                                                                    <font key="font" metaFont="system"/>
                                                                     <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="mainBackground"/>
                                                                 </textFieldCell>
@@ -1614,7 +1614,7 @@ CA
                                                                                 </constraints>
                                                                                 <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="NSLockLockedTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="aHW-dK-rqB">
                                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                                                    <font key="font" metaFont="titleBar"/>
+                                                                                    <font key="font" metaFont="system"/>
                                                                                 </buttonCell>
                                                                                 <connections>
                                                                                     <action selector="toggleNotesLock:" target="XfG-lQ-9wD" id="wku-AS-7EO"/>
@@ -1628,7 +1628,7 @@ CA
                                                                                 </constraints>
                                                                                 <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="NSQuickLookTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="Yk7-v6-QmI">
                                                                                     <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
-                                                                                    <font key="font" metaFont="titleBar"/>
+                                                                                    <font key="font" metaFont="system"/>
                                                                                 </buttonCell>
                                                                                 <connections>
                                                                                     <action selector="togglePreview:" target="XfG-lQ-9wD" id="Mf0-5U-8VP"/>
@@ -1638,7 +1638,7 @@ CA
                                                                                 <rect key="frame" x="50" y="0.0" width="11" height="16"/>
                                                                                 <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="NSShareTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="vLT-o6-WGO">
                                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                                                    <font key="font" metaFont="titleBar"/>
+                                                                                    <font key="font" metaFont="system"/>
                                                                                 </buttonCell>
                                                                                 <connections>
                                                                                     <action selector="shareSheet:" target="rPt-NT-nkU" id="Kfd-pJ-Bqc"/>
@@ -1870,7 +1870,7 @@ CA
         <!--Master Password View Controller-->
         <scene sceneID="6kq-pY-Hei">
             <objects>
-                <viewController storyboardIdentifier="MasterPasswordViewController" id="6ub-n9-nIJ" customClass="MasterPasswordViewController" customModule="FSNotes" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MasterPasswordViewController" id="6ub-n9-nIJ" customClass="MasterPasswordViewController" customModule="MiaoYan" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="9jJ-7H-xQA">
                         <rect key="frame" x="0.0" y="0.0" width="343" height="266"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1888,7 +1888,7 @@ CA
                                 <rect key="frame" x="154" y="185" width="169" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="rog-05-msC">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <allowedInputSourceLocales>
@@ -1900,7 +1900,7 @@ CA
                                 <rect key="frame" x="154" y="143" width="169" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="L9i-Do-dNi">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <allowedInputSourceLocales>
@@ -1912,7 +1912,7 @@ CA
                                 <rect key="frame" x="18" y="145" width="130" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Repeat password:" id="PLH-LL-geH">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -1921,7 +1921,7 @@ CA
                                 <rect key="frame" x="154" y="61" width="169" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="HDT-kS-v25">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -1930,7 +1930,7 @@ CA
                                 <rect key="frame" x="154" y="227" width="169" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <secureTextFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="WmH-4O-3xn">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     <allowedInputSourceLocales>
@@ -1942,7 +1942,7 @@ CA
                                 <rect key="frame" x="18" y="104" width="130" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Hint:" id="ioc-u5-XRA">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -1952,7 +1952,7 @@ CA
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GcP-oI-0b4">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <string key="keyEquivalent" base64-UTF8="YES">
 Gw
 </string>
@@ -1966,7 +1966,7 @@ Gw
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Change" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="frt-CF-STi">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="change:" target="6ub-n9-nIJ" id="iJr-SQ-Wpf"/>
@@ -1976,7 +1976,7 @@ Gw
                                 <rect key="frame" x="18" y="187" width="130" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="New password:" id="iNK-dg-n5E">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -1997,7 +1997,7 @@ Gw
         <!--Window Controller-->
         <scene sceneID="jsp-rc-Q9r">
             <objects>
-                <windowController storyboardIdentifier="About" id="fsj-A7-rSt" customClass="AboutWindowController" customModule="FSNotes" customModuleProvider="target" sceneMemberID="viewController">
+                <windowController storyboardIdentifier="About" id="fsj-A7-rSt" customClass="AboutWindowController" customModule="MiaoYan" customModuleProvider="target" sceneMemberID="viewController">
                     <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="qod-hp-9wd">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -2018,7 +2018,7 @@ Gw
         <!--About View Controller-->
         <scene sceneID="bm4-A4-SJq">
             <objects>
-                <viewController id="6OZ-zZ-7EL" customClass="AboutViewController" customModule="FSNotes" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="6OZ-zZ-7EL" customClass="AboutViewController" customModule="MiaoYan" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="stc-Pf-K3l">
                         <rect key="frame" x="0.0" y="0.0" width="443" height="469"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -2041,7 +2041,7 @@ Gw
                                 <rect key="frame" x="124" y="309" width="207" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Version" id="ELw-Y4-DV0">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2050,7 +2050,7 @@ Gw
                                 <rect key="frame" x="67" y="266" width="316" height="35"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" selectable="YES" alignment="center" title="Copyright © 2017-2020 Oleksandr Glushchenko. All rights reserved." id="0f7-Za-V0B">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2060,7 +2060,7 @@ Gw
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="bevel" title="🔗fsnotes/contributors" bezelStyle="regularSquare" alignment="center" focusRingType="none" imageScaling="proportionallyDown" inset="2" id="jQ1-6K-9ar">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="openContributorsPage:" target="6OZ-zZ-7EL" id="lH1-Ed-dtl"/>
@@ -2074,7 +2074,7 @@ Gw
                                 <rect key="frame" x="88" y="26" width="263" height="39"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" id="sWS-bo-99f">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <string key="title">Roman Kliuchkovych — kmstrr@gmail.com
 Baran Pirinçal – baranpirincal@gmail.com</string>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -2085,7 +2085,7 @@ Baran Pirinçal – baranpirincal@gmail.com</string>
                                 <rect key="frame" x="186" y="79" width="85" height="16"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Icons design:" id="FKf-Ph-LiA">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2098,7 +2098,7 @@ Baran Pirinçal – baranpirincal@gmail.com</string>
                                 <rect key="frame" x="187" y="232" width="76" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Translators:" id="13t-eQ-kOr">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2121,7 +2121,7 @@ Wonsup Yoon (pusnow@kaist.ac.kr)</string>
                                 <rect key="frame" x="31" y="112" width="157" height="110"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" selectable="YES" id="iKE-bp-SFG">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <string key="title">Deutsch 🇩🇪
 Ukrainian🇺🇦
 Spanish 🇪🇸
@@ -2145,7 +2145,7 @@ Korean 🇰🇷</string>
         <!--Project Settings View Controller-->
         <scene sceneID="dYK-AI-vld">
             <objects>
-                <viewController storyboardIdentifier="ProjectSettingsViewController" id="JOV-dV-hyG" customClass="ProjectSettingsViewController" customModule="FSNotes" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ProjectSettingsViewController" id="JOV-dV-hyG" customClass="ProjectSettingsViewController" customModule="MiaoYan" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="MgV-BT-LsD">
                         <rect key="frame" x="0.0" y="0.0" width="450" height="368"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -2155,7 +2155,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Close" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="7GB-y2-EMo">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="close:" target="JOV-dV-hyG" id="2bK-e1-O6V"/>
@@ -2165,7 +2165,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="36" y="318" width="109" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Sort by:" id="4cz-zj-dkH">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2174,7 +2174,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="34" y="115" width="107" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Visibility:" id="jrj-ea-xmm">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2184,7 +2184,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Show notes in &quot;Notes&quot; and &quot;Todo&quot; lists" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Zzw-01-JH7">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="showNotesInMainList:" target="JOV-dV-hyG" id="g1q-7q-gte"/>
@@ -2195,7 +2195,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Use first line as title" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="kbK-Um-cQk">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="firstLineAsTitle:" target="JOV-dV-hyG" id="6tE-fm-7hd"/>
@@ -2213,7 +2213,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="34" y="53" width="112" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Notes list:" id="Scc-aD-CFQ">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2222,7 +2222,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="36" y="197" width="110" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Direction:" id="QxK-39-9yF">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2232,7 +2232,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="radio" title="Ascending" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="EYG-WM-BFN">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="sortDirection:" target="JOV-dV-hyG" id="enk-hU-GOu"/>
@@ -2243,7 +2243,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="radio" title="Descending" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="TCI-Xs-mwm">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="sortDirection:" target="JOV-dV-hyG" id="tHk-pU-Gfm"/>
@@ -2258,7 +2258,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="radio" title="None (Use global settings)" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="oer-ZB-VOx">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="sortBy:" target="JOV-dV-hyG" id="b3k-ez-3cw"/>
@@ -2269,7 +2269,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="radio" title="Modification date" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="GCG-C6-9cg">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="sortBy:" target="JOV-dV-hyG" id="K4l-H0-YUF"/>
@@ -2280,7 +2280,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="radio" title="Creation date" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="PY8-lr-5qr">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="sortBy:" target="JOV-dV-hyG" id="ntI-JD-w1A"/>
@@ -2291,7 +2291,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="radio" title="Title" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="LPT-uW-BtF">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="sortBy:" target="JOV-dV-hyG" id="tq9-Nn-S8l"/>
@@ -2317,7 +2317,7 @@ Korean 🇰🇷</string>
         <!--Git-->
         <scene sceneID="1eZ-Wz-jcm">
             <objects>
-                <viewController title="Git" id="2un-du-hJz" customClass="PreferencesGitViewController" customModule="FSNotes" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Git" id="2un-du-hJz" customClass="PreferencesGitViewController" customModule="MiaoYan" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="ffx-Mm-mqT">
                         <rect key="frame" x="0.0" y="0.0" width="476" height="352"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -2326,7 +2326,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="52" y="263" width="268" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <pathCell key="cell" selectable="YES" editable="YES" alignment="left" id="JDg-Kg-pSb">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <url key="url" string="file://localhost/Applications/"/>
                                 </pathCell>
                             </pathControl>
@@ -2335,7 +2335,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Change" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="7xA-9l-dja">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="changeGitStorage:" target="2un-du-hJz" id="bBG-oB-FJY"/>
@@ -2346,7 +2346,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Show in Finder" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gra-E2-dYh">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="showFinder:" target="2un-du-hJz" id="OTg-rF-O3R"/>
@@ -2357,7 +2357,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Show in Terminal" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="o6a-px-wp7">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="showTerminal:" target="2un-du-hJz" id="WvY-Pt-zlF"/>
@@ -2371,7 +2371,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="52" y="167" width="375" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Automatic snapshots:" id="P31-Ka-9HV">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2380,7 +2380,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="220" y="102" width="48" height="22"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" title="1" drawsBackground="YES" id="kqJ-Fr-EeB">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2392,7 +2392,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="275" y="105" width="57" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="hour at" id="2Iq-vN-V2w">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2405,7 +2405,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="52" y="41" width="100" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Git version:" id="qiO-vb-B9L">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2424,7 +2424,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="radio" title="Back up manually" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="Ze0-SZ-STw">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="backupMethod:" target="2un-du-hJz" id="dsx-Rd-S4c"/>
@@ -2435,7 +2435,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="radio" title="Back up every" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="sAn-Wm-FfY">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="backupMethod:" target="2un-du-hJz" id="IoY-lD-QVk"/>
@@ -2445,7 +2445,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="338" y="102" width="47" height="22"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" title="5" drawsBackground="YES" id="oeL-rE-fXz">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2457,7 +2457,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="391" y="105" width="53" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="minutes" id="Bri-cl-z86">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2466,7 +2466,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="156" y="41" width="167" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="2.3.2" id="GxH-ZH-Hvr">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2489,7 +2489,7 @@ Korean 🇰🇷</string>
         <!--Editor-->
         <scene sceneID="cwg-C1-p0s">
             <objects>
-                <viewController title="Editor" id="ssC-ed-19K" customClass="PreferencesEditorViewController" customModule="FSNotes" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Editor" id="ssC-ed-19K" customClass="PreferencesEditorViewController" customModule="MiaoYan" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="GY1-6c-5uL">
                         <rect key="frame" x="0.0" y="0.0" width="474" height="469"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -2498,7 +2498,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="136" y="424" width="4" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" id="vNg-wB-rdP">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2508,7 +2508,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Code block live highlighting (app restart required)" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="xX0-9b-KDq">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="codeBlockHighlight:" target="ssC-ed-19K" id="Ygz-lW-YAb"/>
@@ -2518,7 +2518,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="49" y="284" width="170" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Line spacing:" id="iUm-Zm-zeg">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2543,7 +2543,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="49" y="379" width="172" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Code Theme:" id="6F0-Cb-DVX">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2561,7 +2561,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Set" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="7od-TM-cUB">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="setFont:" target="ssC-ed-19K" id="Ygn-jF-2Oi"/>
@@ -2572,7 +2572,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <popUpButtonCell key="cell" type="push" title="github" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="v1K-9W-2aB" id="ai1-t2-fc1">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <menu key="menu" id="OOr-cO-sjv">
                                         <items>
                                             <menuItem title="github" state="on" id="v1K-9W-2aB"/>
@@ -2607,7 +2607,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Live images preview" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="wG8-3A-BMJ">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="liveImagesPreview:" target="ssC-ed-19K" id="za5-Br-D6z"/>
@@ -2618,7 +2618,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Focus in editor when selecting note" bezelStyle="regularSquare" imagePosition="left" inset="2" id="r2R-xe-eCA">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="inEditorFocus:" target="ssC-ed-19K" id="c82-YY-k8f"/>
@@ -2629,7 +2629,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Restore cursor position" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="3iM-ZV-3Gf">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="restoreCursor:" target="ssC-ed-19K" id="jkE-NK-ZKJ"/>
@@ -2640,7 +2640,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Automatically insert closing braces and close quotes" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="ypO-g0-1Xo">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="autocloseBrackets:" target="ssC-ed-19K" id="uQX-DB-DoZ"/>
@@ -2651,7 +2651,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Use 4 spaces instead tab" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Poh-KB-4ws">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="spacesInsteadTab:" target="ssC-ed-19K" id="yhE-pe-9gN"/>
@@ -2661,7 +2661,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="49" y="344" width="159" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Code Font:" id="63m-us-3j9">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2670,7 +2670,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="152" y="342" width="126" height="22"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" title="Code Font" drawsBackground="YES" id="Shc-VO-eTc">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2688,7 +2688,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Scan inline tags" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="g5W-YF-jAC">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="inlineTags:" target="ssC-ed-19K" id="fuo-kZ-rZ9"/>
@@ -2698,7 +2698,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="49" y="260" width="172" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Line width:" id="Izt-6v-pKO">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2707,7 +2707,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="49" y="237" width="170" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Images width:" id="ltm-qj-nke">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2716,7 +2716,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="49" y="212" width="170" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Margin size: " id="r69-B6-vT3">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2746,7 +2746,7 @@ Korean 🇰🇷</string>
         <!--Advanced-->
         <scene sceneID="GUW-JY-WNb">
             <objects>
-                <viewController title="Advanced" id="mvt-gI-iG0" customClass="PreferencesAdvancedViewController" customModule="FSNotes" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Advanced" id="mvt-gI-iG0" customClass="PreferencesAdvancedViewController" customModule="MiaoYan" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="tJA-7g-MI3">
                         <rect key="frame" x="0.0" y="0.0" width="464" height="440"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -2755,7 +2755,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="52" y="349" width="265" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <pathCell key="cell" controlSize="small" selectable="YES" editable="YES" alignment="left" id="NNM-sq-Yp5">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <url key="url" string="file:///Applications/"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </pathCell>
@@ -2765,7 +2765,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Change" bezelStyle="rounded" alignment="center" controlSize="small" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="hGi-4f-mtY">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="changeArchiveStorage:" target="mvt-gI-iG0" id="6gI-sS-Gam"/>
@@ -2775,7 +2775,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="50" y="230" width="221" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Language (need app restart):" id="dZD-Db-KHs">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2785,7 +2785,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <popUpButtonCell key="cell" type="push" title="System" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="rSZ-Wo-Rtj" id="BZN-Xe-Atr">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <menu key="menu" id="iLc-AS-AqE">
                                         <items>
                                             <menuItem title="System" state="on" id="rSZ-Wo-Rtj"/>
@@ -2810,7 +2810,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="cmQ-0I-gTB">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <menu key="menu" id="IQ9-BV-ooL"/>
                                 </popUpButtonCell>
                                 <connections>
@@ -2834,7 +2834,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="50" y="377" width="170" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" title="Archive storage:" id="dys-2Q-lfZ">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -2853,7 +2853,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="radio" bezelStyle="regularSquare" imagePosition="left" inset="2" id="DwS-mH-qZ6">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="dockIcon:" target="mvt-gI-iG0" id="Tzm-Sx-GzD"/>
@@ -2874,7 +2874,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="radio" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="UsT-rs-mlR">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="dockIcon:" target="mvt-gI-iG0" id="YWP-6B-yB4"/>
@@ -2924,7 +2924,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Change" bezelStyle="rounded" alignment="center" borderStyle="border" inset="2" id="Yum-W4-OUy">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="changeMarkdownStyle:" target="mvt-gI-iG0" id="4LS-Ay-xUy"/>
@@ -2950,7 +2950,7 @@ Korean 🇰🇷</string>
         <!--Security-->
         <scene sceneID="dgo-jz-dll">
             <objects>
-                <viewController title="Security" id="PXw-YJ-q6A" customClass="PreferencesSecurityViewController" customModule="FSNotes" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Security" id="PXw-YJ-q6A" customClass="PreferencesSecurityViewController" customModule="MiaoYan" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="kQa-Jx-cRD">
                         <rect key="frame" x="0.0" y="0.0" width="492" height="352"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -2960,7 +2960,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Lock on sleep" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="Ve2-qz-vtH">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="lockOnSleep:" target="PXw-YJ-q6A" id="YR7-5n-mLl"/>
@@ -2971,7 +2971,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Lock on screen saver activated" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="IlF-tS-GFG">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="lockOnScreenActivated:" target="PXw-YJ-q6A" id="bz3-2A-GCi"/>
@@ -2982,7 +2982,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Lock when user switched" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="8dk-Cf-bSg">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="lockWhenSwitched:" target="PXw-YJ-q6A" id="8dJ-E3-kWk"/>
@@ -2992,7 +2992,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="49" y="290" width="389" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Auto-lock for encrypted notes:" id="fzY-c6-DaK">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -3006,7 +3006,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Allow Touch ID to unlock notes" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="KST-y3-KvM">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="allowTouchID:" target="PXw-YJ-q6A" id="Wxl-m2-01u"/>
@@ -3016,7 +3016,7 @@ Korean 🇰🇷</string>
                                 <rect key="frame" x="49" y="155" width="62" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Touch ID:" id="Nw2-km-iDW">
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -3026,7 +3026,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Save Master Password in Keychain" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="wM5-nS-jjt">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="saveInKeychain:" target="PXw-YJ-q6A" id="DTh-fX-VH3"/>
@@ -3041,7 +3041,7 @@ Korean 🇰🇷</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Change Master Password" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="3RO-C7-NOO">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="titleBar"/>
+                                    <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="openMasterPasswordWindow:" target="PXw-YJ-q6A" id="wnh-nx-9iE"/>
