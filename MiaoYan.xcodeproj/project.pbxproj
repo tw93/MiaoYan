@@ -562,7 +562,7 @@
 		D75DF63E21319993003C3059 /* todo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "todo@2x.png"; sourceTree = "<group>"; };
 		D75DF63F21319993003C3059 /* todo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = todo.png; sourceTree = "<group>"; };
 		D75DF64021319993003C3059 /* todo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "todo@3x.png"; sourceTree = "<group>"; };
-		D75E341122462442006AD1C1 /* FSNotes Info (Notarized).plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "FSNotes Info (Notarized).plist"; path = "/Users/fluder/src/fsnotes/FSNotes Info (Notarized).plist"; sourceTree = "<absolute>"; };
+		D75E341122462442006AD1C1 /* MiaoYan Info (Notarized).plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "MiaoYan Info (Notarized).plist"; path = "/Users/fluder/src/fsnotes/MiaoYan Info (Notarized).plist"; sourceTree = "<absolute>"; };
 		D75EE7F62078B22D0055F159 /* SidebarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarItem.swift; sourceTree = "<group>"; };
 		D75EE7F92078B3C00055F159 /* Sidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sidebar.swift; sourceTree = "<group>"; };
 		D75EE7FC2078C5460055F159 /* SidebarCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarCellView.swift; sourceTree = "<group>"; };
@@ -595,7 +595,7 @@
 		D7793C741F211C6000CA39B7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		D7793C791F211C6000CA39B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D7793C7B1F211C6000CA39B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D7793C7C1F211C6000CA39B7 /* FSNotes.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FSNotes.entitlements; sourceTree = "<group>"; };
+		D7793C7C1F211C6000CA39B7 /* MiaoYan.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MiaoYan.entitlements; sourceTree = "<group>"; };
 		D779C7BA1F415BE300FADEE1 /* PrefsWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefsWindowController.swift; sourceTree = "<group>"; };
 		D77B9E9A20DE53E0003FAA27 /* archive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = archive.png; sourceTree = "<group>"; };
 		D77CC040216A608500582B97 /* EditorScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorScrollView.swift; sourceTree = "<group>"; };
@@ -604,7 +604,7 @@
 		D78115642153C034004FA1CA /* add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add.png; sourceTree = "<group>"; };
 		D783B504208A1BFD00328A41 /* EditorSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorSplitView.swift; sourceTree = "<group>"; };
 		D78678CA2093AE10001A6620 /* UndoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UndoData.swift; sourceTree = "<group>"; };
-		D78D20D41F934C05006DBBC3 /* FSNotes (CloudKit).entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = "FSNotes (CloudKit).entitlements"; sourceTree = "<group>"; };
+		D78D20D41F934C05006DBBC3 /* MiaoYan (CloudKit).entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = "MiaoYan (CloudKit).entitlements"; sourceTree = "<group>"; };
 		D792297421A845B4005F468F /* ProjectSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSettingsViewController.swift; sourceTree = "<group>"; };
 		D7958A3B22EDA35700EDBDDC /* attach.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = attach.png; sourceTree = "<group>"; };
 		D797004B1F3DD10700BAD94D /* EditTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTextView.swift; sourceTree = "<group>"; };
@@ -1014,10 +1014,10 @@
 				D7793C781F211C6000CA39B7 /* Main.storyboard */,
 				D7465F27207F2CD600E46A52 /* Images.xcassets */,
 				D7793C7B1F211C6000CA39B7 /* Info.plist */,
-				D75E341122462442006AD1C1 /* FSNotes Info (Notarized).plist */,
+				D75E341122462442006AD1C1 /* MiaoYan Info (Notarized).plist */,
 				D70FE13120FE198200813F9E /* InfoPlist.strings */,
-				D7793C7C1F211C6000CA39B7 /* FSNotes.entitlements */,
-				D78D20D41F934C05006DBBC3 /* FSNotes (CloudKit).entitlements */,
+				D7793C7C1F211C6000CA39B7 /* MiaoYan.entitlements */,
+				D78D20D41F934C05006DBBC3 /* MiaoYan (CloudKit).entitlements */,
 				D730829123084340003185D1 /* MPreviewView.swift */,
 			);
 			path = MiaoYan;

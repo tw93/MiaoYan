@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D7E81C2B1F925B5F00416A91"
-               BuildableName = "FSNotes.app"
+               BuildableName = "MiaoYan.app"
                BlueprintName = "MiaoYan (iCloud Documents)"
                ReferencedContainer = "container:MiaoYan.xcodeproj">
             </BuildableReference>
@@ -31,7 +31,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D7E81C2B1F925B5F00416A91"
-            BuildableName = "FSNotes.app"
+            BuildableName = "MiaoYan.app"
             BlueprintName = "MiaoYan (iCloud Documents)"
             ReferencedContainer = "container:MiaoYan.xcodeproj">
          </BuildableReference>
@@ -54,7 +54,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D7E81C2B1F925B5F00416A91"
-            BuildableName = "FSNotes.app"
+            BuildableName = "MiaoYan.app"
             BlueprintName = "MiaoYan (iCloud Documents)"
             ReferencedContainer = "container:MiaoYan.xcodeproj">
          </BuildableReference>
@@ -71,7 +71,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D7E81C2B1F925B5F00416A91"
-            BuildableName = "FSNotes.app"
+            BuildableName = "MiaoYan.app"
             BlueprintName = "MiaoYan (iCloud Documents)"
             ReferencedContainer = "container:MiaoYan.xcodeproj">
          </BuildableReference>
