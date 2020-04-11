@@ -57,8 +57,8 @@ class TitleTextField: NSTextField {
             } else {
                 let alert = NSAlert()
                 alert.alertStyle = .critical
-                alert.informativeText = NSLocalizedString("File with name \"\(currentTitle)\" already exists!", comment: "")
-                alert.messageText = NSLocalizedString("Incorrect file name", comment: "")
+                alert.informativeText = NSLocalizedString("文件名称 \"\(currentTitle)\" 已经存在!", comment: "")
+                alert.messageText = NSLocalizedString("请换一个标题", comment: "")
                 alert.runModal()
             }
         }
@@ -85,7 +85,7 @@ class TitleTextField: NSTextField {
     public func updateNotesTableView() {
         guard let vc = ViewController.shared(), let note = EditTextView.note else { return }
 
-        if (note.container == .encryptedTextPack && !note.isUnlocked()) || !note.project.firstLineAsTitle {
+        if !note.project.firstLineAsTitle {
             vc.notesTableView.reloadRow(note: note)
         }
 
