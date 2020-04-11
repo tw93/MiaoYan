@@ -65,10 +65,10 @@
 "Enter Master Password" = "输入管理员密码";
 
 /* No comment provided by engineer. */
-"FSNotes [edit]" = "FSNotes [编辑]";
+"FSNotes [edit]" = "妙言 [编辑]";
 
 /* No comment provided by engineer. */
-"FSNotes [preview]" = "FSNotes [预览]";
+"FSNotes [preview]" = "妙言 [预览]";
 
 /* No comment provided by engineer. */
 "Header 1" = "Header 1";
@@ -143,7 +143,7 @@
 "Preferences" = "偏好设置";
 
 /* No comment provided by engineer. */
-"Quit FSNotes" = "退出FSNotes";
+"Quit FSNotes" = "退出妙言";
 
 /* Delete menu */
 "Remove" = "移除";
