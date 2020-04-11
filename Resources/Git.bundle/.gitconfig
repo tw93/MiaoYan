@@ -1,0 +1,7 @@
+[user]
+    name = FSNotes App
+    email = support@fsnot.es
+[core]
+    safecrlf = false
+[init]
+    templatedir = ~/templates

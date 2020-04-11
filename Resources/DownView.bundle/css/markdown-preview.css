@@ -1,0 +1,546 @@
+/*! normalize.css v4.1.1 | MIT License | github.com/necolas/normalize.css */
+
+progress,
+sub,
+sup {
+    vertical-align: baseline
+}
+button,
+hr,
+input {
+    overflow: visible
+}
+[type=checkbox],
+[type=radio],
+legend {
+    box-sizing: border-box;
+    padding: 0
+}
+html {
+    font-family: sans-serif;
+    -ms-text-size-adjust: 115%;
+    -webkit-text-size-adjust: 115%
+}
+body {
+    margin: 0
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+main,
+menu,
+nav,
+section,
+summary {
+    display: block
+}
+audio,
+canvas,
+progress,
+video {
+    display: inline-block
+}
+audio:not([controls]) {
+    display: none;
+    height: 0
+}
+[hidden],
+template {
+    display: none
+}
+a {
+    background-color: transparent;
+    cursor: pointer;
+    -webkit-text-decoration-skip: objects
+}
+a:active,
+a:hover {
+    outline-width: 0
+}
+abbr[title] {
+    border-bottom: none;
+    text-decoration: underline;
+    text-decoration: underline dotted
+}
+b,
+strong {
+    font-weight: bolder
+}
+dfn {
+    font-style: italic
+}
+h1 {
+    font-size: 2em;
+    margin: .67em 0
+}
+mark {
+    background-color: #ff0;
+    color: #000
+}
+small {
+    font-size: 80%
+}
+sub,
+sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative
+}
+sub {
+    bottom: -.25em
+}
+sup {
+    top: -.5em
+}
+img {
+    border-style: none
+}
+svg:not(:root) {
+    overflow: hidden
+}
+code,
+kbd,
+pre,
+samp {
+    font-family: monospace, monospace;
+    font-size: 1em
+}
+figure {
+    margin: 1em 40px
+}
+hr {
+    box-sizing: content-box;
+    height: 0
+}
+button,
+input,
+select,
+textarea {
+    font: inherit;
+    margin: 0
+}
+optgroup {
+    font-weight: 700
+}
+button,
+select {
+    text-transform: none
+}
+[type=reset],
+[type=submit],
+button,
+html [type=button] {
+    -webkit-appearance: button
+}
+[type=button]::-moz-focus-inner,
+[type=reset]::-moz-focus-inner,
+[type=submit]::-moz-focus-inner,
+button::-moz-focus-inner {
+    border-style: none;
+    padding: 0
+}
+[type=button]:-moz-focusring,
+[type=reset]:-moz-focusring,
+[type=submit]:-moz-focusring,
+button:-moz-focusring {
+    outline: ButtonText dotted 1px
+}
+fieldset {
+    border: 1px solid silver;
+    margin: 0 2px;
+    padding: .35em .625em .75em
+}
+legend {
+    color: inherit;
+    display: table;
+    max-width: 100%;
+    white-space: normal
+}
+textarea {
+    overflow: auto
+}
+[type=number]::-webkit-inner-spin-button,
+[type=number]::-webkit-outer-spin-button {
+    height: auto
+}
+[type=search] {
+    -webkit-appearance: textfield;
+    outline-offset: -2px
+}
+[type=search]::-webkit-search-cancel-button,
+[type=search]::-webkit-search-decoration {
+    -webkit-appearance: none
+}
+::-webkit-input-placeholder {
+    color: inherit;
+    opacity: .54
+}
+::-webkit-file-upload-button {
+    -webkit-appearance: button;
+    font: inherit
+}
+/* Modified version of github.com/sindresorhus/github-markdown-css | MIT License */
+/* Unminify it @ unminify.com */
+
+hr,
+img {
+    box-sizing: content-box
+}
+body:after,
+body:before,
+hr::after,
+hr::before {
+    display: table;
+    content: ""
+}
+a,
+a:not([href]) {
+    text-decoration: none
+}
+blockquote,
+h6 {
+    color: #777
+}
+hr,
+svg:not(:root) {
+    overflow: hidden
+}
+dl,
+dl dt,
+hr,
+td,
+th {
+    padding: 0
+}
+table tr {
+    background-color: #fff
+}
+pre,
+pre code {
+    word-wrap: normal
+}
+body {
+    -ms-text-size-adjust: 115%;
+    -webkit-text-size-adjust: 115%;
+    color: #333;
+    font-family: "sans-serif", "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 0.9em;
+    line-height: 1.2;
+    word-wrap: break-word;
+    padding: 0.7rem
+}
+a {
+    background-color: transparent;
+    -webkit-text-decoration-skip: objects;
+    color: #4078c0
+}
+a:active,
+a:hover {
+    outline-width: 0;
+    text-decoration: underline
+}
+strong {
+    font-weight: bolder
+}
+h1 {
+    margin: .67em 0
+}
+img {
+    background: none;
+    border-radius: 3px;
+    border-style: none;
+    max-width: 100%
+}
+canvas {
+    border-radius: 3px;
+}
+h1,
+h2 {
+    padding-bottom: .3em;
+    border-bottom: 1px solid #eee
+}
+input {
+    margin: 0;
+    overflow: visible;
+    font: 13px/1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
+}
+[type=button]:-moz-focusring,
+[type=reset]:-moz-focusring,
+[type=submit]:-moz-focusring,
+button:-moz-focusring {
+    outline: ButtonText dotted 1px
+}
+[type=checkbox] {
+    box-sizing: border-box;
+    padding: 0
+}
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    display: block;
+    width: 100%;
+    overflow: auto;
+    word-break: normal;
+    word-break: keep-all
+}
+* {
+    box-sizing: border-box
+}
+body:after,
+hr::after {
+    clear: both
+}
+blockquote {
+    margin: 0;
+    padding: 0 15px;
+    border-left: 4px solid #ddd
+}
+ol ol,
+ul ol {
+    list-style-type: lower-roman
+}
+ol ol ol,
+ol ul ol,
+ul ol ol,
+ul ul ol {
+    list-style-type: lower-alpha
+}
+dd {
+    margin-left: 0
+}
+code,
+pre {
+    font: 13px Courier, monospace, "Liberation Mono", Menlo,
+}
+dl dt,
+table th {
+    font-weight: 700
+}
+body>:first-child {
+    margin-top: 0!important
+}
+dl dt,
+li>p {
+    margin-top: 16px
+}
+body>:last-child {
+    margin-bottom: 0!important
+}
+a:not([href]) {
+    color: inherit
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-top: 1em;
+    margin-bottom: 16px;
+    font-weight: 700;
+    line-height: 1.4
+}
+h1 {
+    font-size: 1.8em;
+    line-height: 1.2
+}
+h2 {
+    font-size: 1.6em;
+    line-height: 1.225
+}
+h3 {
+    font-size: 1.4em;
+    line-height: 1.43
+}
+h4 {
+    font-size: 1.2em
+}
+dl dt,
+h5,
+h6 {
+    font-size: 1em
+}
+blockquote,
+dl,
+ol,
+p,
+pre,
+table,
+ul {
+    margin-top: 0;
+    margin-bottom: 16px
+}
+hr {
+    background: #e7e7e7;
+    height: 4px;
+    margin: 16px 0;
+    border: 0
+}
+ol,
+ul {
+    padding-left: 2em
+}
+ol ol,
+ol ul,
+ul ol,
+ul ul {
+    margin-top: 0;
+    margin-bottom: 0
+}
+dl dt {
+    font-style: italic
+}
+dl dd {
+    padding: 0 16px;
+    margin-bottom: 16px
+}
+blockquote>:first-child {
+    margin-top: 0
+}
+blockquote>:last-child {
+    margin-bottom: 0
+}
+table td,
+table th {
+    padding: 6px 13px;
+    border: 1px solid #ddd
+}
+table tr {
+    border-top: 1px solid #ccc
+}
+table tr:nth-child(2n) {
+    background-color: #f8f8f8
+}
+code {
+    padding: .2em 0;
+    margin: 0;
+    font-size: 85%;
+    background-color: rgba(0, 0, 0, .04);
+    border-radius: 3px
+}
+pre code,
+pre>code {
+    padding: 0;
+    margin: 0;
+    border: 0
+}
+code:after,
+code:before {
+    letter-spacing: -.2em;
+    content: "\00a0"
+}
+pre>code {
+    font-size: 100%;
+    word-break: normal;
+    white-space: pre;
+    background: 0 0
+}
+pre code {
+    display: inline;
+    max-width: initial;
+    overflow: initial;
+    line-height: inherit;
+    background-color: transparent
+}
+pre code:after,
+pre code:before {
+    content: normal
+}
+kbd {
+    display: inline-block;
+    padding: 3px 5px;
+    font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    line-height: 10px;
+    color: #555;
+    vertical-align: middle;
+    background-color: #fcfcfc;
+    border: 1px solid #ccc;
+    border-bottom-color: #bbb;
+    border-radius: 3px;
+    box-shadow: inset 0 -1px 0 #bbb
+}
+:checked+.radio-label {
+    position: relative;
+    z-index: 1;
+    border-color: #4078c0
+}
+hr {
+    border-bottom-color: #eee
+}
+/*
+ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+ */
+
+.hljs{display:block;overflow-x:auto;padding:0.5em;color:#383a42;background:#fafafa}
+
+pre {
+    position: relative;
+}
+
+pre > .copyCode {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: white;
+    border-radius: 3px;
+    margin: 2px;
+    padding: 2px;
+    height: 18px;
+    border: 1px solid #AAAAAA;
+    transition: background 0.5s ease-out;
+}
+
+body > ul, body > ol {
+    margin-left: 0;
+    padding: 0;
+
+}
+    ul.cb  {
+        list-style-type: none;
+    }
+
+input[type='checkbox'] {
+    -webkit-appearance:none;
+    width:20px;
+    height:20px;
+    line-height: 14px;
+    border-radius:5px;
+    border:1px solid #555;
+    vertical-align: middle;
+}
+    input[type='checkbox'][disabled][checked]:after {
+        content:'✓';
+        position: absolute;
+        margin-left: 4px;
+        margin-top: 3px;
+        opacity: 1 !important;
+        font-family: 'Arial';
+        font-style: normal;
+        font-weight: normal;
+    }
+
+li {
+    list-style-position: inside;
+    line-height: 22px;
+}
+
+ul li p {
+    margin: 0;
+    padding: 0;
+}
+
+canvas {
+    display: block;
+    margin: 0 auto;
+}
+
+/* Mermaid center */
+
+code.language-mermaid {
+    display: block;
+    text-align: center;
+}

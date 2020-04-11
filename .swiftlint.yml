@@ -1,0 +1,7 @@
+included: # paths to include during linting. `--path` is ignored if present.
+  - FSNotesCore
+excluded: # paths to ignore during linting. Takes precedence over `included`.
+  - Pods
+
+line_length:
+  warning: 220
