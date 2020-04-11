@@ -28,11 +28,7 @@ public class Project: Equatable {
     public var showInCommon: Bool
     public var showInSidebar: Bool = true
 
-    #if os(iOS)
-    public var firstLineAsTitle: Bool = true
-    #else
     public var firstLineAsTitle: Bool = false
-    #endif
     
     init(url: URL, label: String? = nil, isTrash: Bool = false, isRoot: Bool = false, parent: Project? = nil, isDefault: Bool = false, isArchive: Bool = false, isExternal: Bool = false) {
         self.url = url.resolvingSymlinksInPath()
