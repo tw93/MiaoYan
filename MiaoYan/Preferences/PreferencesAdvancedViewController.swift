@@ -15,13 +15,9 @@ class PreferencesAdvancedViewController: NSViewController {
     }
 
     @IBOutlet weak var archivePathControl: NSPathControl!
-    @IBOutlet weak var languagePopUp: NSPopUpButton!
     @IBOutlet weak var version: NSTextField!
     @IBOutlet weak var appearance: NSPopUpButton!
     @IBOutlet weak var appearanceLabel: NSTextField!
-
-    @IBOutlet weak var dockIconFirst: NSButton!
-    @IBOutlet weak var dockIconSecond: NSButton!
 
     @IBOutlet weak var markdownPreviewCSS: NSPathControl!
 
@@ -51,29 +47,6 @@ class PreferencesAdvancedViewController: NSViewController {
         if let archiveDirectory = UserDefaultsManagement.archiveDirectory {
             archivePathControl.url = archiveDirectory
         }
-
-        let languages = [
-            LanguageType(rawValue: 0x00),
-            LanguageType(rawValue: 0x01),
-            LanguageType(rawValue: 0x02),
-            LanguageType(rawValue: 0x03),
-            LanguageType(rawValue: 0x04),
-            LanguageType(rawValue: 0x05),
-            LanguageType(rawValue: 0x06),
-            LanguageType(rawValue: 0x07)
-        ]
-
-        for language in languages {
-            if let lang = language?.description, let id = language?.rawValue {
-                languagePopUp.addItem(withTitle: lang)
-                languagePopUp.lastItem?.state = (id == UserDefaultsManagement.defaultLanguage) ? .on : .off
-
-                if id == UserDefaultsManagement.defaultLanguage {
-                    languagePopUp.selectItem(withTitle: lang)
-                }
-            }
-        }
-
         if #available(OSX 10.14, *) {
             appearance.selectItem(at: UserDefaultsManagement.appearanceType.rawValue)
         } else {
@@ -85,17 +58,6 @@ class PreferencesAdvancedViewController: NSViewController {
             let ver = dictionary["CFBundleShortVersionString"] as? String,
             let build = dictionary["CFBundleVersion"] as? String {
             version.stringValue = "v\(ver) build \(build)"
-        }
-
-        switch UserDefaultsManagement.dockIcon {
-        case 0:
-            dockIconFirst.state = .on
-            break
-        case 1:
-            dockIconSecond.state = .on
-            break
-        default:
-            dockIconFirst.state = .on
         }
 
         if let preview = UserDefaultsManagement.markdownPreviewCSS {
@@ -172,17 +134,6 @@ class PreferencesAdvancedViewController: NSViewController {
                 vc.refillEditArea()
             }
         }
-    }
-
-    @IBAction func languagePopUp(_ sender: NSPopUpButton) {
-        let type = LanguageType.withName(rawValue: sender.title)
-
-        UserDefaultsManagement.defaultLanguage = type.rawValue
-
-        UserDefaults.standard.set([type.code], forKey: "AppleLanguages")
-        UserDefaults.standard.synchronize()
-
-        restart()
     }
 
     private func restart() {

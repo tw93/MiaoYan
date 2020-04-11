@@ -16,16 +16,10 @@ class PreferencesGeneralViewController: NSViewController {
         super.viewWillAppear()
         preferredContentSize = NSSize(width: 476, height: 413)
     }
-
-    @IBOutlet var externalEditorApp: NSTextField!
     @IBOutlet var newNoteshortcutView: MASShortcutView!
     @IBOutlet var searchNotesShortcut: MASShortcutView!
     @IBOutlet weak var defaultStoragePath: NSPathControl!
-    @IBOutlet weak var showDockIcon: NSButton!
-    @IBOutlet weak var txtAsMarkdown: NSButton!
-    @IBOutlet weak var showInMenuBar: NSButton!
     @IBOutlet weak var fileFormat: NSPopUpButton!
-    @IBOutlet weak var fileContainer: NSPopUpButton!
 
     //MARK: global variables
 
@@ -39,21 +33,9 @@ class PreferencesGeneralViewController: NSViewController {
     override func viewDidAppear() {
         self.view.window!.title = NSLocalizedString("Preferences", comment: "")
 
-        externalEditorApp.stringValue = UserDefaultsManagement.externalEditor
-
         if let url = UserDefaultsManagement.storageUrl {
             defaultStoragePath.stringValue = url.path
         }
-
-        showDockIcon.state = UserDefaultsManagement.showDockIcon ? .on : .off
-
-        txtAsMarkdown.state = UserDefaultsManagement.txtAsMarkdown ? .on : .off
-
-        showInMenuBar.state = UserDefaultsManagement.showInMenuBar ? .on : .off
-
-        fileFormat.selectItem(withTag: UserDefaultsManagement.fileFormat.tag)
-
-        fileContainer.selectItem(withTag: UserDefaultsManagement.fileContainer.tag)
     }
 
     @IBAction func changeDefaultStorage(_ sender: Any) {
@@ -84,10 +66,6 @@ class PreferencesGeneralViewController: NSViewController {
                 self.restart()
             }
         }
-    }
-
-    @IBAction func externalEditor(_ sender: Any) {
-        UserDefaultsManagement.externalEditor = externalEditorApp.stringValue
     }
 
     func restart() {

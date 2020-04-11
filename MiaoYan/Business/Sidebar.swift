@@ -27,14 +27,6 @@ class Sidebar {
         let notes = SidebarItem(name: NSLocalizedString("Notes", comment: ""), type: .All, icon: getImage(named: "home\(night).png"))
         system.append(notes)
 
-        let todo = SidebarItem(name: NSLocalizedString("Todo", comment: ""), type: .Todo, icon: getImage(named: "todo_sidebar\(night)"))
-        system.append(todo)
-
-        if let archiveProject = storage.getArchive() {
-            let archive = SidebarItem(name: NSLocalizedString("Archive", comment: ""), project: archiveProject, type: .Archive, icon: getImage(named: "archive\(night).png"))
-            system.append(archive)
-        }
-
         let trashProject = Storage.sharedInstance().getDefaultTrash()
         let trash = SidebarItem(name: NSLocalizedString("Trash", comment: ""), project: trashProject, type: .Trash, icon: getImage(named: "trash\(night)"))
         
@@ -66,7 +58,7 @@ class Sidebar {
 
     
     public func getProjects() -> [SidebarItem] {
-        return list.filter({ ($0 as? SidebarItem)?.type == .Category && ($0 as? SidebarItem)?.type != .Archive && ($0 as? SidebarItem)?.project != nil && ($0 as? SidebarItem)!.project!.showInSidebar }) as! [SidebarItem]
+        return list.filter({ ($0 as? SidebarItem)?.type == .Category && ($0 as? SidebarItem)?.project != nil && ($0 as? SidebarItem)!.project!.showInSidebar }) as! [SidebarItem]
     }
         
     private func getImage(named: String) -> Image? {
