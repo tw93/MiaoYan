@@ -92,33 +92,15 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     }
 
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-        let height = CGFloat(21 + UserDefaultsManagement.cellSpacing)
 
-        if !UserDefaultsManagement.horizontalOrientation && !UserDefaultsManagement.hidePreviewImages {
-            if row < noteList.count {
-                let note = noteList[row]
-
-                if let urls = note.getImagePreviewUrl(), urls.count > 0 {
-                    let previewCharsQty = note.preview.count
-
-                    if (previewCharsQty == 0) {
-                        if note.getTitle() != nil {
-                            // Title + image
-                            return 79 + 17
-                        }
-
-                        // Images only
-                        return 79
-                    }
-
-                    // Title + Prevew + Images
-                    return (height + 58)
-                }
-            }
+        if row < noteList.count {
+            let note = noteList[row]
+            note.dealContent()
         }
+    
 
         // Title + preview
-        return height
+        return CGFloat(58)
     }
     
     // On selected row show notes in right panel
@@ -374,8 +356,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
 
     public func reloadRow(note: Note) {
         note.invalidateCache()
-        let urls = note.getImagePreviewUrl()
-
         DispatchQueue.main.async {
             if let i = self.noteList.firstIndex(of: note) {
                 if let row = self.rowView(atRow: i, makeIfNecessary: false) as? NoteRowView, let cell = row.subviews.first as? NoteCellView {

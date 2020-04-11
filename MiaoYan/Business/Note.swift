@@ -199,7 +199,6 @@ public class Note: NSObject  {
             }
 
             try FileManager.default.moveItem(at: url, to: destination)
-            removeCacheForPreviewImages()
 
             #if os(OSX)
                 let restorePin = isPinned
@@ -396,7 +395,7 @@ public class Note: NSObject  {
     }
 
     @objc func getCreationDateForLabel() -> String? {
-        guard let creationDate = self.creationDate else { return nil }        
+        guard let creationDate = self.creationDate else { return nil }
         return dateFormatter.formatDateForDisplay(creationDate)
     }
     
@@ -1094,75 +1093,9 @@ public class Note: NSObject  {
     }
     #endif
 
-    public func getImagePreviewUrl() -> [URL]? {
-        if self.isParsed {
-            return self.imageUrl
-        }
-
-        var i = 0
-        var urls: [URL] = []
-        var mdImages: [String] = []
-
-        NotesTextProcessor.imageInlineRegex.regularExpression.enumerateMatches(in: content.string, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSRange(0..<content.length), using:
-        {(result, flags, stop) -> Void in
-
-            if let range = result?.range(at: 0) {
-                mdImages.append(self.content.attributedSubstring(from: range).string)
-            }
-
-            guard let range = result?.range(at: 3), self.content.length >= range.location else { return }
-
-            guard let imagePath = self.content.attributedSubstring(from: range).string.removingPercentEncoding else { return }
-
-            if let url = self.getImageUrl(imageName: imagePath) {
-                if url.isRemote() {
-                    urls.append(url)
-                    i += 1
-                } else if FileManager.default.fileExists(atPath: url.path), url.isImage || url.isVideo {
-                    urls.append(url)
-                    i += 1
-                }
-            }
-
-            if mdImages.count > 3 {
-                stop.pointee = true
-            }
-        })
-
-        var cleanText = content.string
-        for image in mdImages {
-            cleanText = cleanText.replacingOccurrences(of: image, with: "")
-        }
-
-        cleanText =
-            cleanText
-                .replacingOccurrences(of: "#", with: "")
-                .replacingOccurrences(of: "- [ ]", with: "")
-                .replacingOccurrences(of: "- [x]", with: "")
-
-        let components = cleanText.trim().components(separatedBy: "\n").filter({ $0 != "" })
-
-        if let first = components.first {
-            if UserDefaultsManagement.firstLineAsTitle || project.firstLineAsTitle {
-                self.title = first.trim()
-                self.preview = getPreviewLabel(with: components.dropFirst().joined(separator: " "))
-                firstLineAsTitle = true
-            } else {
-                loadTitleFromFileName()
-                self.preview = getPreviewLabel(with: components.joined(separator: " "))
-            }
-        } else {
-            if !(UserDefaultsManagement.firstLineAsTitle || project.firstLineAsTitle) {
-                loadTitleFromFileName()
-            } else {
-                firstLineAsTitle = false
-            }
-        }
-
-        self.imageUrl = urls
+    public func dealContent(){
+        loadTitleFromFileName()
         self.isParsed = true
-
-        return urls
     }
 
     private func loadTitleFromFileName() {
@@ -1229,18 +1162,6 @@ public class Note: NSObject  {
         }
 
         return nil
-    }
-
-    public func removeCacheForPreviewImages() {
-        guard let imageURLs = getImagePreviewUrl() else { return }
-
-        for url in imageURLs {
-            if let imageURL = getCacheForPreviewImage(at: url) {
-                if FileManager.default.fileExists(atPath: imageURL.path) {
-                    try? FileManager.default.removeItem(at: imageURL)
-                }
-            }
-        }
     }
 
     private func convertFlatToTextBundle() -> URL {
@@ -1629,27 +1550,11 @@ public class Note: NSObject  {
     }
 
     public func getTitle() -> String? {
-        if isEncrypted() && !isUnlocked() {
+        if isEncrypted(){
             return getFileName()
         }
-
-        #if os(iOS)
-        if !project.firstLineAsTitle {
-            return getFileName()
-        }
-        #endif
 
         if title.count > 0 {
-            if title.isValidUUID && (
-                UserDefaultsManagement.firstLineAsTitle || project.firstLineAsTitle
-            ) {
-                return nil
-            }
-
-            if title.starts(with: "![") {
-                return nil;
-            }
-            
             return title
         }
 
