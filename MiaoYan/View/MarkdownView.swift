@@ -102,19 +102,6 @@ open class MarkdownView: WKWebView {
         try loadHTMLView(markdownString, css: "")
     }
 
-    private func getMathJaxJS() -> String {
-        if !UserDefaultsManagement.mathJaxPreview {
-            return String()
-        }
-
-        return """
-            <script src="js/MathJax-2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
-            <script type="text/x-mathjax-config">
-                MathJax.Hub.Config({ showMathMenu: false, tex2jax: { inlineMath: [ ['$', '$'], ['\\(', '\\)'] ], }, messageStyle: "none", showProcessingMessages: true });
-            </script>
-        """
-    }
-    
     public static func getPreviewStyle(theme: String? = nil) -> String {
         var css = String()
 
@@ -133,18 +120,6 @@ open class MarkdownView: WKWebView {
         
         let familyName = UserDefaultsManagement.noteFont.familyName
         
-        #if os(iOS)
-            if #available(iOS 11.0, *) {
-                if let font = UserDefaultsManagement.noteFont {
-                    let fontMetrics = UIFontMetrics(forTextStyle: .body)
-                    let fontSize = fontMetrics.scaledFont(for: font).pointSize
-                    let fs = Int(fontSize) - 2
-                    
-                    return "body {font: \(fs)px '\(familyName)'; } code, pre {font: \(fs)px Courier New; font-weight: bold; } img {display: block; margin: 0 auto;} \(codeStyle)"
-                }
-            }
-        #endif
-
         let family = familyName ?? "-apple-system"
         let margin = Int(UserDefaultsManagement.marginSize)
 
@@ -224,9 +199,7 @@ private extension MarkdownView {
             htmlString = loadImages(imagesStorage: imagesStorage, html: htmlString)
         }
 
-        var pageHTMLString = try htmlFromTemplate(htmlString, css: css)
-
-        pageHTMLString = pageHTMLString.replacingOccurrences(of: "MATH_JAX_JS", with: getMathJaxJS())
+        let pageHTMLString = try htmlFromTemplate(htmlString, css: css)
 
         let indexURL = createTemporaryBundle(pageHTMLString: pageHTMLString)
         
@@ -298,16 +271,6 @@ private extension MarkdownView {
         var template = try NSString(contentsOf: baseURL, encoding: String.Encoding.utf8.rawValue)
         template = template.replacingOccurrences(of: "DOWN_CSS", with: css) as NSString
 
-#if os(iOS)
-        if NightNight.theme == .night {
-            template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
-        }
-#else
-        if UserDataService.instance.isDark {
-            template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
-        }
-#endif
-
         return template.replacingOccurrences(of: "DOWN_HTML", with: htmlString)
     }
     
@@ -323,11 +286,7 @@ extension MarkdownView: WKNavigationDelegate {
         switch navigationAction.navigationType {
         case .linkActivated:
             decisionHandler(.cancel)
-            #if os(iOS)
-                UIApplication.shared.openURL(url)
-            #elseif os(OSX)
-                NSWorkspace.shared.open(url)
-            #endif
+            NSWorkspace.shared.open(url)
         default:
             decisionHandler(.allow)
         }
@@ -339,7 +298,6 @@ extension MarkdownView: WKNavigationDelegate {
     
 }
 
-#if os(OSX)
 class HandlerCopyCode: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController,
                                didReceive message: WKScriptMessage) {
@@ -363,19 +321,5 @@ class HandlerMouseOut: NSObject, WKScriptMessageHandler {
         NSCursor.arrow.set()
     }
 }
-#endif
 
-#if os(iOS)
-import MobileCoreServices
-
-class HandlerCopyCode: NSObject, WKScriptMessageHandler {
-    func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
-        let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
-        let pasteboard = UIPasteboard.general
-        let item = [kUTTypeUTF8PlainText as String : message as Any]
-        pasteboard.items = [item]
-    }
-}
-#endif
 

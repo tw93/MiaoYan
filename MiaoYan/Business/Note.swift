@@ -396,16 +396,8 @@ public class Note: NSObject  {
     }
 
     @objc func getCreationDateForLabel() -> String? {
-        guard let creationDate = self.creationDate else { return nil }
-        guard !UserDefaultsManagement.hideDate else { return nil }
-
-        let calendar = NSCalendar.current
-        if calendar.isDateInToday(creationDate) {
-            return dateFormatter.formatTimeForDisplay(creationDate)
-        }
-        else {
-            return dateFormatter.formatDateForDisplay(creationDate)
-        }
+        guard let creationDate = self.creationDate else { return nil }        
+        return dateFormatter.formatDateForDisplay(creationDate)
     }
     
     func getContent() -> NSAttributedString? {
