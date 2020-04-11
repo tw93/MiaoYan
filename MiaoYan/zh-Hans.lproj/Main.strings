@@ -62,13 +62,13 @@
 "4J7-dP-txa.title" = "进入全屏幕";
 
 /* Class = "NSMenuItem"; title = "Quit FSNotes"; ObjectID = "4sb-4s-VLi"; */
-"4sb-4s-VLi.title" = "退出FSNotes";
+"4sb-4s-VLi.title" = "退出妙言";
 
 /* Class = "NSMenuItem"; title = "Remove encryption"; ObjectID = "5gL-j7-Zq8"; */
 "5gL-j7-Zq8.title" = "移除加密";
 
 /* Class = "NSMenuItem"; title = "About FSNotes"; ObjectID = "5kV-Vb-QxS"; */
-"5kV-Vb-QxS.title" = "关于FSNotes";
+"5kV-Vb-QxS.title" = "关于妙言";
 
 /* Class = "NSMenuItem"; title = "Copy title"; ObjectID = "5LV-Vi-n79"; */
 "5LV-Vi-n79.title" = "拷贝标题";
