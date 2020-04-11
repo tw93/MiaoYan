@@ -16,7 +16,7 @@ end
 
 def common_pods
     pod 'Highlightr', :git => 'https://github.com/glushchenko/Highlightr.git', :branch => 'master'
-    pod 'libcmark_gfm', :git => 'https://github.com/KristopherGBaker/libcmark_gfm.git', :branch => 'master' 
+    pod 'libcmark_gfm', :git => 'https://github.com/KristopherGBaker/libcmark_gfm.git', :branch => 'master'
 	pod 'RNCryptor', '~> 5.1.0'
     pod 'SSZipArchive', :git => 'https://github.com/glushchenko/ZipArchive.git', :branch => 'master'
 end
@@ -25,15 +25,10 @@ def framework_pods
     pod 'SwiftLint', '~> 0.30.0'
 end
 
-target 'FSNotesCore macOS' do
+target 'MiaoYan' do
     platform :osx, MAC_TARGET_VERSION
     pod 'MASShortcut', :git => 'https://github.com/glushchenko/MASShortcut.git', :branch => 'master'
     framework_pods
-end
-
-target 'MiaoYan' do
-    platform :osx, MAC_TARGET_VERSION
-
     mac_pods
     common_pods
 end

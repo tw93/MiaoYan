@@ -83,10 +83,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return false
         }
 
-        if menuItem.menu?.identifier?.rawValue == "viewMenu" {
-            menuItem.state = UserDefaultsManagement.mathJaxPreview ? .on : .off
-        }
-
         if note.isRTF() {
             let disableRTF = [
                 NSLocalizedString("Header 1", comment: ""),
@@ -188,15 +184,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     override func mouseDown(with event: NSEvent) {
-        let vc = self.window?.contentViewController as! ViewController
-
-        guard let note = EditTextView.note else { return }
-        guard note.container != .encryptedTextPack else {
-            vc.unLock(notes: [note])
-            vc.emptyEditAreaImage.isHidden = false
-            return
-        }
-
+  
+        guard EditTextView.note != nil else { return }
+       
         guard let container = self.textContainer, let manager = self.layoutManager else { return }
 
         let point = self.convert(event.locationInWindow, from: nil)
@@ -420,16 +410,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         guard let vc = ViewController.shared() else { return }
 
         vc.togglePreview()
-    }
-
-    @IBAction func toggleMathJax(_ sender: NSMenuItem) {
-        sender.state = sender.state == .on ? .off : .on
-
-        UserDefaultsManagement.mathJaxPreview = sender.state == .on
-
-        guard let vc = ViewController.shared() else { return }
-
-        vc.refillEditArea(force: true)
     }
 
     func getSelectedNote() -> Note? {
