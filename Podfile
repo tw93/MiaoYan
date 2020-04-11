@@ -31,14 +31,14 @@ target 'FSNotesCore macOS' do
     framework_pods
 end
 
-target 'FSNotes' do
+target 'MiaoYan' do
     platform :osx, MAC_TARGET_VERSION
 
     mac_pods
     common_pods
 end
 
-target 'FSNotes (iCloud Documents)' do
+target 'MiaoYan (iCloud Documents)' do
     platform :osx, MAC_TARGET_VERSION
 
     mac_pods
