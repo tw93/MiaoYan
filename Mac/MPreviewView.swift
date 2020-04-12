@@ -132,7 +132,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         let template = MPreviewView.template
         let htmlString = renderMarkdownHTML(markdown: markdown)!
-        guard var pageHTMLString = template?.replacingOccurrences(of: "DOWN_HTML", with: htmlString) else { return }
+        guard let pageHTMLString = template?.replacingOccurrences(of: "DOWN_HTML", with: htmlString) else { return }
 
         var baseURL: URL?
         if let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle") {
@@ -141,6 +141,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 baseURL = bundle.url(forResource: "index", withExtension: "html")
             }
         }
+        
         loadHTMLString(pageHTMLString, baseURL: baseURL)
     }
 

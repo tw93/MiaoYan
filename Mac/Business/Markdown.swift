@@ -34,5 +34,5 @@ func renderMarkdownHTML(markdown: String) -> String? {
 
     cmark_parser_feed(parser, markdown, markdown.utf8.count)
     guard let node = cmark_parser_finish(parser) else { return nil }
-    return String(cString: cmark_render_html(node, 0, nil))
+    return String(cString: cmark_render_html(node, 1 << 17, nil))
 }

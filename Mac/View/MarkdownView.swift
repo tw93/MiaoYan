@@ -62,6 +62,8 @@ open class MarkdownView: WKWebView {
         scrollView.backgroundColor = UIColor.clear
         #endif
 
+        print(">>>>>>>")
+        print(markdownString)
         if openLinksInBrowser || didLoadSuccessfully != nil { navigationDelegate = self }
         try loadHTMLView(markdownString, css: MarkdownView.getPreviewStyle(), imagesStorage: imagesStorage)
     }
@@ -182,7 +184,9 @@ private extension MarkdownView {
     func loadHTMLView(_ markdownString: String, css: String, imagesStorage: URL? = nil) throws {
 
         var htmlString = renderMarkdownHTML(markdown: markdownString)!
-
+        print(">>>>>>>>>>>>>>121.")
+        print(htmlString)
+        
         if let imagesStorage = imagesStorage {
             htmlString = loadImages(imagesStorage: imagesStorage, html: htmlString)
         }
@@ -199,11 +203,11 @@ private extension MarkdownView {
 
     private func loadImages(imagesStorage: URL, html: String) -> String {
         var htmlString = html
-
+ 
         do {
             let regex = try NSRegularExpression(pattern: "<img.*?src=\"([^\"]*)\"")
             let results = regex.matches(in: html, range: NSRange(html.startIndex..., in: html))
-
+        
             let images = results.map {
                 String(html[Range($0.range, in: html)!])
             }
