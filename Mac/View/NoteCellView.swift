@@ -76,7 +76,7 @@ class NoteCellView: NSTableCellView {
                 return
             }
 
-            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
+            if #available(OSX 10.13, *) {
                 name.textColor = NSColor.init(named: "mainText")
             } else {
                 name.textColor = NSColor.black

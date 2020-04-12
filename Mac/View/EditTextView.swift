@@ -214,7 +214,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     override func mouseMoved(with event: NSEvent) {
         let viewController = self.window?.contentViewController as! ViewController
-        if (!viewController.emptyEditAreaImage.isHidden) {
+        if (!viewController.emptyEditAreaView.isHidden) {
             NSCursor.pointingHand.set()
             return
         }
@@ -427,7 +427,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     func fill(note: Note, highlight: Bool = false, saveTyping: Bool = false, force: Bool = false) {
         let viewController = self.window?.contentViewController as! ViewController
-        viewController.emptyEditAreaImage.isHidden = true
+        viewController.emptyEditAreaView.isHidden = true
         viewController.titleBarView.isHidden = false
 
         EditTextView.note = note
@@ -558,7 +558,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         if let viewController = self.window?.contentViewController as? ViewController {
             viewController.emptyEditAreaImage.image = NSImage(imageLiteralResourceName: "makeNoteAsset")
-            viewController.emptyEditAreaImage.isHidden = false
+            viewController.emptyEditAreaView.isHidden = false
             viewController.titleBarView.isHidden = true
             viewController.updateTitle(newTitle: nil)
         }
