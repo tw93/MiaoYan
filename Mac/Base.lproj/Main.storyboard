@@ -926,18 +926,19 @@ CA
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </searchFieldCell>
                                                     </searchField>
-                                                    <scrollView focusRingType="none" borderType="none" autohidesScrollers="YES" horizontalLineScroll="56" horizontalPageScroll="10" verticalLineScroll="56" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kzf-Jh-YEb">
+                                                    <scrollView focusRingType="none" borderType="none" autohidesScrollers="YES" horizontalLineScroll="18" horizontalPageScroll="10" verticalLineScroll="18" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kzf-Jh-YEb">
                                                         <rect key="frame" x="0.0" y="0.0" width="237" height="542"/>
-                                                        <clipView key="contentView" canDrawConcurrently="YES" focusRingType="none" drawsBackground="NO" id="MtJ-BC-rZB">
+                                                        <clipView key="contentView" canDrawConcurrently="YES" focusRingType="none" drawsBackground="NO" copiesOnScroll="NO" id="MtJ-BC-rZB">
                                                             <rect key="frame" x="0.0" y="0.0" width="237" height="542"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" columnResizing="NO" autosaveColumns="NO" rowHeight="55" rowSizeStyle="automatic" viewBased="YES" id="8X8-yh-5EA" customClass="NotesTableView" customModule="MiaoYan" customModuleProvider="target">
+                                                                <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" columnResizing="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="8X8-yh-5EA" customClass="NotesTableView" customModule="MiaoYan" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="0.0" width="237" height="542"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <size key="intercellSpacing" width="1" height="1"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                                    <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                                                    <tableViewGridLines key="gridStyleMask" horizontal="YES"/>
+                                                                    <color key="gridColor" name="divider"/>
                                                                     <tableColumns>
                                                                         <tableColumn editable="NO" width="236" maxWidth="2000" id="aKf-mj-22P">
                                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
@@ -1140,20 +1141,41 @@ CA
                                                             <constraint firstItem="Pfo-n9-dyP" firstAttribute="leading" secondItem="xSU-Mk-2F1" secondAttribute="leading" constant="26" id="qe2-r0-qbo"/>
                                                         </constraints>
                                                     </customView>
-                                                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" alphaValue="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="Gz4-4G-Fts">
-                                                        <rect key="frame" x="0.0" y="198" width="568" height="166"/>
-                                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="logo" id="WpA-pT-SDs"/>
-                                                        <color key="contentTintColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                    </imageView>
+                                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="B2U-rx-xCL">
+                                                        <rect key="frame" x="111" y="80" width="240" height="240"/>
+                                                        <subviews>
+                                                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" alphaValue="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="Gz4-4G-Fts">
+                                                                <rect key="frame" x="37" y="54" width="166" height="166"/>
+                                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyUpOrDown" image="logo" id="WpA-pT-SDs"/>
+                                                                <color key="contentTintColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                            </imageView>
+                                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kn8-MP-1kR">
+                                                                <rect key="frame" x="18" y="20" width="204" height="34"/>
+                                                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="妙言" id="mj8-mU-0W4">
+                                                                    <font key="font" size="26" name="STYuanti-SC-Regular"/>
+                                                                    <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                </textFieldCell>
+                                                            </textField>
+                                                        </subviews>
+                                                        <constraints>
+                                                            <constraint firstItem="kn8-MP-1kR" firstAttribute="centerX" secondItem="B2U-rx-xCL" secondAttribute="centerX" id="7gF-SI-4wa"/>
+                                                            <constraint firstItem="kn8-MP-1kR" firstAttribute="centerY" secondItem="B2U-rx-xCL" secondAttribute="centerY" constant="86" id="XYx-SE-ILt"/>
+                                                            <constraint firstAttribute="height" constant="240" id="ocX-MY-dUa"/>
+                                                            <constraint firstAttribute="width" constant="240" id="zhs-CF-bHS"/>
+                                                        </constraints>
+                                                    </customView>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="8Ne-do-Q9o"/>
                                                     <constraint firstItem="xSU-Mk-2F1" firstAttribute="leading" secondItem="at7-wA-VAS" secondAttribute="leading" id="CQ0-DY-aM0"/>
+                                                    <constraint firstItem="B2U-rx-xCL" firstAttribute="centerY" secondItem="at7-wA-VAS" secondAttribute="centerY" constant="100" id="EYv-ge-ZTT"/>
                                                     <constraint firstAttribute="trailing" secondItem="qJO-7f-vkL" secondAttribute="trailing" id="GZ2-jz-8Ue"/>
                                                     <constraint firstItem="qJO-7f-vkL" firstAttribute="top" secondItem="xSU-Mk-2F1" secondAttribute="bottom" id="NMQ-Tc-leL"/>
                                                     <constraint firstItem="xSU-Mk-2F1" firstAttribute="top" secondItem="at7-wA-VAS" secondAttribute="top" id="Nm9-X5-Q67"/>
                                                     <constraint firstAttribute="trailing" secondItem="xSU-Mk-2F1" secondAttribute="trailing" id="Te8-se-icR"/>
+                                                    <constraint firstItem="B2U-rx-xCL" firstAttribute="centerX" secondItem="at7-wA-VAS" secondAttribute="centerX" id="cpg-YL-qnc"/>
                                                     <constraint firstAttribute="bottom" secondItem="qJO-7f-vkL" secondAttribute="bottom" id="hij-XA-hAd"/>
                                                     <constraint firstItem="qJO-7f-vkL" firstAttribute="leading" secondItem="at7-wA-VAS" secondAttribute="leading" id="inr-29-Y1D"/>
                                                 </constraints>
@@ -1184,7 +1206,9 @@ CA
                     <connections>
                         <outlet property="editArea" destination="cmZ-KL-T9k" id="sJd-5P-0mf"/>
                         <outlet property="editAreaScroll" destination="qJO-7f-vkL" id="X69-yq-N67"/>
-                        <outlet property="emptyEditAreaImage" destination="Gz4-4G-Fts" id="Bih-Xr-Cl8"/>
+                        <outlet property="emptyEditAreaImage" destination="Gz4-4G-Fts" id="Wan-oZ-dmP"/>
+                        <outlet property="emptyEditAreaView" destination="B2U-rx-xCL" id="Y00-zR-k4l"/>
+                        <outlet property="noteCountText" destination="kn8-MP-1kR" id="FnQ-4i-0z8"/>
                         <outlet property="noteMenu" destination="AaK-Xd-i52" id="t41-7H-k7N"/>
                         <outlet property="notesListCustomView" destination="8ej-mX-KM6" id="yDe-gf-AHy"/>
                         <outlet property="notesScrollView" destination="Kzf-Jh-YEb" id="u8R-Hy-KjV"/>
@@ -1516,6 +1540,9 @@ CA
         <image name="logo" width="1200" height="1200"/>
         <image name="pin" width="128" height="128"/>
         <image name="repository" width="40" height="40"/>
+        <namedColor name="divider">
+            <color red="0.9137254901960784" green="0.9137254901960784" blue="0.9137254901960784" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="mainBackground">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
