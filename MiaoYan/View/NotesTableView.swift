@@ -98,9 +98,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
             note.dealContent()
         }
     
-
-        // Title + preview
-        return CGFloat(58)
+        return CGFloat(52)
     }
     
     // On selected row show notes in right panel
