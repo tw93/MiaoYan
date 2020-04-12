@@ -46,6 +46,7 @@ class ViewController: NSViewController,
 
     // MARK: - IBOutlets
     @IBOutlet var emptyEditAreaImage: NSImageView!
+    @IBOutlet var emptyEditAreaView: NSView!
     @IBOutlet weak var splitView: EditorSplitView!
     @IBOutlet var editArea: EditTextView!
     @IBOutlet weak var editAreaScroll: EditorScrollView!
@@ -109,6 +110,7 @@ class ViewController: NSViewController,
         #endif
 
         searchQueue.maxConcurrentOperationCount = 1
+        
         notesTableView.loadingQueue.maxConcurrentOperationCount = 1
         notesTableView.loadingQueue.qualityOfService = QualityOfService.userInteractive
     }
@@ -465,7 +467,7 @@ class ViewController: NSViewController,
     }
 
     func setTableRowHeight() {
-        notesTableView.rowHeight = CGFloat(50)
+        notesTableView.rowHeight = CGFloat(52)
         notesTableView.reloadData()
     }
 
@@ -1272,7 +1274,7 @@ class ViewController: NSViewController,
      */
     private func preLoadNoteTitles(in project: Project) {
         if (UserDefaultsManagement.sort == .title || project.sortBy == .title) && (UserDefaultsManagement.firstLineAsTitle || project.firstLineAsTitle) {
-            let notes = storage.noteList.filter({ $0.project == project })
+            _ = storage.noteList.filter({ $0.project == project })
         }
     }
 
@@ -1353,7 +1355,7 @@ class ViewController: NSViewController,
         if (self.notesTableView.selectedRow > -1) {
             DispatchQueue.main.async() {
                 self.editArea.isEditable = true
-                self.emptyEditAreaImage.isHidden = true
+                self.emptyEditAreaView.isHidden = true
                 self.titleBarView.isHidden=false
                 self.editArea.window?.makeFirstResponder(resp)
                 self.editArea.restoreCursorPosition()
