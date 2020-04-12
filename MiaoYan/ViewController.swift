@@ -84,27 +84,7 @@ class ViewController: NSViewController,
             previewButton.state = .off
         }
     }
-    @IBOutlet weak var titleBarView: TitleBarView! {
-        didSet {
-            titleBarView.onMouseExitedClosure = { [weak self] in
-                DispatchQueue.main.async {
-                    NSAnimationContext.runAnimationGroup({ context in
-                        context.duration = 0.15
-                        self?.titleLabel.backgroundColor = .clear
-                    }, completionHandler: nil)
-                }
-            }
-            titleBarView.onMouseEnteredClosure = { [weak self] in
-                DispatchQueue.main.async {
-                    guard self?.titleLabel.isEnabled == false || self?.titleLabel.isEditable == false else { return }
-
-                    NSAnimationContext.runAnimationGroup({ context in
-                        context.duration = 0.15
-                    }, completionHandler: nil)
-                }
-            }
-        }
-    }
+    @IBOutlet weak var titleBarView: TitleBarView!
     @IBOutlet weak var sidebarScrollView: NSScrollView!
     @IBOutlet weak var notesScrollView: NSScrollView!
 

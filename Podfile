@@ -25,10 +25,14 @@ def framework_pods
     pod 'SwiftLint', '~> 0.30.0'
 end
 
-target 'MiaoYan' do
+target 'FSNotesCore macOS' do
     platform :osx, MAC_TARGET_VERSION
     pod 'MASShortcut', :git => 'https://github.com/glushchenko/MASShortcut.git', :branch => 'master'
     framework_pods
+end
+
+target 'MiaoYan' do
+    platform :osx, MAC_TARGET_VERSION
     mac_pods
     common_pods
 end
