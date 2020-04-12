@@ -15,8 +15,13 @@
 </head>
 
 <body>
-    <div class="markdown-body">DOWN_HTML</div>
+    <div class="markdown-body"          oncontextmenu='contextMenu(event)'>DOWN_HTML</div>
     <script>
+        
+        function contextMenu(evt){
+            evt.preventDefault && evt.preventDefault();
+        }
+    
         function getSelectionAndSendMessage() {
             var txt = document.getSelection().toString();
             window.webkit.messageHandlers.newSelectionDetected.postMessage(txt);
