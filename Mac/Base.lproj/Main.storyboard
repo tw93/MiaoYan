@@ -1208,7 +1208,6 @@ CA
                         <outlet property="editAreaScroll" destination="qJO-7f-vkL" id="X69-yq-N67"/>
                         <outlet property="emptyEditAreaImage" destination="Gz4-4G-Fts" id="Wan-oZ-dmP"/>
                         <outlet property="emptyEditAreaView" destination="B2U-rx-xCL" id="Y00-zR-k4l"/>
-                        <outlet property="noteCountText" destination="kn8-MP-1kR" id="FnQ-4i-0z8"/>
                         <outlet property="noteMenu" destination="AaK-Xd-i52" id="t41-7H-k7N"/>
                         <outlet property="notesListCustomView" destination="8ej-mX-KM6" id="yDe-gf-AHy"/>
                         <outlet property="notesScrollView" destination="Kzf-Jh-YEb" id="u8R-Hy-KjV"/>
