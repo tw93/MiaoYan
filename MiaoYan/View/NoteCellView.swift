@@ -17,14 +17,14 @@ class NoteCellView: NSTableCellView {
     public var note: Note?
     public var timestamp: Int64?
     public let cellSpacing: CGFloat = 33
-    
+
     private let labelColor = NSColor(deviceRed: 0.6, green: 0.6, blue: 0.6, alpha: 1)
-    
+
 
     public var tableView: NotesTableView? {
         get {
             guard let vc = ViewController.shared() else { return nil }
-            
+
             return vc.notesTableView
         }
     }
@@ -36,20 +36,20 @@ class NoteCellView: NSTableCellView {
 
         super.viewWillDraw()
     }
-    
+
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
-        
+
         renderPin()
         udpateSelectionHighlight()
-    
+
         pin.frame.origin.y = CGFloat(-4) + CGFloat(cellSpacing) + CGFloat(0)
     }
 
     public func configure(note: Note) {
         self.note = note
     }
-    
+
     // This NoteCellView has multiple contained views; this method changes
     // these views' color when the cell is selected.
     override var backgroundStyle: NSView.BackgroundStyle {
@@ -63,7 +63,7 @@ class NoteCellView: NSTableCellView {
             return super.backgroundStyle;
         }
     }
-    
+
     public func udpateSelectionHighlight() {
         if ( self.backgroundStyle == NSView.BackgroundStyle.dark ) {
             date.textColor = NSColor.white
@@ -83,7 +83,7 @@ class NoteCellView: NSTableCellView {
             }
         }
     }
-    
+
     func renderPin() {
         if let value = objectValue, let note = value as? Note  {
                 pin.image = NSImage(named: "pin")

@@ -914,7 +914,7 @@ CA
                                         <rect key="frame" x="145" y="0.0" width="806" height="600"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <subviews>
-                                            <customView autoresizesSubviews="NO" misplaced="YES" id="8ej-mX-KM6" customClass="SidebarNotesView" customModule="MiaoYan" customModuleProvider="target">
+                                            <customView autoresizesSubviews="NO" id="8ej-mX-KM6" customClass="SidebarNotesView" customModule="MiaoYan" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="237" height="600"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                                 <subviews>
@@ -930,19 +930,19 @@ CA
                                                         </searchFieldCell>
                                                     </searchField>
                                                     <scrollView focusRingType="none" borderType="none" autohidesScrollers="YES" horizontalLineScroll="56" horizontalPageScroll="10" verticalLineScroll="56" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kzf-Jh-YEb">
-                                                        <rect key="frame" x="0.0" y="0.0" width="399" height="542"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="237" height="542"/>
                                                         <clipView key="contentView" canDrawConcurrently="YES" focusRingType="none" drawsBackground="NO" id="MtJ-BC-rZB">
-                                                            <rect key="frame" x="0.0" y="0.0" width="399" height="542"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="237" height="542"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" columnResizing="NO" autosaveColumns="NO" rowHeight="55" rowSizeStyle="automatic" viewBased="YES" id="8X8-yh-5EA" customClass="NotesTableView" customModule="MiaoYan" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="399" height="542"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="237" height="542"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <size key="intercellSpacing" width="1" height="1"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                                     <tableColumns>
-                                                                        <tableColumn editable="NO" width="398" maxWidth="2000" id="aKf-mj-22P">
+                                                                        <tableColumn editable="NO" width="236" maxWidth="2000" id="aKf-mj-22P">
                                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
                                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -955,7 +955,7 @@ CA
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             <prototypeCellViews>
                                                                                 <tableCellView identifier="NoteCellView" id="8qL-z4-nzh" customClass="NoteCellView" customModule="MiaoYan" customModuleProvider="target">
-                                                                                    <rect key="frame" x="0.0" y="0.0" width="398" height="55"/>
+                                                                                    <rect key="frame" x="0.0" y="0.0" width="236" height="55"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <imageView identifier="pin" hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9h5-Ob-Nej">
@@ -967,8 +967,8 @@ CA
                                                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="pin" id="MIi-Yg-aUg"/>
                                                                                         </imageView>
                                                                                         <textField identifier="cellName" autoresizesSubviews="NO" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UvD-jB-7Ok" customClass="NameTextField" customModule="MiaoYan" customModuleProvider="target">
-                                                                                            <rect key="frame" x="18" y="27" width="364" height="16"/>
-                                                                                            <textFieldCell key="cell" sendsActionOnEndEditing="YES" state="on" alignment="left" title="Name" usesSingleLineMode="YES" id="y7T-Rc-etT">
+                                                                                            <rect key="frame" x="18" y="27" width="202" height="16"/>
+                                                                                            <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" state="on" alignment="left" title="Name" usesSingleLineMode="YES" id="y7T-Rc-etT">
                                                                                                 <font key="font" metaFont="systemMedium" size="13"/>
                                                                                                 <color key="textColor" name="mainText"/>
                                                                                                 <color key="backgroundColor" name="mainBackground"/>
@@ -980,7 +980,7 @@ CA
                                                                                         <textField identifier="cellDate" autoresizesSubviews="NO" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="abw-Lq-K7d">
                                                                                             <rect key="frame" x="18" y="8" width="43" height="14"/>
                                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="2/23/11" id="9w3-fa-di3">
-                                                                                                <font key="font" metaFont="menu" size="11"/>
+                                                                                                <font key="font" metaFont="controlContent" size="11"/>
                                                                                                 <color key="textColor" red="0.65995385362694303" green="0.1371187799261683" blue="0.15795969262071341" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                                 <color key="backgroundColor" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
                                                                                                 <connections>
@@ -1039,7 +1039,7 @@ CA
                                                 <rect key="frame" x="238" y="0.0" width="568" height="600"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
-                                                    <scrollView misplaced="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="qJO-7f-vkL" customClass="EditorScrollView" customModule="MiaoYan" customModuleProvider="target">
+                                                    <scrollView canDrawConcurrently="YES" misplaced="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="qJO-7f-vkL" customClass="EditorScrollView" customModule="MiaoYan" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="568" height="562"/>
                                                         <clipView key="contentView" canDrawConcurrently="YES" focusRingType="none" drawsBackground="NO" copiesOnScroll="NO" id="FJ2-Yo-v0A">
                                                             <rect key="frame" x="0.0" y="0.0" width="568" height="562"/>
@@ -1058,7 +1058,7 @@ CA
                                                             <edgeInsets key="contentInsets" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
                                                         </clipView>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="1Ss-OK-0sm"/>
+                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="1Ss-OK-0sm"/>
                                                         </constraints>
                                                         <edgeInsets key="contentInsets" left="0.0" right="0.0" top="0.0" bottom="0.0"/>
                                                         <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="0fC-ae-uwb">
@@ -1071,14 +1071,14 @@ CA
                                                         </scroller>
                                                     </scrollView>
                                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="xSU-Mk-2F1" customClass="TitleBarView" customModule="MiaoYan" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="540" width="300" height="60"/>
+                                                        <rect key="frame" x="0.0" y="528" width="462" height="72"/>
                                                         <subviews>
-                                                            <textField horizontalHuggingPriority="1" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="rZx-hk-GcJ" customClass="TitleTextField" customModule="MiaoYan" customModuleProvider="target">
-                                                                <rect key="frame" x="30" y="4" width="185" height="40"/>
+                                                            <textField focusRingType="exterior" horizontalHuggingPriority="1" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rZx-hk-GcJ" customClass="TitleTextField" customModule="MiaoYan" customModuleProvider="target">
+                                                                <rect key="frame" x="30" y="12" width="347" height="40"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="40" id="3QH-0a-na2"/>
                                                                 </constraints>
-                                                                <textFieldCell key="cell" selectable="YES" sendsActionOnEndEditing="YES" alignment="left" title="Title" drawsBackground="YES" usesSingleLineMode="YES" id="O9K-a1-3eu">
+                                                                <textFieldCell key="cell" lineBreakMode="truncatingHead" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" focusRingType="exterior" alignment="left" title="Title" drawsBackground="YES" usesSingleLineMode="YES" id="O9K-a1-3eu">
                                                                     <font key="font" metaFont="systemSemibold" size="22"/>
                                                                     <color key="textColor" name="underlineColor"/>
                                                                     <color key="backgroundColor" name="mainBackground"/>
@@ -1088,16 +1088,16 @@ CA
                                                                 </connections>
                                                             </textField>
                                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Pfo-n9-dyP">
-                                                                <rect key="frame" x="24" y="7" width="258" height="5"/>
+                                                                <rect key="frame" x="26" y="10" width="422" height="14"/>
                                                             </box>
                                                             <customView horizontalHuggingPriority="249" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="Ua8-RE-q01">
-                                                                <rect key="frame" x="235" y="0.0" width="65" height="60"/>
+                                                                <rect key="frame" x="397" y="0.0" width="65" height="72"/>
                                                                 <subviews>
-                                                                    <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="9" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" horizontalCompressionResistancePriority="1000" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="shI-kr-3o8">
-                                                                        <rect key="frame" x="12" y="22" width="41" height="16"/>
+                                                                    <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="9" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" horizontalCompressionResistancePriority="1000" misplaced="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="shI-kr-3o8">
+                                                                        <rect key="frame" x="20" y="34" width="22" height="16"/>
                                                                         <subviews>
                                                                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bn7-FD-jzc">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="19" height="16"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="22" height="16"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="width" constant="22" id="cL1-PF-gSQ"/>
                                                                                     <constraint firstAttribute="height" constant="16" id="mhf-Ok-C0D"/>
@@ -1122,24 +1122,23 @@ CA
                                                                 <constraints>
                                                                     <constraint firstItem="shI-kr-3o8" firstAttribute="centerY" secondItem="Ua8-RE-q01" secondAttribute="centerY" id="AVX-pD-7Dr"/>
                                                                     <constraint firstAttribute="trailing" secondItem="shI-kr-3o8" secondAttribute="trailing" constant="12" id="PPb-lX-xlt"/>
-                                                                    <constraint firstItem="shI-kr-3o8" firstAttribute="leading" secondItem="Ua8-RE-q01" secondAttribute="leading" constant="12" id="pyO-IT-LKf"/>
                                                                 </constraints>
                                                             </customView>
                                                         </subviews>
                                                         <constraints>
                                                             <constraint firstItem="rZx-hk-GcJ" firstAttribute="leading" secondItem="xSU-Mk-2F1" secondAttribute="leading" constant="30" id="1I0-Qm-T21"/>
                                                             <constraint firstItem="rZx-hk-GcJ" firstAttribute="centerY" secondItem="xSU-Mk-2F1" secondAttribute="centerY" id="3lf-bf-dJA"/>
+                                                            <constraint firstAttribute="bottom" secondItem="rZx-hk-GcJ" secondAttribute="bottom" constant="12" id="8mY-vj-ThP"/>
                                                             <constraint firstItem="Pfo-n9-dyP" firstAttribute="top" secondItem="xSU-Mk-2F1" secondAttribute="top" constant="50" id="BUD-HD-FGz"/>
                                                             <constraint firstAttribute="bottom" secondItem="Pfo-n9-dyP" secondAttribute="bottom" constant="12" id="KeT-wK-rD9"/>
-                                                            <constraint firstItem="rZx-hk-GcJ" firstAttribute="top" secondItem="xSU-Mk-2F1" secondAttribute="top" constant="16" id="S3t-gW-4L0"/>
+                                                            <constraint firstItem="rZx-hk-GcJ" firstAttribute="top" secondItem="xSU-Mk-2F1" secondAttribute="top" constant="20" id="S3t-gW-4L0"/>
                                                             <constraint firstAttribute="trailing" secondItem="Ua8-RE-q01" secondAttribute="trailing" id="Uos-hm-kn6"/>
                                                             <constraint firstAttribute="trailing" secondItem="rZx-hk-GcJ" secondAttribute="trailing" constant="85" id="ZjM-uT-4wC"/>
                                                             <constraint firstItem="Ua8-RE-q01" firstAttribute="leading" secondItem="rZx-hk-GcJ" secondAttribute="trailing" constant="20" id="eWY-C1-IBp"/>
                                                             <constraint firstItem="Ua8-RE-q01" firstAttribute="top" secondItem="xSU-Mk-2F1" secondAttribute="top" id="esv-qQ-apf"/>
-                                                            <constraint firstAttribute="trailing" secondItem="Pfo-n9-dyP" secondAttribute="trailing" constant="18" id="mlw-DA-dA6"/>
+                                                            <constraint firstAttribute="trailing" secondItem="Pfo-n9-dyP" secondAttribute="trailing" constant="14" id="gxQ-7Y-QMI"/>
                                                             <constraint firstAttribute="bottom" secondItem="Ua8-RE-q01" secondAttribute="bottom" id="nac-xp-D3Y"/>
-                                                            <constraint firstItem="Pfo-n9-dyP" firstAttribute="leading" secondItem="xSU-Mk-2F1" secondAttribute="leading" constant="24" id="qe2-r0-qbo"/>
-                                                            <constraint firstAttribute="height" constant="60" id="uht-o4-cfz"/>
+                                                            <constraint firstItem="Pfo-n9-dyP" firstAttribute="leading" secondItem="xSU-Mk-2F1" secondAttribute="leading" constant="26" id="qe2-r0-qbo"/>
                                                         </constraints>
                                                     </customView>
                                                     <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" alphaValue="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="Gz4-4G-Fts">

@@ -26,6 +26,17 @@ class TitleTextField: NSTextField {
         return super.performKeyEquivalent(with: event)
     }
 
+    override func draw(_ dirtyRect: NSRect) {
+        if window?.firstResponder == currentEditor() && NSApp.isActive {
+            NSGraphicsContext.saveGraphicsState()
+            NSFocusRingPlacement.only.set()
+            NSGraphicsContext.restoreGraphicsState()
+           } else {
+            super.draw(dirtyRect)
+           }
+    }
+
+
     override func becomeFirstResponder() -> Bool {
         if let note = EditTextView.note {
             stringValue = note.getFileName()
@@ -44,7 +55,7 @@ class TitleTextField: NSTextField {
             updateNotesTableView()
             editModeOff()
         }
-        
+
         if currentName != currentTitle {
             let ext = note.url.pathExtension
             let dst = note.project.url.appendingPathComponent(currentTitle).appendingPathExtension(ext)
@@ -73,15 +84,14 @@ class TitleTextField: NSTextField {
     public func editModeOn() {
         self.isEnabled = true
         self.isEditable = true
-        
         MainWindowController.shared()?.makeFirstResponder(self)
     }
-    
+
     public func editModeOff() {
         self.isEnabled = false
         self.isEditable = false
     }
-    
+
     public func updateNotesTableView() {
         guard let vc = ViewController.shared(), let note = EditTextView.note else { return }
 
@@ -93,4 +103,5 @@ class TitleTextField: NSTextField {
             window?.makeFirstResponder(responder)
         }
     }
+
 }
