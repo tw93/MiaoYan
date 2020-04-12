@@ -29,9 +29,9 @@ public class UserDefaultsManagement {
     static var DefaultFont = ".AppleSystemUIFont"
 
 #if os(OSX)
-    static var DefaultFontSize = 14
+    static var DefaultFontSize = 16
 #else
-    static var DefaultFontSize = 17
+    static var DefaultFontSize = 18
 #endif
 
     static var DefaultSnapshotsInterval = 1
