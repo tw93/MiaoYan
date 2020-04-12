@@ -521,7 +521,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     private func setTextColor() {
-        if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
+        if #available(OSX 10.13, *) {
             textColor = NSColor.init(named: "mainText")
         } else {
             textColor = UserDefaultsManagement.fontColor

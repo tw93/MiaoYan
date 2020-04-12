@@ -700,14 +700,14 @@ CA
                             <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nbv-Zo-swV">
                                 <rect key="frame" x="32" y="235" width="144" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <popUpButtonCell key="cell" type="push" title="系统" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="fQA-b2-fKr" id="1RF-NZ-wo5" userLabel="外观">
+                                <popUpButtonCell key="cell" type="push" title="自动" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="fQA-b2-fKr" id="1RF-NZ-wo5" userLabel="外观">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                     <menu key="menu" id="fpJ-Al-SNn">
                                         <items>
-                                            <menuItem title="系统" id="fQA-b2-fKr"/>
-                                            <menuItem title="亮色" state="on" id="dx8-sq-a90"/>
-                                            <menuItem title="暗色" id="73o-2j-rWk">
+                                            <menuItem title="自动" state="on" id="fQA-b2-fKr"/>
+                                            <menuItem title="浅色" id="dx8-sq-a90"/>
+                                            <menuItem title="深色" id="73o-2j-rWk">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
                                         </items>

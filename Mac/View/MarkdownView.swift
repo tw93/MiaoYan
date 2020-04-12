@@ -62,8 +62,6 @@ open class MarkdownView: WKWebView {
         scrollView.backgroundColor = UIColor.clear
         #endif
 
-        print(">>>>>>>")
-        print(markdownString)
         if openLinksInBrowser || didLoadSuccessfully != nil { navigationDelegate = self }
         try loadHTMLView(markdownString, css: MarkdownView.getPreviewStyle(), imagesStorage: imagesStorage)
     }
@@ -184,9 +182,7 @@ private extension MarkdownView {
     func loadHTMLView(_ markdownString: String, css: String, imagesStorage: URL? = nil) throws {
 
         var htmlString = renderMarkdownHTML(markdown: markdownString)!
-        print(">>>>>>>>>>>>>>121.")
-        print(htmlString)
-        
+ 
         if let imagesStorage = imagesStorage {
             htmlString = loadImages(imagesStorage: imagesStorage, html: htmlString)
         }
