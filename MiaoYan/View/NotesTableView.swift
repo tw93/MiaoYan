@@ -127,9 +127,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         
         if (noteList.indices.contains(selectedRow)) {
             let note = noteList[selectedRow]
-
-        
-
             self.loadingQueue.cancelAllOperations()
             let operation = BlockOperation()
             operation.addExecutionBlock { [weak self] in        
@@ -143,7 +140,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
                 }
             }
             self.loadingQueue.addOperation(operation)
-
         } else {
             vc.editArea.clear()
         }

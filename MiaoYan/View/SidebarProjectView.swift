@@ -94,7 +94,7 @@ class SidebarProjectView: NSOutlineView,
                 return false
             }
 
-            if let project = sidebarItem.project {
+            if sidebarItem.project != nil {
                 return true
             }
         }
@@ -241,7 +241,7 @@ class SidebarProjectView: NSOutlineView,
     }
 
     func outlineView(_ outlineView: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
-        if let si = item as? SidebarItem {
+        if item is SidebarItem {
             return 35
         }
         return 25
@@ -275,22 +275,22 @@ class SidebarProjectView: NSOutlineView,
             case .All:
                 cell.icon.image = NSImage(imageLiteralResourceName: "home.png")
                 cell.icon.isHidden = false
-                cell.label.frame.origin.x = 25
+                cell.label.frame.origin.x = 24
 
             case .Trash:
                 cell.icon.image = NSImage(imageLiteralResourceName: "trash.png")
                 cell.icon.isHidden = false
-                cell.label.frame.origin.x = 25
+                cell.label.frame.origin.x = 24
 
             case .Category:
                 cell.icon.image = NSImage(imageLiteralResourceName: "repository.png")
                 cell.icon.isHidden = false
-                cell.label.frame.origin.x = 25
+                cell.label.frame.origin.x = 24
 
             case .Inbox:
                 cell.icon.image = NSImage(imageLiteralResourceName: "sidebarInbox")
                 cell.icon.isHidden = false
-                cell.label.frame.origin.x = 25
+                cell.label.frame.origin.x = 24
             }
         }
         return cell
@@ -315,10 +315,7 @@ class SidebarProjectView: NSOutlineView,
     }
 
     override func selectRowIndexes(_ indexes: IndexSet, byExtendingSelection extend: Bool) {
-        guard let index = indexes.first else { return }
-
-        var extend = extend
-
+        guard indexes.first != nil else { return }
         super.selectRowIndexes(indexes, byExtendingSelection: extend)
     }
 
@@ -360,7 +357,6 @@ class SidebarProjectView: NSOutlineView,
 
         guard let sidebarItems = sidebarItems else { return }
 
-        let lastRow = lastSelectedRow
         lastSelectedRow = selectedRow
 
         if let view = notification.object as? NSOutlineView {
@@ -632,7 +628,7 @@ class SidebarProjectView: NSOutlineView,
 
                 guard let si = sidebarItems, si.indices.contains(j) else { return }
 
-                if let next = si[j] as? SidebarItem {
+                if si[j] is SidebarItem {
                     selectRowIndexes([j], byExtendingSelection: false)
                     return
                 }
@@ -654,7 +650,7 @@ class SidebarProjectView: NSOutlineView,
 
                 guard let si = sidebarItems, si.indices.contains(j) else { return }
 
-                if let next = si[j] as? SidebarItem {
+                if si[j] is SidebarItem {
                     selectRowIndexes([j], byExtendingSelection: false)
                     return
                 }
