@@ -430,6 +430,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     func fill(note: Note, highlight: Bool = false, saveTyping: Bool = false, force: Bool = false) {
         let viewController = self.window?.contentViewController as! ViewController
         viewController.emptyEditAreaImage.isHidden = true
+        viewController.titleBarView.isHidden = false
 
         EditTextView.note = note
         UserDefaultsManagement.lastSelectedURL = note.url
@@ -564,6 +565,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         if let viewController = self.window?.contentViewController as? ViewController {
             viewController.emptyEditAreaImage.image = NSImage(imageLiteralResourceName: "makeNoteAsset")
             viewController.emptyEditAreaImage.isHidden = false
+            viewController.titleBarView.isHidden = true
             viewController.updateTitle(newTitle: nil)
         }
 

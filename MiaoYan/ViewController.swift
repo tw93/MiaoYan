@@ -211,11 +211,6 @@ class ViewController: NSViewController,
 
         editArea.textContainerInset.height = 10
         editArea.isEditable = false
-        //editArea.layoutManager?.allowsNonContiguousLayout = false
-
-        if #available(OSX 10.13, *) {} else {
-            self.editArea.backgroundColor = UserDefaultsManagement.bgColor
-        }
 
         self.editArea.layoutManager?.defaultAttachmentScaling = .scaleProportionallyDown
 
@@ -225,10 +220,6 @@ class ViewController: NSViewController,
         self.editArea.typingAttributes[.paragraphStyle] = paragraphStyle
 
         self.editArea.font = UserDefaultsManagement.noteFont
-
-        if (UserDefaultsManagement.horizontalOrientation) {
-            self.splitView.isVertical = false
-        }
 
         self.setTableRowHeight()
         self.storageOutlineView.sidebarItems = Sidebar().getList()
@@ -240,25 +231,10 @@ class ViewController: NSViewController,
 
         notesScrollView.scrollerStyle = .overlay
         sidebarScrollView.scrollerStyle = .overlay
-
-        if UserDefaultsManagement.appearanceType == .Custom {
-            titleLabel.backgroundColor = UserDefaultsManagement.bgColor
-        }
     }
 
     private func configureNotesList() {
         self.updateTable() {
-            if UserDefaultsManagement.copyWelcome {
-                if let index = self.storageOutlineView.sidebarItems?.firstIndex(where: { ($0 as? SidebarItem)?.getName() == "Welcome" }) {
-                    DispatchQueue.main.async {
-                        self.storageOutlineView.selectRowIndexes([index], byExtendingSelection: false)
-                    }
-                }
-
-                UserDefaultsManagement.copyWelcome = false
-                return
-            }
-
             let lastSidebarItem = UserDefaultsManagement.lastProject
             if let items = self.storageOutlineView.sidebarItems, items.indices.contains(lastSidebarItem) {
                 DispatchQueue.main.async {
@@ -311,8 +287,6 @@ class ViewController: NSViewController,
             if self.keyDown(with: $0) {
                 return $0
             }
-            //return NSEvent()
-
             return nil
         }
     }
@@ -1074,9 +1048,7 @@ class ViewController: NSViewController,
 
         blockFSUpdates()
 
-        if (
-            !UserDefaultsManagement.preview
-            && self.editArea.isEditable
+        if ( self.editArea.isEditable
         ) {
             editArea.removeHighlight()
             editArea.saveImages()
@@ -1375,7 +1347,7 @@ class ViewController: NSViewController,
     }
 
     func focusEditArea(firstResponder: NSResponder? = nil) {
-        guard let note = EditTextView.note, !UserDefaultsManagement.preview || note.isRTF(), EditTextView.note?.container != .encryptedTextPack else { return }
+        guard let note = EditTextView.note, !UserDefaultsManagement.preview || note.isRTF() else { return }
 
         var resp: NSResponder = self.editArea
         if let responder = firstResponder {
@@ -1386,6 +1358,7 @@ class ViewController: NSViewController,
             DispatchQueue.main.async() {
                 self.editArea.isEditable = true
                 self.emptyEditAreaImage.isHidden = true
+                self.titleBarView.isHidden=false
                 self.editArea.window?.makeFirstResponder(resp)
                 self.editArea.restoreCursorPosition()
             }
@@ -1398,9 +1371,8 @@ class ViewController: NSViewController,
     func focusTable() {
         DispatchQueue.main.async {
             let index = self.notesTableView.selectedRow > -1 ? self.notesTableView.selectedRow : 0
-
             self.notesTableView.window?.makeFirstResponder(self.notesTableView)
-            self.notesTableView.selectRowIndexes([index], byExtendingSelection: false)
+            self.notesTableView.selectRowIndexes([index], byExtendingSelection: true)
             self.notesTableView.scrollRowToVisible(index)
         }
     }
@@ -1420,8 +1392,8 @@ class ViewController: NSViewController,
             createNote(content: clipboard!, project: project)
 
             let notification = NSUserNotification()
-            notification.title = "FSNotes"
-            notification.informativeText = "Clipboard successfully saved"
+            notification.title = "妙言"
+            notification.informativeText = "复制保存成功"
             notification.soundName = NSUserNotificationDefaultSoundName
             NSUserNotificationCenter.default.deliver(notification)
         }
@@ -1465,7 +1437,7 @@ class ViewController: NSViewController,
 
         let selectedProjects = vc.storageOutlineView.getSidebarProjects()
         var sidebarProject = project ?? selectedProjects?.first
-        var text = content
+        let text = content
 
         if sidebarProject == nil {
             let projects = storage.getProjects()
@@ -1478,8 +1450,6 @@ class ViewController: NSViewController,
         note.content = NSMutableAttributedString(string: text)
         note.save()
 
-        _ = note.scanContentTags()
-
         if let selectedProjects = selectedProjects, !selectedProjects.contains(project) {
             return
         }
@@ -1488,10 +1458,6 @@ class ViewController: NSViewController,
         notesTableView.deselectNotes()
         editArea.string = text
         EditTextView.note = note
-
-        if let si = getSidebarItem(){
-            note.addTag(si.name)
-        }
 
         search.stringValue.removeAll()
 
@@ -1590,13 +1556,13 @@ class ViewController: NSViewController,
         guard let vc = ViewController.shared() else { return }
         vc.editArea.window?.makeFirstResponder(vc.notesTableView)
 
-        self.view.window!.title = NSLocalizedString("FSNotes [preview]", comment: "")
+        self.view.window!.title = NSLocalizedString("妙言「预览」", comment: "")
         UserDefaultsManagement.preview = true
         refillEditArea()
     }
 
     func disablePreview() {
-        self.view.window!.title = NSLocalizedString("FSNotes [edit]", comment: "")
+        self.view.window!.title = NSLocalizedString("妙言「编辑」", comment: "")
         UserDefaultsManagement.preview = false
 
         editArea.markdownView?.removeFromSuperview()
@@ -1629,10 +1595,6 @@ class ViewController: NSViewController,
 
         noteMenu.addItem(moveMenuItem)
         let moveMenu = NSMenu()
-
-        if UserDefaultsManagement.inlineTags, let tagsMenu = noteMenu.item(withTitle: NSLocalizedString("Tags", comment: "")) {
-            noteMenu.removeItem(tagsMenu)
-        }
 
         if !note.isTrash() {
             let trashMenu = NSMenuItem()
