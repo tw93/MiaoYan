@@ -884,12 +884,10 @@ class ViewController: NSViewController,
 
     @objc func switchTitleToEditMode() {
         guard let vc = ViewController.shared() else { return }
-
         if vc.notesTableView.selectedRow > -1 {
             vc.titleLabel.editModeOn()
-
-            if let note = EditTextView.note, note.getFileName().isValidUUID {
-                vc.titleLabel.stringValue = note.getFileName()
+            if let note = EditTextView.note{
+                vc.titleLabel.stringValue = note.getShortTitle()
             }
         }
     }
@@ -1780,7 +1778,6 @@ class ViewController: NSViewController,
 
         titleLabel.stringValue = titleString
         titleLabel.currentEditor()?.selectedRange = NSRange(location: 0, length: 0)
-
         let title = newTitle != nil ? "\(appName) - \(noteTitle)" : appName
         MainWindowController.shared()?.title = title
     }
@@ -1789,14 +1786,6 @@ class ViewController: NSViewController,
 
     @IBAction func togglePreview(_ sender: NSButton) {
         togglePreview()
-    }
-
-    @IBAction func shareSheet(_ sender: NSButton) {
-        if let note = notesTableView.getSelectedNote() {
-            let sharingPicker = NSSharingServicePicker(items: [note.content])
-            sharingPicker.delegate = self
-            sharingPicker.show(relativeTo: NSZeroRect, of: sender, preferredEdge: .minY)
-        }
     }
 
     public func saveTextAtClipboard() {

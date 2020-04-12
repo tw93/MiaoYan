@@ -1506,7 +1506,6 @@ public class Note: NSObject  {
 
     public func getFileName() -> String {
         let fileName = url.deletingPathExtension().pathComponents.last!.replacingOccurrences(of: ":", with: "/")
-
         return fileName
     }
 
