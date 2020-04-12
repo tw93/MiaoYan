@@ -700,19 +700,16 @@ CA
                             <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nbv-Zo-swV">
                                 <rect key="frame" x="32" y="235" width="144" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <popUpButtonCell key="cell" type="push" title="系统" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="fQA-b2-fKr" id="1RF-NZ-wo5">
+                                <popUpButtonCell key="cell" type="push" title="白色" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="73o-2j-rWk" id="1RF-NZ-wo5">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                     <menu key="menu" id="fpJ-Al-SNn">
                                         <items>
-                                            <menuItem title="系统" state="on" id="fQA-b2-fKr"/>
-                                            <menuItem title="白色" id="73o-2j-rWk">
-                                                <string key="keyEquivalent" base64-UTF8="YES">
-CA
-</string>
+                                            <menuItem title="白色" state="on" id="73o-2j-rWk">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
                                             <menuItem title="黑色" id="dx8-sq-a90"/>
+                                            <menuItem title="系统" id="fQA-b2-fKr"/>
                                         </items>
                                     </menu>
                                 </popUpButtonCell>
@@ -1144,9 +1141,9 @@ CA
                                                         </constraints>
                                                     </customView>
                                                     <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" alphaValue="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="Gz4-4G-Fts">
-                                                        <rect key="frame" x="249" y="250" width="70" height="99"/>
+                                                        <rect key="frame" x="0.0" y="198" width="568" height="166"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="icon" id="WpA-pT-SDs"/>
+                                                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="logo" id="WpA-pT-SDs"/>
                                                         <color key="contentTintColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                     </imageView>
                                                 </subviews>
@@ -1516,7 +1513,7 @@ CA
     <resources>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSQuickLookTemplate" width="19" height="12"/>
-        <image name="icon" width="198.19354248046875" height="198.19354248046875"/>
+        <image name="logo" width="1200" height="1200"/>
         <image name="pin" width="128" height="128"/>
         <image name="repository" width="40" height="40"/>
         <namedColor name="mainBackground">

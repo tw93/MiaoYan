@@ -91,7 +91,6 @@ class ViewController: NSViewController,
     // MARK: - Overrides
 
     override func viewDidLoad() {
-        scheduleSnapshots()
         self.configureShortcuts()
         self.configureDelegates()
         self.configureLayout()
@@ -786,8 +785,7 @@ class ViewController: NSViewController,
         guard let vc = ViewController.shared() else { return }
 
         if vc.notesTableView.selectedRow >= 0 {
-            vc.loadHistory()
-
+       
             let historyTitle = NSLocalizedString("History", comment: "Menu")
             let historyMenu = vc.noteMenu.item(withTitle: historyTitle)
             let view = vc.notesTableView.rect(ofRow: vc.notesTableView.selectedRow)
@@ -1632,7 +1630,6 @@ class ViewController: NSViewController,
         }
 
         noteMenu.setSubmenu(moveMenu, for: moveMenuItem)
-        loadHistory()
     }
 
     func loadSortBySetting() {
