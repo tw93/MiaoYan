@@ -81,7 +81,7 @@ class ViewController: NSViewController,
     }
     @IBOutlet weak var previewButton: NSButton! {
         didSet {
-            previewButton.state = .off
+           previewButton.state = UserDefaultsManagement.preview ? .on : .off
         }
     }
     @IBOutlet weak var titleBarView: TitleBarView!
@@ -1203,7 +1203,7 @@ class ViewController: NSViewController,
                 }
             }
 
-            var terms = filter.split(separator: " ")
+            let terms = filter.split(separator: " ")
             let source = self.storage.noteList
             var notes = [Note]()
 
