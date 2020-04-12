@@ -25,9 +25,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
     var downView: MarkdownView?
     public var timer: Timer?
     public var markdownView: MPreviewView?
-
     public static var imagesLoaderQueue = OperationQueue.init()
-
+    
     override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {
         validateSubmenu(menu)
     }
@@ -45,7 +44,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn flag: Bool) {
         var newRect = NSRect(origin: rect.origin, size: rect.size)
         newRect.size.width = self.caretWidth
-
         if let range = getParagraphRange(), range.upperBound != textStorage?.length || (
             range.upperBound == textStorage?.length
             && textStorage?.string.last == "\n"
@@ -449,7 +447,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             typingAttributes[.font] = UserDefaultsManagement.noteFont
         }
 
-        if UserDefaultsManagement.preview && !note.isRTF() {
+        if UserDefaultsManagement.preview {
             EditTextView.note = nil
             textStorage?.setAttributedString(NSAttributedString())
             EditTextView.note = note
@@ -501,10 +499,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         restoreCursorPosition()
         applyLeftParagraphStyle()
-
-        if UserDefaultsManagement.appearanceType == AppearanceType.Custom {
-            backgroundColor = UserDefaultsManagement.bgColor
-        }
     }
 
     private func fillPlainAndRTFStyle(note: Note, saveTyping: Bool) {

@@ -12,16 +12,10 @@
     <style>
         DOWN_CSS
     </style>
-    <style>
-        #MathJax_Message+* {
-            margin-top: 0 !important;
-        }
-    </style>
 </head>
 
 <body>
-
-    DOWN_HTML
+    <div class="markdown-body">DOWN_HTML</div>
     <script>
         function getSelectionAndSendMessage() {
             var txt = document.getSelection().toString();
@@ -62,57 +56,7 @@
             switchToDarkMode();
         }
     </script>
-    <script>
-        var preList = document.getElementsByTagName("code"),
-            length = preList.length,
-            i = 0;
 
-        for (i; i < length; i++) {
-
-            if (preList[i].parentNode.tagName != "PRE") {
-                continue;
-            }
-
-            if (preList[i].classList.contains('language-mermaid')) {
-                continue;
-            }
-
-            var copy = document.createElement("img");
-            copy.src = "copy.png";
-            copy.classList.add('copyCode');
-            copy.setAttribute("id", "copyButton");
-            copy.style.display = "none"
-
-            var parentDiv = preList[i].parentNode;
-            parentDiv.insertBefore(copy, preList[i]);
-
-            copy.addEventListener("click", function(event) {
-                event.target.style.background = "#FFDC00"
-                setTimeout(function() {
-                    event.target.style.background = "white"
-                }, 150)
-
-                var text = event.target.parentNode.getElementsByTagName("code")[0].textContent
-                window.webkit.messageHandlers.notification.postMessage(text)
-            })
-
-            copy.addEventListener("mouseenter", function(event) {
-                event.target.parentNode.firstElementChild.style.display = "inline"
-            });
-
-            copy.addEventListener("mouseleave", function(event) {
-                event.target.parentNode.firstElementChild.style.display = "none"
-            });
-
-            preList[i].addEventListener("mouseenter", function(event) {
-                event.target.parentNode.firstElementChild.style.display = "inline"
-            });
-
-            preList[i].addEventListener("mouseleave", function(event) {
-                event.target.parentNode.firstElementChild.style.display = "none"
-            });
-        }
-    </script>
 
     <script>
         var preList = document.getElementsByTagName("input"),
@@ -169,7 +113,6 @@
             var collection = document.getElementsByClassName("fsnotes-preview"),
                 images = Array.prototype.slice.call(collection);
             loadCanvas(images);
-
         };
 
         document.addEventListener("DOMContentLoaded", onLoaded);
