@@ -175,18 +175,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         mainWindowController?.makeNew()
     }
     
-    @IBAction func openHelp(_ sender: Any) {
-        NSWorkspace.shared.open(URL(string: "https://github.com/glushchenko/fsnotes/wiki")!)
-    }
-
-    @IBAction func openReportsAndRequests(_ sender: Any) {
-        NSWorkspace.shared.open(URL(string: "https://github.com/glushchenko/fsnotes/issues/new/choose")!)
-    }
-
-    @IBAction func openSite(_ sender: Any) {
-        NSWorkspace.shared.open(URL(string: "https://fsnot.es")!)
-    }
-    
     @IBAction func openPreferences(_ sender: Any?) {
         if prefsWindowController == nil {
             let storyboard = NSStoryboard(name: "Main", bundle: nil)

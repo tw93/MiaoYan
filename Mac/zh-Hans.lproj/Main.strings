@@ -7,8 +7,8 @@
 /* Class = "NSMenuItem"; title = "Title"; ObjectID = "1qV-pJ-ZQT"; */
 "1qV-pJ-ZQT.title" = "标题";
 
-/* Class = "NSMenuItem"; title = "FSNotes"; ObjectID = "1Xt-HY-uBw"; */
-"1Xt-HY-uBw.title" = "FSNotes";
+/* Class = "NSMenuItem"; title = "MiaoYan"; ObjectID = "1Xt-HY-uBw"; */
+"1Xt-HY-uBw.title" = "MiaoYan";
 
 /* Class = "NSTextFieldCell"; placeholderString = "TextEdit"; ObjectID = "1XY-bI-DX7"; */
 "1XY-bI-DX7.placeholderString" = "TextEdit";
@@ -61,13 +61,13 @@
 /* Class = "NSMenuItem"; title = "Enter Full Screen"; ObjectID = "4J7-dP-txa"; */
 "4J7-dP-txa.title" = "进入全屏幕";
 
-/* Class = "NSMenuItem"; title = "Quit FSNotes"; ObjectID = "4sb-4s-VLi"; */
+/* Class = "NSMenuItem"; title = "Quit MiaoYan"; ObjectID = "4sb-4s-VLi"; */
 "4sb-4s-VLi.title" = "退出妙言";
 
 /* Class = "NSMenuItem"; title = "Remove encryption"; ObjectID = "5gL-j7-Zq8"; */
 "5gL-j7-Zq8.title" = "移除加密";
 
-/* Class = "NSMenuItem"; title = "About FSNotes"; ObjectID = "5kV-Vb-QxS"; */
+/* Class = "NSMenuItem"; title = "About MiaoYan"; ObjectID = "5kV-Vb-QxS"; */
 "5kV-Vb-QxS.title" = "关于妙言";
 
 /* Class = "NSMenuItem"; title = "Copy title"; ObjectID = "5LV-Vi-n79"; */
@@ -242,7 +242,7 @@
 "dys-2Q-lfZ.title" = "存档存储：";
 
 /* Class = "NSTextFieldCell"; title = "Language (need app restart):"; ObjectID = "dZD-Db-KHs"; */
-"dZD-Db-KHs.title" = "语言 (需要重启FSNotes):";
+"dZD-Db-KHs.title" = "语言 (需要重启MiaoYan):";
 
 /* Class = "NSMenuItem"; title = "Duplicate"; ObjectID = "E6I-n5-dsi"; */
 "E6I-n5-dsi.title" = "副本";
@@ -292,8 +292,8 @@
 /* Class = "NSMenuItem"; title = "Delete"; ObjectID = "fHG-zk-g0k"; */
 "fHG-zk-g0k.title" = "删除";
 
-/* Class = "NSMenuItem"; title = "FSNotes Help"; ObjectID = "FKE-Sm-Kum"; */
-"FKE-Sm-Kum.title" = "FSNotes帮助";
+/* Class = "NSMenuItem"; title = "MiaoYan Help"; ObjectID = "FKE-Sm-Kum"; */
+"FKE-Sm-Kum.title" = "MiaoYan帮助";
 
 /* Class = "NSMenuItem"; title = "Remove encryption"; ObjectID = "fkH-Wf-n87"; */
 "fkH-Wf-n87.title" = "移除加密";
@@ -406,8 +406,8 @@
 /* Class = "NSMenuItem"; title = "Shift Right"; ObjectID = "IPu-Ll-IBE"; */
 "IPu-Ll-IBE.title" = "右移";
 
-/* Class = "NSWindow"; title = "FSNotes"; ObjectID = "IQv-IB-iLA"; */
-"IQv-IB-iLA.title" = "FSNotes";
+/* Class = "NSWindow"; title = "MiaoYan"; ObjectID = "IQv-IB-iLA"; */
+"IQv-IB-iLA.title" = "MiaoYan";
 
 /* Class = "NSTextFieldCell"; title = "Line spacing:"; ObjectID = "iUm-Zm-zeg"; */
 "iUm-Zm-zeg.title" = "行间距：";
@@ -426,9 +426,6 @@
 
 /* Class = "NSMenuItem"; title = "Rename"; ObjectID = "jLq-8F-n0X"; */
 "jLq-8F-n0X.title" = "重命名";
-
-/* Class = "NSButtonCell"; title = "🔗fsnotes/contributors"; ObjectID = "jQ1-6K-9ar"; */
-"jQ1-6K-9ar.title" = "🔗fsnotes/contributors";
 
 /* Class = "NSTextFieldCell"; title = "Visibility:"; ObjectID = "jrj-ea-xmm"; */
 "jrj-ea-xmm.title" = "可见性：";
@@ -466,9 +463,6 @@
 /* Class = "NSTextFieldCell"; title = "1"; ObjectID = "kqJ-Fr-EeB"; */
 "kqJ-Fr-EeB.title" = "1";
 
-/* Class = "NSButtonCell"; title = "Allow Touch ID to unlock notes"; ObjectID = "KST-y3-KvM"; */
-"KST-y3-KvM.title" = "允许使用Touch ID解锁笔记";
-
 /* Class = "NSWindow"; title = "Preferences"; ObjectID = "ldu-U8-PD1"; */
 "ldu-U8-PD1.title" = "偏好设置";
 
@@ -485,7 +479,7 @@
 "LTw-w4-tEo.title" = "粗体";
 
 /* Class = "NSButtonCell"; title = "Hide FSNotes when activating another application"; ObjectID = "M29-fW-FJa"; */
-"M29-fW-FJa.title" = "激活其他应用时自动隐藏FSNotes";
+"M29-fW-FJa.title" = "激活其他应用时自动隐藏MiaoYan";
 
 /* Class = "NSMenuItem"; title = "TextBundle"; ObjectID = "MCR-1v-3Wc"; */
 "MCR-1v-3Wc.title" = "TextBundle";
@@ -548,7 +542,7 @@
 "oer-ZB-VOx.title" = "无（使用全局设置）";
 
 /* Class = "NSMenuItem"; title = "Hide FSNotes"; ObjectID = "Olw-nP-bQN"; */
-"Olw-nP-bQN.title" = "隐藏FSNotes";
+"Olw-nP-bQN.title" = "隐藏MiaoYan";
 
 /* Class = "NSMenuItem"; title = "Code Block"; ObjectID = "OOL-dM-zIE"; */
 "OOL-dM-zIE.title" = "代码块";
@@ -739,8 +733,8 @@
 /* Class = "NSMenuItem"; title = "Copy URL"; ObjectID = "uQ1-ej-ufE"; */
 "uQ1-ej-ufE.title" = "拷贝URL";
 
-/* Class = "NSMenu"; title = "FSNotes"; ObjectID = "uQy-DD-JDr"; */
-"uQy-DD-JDr.title" = "FSNotes";
+/* Class = "NSMenu"; title = "MiaoYan"; ObjectID = "uQy-DD-JDr"; */
+"uQy-DD-JDr.title" = "MiaoYan";
 
 /* Class = "NSMenuItem"; title = "Cut"; ObjectID = "uRl-iY-unG"; */
 "uRl-iY-unG.title" = "剪切";

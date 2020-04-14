@@ -13,13 +13,13 @@ import Cocoa
 extension AppDelegate {
     
     enum HandledSchemes: String {
-        case fsnotes = "fsnotes"
+        case miaoyan = "miaoyan"
         case nv = "nv"
         case nvALT = "nvalt"
         case file = "file"
     }
     
-    enum FSNotesRoutes: String {
+    enum MiaoYanRoutes: String {
         case find = "find"
         case new = "new"
     }
@@ -47,8 +47,8 @@ extension AppDelegate {
             } else {
                 self.urls = urls
             }
-        case HandledSchemes.fsnotes.rawValue:
-            FSNotesRouter(url)
+        case HandledSchemes.miaoyan.rawValue:
+            MiaoYanRouter(url)
         case HandledSchemes.nv.rawValue,
              HandledSchemes.nvALT.rawValue:
             NvALTRouter(url)
@@ -89,21 +89,21 @@ extension AppDelegate {
     
     // MARK: - FSNotes routes
     
-    func FSNotesRouter(_ url: URL) {
+    func MiaoYanRouter(_ url: URL) {
         guard let directive = url.host else { return }
         
         switch directive {
-        case FSNotesRoutes.find.rawValue:
-            RouteFSNotesFind(url)
-        case FSNotesRoutes.new.rawValue:
-            RouteFSNotesNew(url)
+        case MiaoYanRoutes.find.rawValue:
+            RouteMiaoYanFind(url)
+        case MiaoYanRoutes.new.rawValue:
+            RouteMiaoYanNew(url)
         default:
             break
         }
     }
     
     /// Handles URLs with the path /find/searchstring1%20searchstring2
-    func RouteFSNotesFind(_ url: URL) {
+    func RouteMiaoYanFind(_ url: URL) {
         let lastPath = url.lastPathComponent
 
         guard nil != ViewController.shared() else {
@@ -128,13 +128,13 @@ extension AppDelegate {
     }
     
     /// Handles URLs with the following paths:
-    ///   - fsnotes://make/?title=URI-escaped-title&html=URI-escaped-HTML-data
-    ///   - fsnotes://make/?title=URI-escaped-title&txt=URI-escaped-plain-text
-    ///   - fsnotes://make/?txt=URI-escaped-plain-text
+    ///   - miaoyan://make/?title=URI-escaped-title&html=URI-escaped-HTML-data
+    ///   - miaoyan://make/?title=URI-escaped-title&txt=URI-escaped-plain-text
+    ///   - miaoyan://make/?txt=URI-escaped-plain-text
     ///
     /// The three possible parameters (title, txt, html) are all optional.
     ///
-    func RouteFSNotesNew(_ url: URL) {
+    func RouteMiaoYanNew(_ url: URL) {
         var title = ""
         var body = ""
         
@@ -186,7 +186,7 @@ extension AppDelegate {
     /// Note: this route is identical to the corresponding FSNotes route.
     ///
     func RouteNvAltFind(_ url: URL) {
-        RouteFSNotesFind(url)
+        RouteMiaoYanFind(url)
     }
     
     /// Handle URLs in the format nv://note%20title
@@ -197,7 +197,7 @@ extension AppDelegate {
         let pathWithFind = url.absoluteString.replacingOccurrences(of: "://", with: "://find/")
         guard let newURL = URL(string: pathWithFind) else { return }
         
-        RouteFSNotesFind(newURL)
+        RouteMiaoYanFind(newURL)
     }
     
     /// Handle URLs in the format:

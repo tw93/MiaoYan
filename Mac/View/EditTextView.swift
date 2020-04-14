@@ -370,7 +370,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 return
             }
 
-            let filePathKey = NSAttributedString.Key(rawValue: "co.fluder.fsnotes.image.path")
+            let filePathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
 
             if (storage.attribute(filePathKey, at: range.location, effectiveRange: nil) as? String) != nil {
                 return
@@ -818,7 +818,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         var length = range.lowerBound
         let data = Data(bytes: &length, count: MemoryLayout.size(ofValue: length))
-        try? note.url.setExtendedAttribute(data: data, forName: "co.fluder.fsnotes.cursor")
+        try? note.url.setExtendedAttribute(data: data, forName: "com.tw93.miaoyu.cursor")
     }
 
     func restoreCursorPosition() {
@@ -832,7 +832,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         var position = storage.length
 
         if let note = EditTextView.note {
-            if let data = try? note.url.extendedAttribute(forName: "co.fluder.fsnotes.cursor") {
+            if let data = try? note.url.extendedAttribute(forName: "com.tw93.miaoyan.cursor") {
                 position = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Int in
                     ptr.load(as: Int.self)
                 }
@@ -925,9 +925,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
             let dropPoint = convert(sender.draggingLocation, from: nil)
             let caretLocation = characterIndexForInsertion(at: dropPoint)
 
-            let filePathKey = NSAttributedString.Key(rawValue: "co.fluder.fsnotes.image.path")
-            let titleKey = NSAttributedString.Key(rawValue: "co.fluder.fsnotes.image.title")
-            let positionKey = NSAttributedString.Key(rawValue: "co.fluder.fsnotes.image.position")
+            let filePathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyu.image.path")
+            let titleKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.title")
+            let positionKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.position")
 
             guard
                 let path = attributedText.attribute(filePathKey, at: 0, effectiveRange: nil) as? String,
@@ -1203,7 +1203,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         guard let selected = attributedSubstring(forProposedRange: selectedRange(), actualRange: nil) else { return .generic }
 
         let attributedString = NSMutableAttributedString(attributedString: selected)
-        let positionKey = NSAttributedString.Key(rawValue: "co.fluder.fsnotes.image.position")
+        let positionKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.position")
         attributedString.addAttribute(positionKey, value: selectedRange().location, range: NSRange(0..<1))
 
         let data = NSKeyedArchiver.archivedData(withRootObject: attributedString)
@@ -1249,8 +1249,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return
         }
 
-        let titleKey = NSAttributedString.Key(rawValue: "co.fluder.fsnotes.image.title")
-        let pathKey = NSAttributedString.Key(rawValue: "co.fluder.fsnotes.image.path")
+        let titleKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.title")
+        let pathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
 
         if let event = NSApp.currentEvent,
             !event.modifierFlags.contains(.command),
@@ -1433,7 +1433,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         storage.enumerateAttribute(.attachment, in: checkRange) { (value, range, _) in
             if let _ = value as? NSTextAttachment, storage.attribute(.todo, at: range.location, effectiveRange: nil) == nil {
 
-                let filePathKey = NSAttributedString.Key(rawValue: "co.fluder.fsnotes.image.path")
+                let filePathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
 
                 if let filePath = storage.attribute(filePathKey, at: range.location, effectiveRange: nil) as? String {
 

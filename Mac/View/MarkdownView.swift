@@ -244,7 +244,7 @@ private extension MarkdownView {
                     localPath.remove(at: localPath.startIndex)
                 }
 
-                let imPath = "<img data-orientation=\"\(orientation)\" class=\"fsnotes-preview\" src=\"" + localPath + "\""
+                let imPath = "<img data-orientation=\"\(orientation)\" class=\"miaoyu-preview\" src=\"" + localPath + "\""
 
                 htmlString = htmlString.replacingOccurrences(of: image, with: imPath)
             }

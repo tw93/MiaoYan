@@ -9,7 +9,7 @@
 import Foundation
 
 struct KeychainConfiguration {
-    static let serviceName = "FSNotesApp"
+    static let serviceName = "MiaoYanApp"
 
     /*
      Specifying an access group to use with `KeychainPasswordItem` instances

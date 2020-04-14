@@ -145,7 +145,7 @@ class ViewController: NSViewController,
 
         if let title = menuItem.menu?.identifier?.rawValue {
             switch title {
-            case "fsnotesMenu":
+            case "miaoyanMenu":
                 if menuItem.identifier?.rawValue == "emptyTrashMenu" {
                     menuItem.keyEquivalentModifierMask = UserDefaultsManagement.focusInEditorOnNoteSelect
                             ? [.command, .option, .shift]
@@ -1667,7 +1667,7 @@ class ViewController: NSViewController,
     @objc func ubiquitousKeyValueStoreDidChange(notification: NSNotification) {
         if let keys = notification.userInfo?[NSUbiquitousKeyValueStoreChangedKeysKey] as? [String] {
             for key in keys {
-                if key == "co.fluder.fsnotes.pins.shared" {
+                if key == "com.tw93.miaoyan.pins.shared" {
                     let changedNotes = storage.restoreCloudPins()
 
                     if let notes = changedNotes.added {
@@ -1744,13 +1744,13 @@ class ViewController: NSViewController,
     @IBAction func copyURL(_ sender: Any) {
         if let note = notesTableView.getSelectedNote(), let title = note.title.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) {
 
-            let name = "fsnotes://find/\(title)"
+            let name = "miaoyan://find/\(title)"
             let pasteboard = NSPasteboard.general
             pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
             pasteboard.setString(name, forType: NSPasteboard.PasteboardType.string)
 
             let notification = NSUserNotification()
-            notification.title = "FSNotes"
+            notification.title = "MiaoYan"
             notification.informativeText = NSLocalizedString("URL has been copied to clipboard", comment: "")
             notification.soundName = NSUserNotificationDefaultSoundName
             NSUserNotificationCenter.default.deliver(notification)
@@ -1766,7 +1766,7 @@ class ViewController: NSViewController,
     }
 
     func updateTitle(newTitle: String?) {
-        let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "FSNotes"
+        let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "MiaoYan"
 
         let noteTitle: String = newTitle ?? appName
         var titleString = noteTitle
