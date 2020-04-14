@@ -206,7 +206,7 @@ extension NSTextStorage: NSTextStorageDelegate {
                 paragraph.alignment = value.isFile() ? .left : .center
                 textStorage.addAttribute(.paragraphStyle, value: paragraph, range: range)
 
-                let imageKey = NSAttributedString.Key(rawValue: "co.fluder.fsnotes.image.url")
+                let imageKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.url")
                 if let url = textStorage.attribute(imageKey, at: range.location, effectiveRange: nil) as? URL {
                     loadImage(attachment: value, url: url, range: range)
                 }

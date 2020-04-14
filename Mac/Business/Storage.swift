@@ -40,14 +40,14 @@ class Storage {
     
 #if os(iOS)
     let initialFiles = [
-        "FSNotes - Readme.md",
-        "FSNotes - Code Highlighting.md"
+        "MiaoYan - Readme.md",
+        "MiaoYan - Code Highlighting.md"
     ]
 #else
     let initialFiles = [
-        "FSNotes - Readme.md",
-        "FSNotes - Shortcuts.md",
-        "FSNotes - Code Highlighting.md"
+        "MiaoYan - Readme.md",
+        "MiaoYan - Shortcuts.md",
+        "MiaoYan - Code Highlighting.md"
     ]
 #endif
     
@@ -483,7 +483,7 @@ class Storage {
             
             #if CLOUDKIT
             #else
-                if let data = try? note.url.extendedAttribute(forName: "co.fluder.fsnotes.pin") {
+                if let data = try? note.url.extendedAttribute(forName: "com.tw93.miaoyan.pin") {
                     let isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
                         ptr.load(as: Bool.self)
                     }
@@ -874,7 +874,7 @@ class Storage {
             }
 
             let keyStore = NSUbiquitousKeyValueStore()
-            keyStore.set(names, forKey: "co.fluder.fsnotes.pins.shared")
+            keyStore.set(names, forKey: "com.tw93.miaoyan.pins.shared")
             keyStore.synchronize()
 
             print("Pins successfully saved: \(names)")
@@ -890,7 +890,7 @@ class Storage {
         let keyStore = NSUbiquitousKeyValueStore()
         keyStore.synchronize()
         
-        if let names = keyStore.array(forKey: "co.fluder.fsnotes.pins.shared") as? [String] {
+        if let names = keyStore.array(forKey: "com.tw93.miaoyan.pins.shared") as? [String] {
             if let pinned = getPinned() {
                 for note in pinned {
                     if !names.contains(note.name) {

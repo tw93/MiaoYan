@@ -141,7 +141,7 @@ class FileSystemEventManager {
             }
         }
         
-        if note.name == "FSNotes - Readme.md" {
+        if note.name == "MiaoYan - Readme.md" {
             self.delegate.updateTable() {
                 self.delegate.notesTableView.selectRow(0)
                 note.addPin()
