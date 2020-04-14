@@ -438,7 +438,7 @@ public class Note: NSObject  {
         #elseif os(OSX)
             var pin = true
             let data = Data(bytes: &pin, count: 1)
-            try? url.setExtendedAttribute(data: data, forName: "co.fluder.fsnotes.pin")
+            try? url.setExtendedAttribute(data: data, forName: "com.tw93.miaoyan.pin")
         #endif
     }
     
@@ -454,7 +454,7 @@ public class Note: NSObject  {
             #elseif os(OSX)
                 var pin = false
                 let data = Data(bytes: &pin, count: 1)
-                try? url.setExtendedAttribute(data: data, forName: "co.fluder.fsnotes.pin")
+                try? url.setExtendedAttribute(data: data, forName: "com.tw93.miaoyan.pin")
             #endif
         }
     }
@@ -710,7 +710,7 @@ public class Note: NSObject  {
             {
                 "transient" : true,
                 "type" : "\(type.uti)",
-                "creatorIdentifier" : "co.fluder.fsnotes",
+                "creatorIdentifier" : "com.tw93.miaoyan",
                 "version" : 2,
                 "flatExtension" : "\(originalExtension)"
             }
@@ -721,7 +721,7 @@ public class Note: NSObject  {
         {
             "transient" : true,
             "type" : "\(type.uti)",
-            "creatorIdentifier" : "co.fluder.fsnotes",
+            "creatorIdentifier" : "com.tw93.miaoyu",
             "version" : 2
         }
         """
@@ -1330,7 +1330,7 @@ public class Note: NSObject  {
             let encryptedData = RNCryptor.encrypt(data: data, withPassword: password)
 
             try encryptedData.write(to: self.url)
-            print("FSNotes successfully writed encrypted data for: \(title)")
+            print("MiaoYan successfully writed encrypted data for: \(title)")
 
             try FileManager.default.removeItem(at: textPackURL)
         } catch {

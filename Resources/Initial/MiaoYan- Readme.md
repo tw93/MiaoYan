@@ -25,11 +25,11 @@ Key features:
 
 Default storage directory (Notarized):
 
-```~/Library/Containers/co.fluder.FSNotes/Data/Documents/```
+```~/Library/Containers/com.tw93.MiaoYan/Data/Documents/```
 
 Default storage directory (iCloud Drive):
 
-```~/Library/Mobile Documents/iCloud~co~fluder~fsnotes/Documents```
+```~/Library/Mobile Documents/iCloud~co~fluder~miaoyan/Documents```
 
 Of course you can change the directory (i.e. Dropbox or iCloud Drive) for synchronization
 

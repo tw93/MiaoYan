@@ -844,7 +844,7 @@ public class UserDefaultsManagement {
     static var fileContainer: NoteContainer {
         get {
             #if SHARE_EXT
-                let defaults = UserDefaults.init(suiteName: "group.fsnotes-manager")
+                let defaults = UserDefaults.init(suiteName: "group.miaoyan-manager")
                 if let result = defaults?.object(forKey: Constants.SharedContainerKey) as? Int, let container = NoteContainer(rawValue: result) {
                     return container
                 }
@@ -857,7 +857,7 @@ public class UserDefaultsManagement {
         }
         set {
             #if os(iOS)
-            UserDefaults.init(suiteName: "group.fsnotes-manager")?.set(newValue.rawValue, forKey: Constants.SharedContainerKey)
+            UserDefaults.init(suiteName: "group.miaoyan-manager")?.set(newValue.rawValue, forKey: Constants.SharedContainerKey)
             #endif
 
             UserDefaults.standard.set(newValue.rawValue, forKey: Constants.NoteContainer)
@@ -866,7 +866,7 @@ public class UserDefaultsManagement {
 
     static var projects: [URL] {
         get {
-            guard let defaults = UserDefaults.init(suiteName: "group.fsnotes-manager") else { return [] }
+            guard let defaults = UserDefaults.init(suiteName: "group.miaoyan-manager") else { return [] }
 
             if let result = defaults.object(forKey: Constants.ProjectsKey) as? Data, let urls = NSKeyedUnarchiver.unarchiveObject(with: result) as? [URL] {
                 return urls
@@ -875,7 +875,7 @@ public class UserDefaultsManagement {
             return []
         }
         set {
-            guard let defaults = UserDefaults.init(suiteName: "group.fsnotes-manager") else { return }
+            guard let defaults = UserDefaults.init(suiteName: "group.miaoyan-manager") else { return }
 
             let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
             defaults.set(data, forKey: Constants.ProjectsKey)
@@ -884,7 +884,7 @@ public class UserDefaultsManagement {
 
     static var importURLs: [URL] {
         get {
-            guard let defaults = UserDefaults.init(suiteName: "group.fsnotes-manager") else { return [] }
+            guard let defaults = UserDefaults.init(suiteName: "group.miaoyan-manager") else { return [] }
 
             if let result = defaults.object(forKey: Constants.ImportURLsKey) as? Data, let urls = NSKeyedUnarchiver.unarchiveObject(with: result) as? [URL] {
                 return urls
@@ -893,7 +893,7 @@ public class UserDefaultsManagement {
             return []
         }
         set {
-            guard let defaults = UserDefaults.init(suiteName: "group.fsnotes-manager") else { return }
+            guard let defaults = UserDefaults.init(suiteName: "group.miaoyan-manager") else { return }
 
             let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
             defaults.set(data, forKey: Constants.ImportURLsKey)

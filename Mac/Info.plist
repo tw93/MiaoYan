@@ -133,10 +133,10 @@
 			<key>CFBundleURLIconFile</key>
 			<string>icon</string>
 			<key>CFBundleURLName</key>
-			<string>co.fluder.fsnotes</string>
+			<string>com.tw93.miaoyan</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fsnotes</string>
+				<string>miaoyan</string>
 			</array>
 		</dict>
 		<dict>
@@ -145,7 +145,7 @@
 			<key>CFBundleURLIconFile</key>
 			<string>icon</string>
 			<key>CFBundleURLName</key>
-			<string>co.fluder.fsnotes</string>
+			<string>com.tw93.miaoyan</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>nv</string>
@@ -157,7 +157,7 @@
 			<key>CFBundleURLIconFile</key>
 			<string>icon</string>
 			<key>CFBundleURLName</key>
-			<string>co.fluder.fsnotes</string>
+			<string>com.tw93.miaoyan</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>nvalt</string>
@@ -177,20 +177,18 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2017-2019 Oleksandr Glushchenko. All rights reserved.</string>
 	<key>NSMainStoryboardFile</key>
 	<string>Main</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>NSUbiquitousContainers</key>
 	<dict>
-		<key>iCloud.co.fluder.fsnotes</key>
+		<key>iCloud.com.tw93.miaoyu</key>
 		<dict>
 			<key>NSUbiquitousContainerIsDocumentScopePublic</key>
 			<true/>
 			<key>NSUbiquitousContainerName</key>
-			<string>FSNotes</string>
+			<string>MiaoYu</string>
 			<key>NSUbiquitousContainerSupportedFolderLevels</key>
 			<string>One</string>
 		</dict>
