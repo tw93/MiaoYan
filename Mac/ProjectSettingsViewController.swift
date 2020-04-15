@@ -22,7 +22,6 @@ class ProjectSettingsViewController: NSViewController {
     @IBOutlet weak var directionDESC: NSButton!
 
     @IBOutlet weak var showInAll: NSButton!
-    @IBOutlet weak var firstLineAsTitle: NSButton!
 
     @IBAction func sortBy(_ sender: NSButton) {
         guard let project = project else { return }
@@ -60,21 +59,6 @@ class ProjectSettingsViewController: NSViewController {
         project?.saveSettings()
     }
 
-    @IBAction func firstLineAsTitle(_ sender: NSButton) {
-        guard let project = self.project else { return }
-
-        project.firstLineAsTitle = sender.state == .on
-        project.saveSettings()
-
-        let notes = Storage.sharedInstance().getNotesBy(project: project)
-        for note in notes {
-            note.invalidateCache()
-        }
-
-        guard let vc = ViewController.shared() else { return }
-        vc.notesTableView.reloadData()
-    }
-
     @IBAction func close(_ sender: Any) {
         self.dismiss(nil)
     }
@@ -87,8 +71,6 @@ class ProjectSettingsViewController: NSViewController {
 
     public func load(project: Project) {
         showInAll.state = project.showInCommon ? .on : .off
-        firstLineAsTitle.state = project.firstLineAsTitle ? .on : .off
-
         modificationDate.state = project.sortBySettings == .modificationDate ? .on : .off
         creationDate.state = project.sortBySettings == .creationDate ? .on : .off
         titleButton.state = project.sortBySettings == .title ? .on : .off

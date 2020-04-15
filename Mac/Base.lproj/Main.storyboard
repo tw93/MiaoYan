@@ -978,7 +978,7 @@ CA
                                                                                         <textField identifier="cellDate" autoresizesSubviews="NO" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="abw-Lq-K7d">
                                                                                             <rect key="frame" x="18" y="10" width="43" height="14"/>
                                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="2/23/11" id="9w3-fa-di3">
-                                                                                                <font key="font" metaFont="message" size="11"/>
+                                                                                                <font key="font" metaFont="label" size="11"/>
                                                                                                 <color key="textColor" red="0.65995385362694303" green="0.1371187799261683" blue="0.15795969262071341" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                                 <color key="backgroundColor" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
                                                                                                 <connections>
@@ -1368,17 +1368,6 @@ CA
                         <rect key="frame" x="0.0" y="0.0" width="450" height="368"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lhi-dw-WFN">
-                                <rect key="frame" x="335" y="13" width="101" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="push" title="Close" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="7GB-y2-EMo">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="close:" target="JOV-dV-hyG" id="2bK-e1-O6V"/>
-                                </connections>
-                            </button>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cFW-mP-L5G">
                                 <rect key="frame" x="36" y="318" width="109" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
@@ -1408,34 +1397,10 @@ CA
                                     <action selector="showNotesInMainList:" target="JOV-dV-hyG" id="g1q-7q-gte"/>
                                 </connections>
                             </button>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pbJ-GR-hHs">
-                                <rect key="frame" x="150" y="53" width="252" height="18"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="check" title="Use first line as title" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="kbK-Um-cQk">
-                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="firstLineAsTitle:" target="JOV-dV-hyG" id="6tE-fm-7hd"/>
-                                </connections>
-                            </button>
-                            <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="9Ag-KN-R7v">
-                                <rect key="frame" x="36" y="90" width="364" height="5"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            </box>
                             <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Xlx-2b-uqS">
                                 <rect key="frame" x="38" y="154" width="366" height="5"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </box>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eOj-jC-ndy">
-                                <rect key="frame" x="34" y="53" width="112" height="17"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="Notes list:" id="Scc-aD-CFQ">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yJO-Hj-7Bf">
                                 <rect key="frame" x="36" y="197" width="110" height="17"/>
                                 <autoresizingMask key="autoresizingMask"/>
@@ -1515,13 +1480,23 @@ CA
                                     <action selector="sortBy:" target="JOV-dV-hyG" id="tq9-Nn-S8l"/>
                                 </connections>
                             </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lhi-dw-WFN">
+                                <rect key="frame" x="335" y="37" width="101" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Close" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="7GB-y2-EMo">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="close:" target="JOV-dV-hyG" id="2bK-e1-O6V"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
                     <connections>
                         <outlet property="creationDate" destination="VM6-1W-eJP" id="2gs-eQ-fiQ"/>
                         <outlet property="directionASC" destination="cG6-mW-iPi" id="7o9-GP-Mck"/>
                         <outlet property="directionDESC" destination="HIU-aj-0cI" id="x94-Ms-POU"/>
-                        <outlet property="firstLineAsTitle" destination="pbJ-GR-hHs" id="ue5-hc-jLA"/>
                         <outlet property="modificationDate" destination="qfE-2B-PiS" id="GzG-Jq-tKk"/>
                         <outlet property="showInAll" destination="DQw-2B-ocF" id="Sti-yU-e3J"/>
                         <outlet property="sortByGlobal" destination="lRQ-kL-8RA" id="7az-vA-Nhu"/>

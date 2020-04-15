@@ -551,13 +551,11 @@ public class Note: NSObject  {
     }
 
     private func loadTitle() {
-        if !(UserDefaultsManagement.firstLineAsTitle || project.firstLineAsTitle) {
-            title = url
-                .deletingPathExtension()
-                .pathComponents
-                .last!
-                .replacingOccurrences(of: ":", with: "/")
-        }
+        title = url
+            .deletingPathExtension()
+            .pathComponents
+            .last!
+            .replacingOccurrences(of: ":", with: "/")
     }
 
     public func save(attributed: NSAttributedString) {
