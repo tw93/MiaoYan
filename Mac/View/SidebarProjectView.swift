@@ -10,7 +10,7 @@ import Cocoa
 import Foundation
 import Carbon.HIToolbox
 
-import FSNotesCore_macOS
+import MiaoYanCore_macOS
 
 class SidebarProjectView: NSOutlineView,
     NSOutlineViewDelegate,

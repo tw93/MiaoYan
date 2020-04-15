@@ -9,7 +9,7 @@
 import Cocoa
 import MASShortcut
 import CoreData
-import FSNotesCore_macOS
+import MiaoYanCore_macOS
 
 class PrefsViewController: NSTabViewController  {
 
@@ -34,7 +34,7 @@ class PrefsViewController: NSTabViewController  {
                 toolbarItem.label = "\(tabViewItem.label)    "
             }
         }
-        
+
         return toolbarItem
     }
 }

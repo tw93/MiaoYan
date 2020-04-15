@@ -1,6 +1,3 @@
 /* Bundle name */
 "CFBundleName" = "MiaoYanCore_macOS";
 
-/* Copyright (human-readable) */
-"NSHumanReadableCopyright" = "Copyright © 2018 Oleksandr Glushchenko. Alle Rechte vorbehalten";
-
