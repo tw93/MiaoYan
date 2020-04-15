@@ -1273,7 +1273,7 @@ class ViewController: NSViewController,
      Load titles in cases sort by Title
      */
     private func preLoadNoteTitles(in project: Project) {
-        if (UserDefaultsManagement.sort == .title || project.sortBy == .title) && (UserDefaultsManagement.firstLineAsTitle || project.firstLineAsTitle) {
+        if (UserDefaultsManagement.sort == .title || project.sortBy == .title) {
             _ = storage.noteList.filter({ $0.project == project })
         }
     }

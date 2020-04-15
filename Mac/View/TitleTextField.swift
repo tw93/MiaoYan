@@ -94,11 +94,7 @@ class TitleTextField: NSTextField {
 
     public func updateNotesTableView() {
         guard let vc = ViewController.shared(), let note = EditTextView.note else { return }
-
-        if !note.project.firstLineAsTitle {
-            vc.notesTableView.reloadRow(note: note)
-        }
-
+        vc.notesTableView.reloadRow(note: note)
         if let responder = restoreResponder {
             window?.makeFirstResponder(responder)
         }
