@@ -1,6 +1,3 @@
 /* Bundle name */
-"CFBundleName" = "FSNotesCore_macOS";
-
-/* Copyright (human-readable) */
-"NSHumanReadableCopyright" = "Copyright © 2018 Oleksandr Glushchenko. Alle Rechte vorbehalten";
+"CFBundleName" = "MiaoYanCore_macOS";
 

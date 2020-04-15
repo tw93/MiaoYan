@@ -9,10 +9,10 @@
 #import <Cocoa/Cocoa.h>
 
 //! Project version number for FSNotesCore_macOS.
-FOUNDATION_EXPORT double FSNotesCore_macOSVersionNumber;
+FOUNDATION_EXPORT double MiaoYanCore_macOSVersionNumber;
 
 //! Project version string for FSNotesCore_macOS.
-FOUNDATION_EXPORT const unsigned char FSNotesCore_macOSVersionString[];
+FOUNDATION_EXPORT const unsigned char MiaoYan_macOSVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <FSNotesCore_macOS/PublicHeader.h>
 

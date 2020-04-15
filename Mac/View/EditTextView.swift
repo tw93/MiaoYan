@@ -9,7 +9,7 @@
 import Cocoa
 import Highlightr
 import Carbon.HIToolbox
-import FSNotesCore_macOS
+import MiaoYanCore_macOS
 
 class EditTextView: NSTextView, NSTextFinderClient {
     public static var note: Note?
@@ -26,7 +26,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     public var timer: Timer?
     public var markdownView: MPreviewView?
     public static var imagesLoaderQueue = OperationQueue.init()
-    
+
     override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {
         validateSubmenu(menu)
     }
@@ -182,9 +182,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     override func mouseDown(with event: NSEvent) {
-  
+
         guard EditTextView.note != nil else { return }
-       
+
         guard let container = self.textContainer, let manager = self.layoutManager else { return }
 
         let point = self.convert(event.locationInWindow, from: nil)
@@ -417,7 +417,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     public func isEditable(note: Note) -> Bool {
-        
+
         if UserDefaultsManagement.preview {
             return false
         }

@@ -9,7 +9,7 @@
 import Cocoa
 import MASShortcut
 import CoreData
-import FSNotesCore_macOS
+import MiaoYanCore_macOS
 
 class PreferencesGeneralViewController: NSViewController {
     override func viewWillAppear() {
@@ -50,14 +50,14 @@ class PreferencesGeneralViewController: NSViewController {
            restart()
        }
 
-    
+
     override func viewDidAppear() {
         self.view.window!.title = NSLocalizedString("Preferences", comment: "")
 
         if let url = UserDefaultsManagement.storageUrl {
             defaultStoragePath.stringValue = url.path
         }
-        
+
         if #available(OSX 10.14, *) {
             appearance.selectItem(at: UserDefaultsManagement.appearanceType.rawValue)
         } else {
