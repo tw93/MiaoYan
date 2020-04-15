@@ -8,7 +8,7 @@
 
 import Cocoa
 import MASShortcut
-import FSNotesCore_macOS
+import MiaoYanCore_macOS
 import WebKit
 import LocalAuthentication
 
@@ -110,7 +110,7 @@ class ViewController: NSViewController,
         #endif
 
         searchQueue.maxConcurrentOperationCount = 1
-        
+
         notesTableView.loadingQueue.maxConcurrentOperationCount = 1
         notesTableView.loadingQueue.qualityOfService = QualityOfService.userInteractive
     }
@@ -787,7 +787,7 @@ class ViewController: NSViewController,
         guard let vc = ViewController.shared() else { return }
 
         if vc.notesTableView.selectedRow >= 0 {
-       
+
             let historyTitle = NSLocalizedString("History", comment: "Menu")
             let historyMenu = vc.noteMenu.item(withTitle: historyTitle)
             let view = vc.notesTableView.rect(ofRow: vc.notesTableView.selectedRow)

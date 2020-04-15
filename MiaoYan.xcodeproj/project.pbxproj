@@ -9,21 +9,21 @@
 /* Begin PBXBuildFile section */
 		270678F22445FE8B00D9935F /* Pods_MiaoYan.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 951EFB1C1F695127AE454696 /* Pods_MiaoYan.framework */; };
 		270678F32445FE8B00D9935F /* Pods_MiaoYan.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 951EFB1C1F695127AE454696 /* Pods_MiaoYan.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		270678F6244601C000D9935F /* FSNotesCore_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A1212C244176470016A14B /* FSNotesCore_macOS.framework */; };
-		270678F7244601C000D9935F /* FSNotesCore_macOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 27A1212C244176470016A14B /* FSNotesCore_macOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		270678FB244683C000D9935F /* Pods_FSNotesCore_macOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E531DBCAE528854A3CCF5ECE /* Pods_FSNotesCore_macOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		270678F6244601C000D9935F /* MiaoYanCore_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */; };
+		270678F7244601C000D9935F /* MiaoYanCore_macOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		275592971F3AE9B5006B8988 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275592961F3AE9B5006B8988 /* MainWindowController.swift */; };
+		278782A6244690C9000D5B82 /* MiaoYanCore_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */; };
+		278782A7244690C9000D5B82 /* MiaoYanCore_macOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		278782AA2446910D000D5B82 /* Pods_MiaoYanCore_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E9D36FA8E1C6FB67A485A09 /* Pods_MiaoYanCore_macOS.framework */; };
 		2799407C218484C900727B20 /* TitleBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799407B218484C900727B20 /* TitleBarView.swift */; };
 		27E48B1D2442DEA1007FF32F /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 27E48B1C2442DEA1007FF32F /* logo.png */; };
-		586ABDA5810502015BB7D515 /* Pods_FSNotesCore_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E531DBCAE528854A3CCF5ECE /* Pods_FSNotesCore_macOS.framework */; };
 		630A4D001E79552480BE870E /* Pods_MiaoYan__iCloud_Documents_.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3638E5E190683BCAE5B738F5 /* Pods_MiaoYan__iCloud_Documents_.framework */; };
-		6F13BB1620FEDDF50005E120 /* FSNotesCore_macOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F13BB0620FEDDF50005E120 /* FSNotesCore_macOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6F13BB1620FEDDF50005E120 /* MiaoYanCore_macOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F13BB0620FEDDF50005E120 /* MiaoYanCore_macOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F13BB6A20FEE0450005E120 /* DateFormatter+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F13BB2820FEDE230005E120 /* DateFormatter+.swift */; };
 		6F13BB6C20FEE04A0005E120 /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F13BB2920FEDE230005E120 /* String+.swift */; };
 		6F13BB6E20FEE04F0005E120 /* URL+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F13BB2A20FEDE230005E120 /* URL+.swift */; };
 		6F13BB7120FEE0DD0005E120 /* UserDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F13BB3820FEDE230005E120 /* UserDataService.swift */; };
 		8F7136EE23490CBF004DFA6E /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7136ED23490CBF004DFA6E /* Markdown.swift */; };
-		A744D706637F6DB9D3D59605 /* Pods_FSNotesCore_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8234DC25EF425B1EA6B46D9B /* Pods_FSNotesCore_macOS.framework */; };
 		D7038E1D20FA86C100A54E69 /* SharingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7038E1C20FA86C100A54E69 /* SharingService.swift */; };
 		D7038E1E20FA86C100A54E69 /* SharingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7038E1C20FA86C100A54E69 /* SharingService.swift */; };
 		D7038E2020FA957400A54E69 /* copy.png in Resources */ = {isa = PBXBuildFile; fileRef = D7038E1F20FA957300A54E69 /* copy.png */; };
@@ -357,6 +357,13 @@
 			remoteGlobalIDString = 6F13BB0320FEDDF40005E120;
 			remoteInfo = "FSNotesCore macOS";
 		};
+		278782A8244690C9000D5B82 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D7793C671F211C6000CA39B7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6F13BB0320FEDDF40005E120;
+			remoteInfo = "MiaoYan Core macOS";
+		};
 		6F13BB1720FEDDF50005E120 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D7793C671F211C6000CA39B7 /* Project object */;
@@ -373,7 +380,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				270678F7244601C000D9935F /* FSNotesCore_macOS.framework in Embed Frameworks */,
+				270678F7244601C000D9935F /* MiaoYanCore_macOS.framework in Embed Frameworks */,
 				270678F32445FE8B00D9935F /* Pods_MiaoYan.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -385,7 +392,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				270678FB244683C000D9935F /* Pods_FSNotesCore_macOS.framework in Embed Frameworks */,
+				278782A7244690C9000D5B82 /* MiaoYanCore_macOS.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -413,25 +420,24 @@
 
 /* Begin PBXFileReference section */
 		096293D85E5CC744D2EDD8EC /* Pods-MiaoYan (iCloud Documents).release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYan (iCloud Documents).release.xcconfig"; path = "Target Support Files/Pods-MiaoYan (iCloud Documents)/Pods-MiaoYan (iCloud Documents).release.xcconfig"; sourceTree = "<group>"; };
+		2706793C24468E3800D9935F /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = MiaoYan.app; path = /Users/Tw93/www/iOS/MiaoYan/build/Debug/MiaoYan.app; sourceTree = "<absolute>"; };
+		2706793D24468E3800D9935F /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = MiaoYan.app; path = /Users/Tw93/www/iOS/MiaoYan/build/Debug/MiaoYan.app; sourceTree = "<absolute>"; };
 		275592961F3AE9B5006B8988 /* MainWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
 		2799407B218484C900727B20 /* TitleBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleBarView.swift; sourceTree = "<group>"; };
-		27A1212C244176470016A14B /* FSNotesCore_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FSNotesCore_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		27A121562442A49D0016A14B /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = MiaoYan.app; path = /Users/Tw93/www/iOS/MiaoYan/build/Debug/MiaoYan.app; sourceTree = "<absolute>"; };
-		27A121572442A49D0016A14B /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = MiaoYan.app; path = /Users/Tw93/www/iOS/MiaoYan/build/Debug/MiaoYan.app; sourceTree = "<absolute>"; };
+		27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MiaoYanCore_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		27E48B1C2442DEA1007FF32F /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = ../../../../Downloads/Sketch/logo.png; sourceTree = "<group>"; };
 		3638E5E190683BCAE5B738F5 /* Pods_MiaoYan__iCloud_Documents_.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MiaoYan__iCloud_Documents_.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		469FA7126FC57EFF16B8CA67 /* Pods-MiaoYanCore macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYanCore macOS.release.xcconfig"; path = "Target Support Files/Pods-MiaoYanCore macOS/Pods-MiaoYanCore macOS.release.xcconfig"; sourceTree = "<group>"; };
 		5665A4534543CBBCB417646F /* Pods-MiaoYanCore macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYanCore macOS.debug.xcconfig"; path = "Target Support Files/Pods-MiaoYanCore macOS/Pods-MiaoYanCore macOS.debug.xcconfig"; sourceTree = "<group>"; };
 		58B367E717BA7BB76F7EC869 /* Pods-MiaoYan (iCloud Documents).debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYan (iCloud Documents).debug.xcconfig"; path = "Target Support Files/Pods-MiaoYan (iCloud Documents)/Pods-MiaoYan (iCloud Documents).debug.xcconfig"; sourceTree = "<group>"; };
 		638C3D39232D70961B32583F /* Pods-MiaoYan.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYan.release.xcconfig"; path = "Target Support Files/Pods-MiaoYan/Pods-MiaoYan.release.xcconfig"; sourceTree = "<group>"; };
-		6F13BB0620FEDDF50005E120 /* FSNotesCore_macOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FSNotesCore_macOS.h; sourceTree = "<group>"; };
+		6F13BB0620FEDDF50005E120 /* MiaoYanCore_macOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MiaoYanCore_macOS.h; sourceTree = "<group>"; };
 		6F13BB0720FEDDF50005E120 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F13BB2820FEDE230005E120 /* DateFormatter+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+.swift"; sourceTree = "<group>"; };
 		6F13BB2920FEDE230005E120 /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
 		6F13BB2A20FEDE230005E120 /* URL+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+.swift"; sourceTree = "<group>"; };
 		6F13BB3820FEDE230005E120 /* UserDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataService.swift; sourceTree = "<group>"; };
 		7E9D36FA8E1C6FB67A485A09 /* Pods_MiaoYanCore_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MiaoYanCore_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8234DC25EF425B1EA6B46D9B /* Pods_FSNotesCore_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FSNotesCore_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F7136ED23490CBF004DFA6E /* Markdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Markdown.swift; sourceTree = "<group>"; };
 		914712153CDB0EAD6F26CC39 /* Pods-FSNotesCore macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FSNotesCore macOS.release.xcconfig"; path = "Target Support Files/Pods-FSNotesCore macOS/Pods-FSNotesCore macOS.release.xcconfig"; sourceTree = "<group>"; };
 		91B2C247C287A5BDC802D510 /* Pods-MiaoYan.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYan.debug.xcconfig"; path = "Target Support Files/Pods-MiaoYan/Pods-MiaoYan.debug.xcconfig"; sourceTree = "<group>"; };
@@ -676,8 +682,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				586ABDA5810502015BB7D515 /* Pods_FSNotesCore_macOS.framework in Frameworks */,
-				A744D706637F6DB9D3D59605 /* Pods_FSNotesCore_macOS.framework in Frameworks */,
+				278782AA2446910D000D5B82 /* Pods_MiaoYanCore_macOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -685,7 +690,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				270678F6244601C000D9935F /* FSNotesCore_macOS.framework in Frameworks */,
+				270678F6244601C000D9935F /* MiaoYanCore_macOS.framework in Frameworks */,
 				270678F22445FE8B00D9935F /* Pods_MiaoYan.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -694,6 +699,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				278782A6244690C9000D5B82 /* MiaoYanCore_macOS.framework in Frameworks */,
 				630A4D001E79552480BE870E /* Pods_MiaoYan__iCloud_Documents_.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -769,7 +775,7 @@
 			children = (
 				6F13BB3520FEDE230005E120 /* Extensions */,
 				6F13BB3720FEDE230005E120 /* Helpers */,
-				6F13BB0620FEDDF50005E120 /* FSNotesCore_macOS.h */,
+				6F13BB0620FEDDF50005E120 /* MiaoYanCore_macOS.h */,
 				6F13BB0720FEDDF50005E120 /* Info.plist */,
 				D77F181E220F47FB00716DE3 /* InfoPlist.strings */,
 				D7DCFECE2108CAC90059B37B /* CoreNote.swift */,
@@ -807,7 +813,6 @@
 				951EFB1C1F695127AE454696 /* Pods_MiaoYan.framework */,
 				7E9D36FA8E1C6FB67A485A09 /* Pods_MiaoYanCore_macOS.framework */,
 				3638E5E190683BCAE5B738F5 /* Pods_MiaoYan__iCloud_Documents_.framework */,
-				8234DC25EF425B1EA6B46D9B /* Pods_FSNotesCore_macOS.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -928,7 +933,7 @@
 				D7793C711F211C6000CA39B7 /* Mac */,
 				C5F4774EAA923C4003B182F8 /* Frameworks */,
 				32CE416A4DFCDD098D5DAF53 /* Pods */,
-				27A1212C244176470016A14B /* FSNotesCore_macOS.framework */,
+				27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */,
 				270678FD2446861D00D9935F /* Recovered References */,
 			);
 			sourceTree = "<group>";
@@ -1160,16 +1165,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F13BB1620FEDDF50005E120 /* FSNotesCore_macOS.h in Headers */,
+				6F13BB1620FEDDF50005E120 /* MiaoYanCore_macOS.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		6F13BB0320FEDDF40005E120 /* FSNotesCore macOS */ = {
+		6F13BB0320FEDDF40005E120 /* MiaoYanCore macOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6F13BB2020FEDDF50005E120 /* Build configuration list for PBXNativeTarget "FSNotesCore macOS" */;
+			buildConfigurationList = 6F13BB2020FEDDF50005E120 /* Build configuration list for PBXNativeTarget "MiaoYanCore macOS" */;
 			buildPhases = (
 				E455DB381CF1C8CED1820400 /* [CP] Check Pods Manifest.lock */,
 				6F13BAFF20FEDDF40005E120 /* Headers */,
@@ -1182,9 +1187,9 @@
 			);
 			dependencies = (
 			);
-			name = "FSNotesCore macOS";
+			name = "MiaoYanCore macOS";
 			productName = "FSNotesCore macOS";
-			productReference = 27A1212C244176470016A14B /* FSNotesCore_macOS.framework */;
+			productReference = 27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		D7793C6E1F211C6000CA39B7 /* MiaoYan */ = {
@@ -1207,7 +1212,7 @@
 			);
 			name = MiaoYan;
 			productName = FSNotes;
-			productReference = 27A121562442A49D0016A14B /* MiaoYan.app */;
+			productReference = 2706793C24468E3800D9935F /* MiaoYan.app */;
 			productType = "com.apple.product-type.application";
 		};
 		D7E81C2B1F925B5F00416A91 /* MiaoYan (iCloud Documents) */ = {
@@ -1225,10 +1230,11 @@
 			buildRules = (
 			);
 			dependencies = (
+				278782A9244690C9000D5B82 /* PBXTargetDependency */,
 			);
 			name = "MiaoYan (iCloud Documents)";
 			productName = FSNotes;
-			productReference = 27A121572442A49D0016A14B /* MiaoYan.app */;
+			productReference = 2706793D24468E3800D9935F /* MiaoYan.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1301,7 +1307,7 @@
 			targets = (
 				D7793C6E1F211C6000CA39B7 /* MiaoYan */,
 				D7E81C2B1F925B5F00416A91 /* MiaoYan (iCloud Documents) */,
-				6F13BB0320FEDDF40005E120 /* FSNotesCore macOS */,
+				6F13BB0320FEDDF40005E120 /* MiaoYanCore macOS */,
 			);
 		};
 /* End PBXProject section */
@@ -1598,7 +1604,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-FSNotesCore macOS-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-MiaoYanCore macOS-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1822,12 +1828,17 @@
 /* Begin PBXTargetDependency section */
 		270678F9244601C000D9935F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6F13BB0320FEDDF40005E120 /* FSNotesCore macOS */;
+			target = 6F13BB0320FEDDF40005E120 /* MiaoYanCore macOS */;
 			targetProxy = 270678F8244601C000D9935F /* PBXContainerItemProxy */;
+		};
+		278782A9244690C9000D5B82 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6F13BB0320FEDDF40005E120 /* MiaoYanCore macOS */;
+			targetProxy = 278782A8244690C9000D5B82 /* PBXContainerItemProxy */;
 		};
 		6F13BB1820FEDDF50005E120 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 6F13BB0320FEDDF40005E120 /* FSNotesCore macOS */;
+			target = 6F13BB0320FEDDF40005E120 /* MiaoYanCore macOS */;
 			targetProxy = 6F13BB1720FEDDF50005E120 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1871,7 +1882,7 @@
 /* Begin XCBuildConfiguration section */
 		6F13BB1C20FEDDF50005E120 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BAA170983A18DD6E467B3065 /* Pods-FSNotesCore macOS.debug.xcconfig */;
+			baseConfigurationReference = 5665A4534543CBBCB417646F /* Pods-MiaoYanCore macOS.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
@@ -1904,7 +1915,7 @@
 		};
 		6F13BB1D20FEDDF50005E120 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 914712153CDB0EAD6F26CC39 /* Pods-FSNotesCore macOS.release.xcconfig */;
+			baseConfigurationReference = 469FA7126FC57EFF16B8CA67 /* Pods-MiaoYanCore macOS.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
@@ -2189,7 +2200,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6F13BB2020FEDDF50005E120 /* Build configuration list for PBXNativeTarget "FSNotesCore macOS" */ = {
+		6F13BB2020FEDDF50005E120 /* Build configuration list for PBXNativeTarget "MiaoYanCore macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6F13BB1C20FEDDF50005E120 /* Debug */,

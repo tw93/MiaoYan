@@ -9,15 +9,15 @@
 import Cocoa
 import Carbon.HIToolbox
 
-import FSNotesCore_macOS
+import MiaoYanCore_macOS
 
 class SearchTextField: NSSearchField, NSSearchFieldDelegate {
 
     public var vcDelegate: ViewController!
-    
+
     private var filterQueue = OperationQueue.init()
     private var searchTimer = Timer()
-    
+
     public var searchQuery = ""
     public var selectedRange = NSRange()
     public var skipAutocomplete = false
@@ -38,13 +38,13 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
             vcDelegate.notesTableView.selectNext()
             return
         }
-        
+
         if (event.keyCode == kVK_LeftArrow && stringValue.count == 0) {
             vcDelegate.storageOutlineView.window?.makeFirstResponder(vcDelegate.storageOutlineView)
             vcDelegate.storageOutlineView.selectRowIndexes([1], byExtendingSelection: false)
             return
         }
-        
+
         if event.keyCode == kVK_Return {
             vcDelegate.focusEditArea()
         }
@@ -103,7 +103,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         searchTimer.invalidate()
         searchTimer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(search), userInfo: nil, repeats: false)
     }
-    
+
     public func suggestAutocomplete(_ note: Note, filter: String) {
         guard note.title != filter.lowercased(), let editor = currentEditor() else { return }
 
