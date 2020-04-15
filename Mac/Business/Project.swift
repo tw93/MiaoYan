@@ -162,12 +162,6 @@ public class Project: Equatable {
                         }
                     }
                 }
-
-                if let firstLineAsTitle = settings["firstLineAsTitle"] as? Bool {
-                    self.firstLineAsTitle = firstLineAsTitle
-                } else {
-                    self.firstLineAsTitle = UserDefaultsManagement.firstLineAsTitle
-                }
             }
             return
         }
@@ -192,19 +186,8 @@ public class Project: Equatable {
                     }
                 }
             }
-
-            if isRoot {
-                self.firstLineAsTitle = UserDefaultsManagement.firstLineAsTitle
-            } else if let firstLineAsTitle = settings.value(forKey: "firstLineAsTitle") as? Bool {
-                self.firstLineAsTitle = firstLineAsTitle
-            } else {
-                self.firstLineAsTitle = UserDefaultsManagement.firstLineAsTitle
-            }
-
             return
         }
-
-        self.firstLineAsTitle = UserDefaultsManagement.firstLineAsTitle
 
         if label == "Welcome" {
             sortBy = .title
