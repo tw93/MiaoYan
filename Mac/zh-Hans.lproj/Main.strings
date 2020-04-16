@@ -391,15 +391,6 @@
 /* Class = "NSMenuItem"; title = "Back up storage"; ObjectID = "iIP-wI-OaZ"; */
 "iIP-wI-OaZ.title" = "备份存储";
 
-/* Class = "NSTextFieldCell"; title = "Deutsch 🇩🇪\nUkrainian🇺🇦\nSpanish 🇪🇸\nArabic 🇮🇶\nChinese (Simplified) 🇨🇳\nKorean 🇰🇷"; ObjectID = "iKE-bp-SFG"; */
-"iKE-bp-SFG.title" = "Deutsch 🇩🇪\nУкраїнська 🇺🇦\nSpanish 🇪🇸\nArabic 🇮🇶\n简体中文 🇨🇳";
-
-/* Class = "NSButtonCell"; title = "Lock on screen saver activated"; ObjectID = "IlF-tS-GFG"; */
-"IlF-tS-GFG.title" = "系统激活屏幕保护后自动锁定";
-
-/* Class = "NSTextFieldCell"; title = "New password:"; ObjectID = "iNK-dg-n5E"; */
-"iNK-dg-n5E.title" = "新的密码：";
-
 /* Class = "NSTextFieldCell"; title = "Hint:"; ObjectID = "ioc-u5-XRA"; */
 "ioc-u5-XRA.title" = "提示：";
 
@@ -582,9 +573,6 @@
 
 /* Class = "NSMenuItem"; title = "Back up storage"; ObjectID = "PvQ-Pd-zsZ"; */
 "PvQ-Pd-zsZ.title" = "备份存储";
-
-/* Class = "NSViewController"; title = "Security"; ObjectID = "PXw-YJ-q6A"; */
-"PXw-YJ-q6A.title" = "安全性";
 
 /* Class = "NSButtonCell"; title = "Creation date"; ObjectID = "PY8-lr-5qr"; */
 "PY8-lr-5qr.title" = "创建日期";

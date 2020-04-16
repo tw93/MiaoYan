@@ -1,11 +1,3 @@
-//
-//  Project.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 4/7/18.
-//  Copyright © 2018 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Foundation
 
 public class Project: Equatable {
@@ -203,25 +195,6 @@ public class Project: Equatable {
         return nil
     }
 
-    public func getGitPath() -> String? {
-        if isArchive || parent == nil {
-            return nil
-        }
-
-        let parentURL = getParent().url
-        let relative = url.path.replacingOccurrences(of: parentURL.path, with: "")
-        
-        if relative.first == "/" {
-            return String(relative.dropFirst())
-        }
-
-        if relative == "" {
-            return nil
-        }
-
-        return relative
-    }
-
     public func createDirectory() {
         do {
             try FileManager.default.createDirectory(at: url.appendingPathComponent("i"), withIntermediateDirectories: true, attributes: nil)
@@ -248,20 +221,5 @@ public class Project: Equatable {
 
     public func getShortSign() -> String {
         return String(getParent().url.path.md5.prefix(4))
-    }
-
-    public func getAllTags() -> [String] {
-        let notes = Storage.sharedInstance().noteList.filter({ $0.project == self })
-
-        var tags = [String]()
-        for note in notes {
-            for tag in note.tags {
-                if !tags.contains(tag) {
-                    tags.append(tag)
-                }
-            }
-        }
-
-        return tags
     }
 }

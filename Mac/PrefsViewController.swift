@@ -1,11 +1,3 @@
-//
-//  PrefsViewController.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 8/4/17.
-//  Copyright © 2017 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Cocoa
 import MASShortcut
 import CoreData

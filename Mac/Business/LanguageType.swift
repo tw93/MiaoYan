@@ -1,21 +1,3 @@
-//
-//  LanguageType.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 7/7/18.
-//  Copyright © 2018 Oleksandr Glushchenko. All rights reserved.
-//
-
-import Foundation
-
-//
-//  NoteFileType.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 1/6/18.
-//  Copyright © 2018 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Foundation
 
 enum LanguageType: Int {

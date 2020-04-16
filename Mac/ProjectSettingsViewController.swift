@@ -1,11 +1,3 @@
-//
-//  ProjectSettingsViewController.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 11/23/18.
-//  Copyright © 2018 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Cocoa
 import Carbon.HIToolbox
 
