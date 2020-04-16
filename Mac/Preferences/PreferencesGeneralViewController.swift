@@ -1,11 +1,3 @@
-//
-//  PreferencesGeneralViewController.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 3/17/19.
-//  Copyright © 2019 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Cocoa
 import MASShortcut
 import CoreData

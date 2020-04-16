@@ -1,11 +1,3 @@
-//
-//  CodeBlock.swift
-//  FSNotes
-//
-//  Created by Олександр Глущенко on 8/28/19.
-//  Copyright © 2019 Oleksandr Glushchenko. All rights reserved.
-//
-
 import AppKit
 
 class CodeBlock: NSTextBlock {

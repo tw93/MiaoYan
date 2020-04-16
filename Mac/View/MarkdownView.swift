@@ -1,11 +1,3 @@
-//
-//  DownView.swift
-//  Down
-//
-//  Created by Rob Phillips on 6/1/16.
-//  Copyright © 2016 Glazed Donut, LLC. All rights reserved.
-//
-
 import WebKit
 import Highlightr
 

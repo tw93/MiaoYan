@@ -1,11 +1,3 @@
-//
-//  EditTextView.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 8/11/17.
-//  Copyright © 2017 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Cocoa
 import Highlightr
 import Carbon.HIToolbox

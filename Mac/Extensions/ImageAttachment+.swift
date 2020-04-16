@@ -1,11 +1,3 @@
-//
-//  ImageAttachment+.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 1/19/19.
-//  Copyright © 2019 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Cocoa
 import AVKit
 

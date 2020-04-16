@@ -1,11 +1,3 @@
-//
-//  TitleBarView.swift
-//  FSNotes
-//
-//  Created by BUDDAx2 on 10/27/18.
-//  Copyright © 2018 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Cocoa
 
 class TitleBarView: NSView {

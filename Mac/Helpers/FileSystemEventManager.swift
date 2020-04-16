@@ -1,11 +1,3 @@
-//
-//  FileSystemEventManager.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 7/13/18.
-//  Copyright © 2018 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Foundation
 import MiaoYanCore_macOS
 
