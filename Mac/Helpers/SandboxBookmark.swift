@@ -1,11 +1,3 @@
-//
-//  SandboxBookmark.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 8/6/17.
-//  Copyright © 2017 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Foundation
 
 class SandboxBookmark {

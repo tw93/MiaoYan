@@ -1,11 +1,3 @@
-//
-//  UndoData.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 4/27/18.
-//  Copyright © 2018 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Foundation
 
 class UndoData: NSObject {

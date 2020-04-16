@@ -1,11 +1,3 @@
-//
-//  ViewController.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 7/20/17.
-//  Copyright © 2017 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Cocoa
 import MASShortcut
 import MiaoYanCore_macOS

@@ -1,11 +1,3 @@
-//
-//  SearchTextField.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 8/3/17.
-//  Copyright © 2017 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Cocoa
 import Carbon.HIToolbox
 

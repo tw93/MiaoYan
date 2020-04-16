@@ -1,12 +1,3 @@
-//
-//  NoteMO+CoreDataClass.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 9/24/17.
-//  Copyright © 2017 Oleksandr Glushchenko. All rights reserved.
-//
-//
-
 import Foundation
 import RNCryptor
 import SSZipArchive
@@ -1531,15 +1522,5 @@ public class Note: NSObject  {
         }
 
         return nil
-    }
-
-    public func getGitPath() -> String {
-        var path = name
-
-        if let gitPath = project.getGitPath() {
-            path = gitPath + "/" + name
-        }
-
-        return path
     }
 }
