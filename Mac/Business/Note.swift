@@ -108,7 +108,7 @@ public class Note: NSObject  {
             content = NSMutableAttributedString(attributedString: attributedString)
         }
         
-        if !isTrash() && !project.isArchive {
+        if !isTrash() {
             loadTags()
         }
     }
@@ -809,14 +809,6 @@ public class Note: NSObject  {
     
     func isTrash() -> Bool {
         return project.isTrash
-    }
-    
-    public func isInArchive() -> Bool {
-        guard UserDefaultsManagement.archiveDirectory != nil else {
-            return false
-        }
-        
-        return project.isArchive
     }
 
     public func contains<S: StringProtocol>(terms: [S]) -> Bool {

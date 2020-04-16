@@ -1,11 +1,3 @@
-//
-//  UserDataService.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 1/30/18.
-//  Copyright © 2018 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Foundation
 
 public class UserDataService {

@@ -1,11 +1,3 @@
-//
-//  Date+.swift
-//  FSNotes iOS
-//
-//  Created by Oleksandr Glushchenko on 9/25/18.
-//  Copyright © 2018 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Foundation
 
 extension Date {

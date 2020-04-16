@@ -4,7 +4,7 @@
 
 File system notes is modern notational velocity (nvALT) on steroids.
 
-FSNotes respects open formats: **plain/text, markdown, rtf**, and stores data in the file system. You can view, edit, and copy data in your favourite external editor and see live results in FSNotes.
+MiaoYan respects open formats: **plain/text, markdown, rtf**, and stores data in the file system. You can view, edit, and copy data in your favourite external editor and see live results in MiaoYan.
 
 Key features:
 
@@ -32,8 +32,6 @@ Default storage directory (iCloud Drive):
 ```~/Library/Mobile Documents/iCloud~co~fluder~miaoyan/Documents```
 
 Of course you can change the directory (i.e. Dropbox or iCloud Drive) for synchronization
-
-![](https://raw.githubusercontent.com/glushchenko/fsnotes/master/code.png)
 
 - [ ] and
 - [x] todo 🤗

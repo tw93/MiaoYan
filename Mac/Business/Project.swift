@@ -8,7 +8,6 @@ public class Project: Equatable {
     var isRoot: Bool
     var parent: Project?
     var isDefault: Bool
-    var isArchive: Bool
     public var isExternal: Bool = false
 
     public var sortBy: SortBy = UserDefaultsManagement.sort
@@ -22,16 +21,15 @@ public class Project: Equatable {
 
     public var firstLineAsTitle: Bool = false
     
-    init(url: URL, label: String? = nil, isTrash: Bool = false, isRoot: Bool = false, parent: Project? = nil, isDefault: Bool = false, isArchive: Bool = false, isExternal: Bool = false) {
+    init(url: URL, label: String? = nil, isTrash: Bool = false, isRoot: Bool = false, parent: Project? = nil, isDefault: Bool = false, isExternal: Bool = false) {
         self.url = url.resolvingSymlinksInPath()
         self.isTrash = isTrash
         self.isRoot = isRoot
         self.parent = parent
         self.isDefault = isDefault
-        self.isArchive = isArchive
         self.isExternal = isExternal
 
-        showInCommon = (isTrash || isArchive) ? false : true
+        showInCommon = isTrash ? false : true
 
         #if os(iOS)
         if isRoot && isDefault {
@@ -101,10 +99,6 @@ public class Project: Equatable {
             return "Trash"
         }
 
-        if isArchive {
-            return label
-        }
-        
         return "\(getParent().getFullLabel()) › \(label)"
     }
 
