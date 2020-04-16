@@ -1,11 +1,3 @@
-//
-//  UserDefaultsManagement+.swift
-//  FSNotesCore macOS
-//
-//  Created by Oleksandr Glushchenko on 10/25/18.
-//  Copyright © 2018 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Foundation
 import MASShortcut
 import AppKit

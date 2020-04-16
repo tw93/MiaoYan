@@ -78,12 +78,6 @@ class PreferencesGeneralViewController: NSViewController {
 
                 UserDefaultsManagement.storagePath = url.path
                 self.defaultStoragePath.stringValue = url.path
-
-                // Resets archive if not bookmarked
-                if let archiveURL = UserDefaultsManagement.archiveDirectory, !activeBookmars.contains(archiveURL) {
-                    UserDefaultsManagement.archiveDirectory = nil
-                }
-
                 self.restart()
             }
         }

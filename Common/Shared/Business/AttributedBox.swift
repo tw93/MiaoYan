@@ -1,11 +1,3 @@
-//
-//  AttributedBox.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 8/30/18.
-//  Copyright © 2018 Oleksandr Glushchenko. All rights reserved.
-//
-
 #if os(iOS)
     import UIKit
     import NightNight

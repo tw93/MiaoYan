@@ -1,11 +1,3 @@
-//
-//  NoteCellView+.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 11/6/18.
-//  Copyright © 2018 Oleksandr Glushchenko. All rights reserved.
-//
-
 #if os(iOS)
 import UIKit
 typealias ImageView = UIImageView

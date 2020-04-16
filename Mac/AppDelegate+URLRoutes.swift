@@ -1,11 +1,3 @@
-//
-//  AppDelegate+URLRoutes.swift
-//  FSNotes
-//
-//  Created by Jeff Hanbury on 13/04/18.
-//  Copyright © 2018 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Foundation
 import Cocoa
 
@@ -65,7 +57,7 @@ extension AppDelegate {
 
         for url in urls {
             if let items = vc.storageOutlineView.sidebarItems, let note = Storage.sharedInstance().getBy(url: url) {
-                if let sidebarItem = items.first(where: { ($0 as? SidebarItem)?.project == note.project || ($0 as? SidebarItem)?.project?.isArchive == note.isInArchive()}) {
+                if let sidebarItem = items.first(where: { ($0 as? SidebarItem)?.project == note.project}) {
                     sidebarIndex = vc.storageOutlineView.row(forItem: sidebarItem)
                     importedNote = note
                 }
@@ -87,7 +79,7 @@ extension AppDelegate {
         }
     }
     
-    // MARK: - FSNotes routes
+    // MARK: - MiaoYan routes
     
     func MiaoYanRouter(_ url: URL) {
         guard let directive = url.host else { return }
@@ -183,7 +175,7 @@ extension AppDelegate {
     
     /// Handle URLs in the format nv://find/searchstring1%20searchstring2
     ///
-    /// Note: this route is identical to the corresponding FSNotes route.
+    /// Note: this route is identical to the corresponding MiaoYan route.
     ///
     func RouteNvAltFind(_ url: URL) {
         RouteMiaoYanFind(url)

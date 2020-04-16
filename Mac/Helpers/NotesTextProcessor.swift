@@ -310,7 +310,7 @@ public class NotesTextProcessor {
     
     
     /**
-     Coverts App links:`[[Link Title]]` to Markdown: `[Link](fsnotes://find/link%20title)`
+     Coverts App links:`[[Link Title]]` to Markdown: `[Link](miaoyan://find/link%20title)`
      
      - parameter content:      A string containing CommonMark Markdown
      

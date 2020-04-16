@@ -1,11 +1,3 @@
-//
-//  MPreviewView.swift
-//  FSNotes
-//
-//  Created by Олександр Глущенко on 8/17/19.
-//  Copyright © 2019 Oleksandr Glushchenko. All rights reserved.
-//
-
 import WebKit
 import Carbon.HIToolbox
 

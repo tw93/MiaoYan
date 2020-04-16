@@ -13,7 +13,7 @@ class AboutViewController: NSViewController {
     @IBOutlet weak var versionLabel: NSTextField!
     
     @IBAction func openContributorsPage(_ sender: Any) {
-        let url = URL(string: "https://github.com/glushchenko/fsnotes/graphs/contributors")!
+        let url = URL(string: "")!
         NSWorkspace.shared.open(url)
     }
 }

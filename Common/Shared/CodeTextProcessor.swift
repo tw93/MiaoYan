@@ -1,11 +1,3 @@
-//
-//  CodeTextProcessor.swift
-//  FSNotes
-//
-//  Created by Олександр Глущенко on 9/2/19.
-//  Copyright © 2019 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Foundation
 
 class CodeTextProcessor {
