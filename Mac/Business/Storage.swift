@@ -1,11 +1,3 @@
-//
-//  NotesCollection.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 8/9/17.
-//  Copyright © 2017 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Foundation
 import CoreServices
 
@@ -74,7 +66,7 @@ class Storage {
             projects.append(project)
 
             for bookmark in bookmarks {
-                let externalProject = Project(url: bookmark, label: bookmark.lastPathComponent, isTrash: false, isRoot: true, isDefault: false, isArchive: false, isExternal: true)
+                let externalProject = Project(url: bookmark, label: bookmark.lastPathComponent, isTrash: false, isRoot: true, isDefault: false, isExternal: true)
                 
                 projects.append(externalProject)
             }
@@ -82,13 +74,6 @@ class Storage {
             #if NOT_EXTENSION
                 checkTrashForVolume(url: project.url)
             #endif
-
-            if let archive = UserDefaultsManagement.archiveDirectory {
-                let archiveLabel = NSLocalizedString("Archive", comment: "Sidebar label")
-                let project = Project(url: archive, label: archiveLabel, isRoot: false, isDefault: false, isArchive: true)
-                _ = add(project: project)
-            }
-
             return
         #endif
 
@@ -117,7 +102,7 @@ class Storage {
         let archiveLabel = NSLocalizedString("Archive", comment: "Sidebar label")
 
         if let archive = UserDefaultsManagement.archiveDirectory {
-            let project = Project(url: archive, label: archiveLabel, isRoot: false, isDefault: false, isArchive: true)
+            let project = Project(url: archive, label: archiveLabel, isRoot: false, isDefault: false)
             _ = add(project: project)
         }
     }
@@ -279,14 +264,6 @@ class Storage {
         return added
     }
 
-    public func getArchive() -> Project? {
-        if let project = projects.first(where: { $0.isArchive }) {
-            return project
-        }
-        
-        return nil
-    }
-    
     func getTrash(url: URL) -> URL? {
         #if os(OSX)
             return try? FileManager.default.url(for: .trashDirectory, in: .allDomainsMask, appropriateFor: url, create: false)
@@ -322,10 +299,6 @@ class Storage {
             }
 
             if project.isRoot && skipRoot {
-                continue
-            }
-
-            if project.isArchive && !withArchive {
                 continue
             }
 
@@ -469,9 +442,6 @@ class Storage {
             #endif
 
             let note = Note(url: url.resolvingSymlinksInPath(), with: item)
-            if item.isArchive {
-                note.loadTags()
-            }
 
             if (url.pathComponents.count == 0) {
                 continue
@@ -511,15 +481,7 @@ class Storage {
             noteList.append(note)
         }
     }
-    
-    public func unload(project: Project) {
-        let notes = noteList.filter({ $0.project.isArchive })
-        for note in notes {
-            if let i = noteList.firstIndex(where: {$0 === note}) {
-                noteList.remove(at: i)
-            }
-        }
-    }
+
 
     public func reLoadTrash() {
         noteList.removeAll(where: { $0.isTrash() })

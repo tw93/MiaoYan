@@ -1,13 +1,4 @@
-//
-//  MainWindowController.swift
-//  FSNotes
-//
-//  Created by BUDDAx2 on 8/9/17.
-//  Copyright © 2017 Oleksandr Glushchenko. All rights reserved.
-//
-
 import AppKit
-
 
 class MainWindowController: NSWindowController, NSWindowDelegate {
     let notesListUndoManager = UndoManager()

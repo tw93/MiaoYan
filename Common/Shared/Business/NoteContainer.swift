@@ -1,11 +1,3 @@
-//
-//  NoteContainer.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 3/4/19.
-//  Copyright © 2019 Oleksandr Glushchenko. All rights reserved.
-//
-
 public enum NoteContainer: Int {
     case none = 0x01
     case textBundle = 0x02

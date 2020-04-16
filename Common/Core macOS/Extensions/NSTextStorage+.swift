@@ -1,11 +1,3 @@
-//
-//  NSTextStorage+.swift
-//  FSNotesCore macOS
-//
-//  Created by Oleksandr Glushchenko on 7/20/18.
-//  Copyright © 2018 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Foundation
 
 import Cocoa
