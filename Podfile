@@ -37,13 +37,6 @@ target 'MiaoYan' do
     common_pods
 end
 
-target 'MiaoYan (iCloud Documents)' do
-    platform :osx, MAC_TARGET_VERSION
-
-    mac_pods
-    common_pods
-end
-
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     if target.name == 'cmark-gfm-swift-macOS'
