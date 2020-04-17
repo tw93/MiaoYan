@@ -71,7 +71,6 @@ class PreferencesGeneralViewController: NSViewController {
                 guard let currentURL = UserDefaultsManagement.storageUrl else { return }
 
                 let bookmark = SandboxBookmark.sharedInstance()
-                bookmark.load()
                 bookmark.remove(url: currentURL)
                 bookmark.store(url: url)
                 bookmark.save()

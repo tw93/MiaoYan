@@ -1007,7 +1007,7 @@ public class TextFormatter {
         let attributedString = NSMutableAttributedString(string: string)
         let range = NSRange(0..<attributedString.length)
 
-        attributedString.addAttribute(.font, value: NotesTextProcessor.codeFont, range: range)
+        attributedString.addAttribute(.font, value: NotesTextProcessor.codeFont as Any, range: range)
         return attributedString
     }
 }
