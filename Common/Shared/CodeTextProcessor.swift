@@ -138,7 +138,8 @@ class CodeTextProcessor {
         return getBlockRanges(ranges: paragraphRanges, pars: paragraphList)
     }
 
-    public func getBlockRanges(ranges: [NSRange], pars: [String]) -> [NSRange]? {
+    public func getBlockRanges(ranges: [NSRange],
+                               pars: [String]) -> [NSRange]? {
         let digitSet = CharacterSet.decimalDigits
         var codeBlocks = [NSRange]()
         var index = 0
