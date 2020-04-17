@@ -72,40 +72,17 @@ class EditTextView: NSTextView, NSTextFinderClient {
         if menuItem.menu?.identifier?.rawValue == "formatMenu", let vc = ViewController.shared(), vc.notesTableView.selectedRow == -1 || !vc.editArea.hasFocus() {
             return false
         }
+        let disable = [
+            NSLocalizedString("Underline", comment: ""),
+            NSLocalizedString("Strikethrough", comment: "")
+        ]
 
-        if note.isRTF() {
-            let disableRTF = [
-                NSLocalizedString("Header 1", comment: ""),
-                NSLocalizedString("Header 2", comment: ""),
-                NSLocalizedString("Header 3", comment: ""),
-                NSLocalizedString("Header 4", comment: ""),
-                NSLocalizedString("Header 5", comment: ""),
-                NSLocalizedString("Header 6", comment: ""),
-                NSLocalizedString("Link", comment: ""),
-                NSLocalizedString("Image or file", comment: ""),
-                NSLocalizedString("Toggle preview", comment: ""),
-                NSLocalizedString("Code Block", comment: ""),
-                NSLocalizedString("Code Span", comment: ""),
-                NSLocalizedString("Todo", comment: "")
-            ]
-
-            if disableRTF.contains(menuItem.title) {
-                menuItem.isHidden = true
-            }
-
-            return !disableRTF.contains(menuItem.title)
-        } else {
-            let disable = [
-                NSLocalizedString("Underline", comment: ""),
-                NSLocalizedString("Strikethrough", comment: "")
-            ]
-
-            if disable.contains(menuItem.title) {
-                menuItem.isHidden = true
-            }
-
-            return !disable.contains(menuItem.title)
+        if disable.contains(menuItem.title) {
+            menuItem.isHidden = true
         }
+
+        return !disable.contains(menuItem.title)
+        
     }
 
     // MARK: Overrides
