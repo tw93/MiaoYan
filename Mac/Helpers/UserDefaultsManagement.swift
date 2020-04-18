@@ -22,12 +22,12 @@ public class UserDefaultsManagement {
     static var DefaultFontSize = 16
     static var editorLineSpacing = 4
 
-    static var DefaultFontColor = Color(red:0.15, green:0.15, blue:0.15, alpha:1.00)
+    static var DefaultFontColor = Color(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.00)
     static var DefaultBgColor = Color.white
-    
+
     static var codeFontName = "JetBrains Mono"
     static var lineWidth = 1000
-    
+    static var linkColor = Color(red: 0.15, green: 0.58, blue: 0.99, alpha: 1.00)
     static var fullScreen = false
 
     static var codeFontSize = 14
@@ -308,8 +308,6 @@ public class UserDefaultsManagement {
         }
     #endif
 
-
-
     static var archiveDirectory: URL? {
         get {
             #if os(OSX)
@@ -425,6 +423,7 @@ public class UserDefaultsManagement {
             defaults.set(data, forKey: Constants.ImportURLsKey)
         }
     }
+
     static var markdownPreviewCSS: URL? {
         get {
             if let path = UserDefaults.standard.object(forKey: Constants.MarkdownPreviewCSS) as? String,
