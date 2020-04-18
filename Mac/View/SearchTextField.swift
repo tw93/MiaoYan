@@ -128,9 +128,6 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         self.filterQueue.cancelAllOperations()
         self.filterQueue.addOperation {
             self.vcDelegate.updateTable(search: true, searchText: searchText, sidebarItem: sidebarItem, projects: projects) {
-                if !UserDefaultsManagement.focusInEditorOnNoteSelect {
-                    UserDataService.instance.searchTrigger = false
-                }
             }
         }
 

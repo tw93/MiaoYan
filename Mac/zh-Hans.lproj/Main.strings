@@ -85,9 +85,6 @@
 /* Class = "NSTextFieldCell"; title = "Current password:"; ObjectID = "7me-g8-vOq"; */
 "7me-g8-vOq.title" = "当前密码：";
 
-/* Class = "NSMenuItem"; title = "Open external"; ObjectID = "7MT-fy-lXN"; */
-"7MT-fy-lXN.title" = "打开外部";
-
 /* Class = "NSButtonCell"; title = "Change"; ObjectID = "7xA-9l-dja"; */
 "7xA-9l-dja.title" = "更改";
 
@@ -690,9 +687,6 @@
 
 /* Class = "NSMenuItem"; title = "Show Substitutions"; ObjectID = "z6F-FW-3nz"; */
 "z6F-FW-3nz.title" = "显示替换";
-
-/* Class = "NSTextFieldCell"; title = "Open in external editor:"; ObjectID = "zcY-e5-gKs"; */
-"zcY-e5-gKs.title" = "在外部编辑器中打开：";
 
 /* Class = "NSButtonCell"; title = "Back up manually"; ObjectID = "Ze0-SZ-STw"; */
 "Ze0-SZ-STw.title" = "手动备份";
