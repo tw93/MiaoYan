@@ -20,19 +20,29 @@ public class UserDefaultsManagement {
     static var DefaultFont = ".AppleSystemUIFont"
 
     static var DefaultFontSize = 16
-    static var editorLineSpacing = 2
+    static var editorLineSpacing = 4
 
-    static var DefaultFontColor = Color.black
+    static var DefaultFontColor = Color(red:0.15, green:0.15, blue:0.15, alpha:1.00)
     static var DefaultBgColor = Color.white
+    
+    static var codeFontName = "JetBrains Mono"
+    static var lineWidth = 1000
+    
+    static var fullScreen = false
+
+    static var codeFontSize = 14
+    static var maxNightModeBrightnessLevel = 35
+
+    static var lastProject = 0
+    static var fontName = "JetBrains Mono"
+    static var previewFontSize = 16
+    static var sortDirection = true
+    static var marginSize = 24
+    static var realSidebarSize = 100
 
     private struct Constants {
         static let AppearanceTypeKey = "appearanceType"
         static let ArchiveDirectoryKey = "archiveDirectory"
-        static let AutomaticQuoteSubstitution = "automaticQuoteSubstitution"
-        static let AutomaticDataDetection = "automaticDataDetection"
-        static let AutomaticLinkDetection = "automaticLinkDetection"
-        static let AutomaticTextReplacement = "automaticTextReplacement"
-        static let AutomaticDashSubstitution = "automaticDashSubstitution"
         static let BgColorKey = "bgColorKeyed"
         static let CellFrameOriginY = "cellFrameOriginY"
         static let CodeFontNameKey = "codeFont"
@@ -66,12 +76,6 @@ public class UserDefaultsManagement {
         static let StoragePathKey = "storageUrl"
         static let TextMatchAutoSelection = "textMatchAutoSelection"
     }
-
-    static var codeFontName = "JetBrains Mono"
-
-    static var codeFontSize = 14
-
-    static var fontName = "JetBrains Mono"
 
     static var fontSize: Int {
         get {
@@ -255,8 +259,6 @@ public class UserDefaultsManagement {
         }
     }
 
-    static var sortDirection = true
-
     static var sidebarSize: CGFloat {
         get {
             if let size = UserDefaults.standard.object(forKey: "sidebarSize"), let width = size as? CGFloat {
@@ -273,8 +275,6 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: "sidebarSize")
         }
     }
-
-    static var realSidebarSize = 100
 
     static var lastSelectedURL: URL? {
         get {
@@ -308,9 +308,7 @@ public class UserDefaultsManagement {
         }
     #endif
 
-    static var maxNightModeBrightnessLevel = 35
 
-    static var lastProject = 0
 
     static var archiveDirectory: URL? {
         get {
@@ -368,19 +366,6 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.ImagesWidthKey)
         }
     }
-
-    static var lineWidth = 1000
-
-    static var textMatchAutoSelection = true
-
-    static var automaticQuoteSubstitution = false
-
-    static var automaticDataDetection = false
-    static var automaticLinkDetection = false
-
-    static var automaticTextReplacement = false
-
-    static var automaticDashSubstitution = false
 
     static var fileContainer: NoteContainer {
         get {
@@ -440,11 +425,6 @@ public class UserDefaultsManagement {
             defaults.set(data, forKey: Constants.ImportURLsKey)
         }
     }
-
-    static var previewFontSize = 16
-
-    static var marginSize = 20
-
     static var markdownPreviewCSS: URL? {
         get {
             if let path = UserDefaults.standard.object(forKey: Constants.MarkdownPreviewCSS) as? String,
@@ -464,6 +444,4 @@ public class UserDefaultsManagement {
             }
         }
     }
-
-    static var fullScreen = false
 }

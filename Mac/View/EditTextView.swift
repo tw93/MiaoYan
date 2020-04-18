@@ -44,7 +44,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             newRect.size.height = newRect.size.height - CGFloat(UserDefaultsManagement.editorLineSpacing)
         }
 
-        let clr = NSColor(red: 0.47, green: 0.53, blue: 0.69, alpha: 1.0)
+        let clr = NSColor(red: 0.2, green: 2, blue: 0.2, alpha: 1.0)
         super.drawInsertionPoint(in: newRect, color: clr, turnedOn: flag)
     }
 
@@ -82,41 +82,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         return !disable.contains(menuItem.title)
-    }
-
-    override func toggleAutomaticQuoteSubstitution(_ sender: Any?) {
-        if let menu = sender as? NSMenuItem {
-            UserDefaultsManagement.automaticQuoteSubstitution = (menu.state == .off)
-        }
-        super.toggleAutomaticQuoteSubstitution(sender)
-    }
-
-    override func toggleAutomaticDataDetection(_ sender: Any?) {
-        if let menu = sender as? NSMenuItem {
-            UserDefaultsManagement.automaticDataDetection = (menu.state == .off)
-        }
-        super.toggleAutomaticDataDetection(sender)
-    }
-
-    override func toggleAutomaticLinkDetection(_ sender: Any?) {
-        if let menu = sender as? NSMenuItem {
-            UserDefaultsManagement.automaticLinkDetection = (menu.state == .off)
-        }
-        super.toggleAutomaticLinkDetection(sender)
-    }
-
-    override func toggleAutomaticTextReplacement(_ sender: Any?) {
-        if let menu = sender as? NSMenuItem {
-            UserDefaultsManagement.automaticTextReplacement = (menu.state == .off)
-        }
-        super.toggleAutomaticTextReplacement(sender)
-    }
-
-    override func toggleAutomaticDashSubstitution(_ sender: Any?) {
-        if let menu = sender as? NSMenuItem {
-            UserDefaultsManagement.automaticDashSubstitution = (menu.state == .off)
-        }
-        super.toggleAutomaticDashSubstitution(sender)
     }
 
     override func mouseDown(with event: NSEvent) {
@@ -166,11 +131,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let glyphRect = manager.boundingRect(forGlyphRange: NSRange(location: index, length: 1), in: container)
 
         if glyphRect.contains(properPoint), isTodo(index) {
-            NSCursor.pointingHand.set()
-            return
-        }
-
-        if glyphRect.contains(properPoint), (textStorage?.attribute(.link, at: index, effectiveRange: nil)) != nil {
             NSCursor.pointingHand.set()
             return
         }
@@ -1049,77 +1009,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         typingAttributes[.paragraphStyle] = paragraphStyle
         defaultParagraphStyle = paragraphStyle
         textStorage?.updateParagraphStyle()
-    }
-
-    override func clicked(onLink link: Any, at charIndex: Int) {
-        if let link = link as? String, link.isValidEmail(), let mail = URL(string: "mailto:\(link)") {
-            NSWorkspace.shared.open(mail)
-            return
-        }
-
-        let range = NSRange(location: charIndex, length: 1)
-
-        let char = attributedSubstring(forProposedRange: range, actualRange: nil)
-        if char?.attribute(.attachment, at: 0, effectiveRange: nil) == nil {
-            if NSEvent.modifierFlags.contains(.command), let link = link as? String, let url = URL(string: link) {
-                _ = try? NSWorkspace.shared.open(url, options: .withoutActivation, configuration: [:])
-                return
-            }
-
-            super.clicked(onLink: link, at: charIndex)
-            return
-        }
-
-        let titleKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.title")
-        let pathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
-
-        if let event = NSApp.currentEvent,
-            !event.modifierFlags.contains(.command),
-            let note = EditTextView.note,
-            let path = (char?.attribute(pathKey, at: 0, effectiveRange: nil) as? String)?.removingPercentEncoding,
-            let url = note.getImageUrl(imageName: path) {
-            if !url.isImage {
-                NSWorkspace.shared.activateFileViewerSelecting([url])
-                return
-            }
-
-            let isOpened = NSWorkspace.shared.openFile(url.path, withApplication: "Preview", andDeactivate: true)
-
-            if isOpened { return }
-
-            let url = URL(fileURLWithPath: url.path)
-            NSWorkspace.shared.open(url)
-            return
-        }
-
-        guard let window = MainWindowController.shared() else { return }
-        guard let vc = window.contentViewController as? ViewController else { return }
-
-        vc.alert = NSAlert()
-        let field = NSTextField(frame: NSRect(x: 0, y: 0, width: 290, height: 20))
-        field.placeholderString = "All Hail the Crimson King"
-
-        if let title = char?.attribute(titleKey, at: 0, effectiveRange: nil) as? String {
-            field.stringValue = title
-        }
-
-        vc.alert?.messageText = NSLocalizedString("Please enter image title:", comment: "Edit area")
-        vc.alert?.accessoryView = field
-        vc.alert?.alertStyle = .informational
-        vc.alert?.addButton(withTitle: "OK")
-        vc.alert?.beginSheetModal(for: window) { (returnCode: NSApplication.ModalResponse) -> Void in
-            if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
-                self.textStorage?.addAttribute(titleKey, value: field.stringValue, range: range)
-
-                if let note = vc.notesTableView.getSelectedNote(), note.container != .encryptedTextPack {
-                    note.save(attributed: self.attributedString())
-                }
-            }
-
-            vc.alert = nil
-        }
-
-        field.becomeFirstResponder()
     }
 
     override func viewDidChangeEffectiveAppearance() {

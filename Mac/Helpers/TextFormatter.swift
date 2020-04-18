@@ -120,36 +120,6 @@ public class TextFormatter {
             self.insertText(string, selectRange: NSMakeRange(location, 0))
         }
         
-        if type == .RichText {
-            let newFont = toggleItalicFont(font: getTypingAttributes())
-            
-            #if os(iOS)
-            guard attributedString.length > 0 else {
-                setTypingAttributes(font: newFont)
-                return
-            }
-            #endif
-            
-            textView.undoManager?.beginUndoGrouping()
-            #if os(OSX)
-                let string = NSMutableAttributedString(attributedString: attributedString)
-                string.addAttribute(.font, value: newFont, range: selectedRange)
-                self.insertText(string, replacementRange: range, selectRange: range)
-                setTypingAttributes(font: newFont)
-            #else
-                let selectedRange = textView.selectedRange
-                let selectedTextRange = textView.selectedTextRange!
-                let selectedText = textView.textStorage.attributedSubstring(from: selectedRange)
-            
-                let mutableAttributedString = NSMutableAttributedString(attributedString: selectedText)
-                mutableAttributedString.toggleItalicFont()
-            
-                textView.replace(selectedTextRange, withText: selectedText.string)
-                textView.textStorage.replaceCharacters(in: selectedRange, with: mutableAttributedString)
-                textView.selectedRange = selectedRange
-            #endif
-            textView.undoManager?.endUndoGrouping()
-        }
     }
     
     public func underline() {

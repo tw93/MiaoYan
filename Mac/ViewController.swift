@@ -206,6 +206,7 @@ class ViewController: NSViewController,
 
         self.editArea.font = UserDefaultsManagement.noteFont
 
+       
         self.setTableRowHeight()
         self.storageOutlineView.sidebarItems = Sidebar().getList()
 
@@ -234,18 +235,16 @@ class ViewController: NSViewController,
         self.editArea.isContinuousSpellCheckingEnabled = false
         self.editArea.smartInsertDeleteEnabled = false
         self.editArea.isAutomaticSpellingCorrectionEnabled = false
-        self.editArea.isAutomaticQuoteSubstitutionEnabled = UserDefaultsManagement.automaticQuoteSubstitution
-        self.editArea.isAutomaticDataDetectionEnabled = UserDefaultsManagement.automaticDataDetection
-        self.editArea.isAutomaticLinkDetectionEnabled = UserDefaultsManagement.automaticLinkDetection
-        self.editArea.isAutomaticTextReplacementEnabled = UserDefaultsManagement.automaticTextReplacement
-        self.editArea.isAutomaticDashSubstitutionEnabled = UserDefaultsManagement.automaticDashSubstitution
-
-        if UserDefaultsManagement.appearanceType != AppearanceType.Custom {
-            if #available(OSX 10.13, *) {
-                self.editArea?.linkTextAttributes = [
-                    .foregroundColor:  NSColor.init(named: "link")!
-                ]
-            }
+        self.editArea.isAutomaticQuoteSubstitutionEnabled = false
+        self.editArea.isAutomaticDataDetectionEnabled = false
+        self.editArea.isAutomaticLinkDetectionEnabled = false
+        self.editArea.isAutomaticTextReplacementEnabled = false
+        self.editArea.isAutomaticDashSubstitutionEnabled = false
+            
+        if #available(OSX 10.13, *) {
+            self.editArea?.linkTextAttributes = [
+                .foregroundColor: NSColor.init(named: "link")!
+            ]
         }
 
         self.editArea.usesFindBar = true
@@ -1166,7 +1165,7 @@ class ViewController: NSViewController,
                             self.search.suggestAutocomplete(note, filter: originalFilter)
                         }
 
-                        if filter.count > 0 && (UserDefaultsManagement.textMatchAutoSelection || note.title.lowercased() == self.search.stringValue.lowercased()) {
+                        if filter.count > 0 && ( note.title.lowercased() == self.search.stringValue.lowercased()) {
                             self.selectNullTableRow(timer: true)
                         } else {
                             self.editArea.clear()
