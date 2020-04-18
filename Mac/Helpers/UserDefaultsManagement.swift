@@ -17,10 +17,10 @@ public class UserDefaultsManagement {
         typealias Font = UIFont
     #endif
 
-    static var DefaultFont = ".AppleSystemUIFont"
+    static var DefaultFont = "JetBrains Mono"
 
     static var DefaultFontSize = 16
-    static var editorLineSpacing = 5
+    static var editorLineSpacing = 5.6
 
     static var DefaultFontColor = Color(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.00)
     static var DefaultBgColor = Color.white

@@ -1294,7 +1294,7 @@ public class Note: NSObject  {
         let fileName = getFileName()
 
         if fileName.isValidUUID {
-            return "✦"
+            return "未命名文档"
         }
 
         return fileName
