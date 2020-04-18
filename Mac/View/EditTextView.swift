@@ -82,7 +82,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         return !disable.contains(menuItem.title)
-        
+
     }
 
     override func toggleAutomaticQuoteSubstitution(_ sender: Any?) {
@@ -593,7 +593,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         // hasMarkedText added for Japanese hack https://yllan.org/blog/archives/231
         if event.keyCode == kVK_Tab && !hasMarkedText(){
             breakUndoCoalescing()
-        
+
                 let tab = TextFormatter.getAttributedCode(string: "    ")
                 insertText(tab, replacementRange: selectedRange())
                 breakUndoCoalescing()
