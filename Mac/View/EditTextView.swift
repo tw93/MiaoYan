@@ -1,6 +1,6 @@
+import Carbon.HIToolbox
 import Cocoa
 import Highlightr
-import Carbon.HIToolbox
 import MiaoYanCore_macOS
 
 class EditTextView: NSTextView, NSTextFinderClient {
@@ -17,7 +17,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     var downView: MarkdownView?
     public var timer: Timer?
     public var markdownView: MPreviewView?
-    public static var imagesLoaderQueue = OperationQueue.init()
+    public static var imagesLoaderQueue = OperationQueue()
 
     override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {
         validateSubmenu(menu)
@@ -31,20 +31,20 @@ class EditTextView: NSTextView, NSTextFinderClient {
         return super.becomeFirstResponder()
     }
 
-    //MARK: caret width
+    // MARK: caret width
 
     override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn flag: Bool) {
         var newRect = NSRect(origin: rect.origin, size: rect.size)
-        newRect.size.width = self.caretWidth
+        newRect.size.width = caretWidth
         if let range = getParagraphRange(), range.upperBound != textStorage?.length || (
             range.upperBound == textStorage?.length
-            && textStorage?.string.last == "\n"
-            && selectedRange().location != textStorage?.length
+                && textStorage?.string.last == "\n"
+                && selectedRange().location != textStorage?.length
         ) {
             newRect.size.height = newRect.size.height - CGFloat(UserDefaultsManagement.editorLineSpacing)
         }
 
-        let clr = NSColor(red:0.47, green:0.53, blue:0.69, alpha:1.0)
+        let clr = NSColor(red: 0.47, green: 0.53, blue: 0.69, alpha: 1.0)
         super.drawInsertionPoint(in: newRect, color: clr, turnedOn: flag)
     }
 
@@ -54,7 +54,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     override func setNeedsDisplay(_ invalidRect: NSRect) {
         var newInvalidRect = NSRect(origin: invalidRect.origin, size: invalidRect.size)
-        newInvalidRect.size.width += self.caretWidth - 1
+        newInvalidRect.size.width += caretWidth - 1
         super.setNeedsDisplay(newInvalidRect)
     }
 
@@ -82,7 +82,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         return !disable.contains(menuItem.title)
-
     }
 
     override func toggleAutomaticQuoteSubstitution(_ sender: Any?) {
@@ -121,12 +120,11 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     override func mouseDown(with event: NSEvent) {
-
         guard EditTextView.note != nil else { return }
 
-        guard let container = self.textContainer, let manager = self.layoutManager else { return }
+        guard let container = textContainer, let manager = layoutManager else { return }
 
-        let point = self.convert(event.locationInWindow, from: nil)
+        let point = convert(event.locationInWindow, from: nil)
         let properPoint = NSPoint(x: point.x - textContainerInset.width, y: point.y)
 
         let index = manager.characterIndex(for: properPoint, in: container, fractionOfDistanceBetweenInsertionPoints: nil)
@@ -134,7 +132,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let glyphRect = manager.boundingRect(forGlyphRange: NSRange(location: index, length: 1), in: container)
 
         if glyphRect.contains(properPoint), isTodo(index) {
-            guard let f = self.getTextFormatter() else { return }
+            guard let f = getTextFormatter() else { return }
             f.toggleTodo(index)
 
             DispatchQueue.main.async {
@@ -147,32 +145,32 @@ class EditTextView: NSTextView, NSTextFinderClient {
         saveCursorPosition()
 
         if !UserDefaultsManagement.preview {
-            self.isEditable = true
+            isEditable = true
         }
     }
 
     override func mouseMoved(with event: NSEvent) {
-        let viewController = self.window?.contentViewController as! ViewController
-        if (!viewController.emptyEditAreaView.isHidden) {
+        let viewController = window?.contentViewController as! ViewController
+        if !viewController.emptyEditAreaView.isHidden {
             NSCursor.pointingHand.set()
             return
         }
 
-        let point = self.convert(event.locationInWindow, from: nil)
+        let point = convert(event.locationInWindow, from: nil)
         let properPoint = NSPoint(x: point.x - textContainerInset.width, y: point.y)
 
-        guard let container = self.textContainer, let manager = self.layoutManager else { return }
+        guard let container = textContainer, let manager = layoutManager else { return }
 
         let index = manager.characterIndex(for: properPoint, in: container, fractionOfDistanceBetweenInsertionPoints: nil)
 
         let glyphRect = manager.boundingRect(forGlyphRange: NSRange(location: index, length: 1), in: container)
 
-        if glyphRect.contains(properPoint), self.isTodo(index) {
+        if glyphRect.contains(properPoint), isTodo(index) {
             NSCursor.pointingHand.set()
             return
         }
 
-        if glyphRect.contains(properPoint), ((textStorage?.attribute(.link, at: index, effectiveRange: nil)) != nil) {
+        if glyphRect.contains(properPoint), (textStorage?.attribute(.link, at: index, effectiveRange: nil)) != nil {
             NSCursor.pointingHand.set()
             return
         }
@@ -185,7 +183,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     public func isTodo(_ location: Int) -> Bool {
-        guard let storage = self.textStorage else { return false }
+        guard let storage = textStorage else { return false }
 
         let range = (storage.string as NSString).paragraphRange(for: NSRange(location: location, length: 0))
         let string = storage.attributedSubstring(from: range).string as NSString
@@ -201,7 +199,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         if length > 0 {
             let upper = range.location + length
-            if location >= range.location && location <= upper {
+            if location >= range.location, location <= upper {
                 return true
             }
         }
@@ -210,11 +208,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     override func completions(forPartialWordRange charRange: NSRange, indexOfSelectedItem index: UnsafeMutablePointer<Int>) -> [String]? {
-
         let nsString = string as NSString
         let chars = nsString.substring(with: charRange)
         if let notes = storage.getBy(startWith: chars) {
-            let titles = notes.map{ $0.title }
+            let titles = notes.map { $0.title }
             return titles
         }
 
@@ -222,13 +219,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     override var writablePasteboardTypes: [NSPasteboard.PasteboardType] {
-        get {
-            return [NSPasteboard.PasteboardType.rtfd, NSPasteboard.PasteboardType.string]
-        }
+        return [NSPasteboard.PasteboardType.rtfd, NSPasteboard.PasteboardType.string]
     }
 
     override func writeSelection(to pboard: NSPasteboard, type: NSPasteboard.PasteboardType) -> Bool {
-
         guard let storage = textStorage else { return false }
 
         let range = selectedRange()
@@ -259,7 +253,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     // Copy empty string
     override func copy(_ sender: Any?) {
-        if self.selectedRange.length == 0, let paragraphRange = self.getParagraphRange(), let paragraph = attributedSubstring(forProposedRange: paragraphRange, actualRange: nil) {
+        if selectedRange.length == 0, let paragraphRange = getParagraphRange(), let paragraph = attributedSubstring(forProposedRange: paragraphRange, actualRange: nil) {
             let pasteboard = NSPasteboard.general
             pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
             pasteboard.setString(paragraph.string.trim().removeLastNewLine(), forType: NSPasteboard.PasteboardType.string)
@@ -288,9 +282,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
             let currentRange = selectedRange()
 
-            self.breakUndoCoalescing()
-            self.insertText(clipboard, replacementRange: currentRange)
-            self.breakUndoCoalescing()
+            breakUndoCoalescing()
+            insertText(clipboard, replacementRange: currentRange)
+            breakUndoCoalescing()
 
             saveTextStorageContent(to: note)
             return
@@ -302,7 +296,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     public func saveImages() {
         guard let storage = textStorage else { return }
 
-        storage.enumerateAttribute(.attachment, in: NSRange(location: 0, length: storage.length)) { (value, range, _) in
+        storage.enumerateAttribute(.attachment, in: NSRange(location: 0, length: storage.length)) { value, range, _ in
 
             guard let textAttachment = value as? NSTextAttachment,
                 storage.attribute(.todo, at: range.location, effectiveRange: nil) == nil else {
@@ -318,7 +312,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             if let note = EditTextView.note,
                 let imageData = textAttachment.fileWrapper?.regularFileContents,
                 let path = ImagesProcessor.writeFile(data: imageData, note: note) {
-
                 storage.addAttribute(filePathKey, value: path, range: range)
             }
         }
@@ -337,7 +330,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     public func isEditable(note: Note) -> Bool {
-
         if UserDefaultsManagement.preview {
             return false
         }
@@ -346,7 +338,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     func fill(note: Note, highlight: Bool = false, saveTyping: Bool = false, force: Bool = false) {
-        let viewController = self.window?.contentViewController as! ViewController
+        let viewController = window?.contentViewController as! ViewController
         viewController.emptyEditAreaView.isHidden = true
         viewController.titleBarView.isHidden = false
 
@@ -375,7 +367,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             if markdownView == nil {
                 let frame = viewController.editAreaScroll.bounds
                 markdownView = MPreviewView(frame: frame, note: note, closure: {})
-                if let view = self.markdownView, EditTextView.note == note {
+                if let view = markdownView, EditTextView.note == note {
                     viewController.editAreaScroll.addSubview(view)
                 }
             } else {
@@ -394,7 +386,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         guard let storage = textStorage else { return }
 
         if note.isMarkdown(), let content = note.content.mutableCopy() as? NSMutableAttributedString {
-             content.loadImages(note: note)
+            content.loadImages(note: note)
             content.replaceCheckboxes()
 
             EditTextView.shouldForceRescan = true
@@ -403,7 +395,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             storage.setAttributedString(note.content)
         }
 
-        if !note.isMarkdown()  {
+        if !note.isMarkdown() {
             fillPlainAndRTFStyle(note: note, saveTyping: saveTyping)
         }
 
@@ -421,7 +413,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     private func fillPlainAndRTFStyle(note: Note, saveTyping: Bool) {
         guard let storage = textStorage else { return }
 
-        if note.type == .RichText && !saveTyping {
+        if note.type == .RichText, !saveTyping {
             storage.updateFont()
             storage.loadUnderlines()
         }
@@ -439,7 +431,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     private func setTextColor() {
         if #available(OSX 10.13, *) {
-            textColor = NSColor.init(named: "mainText")
+            textColor = NSColor(named: "mainText")
         } else {
             textColor = UserDefaultsManagement.fontColor
         }
@@ -460,7 +452,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         processor.highlightKeyword(search: search, remove: true)
 
         // restore cursor
-        setSelectedRange(NSRange.init(location: cursorLocation, length: 0))
+        setSelectedRange(NSRange(location: cursorLocation, length: 0))
     }
 
     public func clear() {
@@ -471,9 +463,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
         isEditable = false
 
         let appDelegate = NSApplication.shared.delegate as! AppDelegate
-        self.window?.title = appDelegate.appTitle
+        window?.title = appDelegate.appTitle
 
-        if let viewController = self.window?.contentViewController as? ViewController {
+        if let viewController = window?.contentViewController as? ViewController {
             viewController.emptyEditAreaImage.image = NSImage(imageLiteralResourceName: "makeNoteAsset")
             viewController.emptyEditAreaView.isHidden = false
             viewController.titleBarView.isHidden = true
@@ -501,13 +493,13 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         var mask = 0
-        if (font.isBold) {
-            if (font.isItalic) {
+        if font.isBold {
+            if font.isItalic {
                 mask = NSFontItalicTrait
             }
         } else {
-            if (font.isItalic) {
-                mask = NSFontBoldTrait|NSFontItalicTrait
+            if font.isItalic {
+                mask = NSFontBoldTrait | NSFontItalicTrait
             } else {
                 mask = NSFontBoldTrait
             }
@@ -522,13 +514,13 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         var mask = 0
-        if (font.isItalic) {
-            if (font.isBold) {
+        if font.isItalic {
+            if font.isBold {
                 mask = NSFontBoldTrait
             }
         } else {
-            if (font.isBold) {
-                mask = NSFontBoldTrait|NSFontItalicTrait
+            if font.isBold {
+                mask = NSFontBoldTrait | NSFontItalicTrait
             } else {
                 mask = NSFontItalicTrait
             }
@@ -545,12 +537,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override func keyDown(with event: NSEvent) {
         guard !(
             event.modifierFlags.contains(.shift) &&
-            [
-                kVK_UpArrow,
-                kVK_DownArrow,
-                kVK_LeftArrow,
-                kVK_RightArrow
-            ].contains(Int(event.keyCode))
+                [
+                    kVK_UpArrow,
+                    kVK_DownArrow,
+                    kVK_LeftArrow,
+                    kVK_RightArrow
+                ].contains(Int(event.keyCode))
         ) else {
             super.keyDown(with: event)
             return
@@ -559,27 +551,11 @@ class EditTextView: NSTextView, NSTextFinderClient {
         guard let note = EditTextView.note else { return }
 
         let brackets = [
-            "(" : ")",
-            "[" : "]",
-            "{" : "}",
-            "\"" : "\"",
+            "(": ")",
+            "[": "]",
+            "{": "}",
+            "\"": "\""
         ]
-
-        if UserDefaultsManagement.autocloseBrackets,
-            let openingBracket = event.characters,
-            let closingBracket = brackets[openingBracket] {
-            if selectedRange().length > 0 {
-                let before = NSMakeRange(selectedRange().lowerBound, 0)
-                self.insertText(openingBracket, replacementRange: before)
-                let after = NSMakeRange(selectedRange().upperBound, 0)
-                self.insertText(closingBracket, replacementRange: after)
-            } else {
-                super.keyDown(with: event)
-                self.insertText(closingBracket, replacementRange: selectedRange())
-                self.moveBackward(self)
-            }
-            return
-        }
 
         if event.keyCode == kVK_Tab {
             if event.modifierFlags.contains(.shift) {
@@ -591,14 +567,13 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         // hasMarkedText added for Japanese hack https://yllan.org/blog/archives/231
-        if event.keyCode == kVK_Tab && !hasMarkedText(){
+        if event.keyCode == kVK_Tab && !hasMarkedText() {
             breakUndoCoalescing()
 
-                let tab = TextFormatter.getAttributedCode(string: "    ")
-                insertText(tab, replacementRange: selectedRange())
-                breakUndoCoalescing()
-                return
-
+            let tab = TextFormatter.getAttributedCode(string: "    ")
+            insertText(tab, replacementRange: selectedRange())
+            breakUndoCoalescing()
+            return
         }
 
         if event.keyCode == kVK_Return && !hasMarkedText() {
@@ -634,7 +609,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     override func shouldChangeText(in affectedCharRange: NSRange, replacementString: String?) -> Bool {
-
         guard let note = EditTextView.note else {
             return super.shouldChangeText(in: affectedCharRange, replacementString: replacementString)
         }
@@ -666,13 +640,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override func insertCompletion(_ word: String, forPartialWordRange charRange: NSRange, movement: Int, isFinal flag: Bool) {
         var final = flag
 
-        if let event = self.window?.currentEvent, event.type == .keyDown, ["_", "/"].contains(event.characters) {
+        if let event = window?.currentEvent, event.type == .keyDown, ["_", "/"].contains(event.characters) {
             final = false
         }
 
         super.insertCompletion(word, forPartialWordRange: charRange, movement: movement, isFinal: final)
     }
-
 
     func saveCursorPosition() {
         guard let note = EditTextView.note, let range = selectedRanges[0] as? NSRange, UserDefaultsManagement.restoreCursorPosition else {
@@ -712,7 +685,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     func saveTextStorageContent(to note: Note) {
-        guard note.container != .encryptedTextPack, let storage = self.textStorage else { return }
+        guard note.container != .encryptedTextPack, let storage = textStorage else { return }
 
         let string = storage.attributedSubstring(from: NSRange(0..<storage.length))
 
@@ -731,7 +704,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     func getPreviewStyle() -> String {
         var codeStyle = ""
         if let hgPath = Bundle(for: Highlightr.self).path(forResource: UserDefaultsManagement.codeTheme + ".min", ofType: "css") {
-            codeStyle = try! String.init(contentsOfFile: hgPath)
+            codeStyle = try! String(contentsOfFile: hgPath)
         }
 
         guard let familyName = UserDefaultsManagement.noteFont.familyName else {
@@ -766,8 +739,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         if let data = board.data(forType: .rtfd),
             let text = NSAttributedString(rtfd: data, documentAttributes: nil),
             text.length > 0,
-            range.length > 0
-        {
+            range.length > 0 {
             insertText("", replacementRange: range)
 
             let dropPoint = convert(sender.draggingLocation, from: nil)
@@ -786,7 +758,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return true
         }
 
-        if let data = board.data(forType: NSPasteboard.PasteboardType.init(rawValue: "attributedText")), let attributedText = NSKeyedUnarchiver.unarchiveObject(with: data) as? NSMutableAttributedString {
+        if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "attributedText")), let attributedText = NSKeyedUnarchiver.unarchiveObject(with: data) as? NSMutableAttributedString {
             let dropPoint = convert(sender.draggingLocation, from: nil)
             let caretLocation = characterIndexForInsertion(at: dropPoint)
 
@@ -820,7 +792,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         if let urls = board.readObjects(forClasses: [NSURL.self], options: nil) as? [URL],
             urls.count > 0 {
-
             let dropPoint = convert(sender.draggingLocation, from: nil)
             let caretLocation = characterIndexForInsertion(at: dropPoint)
             var offset = 0
@@ -837,21 +808,21 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 guard let filePath = ImagesProcessor.writeFile(data: data, url: url, note: note) else { return false }
 
                 let insertRange = NSRange(location: caretLocation + offset, length: 0)
-                    let cleanPath = filePath.removingPercentEncoding ?? filePath
-                    guard let url = note.getImageUrl(imageName: cleanPath) else { return false }
+                let cleanPath = filePath.removingPercentEncoding ?? filePath
+                guard let url = note.getImageUrl(imageName: cleanPath) else { return false }
 
-                    let invalidateRange = NSRange(location: caretLocation + offset, length: 1)
-                    let attachment = NoteAttachment(title: "", path: cleanPath, url: url, cache: nil, invalidateRange: invalidateRange, note: note)
+                let invalidateRange = NSRange(location: caretLocation + offset, length: 1)
+                let attachment = NoteAttachment(title: "", path: cleanPath, url: url, cache: nil, invalidateRange: invalidateRange, note: note)
 
-                    if let string = attachment.getAttributedString() {
-                        EditTextView.shouldForceRescan = true
+                if let string = attachment.getAttributedString() {
+                    EditTextView.shouldForceRescan = true
 
-                        insertText(string, replacementRange: insertRange)
-                        insertNewline(nil)
-                        insertNewline(nil)
+                    insertText(string, replacementRange: insertRange)
+                    insertNewline(nil)
+                    insertNewline(nil)
 
-                        offset += 3
-                    }
+                    offset += 3
+                }
             }
 
             if let storage = textStorage {
@@ -860,7 +831,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 note.save()
                 applyLeftParagraphStyle()
             }
-            self.viewDelegate?.notesTableView.reloadRow(note: note)
+            viewDelegate?.notesTableView.reloadRow(note: note)
 
             return true
         }
@@ -885,12 +856,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     public func scrollToCursor() {
-        let cursorRange = NSMakeRange(self.selectedRange().location, 0)
+        let cursorRange = NSMakeRange(selectedRange().location, 0)
         scrollRangeToVisible(cursorRange)
     }
 
     public func hasFocus() -> Bool {
-        if let fr = self.window?.firstResponder, fr.isKind(of: EditTextView.self) {
+        if let fr = window?.firstResponder, fr.isKind(of: EditTextView.self) {
             return true
         }
 
@@ -914,7 +885,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     @IBAction func toggleTodo(_ sender: Any) {
-        guard let f = self.getTextFormatter() else { return }
+        guard let f = getTextFormatter() else { return }
 
         f.toggleTodo()
     }
@@ -955,7 +926,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
                 let last = urls.last
                 for url in urls {
-
                     if self.saveFile(url: url, in: note) {
                         if last != url {
                             self.insertNewline(nil)
@@ -1044,17 +1014,17 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let sg = menu.item(withTitle: NSLocalizedString("Spelling and Grammar", comment: ""))?.submenu
         let s = menu.item(withTitle: NSLocalizedString("Substitutions", comment: ""))?.submenu
 
-        sg?.item(withTitle: NSLocalizedString("Check Spelling While Typing", comment: ""))?.state = self.isContinuousSpellCheckingEnabled ? .on : .off
-        sg?.item(withTitle: NSLocalizedString("Check Grammar With Spelling", comment: ""))?.state = self.isGrammarCheckingEnabled ? .on : .off
-        sg?.item(withTitle: NSLocalizedString("Correct Spelling Automatically", comment: ""))?.state = self.isAutomaticSpellingCorrectionEnabled ? .on : .off
+        sg?.item(withTitle: NSLocalizedString("Check Spelling While Typing", comment: ""))?.state = isContinuousSpellCheckingEnabled ? .on : .off
+        sg?.item(withTitle: NSLocalizedString("Check Grammar With Spelling", comment: ""))?.state = isGrammarCheckingEnabled ? .on : .off
+        sg?.item(withTitle: NSLocalizedString("Correct Spelling Automatically", comment: ""))?.state = isAutomaticSpellingCorrectionEnabled ? .on : .off
 
-        s?.item(withTitle: NSLocalizedString("Smart Copy/Paste", comment: ""))?.state = self.smartInsertDeleteEnabled ? .on : .off
-        s?.item(withTitle: NSLocalizedString("Smart Quotes", comment: ""))?.state = self.isAutomaticQuoteSubstitutionEnabled ? .on : .off
+        s?.item(withTitle: NSLocalizedString("Smart Copy/Paste", comment: ""))?.state = smartInsertDeleteEnabled ? .on : .off
+        s?.item(withTitle: NSLocalizedString("Smart Quotes", comment: ""))?.state = isAutomaticQuoteSubstitutionEnabled ? .on : .off
 
-        s?.item(withTitle: NSLocalizedString("Smart Dashes", comment: ""))?.state = self.isAutomaticDashSubstitutionEnabled ? .on : .off
-        s?.item(withTitle: NSLocalizedString("Smart Links", comment: ""))?.state = self.isAutomaticLinkDetectionEnabled  ? .on : .off
-        s?.item(withTitle: NSLocalizedString("Text Replacement", comment: ""))?.state = self.isAutomaticTextReplacementEnabled   ? .on : .off
-        s?.item(withTitle: NSLocalizedString("Data Detectors", comment: ""))?.state = self.isAutomaticDataDetectionEnabled ? .on : .off
+        s?.item(withTitle: NSLocalizedString("Smart Dashes", comment: ""))?.state = isAutomaticDashSubstitutionEnabled ? .on : .off
+        s?.item(withTitle: NSLocalizedString("Smart Links", comment: ""))?.state = isAutomaticLinkDetectionEnabled ? .on : .off
+        s?.item(withTitle: NSLocalizedString("Text Replacement", comment: ""))?.state = isAutomaticTextReplacementEnabled ? .on : .off
+        s?.item(withTitle: NSLocalizedString("Data Detectors", comment: ""))?.state = isAutomaticDataDetectionEnabled ? .on : .off
     }
 
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
@@ -1065,7 +1035,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         attributedString.addAttribute(positionKey, value: selectedRange().location, range: NSRange(0..<1))
 
         let data = NSKeyedArchiver.archivedData(withRootObject: attributedString)
-        let type = NSPasteboard.PasteboardType.init(rawValue: "attributedText")
+        let type = NSPasteboard.PasteboardType(rawValue: "attributedText")
         let board = sender.draggingPasteboard
         board.setData(data, forType: type)
 
@@ -1091,7 +1061,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         let char = attributedSubstring(forProposedRange: range, actualRange: nil)
         if char?.attribute(.attachment, at: 0, effectiveRange: nil) == nil {
-
             if NSEvent.modifierFlags.contains(.command), let link = link as? String, let url = URL(string: link) {
                 _ = try? NSWorkspace.shared.open(url, options: .withoutActivation, configuration: [:])
                 return
@@ -1109,7 +1078,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             let note = EditTextView.note,
             let path = (char?.attribute(pathKey, at: 0, effectiveRange: nil) as? String)?.removingPercentEncoding,
             let url = note.getImageUrl(imageName: path) {
-
             if !url.isImage {
                 NSWorkspace.shared.activateFileViewerSelecting([url])
                 return
@@ -1148,14 +1116,11 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 }
             }
 
-
             vc.alert = nil
         }
 
         field.becomeFirstResponder()
     }
-
-
 
     override func viewDidChangeEffectiveAppearance() {
         guard let note = EditTextView.note else { return }
@@ -1229,7 +1194,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     private func saveClipboard(data: Data, note: Note, ext: String? = nil, url: URL? = nil) {
         if let path = ImagesProcessor.writeFile(data: data, url: url, note: note, ext: ext) {
-
             guard let path = path.removingPercentEncoding else { return }
 
             if let imageUrl = note.getImageUrl(imageName: path) {
@@ -1239,9 +1203,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 if let attributedString = attachment.getAttributedString() {
                     let newLineImage = NSMutableAttributedString(attributedString: attributedString)
 
-                    self.breakUndoCoalescing()
-                    self.insertText(newLineImage, replacementRange: selectedRange())
-                    self.breakUndoCoalescing()
+                    breakUndoCoalescing()
+                    insertText(newLineImage, replacementRange: selectedRange())
+                    breakUndoCoalescing()
                     return
                 }
             }
@@ -1274,13 +1238,11 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         var removedImages = [URL: URL]()
 
-        storage.enumerateAttribute(.attachment, in: checkRange) { (value, range, _) in
+        storage.enumerateAttribute(.attachment, in: checkRange) { value, range, _ in
             if let _ = value as? NSTextAttachment, storage.attribute(.todo, at: range.location, effectiveRange: nil) == nil {
-
                 let filePathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
 
                 if let filePath = storage.attribute(filePathKey, at: range.location, effectiveRange: nil) as? String {
-
                     if let note = EditTextView.note {
                         guard let imageURL = note.getImageUrl(imageName: filePath) else { return }
 
@@ -1338,7 +1300,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 let image = im.tint(color: NSColor.white)
                 image.size = NSSize(width: 20, height: 20)
                 let button = NSButton(image: image, target: self, action: #selector(toggleTodo(_:)))
-                button.bezelColor = NSColor(red:0.21, green:0.21, blue:0.21, alpha:1.0)
+                button.bezelColor = NSColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1.0)
 
                 let customViewItem = NSCustomTouchBarItem(identifier: identifier)
                 customViewItem.view = button
@@ -1349,7 +1311,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 let image = im.tint(color: NSColor.white)
                 image.size = NSSize(width: 20, height: 20)
                 let button = NSButton(image: image, target: self, action: #selector(pressBold(_:)))
-                button.bezelColor = NSColor(red:0.21, green:0.21, blue:0.21, alpha:1.0)
+                button.bezelColor = NSColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1.0)
 
                 let customViewItem = NSCustomTouchBarItem(identifier: identifier)
                 customViewItem.view = button
@@ -1360,7 +1322,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 let image = im.tint(color: NSColor.white)
                 image.size = NSSize(width: 20, height: 20)
                 let button = NSButton(image: image, target: self, action: #selector(pressItalic(_:)))
-                button.bezelColor = NSColor(red:0.21, green:0.21, blue:0.21, alpha:1.0)
+                button.bezelColor = NSColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1.0)
 
                 let customViewItem = NSCustomTouchBarItem(identifier: identifier)
                 customViewItem.view = button
@@ -1371,7 +1333,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 let image = im.tint(color: NSColor.white)
                 image.size = NSSize(width: 20, height: 20)
                 let button = NSButton(image: image, target: self, action: #selector(insertFileOrImage(_:)))
-                button.bezelColor = NSColor(red:0.21, green:0.21, blue:0.21, alpha:1.0)
+                button.bezelColor = NSColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1.0)
 
                 let customViewItem = NSCustomTouchBarItem(identifier: identifier)
                 customViewItem.view = button
@@ -1383,7 +1345,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 let image = im.tint(color: NSColor.white)
                 image.size = NSSize(width: 20, height: 20)
                 let button = NSButton(image: image, target: self, action: #selector(shiftRight(_:)))
-                button.bezelColor = NSColor(red:0.21, green:0.21, blue:0.21, alpha:1.0)
+                button.bezelColor = NSColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1.0)
 
                 let customViewItem = NSCustomTouchBarItem(identifier: identifier)
                 customViewItem.view = button
@@ -1395,7 +1357,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 let image = im.tint(color: NSColor.white)
                 image.size = NSSize(width: 20, height: 20)
                 let button = NSButton(image: image, target: self, action: #selector(shiftLeft(_:)))
-                button.bezelColor = NSColor(red:0.21, green:0.21, blue:0.21, alpha:1.0)
+                button.bezelColor = NSColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1.0)
 
                 let customViewItem = NSCustomTouchBarItem(identifier: identifier)
                 customViewItem.view = button
@@ -1406,7 +1368,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 let image = im.tint(color: NSColor.white)
                 image.size = NSSize(width: 20, height: 20)
                 let button = NSButton(image: image, target: self, action: #selector(insertCodeBlock(_:)))
-                button.bezelColor = NSColor(red:0.21, green:0.21, blue:0.21, alpha:1.0)
+                button.bezelColor = NSColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1.0)
 
                 let customViewItem = NSCustomTouchBarItem(identifier: identifier)
                 customViewItem.view = button
@@ -1417,7 +1379,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 let image = im.tint(color: NSColor.white)
                 image.size = NSSize(width: 20, height: 20)
                 let button = NSButton(image: image, target: self, action: #selector(insertLink(_:)))
-                button.bezelColor = NSColor(red:0.21, green:0.21, blue:0.21, alpha:1.0)
+                button.bezelColor = NSColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1.0)
 
                 let customViewItem = NSCustomTouchBarItem(identifier: identifier)
                 customViewItem.view = button
