@@ -297,9 +297,7 @@ class ViewController: NSViewController,
     @IBAction func searchAndCreate(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
 
-        let size = UserDefaultsManagement.horizontalOrientation
-            ? vc.splitView.subviews[0].frame.height
-            : vc.splitView.subviews[0].frame.width
+        let size = vc.splitView.subviews[0].frame.width
 
         if size == 0 {
             toggleNoteList(self)
@@ -612,8 +610,8 @@ class ViewController: NSViewController,
             }
         }
 
-        // Pin note shortcut (cmd-8)
-        if (event.keyCode == kVK_ANSI_8 && event.modifierFlags.contains(.command)) {
+        // Pin note shortcut (cmd+shift+p)
+        if (event.keyCode == kVK_ANSI_P && event.modifierFlags.contains(.shift) &&  event.modifierFlags.contains(.command)) {
             pin(notesTableView.selectedRowIndexes)
             return true
         }
@@ -671,8 +669,8 @@ class ViewController: NSViewController,
             return true
         }
 
-        // Toggle sidebar cmd+shift+control+b
-        if event.modifierFlags.contains(.command) && event.modifierFlags.contains(.shift) && event.modifierFlags.contains(.control) && event.keyCode == kVK_ANSI_B {
+        // Toggle sidebar cmd+1
+        if event.modifierFlags.contains(.command) && event.keyCode == kVK_ANSI_1 {
             toggleSidebar("")
             return false
         }
@@ -936,9 +934,7 @@ class ViewController: NSViewController,
     @IBAction func toggleNoteList(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
 
-        let size = UserDefaultsManagement.horizontalOrientation
-            ? vc.splitView.subviews[0].frame.height
-            : vc.splitView.subviews[0].frame.width
+        let size = vc.splitView.subviews[0].frame.width
 
         if size == 0 {
             var size = UserDefaultsManagement.sidebarSize

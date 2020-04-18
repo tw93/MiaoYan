@@ -354,24 +354,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
     }
 
-    @IBAction func editorMenuItem(_ sender: NSMenuItem) {
-        if sender.title == NSLocalizedString("Image or file", comment: "") {
-            sender.keyEquivalentModifierMask = [.shift, .command]
-        }
-
-        let keyEquivalent = (sender as AnyObject).keyEquivalent.lowercased()
-        let dict = [
-            "b": kVK_ANSI_B, "i": kVK_ANSI_I, "j": kVK_ANSI_J, "y": kVK_ANSI_Y,
-            "u": kVK_ANSI_U, "1": kVK_ANSI_1, "2": kVK_ANSI_2, "3": kVK_ANSI_3,
-            "4": kVK_ANSI_4, "5": kVK_ANSI_5, "6": kVK_ANSI_6] as [String: Int]
-
-        if let key = dict[keyEquivalent] {
-            let keyCode = UInt16(key)
-            guard let modifier = (sender as AnyObject).keyEquivalentModifierMask else { return }
-
-            _ = formatShortcut(keyCode: keyCode, modifier: modifier)
-        }
-    }
 
     @IBAction func togglePreview(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
@@ -533,53 +515,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         EditTextView.note = nil
-    }
-
-    func formatShortcut(keyCode: UInt16, modifier: NSEvent.ModifierFlags) -> Bool {
-        guard let vc = ViewController.shared(),
-            let editArea = vc.editArea,
-            let note = vc.getCurrentNote(),
-            !UserDefaultsManagement.preview,
-            editArea.isEditable else { return false }
-
-        let formatter = TextFormatter(textView: editArea, note: note)
-
-        switch keyCode {
-        case 11: // cmd-b
-            formatter.bold()
-            return true
-        case 34: // command-shift-i (image) | command-option-i (link) | command-i
-            if (note.isMarkdown() && modifier.contains([.command, .option])) { //
-                formatter.link()
-                return true
-            }
-
-            formatter.italic()
-            return true
-        case 32: // cmd-u
-            formatter.underline()
-            return true
-        case 16: // cmd-y
-            formatter.strike()
-            return true
-        case (18...23): // cmd-1/6 (headers 1/6)
-            if note.isMarkdown() {
-                var string = ""
-                for index in [18, 19, 20, 21, 23, 22] {
-                    string = string + "#"
-                    if Int(keyCode) == index {
-                        break
-                    }
-                }
-
-                formatter.header(string)
-                return true
-            }
-
-            return false
-        default:
-            return false
-        }
     }
 
     func getParagraphRange() -> NSRange? {

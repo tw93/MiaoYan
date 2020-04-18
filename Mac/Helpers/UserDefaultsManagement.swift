@@ -128,7 +128,7 @@ public class UserDefaultsManagement {
             if let returnFontName = UserDefaults.standard.object(forKey: Constants.FontNameKey) {
                 return returnFontName as! String
             } else {
-                return "Avenir Next"
+                return "JetBrains Mono"
             }
         }
         set {

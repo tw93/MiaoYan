@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16096"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -535,20 +536,19 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="View" identifier="viewMenu" id="HyV-fh-RgO">
                                     <items>
-                                        <menuItem title="Toggle preview" keyEquivalent="`" id="PdU-Em-Ugm">
+                                        <menuItem title="Hide/show sidebar" keyEquivalent="1" id="DCh-5P-PZe">
                                             <connections>
-                                                <action selector="togglePreview:" target="N0L-g4-qwj" id="2w1-01-aD6"/>
+                                                <action selector="toggleSidebar:" target="L4m-js-agn" id="MRM-fh-zTo"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Hide/show note list" keyEquivalent="B" id="WHt-T4-l9c">
+                                        <menuItem title="Hide/show note list" keyEquivalent="2" id="WHt-T4-l9c">
                                             <connections>
                                                 <action selector="toggleNoteList:" target="L4m-js-agn" id="G22-P2-hks"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Hide/show sidebar" keyEquivalent="B" id="DCh-5P-PZe">
-                                            <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                        <menuItem title="Toggle preview" keyEquivalent="3" id="PdU-Em-Ugm">
                                             <connections>
-                                                <action selector="toggleSidebar:" target="L4m-js-agn" id="MRM-fh-zTo"/>
+                                                <action selector="togglePreview:" target="N0L-g4-qwj" id="2w1-01-aD6"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Sort by" id="rHB-xF-GgG">
@@ -973,7 +973,7 @@ CA
                                                                                         <textField identifier="cellDate" autoresizesSubviews="NO" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="abw-Lq-K7d">
                                                                                             <rect key="frame" x="18" y="10" width="43" height="14"/>
                                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="2/23/11" id="9w3-fa-di3">
-                                                                                                <font key="font" metaFont="message" size="11"/>
+                                                                                                <font key="font" metaFont="controlContent" size="11"/>
                                                                                                 <color key="textColor" red="0.65995385362694303" green="0.1371187799261683" blue="0.15795969262071341" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                                 <color key="backgroundColor" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
                                                                                                 <connections>

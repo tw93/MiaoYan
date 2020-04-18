@@ -44,9 +44,6 @@
 "Correct Spelling Automatically" = "自动纠正拼写";
 
 /* No comment provided by engineer. */
-"Current password does not match with password in keychain" = "当前密码与钥匙串中的密码不匹配";
-
-/* No comment provided by engineer. */
 "Data Detectors" = "数据检测器";
 
 /* No comment provided by engineer. */
@@ -63,12 +60,6 @@
 
 /* No comment provided by engineer. */
 "Enter Master Password" = "输入管理员密码";
-
-/* No comment provided by engineer. */
-"FSNotes [edit]" = "FSNotes [编辑]";
-
-/* No comment provided by engineer. */
-"FSNotes [preview]" = "FSNotes [预览]";
 
 /* Menu */
 "History" = "历史";
@@ -110,13 +101,7 @@
 "Please enter image title:" = "请输入图像标题：";
 
 /* No comment provided by engineer. */
-"Please enter password for current note" = "请输入当前笔记的密码";
-
-/* No comment provided by engineer. */
 "Please enter project name:" = "请输入项目名称：";
-
-/* Menu */
-"Please enter tags (comma separated):" = "请输入标签（使用英文逗号分隔）：";
 
 /* No comment provided by engineer. */
 "Please try again" = "请再试一次";
@@ -180,9 +165,6 @@
 "This action cannot be undone." = "此操作无法撤消。";
 
 /* No comment provided by engineer. */
-"Todo" = "待办事项";
-
-/* No comment provided by engineer. */
 "Toggle preview" = "切换预览";
 
 /* Sidebar label */
@@ -199,7 +181,4 @@
 
 /* Menu */
 "View" = "视图";
-
-/* No comment provided by engineer. */
-"Wrong repeated password" = "重复密码输入错误";
 
