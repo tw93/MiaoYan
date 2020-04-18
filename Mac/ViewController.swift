@@ -139,17 +139,13 @@ class ViewController: NSViewController,
             switch title {
             case "miaoyanMenu":
                 if menuItem.identifier?.rawValue == "emptyTrashMenu" {
-                    menuItem.keyEquivalentModifierMask = UserDefaultsManagement.focusInEditorOnNoteSelect
-                            ? [.command, .option, .shift]
-                            : [.command, .shift]
+                    menuItem.keyEquivalentModifierMask = [.command, .option, .shift]
                     return true
                 }
             case "fileMenu":
                 if menuItem.identifier?.rawValue == "fileMenu.delete" {
-                    menuItem.keyEquivalentModifierMask =
-                        UserDefaultsManagement.focusInEditorOnNoteSelect
-                        ? [.command, .option]
-                        : [.command]
+                    menuItem.keyEquivalentModifierMask = [.command, .option]
+                       
                 }
 
                 if menuItem.identifier?.rawValue == "fileMenu.history" {
@@ -237,7 +233,7 @@ class ViewController: NSViewController,
         self.editArea.isGrammarCheckingEnabled = false
         self.editArea.isContinuousSpellCheckingEnabled = false
         self.editArea.smartInsertDeleteEnabled = false
-        self.editArea.isAutomaticSpellingCorrectionEnabled = UserDefaultsManagement.automaticSpellingCorrection
+        self.editArea.isAutomaticSpellingCorrectionEnabled = false
         self.editArea.isAutomaticQuoteSubstitutionEnabled = UserDefaultsManagement.automaticQuoteSubstitution
         self.editArea.isAutomaticDataDetectionEnabled = UserDefaultsManagement.automaticDataDetection
         self.editArea.isAutomaticLinkDetectionEnabled = UserDefaultsManagement.automaticLinkDetection
@@ -774,12 +770,6 @@ class ViewController: NSViewController,
             print("File moved from \"\(url.deletingPathExtension().lastPathComponent)\" to \"\(newUrl.deletingPathExtension().lastPathComponent)\"")
         } catch {
             note.overwrite(url: url)
-        }
-    }
-
-    @IBAction func editorMenu(_ sender: Any) {
-        for index in notesTableView.selectedRowIndexes {
-            external(selectedRow: index)
         }
     }
 
@@ -1456,19 +1446,6 @@ class ViewController: NSViewController,
         notesTableView.endUpdates()
 
         filteredNoteList = resorted
-    }
-
-    func external(selectedRow: Int) {
-        if (notesTableView.noteList.indices.contains(selectedRow)) {
-            let note = notesTableView.noteList[selectedRow]
-
-            var path = note.url.path
-            if note.isTextBundle(), let url = note.getContentFileURL() {
-                path = url.path
-            }
-
-            NSWorkspace.shared.openFile(path, withApplication: UserDefaultsManagement.externalEditor)
-        }
     }
 
     func enablePreview() {

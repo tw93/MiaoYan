@@ -126,7 +126,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
                     guard !operation.isCancelled, self?.fillTimestamp == timestamp else { return }
 
                     vc.editArea.fill(note: note, highlight: true)
-                    if UserDefaultsManagement.focusInEditorOnNoteSelect && !UserDataService.instance.searchTrigger {
+                    if !UserDataService.instance.searchTrigger {
                         vc.focusEditArea(firstResponder: nil)
                     }
                 }

@@ -21,8 +21,6 @@ public class UserDefaultsManagement {
 
     static var DefaultFontSize = 16
     static var editorLineSpacing = 2
-    static var DefaultSnapshotsInterval = 1
-    static var DefaultSnapshotsIntervalMinutes = 5
 
     static var DefaultFontColor = Color.black
     static var DefaultBgColor = Color.white
@@ -30,20 +28,16 @@ public class UserDefaultsManagement {
     private struct Constants {
         static let AppearanceTypeKey = "appearanceType"
         static let ArchiveDirectoryKey = "archiveDirectory"
-        static let AutomaticSpellingCorrection = "automaticSpellingCorrection"
         static let AutomaticQuoteSubstitution = "automaticQuoteSubstitution"
         static let AutomaticDataDetection = "automaticDataDetection"
         static let AutomaticLinkDetection = "automaticLinkDetection"
         static let AutomaticTextReplacement = "automaticTextReplacement"
         static let AutomaticDashSubstitution = "automaticDashSubstitution"
-        static let BackupManually = "backupManually"
         static let BgColorKey = "bgColorKeyed"
         static let CellFrameOriginY = "cellFrameOriginY"
         static let CodeFontNameKey = "codeFont"
         static let CodeFontSizeKey = "codeFontSize"
-
         static let codeTheme = "codeTheme"
-        static let DefaultLanguageKey = "defaultLanguage"
         static let FontNameKey = "font"
         static let FontSizeKey = "fontsize"
         static let FontColorKey = "fontColorKeyed"
@@ -68,13 +62,8 @@ public class UserDefaultsManagement {
         static let RestoreCursorPosition = "restoreCursorPosition"
         static let SaveInKeychain = "saveInKeychain"
         static let SharedContainerKey = "sharedContainer"
-
-        static let SnapshotsInterval = "snapshotsInterval"
-        static let SnapshotsIntervalMinutes = "snapshotsIntervalMinutes"
         static let SortBy = "sortBy"
-        static let SpacesInsteadTabs = "spacesInsteadTabs"
         static let StoragePathKey = "storageUrl"
-        static let TableOrientation = "isUseHorizontalMode"
         static let TextMatchAutoSelection = "textMatchAutoSelection"
     }
 
@@ -160,20 +149,6 @@ public class UserDefaultsManagement {
         set {
             let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
             UserDefaults.standard.set(data, forKey: Constants.BgColorKey)
-        }
-    }
-
-    static var externalEditor: String {
-        get {
-            let name = UserDefaults.standard.object(forKey: "externalEditorApp")
-            if name != nil, (name as! String).count > 0 {
-                return name as! String
-            } else {
-                return "TextEdit"
-            }
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "externalEditorApp")
         }
     }
 
@@ -317,10 +292,6 @@ public class UserDefaultsManagement {
         }
     }
 
-    static var focusInEditorOnNoteSelect = true
-
-    static var defaultLanguage = 0
-
     static var restoreCursorPosition = true
 
     #if os(iOS)
@@ -402,8 +373,6 @@ public class UserDefaultsManagement {
 
     static var textMatchAutoSelection = true
 
-    static var automaticSpellingCorrection = false
-
     static var automaticQuoteSubstitution = false
 
     static var automaticDataDetection = false
@@ -412,8 +381,6 @@ public class UserDefaultsManagement {
     static var automaticTextReplacement = false
 
     static var automaticDashSubstitution = false
-
-    static var isHiddenSidebar = false
 
     static var fileContainer: NoteContainer {
         get {
@@ -497,34 +464,6 @@ public class UserDefaultsManagement {
             }
         }
     }
-
-    static var snapshotsInterval: Int {
-        get {
-            if let interval = UserDefaults.standard.object(forKey: Constants.SnapshotsInterval) as? Int {
-                return interval
-            }
-
-            return self.DefaultSnapshotsInterval
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.SnapshotsInterval)
-        }
-    }
-
-    static var snapshotsIntervalMinutes: Int {
-        get {
-            if let interval = UserDefaults.standard.object(forKey: Constants.SnapshotsIntervalMinutes) as? Int {
-                return interval
-            }
-
-            return self.DefaultSnapshotsIntervalMinutes
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.SnapshotsIntervalMinutes)
-        }
-    }
-
-    static var backupManually = true
 
     static var fullScreen = false
 }
