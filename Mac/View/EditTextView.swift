@@ -23,16 +23,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         validateSubmenu(menu)
     }
 
-    override func becomeFirstResponder() -> Bool {
-        if let note = EditTextView.note, note.container == .encryptedTextPack {
-            return false
-        }
-
-        return super.becomeFirstResponder()
-    }
-
-    // MARK: caret width
-
     override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn flag: Bool) {
         var newRect = NSRect(origin: rect.origin, size: rect.size)
         newRect.size.width = caretWidth
@@ -44,7 +34,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             newRect.size.height = newRect.size.height - CGFloat(UserDefaultsManagement.editorLineSpacing)
         }
 
-        let clr = NSColor(red: 0.2, green: 2, blue: 0.2, alpha: 1.0)
+        let clr = NSColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 1.0)
         super.drawInsertionPoint(in: newRect, color: clr, turnedOn: flag)
     }
 
@@ -61,7 +51,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     // MARK: Menu
 
     override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
-        guard let note = EditTextView.note else { return false }
+        guard EditTextView.note != nil else { return false }
 
         menuItem.isHidden = false
 
@@ -83,7 +73,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         return !disable.contains(menuItem.title)
     }
-
+    
     override func mouseDown(with event: NSEvent) {
         guard EditTextView.note != nil else { return }
 
@@ -194,15 +184,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             pboard.setString(plainText, forType: .string)
             return true
         }
-
-        if type == .rtfd {
-            let richString = attributedString.unLoadCheckboxes()
-            if let rtfd = try? richString.data(from: NSMakeRange(0, richString.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtfd]) {
-                pboard.setData(rtfd, forType: NSPasteboard.PasteboardType.rtfd)
-                return true
-            }
-        }
-
         if type.rawValue == "NSStringPboardType" {
             EditTextView.shouldForceRescan = true
             return super.writeSelection(to: pboard, type: type)
@@ -225,13 +206,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     override func paste(_ sender: Any?) {
         guard let note = EditTextView.note else { return }
-
-        guard note.isMarkdown() else {
-            super.paste(sender)
-
-            fillPlainAndRTFStyle(note: note, saveTyping: false)
-            return
-        }
 
         if pasteImageFromClipboard(in: note) {
             return
@@ -355,10 +329,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             storage.setAttributedString(note.content)
         }
 
-        if !note.isMarkdown() {
-            fillPlainAndRTFStyle(note: note, saveTyping: saveTyping)
-        }
-
         if highlight {
             let search = getSearchText()
             let processor = NotesTextProcessor(storage: storage)
@@ -368,25 +338,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         restoreCursorPosition()
         applyLeftParagraphStyle()
-    }
-
-    private func fillPlainAndRTFStyle(note: Note, saveTyping: Bool) {
-        guard let storage = textStorage else { return }
-
-        if note.type == .RichText, !saveTyping {
-            storage.updateFont()
-            storage.loadUnderlines()
-        }
-
-        if note.type == .PlainText {
-            font = UserDefaultsManagement.noteFont
-        }
-
-        setTextColor()
-
-        let range = NSRange(0..<storage.length)
-        let processor = NotesTextProcessor(storage: storage, range: range)
-        processor.higlightLinks()
     }
 
     private func setTextColor() {
@@ -509,13 +460,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         guard let note = EditTextView.note else { return }
-
-        let brackets = [
-            "(": ")",
-            "[": "]",
-            "{": "}",
-            "\"": "\""
-        ]
 
         if event.keyCode == kVK_Tab {
             if event.modifierFlags.contains(.shift) {
