@@ -158,11 +158,6 @@ public class Project: Equatable {
             }
             return
         }
-
-        if label == "Welcome" {
-            sortBy = .title
-            sortDirection = .asc
-        }
     }
 
     public func getRelativePath() -> String? {

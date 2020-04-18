@@ -7,21 +7,20 @@ import Foundation
 #endif
 
 public class UserDefaultsManagement {
-
-#if os(OSX)
-    typealias Color = NSColor
-    typealias Image = NSImage
-    typealias Font = NSFont
-#else
-    typealias Color = UIColor
-    typealias Image = UIImage
-    typealias Font = UIFont
-#endif
+    #if os(OSX)
+        typealias Color = NSColor
+        typealias Image = NSImage
+        typealias Font = NSFont
+    #else
+        typealias Color = UIColor
+        typealias Image = UIImage
+        typealias Font = UIFont
+    #endif
 
     static var DefaultFont = ".AppleSystemUIFont"
 
-    static var DefaultFontSize = 15
-    static var editorLineSpacing = 1.4
+    static var DefaultFontSize = 16
+    static var editorLineSpacing = 2
     static var DefaultSnapshotsInterval = 1
     static var DefaultSnapshotsIntervalMinutes = 5
 
@@ -50,10 +49,6 @@ public class UserDefaultsManagement {
         static let FontColorKey = "fontColorKeyed"
         static let FullScreen = "fullScreen"
         static let NoteType = "noteType"
-
-
-
-
         static let ImagesWidthKey = "imagesWidthKey"
         static let ImportURLsKey = "ImportURLs"
         static let LastSelectedPath = "lastSelectedPath"
@@ -73,7 +68,6 @@ public class UserDefaultsManagement {
         static let RestoreCursorPosition = "restoreCursorPosition"
         static let SaveInKeychain = "saveInKeychain"
         static let SharedContainerKey = "sharedContainer"
-        static let ShowDockIcon = "showDockIcon"
 
         static let SnapshotsInterval = "snapshotsInterval"
         static let SnapshotsIntervalMinutes = "snapshotsIntervalMinutes"
@@ -82,24 +76,21 @@ public class UserDefaultsManagement {
         static let StoragePathKey = "storageUrl"
         static let TableOrientation = "isUseHorizontalMode"
         static let TextMatchAutoSelection = "textMatchAutoSelection"
-        static let TxtAsMarkdown = "txtAsMarkdown"
-        static let AutocloseBrackets = "autocloseBrackets"
-        static let Welcome = "welcome"
     }
 
-    static var codeFontName="JetBrains Mono"
+    static var codeFontName = "JetBrains Mono"
 
-    static var codeFontSize=14
+    static var codeFontSize = 14
 
-    static var fontName="JetBrains Mono"
+    static var fontName = "JetBrains Mono"
 
     static var fontSize: Int {
         get {
-        #if os(iOS)
-            if UserDefaultsManagement.dynamicTypeFont {
-                return self.DefaultFontSize
-            }
-        #endif
+            #if os(iOS)
+                if UserDefaultsManagement.dynamicTypeFont {
+                    return self.DefaultFontSize
+                }
+            #endif
 
             if let returnFontSize = UserDefaults.standard.object(forKey: Constants.FontSizeKey) {
                 return returnFontSize as! Int
@@ -121,7 +112,7 @@ public class UserDefaultsManagement {
             return Font.systemFont(ofSize: CGFloat(self.codeFontSize))
         }
         set {
-            guard let newValue = newValue else {return}
+            guard let newValue = newValue else { return }
 
             self.codeFontName = newValue.fontName
             self.codeFontSize = Int(newValue.pointSize)
@@ -137,7 +128,7 @@ public class UserDefaultsManagement {
             return Font.systemFont(ofSize: CGFloat(self.fontSize))
         }
         set {
-            guard let newValue = newValue else {return}
+            guard let newValue = newValue else { return }
 
             self.fontName = newValue.fontName
             self.fontSize = Int(newValue.pointSize)
@@ -175,7 +166,7 @@ public class UserDefaultsManagement {
     static var externalEditor: String {
         get {
             let name = UserDefaults.standard.object(forKey: "externalEditorApp")
-            if name != nil && (name as! String).count > 0 {
+            if name != nil, (name as! String).count > 0 {
                 return name as! String
             } else {
                 return "TextEdit"
@@ -187,33 +178,29 @@ public class UserDefaultsManagement {
     }
 
     static var iCloudDocumentsContainer: URL? {
-        get {
-            if let iCloudDocumentsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents").resolvingSymlinksInPath() {
-                if (!FileManager.default.fileExists(atPath: iCloudDocumentsURL.path, isDirectory: nil)) {
-                    do {
-                        try FileManager.default.createDirectory(at: iCloudDocumentsURL, withIntermediateDirectories: true, attributes: nil)
+        if let iCloudDocumentsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents").resolvingSymlinksInPath() {
+            if !FileManager.default.fileExists(atPath: iCloudDocumentsURL.path, isDirectory: nil) {
+                do {
+                    try FileManager.default.createDirectory(at: iCloudDocumentsURL, withIntermediateDirectories: true, attributes: nil)
 
-                        return iCloudDocumentsURL.resolvingSymlinksInPath()
-                    } catch {
-                        print("Home directory creation: \(error)")
-                    }
-                } else {
-                   return iCloudDocumentsURL.resolvingSymlinksInPath()
+                    return iCloudDocumentsURL.resolvingSymlinksInPath()
+                } catch {
+                    print("Home directory creation: \(error)")
                 }
+            } else {
+                return iCloudDocumentsURL.resolvingSymlinksInPath()
             }
-
-            return nil
         }
+
+        return nil
     }
 
     static var localDocumentsContainer: URL? {
-        get {
-            if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-                return URL(fileURLWithPath: path)
-            }
-
-            return nil
+        if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+            return URL(fileURLWithPath: path)
         }
+
+        return nil
     }
 
     static var storagePath: String? {
@@ -230,13 +217,13 @@ public class UserDefaultsManagement {
                 return iCloudDocumentsURL.path
             }
 
-        #if os(iOS)
-            return self.localDocumentsContainer?.path
-        #elseif CLOUDKIT && os(macOS)
-            return nil
-        #else
-            return self.localDocumentsContainer?.path
-        #endif
+            #if os(iOS)
+                return self.localDocumentsContainer?.path
+            #elseif CLOUDKIT && os(macOS)
+                return nil
+            #else
+                return self.localDocumentsContainer?.path
+            #endif
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.StoragePathKey)
@@ -244,18 +231,16 @@ public class UserDefaultsManagement {
     }
 
     static var storageUrl: URL? {
-        get {
-            if let path = storagePath {
-                let expanded = NSString(string: path).expandingTildeInPath
+        if let path = storagePath {
+            let expanded = NSString(string: path).expandingTildeInPath
 
-                return URL.init(fileURLWithPath: expanded).resolvingSymlinksInPath()
-            }
-
-            return nil
+            return URL(fileURLWithPath: expanded).resolvingSymlinksInPath()
         }
+
+        return nil
     }
 
-    static var preview=false
+    static var preview = false
 
     static var lastSync: Date? {
         get {
@@ -269,9 +254,6 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: "lastSync")
         }
     }
-
-
-
 
     static var cellViewFrameOriginY: CGFloat? {
         get {
@@ -298,8 +280,7 @@ public class UserDefaultsManagement {
         }
     }
 
-    static var sortDirection=true
-
+    static var sortDirection = true
 
     static var sidebarSize: CGFloat {
         get {
@@ -318,9 +299,7 @@ public class UserDefaultsManagement {
         }
     }
 
-
-    static var realSidebarSize=100
-
+    static var realSidebarSize = 100
 
     static var lastSelectedURL: URL? {
         get {
@@ -338,12 +317,11 @@ public class UserDefaultsManagement {
         }
     }
 
-
     static var focusInEditorOnNoteSelect = true
 
-    static var defaultLanguage=0
+    static var defaultLanguage = 0
 
-    static var restoreCursorPosition=true
+    static var restoreCursorPosition = true
 
     #if os(iOS)
         static var nightModeType: NightMode {
@@ -359,30 +337,26 @@ public class UserDefaultsManagement {
         }
     #endif
 
-    static var maxNightModeBrightnessLevel=35
-
-    static var autocloseBrackets=true
+    static var maxNightModeBrightnessLevel = 35
 
     static var lastProject = 0
-
-    static var showDockIcon = true
 
     static var archiveDirectory: URL? {
         get {
             #if os(OSX)
-            if let path = UserDefaults.standard.object(forKey: Constants.ArchiveDirectoryKey) as? String,
-                let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
-                let archiveURL = URL(string: "file://" + encodedPath + "/") {
-                var isDirectory = ObjCBool(true)
-                let exists = FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory)
+                if let path = UserDefaults.standard.object(forKey: Constants.ArchiveDirectoryKey) as? String,
+                    let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
+                    let archiveURL = URL(string: "file://" + encodedPath + "/") {
+                    var isDirectory = ObjCBool(true)
+                    let exists = FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory)
 
-                if (exists && isDirectory.boolValue) {
-                    return archiveURL
-                } else {
-                    self.archiveDirectory = nil
-                    print("Archive path not accessible, settings resetted to default")
+                    if exists, isDirectory.boolValue {
+                        return archiveURL
+                    } else {
+                        self.archiveDirectory = nil
+                        print("Archive path not accessible, settings resetted to default")
+                    }
                 }
-            }
             #endif
 
             if let archive = storageUrl?.appendingPathComponent("Archive") {
@@ -426,28 +400,25 @@ public class UserDefaultsManagement {
 
     static var lineWidth = 1000
 
-    static var textMatchAutoSelection=true
+    static var textMatchAutoSelection = true
 
+    static var automaticSpellingCorrection = false
 
-    static var automaticSpellingCorrection=false
+    static var automaticQuoteSubstitution = false
 
-    static var automaticQuoteSubstitution=false
+    static var automaticDataDetection = false
+    static var automaticLinkDetection = false
 
-    static var automaticDataDetection=false
-    static var automaticLinkDetection=false
+    static var automaticTextReplacement = false
 
-    static var automaticTextReplacement=false
+    static var automaticDashSubstitution = false
 
-    static var automaticDashSubstitution=false
-
-    static var isHiddenSidebar=false
-
-    static var txtAsMarkdown=false
+    static var isHiddenSidebar = false
 
     static var fileContainer: NoteContainer {
         get {
             #if SHARE_EXT
-                let defaults = UserDefaults.init(suiteName: "group.miaoyan-manager")
+                let defaults = UserDefaults(suiteName: "group.miaoyan-manager")
                 if let result = defaults?.object(forKey: Constants.SharedContainerKey) as? Int, let container = NoteContainer(rawValue: result) {
                     return container
                 }
@@ -460,7 +431,7 @@ public class UserDefaultsManagement {
         }
         set {
             #if os(iOS)
-            UserDefaults.init(suiteName: "group.miaoyan-manager")?.set(newValue.rawValue, forKey: Constants.SharedContainerKey)
+                UserDefaults(suiteName: "group.miaoyan-manager")?.set(newValue.rawValue, forKey: Constants.SharedContainerKey)
             #endif
 
             UserDefaults.standard.set(newValue.rawValue, forKey: Constants.NoteContainer)
@@ -469,7 +440,7 @@ public class UserDefaultsManagement {
 
     static var projects: [URL] {
         get {
-            guard let defaults = UserDefaults.init(suiteName: "group.miaoyan-manager") else { return [] }
+            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else { return [] }
 
             if let result = defaults.object(forKey: Constants.ProjectsKey) as? Data, let urls = NSKeyedUnarchiver.unarchiveObject(with: result) as? [URL] {
                 return urls
@@ -478,7 +449,7 @@ public class UserDefaultsManagement {
             return []
         }
         set {
-            guard let defaults = UserDefaults.init(suiteName: "group.miaoyan-manager") else { return }
+            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else { return }
 
             let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
             defaults.set(data, forKey: Constants.ProjectsKey)
@@ -487,7 +458,7 @@ public class UserDefaultsManagement {
 
     static var importURLs: [URL] {
         get {
-            guard let defaults = UserDefaults.init(suiteName: "group.miaoyan-manager") else { return [] }
+            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else { return [] }
 
             if let result = defaults.object(forKey: Constants.ImportURLsKey) as? Data, let urls = NSKeyedUnarchiver.unarchiveObject(with: result) as? [URL] {
                 return urls
@@ -496,22 +467,21 @@ public class UserDefaultsManagement {
             return []
         }
         set {
-            guard let defaults = UserDefaults.init(suiteName: "group.miaoyan-manager") else { return }
+            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else { return }
 
             let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
             defaults.set(data, forKey: Constants.ImportURLsKey)
         }
     }
 
-    static var previewFontSize=16
+    static var previewFontSize = 16
 
-    static var marginSize=20
+    static var marginSize = 20
 
     static var markdownPreviewCSS: URL? {
         get {
             if let path = UserDefaults.standard.object(forKey: Constants.MarkdownPreviewCSS) as? String,
                 let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) {
-
                 if FileManager.default.fileExists(atPath: path) {
                     return URL(string: "file://" + encodedPath)
                 }
@@ -554,9 +524,7 @@ public class UserDefaultsManagement {
         }
     }
 
-    static var backupManually=true
+    static var backupManually = true
 
-    static var fullScreen=false
-
-    static var copyWelcome=true
+    static var fullScreen = false
 }

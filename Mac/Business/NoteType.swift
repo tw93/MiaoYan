@@ -7,9 +7,8 @@ public enum NoteType: String {
     
     static func withExt(rawValue: String) -> NoteType {
         switch rawValue {
-            case "markdown", "md", "mkd": return NoteType.Markdown
+            case "markdown", "md", "mkd","txt": return NoteType.Markdown
             case "rtf": return NoteType.RichText
-            case "txt": return UserDefaultsManagement.txtAsMarkdown ? .Markdown : .PlainText
             default: return NoteType.PlainText
         }
     }
