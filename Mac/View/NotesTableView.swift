@@ -49,7 +49,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
 
     override func mouseDown(with event: NSEvent) {
         UserDataService.instance.searchTrigger = false
-
         super.mouseDown(with: event)
     }
 
