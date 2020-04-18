@@ -44,9 +44,6 @@
 "Correct Spelling Automatically" = "拼写正确";
 
 /* No comment provided by engineer. */
-"Current password does not match with password in keychain" = "当前密码与钥匙串中的密码不匹配";
-
-/* No comment provided by engineer. */
 "Data Detectors" = "数据检测器";
 
 /* No comment provided by engineer. */
@@ -59,34 +56,10 @@
 "Detach storage" = "分离存储";
 
 /* No comment provided by engineer. */
-"Empty password" = "空密码";
-
-/* No comment provided by engineer. */
-"Enter Master Password" = "输入管理员密码";
-
-/* No comment provided by engineer. */
 "MiaoYan [edit]" = "妙言 [编辑]";
 
 /* No comment provided by engineer. */
 "MiaoYan [preview]" = "妙言 [预览]";
-
-/* No comment provided by engineer. */
-"Header 1" = "Header 1";
-
-/* No comment provided by engineer. */
-"Header 2" = "Header 2";
-
-/* No comment provided by engineer. */
-"Header 3" = "Header 3";
-
-/* No comment provided by engineer. */
-"Header 4" = "Header 4";
-
-/* No comment provided by engineer. */
-"Header 5" = "Header 5";
-
-/* No comment provided by engineer. */
-"Header 6" = "Header 6";
 
 /* Menu */
 "History" = "历史";
@@ -96,12 +69,6 @@
 
 /* No comment provided by engineer. */
 "Link" = "链接";
-
-/* No comment provided by engineer. */
-"Lock All Encrypted" = "锁定所有加密的笔记";
-
-/* No comment provided by engineer. */
-"Master password:" = "管理员密码：";
 
 /* Menu */
 "Move" = "移动";
@@ -115,9 +82,6 @@
 /* No comment provided by engineer. */
 "New project" = "新建项目";
 
-/* No comment provided by engineer. */
-"New RTF" = "新建RTF文件";
-
 /* Sidebar label */
 "Notes" = "全部笔记";
 
@@ -128,13 +92,7 @@
 "Please enter image title:" = "请输入图片标题：";
 
 /* No comment provided by engineer. */
-"Please enter password for current note" = "请输入当前笔记的密码";
-
-/* No comment provided by engineer. */
 "Please enter project name:" = "请输入项目名称：";
-
-/* Menu */
-"Please enter tags (comma separated):" = "请输入标签（使用英文逗号分隔）：";
 
 /* No comment provided by engineer. */
 "Please try again" = "请再试一次";
@@ -161,9 +119,6 @@
 "Show in Finder" = "在Finder中显示";
 
 /* No comment provided by engineer. */
-"Show view options" = "显示视图选项";
-
-/* No comment provided by engineer. */
 "Smart Copy/Paste" = "智能拷贝/粘贴";
 
 /* No comment provided by engineer. */
@@ -187,18 +142,11 @@
 /* No comment provided by engineer. */
 "Substitutions" = "替换";
 
-/* Menu
-   Sidebar label */
-"Tags" = "标签";
-
 /* No comment provided by engineer. */
 "Text Replacement" = "文本替换";
 
 /* Delete menu */
 "This action cannot be undone." = "此操作无法撤消。";
-
-/* No comment provided by engineer. */
-"Todo" = "待办事项";
 
 /* No comment provided by engineer. */
 "Toggle preview" = "切换预览";

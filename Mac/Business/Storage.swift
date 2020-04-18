@@ -91,7 +91,7 @@ class Storage {
             }
 
             if url == UserDefaultsManagement.archiveDirectory
-                || url == UserDefaultsManagement.gitStorage {
+                 {
                 continue
             }
 
@@ -700,26 +700,6 @@ class Storage {
         return projects.first
     }
     
-    public func getTags() -> [String] {
-        return tagNames.sorted { $0 < $1 }
-    }
-
-    public func addTag(_ string: String) {
-        if !tagNames.contains(string) {
-            tagNames.append(string)
-        }
-    }
-
-    public func removeTag(_ string: String) -> Bool {
-        if noteList.filter({ $0.tagNames.contains(string) && !$0.isTrash() }).count < 2 {
-            if let i = tagNames.firstIndex(of: string) {
-                tagNames.remove(at: i)
-                return true
-            }
-        }
-        
-        return false
-    }
 
     public func getAllTrash() -> [Note] {
         return
