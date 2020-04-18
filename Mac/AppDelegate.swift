@@ -21,15 +21,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     func applicationWillFinishLaunching(_ notification: Notification) {
         loadDockIcon()
-
-        if !UserDefaultsManagement.showDockIcon {
-            let transformState = ProcessApplicationTransformState(kProcessTransformToUIElementApplication)
-            var psn = ProcessSerialNumber(highLongOfPSN: 0, lowLongOfPSN: UInt32(kCurrentProcess))
-            TransformProcessType(&psn, transformState)
-
-            NSApp.setActivationPolicy(.accessory)
-        }
-
         let storage = Storage.sharedInstance()
         storage.loadProjects()
         storage.loadDocuments() {}
