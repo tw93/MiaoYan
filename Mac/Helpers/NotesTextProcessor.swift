@@ -31,9 +31,10 @@ public class NotesTextProcessor {
     // MARK: Syntax highlight customisation
     
     /**
-     Color used to highlight markdown syntax. Default value is light grey.
+     Color used to highlight markdown syntax. Default value is fontColor
      */
-    public static var syntaxColor = Color.lightGray
+    
+    public static var syntaxColor = fontColor
     
     #if os(OSX)
         public static var font: NSFont {
@@ -588,7 +589,7 @@ public class NotesTextProcessor {
                     hideSyntaxIfNecessary(range: innerRange)
                 }
                 
-                guard let destinationLinkString = destinationLink else { return }
+                guard destinationLink != nil else { return }
                 
                 NotesTextProcessor.coupleSquareRegex.matches(string, range: range) { (innerResult) -> Void in
                     guard let innerRange = innerResult?.range else { return }

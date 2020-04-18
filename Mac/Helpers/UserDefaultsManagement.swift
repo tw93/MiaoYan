@@ -20,7 +20,7 @@ public class UserDefaultsManagement {
     static var DefaultFont = ".AppleSystemUIFont"
 
     static var DefaultFontSize = 16
-    static var editorLineSpacing = 4
+    static var editorLineSpacing = 5
 
     static var DefaultFontColor = Color(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.00)
     static var DefaultBgColor = Color.white
@@ -37,7 +37,7 @@ public class UserDefaultsManagement {
     static var fontName = "JetBrains Mono"
     static var previewFontSize = 16
     static var sortDirection = true
-    static var marginSize = 24
+    static var marginSize = 30
     static var realSidebarSize = 100
 
     private struct Constants {
