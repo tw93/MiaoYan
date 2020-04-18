@@ -7,7 +7,7 @@ import Foundation
 #endif
 
 public class UserDefaultsManagement {
-    
+
 #if os(OSX)
     typealias Color = NSColor
     typealias Image = NSImage
@@ -17,14 +17,14 @@ public class UserDefaultsManagement {
     typealias Image = UIImage
     typealias Font = UIFont
 #endif
-    
+
     static var DefaultFont = ".AppleSystemUIFont"
 
     static var DefaultFontSize = 15
     static var editorLineSpacing = 1.4
     static var DefaultSnapshotsInterval = 1
     static var DefaultSnapshotsIntervalMinutes = 5
-    
+
     static var DefaultFontColor = Color.black
     static var DefaultBgColor = Color.white
 
@@ -50,10 +50,10 @@ public class UserDefaultsManagement {
         static let FontColorKey = "fontColorKeyed"
         static let FullScreen = "fullScreen"
         static let NoteType = "noteType"
-        
-    
 
-        
+
+
+
         static let ImagesWidthKey = "imagesWidthKey"
         static let ImportURLsKey = "ImportURLs"
         static let LastSelectedPath = "lastSelectedPath"
@@ -92,7 +92,7 @@ public class UserDefaultsManagement {
     static var codeFontSize=14
 
     static var fontName="JetBrains Mono"
-    
+
     static var fontSize: Int {
         get {
         #if os(iOS)
@@ -133,17 +133,17 @@ public class UserDefaultsManagement {
             if let font = Font(name: self.fontName, size: CGFloat(self.fontSize)) {
                 return font
             }
-            
+
             return Font.systemFont(ofSize: CGFloat(self.fontSize))
         }
         set {
             guard let newValue = newValue else {return}
-            
+
             self.fontName = newValue.fontName
             self.fontSize = Int(newValue.pointSize)
         }
     }
-    
+
     static var fontColor: Color {
         get {
             if let returnFontColor = UserDefaults.standard.object(forKey: Constants.FontColorKey), let color = NSKeyedUnarchiver.unarchiveObject(with: returnFontColor as! Data) as? Color {
@@ -171,7 +171,7 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(data, forKey: Constants.BgColorKey)
         }
     }
-    
+
     static var externalEditor: String {
         get {
             let name = UserDefaults.standard.object(forKey: "externalEditorApp")
@@ -185,14 +185,14 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: "externalEditorApp")
         }
     }
-    
+
     static var iCloudDocumentsContainer: URL? {
         get {
             if let iCloudDocumentsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents").resolvingSymlinksInPath() {
                 if (!FileManager.default.fileExists(atPath: iCloudDocumentsURL.path, isDirectory: nil)) {
                     do {
                         try FileManager.default.createDirectory(at: iCloudDocumentsURL, withIntermediateDirectories: true, attributes: nil)
-                        
+
                         return iCloudDocumentsURL.resolvingSymlinksInPath()
                     } catch {
                         print("Home directory creation: \(error)")
@@ -205,17 +205,17 @@ public class UserDefaultsManagement {
             return nil
         }
     }
-    
+
     static var localDocumentsContainer: URL? {
         get {
             if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
                 return URL(fileURLWithPath: path)
             }
- 
+
             return nil
         }
     }
-    
+
     static var storagePath: String? {
         get {
             if let storagePath = UserDefaults.standard.object(forKey: Constants.StoragePathKey) {
@@ -229,7 +229,7 @@ public class UserDefaultsManagement {
             if let iCloudDocumentsURL = self.iCloudDocumentsContainer {
                 return iCloudDocumentsURL.path
             }
-            
+
         #if os(iOS)
             return self.localDocumentsContainer?.path
         #elseif CLOUDKIT && os(macOS)
@@ -242,7 +242,7 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.StoragePathKey)
         }
     }
-    
+
     static var storageUrl: URL? {
         get {
             if let path = storagePath {
@@ -250,13 +250,13 @@ public class UserDefaultsManagement {
 
                 return URL.init(fileURLWithPath: expanded).resolvingSymlinksInPath()
             }
-            
+
             return nil
         }
     }
-            
+
     static var preview=false
-    
+
     static var lastSync: Date? {
         get {
             if let sync = UserDefaults.standard.object(forKey: "lastSync") {
@@ -269,10 +269,10 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: "lastSync")
         }
     }
-    
-    
 
-        
+
+
+
     static var cellViewFrameOriginY: CGFloat? {
         get {
             if let value = UserDefaults.standard.object(forKey: Constants.CellFrameOriginY) {
@@ -284,7 +284,7 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.CellFrameOriginY)
         }
     }
-        
+
     static var sort: SortBy {
         get {
             if let result = UserDefaults.standard.object(forKey: "sortBy"), let sortBy = SortBy(rawValue: result as! String) {
@@ -297,16 +297,16 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(newValue.rawValue, forKey: "sortBy")
         }
     }
-    
+
     static var sortDirection=true
-    
-    
+
+
     static var sidebarSize: CGFloat {
         get {
             if let size = UserDefaults.standard.object(forKey: "sidebarSize"), let width = size as? CGFloat {
                 return width
             }
-            
+
             #if os(iOS)
                 return 0
             #else
@@ -317,8 +317,8 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: "sidebarSize")
         }
     }
-    
-    
+
+
     static var realSidebarSize=100
 
 
@@ -337,14 +337,14 @@ public class UserDefaultsManagement {
             }
         }
     }
-    
-    
+
+
     static var focusInEditorOnNoteSelect = true
-    
+
     static var defaultLanguage=0
-    
+
     static var restoreCursorPosition=true
-    
+
     #if os(iOS)
         static var nightModeType: NightMode {
             get {
@@ -358,15 +358,15 @@ public class UserDefaultsManagement {
             }
         }
     #endif
-    
+
     static var maxNightModeBrightnessLevel=35
-    
+
     static var autocloseBrackets=true
-    
+
     static var lastProject = 0
-    
+
     static var showDockIcon = true
-    
+
     static var archiveDirectory: URL? {
         get {
             #if os(OSX)
@@ -399,10 +399,10 @@ public class UserDefaultsManagement {
                     return archive
                 }
             }
-            
+
             return nil
         }
-        
+
         set {
             if let url = newValue {
                 UserDefaults.standard.set(url.path, forKey: Constants.ArchiveDirectoryKey)
@@ -425,25 +425,25 @@ public class UserDefaultsManagement {
     }
 
     static var lineWidth = 1000
-    
+
     static var textMatchAutoSelection=true
 
-    
+
     static var automaticSpellingCorrection=false
-    
+
     static var automaticQuoteSubstitution=false
-    
+
     static var automaticDataDetection=false
     static var automaticLinkDetection=false
-        
+
     static var automaticTextReplacement=false
-    
+
     static var automaticDashSubstitution=false
 
     static var isHiddenSidebar=false
 
     static var txtAsMarkdown=false
-    
+
     static var fileContainer: NoteContainer {
         get {
             #if SHARE_EXT
@@ -516,7 +516,7 @@ public class UserDefaultsManagement {
                     return URL(string: "file://" + encodedPath)
                 }
             }
-            
+
             return nil
         }
         set {

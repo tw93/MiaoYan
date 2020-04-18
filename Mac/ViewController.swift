@@ -843,7 +843,7 @@ class ViewController: NSViewController,
         vc.notesTableView.removeByNotes(notes: notes)
 
         vc.storage.removeNotes(notes: notes) { urls in
-        
+
             if let appd = NSApplication.shared.delegate as? AppDelegate,
                 let md = appd.mainWindowController
             {
