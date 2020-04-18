@@ -42,7 +42,6 @@ public class UserDefaultsManagement {
 
     private struct Constants {
         static let AppearanceTypeKey = "appearanceType"
-        static let ArchiveDirectoryKey = "archiveDirectory"
         static let BgColorKey = "bgColorKeyed"
         static let CellFrameOriginY = "cellFrameOriginY"
         static let CodeFontNameKey = "codeFont"
@@ -307,51 +306,6 @@ public class UserDefaultsManagement {
             }
         }
     #endif
-
-    static var archiveDirectory: URL? {
-        get {
-            #if os(OSX)
-                if let path = UserDefaults.standard.object(forKey: Constants.ArchiveDirectoryKey) as? String,
-                    let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed),
-                    let archiveURL = URL(string: "file://" + encodedPath + "/") {
-                    var isDirectory = ObjCBool(true)
-                    let exists = FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory)
-
-                    if exists, isDirectory.boolValue {
-                        return archiveURL
-                    } else {
-                        self.archiveDirectory = nil
-                        print("Archive path not accessible, settings resetted to default")
-                    }
-                }
-            #endif
-
-            if let archive = storageUrl?.appendingPathComponent("Archive") {
-                if !FileManager.default.fileExists(atPath: archive.path) {
-                    do {
-                        try FileManager.default.createDirectory(at: archive, withIntermediateDirectories: false, attributes: nil)
-                        self.archiveDirectory = archive
-                        return archive
-                    } catch {
-                        print(error)
-                    }
-                } else {
-                    self.archiveDirectory = archive
-                    return archive
-                }
-            }
-
-            return nil
-        }
-
-        set {
-            if let url = newValue {
-                UserDefaults.standard.set(url.path, forKey: Constants.ArchiveDirectoryKey)
-            } else {
-                UserDefaults.standard.set(nil, forKey: Constants.ArchiveDirectoryKey)
-            }
-        }
-    }
 
     static var imagesWidth: Float {
         get {

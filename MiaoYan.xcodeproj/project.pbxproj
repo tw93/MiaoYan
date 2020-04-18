@@ -12,6 +12,7 @@
 		270678F6244601C000D9935F /* MiaoYanCore_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */; };
 		270678F7244601C000D9935F /* MiaoYanCore_macOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		275592971F3AE9B5006B8988 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275592961F3AE9B5006B8988 /* MainWindowController.swift */; };
+		277A61D8244B538F000F0033 /* SidebarTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277A61D7244B538E000F0033 /* SidebarTableRowView.swift */; };
 		278782AA2446910D000D5B82 /* Pods_MiaoYanCore_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E9D36FA8E1C6FB67A485A09 /* Pods_MiaoYanCore_macOS.framework */; };
 		2799407C218484C900727B20 /* TitleBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799407B218484C900727B20 /* TitleBarView.swift */; };
 		27D44461244A7A05000EF2A2 /* JetBrainsMono-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27D44459244A7A05000EF2A2 /* JetBrainsMono-Bold.ttf */; };
@@ -109,7 +110,6 @@
 		D7C302C521F320FD0041627F /* ImageAttachment+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C302C421F320FD0041627F /* ImageAttachment+.swift */; };
 		D7CA7FC62326519600E9717A /* Commit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CA7FC32326519500E9717A /* Commit.swift */; };
 		D7CAD81B231D44C10006BE1C /* CodeTextProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CAD81A231D44C10006BE1C /* CodeTextProcessor.swift */; };
-		D7CB9905207E5AE300037E91 /* SidebarTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CB9904207E5AE300037E91 /* SidebarTableRowView.swift */; };
 		D7CD5CCB21820A380009D63B /* UserDefaultsManagement+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CD5CCA21820A380009D63B /* UserDefaultsManagement+.swift */; };
 		D7CD5CCD21820B7B0009D63B /* UserDefaultsManagement+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CD5CCA21820A380009D63B /* UserDefaultsManagement+.swift */; };
 		D7CD5F6C1F51185F006AA35D /* NSFont+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CD5F6B1F51185F006AA35D /* NSFont+.swift */; };
@@ -183,7 +183,8 @@
 
 /* Begin PBXFileReference section */
 		275592961F3AE9B5006B8988 /* MainWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
-		278782AF2447FC50000D5B82 /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiaoYan.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		277A61D7244B538E000F0033 /* SidebarTableRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarTableRowView.swift; sourceTree = "<group>"; };
+		278782AF2447FC50000D5B82 /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = MiaoYan.app; path = /Users/Tw93/www/MiaoYan/build/Debug/MiaoYan.app; sourceTree = "<absolute>"; };
 		2799407B218484C900727B20 /* TitleBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleBarView.swift; sourceTree = "<group>"; };
 		27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MiaoYanCore_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		27D44459244A7A05000EF2A2 /* JetBrainsMono-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "JetBrainsMono-Bold.ttf"; sourceTree = "<group>"; };
@@ -293,7 +294,6 @@
 		D7C302C421F320FD0041627F /* ImageAttachment+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageAttachment+.swift"; sourceTree = "<group>"; };
 		D7CA7FC32326519500E9717A /* Commit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Commit.swift; sourceTree = "<group>"; };
 		D7CAD81A231D44C10006BE1C /* CodeTextProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeTextProcessor.swift; sourceTree = "<group>"; };
-		D7CB9904207E5AE300037E91 /* SidebarTableRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarTableRowView.swift; sourceTree = "<group>"; };
 		D7CBAFF7214D4A07002ECD5A /* settings_white@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings_white@3x.png"; sourceTree = "<group>"; };
 		D7CBAFF8214D4A07002ECD5A /* settings_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = settings_white.png; sourceTree = "<group>"; };
 		D7CBAFF9214D4A08002ECD5A /* settings_white@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings_white@2x.png"; sourceTree = "<group>"; };
@@ -507,7 +507,6 @@
 				32CE416A4DFCDD098D5DAF53 /* Pods */,
 				27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */,
 				270678FD2446861D00D9935F /* Recovered References */,
-				278782AF2447FC50000D5B82 /* MiaoYan.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -622,8 +621,8 @@
 				D7508FC71F337E850047AB76 /* SearchTextField.swift */,
 				D7D372F3207B5B0F00AFBD9F /* SidebarNotesView.swift */,
 				D7D372F6207BB09500AFBD9F /* SidebarProjectView.swift */,
-				D7CB9904207E5AE300037E91 /* SidebarTableRowView.swift */,
 				D75EE7FC2078C5460055F159 /* SidebarCellView.swift */,
+				277A61D7244B538E000F0033 /* SidebarTableRowView.swift */,
 				D7169A5C2077BA140025D2C9 /* StorageView.swift */,
 				D783B504208A1BFD00328A41 /* EditorSplitView.swift */,
 				D7038E1C20FA86C100A54E69 /* SharingService.swift */,
@@ -957,7 +956,6 @@
 				D7EDEDFB219203C9000B8C1A /* NoteCellView+.swift in Sources */,
 				D7A9FD311FCB4873008ED23C /* MarkdownView.swift in Sources */,
 				D7A65C5920F11C38003E5ADC /* LanguageType.swift in Sources */,
-				D7CB9905207E5AE300037E91 /* SidebarTableRowView.swift in Sources */,
 				D730BD27222BF30700E69C93 /* KeychainConfiguration.swift in Sources */,
 				D7487FD821738A1900D09383 /* NSImage+.swift in Sources */,
 				D75EE7F72078B22D0055F159 /* SidebarItem.swift in Sources */,
@@ -984,6 +982,7 @@
 				D7470D072170E890006B2A92 /* CustomTextStorage.swift in Sources */,
 				D7038E1D20FA86C100A54E69 /* SharingService.swift in Sources */,
 				D7DD5A8A1F88D50000CE947E /* FileWatcherEvent.swift in Sources */,
+				277A61D8244B538F000F0033 /* SidebarTableRowView.swift in Sources */,
 				D7487FED2174E62B00D09383 /* NSAttributedStringKey+.swift in Sources */,
 				D7CE196C1FA4BA5E004BF8EE /* PreviewTextField.swift in Sources */,
 				D7679376201F0BFD000F7BBF /* SortBy.swift in Sources */,
