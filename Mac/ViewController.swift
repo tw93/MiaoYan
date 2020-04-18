@@ -152,10 +152,6 @@ class ViewController: NSViewController,
                         : [.command]
                 }
 
-                if menuItem.identifier?.rawValue == "fileMenu.tags", UserDefaultsManagement.inlineTags {
-                    return false
-                }
-
                 if menuItem.identifier?.rawValue == "fileMenu.history" {
                     if EditTextView.note != nil {
                         return true
@@ -238,9 +234,9 @@ class ViewController: NSViewController,
     }
 
     private func configureEditor() {
-        self.editArea.isGrammarCheckingEnabled = UserDefaultsManagement.grammarChecking
-        self.editArea.isContinuousSpellCheckingEnabled = UserDefaultsManagement.continuousSpellChecking
-        self.editArea.smartInsertDeleteEnabled = UserDefaultsManagement.smartInsertDelete
+        self.editArea.isGrammarCheckingEnabled = false
+        self.editArea.isContinuousSpellCheckingEnabled = false
+        self.editArea.smartInsertDeleteEnabled = false
         self.editArea.isAutomaticSpellingCorrectionEnabled = UserDefaultsManagement.automaticSpellingCorrection
         self.editArea.isAutomaticQuoteSubstitutionEnabled = UserDefaultsManagement.automaticQuoteSubstitution
         self.editArea.isAutomaticDataDetectionEnabled = UserDefaultsManagement.automaticDataDetection
@@ -297,9 +293,7 @@ class ViewController: NSViewController,
     @IBAction func searchAndCreate(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
 
-        let size = UserDefaultsManagement.horizontalOrientation
-            ? vc.splitView.subviews[0].frame.height
-            : vc.splitView.subviews[0].frame.width
+        let size = vc.splitView.subviews[0].frame.width
 
         if size == 0 {
             toggleNoteList(self)
@@ -612,67 +606,14 @@ class ViewController: NSViewController,
             }
         }
 
-        // Pin note shortcut (cmd-8)
-        if (event.keyCode == kVK_ANSI_8 && event.modifierFlags.contains(.command)) {
+        // Pin note shortcut (cmd+shift+p)
+        if (event.keyCode == kVK_ANSI_P && event.modifierFlags.contains(.shift) &&  event.modifierFlags.contains(.command)) {
             pin(notesTableView.selectedRowIndexes)
             return true
         }
 
-        // Next project cmd - shift - j
-        if (
-            event.keyCode == kVK_ANSI_J
-            && event.modifierFlags.contains([.command])
-            && !event.modifierFlags.contains(.option)
-            && event.modifierFlags.contains(.shift)
-        ) {
-            if titleLabel.isEditable {
-                titleLabel.window?.makeFirstResponder(nil)
-            }
-
-            storageOutlineView.selectNext()
-            return true
-        }
-
-        // Prev project cmd - shift - k
-        if (
-            event.keyCode == kVK_ANSI_K
-            && event.modifierFlags.contains(.command)
-            && event.modifierFlags.contains(.shift)
-        ) {
-            if titleLabel.isEditable {
-                titleLabel.window?.makeFirstResponder(nil)
-            }
-
-            storageOutlineView.selectPrev()
-            return true
-        }
-
-        // Next note (cmd-j)
-        if (
-            event.keyCode == kVK_ANSI_J
-            && event.modifierFlags.contains([.command])
-            && !event.modifierFlags.contains(.option)
-        ) {
-            if titleLabel.isEditable {
-                titleLabel.window?.makeFirstResponder(nil)
-            }
-
-            notesTableView.selectNext()
-            return true
-        }
-
-        // Prev note (cmd-k)
-        if (event.keyCode == kVK_ANSI_K && event.modifierFlags.contains(.command)) {
-            if titleLabel.isEditable {
-                titleLabel.window?.makeFirstResponder(nil)
-            }
-
-            notesTableView.selectPrev()
-            return true
-        }
-
-        // Toggle sidebar cmd+shift+control+b
-        if event.modifierFlags.contains(.command) && event.modifierFlags.contains(.shift) && event.modifierFlags.contains(.control) && event.keyCode == kVK_ANSI_B {
+        // 展开 sidebar cmd+1
+        if event.modifierFlags.contains(.command) && event.keyCode == kVK_ANSI_1 {
             toggleSidebar("")
             return false
         }
@@ -902,10 +843,7 @@ class ViewController: NSViewController,
         vc.notesTableView.removeByNotes(notes: notes)
 
         vc.storage.removeNotes(notes: notes) { urls in
-            if !UserDefaultsManagement.inlineTags {
-                vc.storageOutlineView.reloadSidebar()
-            }
-
+        
             if let appd = NSApplication.shared.delegate as? AppDelegate,
                 let md = appd.mainWindowController
             {
@@ -936,9 +874,7 @@ class ViewController: NSViewController,
     @IBAction func toggleNoteList(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
 
-        let size = UserDefaultsManagement.horizontalOrientation
-            ? vc.splitView.subviews[0].frame.height
-            : vc.splitView.subviews[0].frame.width
+        let size = vc.splitView.subviews[0].frame.width
 
         if size == 0 {
             var size = UserDefaultsManagement.sidebarSize
@@ -1162,10 +1098,6 @@ class ViewController: NSViewController,
         if searchText == nil {
             projects = storageOutlineView.getSidebarProjects()
             sidebarItem = getSidebarItem()
-
-            if !UserDefaultsManagement.inlineTags {
-                sidebarName = getSidebarItem()?.getName()
-            }
         }
 
         var filter = searchText ?? self.search.stringValue
@@ -1602,7 +1534,7 @@ class ViewController: NSViewController,
             }
 
             let menuItem = NSMenuItem()
-            menuItem.title = item.getFullLabel()
+            menuItem.title = item.label
             menuItem.representedObject = item
             menuItem.action = #selector(vc.moveNote(_:))
             moveMenu.addItem(menuItem)
@@ -1688,7 +1620,7 @@ class ViewController: NSViewController,
             return
         }
 
-        if UserDefaultsManagement.hideRealSidebar || sidebarSplitView.subviews[0].frame.width < 50 {
+        if  sidebarSplitView.subviews[0].frame.width < 50 {
 
             searchTopConstraint.constant = CGFloat(25)
             return

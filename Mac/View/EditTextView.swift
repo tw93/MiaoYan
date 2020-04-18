@@ -85,36 +85,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         
     }
 
-    // MARK: Overrides
-
-    override func toggleContinuousSpellChecking(_ sender: Any?) {
-        if let menu = sender as? NSMenuItem {
-            UserDefaultsManagement.continuousSpellChecking = (menu.state == .off)
-        }
-        super.toggleContinuousSpellChecking(sender)
-    }
-
-    override func toggleGrammarChecking(_ sender: Any?) {
-        if let menu = sender as? NSMenuItem {
-            UserDefaultsManagement.grammarChecking = (menu.state == .off)
-        }
-        super.toggleGrammarChecking(sender)
-    }
-
-    override func toggleAutomaticSpellingCorrection(_ sender: Any?) {
-        if let menu = sender as? NSMenuItem {
-            UserDefaultsManagement.automaticSpellingCorrection = (menu.state == .off)
-        }
-        super.toggleAutomaticSpellingCorrection(sender)
-    }
-
-    override func toggleSmartInsertDelete(_ sender: Any?) {
-        if let menu = sender as? NSMenuItem {
-            UserDefaultsManagement.smartInsertDelete = (menu.state == .off)
-        }
-        super.toggleSmartInsertDelete(sender)
-    }
-
     override func toggleAutomaticQuoteSubstitution(_ sender: Any?) {
         if let menu = sender as? NSMenuItem {
             UserDefaultsManagement.automaticQuoteSubstitution = (menu.state == .off)
@@ -354,25 +324,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
     }
 
-    @IBAction func editorMenuItem(_ sender: NSMenuItem) {
-        if sender.title == NSLocalizedString("Image or file", comment: "") {
-            sender.keyEquivalentModifierMask = [.shift, .command]
-        }
-
-        let keyEquivalent = (sender as AnyObject).keyEquivalent.lowercased()
-        let dict = [
-            "b": kVK_ANSI_B, "i": kVK_ANSI_I, "j": kVK_ANSI_J, "y": kVK_ANSI_Y,
-            "u": kVK_ANSI_U, "1": kVK_ANSI_1, "2": kVK_ANSI_2, "3": kVK_ANSI_3,
-            "4": kVK_ANSI_4, "5": kVK_ANSI_5, "6": kVK_ANSI_6] as [String: Int]
-
-        if let key = dict[keyEquivalent] {
-            let keyCode = UInt16(key)
-            guard let modifier = (sender as AnyObject).keyEquivalentModifierMask else { return }
-
-            _ = formatShortcut(keyCode: keyCode, modifier: modifier)
-        }
-    }
-
     @IBAction func togglePreview(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
 
@@ -443,10 +394,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         guard let storage = textStorage else { return }
 
         if note.isMarkdown(), let content = note.content.mutableCopy() as? NSMutableAttributedString {
-            if UserDefaultsManagement.liveImagesPreview {
-                content.loadImages(note: note)
-            }
-
+             content.loadImages(note: note)
             content.replaceCheckboxes()
 
             EditTextView.shouldForceRescan = true
@@ -533,53 +481,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         EditTextView.note = nil
-    }
-
-    func formatShortcut(keyCode: UInt16, modifier: NSEvent.ModifierFlags) -> Bool {
-        guard let vc = ViewController.shared(),
-            let editArea = vc.editArea,
-            let note = vc.getCurrentNote(),
-            !UserDefaultsManagement.preview,
-            editArea.isEditable else { return false }
-
-        let formatter = TextFormatter(textView: editArea, note: note)
-
-        switch keyCode {
-        case 11: // cmd-b
-            formatter.bold()
-            return true
-        case 34: // command-shift-i (image) | command-option-i (link) | command-i
-            if (note.isMarkdown() && modifier.contains([.command, .option])) { //
-                formatter.link()
-                return true
-            }
-
-            formatter.italic()
-            return true
-        case 32: // cmd-u
-            formatter.underline()
-            return true
-        case 16: // cmd-y
-            formatter.strike()
-            return true
-        case (18...23): // cmd-1/6 (headers 1/6)
-            if note.isMarkdown() {
-                var string = ""
-                for index in [18, 19, 20, 21, 23, 22] {
-                    string = string + "#"
-                    if Int(keyCode) == index {
-                        break
-                    }
-                }
-
-                formatter.header(string)
-                return true
-            }
-
-            return false
-        default:
-            return false
-        }
     }
 
     func getParagraphRange() -> NSRange? {
@@ -692,17 +593,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
         // hasMarkedText added for Japanese hack https://yllan.org/blog/archives/231
         if event.keyCode == kVK_Tab && !hasMarkedText(){
             breakUndoCoalescing()
-            if UserDefaultsManagement.spacesInsteadTabs {
+        
                 let tab = TextFormatter.getAttributedCode(string: "    ")
                 insertText(tab, replacementRange: selectedRange())
                 breakUndoCoalescing()
                 return
-            }
 
-            let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
-            formatter.tabKey()
-            breakUndoCoalescing()
-            return
         }
 
         if event.keyCode == kVK_Return && !hasMarkedText() {
@@ -941,8 +837,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 guard let filePath = ImagesProcessor.writeFile(data: data, url: url, note: note) else { return false }
 
                 let insertRange = NSRange(location: caretLocation + offset, length: 0)
-
-                if UserDefaultsManagement.liveImagesPreview {
                     let cleanPath = filePath.removingPercentEncoding ?? filePath
                     guard let url = note.getImageUrl(imageName: cleanPath) else { return false }
 
@@ -958,11 +852,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
                         offset += 3
                     }
-                } else {
-                    insertText("![](\(filePath))", replacementRange: insertRange)
-                    insertNewline(nil)
-                    insertNewline(nil)
-                }
             }
 
             if let storage = textStorage {
@@ -1212,12 +1101,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return
         }
 
-        if !UserDefaultsManagement.liveImagesPreview {
-            let url = URL(fileURLWithPath: link as! String)
-            NSWorkspace.shared.open(url)
-            return
-        }
-
         let titleKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.title")
         let pathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
 
@@ -1347,14 +1230,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
     private func saveClipboard(data: Data, note: Note, ext: String? = nil, url: URL? = nil) {
         if let path = ImagesProcessor.writeFile(data: data, url: url, note: note, ext: ext) {
 
-            guard UserDefaultsManagement.liveImagesPreview else {
-                let newLineImage = NSAttributedString(string: "![](\(path))")
-                self.breakUndoCoalescing()
-                self.insertText(newLineImage, replacementRange: selectedRange())
-                self.breakUndoCoalescing()
-                return
-            }
-
             guard let path = path.removingPercentEncoding else { return }
 
             if let imageUrl = note.getImageUrl(imageName: path) {
@@ -1383,12 +1258,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return
         }
 
-        guard Float(width) - margin * 2 > lineWidth else {
+        guard Float(width) - Float(margin * 2) > Float(lineWidth) else {
             textContainerInset.width = CGFloat(margin)
             return
         }
 
-        let inset = (Float(width) - lineWidth) / 2
+        let inset = (Int(Float(width)) - lineWidth) / 2
 
         textContainerInset.width = CGFloat(inset)
     }

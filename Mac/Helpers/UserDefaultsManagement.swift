@@ -20,12 +20,8 @@ public class UserDefaultsManagement {
     
     static var DefaultFont = ".AppleSystemUIFont"
 
-#if os(OSX)
-    static var DefaultFontSize = 16
-#else
-    static var DefaultFontSize = 18
-#endif
-
+    static var DefaultFontSize = 15
+    static var editorLineSpacing = 1.4
     static var DefaultSnapshotsInterval = 1
     static var DefaultSnapshotsIntervalMinutes = 5
     
@@ -46,30 +42,24 @@ public class UserDefaultsManagement {
         static let CellFrameOriginY = "cellFrameOriginY"
         static let CodeFontNameKey = "codeFont"
         static let CodeFontSizeKey = "codeFontSize"
-        static let codeBlockHighlight = "codeBlockHighlight"
+
         static let codeTheme = "codeTheme"
-        static let ContinuousSpellChecking = "continuousSpellChecking"
         static let DefaultLanguageKey = "defaultLanguage"
         static let FontNameKey = "font"
         static let FontSizeKey = "fontsize"
         static let FontColorKey = "fontColorKeyed"
         static let FullScreen = "fullScreen"
         static let NoteType = "noteType"
-        static let GrammarChecking = "grammarChecking"
-        static let GitStorage = "gitStorage"
-        static let HideDate = "hideDate"
-        static let HideOnDeactivate = "hideOnDeactivate"
-        static let HideSidebar = "hideSidebar"
-        static let HidePreviewKey = "hidePreview"
-        static let HidePreviewImages = "hidePreviewImages"
+        
+    
+
+        
         static let ImagesWidthKey = "imagesWidthKey"
         static let ImportURLsKey = "ImportURLs"
-        static let InlineTags = "inlineTags"
         static let LastSelectedPath = "lastSelectedPath"
         static let LastProject = "lastProject"
         static let LineSpacingEditorKey = "lineSpacingEditor"
         static let LineWidthKey = "lineWidth"
-        static let LiveImagesPreview = "liveImagesPreview"
         static let MarginSizeKey = "marginSize"
         static let MarkdownPreviewCSS = "markdownPreviewCSS"
         static let NightModeType = "nightModeType"
@@ -84,7 +74,7 @@ public class UserDefaultsManagement {
         static let SaveInKeychain = "saveInKeychain"
         static let SharedContainerKey = "sharedContainer"
         static let ShowDockIcon = "showDockIcon"
-        static let SmartInsertDelete = "smartInsertDelete"
+
         static let SnapshotsInterval = "snapshotsInterval"
         static let SnapshotsIntervalMinutes = "snapshotsIntervalMinutes"
         static let SortBy = "sortBy"
@@ -97,44 +87,11 @@ public class UserDefaultsManagement {
         static let Welcome = "welcome"
     }
 
-    static var codeFontName: String {
-        get {
-            if let returnFontName = UserDefaults.standard.object(forKey: Constants.CodeFontNameKey) {
-                return returnFontName as! String
-            } else {
-                return "Source Code Pro"
-            }
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.CodeFontNameKey)
-        }
-    }
+    static var codeFontName="JetBrains Mono"
 
-    static var codeFontSize: Int {
-        get {
-            if let returnFontSize = UserDefaults.standard.object(forKey: Constants.CodeFontSizeKey) {
-                return returnFontSize as! Int
-            } else {
-                return self.DefaultFontSize
-            }
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.CodeFontSizeKey)
-        }
-    }
+    static var codeFontSize=14
 
-    static var fontName: String {
-        get {
-            if let returnFontName = UserDefaults.standard.object(forKey: Constants.FontNameKey) {
-                return returnFontName as! String
-            } else {
-                return "Avenir Next"
-            }
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.FontNameKey)
-        }
-    }
+    static var fontName="JetBrains Mono"
     
     static var fontSize: Int {
         get {
@@ -157,7 +114,7 @@ public class UserDefaultsManagement {
 
     static var codeFont: Font! {
         get {
-            if let font = Font(name: self.codeFontName, size: CGFloat(self.codeFontSize)) {
+            if let font = Font(name: self.fontName, size: CGFloat(self.codeFontSize)) {
                 return font
             }
 
@@ -226,19 +183,6 @@ public class UserDefaultsManagement {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: "externalEditorApp")
-        }
-    }
-
-    static var horizontalOrientation: Bool {
-        get {
-            if let returnMode = UserDefaults.standard.object(forKey: Constants.TableOrientation) {
-                return returnMode as! Bool
-            } else {
-                return false
-            }
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.TableOrientation)
         }
     }
     
@@ -311,18 +255,7 @@ public class UserDefaultsManagement {
         }
     }
             
-    static var preview: Bool {
-        get {
-            if let preview = UserDefaults.standard.object(forKey: Constants.Preview) {
-                return preview as! Bool
-            } else {
-                return false
-            }
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.Preview)
-        }
-    }
+    static var preview=false
     
     static var lastSync: Date? {
         get {
@@ -337,21 +270,10 @@ public class UserDefaultsManagement {
         }
     }
     
-    static var hideOnDeactivate: Bool {
-        get {
-            if let hideOnDeactivate = UserDefaults.standard.object(forKey: Constants.HideOnDeactivate) {
-                return hideOnDeactivate as! Bool
-            } else {
-                return false
-            }
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.HideOnDeactivate)
-        }
-    }
+    
 
         
-    static var cellViewFrameOriginY: CGFloat? {        
+    static var cellViewFrameOriginY: CGFloat? {
         get {
             if let value = UserDefaults.standard.object(forKey: Constants.CellFrameOriginY) {
                 return value as? CGFloat
@@ -360,19 +282,6 @@ public class UserDefaultsManagement {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.CellFrameOriginY)
-        }
-    }
-    
-    static var hidePreview: Bool {
-        get {
-            if let returnMode = UserDefaults.standard.object(forKey: Constants.HidePreviewKey) {
-                return returnMode as! Bool
-            } else {
-                return false
-            }
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.HidePreviewKey)
         }
     }
         
@@ -389,30 +298,8 @@ public class UserDefaultsManagement {
         }
     }
     
-    static var sortDirection: Bool {
-        get {
-            if let returnMode = UserDefaults.standard.object(forKey: "sortDirection") {
-                return returnMode as! Bool
-            } else {
-                return true
-            }
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "sortDirection")
-        }
-    }
+    static var sortDirection=true
     
-    static var hideSidebar: Bool {
-        get {
-            if let hide = UserDefaults.standard.object(forKey: "hideSidebar") {
-                return hide as! Bool
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "hideSidebar")
-        }
-    }
     
     static var sidebarSize: CGFloat {
         get {
@@ -431,41 +318,9 @@ public class UserDefaultsManagement {
         }
     }
     
-    static var hideRealSidebar: Bool {
-        get {
-            if let hide = UserDefaults.standard.object(forKey: "hideRealSidebar") {
-                return hide as! Bool
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "hideRealSidebar")
-        }
-    }
     
-    static var realSidebarSize: Int {
-        get {
-            if let size = UserDefaults.standard.object(forKey: "realSidebarSize") {
-                return size as! Int
-            }
-            return 100
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "realSidebarSize")
-        }
-    }
-    
-    static var codeBlockHighlight: Bool {
-        get {
-            if let highlight = UserDefaults.standard.object(forKey: Constants.codeBlockHighlight) {
-                return highlight as! Bool
-            }
-            return true
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.codeBlockHighlight)
-        }
-    }
+    static var realSidebarSize=100
+
 
     static var lastSelectedURL: URL? {
         get {
@@ -483,66 +338,12 @@ public class UserDefaultsManagement {
         }
     }
     
-    static var liveImagesPreview: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.LiveImagesPreview) {
-                return result as! Bool
-            }
-            return true
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.LiveImagesPreview)
-        }
-    }
     
-    static var focusInEditorOnNoteSelect: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: "focusInEditorOnNoteSelect") {
-                return result as! Bool
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "focusInEditorOnNoteSelect")
-        }
-    }
+    static var focusInEditorOnNoteSelect = true
     
-    static var defaultLanguage: Int {
-        get {
-            if let dl = UserDefaults.standard.object(forKey: Constants.DefaultLanguageKey) as? Int {
-                return dl
-            }
-            
-            return 0
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.DefaultLanguageKey)
-        }
-    }
+    static var defaultLanguage=0
     
-    static var restoreCursorPosition: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.RestoreCursorPosition) {
-                return result as! Bool
-            }
-            return true
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.RestoreCursorPosition)
-        }
-    }
-    
-    static var nightModeAuto: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.NightModeAuto) {
-                return result as! Bool
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.NightModeAuto)
-        }
-    }
+    static var restoreCursorPosition=true
     
     #if os(iOS)
         static var nightModeType: NightMode {
@@ -558,54 +359,13 @@ public class UserDefaultsManagement {
         }
     #endif
     
-    static var maxNightModeBrightnessLevel: Float {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.NightModeBrightnessLevel) {
-                return result as! Float
-            }
-            return 35
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.NightModeBrightnessLevel)
-        }
-    }
+    static var maxNightModeBrightnessLevel=35
     
-    static var autocloseBrackets: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.AutocloseBrackets) {
-                return result as! Bool
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.AutocloseBrackets)
-        }
-    }
+    static var autocloseBrackets=true
     
-    static var lastProject: Int {
-        get {
-            if let lastProject = UserDefaults.standard.object(forKey: Constants.LastProject) {
-                return lastProject as! Int
-            } else {
-                return 0
-            }
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.LastProject)
-        }
-    }
+    static var lastProject = 0
     
-    static var showDockIcon: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.ShowDockIcon) {
-                return result as! Bool
-            }
-            return true
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.ShowDockIcon)
-        }
-    }
+    static var showDockIcon = true
     
     static var archiveDirectory: URL? {
         get {
@@ -651,18 +411,6 @@ public class UserDefaultsManagement {
             }
         }
     }
-    
-    static var editorLineSpacing: Float {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.LineSpacingEditorKey) {
-                return result as! Float
-            }
-            return 0
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.LineSpacingEditorKey)
-        }
-    }
 
     static var imagesWidth: Float {
         get {
@@ -676,161 +424,25 @@ public class UserDefaultsManagement {
         }
     }
 
-    static var lineWidth: Float {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.LineWidthKey) {
-                return result as! Float
-            }
-            return 1000
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.LineWidthKey)
-        }
-    }
+    static var lineWidth = 1000
     
-    static var textMatchAutoSelection: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.TextMatchAutoSelection) {
-                return result as! Bool
-            }
-            return true
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.TextMatchAutoSelection)
-        }
-    }
+    static var textMatchAutoSelection=true
+
     
-    static var continuousSpellChecking: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.ContinuousSpellChecking) {
-                return result as! Bool
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.ContinuousSpellChecking)
-        }
-    }
+    static var automaticSpellingCorrection=false
     
-    static var grammarChecking: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.GrammarChecking) {
-                return result as! Bool
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.GrammarChecking)
-        }
-    }
+    static var automaticQuoteSubstitution=false
     
-    static var smartInsertDelete: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.SmartInsertDelete) {
-                return result as! Bool
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.SmartInsertDelete)
-        }
-    }
-    
-    static var automaticSpellingCorrection: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.AutomaticSpellingCorrection) {
-                return result as! Bool
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.AutomaticSpellingCorrection)
-        }
-    }
-    
-    static var automaticQuoteSubstitution: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.AutomaticQuoteSubstitution) {
-                return result as! Bool
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.AutomaticQuoteSubstitution)
-        }
-    }
-    
-    static var automaticDataDetection: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.AutomaticDataDetection) {
-                return result as! Bool
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.AutomaticDataDetection)
-        }
-    }
-    
-    static var automaticLinkDetection: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.AutomaticLinkDetection) {
-                return result as! Bool
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.AutomaticLinkDetection)
-        }
-    }
+    static var automaticDataDetection=false
+    static var automaticLinkDetection=false
         
-    static var automaticTextReplacement: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.AutomaticTextReplacement) {
-                return result as! Bool
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.AutomaticTextReplacement)
-        }
-    }
+    static var automaticTextReplacement=false
     
-    static var automaticDashSubstitution: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.AutomaticDashSubstitution) {
-                return result as! Bool
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.AutomaticDashSubstitution)
-        }
-    }
+    static var automaticDashSubstitution=false
 
-    static var isHiddenSidebar: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.HideSidebar) {
-                return result as! Bool
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.HideSidebar)
-        }
-    }
+    static var isHiddenSidebar=false
 
-    static var txtAsMarkdown: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.TxtAsMarkdown) as? Bool {
-                return result
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.TxtAsMarkdown)
-        }
-    }
+    static var txtAsMarkdown=false
     
     static var fileContainer: NoteContainer {
         get {
@@ -891,77 +503,9 @@ public class UserDefaultsManagement {
         }
     }
 
-    static var fileFormat: NoteType {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.NoteType) as? Int {
-                return NoteType.withTag(rawValue: result)
-            }
-            return .Markdown
-        }
-        set {
-            UserDefaults.standard.set(newValue.tag, forKey: Constants.NoteType)
-        }
-    }
+    static var previewFontSize=16
 
-    static var previewFontSize: Int {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.PreviewFontSize) as? Int {
-                return result
-            }
-            return 11
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.PreviewFontSize)
-        }
-    }
-
-    static var hidePreviewImages: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.HidePreviewImages) as? Bool {
-                return result
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.HidePreviewImages)
-        }
-    }
-
-    static var hideDate: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.HideDate) as? Bool {
-                return result
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.HideDate)
-        }
-    }
-
-    static var spacesInsteadTabs: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.SpacesInsteadTabs) as? Bool {
-                return result
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.SpacesInsteadTabs)
-        }
-    }
-
-    static var marginSize: Float {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.MarginSizeKey) {
-                return result as! Float
-            }
-            return 20
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.MarginSizeKey)
-        }
-    }
+    static var marginSize=20
 
     static var markdownPreviewCSS: URL? {
         get {
@@ -981,30 +525,6 @@ public class UserDefaultsManagement {
             } else {
                 UserDefaults.standard.set(nil, forKey: Constants.MarkdownPreviewCSS)
             }
-        }
-    }
-
-    static var gitStorage: URL {
-        get {
-            if let repositories = UserDefaults.standard.url(forKey: Constants.GitStorage) {
-                if !FileManager.default.fileExists(atPath: repositories.path) {
-                    try? FileManager.default.createDirectory(at: repositories, withIntermediateDirectories: true, attributes: nil)
-                }
-
-                return repositories
-            }
-
-            let applicationSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-            let repositories = applicationSupport.appendingPathComponent("Repositories")
-
-            if !FileManager.default.fileExists(atPath: repositories.path) {
-                try? FileManager.default.createDirectory(at: repositories, withIntermediateDirectories: true, attributes: nil)
-            }
-
-            return repositories
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.GitStorage)
         }
     }
 
@@ -1034,52 +554,9 @@ public class UserDefaultsManagement {
         }
     }
 
-    static var backupManually: Bool {
-        get {
-            if let returnMode = UserDefaults.standard.object(forKey: Constants.BackupManually) as? Bool {
-                return returnMode
-            } else {
-                return true
-            }
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.BackupManually)
-        }
-    }
+    static var backupManually=true
 
-    static var fullScreen: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.FullScreen) as? Bool {
-                return result
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.FullScreen)
-        }
-    }
+    static var fullScreen=false
 
-    static var inlineTags: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.InlineTags) as? Bool {
-                return result
-            }
-            return true
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.InlineTags)
-        }
-    }
-
-    static var copyWelcome: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.Welcome) as? Bool {
-                return result
-            }
-            return true
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.Welcome)
-        }
-    }
+    static var copyWelcome=true
 }

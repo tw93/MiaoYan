@@ -8,8 +8,6 @@ class CodeTextProcessor {
     }
 
     public func getCodeBlockRanges(parRange: NSRange) -> [NSRange]? {
-        guard UserDefaultsManagement.codeBlockHighlight else { return nil }
-
         let min = scanCodeBlockUp(location: parRange.location - 1)
         let max = scanCodeBlockDown(location: parRange.upperBound)
 
@@ -124,13 +122,11 @@ class CodeTextProcessor {
     }
 
     public func getCodeBlockRanges() -> [NSRange]? {
-        guard UserDefaultsManagement.codeBlockHighlight else { return nil }
-
         var paragraphRanges = [NSRange]()
         var paragraphList = [String]()
 
         let string = textStorage.string as NSString
-        string.enumerateSubstrings(in: NSRange(0..<string.length), options: .byParagraphs) {value, range, _, _ in
+        string.enumerateSubstrings(in: NSRange(0..<string.length), options: .byParagraphs) { value, range, _, _ in
             paragraphRanges.append(range)
             paragraphList.append(value!)
         }
@@ -160,7 +156,6 @@ class CodeTextProcessor {
                     || prevParagraph.starts(with: "- ")
                     || prevParagraph.starts(with: " - ")
                     || prevParagraph.starts(with: "*") {
-
                     skipFlag = true
                     index += 1
                     continue

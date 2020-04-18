@@ -589,9 +589,6 @@
 /* Class = "NSWindow"; title = "Window"; ObjectID = "qod-hp-9wd"; */
 "qod-hp-9wd.title" = "窗口";
 
-/* Class = "NSMenuItem"; title = "Show view options"; ObjectID = "qs2-5J-Q3n"; */
-"qs2-5J-Q3n.title" = "显示视图选项";
-
 /* Class = "NSTextFieldCell"; title = "Direction:"; ObjectID = "QxK-39-9yF"; */
 "QxK-39-9yF.title" = "Direction:";
 
@@ -666,9 +663,6 @@
 
 /* Class = "NSMenuItem"; title = "Rename folder"; ObjectID = "Tap-iY-hyA"; */
 "Tap-iY-hyA.title" = "重命名文件夹";
-
-/* Class = "NSMenuItem"; title = "Show view options"; ObjectID = "Tcg-83-bZN"; */
-"Tcg-83-bZN.title" = "显示视图选项";
 
 /* Class = "NSButtonCell"; title = "Descending"; ObjectID = "TCI-Xs-mwm"; */
 "TCI-Xs-mwm.title" = "降序";
