@@ -18,17 +18,6 @@ class TitleTextField: NSTextField {
         return super.performKeyEquivalent(with: event)
     }
 
-    override func draw(_ dirtyRect: NSRect) {
-        if window?.firstResponder == currentEditor() && NSApp.isActive {
-            NSGraphicsContext.saveGraphicsState()
-            NSFocusRingPlacement.only.set()
-            NSGraphicsContext.restoreGraphicsState()
-           } else {
-            super.draw(dirtyRect)
-           }
-    }
-
-
     override func becomeFirstResponder() -> Bool {
         if let note = EditTextView.note {
             stringValue = note.getFileName()

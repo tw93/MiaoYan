@@ -48,7 +48,6 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
         
         if fr.isKind(of: EditTextView.self) {
             guard let vc = ViewController.shared(), let ev = vc.editArea, ev.isEditable else { return notesListUndoManager }
-            
             return editorUndoManager
         }
         
