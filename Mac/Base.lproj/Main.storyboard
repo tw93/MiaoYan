@@ -17,7 +17,6 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="MiaoYan" systemMenu="apple" identifier="miaoyanMenu" id="uQy-DD-JDr">
                                     <items>
-                                        <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
                                         <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW">
                                             <connections>
                                                 <action selector="openPreferences:" target="Voe-Tx-rLC" id="inL-8g-wqE"/>
@@ -32,12 +31,6 @@ CA
                                                 <action selector="emptyTrash:" target="L4m-js-agn" id="d27-Z5-1ap"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
-                                        <menuItem title="Services" id="NMo-om-nkz">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Services" systemMenu="services" id="hz9-B4-Xy5"/>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="4je-JR-u6R"/>
                                         <menuItem title="Hide MiaoYan" keyEquivalent="h" id="Olw-nP-bQN">
                                             <connections>
                                                 <action selector="hide:" target="Ady-hI-5gd" id="PnN-Uc-m68"/>
@@ -49,13 +42,6 @@ CA
                                                 <action selector="hideOtherApplications:" target="Ady-hI-5gd" id="VT4-aY-XCT"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Show All" id="Kd2-mp-pUS">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="unhideAllApplications:" target="Ady-hI-5gd" id="Dhg-Le-xox"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="kCx-OE-vgT"/>
                                         <menuItem title="Quit MiaoYan" keyEquivalent="q" id="4sb-4s-VLi">
                                             <connections>
                                                 <action selector="terminate:" target="Ady-hI-5gd" id="Te7-pn-YzF"/>
@@ -73,7 +59,7 @@ CA
                                                 <action selector="performClose:" target="Ady-hI-5gd" id="kc5-tb-yP0"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Import" keyEquivalent="O" identifier="fileMenu.import" id="O8Z-cg-XnH">
+                                        <menuItem title="Import" keyEquivalent="o" identifier="fileMenu.import" id="O8Z-cg-XnH">
                                             <connections>
                                                 <action selector="importNote:" target="Ady-hI-5gd" id="r4z-z3-fFc"/>
                                             </connections>
@@ -83,18 +69,11 @@ CA
                                                 <action selector="fileMenuNewNote:" target="L4m-js-agn" id="N33-Jf-oOg"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Save revision" keyEquivalent="s" id="o8V-Wi-IWO">
-                                            <connections>
-                                                <action selector="saveRevision:" target="Ady-hI-5gd" id="GVG-2g-BP7"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="pvu-vt-MCq"/>
                                         <menuItem title="Search and create" keyEquivalent="l" identifier="fileMenu.searchAndCreate" id="hPY-aY-QOE">
                                             <connections>
                                                 <action selector="searchAndCreate:" target="L4m-js-agn" id="ChM-Mj-Rdf"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="DJZ-Sf-cos"/>
                                         <menuItem title="Duplicate" keyEquivalent="d" id="pnm-dP-GKO">
                                             <connections>
                                                 <action selector="duplicate:" target="Ady-hI-5gd" id="9eI-Pe-IRx"/>
@@ -105,40 +84,22 @@ CA
                                                 <action selector="renameMenu:" target="L4m-js-agn" id="H0Y-Fe-qfr"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Reveal in Finder" keyEquivalent="i" id="rXU-X3-UjC">
+                                            <connections>
+                                                <action selector="finderMenu:" target="Ady-hI-5gd" id="Ift-tc-85m"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Move" keyEquivalent="m" id="CvG-Kp-kdK">
+                                            <connections>
+                                                <action selector="moveMenu:" target="L4m-js-agn" id="CDY-Sr-IPD"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Delete" identifier="fileMenu.delete" id="TjZ-PX-YVo">
                                             <string key="keyEquivalent" base64-UTF8="YES">
 CA
 </string>
                                             <connections>
-                                                <action selector="deleteNote:" target="L4m-js-agn" id="AiT-JP-62A"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Reveal in Finder" keyEquivalent="R" id="rXU-X3-UjC">
-                                            <connections>
-                                                <action selector="finderMenu:" target="Ady-hI-5gd" id="Ift-tc-85m"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Copy title" keyEquivalent="c" identifier="fileMenu.copyTitle" id="5LV-Vi-n79">
-                                            <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="copyTitle:" target="Ady-hI-5gd" id="a1Z-Iq-V4h"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="wQ9-qT-qnU"/>
-                                        <menuItem title="Move" keyEquivalent="T" id="CvG-Kp-kdK">
-                                            <connections>
-                                                <action selector="moveMenu:" target="L4m-js-agn" id="CDY-Sr-IPD"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="History" keyEquivalent="H" id="Snd-dJ-uj5">
-                                            <connections>
-                                                <action selector="historyMenu:" target="Ady-hI-5gd" id="VPf-oO-JCe"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="zV0-3n-jVp"/>
-                                        <menuItem title="Print" keyEquivalent="p" id="OV0-om-POJ">
-                                            <connections>
-                                                <action selector="printNotes:" target="Ady-hI-5gd" id="aq9-E9-nEe"/>
+                                                <action selector="deleteNote:" target="L4m-js-agn" id="QZA-ii-6Ou"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -173,21 +134,6 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="View" identifier="viewMenu" id="HyV-fh-RgO">
                                     <items>
-                                        <menuItem title="Hide/show sidebar" keyEquivalent="1" id="DCh-5P-PZe">
-                                            <connections>
-                                                <action selector="toggleSidebar:" target="L4m-js-agn" id="MRM-fh-zTo"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Hide/show note list" keyEquivalent="2" id="WHt-T4-l9c">
-                                            <connections>
-                                                <action selector="toggleNoteList:" target="L4m-js-agn" id="G22-P2-hks"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Toggle preview" keyEquivalent="3" id="PdU-Em-Ugm">
-                                            <connections>
-                                                <action selector="togglePreview:" target="N0L-g4-qwj" id="2w1-01-aD6"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem title="Sort by" id="rHB-xF-GgG">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Sort by" id="05n-RU-nOV">
@@ -213,7 +159,21 @@ CA
                                                 </items>
                                             </menu>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="hB3-LF-h0Y"/>
+                                        <menuItem title="Hide/show sidebar" keyEquivalent="1" id="DCh-5P-PZe">
+                                            <connections>
+                                                <action selector="toggleSidebar:" target="L4m-js-agn" id="MRM-fh-zTo"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Hide/show note list" keyEquivalent="2" id="WHt-T4-l9c">
+                                            <connections>
+                                                <action selector="toggleNoteList:" target="L4m-js-agn" id="G22-P2-hks"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Toggle preview" keyEquivalent="3" id="PdU-Em-Ugm">
+                                            <connections>
+                                                <action selector="togglePreview:" target="N0L-g4-qwj" id="2w1-01-aD6"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Enter Full Screen" keyEquivalent="f" id="4J7-dP-txa">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
@@ -237,7 +197,6 @@ CA
                                                 <action selector="redo:" target="Ady-hI-5gd" id="oIA-Rs-6OD"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="WRV-NI-Exz"/>
                                         <menuItem title="Cut" keyEquivalent="x" id="uRl-iY-unG">
                                             <connections>
                                                 <action selector="cut:" target="Ady-hI-5gd" id="YJe-68-I9s"/>
@@ -258,18 +217,11 @@ CA
                                                 <action selector="pasteAsPlainText:" target="Ady-hI-5gd" id="cEh-KX-wJQ"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Delete" id="pa3-QI-u2k">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="delete:" target="Ady-hI-5gd" id="0Mk-Ml-PaM"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem title="Select All" keyEquivalent="a" id="Ruw-6m-B2m">
                                             <connections>
                                                 <action selector="selectAll:" target="Ady-hI-5gd" id="VNm-Mi-diN"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="uyl-h8-XO2"/>
                                         <menuItem title="Find" id="4EN-yA-p0u">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Find" identifier="findMenu" id="1b7-l0-nxx">
@@ -322,13 +274,11 @@ CA
                                                 <action selector="performZoom:" target="Ady-hI-5gd" id="Wrc-W7-8lh"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="f4P-YX-ans"/>
                                         <menuItem title="Main Window" state="on" keyEquivalent="\" id="qZf-Xp-kDW">
                                             <connections>
                                                 <action selector="openMainWindow:" target="Voe-Tx-rLC" id="wG8-zv-K7f"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="DHU-Ji-YT6"/>
                                         <menuItem title="Bring All to Front" id="s6A-tQ-Sbe">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
@@ -552,6 +502,10 @@ CA
                                                                                         <action selector="add:" target="I0q-sX-uBq" id="1Ni-H9-HG0"/>
                                                                                     </connections>
                                                                                 </button>
+                                                                                <box verticalHuggingPriority="750" fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="bVt-gT-Six">
+                                                                                    <rect key="frame" x="1" y="0.0" width="197" height="5"/>
+                                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                                </box>
                                                                             </subviews>
                                                                             <constraints>
                                                                                 <constraint firstItem="gNt-mn-bYH" firstAttribute="centerY" secondItem="I0q-sX-uBq" secondAttribute="centerY" id="1I3-WJ-8IJ"/>
@@ -694,7 +648,7 @@ CA
                                                                                         <textField identifier="cellDate" autoresizesSubviews="NO" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="abw-Lq-K7d">
                                                                                             <rect key="frame" x="18" y="10" width="43" height="14"/>
                                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="2/23/11" id="9w3-fa-di3">
-                                                                                                <font key="font" metaFont="label" size="11"/>
+                                                                                                <font key="font" metaFont="message" size="11"/>
                                                                                                 <color key="textColor" red="0.65995385362694303" green="0.1371187799261683" blue="0.15795969262071341" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                                 <color key="backgroundColor" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
                                                                                                 <connections>
@@ -792,7 +746,7 @@ CA
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="40" id="3QH-0a-na2"/>
                                                                 </constraints>
-                                                                <textFieldCell key="cell" lineBreakMode="truncatingMiddle" enabled="NO" sendsActionOnEndEditing="YES" focusRingType="none" alignment="left" title="Title" placeholderString="输入标题" drawsBackground="YES" usesSingleLineMode="YES" id="O9K-a1-3eu">
+                                                                <textFieldCell key="cell" lineBreakMode="truncatingMiddle" selectable="YES" editable="YES" enabled="NO" sendsActionOnEndEditing="YES" focusRingType="none" alignment="left" title="Title" placeholderString="输入标题" drawsBackground="YES" usesSingleLineMode="YES" id="O9K-a1-3eu">
                                                                     <font key="font" metaFont="systemSemibold" size="22"/>
                                                                     <color key="textColor" name="underlineColor"/>
                                                                     <color key="backgroundColor" name="mainBackground"/>
@@ -808,10 +762,10 @@ CA
                                                                 <rect key="frame" x="393" y="0.0" width="69" height="56"/>
                                                                 <subviews>
                                                                     <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="9" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" horizontalCompressionResistancePriority="1000" misplaced="YES" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="shI-kr-3o8">
-                                                                        <rect key="frame" x="20" y="8" width="22" height="26"/>
+                                                                        <rect key="frame" x="20" y="18" width="22" height="16"/>
                                                                         <subviews>
                                                                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bn7-FD-jzc">
-                                                                                <rect key="frame" x="0.0" y="10" width="22" height="16"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="22" height="16"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="width" constant="22" id="cL1-PF-gSQ"/>
                                                                                     <constraint firstAttribute="height" constant="16" id="mhf-Ok-C0D"/>
@@ -826,7 +780,7 @@ CA
                                                                             </button>
                                                                         </subviews>
                                                                         <constraints>
-                                                                            <constraint firstAttribute="bottom" secondItem="Bn7-FD-jzc" secondAttribute="bottom" constant="10" id="RcY-CS-koI"/>
+                                                                            <constraint firstAttribute="bottom" secondItem="Bn7-FD-jzc" secondAttribute="bottom" id="RcY-CS-koI"/>
                                                                         </constraints>
                                                                         <visibilityPriorities>
                                                                             <integer value="1000"/>
@@ -959,34 +913,23 @@ CA
                                 <action selector="renameMenu:" target="XfG-lQ-9wD" id="iYK-OA-0IW"/>
                             </connections>
                         </menuItem>
+                        <menuItem title="Pin/unpin" keyEquivalent="P" id="jFN-Dp-LON">
+                            <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                            <connections>
+                                <action selector="pinMenu:" target="XfG-lQ-9wD" id="n3K-Qd-LrZ"/>
+                            </connections>
+                        </menuItem>
+                        <menuItem title="Reveal in Finder" alternate="YES" keyEquivalent="i" id="xSO-lW-k8f">
+                            <connections>
+                                <action selector="finderMenu:" target="rPt-NT-nkU" id="HN5-My-jcv"/>
+                            </connections>
+                        </menuItem>
                         <menuItem title="Delete" id="fHG-zk-g0k">
                             <string key="keyEquivalent" base64-UTF8="YES">
 CA
 </string>
                             <connections>
-                                <action selector="deleteNote:" target="XfG-lQ-9wD" id="WOk-2N-rha"/>
-                            </connections>
-                        </menuItem>
-                        <menuItem title="Pin/unpin" keyEquivalent="8" id="jFN-Dp-LON">
-                            <connections>
-                                <action selector="pinMenu:" target="XfG-lQ-9wD" id="n3K-Qd-LrZ"/>
-                            </connections>
-                        </menuItem>
-                        <menuItem title="Reveal in Finder" alternate="YES" keyEquivalent="R" id="xSO-lW-k8f">
-                            <connections>
-                                <action selector="finderMenu:" target="rPt-NT-nkU" id="HN5-My-jcv"/>
-                            </connections>
-                        </menuItem>
-                        <menuItem isSeparatorItem="YES" id="Fj3-MU-qJ9"/>
-                        <menuItem title="Copy title" keyEquivalent="c" identifier="noteMove.copyTitle" id="3kn-9C-fsB">
-                            <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
-                            <connections>
-                                <action selector="copyTitle:" target="rPt-NT-nkU" id="Fwy-yp-nPd"/>
-                            </connections>
-                        </menuItem>
-                        <menuItem title="Print" keyEquivalent="p" identifier="noteMove.print" id="nCW-CZ-qC7">
-                            <connections>
-                                <action selector="printNotes:" target="rPt-NT-nkU" id="f6C-X6-WZP"/>
+                                <action selector="deleteNote:" target="XfG-lQ-9wD" id="3m0-Tl-QCc"/>
                             </connections>
                         </menuItem>
                     </items>
@@ -1015,7 +958,7 @@ CA
                             <string key="keyEquivalent" base64-UTF8="YES">
 CA
 </string>
-                            <modifierMask key="keyEquivalentModifierMask" shift="YES" option="YES"/>
+                            <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                             <connections>
                                 <action selector="deleteMenu:" target="urA-eK-bWB" id="AFb-ct-LdH"/>
                             </connections>

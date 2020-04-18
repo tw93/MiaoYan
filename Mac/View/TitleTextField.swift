@@ -1,15 +1,15 @@
-import Cocoa
 import Carbon.HIToolbox
+import Cocoa
 
 class TitleTextField: NSTextField {
     public var restoreResponder: NSResponder?
 
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
-        if event.modifierFlags.contains(.command)
-            && event.keyCode == kVK_ANSI_C
-            && !event.modifierFlags.contains(.shift)
-            && !event.modifierFlags.contains(.control)
-            && !event.modifierFlags.contains(.option) {
+        if event.modifierFlags.contains(.command),
+            event.keyCode == kVK_ANSI_C,
+            !event.modifierFlags.contains(.shift),
+            !event.modifierFlags.contains(.control),
+            !event.modifierFlags.contains(.option) {
             let pasteboard = NSPasteboard.general
             pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
             pasteboard.setString(self.stringValue, forType: NSPasteboard.PasteboardType.string)
@@ -22,7 +22,6 @@ class TitleTextField: NSTextField {
         if let note = EditTextView.note {
             stringValue = note.getFileName()
         }
-
         return super.becomeFirstResponder()
     }
 
@@ -44,7 +43,7 @@ class TitleTextField: NSTextField {
             if !FileManager.default.fileExists(atPath: dst.path), note.move(to: dst) {
                 vc.updateTitle(newTitle: currentTitle)
 
-                updateNotesTableView()
+                self.updateNotesTableView()
                 return
             } else {
                 let alert = NSAlert()
@@ -57,7 +56,7 @@ class TitleTextField: NSTextField {
 
         vc.updateTitle(newTitle: currentName)
         self.resignFirstResponder()
-        updateNotesTableView()
+        self.updateNotesTableView()
         vc.titleLabel.isEditable = false
         vc.titleLabel.isEnabled = false
     }
@@ -80,5 +79,4 @@ class TitleTextField: NSTextField {
             window?.makeFirstResponder(responder)
         }
     }
-
 }

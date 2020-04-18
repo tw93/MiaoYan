@@ -493,21 +493,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return
         }
 
-        if note.type == .PlainText || note.type == .RichText {
-            super.keyDown(with: event)
-            saveCursorPosition()
-
-            let range = getParagraphRange()
-            let processor = NotesTextProcessor(storage: textStorage, range: range)
-            processor.higlightLinks()
-
-            if note.type == .RichText {
-                note.save(attributed: attributedString())
-            }
-
-            return
-        }
-
         super.keyDown(with: event)
         saveCursorPosition()
     }

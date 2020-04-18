@@ -144,16 +144,10 @@ class ViewController: NSViewController,
                 }
             case "fileMenu":
                 if menuItem.identifier?.rawValue == "fileMenu.delete" {
-                    menuItem.keyEquivalentModifierMask = [.command, .option]
+                    menuItem.keyEquivalentModifierMask = [.command]
                 }
 
-                if menuItem.identifier?.rawValue == "fileMenu.history" {
-                    if EditTextView.note != nil {
-                        return true
-                    }
-                }
-
-                if ["fileMenu.new", "fileMenu.newRtf", "fileMenu.searchAndCreate", "fileMenu.import"].contains(menuItem.identifier?.rawValue) {
+                if ["fileMenu.new", "fileMenu.searchAndCreate", "fileMenu.import"].contains(menuItem.identifier?.rawValue) {
                     return true
                 }
 
@@ -780,11 +774,11 @@ class ViewController: NSViewController,
 
     @objc func switchTitleToEditMode() {
         guard let vc = ViewController.shared() else { return }
-        if vc.notesTableView.selectedRow > -1 {
-            vc.titleLabel.editModeOn()
-            if let note = EditTextView.note{
-                vc.titleLabel.stringValue = note.getShortTitle()
-            }
+
+        vc.titleLabel.editModeOn()
+
+        if let note = EditTextView.note {
+            vc.titleLabel.stringValue = note.getShortTitle()
         }
     }
 
@@ -1612,7 +1606,7 @@ class ViewController: NSViewController,
             pasteboard.setString(name, forType: NSPasteboard.PasteboardType.string)
 
             let notification = NSUserNotification()
-            notification.title = "MiaoYan"
+            notification.title = "妙言"
             notification.informativeText = NSLocalizedString("URL has been copied to clipboard", comment: "")
             notification.soundName = NSUserNotificationDefaultSoundName
             NSUserNotificationCenter.default.deliver(notification)
