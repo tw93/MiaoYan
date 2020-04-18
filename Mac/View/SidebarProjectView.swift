@@ -73,14 +73,6 @@ class SidebarProjectView: NSOutlineView,
             }
         }
 
-        if menuItem.title == NSLocalizedString("Show view options", comment: "") {
-            if sidebarItem.isTrash() {
-                return false
-            }
-
-            return nil != sidebarItem.project
-        }
-
         if menuItem.title == NSLocalizedString("New folder", comment: "") {
             if sidebarItem.isTrash() {
                 return false

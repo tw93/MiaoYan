@@ -13,11 +13,8 @@ public class Note: NSObject  {
     var content: NSMutableAttributedString = NSMutableAttributedString()
     var creationDate: Date? = Date()
     var sharedStorage = Storage.sharedInstance()
-    var tagNames = [String]()
     let dateFormatter = DateFormatter()
     let undoManager = UndoManager()
-
-    public var tags = [String]()
     public var originalExtension: String?
     
     public var name: String = ""
@@ -61,7 +58,7 @@ public class Note: NSObject  {
         self.name = name
         
         self.container = cont ?? UserDefaultsManagement.fileContainer
-        self.type = type ?? UserDefaultsManagement.fileFormat
+        self.type = type ?? .Markdown
         
         let ext = container == .none
             ? self.type.getExtension(for: container)
@@ -103,13 +100,9 @@ public class Note: NSObject  {
         }
     }
         
-    func load(tags: Bool = true) {        
+    func load() {
         if let attributedString = getContent() {
             content = NSMutableAttributedString(attributedString: attributedString)
-        }
-        
-        if !isTrash() {
-            loadTags()
         }
     }
         
@@ -344,12 +337,6 @@ public class Note: NSObject  {
         }
         
         preview = preview.replacingOccurrences(of: "\n", with: " ")
-        if (
-            UserDefaultsManagement.horizontalOrientation
-                && content.hasPrefix(" – ") == false
-            ) {
-            preview = " – " + preview
-        }
 
         preview = preview.condenseWhitespace()
 
@@ -369,8 +356,7 @@ public class Note: NSObject  {
     }
     
     @objc func getDateForLabel() -> String {
-        guard !UserDefaultsManagement.hideDate else { return String() }
-
+       
         guard let date = (project.sortBy == .creationDate || UserDefaultsManagement.sort == .creationDate)
             ? creationDate
             : modifiedLocalAt
@@ -571,9 +557,8 @@ public class Note: NSObject  {
         if self.isMarkdown() {
             self.content = self.content.unLoadCheckboxes()
 
-            if UserDefaultsManagement.liveImagesPreview {
-                self.content = self.content.unLoadImages(note: self)
-            }
+            self.content = self.content.unLoadImages(note: self)
+        
         }
 
         self.save(attributedString: self.content, globalStorage: globalStorage)
@@ -815,192 +800,7 @@ public class Note: NSObject  {
         return name.localizedStandardContains(terms) || content.string.localizedStandardContains(terms)
     }
 
-    public func getCommaSeparatedTags() -> String {
-        return tagNames.map { String($0) }.joined(separator: ", ")
-    }
-
-    public func saveTags(_ string: [String]) -> ([String], [String]) {
-        let newTagsClean = string
-        var new = [String]()
-        var removed = [String]()
-        
-        for tag in tagNames {
-            if !newTagsClean.contains(tag) {
-                removed.append(tag)
-            }
-        }
-        
-        for newTagClean in newTagsClean {
-            if !tagNames.contains(newTagClean) {
-                new.append(newTagClean)
-            }
-        }
-        
-        for n in new { sharedStorage.addTag(n) }
-        
-        var removedFromStorage = [String]()
-        for r in removed {
-            if sharedStorage.removeTag(r) {
-                removedFromStorage.append(r)
-            }
-        }
-        
-        tagNames = newTagsClean
-
-        #if os(OSX)
-            try? (url as NSURL).setResourceValue(newTagsClean, forKey: .tagNamesKey)
-        #else
-            let data = NSKeyedArchiver.archivedData(withRootObject: NSMutableArray(array: newTagsClean))
-            do {
-                try self.url.setExtendedAttribute(data: data, forName: "com.apple.metadata:_kMDItemUserTags")
-            } catch {
-                print(error)
-            }
-        #endif
-        
-        return (removedFromStorage, removed)
-    }
-    
-    public func removeAllTags() -> [String] {
-        let result = saveTags([])
-        
-        return result.0
-    }
-    
-    public func addTag(_ name: String) {
-        guard !tagNames.contains(name) else { return }
-        
-        tagNames.append(name)
-
-        #if os(OSX)
-            try? (url as NSURL).setResourceValue(tagNames, forKey: .tagNamesKey)
-        #else
-        let data = NSKeyedArchiver.archivedData(withRootObject: NSMutableArray(array: self.tagNames))
-            do {
-                try url.setExtendedAttribute(data: data, forName: "com.apple.metadata:_kMDItemUserTags")
-            } catch {
-                print(error)
-            }
-        #endif
-    }
-
-    public func removeTag(_ name: String) {
-        guard tagNames.contains(name) else { return }
-        
-        if let i = tagNames.firstIndex(of: name) {
-            tagNames.remove(at: i)
-        }
-        
-        if sharedStorage.noteList.first(where: {$0.tagNames.contains(name)}) == nil {
-            if let i = sharedStorage.tagNames.firstIndex(of: name) {
-                sharedStorage.tagNames.remove(at: i)
-            }
-        }
-        
-        _ = saveTags(tagNames)
-    }
-
-#if os(OSX)
-    public func loadTags() {
-        let tags = try? url.resourceValues(forKeys: [.tagNamesKey])
-        if let tagNames = tags?.tagNames {
-            for tag in tagNames {
-                if !self.tagNames.contains(tag) {
-                    self.tagNames.append(tag)
-                }
-
-                if !project.isTrash {
-                    sharedStorage.addTag(tag)
-                }
-            }
-        }
-
-        if UserDefaultsManagement.inlineTags {
-            _ = scanContentTags()
-        }
-    }
-#else
-    public func loadTags() -> Bool {
-        if let data = try? url.extendedAttribute(forName: "com.apple.metadata:_kMDItemUserTags"),
-            let tags = NSKeyedUnarchiver.unarchiveObject(with: data) as? NSMutableArray {
-            self.tagNames.removeAll()
-            for tag in tags {
-                if let tagName = tag as? String {
-                    self.tagNames.append(tagName)
-
-                    if !project.isTrash {
-                        sharedStorage.addTag(tagName)
-                    }
-                }
-            }
-        }
-
-        if UserDefaultsManagement.inlineTags {
-            let changes = scanContentTags()
-            let qty = changes.0.count + changes.1.count
-
-            if (qty > 0) {
-                return true
-            }
-        }
-
-        return false
-    }
-#endif
-
-    public func scanContentTags() -> ([String], [String]) {
-        var added = [String]()
-        var removed = [String]()
-
-        let inlineTags = content.string.matchingStrings(regex: "(?:\\A|\\s)\\#([^\\s\\!\\#\\:\\[\\\"\\(\\;\\.\\,]+)")
-
-        var tags = [String]()
-        for tag in inlineTags {
-            guard let tag = tag.last, isValid(tag: tag) else { continue }
-
-            if tag.last == "/" {
-                tags.append(String(tag.dropLast()))
-            } else {
-                tags.append(tag)
-            }
-        }
-
-        if tags.contains("notags") {
-            removed = self.tags
-
-            self.tags.removeAll()
-            return (added, removed)
-        }
-
-        for noteTag in self.tags {
-            if !tags.contains(noteTag) {
-                removed.append(noteTag)
-            }
-        }
-        
-        for tag in tags {
-            if !self.tags.contains(tag) {
-                added.append(tag)
-            }
-        }
-
-
-        self.tags = tags
-
-        return (added, removed)
-    }
-
     private var excludeRanges = [NSRange]()
-
-    private func isValid(tag: String) -> Bool {
-        let isHEX = (tag.matchingStrings(regex: "^[A-Fa-f0-9]{6}$").last != nil)
-        
-        if isHEX || tag.isNumber {
-            return false
-        }
-
-        return true
-    }
     
     public func getImageUrl(imageName: String) -> URL? {
         if imageName.starts(with: "http://") || imageName.starts(with: "https://") {

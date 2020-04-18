@@ -8,7 +8,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
         let appDelegate = NSApplication.shared.delegate as! AppDelegate
         appDelegate.mainWindowController = self
 
-        self.window?.hidesOnDeactivate = UserDefaultsManagement.hideOnDeactivate
+        self.window?.hidesOnDeactivate = false
         self.window?.titleVisibility = .hidden
         self.window?.titlebarAppearsTransparent = true
 

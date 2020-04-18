@@ -85,22 +85,6 @@ public class Project: Equatable {
         
         return self
     }
-    
-    public func getFullLabel() -> String {
-        if isRoot  {
-            if isExternal {
-                return "External › " + label
-            }
-            
-            return label
-        }
-
-        if isTrash {
-            return "Trash"
-        }
-
-        return "\(getParent().getFullLabel()) › \(label)"
-    }
 
     public func saveSettings() {
         let data = [

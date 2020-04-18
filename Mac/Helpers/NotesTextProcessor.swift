@@ -170,7 +170,6 @@ public class NotesTextProcessor {
     }
         
     public static func getFencedCodeBlockRange(paragraphRange: NSRange, string: NSMutableAttributedString) -> NSRange? {
-        guard UserDefaultsManagement.codeBlockHighlight else { return nil }
 
         let regex = try! NSRegularExpression(pattern: NotesTextProcessor._codeQuoteBlockPattern, options: [
             NSRegularExpression.Options.allowCommentsAndWhitespace,
@@ -345,7 +344,7 @@ public class NotesTextProcessor {
     public static func highlightFencedAndIndentCodeBlocks(attributedString: NSMutableAttributedString) {
         let range = NSRange(0..<attributedString.length)
 
-        if UserDefaultsManagement.codeBlockHighlight {
+        
             var fencedRanges = [NSRange]()
 
             // Fenced code block
@@ -376,7 +375,7 @@ public class NotesTextProcessor {
 
                     NotesTextProcessor.highlightCode(attributedString: attributedString, range: range)
                 }
-            }
+            
         }
     }
 
@@ -726,36 +725,6 @@ public class NotesTextProcessor {
             }
         }
 
-        if !UserDefaultsManagement.liveImagesPreview {
-            
-            // We detect and process inline images
-            NotesTextProcessor.imageInlineRegex.matches(string, range: paragraphRange) { (result) -> Void in
-                guard let range = result?.range else { return }
-
-                if let linkRange = result?.range(at: 3) {
-                    let link = attributedString.mutableString.substring(with: linkRange).removingPercentEncoding
-
-                    if let link = link, let url = note.getImageUrl(imageName: link) {
-                        attributedString.addAttribute(.link, value: url, range: linkRange)
-                    }
-                }
-
-                attributedString.addAttribute(.font, value: codeFont, range: range)
-                NotesTextProcessor.imageOpeningSquareRegex.matches(string, range: paragraphRange) { (innerResult) -> Void in
-                    guard let innerRange = innerResult?.range else { return }
-                    attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
-                }
-                NotesTextProcessor.imageClosingSquareRegex.matches(string, range: paragraphRange) { (innerResult) -> Void in
-                    guard let innerRange = innerResult?.range else { return }
-                    attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
-                }
-                NotesTextProcessor.parenRegex.matches(string, range: range) { (innerResult) -> Void in
-                    guard let innerRange = innerResult?.range else { return }
-                    attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
-                }
-            }
-        }
-
         attributedString.enumerateAttribute(.attachment, in: paragraphRange,  options: []) { (value, range, stop) -> Void in
             if value != nil, let todo = attributedString.attribute(.todo, at: range.location, effectiveRange: nil) {
 
@@ -770,7 +739,7 @@ public class NotesTextProcessor {
     }
 
     public static func checkBackTick(styleApplier: NSMutableAttributedString, paragraphRange: NSRange? = nil) {
-        guard UserDefaultsManagement.codeBlockHighlight else { return }
+  
 
         var range = NSRange(0..<styleApplier.length)
 

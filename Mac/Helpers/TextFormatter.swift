@@ -272,7 +272,7 @@ public class TextFormatter {
     
     public func tab() {
         guard let pRange = getParagraphRange() else { return }
-        let padding = UserDefaultsManagement.spacesInsteadTabs ? "    " : "\t"
+        let padding = "    "
 
         guard range.length > 0 else {
             let text = storage.attributedSubstring(from: pRange).string
