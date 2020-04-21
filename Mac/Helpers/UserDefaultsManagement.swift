@@ -38,7 +38,7 @@ public class UserDefaultsManagement {
     static var previewFontSize = 16
     static var sortDirection = true
     static var marginSize = 30
-    static var realSidebarSize = 100
+    static var realSidebarSize = 200
 
     private struct Constants {
         static let AppearanceTypeKey = "appearanceType"
