@@ -142,7 +142,6 @@ public class TextFormatter {
     
     func unTab() {
         guard let pRange = getParagraphRange() else { return }
-        
         guard range.length > 0 else {
             var diff = 0
             var text = storage.attributedSubstring(from: pRange).string

@@ -184,7 +184,7 @@
 /* Begin PBXFileReference section */
 		275592961F3AE9B5006B8988 /* MainWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
 		277A61D7244B538E000F0033 /* SidebarTableRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarTableRowView.swift; sourceTree = "<group>"; };
-		278782AF2447FC50000D5B82 /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = MiaoYan.app; path = /Users/Tw93/www/MiaoYan/build/Debug/MiaoYan.app; sourceTree = "<absolute>"; };
+		2795E557244C98DD00637858 /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = MiaoYan.app; path = /Users/Tw93/www/MiaoYan/build/Debug/MiaoYan.app; sourceTree = "<absolute>"; };
 		2799407B218484C900727B20 /* TitleBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleBarView.swift; sourceTree = "<group>"; };
 		27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MiaoYanCore_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		27D44459244A7A05000EF2A2 /* JetBrainsMono-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "JetBrainsMono-Bold.ttf"; sourceTree = "<group>"; };
@@ -706,7 +706,7 @@
 			);
 			name = MiaoYan;
 			productName = FSNotes;
-			productReference = 278782AF2447FC50000D5B82 /* MiaoYan.app */;
+			productReference = 2795E557244C98DD00637858 /* MiaoYan.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
