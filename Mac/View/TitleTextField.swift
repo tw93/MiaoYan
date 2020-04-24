@@ -59,7 +59,7 @@ class TitleTextField: NSTextField {
     }
 
     public func editModeOn() {
-        MainWindowController.shared()?.makeFirstResponder(nil)
+        MainWindowController.shared()?.makeFirstResponder(self)
     }
 
     public func updateNotesTableView() {
