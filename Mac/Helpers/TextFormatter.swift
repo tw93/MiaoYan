@@ -28,9 +28,6 @@ public class TextFormatter {
     private var prevSelectedString: NSAttributedString
     private var prevSelectedRange: NSRange
     
-    private var isAutomaticQuoteSubstitutionEnabled: Bool = false
-    private var isAutomaticDashSubstitutionEnabled: Bool = false
-    
     private var shouldScanMarkdown: Bool
     
     init(textView: TextView, note: Note, shouldScanMarkdown: Bool = true) {
@@ -56,14 +53,6 @@ public class TextFormatter {
         
         prevSelectedRange = range
         prevSelectedString = storage.attributedSubstring(from: prevSelectedRange)
-        
-        #if os(OSX)
-            self.isAutomaticQuoteSubstitutionEnabled = textView.isAutomaticQuoteSubstitutionEnabled
-            self.isAutomaticDashSubstitutionEnabled = textView.isAutomaticDashSubstitutionEnabled
-        
-            textView.isAutomaticQuoteSubstitutionEnabled = false
-            textView.isAutomaticDashSubstitutionEnabled = false
-        #endif
         
         self.shouldScanMarkdown = note.isMarkdown() ? shouldScanMarkdown : false
     }
@@ -636,11 +625,6 @@ public class TextFormatter {
     }
     
     deinit {
-        #if os(OSX)
-            textView.isAutomaticQuoteSubstitutionEnabled = self.isAutomaticQuoteSubstitutionEnabled
-            textView.isAutomaticDashSubstitutionEnabled = self.isAutomaticDashSubstitutionEnabled
-        #endif
-        
         if note.isMarkdown() {
             if var font = UserDefaultsManagement.noteFont {
                 #if os(iOS)
