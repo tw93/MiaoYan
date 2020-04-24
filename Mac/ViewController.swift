@@ -50,12 +50,12 @@ class ViewController: NSViewController,
     @IBOutlet var searchTopConstraint: NSLayoutConstraint!
     @IBOutlet var titleLabel: TitleTextField! {
         didSet {
-            let clickGesture = NSClickGestureRecognizer()
-            clickGesture.target = self
-            clickGesture.numberOfClicksRequired = 1
-            clickGesture.buttonMask = 0x1
-            clickGesture.action = #selector(switchTitleToEditMode)
-            titleLabel.addGestureRecognizer(clickGesture)
+//            let clickGesture = NSClickGestureRecognizer()
+//            clickGesture.target = self
+//            clickGesture.numberOfClicksRequired = 1
+//            clickGesture.buttonMask = 0x1
+//            clickGesture.action = #selector(switchTitleToEditMode)
+//            titleLabel.addGestureRecognizer(clickGesture)
             titleLabel.layer?.masksToBounds = false
         }
     }
@@ -225,7 +225,7 @@ class ViewController: NSViewController,
         editArea.usesFindBar = true
         editArea.isIncrementalSearchingEnabled = true
         editArea.isAutomaticQuoteSubstitutionEnabled = false
-        self.editArea.isAutomaticDataDetectionEnabled = false
+        editArea.isAutomaticDataDetectionEnabled = false
         editArea.textStorage?.delegate = editArea.textStorage
         editArea.viewDelegate = self
     }
@@ -779,7 +779,7 @@ class ViewController: NSViewController,
         vc.titleLabel.editModeOn()
 
         if let note = EditTextView.note {
-            vc.titleLabel.stringValue = note.getShortTitle()
+            vc.titleLabel.stringValue = note.getShortTitle()!
         }
     }
 
@@ -908,13 +908,8 @@ class ViewController: NSViewController,
     func controlTextDidEndEditing(_ obj: Notification) {
         guard let textField = obj.object as? NSTextField, textField == titleLabel else { return }
 
-        if titleLabel.isEditable == true {
-            fileName(titleLabel)
-            view.window?.makeFirstResponder(notesTableView)
-        } else {
-            let currentNote = notesTableView.getSelectedNote()
-            updateTitle(newTitle: currentNote?.getTitleWithoutLabel() ?? NSLocalizedString("Untitled Note", comment: "Untitled Note"))
-        }
+        fileName(titleLabel)
+        view.window?.makeFirstResponder(notesTableView)
     }
 
     public func blockFSUpdates() {
