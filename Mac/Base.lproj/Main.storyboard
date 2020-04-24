@@ -648,7 +648,7 @@ CA
                                                                                         <textField identifier="cellDate" autoresizesSubviews="NO" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="abw-Lq-K7d">
                                                                                             <rect key="frame" x="18" y="10" width="43" height="14"/>
                                                                                             <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="right" title="2/23/11" id="9w3-fa-di3">
-                                                                                                <font key="font" metaFont="label" size="11"/>
+                                                                                                <font key="font" metaFont="message" size="11"/>
                                                                                                 <color key="textColor" red="0.65995385362694303" green="0.1371187799261683" blue="0.15795969262071341" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                                 <color key="backgroundColor" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
                                                                                                 <connections>
@@ -742,7 +742,7 @@ CA
                                                         <rect key="frame" x="0.0" y="544" width="462" height="56"/>
                                                         <subviews>
                                                             <textField canDrawConcurrently="YES" focusRingType="none" horizontalHuggingPriority="1" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="rZx-hk-GcJ" customClass="TitleTextField" customModule="MiaoYan" customModuleProvider="target">
-                                                                <rect key="frame" x="24" y="0.0" width="353" height="40"/>
+                                                                <rect key="frame" x="30" y="0.0" width="347" height="40"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="40" id="3QH-0a-na2"/>
                                                                 </constraints>
@@ -756,7 +756,7 @@ CA
                                                                 </connections>
                                                             </textField>
                                                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Pfo-n9-dyP">
-                                                                <rect key="frame" x="26" y="-2" width="422" height="10"/>
+                                                                <rect key="frame" x="32" y="-2" width="400" height="10"/>
                                                             </box>
                                                             <customView horizontalHuggingPriority="249" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="Ua8-RE-q01">
                                                                 <rect key="frame" x="393" y="0.0" width="69" height="56"/>
@@ -792,12 +792,12 @@ CA
                                                                 </subviews>
                                                                 <constraints>
                                                                     <constraint firstItem="shI-kr-3o8" firstAttribute="centerY" secondItem="Ua8-RE-q01" secondAttribute="centerY" id="AVX-pD-7Dr"/>
-                                                                    <constraint firstAttribute="trailing" secondItem="shI-kr-3o8" secondAttribute="trailing" constant="12" id="PPb-lX-xlt"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="shI-kr-3o8" secondAttribute="trailing" constant="28" id="PPb-lX-xlt"/>
                                                                 </constraints>
                                                             </customView>
                                                         </subviews>
                                                         <constraints>
-                                                            <constraint firstItem="rZx-hk-GcJ" firstAttribute="leading" secondItem="xSU-Mk-2F1" secondAttribute="leading" constant="24" id="1I0-Qm-T21"/>
+                                                            <constraint firstItem="rZx-hk-GcJ" firstAttribute="leading" secondItem="xSU-Mk-2F1" secondAttribute="leading" constant="30" id="1I0-Qm-T21"/>
                                                             <constraint firstAttribute="bottom" secondItem="rZx-hk-GcJ" secondAttribute="bottom" id="8mY-vj-ThP"/>
                                                             <constraint firstItem="Pfo-n9-dyP" firstAttribute="top" secondItem="xSU-Mk-2F1" secondAttribute="top" constant="50" id="BUD-HD-FGz"/>
                                                             <constraint firstAttribute="bottom" secondItem="Pfo-n9-dyP" secondAttribute="bottom" id="KeT-wK-rD9"/>
@@ -806,9 +806,9 @@ CA
                                                             <constraint firstAttribute="trailing" secondItem="rZx-hk-GcJ" secondAttribute="trailing" constant="85" id="ZjM-uT-4wC"/>
                                                             <constraint firstItem="Ua8-RE-q01" firstAttribute="leading" secondItem="rZx-hk-GcJ" secondAttribute="trailing" constant="16" id="eWY-C1-IBp"/>
                                                             <constraint firstItem="Ua8-RE-q01" firstAttribute="top" secondItem="xSU-Mk-2F1" secondAttribute="top" id="esv-qQ-apf"/>
-                                                            <constraint firstAttribute="trailing" secondItem="Pfo-n9-dyP" secondAttribute="trailing" constant="14" id="gxQ-7Y-QMI"/>
+                                                            <constraint firstAttribute="trailing" secondItem="Pfo-n9-dyP" secondAttribute="trailing" constant="30" id="gxQ-7Y-QMI"/>
                                                             <constraint firstAttribute="bottom" secondItem="Ua8-RE-q01" secondAttribute="bottom" id="nac-xp-D3Y"/>
-                                                            <constraint firstItem="Pfo-n9-dyP" firstAttribute="leading" secondItem="xSU-Mk-2F1" secondAttribute="leading" constant="26" id="qe2-r0-qbo"/>
+                                                            <constraint firstItem="Pfo-n9-dyP" firstAttribute="leading" secondItem="xSU-Mk-2F1" secondAttribute="leading" constant="32" id="qe2-r0-qbo"/>
                                                         </constraints>
                                                     </customView>
                                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="B2U-rx-xCL">
