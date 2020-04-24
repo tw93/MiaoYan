@@ -20,7 +20,7 @@ class TitleTextField: NSTextField {
 
     override func becomeFirstResponder() -> Bool {
         if let note = EditTextView.note {
-            stringValue = note.getFileName()
+            stringValue = note.getShortTitle()!
         }
         return super.becomeFirstResponder()
     }
@@ -29,11 +29,10 @@ class TitleTextField: NSTextField {
         guard stringValue.count > 0, let vc = ViewController.shared(), let note = EditTextView.note else { return }
 
         let currentTitle = stringValue
-        let currentName = note.getFileName()
+        let currentName = note.getShortTitle()
 
         defer {
             updateNotesTableView()
-            editModeOff()
         }
 
         if currentName != currentTitle {
@@ -47,7 +46,7 @@ class TitleTextField: NSTextField {
                 return
             } else {
                 let alert = NSAlert()
-                alert.alertStyle = .critical
+                alert.alertStyle = .informational
                 alert.informativeText = NSLocalizedString("文件名称 \"\(currentTitle)\" 已经存在!", comment: "")
                 alert.messageText = NSLocalizedString("请换一个标题", comment: "")
                 alert.runModal()
@@ -57,19 +56,10 @@ class TitleTextField: NSTextField {
         vc.updateTitle(newTitle: currentName)
         self.resignFirstResponder()
         self.updateNotesTableView()
-        vc.titleLabel.isEditable = false
-        vc.titleLabel.isEnabled = false
     }
 
     public func editModeOn() {
-        self.isEnabled = true
-        self.isEditable = true
-        MainWindowController.shared()?.makeFirstResponder(self)
-    }
-
-    public func editModeOff() {
-        self.isEnabled = false
-        self.isEditable = false
+        MainWindowController.shared()?.makeFirstResponder(nil)
     }
 
     public func updateNotesTableView() {

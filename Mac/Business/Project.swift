@@ -18,8 +18,6 @@ public class Project: Equatable {
 
     public var showInCommon: Bool
     public var showInSidebar: Bool = true
-
-    public var firstLineAsTitle: Bool = false
     
     init(url: URL, label: String? = nil, isTrash: Bool = false, isRoot: Bool = false, parent: Project? = nil, isDefault: Bool = false, isExternal: Bool = false) {
         self.url = url.resolvingSymlinksInPath()
@@ -91,8 +89,7 @@ public class Project: Equatable {
             "sortBy": sortBySettings.rawValue,
             "sortDirection": sortDirectionSettings.rawValue,
             "showInCommon": showInCommon,
-            "showInSidebar": showInSidebar,
-            "firstLineAsTitle": firstLineAsTitle
+            "showInSidebar": showInSidebar
         ] as [String : Any]
 
         if let relativePath = getRelativePath() {
