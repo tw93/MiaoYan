@@ -24,7 +24,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
             return
         }
 
-        if let note = EditTextView.note, event.keyCode == kVK_Tab, !event.modifierFlags.contains(.control), !UserDefaultsManagement.preview {
+        if let _ = EditTextView.note, event.keyCode == kVK_Tab, !event.modifierFlags.contains(.control), !UserDefaultsManagement.preview {
             vc.focusEditArea()
         }
 
