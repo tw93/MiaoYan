@@ -908,12 +908,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         sg?.item(withTitle: NSLocalizedString("Correct Spelling Automatically", comment: ""))?.state = isAutomaticSpellingCorrectionEnabled ? .on : .off
 
         s?.item(withTitle: NSLocalizedString("Smart Copy/Paste", comment: ""))?.state = smartInsertDeleteEnabled ? .on : .off
-        s?.item(withTitle: NSLocalizedString("Smart Quotes", comment: ""))?.state = isAutomaticQuoteSubstitutionEnabled ? .on : .off
-
-        s?.item(withTitle: NSLocalizedString("Smart Dashes", comment: ""))?.state = isAutomaticDashSubstitutionEnabled ? .on : .off
-        s?.item(withTitle: NSLocalizedString("Smart Links", comment: ""))?.state = isAutomaticLinkDetectionEnabled ? .on : .off
-        s?.item(withTitle: NSLocalizedString("Text Replacement", comment: ""))?.state = isAutomaticTextReplacementEnabled ? .on : .off
-        s?.item(withTitle: NSLocalizedString("Data Detectors", comment: ""))?.state = isAutomaticDataDetectionEnabled ? .on : .off
     }
 
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {

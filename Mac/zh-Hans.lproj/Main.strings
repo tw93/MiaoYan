@@ -301,9 +301,6 @@
 /* Class = "NSMenuItem"; title = "Search and create"; ObjectID = "hPY-aY-QOE"; */
 "hPY-aY-QOE.title" = "搜索或创建";
 
-/* Class = "NSMenuItem"; title = "Smart Quotes"; ObjectID = "hQb-2v-fYv"; */
-"hQb-2v-fYv.title" = "智能引号";
-
 /* Class = "NSMenu"; title = "View"; ObjectID = "HyV-fh-RgO"; */
 "HyV-fh-RgO.title" = "视图";
 
