@@ -224,7 +224,8 @@ class ViewController: NSViewController,
     private func configureEditor() {
         editArea.usesFindBar = true
         editArea.isIncrementalSearchingEnabled = true
-
+        editArea.isAutomaticQuoteSubstitutionEnabled = false
+        self.editArea.isAutomaticDataDetectionEnabled = false
         editArea.textStorage?.delegate = editArea.textStorage
         editArea.viewDelegate = self
     }
