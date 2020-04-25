@@ -50,7 +50,7 @@ class TitleTextField: NSTextField {
             } else {
                 let alert = NSAlert()
                 alert.alertStyle = .informational
-                alert.informativeText = NSLocalizedString("文件名称 \"\(currentTitle)\" 已经存在!", comment: "")
+                alert.informativeText = NSLocalizedString("此文件夹下该名称 \"\(currentTitle)\" 已经存在!", comment: "")
                 alert.messageText = NSLocalizedString("请换一个标题", comment: "")
                 alert.runModal()
             }
