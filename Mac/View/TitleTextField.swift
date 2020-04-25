@@ -25,6 +25,10 @@ class TitleTextField: NSTextField {
     }
 
     override func textDidEndEditing(_ notification: Notification) {
+        saveTitle()
+    }
+
+    public func saveTitle() {
         guard stringValue.count > 0, let vc = ViewController.shared(), let note = EditTextView.note else { return }
 
         let currentTitle = stringValue
@@ -62,7 +66,7 @@ class TitleTextField: NSTextField {
         inFocus = (self.window?.firstResponder is NSTextView) && self.window?.fieldEditor(false, for: nil) != nil && self.isEqual(to: (self.window?.firstResponder as? NSTextView)?.delegate)
         return inFocus
     }
-    
+
     public func editModeOn() {
         MainWindowController.shared()?.makeFirstResponder(self)
     }

@@ -180,12 +180,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         ViewController.shared()?.fileMenuNewNote(self)
     }
 
-    @IBAction func newRTF(_ sender: Any?) {
-        mainWindowController?.makeNew()
-        NSApp.activate(ignoringOtherApps: true)
-        ViewController.shared()?.fileMenuNewRTF(self)
-    }
-
     @IBAction func searchAndCreate(_ sender: Any?) {
         mainWindowController?.makeNew()
         NSApp.activate(ignoringOtherApps: true)
