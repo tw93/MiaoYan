@@ -1091,14 +1091,14 @@ public class Note: NSObject {
         return fileName
     }
 
-    public func getShortTitle() -> String? {
+    public func getShortTitle() -> String {
         let fileName = getFileName()
 
         if fileName.isValidUUID {
             return ""
         }
 
-        return nil
+        return fileName
     }
 
     public func getTitle() -> String? {

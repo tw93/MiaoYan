@@ -20,7 +20,7 @@ class TitleTextField: NSTextField {
 
     override func becomeFirstResponder() -> Bool {
         if let note = EditTextView.note {
-            stringValue = note.getShortTitle()!
+            stringValue = note.getShortTitle()
         }
         return super.becomeFirstResponder()
     }
