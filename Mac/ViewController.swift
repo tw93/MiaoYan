@@ -567,7 +567,6 @@ class ViewController: NSViewController,
         // Search cmd-f
         if event.keyCode == kVK_ANSI_F, event.modifierFlags.contains(.command), !event.modifierFlags.contains(.control) {
             if notesTableView.getSelectedNote() != nil {
-                // Turn off preview mode as text search works only in text editor
                 disablePreview()
                 return true
             }
@@ -582,6 +581,13 @@ class ViewController: NSViewController,
         // 展开 sidebar cmd+1
         if event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_1 {
             toggleSidebar("")
+            return false
+        }
+        
+        
+        // 保存
+        if event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_S {
+            titleLabel.saveTitle()
             return false
         }
 
@@ -654,16 +660,6 @@ class ViewController: NSViewController,
         }
     }
 
-    @IBAction func fileMenuNewRTF(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
-
-        if let type = vc.getSidebarType(), type == .Trash {
-            vc.storageOutlineView.deselectAll(nil)
-        }
-
-        vc.createNote(type: .RichText)
-    }
-
     @IBAction func moveMenu(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
 
@@ -677,20 +673,6 @@ class ViewController: NSViewController,
             let general = moveMenu?.submenu?.item(at: 0)
 
             moveMenu?.submenu?.popUp(positioning: general, at: NSPoint(x: x, y: view.origin.y + 8), in: vc.notesTableView)
-        }
-    }
-
-    @IBAction func historyMenu(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
-
-        if vc.notesTableView.selectedRow >= 0 {
-            let historyTitle = NSLocalizedString("History", comment: "Menu")
-            let historyMenu = vc.noteMenu.item(withTitle: historyTitle)
-            let view = vc.notesTableView.rect(ofRow: vc.notesTableView.selectedRow)
-            let x = vc.splitView.subviews[0].frame.width + 5
-            let general = historyMenu?.submenu?.item(at: 0)
-
-            historyMenu?.submenu?.popUp(positioning: general, at: NSPoint(x: x, y: view.origin.y + 8), in: vc.notesTableView)
         }
     }
 
@@ -1263,7 +1245,7 @@ class ViewController: NSViewController,
             createNote(content: clipboard!, project: project)
 
             let notification = NSUserNotification()
-            notification.title = "妙言1"
+            notification.title = "妙言"
             notification.informativeText = "复制保存成功"
             notification.soundName = NSUserNotificationDefaultSoundName
             NSUserNotificationCenter.default.deliver(notification)
@@ -1619,7 +1601,6 @@ class ViewController: NSViewController,
 
     public func updateTitle(newTitle: String) {
         titleLabel.stringValue = newTitle
-        titleLabel.currentEditor()?.selectedRange = NSRange(location: 0, length: 0)
     }
 
     // MARK: Share Service
