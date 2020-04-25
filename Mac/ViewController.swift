@@ -1324,17 +1324,13 @@ class ViewController: NSViewController,
         notesTableView.deselectNotes()
         editArea.string = text
         EditTextView.note = note
-
         search.stringValue.removeAll()
-
         updateTable {
             DispatchQueue.main.async {
                 if let index = self.notesTableView.getIndex(note) {
                     self.notesTableView.selectRowIndexes([index], byExtendingSelection: false)
                     self.notesTableView.scrollRowToVisible(index)
                 }
-
-                self.focusEditArea()
             }
         }
     }
