@@ -50,12 +50,6 @@ class ViewController: NSViewController,
     @IBOutlet var searchTopConstraint: NSLayoutConstraint!
     @IBOutlet var titleLabel: TitleTextField! {
         didSet {
-//            let clickGesture = NSClickGestureRecognizer()
-//            clickGesture.target = self
-//            clickGesture.numberOfClicksRequired = 1
-//            clickGesture.buttonMask = 0x1
-//            clickGesture.action = #selector(switchTitleToEditMode)
-//            titleLabel.addGestureRecognizer(clickGesture)
             titleLabel.layer?.masksToBounds = false
         }
     }
@@ -180,7 +174,7 @@ class ViewController: NSViewController,
     // MARK: - Initial configuration
 
     private func configureLayout() {
-        updateTitle(newTitle: nil)
+        updateTitle(newTitle: "")
 
         DispatchQueue.main.async {
             self.editArea.updateTextContainerInset()
@@ -469,6 +463,11 @@ class ViewController: NSViewController,
 
         if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), editArea.hasFocus() {
             editArea.deleteToBeginningOfLine(nil)
+            return false
+        }
+
+        if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), titleLabel.hasFocus() {
+            updateTitle(newTitle: "")
             return false
         }
 
@@ -908,8 +907,13 @@ class ViewController: NSViewController,
     func controlTextDidEndEditing(_ obj: Notification) {
         guard let textField = obj.object as? NSTextField, textField == titleLabel else { return }
 
-        fileName(titleLabel)
-        view.window?.makeFirstResponder(notesTableView)
+        if titleLabel.isEditable == true {
+            fileName(titleLabel)
+            view.window?.makeFirstResponder(notesTableView)
+        } else {
+            let currentNote = notesTableView.getSelectedNote()
+            updateTitle(newTitle: currentNote?.getTitleWithoutLabel() ?? NSLocalizedString("Untitled Note", comment: "Untitled Note"))
+        }
     }
 
     public func blockFSUpdates() {
@@ -1259,7 +1263,7 @@ class ViewController: NSViewController,
             createNote(content: clipboard!, project: project)
 
             let notification = NSUserNotification()
-            notification.title = "妙言"
+            notification.title = "妙言1"
             notification.informativeText = "复制保存成功"
             notification.soundName = NSUserNotificationDefaultSoundName
             NSUserNotificationCenter.default.deliver(notification)
@@ -1613,20 +1617,9 @@ class ViewController: NSViewController,
         }
     }
 
-    func updateTitle(newTitle: String?) {
-        let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "MiaoYan"
-
-        let noteTitle: String = newTitle ?? appName
-        var titleString = noteTitle
-
-        if noteTitle.isValidUUID {
-            titleString = String()
-        }
-
-        titleLabel.stringValue = titleString
+    public func updateTitle(newTitle: String) {
+        titleLabel.stringValue = newTitle
         titleLabel.currentEditor()?.selectedRange = NSRange(location: 0, length: 0)
-        let title = newTitle != nil ? "\(appName) - \(noteTitle)" : appName
-        MainWindowController.shared()?.title = title
     }
 
     // MARK: Share Service
