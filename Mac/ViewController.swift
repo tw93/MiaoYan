@@ -779,7 +779,7 @@ class ViewController: NSViewController,
         vc.titleLabel.editModeOn()
 
         if let note = EditTextView.note {
-            vc.titleLabel.stringValue = note.getShortTitle()!
+            vc.titleLabel.stringValue = note.getShortTitle()
         }
     }
 
