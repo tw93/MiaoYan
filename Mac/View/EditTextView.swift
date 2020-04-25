@@ -73,7 +73,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         return !disable.contains(menuItem.title)
     }
-    
+
     override func mouseDown(with event: NSEvent) {
         guard EditTextView.note != nil else { return }
 
@@ -380,7 +380,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             viewController.emptyEditAreaImage.image = NSImage(imageLiteralResourceName: "makeNoteAsset")
             viewController.emptyEditAreaView.isHidden = false
             viewController.titleBarView.isHidden = true
-            viewController.updateTitle(newTitle: nil)
+            viewController.updateTitle(newTitle: "")
         }
 
         EditTextView.note = nil
@@ -470,7 +470,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             }
         }
 
-        if event.keyCode == kVK_Delete && event.modifierFlags.contains(.option) {
+        if event.keyCode == kVK_Delete, event.modifierFlags.contains(.option) {
             deleteWordBackward(nil)
             return
         }

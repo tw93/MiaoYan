@@ -3,7 +3,6 @@ import Cocoa
 
 class TitleTextField: NSTextField {
     public var restoreResponder: NSResponder?
-
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
         if event.modifierFlags.contains(.command),
             event.keyCode == kVK_ANSI_C,
@@ -58,6 +57,12 @@ class TitleTextField: NSTextField {
         self.updateNotesTableView()
     }
 
+    public func hasFocus() -> Bool {
+        var inFocus = false
+        inFocus = (self.window?.firstResponder is NSTextView) && self.window?.fieldEditor(false, for: nil) != nil && self.isEqual(to: (self.window?.firstResponder as? NSTextView)?.delegate)
+        return inFocus
+    }
+    
     public func editModeOn() {
         MainWindowController.shared()?.makeFirstResponder(self)
     }
