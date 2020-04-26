@@ -83,7 +83,6 @@ class ViewController: NSViewController,
         configureLayout()
         configureNotesList()
         configureEditor()
-        configureGesture()
 
         fsManager = FileSystemEventManager(storage: storage, delegate: self)
         fsManager?.start()
@@ -223,16 +222,6 @@ class ViewController: NSViewController,
         editArea.isAutomaticDataDetectionEnabled = false
         editArea.textStorage?.delegate = editArea.textStorage
         editArea.viewDelegate = self
-    }
-
-    private func configureGesture() {
-        let swipeUp = NSPanGestureRecognizer(target:self, action:#selector(pan(_:)))
-        swipeUp.direction = .up
-        self.view.addGestureRecognizer(swipeUp)
-         
-        let swipeDown = NSPanGestureRecognizer(target:self, action:#selector(pan(_:)))
-        swipeDown.direction = .down
-        self.view.addGestureRecognizer(swipeDown)
     }
 
     private func configureShortcuts() {
@@ -1610,7 +1599,14 @@ class ViewController: NSViewController,
     }
 
     public func updateTitle(newTitle: String) {
-        titleLabel.stringValue = newTitle
+        var titleString = newTitle
+
+        if newTitle.isValidUUID {
+            titleString = String()
+        }
+        titleLabel.stringValue = titleString
+
+        titleLabel.currentEditor()?.selectedRange = NSRange(location: titleString.utf16.count, length: 0)
     }
 
     // MARK: Share Service
