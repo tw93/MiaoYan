@@ -83,6 +83,7 @@ class ViewController: NSViewController,
         configureLayout()
         configureNotesList()
         configureEditor()
+        configureGesture()
 
         fsManager = FileSystemEventManager(storage: storage, delegate: self)
         fsManager?.start()
@@ -222,6 +223,16 @@ class ViewController: NSViewController,
         editArea.isAutomaticDataDetectionEnabled = false
         editArea.textStorage?.delegate = editArea.textStorage
         editArea.viewDelegate = self
+    }
+
+    private func configureGesture() {
+        let swipeUp = NSPanGestureRecognizer(target:self, action:#selector(pan(_:)))
+        swipeUp.direction = .up
+        self.view.addGestureRecognizer(swipeUp)
+         
+        let swipeDown = NSPanGestureRecognizer(target:self, action:#selector(pan(_:)))
+        swipeDown.direction = .down
+        self.view.addGestureRecognizer(swipeDown)
     }
 
     private func configureShortcuts() {
@@ -583,8 +594,7 @@ class ViewController: NSViewController,
             toggleSidebar("")
             return false
         }
-        
-        
+
         // 保存
         if event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_S {
             titleLabel.saveTitle()
