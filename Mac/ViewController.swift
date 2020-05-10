@@ -831,7 +831,7 @@ class ViewController: NSViewController,
             DispatchQueue.main.async {
                 vc.splitView.setPosition(0, ofDividerAt: 0)
             }
-            //防止空出现
+            // 防止空出现
             hideSidebar("")
         }
         vc.editArea.updateTextContainerInset()
@@ -846,6 +846,7 @@ class ViewController: NSViewController,
             UserDefaultsManagement.realSidebarSize = size
             vc.sidebarSplitView.setPosition(0, ofDividerAt: 0)
         } else {
+            showNoteList("")
             vc.sidebarSplitView.setPosition(CGFloat(UserDefaultsManagement.realSidebarSize), ofDividerAt: 0)
         }
 
@@ -860,6 +861,22 @@ class ViewController: NSViewController,
         if size != 0 {
             UserDefaultsManagement.realSidebarSize = size
             vc.sidebarSplitView.setPosition(0, ofDividerAt: 0)
+        }
+        vc.editArea.updateTextContainerInset()
+    }
+
+    func showNoteList(_ sender: Any) {
+        guard let vc = ViewController.shared() else { return }
+
+        let size = vc.splitView.subviews[0].frame.width
+
+        if size == 0 {
+            var size = UserDefaultsManagement.sidebarSize
+            if UserDefaultsManagement.sidebarSize == 0 {
+                size = 250
+            }
+            vc.splitView.shouldHideDivider = false
+            vc.splitView.setPosition(size, ofDividerAt: 0)
         }
         vc.editArea.updateTextContainerInset()
     }
