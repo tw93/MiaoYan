@@ -216,7 +216,7 @@ class ViewController: NSViewController,
     }
 
     private func configureEditor() {
-        editArea.usesFindBar = true
+        editArea.usesFindBar = false
         editArea.isIncrementalSearchingEnabled = true
         editArea.isAutomaticQuoteSubstitutionEnabled = false
         editArea.isAutomaticDataDetectionEnabled = false

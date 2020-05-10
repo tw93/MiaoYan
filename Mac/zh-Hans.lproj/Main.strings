@@ -100,9 +100,6 @@
 /* Class = "NSTextFieldCell"; title = "2/23/11"; ObjectID = "9w3-fa-di3"; */
 "9w3-fa-di3.title" = "2/23/11";
 
-/* Class = "NSMenuItem"; title = "Smart Copy/Paste"; ObjectID = "9yt-4B-nSM"; */
-"9yt-4B-nSM.title" = "智能拷贝/粘贴";
-
 /* Class = "NSTextFieldCell"; title = "Note list location:"; ObjectID = "54i-GK-spQ"; */
 "54i-GK-spQ.title" = "笔记列表位置：";
 
@@ -159,9 +156,6 @@
 
 /* Class = "NSMenuItem"; title = "vs"; ObjectID = "cwc-a7-vkr"; */
 "cwc-a7-vkr.title" = "vs";
-
-/* Class = "NSMenuItem"; title = "Smart Links"; ObjectID = "cwL-P1-jid"; */
-"cwL-P1-jid.title" = "智能链接";
 
 /* Class = "NSMenuItem"; title = "Header 2"; ObjectID = "cYB-6U-8ac"; */
 "cYB-6U-8ac.title" = "Header 2";
@@ -525,9 +519,6 @@
 
 /* Class = "NSMenuItem"; title = "Copy URL"; ObjectID = "Rg2-j1-Foz"; */
 "Rg2-j1-Foz.title" = "拷贝URL";
-
-/* Class = "NSMenuItem"; title = "Smart Dashes"; ObjectID = "rgM-f4-ycn"; */
-"rgM-f4-ycn.title" = "智能破折号";
 
 /* Class = "NSMenuItem"; title = "Sort by"; ObjectID = "rHB-xF-GgG"; */
 "rHB-xF-GgG.title" = "排序方式";
