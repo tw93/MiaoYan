@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "checkbox_empty.png",
+      "filename" : "checkbox-empty.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "checkbox_empty_white.png",
+      "filename" : "checkbox-empty-white.png",
       "appearances" : [
         {
           "appearance" : "luminosity",
@@ -18,12 +18,12 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "checkbox_empty@2x.png",
+      "filename" : "checkbox-empty.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "checkbox_empty_white@2x.png",
+      "filename" : "checkbox-empty-white.png",
       "appearances" : [
         {
           "appearance" : "luminosity",
@@ -34,12 +34,13 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "checkbox_empty@3x.png",
+      "filename" : "checkbox-empty.png",
       "scale" : "3x"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
+      "filename" : "checkbox-empty.png",
       "appearances" : [
         {
           "appearance" : "luminosity",

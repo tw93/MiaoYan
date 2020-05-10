@@ -30,7 +30,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             newRect.size.height = newRect.size.height - CGFloat(UserDefaultsManagement.editorLineSpacing)
         }
 
-        let clr = NSColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 1.0)
+        let clr = NSColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0)
         super.drawInsertionPoint(in: newRect, color: clr, turnedOn: flag)
     }
 

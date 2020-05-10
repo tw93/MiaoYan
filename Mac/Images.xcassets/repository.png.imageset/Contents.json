@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "icons8-folder-64.png",
+      "filename" : "cell.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "icons8-folder-64 копіювати.png",
+      "filename" : "cell-white.png",
       "appearances" : [
         {
           "appearance" : "luminosity",
@@ -18,12 +18,12 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "icons8-folder-65.png",
+      "filename" : "cell.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "icons8-folder-64 копіювати-1.png",
+      "filename" : "cell-white.png",
       "appearances" : [
         {
           "appearance" : "luminosity",
@@ -34,12 +34,13 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "icons8-folder-66.png",
+      "filename" : "cell.png",
       "scale" : "3x"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
+      "filename" : "cell-white.png",
       "appearances" : [
         {
           "appearance" : "luminosity",
