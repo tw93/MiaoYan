@@ -19,10 +19,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
     public var markdownView: MPreviewView?
     public static var imagesLoaderQueue = OperationQueue()
 
-    override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {
-        validateSubmenu(menu)
-    }
-
     override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn flag: Bool) {
         var newRect = NSRect(origin: rect.origin, size: rect.size)
         newRect.size.width = caretWidth
@@ -46,32 +42,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         var newInvalidRect = NSRect(origin: invalidRect.origin, size: invalidRect.size)
         newInvalidRect.size.width += caretWidth - 1
         super.setNeedsDisplay(newInvalidRect)
-    }
-
-    // MARK: Menu
-
-    override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
-        guard EditTextView.note != nil else { return false }
-
-        menuItem.isHidden = false
-
-        if menuItem.menu?.identifier?.rawValue == "editMenu" {
-            validateSubmenu(menuItem.menu!)
-        }
-
-        if menuItem.menu?.identifier?.rawValue == "formatMenu", let vc = ViewController.shared(), vc.notesTableView.selectedRow == -1 || !vc.editArea.hasFocus() {
-            return false
-        }
-        let disable = [
-            NSLocalizedString("Underline", comment: ""),
-            NSLocalizedString("Strikethrough", comment: "")
-        ]
-
-        if disable.contains(menuItem.title) {
-            menuItem.isHidden = true
-        }
-
-        return !disable.contains(menuItem.title)
     }
 
     override func mouseDown(with event: NSEvent) {
@@ -192,15 +162,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
         return false
     }
 
-    // Copy empty string
+    // 清除最后一行
     override func copy(_ sender: Any?) {
-        if selectedRange.length == 0, let paragraphRange = getParagraphRange(), let paragraph = attributedSubstring(forProposedRange: paragraphRange, actualRange: nil) {
+        if let paragraphRange = getParagraphRange(), let paragraph = attributedSubstring(forProposedRange: paragraphRange, actualRange: nil) {
             let pasteboard = NSPasteboard.general
             pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
             pasteboard.setString(paragraph.string.trim().removeLastNewLine(), forType: NSPasteboard.PasteboardType.string)
             return
         }
-
         super.copy(sender)
     }
 
@@ -478,7 +447,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         super.keyDown(with: event)
         saveCursorPosition()
     }
-    
+
     override func shouldChangeText(in affectedCharRange: NSRange, replacementString: String?) -> Bool {
         guard let note = EditTextView.note else {
             return super.shouldChangeText(in: affectedCharRange, replacementString: replacementString)
@@ -879,17 +848,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         guard let note = EditTextView.note else { return nil }
 
         return TextFormatter(textView: self, note: note)
-    }
-
-    private func validateSubmenu(_ menu: NSMenu) {
-        let sg = menu.item(withTitle: NSLocalizedString("Spelling and Grammar", comment: ""))?.submenu
-        let s = menu.item(withTitle: NSLocalizedString("Substitutions", comment: ""))?.submenu
-
-        sg?.item(withTitle: NSLocalizedString("Check Spelling While Typing", comment: ""))?.state = isContinuousSpellCheckingEnabled ? .on : .off
-        sg?.item(withTitle: NSLocalizedString("Check Grammar With Spelling", comment: ""))?.state = isGrammarCheckingEnabled ? .on : .off
-        sg?.item(withTitle: NSLocalizedString("Correct Spelling Automatically", comment: ""))?.state = isAutomaticSpellingCorrectionEnabled ? .on : .off
-
-        s?.item(withTitle: NSLocalizedString("Smart Copy/Paste", comment: ""))?.state = smartInsertDeleteEnabled ? .on : .off
     }
 
     override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
