@@ -478,7 +478,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         super.keyDown(with: event)
         saveCursorPosition()
     }
-
+    
     override func shouldChangeText(in affectedCharRange: NSRange, replacementString: String?) -> Bool {
         guard let note = EditTextView.note else {
             return super.shouldChangeText(in: affectedCharRange, replacementString: replacementString)
