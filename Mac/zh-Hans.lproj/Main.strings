@@ -128,7 +128,7 @@
 "AYu-sK-qS6.title" = "主菜单";
 
 /* Class = "NSSearchFieldCell"; placeholderString = "Search or create"; ObjectID = "B7t-9v-bSk"; */
-"B7t-9v-bSk.placeholderString" = "搜索或创建";
+"B7t-9v-bSk.placeholderString" = "搜索或回车创建";
 
 /* Class = "NSTextFieldCell"; title = "Note Font:"; ObjectID = "bJC-he-nDV"; */
 "bJC-he-nDV.title" = "笔记字体：";
@@ -291,9 +291,6 @@
 
 /* Class = "NSButtonCell"; title = "Change"; ObjectID = "hGi-4f-mtY"; */
 "hGi-4f-mtY.title" = "更改";
-
-/* Class = "NSMenuItem"; title = "Search and create"; ObjectID = "hPY-aY-QOE"; */
-"hPY-aY-QOE.title" = "搜索或创建";
 
 /* Class = "NSMenu"; title = "View"; ObjectID = "HyV-fh-RgO"; */
 "HyV-fh-RgO.title" = "视图";
