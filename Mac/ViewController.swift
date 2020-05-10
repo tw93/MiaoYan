@@ -448,7 +448,7 @@ class ViewController: NSViewController,
             }
         }
     }
-
+    
     public func keyDown(with event: NSEvent) -> Bool {
         guard let mw = MainWindowController.shared() else { return false }
 
