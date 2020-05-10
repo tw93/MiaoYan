@@ -3,28 +3,27 @@ import AppKit
 class MainWindowController: NSWindowController, NSWindowDelegate {
     let notesListUndoManager = UndoManager()
     var editorUndoManager = UndoManager()
-    
+
     override func windowDidLoad() {
         let appDelegate = NSApplication.shared.delegate as! AppDelegate
         appDelegate.mainWindowController = self
-
-        self.window?.hidesOnDeactivate = false
-        self.window?.titleVisibility = .hidden
-        self.window?.titlebarAppearsTransparent = true
-
-        self.windowFrameAutosaveName = "myMainWindow"
+        window?.isMovableByWindowBackground = true
+        window?.hidesOnDeactivate = true
+        window?.titleVisibility = .hidden
+        window?.titlebarAppearsTransparent = true
+        windowFrameAutosaveName = "myMainWindow"
     }
-    
+
     func windowDidResize(_ notification: Notification) {
         refreshEditArea()
     }
-        
+
     func makeNew() {
         window?.makeKeyAndOrderFront(self)
         NSApp.activate(ignoringOtherApps: true)
         refreshEditArea(focusSearch: true)
     }
-    
+
     func refreshEditArea(focusSearch: Bool = false) {
         guard let vc = ViewController.shared() else { return }
 
@@ -36,21 +35,21 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
 
         vc.editArea.updateTextContainerInset()
     }
-    
+
     func windowWillReturnUndoManager(_ window: NSWindow) -> UndoManager? {
         guard let fr = window.firstResponder else {
             return notesListUndoManager
         }
-        
+
         if fr.isKind(of: NotesTableView.self) {
             return notesListUndoManager
         }
-        
+
         if fr.isKind(of: EditTextView.self) {
             guard let vc = ViewController.shared(), let ev = vc.editArea, ev.isEditable else { return notesListUndoManager }
             return editorUndoManager
         }
-        
+
         return notesListUndoManager
     }
 
