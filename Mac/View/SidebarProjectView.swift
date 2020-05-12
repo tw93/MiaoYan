@@ -218,9 +218,9 @@ class SidebarProjectView: NSOutlineView,
 
     func outlineView(_ outlineView: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
         if item is SidebarItem {
-            return 35
+            return 34
         }
-        return 25
+        return 24
     }
 
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
@@ -266,7 +266,6 @@ class SidebarProjectView: NSOutlineView,
                 cell.icon.isHidden = false
                 cell.label.frame.origin.x = 24
             }
-        }
         return cell
     }
 

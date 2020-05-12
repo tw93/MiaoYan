@@ -24,7 +24,9 @@ class Sidebar {
         
         system.append(trash)
         
-        list = system
+        if system.count > 0 {
+            list = system
+        }
         
         let rootProjects = storage.getRootProjects()
         
@@ -32,6 +34,7 @@ class Sidebar {
             let icon = getImage(named: "repository\(night).png")
             
             let childProjects = storage.getChildProjects(project: project)
+            
             for childProject in childProjects {
                 list.append(SidebarItem(name: childProject.label, project: childProject, type: .Category, icon: icon))
             }
