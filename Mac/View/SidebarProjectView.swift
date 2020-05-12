@@ -1,6 +1,6 @@
+import Carbon.HIToolbox
 import Cocoa
 import Foundation
-import Carbon.HIToolbox
 
 import MiaoYanCore_macOS
 
@@ -8,9 +8,8 @@ class SidebarProjectView: NSOutlineView,
     NSOutlineViewDelegate,
     NSOutlineViewDataSource,
     NSMenuItemValidation {
-
-    var sidebarItems: [Any]? = nil
-    var viewDelegate: ViewController? = nil
+    var sidebarItems: [Any]?
+    var viewDelegate: ViewController?
 
     private var storage = Storage.sharedInstance()
     public var isFirstLaunch = true
@@ -31,7 +30,6 @@ class SidebarProjectView: NSOutlineView,
         guard let sidebarItem = getSidebarItem() else { return false }
 
         if menuItem.title == NSLocalizedString("Back up storage", comment: "") {
-
             return true
         }
 
@@ -57,7 +55,6 @@ class SidebarProjectView: NSOutlineView,
 
         if menuItem.title == NSLocalizedString("Delete folder", comment: "")
             || menuItem.title == NSLocalizedString("Detach storage", comment: "") {
-
             if sidebarItem.isTrash() {
                 return false
             }
@@ -68,7 +65,7 @@ class SidebarProjectView: NSOutlineView,
                     : NSLocalizedString("Delete folder", comment: "")
             }
 
-            if let project = sidebarItem.project, !project.isDefault{
+            if let project = sidebarItem.project, !project.isDefault {
                 return true
             }
         }
@@ -91,35 +88,35 @@ class SidebarProjectView: NSOutlineView,
         dataSource = self
         registerForDraggedTypes([
             NSPasteboard.PasteboardType(rawValue: "public.data"),
-            NSPasteboard.PasteboardType.init(rawValue: "notesTable")
+            NSPasteboard.PasteboardType(rawValue: "notesTable")
         ])
         super.draw(dirtyRect)
     }
 
     override func keyDown(with event: NSEvent) {
-        if event.modifierFlags.contains(.option) && event.modifierFlags.contains(.shift) && event.keyCode == kVK_ANSI_N {
+        if event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_N {
             addProject("")
             return
         }
 
-        if event.modifierFlags.contains(.option) && event.modifierFlags.contains(.shift) && event.modifierFlags.contains(.command) && event.keyCode == kVK_ANSI_R {
+        if event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_R {
             revealInFinder("")
             return
         }
 
-        if event.modifierFlags.contains(.option) && event.modifierFlags.contains(.shift) && event.keyCode == kVK_ANSI_R {
+        if event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_R {
             renameMenu("")
             return
         }
 
-        if event.modifierFlags.contains(.option) && event.modifierFlags.contains(.shift) && event.keyCode == kVK_Delete {
+        if event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.keyCode == kVK_Delete {
             deleteMenu("")
             return
         }
 
         // Tab to search
         if event.keyCode == 48 {
-            self.viewDelegate?.search.becomeFirstResponder()
+            viewDelegate?.search.becomeFirstResponder()
             return
         }
         super.keyDown(with: event)
@@ -133,8 +130,7 @@ class SidebarProjectView: NSOutlineView,
 
         switch sidebarItem.type {
         case .Category, .Trash, .Inbox:
-            if let data = board.data(forType: NSPasteboard.PasteboardType.init(rawValue: "notesTable")), let rows = NSKeyedUnarchiver.unarchiveObject(with: data) as? IndexSet {
-
+            if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "notesTable")), let rows = NSKeyedUnarchiver.unarchiveObject(with: data) as? IndexSet {
                 var notes = [Note]()
                 for row in rows {
                     let note = vc.notesTableView.noteList[row]
@@ -161,16 +157,15 @@ class SidebarProjectView: NSOutlineView,
 
             for url in urls {
                 var isDirectory = ObjCBool(true)
-                if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory), isDirectory.boolValue && !url.path.contains(".textbundle") {
-
+                if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory), isDirectory.boolValue, !url.path.contains(".textbundle") {
                     let newSub = project.url.appendingPathComponent(url.lastPathComponent, isDirectory: true)
                     let newProject = Project(url: newSub, parent: project)
                     newProject.create()
 
-                    _ = self.storage.add(project: newProject)
-                    self.reloadSidebar()
+                    _ = storage.add(project: newProject)
+                    reloadSidebar()
 
-                    let validFiles = self.storage.readDirectory(url)
+                    let validFiles = storage.readDirectory(url)
                     for file in validFiles {
                         _ = vc.copy(project: newProject, url: file.0)
                     }
@@ -193,21 +188,19 @@ class SidebarProjectView: NSOutlineView,
         guard let sidebarItem = item as? SidebarItem else { return NSDragOperation() }
         switch sidebarItem.type {
         case .Trash:
-            if let data = board.data(forType: NSPasteboard.PasteboardType.init(rawValue: "notesTable")), !data.isEmpty {
+            if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "notesTable")), !data.isEmpty {
                 return .copy
             }
-            break
-        case .Category,.Inbox:
+        case .Category, .Inbox:
             guard sidebarItem.isSelectable() else { break }
 
-            if let data = board.data(forType: NSPasteboard.PasteboardType.init(rawValue: "notesTable")), !data.isEmpty {
+            if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "notesTable")), !data.isEmpty {
                 return .move
             }
 
             if let urls = board.readObjects(forClasses: [NSURL.self], options: nil) as? [URL], urls.count > 0 {
                 return .copy
             }
-            break
         default:
             break
         }
@@ -216,7 +209,6 @@ class SidebarProjectView: NSOutlineView,
     }
 
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
-
         if let sidebar = sidebarItems, item == nil {
             return sidebar.count
         }
@@ -236,7 +228,6 @@ class SidebarProjectView: NSOutlineView,
     }
 
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
-
         if let sidebar = sidebarItems, item == nil {
             return sidebar[index]
         }
@@ -249,7 +240,6 @@ class SidebarProjectView: NSOutlineView,
     }
 
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
-
         let cell = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "DataCell"), owner: self) as! SidebarCellView
 
         if let si = item as? SidebarItem {
@@ -285,8 +275,6 @@ class SidebarProjectView: NSOutlineView,
     }
 
     func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
-
-
         guard let sidebarItem = item as? SidebarItem else {
             return false
         }
@@ -347,10 +335,9 @@ class SidebarProjectView: NSOutlineView,
             let sidebar = sidebarItems
             let i = view.selectedRow
 
-
             if sidebar.indices.contains(i), let item = sidebar[i] as? SidebarItem {
-                if UserDataService.instance.lastType == item.type.rawValue && UserDataService.instance.lastProject == item.project?.url &&
-                    UserDataService.instance.lastName == item.name{
+                if UserDataService.instance.lastType == item.type.rawValue, UserDataService.instance.lastProject == item.project?.url,
+                    UserDataService.instance.lastName == item.name {
                     return
                 }
 
@@ -372,12 +359,11 @@ class SidebarProjectView: NSOutlineView,
                 return
             }
 
-            vd.updateTable() {
+            vd.updateTable {
                 if self.isFirstLaunch {
                     if let url = UserDefaultsManagement.lastSelectedURL,
                         let lastNote = vd.storage.getBy(url: url),
-                        let i = vd.notesTableView.getIndex(lastNote)
-                    {
+                        let i = vd.notesTableView.getIndex(lastNote) {
                         vd.notesTableView.selectRow(i)
 
                         DispatchQueue.main.async {
@@ -393,7 +379,7 @@ class SidebarProjectView: NSOutlineView,
     }
 
     override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {
-        if (clickedRow > -1) {
+        if clickedRow > -1 {
             selectRowIndexes([clickedRow], byExtendingSelection: false)
 
             for item in menu.items {
@@ -431,15 +417,14 @@ class SidebarProjectView: NSOutlineView,
         let selected = v.selectedRow
         guard let si = v.sidebarItems, si.indices.contains(selected) else { return }
 
+        guard let sidebarItem = si[selected] as? SidebarItem, let project = sidebarItem.project, !project.isDefault, sidebarItem.type != .All, sidebarItem.type != .Trash else { return }
 
-        guard let sidebarItem = si[selected] as? SidebarItem, let project = sidebarItem.project, !project.isDefault && sidebarItem.type != .All && sidebarItem.type != .Trash  else { return }
-
-        if !project.isRoot && sidebarItem.type == .Category {
+        if !project.isRoot, sidebarItem.type == .Category {
             guard let w = v.superview?.window else {
                 return
             }
 
-            let alert = NSAlert.init()
+            let alert = NSAlert()
             let messageText = NSLocalizedString("Are you sure you want to remove project \"%@\" and all files inside?", comment: "")
 
             alert.messageText = String(format: messageText, project.label)
@@ -448,7 +433,6 @@ class SidebarProjectView: NSOutlineView,
             alert.addButton(withTitle: NSLocalizedString("Cancel", comment: "Delete menu"))
             alert.beginSheetModal(for: w) { (returnCode: NSApplication.ModalResponse) -> Void in
                 if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
-
                     guard let resultingItemUrl = Storage.sharedInstance().trashItem(url: project.url) else { return }
 
                     do {
@@ -522,13 +506,13 @@ class SidebarProjectView: NSOutlineView,
     }
 
     private func removeProject(project: Project) {
-        self.storage.removeBy(project: project)
+        storage.removeBy(project: project)
 
-        self.viewDelegate?.fsManager?.restart()
-        self.viewDelegate?.cleanSearchAndEditArea()
+        viewDelegate?.fsManager?.restart()
+        viewDelegate?.cleanSearchAndEditArea()
 
-        self.sidebarItems = Sidebar().getList()
-        self.reloadData()
+        sidebarItems = Sidebar().getList()
+        reloadData()
     }
 
     private func addChild(field: NSTextField, project: Project) {
@@ -641,7 +625,6 @@ class SidebarProjectView: NSOutlineView,
 
                 return
             }
-
         }
 
         selectRowIndexes([i], byExtendingSelection: false)
@@ -667,6 +650,5 @@ class SidebarProjectView: NSOutlineView,
         vc.storageOutlineView.sidebarItems = Sidebar().getList()
         vc.storageOutlineView.reloadData()
         vc.storageOutlineView.selectRowIndexes([selected], byExtendingSelection: false)
-
     }
 }
