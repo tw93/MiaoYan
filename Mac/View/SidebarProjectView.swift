@@ -266,6 +266,7 @@ class SidebarProjectView: NSOutlineView,
                 cell.icon.isHidden = false
                 cell.label.frame.origin.x = 24
             }
+        }
         return cell
     }
 
