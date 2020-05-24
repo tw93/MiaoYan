@@ -216,12 +216,12 @@ class ViewController: NSViewController,
     }
 
     private func configureEditor() {
-        editArea.usesFindBar = false
-        editArea.isIncrementalSearchingEnabled = true
-        editArea.isAutomaticQuoteSubstitutionEnabled = false
-        editArea.isAutomaticDataDetectionEnabled = false
-        editArea.textStorage?.delegate = editArea.textStorage
-        editArea.viewDelegate = self
+        self.editArea.usesFindBar = false
+        self.editArea.isIncrementalSearchingEnabled = true
+        self.editArea.isAutomaticQuoteSubstitutionEnabled = false
+        self.editArea.isAutomaticDataDetectionEnabled = false
+        self.editArea.textStorage?.delegate = editArea.textStorage
+        self.editArea.viewDelegate = self
     }
 
     private func configureShortcuts() {

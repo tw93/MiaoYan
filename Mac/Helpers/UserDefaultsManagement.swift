@@ -17,15 +17,15 @@ public class UserDefaultsManagement {
         typealias Font = UIFont
     #endif
 
-    static var DefaultFont = "JetBrains Mono"
+    static var DefaultFont = "Avenir Next"
 
     static var DefaultFontSize = 16
-    static var editorLineSpacing = 5.6
+    static var editorLineSpacing = 8
 
     static var DefaultFontColor = Color(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.00)
     static var DefaultBgColor = Color.white
 
-    static var codeFontName = "JetBrains Mono"
+    static var codeFontName = "Avenir Next"
     static var lineWidth = 1000
     static var linkColor = Color(red: 0.15, green: 0.58, blue: 0.99, alpha: 1.00)
     static var fullScreen = false
@@ -34,7 +34,7 @@ public class UserDefaultsManagement {
     static var maxNightModeBrightnessLevel = 35
 
     static var lastProject = 0
-    static var fontName = "JetBrains Mono"
+    static var fontName = "Avenir Next"
     static var previewFontSize = 16
     static var sortDirection = true
     static var marginSize = 30

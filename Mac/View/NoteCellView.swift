@@ -12,7 +12,6 @@ class NoteCellView: NSTableCellView {
 
     private let labelColor = NSColor(deviceRed: 0.6, green: 0.6, blue: 0.6, alpha: 1)
 
-
     public var tableView: NotesTableView? {
         get {
             guard let vc = ViewController.shared() else { return nil }
