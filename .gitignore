@@ -2,8 +2,9 @@ Pods
 *.xcuserstate
 xcuserdata
 Podfile.lock
-FSNotes.xcworkspace/xcshareddata/*
-FSNotes.xcworkspace/xcuserdata/*
-FSNotes.xcodeproj/xcuserdata/*
+MiaoYan.xcworkspace/xcshareddata/*
+MiaoYan.xcworkspace/xcuserdata/*
+MiaoYan.xcodeproj/xcuserdata/*
 .idea/
 Releases
+.DS_Store
