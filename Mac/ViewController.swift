@@ -461,12 +461,17 @@ class ViewController: NSViewController,
             return true
         }
 
+        if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), search.hasFocus() {
+            search.stringValue.removeAll()
+            return false
+        }
+        
         if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), editArea.hasFocus() {
             editArea.deleteToBeginningOfLine(nil)
             return false
         }
 
-        if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), titleLabel.hasFocus(),!editArea.hasFocus() {
+        if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), titleLabel.hasFocus() {
             updateTitle(newTitle: "")
             return false
         }
@@ -637,8 +642,7 @@ class ViewController: NSViewController,
         if let type = vc.getSidebarType(), type == .Trash {
             vc.storageOutlineView.deselectAll(nil)
         }
-
-        vc.createNote(content: "")
+        vc.createNote(name:"未命名",content: "")
     }
 
     @IBAction func importNote(_ sender: NSMenuItem) {
@@ -1132,10 +1136,6 @@ class ViewController: NSViewController,
 
                 if search {
                     if self.notesTableView.noteList.count > 0 {
-                        if !self.search.skipAutocomplete, self.search.timestamp == timestamp {
-                            self.search.suggestAutocomplete(note, filter: originalFilter)
-                        }
-
                         if filter.count > 0, note.title.lowercased() == self.search.stringValue.lowercased() {
                             self.selectNullTableRow(timer: true)
                         } else {
