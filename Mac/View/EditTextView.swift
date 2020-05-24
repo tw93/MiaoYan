@@ -154,6 +154,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
             pboard.setString(plainText, forType: .string)
             return true
         }
+        if type == .rtfd {
+            let richString = attributedString.unLoadCheckboxes()
+            if let rtfd = try? richString.data(from: NSMakeRange(0, richString.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtfd]) {
+                pboard.setData(rtfd, forType: NSPasteboard.PasteboardType.rtfd)
+                return true
+            }
+        }
+
         if type.rawValue == "NSStringPboardType" {
             EditTextView.shouldForceRescan = true
             return super.writeSelection(to: pboard, type: type)
@@ -164,9 +172,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     // 清除最后一行
     override func copy(_ sender: Any?) {
-        if let paragraphRange = getParagraphRange(), let paragraph = attributedSubstring(forProposedRange: paragraphRange, actualRange: nil) {
-            let pasteboard = NSPasteboard.general
-            pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
+        let pasteboard = NSPasteboard.general
+        pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
+
+        if self.selectedRange.length == 0, let paragraphRange = self.getParagraphRange(), let paragraph = attributedSubstring(forProposedRange: paragraphRange, actualRange: nil) {
             pasteboard.setString(paragraph.string.trim().removeLastNewLine(), forType: NSPasteboard.PasteboardType.string)
             return
         }
@@ -185,14 +194,13 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
             let currentRange = selectedRange()
 
-            breakUndoCoalescing()
-            insertText(clipboard, replacementRange: currentRange)
-            breakUndoCoalescing()
+            self.breakUndoCoalescing()
+            self.insertText(clipboard, replacementRange: currentRange)
+            self.breakUndoCoalescing()
 
             saveTextStorageContent(to: note)
             return
         }
-
         super.paste(sender)
     }
 
@@ -887,8 +895,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let switchScript = "if (typeof(\(funcName)) == 'function') { \(funcName)(); }"
 
         downView?.evaluateJavaScript(switchScript)
-
-        // TODO: implement code block live theme changer
         viewDelegate?.refillEditArea()
     }
 
