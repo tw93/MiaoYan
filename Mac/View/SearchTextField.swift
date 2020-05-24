@@ -91,6 +91,12 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         }
     }
 
+    public func hasFocus() -> Bool {
+        var inFocus = false
+        inFocus = (self.window?.firstResponder is NSTextView) && self.window?.fieldEditor(false, for: nil) != nil && self.isEqual(to: (self.window?.firstResponder as? NSTextView)?.delegate)
+        return inFocus
+    }
+    
     func controlTextDidChange(_ obj: Notification) {
         searchTimer.invalidate()
         searchTimer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(search), userInfo: nil, repeats: false)
@@ -109,12 +115,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         UserDataService.instance.searchTrigger = true
 
         let searchText = self.stringValue
-        let currentTextLength = searchText.count
         var sidebarItem: SidebarItem? = nil
-
-        if currentTextLength > self.lastQueryLength {
-            self.skipAutocomplete = false
-        }
 
         self.lastQueryLength = searchText.count
 
