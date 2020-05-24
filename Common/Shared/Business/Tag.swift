@@ -1,11 +1,3 @@
-//
-//  Tag.swift
-//  FSNotes
-//
-//  Created by Олександр Глущенко on 14.10.2019.
-//  Copyright © 2019 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Foundation
 
 class Tag {
