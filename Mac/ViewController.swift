@@ -466,7 +466,7 @@ class ViewController: NSViewController,
             return false
         }
 
-        if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), titleLabel.hasFocus() {
+        if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), titleLabel.hasFocus(),!editArea.hasFocus() {
             updateTitle(newTitle: "")
             return false
         }
@@ -1437,6 +1437,7 @@ class ViewController: NSViewController,
     }
 
     func togglePreview() {
+        titleLabel.saveTitle()
         if UserDefaultsManagement.preview {
             disablePreview()
         } else {
