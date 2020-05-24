@@ -130,14 +130,14 @@
 			containerPortal = D7793C671F211C6000CA39B7 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 6F13BB0320FEDDF40005E120;
-			remoteInfo = "FSNotesCore macOS";
+			remoteInfo = "MiaoYanCore macOS";
 		};
 		6F13BB1720FEDDF50005E120 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D7793C671F211C6000CA39B7 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 6F13BB0320FEDDF40005E120;
-			remoteInfo = "FSNotesCore macOS";
+			remoteInfo = "MiaoYanCore macOS";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -592,7 +592,7 @@
 			dependencies = (
 			);
 			name = "MiaoYanCore macOS";
-			productName = "FSNotesCore macOS";
+			productName = "MiaoYanCore macOS";
 			productReference = 27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */;
 			productType = "com.apple.product-type.framework";
 		};
@@ -615,7 +615,7 @@
 				270678F9244601C000D9935F /* PBXTargetDependency */,
 			);
 			name = MiaoYan;
-			productName = FSNotes;
+			productName = MiaoYan;
 			productReference = 27D17C9D2467EC7100CACCDA /* MiaoYan.app */;
 			productType = "com.apple.product-type.application";
 		};
