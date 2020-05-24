@@ -83,7 +83,7 @@
 "New project" = "新建项目";
 
 /* Sidebar label */
-"Notes" = "全部笔记";
+"Notes" = "全部妙言";
 
 /* No comment provided by engineer. */
 "OK" = "好的";
@@ -150,6 +150,8 @@
 
 /* Menu */
 "View" = "视图";
+
+"Search" = "搜索";
 
 /* No comment provided by engineer. */
 "Wrong repeated password" = "重复密码输入不正确";
