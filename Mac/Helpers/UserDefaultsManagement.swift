@@ -37,7 +37,7 @@ public class UserDefaultsManagement {
     static var fontName = "Avenir Next"
     static var previewFontSize = 16
     static var sortDirection = true
-    static var marginSize = 30
+    static var marginSize = 28
     static var realSidebarSize = 200
 
     private struct Constants {
