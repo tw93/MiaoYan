@@ -4,21 +4,21 @@ MAC_TARGET_VERSION = '10.11'
 IOS_TARGET_VERSION = '10'
 
 def mac_pods
-    pod 'MASShortcut', :git => 'https://github.com/glushchenko/MASShortcut.git', :branch => 'master'
+    pod 'MASShortcut', :git => 'https://github.com/shpakovski/MASShortcut.git', :branch => 'master'
 end
 
 def ios_pods
-    pod 'NightNight', :git => 'https://github.com/glushchenko/NightNight.git', :branch => 'master'
+    pod 'NightNight', :git => 'https://github.com/draveness/NightNight.git', :branch => 'master'
     pod 'DKImagePickerController', '4.1.4'
-    pod 'SSZipArchive', :git => 'https://github.com/glushchenko/ZipArchive.git', :branch => 'master'
+    pod 'SSZipArchive', :git => 'https://github.com/ZipArchive/ZipArchive.git', :branch => 'master'
     pod 'DropDown', '2.3.13'
 end
 
 def common_pods
-    pod 'Highlightr', :git => 'https://github.com/glushchenko/Highlightr.git', :branch => 'master'
+    pod 'Highlightr', :git => 'https://github.com/raspu/Highlightr.git', :branch => 'master'
     pod 'libcmark_gfm', :git => 'https://github.com/KristopherGBaker/libcmark_gfm.git', :branch => 'master'
 	pod 'RNCryptor', '~> 5.1.0'
-    pod 'SSZipArchive', :git => 'https://github.com/glushchenko/ZipArchive.git', :branch => 'master'
+    pod 'SSZipArchive', :git => 'https://github.com/ZipArchive/ZipArchive.git', :branch => 'master'
 end
 
 def framework_pods
@@ -27,7 +27,7 @@ end
 
 target 'MiaoYanCore macOS' do
     platform :osx, MAC_TARGET_VERSION
-    pod 'MASShortcut', :git => 'https://github.com/glushchenko/MASShortcut.git', :branch => 'master'
+    pod 'MASShortcut', :git => 'https://github.com/shpakovski/MASShortcut.git', :branch => 'master'
     framework_pods
 end
 
