@@ -1,6 +1,6 @@
 <img src=https://qpluspicture.oss-cn-beijing.aliyuncs.com/DlvpN4/logo.png width=200  />
 
-## 妙言[🚧中]
+## 妙言【🚧 施工中】
 
 > 轻灵的 Markdown 笔记本伴你写出妙言，思考记录到载体上方能发挥更大的价值。
 
@@ -13,6 +13,10 @@
 - 使用 Swift5 原生开发，较 Electron 套壳方式性能体验好
 - 聚焦在纯文本输入体验，较富文本编辑稳定和舒心
 - 容易记住的众多快捷键，操作上快人一步
+
+## 安装
+
+从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases) 中下载最新的 MiaoYan.dmg 安装包，双击安装即可
 
 ## 快捷键
 
