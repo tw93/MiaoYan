@@ -36,10 +36,10 @@ extension UserDefaultsManagement {
             let modifier = UserDefaults.standard.object(forKey: Constants.NewNoteKeyModifier)
 
             if code != nil && modifier != nil, let keyCode = code as? UInt, let modifierFlags = modifier as? UInt {
-                return MASShortcut(keyCode: keyCode, modifierFlags: modifierFlags)
+                return MASShortcut(keyCode: Int(keyCode), modifierFlags: NSEvent.ModifierFlags(rawValue: modifierFlags))
             }
 
-            return MASShortcut(keyCode: 45, modifierFlags: 917504)
+            return MASShortcut(keyCode: 45, modifierFlags: NSEvent.ModifierFlags(rawValue: 917504))
         }
         set {
             UserDefaults.standard.set(newValue.keyCode, forKey: Constants.NewNoteKeyCode)
@@ -53,10 +53,10 @@ extension UserDefaultsManagement {
             let modifier = UserDefaults.standard.object(forKey: Constants.SearchNoteKeyModifier)
 
             if code != nil && modifier != nil, let keyCode = code as? UInt, let modifierFlags = modifier as? UInt {
-                return MASShortcut(keyCode: keyCode, modifierFlags: modifierFlags)
+                return MASShortcut(keyCode: Int(keyCode), modifierFlags: NSEvent.ModifierFlags(rawValue: modifierFlags))
             }
 
-            return MASShortcut(keyCode: 37, modifierFlags: 917504)
+            return MASShortcut(keyCode: 37, modifierFlags: NSEvent.ModifierFlags(rawValue: 917504))
         }
         set {
             UserDefaults.standard.set(newValue.keyCode, forKey: Constants.SearchNoteKeyCode)
