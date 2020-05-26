@@ -20,7 +20,7 @@ public class UserDefaultsManagement {
     static var DefaultFont = "Avenir Next"
 
     static var DefaultFontSize = 16
-    static var editorLineSpacing = 8
+    static var editorLineSpacing = 7.2
 
     static var DefaultFontColor = Color(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.00)
     static var DefaultBgColor = Color.white

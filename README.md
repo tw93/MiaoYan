@@ -41,11 +41,12 @@
 
 ## 感谢
 
+- [KristopherGBaker/libcmark_gfm](https://github.com/KristopherGBaker/libcmark_gfm)：适用于cmark-gfm的Swift兼容框架
 - [Remix-Design/RemixIcon](https://github.com/Remix-Design/RemixIcon)：简洁的 icon
 - [draveness/NightNight](https://github.com/draveness/NightNight)：黑暗模式
-- [raspu/Highlightr](https://github.com/raspu/Highlightr)：语法高亮
-- [hpakovski/MASShortcut](https://github.com/shpakovski/MASShortcut)：快捷键
+- [raspu/Highlightr](https://github.com/raspu/Highlightr)：语法高亮能力
 - [glushchenko/fsnotes](https://github.com/glushchenko/fsnotes)：乌克兰开发者写的笔记应用，妙言开始之初有部分代码和思路来源于此
+- [hpakovski/MASShortcut](https://github.com/shpakovski/MASShortcut)：快捷键
 
 # 协议
 

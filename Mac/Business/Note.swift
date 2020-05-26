@@ -1,6 +1,5 @@
 import Foundation
 import LocalAuthentication
-import RNCryptor
 import SSZipArchive
 
 public class Note: NSObject {
