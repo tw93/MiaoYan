@@ -8,7 +8,7 @@ class NoteCellView: NSTableCellView {
 
     public var note: Note?
     public var timestamp: Int64?
-    public let cellSpacing: CGFloat = 33
+    public let cellSpacing: CGFloat = 34
 
     private let labelColor = NSColor(deviceRed: 0.6, green: 0.6, blue: 0.6, alpha: 1)
 
