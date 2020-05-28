@@ -1030,44 +1030,41 @@ CA
             </objects>
             <point key="canvasLocation" x="-1325" y="533"/>
         </scene>
-        <!--About View Controller-->
+        <!--About MiaoYan-->
         <scene sceneID="fut-XK-Los">
             <objects>
-                <viewController id="YNW-vn-A3h" customClass="AboutViewController" customModule="FSNotes" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="About MiaoYan" id="YNW-vn-A3h" customClass="AboutViewController" sceneMemberID="viewController">
                     <view key="view" id="nlO-Om-1If">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="184"/>
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="175"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zv2-7T-dgL">
-                                <rect key="frame" x="117" y="96" width="67" height="70"/>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zv2-7T-dgL">
+                                <rect key="frame" x="117" y="90" width="67" height="67"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="70" id="EZK-uw-icE"/>
+                                    <constraint firstAttribute="height" constant="67" id="EZK-uw-icE"/>
                                     <constraint firstAttribute="width" constant="67" id="Y4A-Dc-jQn"/>
                                 </constraints>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageAlignment="left" imageScaling="proportionallyDown" image="makeNoteAsset" id="ouP-5W-5Lf"/>
                             </imageView>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cgf-ax-Go5">
-                                <rect key="frame" x="132" y="70" width="37" height="17"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cgf-ax-Go5">
+                                <rect key="frame" x="132" y="63" width="37" height="17"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="妙言" id="v9A-ZO-AAb">
                                     <font key="font" size="14" name=".PingFangSC-Medium"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wKq-L7-eGG">
-                                <rect key="frame" x="63" y="19" width="174" height="19"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="19" id="zqp-ge-9xx"/>
-                                </constraints>
-                                <textFieldCell key="cell" selectable="YES" alignment="center" title="Copyright © 2020  Tw93" id="ad2-SL-Pni">
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="Bqv-Qw-wbK">
+                                <rect key="frame" x="113" y="43" width="74" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Version 0.1" id="PM6-HD-5pk">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="751" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bqv-Qw-wbK">
-                                <rect key="frame" x="113" y="48" width="74" height="16"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Version 0.1" id="PM6-HD-5pk">
+                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wKq-L7-eGG">
+                                <rect key="frame" x="71" y="16" width="159" height="19"/>
+                                <textFieldCell key="cell" selectable="YES" alignment="center" title="Copyright © 2020 Tw93" id="ad2-SL-Pni">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1075,15 +1072,15 @@ CA
                             </textField>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="cgf-ax-Go5" firstAttribute="top" secondItem="zv2-7T-dgL" secondAttribute="bottom" constant="9" id="4hD-4j-aF6"/>
-                            <constraint firstItem="cgf-ax-Go5" firstAttribute="centerX" secondItem="Bqv-Qw-wbK" secondAttribute="centerX" id="6jr-6Z-3Fk"/>
-                            <constraint firstAttribute="bottom" secondItem="cgf-ax-Go5" secondAttribute="bottom" constant="76" id="7f3-Dx-wNI"/>
-                            <constraint firstAttribute="bottom" secondItem="wKq-L7-eGG" secondAttribute="bottom" constant="5" id="D0a-iI-sYp"/>
+                            <constraint firstItem="zv2-7T-dgL" firstAttribute="top" secondItem="nlO-Om-1If" secondAttribute="top" constant="18" id="0CV-Qs-pUv"/>
+                            <constraint firstItem="Bqv-Qw-wbK" firstAttribute="centerX" secondItem="wKq-L7-eGG" secondAttribute="centerX" id="5ye-1V-DhR"/>
                             <constraint firstItem="Bqv-Qw-wbK" firstAttribute="top" secondItem="cgf-ax-Go5" secondAttribute="bottom" constant="4" id="MA8-fy-5C3"/>
+                            <constraint firstItem="Bqv-Qw-wbK" firstAttribute="centerX" secondItem="cgf-ax-Go5" secondAttribute="centerX" id="OLu-ub-0XN"/>
+                            <constraint firstItem="wKq-L7-eGG" firstAttribute="top" secondItem="Bqv-Qw-wbK" secondAttribute="bottom" constant="6" id="P8K-tU-FGs"/>
                             <constraint firstItem="cgf-ax-Go5" firstAttribute="centerX" secondItem="nlO-Om-1If" secondAttribute="centerX" id="SE0-L1-s7N"/>
                             <constraint firstItem="zv2-7T-dgL" firstAttribute="centerX" secondItem="cgf-ax-Go5" secondAttribute="centerX" id="Wqi-QZ-wrF"/>
-                            <constraint firstItem="cgf-ax-Go5" firstAttribute="centerX" secondItem="wKq-L7-eGG" secondAttribute="centerX" id="XL9-jg-F6X"/>
                             <constraint firstItem="wKq-L7-eGG" firstAttribute="leading" secondItem="nlO-Om-1If" secondAttribute="leading" constant="65" id="bPh-vo-YAG"/>
+                            <constraint firstItem="cgf-ax-Go5" firstAttribute="top" secondItem="zv2-7T-dgL" secondAttribute="bottom" constant="10" id="opg-Mj-U95"/>
                         </constraints>
                     </view>
                     <connections>
@@ -1092,7 +1089,7 @@ CA
                 </viewController>
                 <customObject id="I64-qx-LHv" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-792" y="578.5"/>
+            <point key="canvasLocation" x="-792" y="562.5"/>
         </scene>
     </scenes>
     <resources>
