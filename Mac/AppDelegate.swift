@@ -3,16 +3,15 @@ import MiaoYanCore_macOS
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
-
     var mainWindowController: MainWindowController?
     var prefsWindowController: PrefsWindowController?
     var aboutWindowController: AboutWindowController?
     var statusItem: NSStatusItem?
 
-    public var urls: [URL]? = nil
-    public var searchQuery: String? = nil
-    public var newName: String? = nil
-    public var newContent: String? = nil
+    public var urls: [URL]?
+    public var searchQuery: String?
+    public var newName: String?
+    public var newContent: String?
 
     var appTitle: String {
         let name = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
@@ -24,7 +23,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         let storage = Storage.sharedInstance()
         storage.loadProjects()
-        storage.loadDocuments() {}
+        storage.loadDocuments {}
     }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -36,8 +35,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         #if CLOUDKIT
         if let iCloudDocumentsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents").resolvingSymlinksInPath() {
-
-            if (!FileManager.default.fileExists(atPath: iCloudDocumentsURL.path, isDirectory: nil)) {
+            if !FileManager.default.fileExists(atPath: iCloudDocumentsURL.path, isDirectory: nil) {
                 do {
                     try FileManager.default.createDirectory(at: iCloudDocumentsURL, withIntermediateDirectories: true, attributes: nil)
                 } catch {
@@ -48,7 +46,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         #endif
 
         if UserDefaultsManagement.storagePath == nil {
-            self.requestStorageDirectory()
+            requestStorageDirectory()
             return
         }
 
@@ -58,12 +56,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             fatalError("Error getting main window controller")
         }
 
-        self.mainWindowController = mainWC
+        mainWindowController = mainWC
         mainWC.window?.makeKeyAndOrderFront(nil)
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        if (!flag) {
+        if !flag {
             mainWindowController?.makeNew()
         } else {
             mainWindowController?.refreshEditArea()
@@ -85,16 +83,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     private func applyAppearance() {
-
         if #available(OSX 10.14, *) {
             if UserDefaultsManagement.appearanceType != .Custom {
                 if UserDefaultsManagement.appearanceType == .Dark {
-                    NSApp.appearance = NSAppearance.init(named: NSAppearance.Name.darkAqua)
+                    NSApp.appearance = NSAppearance(named: NSAppearance.Name.darkAqua)
                     UserDataService.instance.isDark = true
                 }
 
                 if UserDefaultsManagement.appearanceType == .Light {
-                    NSApp.appearance = NSAppearance.init(named: NSAppearance.Name.aqua)
+                    NSApp.appearance = NSAppearance(named: NSAppearance.Name.aqua)
                     UserDataService.instance.isDark = false
                 }
 
@@ -102,7 +99,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                     UserDataService.instance.isDark = true
                 }
             } else {
-                NSApp.appearance = NSAppearance.init(named: NSAppearance.Name.aqua)
+                NSApp.appearance = NSAppearance(named: NSAppearance.Name.aqua)
             }
         }
     }
@@ -122,7 +119,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     private func requestStorageDirectory() {
-        var directoryURL: URL? = nil
+        var directoryURL: URL?
         if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
             directoryURL = URL(fileURLWithPath: path)
         }
@@ -152,11 +149,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
     }
 
-
     // MARK: IBActions
 
     @IBAction func openMainWindow(_ sender: Any) {
         mainWindowController?.makeNew()
+    }
+
+    @IBAction func openSite(_ sender: Any) {
+        NSWorkspace.shared.open(URL(string: "https://github.com/tw93/MiaoYan")!)
     }
 
     @IBAction func openPreferences(_ sender: Any?) {
@@ -191,7 +191,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
     }
 
-
     @IBAction func showAboutWindow(_ sender: AnyObject) {
         if aboutWindowController == nil {
             let storyboard = NSStoryboard(name: "Main", bundle: nil)
@@ -221,10 +220,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         switch UserDefaultsManagement.dockIcon {
         case 0:
             image = NSImage(named: "icon.png")
-            break
         case 1:
             image = NSImage(named: "icon_alt.png")
-            break
         default:
             break
         }

@@ -50,7 +50,7 @@
 "Delete" = "删除";
 
 /* No comment provided by engineer. */
-"Delete folder" = "删除文件夹";
+"Delete folder" = "删除文件夹11111";
 
 /* No comment provided by engineer. */
 "Detach storage" = "分离存储";
@@ -152,7 +152,3 @@
 "View" = "视图";
 
 "Search" = "搜索";
-
-/* No comment provided by engineer. */
-"Wrong repeated password" = "重复密码输入不正确";
-
