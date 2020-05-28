@@ -122,6 +122,66 @@ class SidebarProjectView: NSOutlineView,
         super.keyDown(with: event)
     }
 
+    func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
+        guard let vc = ViewController.shared() else { return false }
+        let board = info.draggingPasteboard
+
+        guard let sidebarItem = item as? SidebarItem else { return false }
+
+        switch sidebarItem.type {
+        case .Category, .Trash, .Inbox:
+            if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "notesTable")), let rows = NSKeyedUnarchiver.unarchiveObject(with: data) as? IndexSet {
+                var notes = [Note]()
+                for row in rows {
+                    let note = vc.notesTableView.noteList[row]
+                    notes.append(note)
+                }
+
+                if let project = sidebarItem.project {
+                    vc.move(notes: notes, project: project)
+                } else if sidebarItem.isTrash() {
+                    vc.editArea.clear()
+                    vc.storage.removeNotes(notes: notes) { _ in
+                        DispatchQueue.main.async {
+                            vc.storageOutlineView.reloadSidebar()
+                            vc.notesTableView.removeByNotes(notes: notes)
+                        }
+                    }
+                }
+
+                return true
+            }
+
+            guard let urls = board.readObjects(forClasses: [NSURL.self], options: nil) as? [URL],
+                let project = sidebarItem.project else { return false }
+
+            for url in urls {
+                var isDirectory = ObjCBool(true)
+                if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory), isDirectory.boolValue, !url.path.contains(".textbundle") {
+                    let newSub = project.url.appendingPathComponent(url.lastPathComponent, isDirectory: true)
+                    let newProject = Project(url: newSub, parent: project)
+                    newProject.create()
+
+                    _ = storage.add(project: newProject)
+                    reloadSidebar()
+
+                    let validFiles = storage.readDirectory(url)
+                    for file in validFiles {
+                        _ = vc.copy(project: newProject, url: file.0)
+                    }
+                } else {
+                    _ = vc.copy(project: project, url: url)
+                }
+            }
+
+            return true
+        default:
+            break
+        }
+
+        return false
+    }
+
     func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
         let board = info.draggingPasteboard
 
