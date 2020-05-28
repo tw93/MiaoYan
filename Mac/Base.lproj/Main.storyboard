@@ -17,6 +17,12 @@
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="MiaoYan" systemMenu="apple" identifier="miaoyanMenu" id="uQy-DD-JDr">
                                     <items>
+                                        <menuItem title="About MiaoYan" id="gXN-Ca-moU">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="showAboutWindow:" target="Voe-Tx-rLC" id="PR0-oC-n1f"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW">
                                             <connections>
                                                 <action selector="openPreferences:" target="Voe-Tx-rLC" id="inL-8g-wqE"/>
@@ -26,20 +32,15 @@
                                             <string key="keyEquivalent" base64-UTF8="YES">
 CA
 </string>
-                                            <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                                            <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="emptyTrash:" target="L4m-js-agn" id="d27-Z5-1ap"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Hide MiaoYan" keyEquivalent="h" id="Olw-nP-bQN">
-                                            <connections>
-                                                <action selector="hide:" target="Ady-hI-5gd" id="PnN-Uc-m68"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Hide Others" keyEquivalent="h" id="Vdr-fp-XzO">
+                                        <menuItem title="Star MiaoYan" keyEquivalent="m" id="V6f-Kx-tjO">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
-                                                <action selector="hideOtherApplications:" target="Ady-hI-5gd" id="VT4-aY-XCT"/>
+                                                <action selector="openSite:" target="Voe-Tx-rLC" id="ccv-Q7-4w9"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Quit MiaoYan" keyEquivalent="q" id="4sb-4s-VLi">
@@ -1021,10 +1022,77 @@ CA
                             <outlet property="delegate" destination="fsj-A7-rSt" id="MQB-GZ-L3v"/>
                         </connections>
                     </window>
+                    <connections>
+                        <segue destination="YNW-vn-A3h" kind="relationship" relationship="window.shadowedContentViewController" id="IZM-5g-79J"/>
+                    </connections>
                 </windowController>
                 <customObject id="5yP-4F-Hxb" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1410" y="550"/>
+            <point key="canvasLocation" x="-1325" y="533"/>
+        </scene>
+        <!--About View Controller-->
+        <scene sceneID="fut-XK-Los">
+            <objects>
+                <viewController id="YNW-vn-A3h" customClass="AboutViewController" customModule="FSNotes" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="nlO-Om-1If">
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="184"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zv2-7T-dgL">
+                                <rect key="frame" x="117" y="96" width="67" height="70"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="70" id="EZK-uw-icE"/>
+                                    <constraint firstAttribute="width" constant="67" id="Y4A-Dc-jQn"/>
+                                </constraints>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageAlignment="left" imageScaling="proportionallyDown" image="makeNoteAsset" id="ouP-5W-5Lf"/>
+                            </imageView>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cgf-ax-Go5">
+                                <rect key="frame" x="132" y="70" width="37" height="17"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="妙言" id="v9A-ZO-AAb">
+                                    <font key="font" size="14" name=".PingFangSC-Medium"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wKq-L7-eGG">
+                                <rect key="frame" x="63" y="19" width="174" height="19"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="19" id="zqp-ge-9xx"/>
+                                </constraints>
+                                <textFieldCell key="cell" selectable="YES" alignment="center" title="Copyright © 2020  Tw93" id="ad2-SL-Pni">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="751" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bqv-Qw-wbK">
+                                <rect key="frame" x="113" y="48" width="74" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Version 0.1" id="PM6-HD-5pk">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="cgf-ax-Go5" firstAttribute="top" secondItem="zv2-7T-dgL" secondAttribute="bottom" constant="9" id="4hD-4j-aF6"/>
+                            <constraint firstItem="cgf-ax-Go5" firstAttribute="centerX" secondItem="Bqv-Qw-wbK" secondAttribute="centerX" id="6jr-6Z-3Fk"/>
+                            <constraint firstAttribute="bottom" secondItem="cgf-ax-Go5" secondAttribute="bottom" constant="76" id="7f3-Dx-wNI"/>
+                            <constraint firstAttribute="bottom" secondItem="wKq-L7-eGG" secondAttribute="bottom" constant="5" id="D0a-iI-sYp"/>
+                            <constraint firstItem="Bqv-Qw-wbK" firstAttribute="top" secondItem="cgf-ax-Go5" secondAttribute="bottom" constant="4" id="MA8-fy-5C3"/>
+                            <constraint firstItem="cgf-ax-Go5" firstAttribute="centerX" secondItem="nlO-Om-1If" secondAttribute="centerX" id="SE0-L1-s7N"/>
+                            <constraint firstItem="zv2-7T-dgL" firstAttribute="centerX" secondItem="cgf-ax-Go5" secondAttribute="centerX" id="Wqi-QZ-wrF"/>
+                            <constraint firstItem="cgf-ax-Go5" firstAttribute="centerX" secondItem="wKq-L7-eGG" secondAttribute="centerX" id="XL9-jg-F6X"/>
+                            <constraint firstItem="wKq-L7-eGG" firstAttribute="leading" secondItem="nlO-Om-1If" secondAttribute="leading" constant="65" id="bPh-vo-YAG"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="versionLabel" destination="Bqv-Qw-wbK" id="pDn-Dj-MHj"/>
+                    </connections>
+                </viewController>
+                <customObject id="I64-qx-LHv" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-792" y="578.5"/>
         </scene>
     </scenes>
     <resources>

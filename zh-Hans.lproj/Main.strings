@@ -16,6 +16,9 @@
 /* Class = "NSMenuItem"; title = "New"; ObjectID = "2Ci-Yj-aWK"; */
 "2Ci-Yj-aWK.title" = "新建";
 
+/* Class = "NSMenuItem"; title = "Search"; ObjectID = "hPY-aY-QOE"; */
+"hPY-aY-QOE.title" = "搜索";
+
 /* Class = "NSTextFieldCell"; title = "hour at"; ObjectID = "2Iq-vN-V2w"; */
 "2Iq-vN-V2w.title" = "某个时刻";
 
@@ -55,11 +58,12 @@
 /* Class = "NSMenuItem"; title = "Quit MiaoYan"; ObjectID = "4sb-4s-VLi"; */
 "4sb-4s-VLi.title" = "退出妙言";
 
-/* Class = "NSMenuItem"; title = "Remove encryption"; ObjectID = "5gL-j7-Zq8"; */
-"5gL-j7-Zq8.title" = "移除加密";
 
-/* Class = "NSMenuItem"; title = "About MiaoYan"; ObjectID = "5kV-Vb-QxS"; */
-"5kV-Vb-QxS.title" = "关于妙言";
+/* Class = "NSMenuItem"; title = "Star MiaoYan"; ObjectID = "V6f-Kx-tjO"; */
+"V6f-Kx-tjO.title" = "喜欢妙言";
+
+/* Class = "NSMenuItem"; title = "About MiaoYan"; ObjectID = "gXN-Ca-moU"; */
+"gXN-Ca-moU.title" = "关于妙言";
 
 /* Class = "NSMenuItem"; title = "Copy title"; ObjectID = "5LV-Vi-n79"; */
 "5LV-Vi-n79.title" = "拷贝标题";
@@ -103,20 +107,8 @@
 /* Class = "NSTextFieldCell"; title = "Note list location:"; ObjectID = "54i-GK-spQ"; */
 "54i-GK-spQ.title" = "笔记列表位置：";
 
-/* Class = "NSTextFieldCell"; title = "Code Font:"; ObjectID = "63m-us-3j9"; */
-"63m-us-3j9.title" = "代码字体：";
-
-/* Class = "NSMenuItem"; title = "Correct Spelling Automatically"; ObjectID = "78Y-hA-62v"; */
-"78Y-hA-62v.title" = "自动纠正拼写";
-
 /* Class = "NSMenuItem"; title = "Minimize"; ObjectID = "A5V-Wm-if2"; */
 "A5V-Wm-if2.title" = "最小化";
-
-/* Class = "NSTextFieldCell"; title = "Search shortcut:"; ObjectID = "a6n-hz-V8D"; */
-"a6n-hz-V8D.title" = "搜索快捷键:";
-
-/* Class = "NSMenuItem"; title = "monokai-sublime"; ObjectID = "AaQ-hp-VpR"; */
-"AaQ-hp-VpR.title" = "monokai-sublime";
 
 /* Class = "NSTextFieldCell"; title = "Repositories:"; ObjectID = "ASf-hd-2fT"; */
 "ASf-hd-2fT.title" = "存储库：";
@@ -618,9 +610,6 @@
 
 /* Class = "NSMenuItem"; title = "Hide/show note list"; ObjectID = "WHt-T4-l9c"; */
 "WHt-T4-l9c.title" = "隐藏/显示笔记列表";
-
-/* Class = "NSMenuItem"; title = "Help"; ObjectID = "wpr-3q-Mcd"; */
-"wpr-3q-Mcd.title" = "帮助";
 
 /* Class = "NSMenuItem"; title = "Copy"; ObjectID = "x3v-GG-iWU"; */
 "x3v-GG-iWU.title" = "拷贝";
