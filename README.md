@@ -4,7 +4,7 @@
 
 > 轻灵的 Markdown 笔记本伴你写出妙言，思考记录到载体上方能发挥更大的价值。
 
-<img src=https://qpluspicture.oss-cn-beijing.aliyuncs.com/uR5sEr/m.gif width=700 />
+<img src=https://qpluspicture.oss-cn-beijing.aliyuncs.com/3P6700/m.gif width=700 />
 
 ## 特点
 
