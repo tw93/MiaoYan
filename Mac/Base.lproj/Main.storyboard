@@ -765,17 +765,17 @@ CA
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <scrollView canDrawConcurrently="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="qJO-7f-vkL" customClass="EditorScrollView" customModule="MiaoYan" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="460" height="556"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="460" height="554"/>
                                                         <clipView key="contentView" canDrawConcurrently="YES" focusRingType="none" drawsBackground="NO" copiesOnScroll="NO" id="FJ2-Yo-v0A">
-                                                            <rect key="frame" x="0.0" y="0.0" width="460" height="556"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="460" height="554"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textView editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="bar" allowsCharacterPickerTouchBarItem="NO" allowsDocumentBackgroundColorChange="YES" allowsUndo="YES" allowsImageEditing="YES" usesRuler="YES" allowsNonContiguousLayout="YES" textCompletion="NO" id="cmZ-KL-T9k" customClass="EditTextView" customModule="MiaoYan" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="460" height="540"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="460" height="538"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="mainBackground"/>
-                                                                    <size key="minSize" width="460" height="540"/>
+                                                                    <size key="minSize" width="460" height="538"/>
                                                                     <size key="maxSize" width="636" height="10000000"/>
                                                                     <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                                 </textView>
@@ -821,7 +821,7 @@ CA
                                                         </constraints>
                                                     </customView>
                                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="xSU-Mk-2F1" customClass="TitleBarView" customModule="MiaoYan" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="556" width="460" height="44"/>
+                                                        <rect key="frame" x="0.0" y="554" width="460" height="44"/>
                                                         <subviews>
                                                             <textField canDrawConcurrently="YES" focusRingType="none" horizontalHuggingPriority="1" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="rZx-hk-GcJ" customClass="TitleTextField" customModule="MiaoYan" customModuleProvider="target">
                                                                 <rect key="frame" x="28" y="0.0" width="347" height="30"/>
@@ -874,6 +874,7 @@ CA
                                                             <constraint firstItem="Ua8-RE-q01" firstAttribute="leading" secondItem="rZx-hk-GcJ" secondAttribute="trailing" constant="16" id="eWY-C1-IBp"/>
                                                             <constraint firstItem="Ua8-RE-q01" firstAttribute="top" secondItem="xSU-Mk-2F1" secondAttribute="top" id="esv-qQ-apf"/>
                                                             <constraint firstAttribute="bottom" secondItem="Ua8-RE-q01" secondAttribute="bottom" id="nac-xp-D3Y"/>
+                                                            <constraint firstAttribute="height" constant="44" id="pX3-IZ-w1v"/>
                                                         </constraints>
                                                     </customView>
                                                 </subviews>
@@ -884,7 +885,7 @@ CA
                                                     <constraint firstItem="B2U-rx-xCL" firstAttribute="centerY" secondItem="at7-wA-VAS" secondAttribute="centerY" constant="100" id="EYv-ge-ZTT"/>
                                                     <constraint firstAttribute="trailing" secondItem="qJO-7f-vkL" secondAttribute="trailing" constant="2" id="GZ2-jz-8Ue"/>
                                                     <constraint firstItem="qJO-7f-vkL" firstAttribute="top" secondItem="xSU-Mk-2F1" secondAttribute="bottom" id="NMQ-Tc-leL"/>
-                                                    <constraint firstItem="xSU-Mk-2F1" firstAttribute="top" secondItem="at7-wA-VAS" secondAttribute="top" id="Nm9-X5-Q67"/>
+                                                    <constraint firstItem="xSU-Mk-2F1" firstAttribute="top" secondItem="at7-wA-VAS" secondAttribute="top" constant="2" id="Nm9-X5-Q67"/>
                                                     <constraint firstAttribute="trailing" secondItem="xSU-Mk-2F1" secondAttribute="trailing" constant="2" id="Te8-se-icR"/>
                                                     <constraint firstItem="B2U-rx-xCL" firstAttribute="centerX" secondItem="at7-wA-VAS" secondAttribute="centerX" constant="-1" id="cpg-YL-qnc"/>
                                                     <constraint firstAttribute="bottom" secondItem="qJO-7f-vkL" secondAttribute="bottom" id="hij-XA-hAd"/>
