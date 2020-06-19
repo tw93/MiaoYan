@@ -16,7 +16,8 @@
 
 ## 安装
 
-从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases) 中下载最新的 MiaoYan.dmg 安装包，双击安装即可
+- 快捷安装：`brew cask install miaoyan`
+- 手动安装：从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases) 中下载最新的 MiaoYan.dmg 安装包，双击安装即可
 
 ## 快捷键
 
@@ -41,7 +42,7 @@
 
 ## 感谢
 
-- [KristopherGBaker/libcmark_gfm](https://github.com/KristopherGBaker/libcmark_gfm)：适用于cmark-gfm的Swift兼容框架
+- [KristopherGBaker/libcmark_gfm](https://github.com/KristopherGBaker/libcmark_gfm)：适用于 cmark-gfm 的 Swift 兼容框架
 - [Remix-Design/RemixIcon](https://github.com/Remix-Design/RemixIcon)：简洁的 icon
 - [draveness/NightNight](https://github.com/draveness/NightNight)：黑暗模式
 - [raspu/Highlightr](https://github.com/raspu/Highlightr)：语法高亮能力
