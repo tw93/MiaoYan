@@ -17,12 +17,12 @@ public class UserDefaultsManagement {
         typealias Font = UIFont
     #endif
 
-    static var DefaultFont = "Avenir Next"
+    static var DefaultFont = "PingFang SC"
 
-    static var DefaultFontSize = 16
-    static var editorLineSpacing = 7.2
+    static var DefaultFontSize = 14
+    static var editorLineSpacing = 6
 
-    static var DefaultFontColor = Color(red: 0.15, green: 0.15, blue: 0.15, alpha: 1.00)
+    static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
     static var DefaultBgColor = Color.white
 
     static var codeFontName = "Avenir Next"
@@ -34,8 +34,8 @@ public class UserDefaultsManagement {
     static var maxNightModeBrightnessLevel = 35
 
     static var lastProject = 0
-    static var fontName = "Avenir Next"
-    static var previewFontSize = 16
+    static var fontName = "PingFang SC"
+    static var previewFontSize = 14
     static var sortDirection = true
     static var marginSize = 28
     static var realSidebarSize = 200
