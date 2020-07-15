@@ -19,7 +19,7 @@ public class UserDefaultsManagement {
 
     static var DefaultFont = "PingFang SC"
 
-    static var DefaultFontSize = 14
+    static var DefaultFontSize = 15
     static var editorLineSpacing = 6
 
     static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
@@ -35,7 +35,7 @@ public class UserDefaultsManagement {
 
     static var lastProject = 0
     static var fontName = "PingFang SC"
-    static var previewFontSize = 14
+    static var previewFontSize = 15
     static var sortDirection = true
     static var marginSize = 28
     static var realSidebarSize = 200
