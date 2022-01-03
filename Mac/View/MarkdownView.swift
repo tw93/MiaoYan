@@ -103,7 +103,7 @@ open class MarkdownView: WKWebView {
         let family = familyName ?? "-apple-system"
         let margin = Int(UserDefaultsManagement.marginSize)
 
-        return "body {font: \(UserDefaultsManagement.fontSize)px '\(family)', '-apple-system'; margin: 0 \(margin)px; } code, pre {font: \(UserDefaultsManagement.codeFontSize)px '\(UserDefaultsManagement.codeFontName)', Courier, monospace, 'Liberation Mono', Menlo;} img {display: block; margin: 0 auto;} \(codeStyle) \(css)"
+        return "body {font: \(UserDefaultsManagement.fontSize)px '\(family)', '-apple-system'; margin: 0 \(margin)px; } code, pre {font: \(UserDefaultsManagement.codeFontSize)px '\(UserDefaultsManagement.codeFontName)', Courier, monospace, 'Liberation Mono', Menlo;} img {display: block;} \(codeStyle) \(css)"
     }
 
     // MARK: - Private Properties

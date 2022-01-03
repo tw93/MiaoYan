@@ -56,7 +56,7 @@ a {
     background-color: transparent;
     cursor: pointer;
     -webkit-text-decoration-skip: objects;
-    white-space: white-space;
+    white-space: pre-line;
 }
 a:active,
 a:hover {
@@ -70,7 +70,7 @@ abbr[title] {
 b,
 strong {
     font-weight: bolder;
-    white-space: white-space;
+    white-space: pre-line;
 }
 dfn {
     font-style: italic
@@ -645,7 +645,7 @@ code.language-mermaid {
 }
 
 .markdown-body img {
-  border-style: none;
+    border-style: none;
 }
 
 .markdown-body code,
@@ -796,7 +796,7 @@ code.language-mermaid {
 .markdown-body p {
   margin-top: 0;
   margin-bottom: 10px;
-  white-space: pre-wrap;
+  white-space: pre-line;
 }
 
 .markdown-body blockquote {
