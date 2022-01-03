@@ -250,7 +250,6 @@ private extension MarkdownView {
     func htmlFromTemplate(_ htmlString: String, css: String) throws -> String {
         var template = try NSString(contentsOf: baseURL, encoding: String.Encoding.utf8.rawValue)
         template = template.replacingOccurrences(of: "DOWN_CSS", with: css) as NSString
-
         return template.replacingOccurrences(of: "DOWN_HTML", with: htmlString)
     }
 
