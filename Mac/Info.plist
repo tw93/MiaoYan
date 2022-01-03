@@ -192,7 +192,7 @@
 	<string>NSApplication</string>
 	<key>NSUbiquitousContainers</key>
 	<dict>
-		<key>iCloud.com.tw93.miaoyu</key>
+		<key>iCloud.com.tw93.miaoyan</key>
 		<dict>
 			<key>NSUbiquitousContainerIsDocumentScopePublic</key>
 			<true/>

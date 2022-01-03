@@ -672,7 +672,7 @@ public class Note: NSObject {
         {
             "transient" : true,
             "type" : "\(type.uti)",
-            "creatorIdentifier" : "com.tw93.miaoyu",
+            "creatorIdentifier" : "com.tw93.miaoyan",
             "version" : 2
         }
         """

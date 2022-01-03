@@ -504,7 +504,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         var length = range.lowerBound
         let data = Data(bytes: &length, count: MemoryLayout.size(ofValue: length))
-        try? note.url.setExtendedAttribute(data: data, forName: "com.tw93.miaoyu.cursor")
+        try? note.url.setExtendedAttribute(data: data, forName: "com.tw93.miaoyan.cursor")
     }
 
     func restoreCursorPosition() {
@@ -610,7 +610,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             let dropPoint = convert(sender.draggingLocation, from: nil)
             let caretLocation = characterIndexForInsertion(at: dropPoint)
 
-            let filePathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyu.image.path")
+            let filePathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
             let titleKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.title")
             let positionKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.position")
 
