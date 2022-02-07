@@ -45,9 +45,6 @@ class NoteCellView: NSTableCellView {
     // these views' color when the cell is selected.
     override var backgroundStyle: NSView.BackgroundStyle {
         set {
-            if let rowView = self.superview as? NSTableRowView {
-                super.backgroundStyle = rowView.isSelected ? NSView.BackgroundStyle.dark : NSView.BackgroundStyle.light
-            }
             self.udpateSelectionHighlight()
         }
         get {
@@ -61,11 +58,6 @@ class NoteCellView: NSTableCellView {
             name.textColor = NSColor.white
         } else {
             date.textColor = labelColor
-
-            if self.name.stringValue == "Untitled Note" {
-                name.textColor = NSColor(red:0.41, green:0.42, blue:0.46, alpha:1.0)
-                return
-            }
 
             if #available(OSX 10.13, *) {
                 name.textColor = NSColor.init(named: "mainText")
