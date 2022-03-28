@@ -1053,7 +1053,7 @@ class ViewController: NSViewController,
     func updateTable(search: Bool = false, searchText: String? = nil, sidebarItem: SidebarItem? = nil, projects: [Project]? = nil, completion: @escaping () -> Void = {}) {
         var sidebarItem: SidebarItem? = sidebarItem
         var projects: [Project]? = projects
-        var sidebarName: String?
+        var sidebarName: String? = nil
         
         let timestamp = Date().toMillis()
 
@@ -1063,6 +1063,7 @@ class ViewController: NSViewController,
         if searchText == nil {
             projects = storageOutlineView.getSidebarProjects()
             sidebarItem = getSidebarItem()
+            sidebarName = getSidebarItem()?.getName()
         }
 
         var filter = searchText ?? self.search.stringValue
