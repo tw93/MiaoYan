@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="20037"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -359,7 +359,7 @@ CA
                             </pathControl>
                             <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nbv-Zo-swV">
                                 <rect key="frame" x="31" y="232" width="66" height="25"/>
-                                <popUpButtonCell key="cell" type="push" title="自动" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="fQA-b2-fKr" id="1RF-NZ-wo5" userLabel="外观">
+                                <popUpButtonCell key="cell" type="push" title="自动" bezelStyle="rounded" imagePosition="above" alignment="center" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="fQA-b2-fKr" id="1RF-NZ-wo5" userLabel="外观">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="menu"/>
                                     <menu key="menu" id="fpJ-Al-SNn">
@@ -454,7 +454,7 @@ CA
                             <splitView arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dO0-pK-Ktm" customClass="SidebarSplitView" customModule="MiaoYan" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="951" height="600"/>
                                 <subviews>
-                                    <customView autoresizesSubviews="NO" misplaced="YES" id="5sB-7J-vgE" customClass="StorageView" customModule="MiaoYan" customModuleProvider="target">
+                                    <customView autoresizesSubviews="NO" id="5sB-7J-vgE" customClass="StorageView" customModule="MiaoYan" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="196" height="600"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <subviews>
@@ -581,11 +581,11 @@ CA
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                             </scrollView>
-                                            <customView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vp7-cq-QSI" customClass="OutlineHeaderView" customModule="MiaoYan" customModuleProvider="target">
+                                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="vp7-cq-QSI" customClass="OutlineHeaderView" customModule="MiaoYan" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="562" width="196" height="38"/>
                                                 <subviews>
-                                                    <button misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yei-Or-qiI" userLabel="Add Project">
-                                                        <rect key="frame" x="160" y="6" width="18" height="18"/>
+                                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="Yei-Or-qiI" userLabel="Add Project">
+                                                        <rect key="frame" x="170" y="8" width="18" height="18"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="18" id="qVi-vf-K2q"/>
                                                             <constraint firstAttribute="height" constant="18" id="xZe-bb-IRl"/>
@@ -602,7 +602,7 @@ CA
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="38" id="9sA-Ak-h1e"/>
                                                     <constraint firstAttribute="trailing" secondItem="Yei-Or-qiI" secondAttribute="trailing" constant="8" id="SV6-Bq-MVW"/>
-                                                    <constraint firstItem="Yei-Or-qiI" firstAttribute="top" secondItem="vp7-cq-QSI" secondAttribute="top" constant="14" id="qdV-AB-OBk"/>
+                                                    <constraint firstItem="Yei-Or-qiI" firstAttribute="top" secondItem="vp7-cq-QSI" secondAttribute="top" constant="12" id="qdV-AB-OBk"/>
                                                 </constraints>
                                             </customView>
                                         </subviews>
@@ -646,21 +646,21 @@ CA
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </searchFieldCell>
                                                     </searchField>
-                                                    <scrollView focusRingType="none" misplaced="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="18" horizontalPageScroll="10" verticalLineScroll="18" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" findBarPosition="belowContent" translatesAutoresizingMaskIntoConstraints="NO" id="Kzf-Jh-YEb">
-                                                        <rect key="frame" x="0.0" y="0.0" width="272" height="564"/>
+                                                    <scrollView focusRingType="none" borderType="none" autohidesScrollers="YES" horizontalLineScroll="18" horizontalPageScroll="10" verticalLineScroll="18" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" findBarPosition="belowContent" translatesAutoresizingMaskIntoConstraints="NO" id="Kzf-Jh-YEb">
+                                                        <rect key="frame" x="0.0" y="0.0" width="237" height="564"/>
                                                         <clipView key="contentView" focusRingType="none" drawsBackground="NO" copiesOnScroll="NO" id="MtJ-BC-rZB">
-                                                            <rect key="frame" x="0.0" y="0.0" width="272" height="564"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="237" height="564"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" columnResizing="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="8X8-yh-5EA" customClass="NotesTableView" customModule="MiaoYan" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="272" height="564"/>
+                                                                <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnResizing="NO" autosaveColumns="NO" rowSizeStyle="automatic" viewBased="YES" id="8X8-yh-5EA" customClass="NotesTableView" customModule="MiaoYan" customModuleProvider="target">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="237" height="564"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <size key="intercellSpacing" width="1" height="1"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     <tableViewGridLines key="gridStyleMask" horizontal="YES"/>
                                                                     <color key="gridColor" name="divider"/>
                                                                     <tableColumns>
-                                                                        <tableColumn editable="NO" width="239" maxWidth="2000" id="aKf-mj-22P">
+                                                                        <tableColumn editable="NO" width="205" maxWidth="2000" id="aKf-mj-22P">
                                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
                                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -673,11 +673,11 @@ CA
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             <prototypeCellViews>
                                                                                 <tableCellView identifier="NoteCellView" id="8qL-z4-nzh" customClass="NoteCellView" customModule="MiaoYan" customModuleProvider="target">
-                                                                                    <rect key="frame" x="10" y="0.0" width="250" height="0.0"/>
+                                                                                    <rect key="frame" x="10" y="0.0" width="216" height="0.0"/>
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
-                                                                                        <textField identifier="cellName" autoresizesSubviews="NO" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UvD-jB-7Ok" customClass="NameTextField" customModule="MiaoYan" customModuleProvider="target">
-                                                                                            <rect key="frame" x="0.0" y="-24" width="280" height="16"/>
+                                                                                        <textField identifier="cellName" autoresizesSubviews="NO" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UvD-jB-7Ok" customClass="NameTextField" customModule="MiaoYan" customModuleProvider="target">
+                                                                                            <rect key="frame" x="-2" y="-24" width="220" height="16"/>
                                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" state="on" alignment="left" title="Name" usesSingleLineMode="YES" id="y7T-Rc-etT">
                                                                                                 <font key="font" metaFont="systemMedium" size="13"/>
                                                                                                 <color key="textColor" name="mainText"/>
@@ -758,22 +758,22 @@ CA
                                                     <constraint firstItem="Kzf-Jh-YEb" firstAttribute="top" secondItem="bd7-O3-GQF" secondAttribute="bottom" constant="6" id="z4N-Ag-s6x"/>
                                                 </constraints>
                                             </customView>
-                                            <customView autoresizesSubviews="NO" misplaced="YES" id="at7-wA-VAS" customClass="EditorView" customModule="MiaoYan" customModuleProvider="target">
+                                            <customView autoresizesSubviews="NO" id="at7-wA-VAS" customClass="EditorView" customModule="MiaoYan" customModuleProvider="target">
                                                 <rect key="frame" x="238" y="0.0" width="516" height="600"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="qJO-7f-vkL" customClass="EditorScrollView" customModule="MiaoYan" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="550" height="554"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="514" height="554"/>
                                                         <clipView key="contentView" focusRingType="none" drawsBackground="NO" copiesOnScroll="NO" id="FJ2-Yo-v0A">
-                                                            <rect key="frame" x="0.0" y="0.0" width="550" height="554"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="514" height="554"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textView editable="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="bar" allowsCharacterPickerTouchBarItem="NO" allowsDocumentBackgroundColorChange="YES" allowsUndo="YES" allowsImageEditing="YES" usesRuler="YES" allowsNonContiguousLayout="YES" textCompletion="NO" id="cmZ-KL-T9k" customClass="EditTextView" customModule="MiaoYan" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="550" height="538"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="514" height="538"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="mainBackground"/>
-                                                                    <size key="minSize" width="550" height="538"/>
+                                                                    <size key="minSize" width="514" height="538"/>
                                                                     <size key="maxSize" width="748" height="10000000"/>
                                                                     <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                                 </textView>
@@ -794,7 +794,7 @@ CA
                                                         </scroller>
                                                     </scrollView>
                                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="B2U-rx-xCL">
-                                                        <rect key="frame" x="155" y="80" width="240" height="240"/>
+                                                        <rect key="frame" x="137" y="80" width="240" height="240"/>
                                                         <subviews>
                                                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" alphaValue="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="Gz4-4G-Fts">
                                                                 <rect key="frame" x="37" y="54" width="166" height="166"/>
@@ -819,10 +819,10 @@ CA
                                                         </constraints>
                                                     </customView>
                                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="xSU-Mk-2F1" customClass="TitleBarView" customModule="MiaoYan" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="554" width="550" height="44"/>
+                                                        <rect key="frame" x="0.0" y="554" width="514" height="44"/>
                                                         <subviews>
                                                             <textField focusRingType="none" horizontalHuggingPriority="1" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="rZx-hk-GcJ" customClass="TitleTextField" customModule="MiaoYan" customModuleProvider="target">
-                                                                <rect key="frame" x="28" y="0.0" width="437" height="30"/>
+                                                                <rect key="frame" x="28" y="0.0" width="401" height="30"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="30" id="3QH-0a-na2"/>
                                                                 </constraints>
@@ -836,7 +836,7 @@ CA
                                                                 </connections>
                                                             </textField>
                                                             <customView horizontalHuggingPriority="249" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="Ua8-RE-q01">
-                                                                <rect key="frame" x="481" y="0.0" width="69" height="44"/>
+                                                                <rect key="frame" x="445" y="0.0" width="69" height="44"/>
                                                                 <subviews>
                                                                     <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="9" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" horizontalCompressionResistancePriority="1000" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="shI-kr-3o8">
                                                                         <rect key="frame" x="41" y="22" width="0.0" height="0.0"/>
@@ -878,7 +878,7 @@ CA
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="B2U-rx-xCL" firstAttribute="centerX" secondItem="at7-wA-VAS" secondAttribute="centerX" constant="-1" id="7yM-Ma-stH"/>
-                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="8Ne-do-Q9o"/>
+                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="516" id="8Ne-do-Q9o"/>
                                                     <constraint firstItem="xSU-Mk-2F1" firstAttribute="leading" secondItem="at7-wA-VAS" secondAttribute="leading" id="CQ0-DY-aM0"/>
                                                     <constraint firstItem="B2U-rx-xCL" firstAttribute="centerY" secondItem="at7-wA-VAS" secondAttribute="centerY" constant="100" id="EYv-ge-ZTT"/>
                                                     <constraint firstAttribute="trailing" secondItem="qJO-7f-vkL" secondAttribute="trailing" constant="2" id="GZ2-jz-8Ue"/>
