@@ -17,25 +17,25 @@ public class UserDefaultsManagement {
         typealias Font = UIFont
     #endif
 
-    static var DefaultFont = "PingFang SC"
+    static var DefaultFont = "JetBrains Mono, Fira Code, Menlo, Monaco, 'Courier New', monospace"
 
-    static var DefaultFontSize = 15
+    static var DefaultFontSize = 14
     static var editorLineSpacing = 6
 
     static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
     static var DefaultBgColor = Color.white
 
-    static var codeFontName = "Avenir Next"
+    static var codeFontName = DefaultFont
     static var lineWidth = 1000
-    static var linkColor = Color(red: 0.15, green: 0.58, blue: 0.99, alpha: 1.00)
+    static var linkColor = Color(red: 0.23, green: 0.23, blue: 0.23, alpha: 1.00)
     static var fullScreen = false
 
     static var codeFontSize = 14
     static var maxNightModeBrightnessLevel = 35
 
     static var lastProject = 0
-    static var fontName = "PingFang SC"
-    static var previewFontSize = 15
+    static var fontName = DefaultFont
+    static var previewFontSize = 14
     static var sortDirection = true
     static var marginSize = 28
     static var realSidebarSize = 200

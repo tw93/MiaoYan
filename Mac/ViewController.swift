@@ -1054,7 +1054,7 @@ class ViewController: NSViewController,
         var sidebarItem: SidebarItem? = sidebarItem
         var projects: [Project]? = projects
         var sidebarName: String?
-
+        
         let timestamp = Date().toMillis()
 
         self.search.timestamp = timestamp
