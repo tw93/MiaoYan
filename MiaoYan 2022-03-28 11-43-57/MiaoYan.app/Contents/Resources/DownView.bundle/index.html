@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0" />
+    <link charset="utf-8" href="css/markdown-preview.css" rel="stylesheet">
+    <script charset="utf-8" src="js/load-image.all.min.js" type="text/javascript"></script>
+    <script charset="utf-8" src="js/highlight.min.js" type="text/javascript"></script>
+    <script src="js/mermaid.min.js"></script>
+    <title></title>
+    <style>
+        DOWN_CSS
+    </style>
+</head>
+
+<body>
+    <div class="markdown-body"          oncontextmenu='contextMenu(event)'>DOWN_HTML</div>
+    <script>
+        
+        function contextMenu(evt){
+            evt.preventDefault && evt.preventDefault();
+        }
+    
+        function getSelectionAndSendMessage() {
+            var txt = document.getSelection().toString();
+            window.webkit.messageHandlers.newSelectionDetected.postMessage(txt);
+        }
+        document.onmouseup = getSelectionAndSendMessage;
+        document.onkeyup = getSelectionAndSendMessage;
+        document.oncontextmenu = getSelectionAndSendMessage;
+
+        hljs.initHighlightingOnLoad();
+
+        var darkModeStylesNodeID = "darkModeStyles";
+
+        function addStyleString(str, nodeID) {
+            var node = document.createElement('style');
+            node.id = nodeID;
+            node.innerHTML = str;
+
+            document.getElementsByTagName('head')[0].appendChild(node);
+        }
+
+        function switchToDarkMode() {
+            var darkModeStyleElement = document.getElementById(darkModeStylesNodeID);
+            if (darkModeStyleElement == null) {
+                var darkModeStyles = "* { color: white; } body { background: #2a2b2e; } code { background: #454545; } .hljs { background: #454545 } a { color: #98e7a7 } table td, table th { color: black } input[type='checkbox'] { border: 1px solid white; }";
+                addStyleString(darkModeStyles, darkModeStylesNodeID);
+            }
+        }
+
+        function switchToLightMode() {
+            var darkModeStyleElement = document.getElementById(darkModeStylesNodeID);
+            if (darkModeStyleElement != null) {
+                darkModeStyleElement.parentElement.removeChild(darkModeStyleElement);
+            }
+        }
+
+        if ('CUSTOM_CSS' == 'darkmode') {
+            switchToDarkMode();
+        }
+    </script>
+
+
+    <script>
+        var preList = document.getElementsByTagName("input"),
+            length = preList.length,
+            i = 0;
+
+        for (i; i < length; i++) {
+            preList[i].disabled = true;
+
+            if (preList[i].parentNode.tagName == "P" && preList[i].parentNode.parentNode.tagName == "LI") {
+                preList[i].parentNode.parentNode.parentNode.classList.add('cb')
+                continue;
+            }
+
+            if (preList[i].parentNode.tagName != "LI") {
+                continue;
+            }
+
+            preList[i].parentNode.parentNode.classList.add('cb')
+        }
+    </script>
+
+    <script>
+        var loadCanvas = function(images) {
+            if (images.length == 0) {
+                return;
+            }
+
+            var image = images.shift();
+            var orientation = parseInt(image.dataset.orientation) || 0;
+
+            if (orientation < 2) {
+                loadCanvas(images);
+                return;
+            }
+
+            loadImage(
+                image.src,
+                function(canvas) {
+                    image.parentNode.replaceChild(canvas, image)
+                    canvas.style.maxWidth = '100%';
+
+                    if (images.length > 0) {
+                        loadCanvas(images);
+                    }
+                }, {
+                    orientation: orientation,
+                    canvas: true
+                }
+            );
+        };
+
+        var onLoaded = function() {
+            var collection = document.getElementsByClassName("miaoyan-preview"),
+                images = Array.prototype.slice.call(collection);
+            loadCanvas(images);
+        };
+
+        document.addEventListener("DOMContentLoaded", onLoaded);
+    </script>
+
+    <script>
+        var config = {
+            startOnLoad: true,
+            theme: 'forest',
+            flowchart: {
+                useMaxWidth: false,
+                htmlLabels: true
+            }
+        };
+
+        mermaid.initialize(config);
+        window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
+    </script>
+</body>
+
+</html>

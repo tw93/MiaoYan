@@ -116,7 +116,7 @@ public class NotesTextProcessor {
     open var quoteIndendation: CGFloat = 20
     
     #if os(OSX)
-        public static var codeFont = NSFont(name: UserDefaultsManagement.codeFontName, size: CGFloat(UserDefaultsManagement.codeFontSize))
+        public static var codeFont = NSFont(name: UserDefaultsManagement.fontName, size: CGFloat(UserDefaultsManagement.codeFontSize))
     #else
         static var codeFont: UIFont? {
             if var font = UIFont(name: "Source Code Pro", size: CGFloat(UserDefaultsManagement.fontSize)) {
@@ -373,8 +373,6 @@ public class NotesTextProcessor {
         let quoteFont = NotesTextProcessor.quoteFont(CGFloat(UserDefaultsManagement.fontSize))
         
         #if os(OSX)
-            let boldFont = NSFont.boldFont()
-            let italicFont = NSFont.italicFont()
             let hiddenFont = NSFont.systemFont(ofSize: 0.1)
         #else
             var boldFont: UIFont {
@@ -472,7 +470,7 @@ public class NotesTextProcessor {
         // We detect and process underlined headers
         NotesTextProcessor.headersSetextRegex.matches(string, range: paragraphRange) { (result) -> Void in
             guard let range = result?.range else { return }
-            attributedString.addAttribute(.font, value: boldFont, range: range)
+//            attributedString.addAttribute(.font, value: boldFont, range: range)
             attributedString.fixAttributes(in: range)
             
             NotesTextProcessor.headersSetextUnderlineRegex.matches(string, range: range) { (innerResult) -> Void in
@@ -485,7 +483,7 @@ public class NotesTextProcessor {
         // We detect and process dashed headers
         NotesTextProcessor.headersAtxRegex.matches(string, range: paragraphRange) { (result) -> Void in
             guard let range = result?.range else { return }
-            attributedString.addAttribute(.font, value: boldFont, range: range)
+//            attributedString.addAttribute(.font, value: boldFont, range: range)
             attributedString.fixAttributes(in: range)
             
             NotesTextProcessor.headersAtxOpeningRegex.matches(string, range: range) { (innerResult) -> Void in
@@ -656,7 +654,6 @@ public class NotesTextProcessor {
         // We detect and process italics
         NotesTextProcessor.italicRegex.matches(string, range: paragraphRange) { (result) -> Void in
             guard let range = result?.range else { return }
-            attributedString.addAttribute(.font, value: italicFont, range: range)
             attributedString.fixAttributes(in: range)
             
             let preRange = NSMakeRange(range.location, 1)
@@ -671,7 +668,6 @@ public class NotesTextProcessor {
         // We detect and process bolds
         NotesTextProcessor.boldRegex.matches(string, range: paragraphRange) { (result) -> Void in
             guard let range = result?.range else { return }
-            attributedString.addAttribute(.font, value: boldFont, range: range)
             attributedString.fixAttributes(in: range)
             
             let preRange = NSMakeRange(range.location, 2)
@@ -1215,7 +1211,7 @@ public class NotesTextProcessor {
         return Array(repeating: text, count: count).reduce("", +)
     }
     
-    // We transform the user provided `codeFontName` `String` to a `NSFont`
+    // We transform the user provided `fontName` `String` to a `NSFont`
     fileprivate static func codeFont(_ size: CGFloat) -> Font {
         if var font = UserDefaultsManagement.noteFont {
             #if os(iOS)
