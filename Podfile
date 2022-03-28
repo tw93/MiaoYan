@@ -21,7 +21,7 @@ def common_pods
 end
 
 def framework_pods
-    pod 'SwiftLint', '~> 0.30.0'
+    pod 'SwiftLint', '~> 0.47.0'
 end
 
 target 'MiaoYanCore macOS' do
@@ -53,3 +53,8 @@ post_install do |installer|
     end
   end
 end
+
+install! 'cocoapods', :deterministic_uuids => false
+
+# ignore all warnings from all pods
+inhibit_all_warnings!
