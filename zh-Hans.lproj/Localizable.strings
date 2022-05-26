@@ -65,9 +65,6 @@
 "History" = "历史";
 
 /* No comment provided by engineer. */
-"Inbox" = "根目录";
-
-/* No comment provided by engineer. */
 "Link" = "链接";
 
 /* Menu */
@@ -137,7 +134,7 @@
 "Toggle preview" = "切换预览";
 
 /* Sidebar label */
-"Trash" = "垃圾箱";
+"Trash" = "最近删除";
 
 /* No comment provided by engineer. */
 "Underline" = "下划线";
