@@ -23,15 +23,8 @@ class SidebarProjectView: NSOutlineView,
     }
 
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
-        if menuItem.title == NSLocalizedString("Attach storage...", comment: "") {
-            return true
-        }
-
+     
         guard let sidebarItem = getSidebarItem() else { return false }
-
-        if menuItem.title == NSLocalizedString("Back up storage", comment: "") {
-            return true
-        }
 
         if menuItem.title == NSLocalizedString("Show in Finder", comment: "") {
             if let sidebarItem = getSidebarItem() {
@@ -53,29 +46,16 @@ class SidebarProjectView: NSOutlineView,
             }
         }
 
-        if menuItem.title == NSLocalizedString("Delete folder", comment: "")
-            || menuItem.title == NSLocalizedString("Detach storage", comment: "") {
+        if menuItem.title == NSLocalizedString("Delete folder", comment: "") {
             if sidebarItem.isTrash() {
                 return false
             }
 
             if let project = sidebarItem.project {
-                menuItem.title = project.isRoot
-                    ? NSLocalizedString("Detach storage", comment: "")
-                    : NSLocalizedString("Delete folder", comment: "")
+                menuItem.title =  NSLocalizedString("Delete folder", comment: "")
             }
 
             if let project = sidebarItem.project, !project.isDefault {
-                return true
-            }
-        }
-
-        if menuItem.title == NSLocalizedString("New folder", comment: "") {
-            if sidebarItem.isTrash() {
-                return false
-            }
-
-            if sidebarItem.project != nil {
                 return true
             }
         }
@@ -471,11 +451,8 @@ class SidebarProjectView: NSOutlineView,
             }
         }
 
-        guard let project = unwrappedProject else {
-            addRoot()
-            return
-        }
-
+   
+        let project = Storage.sharedInstance().getMainProject()
         guard let window = MainWindowController.shared() else { return }
 
         let alert = NSAlert()

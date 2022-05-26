@@ -10,12 +10,6 @@
 /* No comment provided by engineer. */
 "Are you sure you want to remove project \"%@\" and all files inside?" = "您确定要删除项目\"%@\"和它下面的所有文件吗？";
 
-/* No comment provided by engineer. */
-"Attach storage..." = "添加多个文件夹";
-
-/* No comment provided by engineer. */
-"Back up storage" = "提交git的存储库中的所有文件";
-
 /* Delete menu */
 "Cancel" = "取消";
 
@@ -50,10 +44,7 @@
 "Delete" = "删除";
 
 /* No comment provided by engineer. */
-"Delete folder" = "删除文件夹11111";
-
-/* No comment provided by engineer. */
-"Detach storage" = "分离存储";
+"Delete folder" = "删除文件夹";
 
 /* No comment provided by engineer. */
 "MiaoYan [edit]" = "妙言 [编辑]";
@@ -89,7 +80,7 @@
 "Please enter image title:" = "请输入图片标题：";
 
 /* No comment provided by engineer. */
-"Please enter project name:" = "请输入项目名称：";
+"Please enter project name:" = "请输入名称：";
 
 /* No comment provided by engineer. */
 "Please try again" = "请再试一次";
