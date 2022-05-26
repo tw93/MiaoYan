@@ -79,12 +79,12 @@ class SidebarProjectView: NSOutlineView,
             return
         }
 
-        if event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_R {
+        if  event.modifierFlags.contains(.option), event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_R {
             revealInFinder("")
             return
         }
 
-        if event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_R {
+        if event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_E {
             renameMenu("")
             return
         }

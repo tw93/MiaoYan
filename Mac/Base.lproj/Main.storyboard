@@ -110,7 +110,7 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Folder" identifier="folderMenu" id="BYI-2F-BJo">
                                     <items>
-                                        <menuItem title="Show in Finder" keyEquivalent="R" id="F5A-zs-zwP">
+                                        <menuItem title="Show in Finder" keyEquivalent="r" id="F5A-zs-zwP">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="revealInFinder:" target="yxb-XH-bXh" id="7V6-4X-pMA"/>
@@ -122,8 +122,7 @@ CA
                                                 <action selector="addProject:" target="yxb-XH-bXh" id="vwO-zV-96Q"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Rename folder" keyEquivalent="R" id="Tap-iY-hyA">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES"/>
+                                        <menuItem title="Rename folder" keyEquivalent="e" id="Tap-iY-hyA">
                                             <connections>
                                                 <action selector="renameMenu:" target="yxb-XH-bXh" id="fjN-9b-ISI"/>
                                             </connections>
@@ -982,13 +981,12 @@ CA
                                 <action selector="addProject:" target="rPt-NT-nkU" id="yjG-Jc-AJN"/>
                             </connections>
                         </menuItem>
-                        <menuItem title="Rename folder" keyEquivalent="R" id="fzU-ZR-Ubv">
-                            <modifierMask key="keyEquivalentModifierMask" option="YES"/>
+                        <menuItem title="Rename folder" keyEquivalent="e" id="fzU-ZR-Ubv">
                             <connections>
                                 <action selector="renameMenu:" target="urA-eK-bWB" id="Jh4-4H-wc0"/>
                             </connections>
                         </menuItem>
-                        <menuItem title="Show in Finder" keyEquivalent="R" id="goN-LO-L7l">
+                        <menuItem title="Show in Finder" keyEquivalent="r" id="goN-LO-L7l">
                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                             <connections>
                                 <action selector="revealInFinder:" target="urA-eK-bWB" id="lPM-Ou-AK0"/>
