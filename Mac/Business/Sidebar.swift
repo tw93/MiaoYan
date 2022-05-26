@@ -29,7 +29,7 @@ class Sidebar {
                 list.append(SidebarItem(name: childProject.label, project: childProject, type: .Category, icon: icon))
             }
         }
-
+        
         if(storage.getAllTrash().count>0){
             let trashProject = Storage.sharedInstance().getDefaultTrash()
             let trash = SidebarItem(name: NSLocalizedString("Trash", comment: ""), project: trashProject, type: .Trash, icon: getImage(named: "trash\(night)"))
