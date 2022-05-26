@@ -316,9 +316,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     public func insertNew(note: Note) {
         guard let vc = window?.contentViewController as? ViewController else { return }
 
-        let type = vc.getSidebarType() ?? .Inbox
-        guard vc.isFit(note: note, shouldLoadMain: true, type: type) else { return }
-
         let at = countVisiblePinned()
         noteList.insert(note, at: at)
         vc.filteredNoteList?.insert(note, at: at)

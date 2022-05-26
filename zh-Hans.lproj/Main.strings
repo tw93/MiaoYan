@@ -234,7 +234,7 @@
 "fzU-ZR-Ubv.title" = "重命名文件夹";
 
 /* Class = "NSMenuItem"; title = "Empty Trash"; ObjectID = "G9H-Lg-TXE"; */
-"G9H-Lg-TXE.title" = "清空垃圾箱";
+"G9H-Lg-TXE.title" = "清空删除";
 
 /* Class = "NSTextFieldCell"; title = "Save clipboard shortcut:"; ObjectID = "gbE-yH-ECm"; */
 "gbE-yH-ECm.title" = "保存到剪贴板快捷键";

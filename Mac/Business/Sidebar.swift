@@ -8,17 +8,12 @@ class Sidebar {
     
     init() {
         let night = ""
-        let inboxName = "sidebarInbox"
         var system = [SidebarItem]()
         
         let notes = SidebarItem(name: NSLocalizedString("Notes", comment: ""), type: .All, icon: getImage(named: "home\(night).png"))
         system.append(notes)
         
-        if let project = Storage.sharedInstance().getDefault() {
-            let inbox = SidebarItem(name: NSLocalizedString("Inbox", comment: ""), project: project, type: .Inbox, icon: getImage(named: inboxName))
-            system.append(inbox)
-        }
-        
+    
         if system.count > 0 {
             list = system
         }
@@ -34,11 +29,12 @@ class Sidebar {
                 list.append(SidebarItem(name: childProject.label, project: childProject, type: .Category, icon: icon))
             }
         }
-        
-        let trashProject = Storage.sharedInstance().getDefaultTrash()
-        let trash = SidebarItem(name: NSLocalizedString("Trash", comment: ""), project: trashProject, type: .Trash, icon: getImage(named: "trash\(night)"))
-        
-        list.append(trash)
+
+        if(storage.getAllTrash().count>0){
+            let trashProject = Storage.sharedInstance().getDefaultTrash()
+            let trash = SidebarItem(name: NSLocalizedString("Trash", comment: ""), project: trashProject, type: .Trash, icon: getImage(named: "trash\(night)"))
+            list.append(trash)
+        }
     }
     
     public func getList() -> [Any] {
