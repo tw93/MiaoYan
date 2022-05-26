@@ -330,13 +330,6 @@ class ViewController: NSViewController,
 
             _ = note.move(to: destination, project: project)
 
-            let type = getSidebarType() ?? .Inbox
-            let show = isFit(note: note, shouldLoadMain: true, type: type)
-
-            if !show {
-                notesTableView.removeByNotes(notes: [note])
-            }
-
             note.invalidateCache()
         }
 
@@ -1077,7 +1070,7 @@ class ViewController: NSViewController,
             projects == nil || (
                 projects!.count < 2 && projects!.first!.isRoot
             ) {
-            type = filter.count > 0 ? .All : .Inbox
+            type = .All
         }
 
         let operation = BlockOperation()
@@ -1191,12 +1184,11 @@ class ViewController: NSViewController,
             && (filter.isEmpty || isMatched(note: note, terms: terms!)
             ) && (
                 type == .All && note.project.showInCommon
-                    || type != .Inbox && projects != nil && (
+                    || (
                         projects!.contains(note.project)
                             || (note.project.parent != nil && projects!.contains(note.project.parent!))
                     )
                     || type == .Trash
-                    || type == .Inbox && note.project.isRoot && note.project.isDefault
             ) && (
                 type == .Trash && note.isTrash()
                     || type != .Trash && !note.isTrash()

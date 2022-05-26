@@ -129,7 +129,7 @@ class SidebarProjectView: NSOutlineView,
         guard let sidebarItem = item as? SidebarItem else { return false }
 
         switch sidebarItem.type {
-        case .Category, .Trash, .Inbox:
+        case .Category, .Trash:
             if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "notesTable")), let rows = NSKeyedUnarchiver.unarchiveObject(with: data) as? IndexSet {
                 var notes = [Note]()
                 for row in rows {
@@ -191,7 +191,7 @@ class SidebarProjectView: NSOutlineView,
             if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "notesTable")), !data.isEmpty {
                 return .copy
             }
-        case .Category, .Inbox:
+        case .Category:
             guard sidebarItem.isSelectable() else { break }
 
             if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "notesTable")), !data.isEmpty {
@@ -261,10 +261,6 @@ class SidebarProjectView: NSOutlineView,
                 cell.icon.isHidden = false
                 cell.label.frame.origin.x = 24
 
-            case .Inbox:
-                cell.icon.image = NSImage(imageLiteralResourceName: "sidebarInbox")
-                cell.icon.isHidden = false
-                cell.label.frame.origin.x = 24
             }
         }
         return cell
