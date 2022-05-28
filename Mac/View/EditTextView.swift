@@ -13,7 +13,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     var isHighlighted: Bool = false
     let storage = Storage.sharedInstance()
-    let caretWidth: CGFloat = 2
+    let caretWidth: CGFloat = 1
     var downView: MarkdownView?
     public var timer: Timer?
     public var markdownView: MPreviewView?
@@ -22,15 +22,16 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn flag: Bool) {
         var newRect = NSRect(origin: rect.origin, size: rect.size)
         newRect.size.width = caretWidth
+        
         if let range = getParagraphRange(), range.upperBound != textStorage?.length || (
             range.upperBound == textStorage?.length
                 && textStorage?.string.last == "\n"
                 && selectedRange().location != textStorage?.length
         ) {
-            newRect.size.height = newRect.size.height - CGFloat(UserDefaultsManagement.editorLineSpacing)
+            newRect.size.height = newRect.size.height - 3.6
         }
 
-        let clr = NSColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0)
+        let clr = NSColor(red:0.47, green:0.53, blue:0.69, alpha:1.0)
         super.drawInsertionPoint(in: newRect, color: clr, turnedOn: flag)
     }
 
@@ -175,7 +176,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let pasteboard = NSPasteboard.general
         pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
 
-        if self.selectedRange.length == 0, let paragraphRange = self.getParagraphRange(), let paragraph = attributedSubstring(forProposedRange: paragraphRange, actualRange: nil) {
+        if selectedRange.length == 0, let paragraphRange = getParagraphRange(), let paragraph = attributedSubstring(forProposedRange: paragraphRange, actualRange: nil) {
             pasteboard.setString(paragraph.string.trim().removeLastNewLine(), forType: NSPasteboard.PasteboardType.string)
             return
         }
@@ -194,9 +195,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
             let currentRange = selectedRange()
 
-            self.breakUndoCoalescing()
-            self.insertText(clipboard, replacementRange: currentRange)
-            self.breakUndoCoalescing()
+            breakUndoCoalescing()
+            insertText(clipboard, replacementRange: currentRange)
+            breakUndoCoalescing()
 
             saveTextStorageContent(to: note)
             return
@@ -210,7 +211,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
         storage.enumerateAttribute(.attachment, in: NSRange(location: 0, length: storage.length)) { value, range, _ in
 
             guard let textAttachment = value as? NSTextAttachment,
-                storage.attribute(.todo, at: range.location, effectiveRange: nil) == nil else {
+                  storage.attribute(.todo, at: range.location, effectiveRange: nil) == nil
+            else {
                 return
             }
 
@@ -221,8 +223,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
             }
 
             if let note = EditTextView.note,
-                let imageData = textAttachment.fileWrapper?.regularFileContents,
-                let path = ImagesProcessor.writeFile(data: imageData, note: note) {
+               let imageData = textAttachment.fileWrapper?.regularFileContents,
+               let path = ImagesProcessor.writeFile(data: imageData, note: note)
+            {
                 storage.addAttribute(filePathKey, value: path, range: range)
             }
         }
@@ -259,7 +262,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
         viewController.updateTitle(newTitle: note.getFileName())
 
         if let appd = NSApplication.shared.delegate as? AppDelegate,
-            let md = appd.mainWindowController {
+           let md = appd.mainWindowController
+        {
             md.editorUndoManager = note.undoManager
         }
 
@@ -365,8 +369,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     func getParagraphRange() -> NSRange? {
         guard let vc = ViewController.shared(),
-            let editArea = vc.editArea,
-            let storage = editArea.textStorage
+              let editArea = vc.editArea,
+              let storage = editArea.textStorage
         else {
             return nil
         }
@@ -585,9 +589,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
         guard let note = EditTextView.note, let storage = textStorage else { return false }
 
         if let data = board.data(forType: .rtfd),
-            let text = NSAttributedString(rtfd: data, documentAttributes: nil),
-            text.length > 0,
-            range.length > 0 {
+           let text = NSAttributedString(rtfd: data, documentAttributes: nil),
+           text.length > 0,
+           range.length > 0
+        {
             insertText("", replacementRange: range)
 
             let dropPoint = convert(sender.draggingLocation, from: nil)
@@ -639,7 +644,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         if let urls = board.readObjects(forClasses: [NSURL.self], options: nil) as? [URL],
-            urls.count > 0 {
+           urls.count > 0
+        {
             let dropPoint = convert(sender.draggingLocation, from: nil)
             let caretLocation = characterIndexForInsertion(at: dropPoint)
             var offset = 0
@@ -740,10 +746,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     @IBAction func pressBold(_ sender: Any) {
         guard let vc = ViewController.shared(),
-            let editArea = vc.editArea,
-            let note = vc.getCurrentNote(),
-            !UserDefaultsManagement.preview,
-            editArea.isEditable else { return }
+              let editArea = vc.editArea,
+              let note = vc.getCurrentNote(),
+              !UserDefaultsManagement.preview,
+              editArea.isEditable else { return }
 
         let formatter = TextFormatter(textView: editArea, note: note)
         formatter.bold()
@@ -751,10 +757,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     @IBAction func pressItalic(_ sender: Any) {
         guard let vc = ViewController.shared(),
-            let editArea = vc.editArea,
-            let note = vc.getCurrentNote(),
-            !UserDefaultsManagement.preview,
-            editArea.isEditable else { return }
+              let editArea = vc.editArea,
+              let note = vc.getCurrentNote(),
+              !UserDefaultsManagement.preview,
+              editArea.isEditable else { return }
 
         let formatter = TextFormatter(textView: editArea, note: note)
         formatter.italic()
@@ -768,7 +774,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         panel.canChooseDirectories = false
         panel.canChooseFiles = true
         panel.canCreateDirectories = true
-        panel.begin { (result) -> Void in
+        panel.begin { result in
             if result.rawValue == NSFileHandlingPanelOKButton {
                 let urls = panel.urls
 
@@ -843,10 +849,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     @IBAction func insertLink(_ sender: Any) {
         guard let vc = ViewController.shared(),
-            let editArea = vc.editArea,
-            let note = vc.getCurrentNote(),
-            !UserDefaultsManagement.preview,
-            editArea.isEditable else { return }
+              let editArea = vc.editArea,
+              let note = vc.getCurrentNote(),
+              !UserDefaultsManagement.preview,
+              editArea.isEditable else { return }
 
         let formatter = TextFormatter(textView: editArea, note: note)
         formatter.link()
@@ -1029,124 +1035,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 print(error)
             }
         }
-    }
-
-    @available(OSX 10.12.2, *)
-    override func makeTouchBar() -> NSTouchBar? {
-        let touchBar = NSTouchBar()
-        touchBar.delegate = self
-        touchBar.defaultItemIdentifiers = [
-            NSTouchBarItem.Identifier("Todo"),
-            NSTouchBarItem.Identifier("Bold"),
-            NSTouchBarItem.Identifier("Italic"),
-            .fixedSpaceSmall,
-            NSTouchBarItem.Identifier("Link"),
-            NSTouchBarItem.Identifier("Image or file"),
-            NSTouchBarItem.Identifier("CodeBlock"),
-            .fixedSpaceSmall,
-            NSTouchBarItem.Identifier("Indent"),
-            NSTouchBarItem.Identifier("UnIndent")
-        ]
-        return touchBar
-    }
-
-    @available(OSX 10.12.2, *)
-    override func touchBar(_ touchBar: NSTouchBar, makeItemForIdentifier identifier: NSTouchBarItem.Identifier) -> NSTouchBarItem? {
-        switch identifier {
-        case NSTouchBarItem.Identifier("Todo"):
-            if let im = NSImage(named: "todo"), im.isValid, im.size.height > 0 {
-                let image = im.tint(color: NSColor.white)
-                image.size = NSSize(width: 20, height: 20)
-                let button = NSButton(image: image, target: self, action: #selector(toggleTodo(_:)))
-                button.bezelColor = NSColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1.0)
-
-                let customViewItem = NSCustomTouchBarItem(identifier: identifier)
-                customViewItem.view = button
-                return customViewItem
-            }
-        case NSTouchBarItem.Identifier("Bold"):
-            if let im = NSImage(named: "bold"), im.isValid, im.size.height > 0 {
-                let image = im.tint(color: NSColor.white)
-                image.size = NSSize(width: 20, height: 20)
-                let button = NSButton(image: image, target: self, action: #selector(pressBold(_:)))
-                button.bezelColor = NSColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1.0)
-
-                let customViewItem = NSCustomTouchBarItem(identifier: identifier)
-                customViewItem.view = button
-                return customViewItem
-            }
-        case NSTouchBarItem.Identifier("Italic"):
-            if let im = NSImage(named: "italic"), im.isValid, im.size.height > 0 {
-                let image = im.tint(color: NSColor.white)
-                image.size = NSSize(width: 20, height: 20)
-                let button = NSButton(image: image, target: self, action: #selector(pressItalic(_:)))
-                button.bezelColor = NSColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1.0)
-
-                let customViewItem = NSCustomTouchBarItem(identifier: identifier)
-                customViewItem.view = button
-                return customViewItem
-            }
-        case NSTouchBarItem.Identifier("Image or file"):
-            if let im = NSImage(named: "image"), im.isValid, im.size.height > 0 {
-                let image = im.tint(color: NSColor.white)
-                image.size = NSSize(width: 20, height: 20)
-                let button = NSButton(image: image, target: self, action: #selector(insertFileOrImage(_:)))
-                button.bezelColor = NSColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1.0)
-
-                let customViewItem = NSCustomTouchBarItem(identifier: identifier)
-                customViewItem.view = button
-                return customViewItem
-            }
-
-        case NSTouchBarItem.Identifier("Indent"):
-            if let im = NSImage(named: "indent"), im.isValid, im.size.height > 0 {
-                let image = im.tint(color: NSColor.white)
-                image.size = NSSize(width: 20, height: 20)
-                let button = NSButton(image: image, target: self, action: #selector(shiftRight(_:)))
-                button.bezelColor = NSColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1.0)
-
-                let customViewItem = NSCustomTouchBarItem(identifier: identifier)
-                customViewItem.view = button
-                return customViewItem
-            }
-
-        case NSTouchBarItem.Identifier("UnIndent"):
-            if let im = NSImage(named: "unindent"), im.isValid, im.size.height > 0 {
-                let image = im.tint(color: NSColor.white)
-                image.size = NSSize(width: 20, height: 20)
-                let button = NSButton(image: image, target: self, action: #selector(shiftLeft(_:)))
-                button.bezelColor = NSColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1.0)
-
-                let customViewItem = NSCustomTouchBarItem(identifier: identifier)
-                customViewItem.view = button
-                return customViewItem
-            }
-        case NSTouchBarItem.Identifier("CodeBlock"):
-            if let im = NSImage(named: "codeblock"), im.isValid, im.size.height > 0 {
-                let image = im.tint(color: NSColor.white)
-                image.size = NSSize(width: 20, height: 20)
-                let button = NSButton(image: image, target: self, action: #selector(insertCodeBlock(_:)))
-                button.bezelColor = NSColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1.0)
-
-                let customViewItem = NSCustomTouchBarItem(identifier: identifier)
-                customViewItem.view = button
-                return customViewItem
-            }
-        case NSTouchBarItem.Identifier("Link"):
-            if let im = NSImage(named: "tb_link"), im.isValid, im.size.height > 0 {
-                let image = im.tint(color: NSColor.white)
-                image.size = NSSize(width: 20, height: 20)
-                let button = NSButton(image: image, target: self, action: #selector(insertLink(_:)))
-                button.bezelColor = NSColor(red: 0.21, green: 0.21, blue: 0.21, alpha: 1.0)
-
-                let customViewItem = NSCustomTouchBarItem(identifier: identifier)
-                customViewItem.view = button
-                return customViewItem
-            }
-        default: break
-        }
-
-        return super.touchBar(touchBar, makeItemForIdentifier: identifier)
     }
 
     override func menu(for event: NSEvent) -> NSMenu? {

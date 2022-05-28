@@ -51,7 +51,7 @@ class SidebarProjectView: NSOutlineView,
                 return false
             }
 
-            if let project = sidebarItem.project {
+            if sidebarItem.project != nil {
                 menuItem.title =  NSLocalizedString("Delete folder", comment: "")
             }
 
