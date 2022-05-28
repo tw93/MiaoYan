@@ -413,9 +413,6 @@
 /* Class = "NSMenuItem"; title = "Services"; ObjectID = "NMo-om-nkz"; */
 "NMo-om-nkz.title" = "服务";
 
-/* Class = "NSTextFieldCell"; title = "Touch ID:"; ObjectID = "Nw2-km-iDW"; */
-"Nw2-km-iDW.title" = "Touch ID:";
-
 /* Class = "NSButtonCell"; title = "Show in Terminal"; ObjectID = "o6a-px-wp7"; */
 "o6a-px-wp7.title" = "在终端中打开:";
 
