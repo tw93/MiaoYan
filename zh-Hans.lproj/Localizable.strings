@@ -112,12 +112,6 @@
 /* No comment provided by engineer. */
 "Strikethrough" = "删除线";
 
-/* No comment provided by engineer. */
-"Substitutions" = "替换";
-
-/* No comment provided by engineer. */
-"Text Replacement" = "文本替换";
-
 /* Delete menu */
 "This action cannot be undone." = "此操作无法撤消。";
 
