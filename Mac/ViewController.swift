@@ -11,7 +11,8 @@ class ViewController: NSViewController,
     NSOutlineViewDelegate,
     NSOutlineViewDataSource,
     WebFrameLoadDelegate,
-    NSMenuItemValidation {
+    NSMenuItemValidation
+{
     // MARK: - Properties
 
     public var fsManager: FileSystemEventManager?
@@ -216,12 +217,14 @@ class ViewController: NSViewController,
     }
 
     private func configureEditor() {
-        self.editArea.usesFindBar = false
-        self.editArea.isIncrementalSearchingEnabled = true
-        self.editArea.isAutomaticQuoteSubstitutionEnabled = false
-        self.editArea.isAutomaticDataDetectionEnabled = false
-        self.editArea.textStorage?.delegate = editArea.textStorage
-        self.editArea.viewDelegate = self
+        editArea.usesFindBar = false
+        editArea.isIncrementalSearchingEnabled = true
+        editArea.isAutomaticLinkDetectionEnabled = true
+        editArea.isAutomaticQuoteSubstitutionEnabled = false
+        editArea.isAutomaticDataDetectionEnabled = false
+        editArea.isAutomaticTextReplacementEnabled = false
+        editArea.textStorage?.delegate = editArea.textStorage
+        editArea.viewDelegate = self
     }
 
     private func configureShortcuts() {
@@ -458,7 +461,7 @@ class ViewController: NSViewController,
             search.stringValue.removeAll()
             return false
         }
-        
+
         if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), editArea.hasFocus() {
             editArea.deleteToBeginningOfLine(nil)
             return false
@@ -471,26 +474,26 @@ class ViewController: NSViewController,
 
         // Return / Cmd + Return navigation
         if event.keyCode == kVK_Return {
-            if let fr = NSApp.mainWindow?.firstResponder, self.alert == nil {
+            if let fr = NSApp.mainWindow?.firstResponder, alert == nil {
                 if event.modifierFlags.contains(.command) {
                     if fr.isKind(of: NotesTableView.self) {
-                        NSApp.mainWindow?.makeFirstResponder(self.storageOutlineView)
+                        NSApp.mainWindow?.makeFirstResponder(storageOutlineView)
                         return false
                     }
 
                     if fr.isKind(of: EditTextView.self) {
-                        NSApp.mainWindow?.makeFirstResponder(self.notesTableView)
+                        NSApp.mainWindow?.makeFirstResponder(notesTableView)
                         return false
                     }
                 } else {
                     if fr.isKind(of: SidebarProjectView.self) {
-                        self.notesTableView.selectNext()
-                        NSApp.mainWindow?.makeFirstResponder(self.notesTableView)
+                        notesTableView.selectNext()
+                        NSApp.mainWindow?.makeFirstResponder(notesTableView)
                         return false
                     }
 
                     if let note = EditTextView.note, fr.isKind(of: NotesTableView.self) && !(UserDefaultsManagement.preview && !note.isRTF()) {
-                        NSApp.mainWindow?.makeFirstResponder(self.editArea)
+                        NSApp.mainWindow?.makeFirstResponder(editArea)
                         return false
                     }
                 }
@@ -521,7 +524,8 @@ class ViewController: NSViewController,
                             event.modifierFlags.contains(.command)
                     )
             )
-            && NSApplication.shared.mainWindow == NSApplication.shared.keyWindow {
+            && NSApplication.shared.mainWindow == NSApplication.shared.keyWindow
+        {
             UserDataService.instance.resetLastSidebar()
 
             if let view = NSApplication.shared.mainWindow?.firstResponder as? NSTextView, let textField = view.superview?.superview, textField.isKind(of: NameTextField.self) {
@@ -589,7 +593,8 @@ class ViewController: NSViewController,
         }
 
         if let fr = mw.firstResponder, !fr.isKind(of: EditTextView.self), !fr.isKind(of: NSTextView.self), !event.modifierFlags.contains(.command),
-            !event.modifierFlags.contains(.control) {
+           !event.modifierFlags.contains(.control)
+        {
             if let char = event.characters {
                 let newSet = CharacterSet(charactersIn: char)
                 if newSet.isSubset(of: CharacterSet.alphanumerics) {
@@ -635,7 +640,7 @@ class ViewController: NSViewController,
         if let type = vc.getSidebarType(), type == .Trash {
             vc.storageOutlineView.deselectAll(nil)
         }
-        vc.createNote(name:"未命名",content: "")
+        vc.createNote(name: "未命名", content: "")
     }
 
     @IBAction func importNote(_ sender: NSMenuItem) {
@@ -644,7 +649,7 @@ class ViewController: NSViewController,
         panel.canChooseDirectories = false
         panel.canChooseFiles = true
         panel.canCreateDirectories = false
-        panel.begin { (result) -> Void in
+        panel.begin { result in
             if result.rawValue == NSFileHandlingPanelOKButton {
                 let urls = panel.urls
                 let project = self.getSidebarProject() ?? self.storage.getMainProject()
@@ -683,7 +688,7 @@ class ViewController: NSViewController,
 
         if note.project.fileExist(fileName: value, ext: note.url.pathExtension), !isSoftRename {
             self.alert = NSAlert()
-            guard let alert = self.alert else { return }
+            guard let alert = alert else { return }
 
             alert.messageText = "Hmm, something goes wrong 🙈"
             alert.informativeText = "Note with name \"\(value)\" already exists in selected storage."
@@ -780,7 +785,8 @@ class ViewController: NSViewController,
         vc.storage.removeNotes(notes: notes) { urls in
 
             if let appd = NSApplication.shared.delegate as? AppDelegate,
-                let md = appd.mainWindowController {
+               let md = appd.mainWindowController
+            {
                 let undoManager = md.notesListUndoManager
 
                 if let ntv = vc.notesTableView {
@@ -882,7 +888,7 @@ class ViewController: NSViewController,
         guard let vc = ViewController.shared() else { return }
 
         if let sidebarItem = vc.getSidebarItem(), sidebarItem.isTrash() {
-            let indexSet = IndexSet(integersIn: 0..<vc.notesTableView.noteList.count)
+            let indexSet = IndexSet(integersIn: 0 ..< vc.notesTableView.noteList.count)
             vc.notesTableView.removeRows(at: indexSet, withAnimation: .effectFade)
         }
 
@@ -900,7 +906,8 @@ class ViewController: NSViewController,
         }
 
         if let controller = vc.storyboard?.instantiateController(withIdentifier: "ProjectSettingsViewController")
-            as? ProjectSettingsViewController {
+            as? ProjectSettingsViewController
+        {
             projectSettingsViewController = controller
 
             if let project = vc.getSidebarProject() {
@@ -968,7 +975,7 @@ class ViewController: NSViewController,
         alert.informativeText = NSLocalizedString("This action cannot be undone.", comment: "")
         alert.addButton(withTitle: NSLocalizedString("Remove note(s)", comment: ""))
         alert.addButton(withTitle: NSLocalizedString("Cancel", comment: ""))
-        alert.beginSheetModal(for: window) { (returnCode: NSApplication.ModalResponse) -> Void in
+        alert.beginSheetModal(for: window) { (returnCode: NSApplication.ModalResponse) in
             if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
                 let selectedRow = vc.notesTableView.selectedRowIndexes.min()
                 vc.editArea.clear()
@@ -1046,8 +1053,8 @@ class ViewController: NSViewController,
     func updateTable(search: Bool = false, searchText: String? = nil, sidebarItem: SidebarItem? = nil, projects: [Project]? = nil, completion: @escaping () -> Void = {}) {
         var sidebarItem: SidebarItem? = sidebarItem
         var projects: [Project]? = projects
-        var sidebarName: String? = nil
-        
+        var sidebarName: String?
+
         let timestamp = Date().toMillis()
 
         self.search.timestamp = timestamp
@@ -1067,9 +1074,10 @@ class ViewController: NSViewController,
 
         // Global search if sidebar not checked
         if type == nil,
-            projects == nil || (
-                projects!.count < 2 && projects!.first!.isRoot
-            ) {
+           projects == nil || (
+               projects!.count < 2 && projects!.first!.isRoot
+           )
+        {
             type = .All
         }
 
@@ -1278,7 +1286,8 @@ class ViewController: NSViewController,
         if
             NSApplication.shared.isActive
             && !NSApplication.shared.isHidden
-            && !mainWindow.isMiniaturized {
+            && !mainWindow.isMiniaturized
+        {
             NSApplication.shared.hide(nil)
             return
         }
@@ -1361,8 +1370,8 @@ class ViewController: NSViewController,
         var updatedNotes = [(Int, Note)]()
         for row in selectedRows {
             guard let rowView = notesTableView.rowView(atRow: row, makeIfNecessary: false) as? NoteRowView,
-                let cell = rowView.view(atColumn: 0) as? NoteCellView,
-                let note = cell.objectValue as? Note
+                  let cell = rowView.view(atColumn: 0) as? NoteCellView,
+                  let note = cell.objectValue as? Note
             else { continue }
 
             updatedNotes.append((row, note))
@@ -1384,8 +1393,8 @@ class ViewController: NSViewController,
         }
 
         let nowUnpinned = updatedNotes
-            .filter { (_, note) -> Bool in !note.isPinned }
-            .compactMap { (_, note) -> (Int, Note)? in
+            .filter { _, note -> Bool in !note.isPinned }
+            .compactMap { _, note -> (Int, Note)? in
                 guard let curRow = state.firstIndex(where: { $0 === note }) else { return nil }
                 return (curRow, note)
             }
@@ -1483,7 +1492,8 @@ class ViewController: NSViewController,
 
         for menu in noteMenu.items {
             if let identifier = menu.identifier?.rawValue,
-                personalSelection.contains(identifier) {
+               personalSelection.contains(identifier)
+            {
                 menu.isHidden = (vc.notesTableView.selectedRowIndexes.count > 1)
             }
         }
@@ -1500,7 +1510,8 @@ class ViewController: NSViewController,
             let view = menu.item(withTitle: viewLabel),
             let submenu = view.submenu,
             let sortMenu = submenu.item(withTitle: sortByLabel),
-            let sortItems = sortMenu.submenu else {
+            let sortItems = sortMenu.submenu
+        else {
             return
         }
 
