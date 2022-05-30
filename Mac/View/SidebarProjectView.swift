@@ -456,9 +456,9 @@ class SidebarProjectView: NSOutlineView,
         guard let window = MainWindowController.shared() else { return }
 
         let alert = NSAlert()
-        let field = NSTextField(frame: NSRect(x: 0, y: 0, width: 290, height: 20))
+        let field = NSTextField(frame: NSRect(x: 0, y: 0, width: 280, height: 24))
+        field.focusRingType = .none
         alert.messageText = NSLocalizedString("New project", comment: "")
-        alert.informativeText = NSLocalizedString("Please enter project name:", comment: "")
         alert.accessoryView = field
         alert.alertStyle = .informational
         alert.addButton(withTitle: NSLocalizedString("Add", comment: ""))
