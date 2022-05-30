@@ -173,6 +173,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     // 清除最后一行
     override func copy(_ sender: Any?) {
+        
         let pasteboard = NSPasteboard.general
         pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
 

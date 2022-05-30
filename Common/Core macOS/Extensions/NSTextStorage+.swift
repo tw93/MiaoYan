@@ -68,7 +68,6 @@ extension NSTextStorage {
 
                         let ratio: Float = Float(maxWidth) / Float(rep.pixelsWide)
                         var size = NSSize(width: rep.pixelsWide, height: rep.pixelsHigh)
-                    
                         if ratio < 1 {
                             size = NSSize(width: Int(maxWidth), height: Int(Float(rep.pixelsHigh) * Float(ratio)))
                         }

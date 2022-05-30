@@ -1036,7 +1036,6 @@ class ViewController: NSViewController,
         if let type = sidebarItem?.type {
             return type
         }
-
         return nil
     }
 
@@ -1193,11 +1192,11 @@ class ViewController: NSViewController,
             ) && (
                 type == .All && note.project.showInCommon
                     || (
-                        projects!.contains(note.project)
+                        type != .All && projects!.contains(note.project)
                             || (note.project.parent != nil && projects!.contains(note.project.parent!))
                     )
                     || type == .Trash
-            ) && (
+            ) && (  
                 type == .Trash && note.isTrash()
                     || type != .Trash && !note.isTrash()
             )
