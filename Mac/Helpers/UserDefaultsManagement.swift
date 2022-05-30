@@ -25,7 +25,7 @@ public class UserDefaultsManagement {
     static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
     static var DefaultBgColor = Color.white
 
-    static var codeFontName = DefaultFont
+    static var codeFontName = "JetBrains Mono"
     static var lineWidth = 1000
     static var linkColor = Color(red: 0.23, green: 0.23, blue: 0.23, alpha: 1.00)
     static var fullScreen = false
@@ -40,7 +40,7 @@ public class UserDefaultsManagement {
     static var marginSize = 28
     static var realSidebarSize = 200
 
-    private struct Constants {
+    private enum Constants {
         static let AppearanceTypeKey = "appearanceType"
         static let BgColorKey = "bgColorKeyed"
         static let CellFrameOriginY = "cellFrameOriginY"
@@ -381,7 +381,8 @@ public class UserDefaultsManagement {
     static var markdownPreviewCSS: URL? {
         get {
             if let path = UserDefaults.standard.object(forKey: Constants.MarkdownPreviewCSS) as? String,
-                let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) {
+               let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+            {
                 if FileManager.default.fileExists(atPath: path) {
                     return URL(string: "file://" + encodedPath)
                 }
