@@ -22,7 +22,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn flag: Bool) {
         var newRect = NSRect(origin: rect.origin, size: rect.size)
         newRect.size.width = caretWidth
-        
+
         if let range = getParagraphRange(), range.upperBound != textStorage?.length || (
             range.upperBound == textStorage?.length
                 && textStorage?.string.last == "\n"
@@ -31,7 +31,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             newRect.size.height = newRect.size.height - 3.6
         }
 
-        let clr = NSColor(red:0.47, green:0.53, blue:0.69, alpha:1.0)
+        let clr = NSColor(red: 0.47, green: 0.53, blue: 0.69, alpha: 1.0)
         super.drawInsertionPoint(in: newRect, color: clr, turnedOn: flag)
     }
 
@@ -449,6 +449,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 saveCursorPosition()
                 return
             }
+        }
+
+        if event.keyCode == kVK_Return, !hasMarkedText() {
+            breakUndoCoalescing()
+            let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
+            formatter.newLine()
+            breakUndoCoalescing()
+            return
         }
 
         if event.keyCode == kVK_Delete, event.modifierFlags.contains(.option) {

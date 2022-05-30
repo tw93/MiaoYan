@@ -195,7 +195,7 @@ extension NSTextStorage: NSTextStorageDelegate {
             if let value = value as? NSTextAttachment, textStorage.attribute(.todo, at: range.location, effectiveRange: nil) == nil {
 
                 let paragraph = NSMutableParagraphStyle()
-                paragraph.alignment = value.isFile() ? .left : .center
+                paragraph.alignment = .left
                 textStorage.addAttribute(.paragraphStyle, value: paragraph, range: range)
 
                 let imageKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.url")
