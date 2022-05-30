@@ -428,30 +428,7 @@ class SidebarProjectView: NSOutlineView,
     }
 
     @IBAction func addProject(_ sender: Any) {
-        guard let vc = ViewController.shared(), let v = vc.storageOutlineView else { return }
-
-        var unwrappedProject: Project?
-        if let si = v.getSidebarItem(),
-            let p = si.project {
-            unwrappedProject = p
-        }
-
-        if sender is NSMenuItem,
-            let mi = sender as? NSMenuItem,
-            mi.title == NSLocalizedString("Attach storage...", comment: "") {
-            unwrappedProject = nil
-        }
-
-        if sender is SidebarCellView, let cell = sender as? SidebarCellView, let si = cell.objectValue as? SidebarItem {
-            if let p = si.project {
-                unwrappedProject = p
-            } else {
-                addRoot()
-                return
-            }
-        }
-
-   
+    
         let project = Storage.sharedInstance().getMainProject()
         guard let window = MainWindowController.shared() else { return }
 
