@@ -89,18 +89,10 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         
         let markdownString = note.getPrettifiedContent()
         let css = MarkdownView.getPreviewStyle()
-
-        var imagesStorage = note.project.url
-        if note.isTextBundle() {
-            imagesStorage = note.getURL()
-        }
-
-        if let urls = note.imageUrl, urls.count > 0 {
-            cleanCache()
-            try? loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
-        } else {
-            fastLoading(note: note, markdown: markdownString, css: css)
-        }
+        let imagesStorage = note.project.url
+        
+        cleanCache()
+        try? loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
         
         self.note = note
     }
@@ -115,26 +107,6 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
             }
         }
-    }
-
-    public func fastLoading(note: Note, markdown: String, css: String) {
-        if MPreviewView.template == nil {
-            MPreviewView.template = getTemplate(css: css)
-        }
-
-        let template = MPreviewView.template
-        let htmlString = renderMarkdownHTML(markdown: markdown)!
-        guard let pageHTMLString = template?.replacingOccurrences(of: "DOWN_HTML", with: htmlString) else { return }
-
-        var baseURL: URL?
-        if let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle") {
-            let url = NSURL.fileURL(withPath: path)
-            if let bundle = Bundle(url: url) {
-                baseURL = bundle.url(forResource: "index", withExtension: "html")
-            }
-        }
-        
-        loadHTMLString(pageHTMLString, baseURL: baseURL)
     }
 
     private func getTemplate(css: String) -> String? {
