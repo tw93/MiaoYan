@@ -219,7 +219,7 @@ class ViewController: NSViewController,
     private func configureEditor() {
         editArea.usesFindBar = false
         editArea.isIncrementalSearchingEnabled = true
-        editArea.isAutomaticLinkDetectionEnabled = true
+        editArea.isAutomaticLinkDetectionEnabled = false
         editArea.isAutomaticQuoteSubstitutionEnabled = false
         editArea.isAutomaticDataDetectionEnabled = false
         editArea.isAutomaticTextReplacementEnabled = false

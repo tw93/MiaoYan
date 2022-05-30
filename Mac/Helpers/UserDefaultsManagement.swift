@@ -17,7 +17,7 @@ public class UserDefaultsManagement {
         typealias Font = UIFont
     #endif
 
-    static var DefaultFont = "JetBrains Mono, Fira Code, Menlo, Monaco, 'Courier New', monospace"
+    static var DefaultFont = "JetBrains Mono"
 
     static var DefaultFontSize = 14
     static var editorLineSpacing = 6
