@@ -59,7 +59,7 @@ class NoteAttachment {
         let mutableAttributedString = NSMutableAttributedString(attributedString: attributedString)
         let paragraphStyle = NSMutableParagraphStyle()
 
-        paragraphStyle.alignment = url.isImage ? .center : .left
+        paragraphStyle.alignment = .left
         paragraphStyle.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
 
         let attributes = [
