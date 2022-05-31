@@ -286,7 +286,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         let url = NSURL.fileURL(withPath: path!)
         let bundle = Bundle(url: url)
         let baseURL = bundle!.url(forResource: "index", withExtension: "html")!
-
+        
         var template = try NSString(contentsOf: baseURL, encoding: String.Encoding.utf8.rawValue)
         template = template.replacingOccurrences(of: "DOWN_CSS", with: css) as NSString
 

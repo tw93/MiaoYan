@@ -123,7 +123,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
                     guard !operation.isCancelled, self?.fillTimestamp == timestamp else { return }
 
                     vc.editArea.fill(note: note, highlight: true)
-                    vc.focusEditArea()
                 }
             }
             loadingQueue.addOperation(operation)
