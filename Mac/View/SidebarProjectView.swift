@@ -7,7 +7,8 @@ import MiaoYanCore_macOS
 class SidebarProjectView: NSOutlineView,
     NSOutlineViewDelegate,
     NSOutlineViewDataSource,
-    NSMenuItemValidation {
+    NSMenuItemValidation
+{
     var sidebarItems: [Any]?
     var viewDelegate: ViewController?
 
@@ -23,7 +24,6 @@ class SidebarProjectView: NSOutlineView,
     }
 
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
-     
         guard let sidebarItem = getSidebarItem() else { return false }
 
         if menuItem.title == NSLocalizedString("Show in Finder", comment: "") {
@@ -52,7 +52,7 @@ class SidebarProjectView: NSOutlineView,
             }
 
             if sidebarItem.project != nil {
-                menuItem.title =  NSLocalizedString("Delete folder", comment: "")
+                menuItem.title = NSLocalizedString("Delete folder", comment: "")
             }
 
             if let project = sidebarItem.project, !project.isDefault {
@@ -79,7 +79,7 @@ class SidebarProjectView: NSOutlineView,
             return
         }
 
-        if  event.modifierFlags.contains(.option), event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_R {
+        if event.modifierFlags.contains(.option), event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_R {
             revealInFinder("")
             return
         }
@@ -133,7 +133,7 @@ class SidebarProjectView: NSOutlineView,
             }
 
             guard let urls = board.readObjects(forClasses: [NSURL.self], options: nil) as? [URL],
-                let project = sidebarItem.project else { return false }
+                  let project = sidebarItem.project else { return false }
 
             for url in urls {
                 var isDirectory = ObjCBool(true)
@@ -196,6 +196,7 @@ class SidebarProjectView: NSOutlineView,
         return 0
     }
 
+    
     func outlineView(_ outlineView: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
         if item is SidebarItem {
             return 34
@@ -240,7 +241,6 @@ class SidebarProjectView: NSOutlineView,
                 cell.icon.image = NSImage(imageLiteralResourceName: "repository.png")
                 cell.icon.isHidden = false
                 cell.label.frame.origin.x = 24
-
             }
         }
         return cell
@@ -313,7 +313,8 @@ class SidebarProjectView: NSOutlineView,
 
             if sidebar.indices.contains(i), let item = sidebar[i] as? SidebarItem {
                 if UserDataService.instance.lastType == item.type.rawValue, UserDataService.instance.lastProject == item.project?.url,
-                    UserDataService.instance.lastName == item.name {
+                   UserDataService.instance.lastName == item.name
+                {
                     return
                 }
 
@@ -338,8 +339,9 @@ class SidebarProjectView: NSOutlineView,
             vd.updateTable {
                 if self.isFirstLaunch {
                     if let url = UserDefaultsManagement.lastSelectedURL,
-                        let lastNote = vd.storage.getBy(url: url),
-                        let i = vd.notesTableView.getIndex(lastNote) {
+                       let lastNote = vd.storage.getBy(url: url),
+                       let i = vd.notesTableView.getIndex(lastNote)
+                    {
                         vd.notesTableView.selectRow(i)
 
                         DispatchQueue.main.async {
@@ -375,7 +377,7 @@ class SidebarProjectView: NSOutlineView,
 
         let selected = v.selectedRow
         guard let si = v.sidebarItems,
-            si.indices.contains(selected) else { return }
+              si.indices.contains(selected) else { return }
 
         guard
             let sidebarItem = si[selected] as? SidebarItem,
@@ -407,7 +409,7 @@ class SidebarProjectView: NSOutlineView,
             alert.informativeText = NSLocalizedString("This action cannot be undone.", comment: "Delete menu")
             alert.addButton(withTitle: NSLocalizedString("Remove", comment: "Delete menu"))
             alert.addButton(withTitle: NSLocalizedString("Cancel", comment: "Delete menu"))
-            alert.beginSheetModal(for: w) { (returnCode: NSApplication.ModalResponse) -> Void in
+            alert.beginSheetModal(for: w) { (returnCode: NSApplication.ModalResponse) in
                 if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
                     guard let resultingItemUrl = Storage.sharedInstance().trashItem(url: project.url) else { return }
 
@@ -428,7 +430,6 @@ class SidebarProjectView: NSOutlineView,
     }
 
     @IBAction func addProject(_ sender: Any) {
-    
         let project = Storage.sharedInstance().getMainProject()
         guard let window = MainWindowController.shared() else { return }
 
@@ -440,7 +441,7 @@ class SidebarProjectView: NSOutlineView,
         alert.alertStyle = .informational
         alert.addButton(withTitle: NSLocalizedString("Add", comment: ""))
         alert.addButton(withTitle: NSLocalizedString("Cancel", comment: ""))
-        alert.beginSheetModal(for: window) { (returnCode: NSApplication.ModalResponse) -> Void in
+        alert.beginSheetModal(for: window) { (returnCode: NSApplication.ModalResponse) in
             if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
                 self.addChild(field: field, project: project)
             }
@@ -489,7 +490,7 @@ class SidebarProjectView: NSOutlineView,
         openPanel.canChooseDirectories = true
         openPanel.canCreateDirectories = true
         openPanel.canChooseFiles = false
-        openPanel.begin { (result) -> Void in
+        openPanel.begin { result in
             if result.rawValue == NSFileHandlingPanelOKButton {
                 guard let url = openPanel.url else {
                     return
@@ -585,7 +586,7 @@ class SidebarProjectView: NSOutlineView,
 
         let selected = v.selectedRow
         guard let si = v.sidebarItems,
-            si.indices.contains(selected) else { return nil }
+              si.indices.contains(selected) else { return nil }
 
         let sidebarItem = si[selected] as? SidebarItem
         return sidebarItem

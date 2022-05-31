@@ -3,7 +3,8 @@ import Cocoa
 import MiaoYanCore_macOS
 
 class NotesTableView: NSTableView, NSTableViewDataSource,
-    NSTableViewDelegate {
+    NSTableViewDelegate
+{
     var noteList = [Note]()
     var defaultCell = NoteCellView()
     var pinnedCell = NoteCellView()
