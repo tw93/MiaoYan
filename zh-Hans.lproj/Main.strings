@@ -248,12 +248,6 @@
 /* Class = "NSMenuItem"; title = "Show in Finder"; ObjectID = "goN-LO-L7l"; */
 "goN-LO-L7l.title" = "在Finder中显示";
 
-/* Class = "NSButtonCell"; title = "Show in Finder"; ObjectID = "gra-E2-dYh"; */
-"gra-E2-dYh.title" = "在Finder中显示";
-
-/* Class = "NSMenuItem"; title = "Lock All Encrypted"; ObjectID = "GrP-W1-7ZQ"; */
-"GrP-W1-7ZQ.title" = "锁定所有加密的笔记";
-
 /* Class = "NSMenuItem"; title = "Paste"; ObjectID = "gVA-U4-sdL"; */
 "gVA-U4-sdL.title" = "粘贴";
 
@@ -274,7 +268,6 @@
 
 /* Class = "NSMenuItem"; title = "Show Spelling and Grammar"; ObjectID = "HFo-cy-zxI"; */
 "HFo-cy-zxI.title" = "显示拼写和语法";
-
 
 /* Class = "NSButtonCell"; title = "Change"; ObjectID = "hGi-4f-mtY"; */
 "hGi-4f-mtY.title" = "更改";
