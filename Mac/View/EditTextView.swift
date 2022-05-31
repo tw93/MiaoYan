@@ -261,6 +261,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
         UserDefaultsManagement.lastSelectedURL = note.url
 
         viewController.updateTitle(newTitle: note.getFileName())
+        
+        undoManager?.removeAllActions(withTarget: self)
 
         if let appd = NSApplication.shared.delegate as? AppDelegate,
            let md = appd.mainWindowController
@@ -1033,7 +1035,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
             }
         }
 
-        note.undoManager.registerUndo(withTarget: self, selector: #selector(unDeleteImages), object: removedImages)
+        if removedImages.count > 0 {
+            note.undoManager.registerUndo(withTarget: self, selector: #selector(unDeleteImages), object: removedImages)
+        }
     }
 
     @objc public func unDeleteImages(_ urls: [URL: URL]) {
