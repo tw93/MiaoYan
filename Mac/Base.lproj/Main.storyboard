@@ -453,7 +453,7 @@ CA
                             <splitView arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dO0-pK-Ktm" customClass="SidebarSplitView" customModule="MiaoYan" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="951" height="611"/>
                                 <subviews>
-                                    <customView autoresizesSubviews="NO" id="5sB-7J-vgE" customClass="StorageView" customModule="MiaoYan" customModuleProvider="target">
+                                    <customView autoresizesSubviews="NO" misplaced="YES" id="5sB-7J-vgE" customClass="StorageView" customModule="MiaoYan" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="196" height="611"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <subviews>
@@ -470,7 +470,7 @@ CA
                                                             <color key="backgroundColor" name="_sourceListBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                             <tableColumns>
-                                                                <tableColumn width="164" minWidth="16" maxWidth="1000" id="Gwp-vX-YaR">
+                                                                <tableColumn width="164" minWidth="14" maxWidth="300" id="Gwp-vX-YaR">
                                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Library">
                                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -586,10 +586,10 @@ CA
                                                 </scroller>
                                             </scrollView>
                                             <customView autoresizesSubviews="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vp7-cq-QSI" customClass="OutlineHeaderView" customModule="MiaoYan" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="573" width="196" height="38"/>
+                                                <rect key="frame" x="0.0" y="573" width="433" height="38"/>
                                                 <subviews>
                                                     <button autoresizesSubviews="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yei-Or-qiI" userLabel="Add Project">
-                                                        <rect key="frame" x="170" y="8" width="18" height="18"/>
+                                                        <rect key="frame" x="407" y="8" width="18" height="18"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="18" id="qVi-vf-K2q"/>
                                                             <constraint firstAttribute="height" constant="18" id="xZe-bb-IRl"/>
@@ -621,12 +621,12 @@ CA
                                         <rect key="frame" x="197" y="0.0" width="754" height="611"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <subviews>
-                                            <customView autoresizesSubviews="NO" id="8ej-mX-KM6" customClass="SidebarNotesView" customModule="MiaoYan" customModuleProvider="target">
+                                            <customView autoresizesSubviews="NO" misplaced="YES" id="8ej-mX-KM6" customClass="SidebarNotesView" customModule="MiaoYan" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="237" height="611"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                                 <subviews>
                                                     <button translatesAutoresizingMaskIntoConstraints="NO" id="gaB-Rc-PMR">
-                                                        <rect key="frame" x="212" y="585" width="18" height="18"/>
+                                                        <rect key="frame" x="-25" y="585" width="18" height="18"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="18" id="6Ki-MS-W35"/>
                                                             <constraint firstAttribute="height" constant="18" id="T7f-i3-Lpy"/>
@@ -640,7 +640,7 @@ CA
                                                         </connections>
                                                     </button>
                                                     <searchField wantsLayer="YES" focusRingType="none" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bd7-O3-GQF" customClass="SearchTextField" customModule="MiaoYan" customModuleProvider="target">
-                                                        <rect key="frame" x="8" y="579" width="197" height="32"/>
+                                                        <rect key="frame" x="-32" y="579" width="0.0" height="32"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="32" id="Ptr-z2-0T0"/>
                                                         </constraints>
@@ -651,20 +651,20 @@ CA
                                                         </searchFieldCell>
                                                     </searchField>
                                                     <scrollView focusRingType="none" borderType="none" autohidesScrollers="YES" horizontalLineScroll="49" horizontalPageScroll="10" verticalLineScroll="49" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" findBarPosition="belowContent" translatesAutoresizingMaskIntoConstraints="NO" id="Kzf-Jh-YEb">
-                                                        <rect key="frame" x="0.0" y="0.0" width="237" height="573"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="573"/>
                                                         <clipView key="contentView" focusRingType="none" drawsBackground="NO" copiesOnScroll="NO" id="MtJ-BC-rZB">
-                                                            <rect key="frame" x="0.0" y="0.0" width="237" height="573"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="0.0" height="573"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnResizing="NO" autosaveColumns="NO" rowHeight="48" rowSizeStyle="automatic" viewBased="YES" id="8X8-yh-5EA" customClass="NotesTableView" customModule="MiaoYan" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="237" height="573"/>
+                                                                <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnResizing="NO" autosaveColumns="NO" rowHeight="48" viewBased="YES" id="8X8-yh-5EA" customClass="NotesTableView" customModule="MiaoYan" customModuleProvider="target">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="219" height="573"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <size key="intercellSpacing" width="1" height="1"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     <tableViewGridLines key="gridStyleMask" horizontal="YES"/>
                                                                     <color key="gridColor" name="divider"/>
                                                                     <tableColumns>
-                                                                        <tableColumn editable="NO" width="205" maxWidth="2000" id="aKf-mj-22P">
+                                                                        <tableColumn editable="NO" width="187" maxWidth="400" id="aKf-mj-22P">
                                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
                                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -674,13 +674,15 @@ CA
                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                             </textFieldCell>
+                                                                            <sortDescriptor key="sortDescriptorPrototype" selector="compare:" sortKey="key" ascending="NO"/>
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             <prototypeCellViews>
-                                                                                <tableCellView identifier="NoteCellView" translatesAutoresizingMaskIntoConstraints="NO" id="8qL-z4-nzh" customClass="NoteCellView" customModule="MiaoYan" customModuleProvider="target">
-                                                                                    <rect key="frame" x="10" y="0.0" width="216" height="48"/>
+                                                                                <tableCellView identifier="NoteCellView" focusRingType="none" id="8qL-z4-nzh" customClass="NoteCellView" customModule="MiaoYan" customModuleProvider="target">
+                                                                                    <rect key="frame" x="10" y="0.0" width="198" height="48"/>
+                                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                     <subviews>
                                                                                         <textField identifier="cellName" autoresizesSubviews="NO" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UvD-jB-7Ok" customClass="NameTextField" customModule="MiaoYan" customModuleProvider="target">
-                                                                                            <rect key="frame" x="-2" y="22" width="220" height="17"/>
+                                                                                            <rect key="frame" x="-2" y="22" width="202" height="17"/>
                                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" state="on" alignment="left" title="Name" usesSingleLineMode="YES" id="y7T-Rc-etT">
                                                                                                 <font key="font" size="13" name="JetBrainsMono-Medium"/>
                                                                                                 <color key="textColor" name="mainText"/>
@@ -714,7 +716,7 @@ CA
                                                                                         <constraint firstItem="UvD-jB-7Ok" firstAttribute="top" secondItem="8qL-z4-nzh" secondAttribute="top" constant="9" id="AtV-FX-Ffi"/>
                                                                                         <constraint firstItem="9h5-Ob-Nej" firstAttribute="leading" secondItem="abw-Lq-K7d" secondAttribute="trailing" constant="8" id="F5A-5T-FXC"/>
                                                                                         <constraint firstItem="abw-Lq-K7d" firstAttribute="top" secondItem="UvD-jB-7Ok" secondAttribute="bottom" constant="-2" id="hKA-pJ-rpa"/>
-                                                                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="abw-Lq-K7d" secondAttribute="trailing" constant="20" symbolic="YES" id="hYm-mr-dcs"/>
+                                                                                        <constraint firstAttribute="leading" secondItem="abw-Lq-K7d" secondAttribute="leading" constant="20" id="hYm-mr-dcs"/>
                                                                                         <constraint firstItem="9h5-Ob-Nej" firstAttribute="centerY" secondItem="abw-Lq-K7d" secondAttribute="centerY" id="jki-SD-fdc"/>
                                                                                         <constraint firstItem="UvD-jB-7Ok" firstAttribute="left" secondItem="abw-Lq-K7d" secondAttribute="left" id="ngR-5z-x5I"/>
                                                                                         <constraint firstAttribute="trailing" secondItem="UvD-jB-7Ok" secondAttribute="trailing" id="vb9-2V-r5G"/>
