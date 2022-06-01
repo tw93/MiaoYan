@@ -139,7 +139,8 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         let pageHTMLString = try htmlFromTemplate(htmlString)
 
-        print(pageHTMLString)
+//        print(pageHTMLString)
+        
         let indexURL = createTemporaryBundle(pageHTMLString: pageHTMLString)
 
         if let i = indexURL {
@@ -214,15 +215,26 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             }
 
             for image in images {
-                let regex = "(http[^\\s]+(jpg|jpeg|png|tiff|gif)\\b)"
+                let urlRegex = "(http[^\\s]+(JPG|JPEG|PNG|GIF|jpg|jpeg|png|tiff|gif)\\b)"
 
-                let res = image.matchingStrings(regex: regex)
+                let urlRes = image.matchingStrings(regex: urlRegex)
 
                 var localPath = image
-                if res.count > 0 {
-                    localPath = res[0][0].trim()
+                if urlRes.count > 0 {
+                    localPath = urlRes[0][0].trim()
                 }
+        
+                
+                let widthRegex = "width=\\d+"
+                
+                let widthRes = image.matchingStrings(regex: widthRegex)
 
+                var widthStr = "width=\"auto\""
+                
+                if widthRes.count > 0 {
+                    widthStr = widthRes[0][0].trim()
+                }
+                
                 let localPathClean = localPath.removingPercentEncoding ?? String(localPath)
 
                 let fullImageURL = imagesStorage
@@ -243,8 +255,10 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 if localPath.first == "/" {
                     localPath.remove(at: localPath.startIndex)
                 }
+                
+                
 
-                let imPath = "<img class=\"miaoyan-preview\" data-src=\"" + localPath + "\" src=\"https://gw.alipayobjects.com/zos/k/po/placeholder.png\" data-lazy/>"
+                let imPath = "<img class=\"miaoyan-image\" data-src=\"" + localPath + "\" src=\"https://gw.alipayobjects.com/zos/k/a6/placeholder.png\" data-lazy " + widthStr + " />"
 
                 htmlString = htmlString.replacingOccurrences(of: image, with: imPath)
             }
