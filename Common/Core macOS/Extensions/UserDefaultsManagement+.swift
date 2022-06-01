@@ -1,9 +1,9 @@
+import AppKit
 import Foundation
 import MASShortcut
-import AppKit
 
 extension UserDefaultsManagement {
-    private struct Constants {
+    private enum Constants {
         static let AppearanceTypeKey = "appearanceType"
         static let codeTheme = "codeTheme"
         static let dockIcon = "dockIcon"
@@ -35,7 +35,7 @@ extension UserDefaultsManagement {
             let code = UserDefaults.standard.object(forKey: Constants.NewNoteKeyCode)
             let modifier = UserDefaults.standard.object(forKey: Constants.NewNoteKeyModifier)
 
-            if code != nil && modifier != nil, let keyCode = code as? UInt, let modifierFlags = modifier as? UInt {
+            if code != nil, modifier != nil, let keyCode = code as? UInt, let modifierFlags = modifier as? UInt {
                 return MASShortcut(keyCode: Int(keyCode), modifierFlags: NSEvent.ModifierFlags(rawValue: modifierFlags))
             }
 
@@ -52,7 +52,7 @@ extension UserDefaultsManagement {
             let code = UserDefaults.standard.object(forKey: Constants.SearchNoteKeyCode)
             let modifier = UserDefaults.standard.object(forKey: Constants.SearchNoteKeyModifier)
 
-            if code != nil && modifier != nil, let keyCode = code as? UInt, let modifierFlags = modifier as? UInt {
+            if code != nil, modifier != nil, let keyCode = code as? UInt, let modifierFlags = modifier as? UInt {
                 return MASShortcut(keyCode: Int(keyCode), modifierFlags: NSEvent.ModifierFlags(rawValue: modifierFlags))
             }
 
@@ -72,13 +72,15 @@ extension UserDefaultsManagement {
 
             if #available(OSX 10.14, *) {
                 if NSAppearance.current.isDark {
-                    UserDefaults.standard.set("monokai-sublime", forKey: Constants.codeTheme)
-
-                    return "monokai-sublime"
+                    UserDefaults.standard.set("atom-one-dark", forKey: Constants.codeTheme);
+                    return "atom-one-dark"
+                } else {
+                    UserDefaults.standard.set("vs", forKey: Constants.codeTheme);
+                    return "vs"
                 }
             }
 
-            return "atom-one-light"
+            return "vs"
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.codeTheme)

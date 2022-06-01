@@ -1,6 +1,7 @@
 import Cocoa
 
 class SidebarSplitView: NSSplitView {
+    
     override var dividerColor: NSColor {
         if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
             return NSColor.init(named: "divider")!

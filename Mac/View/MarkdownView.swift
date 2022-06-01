@@ -1,27 +1,14 @@
-import WebKit
 import Highlightr
+import WebKit
 
 #if os(iOS)
 import NightNight
 #endif
 
-// MARK: - Public API
 
-public typealias DownViewClosure = () -> ()
+public typealias DownViewClosure = () -> Void
 
 open class MarkdownView: WKWebView {
-
-    /**
-     Initializes a web view with the results of rendering a CommonMark Markdown string
-
-     - parameter frame:               The frame size of the web view
-     - parameter markdownString:      A string containing CommonMark Markdown
-     - parameter openLinksInBrowser:  Whether or not to open links using an external browser
-     - parameter templateBundle:      Optional custom template bundle. Leaving this as `nil` will use the bundle included with Down.
-     - parameter didLoadSuccessfully: Optional callback for when the web content has loaded successfully
-
-     - returns: An instance of Self
-     */
     public init(imagesStorage: URL? = nil, frame: CGRect, markdownString: String, openLinksInBrowser: Bool = true, css: String, templateBundle: Bundle? = nil, didLoadSuccessfully: DownViewClosure? = nil) throws {
         self.didLoadSuccessfully = didLoadSuccessfully
 
@@ -37,8 +24,8 @@ open class MarkdownView: WKWebView {
         userContentController.add(HandlerCopyCode(), name: "notification")
 
         #if os(OSX)
-            userContentController.add(HandlerMouseOver(), name: "mouseover")
-            userContentController.add(HandlerMouseOut(), name: "mouseout")
+        userContentController.add(HandlerMouseOver(), name: "mouseover")
+        userContentController.add(HandlerMouseOut(), name: "mouseout")
         #endif
 
         let configuration = WKWebViewConfiguration()
@@ -55,70 +42,31 @@ open class MarkdownView: WKWebView {
         #endif
 
         if openLinksInBrowser || didLoadSuccessfully != nil { navigationDelegate = self }
-        try loadHTMLView(markdownString, css: MarkdownView.getPreviewStyle(), imagesStorage: imagesStorage)
+        try loadHTMLView(markdownString, imagesStorage: imagesStorage)
     }
 
-    required public init?(coder: NSCoder) {
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    // MARK: - API
 
-    /**
-     Renders the given CommonMark Markdown string into HTML and updates the DownView while keeping the style intact
-
-     - parameter markdownString:      A string containing CommonMark Markdown
-     - parameter didLoadSuccessfully: Optional callback for when the web content has loaded successfully
-
-     - throws: `DownErrors` depending on the scenario
-     */
     public func update(markdownString: String, didLoadSuccessfully: DownViewClosure? = nil) throws {
-        // Note: As the init method takes this callback already, we only overwrite it here if
-        // a non-nil value is passed in
         if let didLoadSuccessfully = didLoadSuccessfully {
             self.didLoadSuccessfully = didLoadSuccessfully
         }
 
-        try loadHTMLView(markdownString, css: "")
+        try loadHTMLView(markdownString)
     }
-
-    public static func getPreviewStyle(theme: String? = nil) -> String {
-        var css = String()
-
-        if let cssURL = UserDefaultsManagement.markdownPreviewCSS {
-            if FileManager.default.fileExists(atPath: cssURL.path), let content = try? String(contentsOf: cssURL) {
-                css = content
-            }
-        }
-
-        let theme = theme ?? UserDefaultsManagement.codeTheme
-
-        var codeStyle = ""
-        if let hgPath = Bundle(for: Highlightr.self).path(forResource: theme + ".min", ofType: "css") {
-            codeStyle = try! String.init(contentsOfFile: hgPath)
-        }
-
-        let familyName = UserDefaultsManagement.noteFont.familyName
-
-        let family = familyName ?? "-apple-system"
-        let margin = Int(UserDefaultsManagement.marginSize)
-
-        return "body {font: \(UserDefaultsManagement.fontSize)px '\(family)', '-apple-system'; margin: 0 \(margin)px; } code, pre {font: \(UserDefaultsManagement.codeFontSize)px '\(UserDefaultsManagement.codeFontName)', Courier, monospace, 'Liberation Mono', Menlo;} img {display: block;} \(codeStyle) \(css)"
-    }
-
-    // MARK: - Private Properties
 
     let bundle: Bundle
 
-    fileprivate lazy var baseURL: URL = {
-        return self.bundle.url(forResource: "index", withExtension: "html")!
-    }()
+    fileprivate lazy var baseURL: URL = self.bundle.url(forResource: "index", withExtension: "html")!
 
     fileprivate var didLoadSuccessfully: DownViewClosure?
 
     func createTemporaryBundle(pageHTMLString: String) -> URL? {
         guard let bundleResourceURL = bundle.resourceURL
-            else { return nil }
+        else { return nil }
 
         let customCSS = UserDefaultsManagement.markdownPreviewCSS
 
@@ -135,7 +83,7 @@ open class MarkdownView: WKWebView {
                 let fileList = try FileManager.default.contentsOfDirectory(atPath: bundleResourceURL.path)
 
                 for file in fileList {
-                    if customCSS != nil && file == "css" {
+                    if customCSS != nil, file == "css" {
                         continue
                     }
 
@@ -170,16 +118,14 @@ open class MarkdownView: WKWebView {
 // MARK: - Private API
 
 private extension MarkdownView {
-
-    func loadHTMLView(_ markdownString: String, css: String, imagesStorage: URL? = nil) throws {
-
+    func loadHTMLView(_ markdownString: String, imagesStorage: URL? = nil) throws {
         var htmlString = renderMarkdownHTML(markdown: markdownString)!
- 
+
         if let imagesStorage = imagesStorage {
             htmlString = loadImages(imagesStorage: imagesStorage, html: htmlString)
         }
 
-        let pageHTMLString = try htmlFromTemplate(htmlString, css: css)
+        let pageHTMLString = try htmlFromTemplate(htmlString)
 
         let indexURL = createTemporaryBundle(pageHTMLString: pageHTMLString)
 
@@ -191,11 +137,11 @@ private extension MarkdownView {
 
     private func loadImages(imagesStorage: URL, html: String) -> String {
         var htmlString = html
- 
+
         do {
             let regex = try NSRegularExpression(pattern: "<img.*?src=\"([^\"]*)\"")
             let results = regex.matches(in: html, range: NSRange(html.startIndex..., in: html))
-        
+
             let images = results.map {
                 String(html[Range($0.range, in: html)!])
             }
@@ -203,7 +149,7 @@ private extension MarkdownView {
             for image in images {
                 var localPath = image.replacingOccurrences(of: "<img src=\"", with: "").dropLast()
 
-                guard !localPath.starts(with: "http://") && !localPath.starts(with: "https://") else {
+                guard !localPath.starts(with: "http://"), !localPath.starts(with: "https://") else {
                     continue
                 }
 
@@ -240,25 +186,22 @@ private extension MarkdownView {
 
                 htmlString = htmlString.replacingOccurrences(of: image, with: imPath)
             }
-        } catch let error {
+        } catch {
             print("Images regex: \(error.localizedDescription)")
         }
 
         return htmlString
     }
 
-    func htmlFromTemplate(_ htmlString: String, css: String) throws -> String {
+    func htmlFromTemplate(_ htmlString: String) throws -> String {
         var template = try NSString(contentsOf: baseURL, encoding: String.Encoding.utf8.rawValue)
-        template = template.replacingOccurrences(of: "DOWN_CSS", with: css) as NSString
         return template.replacingOccurrences(of: "DOWN_HTML", with: htmlString)
     }
-
 }
 
 // MARK: - WKNavigationDelegate
 
 extension MarkdownView: WKNavigationDelegate {
-
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         guard let url = navigationAction.request.url else { return }
 
@@ -274,12 +217,12 @@ extension MarkdownView: WKNavigationDelegate {
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         didLoadSuccessfully?()
     }
-
 }
 
 class HandlerCopyCode: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
+                               didReceive message: WKScriptMessage)
+    {
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
         let pasteboard = NSPasteboard.general
         pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
@@ -289,16 +232,16 @@ class HandlerCopyCode: NSObject, WKScriptMessageHandler {
 
 class HandlerMouseOver: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
+                               didReceive message: WKScriptMessage)
+    {
         NSCursor.pointingHand.set()
     }
 }
 
 class HandlerMouseOut: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
+                               didReceive message: WKScriptMessage)
+    {
         NSCursor.arrow.set()
     }
 }
-
-

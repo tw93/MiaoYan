@@ -88,11 +88,10 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         guard self.note != note || force else { return }
         
         let markdownString = note.getPrettifiedContent()
-        let css = MarkdownView.getPreviewStyle()
         let imagesStorage = note.project.url
         
         cleanCache()
-        try? loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
+        try? loadHTMLView(markdownString,imagesStorage: imagesStorage)
         
         self.note = note
     }
@@ -109,27 +108,6 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         }
     }
 
-    private func getTemplate(css: String) -> String? {
-        let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle")
-        let url = NSURL.fileURL(withPath: path!)
-        let bundle = Bundle(url: url)
-        let baseURL = bundle!.url(forResource: "index", withExtension: "html")!
-
-        guard var template = try? NSString(contentsOf: baseURL, encoding: String.Encoding.utf8.rawValue) else { return nil }
-        template = template.replacingOccurrences(of: "DOWN_CSS", with: css) as NSString
-
-#if os(iOS)
-        if NightNight.theme == .night {
-            template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
-        }
-#else
-        if UserDataService.instance.isDark {
-            template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
-        }
-#endif
-
-        return template as String
-    }
 
     private func isFootNotes(url: URL) -> Bool {
         let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory())
@@ -153,14 +131,16 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         return false
     }
 
-    func loadHTMLView(_ markdownString: String, css: String, imagesStorage: URL? = nil) throws {
+    func loadHTMLView(_ markdownString: String, imagesStorage: URL? = nil) throws {
         var htmlString = renderMarkdownHTML(markdown: markdownString)!
 
         if let imagesStorage = imagesStorage {
             htmlString = loadImages(imagesStorage: imagesStorage, html: htmlString)
         }
 
-        let pageHTMLString = try htmlFromTemplate(htmlString, css: css)
+        let pageHTMLString = try htmlFromTemplate(htmlString)
+        
+        print(pageHTMLString)
         let indexURL = createTemporaryBundle(pageHTMLString: pageHTMLString)
 
         if let i = indexURL {
@@ -281,14 +261,13 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         return htmlString
     }
 
-    func htmlFromTemplate(_ htmlString: String, css: String) throws -> String {
+    func htmlFromTemplate(_ htmlString: String ) throws -> String {
         let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle")
         let url = NSURL.fileURL(withPath: path!)
         let bundle = Bundle(url: url)
         let baseURL = bundle!.url(forResource: "index", withExtension: "html")!
         
         var template = try NSString(contentsOf: baseURL, encoding: String.Encoding.utf8.rawValue)
-        template = template.replacingOccurrences(of: "DOWN_CSS", with: css) as NSString
 
 #if os(iOS)
         if NightNight.theme == .night {

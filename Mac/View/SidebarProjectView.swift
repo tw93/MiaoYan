@@ -70,6 +70,7 @@ class SidebarProjectView: NSOutlineView,
             NSPasteboard.PasteboardType(rawValue: "public.data"),
             NSPasteboard.PasteboardType(rawValue: "notesTable")
         ])
+
         super.draw(dirtyRect)
     }
 
