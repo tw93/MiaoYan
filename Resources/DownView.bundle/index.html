@@ -1,191 +1,187 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1.0" />
-    <link charset="utf-8" href="css/markdown-preview.css" rel="stylesheet">
-    <script charset="utf-8" src="js/load-image.all.min.js" type="text/javascript"></script>
-    <script charset="utf-8" src="js/highlight.min.js" type="text/javascript"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
+    <link charset="utf-8" href="css/markdown-preview.css" rel="stylesheet" />
+    <script
+      charset="utf-8"
+      src="js/highlight.min.js"
+      type="text/javascript"
+    ></script>
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
     <script src="js/mermaid.min.js"></script>
     <title></title>
-</head>
+  </head>
 
-<body>
-    <div class="markdown-body"
-        id="write"
-        oncontextmenu='contextMenu(event)'>DOWN_HTML</div>
+  <body>
+    <div class="markdown-body" id="write" oncontextmenu="contextMenu(event)">
+      DOWN_HTML
+    </div>
     <script>
-        
-        function contextMenu(evt){
-            evt.preventDefault && evt.preventDefault();
-        }
-    
-        function getSelectionAndSendMessage() {
-            var txt = document.getSelection().toString();
-            window.webkit.messageHandlers.newSelectionDetected.postMessage(txt);
-        }
-        document.onmouseup = getSelectionAndSendMessage;
-        document.onkeyup = getSelectionAndSendMessage;
-        document.oncontextmenu = getSelectionAndSendMessage;
+      function contextMenu(evt) {
+        evt.preventDefault && evt.preventDefault();
+      }
 
-        var darkModeStylesNodeID = "darkModeStyles";
+      function getSelectionAndSendMessage() {
+        var txt = document.getSelection().toString();
+        window.webkit.messageHandlers.newSelectionDetected.postMessage(txt);
+      }
+      document.onmouseup = getSelectionAndSendMessage;
+      document.onkeyup = getSelectionAndSendMessage;
+      document.oncontextmenu = getSelectionAndSendMessage;
 
-        function addStyleString(str, nodeID) {
-            var node = document.createElement('style');
-            node.id = nodeID;
-            node.innerHTML = str;
+      var darkModeStylesNodeID = 'darkModeStyles';
 
-            document.getElementsByTagName('head')[0].appendChild(node);
+      function addStyleString(str, nodeID) {
+        var node = document.createElement('style');
+        node.id = nodeID;
+        node.innerHTML = str;
+
+        document.getElementsByTagName('head')[0].appendChild(node);
+      }
+
+      function switchToDarkMode() {
+        var darkModeStyleElement =
+          document.getElementById(darkModeStylesNodeID);
+        if (darkModeStyleElement == null) {
+          var darkModeStyles =
+            "* { color: white; } body { background: #21262B; } code { background: #454545; } a { color: #98e7a7 } table td, table th { color: black } input[type='checkbox'] { border: 1px solid white; }.hljs{color:#abb2bf;background:#21262B}.hljs-comment,.hljs-quote{color:#ABB2BF;}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#c678dd}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#e06c75}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#98c379}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#d19a66}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#61aeee}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#e6c07b}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}";
+          addStyleString(darkModeStyles, darkModeStylesNodeID);
         }
+      }
 
-    
-        function switchToDarkMode() {
-            var darkModeStyleElement = document.getElementById(darkModeStylesNodeID);
-            if (darkModeStyleElement == null) {
-                var darkModeStyles = "* { color: white; } body { background: #21262B; } code { background: #454545; } a { color: #98e7a7 } table td, table th { color: black } input[type='checkbox'] { border: 1px solid white; }.hljs{color:#abb2bf;background:#21262B}.hljs-comment,.hljs-quote{color:#ABB2BF;}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#c678dd}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#e06c75}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#98c379}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#d19a66}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#61aeee}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#e6c07b}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}";
-                addStyleString(darkModeStyles, darkModeStylesNodeID);
-            }
+      function switchToLightMode() {
+        var darkModeStyleElement =
+          document.getElementById(darkModeStylesNodeID);
+        if (darkModeStyleElement != null) {
+          darkModeStyleElement.parentElement.removeChild(darkModeStyleElement);
         }
+      }
 
-        function switchToLightMode() {
-            var darkModeStyleElement = document.getElementById(darkModeStylesNodeID);
-            if (darkModeStyleElement != null) {
-                darkModeStyleElement.parentElement.removeChild(darkModeStyleElement);
-            }
-        }
-
-        if ('CUSTOM_CSS' == 'darkmode') {
-            switchToDarkMode();
-        }
+      if ('CUSTOM_CSS' == 'darkmode') {
+        switchToDarkMode();
+      }
     </script>
 
     <script>
-        var preList = document.getElementsByTagName("code"),
-            length = preList.length,
-            i = 0;
+      var preList = document.getElementsByTagName('code'),
+        length = preList.length,
+        i = 0;
 
-        for (i; i < length; i++) {
-            if (preList[i].classList.contains('language-mermaid')) {
-                continue;
-            }
-
-            preList[i].addEventListener("mouseenter", function(event) {
-                window.webkit.messageHandlers.mouse.postMessage('enter')
-            });
-
-            preList[i].addEventListener("mouseleave", function(event) {
-                window.webkit.messageHandlers.mouse.postMessage('leave')
-            });
-
-            preList[i].addEventListener("click", function(event) {
-                let target = event.target
-                while (target && target.nodeName !== "CODE") {
-                    target = target.parentElement
-                }
-
-                window.webkit.messageHandlers.clipboard.postMessage(target.innerText);
-
-                target.style.background = "#9c9c9c"
-                setTimeout(function() {
-                    if (null == document.getElementById("darkModeStyles")) {
-                        target.style.background = "#f5f5f5";
-                    } else {
-                        target.style.background = "#454545";
-                    }
-                }, 150)
-            });
+      for (i; i < length; i++) {
+        if (preList[i].classList.contains('language-mermaid')) {
+          continue;
         }
 
-        var aList = document.getElementsByTagName("a"),
-            aLength = aList.length,
-            j = 0;
+        preList[i].addEventListener('mouseenter', function (event) {
+          window.webkit.messageHandlers.mouse.postMessage('enter');
+        });
 
-        for (j; j < aLength; j++) {
-            aList[j].addEventListener("mouseenter", function(event) {
-                window.webkit.messageHandlers.mouse.postMessage('enter')
-            });
+        preList[i].addEventListener('mouseleave', function (event) {
+          window.webkit.messageHandlers.mouse.postMessage('leave');
+        });
 
-            aList[j].addEventListener("mouseleave", function(event) {
-                window.webkit.messageHandlers.mouse.postMessage('leave')
-            });
-        }
-    </script>
-    
-    <script>
-        var preList = document.getElementsByTagName("input"),
-            length = preList.length,
-            i = 0;
+        preList[i].addEventListener('click', function (event) {
+          let target = event.target;
+          while (target && target.nodeName !== 'CODE') {
+            target = target.parentElement;
+          }
 
-        for (i; i < length; i++) {
-            preList[i].disabled = true;
+          window.webkit.messageHandlers.clipboard.postMessage(target.innerText);
 
-            if (preList[i].parentNode.tagName == "P" && preList[i].parentNode.parentNode.tagName == "LI") {
-                preList[i].parentNode.parentNode.parentNode.classList.add('cb')
-                continue;
+          target.style.background = '#9c9c9c';
+          setTimeout(function () {
+            if (null == document.getElementById('darkModeStyles')) {
+              target.style.background = '#f5f5f5';
+            } else {
+              target.style.background = '#454545';
             }
+          }, 150);
+        });
+      }
 
-            if (preList[i].parentNode.tagName != "LI") {
-                continue;
-            }
+      var aList = document.getElementsByTagName('a'),
+        aLength = aList.length,
+        j = 0;
 
-            preList[i].parentNode.parentNode.classList.add('cb')
-        }
+      for (j; j < aLength; j++) {
+        aList[j].addEventListener('mouseenter', function (event) {
+          window.webkit.messageHandlers.mouse.postMessage('enter');
+        });
+
+        aList[j].addEventListener('mouseleave', function (event) {
+          window.webkit.messageHandlers.mouse.postMessage('leave');
+        });
+      }
     </script>
 
     <script>
-        var loadCanvas = function(images) {
-            if (images.length == 0) {
-                return;
-            }
+      var preList = document.getElementsByTagName('input'),
+        length = preList.length,
+        i = 0;
 
-            var image = images.shift();
-            var orientation = parseInt(image.dataset.orientation) || 0;
+      for (i; i < length; i++) {
+        preList[i].disabled = true;
 
-            if (orientation < 2) {
-                loadCanvas(images);
-                return;
-            }
+        if (
+          preList[i].parentNode.tagName == 'P' &&
+          preList[i].parentNode.parentNode.tagName == 'LI'
+        ) {
+          preList[i].parentNode.parentNode.parentNode.classList.add('cb');
+          continue;
+        }
 
-            loadImage(
-                image.src,
-                function(canvas) {
-                    image.parentNode.replaceChild(canvas, image)
-                    canvas.style.maxWidth = '100%';
+        if (preList[i].parentNode.tagName != 'LI') {
+          continue;
+        }
 
-                    if (images.length > 0) {
-                        loadCanvas(images);
-                    }
-                }, {
-                    orientation: orientation,
-                    canvas: true
-                }
-            );
-        };
-
-        var onLoaded = function() {
-            var collection = document.getElementsByClassName("miaoyan-preview"),
-                images = Array.prototype.slice.call(collection);
-            loadCanvas(images);
-        };
-
-        document.addEventListener("DOMContentLoaded", onLoaded);
+        preList[i].parentNode.parentNode.classList.add('cb');
+      }
     </script>
 
     <script>
-        var config = {
-            startOnLoad: true,
-            theme: 'forest',
-            flowchart: {
-                useMaxWidth: false,
-                htmlLabels: true
-            }
-        };
+        document.addEventListener('DOMContentLoaded', function () {
+          var observer = new IntersectionObserver(onIntersect);
 
-        mermaid.initialize(config);
-        window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
+          document.querySelectorAll('[data-lazy]').forEach((img) => {
+            observer.observe(img);
+          });
+
+          function onIntersect(entries) {
+            entries.forEach((entry) => {
+              if (
+                entry.target.getAttribute('data-processed') ||
+                !entry.isIntersecting
+              )
+                return true;
+              entry.target.setAttribute(
+                'src',
+                entry.target.getAttribute('data-src'),
+              );
+              entry.target.setAttribute('data-processed', true);
+            });
+          }
+        });
     </script>
-</body>
 
+    <script>
+      var config = {
+        startOnLoad: true,
+        theme: 'forest',
+        flowchart: {
+          useMaxWidth: false,
+          htmlLabels: true,
+        },
+      };
+
+      mermaid.initialize(config);
+      window.mermaid.init(
+        undefined,
+        document.querySelectorAll('.language-mermaid'),
+      );
+    </script>
+  </body>
 </html>

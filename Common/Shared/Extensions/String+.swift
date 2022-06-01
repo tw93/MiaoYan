@@ -1,5 +1,5 @@
-import Foundation
 import CommonCrypto
+import Foundation
 
 public extension String {
     func condenseWhitespace() -> String {
@@ -70,7 +70,7 @@ public extension String {
         guard let regex = try? NSRegularExpression(pattern: regex, options: [.dotMatchesLineSeparators]) else { return [] }
 
         let nsString = self as NSString
-        let results  = regex.matches(in: self, options: [], range: NSRange(0..<nsString.length))
+        let results = regex.matches(in: self, options: [], range: NSRange(0..<nsString.length))
         return results.map { result in
             (0..<result.numberOfRanges).map {
                 result.range(at: $0).location != NSNotFound
@@ -105,48 +105,48 @@ public extension String {
     }
 }
 
-extension StringProtocol where Index == String.Index {
-    public func nsRange(from range: Range<Index>) -> NSRange {
+public extension StringProtocol where Index == String.Index {
+    func nsRange(from range: Range<Index>) -> NSRange {
         return NSRange(range, in: self)
     }
 }
 
 public extension String {
-  subscript(value: Int) -> Character {
-    self[index(at: value)]
-  }
+    subscript(value: Int) -> Character {
+        self[index(at: value)]
+    }
 }
 
 public extension String {
-  subscript(value: NSRange) -> Substring {
-    self[value.lowerBound..<value.upperBound]
-  }
+    subscript(value: NSRange) -> Substring {
+        self[value.lowerBound..<value.upperBound]
+    }
 }
 
 public extension String {
-  subscript(value: CountableClosedRange<Int>) -> Substring {
-    self[index(at: value.lowerBound)...index(at: value.upperBound)]
-  }
+    subscript(value: CountableClosedRange<Int>) -> Substring {
+        self[index(at: value.lowerBound) ... index(at: value.upperBound)]
+    }
 
-  subscript(value: CountableRange<Int>) -> Substring {
-    self[index(at: value.lowerBound)..<index(at: value.upperBound)]
-  }
+    subscript(value: CountableRange<Int>) -> Substring {
+        self[index(at: value.lowerBound)..<index(at: value.upperBound)]
+    }
 
-  subscript(value: PartialRangeUpTo<Int>) -> Substring {
-    self[..<index(at: value.upperBound)]
-  }
+    subscript(value: PartialRangeUpTo<Int>) -> Substring {
+        self[..<index(at: value.upperBound)]
+    }
 
-  subscript(value: PartialRangeThrough<Int>) -> Substring {
-    self[...index(at: value.upperBound)]
-  }
+    subscript(value: PartialRangeThrough<Int>) -> Substring {
+        self[...index(at: value.upperBound)]
+    }
 
-  subscript(value: PartialRangeFrom<Int>) -> Substring {
-    self[index(at: value.lowerBound)...]
-  }
+    subscript(value: PartialRangeFrom<Int>) -> Substring {
+        self[index(at: value.lowerBound)...]
+    }
 }
 
 private extension String {
-  func index(at offset: Int) -> String.Index {
-    index(startIndex, offsetBy: offset)
-  }
+    func index(at offset: Int) -> String.Index {
+        self.index(startIndex, offsetBy: offset)
+    }
 }
