@@ -1,18 +1,17 @@
-import WebKit
 import Carbon.HIToolbox
+import WebKit
 
 #if os(iOS)
-    import NightNight
+import NightNight
 #endif
 
-public typealias MPreviewViewClosure = () -> ()
+public typealias MPreviewViewClosure = () -> Void
 
 class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
-
     private weak var note: Note?
     private var closure: MPreviewViewClosure?
     public static var template: String?
-    
+
     init(frame: CGRect, note: Note, closure: MPreviewViewClosure?) {
         self.closure = closure
         let userContentController = WKUserContentController()
@@ -25,10 +24,10 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         super.init(frame: frame, configuration: configuration)
 
         navigationDelegate = self
-        
+
 #if os(OSX)
         if #available(macOS 10.13, *) {
-              setValue(false, forKey: "drawsBackground")
+            setValue(false, forKey: "drawsBackground")
         }
 #else
         isOpaque = false
@@ -39,6 +38,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         load(note: note)
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -86,13 +86,13 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     public func load(note: Note, force: Bool = false) {
         /// Do not re-load already loaded view
         guard self.note != note || force else { return }
-        
+
         let markdownString = note.getPrettifiedContent()
         let imagesStorage = note.project.url
-        
+
         cleanCache()
-        try? loadHTMLView(markdownString,imagesStorage: imagesStorage)
-        
+        try? loadHTMLView(markdownString, imagesStorage: imagesStorage)
+
         self.note = note
     }
 
@@ -108,7 +108,6 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         }
     }
 
-
     private func isFootNotes(url: URL) -> Bool {
         let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory())
             .appendingPathComponent("wkPreview")
@@ -119,7 +118,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         if link.starts(with: "#") {
             let anchor = link.dropFirst()
             let javascript = "document.getElementById('\(anchor)').offsetTop"
-            evaluateJavaScript(javascript) { [weak self] (result, error) in
+            evaluateJavaScript(javascript) { [weak self] result, _ in
                 if let offset = result as? CGFloat {
                     self?.evaluateJavaScript("window.scrollTo(0,\(offset))", completionHandler: nil)
                 }
@@ -139,7 +138,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         }
 
         let pageHTMLString = try htmlFromTemplate(htmlString)
-        
+
         print(pageHTMLString)
         let indexURL = createTemporaryBundle(pageHTMLString: pageHTMLString)
 
@@ -155,7 +154,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         let bundle = Bundle(url: url)
 
         guard let bundleResourceURL = bundle?.resourceURL
-            else { return nil }
+        else { return nil }
 
         let customCSS = UserDefaultsManagement.markdownPreviewCSS
 
@@ -172,7 +171,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 let fileList = try FileManager.default.contentsOfDirectory(atPath: bundleResourceURL.path)
 
                 for file in fileList {
-                    if customCSS != nil && file == "css" {
+                    if customCSS != nil, file == "css" {
                         continue
                     }
 
@@ -207,7 +206,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         var htmlString = html
 
         do {
-            let regex = try NSRegularExpression(pattern: "<img.*?src=\"([^\"]*)\"")
+            let regex = try NSRegularExpression(pattern: "<img .+?>")
             let results = regex.matches(in: html, range: NSRange(html.startIndex..., in: html))
 
             let images = results.map {
@@ -215,10 +214,13 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             }
 
             for image in images {
-                var localPath = image.replacingOccurrences(of: "<img src=\"", with: "").dropLast()
+                let regex = "(http[^\\s]+(jpg|jpeg|png|tiff|gif)\\b)"
 
-                guard !localPath.starts(with: "http://") && !localPath.starts(with: "https://") else {
-                    continue
+                let res = image.matchingStrings(regex: regex)
+
+                var localPath = image
+                if res.count > 0 {
+                    localPath = res[0][0].trim()
                 }
 
                 let localPathClean = localPath.removingPercentEncoding ?? String(localPath)
@@ -237,36 +239,28 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 try? FileManager.default.removeItem(at: destination)
                 try? FileManager.default.copyItem(at: imageURL, to: destination)
 
-                var orientation = 0
-                let url = NSURL(fileURLWithPath: imageURL.path)
-                if let imageSource = CGImageSourceCreateWithURL(url, nil) {
-                    let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as Dictionary?
-                    if let orientationProp = imageProperties?[kCGImagePropertyOrientation] as? Int {
-                        orientation = orientationProp
-                    }
-                }
-
+    
                 if localPath.first == "/" {
                     localPath.remove(at: localPath.startIndex)
                 }
 
-                let imPath = "<img data-orientation=\"\(orientation)\" class=\"miaoyan-preview\" src=\"" + localPath + "\""
+                let imPath = "<img class=\"miaoyan-preview\" data-src=\"" + localPath + "\" src=\"https://gw.alipayobjects.com/zos/k/po/placeholder.png\" data-lazy/>"
 
                 htmlString = htmlString.replacingOccurrences(of: image, with: imPath)
             }
-        } catch let error {
+        } catch {
             print("Images regex: \(error.localizedDescription)")
         }
 
         return htmlString
     }
 
-    func htmlFromTemplate(_ htmlString: String ) throws -> String {
+    func htmlFromTemplate(_ htmlString: String) throws -> String {
         let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle")
         let url = NSURL.fileURL(withPath: path!)
         let bundle = Bundle(url: url)
         let baseURL = bundle!.url(forResource: "index", withExtension: "html")!
-        
+
         var template = try NSString(contentsOf: baseURL, encoding: String.Encoding.utf8.rawValue)
 
 #if os(iOS)
@@ -292,7 +286,8 @@ class HandlerCodeCopy: NSObject, WKScriptMessageHandler {
     }
 
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
+                               didReceive message: WKScriptMessage)
+    {
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
 
         HandlerCodeCopy.selectionString = message
@@ -303,7 +298,8 @@ class HandlerSelection: NSObject, WKScriptMessageHandler {
     public static var selectionString: String?
 
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
+                               didReceive message: WKScriptMessage)
+    {
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
 
         HandlerSelection.selectionString = message

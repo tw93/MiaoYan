@@ -72,10 +72,10 @@ extension UserDefaultsManagement {
 
             if #available(OSX 10.14, *) {
                 if NSAppearance.current.isDark {
-                    UserDefaults.standard.set("atom-one-dark", forKey: Constants.codeTheme);
+                    UserDefaults.standard.set("atom-one-dark", forKey: Constants.codeTheme)
                     return "atom-one-dark"
                 } else {
-                    UserDefaults.standard.set("vs", forKey: Constants.codeTheme);
+                    UserDefaults.standard.set("vs", forKey: Constants.codeTheme)
                     return "vs"
                 }
             }
