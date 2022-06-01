@@ -25,7 +25,7 @@ public class UserDefaultsManagement {
     static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
     static var DefaultBgColor = Color.white
 
-    static var codeFontName = "Jetbrains Mono"
+    static var codeFontName = "霞鹜文楷等宽"
     static var lineWidth = 1000
     static var linkColor = Color(red: 0.23, green: 0.23, blue: 0.23, alpha: 1.00)
     static var fullScreen = false
@@ -97,7 +97,7 @@ public class UserDefaultsManagement {
 
     static var codeFont: Font! {
         get {
-            if let font = Font(name: self.fontName, size: CGFloat(self.codeFontSize)) {
+            if let font = Font(name: self.codeFontName, size: CGFloat(self.codeFontSize)) {
                 return font
             }
 

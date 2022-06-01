@@ -517,6 +517,7 @@
 				D7793C721F211C6000CA39B7 /* AppDelegate.swift */,
 				D7E6ACE820832D40003599A2 /* AppDelegate+URLRoutes.swift */,
 				D74112271FABA21B00AB619A /* MainWindow.swift */,
+				D730829123084340003185D1 /* MPreviewView.swift */,
 				275592961F3AE9B5006B8988 /* MainWindowController.swift */,
 				D7793C741F211C6000CA39B7 /* ViewController.swift */,
 				D792297421A845B4005F468F /* ProjectSettingsViewController.swift */,
@@ -529,7 +530,6 @@
 				D7465F27207F2CD600E46A52 /* Images.xcassets */,
 				D7793C7B1F211C6000CA39B7 /* Info.plist */,
 				D7793C7C1F211C6000CA39B7 /* MiaoYan.entitlements */,
-				D730829123084340003185D1 /* MPreviewView.swift */,
 			);
 			path = Mac;
 			sourceTree = "<group>";
