@@ -12,6 +12,12 @@
 		270678F6244601C000D9935F /* MiaoYanCore_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */; };
 		270678F7244601C000D9935F /* MiaoYanCore_macOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		275592971F3AE9B5006B8988 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275592961F3AE9B5006B8988 /* MainWindowController.swift */; };
+		276C4161284705C2004C2647 /* LXGWWenKai-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 276C415B284705BF004C2647 /* LXGWWenKai-Bold.ttf */; };
+		276C4162284705C2004C2647 /* LXGWWenKaiMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 276C415C284705BF004C2647 /* LXGWWenKaiMono-Regular.ttf */; };
+		276C4163284705C2004C2647 /* LXGWWenKaiMono-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 276C415D284705C0004C2647 /* LXGWWenKaiMono-Bold.ttf */; };
+		276C4164284705C2004C2647 /* LXGWWenKai-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 276C415E284705C0004C2647 /* LXGWWenKai-Light.ttf */; };
+		276C4165284705C2004C2647 /* LXGWWenKai-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 276C415F284705C1004C2647 /* LXGWWenKai-Regular.ttf */; };
+		276C4166284705C2004C2647 /* LXGWWenKaiMono-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 276C4160284705C2004C2647 /* LXGWWenKaiMono-Light.ttf */; };
 		277A61D8244B538F000F0033 /* SidebarTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277A61D7244B538E000F0033 /* SidebarTableRowView.swift */; };
 		278782AA2446910D000D5B82 /* Pods_MiaoYanCore_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E9D36FA8E1C6FB67A485A09 /* Pods_MiaoYanCore_macOS.framework */; };
 		2799407C218484C900727B20 /* TitleBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799407B218484C900727B20 /* TitleBarView.swift */; };
@@ -183,6 +189,12 @@
 
 /* Begin PBXFileReference section */
 		275592961F3AE9B5006B8988 /* MainWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
+		276C415B284705BF004C2647 /* LXGWWenKai-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LXGWWenKai-Bold.ttf"; sourceTree = "<group>"; };
+		276C415C284705BF004C2647 /* LXGWWenKaiMono-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LXGWWenKaiMono-Regular.ttf"; sourceTree = "<group>"; };
+		276C415D284705C0004C2647 /* LXGWWenKaiMono-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LXGWWenKaiMono-Bold.ttf"; sourceTree = "<group>"; };
+		276C415E284705C0004C2647 /* LXGWWenKai-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LXGWWenKai-Light.ttf"; sourceTree = "<group>"; };
+		276C415F284705C1004C2647 /* LXGWWenKai-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LXGWWenKai-Regular.ttf"; sourceTree = "<group>"; };
+		276C4160284705C2004C2647 /* LXGWWenKaiMono-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LXGWWenKaiMono-Light.ttf"; sourceTree = "<group>"; };
 		277A61D7244B538E000F0033 /* SidebarTableRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarTableRowView.swift; sourceTree = "<group>"; };
 		2795956327B12CDC000B754C /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiaoYan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2799407B218484C900727B20 /* TitleBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleBarView.swift; sourceTree = "<group>"; };
@@ -338,6 +350,12 @@
 		27A1AE302844BA83006DF055 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				276C415B284705BF004C2647 /* LXGWWenKai-Bold.ttf */,
+				276C415E284705C0004C2647 /* LXGWWenKai-Light.ttf */,
+				276C415F284705C1004C2647 /* LXGWWenKai-Regular.ttf */,
+				276C415D284705C0004C2647 /* LXGWWenKaiMono-Bold.ttf */,
+				276C4160284705C2004C2647 /* LXGWWenKaiMono-Light.ttf */,
+				276C415C284705BF004C2647 /* LXGWWenKaiMono-Regular.ttf */,
 				27A1AE312844BA83006DF055 /* JetBrainsMono-Thin.ttf */,
 				27A1AE322844BA83006DF055 /* JetBrainsMono-Bold.ttf */,
 				27A1AE332844BA83006DF055 /* JetBrainsMono-Italic.ttf */,
@@ -731,14 +749,19 @@
 			files = (
 				27A1AE542844BA83006DF055 /* JetBrainsMono-LightItalic.ttf in Resources */,
 				27A1AE522844BA83006DF055 /* JetBrainsMono-Bold.ttf in Resources */,
+				276C4165284705C2004C2647 /* LXGWWenKai-Regular.ttf in Resources */,
 				27A1AE6E2844BA84006DF055 /* JetBrainsMono-Medium.ttf in Resources */,
 				27A1AE612844BA83006DF055 /* JetBrainsMono-Light.ttf in Resources */,
+				276C4166284705C2004C2647 /* LXGWWenKaiMono-Light.ttf in Resources */,
 				27A1AE6B2844BA83006DF055 /* JetBrainsMono-ThinItalic.ttf in Resources */,
 				D71C4A4E1F520F1B00EBA30B /* DownView.bundle in Resources */,
 				27A1AE6A2844BA83006DF055 /* JetBrainsMono-ExtraBoldItalic.ttf in Resources */,
 				27A1AE6F2844BA84006DF055 /* JetBrainsMono-BoldItalic.ttf in Resources */,
 				27A1AE532844BA83006DF055 /* JetBrainsMono-Italic.ttf in Resources */,
+				276C4162284705C2004C2647 /* LXGWWenKaiMono-Regular.ttf in Resources */,
 				27A1AE642844BA83006DF055 /* JetBrainsMono-SemiBold.ttf in Resources */,
+				276C4164284705C2004C2647 /* LXGWWenKai-Light.ttf in Resources */,
+				276C4161284705C2004C2647 /* LXGWWenKai-Bold.ttf in Resources */,
 				27A1AE622844BA83006DF055 /* JetBrainsMono-MediumItalic.ttf in Resources */,
 				27A1AE632844BA83006DF055 /* JetBrainsMono-ExtraBold.ttf in Resources */,
 				D7465F28207F2CD600E46A52 /* Images.xcassets in Resources */,
@@ -746,6 +769,7 @@
 				D7ED6892200F87BD00FF975A /* Initial in Resources */,
 				D7FBBC2520F151F80014EC5B /* Localizable.strings in Resources */,
 				27A1AE572844BA83006DF055 /* JetBrainsMono-ExtraLightItalic.ttf in Resources */,
+				276C4163284705C2004C2647 /* LXGWWenKaiMono-Bold.ttf in Resources */,
 				D7166F541F32F75E001A883F /* Main.storyboard in Resources */,
 				27A1AE512844BA83006DF055 /* JetBrainsMono-Thin.ttf in Resources */,
 				27A1AE552844BA83006DF055 /* JetBrainsMono-Regular.ttf in Resources */,

@@ -17,7 +17,7 @@ public class UserDefaultsManagement {
         typealias Font = UIFont
     #endif
 
-    static var DefaultFont = "JetBrains Mono"
+    static var DefaultFont = "霞鹜文楷"
 
     static var DefaultFontSize = 14
     static var editorLineSpacing = 6
@@ -25,7 +25,7 @@ public class UserDefaultsManagement {
     static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
     static var DefaultBgColor = Color.white
 
-    static var codeFontName = "JetBrains Mono"
+    static var codeFontName = "Jetbrains Mono"
     static var lineWidth = 1000
     static var linkColor = Color(red: 0.23, green: 0.23, blue: 0.23, alpha: 1.00)
     static var fullScreen = false
