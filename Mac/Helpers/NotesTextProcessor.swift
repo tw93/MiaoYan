@@ -116,7 +116,7 @@ public class NotesTextProcessor {
     open var quoteIndendation: CGFloat = 20
     
     #if os(OSX)
-        public static var codeFont = NSFont(name: UserDefaultsManagement.fontName, size: CGFloat(UserDefaultsManagement.codeFontSize))
+        public static var codeFont = NSFont(name: UserDefaultsManagement.codeFontName, size: CGFloat(UserDefaultsManagement.codeFontSize))
     #else
         static var codeFont: UIFont? {
             if var font = UIFont(name: "Source Code Pro", size: CGFloat(UserDefaultsManagement.fontSize)) {
@@ -369,7 +369,7 @@ public class NotesTextProcessor {
         let isFullScan = attributedString.length == paragraphRange.upperBound && paragraphRange.lowerBound == 0
         let string = attributedString.string
         
-        let codeFont = NotesTextProcessor.codeFont(CGFloat(UserDefaultsManagement.fontSize))
+        let codeFont = NotesTextProcessor.codeFont(CGFloat(UserDefaultsManagement.codeFontSize))
         let quoteFont = NotesTextProcessor.quoteFont(CGFloat(UserDefaultsManagement.fontSize))
         
         #if os(OSX)

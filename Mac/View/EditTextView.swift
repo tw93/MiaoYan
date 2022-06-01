@@ -564,19 +564,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
     }
 
-    func getPreviewStyle() -> String {
-        var codeStyle = ""
-        if let hgPath = Bundle(for: Highlightr.self).path(forResource: UserDefaultsManagement.codeTheme + ".min", ofType: "css") {
-            codeStyle = try! String(contentsOfFile: hgPath)
-        }
-
-        guard let familyName = UserDefaultsManagement.noteFont.familyName else {
-            return codeStyle
-        }
-
-        return "body {font: \(UserDefaultsManagement.fontSize)px \(familyName); } code, pre {font: \(UserDefaultsManagement.codeFontSize)px \(UserDefaultsManagement.codeFontName);} \(codeStyle)"
-    }
-
     override func awakeFromNib() {
         super.awakeFromNib()
         registerForDraggedTypes([
@@ -903,7 +890,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         guard let note = EditTextView.note else { return }
 
         UserDataService.instance.isDark = effectiveAppearance.isDark
-        UserDefaultsManagement.codeTheme = effectiveAppearance.isDark ? "monokai-sublime" : "atom-one-light"
+        UserDefaultsManagement.codeTheme = effectiveAppearance.isDark ? "atom-one-dark" : "vs"
 
         NotesTextProcessor.hl = nil
         NotesTextProcessor.highlight(note: note)
