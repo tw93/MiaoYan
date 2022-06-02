@@ -173,7 +173,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     // 清除最后一行
     override func copy(_ sender: Any?) {
-        
         let pasteboard = NSPasteboard.general
         pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
 
@@ -261,7 +260,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         UserDefaultsManagement.lastSelectedURL = note.url
 
         viewController.updateTitle(newTitle: note.getFileName())
-        
+
         undoManager?.removeAllActions(withTarget: self)
 
         if let appd = NSApplication.shared.delegate as? AppDelegate,
@@ -304,7 +303,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
         guard let storage = textStorage else { return }
 
         if note.isMarkdown(), let content = note.content.mutableCopy() as? NSMutableAttributedString {
-            content.loadImages(note: note)
+            if UserDefaultsManagement.liveImagesPreview {
+                content.loadImages(note: note)
+            }
             content.replaceCheckboxes()
 
             EditTextView.shouldForceRescan = true
@@ -612,7 +613,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "attributedText")), let attributedText = NSKeyedUnarchiver.unarchiveObject(with: data) as? NSMutableAttributedString {
             let dropPoint = convert(sender.draggingLocation, from: nil)
             let caretLocation = characterIndexForInsertion(at: dropPoint)
-
+            
             let filePathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
             let titleKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.title")
             let positionKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.position")
@@ -660,20 +661,26 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 guard let filePath = ImagesProcessor.writeFile(data: data, url: url, note: note) else { return false }
 
                 let insertRange = NSRange(location: caretLocation + offset, length: 0)
-                let cleanPath = filePath.removingPercentEncoding ?? filePath
-                guard let url = note.getImageUrl(imageName: cleanPath) else { return false }
+                if UserDefaultsManagement.liveImagesPreview {
+                    let cleanPath = filePath.removingPercentEncoding ?? filePath
+                    guard let url = note.getImageUrl(imageName: cleanPath) else { return false }
 
-                let invalidateRange = NSRange(location: caretLocation + offset, length: 1)
-                let attachment = NoteAttachment(title: "", path: cleanPath, url: url, cache: nil, invalidateRange: invalidateRange, note: note)
+                    let invalidateRange = NSRange(location: caretLocation + offset, length: 1)
+                    let attachment = NoteAttachment(title: "", path: cleanPath, url: url, cache: nil, invalidateRange: invalidateRange, note: note)
 
-                if let string = attachment.getAttributedString() {
-                    EditTextView.shouldForceRescan = true
+                    if let string = attachment.getAttributedString() {
+                        EditTextView.shouldForceRescan = true
 
-                    insertText(string, replacementRange: insertRange)
+                        insertText(string, replacementRange: insertRange)
+                        insertNewline(nil)
+                        insertNewline(nil)
+
+                        offset += 3
+                    }
+                } else {
+                    insertText("![](\(filePath))", replacementRange: insertRange)
                     insertNewline(nil)
                     insertNewline(nil)
-
-                    offset += 3
                 }
             }
 
@@ -877,6 +884,86 @@ class EditTextView: NSTextView, NSTextFinderClient {
         return .copy
     }
 
+    override func clicked(onLink link: Any, at charIndex: Int) {
+        if let link = link as? String, link.isValidEmail(), let mail = URL(string: "mailto:\(link)") {
+            NSWorkspace.shared.open(mail)
+            return
+        }
+
+        let range = NSRange(location: charIndex, length: 1)
+        
+        let char = attributedSubstring(forProposedRange: range, actualRange: nil)
+        if char?.attribute(.attachment, at: 0, effectiveRange: nil) == nil {
+
+            if NSEvent.modifierFlags.contains(.command), let link = link as? String, let url = URL(string: link) {
+                _ = try? NSWorkspace.shared.open(url, options: .withoutActivation, configuration: [:])
+                return
+            }
+
+            super.clicked(onLink: link, at: charIndex)
+            return
+        }
+        
+        if !UserDefaultsManagement.liveImagesPreview {
+            let url = URL(fileURLWithPath: link as! String)
+            NSWorkspace.shared.open(url)
+            return
+        }
+        
+        let pathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
+        let titleKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.title")
+   
+        if let event = NSApp.currentEvent,
+            !event.modifierFlags.contains(.command),
+            let note = EditTextView.note,
+            let path = (char?.attribute(pathKey, at: 0, effectiveRange: nil) as? String)?.removingPercentEncoding,
+            let url = note.getImageUrl(imageName: path) {
+
+            if !url.isImage {
+                NSWorkspace.shared.activateFileViewerSelecting([url])
+                return
+            }
+
+            let isOpened = NSWorkspace.shared.openFile(url.path, withApplication: "Preview", andDeactivate: true)
+
+            if isOpened { return }
+
+            let url = URL(fileURLWithPath: url.path)
+            NSWorkspace.shared.open(url)
+            return
+        }
+
+        guard let window = MainWindowController.shared() else { return }
+        guard let vc = window.contentViewController as? ViewController else { return }
+
+        vc.alert = NSAlert()
+        let field = NSTextField(frame: NSRect(x: 0, y: 0, width: 290, height: 20))
+        field.placeholderString = "All Hail the Crimson King"
+        
+        if let title = char?.attribute(titleKey, at: 0, effectiveRange: nil) as? String {
+            field.stringValue = title
+        }
+        
+        vc.alert?.messageText = NSLocalizedString("Please enter image title:", comment: "Edit area")
+        vc.alert?.accessoryView = field
+        vc.alert?.alertStyle = .informational
+        vc.alert?.addButton(withTitle: "OK")
+        vc.alert?.beginSheetModal(for: window) { (returnCode: NSApplication.ModalResponse) -> Void in
+            if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
+                self.textStorage?.addAttribute(titleKey, value: field.stringValue, range: range)
+                
+                if let note = vc.notesTableView.getSelectedNote(), note.container != .encryptedTextPack {
+                    note.save(attributed: self.attributedString())
+                }
+            }
+            
+            
+            vc.alert = nil
+        }
+        
+        field.becomeFirstResponder()
+    }
+    
     public func applyLeftParagraphStyle() {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
@@ -956,6 +1043,15 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     private func saveClipboard(data: Data, note: Note, ext: String? = nil, url: URL? = nil) {
         if let path = ImagesProcessor.writeFile(data: data, url: url, note: note, ext: ext) {
+            
+            guard UserDefaultsManagement.liveImagesPreview else {
+                let newLineImage = NSAttributedString(string: "![](\(path))")
+                self.breakUndoCoalescing()
+                self.insertText(newLineImage, replacementRange: selectedRange())
+                self.breakUndoCoalescing()
+                return
+            }
+            
             guard let path = path.removingPercentEncoding else { return }
 
             if let imageUrl = note.getImageUrl(imageName: path) {
