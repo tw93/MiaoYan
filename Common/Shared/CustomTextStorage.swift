@@ -5,14 +5,13 @@ import UIKit
 #endif
 
 extension NSTextStorage: NSTextStorageDelegate {
-
 #if os(iOS)
     public func textStorage(
         _ textStorage: NSTextStorage,
         didProcessEditing editedMask: NSTextStorage.EditActions,
         range editedRange: NSRange,
-        changeInLength delta: Int) {
-
+        changeInLength delta: Int)
+    {
         guard editedMask != .editedAttributes else { return }
         process(textStorage: textStorage, range: editedRange, changeInLength: delta)
     }
@@ -21,8 +20,8 @@ extension NSTextStorage: NSTextStorageDelegate {
         _ textStorage: NSTextStorage,
         didProcessEditing editedMask: NSTextStorageEditActions,
         range editedRange: NSRange,
-        changeInLength delta: Int) {
-
+        changeInLength delta: Int)
+    {
         guard editedMask != .editedAttributes else { return }
         process(textStorage: textStorage, range: editedRange, changeInLength: delta)
     }
@@ -53,12 +52,12 @@ extension NSTextStorage: NSTextStorageDelegate {
 
         return
             string == "`"
-            || string == "`\n"
-            || EditTextView.lastRemoved == "`"
-            || (
-                EditTextView.shouldForceRescan
-                && string.contains("```")
-            )
+                || string == "`\n"
+                || EditTextView.lastRemoved == "`"
+                || (
+                    EditTextView.shouldForceRescan
+                        && string.contains("```")
+                )
     }
 
     private func rescanAll(textStorage: NSTextStorage) {
@@ -84,10 +83,10 @@ extension NSTextStorage: NSTextStorageDelegate {
             highlight(textStorage: textStorage, fencedRange: fencedRange, parRange: parRange, delta: delta, editedRange: editedRange)
 
             if delta == 1,
-                textStorage.mutableString.substring(with: editedRange) == "\n",
-                textStorage.length >= fencedRange.upperBound + 1,
-                textStorage.attribute(.backgroundColor, at: fencedRange.upperBound, effectiveRange: nil) != nil {
-
+               textStorage.mutableString.substring(with: editedRange) == "\n",
+               textStorage.length >= fencedRange.upperBound + 1,
+               textStorage.attribute(.backgroundColor, at: fencedRange.upperBound, effectiveRange: nil) != nil
+            {
                 textStorage.removeAttribute(.backgroundColor, range: NSRange(location: fencedRange.upperBound, length: 1))
             }
 
@@ -148,7 +147,7 @@ extension NSTextStorage: NSTextStorageDelegate {
 
         // Proper paragraph scan for two line markup "==" and "--"
         let prevParagraphLocation = parRange.lowerBound - 1
-        if prevParagraphLocation > 0 && (paragraph.starts(with: "==") || paragraph.starts(with: "--")) {
+        if prevParagraphLocation > 0, paragraph.starts(with: "==") || paragraph.starts(with: "--") {
             let prev = textStorage.mutableString.paragraphRange(for: NSRange(location: prevParagraphLocation, length: 0))
             parRange = NSRange(location: prev.lowerBound, length: parRange.upperBound - prev.lowerBound)
         }
@@ -168,7 +167,8 @@ extension NSTextStorage: NSTextStorageDelegate {
             NotesTextProcessor.highlightCode(attributedString: textStorage, range: parRange, language: language)
             textStorage.addAttribute(.backgroundColor, value: NotesTextProcessor.codeBackground, range: parRange)
         } else if let codeBlockRanges = codeTextProcessor.getCodeBlockRanges(),
-            let intersectedRange = codeTextProcessor.getIntersectedRange(range: parRange, ranges: codeBlockRanges) {
+                  let intersectedRange = codeTextProcessor.getIntersectedRange(range: parRange, ranges: codeBlockRanges)
+        {
             let checkRange = intersectedRange.length > 1000 ? editedRange : intersectedRange
             NotesTextProcessor.highlightCode(attributedString: textStorage, range: checkRange)
         } else {
@@ -191,9 +191,8 @@ extension NSTextStorage: NSTextStorageDelegate {
         }
 
         let affectedRange = NSRange(start..<finish)
-        textStorage.enumerateAttribute(.attachment, in: affectedRange) { (value, range, _) in
+        textStorage.enumerateAttribute(.attachment, in: affectedRange) { value, range, _ in
             if let value = value as? NSTextAttachment, textStorage.attribute(.todo, at: range.location, effectiveRange: nil) == nil {
-
                 let paragraph = NSMutableParagraphStyle()
                 paragraph.alignment = .left
                 textStorage.addAttribute(.paragraphStyle, value: paragraph, range: range)

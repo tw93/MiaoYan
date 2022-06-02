@@ -19,7 +19,7 @@ public class UserDefaultsManagement {
 
     static var DefaultFont = "霞鹜文楷"
 
-    static var DefaultFontSize = 14
+    static var DefaultFontSize = 15
     static var editorLineSpacing = 6
 
     static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
@@ -33,7 +33,6 @@ public class UserDefaultsManagement {
     static var codeFontSize = 14
     static var maxNightModeBrightnessLevel = 35
 
-    static var lastProject = 0
     static var fontName = DefaultFont
     static var previewFontSize = 14
     static var sortDirection = true
@@ -76,6 +75,19 @@ public class UserDefaultsManagement {
         static let TextMatchAutoSelection = "textMatchAutoSelection"
     }
 
+    static var lastProject: Int {
+        get {
+            if let lastProject = UserDefaults.standard.object(forKey: Constants.LastProject) {
+                return lastProject as! Int
+            } else {
+                return 0
+            }
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.LastProject)
+        }
+    }
+    
     static var fontSize: Int {
         get {
             #if os(iOS)
