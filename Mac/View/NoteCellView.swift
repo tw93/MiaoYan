@@ -113,8 +113,6 @@ class NoteCellView: NSTableCellView {
     public func attachHeaders(note: Note) {
         if let title = note.getTitle() {
             self.name.stringValue = title
-        } else {
-            self.name.stringValue = ""
         }
 
         if let viewController = ViewController.shared(),

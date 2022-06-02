@@ -73,11 +73,11 @@ public class Note: NSObject {
     }
 
     public func getLastSelectedRange() -> NSRange? {
-        return lastSelectedRange
+        lastSelectedRange
     }
 
     public func hasTitle() -> Bool {
-        return true
+        true
     }
 
     /// Important for decrypted temporary containers
@@ -135,15 +135,15 @@ public class Note: NSObject {
     }
 
     public func isTextBundle() -> Bool {
-        return (container == .textBundle || container == .textBundleV2)
+        container == .textBundle || container == .textBundleV2
     }
 
     public func isFullLoadedTextBundle() -> Bool {
-        return getContentFileURL() != nil
+        getContentFileURL() != nil
     }
 
     public func getExtensionForContainer() -> String {
-        return type.getExtension(for: container)
+        type.getExtension(for: container)
     }
 
     public func getFileModifiedDate() -> Date? {
@@ -229,7 +229,7 @@ public class Note: NSObject {
     }
 
     public func isEmpty() -> Bool {
-        return content.length == 0
+        content.length == 0
     }
 
     #if os(iOS)
@@ -318,7 +318,7 @@ public class Note: NSObject {
 
     public func getPreviewLabel(with text: String? = nil) -> String {
         var preview = ""
-        let content = text ?? self.content.string
+        let content = text ?? content.string
         let length = text?.count ?? self.content.string.count
 
         if length > 250 {
@@ -345,7 +345,7 @@ public class Note: NSObject {
     }
 
     @objc public func getPreviewForLabel() -> String {
-        return getPreviewLabel()
+        getPreviewLabel()
     }
 
     @objc func getDateForLabel() -> String {
@@ -387,11 +387,11 @@ public class Note: NSObject {
     }
 
     func isRTF() -> Bool {
-        return type == .RichText
+        type == .RichText
     }
 
     func isMarkdown() -> Bool {
-        return type == .Markdown
+        type == .Markdown
     }
 
     func addPin(cloudSave: Bool = true) {
@@ -468,7 +468,7 @@ public class Note: NSObject {
     }
 
     func getPrettifiedContent() -> String {
-        var content = self.content.string
+        var content = content.string
 
         #if NOT_EXTENSION || os(OSX)
         content = NotesTextProcessor.convertAppLinks(in: content)
@@ -772,11 +772,11 @@ public class Note: NSObject {
     }
 
     func isTrash() -> Bool {
-        return project.isTrash
+        project.isTrash
     }
 
     public func contains<S: StringProtocol>(terms: [S]) -> Bool {
-        return name.localizedStandardContains(terms) || content.string.localizedStandardContains(terms)
+        name.localizedStandardContains(terms) || content.string.localizedStandardContains(terms)
     }
 
     private var excludeRanges = [NSRange]()
@@ -802,7 +802,7 @@ public class Note: NSObject {
     }
 
     public func getImageCacheUrl() -> URL? {
-        return project.url.appendingPathComponent("/.cache/")
+        project.url.appendingPathComponent("/.cache/")
     }
 
     public func getAllImages(content: NSMutableAttributedString? = nil) -> [(url: URL, path: String)] {
@@ -827,7 +827,7 @@ public class Note: NSObject {
     #if os(OSX)
 
     public func duplicate() {
-        var url = self.url
+        var url = url
         let ext = url.pathExtension
         url.deletePathExtension()
 
@@ -842,7 +842,7 @@ public class Note: NSObject {
     }
 
     public func getDupeName() -> String? {
-        var url = self.url
+        var url = url
         url.deletePathExtension()
 
         let name = url.lastPathComponent
@@ -883,7 +883,7 @@ public class Note: NSObject {
     }
 
     public func isEqualURL(url: URL) -> Bool {
-        return url.path == self.url.path
+        url.path == self.url.path
     }
 
     public func append(string: NSMutableAttributedString) {
@@ -1086,7 +1086,7 @@ public class Note: NSObject {
     }
 
     public func showIconInList() -> Bool {
-        return isPinned
+        isPinned
     }
 
     public func getFileName() -> String {
@@ -1105,16 +1105,18 @@ public class Note: NSObject {
     }
 
     public func getTitle() -> String? {
-        if title.isValidUUID {
-            return "未命名"
-        }
-
         if title.count > 0 {
+            if title.isValidUUID {
+                return "未命名"
+            }
             return title
         }
 
         if getFileName().isValidUUID {
-            return "未命名"
+            let previewCharsQty = preview.count
+            if previewCharsQty > 0 {
+                return "未命名"
+            }
         }
 
         return nil
