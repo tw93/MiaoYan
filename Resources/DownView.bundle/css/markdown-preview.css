@@ -223,25 +223,11 @@ html {
 
 img{
   max-width: 100%;
-}
-
-.miaoyan-image {
   object-fit: cover;
-  height:auto;
 }
 
-.miaoyan-image[data-processed="true"] {
-  animation: fadeIn .5s forwards;
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
+.miaoyan-lazyload {
+  height: auto;
 }
 
 body,
