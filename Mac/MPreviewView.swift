@@ -207,7 +207,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         var htmlString = html
 
         do {
-            let regex = try NSRegularExpression(pattern: "<img .+?>")
+            let regex = try NSRegularExpression(pattern: "<img.*?src=\"([^\"]*)\"")
             let results = regex.matches(in: html, range: NSRange(html.startIndex..., in: html))
 
             let images = results.map {
@@ -215,49 +215,29 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             }
 
             for image in images {
-                let urlRegex = "(http[^\\s]+(JPG|JPEG|PNG|GIF|jpg|jpeg|png|tiff|gif)\\b)"
+                var localPath = image.replacingOccurrences(of: "<img src=\"", with: "").dropLast()
 
-                let urlRes = image.matchingStrings(regex: urlRegex)
+                let localPathClean = localPath.removingPercentEncoding ?? String(localPath)
 
-                var localPath = image
-                var imPath: String
-                if urlRes.count > 0 {
-                    localPath = urlRes[0][0].trim()
+                let fullImageURL = imagesStorage
+                let imageURL = fullImageURL.appendingPathComponent(localPathClean)
 
-                    let widthRegex = "width=\\d+"
+                let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
 
-                    let widthRes = image.matchingStrings(regex: widthRegex)
+                let create = webkitPreview
+                    .appendingPathComponent(localPathClean)
+                    .deletingLastPathComponent()
+                let destination = webkitPreview.appendingPathComponent(localPathClean)
 
-                    var widthStr = "width=\"100%\""
+                try? FileManager.default.createDirectory(atPath: create.path, withIntermediateDirectories: true, attributes: nil)
+                try? FileManager.default.removeItem(at: destination)
+                try? FileManager.default.copyItem(at: imageURL, to: destination)
 
-                    if widthRes.count > 0 {
-                        widthStr = widthRes[0][0].trim()
-                    }
-
-                    imPath = "<img class=\"miaoyan-lazyload\" data-src=\"" + localPath + "\" src=\"https://gw.alipayobjects.com/zos/k/a6/placeholder.png\" " + widthStr + " />"
-                } else {
-                    localPath = String(image.replacingOccurrences(of: "<img src=\"", with: "").dropLast())
-                    let localPathClean = localPath.removingPercentEncoding ?? String(localPath)
-
-                    let fullImageURL = imagesStorage
-                    let imageURL = fullImageURL.appendingPathComponent(localPathClean)
-
-                    let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
-
-                    let create = webkitPreview
-                        .appendingPathComponent(localPathClean)
-                        .deletingLastPathComponent()
-                    let destination = webkitPreview.appendingPathComponent(localPathClean)
-
-                    try? FileManager.default.createDirectory(atPath: create.path, withIntermediateDirectories: true, attributes: nil)
-                    try? FileManager.default.removeItem(at: destination)
-                    try? FileManager.default.copyItem(at: imageURL, to: destination)
-
-                    if localPath.first == "/" {
-                        localPath.remove(at: localPath.startIndex)
-                    }
-                    imPath = "<img src=\"" + localPath + ">"
+                if localPath.first == "/" {
+                    localPath.remove(at: localPath.startIndex)
                 }
+
+                let imPath = "<img src=\"" + localPath + "\""
 
                 htmlString = htmlString.replacingOccurrences(of: image, with: imPath)
             }
