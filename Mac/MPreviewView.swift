@@ -139,8 +139,8 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         let pageHTMLString = try htmlFromTemplate(htmlString)
 
-//        print(pageHTMLString)
-        
+        print(pageHTMLString)
+
         let indexURL = createTemporaryBundle(pageHTMLString: pageHTMLString)
 
         if let i = indexURL {
@@ -223,18 +223,17 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 if urlRes.count > 0 {
                     localPath = urlRes[0][0].trim()
                 }
-        
-                
+
                 let widthRegex = "width=\\d+"
-                
+
                 let widthRes = image.matchingStrings(regex: widthRegex)
 
-                var widthStr = "width=\"auto\""
-                
+                var widthStr = "width=\"100%\""
+
                 if widthRes.count > 0 {
                     widthStr = widthRes[0][0].trim()
                 }
-                
+
                 let localPathClean = localPath.removingPercentEncoding ?? String(localPath)
 
                 let fullImageURL = imagesStorage
@@ -251,14 +250,11 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 try? FileManager.default.removeItem(at: destination)
                 try? FileManager.default.copyItem(at: imageURL, to: destination)
 
-    
                 if localPath.first == "/" {
                     localPath.remove(at: localPath.startIndex)
                 }
-                
-                
 
-                let imPath = "<img class=\"miaoyan-image\" data-src=\"" + localPath + "\" src=\"https://gw.alipayobjects.com/zos/k/a6/placeholder.png\" data-lazy " + widthStr + " />"
+                let imPath = "<img class=\"miaoyan-lazyload\" data-src=\"" + localPath + "\" src=\"https://gw.alipayobjects.com/zos/k/a6/placeholder.png\" " + widthStr + " />"
 
                 htmlString = htmlString.replacingOccurrences(of: image, with: imPath)
             }

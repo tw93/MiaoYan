@@ -5,14 +5,15 @@
     <meta name="viewport" content="initial-scale=1.0" />
     <link charset="utf-8" href="css/markdown-preview.css" rel="stylesheet" />
     <script
-      charset="utf-8"
       src="js/highlight.min.js"
+      charset="utf-8"
       type="text/javascript"
     ></script>
-    <script>
-      hljs.initHighlightingOnLoad();
-    </script>
-    <script src="js/mermaid.min.js"></script>
+    <script
+      src="js/mermaid.min.js"
+      charset="utf-8"
+      type="text/javascript"
+    ></script>
     <title></title>
   </head>
 
@@ -20,6 +21,11 @@
     <div class="markdown-body" id="write" oncontextmenu="contextMenu(event)">
       DOWN_HTML
     </div>
+
+    <script>
+      hljs.initHighlightingOnLoad();
+    </script>
+
     <script>
       function contextMenu(evt) {
         evt.preventDefault && evt.preventDefault();
@@ -143,28 +149,31 @@
     </script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          var observer = new IntersectionObserver(onIntersect);
+      document.addEventListener('DOMContentLoaded', function () {
+        const options = {
+          rootMargin: '0px 0px 200px 0px',
+        };
+        var observer = new IntersectionObserver(onIntersect, options);
 
-          document.querySelectorAll('[data-lazy]').forEach((img) => {
-            observer.observe(img);
-          });
-
-          function onIntersect(entries) {
-            entries.forEach((entry) => {
-              if (
-                entry.target.getAttribute('data-processed') ||
-                !entry.isIntersecting
-              )
-                return true;
-              entry.target.setAttribute(
-                'src',
-                entry.target.getAttribute('data-src'),
-              );
-              entry.target.setAttribute('data-processed', true);
-            });
-          }
+        document.querySelectorAll('.miaoyan-lazyload').forEach((img) => {
+          observer.observe(img);
         });
+
+        function onIntersect(entries) {
+          entries.forEach((entry) => {
+            if (
+              entry.target.getAttribute('data-processed') ||
+              !entry.isIntersecting
+            )
+              return true;
+            entry.target.setAttribute(
+              'src',
+              entry.target.getAttribute('data-src'),
+            );
+            entry.target.setAttribute('data-processed', true);
+          });
+        }
+      });
     </script>
 
     <script>
