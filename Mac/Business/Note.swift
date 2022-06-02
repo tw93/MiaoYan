@@ -9,7 +9,7 @@ public class Note: NSObject {
     var type: NoteType = .Markdown
     var url: URL
 
-    var content: NSMutableAttributedString = NSMutableAttributedString()
+    var content: NSMutableAttributedString = .init()
     var creationDate: Date? = Date()
     var sharedStorage = Storage.sharedInstance()
     let dateFormatter = DateFormatter()
@@ -317,7 +317,7 @@ public class Note: NSObject {
     }
 
     public func getPreviewLabel(with text: String? = nil) -> String {
-        var preview: String = ""
+        var preview = ""
         let content = text ?? self.content.string
         let length = text?.count ?? self.content.string.count
 
@@ -363,7 +363,7 @@ public class Note: NSObject {
     }
 
     @objc func getCreationDateForLabel() -> String? {
-        guard let creationDate = self.creationDate else { return nil }
+        guard let creationDate = creationDate else { return nil }
         return dateFormatter.formatDateForDisplay(creationDate)
     }
 
@@ -435,7 +435,7 @@ public class Note: NSObject {
     }
 
     func cleanMetaData(content: String) -> String {
-        var extractedTitle: String = ""
+        var extractedTitle = ""
 
         if content.hasPrefix("---\n") {
             var list = content.components(separatedBy: "---")
@@ -492,7 +492,8 @@ public class Note: NSObject {
                 let info = url.appendingPathComponent("info.json")
 
                 if let jsonData = try? Data(contentsOf: info),
-                    let info = try? JSONDecoder().decode(TextBundleInfo.self, from: jsonData) {
+                   let info = try? JSONDecoder().decode(TextBundleInfo.self, from: jsonData)
+                {
                     if info.version == 0x02 {
                         type = NoteType.withUTI(rawValue: info.type)
                         container = .textBundleV2
@@ -545,8 +546,9 @@ public class Note: NSObject {
     public func save(globalStorage: Bool = true) {
         if isMarkdown() {
             content = content.unLoadCheckboxes()
-
-            content = content.unLoadImages(note: self)
+            if UserDefaultsManagement.liveImagesPreview {
+                content = content.unLoadImages(note: self)
+            }
         }
 
         save(attributedString: content, globalStorage: globalStorage)
@@ -611,7 +613,8 @@ public class Note: NSObject {
                 url = url.deletingLastPathComponent()
 
                 if let dirList = try? FileManager.default.contentsOfDirectory(atPath: url.path),
-                    let first = dirList.first(where: { $0.starts(with: "text.") }) {
+                   let first = dirList.first(where: { $0.starts(with: "text.") })
+                {
                     url = url.appendingPathComponent(first)
 
                     return url
@@ -806,8 +809,8 @@ public class Note: NSObject {
         let content = content ?? self.content
         var res = [(url: URL, path: String)]()
 
-        NotesTextProcessor.imageInlineRegex.regularExpression.enumerateMatches(in: content.string, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSRange(0..<content.length), using:
-            { (result, _, _) -> Void in
+        NotesTextProcessor.imageInlineRegex.regularExpression.enumerateMatches(in: content.string, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSRange(0 ..< content.length), using:
+            { result, _, _ in
 
                 guard let range = result?.range(at: 3), content.length >= range.location else { return }
 
@@ -816,7 +819,7 @@ public class Note: NSObject {
                 if let imagePath = imagePath, let url = self.getImageUrl(imageName: imagePath), !url.isRemote() {
                     res.append((url: url, path: imagePath))
                 }
-        })
+            })
 
         return res
     }
@@ -946,7 +949,8 @@ public class Note: NSObject {
         let json = textBundleURL.appendingPathComponent("info.json")
 
         if let jsonData = try? Data(contentsOf: json),
-            let info = try? JSONDecoder().decode(TextBundleInfo.self, from: jsonData) {
+           let info = try? JSONDecoder().decode(TextBundleInfo.self, from: jsonData)
+        {
             if let flatExtension = info.flatExtension {
                 let ext = NoteType.withUTI(rawValue: info.type).getExtension(for: .textBundleV2)
                 let fileName = "text.\(ext)"
@@ -1101,11 +1105,10 @@ public class Note: NSObject {
     }
 
     public func getTitle() -> String? {
-        
         if title.isValidUUID {
             return "未命名"
         }
-        
+
         if title.count > 0 {
             return title
         }

@@ -63,6 +63,7 @@ public class UserDefaultsManagement {
         static let NightModeAuto = "nightModeAuto"
         static let NightModeBrightnessLevel = "nightModeBrightnessLevel"
         static let NoteContainer = "noteContainer"
+        static let LiveImagesPreview = "liveImagesPreview"
         static let PinListKey = "pinList"
         static let Preview = "preview"
         static let PreviewFontSize = "previewFontSize"
@@ -87,7 +88,19 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.LastProject)
         }
     }
-    
+
+    static var liveImagesPreview: Bool {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.LiveImagesPreview) {
+                return result as! Bool
+            }
+            return false
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.LiveImagesPreview)
+        }
+    }
+
     static var fontSize: Int {
         get {
             #if os(iOS)
