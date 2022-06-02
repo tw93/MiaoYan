@@ -6,7 +6,7 @@
   --text-font: 'Inter';
   /* the Inter fontface family provides rich opentype features. see https://rsms.me/inter/  */
   --general-font-feature-settings: 'calt', 'ccmp', 'kern', 'salt' 0;
-  --cjk-font: 'Source Han Sans SC', '霞鹜文楷等宽', '思源黑体';
+  --cjk-font: 'JetBrains Mono', '霞鹜文楷','霞鹜文楷等宽', '思源黑体';
   --mono-font: 'JetBrains Mono';
   --fallback-font: 'system-ui', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
