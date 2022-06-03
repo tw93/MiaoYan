@@ -223,11 +223,8 @@ html {
 
 img{
   max-width: 100%;
-  object-fit: cover;
-}
-
-.miaoyan-lazyload {
   height: auto;
+  object-fit: cover;
 }
 
 body,
@@ -267,7 +264,7 @@ h6 {
   margin-bottom: 0.6rem;
   padding-top: 1.2rem;
   font-weight: bold;
-  line-height: 1.2;
+  line-height: 1.3
   cursor: text;
   font-family: var(--display-font) !important;
 }
