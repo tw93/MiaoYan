@@ -19,6 +19,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
     public var markdownView: MPreviewView?
     public static var imagesLoaderQueue = OperationQueue()
 
+    public static var fontColor: NSColor {
+        if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
+            return NSColor(named: "mainText")!
+        } else {
+            return UserDefaultsManagement.fontColor
+        }
+    }
+
     override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn flag: Bool) {
         var newRect = NSRect(origin: rect.origin, size: rect.size)
         newRect.size.width = caretWidth
@@ -31,8 +39,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
             newRect.size.height = newRect.size.height - 3.6
         }
 
-        let clr = NSColor(red: 0.47, green: 0.53, blue: 0.69, alpha: 1.0)
-        super.drawInsertionPoint(in: newRect, color: clr, turnedOn: flag)
+//        let clr = NSColor(red: 0, green: 0, blue: 0, alpha: 1.0)
+        super.drawInsertionPoint(in: newRect, color: EditTextView.fontColor, turnedOn: flag)
     }
 
     override func updateInsertionPointStateAndRestartTimer(_ restartFlag: Bool) {
@@ -132,7 +140,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let nsString = string as NSString
         let chars = nsString.substring(with: charRange)
         if let notes = storage.getBy(startWith: chars) {
-            let titles = notes.map { $0.title }
+            let titles = notes.map(\.title)
             return titles
         }
 
@@ -140,7 +148,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     override var writablePasteboardTypes: [NSPasteboard.PasteboardType] {
-        return [NSPasteboard.PasteboardType.rtfd, NSPasteboard.PasteboardType.string]
+        [NSPasteboard.PasteboardType.rtfd, NSPasteboard.PasteboardType.string]
     }
 
     override func writeSelection(to pboard: NSPasteboard, type: NSPasteboard.PasteboardType) -> Bool {
@@ -613,7 +621,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "attributedText")), let attributedText = NSKeyedUnarchiver.unarchiveObject(with: data) as? NSMutableAttributedString {
             let dropPoint = convert(sender.draggingLocation, from: nil)
             let caretLocation = characterIndexForInsertion(at: dropPoint)
-            
+
             let filePathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
             let titleKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.title")
             let positionKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.position")
@@ -891,10 +899,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         let range = NSRange(location: charIndex, length: 1)
-        
+
         let char = attributedSubstring(forProposedRange: range, actualRange: nil)
         if char?.attribute(.attachment, at: 0, effectiveRange: nil) == nil {
-
             if NSEvent.modifierFlags.contains(.command), let link = link as? String, let url = URL(string: link) {
                 _ = try? NSWorkspace.shared.open(url, options: .withoutActivation, configuration: [:])
                 return
@@ -903,22 +910,22 @@ class EditTextView: NSTextView, NSTextFinderClient {
             super.clicked(onLink: link, at: charIndex)
             return
         }
-        
+
         if !UserDefaultsManagement.liveImagesPreview {
             let url = URL(fileURLWithPath: link as! String)
             NSWorkspace.shared.open(url)
             return
         }
-        
+
         let pathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
         let titleKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.title")
-   
-        if let event = NSApp.currentEvent,
-            !event.modifierFlags.contains(.command),
-            let note = EditTextView.note,
-            let path = (char?.attribute(pathKey, at: 0, effectiveRange: nil) as? String)?.removingPercentEncoding,
-            let url = note.getImageUrl(imageName: path) {
 
+        if let event = NSApp.currentEvent,
+           !event.modifierFlags.contains(.command),
+           let note = EditTextView.note,
+           let path = (char?.attribute(pathKey, at: 0, effectiveRange: nil) as? String)?.removingPercentEncoding,
+           let url = note.getImageUrl(imageName: path)
+        {
             if !url.isImage {
                 NSWorkspace.shared.activateFileViewerSelecting([url])
                 return
@@ -939,31 +946,30 @@ class EditTextView: NSTextView, NSTextFinderClient {
         vc.alert = NSAlert()
         let field = NSTextField(frame: NSRect(x: 0, y: 0, width: 290, height: 20))
         field.placeholderString = "All Hail the Crimson King"
-        
+
         if let title = char?.attribute(titleKey, at: 0, effectiveRange: nil) as? String {
             field.stringValue = title
         }
-        
+
         vc.alert?.messageText = NSLocalizedString("Please enter image title:", comment: "Edit area")
         vc.alert?.accessoryView = field
         vc.alert?.alertStyle = .informational
         vc.alert?.addButton(withTitle: "OK")
-        vc.alert?.beginSheetModal(for: window) { (returnCode: NSApplication.ModalResponse) -> Void in
+        vc.alert?.beginSheetModal(for: window) { (returnCode: NSApplication.ModalResponse) in
             if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
                 self.textStorage?.addAttribute(titleKey, value: field.stringValue, range: range)
-                
+
                 if let note = vc.notesTableView.getSelectedNote(), note.container != .encryptedTextPack {
                     note.save(attributed: self.attributedString())
                 }
             }
-            
-            
+
             vc.alert = nil
         }
-        
+
         field.becomeFirstResponder()
     }
-    
+
     public func applyLeftParagraphStyle() {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
@@ -1043,15 +1049,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     private func saveClipboard(data: Data, note: Note, ext: String? = nil, url: URL? = nil) {
         if let path = ImagesProcessor.writeFile(data: data, url: url, note: note, ext: ext) {
-            
             guard UserDefaultsManagement.liveImagesPreview else {
                 let newLineImage = NSAttributedString(string: "![](\(path))")
-                self.breakUndoCoalescing()
-                self.insertText(newLineImage, replacementRange: selectedRange())
-                self.breakUndoCoalescing()
+                breakUndoCoalescing()
+                insertText(newLineImage, replacementRange: selectedRange())
+                breakUndoCoalescing()
                 return
             }
-            
+
             guard let path = path.removingPercentEncoding else { return }
 
             if let imageUrl = note.getImageUrl(imageName: path) {

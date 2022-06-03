@@ -202,7 +202,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         return indexURL
     }
-
+    
     private func loadImages(imagesStorage: URL, html: String) -> String {
         var htmlString = html
 

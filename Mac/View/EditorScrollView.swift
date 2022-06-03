@@ -6,7 +6,6 @@ class EditorScrollView: NSScrollView {
     override var isFindBarVisible: Bool {
         set {
             // macOS 10.14 margin hack
-            
             if #available(OSX 10.14, *) {
                 if let clip = self.subviews.first as? NSClipView {
                     clip.contentInsets.top = newValue ? 40 : 10
