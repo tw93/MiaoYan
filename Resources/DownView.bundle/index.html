@@ -149,34 +149,6 @@
     </script>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        const options = {
-          rootMargin: '0px 0px 200px 0px',
-        };
-        var observer = new IntersectionObserver(onIntersect, options);
-
-        document.querySelectorAll('.miaoyan-lazyload').forEach((img) => {
-          observer.observe(img);
-        });
-
-        function onIntersect(entries) {
-          entries.forEach((entry) => {
-            if (
-              entry.target.getAttribute('data-processed') ||
-              !entry.isIntersecting
-            )
-              return true;
-            entry.target.setAttribute(
-              'src',
-              entry.target.getAttribute('data-src'),
-            );
-            entry.target.setAttribute('data-processed', true);
-          });
-        }
-      });
-    </script>
-
-    <script>
       var config = {
         startOnLoad: true,
         theme: 'forest',

@@ -2,13 +2,15 @@ import Carbon.HIToolbox
 import Cocoa
 
 class TitleTextField: NSTextField {
+    public var vcDelegate: ViewController!
     public var restoreResponder: NSResponder?
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
         if event.modifierFlags.contains(.command),
-            event.keyCode == kVK_ANSI_C,
-            !event.modifierFlags.contains(.shift),
-            !event.modifierFlags.contains(.control),
-            !event.modifierFlags.contains(.option) {
+           event.keyCode == kVK_ANSI_C,
+           !event.modifierFlags.contains(.shift),
+           !event.modifierFlags.contains(.control),
+           !event.modifierFlags.contains(.option)
+        {
             let pasteboard = NSPasteboard.general
             pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
             pasteboard.setString(self.stringValue, forType: NSPasteboard.PasteboardType.string)
@@ -25,7 +27,9 @@ class TitleTextField: NSTextField {
     }
 
     override func textDidEndEditing(_ notification: Notification) {
-        saveTitle()
+        self.saveTitle()
+        let vc = window?.contentViewController as! ViewController
+        vc.focusEditArea()
     }
 
     public func saveTitle() {

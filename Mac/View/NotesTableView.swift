@@ -33,6 +33,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
 
         if let _ = EditTextView.note, event.keyCode == kVK_Tab, !event.modifierFlags.contains(.control), !UserDefaultsManagement.preview {
             vc.focusEditArea()
+            vc.editArea.updateTextContainerInset()
         }
 
         if event.keyCode == kVK_LeftArrow {
