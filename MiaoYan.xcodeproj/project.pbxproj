@@ -11,7 +11,6 @@
 		270678F32445FE8B00D9935F /* Pods_MiaoYan.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 951EFB1C1F695127AE454696 /* Pods_MiaoYan.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		270678F6244601C000D9935F /* MiaoYanCore_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */; };
 		270678F7244601C000D9935F /* MiaoYanCore_macOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2747D5B3284E05CE00D0127B /* LXGWWenKaiLite-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2747D5B0284E05CD00D0127B /* LXGWWenKaiLite-Light.ttf */; };
 		2747D5B4284E05CE00D0127B /* LXGWWenKaiLite-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2747D5B1284E05CD00D0127B /* LXGWWenKaiLite-Regular.ttf */; };
 		2747D5B5284E05CE00D0127B /* LXGWWenKaiLite-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2747D5B2284E05CE00D0127B /* LXGWWenKaiLite-Bold.ttf */; };
 		275592971F3AE9B5006B8988 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275592961F3AE9B5006B8988 /* MainWindowController.swift */; };
@@ -169,7 +168,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2747D5B0284E05CD00D0127B /* LXGWWenKaiLite-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LXGWWenKaiLite-Light.ttf"; sourceTree = "<group>"; };
 		2747D5B1284E05CD00D0127B /* LXGWWenKaiLite-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LXGWWenKaiLite-Regular.ttf"; sourceTree = "<group>"; };
 		2747D5B2284E05CE00D0127B /* LXGWWenKaiLite-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LXGWWenKaiLite-Bold.ttf"; sourceTree = "<group>"; };
 		275592961F3AE9B5006B8988 /* MainWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
@@ -313,7 +311,6 @@
 			isa = PBXGroup;
 			children = (
 				2747D5B2284E05CE00D0127B /* LXGWWenKaiLite-Bold.ttf */,
-				2747D5B0284E05CD00D0127B /* LXGWWenKaiLite-Light.ttf */,
 				2747D5B1284E05CD00D0127B /* LXGWWenKaiLite-Regular.ttf */,
 			);
 			path = Fonts;
@@ -696,7 +693,6 @@
 				D7ED6892200F87BD00FF975A /* Initial in Resources */,
 				2747D5B4284E05CE00D0127B /* LXGWWenKaiLite-Regular.ttf in Resources */,
 				D7FBBC2520F151F80014EC5B /* Localizable.strings in Resources */,
-				2747D5B3284E05CE00D0127B /* LXGWWenKaiLite-Light.ttf in Resources */,
 				D7166F541F32F75E001A883F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

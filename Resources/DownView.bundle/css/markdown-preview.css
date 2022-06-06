@@ -242,8 +242,7 @@ body,
 }
 
 strong {
-    font-weight: 700;
-    font-weight: bold;
+    font-weight: 700 !important;
 }
 
 h1,
