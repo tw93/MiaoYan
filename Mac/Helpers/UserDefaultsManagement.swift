@@ -17,7 +17,7 @@ public class UserDefaultsManagement {
         typealias Font = UIFont
     #endif
 
-    static var DefaultFont = "霞鹜文楷"
+    static var DefaultFont = "霞鹜文楷 轻便版"
 
     static var DefaultFontSize = 15
     static var editorLineSpacing = 6
@@ -25,7 +25,7 @@ public class UserDefaultsManagement {
     static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
     static var DefaultBgColor = Color.white
 
-    static var codeFontName = "霞鹜文楷等宽"
+    static var codeFontName = DefaultFont
     static var lineWidth = 1000
     static var linkColor = Color(red: 0.23, green: 0.23, blue: 0.23, alpha: 1.00)
     static var fullScreen = false
