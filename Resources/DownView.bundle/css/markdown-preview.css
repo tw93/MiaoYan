@@ -6,8 +6,8 @@
   --text-font: 'Inter';
   /* the Inter fontface family provides rich opentype features. see https://rsms.me/inter/  */
   --general-font-feature-settings: 'calt', 'ccmp', 'kern', 'salt' 0;
-  --cjk-font: '霞鹜文楷轻便版', '思源黑体';
-  --mono-font: '霞鹜文楷轻便版';
+  --cjk-font: '霞鹜文楷 轻便版', '思源黑体';
+  --mono-font: '霞鹜文楷 轻便版';
   --fallback-font: 'system-ui', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
@@ -465,7 +465,7 @@ tt {
 }
 
 code {
-  font-family: '霞鹜文楷';
+  font-family: '霞鹜文楷 轻便版';
   background-color: var(--elevated-background);
   padding: 0 2px 0 2px;
   font-size: 1em;
