@@ -3,18 +3,6 @@
   <channel>
     <title>妙言</title>
     <item>
-      <title>0.2.1</title>
-      <description><![CDATA[
-            <ul>
-            <li>修复了自动更新的 bug</li>
-            <li>使用说明文档有部分更新</li>
-            </ul>
-            ]]>      </description>
-      <pubDate>周四, 17 6月 2022 19:48:44 +0800</pubDate>
-      <enclosure url="https://raw.githubusercontent.com/tw93/MiaoYan/master/Release/MiaoYan_V0.2.1.zip" sparkle:shortVersionString="0.2.1" sparkle:version="0.2.1" sparkle:edSignature="OuiAICNA6/pJ2SPYn5jTPC3AYkLtSecWlqyTWvOz0W6B/BwL61+R/9TqPahEx5jodOlXAszxeJWkHymvEUG3Bw==" length="19905691" type="application/octet-stream" />
-      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-    </item>
-    <item>
       <title>0.2.0</title>
       <description><![CDATA[
             <ul>
@@ -24,10 +12,11 @@
             <li>修复标题更新有时候不保存的 bug</li>
             <li>回车标题自动 focus 到内容区域</li>
             <li>支持本地图片的展示和引入</li>
+            <li>支持自动更新 App</li>
             </ul>
             ]]>      </description>
       <pubDate>周四, 17 6月 2022 15:48:44 +0800</pubDate>
-      <enclosure url="https://miao-yan.vercel.app/Release/MiaoYan_V0.2.0.zip" sparkle:shortVersionString="0.2.0" sparkle:version="0.2.0.0" sparkle:edSignature="tRQgrRVKcSlL8EMBWYMq9SvnFRkYVj/z6QfbwEh4r4GyBI2q20gH+B+0s3BP1si3B9zJ90ruITiMm5uJ2KdkCw==" length="19397363" type="application/octet-stream" />
+      <enclosure url="https://miao-yan.vercel.app/Release/MiaoYan_V0.2.0.zip" sparkle:shortVersionString="0.2.0" sparkle:version="0.2.0" sparkle:edSignature="GIrlW4C5d6qNQVXUBqmWZMjuw6sEOFq8Iwqvm8gDs0HmcbSj9Y3CDfBtgNG/Eg9wYM3feFBQ6lXgb4Lp+V3MAA==" length="19905691" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
     </item>
   </channel>
