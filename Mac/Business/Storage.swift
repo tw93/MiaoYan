@@ -33,9 +33,8 @@ class Storage {
         ]
     #else
         let initialFiles = [
-            "MiaoYan - Readme.md",
-            "MiaoYan - Shortcuts.md",
-            "MiaoYan - Code Highlighting.md"
+            "妙言介绍.md",
+            "妙言使用说明.md"
         ]
     #endif
 
@@ -88,23 +87,23 @@ class Storage {
     }
 
     public func getChildProjects(project: Project) -> [Project] {
-        return projects.filter { $0.parent == project }.sorted(by: { $0.label.lowercased() < $1.label.lowercased() })
+        projects.filter { $0.parent == project }.sorted(by: { $0.label.lowercased() < $1.label.lowercased() })
     }
 
     public func getRootProject() -> Project? {
-        return projects.first(where: { $0.isRoot })
+        projects.first(where: { $0.isRoot })
     }
 
     public func getDefault() -> Project? {
-        return projects.first(where: { $0.isDefault })
+        projects.first(where: { $0.isDefault })
     }
 
     public func getRootProjects() -> [Project] {
-        return projects.filter { $0.isRoot }.sorted(by: { $0.label.lowercased() < $1.label.lowercased() })
+        projects.filter(\.isRoot).sorted(by: { $0.label.lowercased() < $1.label.lowercased() })
     }
 
     public func getDefaultTrash() -> Project? {
-        return projects.first(where: { $0.isTrash })
+        projects.first(where: { $0.isTrash })
     }
 
     private func chechSub(url: URL, parent: Project) -> [Project] {
@@ -114,7 +113,6 @@ class Storage {
 
         if let subFolders = getSubFolders(url: url) {
             for subFolder in subFolders {
-               
                 if subFolder.lastPathComponent == "i" {
                     imageFolders.append(subFolder as URL)
                     continue
@@ -127,14 +125,15 @@ class Storage {
                 let surl = subFolder as URL
 
                 guard !projectExist(url: surl),
-                    surl.lastPathComponent != "i",
-                    surl.lastPathComponent != "files",
-                    !surl.path.contains(".Trash"),
-                    !surl.path.contains("Trash"),
-                    !surl.path.contains("/."),
-                    !surl.path.contains(parentPath),
-                    !surl.path.contains(filesPath),
-                    !surl.path.contains(".textbundle") else {
+                      surl.lastPathComponent != "i",
+                      surl.lastPathComponent != "files",
+                      !surl.path.contains(".Trash"),
+                      !surl.path.contains("Trash"),
+                      !surl.path.contains("/."),
+                      !surl.path.contains(parentPath),
+                      !surl.path.contains(filesPath),
+                      !surl.path.contains(".textbundle")
+                else {
                     continue
                 }
 
@@ -193,7 +192,7 @@ class Storage {
     }
 
     func projectExist(url: URL) -> Bool {
-        return projects.contains(where: { $0.url == url })
+        projects.contains(where: { $0.url == url })
     }
 
     public func removeBy(project: Project) {
@@ -241,7 +240,7 @@ class Storage {
     }
 
     public func getBookmarks() -> [URL] {
-        return bookmarks
+        bookmarks
     }
 
     public static func sharedInstance() -> Storage {
@@ -300,11 +299,11 @@ class Storage {
     }
 
     public func getMainProject() -> Project {
-        return projects.first!
+        projects.first!
     }
 
     public func getProjects() -> [Project] {
-        return projects
+        projects
     }
 
     public func getProjectBy(element: Int) -> Project? {
@@ -316,11 +315,11 @@ class Storage {
     }
 
     public func getCloudDriveProjects() -> [Project] {
-        return projects.filter { $0.isCloudDrive == true }
+        projects.filter { $0.isCloudDrive == true }
     }
 
     public func getLocalProjects() -> [Project] {
-        return projects.filter { $0.isCloudDrive == false }
+        projects.filter { $0.isCloudDrive == false }
     }
 
     public func getProjectPaths() -> [String] {
@@ -339,9 +338,8 @@ class Storage {
 
         return
             projects.first(where: {
-                (
-                    $0.url == projectURL
-                )
+                $0.url == projectURL
+
             })
     }
 
@@ -400,7 +398,8 @@ class Storage {
 
             #if os(OSX)
                 if let currentNoteURL = EditTextView.note?.url,
-                    currentNoteURL == url {
+                   currentNoteURL == url
+                {
                     continue
                 }
             #endif
@@ -509,7 +508,7 @@ class Storage {
     }
 
     func getNextId() -> Int {
-        return noteList.count
+        noteList.count
     }
 
     func checkFirstRun() -> Bool {
@@ -544,36 +543,30 @@ class Storage {
 
         return
             noteList.first(where: {
-                (
-                    $0.url.path.lowercased() == resolvedPath
-                        || "/private" + $0.url.path.lowercased() == resolvedPath
-                )
+                $0.url.path.lowercased() == resolvedPath
+                    || "/private" + $0.url.path.lowercased() == resolvedPath
+
             })
     }
 
     func getBy(name: String) -> Note? {
-        return
-            noteList.first(where: {
-                (
-                    $0.name == name
-                )
-            })
+        noteList.first(where: {
+            $0.name == name
+
+        })
     }
 
     func getBy(title: String) -> Note? {
-        return
-            noteList.first(where: {
-                (
-                    $0.title.lowercased() == title.lowercased()
-                )
-            })
+        noteList.first(where: {
+            $0.title.lowercased() == title.lowercased()
+
+        })
     }
 
     func getBy(startWith: String) -> [Note]? {
-        return
-            noteList.filter {
-                $0.title.starts(with: startWith)
-            }
+        noteList.filter {
+            $0.title.starts(with: startWith)
+        }
     }
 
     func getDemoSubdirURL() -> URL? {
@@ -643,7 +636,8 @@ class Storage {
                 try url.getResourceValue(&isPackageResourceValue, forKey: URLResourceKey.isPackageKey)
 
                 if isDirectoryResourceValue as? Bool == true,
-                    isPackageResourceValue as? Bool == false {
+                   isPackageResourceValue as? Bool == false
+                {
                     subdirs.append(url)
                 }
             } catch let error as NSError {
@@ -659,14 +653,13 @@ class Storage {
     }
 
     public func getCurrentProject() -> Project? {
-        return projects.first
+        projects.first
     }
 
     public func getAllTrash() -> [Note] {
-        return
-            noteList.filter {
-                $0.isTrash()
-            }
+        noteList.filter {
+            $0.isTrash()
+        }
     }
 
     public func initiateCloudDriveSync() {
@@ -816,7 +809,7 @@ class Storage {
     }
 
     public func getPinned() -> [Note]? {
-        return noteList.filter { $0.isPinned }
+        noteList.filter(\.isPinned)
     }
 
     public func remove(project: Project) {
@@ -826,7 +819,7 @@ class Storage {
     }
 
     public func getNotesBy(project: Project) -> [Note] {
-        return noteList.filter { $0.project == project }
+        noteList.filter { $0.project == project }
     }
 
     public func loadProjects(from urls: [URL]) {
