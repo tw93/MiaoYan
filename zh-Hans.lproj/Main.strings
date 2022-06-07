@@ -554,6 +554,9 @@
 /* Class = "NSTabViewController"; title = "Preferences"; ObjectID = "tR0-Uj-4tB"; */
 "tR0-Uj-4tB.title" = "偏好设置";
 
+/* Class = "NSTabViewController"; title = "Preferences"; ObjectID = "BWp-m7-ySj"; */
+"BWp-m7-ySj.title" = "检查更新";
+
 /* Class = "NSMenuItem"; title = "Capitalize"; ObjectID = "UEZ-Bs-lqG"; */
 "UEZ-Bs-lqG.title" = "首字母大写";
 

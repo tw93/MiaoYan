@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>SUFeedURL</key>
-	<string></string>
+	<string>https://github.com/tw93/MiaoYan/raw/master/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>4IB5REPPZ6ya7EP1aIYpaleXXOEVmenFqN4DFnsVbHc=</string>
 	<key>ATSApplicationFontsPath</key>
