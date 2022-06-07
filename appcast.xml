@@ -8,12 +8,12 @@
       <title>0.2.2</title>
       <description><![CDATA[
             <ul>
-            <li>修复了自动更新的 bug</li>
-            <li>使用说明文档有部分更新</li>
+            <li>111修复了自动更新的 bug</li>
+            <li>111使用说明文档有部分更新</li>
             </ul>
             ]]>      </description>
-      <pubDate>周四, 17 6月 2022 19:48:44 +0800</pubDate>
-      <enclosure url="https://miao-yan.vercel.app/Release/MiaoYan_V0.2.1.zip" sparkle:shortVersionString="0.2.2" sparkle:version="0.2.2.0" sparkle:edSignature="DMILaSv1cUaYOwqVaiLThJQYU5I2nveFgSbyA9A2rr37HSg0csP2N62xvCbPPGrOHtJJ7LhqsUUUdNbwRJaQAw==" length="19397380" type="application/octet-stream" />
+      <pubDate>周四, 17 6月 2022 20:48:44 +0800</pubDate>
+      <enclosure url="https://miao-yan.vercel.app/Release/MiaoYan_V0.2.1.zip" sparkle:shortVersionString="0.2.2" sparkle:version="0.2.2.0" sparkle:edSignature="gohZ4LqVHAbnnSVdF762f72p5fgvyFK7ux5Wi4N9BMysqu1WYvdVLTI0Nki2vUX8c7qzSJlD+v0UfD+oUzpFDQ==" length="19397313" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>0.1.0</sparkle:minimumSystemVersion>
     </item>
     <item>
