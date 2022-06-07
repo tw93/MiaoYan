@@ -21,7 +21,31 @@ public class NotesTextProcessor {
                 return UserDefaultsManagement.fontColor
             }
         }
-        
+    
+        public static var highlightColor: NSColor {
+            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
+                return NSColor(named: "highlight")!
+            } else {
+                return NSColor(red: 0.25, green: 0.61, blue: 1.00, alpha: 1.0)
+            }
+        }
+    
+        public static var titleColor: NSColor {
+            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
+                return NSColor(named: "title")!
+            } else {
+                return NSColor(red: 0.25, green: 0.61, blue: 1.00, alpha: 1.0)
+            }
+        }
+    
+        public static var linkColor: NSColor {
+            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
+                return NSColor(named: "link")!
+            } else {
+                return NSColor(red: 1.000, green: 1.00, blue: 0.61, alpha: 0.25)
+            }
+        }
+    
     #else
         typealias Color = UIColor
         typealias Image = UIImage
@@ -38,7 +62,7 @@ public class NotesTextProcessor {
     
     #if os(OSX)
         public static var font: NSFont {
-            return UserDefaultsManagement.noteFont
+            UserDefaultsManagement.noteFont
         }
         
         public static var codeBackground: NSColor {
@@ -48,7 +72,7 @@ public class NotesTextProcessor {
                 return NSColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1.0)
             }
         }
-        
+
         open var highlightColor: NSColor {
             if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
                 return NSColor(named: "highlight")!
@@ -56,7 +80,23 @@ public class NotesTextProcessor {
                 return NSColor(red: 1.00, green: 0.90, blue: 0.70, alpha: 1.0)
             }
         }
-        
+    
+        open var titleColor: NSColor {
+            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
+                return NSColor(named: "title")!
+            } else {
+                return NSColor(red: 1.00, green: 0.90, blue: 0.70, alpha: 1.0)
+            }
+        }
+    
+        open var linkColor: NSColor {
+            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
+                return NSColor(named: "link")!
+            } else {
+                return NSColor(red: 1.00, green: 0.90, blue: 0.70, alpha: 1.0)
+            }
+        }
+
         public static var quoteColor: NSColor {
             if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
                 return NSColor(named: "quoteColor")!
@@ -93,20 +133,12 @@ public class NotesTextProcessor {
             }
         }
         
-        open var highlightColor: UIColor {
-            if NightNight.theme == .night {
-                return UIColor(red: 0.20, green: 0.55, blue: 0.07, alpha: 1.0)
-            } else {
-                return UIColor(red: 1.00, green: 0.90, blue: 0.70, alpha: 1.0)
-            }
-        }
-        
         public static var quoteColor: UIColor {
-            return UIColor.darkGray
+            UIColor.darkGray
         }
         
         public static var underlineColor: UIColor {
-            return UIColor.black
+            UIColor.black
         }
     #endif
     
@@ -452,7 +484,7 @@ public class NotesTextProcessor {
             guard substring.lengthOfBytes(using: .utf8) > 0 else { return }
             
             if #available(OSX 10.13, *) {
-                attributedString.addAttribute(.foregroundColor, value: NSColor(named: "link")!, range: range)
+                attributedString.addAttribute(.foregroundColor, value: highlightColor, range: range)
             } else {
                 attributedString.addAttribute(.foregroundColor, value: UserDefaultsManagement.linkColor, range: range)
             }
@@ -470,7 +502,6 @@ public class NotesTextProcessor {
         // We detect and process underlined headers
         NotesTextProcessor.headersSetextRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range else { return }
-//            attributedString.addAttribute(.font, value: boldFont, range: range)
             attributedString.fixAttributes(in: range)
             
             NotesTextProcessor.headersSetextUnderlineRegex.matches(string, range: range) { innerResult in
@@ -483,19 +514,19 @@ public class NotesTextProcessor {
         // We detect and process dashed headers
         NotesTextProcessor.headersAtxRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range else { return }
-//            attributedString.addAttribute(.font, value: boldFont, range: range)
+            attributedString.addAttribute(.foregroundColor, value: titleColor, range: range)
             attributedString.fixAttributes(in: range)
             
             NotesTextProcessor.headersAtxOpeningRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
-                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                attributedString.addAttribute(.foregroundColor, value: titleColor, range: innerRange)
                 let syntaxRange = NSMakeRange(innerRange.location, innerRange.length + 1)
                 hideSyntaxIfNecessary(range: syntaxRange)
             }
             
             NotesTextProcessor.headersAtxClosingRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
-                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                attributedString.addAttribute(.foregroundColor, value: titleColor, range: innerRange)
                 hideSyntaxIfNecessary(range: innerRange)
             }
         }
@@ -567,7 +598,7 @@ public class NotesTextProcessor {
                     destinationLink = substring
                     
                     if #available(OSX 10.13, *) {
-                        attributedString.addAttribute(.foregroundColor, value: NSColor(named: "link")!, range: linkRange)
+                        attributedString.addAttribute(.foregroundColor, value: highlightColor, range: linkRange)
                     } else {
                         attributedString.addAttribute(.foregroundColor, value: UserDefaultsManagement.linkColor, range: range)
                     }
@@ -599,7 +630,7 @@ public class NotesTextProcessor {
                     guard substring.lengthOfBytes(using: .utf8) > 0 else { return }
                     
                     if #available(OSX 10.13, *) {
-                        attributedString.addAttribute(.foregroundColor, value: NSColor(named: "link")!, range: range)
+                        attributedString.addAttribute(.foregroundColor, value: linkColor, range: range)
                     } else {
                         attributedString.addAttribute(.foregroundColor, value: UserDefaultsManagement.linkColor, range: range)
                     }
@@ -686,7 +717,7 @@ public class NotesTextProcessor {
             guard substring.lengthOfBytes(using: .utf8) > 0 else { return }
             
             if #available(OSX 10.13, *) {
-                attributedString.addAttribute(.foregroundColor, value: NSColor(named: "link")!, range: range)
+                attributedString.addAttribute(.foregroundColor, value: linkColor, range: range)
             } else {
                 attributedString.addAttribute(.foregroundColor, value: UserDefaultsManagement.linkColor, range: range)
             }
@@ -721,6 +752,7 @@ public class NotesTextProcessor {
 
                     if let link = link, let url = note.getImageUrl(imageName: link) {
                         attributedString.addAttribute(.link, value: url, range: linkRange)
+                        attributedString.addAttribute(.foregroundColor, value: linkColor, range: linkRange)
                     }
                 }
 
@@ -1236,7 +1268,7 @@ public class NotesTextProcessor {
     
     /// this is to emulate what's available in PHP
     fileprivate static func repeatString(_ text: String, _ count: Int) -> String {
-        return Array(repeating: text, count: count).reduce("", +)
+        Array(repeating: text, count: count).reduce("", +)
     }
     
     // We transform the user provided `fontName` `String` to a `NSFont`
@@ -1306,7 +1338,7 @@ public class NotesTextProcessor {
                     }
         
                     if #available(OSX 10.13, *) {
-                        storage.addAttribute(.foregroundColor, value: NSColor(named: "link")!, range: range)
+                        storage.addAttribute(.foregroundColor, value: linkColor, range: range)
                     } else {
                         storage.addAttribute(.foregroundColor, value: UserDefaultsManagement.linkColor, range: range)
                     }
