@@ -1,29 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
-    <channel>
-        <title>妙言</title>
-                <item>
-          <title>0.2.1</title>
-          <description><![CDATA[
+<rss version="2.0"
+  xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"
+  xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>妙言</title>
+    <item>
+      <title>0.2.1</title>
+      <description><![CDATA[
             <ul>
             <li>修复了自动更新的 bug</li>
             <li>使用说明文档有部分更新</li>
             </ul>
-            ]]></description>
-            <pubDate>周四, 17 6月 2022 19:48:44 +0800</pubDate>
-            <enclosure
-                url="https://miao-yan.vercel.app/Release/MiaoYan_V0.2.1.zip"
-                sparkle:shortVersionString="0.2.1"
-                sparkle:version="0.2.1.0"
-               sparkle:edSignature="DMILaSv1cUaYOwqVaiLThJQYU5I2nveFgSbyA9A2rr37HSg0csP2N62xvCbPPGrOHtJJ7LhqsUUUdNbwRJaQAw=="
-               length="19397380"
-                type="application/octet-stream"
-            />
-            <sparkle:minimumSystemVersion>0.1.0</sparkle:minimumSystemVersion>
-        </item>
-        <item>
-          <title>0.2.0</title>
-          <description><![CDATA[
+            ]]>      </description>
+      <pubDate>周四, 17 6月 2022 19:48:44 +0800</pubDate>
+      <enclosure url="https://miao-yan.vercel.app/Release/MiaoYan_V0.2.1.zip" sparkle:shortVersionString="0.2.1" sparkle:version="0.2.1.0" sparkle:edSignature="DMILaSv1cUaYOwqVaiLThJQYU5I2nveFgSbyA9A2rr37HSg0csP2N62xvCbPPGrOHtJJ7LhqsUUUdNbwRJaQAw==" length="19397380" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>0.1.0</sparkle:minimumSystemVersion>
+    </item>
+    <item>
+      <title>0.2.0</title>
+      <description><![CDATA[
             <ul>
             <li>全新视觉和编辑预览体验升级，兼容 macOS Monterey 版本</li>
             <li>序号分号等支持自动递增，效果不错</li>
@@ -32,17 +27,10 @@
             <li>回车标题自动 focus 到内容区域</li>
             <li>支持本地图片的展示和引入</li>
             </ul>
-            ]]></description>
-            <pubDate>周四, 17 6月 2022 15:48:44 +0800</pubDate>
-            <enclosure
-                url="https://miao-yan.vercel.app/Release/MiaoYan_V0.2.0.zip"
-                sparkle:shortVersionString="0.2.0"
-                sparkle:version="0.2.0.0"
-                sparkle:edSignature="tRQgrRVKcSlL8EMBWYMq9SvnFRkYVj/z6QfbwEh4r4GyBI2q20gH+B+0s3BP1si3B9zJ90ruITiMm5uJ2KdkCw=="
-                length="19397363"
-                type="application/octet-stream"
-            />
-            <sparkle:minimumSystemVersion>0.1.0</sparkle:minimumSystemVersion>
-        </item>
-    </channel>
+            ]]>      </description>
+      <pubDate>周四, 17 6月 2022 15:48:44 +0800</pubDate>
+      <enclosure url="https://miao-yan.vercel.app/Release/MiaoYan_V0.2.0.zip" sparkle:shortVersionString="0.2.0" sparkle:version="0.2.0.0" sparkle:edSignature="tRQgrRVKcSlL8EMBWYMq9SvnFRkYVj/z6QfbwEh4r4GyBI2q20gH+B+0s3BP1si3B9zJ90ruITiMm5uJ2KdkCw==" length="19397363" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>0.1.0</sparkle:minimumSystemVersion>
+    </item>
+  </channel>
 </rss>
