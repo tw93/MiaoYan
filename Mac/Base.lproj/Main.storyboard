@@ -1062,8 +1062,8 @@ CA
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="Bqv-Qw-wbK">
-                                <rect key="frame" x="107" y="43" width="87" height="16"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Version 0.2.0" id="PM6-HD-5pk">
+                                <rect key="frame" x="108" y="43" width="85" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Version 0.2.1" id="PM6-HD-5pk">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
