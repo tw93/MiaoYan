@@ -3,29 +3,6 @@
     <channel>
         <title>妙言</title>
         <item>
-            <title>0.2.1</title>
-          <description><![CDATA[
-            <ul>
-            <li>全新视觉和编辑预览体验升级，兼容 macOS Monterey 版本</li>
-            <li>序号分号等支持自动递增，效果不错</li>
-            <li>默认的字体更新成 LxgwWenKai，漂亮了不少</li>
-            <li>修复标题更新有时候不保存的 bug</li>
-            <li>回车标题自动 focus 到内容区域</li>
-            <li>支持本地图片的展示和引入</li>
-            </ul>
-            ]]></description>
-            <pubDate>周四, 17 6月 2022 18:48:44 +0800</pubDate>
-            <enclosure
-                url="https://raw.githubusercontent.com/tw93/MiaoYan/master/Release/MiaoYan_V0.2.0.zip"
-                sparkle:shortVersionString="0.2.1"
-                sparkle:version="0.2.1.0"
-                sparkle:edSignature="tRQgrRVKcSlL8EMBWYMq9SvnFRkYVj/z6QfbwEh4r4GyBI2q20gH+B+0s3BP1si3B9zJ90ruITiMm5uJ2KdkCw=="
-                length="19397363"
-                type="application/octet-stream"
-            />
-            <sparkle:minimumSystemVersion>0.1.0</sparkle:minimumSystemVersion>
-        </item>
-        <item>
             <title>0.2.0</title>
           <description><![CDATA[
             <ul>
