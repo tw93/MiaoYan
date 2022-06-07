@@ -5,7 +5,7 @@ IOS_TARGET_VERSION = '10'
 
 def mac_pods
     pod 'MASShortcut', :git => 'https://github.com/shpakovski/MASShortcut.git', :branch => 'master'
-    pod 'Sparkle','2.1.0'
+    pod 'Sparkle', '~> 1.22.0'
 end
 
 def ios_pods
