@@ -15,8 +15,7 @@
 
 ## 下载
 
-- 方式一：快捷安装：`brew cask install miaoyan`
-- 方式二：从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases) 中下载最新的 MiaoYan.dmg 安装包，双击安装即可
+- 从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases) 中下载最新的 MiaoYan.dmg 安装包，双击安装即可
 
 ## 初始化使用
 
