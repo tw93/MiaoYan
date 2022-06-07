@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>SUFeedURL</key>
+	<string></string>
+	<key>SUPublicEDKey</key>
+	<string>4IB5REPPZ6ya7EP1aIYpaleXXOEVmenFqN4DFnsVbHc=</string>
 	<key>ATSApplicationFontsPath</key>
 	<string>.</string>
 	<key>CFBundleDevelopmentRegion</key>
@@ -179,6 +183,8 @@
 	</dict>
 	<key>NSMainStoryboardFile</key>
 	<string>Main</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 	<key>NSUbiquitousContainers</key>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <channel>
+        <title>妙言</title>
+        <item>
+            <title>0.2.0</title>
+          <description><![CDATA[
+            <ul>
+            <li>全新视觉升级，兼容 macOS Monterey 版本</li>
+            </ul>
+
+            ]]></description>
+            <pubDate>周四, 17 6月 2022 18:48:44 +0800</pubDate>
+            <enclosure
+                url="https://xxx.com/app.zip"
+                sparkle:shortVersionString="0.2.0"
+                sparkle:version="0.2.0.0"
+                sparkle:edSignature="drf5/TGtJcuvhW2pW5iHXnTWk2JDFOa06jKCK3mNDS6QJmIUow0SnngxfPGvQrVr0jOuH9ZGFnmcSopTZwilBQ==" length="18213224"
+                type="application/octet-stream"
+            />
+            <sparkle:minimumSystemVersion>10.11</sparkle:minimumSystemVersion>
+        </item>
+    </channel>
+</rss>
