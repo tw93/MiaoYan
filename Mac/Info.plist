@@ -196,7 +196,7 @@
 		</dict>
 	</dict>
 	<key>SUFeedURL</key>
-	<string>https://miao-yan.vercel.app/appcast.xml</string>
+	<string>https://raw.githubusercontent.com/tw93/MiaoYan/master/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>4IB5REPPZ6ya7EP1aIYpaleXXOEVmenFqN4DFnsVbHc=</string>
 	<key>UTExportedTypeDeclarations</key>
