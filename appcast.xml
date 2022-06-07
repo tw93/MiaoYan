@@ -12,10 +12,11 @@
             ]]></description>
             <pubDate>周四, 17 6月 2022 18:48:44 +0800</pubDate>
             <enclosure
-                url="https://xxx.com/app.zip"
+                url="https://github.com/tw93/MiaoYan/raw/master/Release/MiaoYan_V0.2.0.zip"
                 sparkle:shortVersionString="0.2.0"
                 sparkle:version="0.2.0.0"
-                sparkle:edSignature="drf5/TGtJcuvhW2pW5iHXnTWk2JDFOa06jKCK3mNDS6QJmIUow0SnngxfPGvQrVr0jOuH9ZGFnmcSopTZwilBQ==" length="18213224"
+                sparkle:edSignature="drf5/TGtJcuvhW2pW5iHXnTWk2JDFOa06jKCK3mNDS6QJmIUow0SnngxfPGvQrVr0jOuH9ZGFnmcSopTZwilBQ=="
+                length="18213224"
                 type="application/octet-stream"
             />
             <sparkle:minimumSystemVersion>10.11</sparkle:minimumSystemVersion>
