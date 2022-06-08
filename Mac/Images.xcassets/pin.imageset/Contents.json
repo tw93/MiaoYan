@@ -7,7 +7,7 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "pin.png",
+      "filename" : "pin-white.png",
       "appearances" : [
         {
           "appearance" : "luminosity",
@@ -23,7 +23,7 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "pin.png",
+      "filename" : "pin-white.png",
       "appearances" : [
         {
           "appearance" : "luminosity",
@@ -40,7 +40,7 @@
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "pin.png",
+      "filename" : "pin-white.png",
       "appearances" : [
         {
           "appearance" : "luminosity",
