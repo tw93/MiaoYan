@@ -1,0 +1,279 @@
+
+/* Class = "NSMenu"; title = "Sort by"; ObjectID = "05n-RU-nOV"; */
+"05n-RU-nOV.title" = "Sort by";
+
+/* Class = "NSMenuItem"; title = "MiaoYan"; ObjectID = "1Xt-HY-uBw"; */
+"1Xt-HY-uBw.title" = "MiaoYan";
+
+/* Class = "NSMenu"; title = "Find"; ObjectID = "1b7-l0-nxx"; */
+"1b7-l0-nxx.title" = "Find";
+
+/* Class = "NSMenuItem"; title = "Title"; ObjectID = "1qV-pJ-ZQT"; */
+"1qV-pJ-ZQT.title" = "Title";
+
+/* Class = "NSMenuItem"; title = "New"; ObjectID = "2Ci-Yj-aWK"; */
+"2Ci-Yj-aWK.title" = "New";
+
+/* Class = "NSTextFieldCell"; title = "Table View Cell"; ObjectID = "2ZQ-YX-F9M"; */
+"2ZQ-YX-F9M.title" = "Table View Cell";
+
+/* Class = "NSMenuItem"; title = "New folder"; ObjectID = "3zv-SD-lSX"; */
+"3zv-SD-lSX.title" = "New folder";
+
+/* Class = "NSMenuItem"; title = "Find"; ObjectID = "4EN-yA-p0u"; */
+"4EN-yA-p0u.title" = "Find";
+
+/* Class = "NSMenuItem"; title = "Enter Full Screen"; ObjectID = "4J7-dP-txa"; */
+"4J7-dP-txa.title" = "Enter Full Screen";
+
+/* Class = "NSMenuItem"; title = "Quit MiaoYan"; ObjectID = "4sb-4s-VLi"; */
+"4sb-4s-VLi.title" = "Quit MiaoYan";
+
+/* Class = "NSMenuItem"; title = "Edit"; ObjectID = "5QF-Oa-p0T"; */
+"5QF-Oa-p0T.title" = "Edit";
+
+/* Class = "NSMenuItem"; title = "Redo"; ObjectID = "6dh-zS-Vam"; */
+"6dh-zS-Vam.title" = "Redo";
+
+/* Class = "NSMenuItem"; title = "深色"; ObjectID = "73o-2j-rWk"; */
+"73o-2j-rWk.title" = "深色";
+
+/* Class = "NSTextFieldCell"; title = "2/23/11"; ObjectID = "9w3-fa-di3"; */
+"9w3-fa-di3.title" = "2/23/11";
+
+/* Class = "NSMenuItem"; title = "Minimize"; ObjectID = "A5V-Wm-if2"; */
+"A5V-Wm-if2.title" = "Minimize";
+
+/* Class = "NSMenu"; title = "Main Menu"; ObjectID = "AYu-sK-qS6"; */
+"AYu-sK-qS6.title" = "Main Menu";
+
+/* Class = "NSSearchFieldCell"; placeholderString = "Search"; ObjectID = "B7t-9v-bSk"; */
+"B7t-9v-bSk.placeholderString" = "Search";
+
+/* Class = "NSMenuItem"; title = "Preferences…"; ObjectID = "BOF-NM-1cW"; */
+"BOF-NM-1cW.title" = "Preferences…";
+
+/* Class = "NSMenuItem"; title = "Check for Updates"; ObjectID = "BWp-m7-ySj"; */
+"BWp-m7-ySj.title" = "Check for Updates";
+
+/* Class = "NSMenu"; title = "Folder"; ObjectID = "BYI-2F-BJo"; */
+"BYI-2F-BJo.title" = "Folder";
+
+/* Class = "NSMenuItem"; title = "Move"; ObjectID = "CvG-Kp-kdK"; */
+"CvG-Kp-kdK.title" = "Move";
+
+/* Class = "NSMenuItem"; title = "Hide/show sidebar"; ObjectID = "DCh-5P-PZe"; */
+"DCh-5P-PZe.title" = "Hide/show sidebar";
+
+/* Class = "NSMenuItem"; title = "Duplicate"; ObjectID = "E6I-n5-dsi"; */
+"E6I-n5-dsi.title" = "Duplicate";
+
+/* Class = "NSMenuItem"; title = "Show in Finder"; ObjectID = "F5A-zs-zwP"; */
+"F5A-zs-zwP.title" = "Show in Finder";
+
+/* Class = "NSMenuItem"; title = "Zoom"; ObjectID = "FQV-5x-ffs"; */
+"FQV-5x-ffs.title" = "Zoom";
+
+/* Class = "NSMenuItem"; title = "Folder"; ObjectID = "Fuh-qO-nt2"; */
+"Fuh-qO-nt2.title" = "Folder";
+
+/* Class = "NSMenuItem"; title = "Empty Trash"; ObjectID = "G9H-Lg-TXE"; */
+"G9H-Lg-TXE.title" = "Empty Trash";
+
+/* Class = "NSTableColumn"; headerCell.title = "Library"; ObjectID = "Gwp-vX-YaR"; */
+"Gwp-vX-YaR.headerCell.title" = "Library";
+
+/* Class = "NSMenuItem"; title = "View"; ObjectID = "H8h-7b-M4v"; */
+"H8h-7b-M4v.title" = "View";
+
+/* Class = "NSMenu"; title = "View"; ObjectID = "HyV-fh-RgO"; */
+"HyV-fh-RgO.title" = "View";
+
+/* Class = "NSWindow"; title = "MiaoYan"; ObjectID = "IQv-IB-iLA"; */
+"IQv-IB-iLA.title" = "MiaoYan";
+
+/* Class = "NSTextFieldCell"; title = "语言："; ObjectID = "M1L-gX-jeu"; */
+"M1L-gX-jeu.title" = "语言：";
+
+/* Class = "NSMenu"; title = "Window"; ObjectID = "MlK-p2-CxF"; */
+"MlK-p2-CxF.title" = "Window";
+
+/* Class = "NSViewController"; title = "General"; ObjectID = "NHv-lG-vxt"; */
+"NHv-lG-vxt.title" = "General";
+
+/* Class = "NSMenuItem"; title = "Save revision"; ObjectID = "Nhf-c1-VJ6"; */
+"Nhf-c1-VJ6.title" = "Save revision";
+
+/* Class = "NSTextFieldCell"; title = "Text Cell"; ObjectID = "NiN-n8-Y4W"; */
+"NiN-n8-Y4W.title" = "Text Cell";
+
+/* Class = "NSMenuItem"; title = "Import"; ObjectID = "O8Z-cg-XnH"; */
+"O8Z-cg-XnH.title" = "Import";
+
+/* Class = "NSTextFieldCell"; placeholderString = "输入标题"; ObjectID = "O9K-a1-3eu"; */
+"O9K-a1-3eu.placeholderString" = "输入标题";
+
+/* Class = "NSTextFieldCell"; title = "Title"; ObjectID = "O9K-a1-3eu"; */
+"O9K-a1-3eu.title" = "Title";
+
+/* Class = "NSMenuItem"; title = "Find Previous"; ObjectID = "OwM-mh-QMV"; */
+"OwM-mh-QMV.title" = "Find Previous";
+
+/* Class = "NSTextFieldCell"; title = "Version 0.2.0"; ObjectID = "PM6-HD-5pk"; */
+"PM6-HD-5pk.title" = "Version 0.2.0";
+
+/* Class = "NSMenuItem"; title = "Toggle preview"; ObjectID = "PdU-Em-Ugm"; */
+"PdU-Em-Ugm.title" = "Toggle preview";
+
+/* Class = "NSMenuItem"; title = "Select All"; ObjectID = "Ruw-6m-B2m"; */
+"Ruw-6m-B2m.title" = "Select All";
+
+/* Class = "NSMenuItem"; title = "Delete folder"; ObjectID = "RwR-P0-ycK"; */
+"RwR-P0-ycK.title" = "Delete folder";
+
+/* Class = "NSMenuItem"; title = "Jump to Selection"; ObjectID = "S0p-oC-mLd"; */
+"S0p-oC-mLd.title" = "Jump to Selection";
+
+/* Class = "NSTextFieldCell"; title = "Text Cell"; ObjectID = "SFY-jB-hva"; */
+"SFY-jB-hva.title" = "Text Cell";
+
+/* Class = "NSMenuItem"; title = "Window"; ObjectID = "SdL-vK-KjH"; */
+"SdL-vK-KjH.title" = "Window";
+
+/* Class = "NSMenuItem"; title = "File"; ObjectID = "SeY-r8-n3w"; */
+"SeY-r8-n3w.title" = "File";
+
+/* Class = "NSMenuItem"; title = "New folder"; ObjectID = "SrH-fe-Hog"; */
+"SrH-fe-Hog.title" = "New folder";
+
+/* Class = "NSMenuItem"; title = "Rename folder"; ObjectID = "Tap-iY-hyA"; */
+"Tap-iY-hyA.title" = "Rename folder";
+
+/* Class = "NSMenuItem"; title = "Delete"; ObjectID = "TjZ-PX-YVo"; */
+"TjZ-PX-YVo.title" = "Delete";
+
+/* Class = "NSMenu"; title = "Edit"; ObjectID = "W48-6f-4Dl"; */
+"W48-6f-4Dl.title" = "Edit";
+
+/* Class = "NSMenuItem"; title = "Hide/show note list"; ObjectID = "WHt-T4-l9c"; */
+"WHt-T4-l9c.title" = "Hide/show note list";
+
+/* Class = "NSMenuItem"; title = "Paste and Match Style"; ObjectID = "WeT-3V-zwk"; */
+"WeT-3V-zwk.title" = "Paste and Match Style";
+
+/* Class = "NSTextFieldCell"; title = "外观："; ObjectID = "X8u-wB-WWq"; */
+"X8u-wB-WWq.title" = "外观：";
+
+/* Class = "NSMenuItem"; title = "Rename"; ObjectID = "XBB-Sr-T1D"; */
+"XBB-Sr-T1D.title" = "Rename";
+
+/* Class = "NSMenuItem"; title = "Find…"; ObjectID = "Xz5-n4-O0W"; */
+"Xz5-n4-O0W.title" = "Find…";
+
+/* Class = "NSMenuItem"; title = "Find and Replace…"; ObjectID = "YEy-JH-Tfz"; */
+"YEy-JH-Tfz.title" = "Find and Replace…";
+
+/* Class = "NSViewController"; title = "About MiaoYan"; ObjectID = "YNW-vn-A3h"; */
+"YNW-vn-A3h.title" = "About MiaoYan";
+
+/* Class = "NSTextFieldCell"; title = "Table View Cell"; ObjectID = "aX0-yU-aew"; */
+"aX0-yU-aew.title" = "Table View Cell";
+
+/* Class = "NSTextFieldCell"; title = "Copyright © 2022 Tw93"; ObjectID = "ad2-SL-Pni"; */
+"ad2-SL-Pni.title" = "Copyright © 2022 Tw93";
+
+/* Class = "NSMenuItem"; title = "Modification date"; ObjectID = "dCc-l5-XB2"; */
+"dCc-l5-XB2.title" = "Modification date";
+
+/* Class = "NSMenuItem"; title = "Undo"; ObjectID = "dRJ-4n-Yzg"; */
+"dRJ-4n-Yzg.title" = "Undo";
+
+/* Class = "NSMenuItem"; title = "浅色"; ObjectID = "dx8-sq-a90"; */
+"dx8-sq-a90.title" = "浅色";
+
+/* Class = "NSMenuItem"; title = "Creation date"; ObjectID = "eTL-dh-GvM"; */
+"eTL-dh-GvM.title" = "Creation date";
+
+/* Class = "NSMenuItem"; title = "Delete"; ObjectID = "fHG-zk-g0k"; */
+"fHG-zk-g0k.title" = "Delete";
+
+/* Class = "NSMenuItem"; title = "自动"; ObjectID = "fQA-b2-fKr"; */
+"fQA-b2-fKr.title" = "自动";
+
+/* Class = "NSTextFieldCell"; title = "存储:"; ObjectID = "fmS-eE-nne"; */
+"fmS-eE-nne.title" = "存储:";
+
+/* Class = "NSMenuItem"; title = "Rename folder"; ObjectID = "fzU-ZR-Ubv"; */
+"fzU-ZR-Ubv.title" = "Rename folder";
+
+/* Class = "NSMenuItem"; title = "Paste"; ObjectID = "gVA-U4-sdL"; */
+"gVA-U4-sdL.title" = "Paste";
+
+/* Class = "NSMenuItem"; title = "About MiaoYan"; ObjectID = "gXN-Ca-moU"; */
+"gXN-Ca-moU.title" = "About MiaoYan";
+
+/* Class = "NSMenuItem"; title = "Show in Finder"; ObjectID = "goN-LO-L7l"; */
+"goN-LO-L7l.title" = "Show in Finder";
+
+/* Class = "NSMenuItem"; title = "Search"; ObjectID = "hPY-aY-QOE"; */
+"hPY-aY-QOE.title" = "Search";
+
+/* Class = "NSMenuItem"; title = "Pin/unpin"; ObjectID = "jFN-Dp-LON"; */
+"jFN-Dp-LON.title" = "Pin/unpin";
+
+/* Class = "NSMenuItem"; title = "Rename"; ObjectID = "jLq-8F-n0X"; */
+"jLq-8F-n0X.title" = "Rename";
+
+/* Class = "NSMenuItem"; title = "Close"; ObjectID = "kIy-TN-XMS"; */
+"kIy-TN-XMS.title" = "Close";
+
+/* Class = "NSWindow"; title = "Preferences"; ObjectID = "ldu-U8-PD1"; */
+"ldu-U8-PD1.title" = "Preferences";
+
+/* Class = "NSTextFieldCell"; title = "妙 言"; ObjectID = "mj8-mU-0W4"; */
+"mj8-mU-0W4.title" = "妙 言";
+
+/* Class = "NSButtonCell"; title = "Change"; ObjectID = "nBn-aV-7mt"; */
+"nBn-aV-7mt.title" = "Change";
+
+/* Class = "NSMenuItem"; title = "Duplicate"; ObjectID = "pnm-dP-GKO"; */
+"pnm-dP-GKO.title" = "Duplicate";
+
+/* Class = "NSMenuItem"; title = "Find Next"; ObjectID = "q09-fT-Sye"; */
+"q09-fT-Sye.title" = "Find Next";
+
+/* Class = "NSMenuItem"; title = "Main Window"; ObjectID = "qZf-Xp-kDW"; */
+"qZf-Xp-kDW.title" = "Main Window";
+
+/* Class = "NSWindow"; title = "Window"; ObjectID = "qod-hp-9wd"; */
+"qod-hp-9wd.title" = "Window";
+
+/* Class = "NSMenuItem"; title = "Sort by"; ObjectID = "rHB-xF-GgG"; */
+"rHB-xF-GgG.title" = "Sort by";
+
+/* Class = "NSMenuItem"; title = "Reveal in Finder"; ObjectID = "rXU-X3-UjC"; */
+"rXU-X3-UjC.title" = "Reveal in Finder";
+
+/* Class = "NSMenuItem"; title = "Bring All to Front"; ObjectID = "s6A-tQ-Sbe"; */
+"s6A-tQ-Sbe.title" = "Bring All to Front";
+
+/* Class = "NSMenu"; title = "File"; ObjectID = "uMZ-sI-7ja"; */
+"uMZ-sI-7ja.title" = "File";
+
+/* Class = "NSMenu"; title = "MiaoYan"; ObjectID = "uQy-DD-JDr"; */
+"uQy-DD-JDr.title" = "MiaoYan";
+
+/* Class = "NSMenuItem"; title = "Cut"; ObjectID = "uRl-iY-unG"; */
+"uRl-iY-unG.title" = "Cut";
+
+/* Class = "NSTextFieldCell"; title = "MiaoYan"; ObjectID = "v9A-ZO-AAb"; */
+"v9A-ZO-AAb.title" = "MiaoYan";
+
+/* Class = "NSMenuItem"; title = "Copy"; ObjectID = "x3v-GG-iWU"; */
+"x3v-GG-iWU.title" = "Copy";
+
+/* Class = "NSMenuItem"; title = "Reveal in Finder"; ObjectID = "xSO-lW-k8f"; */
+"xSO-lW-k8f.title" = "Reveal in Finder";
+
+/* Class = "NSTextFieldCell"; title = "Name"; ObjectID = "y7T-Rc-etT"; */
+"y7T-Rc-etT.title" = "Name";

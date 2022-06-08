@@ -9,6 +9,7 @@ class PreferencesGeneralViewController: NSViewController {
         preferredContentSize = NSSize(width: 476, height: 413)
     }
     @IBOutlet weak var defaultStoragePath: NSPathControl!
+    @IBOutlet weak var languagePopUp: NSPopUpButton!
     @IBOutlet weak var appearance: NSPopUpButton!
     @IBOutlet weak var appearanceLabel: NSTextField!
 
@@ -48,6 +49,22 @@ class PreferencesGeneralViewController: NSViewController {
     override func viewDidAppear() {
         self.view.window!.title = NSLocalizedString("Preferences", comment: "")
 
+        let languages = [
+            LanguageType(rawValue: 0x06),
+            LanguageType(rawValue: 0x00)
+        ]
+
+        for language in languages {
+            if let lang = language?.description, let id = language?.rawValue {
+                languagePopUp.addItem(withTitle: lang)
+                languagePopUp.lastItem?.state = (id == UserDefaultsManagement.defaultLanguage) ? .on : .off
+
+                if id == UserDefaultsManagement.defaultLanguage {
+                    languagePopUp.selectItem(withTitle: lang)
+                }
+            }
+        }
+        
         if let url = UserDefaultsManagement.storageUrl {
             defaultStoragePath.stringValue = url.path
         }
@@ -84,6 +101,17 @@ class PreferencesGeneralViewController: NSViewController {
         }
     }
 
+    @IBAction func languagePopUp(_ sender: NSPopUpButton) {
+        let type = LanguageType.withName(rawValue: sender.title)
+
+        UserDefaultsManagement.defaultLanguage = type.rawValue
+
+        UserDefaults.standard.set([type.code], forKey: "AppleLanguages")
+        UserDefaults.standard.synchronize()
+
+        restart()
+    }
+    
     func restart() {
         let url = URL(fileURLWithPath: Bundle.main.resourcePath!)
         let path = url.deletingLastPathComponent().deletingLastPathComponent().absoluteString

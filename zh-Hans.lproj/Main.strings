@@ -7,6 +7,15 @@
 /* Class = "NSMenuItem"; title = "MiaoYan"; ObjectID = "1Xt-HY-uBw"; */
 "1Xt-HY-uBw.title" = "妙言";
 
+/* Class = "NSWindow"; title = "MiaoYan"; ObjectID = "IQv-IB-iLA"; */
+"IQv-IB-iLA.title" = "妙言";
+
+/* Class = "NSTextField"; title = "MiaoYan"; ObjectID = "cgf-ax-Go5"; */
+"cgf-ax-Go5.title" = "妙言";
+
+/* Class = "NSTextFieldCell"; title = "MiaoYan"; ObjectID = "v9A-ZO-AAb"; */
+"v9A-ZO-AAb.title" = "妙言";
+
 /* Class = "NSTextFieldCell"; placeholderString = "TextEdit"; ObjectID = "1XY-bI-DX7"; */
 "1XY-bI-DX7.placeholderString" = "TextEdit";
 

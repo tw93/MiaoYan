@@ -492,7 +492,7 @@ class ViewController: NSViewController,
                         return false
                     }
 
-                    if let note = EditTextView.note, fr.isKind(of: NotesTableView.self) && !(UserDefaultsManagement.preview && !note.isRTF()) {
+                    if let note = EditTextView.note, fr.isKind(of: NotesTableView.self), !(UserDefaultsManagement.preview && !note.isRTF()) {
                         NSApp.mainWindow?.makeFirstResponder(editArea)
                         return false
                     }
@@ -517,14 +517,14 @@ class ViewController: NSViewController,
 
         // Focus search bar on ESC
         if
-            (
-                event.keyCode == kVK_Escape
-                    || (
-                        event.characters == "." &&
-                            event.modifierFlags.contains(.command)
-                    )
-            )
-            && NSApplication.shared.mainWindow == NSApplication.shared.keyWindow
+
+            event.keyCode == kVK_Escape
+            || (
+                event.characters == "." &&
+                    event.modifierFlags.contains(.command)
+            ),
+
+            NSApplication.shared.mainWindow == NSApplication.shared.keyWindow
         {
             UserDataService.instance.resetLastSidebar()
 
@@ -552,7 +552,7 @@ class ViewController: NSViewController,
             let hasSelectedNotes = notesTableView.selectedRow > -1
             let hasSelectedBarItem = storageOutlineView.selectedRow > -1
 
-            if hasSelectedBarItem && hasSelectedNotes {
+            if hasSelectedBarItem, hasSelectedNotes {
                 UserDefaultsManagement.lastProject = 0
                 UserDataService.instance.isNotesTableEscape = true
                 notesTableView.deselectAll(nil)
@@ -958,7 +958,7 @@ class ViewController: NSViewController,
     }
 
     public func getCurrentNote() -> Note? {
-        return EditTextView.note
+        EditTextView.note
     }
 
     private func removeForever() {
@@ -1196,7 +1196,7 @@ class ViewController: NSViewController,
                             || (note.project.parent != nil && projects!.contains(note.project.parent!))
                     )
                     || type == .Trash
-            ) && (  
+            ) && (
                 type == .Trash && note.isTrash()
                     || type != .Trash && !note.isTrash()
             )
@@ -1283,9 +1283,9 @@ class ViewController: NSViewController,
         guard let mainWindow = MainWindowController.shared() else { return }
 
         if
-            NSApplication.shared.isActive
-            && !NSApplication.shared.isHidden
-            && !mainWindow.isMiniaturized
+            NSApplication.shared.isActive,
+            !NSApplication.shared.isHidden,
+            !mainWindow.isMiniaturized
         {
             NSApplication.shared.hide(nil)
             return
@@ -1631,6 +1631,8 @@ class ViewController: NSViewController,
     }
 
     public func updateTitle(newTitle: String) {
+        let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "MiaoYan"
+
         var titleString = newTitle
 
         if newTitle.isValidUUID {
@@ -1639,6 +1641,8 @@ class ViewController: NSViewController,
         titleLabel.stringValue = titleString
 
         titleLabel.currentEditor()?.selectedRange = NSRange(location: titleString.utf16.count, length: 0)
+        
+        MainWindowController.shared()?.title = appName
     }
 
     // MARK: Share Service
