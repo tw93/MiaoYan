@@ -52,6 +52,7 @@ public class UserDefaultsManagement {
         static let FullScreen = "fullScreen"
         static let NoteType = "noteType"
         static let ImagesWidthKey = "imagesWidthKey"
+        static let DefaultLanguageKey = "defaultLanguage"
         static let ImportURLsKey = "ImportURLs"
         static let LastSelectedPath = "lastSelectedPath"
         static let LastProject = "lastProject"
@@ -89,6 +90,19 @@ public class UserDefaultsManagement {
         }
     }
 
+    static var defaultLanguage: Int {
+        get {
+            if let dl = UserDefaults.standard.object(forKey: Constants.DefaultLanguageKey) as? Int {
+                return dl
+            }
+            
+            return 0
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.DefaultLanguageKey)
+        }
+    }
+    
     static var liveImagesPreview: Bool {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.LiveImagesPreview) {
