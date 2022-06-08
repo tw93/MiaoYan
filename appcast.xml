@@ -5,7 +5,7 @@
     <item>
       <title>0.2.0</title>
       <description><![CDATA[
-            <ul>
+            <ol>
             <li>全新视觉和编辑预览体验升级，兼容 macOS Monterey 版本</li>
             <li>序号分号等支持自动递增，效果不错</li>
             <li>默认的字体更新成霞鹜文楷</li>
@@ -13,10 +13,10 @@
             <li>回车标题自动 focus 到内容区域</li>
             <li>支持本地图片的展示和引入</li>
             <li>支持自动更新 App</li>
-            </ul>
+            </ol>
             ]]>      </description>
-      <pubDate>周四, 17 6月 2022 15:48:44 +0800</pubDate>
-      <enclosure url="https://miao-yan.vercel.app/Release/MiaoYan_V0.2.0.zip" sparkle:shortVersionString="0.2.0" sparkle:version="0.2.0" sparkle:edSignature="GIrlW4C5d6qNQVXUBqmWZMjuw6sEOFq8Iwqvm8gDs0HmcbSj9Y3CDfBtgNG/Eg9wYM3feFBQ6lXgb4Lp+V3MAA==" length="19905691" type="application/octet-stream" />
+      <pubDate>周三, 08 6月 2022 14:48:44 +0800</pubDate>
+      <enclosure url="https://miao-yan.vercel.app/Release/MiaoYan_V0.2.0.zip" sparkle:shortVersionString="0.2.0" sparkle:version="0.2.0" sparkle:edSignature="qRtdNH5/DxEaS5YjEVFI57w0H2QHmctL/lsU3W4SXj/Es6iZS/FAVYKbBESfYd0397T7Sw2Pd3WxW1lzJEYCBg==" length="19889101" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
     </item>
   </channel>
