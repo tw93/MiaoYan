@@ -1,11 +1,11 @@
 #if os(iOS)
-    import UIKit
     import NightNight
+    import UIKit
 #else
     import Cocoa
 #endif
 
-class AttributedBox {
+enum AttributedBox {
     public static func getChecked() -> NSMutableAttributedString? {
         let checkboxText = getCleanChecked()
         checkboxText.append(NSAttributedString(string: " "))
@@ -30,11 +30,11 @@ class AttributedBox {
             let image = getImage(name: "checkbox_empty")
             attachment.image = image
         } else {
-        #if os(OSX)
-            image = NSImage(named: "checkbox_empty1012.png")!.resize(to: CGSize(width: size, height: size))!
-            let cell = NSTextAttachmentCell(imageCell: image)
-            attachment.attachmentCell = cell
-        #endif
+            #if os(OSX)
+                image = NSImage(named: "checkbox_empty1012.png")!.resize(to: CGSize(width: size, height: size))!
+                let cell = NSTextAttachmentCell(imageCell: image)
+                attachment.attachmentCell = cell
+            #endif
         }
 
         attachment.bounds = CGRect(x: CGFloat(0), y: (font.capHeight - size) / 2, width: size, height: size)
@@ -43,8 +43,7 @@ class AttributedBox {
 
         checkboxText.addAttribute(.todo, value: 0, range: NSRange(0..<1))
 
-        if #available(OSX 10.13, iOS 10.0, *) {
-        } else {
+        if #unavailable(OSX 10.13, iOS 10.0) {
             let offset = (font.capHeight - size) / 2
             checkboxText.addAttribute(.baselineOffset, value: offset, range: NSRange(0..<1))
         }
@@ -66,11 +65,11 @@ class AttributedBox {
             image = getImage(name: "checkbox")
             attachment.image = image
         } else {
-        #if os(OSX)
-            image = NSImage(named: "checkbox1012.png")!.resize(to: CGSize(width: size, height: size))!
-            let cell = NSTextAttachmentCell(imageCell: image)
-            attachment.attachmentCell = cell
-        #endif
+            #if os(OSX)
+                image = NSImage(named: "checkbox1012.png")!.resize(to: CGSize(width: size, height: size))!
+                let cell = NSTextAttachmentCell(imageCell: image)
+                attachment.attachmentCell = cell
+            #endif
         }
 
         attachment.bounds = CGRect(x: CGFloat(0), y: (font.capHeight - size) / 2, width: size, height: size)
@@ -79,8 +78,7 @@ class AttributedBox {
 
         checkboxText.addAttribute(.todo, value: 1, range: NSRange(0..<1))
 
-        if #available(OSX 10.13, iOS 10.0, *) {
-        } else {
+        if #unavailable(OSX 10.13, iOS 10.0) {
             let offset = (font.capHeight - size) / 2
             checkboxText.addAttribute(.baselineOffset, value: offset, range: NSRange(0..<1))
         }
