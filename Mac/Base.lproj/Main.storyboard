@@ -400,6 +400,27 @@ CA
                                     <action selector="changeDefaultStorage:" target="NHv-lG-vxt" id="LS1-05-YQG"/>
                                 </connections>
                             </button>
+                            <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="I8N-rL-amz">
+                                <rect key="frame" x="124" y="232" width="144" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="LsM-Zw-Wrl">
+                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="menu"/>
+                                    <menu key="menu" id="wLV-Lz-I67"/>
+                                </popUpButtonCell>
+                                <connections>
+                                    <action selector="languagePopUp:" target="NHv-lG-vxt" id="fRJ-Ff-Aa7"/>
+                                </connections>
+                            </popUpButton>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="31i-Dr-RID">
+                                <rect key="frame" x="128" y="270" width="221" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="语言：" id="jdI-uU-sfm">
+                                    <font key="font" size="13" name=".PingFangSC-Regular"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                         <constraints>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="nbv-Zo-swV" secondAttribute="trailing" constant="20" symbolic="YES" id="AIV-jt-oKD"/>
@@ -408,9 +429,9 @@ CA
                             <constraint firstItem="XZf-Ag-G2L" firstAttribute="leading" secondItem="dkg-Hb-c1w" secondAttribute="trailing" constant="8" symbolic="YES" id="S1k-c8-fHN"/>
                             <constraint firstItem="TrE-Qn-Cw5" firstAttribute="top" secondItem="4Xk-4f-czc" secondAttribute="top" constant="59" id="TLP-yP-rrg"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="TrE-Qn-Cw5" secondAttribute="trailing" constant="20" symbolic="YES" id="aQ9-dc-jos"/>
+                            <constraint firstItem="nbv-Zo-swV" firstAttribute="leading" secondItem="TrE-Qn-Cw5" secondAttribute="leading" id="bmb-B1-JWf"/>
                             <constraint firstItem="TrE-Qn-Cw5" firstAttribute="leading" secondItem="dkg-Hb-c1w" secondAttribute="leading" id="eXr-fk-XNG"/>
                             <constraint firstItem="TrE-Qn-Cw5" firstAttribute="leading" secondItem="4Xk-4f-czc" secondAttribute="leading" constant="34" id="l4W-17-awv"/>
-                            <constraint firstItem="TrE-Qn-Cw5" firstAttribute="leading" secondItem="nbv-Zo-swV" secondAttribute="leading" id="oMd-78-8tR"/>
                             <constraint firstItem="nbv-Zo-swV" firstAttribute="top" secondItem="TrE-Qn-Cw5" secondAttribute="bottom" constant="14" id="vVs-W0-jfN"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="81L-hB-Mc1" secondAttribute="trailing" symbolic="YES" id="xeI-6p-Xx2"/>
                             <constraint firstItem="81L-hB-Mc1" firstAttribute="top" secondItem="nbv-Zo-swV" secondAttribute="bottom" constant="34" id="y1b-rv-TJV"/>
@@ -422,6 +443,7 @@ CA
                         <outlet property="appearance" destination="nbv-Zo-swV" id="X07-uA-Cb7"/>
                         <outlet property="appearanceLabel" destination="TrE-Qn-Cw5" id="6OY-nG-s9U"/>
                         <outlet property="defaultStoragePath" destination="dkg-Hb-c1w" id="ly3-HH-jj3"/>
+                        <outlet property="languagePopUp" destination="I8N-rL-amz" id="47F-nH-5hW"/>
                     </connections>
                 </viewController>
                 <customObject id="o4P-dg-Cec" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
