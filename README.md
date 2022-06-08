@@ -19,7 +19,7 @@
 
 ## 初始化使用
 
-1. 可以在 iCloud 或者文档中创建一个 MiaoYan 的文件夹，然后打开 `妙言` 的 [设置](https://qpluspicture.oss-cn-beijing.aliyuncs.com/dcDO8s/31.jpg)，将默认存储地址修改成这个
+1. 可以在 iCloud 或者文档中创建一个 MiaoYan 的文件夹，然后打开妙言的 [设置](https://qpluspicture.oss-cn-beijing.aliyuncs.com/dcDO8s/31.jpg)，将默认存储地址修改成这个
 2. [点击](https://qpluspicture.oss-cn-beijing.aliyuncs.com/cHBjMt/43.jpg) 妙言左上角新增文件夹的图标，创建好自己的文档分类文件夹，就可以开始使用了
 
 ## 快捷键
@@ -40,7 +40,7 @@
 
 ## 为什么要做妙言
 
-- 之前有尝试过众多的笔记应用，大学时期为知笔记、印象笔记，工作时候用过 Ulysses(无预览)、Quiver(多年不更新)、MWeb(功能复杂)、Bear(Markdown 图片等富格式不支持)，种种原因，还是不顺手或者将就使用，才有了做 `妙言` 的想法
+- 之前有尝试过众多的笔记应用，大学时期为知笔记、印象笔记，工作时候用过 Ulysses(无预览)、Quiver(多年不更新)、MWeb(功能复杂)、Bear(Markdown 图片等富格式不支持)，种种原因，还是不顺手或者将就使用，才有了做妙言的想法
 - 工作为前端开发，也喜欢 iOS 开发，借项目开发学习一下 Swift 以及 OSX 开发，保持一颗折腾的心
 
 ## 感谢
@@ -49,9 +49,9 @@
 - [Remix-Design/RemixIcon](https://github.com/Remix-Design/RemixIcon)：简洁的 icon
 - [draveness/NightNight](https://github.com/draveness/NightNight)：黑暗模式
 - [raspu/Highlightr](https://github.com/raspu/Highlightr)：语法高亮能力
-- [glushchenko/fsnotes](https://github.com/glushchenko/fsnotes)：为乌克兰开发者开发的应用，`妙言` 有部分框架代码来源于此
+- [glushchenko/fsnotes](https://github.com/glushchenko/fsnotes)：为乌克兰开发者开发的应用，妙言有部分框架代码来源于此
 - [hpakovski/MASShortcut](https://github.com/shpakovski/MASShortcut)：快捷键插件
-- [lxgw/LxgwWenKai](https://github.com/lxgw/LxgwWenKai)：一款漂亮的开源中文字体，`妙言` 将其作为默认字体
+- [lxgw/LxgwWenKai](https://github.com/lxgw/LxgwWenKai)：一款漂亮的开源中文字体，妙言将其作为默认字体
 
 # 协议
 
