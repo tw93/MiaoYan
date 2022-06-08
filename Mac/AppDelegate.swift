@@ -1,5 +1,8 @@
 import Cocoa
 import MiaoYanCore_macOS
+import AppCenter
+import AppCenterAnalytics
+import AppCenterCrashes
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
@@ -58,6 +61,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         mainWindowController = mainWC
         mainWC.window?.makeKeyAndOrderFront(nil)
+        
+        AppCenter.start(withAppSecret: "e4d22300-3bd7-427f-8f3c-41f315c2bb76", services:[
+          Analytics.self,
+          Crashes.self
+        ])
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
