@@ -95,8 +95,7 @@ public class UserDefaultsManagement {
             if let dl = UserDefaults.standard.object(forKey: Constants.DefaultLanguageKey) as? Int {
                 return dl
             }
-            
-            return 0
+            return 1
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.DefaultLanguageKey)

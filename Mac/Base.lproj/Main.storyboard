@@ -365,9 +365,9 @@ CA
                                 </pathCell>
                             </pathControl>
                             <popUpButton verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nbv-Zo-swV">
-                                <rect key="frame" x="26" y="232" width="107" height="25"/>
+                                <rect key="frame" x="26" y="232" width="80" height="25"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="100" id="7Te-zC-kkY"/>
+                                    <constraint firstAttribute="width" constant="80" id="7Te-zC-kkY"/>
                                 </constraints>
                                 <popUpButtonCell key="cell" type="push" title="System" bezelStyle="rounded" imagePosition="above" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="fQA-b2-fKr" id="1RF-NZ-wo5" userLabel="外观">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -405,9 +405,9 @@ CA
                                 </connections>
                             </button>
                             <popUpButton verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="I8N-rL-amz">
-                                <rect key="frame" x="213" y="232" width="100" height="25"/>
+                                <rect key="frame" x="196" y="232" width="160" height="25"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="100" id="iez-xO-f3j"/>
+                                    <constraint firstAttribute="width" constant="160" id="iez-xO-f3j"/>
                                 </constraints>
                                 <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="LsM-Zw-Wrl">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -419,7 +419,7 @@ CA
                                 </connections>
                             </popUpButton>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="31i-Dr-RID">
-                                <rect key="frame" x="217" y="270" width="138" height="16"/>
+                                <rect key="frame" x="200" y="270" width="138" height="16"/>
                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Language:" id="jdI-uU-sfm">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
