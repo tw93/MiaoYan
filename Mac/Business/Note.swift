@@ -353,13 +353,7 @@ public class Note: NSObject {
             ? creationDate
             : modifiedLocalAt
         else { return String() }
-
-        let calendar = NSCalendar.current
-        if calendar.isDateInToday(date) {
-            return dateFormatter.formatTimeForDisplay(date)
-        } else {
-            return dateFormatter.formatDateForDisplay(date)
-        }
+        return dateFormatter.formatTimeForDisplay(date)
     }
 
     @objc func getCreationDateForLabel() -> String? {
@@ -1104,10 +1098,18 @@ public class Note: NSObject {
         return fileName
     }
 
+    public func getDefaultTitle() -> String? {
+        if UserDefaultsManagement.defaultLanguage == 0 {
+            return "Untitled"
+        } else {
+            return "未命名"
+        }
+    }
+
     public func getTitle() -> String? {
         if title.count > 0 {
             if title.isValidUUID {
-                return "未命名"
+                return getDefaultTitle()
             }
             return title
         }
@@ -1115,7 +1117,7 @@ public class Note: NSObject {
         if getFileName().isValidUUID {
             let previewCharsQty = preview.count
             if previewCharsQty > 0 {
-                return "未命名"
+                return getDefaultTitle()
             }
         }
 

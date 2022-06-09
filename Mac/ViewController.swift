@@ -640,7 +640,11 @@ class ViewController: NSViewController,
         if let type = vc.getSidebarType(), type == .Trash {
             vc.storageOutlineView.deselectAll(nil)
         }
-        vc.createNote(name: "未命名", content: "")
+        if UserDefaultsManagement.defaultLanguage == 0 {
+            vc.createNote(name: "Untitled", content: "")
+        } else {
+            vc.createNote(name: "未命名", content: "")
+        }
     }
 
     @IBAction func importNote(_ sender: NSMenuItem) {
@@ -1641,7 +1645,7 @@ class ViewController: NSViewController,
         titleLabel.stringValue = titleString
 
         titleLabel.currentEditor()?.selectedRange = NSRange(location: titleString.utf16.count, length: 0)
-        
+
         MainWindowController.shared()?.title = appName
     }
 

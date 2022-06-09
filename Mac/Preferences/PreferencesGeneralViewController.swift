@@ -51,7 +51,7 @@ class PreferencesGeneralViewController: NSViewController {
 
         let languages = [
             LanguageType(rawValue: 0x00),
-            LanguageType(rawValue: 0x06)
+            LanguageType(rawValue: 0x01)
         ]
 
         for language in languages {

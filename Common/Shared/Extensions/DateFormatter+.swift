@@ -9,9 +9,7 @@ public extension DateFormatter {
     }
 
     func formatTimeForDisplay(_ date: Date) -> String {
-        dateStyle = .medium
-        timeStyle = .short
-        locale = NSLocale.autoupdatingCurrent
+        dateFormat = "yyyy/MM/dd hh:mm"
         return string(from: date)
     }
 
