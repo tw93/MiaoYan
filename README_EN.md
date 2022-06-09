@@ -53,7 +53,7 @@
 - [Remix-Design/RemixIcon](https://github.com/Remix-Design/RemixIcon): Clean and simple icon.
 - [draveness/NightNight](https://github.com/draveness/NightNight): Dark Mode.
 - [raspu/Highlightr](https://github.com/raspu/Highlightr): Syntax highlighting capability.
-- [glushchenko/fsnotes](https://github.com/glushchenko/fsnotes): A ukrainian developer developed the application, MiaoYan has part of the framework code from this.
+- [glushchenko/fsnotes](https://github.com/glushchenko/fsnotes): MiaoYan has part of the framework code from this.
 - [hpakovski/MASShortcut](https://github.com/shpakovski/MASShortcut): Shortcut Key Plugin.
 - [lxgw/LxgwWenKai](https://github.com/lxgw/LxgwWenKai): A beautiful open source Chinese font, MiaoYan has made it the default font.
 
