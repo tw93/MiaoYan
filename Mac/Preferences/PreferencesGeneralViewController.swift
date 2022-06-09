@@ -58,7 +58,6 @@ class PreferencesGeneralViewController: NSViewController {
             if let lang = language?.description, let id = language?.rawValue {
                 languagePopUp.addItem(withTitle: lang)
                 languagePopUp.lastItem?.state = (id == UserDefaultsManagement.defaultLanguage) ? .on : .off
-
                 if id == UserDefaultsManagement.defaultLanguage {
                     languagePopUp.selectItem(withTitle: lang)
                 }
