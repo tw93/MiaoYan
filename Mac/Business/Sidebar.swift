@@ -10,7 +10,7 @@ class Sidebar {
         let night = ""
         var system = [SidebarItem]()
         
-        let notes = SidebarItem(name: NSLocalizedString("Notes", comment: ""), type: .All, icon: getImage(named: "home\(night).png"))
+        let notes = SidebarItem(name: NSLocalizedString("MiaoYan", comment: ""), type: .All, icon: getImage(named: "home\(night).png"))
         system.append(notes)
         
         if system.count > 0 {

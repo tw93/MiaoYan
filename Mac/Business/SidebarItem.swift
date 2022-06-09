@@ -30,7 +30,7 @@ class SidebarItem {
     }
     
     public func isGroupItem() -> Bool {
-        let notesLabel = NSLocalizedString("Notes", comment: "Sidebar label")
+        let notesLabel = NSLocalizedString("MiaoYan", comment: "Sidebar label")
         let trashLabel = NSLocalizedString("Trash", comment: "Sidebar label")
         if project == nil && [notesLabel, trashLabel].contains(name) {
             return true
