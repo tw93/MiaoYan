@@ -53,7 +53,7 @@
 - [Remix-Design/RemixIcon](https://github.com/Remix-Design/RemixIcon)：简洁的 icon
 - [draveness/NightNight](https://github.com/draveness/NightNight)：黑暗模式
 - [raspu/Highlightr](https://github.com/raspu/Highlightr)：语法高亮能力
-- [glushchenko/fsnotes](https://github.com/glushchenko/fsnotes)：为乌克兰开发者开发的应用，妙言有部分框架代码来源于此
+- [glushchenko/fsnotes](https://github.com/glushchenko/fsnotes)：妙言部分初始化代码来源于此
 - [hpakovski/MASShortcut](https://github.com/shpakovski/MASShortcut)：快捷键插件
 - [lxgw/LxgwWenKai](https://github.com/lxgw/LxgwWenKai)：一款漂亮的开源中文字体，妙言将其作为默认字体
 
