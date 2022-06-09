@@ -1,0 +1,64 @@
+<p align="center">
+    <img src=https://qpluspicture.oss-cn-beijing.aliyuncs.com/r9a9uV/43.png width=138  />
+    <h1 align="center">MiaoYan</h1>
+    <div align="center">Lightweight Markdown app to help you write great sentences.</div>
+    <div align="center"><strong>中文</strong> | <a href="https://github.com/tw93/MiaoYan/README_EN.md">English</a></div>
+ 
+</p>
+
+![gif](https://qpluspicture.oss-cn-beijing.aliyuncs.com/auxutX/26.gif)
+
+## Features
+
+- 🪂 **Fantastic**: Local use, security, syntax highlighting, dark mode, source file saving, international.
+- 🐶 **Beauty**: Minimalist design style, folder + file list + editor 3 column mode.
+- 🏌🏽‍♂️ **Fast**: Using Swift5 native development, the performance experience is much better compared to the Web.
+- 🩴 **Simple**: Very light, pure editor input experience, many shortcut keys to help you fast.
+
+## Download
+
+- Download the latest `MiaoYan.dmg` installation package from [GitHub Releases](https://github.com/tw93/MiaoYan/releases) and double-click to install it.
+- If the download speed is very slow in China, you can try [Vercel](https://miao-yan.vercel.app/Release) to download the latest `MiaoYan.dmg`.
+
+## First Use
+
+1. You can create a `MiaoYan` folder in iCloud or the root directory, open MiaoYan's [Settings](https://qpluspicture.oss-cn-beijing.aliyuncs.com/dcDO8s/31.jpg), and change the default storage address to this.
+2. [Click](https://qpluspicture.oss-cn-beijing.aliyuncs.com/cHBjMt/43.jpg) icon of the new folder in the upper left corner of MiaoYan, create your own document category folder, and you can start using it.
+
+## Shortcut Keys
+
+#### Window Operations
+
+- `command + 1`: Collapse expand folder list
+- `command + 2`: Expand the list of documents
+- `command + 3`: Switching between edit and preview states
+
+#### File Operations
+
+- `command + d`: Copy document
+- `command + r`: Rename document
+- `command + i`: Displaying document in Finder
+- `command + shift + p`: Pin document
+- `command + delete`: Delete document
+
+🏂 There are also many other shortcuts waiting for you to find if you like to toss and turn~
+
+## Why do this
+
+- I have tried many note-taking applications before, such as WizNote, Ulysses (no preview), Quiver (not updated for years), MWeb (complicated functions), Bear (Markdown images and other rich formats are not supported), for various reasons, I did not find a good Markdown application, so I had the idea of doing MiaoYan.
+- My job is front-end development, but also can develop iOS, like to toss, Develop MiaoYan as a fun leisure.
+
+## Thanks
+
+- [KristopherGBaker/libcmark_gfm](https://github.com/KristopherGBaker/libcmark_gfm): Swift-compatible framework for cmark-gfm.
+- [Remix-Design/RemixIcon](https://github.com/Remix-Design/RemixIcon): Clean and simple icon.
+- [draveness/NightNight](https://github.com/draveness/NightNight): Dark Mode.
+- [raspu/Highlightr](https://github.com/raspu/Highlightr): Syntax highlighting capability.
+- [glushchenko/fsnotes](https://github.com/glushchenko/fsnotes): A ukrainian developer developed the application, MiaoYan has part of the framework code from this.
+- [hpakovski/MASShortcut](https://github.com/shpakovski/MASShortcut): Shortcut Key Plugin.
+- [lxgw/LxgwWenKai](https://github.com/lxgw/LxgwWenKai): A beautiful open source Chinese font, MiaoYan has made it the default font.
+
+# License
+
+- Follow the MIT License.
+- Please feel free to enjoy and participate in open source.
