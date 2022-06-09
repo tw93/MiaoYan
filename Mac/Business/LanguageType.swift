@@ -1,21 +1,22 @@
 import Foundation
 
 enum LanguageType: Int {
-    case English = 0x00
-    case Chinese = 0x06
+    case Chinese = 0x00
+    case English = 0x01
+
     
     var description: String {
         switch self.rawValue {
-        case 0x00: return "English"
-        case 0x06: return "Chinese (Simplified)"
-        default: return ""
+        case 0x00: return "Chinese (Simplified)"
+        case 0x01: return "English"
+        default: return "Chinese (Simplified)"
         }
     }
     
     var code: String {
         switch self.rawValue {
-        case 0x00: return "en"
-        case 0x06: return "zh-Hans"
+        case 0x00: return "zh-Hans"
+        case 0x01: return "en"
         default: return "zh-Hans"
         }
     }

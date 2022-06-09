@@ -726,9 +726,9 @@ CA
                                                                                             </connections>
                                                                                         </textField>
                                                                                         <textField identifier="cellDate" autoresizesSubviews="NO" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="abw-Lq-K7d">
-                                                                                            <rect key="frame" x="4" y="10" width="49" height="14"/>
+                                                                                            <rect key="frame" x="4" y="11" width="45" height="13"/>
                                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="2/23/11" id="9w3-fa-di3">
-                                                                                                <font key="font" size="12" name="LXGWWenKaiLite-Regular"/>
+                                                                                                <font key="font" size="11" name="LXGWWenKaiLite-Regular"/>
                                                                                                 <color key="textColor" red="0.65995385362694303" green="0.1371187799261683" blue="0.15795969262071341" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                                                 <color key="backgroundColor" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
                                                                                                 <connections>
@@ -737,10 +737,10 @@ CA
                                                                                             </textFieldCell>
                                                                                         </textField>
                                                                                         <imageView identifier="pin" hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9h5-Ob-Nej">
-                                                                                            <rect key="frame" x="59" y="10" width="14" height="14"/>
+                                                                                            <rect key="frame" x="55" y="10" width="12" height="12"/>
                                                                                             <constraints>
-                                                                                                <constraint firstAttribute="height" constant="14" id="QQS-Ef-avR"/>
-                                                                                                <constraint firstAttribute="width" constant="14" id="hpI-x0-6Kw"/>
+                                                                                                <constraint firstAttribute="height" constant="12" id="QQS-Ef-avR"/>
+                                                                                                <constraint firstAttribute="width" constant="12" id="hpI-x0-6Kw"/>
                                                                                             </constraints>
                                                                                             <imageCell key="cell" lineBreakMode="truncatingTail" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="pin" id="MIi-Yg-aUg"/>
                                                                                         </imageView>
@@ -750,7 +750,7 @@ CA
                                                                                         <constraint firstItem="9h5-Ob-Nej" firstAttribute="leading" secondItem="abw-Lq-K7d" secondAttribute="trailing" constant="8" id="F5A-5T-FXC"/>
                                                                                         <constraint firstItem="UvD-jB-7Ok" firstAttribute="leading" secondItem="8qL-z4-nzh" secondAttribute="leading" constant="6" id="eyU-qZ-ACw"/>
                                                                                         <constraint firstItem="abw-Lq-K7d" firstAttribute="top" secondItem="UvD-jB-7Ok" secondAttribute="bottom" constant="-2" id="hKA-pJ-rpa"/>
-                                                                                        <constraint firstItem="9h5-Ob-Nej" firstAttribute="centerY" secondItem="abw-Lq-K7d" secondAttribute="centerY" id="jki-SD-fdc"/>
+                                                                                        <constraint firstItem="9h5-Ob-Nej" firstAttribute="centerY" secondItem="abw-Lq-K7d" secondAttribute="centerY" constant="1.5" id="jki-SD-fdc"/>
                                                                                         <constraint firstItem="UvD-jB-7Ok" firstAttribute="left" secondItem="abw-Lq-K7d" secondAttribute="left" id="ngR-5z-x5I"/>
                                                                                         <constraint firstAttribute="trailing" secondItem="UvD-jB-7Ok" secondAttribute="trailing" id="vb9-2V-r5G"/>
                                                                                     </constraints>
