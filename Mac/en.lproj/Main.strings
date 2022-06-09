@@ -108,7 +108,7 @@
 "O8Z-cg-XnH.title" = "Import";
 
 /* Class = "NSTextFieldCell"; placeholderString = "输入标题"; ObjectID = "O9K-a1-3eu"; */
-"O9K-a1-3eu.placeholderString" = "输入标题";
+"O9K-a1-3eu.placeholderString" = "Input Title";
 
 /* Class = "NSTextFieldCell"; title = "Title"; ObjectID = "O9K-a1-3eu"; */
 "O9K-a1-3eu.title" = "Title";
@@ -227,9 +227,6 @@
 /* Class = "NSWindow"; title = "Preferences"; ObjectID = "ldu-U8-PD1"; */
 "ldu-U8-PD1.title" = "Preferences";
 
-/* Class = "NSTextFieldCell"; title = "妙 言"; ObjectID = "mj8-mU-0W4"; */
-"mj8-mU-0W4.title" = "妙 言";
-
 /* Class = "NSButtonCell"; title = "Change"; ObjectID = "nBn-aV-7mt"; */
 "nBn-aV-7mt.title" = "Change";
 
@@ -292,3 +289,6 @@
 
 /* Class = "NSMenuItem"; title = "Dark"; ObjectID = "73o-2j-rWk"; */
 "73o-2j-rWk.title" = "Dark";
+
+/* Class = "NSTextFieldCell"; title = "MiaoYan"; ObjectID = "mj8-mU-0W4"; */
+"mj8-mU-0W4.title" = "MiaoYan";

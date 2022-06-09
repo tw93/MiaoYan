@@ -664,3 +664,6 @@
 
 /* Class = "NSMenuItem"; title = "Dark"; ObjectID = "73o-2j-rWk"; */
 "73o-2j-rWk.title" = "深色";
+
+/* Class = "NSTextFieldCell"; title = "MiaoYan"; ObjectID = "mj8-mU-0W4"; */
+"mj8-mU-0W4.title" = "妙 言";
