@@ -7,6 +7,7 @@ enum LanguageType: Int {
     var description: String {
         switch self.rawValue {
         case 0x00: return "English"
+        case 0x06: return "Chinese"
         default: return "Chinese"
         }
     }
@@ -14,6 +15,7 @@ enum LanguageType: Int {
     var code: String {
         switch self.rawValue {
         case 0x00: return "English"
+        case 0x06: return "Chinese"
         default: return "Chinese"
         }
     }
