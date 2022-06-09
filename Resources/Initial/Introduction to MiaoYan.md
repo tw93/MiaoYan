@@ -2,8 +2,7 @@
     <img src=https://qpluspicture.oss-cn-beijing.aliyuncs.com/r9a9uV/43.png width=138  />
     <h1 align="center">MiaoYan</h1>
     <div align="center">Lightweight Markdown app to help you write great sentences.</div>
-    <div align="center"><strong>中文</strong> | <a href="https://github.com/tw93/MiaoYan/README_EN.md">English</a></div>
- 
+    <div align="center"><a href="https://github.com/tw93/MiaoYan">中文</a> | <strong>English</strong></div>
 </p>
 
 ![gif](https://qpluspicture.oss-cn-beijing.aliyuncs.com/auxutX/26.gif)
