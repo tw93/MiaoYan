@@ -1,7 +1,20 @@
 <?xml version="1.0" standalone="yes"?>
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
   <channel>
-    <title>妙言</title>
+    <title>妙言(MiaoYan)</title>
+    <item>
+      <title>0.3.0</title>
+      <description><![CDATA[
+            <ul>
+             <li>🎉 支持英语，可去设置中更改 / Support English, you can go to the settings to change.</li>
+             <li>🍭 视觉优化，如文档日期显示时间、小 icon 优化、显示等 / Visual beautification, such as document date display time, small icon beautification, display, etc.</li>
+            </ul>
+            ]]>      </description>
+      <pubDate>周四, 09 6月 2022 14:48:44 +0800</pubDate>
+      <enclosure url="https://miao-yan.vercel.app/Release/MiaoYan_V0.3.0.zip" sparkle:shortVersionString="0.3.0" sparkle:version="0.3.0" sparkle:edSignature="TCIq/KPoELaKd/UBsdSuX7h94cQcdZOFsl/XtK503aIeRkAp5Qua0rTX7WrfEF1ysdsMXRLAHOqIKaEd5RKfAQ==" length="19900882" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    
     <item>
       <title>0.2.0</title>
       <description><![CDATA[

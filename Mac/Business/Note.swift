@@ -1100,9 +1100,9 @@ public class Note: NSObject {
 
     public func getDefaultTitle() -> String? {
         if UserDefaultsManagement.defaultLanguage == 0 {
-            return "Untitled"
-        } else {
             return "未命名"
+        } else {
+            return "Untitled"
         }
     }
 

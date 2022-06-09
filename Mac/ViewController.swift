@@ -641,9 +641,9 @@ class ViewController: NSViewController,
             vc.storageOutlineView.deselectAll(nil)
         }
         if UserDefaultsManagement.defaultLanguage == 0 {
-            vc.createNote(name: "Untitled", content: "")
-        } else {
             vc.createNote(name: "未命名", content: "")
+        } else {
+            vc.createNote(name: "Untitled", content: "")
         }
     }
 
