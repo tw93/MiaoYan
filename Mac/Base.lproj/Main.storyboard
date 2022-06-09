@@ -295,6 +295,39 @@ CA
                                     </items>
                                 </menu>
                             </menuItem>
+                            <menuItem title="Help" id="cO1-tX-rzO">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Help" id="6fQ-gK-hbI">
+                                    <items>
+                                        <menuItem title="MiaoYan Github" id="8iA-X0-DFH">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="openGithub:" target="Voe-Tx-rLC" id="nV7-3j-jHF"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Release Notes" id="iNW-7A-WXP">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="openRelease:" target="Voe-Tx-rLC" id="CvJ-lv-Wxl"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="COz-HW-hkK"/>
+                                        <menuItem title="Report Issues" id="yiX-qe-QKb">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="openIssue:" target="Voe-Tx-rLC" id="nH7-dh-Li8"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="I5l-Qo-Ngo"/>
+                                        <menuItem title="Follow Twitter" id="uXW-Mt-L5y">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="openTwitter:" target="Voe-Tx-rLC" id="ow1-by-iaG"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
                         </items>
                     </menu>
                     <connections>

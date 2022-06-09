@@ -166,8 +166,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         mainWindowController?.makeNew()
     }
 
-    @IBAction func openSite(_ sender: Any) {
+    @IBAction func openGithub(_ sender: Any) {
         NSWorkspace.shared.open(URL(string: "https://github.com/tw93/MiaoYan")!)
+    }
+    
+    @IBAction func openRelease(_ sender: Any) {
+        NSWorkspace.shared.open(URL(string: "https://github.com/tw93/MiaoYan/releases")!)
+    }
+    
+    @IBAction func openTwitter(_ sender: Any) {
+        NSWorkspace.shared.open(URL(string: "https://twitter.com/HiTw93")!)
+    }
+    
+    @IBAction func openIssue(_ sender: Any) {
+        NSWorkspace.shared.open(URL(string: "https://github.com/tw93/MiaoYan/issues")!)
     }
 
     @IBAction func openPreferences(_ sender: Any?) {
