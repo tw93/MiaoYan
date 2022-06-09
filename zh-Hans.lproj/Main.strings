@@ -554,9 +554,6 @@
 /* Class = "NSButtonCell"; title = "Descending"; ObjectID = "TCI-Xs-mwm"; */
 "TCI-Xs-mwm.title" = "降序";
 
-/* Class = "NSTextFieldCell"; title = "Appearance:"; ObjectID = "Tjy-Pz-wrj"; */
-"Tjy-Pz-wrj.title" = "外观：";
-
 /* Class = "NSMenuItem"; title = "Delete"; ObjectID = "TjZ-PX-YVo"; */
 "TjZ-PX-YVo.title" = "删除";
 
@@ -650,3 +647,20 @@
 /* Class = "NSButtonCell"; title = "Show notes in \"Notes\" and \"Todo\" lists"; ObjectID = "Zzw-01-JH7"; */
 "Zzw-01-JH7.title" = "在\"笔记\"和\"待办事项\"列表中显示备注";
 
+/* Class = "NSTextFieldCell"; title = "Appearance:"; ObjectID = "X8u-wB-WWq"; */
+"X8u-wB-WWq.title" = "外观：";
+
+/* Class = "NSTextFieldCell"; title = "Language:"; ObjectID = "jdI-uU-sfm"; */
+"jdI-uU-sfm.title" = "语言：";
+
+/* Class = "NSTextFieldCell"; title = "Storage location:"; ObjectID = "81L-hB-Mc1"; */
+"81L-hB-Mc1.title" = "存储位置：";
+
+/* Class = "NSMenuItem"; title = "System"; ObjectID = "fQA-b2-fKr"; */
+"fQA-b2-fKr.title" = "自动";
+
+/* Class = "NSMenuItem"; title = "Light"; ObjectID = "dx8-sq-a90"; */
+"dx8-sq-a90.title" = "浅色";
+
+/* Class = "NSMenuItem"; title = "Dark"; ObjectID = "73o-2j-rWk"; */
+"73o-2j-rWk.title" = "深色";

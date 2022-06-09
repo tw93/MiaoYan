@@ -50,8 +50,8 @@ class PreferencesGeneralViewController: NSViewController {
         self.view.window!.title = NSLocalizedString("Preferences", comment: "")
 
         let languages = [
-            LanguageType(rawValue: 0x06),
-            LanguageType(rawValue: 0x00)
+            LanguageType(rawValue: 0x00),
+            LanguageType(rawValue: 0x06)
         ]
 
         for language in languages {
@@ -112,7 +112,7 @@ class PreferencesGeneralViewController: NSViewController {
         restart()
     }
     
-    func restart() {
+    private func restart() {
         let url = URL(fileURLWithPath: Bundle.main.resourcePath!)
         let path = url.deletingLastPathComponent().deletingLastPathComponent().absoluteString
         let task = Process()

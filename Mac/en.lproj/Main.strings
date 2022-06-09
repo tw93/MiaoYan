@@ -35,8 +35,8 @@
 /* Class = "NSMenuItem"; title = "Redo"; ObjectID = "6dh-zS-Vam"; */
 "6dh-zS-Vam.title" = "Redo";
 
-/* Class = "NSMenuItem"; title = "深色"; ObjectID = "73o-2j-rWk"; */
-"73o-2j-rWk.title" = "深色";
+/* Class = "NSMenuItem"; title = "Dark"; ObjectID = "73o-2j-rWk"; */
+"73o-2j-rWk.title" = "Dark";
 
 /* Class = "NSTextFieldCell"; title = "2/23/11"; ObjectID = "9w3-fa-di3"; */
 "9w3-fa-di3.title" = "2/23/11";
@@ -91,9 +91,6 @@
 
 /* Class = "NSWindow"; title = "MiaoYan"; ObjectID = "IQv-IB-iLA"; */
 "IQv-IB-iLA.title" = "MiaoYan";
-
-/* Class = "NSTextFieldCell"; title = "语言："; ObjectID = "M1L-gX-jeu"; */
-"M1L-gX-jeu.title" = "语言：";
 
 /* Class = "NSMenu"; title = "Window"; ObjectID = "MlK-p2-CxF"; */
 "MlK-p2-CxF.title" = "Window";
@@ -161,8 +158,8 @@
 /* Class = "NSMenuItem"; title = "Paste and Match Style"; ObjectID = "WeT-3V-zwk"; */
 "WeT-3V-zwk.title" = "Paste and Match Style";
 
-/* Class = "NSTextFieldCell"; title = "外观："; ObjectID = "X8u-wB-WWq"; */
-"X8u-wB-WWq.title" = "外观：";
+/* Class = "NSTextFieldCell"; title = "Appearance:"; ObjectID = "X8u-wB-WWq"; */
+"X8u-wB-WWq.title" = "Appearance:";
 
 /* Class = "NSMenuItem"; title = "Rename"; ObjectID = "XBB-Sr-T1D"; */
 "XBB-Sr-T1D.title" = "Rename";
@@ -188,8 +185,8 @@
 /* Class = "NSMenuItem"; title = "Undo"; ObjectID = "dRJ-4n-Yzg"; */
 "dRJ-4n-Yzg.title" = "Undo";
 
-/* Class = "NSMenuItem"; title = "浅色"; ObjectID = "dx8-sq-a90"; */
-"dx8-sq-a90.title" = "浅色";
+/* Class = "NSMenuItem"; title = "Light"; ObjectID = "dx8-sq-a90"; */
+"dx8-sq-a90.title" = "Light";
 
 /* Class = "NSMenuItem"; title = "Creation date"; ObjectID = "eTL-dh-GvM"; */
 "eTL-dh-GvM.title" = "Creation date";
@@ -197,11 +194,11 @@
 /* Class = "NSMenuItem"; title = "Delete"; ObjectID = "fHG-zk-g0k"; */
 "fHG-zk-g0k.title" = "Delete";
 
-/* Class = "NSMenuItem"; title = "自动"; ObjectID = "fQA-b2-fKr"; */
-"fQA-b2-fKr.title" = "自动";
+/* Class = "NSMenuItem"; title = "System"; ObjectID = "fQA-b2-fKr"; */
+"fQA-b2-fKr.title" = "System";
 
-/* Class = "NSTextFieldCell"; title = "存储:"; ObjectID = "fmS-eE-nne"; */
-"fmS-eE-nne.title" = "存储:";
+/* Class = "NSTextFieldCell"; title = "Storage location:"; ObjectID = "fmS-eE-nne"; */
+"fmS-eE-nne.title" = "Storage location:";
 
 /* Class = "NSMenuItem"; title = "Rename folder"; ObjectID = "fzU-ZR-Ubv"; */
 "fzU-ZR-Ubv.title" = "Rename folder";
@@ -277,3 +274,21 @@
 
 /* Class = "NSTextFieldCell"; title = "Name"; ObjectID = "y7T-Rc-etT"; */
 "y7T-Rc-etT.title" = "Name";
+
+/* Class = "NSTextFieldCell"; title = "Appearance:"; ObjectID = "X8u-wB-WWq"; */
+"X8u-wB-WWq.title" = "Appearance:";
+
+/* Class = "NSTextFieldCell"; title = "Language:"; ObjectID = "jdI-uU-sfm"; */
+"jdI-uU-sfm.title" = "Language:";
+
+/* Class = "NSTextFieldCell"; title = "Storage location:"; ObjectID = "81L-hB-Mc1"; */
+"81L-hB-Mc1.title" = "Storage location:";
+
+/* Class = "NSMenuItem"; title = "System"; ObjectID = "fQA-b2-fKr"; */
+"fQA-b2-fKr.title" = "System";
+
+/* Class = "NSMenuItem"; title = "Light"; ObjectID = "dx8-sq-a90"; */
+"dx8-sq-a90.title" = "Light";
+
+/* Class = "NSMenuItem"; title = "Dark"; ObjectID = "73o-2j-rWk"; */
+"73o-2j-rWk.title" = "Dark";
