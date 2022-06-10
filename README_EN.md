@@ -5,7 +5,7 @@
     <div align="center"><a href="https://github.com/tw93/MiaoYan">中文</a> | <strong>English</strong></div>
 </p>
 
-![gif](https://gw.alipayobjects.com/zos/k/qd/12.gif)
+![gif](https://qpluspicture.oss-cn-beijing.aliyuncs.com/hCRFgN/15.gif)
 
 ## Features
 
