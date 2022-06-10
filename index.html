@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ch">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -33,10 +33,119 @@
       body {
         font-family: 'LXGW WenKai Lite', sans-serif;
       }
+      .i18n-switch-lang:before {
+        content: 'English';
+      }
+      [lang='en'] .i18n-switch-lang:before {
+        content: '中文';
+      }
+
+      .i18n-title:before {
+        content: '妙言';
+      }
+      [lang='en'] .i18n-title {
+        letter-spacing: normal;
+      }
+      [lang='en'] .i18n-title:before {
+        content: 'MiaoYan';
+      }
+      .i18n-description:before {
+        content: '轻灵的 Markdown 笔记本伴你写出妙言~';
+      }
+      [lang='en'] .i18n-description:before {
+        content: 'Lightweight Markdown app to help you write great sentences.';
+      }
+
+      .i18n-download:before {
+        content: '下载';
+      }
+      [lang='en'] .i18n-download:before {
+        content: 'Download';
+      }
+
+      .i18n-feature:before {
+        content: '特征';
+      }
+      [lang='en'] .i18n-feature:before {
+        content: 'Features';
+      }
+      .i18n-miao:before {
+        content: '妙';
+      }
+      [lang='en'] .i18n-miao:before {
+        content: 'Fantastic';
+      }
+      .i18n-miao-decs:before {
+        content: '1. 纯本地使用，无需联网即可使用，源文件保存\a 2. 安全，完全开源 Github，不会上传用户信息\a 3. 支持语法高亮、黑暗模式、还支持国际化';
+      }
+      [lang='en'] .i18n-miao-decs:before {
+        content: '1. Purely local, no internet access required, source files saved.\a 2. Secure, fully open source Github, no user information uploaded.\a 3. Supports syntax highlighting, dark mode, also supports internationalization';
+      }
+
+      @media (min-width: 1024px) {
+        [lang='en'] .i18n-jian-view.lg\:pl-48,
+        [lang='en'] .i18n-mei-view.lg\:pl-48 {
+          padding-left: 4rem;
+        }
+      }
+      .i18n-mei:before {
+        content: '美';
+      }
+      [lang='en'] .i18n-mei:before {
+        content: 'Beauty';
+      }
+      .i18n-mei-decs:before {
+        content: '1. 极简的设计风格，没有多余的东西\a 2. 文件夹 + 文件列表 + 编辑器三栏设计，可收起\a 3. 中文默认使用霞鹜文楷字体，让文字也很美';
+      }
+      [lang='en'] .i18n-mei-decs:before {
+        content: '1. Minimalist design style, no unnecessary stuff.\a 2. Folder + file list + editor three-column design, can be tucked away.\a 3. Chinese default use LxgwWenKai font, make the text is also beautiful.';
+      }
+
+      .i18n-kuai:before {
+        content: '快';
+      }
+      [lang='en'] .i18n-kuai:before {
+        content: 'Fast';
+      }
+      .i18n-kuai-decs:before {
+        content: '1. 使用 Swift5 开发，原生极致性能\a 2. 对多文件做了特别的性能优化，确保不卡顿\a 3. 相比当前市面上套壳 Web 的方式轻巧很多';
+      }
+      [lang='en'] .i18n-kuai-decs:before {
+        content: '1. Developed in Swift5 for the ultimate in native performance\a 2. Specially optimized for multi-file performance to ensure no lag\a 3. Much lighter than any electron app on the market.';
+      }
+
+      .i18n-jian:before {
+        content: '简';
+      }
+      [lang='en'] .i18n-jian:before {
+        content: 'Simple';
+      }
+      .i18n-jian-decs:before {
+        content: '1. 操作过程很轻巧，不耽误你的时间\a 2. 编辑体验媲美原生代码编辑器\a 3. 内置众多快捷键助你快人一步';
+      }
+      [lang='en'] .i18n-jian-decs:before {
+        content: '1. Developed in Swift5 for the ultimate in native performance\a 2. Specially optimized for multi-file performance to ensure no lag\a 3. Much lighter than any electron app on the market.';
+      }
+
+      .i18n-footer-title:before {
+        content: '觉得不错？';
+      }
+      [lang='en'] .i18n-footer-title:before {
+        content: 'Feel Good?';
+      }
+      .i18n-footer-desc:before {
+        content: ' 去 Product Hunt 给妙言投票吧!';
+      }
+      [lang='en'] .i18n-footer-desc:before {
+        content: ' Go to Product Hunt and vote for MiaoYan!';
+      }
     </style>
   </head>
   <body class="leading-normal tracking-normal text-white gradient">
     <!--Hero-->
+    <button
+      class="w-24 absolute top-8 lg:right-12 right-8 text-white py-2 px-4 font-bold rounded-xl shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out lang-switcher i18n-switch-lang"
+    ></button>
     <div class="lg:py-20 py-12">
       <div
         class="container lg:px-12 px-6 mx-auto flex flex-wrap flex-col md:flex-row items-center"
@@ -47,27 +156,29 @@
         >
           <img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 />
           <h1
-            class="my-4 text-8xl font-extrabold leading-tight tracking-widest"
-          >
-            妙言
-          </h1>
+            class="i18n-title my-4 lg:text-8xl text-7xl font-extrabold leading-tight tracking-widest"
+          ></h1>
           <div class="flex flex-row md:w-2/5 text-xm">
-            <div class="px-2 py-1 rounded bg-indigo-500 text-white lg:mr-4 mr-2">
+            <div
+              class="px-2 py-1 rounded bg-indigo-500 text-white lg:mr-4 mr-2"
+            >
               Markdown
             </div>
-            <div class="px-2 py-1 rounded bg-indigo-500 text-white lg:mr-4 mr-2">
+            <div
+              class="px-2 py-1 rounded bg-indigo-500 text-white lg:mr-4 mr-2"
+            >
               Notes
             </div>
-            <div class="px-2 py-1 rounded bg-indigo-500 text-white lg:mr-4 mr-2">
+            <div
+              class="px-2 py-1 rounded bg-indigo-500 text-white lg:mr-4 mr-2"
+            >
               MacOS
             </div>
             <div class="px-2 py-1 rounded bg-indigo-500 text-white">Swift5</div>
           </div>
           <h1
-            class="my-4 lg:text-3xl text-2xl text-left font-bold leading-tight"
-          >
-            轻灵的 Markdown 笔记本伴你写出妙言~
-          </h1>
+            class="i18n-description my-4 lg:text-3xl text-2xl text-left font-bold leading-tight"
+          ></h1>
 
           <div class="flex flex-row items-center">
             <a
@@ -80,9 +191,8 @@
             <a
               href="https://miaoyan.vercel.app/Release/MiaoYan-V0.3.0.dmg"
               target="_blank"
-              class="mx-4 hover:underline bg-black text-white font-bold rounded-xl my-6 py-4 px-7 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+              class="i18n-download mx-4 hover:underline bg-black text-white font-bold rounded-xl my-6 py-4 px-7 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
             >
-              下载
             </a>
           </div>
         </div>
@@ -145,10 +255,8 @@
     <section class="bg-white border-b py-8">
       <div class="container max-w-7xl mx-auto m-4">
         <h1
-          class="w-full my-2 text-6xl font-bold leading-tight text-center text-gray-800"
-        >
-          特征
-        </h1>
+          class="i18n-feature w-full my-2 lg:text-6xl text-5xl font-bold leading-tight text-center text-gray-800"
+        ></h1>
         <div class="w-full mb-4">
           <div
             class="h-1 mx-auto gradient w-64 opacity-25 my-0 py-0 rounded-t"
@@ -156,14 +264,12 @@
         </div>
         <div class="flex flex-wrap mt-12">
           <div class="w-full sm:w-2/3 p-6">
-            <h1 class="text-6xl text-gray-800 font-bold leading-none mb-3">
-              妙
-            </h1>
-            <p class="text-gray-600 mb-8 mt-8 lg:text-2xl text-xl">
-              1. 纯本地使用，无需联网即可使用，源文件保存 <br />
-              2. 安全，完全开源 Github，不会上传用户信息 <br />
-              3. 支持语法高亮、黑暗模式、还支持国际化
-            </p>
+            <h1
+              class="i18n-miao lg:text-6xl text-5xl text-gray-800 font-bold leading-none mb-3"
+            ></h1>
+            <p
+              class="i18n-miao-decs text-gray-600 mb-8 mt-8 lg:text-2xl text-xl whitespace-pre-wrap"
+            ></p>
           </div>
           <div class="w-full sm:w-1/3 p-4">
             <img
@@ -179,27 +285,23 @@
               class="sm:w-4/5"
             />
           </div>
-          <div class="w-full sm:w-2/3 p-6 lg:pl-48">
-            <h1 class="text-6xl text-gray-800 font-bold leading-none mb-3">
-              美
-            </h1>
-            <p class="text-gray-600 mb-8 lg:text-2xl text-xl mt-8">
-              1. 极简的设计风格，没有多余的东西 <br />
-              2. 文件夹 + 文件列表 + 编辑器三栏设计，可收起 <br />
-              3. 中文默认使用霞鹜文楷字体，让文字也很美
-            </p>
+          <div class="i18n-mei-view w-full sm:w-2/3 p-6 lg:pl-48">
+            <h1
+              class="i18n-mei lg:text-6xl text-5xl text-gray-800 font-bold leading-none mb-3"
+            ></h1>
+            <p
+              class="i18n-mei-decs text-gray-600 mb-8 lg:text-2xl text-xl mt-8 whitespace-pre-wrap"
+            ></p>
           </div>
         </div>
         <div class="flex flex-wrap mt-12">
           <div class="w-full sm:w-2/3 p-6">
-            <h1 class="text-6xl text-gray-800 font-bold leading-none mb-3">
-              快
-            </h1>
-            <p class="text-gray-600 mb-8 mt-8 lg:text-2xl text-xl">
-              1. 使用 Swift5 开发，原生极致性能 <br />
-              2. 对多文件做了特别的性能优化，确保不卡顿 <br />
-              3. 相比当前市面上套壳 Web 的方式轻巧很多
-            </p>
+            <h1
+              class="i18n-kuai lg:text-6xl text-5xl text-gray-800 font-bold leading-none mb-3"
+            ></h1>
+            <p
+              class="i18n-kuai-decs text-gray-600 mb-8 mt-8 lg:text-2xl text-xl whitespace-pre-wrap"
+            ></p>
           </div>
           <div class="w-full sm:w-1/3 p-4">
             <img
@@ -214,15 +316,13 @@
               src="https://gw.alipayobjects.com/zos/k/lj/undraw_off_road_re_leme.svg"
             />
           </div>
-          <div class="w-full sm:w-2/3 p-6 lg:pl-48">
-            <h1 class="text-6xl text-gray-800 font-bold leading-none mb-3">
-              简
-            </h1>
-            <p class="text-gray-600 mb-8 lg:text-2xl text-xl mt-8">
-              1. 操作过程很轻巧，不耽误你的时间 <br />
-              2. 编辑体验媲美原生代码编辑器 <br />
-              3. 内置众多快捷键助你快人一步
-            </p>
+          <div class="i18n-jian-view w-full sm:w-2/3 p-6 lg:pl-48">
+            <h1
+              class="i18n-jian lg:text-6xl text-5xl text-gray-800 font-bold leading-none mb-3"
+            ></h1>
+            <p
+              class="i18n-jian-decs text-gray-600 mb-8 lg:text-2xl text-xl mt-8 whitespace-pre-wrap"
+            ></p>
           </div>
         </div>
       </div>
@@ -266,29 +366,76 @@
     </svg>
     <section class="container mx-auto text-center py-6 mb-12">
       <h1
-        class="w-full my-2 text-6xl font-bold leading-tight text-center text-white"
-      >
-        觉得不错
-      </h1>
+        class="i18n-footer-title w-full my-2 lg:text-6xl text-5xl font-bold leading-tight text-center text-white"
+      ></h1>
       <div class="w-full mb-4">
         <div
-          class="h-1 mx-auto bg-white w-1/6 opacity-25 my-0 py-0 rounded-t"
+          class="h-1 mx-auto bg-white w-64 opacity-25 my-0 py-0 rounded-t"
         ></div>
       </div>
       <a
         href="https://www.producthunt.com/posts/miaoyan?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-miaoyan"
         target="_blank"
         ><img
-          src="https://gw.alipayobjects.com/zos/k/a1/featured.svg"
+          src="https://gw.alipayobjects.com/zos/k\a1/featured.svg"
           alt="MiaoYan - Lightweight&#0032;Markdown&#0032;app&#0032;to&#0032;help&#0032;you&#0032;write&#0032;great&#0032;sentences&#0046; | Product Hunt"
           style="width: 250px; height: 54px"
           class="mx-auto my-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
           width="320"
           height="64"
       /></a>
-      <h3 class="my-4 lg:text-3xl text-2xl leading-tight">
-        去 Product Hunt 给妙言投票吧!
-      </h3>
+      <h3 class="i18n-footer-desc my-4 lg:text-3xl text-1xl leading-tight"></h3>
     </section>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"
+    ></script>
+    <script>
+      const setLang = (lang) => {
+        const $html = document.querySelector('html');
+        localStorage.setItem('miaoyanLang', lang);
+        $html.setAttribute('lang', lang);
+        if (lang === 'en') {
+          document.title = 'MiaoYan - Lightweight Markdown app';
+          document
+            .querySelector('meta[name="description"]')
+            .setAttribute(
+              'content',
+              'Lightweight Markdown app to help you write great sentences.',
+            );
+        } else {
+          document.title = '妙言 - 轻灵的 Markdown 笔记本';
+          document
+            .querySelector('meta[name="description"]')
+            .setAttribute('content', '轻灵的 Markdown 笔记本伴你写出妙言~');
+        }
+      };
+      document.addEventListener('DOMContentLoaded', () => {
+        const lang_switch = document.querySelector('.lang-switcher');
+        let langStorage = localStorage.getItem('miaoyanLang');
+        if (['en', 'ch'].indexOf(langStorage) > -1) {
+          setLang(langStorage);
+        } else {
+          if (navigator.language === 'zh-CN') {
+            setLang('ch');
+          } else {
+            setLang('en');
+          }
+        }
+        lang_switch.onclick = () => {
+          const $html = document.querySelector('html');
+          const lang = $html.getAttribute('lang');
+          setLang(lang == 'ch' ? 'en' : 'ch');
+        };
+      });
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-5M47BM3L9Y');
+    </script>
   </body>
 </html>
