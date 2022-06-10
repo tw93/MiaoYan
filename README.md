@@ -1,5 +1,5 @@
 <p align="center">
-    <img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138  />
+       <a href="https://miaoyan.vercel.app/" target="_blank"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 /></a>
     <h1 align="center">妙言</h1>
     <div align="center">轻灵的 Markdown 笔记本伴你写出妙言~</div>
     <div align="center"><strong>中文</strong> | <a href="https://github.com/tw93/MiaoYan/blob/master/README_EN.md">English</a></div>
@@ -16,13 +16,13 @@
 
 ## 下载
 
-- 从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases) 中下载最新的 MiaoYan.dmg 安装包，双击安装即可。
-- 如果在国内下载速度很慢，你可以试试 [Vercel](https://miaoyan.vercel.app/Release) 来下载最新的 `MiaoYan-V0.x.dmg`。
+- 从 <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a> 中下载最新的 MiaoYan.dmg 安装包，双击安装即可。
+- 如果在国内下载速度很慢，你可以试试 <a href="https://miaoyan.vercel.app/Release" target="_blank">Vercel</a> 来下载最新的 `MiaoYan-V0.x.dmg`。
 
 ## 初始化使用
 
-1. 可以在 iCloud 或者根目录下 创建一个 `MiaoYan` 的文件夹，打开妙言的 [设置](https://gw.alipayobjects.com/zos/k/2i/31.jpeg)，将默认存储地址修改成这个。
-2. [点击](https://gw.alipayobjects.com/zos/k/66/43.jpeg) 妙言左上角新增文件夹的图标，创建好自己的文档分类文件夹，就可以开始使用了。
+1. 可以在 iCloud 或者根目录下 创建一个 `MiaoYan` 的文件夹，打开妙言的设置，将默认存储地址修改成这个。
+2. 点击妙言左上角新增文件夹的图标，创建好自己的文档分类文件夹，就可以开始使用了。
 
 ## 快捷键
 
@@ -49,13 +49,13 @@
 
 ## 感谢
 
-- [KristopherGBaker/libcmark_gfm](https://github.com/KristopherGBaker/libcmark_gfm)：适用于 cmark-gfm 的 Swift 兼容框架
-- [Remix-Design/RemixIcon](https://github.com/Remix-Design/RemixIcon)：简洁的 icon
-- [draveness/NightNight](https://github.com/draveness/NightNight)：黑暗模式
-- [raspu/Highlightr](https://github.com/raspu/Highlightr)：语法高亮能力
-- [glushchenko/fsnotes](https://github.com/glushchenko/fsnotes)：妙言部分初始化代码来源于此
-- [hpakovski/MASShortcut](https://github.com/shpakovski/MASShortcut)：快捷键插件
-- [lxgw/LxgwWenKai](https://github.com/lxgw/LxgwWenKai)：一款漂亮的开源中文字体，妙言将其作为默认字体
+- <a href="https://github.com/KristopherGBaker/libcmark_gfm" target="_blank">KristopherGBaker/libcmark_gfm</a>：适用于 cmark-gfm 的 Swift 兼容框架
+- <a href="https://github.com/Remix-Design/RemixIcon" target="_blank">Remix-Design/RemixIcon</a>：简洁的 icon
+- <a href="https://github.com/draveness/NightNight" target="_blank">draveness/NightNight</a>：黑暗模式
+- <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>：语法高亮能力
+- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>：妙言部分初始化代码来源于此
+- <a href="https://github.com/shpakovski/MASShortcut" target="_blank">hpakovski/MASShortcut</a>：快捷键插件
+- <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>：一款漂亮的开源中文字体，妙言将其作为默认字体
 
 # 协议
 

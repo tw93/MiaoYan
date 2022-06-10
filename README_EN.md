@@ -1,5 +1,5 @@
 <p align="center">
-    <img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138  />
+    <a href="https://miaoyan.vercel.app/" target="_blank"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 /></a>
     <h1 align="center">MiaoYan</h1>
     <div align="center">Lightweight Markdown app to help you write great sentences.</div>
     <div align="center"><a href="https://github.com/tw93/MiaoYan">中文</a> | <strong>English</strong></div>
@@ -16,13 +16,13 @@
 
 ## Download
 
-- Download the latest `MiaoYan.dmg` installation package from [GitHub Releases](https://github.com/tw93/MiaoYan/releases) and double-click to install it.
-- If the download speed is very slow in China, you can try [Vercel](https://miaoyan.vercel.app/Release) to download the latest `MiaoYan.dmg`.
+- Download the latest `MiaoYan.dmg` installation package from <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a> and double-click to install it.
+- If the download speed is very slow in China, you can try <a href="https://miaoyan.vercel.app/Release" target="_blank">Vercel</a> to download the latest `MiaoYan.dmg`.
 
 ## First Use
 
-1. You can create a `MiaoYan` folder in iCloud or the root directory, open MiaoYan's [Settings](https://gw.alipayobjects.com/zos/k/2i/31.jpeg), and change the default storage address to this.
-2. [Click](https://gw.alipayobjects.com/zos/k/66/43.jpeg) icon of the new folder in the upper left corner of MiaoYan, create your own document category folder, and you can start using it.
+1. You can create a `MiaoYan` folder in iCloud or the root directory, open MiaoYan's Settings, and change the default storage address to this.
+2. Click icon of the new folder in the upper left corner of MiaoYan, create your own document category folder, and you can start using it.
 
 ## Shortcut Keys
 
@@ -49,13 +49,13 @@
 
 ## Thanks
 
-- [KristopherGBaker/libcmark_gfm](https://github.com/KristopherGBaker/libcmark_gfm): Swift-compatible framework for cmark-gfm.
-- [Remix-Design/RemixIcon](https://github.com/Remix-Design/RemixIcon): Clean and simple icon.
-- [draveness/NightNight](https://github.com/draveness/NightNight): Dark Mode.
-- [raspu/Highlightr](https://github.com/raspu/Highlightr): Syntax highlighting capability.
-- [glushchenko/fsnotes](https://github.com/glushchenko/fsnotes): MiaoYan has part of the framework code from this.
-- [hpakovski/MASShortcut](https://github.com/shpakovski/MASShortcut): Shortcut Key Plugin.
-- [lxgw/LxgwWenKai](https://github.com/lxgw/LxgwWenKai): A beautiful open source Chinese font, MiaoYan has made it the default font.
+- <a href="https://github.com/KristopherGBaker/libcmark_gfm" target="_blank">KristopherGBaker/libcmark_gfm</a>: Swift-compatible framework for cmark-gfm.
+- <a href="https://github.com/Remix-Design/RemixIcon" target="_blank">Remix-Design/RemixIcon</a>: Clean and simple icon.
+- <a href="https://github.com/draveness/NightNight" target="_blank">draveness/NightNight</a>: Dark Mode.
+- <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>: Syntax highlighting capability.
+- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: MiaoYan has part of the framework code from this.
+- <a href="https://github.com/shpakovski/MASShortcut" target="_blank">hpakovski/MASShortcut</a>: Shortcut Key Plugin.
+- <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>: A beautiful open source Chinese font, MiaoYan has made it the default font.
 
 # License
 
