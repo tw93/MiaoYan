@@ -1,11 +1,11 @@
 <p align="center">
-    <img src=https://qpluspicture.oss-cn-beijing.aliyuncs.com/r9a9uV/43.png width=138  />
+    <img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138  />
     <h1 align="center">MiaoYan</h1>
     <div align="center">Lightweight Markdown app to help you write great sentences.</div>
     <div align="center"><a href="https://github.com/tw93/MiaoYan">中文</a> | <strong>English</strong></div>
 </p>
 
-![gif](https://qpluspicture.oss-cn-beijing.aliyuncs.com/auxutX/26.gif)
+![gif](https://gw.alipayobjects.com/zos/k/mz/26.gif)
 
 ## Features
 
@@ -17,12 +17,12 @@
 ## Download
 
 - Download the latest `MiaoYan.dmg` installation package from [GitHub Releases](https://github.com/tw93/MiaoYan/releases) and double-click to install it.
-- If the download speed is very slow in China, you can try [Vercel](https://miao-yan.vercel.app/Release) to download the latest `MiaoYan.dmg`.
+- If the download speed is very slow in China, you can try [Vercel](https://miaoyan.vercel.app/Release) to download the latest `MiaoYan.dmg`.
 
 ## First Use
 
-1. You can create a `MiaoYan` folder in iCloud or the root directory, open MiaoYan's [Settings](https://qpluspicture.oss-cn-beijing.aliyuncs.com/dcDO8s/31.jpg), and change the default storage address to this.
-2. [Click](https://qpluspicture.oss-cn-beijing.aliyuncs.com/cHBjMt/43.jpg) icon of the new folder in the upper left corner of MiaoYan, create your own document category folder, and you can start using it.
+1. You can create a `MiaoYan` folder in iCloud or the root directory, open MiaoYan's [Settings](https://gw.alipayobjects.com/zos/k/2i/31.jpeg), and change the default storage address to this.
+2. [Click](https://gw.alipayobjects.com/zos/k/66/43.jpeg) icon of the new folder in the upper left corner of MiaoYan, create your own document category folder, and you can start using it.
 
 ## Shortcut Keys
 
