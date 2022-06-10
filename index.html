@@ -235,9 +235,12 @@
             webkit-playsinline
             x5-playsinline
             src="https://qpluspicture.oss-cn-beijing.aliyuncs.com/WsOCso/44.mp4"
-            class="w-full z-50 shadow-sm rounded-md"
-          >
-          </video>
+            class="miaoyan-app-video w-full z-50 shadow-sm rounded-md"
+          ></video>
+          <img
+            src="https://gw.alipayobjects.com/zos/k/qd/12.gif"
+            class="miaoyan-app-gif w-full z-50 shadow-sm rounded-md hidden"
+          />
         </div>
       </div>
     </div>
@@ -414,10 +417,6 @@
       /></a>
       <h3 class="i18n-footer-desc my-4 lg:text-3xl text-1xl leading-tight"></h3>
     </section>
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"
-    ></script>
     <script>
       const setLang = (lang) => {
         const $html = document.querySelector('html');
@@ -455,8 +454,19 @@
           const lang = $html.getAttribute('lang');
           setLang(lang == 'ch' ? 'en' : 'ch');
         };
-      });
 
+        const ua = window.navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+          document.querySelector('.miaoyan-app-video').classList.add('hidden');
+          document.querySelector('.miaoyan-app-gif').classList.remove('hidden');
+        }
+      });
+    </script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"
+    ></script>
+    <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
