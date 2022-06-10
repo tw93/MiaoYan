@@ -1,11 +1,11 @@
 <p align="center">
-    <img src=https://qpluspicture.oss-cn-beijing.aliyuncs.com/r9a9uV/43.png width=138  />
+    <img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138  />
     <h1 align="center">妙言</h1>
     <div align="center">轻灵的 Markdown 笔记本伴你写出妙言~</div>
     <div align="center"><strong>中文</strong> | <a href="https://github.com/tw93/MiaoYan/blob/master/README_EN.md">English</a></div>
 </p>
 
-![gif](https://qpluspicture.oss-cn-beijing.aliyuncs.com/auxutX/26.gif)
+![gif](https://gw.alipayobjects.com/zos/k/mz/26.gif)
 
 ## 特点
 
@@ -17,12 +17,12 @@
 ## 下载
 
 - 从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases) 中下载最新的 MiaoYan.dmg 安装包，双击安装即可。
-- 如果在国内下载速度很慢，你可以试试 [Vercel](https://miao-yan.vercel.app/Release) 来下载最新的 `MiaoYan-V0.x.dmg`。
+- 如果在国内下载速度很慢，你可以试试 [Vercel](https://miaoyan.vercel.app/Release) 来下载最新的 `MiaoYan-V0.x.dmg`。
 
 ## 初始化使用
 
-1. 可以在 iCloud 或者根目录下 创建一个 `MiaoYan` 的文件夹，打开妙言的 [设置](https://qpluspicture.oss-cn-beijing.aliyuncs.com/dcDO8s/31.jpg)，将默认存储地址修改成这个。
-2. [点击](https://qpluspicture.oss-cn-beijing.aliyuncs.com/cHBjMt/43.jpg) 妙言左上角新增文件夹的图标，创建好自己的文档分类文件夹，就可以开始使用了。
+1. 可以在 iCloud 或者根目录下 创建一个 `MiaoYan` 的文件夹，打开妙言的 [设置](https://gw.alipayobjects.com/zos/k/2i/31.jpeg)，将默认存储地址修改成这个。
+2. [点击](https://gw.alipayobjects.com/zos/k/66/43.jpeg) 妙言左上角新增文件夹的图标，创建好自己的文档分类文件夹，就可以开始使用了。
 
 ## 快捷键
 
