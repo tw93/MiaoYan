@@ -815,7 +815,7 @@ CA
                                                     </scrollView>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="237" id="Gef-q9-zCe"/>
+                                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="400" id="Gef-q9-zCe"/>
                                                     <constraint firstItem="gaB-Rc-PMR" firstAttribute="leading" secondItem="bd7-O3-GQF" secondAttribute="trailing" constant="7" id="LVf-TD-MV7"/>
                                                     <constraint firstAttribute="trailing" secondItem="bd7-O3-GQF" secondAttribute="trailing" constant="32" id="ZGc-Ja-Aih"/>
                                                     <constraint firstAttribute="trailing" secondItem="bd7-O3-GQF" secondAttribute="trailing" priority="1" constant="8" id="cPW-Ti-DwX"/>

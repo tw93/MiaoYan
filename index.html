@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="theme-color" content="#36563C">
     <meta
       name="viewport"
       content="width=device-width,initial-scale=1,minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
@@ -234,11 +235,12 @@
             playsinline
             webkit-playsinline
             x5-playsinline
-            src="https://qpluspicture.oss-cn-beijing.aliyuncs.com/WsOCso/44.mp4"
+            type="video/mp4"
+            src="https://qpluspicture.oss-cn-beijing.aliyuncs.com/IOIKiB/34.mp4"
             class="miaoyan-app-video w-full z-50 shadow-sm rounded-md"
           ></video>
           <img
-            src="https://qpluspicture.oss-cn-beijing.aliyuncs.com/hCRFgN/15.gif"
+            src="https://qpluspicture.oss-cn-beijing.aliyuncs.com/o7cyY5/44.gif"
             class="miaoyan-app-gif w-full z-50 shadow-sm rounded-md hidden"
           />
         </div>
@@ -409,9 +411,9 @@
         href="https://www.producthunt.com/posts/miaoyan?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-miaoyan"
         target="_blank"
         ><img
-          src="https://gw.alipayobjects.com/zos/k\a1/featured.svg"
+          src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=348771&theme=light"
           alt="MiaoYan - Lightweight&#0032;Markdown&#0032;app&#0032;to&#0032;help&#0032;you&#0032;write&#0032;great&#0032;sentences&#0046; | Product Hunt"
-          style="width: 250px; height: 54px"
+          style="width: 320px; height: 64px"
           class="mx-auto my-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
           width="320"
           height="64"
@@ -421,8 +423,10 @@
     <script>
       const setLang = (lang) => {
         const $html = document.querySelector('html');
-        localStorage.setItem('miaoyanLang', lang);
+        const $video = document.querySelector('.miaoyan-app-video');
+        const $gif = document.querySelector('.miaoyan-app-gif');
         $html.setAttribute('lang', lang);
+        localStorage.setItem('miaoyanLang', lang);
         if (lang === 'en') {
           document.title = 'MiaoYan - Lightweight Markdown app';
           document
@@ -431,11 +435,27 @@
               'content',
               'Lightweight Markdown app to help you write great sentences.',
             );
+          $video.setAttribute(
+            'src',
+            'https://qpluspicture.oss-cn-beijing.aliyuncs.com/Qi50u3/50.mp4',
+          );
+          $gif.setAttribute(
+            'src',
+            'https://qpluspicture.oss-cn-beijing.aliyuncs.com/QBKXAb/30.gif',
+          );
         } else {
           document.title = '妙言 - 轻灵的 Markdown 笔记本';
           document
             .querySelector('meta[name="description"]')
             .setAttribute('content', '轻灵的 Markdown 笔记本伴你写出妙言~');
+          $video.setAttribute(
+            'src',
+            'https://qpluspicture.oss-cn-beijing.aliyuncs.com/IOIKiB/34.mp4',
+          );
+          $gif.setAttribute(
+            'src',
+            'https://qpluspicture.oss-cn-beijing.aliyuncs.com/o7cyY5/44.gif',
+          );
         }
       };
       document.addEventListener('DOMContentLoaded', () => {
