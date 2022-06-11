@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <meta name="theme-color" content="#36563C">
+    <meta name="theme-color" content="#36563C" />
     <meta
       name="viewport"
       content="width=device-width,initial-scale=1,minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
@@ -173,9 +173,9 @@
   <body class="leading-normal tracking-normal text-white gradient">
     <!--Hero-->
     <button
-      class="w-24 absolute top-8 lg:right-12 right-8 text-white py-2 px-4 font-bold rounded-xl shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out lang-switcher i18n-switch-lang"
+      class="w-24 absolute top-7 lg:right-12 right-8 text-white py-2 px-4 font-bold rounded-xl shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out lang-switcher i18n-switch-lang"
     ></button>
-    <div class="lg:py-20 py-12">
+    <div class="lg:py-20 py-10">
       <div
         class="w-full lg:px-12 px-6 mx-auto flex flex-wrap flex-col md:flex-row items-center"
       >
@@ -213,20 +213,20 @@
             <a
               href="https://github.com/tw93/MiaoYan"
               target="_blank"
-              class="mx-auto w-32 text-center lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-xl my-6 py-4 px-7 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+              class="mx-auto w-32 text-center lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-xl lg:my-6 my-3 py-4 px-7 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
             >
               Github
             </a>
             <a
               href="https://miaoyan.vercel.app/Release/MiaoYan-V0.3.0.dmg"
               target="_blank"
-              class="i18n-download text-center w-32 mx-4 hover:underline bg-black text-white font-bold rounded-xl my-6 py-4 px-7 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+              class="i18n-download text-center w-32 mx-4 hover:underline bg-black text-white font-bold rounded-xl lg:my-6 my-3 py-4 px-7 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
             >
             </a>
           </div>
         </div>
         <!--Right Col-->
-        <div class="w-full md:w-3/5 py-6 text-center lg:pl-12">
+        <div class="w-full md:w-3/5 pt-5 lg:pb-6 pb-3 text-center lg:pl-12">
           <video
             autoplay
             muted
@@ -236,11 +236,11 @@
             webkit-playsinline
             x5-playsinline
             type="video/mp4"
-            src="https://qpluspicture.oss-cn-beijing.aliyuncs.com/IOIKiB/34.mp4"
+            src="https://gw.alipayobjects.com/os/k/60/ch.mp4"
             class="miaoyan-app-video w-full z-50 shadow-sm rounded-md"
           ></video>
           <img
-            src="https://qpluspicture.oss-cn-beijing.aliyuncs.com/o7cyY5/44.gif"
+            src="https://gw.alipayobjects.com/zos/k/rz/ch.gif"
             class="miaoyan-app-gif w-full z-50 shadow-sm rounded-md hidden"
           />
         </div>
@@ -411,10 +411,10 @@
         href="https://www.producthunt.com/posts/miaoyan?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-miaoyan"
         target="_blank"
         ><img
-          src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=348771&theme=light"
+          src="https://gw.alipayobjects.com/zos/k/b4/featured.svg"
           alt="MiaoYan - Lightweight&#0032;Markdown&#0032;app&#0032;to&#0032;help&#0032;you&#0032;write&#0032;great&#0032;sentences&#0046; | Product Hunt"
           style="width: 320px; height: 64px"
-          class="mx-auto my-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+          class="miaoyan-product mx-auto my-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
           width="320"
           height="64"
       /></a>
@@ -425,6 +425,7 @@
         const $html = document.querySelector('html');
         const $video = document.querySelector('.miaoyan-app-video');
         const $gif = document.querySelector('.miaoyan-app-gif');
+        const $product = document.querySelector('.miaoyan-product');
         $html.setAttribute('lang', lang);
         localStorage.setItem('miaoyanLang', lang);
         if (lang === 'en') {
@@ -437,11 +438,15 @@
             );
           $video.setAttribute(
             'src',
-            'https://qpluspicture.oss-cn-beijing.aliyuncs.com/Qi50u3/50.mp4',
+            'https://gw.alipayobjects.com/os/k/c3/en.mp4',
           );
           $gif.setAttribute(
             'src',
-            'https://qpluspicture.oss-cn-beijing.aliyuncs.com/QBKXAb/30.gif',
+            'https://gw.alipayobjects.com/zos/k/yb/en.gif',
+          );
+          $product.setAttribute(
+            'src',
+            'https://gw.alipayobjects.com/zos/k/3z/featured.svg',
           );
         } else {
           document.title = '妙言 - 轻灵的 Markdown 笔记本';
@@ -450,11 +455,15 @@
             .setAttribute('content', '轻灵的 Markdown 笔记本伴你写出妙言~');
           $video.setAttribute(
             'src',
-            'https://qpluspicture.oss-cn-beijing.aliyuncs.com/IOIKiB/34.mp4',
+            'https://gw.alipayobjects.com/os/k/60/ch.mp4',
           );
           $gif.setAttribute(
             'src',
-            'https://qpluspicture.oss-cn-beijing.aliyuncs.com/o7cyY5/44.gif',
+            'https://gw.alipayobjects.com/zos/k/rz/ch.gif',
+          );
+          $product.setAttribute(
+            'src',
+            'https://gw.alipayobjects.com/zos/k/b4/featured.svg',
           );
         }
       };
