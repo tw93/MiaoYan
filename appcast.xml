@@ -8,19 +8,19 @@
             <h3>更新记录：</h3>
             <ol>
              <li>🛠 修复全屏高度的问题</li>
-             <li>🎉 官网终于好了<https://miaoyan.vercel.app/></li>
+             <li>🎉 官网终于好了 [miaoyan.vercel.app](https://miaoyan.vercel.app)</li>
             </ol>
             <h3>Update Notes：</h3>
             <ol>
              <li>🛠 Fix full screen height bug.</li>
-             <li>🎉 The official website is ready.<https://miaoyan.vercel.app/></li>
+             <li>🎉 The official website is ready. [miaoyan.vercel.app](https://miaoyan.vercel.app)</li>
             </ol>
             ]]>      </description>
       <pubDate>周六, 11 6月 2022 11:48:44 +0800</pubDate>
       <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.3.1.zip" sparkle:shortVersionString="0.3.1" sparkle:version="0.3.1" sparkle:edSignature="3SWeDCsn/OOZ0j78JeIUSQ/HLCbLYuzSSdDsQ6u37DiF7w1p+7sIFoSRyZQLoV77HEmJ5Q/N7uP7PHWl1USLBQ==" length="20443833" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
     </item>
-    
+
     <item>
       <title>0.3.0</title>
       <description><![CDATA[
