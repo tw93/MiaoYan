@@ -58,10 +58,6 @@
       .gradient {
         background: linear-gradient(60deg, #36563c 0%, #36563c 100%);
       }
-      .miaoyan-app-video-root {
-        height: 0 !important;
-        padding-bottom: 62.5%;
-      }
       body {
         font-family: 'LXGW WenKai Lite', sans-serif;
       }
@@ -237,24 +233,10 @@
         <div
           class="w-full md:w-3/5 pt-5 lg:pb-6 pb-3 text-center lg:pl-12 xl:mt-12"
         >
-          <div class="miaoyan-app-video-root">
-            <video
-              autoplay
-              muted
-              preload
-              loop
-              playsinline
-              webkit-playsinline
-              x5-playsinline
-              type="video/mp4"
-              src="https://gw.alipayobjects.com/os/k/60/ch.mp4"
-              class="miaoyan-app-video w-full z-50 shadow-sm rounded-md"
-            ></video>
-            <img
-              src="https://gw.alipayobjects.com/zos/k/rz/ch.gif"
-              class="miaoyan-app-gif w-full z-50 shadow-sm rounded-md hidden"
-            />
-          </div>
+          <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            class="miaoyan-app-gif w-full z-50 shadow-sm rounded-md"
+          />
         </div>
       </div>
     </div>
@@ -434,11 +416,10 @@
     </section>
     <script>
       const ua = window.navigator.userAgent.toLowerCase();
-      const isWeiXin = ua.match(/MicroMessenger/i) == 'micromessenger';
       const langStorage = localStorage.getItem('miaoyanLang');
+      const $gif = document.querySelector('.miaoyan-app-gif');
       const $html = document.querySelector('html');
       const $video = document.querySelector('.miaoyan-app-video');
-      const $gif = document.querySelector('.miaoyan-app-gif');
       const $product = document.querySelector('.miaoyan-product');
       const $langSwitch = document.querySelector('.lang-switcher');
 
@@ -455,17 +436,10 @@
                 'Lightweight Markdown app to help you write great sentences.',
               );
 
-            if (isWeiXin) {
-              $gif.setAttribute(
-                'src',
-                'https://gw.alipayobjects.com/zos/k/yb/en.gif',
-              );
-            } else {
-              $video.setAttribute(
-                'src',
-                'https://gw.alipayobjects.com/os/k/c3/en.mp4',
-              );
-            }
+            $gif.setAttribute(
+              'src',
+              'https://gw.alipayobjects.com/zos/k/yb/en.gif',
+            );
 
             $product.setAttribute(
               'src',
@@ -476,23 +450,24 @@
             document
               .querySelector('meta[name="description"]')
               .setAttribute('content', '轻灵的 Markdown 笔记本伴你写出妙言~');
-            if (isWeiXin) {
-              $gif.setAttribute(
-                'src',
-                'https://gw.alipayobjects.com/zos/k/rz/ch.gif',
-              );
-            } else {
-              $video.setAttribute(
-                'src',
-                'https://gw.alipayobjects.com/os/k/60/ch.mp4',
-              );
-            }
+
+            $gif.setAttribute(
+              'src',
+              'https://gw.alipayobjects.com/zos/k/rz/ch.gif',
+            );
+
             $product.setAttribute(
               'src',
               'https://gw.alipayobjects.com/zos/k/b4/featured.svg',
             );
           }
         };
+        $langSwitch.onclick = () => {
+          const $html = document.querySelector('html');
+          const lang = $html.getAttribute('lang');
+          setLang(lang == 'ch' ? 'en' : 'ch');
+        };
+
         if (['en', 'ch'].indexOf(langStorage) > -1) {
           setLang(langStorage);
         } else {
@@ -501,18 +476,6 @@
           } else {
             setLang('en');
           }
-        }
-        $langSwitch.onclick = () => {
-          const $html = document.querySelector('html');
-          const lang = $html.getAttribute('lang');
-          setLang(lang == 'ch' ? 'en' : 'ch');
-        };
-
-        if (isWeiXin) {
-          $video.remove();
-          $gif.classList.remove('hidden');
-        } else {
-          $gif.remove();
         }
       });
     </script>
