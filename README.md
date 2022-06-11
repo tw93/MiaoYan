@@ -5,7 +5,7 @@
     <div align="center"><strong>中文</strong> | <a href="https://github.com/tw93/MiaoYan/blob/master/README_EN.md">English</a></div>
 </p>
 
-<img src=https://gw.alipayobjects.com/zos/k/rz/ch.gif width=800 style="border:solid 1px #000">
+![gif](https://gw.alipayobjects.com/zos/k/rz/ch.gif)
 
 ## 特点
 
