@@ -166,6 +166,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         mainWindowController?.makeNew()
     }
 
+    @IBAction func openMiaoYan(_ sender: Any) {
+        NSWorkspace.shared.open(URL(string: "https://miaoyan.vercel.app")!)
+    }
+    
     @IBAction func openGithub(_ sender: Any) {
         NSWorkspace.shared.open(URL(string: "https://github.com/tw93/MiaoYan")!)
     }

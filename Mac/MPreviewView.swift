@@ -139,7 +139,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         let pageHTMLString = try htmlFromTemplate(htmlString)
 
-        print(pageHTMLString)
+//        print(pageHTMLString)
 
         let indexURL = createTemporaryBundle(pageHTMLString: pageHTMLString)
 
