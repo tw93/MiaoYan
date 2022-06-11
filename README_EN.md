@@ -5,9 +5,9 @@
     <div align="center"><a href="https://github.com/tw93/MiaoYan">中文</a> | <strong>English</strong></div>
 </p>
 
-<table><tr><td>
+<kbd>
 <img src=https://gw.alipayobjects.com/zos/k/yb/en.gif width=800>
-</td></tr></table>
+</kbd>
 
 ## Features
 
