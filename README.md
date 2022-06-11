@@ -6,7 +6,7 @@
 </p>
 
 <table><tr><td>
-   ![gif](https://gw.alipayobjects.com/zos/k/rz/ch.gif)
+   <img src=https://gw.alipayobjects.com/zos/k/rz/ch.gif width=800>
 </td></tr></table>
 
 ## 特点
