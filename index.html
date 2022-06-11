@@ -434,7 +434,7 @@
     </section>
     <script>
       const ua = window.navigator.userAgent.toLowerCase();
-      const isWeiXin = ua.match(/MicroMessenger/i) === 'micromessenger';
+      const isWeiXin = ua.match(/MicroMessenger/i) == 'micromessenger';
       const langStorage = localStorage.getItem('miaoyanLang');
       const $html = document.querySelector('html');
       const $video = document.querySelector('.miaoyan-app-video');
