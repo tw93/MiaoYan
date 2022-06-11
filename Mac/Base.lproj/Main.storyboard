@@ -299,10 +299,16 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Help" id="6fQ-gK-hbI">
                                     <items>
-                                        <menuItem title="MiaoYan Github" id="8iA-X0-DFH">
+                                        <menuItem title="Website" id="8iA-X0-DFH">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="openGithub:" target="Voe-Tx-rLC" id="nV7-3j-jHF"/>
+                                                <action selector="openMiaoYan:" target="Voe-Tx-rLC" id="MtJ-nT-Vro"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Github" id="c98-Hm-qYd">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="openGithub:" target="Voe-Tx-rLC" id="m5G-Wm-E6y"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Release Notes" id="iNW-7A-WXP">
@@ -437,8 +443,8 @@ CA
                                     <action selector="changeDefaultStorage:" target="NHv-lG-vxt" id="LS1-05-YQG"/>
                                 </connections>
                             </button>
-                            <popUpButton verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="I8N-rL-amz">
-                                <rect key="frame" x="196" y="232" width="160" height="25"/>
+                            <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="I8N-rL-amz">
+                                <rect key="frame" x="194" y="232" width="167" height="25"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="160" id="iez-xO-f3j"/>
                                 </constraints>
@@ -451,8 +457,11 @@ CA
                                     <action selector="languagePopUp:" target="NHv-lG-vxt" id="fRJ-Ff-Aa7"/>
                                 </connections>
                             </popUpButton>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="31i-Dr-RID">
-                                <rect key="frame" x="200" y="270" width="138" height="16"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="31i-Dr-RID">
+                                <rect key="frame" x="195" y="270" width="138" height="16"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="134" id="mgx-t4-KbP"/>
+                                </constraints>
                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Language:" id="jdI-uU-sfm">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -468,7 +477,9 @@ CA
                             <constraint firstItem="TrE-Qn-Cw5" firstAttribute="top" secondItem="4Xk-4f-czc" secondAttribute="top" constant="59" id="TLP-yP-rrg"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="TrE-Qn-Cw5" secondAttribute="trailing" constant="20" symbolic="YES" id="aQ9-dc-jos"/>
                             <constraint firstItem="nbv-Zo-swV" firstAttribute="leading" secondItem="TrE-Qn-Cw5" secondAttribute="leading" id="bmb-B1-JWf"/>
+                            <constraint firstItem="I8N-rL-amz" firstAttribute="trailing" secondItem="dkg-Hb-c1w" secondAttribute="trailing" id="eDc-1J-XQN"/>
                             <constraint firstItem="TrE-Qn-Cw5" firstAttribute="leading" secondItem="dkg-Hb-c1w" secondAttribute="leading" id="eXr-fk-XNG"/>
+                            <constraint firstItem="31i-Dr-RID" firstAttribute="leading" secondItem="TrE-Qn-Cw5" secondAttribute="trailing" constant="96" id="fnO-js-0xL"/>
                             <constraint firstItem="31i-Dr-RID" firstAttribute="top" secondItem="TrE-Qn-Cw5" secondAttribute="top" id="jLg-ty-8Se"/>
                             <constraint firstItem="TrE-Qn-Cw5" firstAttribute="leading" secondItem="4Xk-4f-czc" secondAttribute="leading" constant="34" id="l4W-17-awv"/>
                             <constraint firstItem="I8N-rL-amz" firstAttribute="top" secondItem="31i-Dr-RID" secondAttribute="bottom" constant="14" id="pAF-B2-dJc"/>
@@ -1102,7 +1113,7 @@ CA
         <!--About MiaoYan-->
         <scene sceneID="fut-XK-Los">
             <objects>
-                <viewController title="About MiaoYan" id="YNW-vn-A3h" customClass="AboutViewController" sceneMemberID="viewController">
+                <viewController title="About MiaoYan" id="YNW-vn-A3h" customClass="AboutViewController" customModule="MiaoYan" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="nlO-Om-1If">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="175"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1117,19 +1128,25 @@ CA
                             </imageView>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cgf-ax-Go5">
                                 <rect key="frame" x="119" y="63" width="62" height="17"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="MiaoYan" id="v9A-ZO-AAb">
+                                <textFieldCell key="cell" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="MiaoYan" id="v9A-ZO-AAb">
                                     <font key="font" metaFont="menu" size="14"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="textColor" name="mainText"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <connections>
+                                        <action selector="openMiaoYan:" target="YNW-vn-A3h" id="g0M-cY-eZL"/>
+                                    </connections>
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="Bqv-Qw-wbK">
-                                <rect key="frame" x="107" y="43" width="87" height="16"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Version 0.3.0" id="PM6-HD-5pk">
+                                <rect key="frame" x="123" y="43" width="54" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Version" id="PM6-HD-5pk">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
+                                <connections>
+                                    <action selector="openVersion:" target="YNW-vn-A3h" id="KkY-hQ-2q0"/>
+                                </connections>
                             </textField>
                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="wKq-L7-eGG">
                                 <rect key="frame" x="63" y="21" width="174" height="16"/>
@@ -1153,7 +1170,7 @@ CA
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="versionLabel" destination="Bqv-Qw-wbK" id="pDn-Dj-MHj"/>
+                        <outlet property="versionLabel" destination="Bqv-Qw-wbK" id="k2s-yH-6BI"/>
                     </connections>
                 </viewController>
                 <customObject id="I64-qx-LHv" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

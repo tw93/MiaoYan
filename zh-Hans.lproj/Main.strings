@@ -671,8 +671,8 @@
 /* Class = "NSMenu"; title = "Help"; ObjectID = "6fQ-gK-hbI"; */
 "6fQ-gK-hbI.title" = "帮助";
 
-/* Class = "NSMenuItem"; title = "MiaoYan Github"; ObjectID = "nyO-nO-ahA"; */
-"8iA-X0-DFH.title" = "妙言 Github";
+/* Class = "NSMenuItem"; title = "Github"; ObjectID = "nyO-nO-ahA"; */
+"8iA-X0-DFH.title" = "官网";
 
 /* Class = "NSMenuItem"; title = "Report Issues"; ObjectID = "yiX-qe-QKb"; */
 "yiX-qe-QKb.title" = "问题反馈";
