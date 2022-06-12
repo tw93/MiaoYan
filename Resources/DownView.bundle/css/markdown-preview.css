@@ -1,14 +1,20 @@
 /* font face configs */
 
+@font-face {
+  font-family: 'LXGW WenKai Lite';
+  src: url('../font/LXGWWenKaiLite-Regular.ttf')
+  format('truetype');
+}
+
+@font-face {
+  font-family: 'LXGW WenKai Lite';
+  src: url('../font/LXGWWenKaiLite-Bold.ttf');
+  font-weight: bold;
+}
+
 :root {
-  /* change your prefered font here */
-  --title-font: 'Inter Display', 'Inter';
-  --text-font: 'Inter';
-  /* the Inter fontface family provides rich opentype features. see https://rsms.me/inter/  */
-  --general-font-feature-settings: 'calt', 'ccmp', 'kern', 'salt' 0;
-  --cjk-font: '霞鹜文楷 轻便版', '思源黑体';
-  --mono-font: '霞鹜文楷 轻便版';
-  --fallback-font: 'system-ui', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --text-font: 'LXGW WenKai Lite', "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --code-font: 'LXGW WenKai Lite', "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 /* general color configs */
@@ -120,7 +126,7 @@
   --icon-color: var(--text-color);
   --icon-filer: brightness(10);
   --title-color: #08090b;
-  --monospace: var(--mono);
+  --text-fontspace: var(--text-font);
   --mark-border: none;
   --table-border: 1px solid var(--color-scale-gray-2) !important;
 }
@@ -189,22 +195,6 @@
   }
 }
 
-/* CJK override */
-
-@font-face {
-  font-family: quote1;
-  src: local('霞鹜文楷 轻便版');
-  unicode-range: U+201c, U+201d;
-}
-
-:root {
-  --mono: var(--mono-font), var(--cjk-font);
-  --general-font: quote1, var(--text-font), var(--cjk-font),
-    var(--fallback-font);
-  --display-font: quote1, var(--title-font), var(--cjk-font),
-    var(--fallback-font);
-}
-
 html {
   font-size: 15px;
 }
@@ -217,12 +207,13 @@ img{
 
 body,
 .file-list-item-summary {
-  font-family: var(--general-font);
-  font-feature-settings: var(--general-font-feature-settings);
+  font-family: var(--text-font);
+  font-feature-settings: var(--text-font);
   color: var(--text-color);
   line-height: 1.6;
 }
 
+body{font-family:LXGW WenKai Lite,sans-serif}
 #write {
   max-width: 860px;
   padding: 24px;
@@ -256,9 +247,9 @@ h6 {
   margin-bottom: 0.6rem;
   padding-top: 1.2rem;
   font-weight: bold;
-  line-height: 1.3
+  line-height: 1.3;
   cursor: text;
-  font-family: var(--display-font) !important;
+  font-family: var(--text-font) !important;
 }
 
 h1,
@@ -449,7 +440,7 @@ table td:last-child {
   border: 1px solid var(--border);
   background-color: var(--elevated-background);
   border-radius: 4px;
-  font-family: var(--general-font);
+  font-family: var(--text-font);
   box-shadow: none !important;
 }
 
@@ -463,13 +454,13 @@ tt {
   padding: 0;
   padding: 2px 4px 0px 4px;
   font-size: 0.9em;
-  font-family: var(--mono);
+  font-family: var(--text-font);
   font-variant-ligatures: common-ligatures !important;
   font-feature-settings: 'liga' 1 !important;
 }
 
 code {
-  font-family: '霞鹜文楷 轻便版';
+  font-family: 'LXGW WenKai Lite';
   background-color: var(--elevated-background);
   padding: 0 2px 0 2px;
   font-size: 1em;
@@ -604,7 +595,7 @@ header,
 .context-menu,
 .megamenu-content,
 footer {
-  font-family: var(--general-font);
+  font-family: var(--text-font);
 }
 
 .file-node-content:hover .file-node-icon,
@@ -932,7 +923,7 @@ del {
 
 .cm-header,
 .cm-header-1 {
-  color: var(--title-font) !important;
+  color: var(--text-font) !important;
 }
 
 .cm-atom {
@@ -1098,7 +1089,7 @@ blockquote > h3:first-child,
 blockquote > h4:first-child,
 blockquote > h5:first-child,
 blockquote > h6:first-child {
-  font: var(--title-font);
+  font: var(--text-font);
   font-weight: 700;
   font-size: inherit !important;
   margin: -12px -16px -8px -16px;
