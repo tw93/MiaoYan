@@ -1,0 +1,28 @@
+{
+  "name": "MiaoYan",
+  "version": "1.0.0",
+  "description": "轻灵的 Markdown 笔记本伴你写出妙言~",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "postcss tailwind.css -o build.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tw93/MiaoYan.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tw93/MiaoYan/issues"
+  },
+  "homepage": "https://github.com/tw93/MiaoYan#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.4.7",
+    "cssnano": "^5.1.11",
+    "postcss": "^8.4.14",
+    "tailwindcss": "^3.1.2"
+  },
+  "dependencies": {}
+}

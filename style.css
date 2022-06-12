@@ -1,0 +1,119 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+
+body {
+  font-family: 'LXGW WenKai Lite', sans-serif;
+}
+
+.gradient {
+  background: linear-gradient(60deg, #36563c 0%, #36563c 100%);
+}
+
+.i18n-switch-lang:before {
+  content: 'English';
+}
+[lang='en'] .i18n-switch-lang:before {
+  content: '中文';
+}
+
+.i18n-title:before {
+  content: '妙言';
+}
+[lang='en'] .i18n-title {
+  letter-spacing: normal;
+}
+[lang='en'] .i18n-title:before {
+  content: 'MiaoYan';
+}
+.i18n-description:before {
+  content: '轻灵的 Markdown 笔记本伴你写出妙言~';
+}
+[lang='en'] .i18n-description:before {
+  content: 'Lightweight Markdown app to help you write great sentences.';
+}
+
+.i18n-download:before {
+  content: '下载';
+}
+[lang='en'] .i18n-download:before {
+  content: 'Download';
+}
+
+.i18n-feature:before {
+  content: '特征';
+}
+[lang='en'] .i18n-feature:before {
+  content: 'Features';
+}
+.i18n-miao:before {
+  content: '妙';
+}
+[lang='en'] .i18n-miao:before {
+  content: 'Fantastic';
+}
+.i18n-miao-decs:before {
+  content: '1. 纯本地使用，无需联网即可使用，源文件保存\a 2. 安全，完全开源 Github，不会上传用户信息\a 3. 支持语法高亮、黑暗模式、还支持国际化';
+}
+[lang='en'] .i18n-miao-decs:before {
+  content: '1. Purely local, no internet access required, source files saved.\a 2. Secure, fully open source Github, no user information uploaded.\a 3. Supports syntax highlighting, dark mode, also supports internationalization';
+}
+
+@media (min-width: 1024px) {
+  [lang='en'] .i18n-jian-view.lg\:pl-48,
+  [lang='en'] .i18n-mei-view.lg\:pl-48 {
+    padding-left: 4rem;
+  }
+}
+.i18n-mei:before {
+  content: '美';
+}
+[lang='en'] .i18n-mei:before {
+  content: 'Beauty';
+}
+.i18n-mei-decs:before {
+  content: '1. 极简的设计风格，没有多余的东西\a 2. 文件夹 + 文件列表 + 编辑器三栏设计，可收起\a 3. 中文默认使用霞鹜文楷字体，让文字也很美';
+}
+[lang='en'] .i18n-mei-decs:before {
+  content: '1. Minimalist design style, no unnecessary stuff.\a 2. Folder + file list + editor three-column design, can be tucked away.\a 3. Chinese default use LxgwWenKai font, make the text is also beautiful.';
+}
+
+.i18n-kuai:before {
+  content: '快';
+}
+[lang='en'] .i18n-kuai:before {
+  content: 'Fast';
+}
+.i18n-kuai-decs:before {
+  content: '1. 使用 Swift5 开发，原生极致性能\a 2. 对多文件做了特别的性能优化，确保不卡顿\a 3. 相比当前市面上套壳 Web 的方式轻巧很多';
+}
+[lang='en'] .i18n-kuai-decs:before {
+  content: '1. Developed in Swift5 for the ultimate in native performance\a 2. Specially optimized for multi-file performance to ensure no lag\a 3. Much lighter than any electron app on the market.';
+}
+
+.i18n-jian:before {
+  content: '简';
+}
+[lang='en'] .i18n-jian:before {
+  content: 'Simple';
+}
+.i18n-jian-decs:before {
+  content: '1. 操作过程很轻巧，不耽误你的时间\a 2. 编辑体验媲美原生代码编辑器\a 3. 内置众多快捷键助你快人一步';
+}
+[lang='en'] .i18n-jian-decs:before {
+  content: '1. Developed in Swift5 for the ultimate in native performance\a 2. Specially optimized for multi-file performance to ensure no lag\a 3. Much lighter than any electron app on the market.';
+}
+
+.i18n-footer-title:before {
+  content: '觉得不错？';
+}
+[lang='en'] .i18n-footer-title:before {
+  content: 'Feel Good?';
+}
+.i18n-footer-desc:before {
+  content: ' 去 Product Hunt 给妙言投票吧!';
+}
+[lang='en'] .i18n-footer-desc:before {
+  content: ' Go to Product Hunt and vote for MiaoYan!';
+}
