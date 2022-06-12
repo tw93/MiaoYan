@@ -3,6 +3,24 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>0.3.2</title>
+      <description><![CDATA[
+            <h3>更新记录：</h3>
+            <ol>
+             <li>🛠 修复预览页面默认字体不是霞鹜文楷的Bug</li>
+             <li>🛠 修复窗口隐藏以后不会再出现在调度中心的 Bug </li>
+            </ol>
+            <h3>Update Notes：</h3>
+            <ol>
+             <li>🛠 Fix bug that the default font of preview is not LXGW WenKai</li>
+             <li>🛠 Fix bug that will not appear in the mission control after the window is hidden </li>
+            </ol>
+            ]]>      </description>
+      <pubDate>周日, 11 6月 2022 23:48:44 +0800</pubDate>
+      <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.3.2.zip" sparkle:shortVersionString="0.3.2" sparkle:version="0.3.2" sparkle:edSignature="i4dbBbhS9gyedCAsuI6/zpqBp23iDNDIX2qIZwW7oMxLyXRgbALednobRutpUSXAY1LsjlkVCdr0lT2ZFZghAQ==" length="31237022" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>0.3.1</title>
       <description><![CDATA[
             <h3>更新记录：</h3>
