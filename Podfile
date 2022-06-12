@@ -12,14 +12,13 @@ end
 def ios_pods
     pod 'NightNight', :git => 'https://github.com/draveness/NightNight.git', :branch => 'master'
     pod 'DKImagePickerController', '4.1.4'
-    pod 'SSZipArchive', :git => 'https://github.com/ZipArchive/ZipArchive.git', :branch => 'master'
     pod 'DropDown', '2.3.13'
 end
 
 def common_pods
     pod 'Highlightr', :git => 'https://github.com/raspu/Highlightr.git', :branch => 'master'
     pod 'libcmark_gfm', :git => 'https://github.com/KristopherGBaker/libcmark_gfm.git', :branch => 'master'
-    pod 'SSZipArchive', :git => 'https://github.com/ZipArchive/ZipArchive.git', :branch => 'master'
+    pod 'SSZipArchive', '2.4.2'
 end
 
 def framework_pods
