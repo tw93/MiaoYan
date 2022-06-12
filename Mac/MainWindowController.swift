@@ -7,11 +7,12 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
     override func windowDidLoad() {
         let appDelegate = NSApplication.shared.delegate as! AppDelegate
         appDelegate.mainWindowController = self
-        window?.isMovableByWindowBackground = true
-        window?.hidesOnDeactivate = true
-        window?.titleVisibility = .hidden
-        window?.titlebarAppearsTransparent = true
-        windowFrameAutosaveName = "myMainWindow"
+        
+        self.window?.isMovableByWindowBackground = true
+        self.window?.hidesOnDeactivate = false
+        self.window?.titleVisibility = .hidden
+        self.window?.titlebarAppearsTransparent = true
+        self.windowFrameAutosaveName = "myMainWindow"
     }
 
     func windowDidResize(_ notification: Notification) {
