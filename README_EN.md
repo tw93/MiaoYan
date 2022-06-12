@@ -19,7 +19,7 @@
 ## Download
 
 - Download the latest `MiaoYan.dmg` installation package from <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a> and double-click to install it.
-- If the download speed is very slow in China, you can try <a href="https://miaoyan.vercel.app/Release/MiaoYan-V0.3.1.dmg" target="_blank">Vercel</a> to download the latest version.
+- If the download speed is very slow in China, you can try <a href="https://miaoyan.vercel.app/Release/MiaoYan-V0.3.2.dmg" target="_blank">Vercel</a> to download the latest version.
 
 ## First Use
 
