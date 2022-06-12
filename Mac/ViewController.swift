@@ -192,6 +192,7 @@ class ViewController: NSViewController,
         editArea.typingAttributes[.paragraphStyle] = paragraphStyle
 
         editArea.font = UserDefaultsManagement.noteFont
+        titleLabel.font = UserDefaultsManagement.titleFont
 
         setTableRowHeight()
         storageOutlineView.sidebarItems = Sidebar().getList()

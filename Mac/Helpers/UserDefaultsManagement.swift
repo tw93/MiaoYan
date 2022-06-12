@@ -31,6 +31,9 @@ public class UserDefaultsManagement {
     static var fullScreen = false
 
     static var codeFontSize = 14
+    static var titleFontSize = 20
+    static var nameFontSize = 14
+    static var dateFontSize = 11
     static var maxNightModeBrightnessLevel = 35
 
     static var fontName = DefaultFont
@@ -164,6 +167,55 @@ public class UserDefaultsManagement {
             self.fontSize = Int(newValue.pointSize)
         }
     }
+    
+    static var titleFont: Font! {
+        get {
+            if let font = Font(name: self.fontName, size: CGFloat(self.titleFontSize)) {
+                return font
+            }
+
+            return Font.systemFont(ofSize: CGFloat(self.titleFontSize))
+        }
+        set {
+            guard let newValue = newValue else { return }
+
+            self.fontName = newValue.fontName
+            self.fontSize = Int(newValue.pointSize)
+        }
+    }
+    
+    static var nameFont: Font! {
+        get {
+            if let font = Font(name: self.fontName, size: CGFloat(self.nameFontSize)) {
+                return font
+            }
+
+            return Font.systemFont(ofSize: CGFloat(self.nameFontSize))
+        }
+        set {
+            guard let newValue = newValue else { return }
+
+            self.fontName = newValue.fontName
+            self.fontSize = Int(newValue.pointSize)
+        }
+    }
+    
+    static var dateFont: Font! {
+        get {
+            if let font = Font(name: self.fontName, size: CGFloat(self.dateFontSize)) {
+                return font
+            }
+
+            return Font.systemFont(ofSize: CGFloat(self.dateFontSize))
+        }
+        set {
+            guard let newValue = newValue else { return }
+
+            self.fontName = newValue.fontName
+            self.fontSize = Int(newValue.pointSize)
+        }
+    }
+
 
     static var fontColor: Color {
         get {

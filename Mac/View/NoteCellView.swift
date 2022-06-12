@@ -35,6 +35,9 @@ class NoteCellView: NSTableCellView {
         udpateSelectionHighlight()
 
         pin.frame.origin.y = CGFloat(-4) + CGFloat(cellSpacing) + CGFloat(0)
+        
+        name.font = UserDefaultsManagement.nameFont
+        date.font = UserDefaultsManagement.dateFont
     }
 
     public func configure(note: Note) {

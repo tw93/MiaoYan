@@ -9,7 +9,7 @@ class SidebarCellView: NSTableCellView {
     
     override func draw(_ dirtyRect: NSRect) {
         plus.isHidden = true
-
+        label.font = UserDefaultsManagement.nameFont
         super.draw(dirtyRect)
     }
     
