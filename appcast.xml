@@ -7,13 +7,13 @@
       <description><![CDATA[
             <h3>更新记录：</h3>
             <ol>
-             <li>🛠 修复预览页面默认字体不是霞鹜文楷的Bug</li>
-             <li>🛠 修复窗口隐藏以后不会再出现在调度中心的 Bug </li>
+             <li>🛠 修复预览页面默认字体不是霞鹜文楷的 Bug</li>
+             <li>🛠 修复窗口隐藏以后不会再出现在调度中心的 Bug</li>
             </ol>
             <h3>Update Notes：</h3>
             <ol>
              <li>🛠 Fix bug that the default font of preview is not LXGW WenKai</li>
-             <li>🛠 Fix bug that will not appear in the mission control after the window is hidden </li>
+             <li>🛠 Fix bug that will not appear in the mission control after the window is hidden</li>
             </ol>
             ]]>      </description>
       <pubDate>周日, 11 6月 2022 23:48:44 +0800</pubDate>
