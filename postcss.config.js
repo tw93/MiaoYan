@@ -3,6 +3,5 @@ module.exports = (ctx) => ({
     tailwindcss: {},
     autoprefixer: {},
     cssnano: {},
-
   },
 });
