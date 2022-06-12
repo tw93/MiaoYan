@@ -6,7 +6,7 @@
 </p>
 
 <kbd>
-  <img src=https://gw.alipayobjects.com/zos/k/rz/ch.gif width=1000>
+  <img src=https://gw.alipayobjects.com/zos/k/4f/ch.gif width=1000>
 </kbd>
 
 ## 特点
