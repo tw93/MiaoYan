@@ -119,5 +119,5 @@ body {
   content: ' 去 Product Hunt 给妙言投票吧!';
 }
 [lang='en'] .i18n-footer-desc:before {
-  content: ' Go to Product Hunt and vote for MiaoYan!';
+  content: 'Go and vote for MiaoYan !';
 }
