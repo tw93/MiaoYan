@@ -289,10 +289,10 @@
         href="https://www.producthunt.com/posts/miaoyan?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-miaoyan"
         target="_blank"
         ><img
-          src="https://gw.alipayobjects.com/zos/k/b4/featured.svg"
+          src="https://gw.alipayobjects.com/zos/k/3z/featured.svg"
           alt="MiaoYan - Lightweight&#0032;Markdown&#0032;app&#0032;to&#0032;help&#0032;you&#0032;write&#0032;great&#0032;sentences&#0046; | Product Hunt"
           style="width: 320px; height: 64px"
-          class="miaoyan-product mx-auto my-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
+          class="mx-auto my-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
           width="320"
           height="64"
       /></a>
@@ -303,8 +303,6 @@
       const langStorage = localStorage.getItem('miaoyanLang');
       const $gif = document.querySelector('.miaoyan-app-gif');
       const $html = document.querySelector('html');
-      const $video = document.querySelector('.miaoyan-app-video');
-      const $product = document.querySelector('.miaoyan-product');
       const $langSwitch = document.querySelector('.lang-switcher');
 
       document.addEventListener('DOMContentLoaded', () => {
@@ -324,11 +322,6 @@
               'src',
               'https://gw.alipayobjects.com/zos/k/8m/en.gif',
             );
-
-            $product.setAttribute(
-              'src',
-              'https://gw.alipayobjects.com/zos/k/3z/featured.svg',
-            );
           } else {
             document.title = '妙言 - 轻灵的 Markdown 笔记本';
             document
@@ -338,11 +331,6 @@
             $gif.setAttribute(
               'src',
               'https://gw.alipayobjects.com/zos/k/4f/ch.gif',
-            );
-
-            $product.setAttribute(
-              'src',
-              'https://gw.alipayobjects.com/zos/k/b4/featured.svg',
             );
           }
         };
