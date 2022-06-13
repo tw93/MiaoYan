@@ -3,7 +3,7 @@ Releases
 .DS_Store
 Resources/.DS_Store
 .vscode/
-node_modules
+node_modules/
 package-lock.json
 Podfile.lock
 Pods

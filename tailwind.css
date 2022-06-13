@@ -2,9 +2,13 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-
 body {
   font-family: 'LXGW WenKai Lite', sans-serif;
+}
+
+.miaoyan-image-container {
+  padding-bottom: 62.5%;
+  height: 0;
 }
 
 .gradient {
