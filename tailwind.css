@@ -1,6 +1,8 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+@import './fonts/lxgwwenkailite-bold.css';
+@import './fonts/lxgwwenkailite-regular.css';
 
 body {
   font-family: 'LXGW WenKai Lite', sans-serif;
