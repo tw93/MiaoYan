@@ -1153,6 +1153,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 91B2C247C287A5BDC802D510 /* Pods-MiaoYan.debug.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -1186,6 +1187,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 638C3D39232D70961B32583F /* Pods-MiaoYan.release.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";

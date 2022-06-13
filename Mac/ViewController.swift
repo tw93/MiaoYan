@@ -35,6 +35,7 @@ class ViewController: NSViewController,
 
     // MARK: - IBOutlets
 
+    @IBOutlet weak var emptyEditTitle: NSTextField!
     @IBOutlet var emptyEditAreaImage: NSImageView!
     @IBOutlet var emptyEditAreaView: NSView!
     @IBOutlet var splitView: EditorSplitView!
@@ -193,6 +194,7 @@ class ViewController: NSViewController,
 
         editArea.font = UserDefaultsManagement.noteFont
         titleLabel.font = UserDefaultsManagement.titleFont
+        emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont
 
         setTableRowHeight()
         storageOutlineView.sidebarItems = Sidebar().getList()
@@ -1427,12 +1429,14 @@ class ViewController: NSViewController,
         view.window!.title = NSLocalizedString("妙言「预览」", comment: "")
         UserDefaultsManagement.preview = true
         refillEditArea()
+        vc.titleLabel.isEditable = false
     }
 
     func disablePreview() {
         view.window!.title = NSLocalizedString("妙言「编辑」", comment: "")
         UserDefaultsManagement.preview = false
 
+        guard let vc = ViewController.shared() else { return }
         editArea.markdownView?.removeFromSuperview()
         editArea.markdownView = nil
 
@@ -1440,6 +1444,7 @@ class ViewController: NSViewController,
         editor.subviews.removeAll(where: { $0.isKind(of: MPreviewView.self) })
 
         refillEditArea()
+        vc.titleLabel.isEditable = true
     }
 
     func togglePreview() {
