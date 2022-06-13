@@ -7,5 +7,6 @@ node_modules/
 package-lock.json
 Podfile.lock
 Pods
+MiaoYan.xcworkspace
 
 
