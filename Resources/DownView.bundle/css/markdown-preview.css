@@ -307,7 +307,7 @@ table {
 #write > ol:first-child,
 #write > dl:first-child,
 #write > table:first-child {
-  margin-top: 0;
+  margin-top: 0 !important;
 }
 
 li > ol,
@@ -553,8 +553,7 @@ code {
 #write > h4:first-child,
 #write > h5:first-child,
 #write > h6:first-child,
-pre:first-child,
-#write > pre > code:first-child,
+#write > pre:first-child,
 #write > ul:first-child,
 #write > ol:first-child {
   padding-top: 0;
@@ -1169,13 +1168,13 @@ blockquote > h6:first-child::before {
 pre code.hljs {
   display: block;
   overflow-x: auto;
-  padding: 1em;
+  padding: 4px;
 }
 code.hljs {
-  padding: 3px 5px;
+  padding: 4px;
 }
 .hljs {
-  background: #fff;
+  background: #F8F8F8;
   color: #000;
 }
 .hljs-comment,

@@ -871,7 +871,7 @@ CA
                                                             <autoresizingMask key="autoresizingMask"/>
                                                         </scroller>
                                                         <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" focusRingType="none" verticalHuggingPriority="750" controlSize="small" horizontal="NO" id="TNj-kl-fKh">
-                                                            <rect key="frame" x="554" y="20" width="14" height="525"/>
+                                                            <rect key="frame" x="577" y="0.0" width="14" height="574"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                         </scroller>
                                                     </scrollView>
@@ -903,6 +903,12 @@ CA
                                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="xSU-Mk-2F1" customClass="TitleBarView" customModule="MiaoYan" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="594" width="591" height="44"/>
                                                         <subviews>
+                                                            <customView translatesAutoresizingMaskIntoConstraints="NO" id="bqF-eB-dpR">
+                                                                <rect key="frame" x="214" y="45" width="163" height="24"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="24" id="SaQ-0K-k6H"/>
+                                                                </constraints>
+                                                            </customView>
                                                             <textField focusRingType="none" horizontalHuggingPriority="1" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="rZx-hk-GcJ" customClass="TitleTextField" customModule="MiaoYan" customModuleProvider="target">
                                                                 <rect key="frame" x="28" y="7" width="478" height="30"/>
                                                                 <constraints>
@@ -917,8 +923,8 @@ CA
                                                                     <outlet property="delegate" destination="XfG-lQ-9wD" id="ikK-Ty-iHC"/>
                                                                 </connections>
                                                             </textField>
-                                                            <customView horizontalHuggingPriority="249" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="Ua8-RE-q01">
-                                                                <rect key="frame" x="522" y="0.0" width="69" height="44"/>
+                                                            <customView horizontalHuggingPriority="249" verticalHuggingPriority="249" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ua8-RE-q01">
+                                                                <rect key="frame" x="523" y="0.0" width="69" height="44"/>
                                                                 <subviews>
                                                                     <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="9" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" horizontalCompressionResistancePriority="1000" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="shI-kr-3o8">
                                                                         <rect key="frame" x="41" y="22" width="0.0" height="0.0"/>
@@ -932,6 +938,7 @@ CA
                                                                             <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                                                                             <font key="font" metaFont="system"/>
                                                                         </buttonCell>
+                                                                        <color key="contentTintColor" name="highlight"/>
                                                                         <connections>
                                                                             <action selector="togglePreview:" target="XfG-lQ-9wD" id="Mf0-5U-8VP"/>
                                                                         </connections>
@@ -948,12 +955,15 @@ CA
                                                         <constraints>
                                                             <constraint firstItem="rZx-hk-GcJ" firstAttribute="leading" secondItem="xSU-Mk-2F1" secondAttribute="leading" constant="28" id="1I0-Qm-T21"/>
                                                             <constraint firstAttribute="centerY" secondItem="rZx-hk-GcJ" secondAttribute="centerY" id="8mY-vj-ThP"/>
+                                                            <constraint firstItem="bqF-eB-dpR" firstAttribute="leading" secondItem="xSU-Mk-2F1" secondAttribute="leading" constant="214" id="Epb-X3-vPy"/>
                                                             <constraint firstAttribute="trailing" secondItem="Ua8-RE-q01" secondAttribute="trailing" id="Uos-hm-kn6"/>
                                                             <constraint firstAttribute="trailing" secondItem="rZx-hk-GcJ" secondAttribute="trailing" constant="85" id="ZjM-uT-4wC"/>
                                                             <constraint firstItem="Ua8-RE-q01" firstAttribute="leading" secondItem="rZx-hk-GcJ" secondAttribute="trailing" constant="16" id="eWY-C1-IBp"/>
                                                             <constraint firstItem="Ua8-RE-q01" firstAttribute="top" secondItem="xSU-Mk-2F1" secondAttribute="top" id="esv-qQ-apf"/>
                                                             <constraint firstAttribute="bottom" secondItem="Ua8-RE-q01" secondAttribute="bottom" id="nac-xp-D3Y"/>
                                                             <constraint firstAttribute="height" constant="44" id="pX3-IZ-w1v"/>
+                                                            <constraint firstItem="bqF-eB-dpR" firstAttribute="centerX" secondItem="xSU-Mk-2F1" secondAttribute="centerX" id="uL2-6O-KzL"/>
+                                                            <constraint firstItem="rZx-hk-GcJ" firstAttribute="top" secondItem="bqF-eB-dpR" secondAttribute="bottom" constant="8" symbolic="YES" id="yfY-ca-PJr"/>
                                                         </constraints>
                                                     </customView>
                                                 </subviews>
@@ -1189,6 +1199,9 @@ CA
         <image name="repository.png" width="120" height="120"/>
         <namedColor name="divider">
             <color red="0.89999997615814209" green="0.89999997615814209" blue="0.89999997615814209" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="highlight">
+            <color red="0.18000000715255737" green="0.40999999642372131" blue="0.10999999940395355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="mainBackground">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -34,8 +34,7 @@ class ViewController: NSViewController,
     }
 
     // MARK: - IBOutlets
-
-    @IBOutlet weak var emptyEditTitle: NSTextField!
+    @IBOutlet var emptyEditTitle: NSTextField!
     @IBOutlet var emptyEditAreaImage: NSImageView!
     @IBOutlet var emptyEditAreaView: NSView!
     @IBOutlet var splitView: EditorSplitView!
@@ -835,7 +834,6 @@ class ViewController: NSViewController,
             vc.splitView.setPosition(UserDefaultsManagement.sidebarSize, ofDividerAt: 0)
         } else {
             UserDefaultsManagement.sidebarSize = size
-
             vc.splitView.shouldHideDivider = true
             vc.splitView.setPosition(0, ofDividerAt: 0)
             DispatchQueue.main.async {
@@ -1496,7 +1494,7 @@ class ViewController: NSViewController,
             "noteMove.print",
             "noteMove.copyTitle",
             "noteMove.copyUrl",
-            "noteMove.rename"
+            "noteMove.rename",
         ]
 
         for menu in noteMenu.items {
