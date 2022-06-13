@@ -201,27 +201,20 @@ body,
   line-height: 1.6;
 }
 
-body{font-family:LXGW WenKai Lite,sans-serif}
 #write {
-  max-width: 860px;
+  max-width: 1000px;
   padding: 24px;
   padding-bottom: 80px;
 }
 
-@media only screen and (min-width: 1400px) {
+@media only screen and (min-width: 1500px) {
   #write {
-    max-width: 1024px;
-  }
-}
-
-@media only screen and (min-width: 1800px) {
-  #write {
-    max-width: 1200px;
+    margin: 0 auto;
   }
 }
 
 strong {
-    font-weight: 700 !important;
+    font-weight: bold !important;
 }
 
 h1,

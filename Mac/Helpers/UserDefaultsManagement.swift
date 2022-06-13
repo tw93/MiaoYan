@@ -32,6 +32,7 @@ public class UserDefaultsManagement {
 
     static var codeFontSize = 14
     static var titleFontSize = 20
+    static var emptyEditTitleFontSize = 36
     static var nameFontSize = 14
     static var dateFontSize = 11
     static var maxNightModeBrightnessLevel = 35
@@ -175,6 +176,22 @@ public class UserDefaultsManagement {
             }
 
             return Font.systemFont(ofSize: CGFloat(self.titleFontSize))
+        }
+        set {
+            guard let newValue = newValue else { return }
+
+            self.fontName = newValue.fontName
+            self.fontSize = Int(newValue.pointSize)
+        }
+    }
+    
+    static var emptyEditTitleFont: Font! {
+        get {
+            if let font = Font(name: self.fontName, size: CGFloat(self.emptyEditTitleFontSize)) {
+                return font
+            }
+
+            return Font.systemFont(ofSize: CGFloat(self.emptyEditTitleFontSize))
         }
         set {
             guard let newValue = newValue else { return }
