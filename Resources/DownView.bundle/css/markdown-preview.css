@@ -1,17 +1,5 @@
 /* font face configs */
 
-@font-face {
-  font-family: 'LXGW WenKai Lite';
-  src: url('../font/LXGWWenKaiLite-Regular.ttf')
-  format('truetype');
-}
-
-@font-face {
-  font-family: 'LXGW WenKai Lite';
-  src: url('../font/LXGWWenKaiLite-Bold.ttf');
-  font-weight: bold;
-}
-
 :root {
   --text-font: 'LXGW WenKai Lite', "Helvetica Neue", Helvetica, Arial, sans-serif;
   --code-font: 'LXGW WenKai Lite', "Helvetica Neue", Helvetica, Arial, sans-serif;
