@@ -193,7 +193,7 @@ class ViewController: NSViewController,
         editArea.typingAttributes[.paragraphStyle] = paragraphStyle
 
         editArea.font = UserDefaultsManagement.noteFont
-        titleLabel.font = UserDefaultsManagement.titleFont
+        titleLabel.font = UserDefaultsManagement.titleFont.titleBold()
         emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont
 
         setTableRowHeight()
