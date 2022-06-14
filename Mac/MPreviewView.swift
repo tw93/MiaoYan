@@ -44,7 +44,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
-        if event.keyCode == kVK_ANSI_C && event.modifierFlags.contains(.command) {
+        if event.keyCode == kVK_ANSI_C, event.modifierFlags.contains(.command) {
             DispatchQueue.main.async {
                 guard let string = HandlerSelection.selectionString else { return }
                 let pasteboard = NSPasteboard.general
@@ -89,9 +89,10 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         let markdownString = note.getPrettifiedContent()
         let imagesStorage = note.project.url
+        let css = MarkdownView.getPreviewStyle()
 
         cleanCache()
-        try? loadHTMLView(markdownString, imagesStorage: imagesStorage)
+        try? loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
 
         self.note = note
     }
@@ -106,6 +107,28 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
             }
         }
+    }
+
+    private func getTemplate(css: String) -> String? {
+        let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle")
+        let url = NSURL.fileURL(withPath: path!)
+        let bundle = Bundle(url: url)
+        let baseURL = bundle!.url(forResource: "index", withExtension: "html")!
+
+        guard var template = try? NSString(contentsOf: baseURL, encoding: String.Encoding.utf8.rawValue) else { return nil }
+        template = template.replacingOccurrences(of: "DOWN_CSS", with: css) as NSString
+
+#if os(iOS)
+        if NightNight.theme == .night {
+            template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
+        }
+#else
+        if UserDataService.instance.isDark {
+            template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
+        }
+#endif
+
+        return template as String
     }
 
     private func isFootNotes(url: URL) -> Bool {
@@ -130,14 +153,14 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         return false
     }
 
-    func loadHTMLView(_ markdownString: String, imagesStorage: URL? = nil) throws {
+    func loadHTMLView(_ markdownString: String, css: String, imagesStorage: URL? = nil) throws {
         var htmlString = renderMarkdownHTML(markdown: markdownString)!
 
         if let imagesStorage = imagesStorage {
             htmlString = loadImages(imagesStorage: imagesStorage, html: htmlString)
         }
 
-        let pageHTMLString = try htmlFromTemplate(htmlString)
+        let pageHTMLString = try htmlFromTemplate(htmlString, css: css)
 
 //        print(pageHTMLString)
 
@@ -202,7 +225,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         return indexURL
     }
-    
+
     private func loadImages(imagesStorage: URL, html: String) -> String {
         var htmlString = html
 
@@ -248,13 +271,15 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         return htmlString
     }
 
-    func htmlFromTemplate(_ htmlString: String) throws -> String {
+    func htmlFromTemplate(_ htmlString: String, css: String) throws -> String {
         let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle")
         let url = NSURL.fileURL(withPath: path!)
         let bundle = Bundle(url: url)
         let baseURL = bundle!.url(forResource: "index", withExtension: "html")!
 
         var template = try NSString(contentsOf: baseURL, encoding: String.Encoding.utf8.rawValue)
+
+        template = template.replacingOccurrences(of: "DOWN_CSS", with: css) as NSString
 
 #if os(iOS)
         if NightNight.theme == .night {
