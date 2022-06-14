@@ -34,6 +34,7 @@ class ViewController: NSViewController,
     }
 
     // MARK: - IBOutlets
+
     @IBOutlet var emptyEditTitle: NSTextField!
     @IBOutlet var emptyEditAreaImage: NSImageView!
     @IBOutlet var emptyEditAreaView: NSView!
@@ -817,6 +818,13 @@ class ViewController: NSViewController,
         NSApp.mainWindow?.makeFirstResponder(vc.notesTableView)
     }
 
+    func setButtonHidden(hidden: Bool) {
+        guard let mainWindow = MainWindowController.shared() else { return }
+        mainWindow.standardWindowButton(NSWindow.ButtonType.closeButton)?.isHidden = hidden
+        mainWindow.standardWindowButton(NSWindow.ButtonType.miniaturizeButton)?.isHidden = hidden
+        mainWindow.standardWindowButton(NSWindow.ButtonType.zoomButton)?.isHidden = hidden
+    }
+
     @IBAction func toggleNoteList(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
 
@@ -829,9 +837,11 @@ class ViewController: NSViewController,
             }
             vc.splitView.shouldHideDivider = false
             vc.splitView.setPosition(size, ofDividerAt: 0)
+            setButtonHidden(hidden: false)
         } else if vc.splitView.shouldHideDivider {
             vc.splitView.shouldHideDivider = false
             vc.splitView.setPosition(UserDefaultsManagement.sidebarSize, ofDividerAt: 0)
+            setButtonHidden(hidden: false)
         } else {
             UserDefaultsManagement.sidebarSize = size
             vc.splitView.shouldHideDivider = true
@@ -841,6 +851,7 @@ class ViewController: NSViewController,
             }
             // 防止空出现
             hideSidebar("")
+            setButtonHidden(hidden: true)
         }
         vc.editArea.updateTextContainerInset()
     }
@@ -849,13 +860,13 @@ class ViewController: NSViewController,
         guard let vc = ViewController.shared() else { return }
 
         let size = Int(vc.sidebarSplitView.subviews[0].frame.width)
-
         if size != 0 {
             UserDefaultsManagement.realSidebarSize = size
             vc.sidebarSplitView.setPosition(0, ofDividerAt: 0)
         } else {
             showNoteList("")
             vc.sidebarSplitView.setPosition(CGFloat(UserDefaultsManagement.realSidebarSize), ofDividerAt: 0)
+            setButtonHidden(hidden: false)
         }
 
         vc.editArea.updateTextContainerInset()
@@ -863,19 +874,19 @@ class ViewController: NSViewController,
 
     func hideSidebar(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
-
         let size = Int(vc.sidebarSplitView.subviews[0].frame.width)
 
         if size != 0 {
             UserDefaultsManagement.realSidebarSize = size
             vc.sidebarSplitView.setPosition(0, ofDividerAt: 0)
+        } else {
+            setButtonHidden(hidden: false)
         }
         vc.editArea.updateTextContainerInset()
     }
 
     func showNoteList(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
-
         let size = vc.splitView.subviews[0].frame.width
 
         if size == 0 {
@@ -885,6 +896,7 @@ class ViewController: NSViewController,
             }
             vc.splitView.shouldHideDivider = false
             vc.splitView.setPosition(size, ofDividerAt: 0)
+            setButtonHidden(hidden: false)
         }
         vc.editArea.updateTextContainerInset()
     }
