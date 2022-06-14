@@ -197,15 +197,15 @@ class EditTextView: NSTextView, NSTextFinderClient {
         if pasteImageFromClipboard(in: note) {
             return
         }
-        
+
         if let clipboard = NSPasteboard.general.string(forType: NSPasteboard.PasteboardType.string) {
             EditTextView.shouldForceRescan = true
 
             let currentRange = selectedRange()
 
-            self.breakUndoCoalescing()
-            self.insertText(clipboard, replacementRange: currentRange)
-            self.breakUndoCoalescing()
+            breakUndoCoalescing()
+            insertText(clipboard, replacementRange: currentRange)
+            breakUndoCoalescing()
 
             saveTextStorageContent(to: note)
             return
@@ -996,13 +996,13 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     private func pasteImageFromClipboard(in note: Note) -> Bool {
-//        if let url = NSURL(from: NSPasteboard.general) {
-//            if !url.isFileURL {
-//                return false
-//            }
-//
-//            return saveFile(url: url as URL, in: note)
-//        }
+        if let url = NSURL(from: NSPasteboard.general) {
+            if !url.isFileURL {
+                return false
+            }
+
+            return saveFile(url: url as URL, in: note)
+        }
 
         if let clipboard = NSPasteboard.general.data(forType: .tiff), let image = NSImage(data: clipboard), let jpgData = image.jpgData {
             EditTextView.shouldForceRescan = true
@@ -1014,7 +1014,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             textStorage?.sizeAttachmentImages()
             return true
         }
-        
+
         return false
     }
 
