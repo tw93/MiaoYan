@@ -193,6 +193,10 @@ img{
   object-fit: cover;
 }
 
+pre {
+    max-width: 100%;
+}
+
 body,
 .file-list-item-summary {
   font-family: var(--text-font);
@@ -1164,7 +1168,7 @@ blockquote > h6:first-child::before {
   margin-right: 4px;
 }
 
-pre code.hljs {
+pre code.hljs, pre.hljs {
   display: block;
   overflow-x: auto;
   padding: 4px;
