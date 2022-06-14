@@ -5,7 +5,6 @@ import WebKit
 import NightNight
 #endif
 
-
 public typealias DownViewClosure = () -> Void
 
 open class MarkdownView: WKWebView {
@@ -56,6 +55,10 @@ open class MarkdownView: WKWebView {
         }
 
         try loadHTMLView(markdownString)
+    }
+
+    public static func getPreviewStyle() -> String {
+        "html {font-size: \(UserDefaultsManagement.previewFontSize)px} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif; }"
     }
 
     let bundle: Bundle

@@ -17,7 +17,7 @@ public class UserDefaultsManagement {
         typealias Font = UIFont
     #endif
 
-    static var DefaultFont = "霞鹜文楷 轻便版"
+    static var DefaultFont = "LXGW WenKai Lite"
 
     static var DefaultFontSize = 15
     static var editorLineSpacing = 6
@@ -30,15 +30,12 @@ public class UserDefaultsManagement {
     static var linkColor = Color(red: 0.23, green: 0.23, blue: 0.23, alpha: 1.00)
     static var fullScreen = false
 
-    static var codeFontSize = 14
     static var titleFontSize = 20
     static var emptyEditTitleFontSize = 36
     static var nameFontSize = 14
     static var dateFontSize = 11
     static var maxNightModeBrightnessLevel = 35
 
-    static var fontName = DefaultFont
-    static var previewFontSize = 14
     static var sortDirection = true
     static var marginSize = 28
     static var realSidebarSize = 200
@@ -48,7 +45,6 @@ public class UserDefaultsManagement {
         static let BgColorKey = "bgColorKeyed"
         static let CellFrameOriginY = "cellFrameOriginY"
         static let CodeFontNameKey = "codeFont"
-        static let CodeFontSizeKey = "codeFontSize"
         static let codeTheme = "codeTheme"
         static let FontNameKey = "font"
         static let FontSizeKey = "fontsize"
@@ -79,6 +75,9 @@ public class UserDefaultsManagement {
         static let SortBy = "sortBy"
         static let StoragePathKey = "storageUrl"
         static let TextMatchAutoSelection = "textMatchAutoSelection"
+        static let FontName = "fontName"
+        static let WindowFontName = "windowFontName"
+        static let PreviewFontName = "previewFontName"
     }
 
     static var lastProject: Int {
@@ -136,20 +135,68 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.FontSizeKey)
         }
     }
+    
+    static var previewFontSize: Int {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.PreviewFontSize) as? Int {
+                return result
+            }
+            return DefaultFontSize
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.PreviewFontSize)
+        }
+    }
 
+    static var fontName: String {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.FontName) as? String {
+                return result
+            }
+            return DefaultFont
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.FontName)
+        }
+    }
+    
+    static var windowFontName: String {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.WindowFontName) as? String {
+                return result
+            }
+            return DefaultFont
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.WindowFontName)
+        }
+    }
+    
+    static var previewFontName: String {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.PreviewFontName) as? String {
+                return result
+            }
+            return DefaultFont
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.PreviewFontName)
+        }
+    }
+    
     static var codeFont: Font! {
         get {
-            if let font = Font(name: self.codeFontName, size: CGFloat(self.codeFontSize)) {
+            if let font = Font(name: self.codeFontName, size: CGFloat(self.fontSize)) {
                 return font
             }
 
-            return Font.systemFont(ofSize: CGFloat(self.codeFontSize))
+            return Font.systemFont(ofSize: CGFloat(self.fontSize))
         }
         set {
             guard let newValue = newValue else { return }
 
             self.codeFontName = newValue.fontName
-            self.codeFontSize = Int(newValue.pointSize)
+            self.fontSize = Int(newValue.pointSize)
         }
     }
 
@@ -171,7 +218,7 @@ public class UserDefaultsManagement {
     
     static var titleFont: Font! {
         get {
-            if let font = Font(name: self.fontName, size: CGFloat(self.titleFontSize)) {
+            if let font = Font(name: self.windowFontName, size: CGFloat(self.titleFontSize)) {
                 return font
             }
 
@@ -187,7 +234,7 @@ public class UserDefaultsManagement {
     
     static var emptyEditTitleFont: Font! {
         get {
-            if let font = Font(name: self.fontName, size: CGFloat(self.emptyEditTitleFontSize)) {
+            if let font = Font(name: self.windowFontName, size: CGFloat(self.emptyEditTitleFontSize)) {
                 return font
             }
 
@@ -203,7 +250,7 @@ public class UserDefaultsManagement {
     
     static var nameFont: Font! {
         get {
-            if let font = Font(name: self.fontName, size: CGFloat(self.nameFontSize)) {
+            if let font = Font(name: self.windowFontName, size: CGFloat(self.nameFontSize)) {
                 return font
             }
 
@@ -219,7 +266,7 @@ public class UserDefaultsManagement {
     
     static var dateFont: Font! {
         get {
-            if let font = Font(name: self.fontName, size: CGFloat(self.dateFontSize)) {
+            if let font = Font(name: self.windowFontName, size: CGFloat(self.dateFontSize)) {
                 return font
             }
 
