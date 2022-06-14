@@ -3,6 +3,29 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>0.4.2</title>
+      <description><![CDATA[
+            <h3>更新记录：</h3>
+            <ol>
+             <li>🎉 终于支持设置字体和字号啦🙊🙊🙊🙊 </li>
+             <li>🍭 优化黑暗模式的展示，比之前更黑一些了 </li>
+             <li>🍭 代码支持pre标签、增加淡化背景、视觉展示优化 </li>
+             <li>🏂 支持复制的图片可以粘贴、默认宽度优化、编辑和预览切换优化 </li>
+             <li>🛠 修复预览模式下标题还可以编辑的问题 </li>
+            </ol>
+            <h3>Update Notes：</h3>
+           <ol>
+            <li> 🎉 Support setting font and font size. 🙊🙊🙊🙊</li>
+            <li> 🍭 Optimize the presentation of dark mode,Darker than before.</li>
+            <li> 🍭 The code supports pre tags, adds fade background, and optimizes visual presentation.</li>
+            <li> 🏂 The copied pictures can be pasted, default width optimization, editing and preview switching optimization.</li> <li> 🛠 Fix the problem that the title can be edited in preview mode.</li>
+            </ol>
+            ]]>      </description>
+      <pubDate>周二, 14 6月 2022 23:48:44 +0800</pubDate>
+      <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.4.0.zip" sparkle:shortVersionString="0.4.0" sparkle:version="0.4.0" sparkle:edSignature="kFMDQRB2RiplVKeMJXO4bnC157ieOXZ1LRUoqg+95dT2tINfVsB6/8mTblImlaD8kvojd4M7nU/o5lEVBX2iBg==" length="27952152" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>0.3.2</title>
       <description><![CDATA[
             <h3>更新记录：</h3>
