@@ -66,6 +66,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         mainWindowController = mainWC
         mainWC.window?.makeKeyAndOrderFront(nil)
+        mainWC.window?.setFrame(NSRect(x:100,y:100,width: 1200,height: 640), display: true)
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
