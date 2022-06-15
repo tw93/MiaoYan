@@ -207,14 +207,8 @@ body,
 }
 
 #write {
-  max-width: 1000px;
+  max-width: 900px;
   padding: 8px 24px 80px;
-}
-
-@media only screen and (min-width: 1500px) {
-  #write {
-    margin: 0 auto;
-  }
 }
 
 strong {
