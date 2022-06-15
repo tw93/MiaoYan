@@ -715,6 +715,7 @@ CA
                         <outlet property="editorFontSize" destination="JPv-4n-4vL" id="meJ-LQ-abo"/>
                         <outlet property="languagePopUp" destination="I8N-rL-amz" id="47F-nH-5hW"/>
                         <outlet property="previewFontName" destination="EMH-T5-er6" id="eM2-ad-fay"/>
+                        <outlet property="previewFontSize" destination="hU4-gw-1Hb" id="Awy-QD-lry"/>
                         <outlet property="windowFontName" destination="6PF-7C-RLR" id="oVB-yw-PFN"/>
                     </connections>
                 </viewController>
