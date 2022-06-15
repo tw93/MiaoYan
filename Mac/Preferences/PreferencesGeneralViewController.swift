@@ -58,6 +58,10 @@ class PreferencesGeneralViewController: NSViewController {
             return
         }
 
+        if UserDefaultsManagement.windowFontName == item.title {
+            return
+        }
+
         UserDefaultsManagement.windowFontName = item.title
 
         NotesTextProcessor.hl = nil
@@ -92,6 +96,10 @@ class PreferencesGeneralViewController: NSViewController {
 
     @IBAction func appearanceClick(_ sender: NSPopUpButton) {
         if let type = AppearanceType(rawValue: sender.indexOfSelectedItem) {
+            if UserDefaultsManagement.appearanceType == type {
+                return
+            }
+
             UserDefaultsManagement.appearanceType = type
 
             if type == .Dark {
@@ -176,6 +184,9 @@ class PreferencesGeneralViewController: NSViewController {
     @IBAction func languagePopUp(_ sender: NSPopUpButton) {
         let type = LanguageType.withName(rawValue: sender.title)
 
+        if UserDefaultsManagement.defaultLanguage == type.rawValue {
+            return
+        }
         UserDefaultsManagement.defaultLanguage = type.rawValue
 
         UserDefaults.standard.set([type.code], forKey: "AppleLanguages")
