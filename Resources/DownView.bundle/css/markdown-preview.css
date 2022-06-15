@@ -1003,6 +1003,10 @@ table {
   border-collapse: separate;
 }
 
+tbody > tr:first-child > td, tbody > tr:first-child > td:first-child{
+  border-top: var(--table-border);
+}
+
 tbody > tr > td:not(:first-child) {
   box-sizing: border-box;
   border: none;

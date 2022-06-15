@@ -833,7 +833,7 @@ class ViewController: NSViewController,
         if size == 0 {
             var size = UserDefaultsManagement.sidebarSize
             if UserDefaultsManagement.sidebarSize == 0 {
-                size = 250
+                size = 280
             }
             vc.splitView.shouldHideDivider = false
             vc.splitView.setPosition(size, ofDividerAt: 0)
@@ -892,7 +892,7 @@ class ViewController: NSViewController,
         if size == 0 {
             var size = UserDefaultsManagement.sidebarSize
             if UserDefaultsManagement.sidebarSize == 0 {
-                size = 250
+                size = 280
             }
             vc.splitView.shouldHideDivider = false
             vc.splitView.setPosition(size, ofDividerAt: 0)

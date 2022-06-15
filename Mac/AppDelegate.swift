@@ -1,8 +1,8 @@
-import Cocoa
-import MiaoYanCore_macOS
 import AppCenter
 import AppCenterAnalytics
 import AppCenterCrashes
+import Cocoa
+import MiaoYanCore_macOS
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
@@ -53,11 +53,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             return
         }
 
-        AppCenter.start(withAppSecret: "e4d22300-3bd7-427f-8f3c-41f315c2bb76", services:[
-          Analytics.self,
-          Crashes.self
+        AppCenter.start(withAppSecret: "e4d22300-3bd7-427f-8f3c-41f315c2bb76", services: [
+            Analytics.self,
+            Crashes.self
         ])
-        
+
         let storyboard = NSStoryboard(name: "Main", bundle: nil)
 
         guard let mainWC = storyboard.instantiateController(withIdentifier: "MainWindowController") as? MainWindowController else {
@@ -66,10 +66,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         mainWindowController = mainWC
         mainWC.window?.makeKeyAndOrderFront(nil)
-        
-        let size = NSSize(width: 1200, height: 640)
-        mainWC.window?.minSize=size
-        mainWC.window?.center()
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
@@ -143,7 +139,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         panel.canChooseFiles = false
         panel.canCreateDirectories = true
         panel.message = "Please select default storage directory"
-        panel.begin { (result) -> Void in
+        panel.begin { result in
             if result.rawValue == NSFileHandlingPanelOKButton {
                 guard let url = panel.url else {
                     return
@@ -170,19 +166,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @IBAction func openMiaoYan(_ sender: Any) {
         NSWorkspace.shared.open(URL(string: "https://miaoyan.vercel.app")!)
     }
-    
+
     @IBAction func openGithub(_ sender: Any) {
         NSWorkspace.shared.open(URL(string: "https://github.com/tw93/MiaoYan")!)
     }
-    
+
     @IBAction func openRelease(_ sender: Any) {
         NSWorkspace.shared.open(URL(string: "https://github.com/tw93/MiaoYan/releases")!)
     }
-    
+
     @IBAction func openTwitter(_ sender: Any) {
         NSWorkspace.shared.open(URL(string: "https://twitter.com/HiTw93")!)
     }
-    
+
     @IBAction func openIssue(_ sender: Any) {
         NSWorkspace.shared.open(URL(string: "https://github.com/tw93/MiaoYan/issues")!)
     }
