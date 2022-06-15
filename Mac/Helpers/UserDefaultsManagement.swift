@@ -37,8 +37,8 @@ public class UserDefaultsManagement {
     static var maxNightModeBrightnessLevel = 35
 
     static var sortDirection = true
-    static var marginSize = 28
-    static var realSidebarSize = 200
+    static var marginSize = 26
+    static var realSidebarSize = 120
 
     private enum Constants {
         static let AppearanceTypeKey = "appearanceType"
@@ -421,7 +421,7 @@ public class UserDefaultsManagement {
             #if os(iOS)
                 return 0
             #else
-                return 250
+                return 280
             #endif
         }
         set {
