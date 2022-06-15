@@ -798,10 +798,7 @@ CA
                                                                                     <imageCell key="cell" refusesFirstResponder="YES" imageScaling="proportionallyDown" image="repository.png" id="WHo-8O-PFO"/>
                                                                                 </imageView>
                                                                                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kTp-qw-RCd">
-                                                                                    <rect key="frame" x="22" y="18" width="104" height="17"/>
-                                                                                    <constraints>
-                                                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="VE7-sq-wIV"/>
-                                                                                    </constraints>
+                                                                                    <rect key="frame" x="22" y="18" width="102" height="17"/>
                                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="2ZQ-YX-F9M">
                                                                                         <font key="font" metaFont="system" size="14"/>
                                                                                         <color key="textColor" name="mainText"/>
@@ -1136,7 +1133,7 @@ CA
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="30" id="3QH-0a-na2"/>
                                                                 </constraints>
-                                                                <textFieldCell key="cell" lineBreakMode="truncatingMiddle" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" focusRingType="none" alignment="left" title="Title" placeholderString="输入标题" drawsBackground="YES" id="O9K-a1-3eu">
+                                                                <textFieldCell key="cell" lineBreakMode="truncatingMiddle" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" focusRingType="none" alignment="left" title="Title" placeholderString="输入标题" drawsBackground="YES" id="O9K-a1-3eu" customClass="PaddedTextFieldCell" customModule="MiaoYan" customModuleProvider="target">
                                                                     <font key="font" metaFont="systemBold" size="20"/>
                                                                     <color key="textColor" name="underlineColor"/>
                                                                     <color key="backgroundColor" name="mainBackground"/>
@@ -1145,14 +1142,14 @@ CA
                                                                     <outlet property="delegate" destination="XfG-lQ-9wD" id="ikK-Ty-iHC"/>
                                                                 </connections>
                                                             </textField>
-                                                            <customView horizontalHuggingPriority="249" verticalHuggingPriority="249" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ua8-RE-q01">
-                                                                <rect key="frame" x="523" y="0.0" width="69" height="44"/>
+                                                            <customView horizontalHuggingPriority="249" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="Ua8-RE-q01">
+                                                                <rect key="frame" x="490" y="0.0" width="69" height="44"/>
                                                                 <subviews>
                                                                     <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="9" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" horizontalCompressionResistancePriority="1000" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="shI-kr-3o8">
                                                                         <rect key="frame" x="41" y="22" width="0.0" height="0.0"/>
                                                                     </stackView>
                                                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bn7-FD-jzc">
-                                                                        <rect key="frame" x="24" y="12" width="21.5" height="20"/>
+                                                                        <rect key="frame" x="36" y="12" width="21.5" height="20"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="16" id="mhf-Ok-C0D"/>
                                                                         </constraints>
@@ -1165,12 +1162,28 @@ CA
                                                                             <action selector="togglePreview:" target="XfG-lQ-9wD" id="Mf0-5U-8VP"/>
                                                                         </connections>
                                                                     </button>
+                                                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AZ7-aG-pPz">
+                                                                        <rect key="frame" x="9" y="11" width="19.5" height="22"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="16" id="iZ9-9y-SLm"/>
+                                                                        </constraints>
+                                                                        <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="display" catalog="system" imagePosition="left" inset="2" id="jYO-z1-Mi3">
+                                                                            <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                                                                            <font key="font" metaFont="system"/>
+                                                                        </buttonCell>
+                                                                        <color key="contentTintColor" name="highlight"/>
+                                                                        <connections>
+                                                                            <action selector="togglePresentation:" target="XfG-lQ-9wD" id="jW2-Vm-rj9"/>
+                                                                        </connections>
+                                                                    </button>
                                                                 </subviews>
                                                                 <constraints>
+                                                                    <constraint firstAttribute="trailing" secondItem="Bn7-FD-jzc" secondAttribute="trailing" constant="12" id="40O-iA-XCi"/>
                                                                     <constraint firstItem="shI-kr-3o8" firstAttribute="centerY" secondItem="Ua8-RE-q01" secondAttribute="centerY" id="AVX-pD-7Dr"/>
-                                                                    <constraint firstItem="Bn7-FD-jzc" firstAttribute="centerY" secondItem="Ua8-RE-q01" secondAttribute="centerY" id="H4n-oa-pN4"/>
                                                                     <constraint firstAttribute="trailing" secondItem="shI-kr-3o8" secondAttribute="trailing" constant="28" id="PPb-lX-xlt"/>
-                                                                    <constraint firstItem="Bn7-FD-jzc" firstAttribute="centerX" secondItem="Ua8-RE-q01" secondAttribute="centerX" id="VuJ-Hp-VfD"/>
+                                                                    <constraint firstItem="Bn7-FD-jzc" firstAttribute="leading" secondItem="AZ7-aG-pPz" secondAttribute="trailing" constant="8" id="RFB-mB-WCW"/>
+                                                                    <constraint firstItem="Bn7-FD-jzc" firstAttribute="centerY" secondItem="Ua8-RE-q01" secondAttribute="centerY" id="bXW-E1-a36"/>
+                                                                    <constraint firstItem="Bn7-FD-jzc" firstAttribute="centerY" secondItem="AZ7-aG-pPz" secondAttribute="centerY" id="h9F-6X-89M"/>
                                                                 </constraints>
                                                             </customView>
                                                         </subviews>
@@ -1237,6 +1250,7 @@ CA
                         <outlet property="notesScrollView" destination="Kzf-Jh-YEb" id="u8R-Hy-KjV"/>
                         <outlet property="notesTableView" destination="8X8-yh-5EA" id="pGL-Nn-LM0"/>
                         <outlet property="outlineHeader" destination="vp7-cq-QSI" id="iK6-z5-GgC"/>
+                        <outlet property="presentationButton" destination="AZ7-aG-pPz" id="RC3-vu-8oY"/>
                         <outlet property="previewButton" destination="Bn7-FD-jzc" id="RxQ-Au-NBr"/>
                         <outlet property="search" destination="bd7-O3-GQF" id="HjC-CH-gRR"/>
                         <outlet property="searchTopConstraint" destination="nXO-Fh-8nv" id="p8r-Pf-fo8"/>
@@ -1413,6 +1427,7 @@ CA
     <resources>
         <image name="NSAddTemplate" width="14" height="13"/>
         <image name="NSQuickLookTemplate" width="21" height="13"/>
+        <image name="display" catalog="system" width="19" height="15"/>
         <image name="makeNoteAsset" width="840" height="788"/>
         <image name="new" width="120" height="120"/>
         <image name="new_rep" width="120" height="120"/>

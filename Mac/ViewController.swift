@@ -50,11 +50,7 @@ class ViewController: NSViewController,
     @IBOutlet var outlineHeader: OutlineHeaderView!
 
     @IBOutlet var searchTopConstraint: NSLayoutConstraint!
-    @IBOutlet var titleLabel: TitleTextField! {
-        didSet {
-            titleLabel.layer?.masksToBounds = false
-        }
-    }
+    @IBOutlet var titleLabel: TitleTextField!
 
     @IBOutlet var sortByOutlet: NSMenuItem!
     @IBOutlet var titleBarAdditionalView: NSVisualEffectView! {
@@ -76,6 +72,12 @@ class ViewController: NSViewController,
     @IBOutlet var titleBarView: TitleBarView!
     @IBOutlet var sidebarScrollView: NSScrollView!
     @IBOutlet var notesScrollView: NSScrollView!
+
+    @IBOutlet var presentationButton: NSButton! {
+        didSet {
+            presentationButton.state = UserDefaultsManagement.presentation ? .on : .off
+        }
+    }
 
     // MARK: - Overrides
 
@@ -423,6 +425,7 @@ class ViewController: NSViewController,
     func refillEditArea(cursor: Int? = nil, previewOnly: Bool = false, saveTyping: Bool = false, force: Bool = false) {
         DispatchQueue.main.async { [weak self] in
             self?.previewButton.state = UserDefaultsManagement.preview ? .on : .off
+            self?.presentationButton.state = UserDefaultsManagement.presentation ? .on : .off
         }
 
         guard !previewOnly || previewOnly && UserDefaultsManagement.preview else {
@@ -518,14 +521,16 @@ class ViewController: NSViewController,
             }
         }
 
+        if event.keyCode == kVK_Escape {
+            if UserDefaultsManagement.presentation {
+                disablePresentation()
+            }
+        }
+
         // Focus search bar on ESC
         if
-
-            event.keyCode == kVK_Escape
-            || (
-                event.characters == "." &&
-                    event.modifierFlags.contains(.command)
-            ),
+            event.characters == ".",
+            event.modifierFlags.contains(.command),
 
             NSApplication.shared.mainWindow == NSApplication.shared.keyWindow
         {
@@ -885,6 +890,18 @@ class ViewController: NSViewController,
         vc.editArea.updateTextContainerInset()
     }
 
+    func showSidebar(_ sender: Any) {
+        guard let vc = ViewController.shared() else { return }
+        let size = Int(vc.sidebarSplitView.subviews[0].frame.width)
+
+        if size == 0 {
+            showNoteList("")
+            vc.sidebarSplitView.setPosition(CGFloat(UserDefaultsManagement.realSidebarSize), ofDividerAt: 0)
+            setButtonHidden(hidden: false)
+        }
+        vc.editArea.updateTextContainerInset()
+    }
+
     func showNoteList(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
         let size = vc.splitView.subviews[0].frame.width
@@ -897,6 +914,30 @@ class ViewController: NSViewController,
             vc.splitView.shouldHideDivider = false
             vc.splitView.setPosition(size, ofDividerAt: 0)
             setButtonHidden(hidden: false)
+        }
+        vc.editArea.updateTextContainerInset()
+    }
+
+    func hideNoteList(_ sender: Any) {
+        guard let vc = ViewController.shared() else { return }
+        let size = vc.splitView.subviews[0].frame.width
+
+        if size != 0 {
+            if vc.splitView.shouldHideDivider {
+                vc.splitView.shouldHideDivider = false
+                vc.splitView.setPosition(UserDefaultsManagement.sidebarSize, ofDividerAt: 0)
+                setButtonHidden(hidden: false)
+            } else {
+                UserDefaultsManagement.sidebarSize = size
+                vc.splitView.shouldHideDivider = true
+                vc.splitView.setPosition(0, ofDividerAt: 0)
+                DispatchQueue.main.async {
+                    vc.splitView.setPosition(0, ofDividerAt: 0)
+                }
+                // 防止空出现
+                hideSidebar("")
+                setButtonHidden(hidden: true)
+            }
         }
         vc.editArea.updateTextContainerInset()
     }
@@ -1466,6 +1507,39 @@ class ViewController: NSViewController,
         }
     }
 
+    func enablePresentation() {
+        UserDefaultsManagement.presentation = true
+        if UserDefaultsManagement.preview {
+            disablePreview()
+        }
+        setButtonHidden(hidden: true)
+        enablePreview()
+        if UserDefaultsManagement.fullScreen {} else {
+            view.window?.toggleFullScreen(nil)
+        }
+        hideNoteList("")
+    }
+
+    func disablePresentation() {
+        UserDefaultsManagement.presentation = false
+        disablePreview()
+        setButtonHidden(hidden: false)
+        if UserDefaultsManagement.fullScreen {
+            view.window?.toggleFullScreen(nil)
+            showSidebar("")
+        }
+    }
+
+    func togglePresentation() {
+        titleLabel.saveTitle()
+
+        if UserDefaultsManagement.presentation {
+            disablePresentation()
+        } else {
+            enablePresentation()
+        }
+    }
+
     func loadMoveMenu() {
         guard let vc = ViewController.shared(), let note = vc.notesTableView.getSelectedNote() else { return }
 
@@ -1669,6 +1743,10 @@ class ViewController: NSViewController,
 
     @IBAction func togglePreview(_ sender: NSButton) {
         togglePreview()
+    }
+
+    @IBAction func togglePresentation(_ sender: NSButton) {
+        togglePresentation()
     }
 
     public func saveTextAtClipboard() {

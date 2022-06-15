@@ -67,6 +67,7 @@ public class UserDefaultsManagement {
         static let LiveImagesPreview = "liveImagesPreview"
         static let PinListKey = "pinList"
         static let Preview = "preview"
+        static let Presentation = "presentation"
         static let PreviewFontSize = "previewFontSize"
         static let ProjectsKey = "projects"
         static let RestoreCursorPosition = "restoreCursorPosition"
@@ -373,6 +374,8 @@ public class UserDefaultsManagement {
     }
 
     static var preview = false
+    
+    static var presentation = false
 
     static var lastSync: Date? {
         get {

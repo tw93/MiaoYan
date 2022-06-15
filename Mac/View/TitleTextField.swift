@@ -18,7 +18,7 @@ class TitleTextField: NSTextField {
 
         return super.performKeyEquivalent(with: event)
     }
-
+    
     override func becomeFirstResponder() -> Bool {
         if let note = EditTextView.note {
             stringValue = note.getShortTitle()
