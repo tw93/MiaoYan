@@ -702,13 +702,13 @@
 "uXW-Mt-L5y.title" = "关注 Twitter";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Format"; ObjectID = "Adc-zl-sqX"; */
-"Adc-zl-sqX.ibShadowedToolTip" = "自动排版";
+"Adc-zl-sqX.ibShadowedToolTip" = "排版";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Demonstrate"; ObjectID = "AZ7-aG-pPz"; */
-"AZ7-aG-pPz.ibShadowedToolTip" = "演示模式";
+"AZ7-aG-pPz.ibShadowedToolTip" = "演示";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Preview"; ObjectID = "Bn7-FD-jzc"; */
-"Bn7-FD-jzc.ibShadowedToolTip" = "预览模式";
+"Bn7-FD-jzc.ibShadowedToolTip" = "预览";
 
 
 /* Class = "NSButton"; ibShadowedToolTip = "New Project"; ObjectID = "Yei-Or-qiI"; */
