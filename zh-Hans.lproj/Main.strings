@@ -455,6 +455,9 @@
 /* Class = "NSMenuItem"; title = "Toggle preview"; ObjectID = "PdU-Em-Ugm"; */
 "PdU-Em-Ugm.title" = "切换预览";
 
+/* Class = "NSMenuItem"; title = "Toggle Presentation"; ObjectID = "9ib-os-JZv"; */
+"9ib-os-JZv.title" = "切换演示";
+
 /* Class = "NSTextFieldCell"; title = "Repeat password:"; ObjectID = "PLH-LL-geH"; */
 "PLH-LL-geH.title" = "重复密码：";
 

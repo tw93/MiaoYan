@@ -1509,6 +1509,7 @@ class ViewController: NSViewController,
 
     func enablePresentation() {
         UserDefaultsManagement.presentation = true
+        hideNoteList("")
         if UserDefaultsManagement.preview {
             disablePreview()
         }
@@ -1517,22 +1518,20 @@ class ViewController: NSViewController,
         if UserDefaultsManagement.fullScreen {} else {
             view.window?.toggleFullScreen(nil)
         }
-        hideNoteList("")
     }
 
     func disablePresentation() {
         UserDefaultsManagement.presentation = false
-        disablePreview()
-        setButtonHidden(hidden: false)
         if UserDefaultsManagement.fullScreen {
             view.window?.toggleFullScreen(nil)
-            showSidebar("")
         }
+        disablePreview()
+        setButtonHidden(hidden: false)
+        showSidebar("")
     }
 
     func togglePresentation() {
         titleLabel.saveTitle()
-
         if UserDefaultsManagement.presentation {
             disablePresentation()
         } else {

@@ -180,6 +180,11 @@ CA
                                                 <action selector="togglePreview:" target="N0L-g4-qwj" id="2w1-01-aD6"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Toggle Presentation" keyEquivalent="4" id="9ib-os-JZv">
+                                            <connections>
+                                                <action selector="togglePresentation:" target="N0L-g4-qwj" id="Dr0-AZ-Kga"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Enter Full Screen" keyEquivalent="f" id="4J7-dP-txa">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
