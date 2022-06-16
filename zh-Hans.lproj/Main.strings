@@ -701,3 +701,16 @@
 /* Class = "NSMenuItem"; title = "Follow Twitter"; ObjectID = "uXW-Mt-L5y"; */
 "uXW-Mt-L5y.title" = "关注 Twitter";
 
+/* Class = "NSButton"; ibShadowedToolTip = "Format"; ObjectID = "Adc-zl-sqX"; */
+"Adc-zl-sqX.ibShadowedToolTip" = "自动排版";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Demonstrate"; ObjectID = "AZ7-aG-pPz"; */
+"AZ7-aG-pPz.ibShadowedToolTip" = "演示模式";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Preview"; ObjectID = "Bn7-FD-jzc"; */
+"Bn7-FD-jzc.ibShadowedToolTip" = "预览模式";
+
+
+/* Class = "NSButton"; ibShadowedToolTip = "New Project"; ObjectID = "Yei-Or-qiI"; */
+"Yei-Or-qiI.ibShadowedToolTip" = "新建分类";
+

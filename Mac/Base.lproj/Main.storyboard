@@ -889,7 +889,7 @@ CA
                                             <customView autoresizesSubviews="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vp7-cq-QSI" customClass="OutlineHeaderView" customModule="MiaoYan" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="592" width="200" height="48"/>
                                                 <subviews>
-                                                    <button autoresizesSubviews="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yei-Or-qiI" userLabel="Add Project">
+                                                    <button autoresizesSubviews="NO" toolTip="New Project" translatesAutoresizingMaskIntoConstraints="NO" id="Yei-Or-qiI" userLabel="Add Project">
                                                         <rect key="frame" x="174" y="15" width="18" height="18"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="18" id="qVi-vf-K2q"/>
@@ -1133,8 +1133,8 @@ CA
                                                                     <constraint firstAttribute="height" constant="24" id="SaQ-0K-k6H"/>
                                                                 </constraints>
                                                             </customView>
-                                                            <textField focusRingType="none" horizontalHuggingPriority="1" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="rZx-hk-GcJ" customClass="TitleTextField" customModule="MiaoYan" customModuleProvider="target">
-                                                                <rect key="frame" x="28" y="7" width="446" height="30"/>
+                                                            <textField focusRingType="none" horizontalHuggingPriority="1" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rZx-hk-GcJ" customClass="TitleTextField" customModule="MiaoYan" customModuleProvider="target">
+                                                                <rect key="frame" x="28" y="7" width="383" height="30"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="30" id="3QH-0a-na2"/>
                                                                 </constraints>
@@ -1148,17 +1148,17 @@ CA
                                                                 </connections>
                                                             </textField>
                                                             <customView horizontalHuggingPriority="249" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="Ua8-RE-q01">
-                                                                <rect key="frame" x="490" y="0.0" width="69" height="44"/>
+                                                                <rect key="frame" x="419" y="0.0" width="140" height="44"/>
                                                                 <subviews>
                                                                     <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="9" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" horizontalCompressionResistancePriority="1000" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="shI-kr-3o8">
-                                                                        <rect key="frame" x="41" y="22" width="0.0" height="0.0"/>
+                                                                        <rect key="frame" x="112" y="22" width="0.0" height="0.0"/>
                                                                     </stackView>
-                                                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bn7-FD-jzc">
-                                                                        <rect key="frame" x="36" y="12" width="21.5" height="20"/>
+                                                                    <button toolTip="Preview" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bn7-FD-jzc">
+                                                                        <rect key="frame" x="91" y="12" width="21.5" height="20"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="16" id="mhf-Ok-C0D"/>
                                                                         </constraints>
-                                                                        <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="NSQuickLookTemplate" imagePosition="left" inset="2" id="Yk7-v6-QmI">
+                                                                        <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="NSQuickLookTemplate" imagePosition="left" toolTip="Preview" inset="2" id="Yk7-v6-QmI">
                                                                             <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                                                                             <font key="font" metaFont="system"/>
                                                                         </buttonCell>
@@ -1167,8 +1167,21 @@ CA
                                                                             <action selector="togglePreview:" target="XfG-lQ-9wD" id="Mf0-5U-8VP"/>
                                                                         </connections>
                                                                     </button>
-                                                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AZ7-aG-pPz">
-                                                                        <rect key="frame" x="9" y="11" width="19.5" height="22"/>
+                                                                    <button toolTip="Format" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Adc-zl-sqX">
+                                                                        <rect key="frame" x="38" y="14" width="16" height="17"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="12" id="7Xj-w1-apm"/>
+                                                                        </constraints>
+                                                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="text.badge.checkmark.rtl" catalog="system" imagePosition="left" inset="2" id="3kI-Cb-zAJ">
+                                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                                            <font key="font" metaFont="system"/>
+                                                                        </buttonCell>
+                                                                        <connections>
+                                                                            <action selector="formartText:" target="XfG-lQ-9wD" id="eMr-mN-d0w"/>
+                                                                        </connections>
+                                                                    </button>
+                                                                    <button toolTip="Demonstrate" verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AZ7-aG-pPz">
+                                                                        <rect key="frame" x="64" y="11" width="19.5" height="22"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="16" id="iZ9-9y-SLm"/>
                                                                         </constraints>
@@ -1183,12 +1196,14 @@ CA
                                                                     </button>
                                                                 </subviews>
                                                                 <constraints>
-                                                                    <constraint firstAttribute="trailing" secondItem="Bn7-FD-jzc" secondAttribute="trailing" constant="12" id="40O-iA-XCi"/>
+                                                                    <constraint firstItem="AZ7-aG-pPz" firstAttribute="leading" secondItem="Adc-zl-sqX" secondAttribute="trailing" constant="10" id="8E2-xo-4YM"/>
                                                                     <constraint firstItem="shI-kr-3o8" firstAttribute="centerY" secondItem="Ua8-RE-q01" secondAttribute="centerY" id="AVX-pD-7Dr"/>
+                                                                    <constraint firstItem="Adc-zl-sqX" firstAttribute="centerY" secondItem="Ua8-RE-q01" secondAttribute="centerY" id="DAj-dN-RX4"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="Bn7-FD-jzc" secondAttribute="trailing" constant="28" id="GuR-x2-veg"/>
                                                                     <constraint firstAttribute="trailing" secondItem="shI-kr-3o8" secondAttribute="trailing" constant="28" id="PPb-lX-xlt"/>
-                                                                    <constraint firstItem="Bn7-FD-jzc" firstAttribute="leading" secondItem="AZ7-aG-pPz" secondAttribute="trailing" constant="8" id="RFB-mB-WCW"/>
+                                                                    <constraint firstAttribute="width" constant="140" id="VrO-x5-8Ao"/>
+                                                                    <constraint firstItem="Bn7-FD-jzc" firstAttribute="leading" secondItem="AZ7-aG-pPz" secondAttribute="trailing" constant="8" id="X4J-CV-jbD"/>
                                                                     <constraint firstItem="Bn7-FD-jzc" firstAttribute="centerY" secondItem="Ua8-RE-q01" secondAttribute="centerY" id="bXW-E1-a36"/>
-                                                                    <constraint firstItem="Bn7-FD-jzc" firstAttribute="centerY" secondItem="AZ7-aG-pPz" secondAttribute="centerY" id="h9F-6X-89M"/>
                                                                 </constraints>
                                                             </customView>
                                                         </subviews>
@@ -1197,7 +1212,7 @@ CA
                                                             <constraint firstAttribute="centerY" secondItem="rZx-hk-GcJ" secondAttribute="centerY" id="8mY-vj-ThP"/>
                                                             <constraint firstItem="bqF-eB-dpR" firstAttribute="leading" secondItem="xSU-Mk-2F1" secondAttribute="leading" constant="214" id="Epb-X3-vPy"/>
                                                             <constraint firstAttribute="trailing" secondItem="Ua8-RE-q01" secondAttribute="trailing" id="Uos-hm-kn6"/>
-                                                            <constraint firstAttribute="trailing" secondItem="rZx-hk-GcJ" secondAttribute="trailing" constant="85" id="ZjM-uT-4wC"/>
+                                                            <constraint firstItem="Ua8-RE-q01" firstAttribute="trailing" secondItem="rZx-hk-GcJ" secondAttribute="trailing" constant="140" id="ZjM-uT-4wC"/>
                                                             <constraint firstItem="Ua8-RE-q01" firstAttribute="leading" secondItem="rZx-hk-GcJ" secondAttribute="trailing" constant="16" id="eWY-C1-IBp"/>
                                                             <constraint firstItem="Ua8-RE-q01" firstAttribute="top" secondItem="xSU-Mk-2F1" secondAttribute="top" id="esv-qQ-apf"/>
                                                             <constraint firstAttribute="bottom" secondItem="Ua8-RE-q01" secondAttribute="bottom" id="nac-xp-D3Y"/>
@@ -1438,6 +1453,7 @@ CA
         <image name="new_rep" width="120" height="120"/>
         <image name="pin" width="120" height="120"/>
         <image name="repository.png" width="120" height="120"/>
+        <image name="text.badge.checkmark.rtl" catalog="system" width="16" height="14"/>
         <namedColor name="divider">
             <color red="0.89999997615814209" green="0.89999997615814209" blue="0.89999997615814209" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

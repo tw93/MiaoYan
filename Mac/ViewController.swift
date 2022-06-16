@@ -11,7 +11,7 @@ class ViewController: NSViewController,
     NSOutlineViewDelegate,
     NSOutlineViewDataSource,
     WebFrameLoadDelegate,
-    NSMenuItemValidation
+    NSMenuItemValidation, NSUserNotificationCenterDelegate
 {
     // MARK: - Properties
 
@@ -1518,6 +1518,7 @@ class ViewController: NSViewController,
         if UserDefaultsManagement.fullScreen {} else {
             view.window?.toggleFullScreen(nil)
         }
+        toast(message: NSLocalizedString("Press ESC key to exit~", comment: ""))
     }
 
     func disablePresentation() {
@@ -1698,6 +1699,8 @@ class ViewController: NSViewController,
         if fr.isKind(of: NotesTableView.self) {
             saveTextAtClipboard()
         }
+
+        if UserDefaultsManagement.preview {}
     }
 
     @IBAction func copyURL(_ sender: Any) {
@@ -1748,6 +1751,19 @@ class ViewController: NSViewController,
         togglePresentation()
     }
 
+    @IBAction func formartText(_ sender: NSButton) {
+        if UserDefaultsManagement.preview {
+            return
+        }
+        if let note = notesTableView.getSelectedNote() {
+            note.content = NSMutableAttributedString(string: note.content.string.spaced)
+            note.save()
+            reloadView()
+            toast(message: NSLocalizedString("Automatic typesetting succeeded~", comment: "")
+            )
+        }
+    }
+
     public func saveTextAtClipboard() {
         if let note = notesTableView.getSelectedNote() {
             let pasteboard = NSPasteboard.general
@@ -1760,8 +1776,8 @@ class ViewController: NSViewController,
         if let note = notesTableView.getSelectedNote() {
             if let render = renderMarkdownHTML(markdown: note.content.string) {
                 let pasteboard = NSPasteboard.general
-                pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
-                pasteboard.setString(render, forType: NSPasteboard.PasteboardType.string)
+                pasteboard.declareTypes([NSPasteboard.PasteboardType.rtfd], owner: nil)
+                pasteboard.setString(render, forType: NSPasteboard.PasteboardType.rtfd)
             }
         }
     }
