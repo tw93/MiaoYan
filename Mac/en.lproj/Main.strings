@@ -310,3 +310,17 @@
 
 /* Class = "NSTextFieldCell"; title = "Preview FontSize:"; ObjectID = "euf-Xu-FDz"; */
 "euf-Xu-FDz.title" = "Preview FontSize:";
+
+
+/* Class = "NSButton"; ibShadowedToolTip = "Format"; ObjectID = "Adc-zl-sqX"; */
+"Adc-zl-sqX.ibShadowedToolTip" = "Format";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Demonstrate"; ObjectID = "AZ7-aG-pPz"; */
+"AZ7-aG-pPz.ibShadowedToolTip" = "Demonstrate";
+
+/* Class = "NSButton"; ibShadowedToolTip = "Preview"; ObjectID = "Bn7-FD-jzc"; */
+"Bn7-FD-jzc.ibShadowedToolTip" = "Preview";
+
+/* Class = "NSButton"; toolTip = "New Project"; ObjectID = "Yei-Or-qiI"; */
+"Yei-Or-qiI.ibShadowedToolTip" = "New Project";
+

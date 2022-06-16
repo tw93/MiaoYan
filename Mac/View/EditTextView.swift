@@ -244,7 +244,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         vc.togglePreview()
     }
-    
+
     @IBAction func togglePresentation(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
 
