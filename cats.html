@@ -50,9 +50,12 @@
   <link rel="stylesheet" href="./cats.css" />
 
   <body class="gradient w-full">
-    <div class="pt-16 md:px-12 px-4 mx-auto relative">
+    <button
+    class="w-24 absolute top-7 lg:right-12 right-8 text-white py-2 px-4 font-bold rounded-xl shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out lang-switcher i18n-switch-lang xl:right-12 xl:top-12"
+  ></button>
+    <div class="md:pb-0 py-20 md:px-12 px-4 mx-auto relative sm:overflow-y-hidden sm:overflow-x-auto overflow-hidden">
       <div
-        class="w-full px-6 mx-auto flex flex-wrap flex-col md:flex-row items-center xl:pl-12 z-10"
+        class="w-full px-6 mx-auto flex flex-wrap flex-col md:flex-row items-center z-10"
       >
         <div
           class="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left text-white"
@@ -75,8 +78,8 @@
           </img>
       </div>
       </div>
-      <div class="flex flex-wrap -m-4 text-center lg:px-10 px-6 xl:mt-36 md:mt-12   mt-2 justify-end">
-        <div class="md:p-8 p-4 xl:w-1/5 md:w-1/4 sm:w-1/2 w-full md:pt-12">
+      <div class="flex flex-wrap -m-4 text-center lg:px-10 px-6 md:mt-36 sm:mt-12   mt-2 justify-end">
+        <div class="md:p-8 p-4 xl:w-1/5 md:w-1/4 sm:w-1/2 w-full">
           <div class="all-wrap">
             <div class="all">
               <div class="yarn"></div>
@@ -236,6 +239,7 @@
   </body>
   <script>
     const ua = window.navigator.userAgent.toLowerCase();
+    const $langSwitch = document.querySelector('.lang-switcher');
     const langStorage = localStorage.getItem('miaoyanLang');
     const $html = document.querySelector('html');
     document.addEventListener('DOMContentLoaded', () => {
@@ -257,6 +261,11 @@
             .setAttribute('content', '轻灵的 Markdown 笔记本伴你写出妙言~');
         }
       };
+      $langSwitch.onclick = () => {
+          const $html = document.querySelector('html');
+          const lang = $html.getAttribute('lang');
+          setLang(lang == 'ch' ? 'en' : 'ch');
+        };
       if (['en', 'ch'].indexOf(langStorage) > -1) {
         setLang(langStorage);
       } else {
