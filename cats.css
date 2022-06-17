@@ -23,7 +23,7 @@
 
 @media (max-width: 780px) {
   .all{
-    top: 3rem;
+    top: 1rem;
     left: calc(50% - 5.2rem);
   }
 
