@@ -11,7 +11,7 @@
 
 ## Features
 
-- 🪂 **Fantastic**: Local use, security, syntax highlighting, dark mode, source file saving, international.
+- 🪂 **Fantastic**: Local use, security, syntax highlighting, dark mode, source file saving, international, Presentation mode, document auto typesetting.
 - 🐶 **Beauty**: Minimalist design style, folder + file list + editor 3 column mode.
 - 🏌🏽‍♂️ **Fast**: Using Swift5 native development, the performance experience is much better compared to the Web.
 - 🩴 **Simple**: Very light, pure editor input experience, many shortcut keys to help you fast.
@@ -34,6 +34,7 @@
 - `command + 1`: Collapse expand folder list
 - `command + 2`: Expand the list of documents
 - `command + 3`: Switching between edit and preview states
+- `command + 4`: Switching between edit and presentation states
 
 #### File Operations
 
@@ -42,6 +43,7 @@
 - `command + i`: Displaying document in Finder
 - `command + shift + p`: Pin document
 - `command + delete`: Delete document
+- `command + shift + l`：Auto typesetting
 
 🏂 There are also many other shortcuts waiting for you to find if you like to toss and turn~
 
@@ -59,6 +61,7 @@
 - <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: MiaoYan has part of the framework code from this.
 - <a href="https://github.com/shpakovski/MASShortcut" target="_blank">hpakovski/MASShortcut</a>: Shortcut Key Plugin.
 - <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>: A beautiful open source Chinese font, MiaoYan has made it the default font.
+- <a href="https://github.com/X140Yu/pangu.Swift" target="_blank">X140Yu/pangu.Swift</a>：How can you do without spaces between Chinese and English?
 
 # License
 

@@ -1,5 +1,4 @@
 /* font face configs */
-
 :root {
   --text-font: 'LXGW WenKai Lite', sans-serif;
 }
@@ -360,6 +359,7 @@ blockquote {
   margin: 0;
   padding: 0 15px;
   color: #777;
+  border-left: 4px solid #f1f3f4;
   border-left: 4px solid var(--border);
   overflow: hidden;
   box-sizing: border-box;

@@ -39,7 +39,7 @@ private extension NSViewController {
         
         view.addSubview(toast)
         
-        let vConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=40)-[toast]-40-|", options: .alignAllBottom, metrics: nil, views: ["toast": toast])
+        let vConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=32)-[toast]-32-|", options: .alignAllBottom, metrics: nil, views: ["toast": toast])
         NSLayoutConstraint.activate(vConstraints)
         toast.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -40).isActive = true
         
@@ -107,7 +107,7 @@ private extension NSViewController {
     
     // Generate the message component of the toast
     func createTextLabel(message: String) -> NSTextField {
-        let tf = NSTextField(frame: NSMakeRect(0, 0, 200, 17))
+        let tf = NSTextField(frame: NSMakeRect(0, 0, 220, 18))
         tf.stringValue = message
         let stf = styleTextLabel(tf: tf)
         
@@ -121,7 +121,7 @@ private extension NSViewController {
     // Style the toast
     func styleToast() -> CALayer {
         let toastLayer = CALayer()
-        toastLayer.backgroundColor = NSColor.black.withAlphaComponent(0.8).cgColor
+        toastLayer.backgroundColor = NSColor.black.withAlphaComponent(1).cgColor
         toastLayer.cornerRadius = 8
         toastLayer.opacity = 0.0
         
@@ -153,7 +153,7 @@ private extension NSViewController {
         animation.keyPath = "opacity"
         animation.values = [0, 0.8, 0.8, 0]
         animation.keyTimes = [0, 0.01, 0.8, 1]
-        animation.duration = 2.4
+        animation.duration = 3
         animation.isAdditive = true
         
         CATransaction.begin()

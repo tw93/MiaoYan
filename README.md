@@ -11,7 +11,7 @@
 
 ## 特点
 
-- 🪂 **妙**：纯本地使用、安全、语法高亮、黑暗模式、源文件保存、国际化
+- 🪂 **妙**：纯本地使用、安全、语法高亮、黑暗模式、源文件保存、国际化、演示模式、文档自动排版
 - 🐶 **美**：极简的设计风格，文件夹 + 文件列表 + 编辑器方式 3 列模式
 - 🏌🏽‍♂️ **快**：使用 Swift5 原生开发，相比 Web 套壳方式性能体验好
 - 🩴 **简**：很轻巧，纯编辑器输入体验，众多快捷键助你快人一步
@@ -34,6 +34,7 @@
 - `command + 1`：收起展开目录
 - `command + 2`：收起展开文档列表
 - `command + 3`：切换编辑和预览
+- `command + 4`：切换到演示模式
 
 #### 文件操作
 
@@ -42,6 +43,7 @@
 - `command + i`：在文件中显示文档
 - `command + shift + p`：pin 置顶文档
 - `command + delete`：删除文档
+- `command + shift + l`：自动排版
 
 🏂 此外还有很多快捷键等着爱折腾的你去寻找~
 
@@ -59,6 +61,7 @@
 - <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>：妙言部分初始化代码来源于此
 - <a href="https://github.com/shpakovski/MASShortcut" target="_blank">hpakovski/MASShortcut</a>：快捷键插件
 - <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>：一款漂亮的开源中文字体，妙言将其作为默认字体
+- <a href="https://github.com/X140Yu/pangu.Swift" target="_blank">X140Yu/pangu.Swift</a>：中文和英文之间没有空格可怎么行？
 
 # 协议
 
