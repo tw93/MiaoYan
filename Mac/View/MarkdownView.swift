@@ -59,7 +59,7 @@ open class MarkdownView: WKWebView {
 
     public static func getPreviewStyle() -> String {
         if UserDefaultsManagement.presentation {
-            return "html {font-size: 24px} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif;} #write { max-width: 1200px;}"
+            return "html {font-size: \(UserDefaultsManagement.presentationFontSize)px} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif;} #write { max-width: 1200px;}"
         } else {
             return "html {font-size: \(UserDefaultsManagement.previewFontSize)px} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif; }"
         }
