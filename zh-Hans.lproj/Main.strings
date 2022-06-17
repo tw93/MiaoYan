@@ -452,6 +452,10 @@
 /* Class = "NSMenuItem"; title = "Delete"; ObjectID = "pa3-QI-u2k"; */
 "pa3-QI-u2k.title" = "删除";
 
+
+/* Class = "NSMenuItem"; title = "Format"; ObjectID = "ieJ-a6-SUU"; */
+"ieJ-a6-SUU.title" = "文档排版";
+
 /* Class = "NSMenuItem"; title = "Toggle preview"; ObjectID = "PdU-Em-Ugm"; */
 "PdU-Em-Ugm.title" = "切换预览";
 

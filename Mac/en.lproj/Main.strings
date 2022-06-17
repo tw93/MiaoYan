@@ -119,6 +119,9 @@
 /* Class = "NSTextFieldCell"; title = "Version 0.2.0"; ObjectID = "PM6-HD-5pk"; */
 "PM6-HD-5pk.title" = "Version 0.2.0";
 
+/* Class = "NSMenuItem"; title = "Format"; ObjectID = "ieJ-a6-SUU"; */
+"ieJ-a6-SUU.title" = "Format";
+
 /* Class = "NSMenuItem"; title = "Toggle preview"; ObjectID = "PdU-Em-Ugm"; */
 "PdU-Em-Ugm.title" = "Toggle preview";
 

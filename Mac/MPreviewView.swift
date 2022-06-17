@@ -51,11 +51,23 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
                 pasteboard.setString(string, forType: NSPasteboard.PasteboardType.string)
             }
-
             return false
         }
 
         return super.performKeyEquivalent(with: event)
+    }
+
+    override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {
+        for menuItem in menu.items {
+            if menuItem.identifier?.rawValue == "WKMenuItemIdentifierSpeechMenu" ||
+                menuItem.identifier?.rawValue == "WKMenuItemIdentifierTranslate" ||
+                menuItem.identifier?.rawValue == "WKMenuItemIdentifierSearchWeb" ||
+                menuItem.identifier?.rawValue == "WKMenuItemIdentifierShareMenu" ||
+                menuItem.identifier?.rawValue == "WKMenuItemIdentifierLookUp"
+            {
+                menuItem.isHidden = true
+            }
+        }
     }
 
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -319,7 +331,6 @@ class HandlerSelection: NSObject, WKScriptMessageHandler {
                                didReceive message: WKScriptMessage)
     {
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
-
         HandlerSelection.selectionString = message
     }
 }

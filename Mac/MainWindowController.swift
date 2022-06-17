@@ -7,12 +7,12 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
     override func windowDidLoad() {
         let appDelegate = NSApplication.shared.delegate as! AppDelegate
         appDelegate.mainWindowController = self
-        
-        self.window?.isMovableByWindowBackground = true
-        self.window?.hidesOnDeactivate = false
-        self.window?.titleVisibility = .hidden
-        self.window?.titlebarAppearsTransparent = true
-        self.windowFrameAutosaveName = "myMainWindow"
+
+        window?.isMovableByWindowBackground = true
+        window?.hidesOnDeactivate = false
+        window?.titleVisibility = .hidden
+        window?.titlebarAppearsTransparent = true
+        windowFrameAutosaveName = "myMainWindow"
     }
 
     func windowDidResize(_ notification: Notification) {
@@ -31,7 +31,9 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
         if vc.storageOutlineView.isFirstLaunch || focusSearch {
             vc.search.window?.makeFirstResponder(vc.search)
         } else {
-            vc.focusEditArea()
+            if !UserDefaultsManagement.preview {
+                vc.focusEditArea()
+            }
         }
 
         vc.editArea.updateTextContainerInset()

@@ -147,6 +147,22 @@ class EditTextView: NSTextView, NSTextFinderClient {
         return nil
     }
 
+    override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {
+        for menuItem in menu.items {
+            if menuItem.identifier?.rawValue == "_searchWithGoogleFromMenu:" ||
+                menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierSpellingAndGrammar" ||
+                menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierSubstitutions" ||
+                menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierTransformations" ||
+                menuItem.identifier?.rawValue == "_NS:290" ||
+                menuItem.identifier?.rawValue == "_NS:291" ||
+                menuItem.identifier?.rawValue == "_NS:328" ||
+                menuItem.identifier?.rawValue == "_NS:353"
+            {
+                menuItem.isHidden = true
+            }
+        }
+    }
+
     override var writablePasteboardTypes: [NSPasteboard.PasteboardType] {
         [NSPasteboard.PasteboardType.rtfd, NSPasteboard.PasteboardType.string]
     }
@@ -243,6 +259,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
         guard let vc = ViewController.shared() else { return }
 
         vc.togglePreview()
+    }
+
+    @IBAction func formatText(_ sender: Any) {
+        guard let vc = ViewController.shared() else { return }
+
+        vc.formatText()
     }
 
     @IBAction func togglePresentation(_ sender: Any) {

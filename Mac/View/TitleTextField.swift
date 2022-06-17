@@ -18,7 +18,7 @@ class TitleTextField: NSTextField {
 
         return super.performKeyEquivalent(with: event)
     }
-    
+
     override func becomeFirstResponder() -> Bool {
         if let note = EditTextView.note {
             stringValue = note.getShortTitle()
@@ -29,7 +29,9 @@ class TitleTextField: NSTextField {
     override func textDidEndEditing(_ notification: Notification) {
         self.saveTitle()
         let vc = window?.contentViewController as! ViewController
-        vc.focusEditArea()
+        if !UserDefaultsManagement.preview {
+            vc.focusEditArea()
+        }
     }
 
     public func saveTitle() {

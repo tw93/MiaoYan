@@ -140,3 +140,5 @@
 "Automatic typesetting succeeded~" = "自动化排版完成~";
 
 "Press ESC key to exit~" = "按 ESC 键退出演示~";
+
+"Format is only possible after exiting preview mode~" = "文档排版需要退出预览模式才可使用~";
