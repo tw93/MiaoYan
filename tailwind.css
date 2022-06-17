@@ -32,6 +32,14 @@ body {
 [lang='en'] .i18n-title:before {
   content: 'MiaoYan';
 }
+
+.i18n-cats-decs:before {
+  content: '喜欢妙言？可以给「汤圆、可乐」买罐头吃！';
+}
+[lang='en'] .i18n-cats-decs:before {
+  content: 'Like MiaoYan? Buy cans for「TangYuan、Coke」.';
+}
+
 .i18n-description:before {
   content: '轻灵的 Markdown 笔记本伴你写出妙言~';
 }
@@ -59,10 +67,10 @@ body {
   content: 'Fantastic';
 }
 .i18n-miao-decs:before {
-  content: '1. 纯本地使用，无需联网即可使用，源文件保存\a 2. 安全，完全开源 Github，不会上传用户信息\a 3. 支持语法高亮、黑暗模式、还支持国际化';
+  content: '1. 纯本地使用，无需联网即可使用，源文件保存\a 2. 安全，完全开源 Github，不会上传用户信息\a 3. 支持语法高亮、黑暗模式、国际化、演示模式、文档自动排版';
 }
 [lang='en'] .i18n-miao-decs:before {
-  content: '1. Purely local, no internet access required, source files saved.\a 2. Secure, fully open source Github, no user information uploaded.\a 3. Supports syntax highlighting, dark mode, also supports internationalization';
+  content: '1. Purely local, no internet access required, source files saved.\a 2. Secure, fully open source Github, no user information uploaded.\a 3. Supports syntax highlighting, dark mode, internationalization, presentation mode, document auto typesetting.';
 }
 
 @media (min-width: 1024px) {
