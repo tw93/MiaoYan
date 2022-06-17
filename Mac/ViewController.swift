@@ -63,21 +63,23 @@ class ViewController: NSViewController,
         }
     }
 
+    @IBOutlet var formatButton: NSButton!
+
     @IBOutlet var previewButton: NSButton! {
         didSet {
             previewButton.state = UserDefaultsManagement.preview ? .on : .off
         }
     }
 
-    @IBOutlet var titleBarView: TitleBarView!
-    @IBOutlet var sidebarScrollView: NSScrollView!
-    @IBOutlet var notesScrollView: NSScrollView!
-
     @IBOutlet var presentationButton: NSButton! {
         didSet {
             presentationButton.state = UserDefaultsManagement.presentation ? .on : .off
         }
     }
+
+    @IBOutlet var titleBarView: TitleBarView!
+    @IBOutlet var sidebarScrollView: NSScrollView!
+    @IBOutlet var notesScrollView: NSScrollView!
 
     // MARK: - Overrides
 
@@ -1476,7 +1478,6 @@ class ViewController: NSViewController,
 
         guard let vc = ViewController.shared() else { return }
         vc.editArea.window?.makeFirstResponder(vc.notesTableView)
-
         view.window!.title = NSLocalizedString("妙言「预览」", comment: "")
         UserDefaultsManagement.preview = true
         refillEditArea()
@@ -1495,6 +1496,7 @@ class ViewController: NSViewController,
         editor.subviews.removeAll(where: { $0.isKind(of: MPreviewView.self) })
 
         refillEditArea()
+        focusEditArea()
         vc.titleLabel.isEditable = true
     }
 
@@ -1518,16 +1520,21 @@ class ViewController: NSViewController,
         if UserDefaultsManagement.fullScreen {} else {
             view.window?.toggleFullScreen(nil)
         }
+        formatButton.isHidden = true
+        previewButton.isHidden = true
         toast(message: NSLocalizedString("Press ESC key to exit~", comment: ""))
     }
 
     func disablePresentation() {
+        previewButton.state = .off
         UserDefaultsManagement.presentation = false
         if UserDefaultsManagement.fullScreen {
             view.window?.toggleFullScreen(nil)
         }
         disablePreview()
         setButtonHidden(hidden: false)
+        formatButton.isHidden = false
+        previewButton.isHidden = false
         showSidebar("")
     }
 
@@ -1537,6 +1544,21 @@ class ViewController: NSViewController,
             disablePresentation()
         } else {
             enablePresentation()
+        }
+    }
+
+    func formatText() {
+        if UserDefaultsManagement.preview {
+            toast(message: NSLocalizedString("Format is only possible after exiting preview mode~", comment: "")
+            )
+            return
+        }
+        if let note = notesTableView.getSelectedNote() {
+            note.content = NSMutableAttributedString(string: note.content.string.spaced)
+            note.save()
+            reloadView()
+            toast(message: NSLocalizedString("Automatic typesetting succeeded~", comment: "")
+            )
         }
     }
 
@@ -1699,8 +1721,6 @@ class ViewController: NSViewController,
         if fr.isKind(of: NotesTableView.self) {
             saveTextAtClipboard()
         }
-
-        if UserDefaultsManagement.preview {}
     }
 
     @IBAction func copyURL(_ sender: Any) {
@@ -1751,17 +1771,8 @@ class ViewController: NSViewController,
         togglePresentation()
     }
 
-    @IBAction func formartText(_ sender: NSButton) {
-        if UserDefaultsManagement.preview {
-            return
-        }
-        if let note = notesTableView.getSelectedNote() {
-            note.content = NSMutableAttributedString(string: note.content.string.spaced)
-            note.save()
-            reloadView()
-            toast(message: NSLocalizedString("Automatic typesetting succeeded~", comment: "")
-            )
-        }
+    @IBAction func formatText(_ sender: NSButton) {
+        formatText()
     }
 
     public func saveTextAtClipboard() {

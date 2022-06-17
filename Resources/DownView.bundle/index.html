@@ -3,34 +3,36 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1.0" />
-    <link rel="stylesheet" href="webfont/lxgwwenkailite-bold.css"/>
-    <link rel="stylesheet" href="webfont/lxgwwenkailite-regular.css"/>
+    <link rel="stylesheet" href="webfont/lxgwwenkailite-bold.css" />
+    <link rel="stylesheet" href="webfont/lxgwwenkailite-regular.css" />
     <link charset="utf-8" href="css/markdown-preview.css" rel="stylesheet" />
-    <script src="js/highlight.min.js" charset="utf-8" type="text/javascript"></script>
-    <script src="js/mermaid.min.js" charset="utf-8" type="text/javascript"></script>
+    <script
+      src="js/highlight.min.js"
+      charset="utf-8"
+      type="text/javascript"
+    ></script>
+    <script
+      src="js/mermaid.min.js"
+      charset="utf-8"
+      type="text/javascript"
+    ></script>
     <title></title>
     <style>
-        DOWN_CSS
+      DOWN_CSS
     </style>
   </head>
 
   <body>
-    <div class="markdown-body" id="write" oncontextmenu="contextMenu(event)">
-      DOWN_HTML
-    </div>
+    <div class="markdown-body" id="write">DOWN_HTML</div>
 
     <script>
-        hljs.configure({ cssSelector: 'pre,pre code' });
-        hljs.highlightAll();
+      hljs.configure({ cssSelector: 'pre,pre code' });
+      hljs.highlightAll();
     </script>
 
     <script>
-      function contextMenu(evt) {
-        evt.preventDefault && evt.preventDefault();
-      }
-
       function getSelectionAndSendMessage() {
-        var txt = document.getSelection().toString();
+        var txt = window.getSelection();
         window.webkit.messageHandlers.newSelectionDetected.postMessage(txt);
       }
       document.onmouseup = getSelectionAndSendMessage;
@@ -71,58 +73,6 @@
     </script>
 
     <script>
-      var preList = document.getElementsByTagName('code'),
-        length = preList.length,
-        i = 0;
-
-      for (i; i < length; i++) {
-        if (preList[i].classList.contains('language-mermaid')) {
-          continue;
-        }
-
-        preList[i].addEventListener('mouseenter', function (event) {
-          window.webkit.messageHandlers.mouse.postMessage('enter');
-        });
-
-        preList[i].addEventListener('mouseleave', function (event) {
-          window.webkit.messageHandlers.mouse.postMessage('leave');
-        });
-
-        preList[i].addEventListener('click', function (event) {
-          let target = event.target;
-          while (target && target.nodeName !== 'CODE') {
-            target = target.parentElement;
-          }
-
-          window.webkit.messageHandlers.clipboard.postMessage(target.innerText);
-
-          target.style.background = '#9c9c9c';
-          setTimeout(function () {
-            if (null == document.getElementById('darkModeStyles')) {
-              target.style.background = '#f5f5f5';
-            } else {
-              target.style.background = '#454545';
-            }
-          }, 150);
-        });
-      }
-
-      var aList = document.getElementsByTagName('a'),
-        aLength = aList.length,
-        j = 0;
-
-      for (j; j < aLength; j++) {
-        aList[j].addEventListener('mouseenter', function (event) {
-          window.webkit.messageHandlers.mouse.postMessage('enter');
-        });
-
-        aList[j].addEventListener('mouseleave', function (event) {
-          window.webkit.messageHandlers.mouse.postMessage('leave');
-        });
-      }
-    </script>
-
-    <script>
       var preList = document.getElementsByTagName('input'),
         length = preList.length,
         i = 0;
@@ -159,7 +109,7 @@
       mermaid.initialize(config);
       window.mermaid.init(
         undefined,
-        document.querySelectorAll('.language-mermaid'),
+        document.querySelectorAll('.language-mermaid')
       );
     </script>
   </body>
