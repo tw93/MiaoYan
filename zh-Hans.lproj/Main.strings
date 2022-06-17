@@ -679,8 +679,11 @@
 /* Class = "NSTextField"; title = "Editor FontSize:"; ObjectID = "Mhq-eB-UoB"; */
 "Mhq-eB-UoB.title" = "编辑器字号：";
 
-/* Class = "NSTextField"; title = "Preview FontSize:"; ObjectID = "euf-Xu-FDz"; */
+/* Class = "NSTextField"; title = "Presentation FontSize:"; ObjectID = "euf-Xu-FDz"; */
 "euf-Xu-FDz.title" = "预览字号：";
+
+/* Class = "NSTextField"; title = "Preview FontSize:"; ObjectID = "AOs-Fb-J09"; */
+"AOs-Fb-J09.title" = "演示字号：";
 
 /* Class = "NSMenuItem"; title = "System"; ObjectID = "fQA-b2-fKr"; */
 "fQA-b2-fKr.title" = "自动";

@@ -69,6 +69,7 @@ public class UserDefaultsManagement {
         static let Preview = "preview"
         static let Presentation = "presentation"
         static let PreviewFontSize = "previewFontSize"
+        static let PresentationFontSize = "presentationFontSize"
         static let ProjectsKey = "projects"
         static let RestoreCursorPosition = "restoreCursorPosition"
         static let SaveInKeychain = "saveInKeychain"
@@ -146,6 +147,18 @@ public class UserDefaultsManagement {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.PreviewFontSize)
+        }
+    }
+    
+    static var presentationFontSize: Int {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.PresentationFontSize) as? Int {
+                return result
+            }
+            return 24
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.PresentationFontSize)
         }
     }
 
