@@ -23,6 +23,12 @@
                                                 <action selector="showAboutWindow:" target="Voe-Tx-rLC" id="PR0-oC-n1f"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Feeding 2 Cats" id="zeb-Y9-O9j">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="openCats:" target="Voe-Tx-rLC" id="mf0-qq-fy0"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Check for Updates" id="BWp-m7-ySj">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
