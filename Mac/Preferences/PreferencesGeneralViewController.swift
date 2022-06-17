@@ -18,6 +18,7 @@ class PreferencesGeneralViewController: NSViewController {
     @IBOutlet var appearanceLabel: NSTextField!
     @IBOutlet var editorFontSize: NSPopUpButton!
     @IBOutlet var previewFontSize: NSPopUpButton!
+    @IBOutlet var presentationFontSize: NSPopUpButton!
 
     // MARK: global variables
 
@@ -94,6 +95,18 @@ class PreferencesGeneralViewController: NSViewController {
         vc.enablePreview()
     }
 
+    @IBAction func presentationFontSizeClick(_ sender: NSPopUpButton) {
+        guard let vc = ViewController.shared() else { return }
+        guard let item = sender.selectedItem else {
+            return
+        }
+
+        UserDefaultsManagement.presentationFontSize = Int(item.title) ?? 24
+
+        vc.disablePresentation()
+        vc.enablePresentation()
+    }
+    
     @IBAction func appearanceClick(_ sender: NSPopUpButton) {
         if let type = AppearanceType(rawValue: sender.indexOfSelectedItem) {
             if UserDefaultsManagement.appearanceType == type {
@@ -153,6 +166,7 @@ class PreferencesGeneralViewController: NSViewController {
 
         editorFontSize.selectItem(withTitle: String(UserDefaultsManagement.fontSize))
         previewFontSize.selectItem(withTitle: String(UserDefaultsManagement.previewFontSize))
+        presentationFontSize.selectItem(withTitle: String(UserDefaultsManagement.presentationFontSize))
         editorFontName.selectItem(withTitle: String(UserDefaultsManagement.fontName))
         windowFontName.selectItem(withTitle: String(UserDefaultsManagement.windowFontName))
         previewFontName.selectItem(withTitle: String(UserDefaultsManagement.previewFontName))
