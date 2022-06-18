@@ -3,6 +3,30 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>0.5.0</title>
+      <description><![CDATA[
+            <h3>更新记录：</h3>
+            <ol>
+             <li>🎉 支持演示模式，去试试 command + 4 </li>
+             <li>🎉 支持文档自动排版，去试试 command + shift + l </li>
+             <li>🐱 给汤圆可乐增加了一个喂罐头的 <a href="https://miaoyan.vercel.app/cats.html">页面</a></li>
+             <li>😂 支持预览模式下，全选右键复制富文本到其他地方 </li>
+             <li>🛠 修复设置中选中当前项也重置、完成对 Mojave 系统的兼容 </li>
+            </ol>
+           <h3>Update Notes：</h3>
+           <ol>
+             <li>🎉 Support presentation mode, go try command + 4 </li>
+             <li>🎉 Support document auto typesetting, go try command + shift + l </li>
+             <li>🐱 Added a <a href="https://miaoyan.vercel.app/cats.html">page</a>  for feeding cans to TangYuan and Cola.</li>
+             <li>😂 Support preview mode, full right click copy rich text to other places.</li>
+             <li>🛠 Fixed reset of selected current item in settings, completed compatibility with Mojave system.</li>
+            </ol>
+            ]]>      </description>
+      <pubDate>周六, 18 6月 2022 09:48:44 +0800</pubDate>
+      <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.5.0.zip" sparkle:shortVersionString="0.5.0" sparkle:version="0.5.0" sparkle:edSignature="nIBcy1GhlngSE7g/+AhNiV+JagiILLqfJjzYkzJBK3h4cBVVjDW25OnY90fxMHQZ0YICEOTGW6vCb19grSU+Aw==" length="27946271" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>0.4.2</title>
       <description><![CDATA[
             <h3>更新记录：</h3>
