@@ -43,7 +43,7 @@
 - `command + i`: Displaying document in Finder
 - `command + shift + p`: Pin document
 - `command + delete`: Delete document
-- `command + shift + l`：Auto typesetting
+- `command + shift + L`：Auto typesetting
 
 🏂 There are also many other shortcuts waiting for you to find if you like to toss and turn~
 
