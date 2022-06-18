@@ -8,7 +8,6 @@ MiaoYan.xcodeproj/xcuserdata/*
 .idea/
 Releases
 .DS_Store
-Resources/.DS_Store
 .vscode/
 node_modules
 fonts/
