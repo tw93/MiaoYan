@@ -16,12 +16,27 @@ body {
   background: linear-gradient(60deg, #36563c 0%, #36563c 100%);
 }
 
-.i18n-switch-lang {
+.i18n-switch-lang,
+.i18n-home-href {
   z-index: 100;
 }
 
+.i18n-miao-href:before {
+  content: '喂猫';
+}
+[lang='en'] .i18n-miao-href:before {
+  content: 'Cats';
+}
+
+.i18n-home-href:before {
+  content: '首页';
+}
+[lang='en'] .i18n-home-href:before {
+  content: 'Home';
+}
+
 .i18n-switch-lang:before {
-  content: 'English';
+  content: 'EN';
 }
 [lang='en'] .i18n-switch-lang:before {
   content: '中文';
