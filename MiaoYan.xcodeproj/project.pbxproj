@@ -529,6 +529,7 @@
 			children = (
 				D797004B1F3DD10700BAD94D /* EditTextView.swift */,
 				D7A9FD301FCB4873008ED23C /* MarkdownView.swift */,
+				272ABB5E285F305500CCD651 /* SidebarProjectView.swift */,
 				D735E5BC1F2EF66000173215 /* NoteCellView.swift */,
 				D735E5BE1F2F001500173215 /* NoteRowView.swift */,
 				D7A415131F2FBDA00099B82C /* NotesTableView.swift */,
@@ -557,7 +558,6 @@
 			children = (
 				D7DD5A871F88D4EA00CE947E /* FileWatcher.swift */,
 				D7DD5A891F88D50000CE947E /* FileWatcherEvent.swift */,
-				272ABB5E285F305500CCD651 /* SidebarProjectView.swift */,
 				D7170C1C20F8565B001DDB36 /* FileSystemEventManager.swift */,
 				D777D7802009115C00D86B33 /* ImagesProcessor.swift */,
 				D7F95F391FF2759300E2A447 /* NotesTextProcessor.swift */,
