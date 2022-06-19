@@ -109,7 +109,7 @@ public class Note: NSObject {
         }
 
         if modifiedAt != modifiedLocalAt {
-            if container != .encryptedTextPack, let attributedString = getContent() {
+            if let attributedString = getContent() {
                 content = NSMutableAttributedString(attributedString: attributedString)
             }
             loadModifiedLocalAt()
@@ -120,7 +120,7 @@ public class Note: NSObject {
     }
 
     public func forceReload() {
-        if container != .encryptedTextPack, let attributedString = getContent() {
+        if  let attributedString = getContent() {
             content = NSMutableAttributedString(attributedString: attributedString)
         }
     }
@@ -362,7 +362,7 @@ public class Note: NSObject {
     }
 
     func getContent() -> NSAttributedString? {
-        guard container != .encryptedTextPack, let url = getContentFileURL() else { return nil }
+        guard let url = getContentFileURL() else { return nil }
 
         do {
             let options = getDocOptions()

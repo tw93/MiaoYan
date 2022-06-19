@@ -585,7 +585,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     func saveTextStorageContent(to note: Note) {
-        guard note.container != .encryptedTextPack, let storage = textStorage else { return }
+        guard let storage = textStorage else { return }
 
         let string = storage.attributedSubstring(from: NSRange(0..<storage.length))
 
@@ -735,8 +735,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     public func unLoadImages(note: Note) {
-        guard note.container != .encryptedTextPack else { return }
-
         note.save(attributed: attributedString())
     }
 
@@ -987,7 +985,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
                 self.textStorage?.addAttribute(titleKey, value: field.stringValue, range: range)
 
-                if let note = vc.notesTableView.getSelectedNote(), note.container != .encryptedTextPack {
+                if let note = vc.notesTableView.getSelectedNote() {
                     note.save(attributed: self.attributedString())
                 }
             }

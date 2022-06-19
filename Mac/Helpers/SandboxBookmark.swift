@@ -15,7 +15,7 @@ class SandboxBookmark {
     
     func bookmarkPath() -> String {
         var url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        url = url.appendingPathComponent("Bookmarks.dict")
+        url = url.appendingPathComponent(".Bookmarks.dict")
         
         return url.path
     }

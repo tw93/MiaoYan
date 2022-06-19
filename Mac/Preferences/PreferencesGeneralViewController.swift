@@ -34,7 +34,7 @@ class PreferencesGeneralViewController: NSViewController {
             return
         }
 
-        UserDefaultsManagement.fontSize = Int(item.title) ?? 15
+        UserDefaultsManagement.fontSize = Int(item.title) ?? UserDefaultsManagement.DefaultFontSize
 
         NotesTextProcessor.hl = nil
         vc.refillEditArea()
@@ -89,7 +89,7 @@ class PreferencesGeneralViewController: NSViewController {
             return
         }
 
-        UserDefaultsManagement.previewFontSize = Int(item.title) ?? 15
+        UserDefaultsManagement.previewFontSize = Int(item.title) ?? UserDefaultsManagement.DefaultPreviewFontSize
 
         vc.disablePreview()
         vc.enablePreview()
@@ -101,7 +101,7 @@ class PreferencesGeneralViewController: NSViewController {
             return
         }
 
-        UserDefaultsManagement.presentationFontSize = Int(item.title) ?? 24
+        UserDefaultsManagement.presentationFontSize = Int(item.title) ?? UserDefaultsManagement.DefaultPresentationFontSize
 
         vc.disablePresentation()
         vc.enablePresentation()

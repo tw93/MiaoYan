@@ -318,7 +318,7 @@
 "euf-Xu-FDz.title" = "Preview FontSize:";
 
 /* Class = "NSTextField"; title = "Presentation FontSize:"; ObjectID = "AOs-Fb-J09"; */
-"AOs-Fb-J09.title" = "演示字号：";
+"AOs-Fb-J09.title" = "Presentation FontSize:";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Format"; ObjectID = "Adc-zl-sqX"; */
 "Adc-zl-sqX.ibShadowedToolTip" = "Format";

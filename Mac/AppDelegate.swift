@@ -63,9 +63,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         guard let mainWC = storyboard.instantiateController(withIdentifier: "MainWindowController") as? MainWindowController else {
             fatalError("Error getting main window controller")
         }
-
-        mainWindowController = mainWC
+        
+//
+//        if UserDefaultsManagement.isFirstLaunch {
+//            let size = NSSize(width: 1200, height: 640)
+//            mainWC.window?.minSize = size
+//            mainWC.window?.center()
+//            UserDefaultsManagement.isFirstLaunch = false
+//        }
+      
         mainWC.window?.makeKeyAndOrderFront(nil)
+        mainWindowController = mainWC
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
@@ -166,7 +174,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @IBAction func openMiaoYan(_ sender: Any) {
         NSWorkspace.shared.open(URL(string: "https://miaoyan.vercel.app")!)
     }
-    
+
     @IBAction func openCats(_ sender: Any) {
         NSWorkspace.shared.open(URL(string: "https://miaoyan.vercel.app/cats.html")!)
     }

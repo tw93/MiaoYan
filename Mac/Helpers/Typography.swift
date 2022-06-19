@@ -3,7 +3,6 @@
 //  MiaoYan
 //
 //  Created by Tw93 on 2022/6/16.
-//  Copyright © 2022 Oleksandr Glushchenko. All rights reserved.
 //
 
 import Foundation

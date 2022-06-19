@@ -531,7 +531,7 @@ CA
                                             <menuItem title="JetBrains Mono" id="gHy-s3-JDh">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
-                                            <menuItem title="Menlo" id="Ob7-cD-LzC">
+                                            <menuItem title="Georgia" id="IUe-Hi-7b6">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
                                             <menuItem title="Avenir Next" id="a6S-Gr-Ch8">
@@ -560,13 +560,19 @@ CA
                                             <menuItem title="LXGW WenKai Lite" state="on" id="Lx0-fl-9t0">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
-                                            <menuItem title="Yuanti SC" id="Pfn-ye-9Vy">
+                                            <menuItem title="Heti Hei" id="PV7-CS-tpO">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
-                                            <menuItem title="Avenir Next" id="0yO-nw-meF">
+                                            <menuItem title="Heti Song" id="0yO-nw-meF">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
-                                            <menuItem title="Helvetica Neue" id="lRS-vK-MWg">
+                                            <menuItem title="Georgia" id="uW5-RQ-wqF">
+                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                            </menuItem>
+                                            <menuItem title="Avenir Next" id="j7g-D4-pKi">
+                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                            </menuItem>
+                                            <menuItem title="Helvetica Neue" id="ne1-PN-WcW">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
                                         </items>
@@ -589,7 +595,10 @@ CA
                                             <menuItem title="LXGW WenKai Lite" state="on" id="QwH-At-JGa">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
-                                            <menuItem title="Avenir Next" id="Bwp-Pv-g0O">
+                                            <menuItem title="Georgia" id="Bwp-Pv-g0O">
+                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                            </menuItem>
+                                            <menuItem title="Avenir Next" id="ek3-JP-viq">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
                                             <menuItem title="Helvetica Neue" id="0cu-dn-9sf">
@@ -637,15 +646,15 @@ CA
                             </textField>
                             <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AY8-g1-9tW">
                                 <rect key="frame" x="31" y="103" width="55" height="25"/>
-                                <popUpButtonCell key="cell" type="push" title="12" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="CIa-Sz-unx" id="JPv-4n-4vL">
+                                <popUpButtonCell key="cell" type="push" title="15" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="xoA-rd-vlO" id="JPv-4n-4vL">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="menu"/>
                                     <menu key="menu" id="n5Y-iD-qYl">
                                         <items>
-                                            <menuItem title="12" state="on" id="CIa-Sz-unx"/>
+                                            <menuItem title="12" id="CIa-Sz-unx"/>
                                             <menuItem title="13" id="Q3T-TQ-ewQ"/>
                                             <menuItem title="14" id="MAe-d2-ol1"/>
-                                            <menuItem title="15" id="xoA-rd-vlO"/>
+                                            <menuItem title="15" state="on" id="xoA-rd-vlO"/>
                                             <menuItem title="16" id="c1S-aB-edm"/>
                                             <menuItem title="17" id="lPX-8x-F9a"/>
                                             <menuItem title="18" id="J0P-Qc-LaU"/>
@@ -660,16 +669,16 @@ CA
                             </popUpButton>
                             <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hU4-gw-1Hb">
                                 <rect key="frame" x="157" y="103" width="55" height="25"/>
-                                <popUpButtonCell key="cell" type="push" title="12" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="vYJ-nZ-Rkv" id="bL4-tX-2xd">
+                                <popUpButtonCell key="cell" type="push" title="16" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="DTe-57-Kqf" id="bL4-tX-2xd">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="menu"/>
                                     <menu key="menu" id="xrE-0h-GOl">
                                         <items>
-                                            <menuItem title="12" state="on" id="vYJ-nZ-Rkv"/>
+                                            <menuItem title="12" id="vYJ-nZ-Rkv"/>
                                             <menuItem title="13" id="2Uz-7H-8jH"/>
                                             <menuItem title="14" id="Wju-FE-YsQ"/>
                                             <menuItem title="15" id="IF0-dQ-WWn"/>
-                                            <menuItem title="16" id="DTe-57-Kqf"/>
+                                            <menuItem title="16" state="on" id="DTe-57-Kqf"/>
                                             <menuItem title="17" id="i29-ed-qEr"/>
                                             <menuItem title="18" id="Z7j-si-A12"/>
                                             <menuItem title="19" id="g4e-PC-JbI"/>
@@ -1034,7 +1043,7 @@ CA
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                     <subviews>
                                                                                         <textField identifier="cellName" autoresizesSubviews="NO" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UvD-jB-7Ok" customClass="NameTextField" customModule="MiaoYan" customModuleProvider="target">
-                                                                                            <rect key="frame" x="4" y="22" width="200" height="17"/>
+                                                                                            <rect key="frame" x="10" y="105" width="182" height="17"/>
                                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" state="on" alignment="left" title="Name" usesSingleLineMode="YES" id="y7T-Rc-etT">
                                                                                                 <font key="font" metaFont="system" size="14"/>
                                                                                                 <color key="textColor" name="mainText"/>
@@ -1045,7 +1054,7 @@ CA
                                                                                             </connections>
                                                                                         </textField>
                                                                                         <textField identifier="cellDate" autoresizesSubviews="NO" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="abw-Lq-K7d">
-                                                                                            <rect key="frame" x="4" y="10" width="42" height="14"/>
+                                                                                            <rect key="frame" x="4" y="7" width="42" height="14"/>
                                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="2/23/11" id="9w3-fa-di3">
                                                                                                 <font key="font" metaFont="smallSystem"/>
                                                                                                 <color key="textColor" red="0.65995385362694303" green="0.1371187799261683" blue="0.15795969262071341" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1056,7 +1065,7 @@ CA
                                                                                             </textFieldCell>
                                                                                         </textField>
                                                                                         <imageView identifier="pin" hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9h5-Ob-Nej">
-                                                                                            <rect key="frame" x="52" y="10" width="12" height="12"/>
+                                                                                            <rect key="frame" x="52" y="7" width="12" height="12"/>
                                                                                             <constraints>
                                                                                                 <constraint firstAttribute="height" constant="12" id="QQS-Ef-avR"/>
                                                                                                 <constraint firstAttribute="width" constant="12" id="hpI-x0-6Kw"/>
@@ -1065,10 +1074,10 @@ CA
                                                                                         </imageView>
                                                                                     </subviews>
                                                                                     <constraints>
-                                                                                        <constraint firstItem="UvD-jB-7Ok" firstAttribute="top" secondItem="8qL-z4-nzh" secondAttribute="top" constant="9" id="AtV-FX-Ffi"/>
+                                                                                        <constraint firstItem="UvD-jB-7Ok" firstAttribute="top" secondItem="8qL-z4-nzh" secondAttribute="top" constant="11" id="AtV-FX-Ffi"/>
                                                                                         <constraint firstItem="9h5-Ob-Nej" firstAttribute="leading" secondItem="abw-Lq-K7d" secondAttribute="trailing" constant="8" id="F5A-5T-FXC"/>
                                                                                         <constraint firstItem="UvD-jB-7Ok" firstAttribute="leading" secondItem="8qL-z4-nzh" secondAttribute="leading" constant="6" id="eyU-qZ-ACw"/>
-                                                                                        <constraint firstItem="abw-Lq-K7d" firstAttribute="top" secondItem="UvD-jB-7Ok" secondAttribute="bottom" constant="-2" id="hKA-pJ-rpa"/>
+                                                                                        <constraint firstAttribute="bottom" secondItem="abw-Lq-K7d" secondAttribute="bottom" constant="7" id="hKA-pJ-rpa"/>
                                                                                         <constraint firstItem="9h5-Ob-Nej" firstAttribute="centerY" secondItem="abw-Lq-K7d" secondAttribute="centerY" constant="1.5" id="jki-SD-fdc"/>
                                                                                         <constraint firstItem="UvD-jB-7Ok" firstAttribute="left" secondItem="abw-Lq-K7d" secondAttribute="left" id="ngR-5z-x5I"/>
                                                                                         <constraint firstAttribute="trailing" secondItem="UvD-jB-7Ok" secondAttribute="trailing" id="vb9-2V-r5G"/>
