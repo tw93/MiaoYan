@@ -5,7 +5,12 @@
     <meta name="viewport" content="initial-scale=1.0" />
     <link rel="stylesheet" href="webfont/lxgwwenkailite-bold.css" />
     <link rel="stylesheet" href="webfont/lxgwwenkailite-regular.css" />
-    <link charset="utf-8" href="css/markdown-preview.css" rel="stylesheet" />
+    <link charset="utf-8" href="css/heti.min.css" rel="stylesheet" />
+    <script
+      src="js/heti-addon.min.js"
+      charset="utf-8"
+      type="text/javascript"
+    ></script>
     <script
       src="js/highlight.min.js"
       charset="utf-8"
@@ -23,8 +28,12 @@
   </head>
 
   <body>
-    <div class="markdown-body" id="write">DOWN_HTML</div>
+    <div class="markdown-body heti" id="write">DOWN_HTML</div>
 
+    <script>
+      const heti = new Heti('.heti');
+      heti.autoSpacing(); // 自动进行中西文混排美化和标点挤压
+    </script>
     <script>
       hljs.configure({ cssSelector: 'pre,pre code' });
       hljs.highlightAll();
@@ -109,7 +118,7 @@
       mermaid.initialize(config);
       window.mermaid.init(
         undefined,
-        document.querySelectorAll('.language-mermaid')
+        document.querySelectorAll('.language-mermaid'),
       );
     </script>
   </body>
