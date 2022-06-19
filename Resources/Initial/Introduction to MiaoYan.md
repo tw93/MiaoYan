@@ -1,5 +1,5 @@
 <p align="center">
-    <a href="https://miaoyan.vercel.app/" target="_blank"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 /></a>
+    <a href="https://miaoyan.app/" target="_blank"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 /></a>
     <h1 align="center">MiaoYan</h1>
     <div align="center">Lightweight Markdown app to help you write great sentences.</div>
     <div align="center"><a href="https://github.com/tw93/MiaoYan">中文</a> | <strong>English</strong></div>
@@ -19,7 +19,7 @@
 ## Download
 
 - Download the latest `MiaoYan.dmg` installation package from <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a> and double-click to install it.
-- If the download speed is very slow in China, you can try <a href="https://miaoyan.vercel.app/Release/MiaoYan.dmg" target="_blank">Vercel</a> to download the latest version.
+- If the download speed is very slow in China, you can try <a href="https://miaoyan.app/Release/MiaoYan.dmg" target="_blank">Vercel</a> to download the latest version.
 
 ## First Use
 
@@ -51,7 +51,7 @@
 
 - I have tried many note-taking applications before, such as WizNote, Ulysses (no preview), Quiver (not updated for years), MWeb (complicated functions), Bear (Markdown images and other rich formats are not supported), for various reasons, I did not find a good Markdown application, so I had the idea of doing MiaoYan.
 - My job is front-end development, but also can develop iOS App, love to toss new things, so develop MiaoYan as a fun leisure.
-- I have two cats, one is called TangYuan, and one is called Coke, if you like MiaoYan, you can give them [feed canned food](https://miaoyan.vercel.app/cats.html).
+- I have two cats, one is called TangYuan, and one is called Coke, if you like MiaoYan, you can give them [feed canned food](https://miaoyan.app/cats.html).
 
 ## Thanks
 
