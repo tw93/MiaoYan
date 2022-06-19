@@ -3,6 +3,28 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>0.5.1</title>
+      <description><![CDATA[
+            <h3>更新记录：</h3>
+            <ol>
+             <li>🎉 支持 ARM64 打包，不过我不是M1电脑，辛苦你帮忙试试 </li>
+             <li>🍭 预览界面改成赫蹏样式增强，新增几个我喜欢的字体，可去设置看看 </li>
+             <li>🐱 第一次使用时候优化默认宽度，默认文件夹，中文下 App 名称改成妙言</li>
+             <li>🩴 将妙言的域名修改成 <a href="https://miaoyan.app/">miaoyan.app</a></li>
+            </ol>
+           <h3>Update Notes：</h3>
+           <ol>
+             <li>🎉 ARM64 packaging is supported, but I am not an M1 computer. Please try it with your help.</li>
+             <li>🍭 Preview style has been changed into heti, and add some new fonts I liked.</li>
+             <li>🐱 Optimize the default width and folder when using it for the first time, and change the app name in Chinese to 妙言.</li>
+             <li>🩴 Change the domain name of miaoyan to <a href="https://miaoyan.app/">miaoyan.app</a>.</li>
+            </ol>
+            ]]>      </description>
+      <pubDate>周日, 19 6月 2022 09:48:44 +0800</pubDate>
+      <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.5.0.zip" sparkle:shortVersionString="0.5.1" sparkle:version="0.5.1" sparkle:edSignature="/PikEGIJ6J2Ij02bEHccTXupqgvMNXGwy/MJPw7AnuAAxOBusNGCkSzOf1zaXg2MitCTowZnuRcbPnvN5BcUCg==" length="27959489" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>0.5.0</title>
       <description><![CDATA[
             <h3>更新记录：</h3>
