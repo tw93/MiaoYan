@@ -170,11 +170,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     @IBAction func openMiaoYan(_ sender: Any) {
-        NSWorkspace.shared.open(URL(string: "https://miaoyan.vercel.app")!)
+        NSWorkspace.shared.open(URL(string: "https://miaoyan.app")!)
     }
 
     @IBAction func openCats(_ sender: Any) {
-        NSWorkspace.shared.open(URL(string: "https://miaoyan.vercel.app/cats.html")!)
+        NSWorkspace.shared.open(URL(string: "https://miaoyan.app/cats.html")!)
     }
 
     @IBAction func openGithub(_ sender: Any) {
