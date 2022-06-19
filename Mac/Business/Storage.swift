@@ -41,8 +41,6 @@ class Storage {
     private var bookmarks = [URL]()
 
     init() {
-        let bookmark = SandboxBookmark.sharedInstance()
-        bookmarks = bookmark.load()
 
         guard let url = UserDefaultsManagement.storageUrl else { return }
 
@@ -251,7 +249,7 @@ class Storage {
         return storage
     }
 
-    public func loadProjects(withTrash: Bool = true, skipRoot: Bool = false) {
+    public func loadProjects(withTrash: Bool = false, skipRoot: Bool = false) {
         if !skipRoot {
             noteList.removeAll()
         }

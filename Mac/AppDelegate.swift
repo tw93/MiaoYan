@@ -150,10 +150,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 guard let url = panel.url else {
                     return
                 }
-
-                let bookmarks = SandboxBookmark.sharedInstance()
-                bookmarks.save(url: url)
-
                 UserDefaultsManagement.storagePath = url.path
 
                 self.restartApp()

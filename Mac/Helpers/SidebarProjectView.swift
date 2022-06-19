@@ -430,8 +430,6 @@ class SidebarProjectView: NSOutlineView,
             }
             return
         }
-
-        SandboxBookmark().removeBy(project.url)
         v.removeProject(project: project)
     }
 
@@ -505,12 +503,6 @@ class SidebarProjectView: NSOutlineView,
                 guard !self.storage.projectExist(url: url) else {
                     return
                 }
-
-                let bookmark = SandboxBookmark.sharedInstance()
-                _ = bookmark.load()
-                bookmark.store(url: url)
-                bookmark.save()
-
                 let newProject = Project(url: url, isRoot: true)
                 let projects = self.storage.add(project: newProject)
                 for project in projects {
