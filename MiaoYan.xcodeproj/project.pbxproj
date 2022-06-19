@@ -12,6 +12,7 @@
 		270678F6244601C000D9935F /* MiaoYanCore_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */; };
 		270678F7244601C000D9935F /* MiaoYanCore_macOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2714D861285196D70026BDE4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2714D863285196D70026BDE4 /* InfoPlist.strings */; };
+		272ABB5F285F305600CCD651 /* SidebarProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272ABB5E285F305500CCD651 /* SidebarProjectView.swift */; };
 		2747D5B4284E05CE00D0127B /* LXGWWenKaiLite-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2747D5B1284E05CD00D0127B /* LXGWWenKaiLite-Regular.ttf */; };
 		2747D5B5284E05CE00D0127B /* LXGWWenKaiLite-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2747D5B2284E05CE00D0127B /* LXGWWenKaiLite-Bold.ttf */; };
 		275592971F3AE9B5006B8988 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275592961F3AE9B5006B8988 /* MainWindowController.swift */; };
@@ -80,7 +81,6 @@
 		D76025B2204EEF64000B9F59 /* TextFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76025B1204EEF64000B9F59 /* TextFormatter.swift */; };
 		D76447DC1F3A4F0700965F01 /* UserDefaultsManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76447DB1F3A4F0700965F01 /* UserDefaultsManagement.swift */; };
 		D7679376201F0BFD000F7BBF /* SortBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7679375201F0BFD000F7BBF /* SortBy.swift */; };
-		D773DE801F36F45900A39C9F /* SandboxBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = D773DE7F1F36F45900A39C9F /* SandboxBookmark.swift */; };
 		D777D7812009115C00D86B33 /* ImagesProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D777D7802009115C00D86B33 /* ImagesProcessor.swift */; };
 		D7793C731F211C6000CA39B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7793C721F211C6000CA39B7 /* AppDelegate.swift */; };
 		D7793C751F211C6000CA39B7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7793C741F211C6000CA39B7 /* ViewController.swift */; };
@@ -110,7 +110,6 @@
 		D7CE196C1FA4BA5E004BF8EE /* PreviewTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CE196B1FA4BA5E004BF8EE /* PreviewTextField.swift */; };
 		D7D1DE68216D05A800AC1845 /* NameTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D1DE67216D05A800AC1845 /* NameTextField.swift */; };
 		D7D372F4207B5B0F00AFBD9F /* SidebarNotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D372F3207B5B0F00AFBD9F /* SidebarNotesView.swift */; };
-		D7D372F7207BB09500AFBD9F /* SidebarProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7D372F6207BB09500AFBD9F /* SidebarProjectView.swift */; };
 		D7DA9E1E21031901001CF0BE /* OutlineHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA9E1D21031901001CF0BE /* OutlineHeaderView.swift */; };
 		D7DA9E2121033489001CF0BE /* NSMutableAttributedString+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA9E2021033489001CF0BE /* NSMutableAttributedString+.swift */; };
 		D7DCFECF2108CAC90059B37B /* CoreNote.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DCFECE2108CAC90059B37B /* CoreNote.swift */; };
@@ -174,6 +173,7 @@
 		2714D862285196D70026BDE4 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2714D864285197CA0026BDE4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2714D86728519FB20026BDE4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
+		272ABB5E285F305500CCD651 /* SidebarProjectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarProjectView.swift; sourceTree = "<group>"; };
 		2747D5B1284E05CD00D0127B /* LXGWWenKaiLite-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LXGWWenKaiLite-Regular.ttf"; sourceTree = "<group>"; };
 		2747D5B2284E05CE00D0127B /* LXGWWenKaiLite-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LXGWWenKaiLite-Bold.ttf"; sourceTree = "<group>"; };
 		2752E9CE285EE68400EE0009 /* MiaoYan.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MiaoYan.entitlements; sourceTree = "<group>"; };
@@ -240,7 +240,6 @@
 		D76447DB1F3A4F0700965F01 /* UserDefaultsManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManagement.swift; sourceTree = "<group>"; };
 		D7679375201F0BFD000F7BBF /* SortBy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortBy.swift; sourceTree = "<group>"; };
 		D76E10C0215A55CE0017F4A3 /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
-		D773DE7F1F36F45900A39C9F /* SandboxBookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxBookmark.swift; sourceTree = "<group>"; };
 		D777D7802009115C00D86B33 /* ImagesProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesProcessor.swift; sourceTree = "<group>"; };
 		D7793C721F211C6000CA39B7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D7793C741F211C6000CA39B7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -269,7 +268,6 @@
 		D7CE196B1FA4BA5E004BF8EE /* PreviewTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewTextField.swift; sourceTree = "<group>"; };
 		D7D1DE67216D05A800AC1845 /* NameTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameTextField.swift; sourceTree = "<group>"; };
 		D7D372F3207B5B0F00AFBD9F /* SidebarNotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarNotesView.swift; sourceTree = "<group>"; };
-		D7D372F6207BB09500AFBD9F /* SidebarProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarProjectView.swift; sourceTree = "<group>"; };
 		D7DA9E1D21031901001CF0BE /* OutlineHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlineHeaderView.swift; sourceTree = "<group>"; };
 		D7DA9E2021033489001CF0BE /* NSMutableAttributedString+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSMutableAttributedString+.swift"; sourceTree = "<group>"; };
 		D7DCFECE2108CAC90059B37B /* CoreNote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreNote.swift; sourceTree = "<group>"; };
@@ -537,7 +535,6 @@
 				D7CE196B1FA4BA5E004BF8EE /* PreviewTextField.swift */,
 				D7508FC71F337E850047AB76 /* SearchTextField.swift */,
 				D7D372F3207B5B0F00AFBD9F /* SidebarNotesView.swift */,
-				D7D372F6207BB09500AFBD9F /* SidebarProjectView.swift */,
 				D75EE7FC2078C5460055F159 /* SidebarCellView.swift */,
 				277A61D7244B538E000F0033 /* SidebarTableRowView.swift */,
 				D7169A5C2077BA140025D2C9 /* StorageView.swift */,
@@ -560,10 +557,10 @@
 			children = (
 				D7DD5A871F88D4EA00CE947E /* FileWatcher.swift */,
 				D7DD5A891F88D50000CE947E /* FileWatcherEvent.swift */,
+				272ABB5E285F305500CCD651 /* SidebarProjectView.swift */,
 				D7170C1C20F8565B001DDB36 /* FileSystemEventManager.swift */,
 				D777D7802009115C00D86B33 /* ImagesProcessor.swift */,
 				D7F95F391FF2759300E2A447 /* NotesTextProcessor.swift */,
-				D773DE7F1F36F45900A39C9F /* SandboxBookmark.swift */,
 				D76025B1204EEF64000B9F59 /* TextFormatter.swift */,
 				D76447DB1F3A4F0700965F01 /* UserDefaultsManagement.swift */,
 				27D95114285B21EF00F40306 /* Typography.swift */,
@@ -865,6 +862,7 @@
 				D7A65C5920F11C38003E5ADC /* LanguageType.swift in Sources */,
 				D730BD27222BF30700E69C93 /* KeychainConfiguration.swift in Sources */,
 				D7487FD821738A1900D09383 /* NSImage+.swift in Sources */,
+				272ABB5F285F305600CCD651 /* SidebarProjectView.swift in Sources */,
 				D75EE7F72078B22D0055F159 /* SidebarItem.swift in Sources */,
 				D783B505208A1BFD00328A41 /* EditorSplitView.swift in Sources */,
 				D75EE8002078E0C60055F159 /* SidebarItemType.swift in Sources */,
@@ -885,7 +883,6 @@
 				D7E025081F3B6DDB00EDDA32 /* Storage.swift in Sources */,
 				D74DFBAD21661BA400F67D64 /* Date+.swift in Sources */,
 				D7F5C0EF223ED0570038F172 /* PreferencesGeneralViewController.swift in Sources */,
-				D7D372F7207BB09500AFBD9F /* SidebarProjectView.swift in Sources */,
 				D7470D072170E890006B2A92 /* CustomTextStorage.swift in Sources */,
 				D7038E1D20FA86C100A54E69 /* SharingService.swift in Sources */,
 				D7DD5A8A1F88D50000CE947E /* FileWatcherEvent.swift in Sources */,
@@ -899,7 +896,6 @@
 				D7153DFD2285A93300A2C20F /* AboutWindowController.swift in Sources */,
 				D77CC041216A608500582B97 /* EditorScrollView.swift in Sources */,
 				8F7136EE23490CBF004DFA6E /* Markdown.swift in Sources */,
-				D773DE801F36F45900A39C9F /* SandboxBookmark.swift in Sources */,
 				D7487F932173503C00D09383 /* AttributedBox.swift in Sources */,
 				D730BD3C222DB9FC00E69C93 /* NameHelper.swift in Sources */,
 				D7153E052285C09C00A2C20F /* AboutViewController.swift in Sources */,
