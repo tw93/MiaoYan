@@ -63,15 +63,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         guard let mainWC = storyboard.instantiateController(withIdentifier: "MainWindowController") as? MainWindowController else {
             fatalError("Error getting main window controller")
         }
-        
-//
-//        if UserDefaultsManagement.isFirstLaunch {
-//            let size = NSSize(width: 1200, height: 640)
-//            mainWC.window?.minSize = size
-//            mainWC.window?.center()
-//            UserDefaultsManagement.isFirstLaunch = false
-//        }
-      
+
+        if UserDefaultsManagement.isFirstLaunch {
+            let size = NSSize(width: 1200, height: 640)
+            mainWC.window?.setContentSize(size)
+            mainWC.window?.center()
+            UserDefaultsManagement.isFirstLaunch = false
+        }
         mainWC.window?.makeKeyAndOrderFront(nil)
         mainWindowController = mainWC
     }
