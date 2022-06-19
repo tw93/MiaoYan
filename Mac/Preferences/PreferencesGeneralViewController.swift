@@ -181,7 +181,7 @@ class PreferencesGeneralViewController: NSViewController {
         openPanel.begin { result in
             if result.rawValue == NSFileHandlingPanelOKButton {
                 guard let url = openPanel.url else { return }
-                guard let currentURL = UserDefaultsManagement.storageUrl else { return }
+                guard UserDefaultsManagement.storageUrl != nil else { return }
 
                 UserDefaultsManagement.storagePath = url.path
                 self.defaultStoragePath.stringValue = url.path
