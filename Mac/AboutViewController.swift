@@ -12,14 +12,6 @@ class AboutViewController: NSViewController {
 
     @IBOutlet var versionLabel: NSTextField!
 
-    @IBAction func openMiaoYan(_ sender: Any) {
-        NSWorkspace.shared.open(URL(string: "https://miaoyan.vercel.app")!)
-    }
-
-    @IBAction func openVersion(_ sender: Any) {
-        NSWorkspace.shared.open(URL(string: "https://miaoyan.vercel.app")!)
-    }
-
     @IBAction func openContributorsPage(_ sender: Any) {
         let url = URL(string: "")!
         NSWorkspace.shared.open(url)
