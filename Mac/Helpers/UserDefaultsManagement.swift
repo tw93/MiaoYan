@@ -20,6 +20,8 @@ public class UserDefaultsManagement {
     static var DefaultFont = "LXGW WenKai Lite"
 
     static var DefaultFontSize = 15
+    static var DefaultPreviewFontSize = 16
+    static var DefaultPresentationFontSize = 24
     static var editorLineSpacing = 6
 
     static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
@@ -80,6 +82,7 @@ public class UserDefaultsManagement {
         static let FontName = "fontName"
         static let WindowFontName = "windowFontName"
         static let PreviewFontName = "previewFontName"
+        static let IsFirstLaunch = "isFirstLaunch"
     }
 
     static var lastProject: Int {
@@ -107,6 +110,18 @@ public class UserDefaultsManagement {
         }
     }
     
+    static var isFirstLaunch: Bool {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.IsFirstLaunch) as? Bool {
+                return result
+            }
+            return true
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.IsFirstLaunch)
+        }
+    }
+
     static var liveImagesPreview: Bool {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.LiveImagesPreview) {
@@ -137,25 +152,25 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.FontSizeKey)
         }
     }
-    
+
     static var previewFontSize: Int {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.PreviewFontSize) as? Int {
                 return result
             }
-            return DefaultFontSize
+            return DefaultPreviewFontSize
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.PreviewFontSize)
         }
     }
-    
+
     static var presentationFontSize: Int {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.PresentationFontSize) as? Int {
                 return result
             }
-            return 24
+            return DefaultPresentationFontSize
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.PresentationFontSize)
@@ -173,7 +188,7 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.FontName)
         }
     }
-    
+
     static var windowFontName: String {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.WindowFontName) as? String {
@@ -185,7 +200,7 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.WindowFontName)
         }
     }
-    
+
     static var previewFontName: String {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.PreviewFontName) as? String {
@@ -197,7 +212,7 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.PreviewFontName)
         }
     }
-    
+
     static var codeFont: Font! {
         get {
             if let font = Font(name: self.codeFontName, size: CGFloat(self.fontSize)) {
@@ -229,7 +244,7 @@ public class UserDefaultsManagement {
             self.fontSize = Int(newValue.pointSize)
         }
     }
-    
+
     static var titleFont: Font! {
         get {
             if let font = Font(name: self.windowFontName, size: CGFloat(self.titleFontSize)) {
@@ -245,7 +260,7 @@ public class UserDefaultsManagement {
             self.fontSize = Int(newValue.pointSize)
         }
     }
-    
+
     static var emptyEditTitleFont: Font! {
         get {
             if let font = Font(name: self.windowFontName, size: CGFloat(self.emptyEditTitleFontSize)) {
@@ -261,7 +276,7 @@ public class UserDefaultsManagement {
             self.fontSize = Int(newValue.pointSize)
         }
     }
-    
+
     static var nameFont: Font! {
         get {
             if let font = Font(name: self.windowFontName, size: CGFloat(self.nameFontSize)) {
@@ -277,7 +292,7 @@ public class UserDefaultsManagement {
             self.fontSize = Int(newValue.pointSize)
         }
     }
-    
+
     static var dateFont: Font! {
         get {
             if let font = Font(name: self.windowFontName, size: CGFloat(self.dateFontSize)) {
@@ -293,7 +308,6 @@ public class UserDefaultsManagement {
             self.fontSize = Int(newValue.pointSize)
         }
     }
-
 
     static var fontColor: Color {
         get {
@@ -343,9 +357,11 @@ public class UserDefaultsManagement {
 
     static var localDocumentsContainer: URL? {
         if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-            return URL(fileURLWithPath: path)
+            let miaoyanPath: String = path + "/MiaoYan"
+            try! FileManager.default.createDirectory(atPath: miaoyanPath,
+                                             withIntermediateDirectories: true, attributes: nil)
+            return URL(fileURLWithPath: miaoyanPath)
         }
-
         return nil
     }
 
@@ -387,7 +403,7 @@ public class UserDefaultsManagement {
     }
 
     static var preview = false
-    
+
     static var presentation = false
 
     static var lastSync: Date? {

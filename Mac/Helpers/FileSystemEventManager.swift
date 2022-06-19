@@ -169,7 +169,6 @@ class FileSystemEventManager {
     }
 
     private func reloadNote(note: Note) {
-        guard note.container != .encryptedTextPack else { return }
         guard let fsContent = note.getContent() else { return }
 
         let memoryContent = note.content.attributedSubstring(from: NSRange(0..<note.content.length))
