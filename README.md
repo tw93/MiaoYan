@@ -19,7 +19,7 @@
 ## 下载
 
 - 从 <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a> 中下载最新的 MiaoYan.dmg 安装包，双击安装即可。
-- 如果在国内下载速度很慢，你可以试试 <a href="https://miaoyan.vercel.app/Release/MiaoYan_V0.5.0.dmg" target="_blank">Vercel</a> 来下载最新版本。
+- 如果在国内下载速度很慢，你可以试试 <a href="https://miaoyan.vercel.app/Release/MiaoYan.dmg" target="_blank">Vercel</a> 来下载最新版本。
 
 ## 初始化使用
 
@@ -63,6 +63,7 @@
 - <a href="https://github.com/shpakovski/MASShortcut" target="_blank">hpakovski/MASShortcut</a>：快捷键插件
 - <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>：一款漂亮的开源中文字体，妙言将其作为默认字体
 - <a href="https://github.com/X140Yu/pangu.Swift" target="_blank">X140Yu/pangu.Swift</a>：中文和英文之间没有空格可怎么行？
+- <a href="https://github.com/sivan/heti" target="_blank">sivan/heti</a>：专为中文内容展示设计的排版样式增强
 
 # 协议
 
