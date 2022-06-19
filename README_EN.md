@@ -19,7 +19,7 @@
 ## Download
 
 - Download the latest `MiaoYan.dmg` installation package from <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a> and double-click to install it.
-- If the download speed is very slow in China, you can try <a href="https://miaoyan.vercel.app/Release/MiaoYan_V0.5.0.dmg" target="_blank">Vercel</a> to download the latest version.
+- If the download speed is very slow in China, you can try <a href="https://miaoyan.vercel.app/Release/MiaoYan.dmg" target="_blank">Vercel</a> to download the latest version.
 
 ## First Use
 
@@ -63,6 +63,7 @@
 - <a href="https://github.com/shpakovski/MASShortcut" target="_blank">hpakovski/MASShortcut</a>: Shortcut Key Plugin.
 - <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>: A beautiful open source Chinese font, MiaoYan has made it the default font.
 - <a href="https://github.com/X140Yu/pangu.Swift" target="_blank">X140Yu/pangu.Swift</a>：How can you do without spaces between Chinese and English?
+- <a href="https://github.com/sivan/heti" target="_blank">sivan/heti</a>：Enhanced typography for Chinese content presentation.
 
 # License
 
