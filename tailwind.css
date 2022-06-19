@@ -25,7 +25,7 @@ body {
   content: '喂猫';
 }
 [lang='en'] .i18n-miao-href:before {
-  content: 'Cats';
+  content: 'Reward';
 }
 
 .i18n-home-href:before {
