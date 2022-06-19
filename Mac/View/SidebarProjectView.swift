@@ -211,7 +211,7 @@ class SidebarProjectView: NSOutlineView,
     }
 
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
-        return false
+        false
     }
 
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
@@ -223,7 +223,7 @@ class SidebarProjectView: NSOutlineView,
     }
 
     func outlineView(_ outlineView: NSOutlineView, objectValueFor tableColumn: NSTableColumn?, byItem item: Any?) -> Any? {
-        return item
+        item
     }
 
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
@@ -253,7 +253,7 @@ class SidebarProjectView: NSOutlineView,
     }
 
     func outlineView(_ outlineView: NSOutlineView, isGroupItem item: Any) -> Bool {
-        return false
+        false
     }
 
     func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
@@ -265,7 +265,7 @@ class SidebarProjectView: NSOutlineView,
     }
 
     func outlineView(_ outlineView: NSOutlineView, rowViewForItem item: Any) -> NSTableRowView? {
-        return SidebarTableRowView(frame: NSZeroRect)
+        SidebarTableRowView(frame: NSZeroRect)
     }
 
     override func selectRowIndexes(_ indexes: IndexSet, byExtendingSelection extend: Bool) {
