@@ -4,6 +4,12 @@
 /* Class = "NSMenuItem"; title = "Title"; ObjectID = "1qV-pJ-ZQT"; */
 "1qV-pJ-ZQT.title" = "标题";
 
+/* Class = "NSMenuItem"; title = "Descending"; ObjectID = "ytU-K8-Ilj"; */
+"ytU-K8-Ilj.title" = "降序";
+
+/* Class = "NSMenuItem"; title = "Ascending"; ObjectID = "yw9-Qh-ngF"; */
+"yw9-Qh-ngF.title" = "升序";
+
 /* Class = "NSMenuItem"; title = "MiaoYan"; ObjectID = "1Xt-HY-uBw"; */
 "1Xt-HY-uBw.title" = "妙言";
 
