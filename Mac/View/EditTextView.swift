@@ -39,7 +39,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             newRect.size.height = newRect.size.height - 3.6
         }
 
-//        let clr = NSColor(red: 0, green: 0, blue: 0, alpha: 1.0)
         super.drawInsertionPoint(in: newRect, color: EditTextView.fontColor, turnedOn: flag)
     }
 
@@ -971,7 +970,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         vc.alert = NSAlert()
         let field = NSTextField(frame: NSRect(x: 0, y: 0, width: 290, height: 20))
-        field.placeholderString = "All Hail the Crimson King"
 
         if let title = char?.attribute(titleKey, at: 0, effectiveRange: nil) as? String {
             field.stringValue = title
