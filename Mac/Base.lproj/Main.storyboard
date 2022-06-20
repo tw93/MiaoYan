@@ -63,19 +63,14 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="File" identifier="fileMenu" id="uMZ-sI-7ja">
                                     <items>
-                                        <menuItem title="Close" keyEquivalent="w" id="kIy-TN-XMS">
+                                        <menuItem title="New" keyEquivalent="n" identifier="fileMenu.new" id="2Ci-Yj-aWK">
                                             <connections>
-                                                <action selector="performClose:" target="Ady-hI-5gd" id="kc5-tb-yP0"/>
+                                                <action selector="fileMenuNewNote:" target="L4m-js-agn" id="N33-Jf-oOg"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Import" keyEquivalent="o" identifier="fileMenu.import" id="O8Z-cg-XnH">
                                             <connections>
                                                 <action selector="importNote:" target="Ady-hI-5gd" id="r4z-z3-fFc"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="New" keyEquivalent="n" identifier="fileMenu.new" id="2Ci-Yj-aWK">
-                                            <connections>
-                                                <action selector="fileMenuNewNote:" target="L4m-js-agn" id="N33-Jf-oOg"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="NDw-wG-Jov"/>
@@ -113,6 +108,11 @@ CA
 </string>
                                             <connections>
                                                 <action selector="deleteNote:" target="L4m-js-agn" id="QZA-ii-6Ou"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Close" keyEquivalent="w" id="kIy-TN-XMS">
+                                            <connections>
+                                                <action selector="performClose:" target="Ady-hI-5gd" id="kc5-tb-yP0"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -166,6 +166,19 @@ CA
                                                         <modifierMask key="keyEquivalentModifierMask"/>
                                                         <connections>
                                                             <action selector="sortBy:" target="L4m-js-agn" id="Diu-Vl-cVb"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem isSeparatorItem="YES" id="uh4-ND-Sy3"/>
+                                                    <menuItem title="Ascending" identifier="Ascending" id="yw9-Qh-ngF">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="sortDirectionBy:" target="L4m-js-agn" id="72C-Zv-AR5"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="Descending" identifier="Descending" id="ytU-K8-Ilj">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="sortDirectionBy:" target="L4m-js-agn" id="Izp-F4-sJU"/>
                                                         </connections>
                                                     </menuItem>
                                                 </items>
@@ -364,6 +377,8 @@ CA
                 <customObject id="N0L-g4-qwj" customClass="EditTextView" customModule="MiaoYan" customModuleProvider="target"/>
                 <customObject id="L4m-js-agn" customClass="ViewController" customModule="MiaoYan" customModuleProvider="target">
                     <connections>
+                        <outlet property="ascendingCheckItem" destination="yw9-Qh-ngF" id="cYY-EW-Dff"/>
+                        <outlet property="descendingCheckItem" destination="ytU-K8-Ilj" id="Mdj-ap-0En"/>
                         <outlet property="sortByOutlet" destination="rHB-xF-GgG" id="Z3o-fD-Poh"/>
                     </connections>
                 </customObject>
