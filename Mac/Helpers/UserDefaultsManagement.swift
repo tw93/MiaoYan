@@ -38,7 +38,6 @@ public class UserDefaultsManagement {
     static var dateFontSize = 11
     static var maxNightModeBrightnessLevel = 35
 
-    static var sortDirection = true
     static var marginSize = 26
     static var realSidebarSize = 120
 
@@ -83,6 +82,7 @@ public class UserDefaultsManagement {
         static let WindowFontName = "windowFontName"
         static let PreviewFontName = "previewFontName"
         static let IsFirstLaunch = "isFirstLaunch"
+        static let SortDirection = "sortDirection"
     }
 
     static var lastProject: Int {
@@ -119,6 +119,18 @@ public class UserDefaultsManagement {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.IsFirstLaunch)
+        }
+    }
+    
+    static var sortDirection: Bool {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.SortDirection) as? Bool {
+                return result
+            }
+            return true
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.SortDirection)
         }
     }
 

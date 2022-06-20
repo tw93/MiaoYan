@@ -9,12 +9,12 @@ public extension DateFormatter {
     }
 
     func formatTimeForDisplay(_ date: Date) -> String {
-        dateFormat = "yyyy/MM/dd hh:mm"
+        dateFormat = "yyyy/MM/dd HH:mm"
         return string(from: date)
     }
 
     func formatForDuplicate(_ date: Date) -> String {
-        dateFormat = "yyyyMMddhhmmss"
+        dateFormat = "yyyyMMddHHmmss"
         return string(from: date)
     }
 }

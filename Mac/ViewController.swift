@@ -77,6 +77,20 @@ class ViewController: NSViewController,
         }
     }
 
+    @IBOutlet var descendingCheckItem: NSMenuItem! {
+        didSet {
+            ascendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .off : .on
+            descendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .on : .off
+        }
+    }
+
+    @IBOutlet var ascendingCheckItem: NSMenuItem! {
+        didSet {
+            ascendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .off : .on
+            descendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .on : .off
+        }
+    }
+
     @IBOutlet var titleBarView: TitleBarView!
     @IBOutlet var sidebarScrollView: NSScrollView!
     @IBOutlet var notesScrollView: NSScrollView!
@@ -277,13 +291,24 @@ class ViewController: NSViewController,
         vc.search.window?.makeFirstResponder(vc.search)
     }
 
+    @IBAction func sortDirectionBy(_ sender: NSMenuItem) {
+        let name = sender.identifier!.rawValue
+        if name == "Ascending", UserDefaultsManagement.sortDirection {
+            UserDefaultsManagement.sortDirection = false
+            resort()
+        }
+        if name == "Descending", !UserDefaultsManagement.sortDirection {
+            UserDefaultsManagement.sortDirection = true
+            resort()
+        }
+    }
+
     @IBAction func sortBy(_ sender: NSMenuItem) {
         if let id = sender.identifier {
             let key = String(id.rawValue.dropFirst(3))
             guard let sortBy = SortBy(rawValue: key) else { return }
 
             UserDefaultsManagement.sort = sortBy
-            UserDefaultsManagement.sortDirection = !UserDefaultsManagement.sortDirection
 
             if let submenu = sortByOutlet.submenu {
                 for item in submenu.items {
@@ -292,21 +317,26 @@ class ViewController: NSViewController,
             }
 
             sender.state = NSControl.StateValue.on
-
-            guard let controller = ViewController.shared() else { return }
-
-            // Sort all notes
-            storage.noteList = storage.sortNotes(noteList: storage.noteList, filter: controller.search.stringValue)
-
-            // Sort notes in the current project
-            if let filtered = controller.filteredNoteList {
-                controller.notesTableView.noteList = storage.sortNotes(noteList: filtered, filter: controller.search.stringValue)
-            } else {
-                controller.notesTableView.noteList = storage.noteList
-            }
-
-            controller.notesTableView.reloadData()
+            resort()
         }
+    }
+
+    func resort() {
+        ascendingCheckItem.state = UserDefaultsManagement.sortDirection ? .off : .on
+        descendingCheckItem.state = UserDefaultsManagement.sortDirection ? .on : .off
+        guard let controller = ViewController.shared() else { return }
+
+        // Sort all notes
+        storage.noteList = storage.sortNotes(noteList: storage.noteList, filter: controller.search.stringValue)
+
+        // Sort notes in the current project
+        if let filtered = controller.filteredNoteList {
+            controller.notesTableView.noteList = storage.sortNotes(noteList: filtered, filter: controller.search.stringValue)
+        } else {
+            controller.notesTableView.noteList = storage.noteList
+        }
+
+        controller.notesTableView.reloadData()
     }
 
     @objc func moveNote(_ sender: NSMenuItem) {
@@ -1008,7 +1038,10 @@ class ViewController: NSViewController,
 
             note.save(attributed: editArea.attributedString())
 
-            if !updateViews.contains(note) {
+            print(UserDefaultsManagement.sort)
+
+            // 编辑内容，标题排序的时候有bug，先关掉
+            if !updateViews.contains(note), UserDefaultsManagement.sort != .title {
                 updateViews.append(note)
             }
 
