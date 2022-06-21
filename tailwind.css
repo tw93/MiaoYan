@@ -43,10 +43,10 @@ body {
 }
 
 .i18n-miao-people-nums:before {
-  content: '木子君、Jerk、芸璟、薛定谔的盲盒、乐宝、忸祁、小锐、嬷嬷嬷呀，当前共计 8 人 ❤️ 妙言。';
+  content: '木子君、Jerk、芸璟、薛定谔的盲盒、乐宝、忸祁、小锐、嬷嬷嬷呀，当前 8 人 ❤️ 妙言。';
 }
 [lang='en'] .i18n-miao-people-nums:before {
-  content: '木子君、Jerk、芸璟、薛定谔的盲盒、乐宝、忸祁、小锐、嬷嬷嬷呀, in total 8 friends ❤ MiaoYan.';
+  content: '木子君、Jerk、芸璟、薛定谔的盲盒、乐宝、忸祁、小锐、嬷嬷嬷呀, 8 friends ❤ MiaoYan.';
 }
 
 
@@ -75,10 +75,10 @@ body {
 }
 
 .i18n-cats-decs:before {
-  content: '喜欢妙言？可以给「汤圆 & 可乐」买罐头吃！';
+  content: '喜欢妙言？可以给「汤圆 & 可乐」买 🥩🍖🍗🍤 罐头吃！';
 }
 [lang='en'] .i18n-cats-decs:before {
-  content: 'Like MiaoYan? Buy cans for「TangYuan & Coke」.';
+  content: 'Like MiaoYan? Buy 🥩🍖🍗🍤 cans for「TangYuan & Coke」.';
 }
 
 .i18n-description:before {
