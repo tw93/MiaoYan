@@ -3,6 +3,7 @@ import AppCenterAnalytics
 import AppCenterCrashes
 import Cocoa
 import MiaoYanCore_macOS
+import Sparkle
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
