@@ -27,6 +27,11 @@ class ViewController: NSViewController,
     var rowUpdaterTimer = Timer()
     let searchQueue = OperationQueue()
 
+    private var isHandlingScrollEvent = false
+    private var swipeLeftExecuted = false
+    private var swipeRightExecuted = false
+    private var scrollDeltaX: CGFloat = 0
+
     private var updateViews = [Note]()
 
     override var representedObject: Any? {
@@ -906,6 +911,97 @@ class ViewController: NSViewController,
         }
 
         vc.editArea.updateTextContainerInset()
+    }
+
+    override func wantsScrollEventsForSwipeTracking(on axis: NSEvent.GestureAxis) -> Bool {
+        axis == .horizontal
+    }
+
+    override func swipe(with event: NSEvent) {
+        swipe(deltaX: event.deltaX)
+    }
+
+    override func scrollWheel(with event: NSEvent) {
+        if !NSEvent.isSwipeTrackingFromScrollEventsEnabled {
+            super.scrollWheel(with: event)
+            return
+        }
+
+        switch event.phase {
+        case .began:
+            isHandlingScrollEvent = true
+            swipeLeftExecuted = false
+            swipeRightExecuted = false
+            scrollDeltaX = 0
+        case .changed:
+            guard isHandlingScrollEvent else { break }
+
+            let directionChanged = scrollDeltaX.sign != event.scrollingDeltaX.sign
+
+            guard !directionChanged else {
+                scrollDeltaX = event.scrollingDeltaX
+                break
+            }
+
+            scrollDeltaX += event.scrollingDeltaX
+
+            // throttle
+            guard abs(scrollDeltaX) > 50 else { break }
+
+            let flippedScrollDelta = scrollDeltaX * -1
+            let swipedLeft = flippedScrollDelta > 0
+
+            switch (swipedLeft, swipeLeftExecuted, swipeRightExecuted) {
+            case (true, false, _): // swiped left
+                swipeLeftExecuted = true
+                swipeRightExecuted = false // allow swipe back (right)
+            case (false, _, false): // swiped right
+                swipeLeftExecuted = false // allow swipe back (left)
+                swipeRightExecuted = true
+            default:
+                super.scrollWheel(with: event)
+                return
+            }
+            swipe(deltaX: flippedScrollDelta)
+            return
+        case .ended,
+             .cancelled,
+             .mayBegin:
+            isHandlingScrollEvent = false
+        default:
+            break
+        }
+
+        super.scrollWheel(with: event)
+    }
+
+    private func swipe(deltaX: CGFloat) {
+        guard deltaX != 0 else { return }
+
+        guard let vc = ViewController.shared() else { return }
+        let siderbarSize = Int(vc.sidebarSplitView.subviews[0].frame.width)
+        let notelistSize = Int(vc.splitView.subviews[0].frame.width)
+
+        let swipedLeft = deltaX > 0
+
+        if swipedLeft {
+            if siderbarSize > 0 {
+                hideSidebar("")
+            } else {
+                if notelistSize > 0 {
+                    hideNoteList("")
+                }
+            }
+
+        } else {
+            if notelistSize == 0 {
+                showNoteList("")
+            } else {
+                if siderbarSize == 0 {
+                    showSidebar("")
+                }
+            }
+        }
     }
 
     func hideSidebar(_ sender: Any) {
