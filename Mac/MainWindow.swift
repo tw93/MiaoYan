@@ -14,4 +14,19 @@ class MainWindow: NSWindow {
             self.setFrame(rect, display: true)
         }
     }
+
+    override func mouseUp(with event: NSEvent) {
+        if event.clickCount >= 2, self.isPointInTitleBar(point: event.locationInWindow) { // double-click in title bar
+            self.performZoom(nil)
+        }
+        super.mouseUp(with: event)
+    }
+
+    fileprivate func isPointInTitleBar(point: CGPoint) -> Bool {
+        if let windowFrame = self.contentView?.frame {
+            let titleBarRect = NSRect(x: self.contentLayoutRect.origin.x, y: self.contentLayoutRect.origin.y + self.contentLayoutRect.height, width: self.contentLayoutRect.width, height: windowFrame.height - self.contentLayoutRect.height)
+            return titleBarRect.contains(point)
+        }
+        return false
+    }
 }
