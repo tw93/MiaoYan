@@ -62,17 +62,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         let index = manager.characterIndex(for: properPoint, in: container, fractionOfDistanceBetweenInsertionPoints: nil)
 
-        let glyphRect = manager.boundingRect(forGlyphRange: NSRange(location: index, length: 1), in: container)
-
-        if glyphRect.contains(properPoint), isTodo(index) {
-            guard let f = getTextFormatter() else { return }
-            f.toggleTodo(index)
-
-            DispatchQueue.main.async {
-                NSCursor.pointingHand.set()
-            }
-            return
-        }
+        _ = manager.boundingRect(forGlyphRange: NSRange(location: index, length: 1), in: container)
 
         super.mouseDown(with: event)
         saveCursorPosition()
@@ -98,41 +88,11 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         let glyphRect = manager.boundingRect(forGlyphRange: NSRange(location: index, length: 1), in: container)
 
-        if glyphRect.contains(properPoint), isTodo(index) {
-            NSCursor.pointingHand.set()
-            return
-        }
-
         if UserDefaultsManagement.preview {
             return
         }
 
         super.mouseMoved(with: event)
-    }
-
-    public func isTodo(_ location: Int) -> Bool {
-        guard let storage = textStorage else { return false }
-
-        let range = (storage.string as NSString).paragraphRange(for: NSRange(location: location, length: 0))
-        let string = storage.attributedSubstring(from: range).string as NSString
-
-        if storage.attribute(.todo, at: location, effectiveRange: nil) != nil {
-            return true
-        }
-
-        var length = string.range(of: "- [ ]").length
-        if length == 0 {
-            length = string.range(of: "- [x]").length
-        }
-
-        if length > 0 {
-            let upper = range.location + length
-            if location >= range.location, location <= upper {
-                return true
-            }
-        }
-
-        return false
     }
 
     override func completions(forPartialWordRange charRange: NSRange, indexOfSelectedItem index: UnsafeMutablePointer<Int>) -> [String]? {
@@ -341,7 +301,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             if UserDefaultsManagement.liveImagesPreview {
                 content.loadImages(note: note)
             }
-            content.replaceCheckboxes()
 
             EditTextView.shouldForceRescan = true
             storage.setAttributedString(content)
@@ -633,8 +592,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             let caretLocation = characterIndexForInsertion(at: dropPoint)
 
             let mutable = NSMutableAttributedString(attributedString: text)
-            mutable.loadCheckboxes()
-
+        
             insertText(mutable, replacementRange: NSRange(location: caretLocation, length: 0))
             storage.sizeAttachmentImages()
 
@@ -774,12 +732,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         EditTextView.shouldForceRescan = true
         f.tab()
-    }
-
-    @IBAction func toggleTodo(_ sender: Any) {
-        guard let f = getTextFormatter() else { return }
-
-        f.toggleTodo()
     }
 
     @IBAction func pressBold(_ sender: Any) {
