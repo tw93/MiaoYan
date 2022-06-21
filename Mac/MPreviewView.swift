@@ -72,6 +72,61 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         closure?()
+        exportImage()
+    }
+
+    public func exportPdf() {
+        if #available(macOS 11.0.0, *) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                let config = WKPDFConfiguration()
+                // Render the PDF
+                super.createPDF(configuration: config) { result in
+                    switch result {
+                    case .success(let data):
+                        if let path = NSSearchPathForDirectoriesInDomains(.desktopDirectory, .userDomainMask, true).first {
+                            let currentName = self.note?.getTitle()
+                            let filePath: String = path + "/" + currentName! + ".pdf"
+                            try! data.write(to: URL(fileURLWithPath: filePath))
+                        }
+
+                    case .failure(let error):
+                        print(error)
+                    }
+                }
+            }
+        } else {}
+    }
+
+    public func exportImage() {
+        if #available(macOS 10.15, *) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
+                    if complete != nil {
+                        super.evaluateJavaScript("document.body.offsetHeight", completionHandler: { height, _ in
+                            guard let contentHeight = height as? CGFloat else { print("Content height could not be obtained"); return }
+                            super.evaluateJavaScript("document.body.offsetWidth", completionHandler: { [weak self] width, _ in
+                                let contentWidth = width as! CGFloat
+                                let config = WKSnapshotConfiguration()
+                                config.rect = CGRect(x: 0, y: 0, width: contentWidth, height: contentHeight)
+                                config.afterScreenUpdates = true
+                                self?.takeSnapshot(with: config, completionHandler: { image, error in
+                                    if let image = image {
+                                        if let desktopURL = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first {
+                                            let currentName = self?.note?.getTitle()
+                                            let destinationURL = desktopURL.appendingPathComponent(currentName! + ".jpeg")
+                                            try! image.saveJPEGRepresentationToURL(url: destinationURL)
+                                        }
+                                        print("Got snapshot")
+                                    } else {
+                                        print("Failed taking snapshot: \(error?.localizedDescription ?? "--")")
+                                    }
+                                })
+                            })
+                        })
+                    }
+                })
+            }
+        } else {}
     }
 
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
