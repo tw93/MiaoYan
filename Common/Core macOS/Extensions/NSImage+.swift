@@ -2,12 +2,12 @@ import Cocoa
 
 public extension NSImage {
     var height: CGFloat {
-        return self.size.height
+        self.size.height
     }
 
     /// Returns the width of the current image.
     var width: CGFloat {
-        return self.size.width
+        self.size.width
     }
 
     /// Returns a png representation of the current image.
@@ -16,6 +16,13 @@ public extension NSImage {
             return tiffData.representation(using: .png, properties: [:])
         }
 
+        return nil
+    }
+
+    var JPEGRepresentation: Data? {
+        if let tiff = self.tiffRepresentation, let tiffData = NSBitmapImageRep(data: tiff) {
+            return tiffData.representation(using: .jpeg, properties: [:])
+        }
         return nil
     }
 
@@ -58,7 +65,7 @@ public extension NSImage {
     func resizeWhileMaintainingAspectRatioToSize(size: NSSize) -> NSImage? {
         let newSize: NSSize
 
-        let widthRatio  = size.width / self.width
+        let widthRatio = size.width / self.width
         let heightRatio = size.height / self.height
 
         if widthRatio > heightRatio {
@@ -104,7 +111,8 @@ public extension NSImage {
             operation: NSCompositingOperation.copy,
             fraction: 1.0,
             respectFlipped: false,
-            hints: [:]) {
+            hints: [:]
+        ) {
             // Return the cropped image.
             return img
         }
@@ -122,13 +130,19 @@ public extension NSImage {
         }
     }
 
+    func saveJPEGRepresentationToURL(url: URL) throws {
+        if let jpeg = self.JPEGRepresentation {
+            try jpeg.write(to: url, options: .atomicWrite)
+        }
+    }
+
     func resize(to targetSize: CGSize) -> NSImage? {
         let frame = CGRect(x: 0, y: 0, width: targetSize.width, height: targetSize.height)
         guard let representation = bestRepresentation(for: frame, context: nil, hints: nil) else {
             return nil
         }
-        let image = NSImage(size: targetSize, flipped: false, drawingHandler: { (_) -> Bool in
-            return representation.draw(in: frame)
+        let image = NSImage(size: targetSize, flipped: false, drawingHandler: { _ -> Bool in
+            representation.draw(in: frame)
         })
         return image
     }
@@ -138,7 +152,7 @@ public extension NSImage {
             bitmapDataPlanes: nil, pixelsWide: Int(newSize.width), pixelsHigh: Int(newSize.height),
             bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
             colorSpaceName: .calibratedRGB, bytesPerRow: 0, bitsPerPixel: 0
-            ) {
+        ) {
             bitmapRep.size = newSize
             NSGraphicsContext.saveGraphicsState()
             NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: bitmapRep)
@@ -160,14 +174,15 @@ public extension NSImage {
     /// - Parameter size: The target size of the image.
     /// - Returns: The resized image.
     func resizeMaintainingAspectRatio(to targetSize: CGSize) -> NSImage? {
-        let widthRatio  = targetSize.width / size.width
+        let widthRatio = targetSize.width / size.width
         let heightRatio = targetSize.height / size.height
         let ratio = max(widthRatio, heightRatio)
         let newSize = CGSize(width: floor(size.width * ratio), height: floor(size.height * ratio))
-        return resized(to: NSSize(width: newSize.width, height: newSize.height))
+        return self.resized(to: NSSize(width: newSize.width, height: newSize.height))
     }
 
     // MARK: Cropping
+
     /// Resize the image, to nearly fit the supplied cropping size
     /// and return a cropped copy the image.
     ///
@@ -205,7 +220,7 @@ public extension NSImage {
 
     var jpgData: Data? {
         guard let tiffRepresentation = tiffRepresentation,
-            let bitmapImage = NSBitmapImageRep(data: tiffRepresentation)
+              let bitmapImage = NSBitmapImageRep(data: tiffRepresentation)
         else { return nil }
 
         return bitmapImage.representation(using: .jpeg, properties: [:])
@@ -237,7 +252,8 @@ public extension NSImage {
                                     bitsPerComponent: 8,
                                     bytesPerRow: 4 * Int(size.width),
                                     space: CGColorSpaceCreateDeviceRGB(),
-                                    bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue) {
+                                    bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue)
+        {
             context.beginPath()
             context.addPath(CGPath(roundedRect: rect, cornerWidth: radius, cornerHeight: radius, transform: nil))
             context.closePath()
@@ -253,7 +269,7 @@ public extension NSImage {
     }
 
     var cgImage: CGImage? {
-        var rect = CGRect.init(origin: .zero, size: self.size)
+        var rect = CGRect(origin: .zero, size: self.size)
         return self.cgImage(forProposedRect: &rect, context: nil, hints: nil)
     }
 }
