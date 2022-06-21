@@ -1555,7 +1555,7 @@ class ViewController: NSViewController,
         }
         formatButton.isHidden = true
         previewButton.isHidden = true
-        toast(message: NSLocalizedString("Press ESC key to exit~", comment: ""))
+        toast(message: NSLocalizedString("🙊 Press ESC key to exit~", comment: ""))
     }
 
     func disablePresentation() {
@@ -1582,7 +1582,7 @@ class ViewController: NSViewController,
 
     func formatText() {
         if UserDefaultsManagement.preview {
-            toast(message: NSLocalizedString("Format is only possible after exiting preview mode~", comment: "")
+            toast(message: NSLocalizedString("😶‍🌫️ Format is only possible after exiting preview mode~", comment: "")
             )
             return
         }
@@ -1590,7 +1590,7 @@ class ViewController: NSViewController,
             note.content = NSMutableAttributedString(string: note.content.string.spaced)
             note.save()
             reloadView()
-            toast(message: NSLocalizedString("Automatic typesetting succeeded~", comment: "")
+            toast(message: NSLocalizedString("🎉 Automatic typesetting succeeded~", comment: "")
             )
         }
     }
@@ -1809,6 +1809,7 @@ class ViewController: NSViewController,
     }
 
     @IBAction func exportImage(_ sender: Any) {
+        toast(message: NSLocalizedString("🙊 Starting export~", comment: ""))
         enablePreview()
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
             self.editArea.markdownView?.exportImage()
@@ -1816,6 +1817,7 @@ class ViewController: NSViewController,
     }
 
     @IBAction func exportPdf(_ sender: Any) {
+        toast(message: NSLocalizedString("🙊 Starting export~", comment: ""))
         enablePreview()
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
             self.editArea.markdownView?.exportPdf()
@@ -1824,9 +1826,9 @@ class ViewController: NSViewController,
 
     public func toastExport(status: Bool) {
         if status {
-            toast(message: NSLocalizedString("Exported to desktop~", comment: ""))
+            toast(message: NSLocalizedString("🎉 Exported to desktop~", comment: ""))
         } else {
-            toast(message: NSLocalizedString("The current Mac system does not support export, please upgrade to above 11.0", comment: ""))
+            toast(message: NSLocalizedString("😶‍🌫️ The current Mac system does not support export, please upgrade to above 11.0", comment: ""))
         }
     }
 

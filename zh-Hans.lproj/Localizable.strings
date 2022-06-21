@@ -137,14 +137,14 @@
 
 "MiaoYan" = "妙言";
 
-"Automatic typesetting succeeded~" = "自动化排版完成~";
+"🎉 Automatic typesetting succeeded~" = "🎉 自动化排版完成~";
 
-"Press ESC key to exit~" = "按 ESC 键退出演示~";
+"🙊 Press ESC key to exit~" = "🙊 按 ESC 键退出演示~";
 
-"Format is only possible after exiting preview mode~" = "文档排版需要退出预览模式才可使用~";
+"😶‍🌫️ Format is only possible after exiting preview mode~" = "😶‍🌫️ 文档排版需要退出预览模式才可使用~";
 
-"The current Mac system does not support export, please upgrade to above 11.0~" = "当前 Mac 系统不支持导出，请升级到 11.0 以上~";
+"😶‍🌫️ The current Mac system does not support export, please upgrade to above 11.0~" = "😶‍🌫️ 当前 Mac 系统不支持导出，请升级到 11.0 以上~";
 
-"Exported to desktop~" = "已导出到桌面~";
+"🎉 Exported to desktop~" = "🎉 已导出到桌面~";
 
-"Starting export~" = "开始导出中~";
+"🙊 Starting export~" = "🙊 开始导出中~";
