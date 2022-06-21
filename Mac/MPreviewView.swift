@@ -108,7 +108,8 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                                 let contentWidth = width as! CGFloat
                                 let config = WKSnapshotConfiguration()
                                 config.rect = CGRect(x: 0, y: 0, width: contentWidth, height: contentHeight)
-                                config.afterScreenUpdates = true
+                                config.afterScreenUpdates = false
+                                self?.frame.size.height = contentHeight
                                 self?.takeSnapshot(with: config, completionHandler: { image, error in
                                     if let image = image {
                                         if let desktopURL = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first {
