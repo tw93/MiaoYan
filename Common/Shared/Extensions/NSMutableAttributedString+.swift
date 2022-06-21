@@ -95,46 +95,4 @@ extension NSMutableAttributedString {
             }
         }
     }
-
-    #if os(OSX)
-    public func loadCheckboxes() {
-        while mutableString.contains("- [ ] ") {
-            let range = mutableString.range(of: "- [ ] ")
-            if length >= range.upperBound, let unChecked = AttributedBox.getUnChecked() {
-                replaceCharacters(in: range, with: unChecked)
-            }
-        }
-
-        while mutableString.contains("- [x] ") {
-            let range = mutableString.range(of: "- [x] ")
-            let parRange = mutableString.paragraphRange(for: range)
-
-            if length >= range.upperBound, let checked = AttributedBox.getChecked() {
-
-                let color = UserDataService.instance.isDark ? NSColor.white : NSColor.black
-                addAttribute(.strikethroughColor, value: color, range: parRange)
-
-                replaceCharacters(in: range, with: checked)
-            }
-        }
-    }
-    #endif
-
-    public func replaceCheckboxes() {
-        #if NOT_EXTENSION || os(OSX)
-        while mutableString.contains("- [ ] ") {
-            let range = mutableString.range(of: "- [ ] ")
-            if length >= range.upperBound, let unChecked = AttributedBox.getUnChecked() {
-                replaceCharacters(in: range, with: unChecked)
-            }
-        }
-
-        while mutableString.contains("- [x] ") {
-            let range = mutableString.range(of: "- [x] ")
-            if length >= range.upperBound, let checked = AttributedBox.getChecked() {
-                replaceCharacters(in: range, with: checked)
-            }
-        }
-        #endif
-    }
 }
