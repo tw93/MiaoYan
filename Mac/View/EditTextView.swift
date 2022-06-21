@@ -86,7 +86,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         let index = manager.characterIndex(for: properPoint, in: container, fractionOfDistanceBetweenInsertionPoints: nil)
 
-        let glyphRect = manager.boundingRect(forGlyphRange: NSRange(location: index, length: 1), in: container)
+        _ = manager.boundingRect(forGlyphRange: NSRange(location: index, length: 1), in: container)
 
         if UserDefaultsManagement.preview {
             return
