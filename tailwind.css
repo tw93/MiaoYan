@@ -36,10 +36,10 @@ body {
 }
 
 .i18n-miao-people-desc:before {
-  content: '每周手动更新，喂猫同学人数和虚拟世界中匹配';
+  content: '每周手动更新，人数和虚拟世界中匹配';
 }
 [lang='en'] .i18n-miao-people-desc:before {
-  content: 'Weekly manual update, matching the number of cat feeding friends with that in the virtual world';
+  content: 'Weekly manual update, matching the number with that in the virtual world';
 }
 
 .i18n-miao-people-nums:before {
