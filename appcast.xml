@@ -2,6 +2,28 @@
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
   <channel>
     <title>妙言 / MiaoYan</title>
+      <item>
+      <title>0.6.0</title>
+      <description><![CDATA[
+            <h3>更新记录：</h3>
+            <ol>
+             <li>🙊 这次真的支持 ARM64 打包了，右键显示简介为「通用架构」🎉🎉🎉 </li>
+             <li>🍭 文档支持导出成PDF和图片了🎉🎉，在文档列表右键看看 </li>
+             <li>🐱 双击左上角标题栏，可以放大到窗口最大和缩小到原来</li>
+             <li>🩴 重新优化了一下文档排序的功能，增加升序降序选项</li>
+            </ol>
+           <h3>Update Notes：</h3>
+           <ol>
+             <li>🎉 This time, ARM64 packaging is really supported,Right click to display the introduction as 「common architecture」 🎉🎉🎉 .</li>
+             <li>🍭Documents can be exported to PDF and Image 🎉🎉, Right click on the document list.</li>
+             <li>🐱 Double click the title bar in the upper left corner to zoom in to the maximum size of the window and zoom out to the original size.</li>
+             <li>🩴 Re optimized the document sorting function and added the ascending and descending options.</li>
+            </ol>
+            ]]></description>
+      <pubDate>周二, 21 6月 2022 19:48:44 +0800</pubDate>
+      <enclosure url="https://qpluspicture.oss-cn-beijing.aliyuncs.com/qH6DA5/MiaoYan_V0.6.0.zip" sparkle:shortVersionString="0.6.0" sparkle:version="0.6.0" sparkle:edSignature="Qg26M5anom4pV/riBciJhVY7jhVW2/VhnE66Cjnx/SyyEz+Wflh3vGsaN7DXc5mEmRW9HBGXD4W3NY6Mh1J/CA==" length="29782435" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
     <item>
       <title>0.5.1</title>
       <description><![CDATA[
