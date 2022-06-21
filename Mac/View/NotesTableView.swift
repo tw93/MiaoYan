@@ -333,6 +333,21 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         reloadData(forRowIndexes: IndexSet(integer: at), columnIndexes: [0])
         endUpdates()
     }
+    
+    override func keyDown(with event: NSEvent) {
+        let vc = window?.contentViewController as? ViewController;
+        if event.modifierFlags.contains(.control), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_P {
+            vc?.exportPdf("")
+            return
+        }
+
+        if event.modifierFlags.contains(.control), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_I {
+            vc?.exportImage("")
+            return
+        }
+
+        super.keyDown(with: event)
+    }
 
     public func reloadRow(note: Note) {
         note.invalidateCache()
