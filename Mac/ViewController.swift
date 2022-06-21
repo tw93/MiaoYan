@@ -1037,8 +1037,6 @@ class ViewController: NSViewController,
 
             note.save(attributed: editArea.attributedString())
 
-            print(UserDefaultsManagement.sort)
-
             // 编辑内容，标题排序的时候有bug，先关掉
             if !updateViews.contains(note), UserDefaultsManagement.sort != .title {
                 updateViews.append(note)
