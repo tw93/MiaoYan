@@ -14,24 +14,30 @@
   animation: swing 7s cubic-bezier(0.5, 0, 0.5, 1) infinite both;
 }
 
-.all-wrap{
+.all-wrap {
   max-width: 50rem;
   min-height: 24rem;
   z-index: -1;
 }
 
+.canvas-div {
+  height: 450px;
+}
 
 @media (max-width: 780px) {
-  .all{
+  .all {
     top: 1rem;
     left: calc(50% - 5.2rem);
   }
 
-  .all-wrap{
+  .all-wrap {
     min-height: 20rem;
   }
-
+  .canvas-div {
+    height: 400px;
+  }
 }
+
 
 
 .yarn {
@@ -44,7 +50,7 @@
   background-image: radial-gradient(
     circle at top left,
     #e97c7f,
-    #E73F30 50%,
+    #e73f30 50%,
     #af1d22
   );
   z-index: 1;
@@ -813,8 +819,7 @@
   }
 }
 
-
- *,
+*,
 *:before,
 *:after {
   box-sizing: border-box;
@@ -829,4 +834,9 @@
 *:after {
   content: '';
   display: block;
+}
+
+#canvas {
+  width: 100%;
+  height: 100%;
 }
