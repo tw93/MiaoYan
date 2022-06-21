@@ -1,112 +1,77 @@
 <!DOCTYPE html>
 <html lang="ch">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <meta name="theme-color" content="#36563C" />
-    <meta
-      name="viewport"
-      content="width=device-width,initial-scale=1,minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
-    />
-    <meta itemprop="name" content="喂猫" />
-    <meta
-      name="description"
-      itemprop="description"
-      content="轻灵的 Markdown 笔记本伴你写出妙言~"
-    />
-    <title>喂猫 - 轻灵的 Markdown 笔记本伴你写出妙言</title>
-    <meta name="keywords" content="Markdown,Tw93,MiaoYan,MacApp" />
-    <meta name="author" content="Tw93" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="miaoyan" />
-    <meta name="twitter:creator" content="Tw93" />
-    <meta property="og:url" content="https://miaoyan.vercel.app/cats.html" />
-    <meta property="og:title" content="Feed Cats" />
-    <meta
-      property="og:description"
-      content="Lightweight Markdown app to help you write great sentences."
-    />
-    <link
-      rel="shortcut icon"
-      href="https://gw.alipayobjects.com/zos/k/t0/43.png"
-      type="image/x-icon"
-    />
-    <meta
-      property="og:image"
-      content="https://gw.alipayobjects.com/zos/k/v9/1.png"
-    />
-    <link
-      rel="icon"
-      href="https://gw.alipayobjects.com/zos/k/t0/43.png"
-      type="image/x-icon"
-    />
-    <link
-      rel="stylesheet"
-      href="https://gw.alipayobjects.com/os/k/webfont/style.css"
-    />
-  </head>
-  <link rel="stylesheet" href="./build.css" />
-  <link rel="stylesheet" href="./cats.css" />
 
-  <body class="gradient w-full">
-    <a
-    href="/"
-    class="text-center w-20 absolute lg:top-12 lg:right-36 top-8 right-32 text-white py-2 px-3 font-bold rounded-xl shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out i18n-home-href"
-  ></a>
-    <!--Hero-->
-    <button
-      class="text-center w-20 absolute lg:top-12 top-8 lg:right-12 right-8 text-white py-2 px-3 font-bold rounded-xl shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out lang-switcher i18n-switch-lang xl:right-12 xl:top-12"
-    ></button>
-    <div class="md:pb-0 lg:py-16 py-10 mx-auto relative sm:overflow-y-hidden sm:overflow-x-auto overflow-hidden">
-      <div
-        class="pt-0 xl:px-12 px-6 xl:mt-12 w-full mx-auto flex flex-wrap flex-col md:flex-row items-center"
-      >
-        <div
-          class="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left text-white"
-        >
-          <img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 />
-          <h1
-            class="i18n-title my-4 lg:text-8xl text-7xl font-extrabold leading-tight tracking-widest"
-          >
-          </h1>
-          <h2
-          class="i18n-cats-decs z-10 lg:text-3xl text-2xl text-left font-bold leading-tight text-white xl:mt-0 md:whitespace-nowrap"
-        >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <meta name="theme-color" content="#36563C" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta itemprop="name" content="喂猫" />
+  <meta name="description" itemprop="description" content="轻灵的 Markdown 笔记本伴你写出妙言~" />
+  <title>喂猫 - 轻灵的 Markdown 笔记本伴你写出妙言</title>
+  <meta name="keywords" content="Markdown,Tw93,MiaoYan,MacApp" />
+  <meta name="author" content="Tw93" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="miaoyan" />
+  <meta name="twitter:creator" content="Tw93" />
+  <meta property="og:url" content="https://miaoyan.vercel.app/cats.html" />
+  <meta property="og:title" content="Feed Cats" />
+  <meta property="og:description" content="Lightweight Markdown app to help you write great sentences." />
+  <link rel="shortcut icon" href="https://gw.alipayobjects.com/zos/k/t0/43.png" type="image/x-icon" />
+  <meta property="og:image" content="https://gw.alipayobjects.com/zos/k/v9/1.png" />
+  <link rel="icon" href="https://gw.alipayobjects.com/zos/k/t0/43.png" type="image/x-icon" />
+  <link rel="stylesheet" href="https://gw.alipayobjects.com/os/k/webfont/style.css" />
+</head>
+<link rel="stylesheet" href="./build.css" />
+<link rel="stylesheet" href="./cats.css" />
+
+<body class="gradient w-full overflow-x-hidden">
+  <a href="/" class="text-center w-20 absolute lg:top-12 lg:right-36 top-8 right-32 text-white py-2 px-3 font-bold rounded-xl shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out i18n-home-href"></a>
+  <!--Hero-->
+  <button class="text-center w-20 absolute lg:top-12 top-8 lg:right-12 right-8 text-white py-2 px-3 font-bold rounded-xl shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out lang-switcher i18n-switch-lang xl:right-12 xl:top-12"></button>
+  <div class="md:pb-0 lg:pt-16 pt-10 mx-auto relative sm:overflow-y-hidden md:overflow-x-hidden sm:overflow-x-auto overflow-hidden">
+    <div class="pt-0 xl:px-12 px-6 xl:mt-12 w-full mx-auto flex flex-wrap flex-col md:flex-row items-center">
+      <div class="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left text-white">
+        <img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 />
+        <h1 class="i18n-title my-4 lg:text-8xl text-7xl font-extrabold leading-tight tracking-widest">
+        </h1>
+        <h2 class="i18n-cats-decs z-10 lg:text-3xl text-2xl text-left font-bold leading-tight text-white xl:mt-0 md:whitespace-nowrap">
         </h2>
-        </div>
-        <div class="md:w-3/5 lg:pl-10 lg:pr-0 md:px-6 flex flex-wrap justify-end">
-          <img title="汤圆/TangYuan" class="md:w-1/3 w-full rounded-full md:mt-0 mt-8 object-cover" src="https://gw.alipayobjects.com/zos/k/wb/IMG_7795%2525203.jpg">
+      </div>
+      <div class="md:w-3/5 lg:pl-10 lg:pr-0 md:px-6 flex flex-wrap justify-end">
+        <img title="汤圆/TangYuan" class="md:w-1/3 w-full rounded-full md:mt-0 mt-8 object-cover" src="https://gw.alipayobjects.com/zos/k/wb/IMG_7795%2525203.jpg">
 
-          </img>
-          <img class="md:w-1/3 w-full md:ml-12 md:mr-4 rounded-full md:mt-0 mt-8 object-cover" title="可乐/Coke" src="https://gw.alipayobjects.com/zos/k/b3/IMG_3664.JPG">
-          </img>
+        </img>
+        <img class="md:w-1/3 w-full md:ml-12 md:mr-4 rounded-full md:mt-0 mt-8 object-cover" title="可乐/Coke" src="https://gw.alipayobjects.com/zos/k/b3/IMG_3664.JPG">
+        </img>
       </div>
-      </div>
-      <div class="flex flex-wrap -m-4 text-center lg:px-12 px-6 lg:mt-16 md:mt-8 mt-2 justify-end">
-        <div class="md:p-8 p-4 xl:w-1/5 md:w-1/4 sm:w-1/2 w-full">
-          <div class="all-wrap">
-            <div class="all">
-              <div class="yarn"></div>
-              <div class="cat-wrap">
-                <div class="cat">
-                  <div class="cat-upper">
-                    <div class="cat-leg"></div>
-                    <div class="cat-leg"></div>
-                    <div class="cat-head">
-                      <div class="cat-ears">
-                        <div class="cat-ear"></div>
-                        <div class="cat-ear"></div>
-                      </div>
-                      <div class="cat-face">
-                        <div class="cat-eyes"></div>
-                        <div class="cat-mouth"></div>
-                        <div class="cat-whiskers"></div>
-                      </div>
+    </div>
+    <div class="flex flex-wrap -m-4 text-center lg:px-12 px-6 lg:mt-16 md:mt-8 mt-2 justify-end">
+      <div class="md:p-8 p-4 xl:w-1/5 md:w-1/4 sm:w-1/2 w-full">
+        <div class="all-wrap">
+          <div class="all">
+            <div class="yarn"></div>
+            <div class="cat-wrap">
+              <div class="cat">
+                <div class="cat-upper">
+                  <div class="cat-leg"></div>
+                  <div class="cat-leg"></div>
+                  <div class="cat-head">
+                    <div class="cat-ears">
+                      <div class="cat-ear"></div>
+                      <div class="cat-ear"></div>
+                    </div>
+                    <div class="cat-face">
+                      <div class="cat-eyes"></div>
+                      <div class="cat-mouth"></div>
+                      <div class="cat-whiskers"></div>
                     </div>
                   </div>
-                  <div class="cat-lower-wrap">
-                    <div class="cat-lower">
+                </div>
+                <div class="cat-lower-wrap">
+                  <div class="cat-lower">
+                    <div class="cat-leg">
                       <div class="cat-leg">
                         <div class="cat-leg">
                           <div class="cat-leg">
@@ -122,11 +87,7 @@
                                               <div class="cat-leg">
                                                 <div class="cat-leg">
                                                   <div class="cat-leg">
-                                                    <div class="cat-leg">
-                                                      <div
-                                                        class="cat-paw"
-                                                      ></div>
-                                                    </div>
+                                                    <div class="cat-paw"></div>
                                                   </div>
                                                 </div>
                                               </div>
@@ -142,6 +103,8 @@
                           </div>
                         </div>
                       </div>
+                    </div>
+                    <div class="cat-leg">
                       <div class="cat-leg">
                         <div class="cat-leg">
                           <div class="cat-leg">
@@ -157,11 +120,7 @@
                                               <div class="cat-leg">
                                                 <div class="cat-leg">
                                                   <div class="cat-leg">
-                                                    <div class="cat-leg">
-                                                      <div
-                                                        class="cat-paw"
-                                                      ></div>
-                                                    </div>
+                                                    <div class="cat-paw"></div>
                                                   </div>
                                                 </div>
                                               </div>
@@ -177,6 +136,8 @@
                           </div>
                         </div>
                       </div>
+                    </div>
+                    <div class="cat-tail">
                       <div class="cat-tail">
                         <div class="cat-tail">
                           <div class="cat-tail">
@@ -191,11 +152,7 @@
                                             <div class="cat-tail">
                                               <div class="cat-tail">
                                                 <div class="cat-tail">
-                                                  <div class="cat-tail">
-                                                    <div
-                                                      class="cat-tail -end"
-                                                    ></div>
-                                                  </div>
+                                                  <div class="cat-tail -end"></div>
                                                 </div>
                                               </div>
                                             </div>
@@ -217,85 +174,337 @@
             </div>
           </div>
         </div>
-        <div class="md:p-6 p-4 xl:ml-48 xl:w-1/5 md:w-1/4 sm:w-1/2 w-full">
-          <img
-            src="https://gw.alipayobjects.com/zos/k/ze/1.png"
-            class="border-4 rounded-lg"
-            style="border-color: #1CAB1A;"
-          />
-        </div>
-        <div class="md:p-6 p-4 xl:w-1/5 md:w-1/4 sm:w-1/2 w-full">
-          <img
-            src="https://gw.alipayobjects.com/zos/k/xa/2.png"
-            class="border-4 border-blue-500 rounded-lg"
-            style="border-color: #1578FF;"
-          />
-        </div>
-        <a
-          class="md:p-6 p-4 xl:w-1/5 md:w-1/4 sm:w-1/2 w-full block"
-          href="https://www.paypal.me/tangwei1993"
-          target="_blank"
-        >
-          <img
-            src="https://gw.alipayobjects.com/zos/k/1l/3.png"
-            class="border-4 border-blue-900 rounded-lg"
-            style="border-color: #032169;"
-          />
-        </a>
       </div>
+      <div class="md:p-6 p-4 xl:ml-48 xl:w-1/5 md:w-1/4 sm:w-1/2 w-full">
+        <img src="https://gw.alipayobjects.com/zos/k/ze/1.png" class="border-4 rounded-lg" style="border-color: #1CAB1A;" />
+      </div>
+      <div class="md:p-6 p-4 xl:w-1/5 md:w-1/4 sm:w-1/2 w-full">
+        <img src="https://gw.alipayobjects.com/zos/k/xa/2.png" class="border-4 border-blue-500 rounded-lg" style="border-color: #1578FF;" />
+      </div>
+      <a class="md:p-6 p-4 xl:w-1/5 md:w-1/4 sm:w-1/2 w-full block" href="https://www.paypal.me/tangwei1993" target="_blank">
+        <img src="https://gw.alipayobjects.com/zos/k/1l/3.png" class="border-4 border-blue-900 rounded-lg" style="border-color: #032169;" />
+      </a>
     </div>
-  </body>
-  <script>
-    const ua = window.navigator.userAgent.toLowerCase();
-    const $langSwitch = document.querySelector('.lang-switcher');
-    const langStorage = localStorage.getItem('miaoyanLang');
-    const $html = document.querySelector('html');
-    document.addEventListener('DOMContentLoaded', () => {
-      const setLang = (lang) => {
-        $html.setAttribute('lang', lang);
-        localStorage.setItem('miaoyanLang', lang);
-        if (lang === 'en') {
-          document.title = 'Feed Cats - Lightweight Markdown app';
-          document
-            .querySelector('meta[name="description"]')
-            .setAttribute(
-              'content',
-              'Lightweight Markdown app to help you write great sentences.',
-            );
-        } else {
-          document.title = '喂猫 - 轻灵的 Markdown 笔记本';
-          document
-            .querySelector('meta[name="description"]')
-            .setAttribute('content', '轻灵的 Markdown 笔记本伴你写出妙言~');
-        }
-      };
-      $langSwitch.onclick = () => {
-          const $html = document.querySelector('html');
-          const lang = $html.getAttribute('lang');
-          setLang(lang == 'ch' ? 'en' : 'ch');
-        };
-      if (['en', 'ch'].indexOf(langStorage) > -1) {
-        setLang(langStorage);
-      } else {
-        if (navigator.language === 'zh-CN') {
-          setLang('ch');
-        } else {
-          setLang('en');
-        }
-      }
-    });
-  </script>
-  <script
-    async
-    src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"
-  ></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
+    <div class="relative md:-mt-48 lg:-mt-40 -mt-8">
+      <svg viewBox="0 0 1428 174" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <g stroke="black" stroke-width="0.2" fill="none" fill-rule="evenodd">
+          <g transform="translate(-2.000000, 44.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <path d="M0,0 C90.7283404,0.927527913 147.912752,27.187927 291.910178,59.9119003 C387.908462,81.7278826 543.605069,89.334785 759,82.7326078 C469.336065,156.254352 216.336065,153.6679 0,74.9732496" opacity="0.100000001"></path>
+            <path d="M100,104.708498 C277.413333,72.2345949 426.147877,52.5246657 546.203633,45.5787101 C666.259389,38.6327546 810.524845,41.7979068 979,55.0741668 C931.069965,56.122511 810.303266,74.8455141 616.699903,111.243176 C423.096539,147.640838 250.863238,145.462612 100,104.708498 Z" opacity="0.100000001"></path>
+            <path d="M1046,51.6521276 C1130.83045,29.328812 1279.08318,17.607883 1439,40.1656806 L1439,120 C1271.17211,77.9435312 1140.17211,55.1609071 1046,51.6521276 Z" id="Path-4" opacity="0.200000003"></path>
+          </g>
+          <g transform="translate(-4.000000, 76.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <path
+              d="M0.457,34.035 C57.086,53.198 98.208,65.809 123.822,71.865 C181.454,85.495 234.295,90.29 272.033,93.459 C311.355,96.759 396.635,95.801 461.025,91.663 C486.76,90.01 518.727,86.372 556.926,80.752 C595.747,74.596 622.372,70.008 636.799,66.991 C663.913,61.324 712.501,49.503 727.605,46.128 C780.47,34.317 818.839,22.532 856.324,15.904 C922.689,4.169 955.676,2.522 1011.185,0.432 C1060.705,1.477 1097.39,3.129 1121.236,5.387 C1161.703,9.219 1208.621,17.821 1235.4,22.304 C1285.855,30.748 1354.351,47.432 1440.886,72.354 L1441.191,104.352 L1.121,104.031 L0.457,34.035 Z">
+            </path>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <section class="bg-white pt-4 -mt-2">
+      <div class="lg:w-full mx-auto">
+        <h1 class="w-full mt-2 lg:text-6xl text-5xl font-bold leading-tight text-center text-gray-700">喂猫的同学们</h1>
+        <div class="w-full mx-auto text-center px-12 lg:mx-300 text-xl mt-8">木子君、Jerk、芸璟、薛定谔的盲盒、乐宝、忸祁、小锐、嬷嬷嬷呀，当前共计 8 人 ❤️ 妙言。
+          <p class="text-center text-sm mt-3 text-gray-500">每周手动更新，喂猫同学人数和虚拟世界中匹配</p>
+        </div>
+      </div>
+    </section>
+    <div class="bg-white canvas-div">
+      <canvas id="canvas"></canvas>
 
-    gtag('config', 'G-5M47BM3L9Y');
-  </script>
+    </div>
+  </div>
+</body>
+<script>
+  const ua = window.navigator.userAgent.toLowerCase();
+  const $langSwitch = document.querySelector('.lang-switcher');
+  const langStorage = localStorage.getItem('miaoyanLang');
+  const $html = document.querySelector('html');
+  document.addEventListener('DOMContentLoaded', () => {
+    const setLang = (lang) => {
+      $html.setAttribute('lang', lang);
+      localStorage.setItem('miaoyanLang', lang);
+      if (lang === 'en') {
+        document.title = 'Feed Cats - Lightweight Markdown app';
+        document
+          .querySelector('meta[name="description"]')
+          .setAttribute(
+            'content',
+            'Lightweight Markdown app to help you write great sentences.',
+          );
+      } else {
+        document.title = '喂猫 - 轻灵的 Markdown 笔记本';
+        document
+          .querySelector('meta[name="description"]')
+          .setAttribute('content', '轻灵的 Markdown 笔记本伴你写出妙言~');
+      }
+    };
+    $langSwitch.onclick = () => {
+      const $html = document.querySelector('html');
+      const lang = $html.getAttribute('lang');
+      setLang(lang == 'ch' ? 'en' : 'ch');
+    };
+    if (['en', 'ch'].indexOf(langStorage) > -1) {
+      setLang(langStorage);
+    } else {
+      if (navigator.language === 'zh-CN') {
+        setLang('ch');
+      } else {
+        setLang('en');
+      }
+    }
+  });
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script src="./gsap.min.js"></script>
+<script>
+  const config = {
+    src: 'https://qpluspicture.oss-cn-beijing.aliyuncs.com/DPDQOa/12.png',
+    rows: 8,
+    cols: 1
+  }
+
+  // UTILS
+
+  const randomRange = (min, max) => min + Math.random() * (max - min)
+
+  const randomIndex = (array) => randomRange(0, array.length) | 0
+
+  const removeFromArray = (array, i) => array.splice(i, 1)[0]
+
+  const removeItemFromArray = (array, item) => removeFromArray(array, array.indexOf(item))
+
+  const removeRandomFromArray = (array) => removeFromArray(array, randomIndex(array))
+
+  const getRandomFromArray = (array) => (
+    array[randomIndex(array) | 0]
+  )
+
+  // TWEEN FACTORIES
+
+  const resetPeep = ({ stage, peep }) => {
+    const direction = Math.random() > 0.5 ? 1 : -1
+    // using an ease function to skew random to lower values to help hide that peeps have no legs
+    const offsetY = 100 - 250 * gsap.parseEase('power2.in')(Math.random())
+    const startY = stage.height - peep.height + offsetY
+    let startX
+    let endX
+
+    if (direction === 1) {
+      startX = -peep.width
+      endX = stage.width
+      peep.scaleX = 1
+    } else {
+      startX = stage.width + peep.width
+      endX = 0
+      peep.scaleX = -1
+    }
+
+    peep.x = startX
+    peep.y = startY
+    peep.anchorY = startY
+
+    return {
+      startX,
+      startY,
+      endX
+    }
+  }
+
+  const normalWalk = ({ peep, props }) => {
+    const {
+      startX,
+      startY,
+      endX
+    } = props
+
+    const xDuration = 10
+    const yDuration = 0.25
+
+    const tl = gsap.timeline()
+    tl.timeScale(randomRange(0.5, 1.5))
+    tl.to(peep, {
+      duration: xDuration,
+      x: endX,
+      ease: 'none'
+    }, 0)
+    tl.to(peep, {
+      duration: yDuration,
+      repeat: xDuration / yDuration,
+      yoyo: true,
+      y: startY - 10
+    }, 0)
+
+    return tl
+  }
+
+  const walks = [
+    normalWalk,
+  ]
+
+  // CLASSES
+
+  class Peep {
+    constructor ({
+      image,
+      rect,
+    }) {
+      this.image = image
+      this.setRect(rect)
+
+      this.x = 0
+      this.y = 0
+      this.anchorY = 0
+      this.scaleX = 1
+      this.walk = null
+    }
+
+    setRect (rect) {
+      this.rect = rect
+      this.width = rect[2]
+      this.height = rect[3]
+
+      this.drawArgs = [
+        this.image,
+        ...rect,
+        0, 0, this.width, this.height
+      ]
+    }
+
+    render (ctx) {
+      ctx.save()
+      ctx.translate(this.x, this.y)
+      ctx.scale(this.scaleX, 1)
+      ctx.drawImage(...this.drawArgs)
+      ctx.restore()
+    }
+  }
+
+  // MAIN
+
+  const img = document.createElement('img')
+  img.onload = init
+  img.src = config.src
+
+  const canvas = document.querySelector('#canvas')
+  const ctx = canvas.getContext('2d')
+
+  const stage = {
+    width: 0,
+    height: 0,
+  }
+
+  const allPeeps = []
+  const availablePeeps = []
+  const crowd = []
+
+  function init () {
+    createPeeps()
+
+    // resize also (re)populates the stage
+    resize()
+
+    gsap.ticker.add(render)
+    window.addEventListener('resize', resize)
+  }
+
+  function createPeeps () {
+    const {
+      rows,
+      cols
+    } = config
+    const {
+      naturalWidth: width,
+      naturalHeight: height
+    } = img
+    const total = rows * cols
+    const rectWidth = width / rows
+    const rectHeight = height / cols
+
+    for (let i = 0; i < total; i++) {
+      allPeeps.push(new Peep({
+        image: img,
+        rect: [
+          (i % rows) * rectWidth,
+          (i / rows | 0) * rectHeight,
+          rectWidth,
+          rectHeight,
+        ]
+      }))
+    }
+  }
+
+  function resize () {
+    stage.width = canvas.clientWidth
+    stage.height = canvas.clientHeight
+    canvas.width = stage.width * devicePixelRatio
+    canvas.height = stage.height * devicePixelRatio
+
+    crowd.forEach((peep) => {
+      peep.walk.kill()
+    })
+
+    crowd.length = 0
+    availablePeeps.length = 0
+    availablePeeps.push(...allPeeps)
+
+    initCrowd()
+  }
+
+  function initCrowd () {
+    while (availablePeeps.length) {
+      // setting random tween progress spreads the peeps out
+      addPeepToCrowd().walk.progress(Math.random())
+    }
+  }
+
+  function addPeepToCrowd () {
+    const peep = removeRandomFromArray(availablePeeps)
+    const walk = getRandomFromArray(walks)({
+      peep,
+      props: resetPeep({
+        peep,
+        stage,
+      })
+    }).eventCallback('onComplete', () => {
+      removePeepFromCrowd(peep)
+      addPeepToCrowd()
+    })
+
+    peep.walk = walk
+
+    crowd.push(peep)
+    crowd.sort((a, b) => a.anchorY - b.anchorY)
+
+    return peep
+  }
+
+  function removePeepFromCrowd (peep) {
+    removeItemFromArray(crowd, peep)
+    availablePeeps.push(peep)
+  }
+
+  function render () {
+    canvas.width = canvas.width
+    ctx.save()
+    ctx.scale(devicePixelRatio, devicePixelRatio)
+
+    crowd.forEach((peep) => {
+      peep.render(ctx)
+    })
+
+    ctx.restore()
+  }
+
+</script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag () {
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+
+  gtag('config', 'G-5M47BM3L9Y');
+</script>
+
 </html>
