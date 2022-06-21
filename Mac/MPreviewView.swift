@@ -72,12 +72,13 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         closure?()
-        exportImage()
     }
 
     public func exportPdf() {
+        let vc = ViewController.shared()
+
         if #available(macOS 11.0.0, *) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 let config = WKPDFConfiguration()
                 // Render the PDF
                 super.createPDF(configuration: config) { result in
@@ -87,10 +88,12 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                             let currentName = self.note?.getTitle()
                             let filePath: String = path + "/" + currentName! + ".pdf"
                             try! data.write(to: URL(fileURLWithPath: filePath))
+                            vc?.toastExport(status: true)
                         }
 
                     case .failure(let error):
                         print(error)
+                        vc?.toastExport(status: false)
                     }
                 }
             }
@@ -98,8 +101,9 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     public func exportImage() {
+        let vc = ViewController.shared()
         if #available(macOS 10.15, *) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
                     if complete != nil {
                         super.evaluateJavaScript("document.body.offsetHeight", completionHandler: { height, _ in
@@ -117,9 +121,11 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                                             let destinationURL = desktopURL.appendingPathComponent(currentName! + ".jpeg")
                                             try! image.saveJPEGRepresentationToURL(url: destinationURL)
                                         }
+                                        vc?.toastExport(status: true)
                                         print("Got snapshot")
                                     } else {
                                         print("Failed taking snapshot: \(error?.localizedDescription ?? "--")")
+                                        vc?.toastExport(status: false)
                                     }
                                 })
                             })
