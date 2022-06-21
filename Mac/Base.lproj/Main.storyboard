@@ -1362,33 +1362,6 @@ CA
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <menu id="AaK-Xd-i52">
                     <items>
-                        <menuItem title="Export" alternate="YES" id="8LY-2s-GJ7">
-                            <modifierMask key="keyEquivalentModifierMask"/>
-                            <menu key="submenu" title="Export" id="LoU-Gc-oM3">
-                                <items>
-                                    <menuItem title="PDF" id="UcZ-Ne-qv1">
-                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                        <connections>
-                                            <action selector="exportPdf:" target="XfG-lQ-9wD" id="DiT-Ue-MTm"/>
-                                        </connections>
-                                    </menuItem>
-                                    <menuItem title="Image" id="GsA-uj-XlT">
-                                        <modifierMask key="keyEquivalentModifierMask"/>
-                                        <connections>
-                                            <action selector="exportImage:" target="XfG-lQ-9wD" id="CHV-dY-HtD"/>
-                                        </connections>
-                                    </menuItem>
-                                </items>
-                            </menu>
-                            <connections>
-                                <action selector="deleteNote:" target="XfG-lQ-9wD" id="y2e-Du-Mlj"/>
-                            </connections>
-                        </menuItem>
-                        <menuItem title="Save revision" keyEquivalent="s" id="Nhf-c1-VJ6">
-                            <connections>
-                                <action selector="saveRevision:" target="rPt-NT-nkU" id="3q1-my-06E"/>
-                            </connections>
-                        </menuItem>
                         <menuItem title="Duplicate" keyEquivalent="d" id="E6I-n5-dsi">
                             <connections>
                                 <action selector="duplicate:" target="rPt-NT-nkU" id="hUh-qX-nAT"/>
@@ -1417,6 +1390,25 @@ CA
                             <connections>
                                 <action selector="deleteNote:" target="XfG-lQ-9wD" id="3m0-Tl-QCc"/>
                             </connections>
+                        </menuItem>
+                        <menuItem title="Export" id="8LY-2s-GJ7">
+                            <modifierMask key="keyEquivalentModifierMask"/>
+                            <menu key="submenu" title="Export" id="LoU-Gc-oM3">
+                                <items>
+                                    <menuItem title="PDF" alternate="YES" keyEquivalent="P" id="UcZ-Ne-qv1">
+                                        <modifierMask key="keyEquivalentModifierMask" control="YES"/>
+                                        <connections>
+                                            <action selector="exportPdf:" target="XfG-lQ-9wD" id="DiT-Ue-MTm"/>
+                                        </connections>
+                                    </menuItem>
+                                    <menuItem title="Image" alternate="YES" keyEquivalent="I" id="GsA-uj-XlT">
+                                        <modifierMask key="keyEquivalentModifierMask" control="YES"/>
+                                        <connections>
+                                            <action selector="exportImage:" target="XfG-lQ-9wD" id="CHV-dY-HtD"/>
+                                        </connections>
+                                    </menuItem>
+                                </items>
+                            </menu>
                         </menuItem>
                     </items>
                 </menu>
