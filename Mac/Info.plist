@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>SUScheduledCheckInterval</key>
-	<integer>3600</integer>
 	<key>ATSApplicationFontsPath</key>
 	<string>.</string>
 	<key>CFBundleDevelopmentRegion</key>
@@ -118,6 +116,8 @@
 	<string>https://miaoyan.vercel.app/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>4IB5REPPZ6ya7EP1aIYpaleXXOEVmenFqN4DFnsVbHc=</string>
+	<key>SUScheduledCheckInterval</key>
+	<integer>3600</integer>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
