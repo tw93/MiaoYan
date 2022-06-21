@@ -22,11 +22,33 @@ body {
 }
 
 .i18n-miao-href:before {
-  content: '喂猫';
+  content: '喂猫 ❤️';
 }
 [lang='en'] .i18n-miao-href:before {
-  content: 'Reward';
+  content: 'Pay ❤️';
 }
+
+.i18n-miao-people:before {
+  content: '喂猫的朋友们';
+}
+[lang='en'] .i18n-miao-people:before {
+  content: 'Friends who feed the cat';
+}
+
+.i18n-miao-people-desc:before {
+  content: '每周手动更新，喂猫同学人数和虚拟世界中匹配';
+}
+[lang='en'] .i18n-miao-people-desc:before {
+  content: 'Weekly manual update, matching the number of cat feeding friends with that in the virtual world';
+}
+
+.i18n-miao-people-nums:before {
+  content: '木子君、Jerk、芸璟、薛定谔的盲盒、乐宝、忸祁、小锐、嬷嬷嬷呀，当前共计 8 人 ❤️ 妙言。';
+}
+[lang='en'] .i18n-miao-people-nums:before {
+  content: '木子君、Jerk、芸璟、薛定谔的盲盒、乐宝、忸祁、小锐、嬷嬷嬷呀, in total 8 friends ❤ MiaoYan.';
+}
+
 
 .i18n-home-href:before {
   content: '首页';
