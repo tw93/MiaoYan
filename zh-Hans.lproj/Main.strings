@@ -731,3 +731,9 @@
 /* Class = "NSButton"; ibShadowedToolTip = "New Project"; ObjectID = "Yei-Or-qiI"; */
 "Yei-Or-qiI.ibShadowedToolTip" = "新建分类";
 
+
+/* Class = "NSMenuItem"; title = "Export"; ObjectID = "8LY-2s-GJ7"; */
+"8LY-2s-GJ7.title" = "导出";
+
+/* Class = "NSMenuItem"; title = "Image"; ObjectID = "GsA-uj-XlT"; */
+"GsA-uj-XlT.title" = "图片";

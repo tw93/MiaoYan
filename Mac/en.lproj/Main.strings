@@ -338,3 +338,9 @@
 /* Class = "NSButton"; toolTip = "New Project"; ObjectID = "Yei-Or-qiI"; */
 "Yei-Or-qiI.ibShadowedToolTip" = "New Project";
 
+
+/* Class = "NSMenuItem"; title = "Export"; ObjectID = "8LY-2s-GJ7"; */
+"8LY-2s-GJ7.title" = "Export";
+
+/* Class = "NSMenuItem"; title = "Image"; ObjectID = "GsA-uj-XlT"; */
+"GsA-uj-XlT.title" = "Image";

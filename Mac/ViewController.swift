@@ -1808,6 +1808,28 @@ class ViewController: NSViewController,
         formatText()
     }
 
+    @IBAction func exportImage(_ sender: Any) {
+        enablePreview()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            self.editArea.markdownView?.exportImage()
+        }
+    }
+
+    @IBAction func exportPdf(_ sender: Any) {
+        enablePreview()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            self.editArea.markdownView?.exportPdf()
+        }
+    }
+
+    public func toastExport(status: Bool) {
+        if status {
+            toast(message: NSLocalizedString("Exported to desktop~", comment: ""))
+        } else {
+            toast(message: NSLocalizedString("The current Mac system does not support export, please upgrade to above 11.0", comment: ""))
+        }
+    }
+
     public func saveTextAtClipboard() {
         if let note = notesTableView.getSelectedNote() {
             let pasteboard = NSPasteboard.general
