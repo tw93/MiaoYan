@@ -890,7 +890,7 @@ CA
                                                                                         <action selector="projectName:" target="I0q-sX-uBq" id="Mx3-zh-Tac"/>
                                                                                     </connections>
                                                                                 </textField>
-                                                                                <box hidden="YES" verticalHuggingPriority="750" ambiguous="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="bVt-gT-Six">
+                                                                                <box hidden="YES" verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="bVt-gT-Six">
                                                                                     <rect key="frame" x="0.0" y="0.0" width="182" height="5"/>
                                                                                 </box>
                                                                             </subviews>
@@ -900,6 +900,7 @@ CA
                                                                                 <constraint firstAttribute="trailing" secondItem="bVt-gT-Six" secondAttribute="trailing" id="VUS-Wa-wfe"/>
                                                                                 <constraint firstItem="kTp-qw-RCd" firstAttribute="leading" secondItem="I0q-sX-uBq" secondAttribute="leading" constant="24" id="bav-Au-PqY"/>
                                                                                 <constraint firstItem="kTp-qw-RCd" firstAttribute="centerY" secondItem="I0q-sX-uBq" secondAttribute="centerY" constant="-1" id="fox-W9-Kiy"/>
+                                                                                <constraint firstItem="bVt-gT-Six" firstAttribute="top" secondItem="1dd-W4-MiY" secondAttribute="bottom" constant="14" id="gPD-DI-exq"/>
                                                                                 <constraint firstItem="bVt-gT-Six" firstAttribute="leading" secondItem="I0q-sX-uBq" secondAttribute="leading" id="oLU-KS-Pam"/>
                                                                                 <constraint firstItem="1dd-W4-MiY" firstAttribute="centerY" secondItem="I0q-sX-uBq" secondAttribute="centerY" id="slG-ke-sdb"/>
                                                                             </constraints>
