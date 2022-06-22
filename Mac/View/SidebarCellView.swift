@@ -3,12 +3,10 @@ import Cocoa
 class SidebarCellView: NSTableCellView {
     @IBOutlet weak var icon: NSImageView!
     @IBOutlet weak var label: NSTextField!
-    @IBOutlet weak var plus: NSButton!
     
     var storage = Storage.sharedInstance()
     
     override func draw(_ dirtyRect: NSRect) {
-        plus.isHidden = true
         label.font = UserDefaultsManagement.nameFont
         super.draw(dirtyRect)
     }
