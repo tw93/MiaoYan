@@ -228,6 +228,7 @@ class ViewController: NSViewController,
 
         notesScrollView.scrollerStyle = .overlay
         sidebarScrollView.scrollerStyle = .overlay
+        sidebarScrollView.horizontalScroller = .none
     }
 
     private func configureNotesList() {
