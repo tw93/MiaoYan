@@ -9,176 +9,205 @@
 }
 
 @font-face {
-  font-family: "Heti Hei";
-  src: "Heti Hei SC", "Heti Hei TC", "Heti Hei JP", "Heti Hei KR";
+  font-family: 'Heti Hei';
+  src: 'Heti Hei SC', 'Heti Hei TC', 'Heti Hei JP', 'Heti Hei KR';
 }
 
 @font-face {
-  font-family: "Heti Hei SC";
-  src: local("PingFang SC Regular"), local("Heiti SC Regular"), local("Microsoft YaHei"), local("Source Han Sans CN Regular"), local("Noto Sans CJK SC Regular"), local("WenQuanYi Micro Hei"), local("Droid Sans Fallback");
+  font-family: 'Heti Hei SC';
+  src: local('PingFang SC Regular'), local('Heiti SC Regular'),
+    local('Microsoft YaHei'), local('Source Han Sans CN Regular'),
+    local('Noto Sans CJK SC Regular'), local('WenQuanYi Micro Hei'),
+    local('Droid Sans Fallback');
 }
 
 @font-face {
-  font-family: "Heti Hei TC";
-  src: local("PingFang TC Regular"), local("Heiti TC Regular"), local("Microsoft Jhenghei"), local("Source Han Sans HK Regular"), local("Source Han Sans TW Regular"), local("Noto Sans CJK TC Regular"), local("WenQuanYi Micro Hei"), local("Droid Sans Fallback");
+  font-family: 'Heti Hei TC';
+  src: local('PingFang TC Regular'), local('Heiti TC Regular'),
+    local('Microsoft Jhenghei'), local('Source Han Sans HK Regular'),
+    local('Source Han Sans TW Regular'), local('Noto Sans CJK TC Regular'),
+    local('WenQuanYi Micro Hei'), local('Droid Sans Fallback');
 }
 
 @font-face {
-  font-family: "Heti Hei JP";
-  src: local("Hiragino Sans GB W3"), local("Source Han Sans JP Regular"), local("Noto Sans CJK JP Regular"), local("Droid Sans Fallback");
+  font-family: 'Heti Hei JP';
+  src: local('Hiragino Sans GB W3'), local('Source Han Sans JP Regular'),
+    local('Noto Sans CJK JP Regular'), local('Droid Sans Fallback');
 }
 
 @font-face {
-  font-family: "Heti Hei KR";
-  src: local("Source Han Sans KR Regular"), local("Noto Sans CJK KR Regular"), local("Droid Sans Fallback");
+  font-family: 'Heti Hei KR';
+  src: local('Source Han Sans KR Regular'), local('Noto Sans CJK KR Regular'),
+    local('Droid Sans Fallback');
 }
 
 @font-face {
-  font-family: "Heti Hei";
+  font-family: 'Heti Hei';
   font-weight: 200;
-  src: "Heti Hei SC Light", "Heti Hei TC Light", "Heti Hei JP Light", "Heti Hei KR Light";
+  src: 'Heti Hei SC Light', 'Heti Hei TC Light', 'Heti Hei JP Light',
+    'Heti Hei KR Light';
 }
 
 @font-face {
-  font-family: "Heti Hei SC Light";
+  font-family: 'Heti Hei SC Light';
   font-weight: 200;
-  src: local("PingFang SC Light"), local("Heiti SC Light"), "Heti Hei SC Light Fallback", local("Source Han Sans CN Light"), local("Noto Sans CJK SC Light");
+  src: local('PingFang SC Light'), local('Heiti SC Light'),
+    'Heti Hei SC Light Fallback', local('Source Han Sans CN Light'),
+    local('Noto Sans CJK SC Light');
 }
 
 @font-face {
-  font-family: "Heti Hei TC Light";
+  font-family: 'Heti Hei TC Light';
   font-weight: 200;
-  src: local("PingFang TC Light"), local("Heiti TC Light"), local("Microsoft Jhenghei Light"), local("Source Han Sans HK Light"), local("Source Han Sans TW Light"), local("Noto Sans CJK TC Light");
+  src: local('PingFang TC Light'), local('Heiti TC Light'),
+    local('Microsoft Jhenghei Light'), local('Source Han Sans HK Light'),
+    local('Source Han Sans TW Light'), local('Noto Sans CJK TC Light');
 }
 
 @font-face {
-  font-family: "Heti Hei JP Light";
+  font-family: 'Heti Hei JP Light';
   font-weight: 200;
-  src: local("Source Han Sans JP Light"), local("Noto Sans CJK JP Light");
+  src: local('Source Han Sans JP Light'), local('Noto Sans CJK JP Light');
 }
 
 @font-face {
-  font-family: "Heti Hei KR Light";
+  font-family: 'Heti Hei KR Light';
   font-weight: 200;
-  src: local("Source Han Sans KR Light"), local("Noto Sans CJK KR Light");
+  src: local('Source Han Sans KR Light'), local('Noto Sans CJK KR Light');
 }
 
 @font-face {
-  font-family: "Heti Hei SC Light Fallback";
+  font-family: 'Heti Hei SC Light Fallback';
   font-weight: 200;
-  src: local("Microsoft YaHei"), local("Droid Sans Fallback");
+  src: local('Microsoft YaHei'), local('Droid Sans Fallback');
 }
 
 @font-face {
-  font-family: "Heti Hei";
+  font-family: 'Heti Hei';
   font-weight: 600;
-  src: "Heti Hei SC Bold", "Heti Hei TC Bold", "Heti Hei JP Bold", "Heti Hei KR Bold";
+  src: 'Heti Hei SC Bold', 'Heti Hei TC Bold', 'Heti Hei JP Bold',
+    'Heti Hei KR Bold';
 }
 
 @font-face {
-  font-family: "Heti Hei SC Bold";
+  font-family: 'Heti Hei SC Bold';
   font-weight: 600;
-  src: local("PingFang SC Medium"), local("Heiti SC Medium"), "Heti Hei SC Bold Fallback", local("Source Han Sans CN Bold"), local("Noto Sans CJK SC Bold");
+  src: local('PingFang SC Medium'), local('Heiti SC Medium'),
+    'Heti Hei SC Bold Fallback', local('Source Han Sans CN Bold'),
+    local('Noto Sans CJK SC Bold');
 }
 
 @font-face {
-  font-family: "Heti Hei TC Bold";
+  font-family: 'Heti Hei TC Bold';
   font-weight: 600;
-  src: local("PingFang TC Medium"), local("Heiti TC Medium"), local("Microsoft Jhenghei Bold"), local("Source Han Sans HK Bold"), local("Source Han Sans TW Bold"), local("Noto Sans CJK TC Bold");
+  src: local('PingFang TC Medium'), local('Heiti TC Medium'),
+    local('Microsoft Jhenghei Bold'), local('Source Han Sans HK Bold'),
+    local('Source Han Sans TW Bold'), local('Noto Sans CJK TC Bold');
 }
 
 @font-face {
-  font-family: "Heti Hei JP Bold";
+  font-family: 'Heti Hei JP Bold';
   font-weight: 600;
-  src: local("Hiragino Sans GB W6"), local("Source Han Sans JP Bold"), local("Noto Sans CJK JP Bold");
+  src: local('Hiragino Sans GB W6'), local('Source Han Sans JP Bold'),
+    local('Noto Sans CJK JP Bold');
 }
 
 @font-face {
-  font-family: "Heti Hei KR Bold";
+  font-family: 'Heti Hei KR Bold';
   font-weight: 600;
-  src: local("Source Han Sans KR Bold"), local("Noto Sans CJK KR Bold");
+  src: local('Source Han Sans KR Bold'), local('Noto Sans CJK KR Bold');
 }
 
 @font-face {
-  font-family: "Heti Hei SC Bold Fallback";
+  font-family: 'Heti Hei SC Bold Fallback';
   font-weight: 600;
-  src: local("Microsoft YaHei"), local("Droid Sans Fallback");
+  src: local('Microsoft YaHei'), local('Droid Sans Fallback');
 }
 
 @font-face {
-  font-family: "Heti Hei Black";
+  font-family: 'Heti Hei Black';
   font-weight: 800;
-  src: "Heti Hei SC Black", "Heti Hei TC Black", "Heti Hei JP Black", "Heti Hei KR Black";
+  src: 'Heti Hei SC Black', 'Heti Hei TC Black', 'Heti Hei JP Black',
+    'Heti Hei KR Black';
 }
 
 @font-face {
-  font-family: "Heti Hei SC Black";
+  font-family: 'Heti Hei SC Black';
   font-weight: 800;
-  src: local("Lantinghei SC Heavy"), local("PingFang SC Semibold"), local("Heiti SC Medium"), "Heti Hei SC Black Fallback", local("Source Han Sans CN Heavy"), local("Noto Sans CJK SC Heavy");
+  src: local('Lantinghei SC Heavy'), local('PingFang SC Semibold'),
+    local('Heiti SC Medium'), 'Heti Hei SC Black Fallback',
+    local('Source Han Sans CN Heavy'), local('Noto Sans CJK SC Heavy');
 }
 
 @font-face {
-  font-family: "Heti Hei TC Black";
+  font-family: 'Heti Hei TC Black';
   font-weight: 800;
-  src: local("Lantinghei TC Heavy"), local("PingFang TC Semibold"), local("Heiti TC Medium"), local("Microsoft Jhenghei Bold"), local("Source Han Sans HK Heavy"), local("Source Han Sans TW Heavy"), local("Noto Sans CJK TC Heavy");
+  src: local('Lantinghei TC Heavy'), local('PingFang TC Semibold'),
+    local('Heiti TC Medium'), local('Microsoft Jhenghei Bold'),
+    local('Source Han Sans HK Heavy'), local('Source Han Sans TW Heavy'),
+    local('Noto Sans CJK TC Heavy');
 }
 
 @font-face {
-  font-family: "Heti Hei JP Black";
+  font-family: 'Heti Hei JP Black';
   font-weight: 800;
-  src: local("Hiragino Sans GB W6"), local("Source Han Sans JP Heavy"), local("Noto Sans CJK JP Heavy");
+  src: local('Hiragino Sans GB W6'), local('Source Han Sans JP Heavy'),
+    local('Noto Sans CJK JP Heavy');
 }
 
 @font-face {
-  font-family: "Heti Hei KR Black";
+  font-family: 'Heti Hei KR Black';
   font-weight: 800;
-  src: local("Source Han Sans KR Heavy"), local("Noto Sans CJK KR Heavy");
+  src: local('Source Han Sans KR Heavy'), local('Noto Sans CJK KR Heavy');
 }
 
 font-face {
-  font-family: "Heti Hei SC Black Fallback";
+  font-family: 'Heti Hei SC Black Fallback';
   font-weight: 800;
-  src: local("Microsoft YaHei"), local("Droid Sans Fallback");
+  src: local('Microsoft YaHei'), local('Droid Sans Fallback');
 }
 
 @font-face {
-  font-family: "Heti Song";
-  src: local("Songti SC Regular"), local("Songti TC Regular"), local("SimSun");
+  font-family: 'Heti Song';
+  src: local('Songti SC Regular'), local('Songti TC Regular'), local('SimSun');
 }
 
 @font-face {
-  font-family: "Heti Song";
+  font-family: 'Heti Song';
   font-weight: 200;
-  src: local("Songti SC Light"), local("Songti TC Light"), "Heti Song Light Fallback";
+  src: local('Songti SC Light'), local('Songti TC Light'),
+    'Heti Song Light Fallback';
 }
 
 @font-face {
-  font-family: "Heti Song Light Fallback";
+  font-family: 'Heti Song Light Fallback';
   font-weight: 200;
-  src: local("SimSun");
+  src: local('SimSun');
 }
 
 @font-face {
-  font-family: "Heti Song";
+  font-family: 'Heti Song';
   font-weight: 600;
-  src: local("Songti SC Bold"), local("Songti TC Bold"), "Heti Song Bold Fallback";
+  src: local('Songti SC Bold'), local('Songti TC Bold'),
+    'Heti Song Bold Fallback';
 }
 
 @font-face {
-  font-family: "Heti Song Bold Fallback";
+  font-family: 'Heti Song Bold Fallback';
   font-weight: 600;
-  src: local("SimSun");
+  src: local('SimSun');
 }
 
 @font-face {
-  font-family: "Heti Song Black";
+  font-family: 'Heti Song Black';
   font-weight: 800;
-  src: local("Songti SC Black"), local("SimSun");
+  src: local('Songti SC Black'), local('SimSun');
 }
 
 @font-face {
-  font-family: "Georgia";
-  src: local("charter"),local("Georgia"),local("Cambria"),local("Times New Roman"),local("Times");
+  font-family: 'Georgia';
+  src: local('charter'), local('Georgia'), local('Cambria'),
+    local('Times New Roman'), local('Times');
 }
 
 html {
@@ -190,7 +219,7 @@ html {
 
 @media (prefers-color-scheme: dark) {
   .html {
-      color: #EDE6F5;
+    color: #ede6f5;
   }
 }
 
@@ -246,7 +275,7 @@ pre {
   margin-inline-end: auto;
 }
 .heti hr {
-  width: 30%;
+  width: 36%;
   height: 1px;
   margin-block-start: 48px;
   margin-block-end: 47px;
@@ -435,6 +464,10 @@ blockquote blockquote {
   .heti table {
     border-color: #404040;
   }
+}
+.heti table {
+  margin-right: auto;
+  margin-left: 0px;
 }
 .heti th,
 .heti td {
@@ -943,8 +976,12 @@ blockquote blockquote {
   margin-inline-end: -0.25em;
 }
 
+.heti ul.cb {
+  list-style-type: none;
+  padding-inline-start: 12px;
+}
 .hljs {
-  background: #F8F8F8;
+  background: #f8f8f8;
   color: #000;
 }
 .hljs-comment,
