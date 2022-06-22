@@ -54,7 +54,7 @@
 
 ## 支持
 
-- 我有两只猫，一只叫汤圆，一只叫可乐，假如觉得妙言让你生活更美好，可以给她们 [喂罐头 🥩🍤](https://miaoyan.app/cats.html)。
+- 我有两只猫，一只叫汤圆，一只叫可乐，假如觉得妙言让你生活更美好，可以给汤圆可乐 [喂罐头 🥩🍤](https://miaoyan.app/cats.html)。
 - 如果你觉得妙言这个产品不错，可以去 [Product Hunt](https://www.producthunt.com/posts/miaoyan) 投票点赞。
 - 如果你喜欢妙言，可以在 Github Star，更欢迎推荐给你志同道合的朋友使用。
 
