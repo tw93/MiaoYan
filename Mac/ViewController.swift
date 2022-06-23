@@ -54,7 +54,7 @@ class ViewController: NSViewController,
     @IBOutlet var notesListCustomView: NSView!
     @IBOutlet var outlineHeader: OutlineHeaderView!
 
-    @IBOutlet weak var AddProjectView: NSButton!
+    @IBOutlet var AddProjectView: NSButton!
     @IBOutlet var searchTopConstraint: NSLayoutConstraint!
     @IBOutlet var titleLabel: TitleTextField!
 
@@ -149,6 +149,12 @@ class ViewController: NSViewController,
                 appDelegate.create(name: name, content: content)
             }
         }
+
+        guard let vc = ViewController.shared() else { return }
+        let size = vc.splitView.subviews[0].frame.width
+        let sideSize = vc.sidebarSplitView.subviews[0].frame.width
+        setDividerHidden(hidden: size == 0)
+        setSideDividerHidden(hidden: sideSize == 0)
     }
 
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
@@ -868,6 +874,40 @@ class ViewController: NSViewController,
         mainWindow.standardWindowButton(NSWindow.ButtonType.zoomButton)?.isHidden = hidden
     }
 
+    func setDividerHidden(hidden: Bool) {
+        guard let vc = ViewController.shared() else { return }
+        if hidden {
+            if #available(macOS 10.13, *) {
+                vc.splitView.setValue(NSColor(named: "mainBackground"), forKey: "dividerColor")
+            } else {
+                vc.splitView.setValue(NSColor.white, forKey: "dividerColor")
+            }
+        } else {
+            if #available(macOS 10.13, *) {
+                vc.splitView.setValue(NSColor(named: "divider")!, forKey: "dividerColor")
+            } else {
+                vc.splitView.setValue(NSColor(red: 0.83, green: 0.83, blue: 0.83, alpha: 1.0), forKey: "dividerColor")
+            }
+        }
+    }
+
+    func setSideDividerHidden(hidden: Bool) {
+        guard let vc = ViewController.shared() else { return }
+        if hidden {
+            if #available(macOS 10.13, *) {
+                vc.sidebarSplitView.setValue(NSColor(named: "mainBackground"), forKey: "dividerColor")
+            } else {
+                vc.sidebarSplitView.setValue(NSColor.white, forKey: "dividerColor")
+            }
+        } else {
+            if #available(macOS 10.13, *) {
+                vc.sidebarSplitView.setValue(NSColor(named: "divider")!, forKey: "dividerColor")
+            } else {
+                vc.sidebarSplitView.setValue(NSColor(red: 0.83, green: 0.83, blue: 0.83, alpha: 1.0), forKey: "dividerColor")
+            }
+        }
+    }
+
     @IBAction func toggleNoteList(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
 
@@ -879,15 +919,18 @@ class ViewController: NSViewController,
                 size = 280
             }
             vc.splitView.shouldHideDivider = false
+            setDividerHidden(hidden: false)
             vc.splitView.setPosition(CGFloat(size), ofDividerAt: 0)
             setButtonHidden(hidden: false)
         } else if vc.splitView.shouldHideDivider {
             vc.splitView.shouldHideDivider = false
+            setDividerHidden(hidden: false)
             vc.splitView.setPosition(CGFloat(UserDefaultsManagement.sidebarSize), ofDividerAt: 0)
             setButtonHidden(hidden: false)
         } else {
             UserDefaultsManagement.sidebarSize = Int(size)
             vc.splitView.shouldHideDivider = true
+            setDividerHidden(hidden: true)
             vc.splitView.setPosition(0, ofDividerAt: 0)
             DispatchQueue.main.async {
                 vc.splitView.setPosition(0, ofDividerAt: 0)
@@ -906,9 +949,11 @@ class ViewController: NSViewController,
         if size != 0 {
             UserDefaultsManagement.realSidebarSize = size
             vc.sidebarSplitView.setPosition(0, ofDividerAt: 0)
+            setSideDividerHidden(hidden: true)
         } else {
             showNoteList("")
             vc.sidebarSplitView.setPosition(CGFloat(UserDefaultsManagement.realSidebarSize), ofDividerAt: 0)
+            setSideDividerHidden(hidden: false)
             setButtonHidden(hidden: false)
         }
 
@@ -1013,6 +1058,7 @@ class ViewController: NSViewController,
         if size != 0 {
             UserDefaultsManagement.realSidebarSize = size
             vc.sidebarSplitView.setPosition(0, ofDividerAt: 0)
+            setSideDividerHidden(hidden: true)
         } else {
             setButtonHidden(hidden: false)
         }
@@ -1026,6 +1072,7 @@ class ViewController: NSViewController,
         if size == 0 {
             showNoteList("")
             vc.sidebarSplitView.setPosition(CGFloat(UserDefaultsManagement.realSidebarSize), ofDividerAt: 0)
+            setSideDividerHidden(hidden: false)
             setButtonHidden(hidden: false)
         }
         vc.editArea.updateTextContainerInset()
@@ -1041,6 +1088,7 @@ class ViewController: NSViewController,
                 size = 280
             }
             vc.splitView.shouldHideDivider = false
+            setDividerHidden(hidden: false)
             vc.splitView.setPosition(CGFloat(size), ofDividerAt: 0)
             setButtonHidden(hidden: false)
         }
@@ -1054,11 +1102,13 @@ class ViewController: NSViewController,
         if size != 0 {
             if vc.splitView.shouldHideDivider {
                 vc.splitView.shouldHideDivider = false
+                setDividerHidden(hidden: false)
                 vc.splitView.setPosition(CGFloat(UserDefaultsManagement.sidebarSize), ofDividerAt: 0)
                 setButtonHidden(hidden: false)
             } else {
                 UserDefaultsManagement.sidebarSize = Int(size)
                 vc.splitView.shouldHideDivider = true
+                setDividerHidden(hidden: true)
                 vc.splitView.setPosition(0, ofDividerAt: 0)
                 DispatchQueue.main.async {
                     vc.splitView.setPosition(0, ofDividerAt: 0)
