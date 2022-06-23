@@ -879,14 +879,14 @@ class ViewController: NSViewController,
                 size = 280
             }
             vc.splitView.shouldHideDivider = false
-            vc.splitView.setPosition(size, ofDividerAt: 0)
+            vc.splitView.setPosition(CGFloat(size), ofDividerAt: 0)
             setButtonHidden(hidden: false)
         } else if vc.splitView.shouldHideDivider {
             vc.splitView.shouldHideDivider = false
-            vc.splitView.setPosition(UserDefaultsManagement.sidebarSize, ofDividerAt: 0)
+            vc.splitView.setPosition(CGFloat(UserDefaultsManagement.sidebarSize), ofDividerAt: 0)
             setButtonHidden(hidden: false)
         } else {
-            UserDefaultsManagement.sidebarSize = size
+            UserDefaultsManagement.sidebarSize = Int(size)
             vc.splitView.shouldHideDivider = true
             vc.splitView.setPosition(0, ofDividerAt: 0)
             DispatchQueue.main.async {
@@ -1041,7 +1041,7 @@ class ViewController: NSViewController,
                 size = 280
             }
             vc.splitView.shouldHideDivider = false
-            vc.splitView.setPosition(size, ofDividerAt: 0)
+            vc.splitView.setPosition(CGFloat(size), ofDividerAt: 0)
             setButtonHidden(hidden: false)
         }
         vc.editArea.updateTextContainerInset()
@@ -1054,10 +1054,10 @@ class ViewController: NSViewController,
         if size != 0 {
             if vc.splitView.shouldHideDivider {
                 vc.splitView.shouldHideDivider = false
-                vc.splitView.setPosition(UserDefaultsManagement.sidebarSize, ofDividerAt: 0)
+                vc.splitView.setPosition(CGFloat(UserDefaultsManagement.sidebarSize), ofDividerAt: 0)
                 setButtonHidden(hidden: false)
             } else {
-                UserDefaultsManagement.sidebarSize = size
+                UserDefaultsManagement.sidebarSize = Int(size)
                 vc.splitView.shouldHideDivider = true
                 vc.splitView.setPosition(0, ofDividerAt: 0)
                 DispatchQueue.main.async {
