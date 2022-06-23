@@ -96,7 +96,7 @@ class SidebarProjectView: NSOutlineView,
             return
         }
 
-        if event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.keyCode == kVK_Delete {
+        if event.modifierFlags.contains(.command), event.modifierFlags.contains(.shift), event.keyCode == kVK_Delete {
             deleteMenu("")
             return
         }
