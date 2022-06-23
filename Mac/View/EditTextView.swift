@@ -592,7 +592,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             let caretLocation = characterIndexForInsertion(at: dropPoint)
 
             let mutable = NSMutableAttributedString(attributedString: text)
-        
+
             insertText(mutable, replacementRange: NSRange(location: caretLocation, length: 0))
             storage.sizeAttachmentImages()
 

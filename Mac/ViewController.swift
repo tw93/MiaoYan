@@ -216,15 +216,14 @@ class ViewController: NSViewController,
 
         editArea.layoutManager?.defaultAttachmentScaling = .scaleProportionallyDown
 
+        editArea.font = UserDefaultsManagement.noteFont
+        titleLabel.font = UserDefaultsManagement.titleFont.titleBold()
+
+        emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
         editArea.defaultParagraphStyle = paragraphStyle
         editArea.typingAttributes[.paragraphStyle] = paragraphStyle
-
-        editArea.font = UserDefaultsManagement.noteFont
-        titleLabel.font = UserDefaultsManagement.titleFont.titleBold()
-        emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont
-
         setTableRowHeight()
         storageOutlineView.sidebarItems = Sidebar().getList()
 
@@ -509,6 +508,7 @@ class ViewController: NSViewController,
 
         if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), search.hasFocus() {
             search.stringValue.removeAll()
+            configureNotesList()
             return false
         }
 
@@ -622,6 +622,7 @@ class ViewController: NSViewController,
         if event.keyCode == kVK_ANSI_F, event.modifierFlags.contains(.command), !event.modifierFlags.contains(.control) {
             if notesTableView.getSelectedNote() != nil {
                 disablePreview()
+                focusSearchInput()
                 return true
             }
         }
@@ -1486,6 +1487,16 @@ class ViewController: NSViewController,
         editArea.window?.makeFirstResponder(resp)
     }
 
+    func focusSearchInput(firstResponder: NSResponder? = nil) {
+        DispatchQueue.main.async {
+            let index = self.notesTableView.selectedRow > -1 ? self.notesTableView.selectedRow : 0
+            self.notesTableView.window?.makeFirstResponder(self.notesTableView)
+            self.notesTableView.selectRowIndexes([index], byExtendingSelection: true)
+            self.notesTableView.scrollRowToVisible(index)
+            self.search.becomeFirstResponder()
+        }
+    }
+
     func focusTable() {
         DispatchQueue.main.async {
             let index = self.notesTableView.selectedRow > -1 ? self.notesTableView.selectedRow : 0
@@ -1572,11 +1583,27 @@ class ViewController: NSViewController,
             return
         }
 
-        disablePreview()
+        UserDefaultsManagement.preview = false
+
+        guard let vc = ViewController.shared() else { return }
+        editArea.markdownView?.removeFromSuperview()
+        editArea.markdownView = nil
+
+        guard let editor = editArea else { return }
+        editor.subviews.removeAll(where: { $0.isKind(of: MPreviewView.self) })
+
+        refillEditArea()
         notesTableView.deselectNotes()
         editArea.string = text
         EditTextView.note = note
         search.stringValue.removeAll()
+        focusEditArea()
+        vc.titleLabel.isEditable = true
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            vc.titleLabel.editModeOn()
+        }
+
         updateTable {
             DispatchQueue.main.async {
                 if let index = self.notesTableView.getIndex(note) {
