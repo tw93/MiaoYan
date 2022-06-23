@@ -54,6 +54,7 @@ class ViewController: NSViewController,
     @IBOutlet var notesListCustomView: NSView!
     @IBOutlet var outlineHeader: OutlineHeaderView!
 
+    @IBOutlet weak var AddProjectView: NSButton!
     @IBOutlet var searchTopConstraint: NSLayoutConstraint!
     @IBOutlet var titleLabel: TitleTextField!
 
@@ -1802,7 +1803,7 @@ class ViewController: NSViewController,
 
     func checkSidebarConstraint() {
         if sidebarSplitView.subviews[0].frame.width > 50 {
-            searchTopConstraint.constant = 8
+            searchTopConstraint.constant = 11
             return
         }
 
@@ -1811,7 +1812,7 @@ class ViewController: NSViewController,
             return
         }
 
-        searchTopConstraint.constant = 8
+        searchTopConstraint.constant = 11
     }
 
     @IBAction func duplicate(_ sender: Any) {
