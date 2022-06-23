@@ -839,14 +839,14 @@ CA
                                         <rect key="frame" x="0.0" y="0.0" width="196" height="640"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <subviews>
-                                            <scrollView fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="55" horizontalPageScroll="10" verticalLineScroll="55" verticalPageScroll="10" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BdT-Ac-GAV">
+                                            <scrollView fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="50" horizontalPageScroll="10" verticalLineScroll="50" verticalPageScroll="10" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BdT-Ac-GAV">
                                                 <rect key="frame" x="-3" y="0.0" width="202" height="600"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <clipView key="contentView" drawsBackground="NO" id="ceg-yR-Ncf">
                                                     <rect key="frame" x="0.0" y="0.0" width="202" height="600"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" autosaveColumns="NO" rowHeight="55" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="14" outlineTableColumn="Gwp-vX-YaR" id="urA-eK-bWB" customClass="SidebarProjectView" customModule="MiaoYan" customModuleProvider="target">
+                                                        <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" autosaveColumns="NO" rowHeight="50" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="14" outlineTableColumn="Gwp-vX-YaR" id="urA-eK-bWB" customClass="SidebarProjectView" customModule="MiaoYan" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="202" height="597"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -879,7 +879,7 @@ CA
                                                                                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kTp-qw-RCd">
                                                                                     <rect key="frame" x="22" y="18" width="156" height="17"/>
                                                                                     <constraints>
-                                                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="40" id="LXx-x4-6KI"/>
+                                                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="LXx-x4-6KI"/>
                                                                                     </constraints>
                                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="2ZQ-YX-F9M">
                                                                                         <font key="font" metaFont="system" size="14"/>
@@ -911,24 +911,6 @@ CA
                                                                                 <outlet property="textField" destination="kTp-qw-RCd" id="2KP-pc-Kir"/>
                                                                             </connections>
                                                                         </tableCellView>
-                                                                        <tableCellView identifier="HeaderCell" id="xN2-Aa-G21" customClass="SidebarHeaderCellView" customModule="MiaoYan" customModuleProvider="target">
-                                                                            <rect key="frame" x="10" y="50" width="182" height="55"/>
-                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                            <subviews>
-                                                                                <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="a5J-Ua-Hnz">
-                                                                                    <rect key="frame" x="1" y="20" width="160" height="16"/>
-                                                                                    <autoresizingMask key="autoresizingMask" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                                                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="aX0-yU-aew">
-                                                                                        <font key="font" metaFont="system" size="14"/>
-                                                                                        <color key="textColor" name="mainText"/>
-                                                                                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                                    </textFieldCell>
-                                                                                </textField>
-                                                                            </subviews>
-                                                                            <connections>
-                                                                                <outlet property="title" destination="a5J-Ua-Hnz" id="iCd-St-m3q"/>
-                                                                            </connections>
-                                                                        </tableCellView>
                                                                     </prototypeCellViews>
                                                                 </tableColumn>
                                                             </tableColumns>
@@ -942,7 +924,7 @@ CA
                                                 </clipView>
                                                 <edgeInsets key="scrollerInsets" left="0.0" right="0.0" top="30" bottom="0.0"/>
                                                 <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="hZT-KZ-qyF">
-                                                    <rect key="frame" x="0.0" y="584" width="160" height="16"/>
+                                                    <rect key="frame" x="0.0" y="584" width="0.0" height="16"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </scroller>
                                                 <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="su1-Ap-Xqc">
@@ -1029,7 +1011,7 @@ CA
                                                                     <tableViewGridLines key="gridStyleMask" horizontal="YES"/>
                                                                     <color key="gridColor" name="divider"/>
                                                                     <tableColumns>
-                                                                        <tableColumn editable="NO" width="205" minWidth="160" maxWidth="400" id="aKf-mj-22P">
+                                                                        <tableColumn editable="NO" width="205" maxWidth="400" id="aKf-mj-22P">
                                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
                                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>

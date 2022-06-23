@@ -39,7 +39,10 @@ public class UserDefaultsManagement {
     static var maxNightModeBrightnessLevel = 35
 
     static var marginSize = 26
-    static var realSidebarSize = 120
+
+    static var realSidebarSize = 138
+
+    static var sidebarSize = 280
 
     private enum Constants {
         static let AppearanceTypeKey = "appearanceType"
@@ -109,7 +112,7 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.DefaultLanguageKey)
         }
     }
-    
+
     static var isFirstLaunch: Bool {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.IsFirstLaunch) as? Bool {
@@ -121,7 +124,7 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.IsFirstLaunch)
         }
     }
-    
+
     static var sortDirection: Bool {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.SortDirection) as? Bool {
@@ -371,7 +374,7 @@ public class UserDefaultsManagement {
         if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
             let miaoyanPath: String = path + "/MiaoYan"
             try! FileManager.default.createDirectory(atPath: miaoyanPath,
-                                             withIntermediateDirectories: true, attributes: nil)
+                                                     withIntermediateDirectories: true, attributes: nil)
             return URL(fileURLWithPath: miaoyanPath)
         }
         return nil
@@ -453,23 +456,6 @@ public class UserDefaultsManagement {
         }
         set {
             UserDefaults.standard.set(newValue.rawValue, forKey: "sortBy")
-        }
-    }
-
-    static var sidebarSize: CGFloat {
-        get {
-            if let size = UserDefaults.standard.object(forKey: "sidebarSize"), let width = size as? CGFloat {
-                return width
-            }
-
-            #if os(iOS)
-                return 0
-            #else
-                return 280
-            #endif
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "sidebarSize")
         }
     }
 
