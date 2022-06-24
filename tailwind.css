@@ -165,8 +165,8 @@ body {
   content: 'Feel Good?';
 }
 .i18n-footer-desc:before {
-  content: ' 去 Product Hunt 给妙言投票吧!';
+  content: '将妙言分享给你志同道合的朋友吧~';
 }
 [lang='en'] .i18n-footer-desc:before {
-  content: 'Go and vote for MiaoYan !';
+  content: 'Share MiaoYan with your like-minded friends~';
 }
