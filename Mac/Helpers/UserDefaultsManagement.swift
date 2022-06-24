@@ -38,7 +38,7 @@ public class UserDefaultsManagement {
     static var dateFontSize = 11
     static var maxNightModeBrightnessLevel = 35
 
-    static var marginSize = 26
+    static var marginSize = 20
 
     static var realSidebarSize = 138
 
