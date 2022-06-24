@@ -4,6 +4,22 @@ import Cocoa
 class TitleTextField: NSTextField {
     public var vcDelegate: ViewController!
     public var restoreResponder: NSResponder?
+
+    override func draw(_ dirtyRect: NSRect) {
+        super.draw(dirtyRect)
+    }
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+
+        let cell = VerticallyCenteredTextFieldCell(textCell: "")
+        self.cell = cell
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
         if event.modifierFlags.contains(.command),
            event.keyCode == kVK_ANSI_C,
