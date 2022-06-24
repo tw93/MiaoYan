@@ -21,11 +21,6 @@
 - 之前有尝试过众多的笔记应用，大学时期为知笔记、印象笔记，工作时候用过 Ulysses(无预览)、Quiver(多年不更新)、MWeb(功能复杂)、Bear(Markdown 图片等富格式不支持)、Typora(不习惯所见所得模式)，种种原因，没有找到一个好用的 Markdown 应用，才有了做妙言的想法。
 - 本职工作为前端开发，会一点 iOS 开发，喜欢折腾，借妙言来玩一下 Swift 以及 macOS 开发，当做一个很愉快的事情。
 
-## 支持
-
-- 我有两只猫，一只叫汤圆，一只叫可乐，假如觉得妙言让你生活更美好，可以给汤圆可乐 [喂罐头 🥩🍤](https://miaoyan.app/cats.html)。
-- 如果你喜欢妙言，可以在 Github Star，更欢迎推荐给你志同道合的朋友使用。
-
 ## 下载
 
 - 从 <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a> 中下载最新的 MiaoYan.dmg 安装包，双击安装即可。
@@ -56,6 +51,11 @@
 - `command + shift + L`：自动排版
 
 🏂 此外还有很多快捷键等着爱折腾的你去寻找~
+
+## 支持
+
+- 我有两只猫，一只叫汤圆，一只叫可乐，假如觉得妙言让你生活更美好，可以给汤圆可乐 [喂罐头 🥩🍤](https://miaoyan.app/cats.html)。
+- 如果你喜欢妙言，可以在 Github Star，更欢迎推荐给你志同道合的朋友使用。
 
 ## 感谢
 

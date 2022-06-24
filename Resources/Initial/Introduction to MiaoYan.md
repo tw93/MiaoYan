@@ -21,11 +21,6 @@
 - I have tried many note-taking applications before, such as WizNote, Ulysses (no preview), Quiver (not updated for years), MWeb (complicated functions), Bear (Markdown images and other rich formats are not supported),Typora (unaccustomed to the WYSIWYG pattern), for various reasons, I did not find a good Markdown application, so I had the idea of doing MiaoYan.
 - My job is front-end development, but also can develop iOS App, love to toss new things, so develop MiaoYan as a fun leisure.
 
-## Support
-
-- I have two cats, one is called TangYuan, and one is called Coke, If you think MiaoYan makes your life better, you can give my cats [feed canned food 🥩🍤](https://miaoyan.app/cats.html).
-- If you like MiaoYan, you can star it in Github. We are more welcome to recommend them to your like-minded friends.
-
 ## Download
 
 - Download the latest `MiaoYan.dmg` installation package from <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a> and double-click to install it.
@@ -56,6 +51,11 @@
 - `command + shift + L`：Auto typesetting
 
 🏂 There are also many other shortcuts waiting for you to find if you like to toss and turn~
+
+## Support
+
+- I have two cats, one is called TangYuan, and one is called Coke, If you think MiaoYan makes your life better, you can give my cats [feed canned food 🥩🍤](https://miaoyan.app/cats.html).
+- If you like MiaoYan, you can star it in Github. We are more welcome to recommend them to your like-minded friends.
 
 ## Thanks
 
