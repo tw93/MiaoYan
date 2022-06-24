@@ -255,6 +255,7 @@ class ViewController: NSViewController,
         editArea.isAutomaticQuoteSubstitutionEnabled = false
         editArea.isAutomaticDataDetectionEnabled = false
         editArea.isAutomaticTextReplacementEnabled = false
+        editArea.isAutomaticDashSubstitutionEnabled = false
         editArea.textStorage?.delegate = editArea.textStorage
         editArea.viewDelegate = self
     }
@@ -693,11 +694,7 @@ class ViewController: NSViewController,
         if let type = vc.getSidebarType(), type == .Trash {
             vc.storageOutlineView.deselectAll(nil)
         }
-        if UserDefaultsManagement.defaultLanguage == 0 {
-            vc.createNote(name: "未命名", content: "")
-        } else {
-            vc.createNote(name: "Untitled", content: "")
-        }
+        vc.createNote(name: "", content: "")
     }
 
     @IBAction func importNote(_ sender: NSMenuItem) {
@@ -1597,7 +1594,6 @@ class ViewController: NSViewController,
         editArea.string = text
         EditTextView.note = note
         search.stringValue.removeAll()
-        focusEditArea()
         vc.titleLabel.isEditable = true
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
