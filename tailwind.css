@@ -43,10 +43,10 @@ body {
 }
 
 .i18n-miao-people-nums:before {
-  content: '木子君、Jerk、芸璟、薛定谔的盲盒、乐宝、忸祁、小锐、嬷嬷嬷呀、π~mong，当前 9 人 ❤️ 妙言。';
+  content: '木子君、Jerk、芸璟、薛定谔的盲盒、沙溪、忸祁、小锐、木呀、π~mong、Hsin，当前 10 人 ❤️ 妙言。';
 }
 [lang='en'] .i18n-miao-people-nums:before {
-  content: '木子君、Jerk、芸璟、薛定谔的盲盒、乐宝、忸祁、小锐、嬷嬷嬷呀、π~mong, 9 friends ❤ MiaoYan.';
+  content: '木子君、Jerk、芸璟、薛定谔的盲盒、沙溪、忸祁、小锐、木呀、π~mong、Hsin, 10 friends ❤ MiaoYan.';
 }
 
 .i18n-home-href:before {
