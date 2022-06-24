@@ -9,14 +9,14 @@
             <ol>
              <li>🎉 侧边栏支持手势收起展开，可以在标题栏位置试试</li>
              <li>🍭 细调了一下深色模式，更舒服了，你切换一下试试不错</li>
-             <li>🏓 编辑器的体验，更好支持表格展示、行高、选中、搜索的能力</li>
+             <li>🏓 优化编辑器的体验，更好支持表格展示、行高、选中、搜索的能力</li>
              <li>🛠 修复侧边栏偶现横向滚动、某个快捷键不生效问题、深色下表格预览问题</li>
             </ol>
            <h3>Update Notes：</h3>
            <ol>
              <li>🎉 The sidebar supports the gesture of folding and expanding. You can try it in the title bar.</li>
              <li>🍭 Fine tune the dark mode, which makes it more comfortable. It's good to switch it.</li>
-             <li>🏓 Editor experience, better support the ability of table display, row height, selection and search.</li>
+             <li>🏓 Optimize the editor experience, better support the ability of table display, row height, selection and search.</li>
              <li>🛠 Fixed occasional horizontal scrolling in the sidebar, a shortcut key not working, and table preview in dark color.</li>
             </ol>
             ]]></description>
