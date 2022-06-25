@@ -1,12 +1,12 @@
-<p align="left"><strong>中文</strong> | <a href="https://github.com/tw93/MiaoYan/blob/master/README_EN.md">English</a></p>
+<p align="left"><strong>English</strong> | <a href="https://github.com/tw93/MiaoYan">中文</a></p>
 <p align="center">
   <a href="https://miaoyan.app/" target="_blank"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 /></a>
-  <h1 align="center">妙言</h1>
+  <h1 align="center">MiaoYan</h1>
   <div align="center">
     <a href="https://twitter.com/HiTw93">
       <img alt="twitter" src="https://img.shields.io/twitter/follow/HiTw93?color=%231D9BF0&label=Twitter&style=flat-square"></a>
     <a href="https://t.me/miaoyan">
-      <img alt="Telegram" src="https://img.shields.io/badge/Telegram-妙言-blue?style=flat-square"></a>
+      <img alt="Telegram" src="https://img.shields.io/badge/Telegram-MiaoYan-blue?style=flat-square"></a>
     <a href="https://github.com/tw93/MiaoYan/commits/dev">
       <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/tw93/MiaoYan.svg?style=flat-square"></a>
     <a href="https://github.com/tw93/MiaoYan/issues?utf8=%E2%9C%93&q=">
@@ -14,74 +14,74 @@
     <a>
       <img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square"></a>
   </div>
-  <div align="center">轻灵的 Markdown 笔记本伴你写出妙言~</div>
+  <div align="center">Lightweight Markdown app to help you write great sentences.</div>
 </p>
 
 <kbd>
-  <img src=https://gw.alipayobjects.com/zos/k/4f/ch.gif width=1000>
+<img src=https://gw.alipayobjects.com/zos/k/8m/en.gif width=1000>
 </kbd>
 
-## 特点
+## Features
 
-- 🪂 **妙**：纯本地使用、安全、语法高亮、黑暗模式、源文件保存、国际化、演示模式、文档自动排版
-- 🐶 **美**：极简的设计风格，文件夹 + 文件列表 + 编辑器方式 3 列模式
-- 🏌🏽‍♂️ **快**：使用 Swift5 原生开发，相比 Web 套壳方式性能体验好
-- 🩴 **简**：很轻巧，纯编辑器输入体验，众多快捷键助你快人一步
+- 🪂 **Fantastic**: Local use, security, syntax highlighting, dark mode, source file saving, international, Presentation mode, document auto typesetting.
+- 🐶 **Beauty**: Minimalist design style, folder + file list + editor 3 column mode.
+- 🏌🏽‍♂️ **Fast**: Using Swift5 native development, the performance experience is much better compared to the Web.
+- 🩴 **Simple**: Very light, pure editor input experience, many shortcut keys to help you fast.
 
-## 为什么要做妙言
+## Why do this
 
-- 之前有尝试过众多的笔记应用，大学时期为知笔记、印象笔记，工作时候用过 Ulysses(无预览)、Quiver(多年不更新)、MWeb(功能复杂)、Bear(Markdown 图片等富格式不支持)、Typora(不习惯所见所得模式)，种种原因，没有找到一个好用的 Markdown 应用，才有了做妙言的想法。
-- 本职工作为前端开发，会一点 iOS 开发，喜欢折腾，借妙言来玩一下 Swift 以及 macOS 开发，当做一个很愉快的事情。
+- I have tried many note-taking applications before, such as WizNote, Ulysses (no preview), Quiver (not updated for years), MWeb (complicated functions), Bear (Markdown images and other rich formats are not supported),Typora (unaccustomed to the WYSIWYG pattern), for various reasons, I did not find a good Markdown application, so I had the idea of doing MiaoYan.
+- My job is front-end development, but also can develop iOS App, love to toss new things, so develop MiaoYan as a fun leisure.
 
-## 下载
+## Download
 
-- 从 <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a> 中下载最新的 MiaoYan.dmg 安装包，双击安装即可。
-- 如果在国内下载速度很慢，你可以试试 <a href="https://miaoyan.vercel.app/Release/MiaoYan.dmg" target="_blank">Vercel</a> 来下载最新版本。
+- Download the latest `MiaoYan.dmg` installation package from <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a> and double-click to install it.
+- If the download speed is very slow in China, you can try <a href="https://miaoyan.app/Release/MiaoYan.dmg" target="_blank">Vercel</a> to download the latest version.
 
-## 初始化使用
+## First Use
 
-1. 可以在 iCloud 或根目录下创建一个 `MiaoYan` 的文件夹，打开妙言的设置，将默认存储地址修改成这个。
-2. 点击妙言左上角新增文件夹的图标，创建好自己的文档分类文件夹，就可以开始使用了。
-3. 同样假如你不习惯默认的字体，可以在设置中修改成其他的正常字体。
+1. You can create a `MiaoYan` folder in iCloud or the root directory, open MiaoYan's Settings, and change the default storage address to this.
+2. Click icon of the new folder in the upper left corner of MiaoYan, create your own document category folder, and you can start using it.
+3. Similarly, if you are not used to the default font, you can change it to other normal fonts in the settings.
 
-## 快捷键
+## Shortcut Keys
 
-#### 窗口操作
+#### Window Operations
 
-- `command + 1`：收起展开目录
-- `command + 2`：收起展开文档列表
-- `command + 3`：切换编辑和预览
-- `command + 4`：切换到演示模式
+- `command + 1`: Collapse expand folder list
+- `command + 2`: Expand the list of documents
+- `command + 3`: Switching between edit and preview states
+- `command + 4`: Switching between edit and presentation states
 
-#### 文件操作
+#### File Operations
 
-- `command + d`：复制文档
-- `command + r`：重命名文档
-- `command + i`：在文件中显示文档
-- `command + shift + p`：pin 置顶文档
-- `command + delete`：删除文档
-- `command + shift + L`：自动排版
+- `command + d`: Copy document
+- `command + r`: Rename document
+- `command + i`: Displaying document in Finder
+- `command + shift + p`: Pin document
+- `command + delete`: Delete document
+- `command + shift + L`：Auto typesetting
 
-🏂 此外还有很多快捷键等着爱折腾的你去寻找~
+🏂 There are also many other shortcuts waiting for you to find if you like to toss and turn~
 
-## 支持
+## Support
 
-- 我有两只猫，一只叫汤圆，一只叫可乐，假如觉得妙言让你生活更美好，可以给汤圆可乐 [喂罐头 🥩🍤](https://miaoyan.app/cats.html)。
-- 如果你喜欢妙言，可以在 Github Star，更欢迎推荐给你志同道合的朋友使用。
+- I have two cats, one is called TangYuan, and one is called Coke, If you think MiaoYan makes your life better, you can give my cats [feed canned food 🥩🍤](https://miaoyan.app/cats.html).
+- If you like MiaoYan, you can star it in Github. We are more welcome to recommend them to your like-minded friends.
 
-## 感谢
+## Thanks
 
-- <a href="https://github.com/KristopherGBaker/libcmark_gfm" target="_blank">KristopherGBaker/libcmark_gfm</a>：适用于 cmark-gfm 的 Swift 兼容框架
-- <a href="https://github.com/Remix-Design/RemixIcon" target="_blank">Remix-Design/RemixIcon</a>：简洁的 icon
-- <a href="https://github.com/draveness/NightNight" target="_blank">draveness/NightNight</a>：黑暗模式
-- <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>：语法高亮能力
-- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>：妙言部分初始化代码来源于此
-- <a href="https://github.com/shpakovski/MASShortcut" target="_blank">hpakovski/MASShortcut</a>：快捷键插件
-- <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>：一款漂亮的开源中文字体，妙言将其作为默认字体
-- <a href="https://github.com/X140Yu/pangu.Swift" target="_blank">X140Yu/pangu.Swift</a>：中文和英文之间没有空格可怎么行？
-- <a href="https://github.com/sivan/heti" target="_blank">sivan/heti</a>：专为中文内容展示设计的排版样式增强
+- <a href="https://github.com/KristopherGBaker/libcmark_gfm" target="_blank">KristopherGBaker/libcmark_gfm</a>: Swift-compatible framework for cmark-gfm.
+- <a href="https://github.com/Remix-Design/RemixIcon" target="_blank">Remix-Design/RemixIcon</a>: Clean and simple icon.
+- <a href="https://github.com/draveness/NightNight" target="_blank">draveness/NightNight</a>: Dark Mode.
+- <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>: Syntax highlighting capability.
+- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: MiaoYan has part of the framework code from this.
+- <a href="https://github.com/shpakovski/MASShortcut" target="_blank">hpakovski/MASShortcut</a>: Shortcut Key Plugin.
+- <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>: A beautiful open source Chinese font, MiaoYan has made it the default font.
+- <a href="https://github.com/X140Yu/pangu.Swift" target="_blank">X140Yu/pangu.Swift</a>：How can you do without spaces between Chinese and English?
+- <a href="https://github.com/sivan/heti" target="_blank">sivan/heti</a>：Enhanced typography for Chinese content presentation.
 
-# 协议
+# License
 
-- 遵循 MIT 协议
-- 请自由地享受和参与开源
+- Follow the MIT License.
+- Please feel free to enjoy and participate in open source.
