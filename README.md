@@ -1,6 +1,7 @@
 <p align="center">
   <a href="https://miaoyan.vercel.app/" target="_blank"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 /></a>
   <h1 align="center">妙言</h1>
+  <div align="center">轻灵的 Markdown 笔记本伴你写出妙言~</div>
   <div align="center">
     <a href="https://twitter.com/HiTw93">
       <img alt="twitter" src="https://img.shields.io/twitter/follow/HiTw93?color=%231D9BF0&label=Twitter&style=flat-square"></a>
@@ -13,13 +14,13 @@
     <a>
       <img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square"></a>
   </div>
-  <div align="center">轻灵的 Markdown 笔记本伴你写出妙言~</div>
-  <div align="center"><strong>中文</strong> | <a href="https://github.com/tw93/MiaoYan/blob/master/README_EN.md">English</a></div>
 </p>
 
 <kbd>
   <img src=https://gw.alipayobjects.com/zos/k/4f/ch.gif width=1000>
 </kbd>
+
+<div align="center"><strong>中文</strong> | <a href="https://github.com/tw93/MiaoYan/blob/master/README_EN.md">English</a></div>
 
 ## 特点
 
