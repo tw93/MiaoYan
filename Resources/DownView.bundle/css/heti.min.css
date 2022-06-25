@@ -218,8 +218,8 @@ html {
 }
 
 body {
-    padding: 0;
-    margin: 0;
+  padding: 0;
+  margin: 0;
 }
 @media (prefers-color-scheme: dark) {
   .html {
@@ -240,13 +240,14 @@ pre {
 #write {
   margin: 0;
   max-width: 900px;
-  padding: 5px 26px 80px;
+  padding: 5px 28px 80px;
 }
 
 .heti {
   font-weight: 400;
   -webkit-font-smoothing: subpixel-antialiased;
-  line-height: 1.5;
+  line-height: 1.74;
+  letter-spacing: 0.05em;
   overflow-wrap: break-word;
   word-wrap: break-word;
   hyphens: auto;
@@ -299,10 +300,18 @@ pre {
   margin-block-end: 24px;
   text-align: justify;
 }
-.heti p:not(:lang(zh)):not(:lang(ja)):not(:lang(kr)),
-.heti p:not(:lang(zh)) {
-  text-align: start;
+
+.heti p[align='center'] {
+  text-align: center;
 }
+.heti p[align='left'] {
+  text-align: left;
+}
+
+.heti p[align='right'] {
+  text-align: right;
+}
+
 .heti blockquote {
   margin-block-start: 12px;
   margin-block-end: 24px;
