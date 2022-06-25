@@ -16,11 +16,11 @@
   </div>
 </p>
 
+<div align="center"><a href="https://github.com/tw93/MiaoYan">中文</a> | <strong>English</strong></div>
+
 <kbd>
 <img src=https://gw.alipayobjects.com/zos/k/8m/en.gif width=1000>
 </kbd>
-
-<div align="center"><a href="https://github.com/tw93/MiaoYan">中文</a> | <strong>English</strong></div>
 
 ## Features
 
