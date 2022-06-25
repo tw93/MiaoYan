@@ -13,7 +13,7 @@
     <a>
       <img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square"></a>
   </div>
-  <strong align="center">Lightweight Markdown app to help you write great sentences.</strong>
+  <div align="center">Lightweight Markdown app to help you write great sentences.</div>
   <div align="center"><a href="https://github.com/tw93/MiaoYan">中文</a> | <strong>English</strong></div>
 </p>
 

@@ -13,7 +13,7 @@
     <a>
       <img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square"></a>
   </div>
-  <strong align="center">轻灵的 Markdown 笔记本伴你写出妙言~</strong>
+  <div align="center">轻灵的 Markdown 笔记本伴你写出妙言~</div>
   <div align="center"><strong>中文</strong> | <a href="https://github.com/tw93/MiaoYan/blob/master/README_EN.md">English</a></div>
 </p>
 
