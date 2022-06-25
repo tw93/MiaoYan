@@ -9,10 +9,8 @@
       <img alt="Telegram" src="https://img.shields.io/badge/Telegram-MiaoYan-blue?style=flat-square"></a>
     <a href="https://github.com/tw93/MiaoYan/commits/dev">
       <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/tw93/MiaoYan.svg?style=flat-square"></a>
-    <a href="https://github.com/tw93/MiaoYan/issues?utf8=%E2%9C%93&q=">
+    <a href="https://github.com/tw93/MiaoYan/issues?q=is%3Aissue+is%3Aclosed">
       <img alt="GitHub closed issues" src="https://img.shields.io/github/issues-closed/tw93/MiaoYan.svg?style=flat-square"></a>
-    <a>
-      <img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square"></a>
   </div>
   <div align="center">Lightweight Markdown app to help you write great sentences.</div>
 </p>
