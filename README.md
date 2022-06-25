@@ -7,7 +7,7 @@
       <img alt="twitter" src="https://img.shields.io/badge/follow-Tweet-blue?style=flat-square&logo=Twitter"></a>
     <a href="https://t.me/miaoyan" target="_blank">
       <img alt="Telegram" src="https://img.shields.io/badge/chat-Telegram-blueviolet?style=flat-square&logo=Telegram"></a>
-     <a href="https://github.com/tw93/MiaoYan/releases/latest" target="_blank">
+     <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">
       <img alt="GitHub closed issues" src="https://img.shields.io/github/downloads/tw93/MiaoYan/total.svg?style=flat-square"></a>
     <a href="https://github.com/tw93/MiaoYan/commits" target="_blank">
       <img alt="GitHub commit" src="https://img.shields.io/github/commit-activity/m/tw93/MiaoYan?style=flat-square"></a>
