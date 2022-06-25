@@ -1,15 +1,17 @@
-<p align="left"><a href="https://github.com/tw93/MiaoYan/blob/master/README.md">English</a> | <strong>中文</strong></p>
+<p align="right"><a href="https://github.com/tw93/MiaoYan/blob/master/README.md">English</a> | <strong>中文</strong></p>
 <p align="center">
   <a href="https://miaoyan.app/" target="_blank"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 /></a>
   <h1 align="center">妙言</h1>
   <div align="center">
-     <a href="https://twitter.com/HiTw93">
-      <img alt="twitter" src="https://img.shields.io/twitter/follow/HiTw93?color=%231D9BF0&label=Twitter&style=flat-square"></a>
-    <a href="https://t.me/miaoyan">
-      <img alt="Telegram" src="https://img.shields.io/badge/Telegram-MiaoYan-blue?style=flat-square"></a>
-    <a href="https://github.com/tw93/MiaoYan/commits/dev">
-      <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/tw93/MiaoYan.svg?style=flat-square"></a>
-    <a href="https://github.com/tw93/MiaoYan/issues?q=is%3Aissue+is%3Aclosed">
+    <a href="https://twitter.com/HiTw93" target="_blank">
+      <img alt="twitter" src="https://img.shields.io/badge/follow-Tweet-blue?style=flat-square&logo=Twitter"></a>
+    <a href="https://t.me/miaoyan" target="_blank">
+      <img alt="Telegram" src="https://img.shields.io/badge/chat-Telegram-blueviolet?style=flat-square&logo=Telegram"></a>
+     <a href="https://github.com/tw93/MiaoYan/releases/latest" target="_blank">
+      <img alt="GitHub closed issues" src="https://img.shields.io/github/downloads/tw93/MiaoYan/total.svg?style=flat-square"></a>
+    <a href="https://github.com/tw93/MiaoYan/commits" target="_blank">
+      <img alt="GitHub commit" src="https://img.shields.io/github/commit-activity/m/tw93/MiaoYan?style=flat-square"></a>
+    <a href="https://github.com/tw93/MiaoYan/issues?q=is%3Aissue+is%3Aclosed" target="_blank">
       <img alt="GitHub closed issues" src="https://img.shields.io/github/issues-closed/tw93/MiaoYan.svg?style=flat-square"></a>
   </div>
   <div align="center">轻灵的 Markdown 笔记本伴你写出妙言~</div>
@@ -33,8 +35,8 @@
 
 ## 下载
 
-- 从 <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a> 中下载最新的 MiaoYan.dmg 安装包，双击安装即可。
-- 如果在国内下载速度很慢，你可以试试 <a href="https://miaoyan.vercel.app/Release/MiaoYan.dmg" target="_blank">Vercel</a> 来下载最新版本。
+- 从 <a href="https://github.com/tw93/MiaoYan/releases/latest" target="_blank">GitHub Releases</a> 中下载最新的 MiaoYan.dmg 安装包，双击安装即可。
+- 如果在国内下载速度很慢，你可以试试 <a href="https://miaoyan.app/Release/MiaoYan.dmg" target="_blank">Vercel</a> 来下载最新版本。
 
 ## 初始化使用
 
@@ -58,13 +60,13 @@
 - `command + i`：在文件中显示文档
 - `command + shift + p`：pin 置顶文档
 - `command + delete`：删除文档
-- `command + shift + L`：自动排版
+- `command + shift + l`：自动排版
 
 🏂 此外还有很多快捷键等着爱折腾的你去寻找~
 
 ## 支持
 
-- 我有两只猫，一只叫汤圆，一只叫可乐，假如觉得妙言让你生活更美好，可以给汤圆可乐 [喂罐头 🥩🍤](https://miaoyan.app/cats.html)。
+- 我有两只猫，一只叫汤圆，一只叫可乐，假如觉得妙言让你生活更美好，可以给汤圆可乐 <a href="https://miaoyan.app/cats.html" target="_blank">喂罐头 🥩🍤</a>。
 - 如果你喜欢妙言，可以在 Github Star，更欢迎推荐给你志同道合的朋友使用。
 
 ## 感谢
