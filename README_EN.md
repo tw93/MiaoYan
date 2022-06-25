@@ -1,7 +1,6 @@
 <p align="center">
   <a href="https://miaoyan.app/" target="_blank"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 /></a>
   <h1 align="center">MiaoYan</h1>
-  <div align="center">Lightweight Markdown app to help you write great sentences.</div>
   <div align="center">
     <a href="https://twitter.com/HiTw93">
       <img alt="twitter" src="https://img.shields.io/twitter/follow/HiTw93?color=%231D9BF0&label=Twitter&style=flat-square"></a>
@@ -14,6 +13,7 @@
     <a>
       <img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square"></a>
   </div>
+  <div align="center">Lightweight Markdown app to help you write great sentences.</div>
 </p>
 
 <div align="center"><a href="https://github.com/tw93/MiaoYan">中文</a> | <strong>English</strong></div>
