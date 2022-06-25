@@ -190,6 +190,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         NSWorkspace.shared.open(URL(string: "https://github.com/tw93/MiaoYan/issues")!)
     }
 
+    @IBAction func openTelegram(_ sender: Any) {
+        NSWorkspace.shared.open(URL(string: "https://t.me/miaoyan")!)
+    }
+
     @IBAction func openPreferences(_ sender: Any?) {
         if prefsWindowController == nil {
             let storyboard = NSStoryboard(name: "Main", bundle: nil)

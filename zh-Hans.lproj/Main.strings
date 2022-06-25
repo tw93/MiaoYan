@@ -80,8 +80,8 @@
 /* Class = "NSMenuItem"; title = "About MiaoYan"; ObjectID = "gXN-Ca-moU"; */
 "gXN-Ca-moU.title" = "关于妙言";
 
-/* Class = "NSMenuItem"; title = "Feeding 2 Cats"; ObjectID = "zeb-Y9-O9j"; */
-"zeb-Y9-O9j.title" = "汤圆可乐";
+/* Class = "NSMenuItem"; title = "Like MiaoYan"; ObjectID = "zeb-Y9-O9j"; */
+"zeb-Y9-O9j.title" = "喜欢妙言";
 
 /* Class = "NSMenuItem"; title = "Copy title"; ObjectID = "5LV-Vi-n79"; */
 "5LV-Vi-n79.title" = "拷贝标题";
