@@ -6,7 +6,7 @@
     <a href="https://twitter.com/HiTw93">
       <img alt="twitter" src="https://img.shields.io/twitter/follow/HiTw93?color=%231D9BF0&label=Twitter&style=flat-square"></a>
     <a href="https://t.me/miaoyan">
-      <img alt="Telegram" src="https://img.shields.io/badge/Telegram-MiaoYan-blue?style=flat-square"></a>
+      <img alt="Telegram" src="https://img.shields.io/badge/Telegram-妙言-blue?style=flat-square"></a>
     <a href="https://github.com/tw93/MiaoYan/commits/dev">
       <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/tw93/MiaoYan.svg?style=flat-square"></a>
     <a href="https://github.com/tw93/MiaoYan/issues?utf8=%E2%9C%93&q=">
