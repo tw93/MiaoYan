@@ -1,3 +1,4 @@
+<p><strong>中文</strong> | <a href="https://github.com/tw93/MiaoYan/blob/master/README_EN.md">English</a></p>
 <p align="center">
   <a href="https://miaoyan.app/" target="_blank"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 /></a>
   <h1 align="center">妙言</h1>
@@ -15,8 +16,6 @@
   </div>
   <div align="center">轻灵的 Markdown 笔记本伴你写出妙言~</div>
 </p>
-
-<div><strong>中文</strong> | <a href="https://github.com/tw93/MiaoYan/blob/master/README_EN.md">English</a></div>
 
 <kbd>
   <img src=https://gw.alipayobjects.com/zos/k/4f/ch.gif width=1000>
