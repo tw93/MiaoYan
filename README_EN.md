@@ -1,3 +1,4 @@
+<p><a href="https://github.com/tw93/MiaoYan">中文</a> | <strong>English</strong></p>
 <p align="center">
   <a href="https://miaoyan.app/" target="_blank"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 /></a>
   <h1 align="center">MiaoYan</h1>
@@ -15,8 +16,6 @@
   </div>
   <div align="center">Lightweight Markdown app to help you write great sentences.</div>
 </p>
-
-<div><a href="https://github.com/tw93/MiaoYan">中文</a> | <strong>English</strong></div>
 
 <kbd>
 <img src=https://gw.alipayobjects.com/zos/k/8m/en.gif width=1000>
