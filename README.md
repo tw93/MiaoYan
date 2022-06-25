@@ -1,15 +1,17 @@
-<p align="left"><strong>English</strong> | <a href="https://github.com/tw93/MiaoYan/blob/master/README_CN.md">中文</a></p>
+<p align="right"><strong>English</strong> | <a href="https://github.com/tw93/MiaoYan/blob/master/README_CN.md">中文</a></p>
 <p align="center">
   <a href="https://miaoyan.app/" target="_blank"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 /></a>
   <h1 align="center">MiaoYan</h1>
   <div align="center">
-    <a href="https://twitter.com/HiTw93">
-      <img alt="twitter" src="https://img.shields.io/twitter/follow/HiTw93?color=%231D9BF0&label=Twitter&style=flat-square"></a>
-    <a href="https://t.me/miaoyan">
-      <img alt="Telegram" src="https://img.shields.io/badge/Telegram-MiaoYan-blue?style=flat-square"></a>
-    <a href="https://github.com/tw93/MiaoYan/commits/dev">
-      <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/tw93/MiaoYan.svg?style=flat-square"></a>
-    <a href="https://github.com/tw93/MiaoYan/issues?q=is%3Aissue+is%3Aclosed">
+ <a href="https://twitter.com/HiTw93" target="_blank">
+      <img alt="twitter" src="https://img.shields.io/badge/follow-Tweet-blue?style=flat-square&logo=Twitter"></a>
+    <a href="https://t.me/miaoyan" target="_blank">
+      <img alt="Telegram" src="https://img.shields.io/badge/chat-Telegram-blueviolet?style=flat-square&logo=Telegram"></a>
+     <a href="https://github.com/tw93/MiaoYan/releases/latest" target="_blank">
+      <img alt="GitHub closed issues" src="https://img.shields.io/github/downloads/tw93/MiaoYan/total.svg?style=flat-square"></a>
+    <a href="https://github.com/tw93/MiaoYan/commits" target="_blank">
+      <img alt="GitHub commit" src="https://img.shields.io/github/commit-activity/m/tw93/MiaoYan?style=flat-square"></a>
+    <a href="https://github.com/tw93/MiaoYan/issues?q=is%3Aissue+is%3Aclosed" target="_blank">
       <img alt="GitHub closed issues" src="https://img.shields.io/github/issues-closed/tw93/MiaoYan.svg?style=flat-square"></a>
   </div>
   <div align="center">Lightweight Markdown app to help you write great sentences.</div>
@@ -33,7 +35,7 @@
 
 ## Download
 
-- Download the latest `MiaoYan.dmg` installation package from <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a> and double-click to install it.
+- Download the latest `MiaoYan.dmg` installation package from <a href="https://github.com/tw93/MiaoYan/releases/latest" target="_blank">GitHub Releases</a> and double-click to install it.
 - If the download speed is very slow in China, you can try <a href="https://miaoyan.app/Release/MiaoYan.dmg" target="_blank">Vercel</a> to download the latest version.
 
 ## First Use
@@ -58,13 +60,13 @@
 - `command + i`: Displaying document in Finder
 - `command + shift + p`: Pin document
 - `command + delete`: Delete document
-- `command + shift + L`：Auto typesetting
+- `command + shift + l`：Auto typesetting
 
 🏂 There are also many other shortcuts waiting for you to find if you like to toss and turn~
 
 ## Support
 
-- I have two cats, one is called TangYuan, and one is called Coke, If you think MiaoYan makes your life better, you can give my cats [feed canned food 🥩🍤](https://miaoyan.app/cats.html).
+- I have two cats, one is called TangYuan, and one is called Coke, If you think MiaoYan makes your life better, you can give my cats <a href="https://miaoyan.app/cats.html" target="_blank">feed canned food 🥩🍤</a>.
 - If you like MiaoYan, you can star it in Github. We are more welcome to recommend them to your like-minded friends.
 
 ## Thanks
