@@ -221,8 +221,8 @@
 /* Class = "NSMenuItem"; title = "About MiaoYan"; ObjectID = "gXN-Ca-moU"; */
 "gXN-Ca-moU.title" = "About MiaoYan";
 
-/* Class = "NSMenuItem"; title = "Feeding 2 Cats"; ObjectID = "zeb-Y9-O9j"; */
-"zeb-Y9-O9j.title" = "Feeding 2 Cats";
+/* Class = "NSMenuItem"; title = "Like MiaoYan"; ObjectID = "zeb-Y9-O9j"; */
+"zeb-Y9-O9j.title" = "Like MiaoYan";
 
 /* Class = "NSMenuItem"; title = "Show in Finder"; ObjectID = "goN-LO-L7l"; */
 "goN-LO-L7l.title" = "Show in Finder";
