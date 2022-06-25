@@ -16,7 +16,7 @@
   <div align="center">轻灵的 Markdown 笔记本伴你写出妙言~</div>
 </p>
 
-<div align="center"><strong>中文</strong> | <a href="https://github.com/tw93/MiaoYan/blob/master/README_EN.md">English</a></div>
+<div><strong>中文</strong> | <a href="https://github.com/tw93/MiaoYan/blob/master/README_EN.md">English</a></div>
 
 <kbd>
   <img src=https://gw.alipayobjects.com/zos/k/4f/ch.gif width=1000>

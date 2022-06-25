@@ -16,7 +16,7 @@
   <div align="center">Lightweight Markdown app to help you write great sentences.</div>
 </p>
 
-<div align="center"><a href="https://github.com/tw93/MiaoYan">中文</a> | <strong>English</strong></div>
+<div><a href="https://github.com/tw93/MiaoYan">中文</a> | <strong>English</strong></div>
 
 <kbd>
 <img src=https://gw.alipayobjects.com/zos/k/8m/en.gif width=1000>
