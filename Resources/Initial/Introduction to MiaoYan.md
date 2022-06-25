@@ -1,12 +1,12 @@
 <p align="center">
-    <a href="https://miaoyan.app/" target="_blank"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 /></a>
+    <div align="center"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138  /></div>
     <h1 align="center">MiaoYan</h1>
     <div align="center">Lightweight Markdown app to help you write great sentences.</div>
-    <div align="center"><a href="https://github.com/tw93/MiaoYan">中文</a> | <strong>English</strong></div>
+    <div align="center"><a href="https://github.com/tw93/MiaoYan/blob/master/README_CN.md">中文</a> | <strong>English</strong></div>
 </p>
 
 <kbd>
-<img src=https://gw.alipayobjects.com/zos/k/8m/en.gif width=1000>
+    <img src=https://gw.alipayobjects.com/zos/k/8m/en.gif width=1000>
 </kbd>
 
 ## Features
