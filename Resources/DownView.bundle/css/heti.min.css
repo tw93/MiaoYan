@@ -217,6 +217,10 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
+body {
+    padding: 0;
+    margin: 0;
+}
 @media (prefers-color-scheme: dark) {
   .html {
     color: #ede6f5;
@@ -234,8 +238,9 @@ pre {
 }
 
 #write {
+  margin: 0;
   max-width: 900px;
-  padding: 0px 16px 80px;
+  padding: 5px 26px 80px;
 }
 
 .heti {
