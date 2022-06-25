@@ -1,8 +1,20 @@
 <p align="center">
-    <a href="https://miaoyan.app/" target="_blank"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 /></a>
-    <h1 align="center">MiaoYan</h1>
-    <div align="center">Lightweight Markdown app to help you write great sentences.</div>
-    <div align="center"><a href="https://github.com/tw93/MiaoYan">中文</a> | <strong>English</strong></div>
+  <a href="https://miaoyan.app/" target="_blank"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 /></a>
+  <h1 align="center">MiaoYan</h1>
+  <div align="center">Lightweight Markdown app to help you write great sentences.</div>
+  <div align="center">
+  <a href="https://twitter.com/HiTw93">
+    <img alt="twitter" src="https://img.shields.io/twitter/follow/HiTw93?color=%231D9BF0&label=Twitter&style=flat-square"></a>
+  <a href="https://t.me/miaoyan">
+    <img alt="Telegram" src="https://img.shields.io/badge/Telegram-MiaoYan-blue?style=flat-square"></a>
+  <a href="https://github.com/tw93/MiaoYan/commits/dev">
+    <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/tw93/MiaoYan.svg?style=flat-square"></a>
+  <a href="https://github.com/tw93/MiaoYan/issues?utf8=%E2%9C%93&q=">
+    <img alt="GitHub closed issues" src="https://img.shields.io/github/issues-closed/tw93/MiaoYan.svg?style=flat-square"></a>
+  <a>
+    <img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square"></a>
+  </div>
+  <div align="center"><a href="https://github.com/tw93/MiaoYan">中文</a> | <strong>English</strong></div>
 </p>
 
 <kbd>
