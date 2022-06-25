@@ -1,6 +1,6 @@
 <p align="center">
     <div align="center"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138  /></div>
-    <h1 align="center">MiaoYan</h1>
+    <h2 align="center">MiaoYan</h2>
     <div align="center">Lightweight Markdown app to help you write great sentences.</div>
     <div align="center"><a href="https://github.com/tw93/MiaoYan/blob/master/README_CN.md">中文</a> | <strong>English</strong></div>
 </p>
