@@ -30,13 +30,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn flag: Bool) {
         var newRect = NSRect(origin: rect.origin, size: rect.size)
         newRect.size.width = caretWidth
-        newRect.origin.y = newRect.origin.y + 5.4
         if let range = getParagraphRange(), range.upperBound != textStorage?.length || (
             range.upperBound == textStorage?.length
                 && textStorage?.string.last == "\n"
                 && selectedRange().location != textStorage?.length
         ) {
-            newRect.size.height = newRect.size.height - 8
+            newRect.size.height = newRect.size.height
         }
 
         super.drawInsertionPoint(in: newRect, color: EditTextView.fontColor, turnedOn: flag)
