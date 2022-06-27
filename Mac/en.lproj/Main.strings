@@ -221,8 +221,17 @@
 /* Class = "NSMenuItem"; title = "About MiaoYan"; ObjectID = "gXN-Ca-moU"; */
 "gXN-Ca-moU.title" = "About MiaoYan";
 
-/* Class = "NSMenuItem"; title = "Like MiaoYan"; ObjectID = "zeb-Y9-O9j"; */
-"zeb-Y9-O9j.title" = "Like MiaoYan";
+/* Class = "NSMenuItem"; title = "Feeding 2 cats"; ObjectID = "zeb-Y9-O9j"; */
+"zeb-Y9-O9j.title" = "Feeding 2 🐱";
+
+/* Class = "NSMenuItem"; title = "Hide MiaoYan"; ObjectID = "bxj-82-bcY"; */
+"bxj-82-bcY.title" = "Hide MiaoYan";
+
+/* Class = "NSMenuItem"; title = "Hide Others"; ObjectID = "gJ8-Jq-hrI"; */
+"gJ8-Jq-hrI.title" = "Hide Others";
+
+/* Class = "NSMenuItem"; title = "Show All"; ObjectID = "M15-Xw-GpW"; */
+"M15-Xw-GpW.title" = "Show All";
 
 /* Class = "NSMenuItem"; title = "Show in Finder"; ObjectID = "goN-LO-L7l"; */
 "goN-LO-L7l.title" = "Show in Finder";
