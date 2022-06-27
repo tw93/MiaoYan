@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>SUAutomaticallyUpdate</key>
-	<true/>
 	<key>ATSApplicationFontsPath</key>
 	<string>.</string>
 	<key>CFBundleDevelopmentRegion</key>
@@ -114,6 +112,8 @@
 			<string>One</string>
 		</dict>
 	</dict>
+	<key>SUAutomaticallyUpdate</key>
+	<true/>
 	<key>SUFeedURL</key>
 	<string>https://miaoyan.vercel.app/appcast.xml</string>
 	<key>SUPublicEDKey</key>
