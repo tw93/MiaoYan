@@ -942,7 +942,7 @@ CA
                                                 <rect key="frame" x="0.0" y="592" width="200" height="48"/>
                                                 <subviews>
                                                     <button autoresizesSubviews="NO" toolTip="New Project" translatesAutoresizingMaskIntoConstraints="NO" id="Yei-Or-qiI" userLabel="Add Project">
-                                                        <rect key="frame" x="174" y="12" width="18" height="18"/>
+                                                        <rect key="frame" x="174" y="11" width="18" height="18"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="18" id="qVi-vf-K2q"/>
                                                             <constraint firstAttribute="height" constant="18" id="xZe-bb-IRl"/>
@@ -959,7 +959,7 @@ CA
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="48" id="9sA-Ak-h1e"/>
                                                     <constraint firstAttribute="trailing" secondItem="Yei-Or-qiI" secondAttribute="trailing" constant="8" id="SV6-Bq-MVW"/>
-                                                    <constraint firstItem="Yei-Or-qiI" firstAttribute="top" secondItem="vp7-cq-QSI" secondAttribute="top" constant="18" id="qdV-AB-OBk"/>
+                                                    <constraint firstItem="Yei-Or-qiI" firstAttribute="top" secondItem="vp7-cq-QSI" secondAttribute="top" constant="19" id="qdV-AB-OBk"/>
                                                 </constraints>
                                             </customView>
                                         </subviews>
@@ -979,7 +979,7 @@ CA
                                                 <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                                                 <subviews>
                                                     <button translatesAutoresizingMaskIntoConstraints="NO" id="gaB-Rc-PMR">
-                                                        <rect key="frame" x="212" y="604" width="18" height="18"/>
+                                                        <rect key="frame" x="212" y="603" width="18" height="18"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="18" id="6Ki-MS-W35"/>
                                                             <constraint firstAttribute="height" constant="18" id="T7f-i3-Lpy"/>
@@ -1102,7 +1102,7 @@ CA
                                                     </scrollView>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="gaB-Rc-PMR" firstAttribute="centerY" secondItem="bd7-O3-GQF" secondAttribute="centerY" id="Bpi-Ce-iS5"/>
+                                                    <constraint firstItem="gaB-Rc-PMR" firstAttribute="centerY" secondItem="bd7-O3-GQF" secondAttribute="centerY" constant="1" id="Bpi-Ce-iS5"/>
                                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="400" id="Gef-q9-zCe"/>
                                                     <constraint firstItem="gaB-Rc-PMR" firstAttribute="leading" secondItem="bd7-O3-GQF" secondAttribute="trailing" constant="7" id="LVf-TD-MV7"/>
                                                     <constraint firstAttribute="trailing" secondItem="bd7-O3-GQF" secondAttribute="trailing" constant="32" id="ZGc-Ja-Aih"/>
@@ -1196,11 +1196,8 @@ CA
                                                             <customView horizontalHuggingPriority="249" verticalHuggingPriority="249" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ua8-RE-q01">
                                                                 <rect key="frame" x="420" y="8" width="140" height="38"/>
                                                                 <subviews>
-                                                                    <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="9" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" horizontalCompressionResistancePriority="1000" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="shI-kr-3o8">
-                                                                        <rect key="frame" x="112" y="22" width="0.0" height="0.0"/>
-                                                                    </stackView>
                                                                     <button toolTip="Format" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Adc-zl-sqX">
-                                                                        <rect key="frame" x="52" y="10" width="16" height="25"/>
+                                                                        <rect key="frame" x="42" y="9" width="16" height="25"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="18" id="7Xj-w1-apm"/>
                                                                         </constraints>
@@ -1213,7 +1210,7 @@ CA
                                                                         </connections>
                                                                     </button>
                                                                     <button toolTip="Demonstrate" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AZ7-aG-pPz">
-                                                                        <rect key="frame" x="108" y="11.5" width="18" height="21"/>
+                                                                        <rect key="frame" x="98" y="10.5" width="18" height="21"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="16" id="iZ9-9y-SLm"/>
                                                                         </constraints>
@@ -1227,7 +1224,7 @@ CA
                                                                         </connections>
                                                                     </button>
                                                                     <button toolTip="Preview" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bn7-FD-jzc">
-                                                                        <rect key="frame" x="78" y="12" width="21.5" height="20"/>
+                                                                        <rect key="frame" x="68" y="11" width="21.5" height="20"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="16" id="mhf-Ok-C0D"/>
                                                                         </constraints>
@@ -1243,13 +1240,11 @@ CA
                                                                 </subviews>
                                                                 <constraints>
                                                                     <constraint firstItem="Bn7-FD-jzc" firstAttribute="leading" secondItem="Adc-zl-sqX" secondAttribute="trailing" constant="10" id="ADf-u4-ifd"/>
-                                                                    <constraint firstItem="shI-kr-3o8" firstAttribute="centerY" secondItem="Ua8-RE-q01" secondAttribute="centerY" id="AVX-pD-7Dr"/>
-                                                                    <constraint firstItem="Adc-zl-sqX" firstAttribute="centerY" secondItem="Ua8-RE-q01" secondAttribute="centerY" id="DAj-dN-RX4"/>
-                                                                    <constraint firstAttribute="trailing" secondItem="AZ7-aG-pPz" secondAttribute="trailing" constant="14" id="HN9-BC-vOW"/>
-                                                                    <constraint firstAttribute="trailing" secondItem="shI-kr-3o8" secondAttribute="trailing" constant="28" id="PPb-lX-xlt"/>
+                                                                    <constraint firstItem="Adc-zl-sqX" firstAttribute="centerY" secondItem="Ua8-RE-q01" secondAttribute="centerY" constant="2" id="DAj-dN-RX4"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="AZ7-aG-pPz" secondAttribute="trailing" constant="24" id="HN9-BC-vOW"/>
                                                                     <constraint firstItem="AZ7-aG-pPz" firstAttribute="centerY" secondItem="Bn7-FD-jzc" secondAttribute="centerY" id="QjJ-un-ook"/>
                                                                     <constraint firstAttribute="width" constant="140" id="VrO-x5-8Ao"/>
-                                                                    <constraint firstItem="Bn7-FD-jzc" firstAttribute="centerY" secondItem="Ua8-RE-q01" secondAttribute="centerY" id="bXW-E1-a36"/>
+                                                                    <constraint firstItem="Bn7-FD-jzc" firstAttribute="centerY" secondItem="Ua8-RE-q01" secondAttribute="centerY" constant="2" id="bXW-E1-a36"/>
                                                                     <constraint firstItem="AZ7-aG-pPz" firstAttribute="leading" secondItem="Bn7-FD-jzc" secondAttribute="trailing" constant="9" id="wD9-OR-RBG"/>
                                                                 </constraints>
                                                             </customView>
@@ -1259,7 +1254,7 @@ CA
                                                             <constraint firstItem="rZx-hk-GcJ" firstAttribute="top" secondItem="xSU-Mk-2F1" secondAttribute="top" constant="9" id="Ics-3U-dtd"/>
                                                             <constraint firstAttribute="trailing" secondItem="Ua8-RE-q01" secondAttribute="trailing" id="Uos-hm-kn6"/>
                                                             <constraint firstItem="Ua8-RE-q01" firstAttribute="leading" secondItem="rZx-hk-GcJ" secondAttribute="trailing" constant="16" id="eWY-C1-IBp"/>
-                                                            <constraint firstItem="Ua8-RE-q01" firstAttribute="top" secondItem="xSU-Mk-2F1" secondAttribute="top" constant="2" id="esv-qQ-apf"/>
+                                                            <constraint firstItem="Ua8-RE-q01" firstAttribute="top" secondItem="xSU-Mk-2F1" secondAttribute="top" id="esv-qQ-apf"/>
                                                             <constraint firstAttribute="bottom" secondItem="Ua8-RE-q01" secondAttribute="bottom" id="nac-xp-D3Y"/>
                                                             <constraint firstAttribute="height" constant="46" id="pX3-IZ-w1v"/>
                                                         </constraints>
