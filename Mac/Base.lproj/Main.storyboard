@@ -23,7 +23,7 @@
                                                 <action selector="showAboutWindow:" target="Voe-Tx-rLC" id="PR0-oC-n1f"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Like MiaoYan?" id="zeb-Y9-O9j">
+                                        <menuItem title="Feeding 2 cats" id="zeb-Y9-O9j">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="openCats:" target="Voe-Tx-rLC" id="mf0-qq-fy0"/>
@@ -42,6 +42,24 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="uUY-TO-1UN"/>
+                                        <menuItem title="Hide MiaoYan" keyEquivalent="h" id="bxj-82-bcY">
+                                            <connections>
+                                                <action selector="hide:" target="Ady-hI-5gd" id="Qbc-aH-8P0"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Hide Others" keyEquivalent="h" id="gJ8-Jq-hrI">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="hideOtherApplications:" target="Ady-hI-5gd" id="4ZZ-o9-YrU"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Show All" id="M15-Xw-GpW">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="unhideAllApplications:" target="Ady-hI-5gd" id="Lsh-qN-Azc"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="mP6-CN-t7D"/>
                                         <menuItem title="Empty Trash" identifier="emptyTrashMenu" id="G9H-Lg-TXE">
                                             <string key="keyEquivalent" base64-UTF8="YES">
 CA

@@ -80,8 +80,17 @@
 /* Class = "NSMenuItem"; title = "About MiaoYan"; ObjectID = "gXN-Ca-moU"; */
 "gXN-Ca-moU.title" = "关于妙言";
 
-/* Class = "NSMenuItem"; title = "Like MiaoYan"; ObjectID = "zeb-Y9-O9j"; */
-"zeb-Y9-O9j.title" = "喜欢妙言";
+/* Class = "NSMenuItem"; title = "Feeding 2 cats"; ObjectID = "zeb-Y9-O9j"; */
+"zeb-Y9-O9j.title" = "喂 2 只🐱";
+
+/* Class = "NSMenuItem"; title = "Hide MiaoYan"; ObjectID = "bxj-82-bcY"; */
+"bxj-82-bcY.title" = "隐藏妙言";
+
+/* Class = "NSMenuItem"; title = "Hide Others"; ObjectID = "gJ8-Jq-hrI"; */
+"gJ8-Jq-hrI.title" = "隐藏其他";
+
+/* Class = "NSMenuItem"; title = "Show All"; ObjectID = "M15-Xw-GpW"; */
+"M15-Xw-GpW.title" = "显示全部";
 
 /* Class = "NSMenuItem"; title = "Copy title"; ObjectID = "5LV-Vi-n79"; */
 "5LV-Vi-n79.title" = "拷贝标题";
