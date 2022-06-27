@@ -22,7 +22,7 @@ public class UserDefaultsManagement {
     static var DefaultFontSize = 15
     static var DefaultPreviewFontSize = 16
     static var DefaultPresentationFontSize = 24
-    static var editorLineSpacing = 4
+    static var editorLineSpacing = 3
 
     static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
     static var DefaultBgColor = Color.white
