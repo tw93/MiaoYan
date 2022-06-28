@@ -115,7 +115,7 @@
 	<key>SUAutomaticallyUpdate</key>
 	<true/>
 	<key>SUFeedURL</key>
-	<string>https://miaoyan.vercel.app/appcast.xml</string>
+	<string>https://miaoyan.app/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>4IB5REPPZ6ya7EP1aIYpaleXXOEVmenFqN4DFnsVbHc=</string>
 	<key>SUScheduledCheckInterval</key>
