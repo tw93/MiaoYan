@@ -694,7 +694,10 @@ class ViewController: NSViewController,
         if let type = vc.getSidebarType(), type == .Trash {
             vc.storageOutlineView.deselectAll(nil)
         }
-        vc.createNote(name: "", content: "")
+        vc.focusTable()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            vc.createNote(name: "", content: "")
+        }
     }
 
     @IBAction func importNote(_ sender: NSMenuItem) {
