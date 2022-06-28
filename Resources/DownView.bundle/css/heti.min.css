@@ -1045,3 +1045,23 @@ blockquote blockquote {
 .hljs-strong {
   font-weight: bold;
 }
+
+code.language-mermaid {
+  display: block;
+  text-align: center;
+}
+
+.heti pre.plantuml-image-container {
+  padding: 0;
+  background: transparent;
+  border-radius: none;
+}
+
+.heti pre.plantuml-image-container .plantuml-image{
+    border-radius: 4px;
+}
+
+.heti pre.mermaid-image-container{
+  padding: 0;
+  background: #fff;
+}
