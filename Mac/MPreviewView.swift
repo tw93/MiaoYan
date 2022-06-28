@@ -354,6 +354,12 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         template = template.replacingOccurrences(of: "DOWN_CSS", with: css) as NSString
 
+        var script = ""
+        if UserDefaultsManagement.supportLaTeX {
+            script = "<script id=\"MathJax-script\" async src=\"https://gw.alipayobjects.com/os/lib/mathjax/3.2.2/es5/startup.js\"></script>"
+        }
+        template = template.replacingOccurrences(of: "DOWN_SCRIPT", with: script) as NSString
+
 #if os(iOS)
         if NightNight.theme == .night {
             template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
