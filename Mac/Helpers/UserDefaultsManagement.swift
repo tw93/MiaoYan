@@ -86,6 +86,7 @@ public class UserDefaultsManagement {
         static let PreviewFontName = "previewFontName"
         static let IsFirstLaunch = "isFirstLaunch"
         static let SortDirection = "sortDirection"
+        static let SupportLaTeX = "supportLaTeX"
     }
 
     static var lastProject: Int {
@@ -335,6 +336,18 @@ public class UserDefaultsManagement {
         set {
             let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
             UserDefaults.standard.set(data, forKey: Constants.FontColorKey)
+        }
+    }
+    
+    static var supportLaTeX: Bool {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.SupportLaTeX) as? Bool {
+                return result
+            }
+            return false
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.SupportLaTeX)
         }
     }
 

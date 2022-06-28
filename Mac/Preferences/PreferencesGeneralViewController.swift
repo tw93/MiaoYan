@@ -19,6 +19,7 @@ class PreferencesGeneralViewController: NSViewController {
     @IBOutlet var editorFontSize: NSPopUpButton!
     @IBOutlet var previewFontSize: NSPopUpButton!
     @IBOutlet var presentationFontSize: NSPopUpButton!
+    @IBOutlet var supportLaTeX: NSButton!
 
     // MARK: global variables
 
@@ -106,7 +107,15 @@ class PreferencesGeneralViewController: NSViewController {
         vc.disablePresentation()
         vc.enablePresentation()
     }
-    
+
+    @IBAction func supportLaTeXClick(_ sender: NSButton) {
+        UserDefaultsManagement.supportLaTeX = (sender.state == .on)
+
+        guard let vc = ViewController.shared() else { return }
+        vc.disablePreview()
+        vc.enablePreview()
+    }
+
     @IBAction func appearanceClick(_ sender: NSPopUpButton) {
         if let type = AppearanceType(rawValue: sender.indexOfSelectedItem) {
             if UserDefaultsManagement.appearanceType == type {
@@ -170,6 +179,7 @@ class PreferencesGeneralViewController: NSViewController {
         editorFontName.selectItem(withTitle: String(UserDefaultsManagement.fontName))
         windowFontName.selectItem(withTitle: String(UserDefaultsManagement.windowFontName))
         previewFontName.selectItem(withTitle: String(UserDefaultsManagement.previewFontName))
+        supportLaTeX.state = UserDefaultsManagement.supportLaTeX ? .on : .off
     }
 
     @IBAction func changeDefaultStorage(_ sender: Any) {

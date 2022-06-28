@@ -26,6 +26,49 @@
       charset="utf-8"
       type="text/javascript"
     ></script>
+    <script>
+      window.MathJax = {
+        loader: { load: ['input/tex', 'ui/menu'] },
+        startup: {
+          pageReady() {
+            MathJax._.mathjax.mathjax.handleRetriesFor(() =>
+              MathJax.startup.document.render()
+            );
+          },
+        },
+        tex: { inlineMath: { '[+]': [['$', '$']] } },
+        options: {
+          menuOptions: {
+            settings: {
+              assistiveMml: false,
+            },
+          },
+          renderActions: {
+            assistiveMml: [], // disable assistive mathml
+            typeset: [
+              150,
+              (doc) => {
+                for (math of doc.math) {
+                  MathJax.config.renderMathML(math, doc);
+                }
+              },
+              (math, doc) => MathJax.config.renderMathML(math, doc),
+            ],
+          },
+          menuOptions: {
+            settings: {
+              assistiveMml: false,
+            },
+          },
+        },
+        renderMathML(math, doc) {
+          math.typesetRoot = document.createElement('mjx-container');
+          math.typesetRoot.innerHTML = MathJax.startup.toMML(math.root);
+          math.display && math.typesetRoot.setAttribute('display', 'block');
+        },
+      };
+    </script>
+    DOWN_SCRIPT
     <title></title>
     <style>
       DOWN_CSS
@@ -123,7 +166,7 @@
       mermaid.initialize(config);
       window.mermaid.init(
         undefined,
-        document.querySelectorAll('.language-mermaid'),
+        document.querySelectorAll('.language-mermaid')
       );
 
       let plantumlPrefix = 'language-plantuml';
@@ -138,7 +181,7 @@
             plantumlEncoder.encode(code.innerText);
           code.parentNode.insertBefore(image, code);
           code.style.display = 'none';
-        },
+        }
       );
       var pres = document.getElementsByTagName('pre'),
         length = pres.length,
@@ -148,7 +191,7 @@
         if (pres[i].querySelector('.plantuml-image')) {
           pres[i].classList.add('plantuml-image-container');
         }
-        if(pres[i].querySelector('.language-mermaid')){
+        if (pres[i].querySelector('.language-mermaid')) {
           pres[i].classList.add('mermaid-image-container');
         }
       }
