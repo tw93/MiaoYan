@@ -56,8 +56,10 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     override func mouseDown(with event: NSEvent) {
         let vc = window?.contentViewController as! ViewController
         UserDataService.instance.searchTrigger = false
-        vc.focusTable()
         super.mouseDown(with: event)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            vc.focusTable()
+        }
     }
 
     override func rightMouseDown(with event: NSEvent) {
