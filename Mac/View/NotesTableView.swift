@@ -50,11 +50,13 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     }
 
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
-        return true
+        true
     }
 
     override func mouseDown(with event: NSEvent) {
+        let vc = window?.contentViewController as! ViewController
         UserDataService.instance.searchTrigger = false
+        vc.focusTable()
         super.mouseDown(with: event)
     }
 
@@ -80,12 +82,12 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
 
     // Custom note highlight style
     func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
-        return NoteRowView()
+        NoteRowView()
     }
 
     // Populate table data
     func numberOfRows(in tableView: NSTableView) -> Int {
-        return noteList.count
+        noteList.count
     }
 
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
@@ -333,9 +335,9 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         reloadData(forRowIndexes: IndexSet(integer: at), columnIndexes: [0])
         endUpdates()
     }
-    
+
     override func keyDown(with event: NSEvent) {
-        let vc = window?.contentViewController as? ViewController;
+        let vc = window?.contentViewController as? ViewController
         if event.modifierFlags.contains(.control), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_P {
             vc?.exportPdf("")
             return
