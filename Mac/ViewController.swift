@@ -334,6 +334,7 @@ class ViewController: NSViewController,
     }
 
     func resort() {
+        guard let vc = ViewController.shared() else { return }
         ascendingCheckItem.state = UserDefaultsManagement.sortDirection ? .off : .on
         descendingCheckItem.state = UserDefaultsManagement.sortDirection ? .on : .off
         guard let controller = ViewController.shared() else { return }
@@ -347,8 +348,8 @@ class ViewController: NSViewController,
         } else {
             controller.notesTableView.noteList = storage.noteList
         }
-
-        controller.notesTableView.reloadData()
+    
+        vc.updateTable()
     }
 
     @objc func moveNote(_ sender: NSMenuItem) {
