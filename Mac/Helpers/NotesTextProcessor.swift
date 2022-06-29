@@ -731,16 +731,16 @@ public class NotesTextProcessor {
             }
         }
         
-        // Todo
-        NotesTextProcessor.todoInlineRegex.matches(string, range: paragraphRange) { result in
-            guard let range = result?.range else { return }
-            let substring = attributedString.mutableString.substring(with: range)
-            
-            if substring.contains("- [x]") {
-                let strikeRange = attributedString.mutableString.paragraphRange(for: range)
-                attributedString.addAttribute(.strikethroughStyle, value: 1, range: strikeRange)
-            }
-        }
+//        // Todo
+//        NotesTextProcessor.todoInlineRegex.matches(string, range: paragraphRange) { result in
+//            guard let range = result?.range else { return }
+//            let substring = attributedString.mutableString.substring(with: range)
+//            
+//            if substring.contains("- [x]") {
+//                let strikeRange = attributedString.mutableString.paragraphRange(for: range)
+//                attributedString.addAttribute(.strikethroughStyle, value: 1, range: strikeRange)
+//            }
+//        }
         
         if !UserDefaultsManagement.liveImagesPreview {
             // We detect and process inline images

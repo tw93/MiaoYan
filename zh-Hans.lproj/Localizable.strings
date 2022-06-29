@@ -5,7 +5,7 @@
 "Archive" = "存档";
 
 /* No comment provided by engineer. */
-"Are you sure you want to irretrievably delete %d note(s)?" = "确定要永久删除%d个笔记？此操作无法恢复！";
+"Are you sure you want to irretrievably delete %d note(s)?" = "确定要永久删除%d个笔记？";
 
 /* No comment provided by engineer. */
 "Are you sure you want to remove project \"%@\" and all files inside?" = "您确定要删除项目\"%@\"和它下面的所有文件吗？";
@@ -95,7 +95,7 @@
 "Remove" = "移除";
 
 /* No comment provided by engineer. */
-"Remove note(s)" = "移除笔记";
+"Remove note(s)" = "确定删除";
 
 /* No comment provided by engineer. */
 "Rename folder" = "重命名文件夹";
@@ -113,7 +113,7 @@
 "Strikethrough" = "删除线";
 
 /* Delete menu */
-"This action cannot be undone." = "此操作无法撤消。";
+"This action cannot be undone." = "此操作无法恢复。";
 
 /* No comment provided by engineer. */
 "Toggle preview" = "切换预览";
