@@ -488,7 +488,7 @@ public class UserDefaultsManagement {
         }
     }
 
-    static var restoreCursorPosition = false
+    static var restoreCursorPosition = true
 
     #if os(iOS)
         static var nightModeType: NightMode {
