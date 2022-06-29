@@ -32,6 +32,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
             vc.search.window?.makeFirstResponder(vc.search)
         } else {
             if !UserDefaultsManagement.preview {
+                vc.titleLabel.saveTitle()
                 vc.focusEditArea()
             }
         }
