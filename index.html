@@ -15,26 +15,43 @@
       itemprop="description"
       content="轻灵的 Markdown 笔记本伴你写出妙言~"
     />
-    <title>妙言 - 轻灵的 Markdown 笔记本</title>
-    <meta name="keywords" content="Markdown,Tw93,MiaoYan,MacApp" />
-    <meta name="author" content="Tw93" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="miaoyan" />
-    <meta name="twitter:creator" content="Tw93" />
-    <meta property="og:url" content="https://miaoyan.vercel.app/" />
-    <meta property="og:title" content="MiaoYan" />
+    <!-- Primary Meta Tags -->
+    <title>妙言</title>
+    <meta name="title" content="妙言" />
+    <meta name="description" content="轻灵的 Markdown 笔记本伴你写出妙言~" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://miaoyan.app/" />
+    <meta property="og:title" content="妙言" />
     <meta
       property="og:description"
-      content="Lightweight Markdown app to help you write great sentences."
+      content="轻灵的 Markdown 笔记本伴你写出妙言~"
     />
+    <meta
+      property="og:image"
+      content="https://gw.alipayobjects.com/zos/k/56/intro.png"
+    />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://miaoyan.app/" />
+    <meta property="twitter:title" content="妙言" />
+    <meta
+      property="twitter:description"
+      content="轻灵的 Markdown 笔记本伴你写出妙言~"
+    />
+    <meta
+      property="twitter:image"
+      content="https://gw.alipayobjects.com/zos/k/56/intro.png"
+    />
+    <meta name="keywords" content="Markdown,Tw93,MiaoYan,MacApp,Swift" />
+    <meta name="author" content="Tw93" />
+    <meta name="twitter:creator" content="Tw93" />
     <link
       rel="shortcut icon"
       href="https://gw.alipayobjects.com/zos/k/t0/43.png"
       type="image/x-icon"
-    />
-    <meta
-      property="og:image"
-      content="https://gw.alipayobjects.com/zos/k/v9/1.png"
     />
     <link
       rel="icon"
@@ -100,7 +117,7 @@
               target="_blank"
               class="text-center w-32 hover:underline text-white font-bold rounded-xl lg:my-6 my-3 py-3 px-4 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out text-lg bg-slate-900 border border-solid border-slate-900"
             >
-            Github
+              Github
             </a>
             <a
               href="https://github.com/tw93/MiaoYan/releases"
@@ -299,7 +316,7 @@
           $html.setAttribute('lang', lang);
           localStorage.setItem('miaoyanLang', lang);
           if (lang === 'en') {
-            document.title = 'MiaoYan - Lightweight Markdown app';
+            document.title = 'MiaoYan';
             document
               .querySelector('meta[name="description"]')
               .setAttribute(
@@ -312,7 +329,7 @@
               'https://gw.alipayobjects.com/zos/k/8m/en.gif',
             );
           } else {
-            document.title = '妙言 - 轻灵的 Markdown 笔记本';
+            document.title = '妙言';
             document
               .querySelector('meta[name="description"]')
               .setAttribute('content', '轻灵的 Markdown 笔记本伴你写出妙言~');
