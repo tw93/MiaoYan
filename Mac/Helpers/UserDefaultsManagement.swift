@@ -20,7 +20,7 @@ public class UserDefaultsManagement {
     static var DefaultFont = "LXGW WenKai Lite"
 
     static var DefaultFontSize = 15
-    static var DefaultPreviewFontSize = 16
+    static var DefaultPreviewFontSize = 15
     static var DefaultPresentationFontSize = 24
     static var editorLineSpacing = 3
 
