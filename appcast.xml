@@ -3,6 +3,28 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>0.6.2</title>
+      <description><![CDATA[
+            <h3>更新记录：</h3>
+            <ol>
+             <li>🎉 终于支持了 PlantUML、Mermaid、LaTeX 的渲染，LaTeX 需设置打开</li>
+             <li>🍭 排序功能继续优化，重排、删除后更新、焦点逻辑变聪明了</li>
+             <li>🙈 修复文章新建极小概率 Crash，感谢 sbccznfy 帮忙复现</li>
+             <li>🛠 Command + H 窗口隐藏，阅读效果持续优化，框架布局优化</li>
+            </ol>
+           <h3>Update Notes：</h3>
+           <ol>
+             <li>🎉 Finally, Supports the rendering of PlantUML, Mermaid and PlantUML、Mermaid、LaTeX, LaTeX needs to be set to open.</li>
+             <li>🍭 The sorting function continues to be optimized. Rearrangement, update after deletion, and focus logic become smarter.</li>
+             <li>🙈  Repair the article and create a new minimum probability crash. Thank sbccznfy for helping to reproduce it.</li>
+             <li>🛠 The command + H window is hidden, the reading effect is continuously optimized, and the frame layout is optimized.</li>
+            </ol>
+            ]]></description>
+      <pubDate>周三, 29 6月 2022 19:48:44 +0800</pubDate>
+      <enclosure url="https://qpluspicture.oss-cn-beijing.aliyuncs.com/g6W6Zu/MiaoYan_V0.6.2.zip" sparkle:shortVersionString="0.6.2" sparkle:version="0.6.2" sparkle:edSignature="KS+jLwU2ukDthtVCdmYr83S3cUWQq7QYj+5VM843+MpQ97RtOfm0ng89M294VbWZvgf4WnXjalW1Po4MPwmZAw==" length="29801212" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>0.6.1</title>
       <description><![CDATA[
             <h3>更新记录：</h3>
@@ -19,12 +41,12 @@
              <li>🏓 Optimize the editor experience, better support the ability of table display, row height, selection and search.</li>
              <li>🛠 Fixed occasional horizontal scrolling in the sidebar, Initialize Title Focus, and table preview in dark color.</li>
             </ol>
-            ]]></description>
+            ]]>      </description>
       <pubDate>周五, 24 6月 2022 19:48:44 +0800</pubDate>
       <enclosure url="https://qpluspicture.oss-cn-beijing.aliyuncs.com/NSfZYH/MiaoYan_V0.6.1.zip" sparkle:shortVersionString="0.6.1" sparkle:version="0.6.1" sparkle:edSignature="za2DuXxkpZ/6vjThZRCLm71a+do4g39DKrDbm6VIWzpcbncHhzeD+JKirgLV2hu7QgXnE4y3BoK5OztUCzJfAQ==" length="29782440" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
     </item>
-      <item>
+    <item>
       <title>0.6.0</title>
       <description><![CDATA[
             <h3>更新记录：</h3>
@@ -41,7 +63,7 @@
              <li>🐱 Double click the title bar in the upper left corner to zoom in to the maximum size of the window and zoom out to the original size.</li>
              <li>🩴 Re optimized the document sorting function and added the ascending and descending options.</li>
             </ol>
-            ]]></description>
+            ]]>      </description>
       <pubDate>周二, 21 6月 2022 19:48:44 +0800</pubDate>
       <enclosure url="https://qpluspicture.oss-cn-beijing.aliyuncs.com/ctDUin/MiaoYan_V0.6.0.zip" sparkle:shortVersionString="0.6.0" sparkle:version="0.6.0" sparkle:edSignature="BtQTAxSEVpsR0/0cGgkTbXiB0o/d4ME2DIVNG4K4YDqAbahfqSPhpAnqwtC9Qqoz1vQMldqEkBXoX5vYSfZNCw==" length="29781049" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
@@ -63,7 +85,7 @@
              <li>🐱 Optimize the default width and folder when using it for the first time, and change the app name in Chinese to 妙言.</li>
              <li>🩴 Change the domain name of miaoyan to <a href="https://miaoyan.app/">miaoyan.app</a>.</li>
             </ol>
-            ]]></description>
+            ]]>      </description>
       <pubDate>周日, 19 6月 2022 09:48:44 +0800</pubDate>
       <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.5.1.zip" sparkle:shortVersionString="0.5.1" sparkle:version="0.5.1" sparkle:edSignature="/PikEGIJ6J2Ij02bEHccTXupqgvMNXGwy/MJPw7AnuAAxOBusNGCkSzOf1zaXg2MitCTowZnuRcbPnvN5BcUCg==" length="27959489" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
