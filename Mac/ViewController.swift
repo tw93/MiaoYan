@@ -1187,10 +1187,9 @@ class ViewController: NSViewController,
 
             note.save(attributed: editArea.attributedString())
 
-            // 编辑内容，标题排序的时候有bug，先关掉
-//            if !updateViews.contains(note), UserDefaultsManagement.sort != .title {
-//                updateViews.append(note)
-//            }
+            if !updateViews.contains(note) {
+                updateViews.append(note)
+            }
 
             rowUpdaterTimer.invalidate()
             rowUpdaterTimer = Timer.scheduledTimer(timeInterval: 1.2, target: self, selector: #selector(updateTableViews), userInfo: nil, repeats: false)
