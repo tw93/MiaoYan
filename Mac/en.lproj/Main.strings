@@ -317,23 +317,23 @@
 /* Class = "NSTextFieldCell"; title = "MiaoYan"; ObjectID = "mj8-mU-0W4"; */
 "mj8-mU-0W4.title" = "MiaoYan";
 
-/* Class = "NSTextFieldCell"; title = "Editor FontName:"; ObjectID = "xdH-tR-vpQ"; */
-"xdH-tR-vpQ.title" = "Editor FontName:";
+/* Class = "NSTextFieldCell"; title = "Editor FontName"; ObjectID = "xdH-tR-vpQ"; */
+"xdH-tR-vpQ.title" = "Editor FontName";
 
-/* Class = "NSTextFieldCell"; title = "Preview FontName:"; ObjectID = "DSZ-lK-z6c"; */
-"DSZ-lK-z6c.title" = "Preview FontName:";
+/* Class = "NSTextFieldCell"; title = "Preview FontName"; ObjectID = "DSZ-lK-z6c"; */
+"DSZ-lK-z6c.title" = "Preview FontName";
 
-/* Class = "NSTextFieldCell"; title = "Window FontName:"; ObjectID = "Ubt-AP-PLa"; */
-"Ubt-AP-PLa.title" = "Window FontName:";
+/* Class = "NSTextFieldCell"; title = "Window FontName"; ObjectID = "Ubt-AP-PLa"; */
+"Ubt-AP-PLa.title" = "Window FontName";
 
-/* Class = "NSTextFieldCell"; title = "Editor FontSize:"; ObjectID = "Mhq-eB-UoB"; */
-"Mhq-eB-UoB.title" = "Editor FontSize:";
+/* Class = "NSTextFieldCell"; title = "Editor FontSize"; ObjectID = "Mhq-eB-UoB"; */
+"Mhq-eB-UoB.title" = "Editor FontSize";
 
-/* Class = "NSTextFieldCell"; title = "Preview FontSize:"; ObjectID = "euf-Xu-FDz"; */
-"euf-Xu-FDz.title" = "Preview FontSize:";
+/* Class = "NSTextFieldCell"; title = "Preview FontSize"; ObjectID = "euf-Xu-FDz"; */
+"euf-Xu-FDz.title" = "Preview FontSize";
 
-/* Class = "NSTextField"; title = "Presentation FontSize:"; ObjectID = "AOs-Fb-J09"; */
-"AOs-Fb-J09.title" = "Presentation FontSize:";
+/* Class = "NSTextField"; title = "Presentation FontSize"; ObjectID = "AOs-Fb-J09"; */
+"AOs-Fb-J09.title" = "Presentation FontSize";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Format"; ObjectID = "Adc-zl-sqX"; */
 "Adc-zl-sqX.ibShadowedToolTip" = "Format";

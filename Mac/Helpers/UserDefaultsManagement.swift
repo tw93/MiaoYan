@@ -338,7 +338,7 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(data, forKey: Constants.FontColorKey)
         }
     }
-    
+
     static var supportLaTeX: Bool {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.SupportLaTeX) as? Bool {
