@@ -242,8 +242,6 @@
 /* Class = "NSMenuItem"; title = "Delete"; ObjectID = "fHG-zk-g0k"; */
 "fHG-zk-g0k.title" = "删除";
 
-/* Class = "NSTextFieldCell"; title = "Default storage:"; ObjectID = "fmS-eE-nne"; */
-"fmS-eE-nne.title" = "默认存储位置:";
 
 /* Class = "NSMenuItem"; title = "Zoom"; ObjectID = "FQV-5x-ffs"; */
 "FQV-5x-ffs.title" = "缩放";
@@ -672,32 +670,33 @@
 /* Class = "NSButtonCell"; title = "Show notes in \"Notes\" and \"Todo\" lists"; ObjectID = "Zzw-01-JH7"; */
 "Zzw-01-JH7.title" = "在\"笔记\"和\"待办事项\"列表中显示备注";
 
-/* Class = "NSTextFieldCell"; title = "Appearance:"; ObjectID = "X8u-wB-WWq"; */
-"X8u-wB-WWq.title" = "外观：";
+/* Class = "NSTextFieldCell"; title = "Appearance"; ObjectID = "X8u-wB-WWq"; */
+"X8u-wB-WWq.title" = "外观";
 
-/* Class = "NSTextFieldCell"; title = "Language:"; ObjectID = "jdI-uU-sfm"; */
-"jdI-uU-sfm.title" = "语言：";
+/* Class = "NSTextFieldCell"; title = "Language"; ObjectID = "jdI-uU-sfm"; */
+"jdI-uU-sfm.title" = "语言";
 
-/* Class = "NSTextFieldCell"; title = "Storage location:"; ObjectID = "81L-hB-Mc1"; */
-"81L-hB-Mc1.title" = "存储位置：";
 
-/* Class = "NSTextField"; title = "Editor FontName:"; ObjectID = "xdH-tR-vpQ"; */
-"xdH-tR-vpQ.title" = "编辑器字体：";
+/* Class = "NSTextFieldCell"; title = "Storage location"; ObjectID = "fmS-eE-nne"; */
+"fmS-eE-nne.title" = "存储位置";
 
-/* Class = "NSTextField"; title = "Preview FontName:"; ObjectID = "DSZ-lK-z6c"; */
-"DSZ-lK-z6c.title" = "预览字体：";
+/* Class = "NSTextField"; title = "Editor FontName"; ObjectID = "xdH-tR-vpQ"; */
+"xdH-tR-vpQ.title" = "编辑器字体";
 
-/* Class = "NSTextField"; title = "Window FontName:"; ObjectID = "Ubt-AP-PLa"; */
-"Ubt-AP-PLa.title" = "窗口字体：";
+/* Class = "NSTextField"; title = "Preview FontName"; ObjectID = "DSZ-lK-z6c"; */
+"DSZ-lK-z6c.title" = "预览字体";
 
-/* Class = "NSTextField"; title = "Editor FontSize:"; ObjectID = "Mhq-eB-UoB"; */
-"Mhq-eB-UoB.title" = "编辑器字号：";
+/* Class = "NSTextField"; title = "Window FontName"; ObjectID = "Ubt-AP-PLa"; */
+"Ubt-AP-PLa.title" = "窗口字体";
 
-/* Class = "NSTextField"; title = "Presentation FontSize:"; ObjectID = "euf-Xu-FDz"; */
-"euf-Xu-FDz.title" = "预览字号：";
+/* Class = "NSTextField"; title = "Editor FontSize"; ObjectID = "Mhq-eB-UoB"; */
+"Mhq-eB-UoB.title" = "编辑器字号";
 
-/* Class = "NSTextField"; title = "Preview FontSize:"; ObjectID = "AOs-Fb-J09"; */
-"AOs-Fb-J09.title" = "演示字号：";
+/* Class = "NSTextField"; title = "Presentation FontSize"; ObjectID = "euf-Xu-FDz"; */
+"euf-Xu-FDz.title" = "预览字号";
+
+/* Class = "NSTextField"; title = "Preview FontSize"; ObjectID = "AOs-Fb-J09"; */
+"AOs-Fb-J09.title" = "演示字号";
 
 /* Class = "NSMenuItem"; title = "System"; ObjectID = "fQA-b2-fKr"; */
 "fQA-b2-fKr.title" = "自动";
