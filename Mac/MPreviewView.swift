@@ -46,10 +46,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
         if event.keyCode == kVK_ANSI_C, event.modifierFlags.contains(.command) {
             DispatchQueue.main.async {
-                guard let string = HandlerSelection.selectionString else { return }
-                let pasteboard = NSPasteboard.general
-                pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
-                pasteboard.setString(string, forType: NSPasteboard.PasteboardType.string)
+                self.evaluateJavaScript("document.execCommand('copy', false, null)", completionHandler: nil)
             }
             return false
         }
@@ -383,8 +380,7 @@ class HandlerCodeCopy: NSObject, WKScriptMessageHandler {
     }
 
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage)
-    {
+                               didReceive message: WKScriptMessage) {
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
 
         HandlerCodeCopy.selectionString = message
@@ -395,9 +391,9 @@ class HandlerSelection: NSObject, WKScriptMessageHandler {
     public static var selectionString: String?
 
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage)
-    {
+                               didReceive message: WKScriptMessage) {
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
+
         HandlerSelection.selectionString = message
     }
 }
