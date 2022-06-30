@@ -8,20 +8,20 @@
             <h3>更新记录：</h3>
             <ol>
              <li>🎉 终于支持了 PlantUML、Mermaid、LaTeX 的渲染，LaTeX 需设置打开</li>
-             <li>🍭 排序功能继续优化，重排、删除后更新、焦点逻辑变聪明了</li>
+             <li>🍭 支持预览富文本复制，排序功能继续优化，重排、删除后更新、焦点逻辑变聪明了</li>
              <li>🙈 修复文章新建极小概率 Crash，感谢 sbccznfy 帮忙复现</li>
-             <li>🛠 Command + H 窗口隐藏，阅读效果持续优化，框架布局优化</li>
+             <li>🛠 Command + H 窗口隐藏，阅读效果持续优化，菜单布局优化</li>
             </ol>
            <h3>Update Notes：</h3>
            <ol>
              <li>🎉 Finally, Supports the rendering of PlantUML, Mermaid and PlantUML、Mermaid、LaTeX, LaTeX needs to be set to open.</li>
-             <li>🍭 The sorting function continues to be optimized. Rearrangement, update after deletion, and focus logic become smarter.</li>
+             <li>🍭 Support preview rich text copy, the sorting function continues to be optimized. Rearrangement, update after deletion, and focus logic become smarter.</li>
              <li>🙈  Repair the article and create a new minimum probability crash. Thank sbccznfy for helping to reproduce it.</li>
-             <li>🛠 The command + H window is hidden, the reading effect is continuously optimized, and the frame layout is optimized.</li>
+             <li>🛠 The command + H window is hidden, the reading effect is continuously optimized, menu layout optimization.</li>
             </ol>
             ]]></description>
-      <pubDate>周三, 29 6月 2022 19:48:44 +0800</pubDate>
-      <enclosure url="https://qpluspicture.oss-cn-beijing.aliyuncs.com/IazlAv/MiaoYan_V0.6.2.zip" sparkle:shortVersionString="0.6.2" sparkle:version="0.6.2" sparkle:edSignature="9XYJGjsSHDp0yScOJVYNLlN+nNfbGHvWUR/WbfzDm0JcTBZyqmQZsSAdxc4NUYQ7wB8hlFnNmEN2Lp7O98MCAA==" length="29800321" type="application/octet-stream" />
+      <pubDate>周四, 29 6月 2022 21:48:44 +0800</pubDate>
+      <enclosure url="https://qpluspicture.oss-cn-beijing.aliyuncs.com/9FmyfW/MiaoYan_V0.6.2.zip" sparkle:shortVersionString="0.6.2" sparkle:version="0.6.2" sparkle:edSignature="e1P0Q9VRIRf/3JXZL+xn0qQdkBIvD8XRfbYrzrj8jQKmIYyMaWG6z4Tv0s6/9X+YAte88tJoyIIkQE/FW2dWAA==" length="29801665" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
     </item>
     <item>
