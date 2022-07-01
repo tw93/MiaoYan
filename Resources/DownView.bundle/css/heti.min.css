@@ -1057,17 +1057,16 @@ code.language-mermaid {
   border-radius: none;
 }
 
-.heti pre.plantuml-image-container .plantuml-image{
-    border-radius: 4px;
+.heti pre.plantuml-image-container .plantuml-image {
+  border-radius: 4px;
 }
 
-.heti pre.mermaid-image-container{
+.heti pre.mermaid-image-container {
   padding: 0;
   background: #fff;
 }
 
-
-mjx-container[display="block"] {
+mjx-container[display='block'] {
   display: block;
   margin: 1em 0;
 }
