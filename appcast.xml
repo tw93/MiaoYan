@@ -7,14 +7,14 @@
       <description><![CDATA[
             <h3>更新记录：</h3>
             <ol>
-             <li>🎉 终于支持 uPic、PicGo 图床了，你可以设置打开试试</li>
+             <li>🎉 终于支持 uPic、PicGo 图床了，可设置中打开，支持复制图片和截图上传</li>
              <li>🍭 完成 LaTeX 性能优化，不需要设置默认开启</li>
              <li>🏓 支持从预览界面 command+c 直接复制选中富文本</li>
              <li>🙈 持续优化编辑器体验，如新建、删除、行高、焦点、搜索、笔记数</li>
             </ol>
            <h3>Update Notes：</h3>
            <ol>
-             <li>🎉 Finally, uPic and PicGo upload are supported, You can set them to open and try.</li>
+             <li>🎉 Finally, uPic and PicGo upload are supported, You can set them to open and try, Support copying pictures and uploading screenshots.</li>
              <li>🍭 To complete latex performance optimization, You do not need to set the default on.</li>
              <li>🏓 Support to copy the selected rich text directly from the preview interface with command+c.</li>
              <li>🙈 Continuously optimize the editor experience, such as new creation, deletion, row height, focus, search, and number of notes.</li>
