@@ -877,6 +877,8 @@ class ViewController: NSViewController,
             }
 
             vc.editArea.clear()
+            vc.emptyEditAreaView.isHidden = true
+
         }
 
         NSApp.mainWindow?.makeFirstResponder(vc.notesTableView)
