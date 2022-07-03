@@ -676,6 +676,9 @@
 /* Class = "NSTextFieldCell"; title = "Language"; ObjectID = "jdI-uU-sfm"; */
 "jdI-uU-sfm.title" = "语言";
 
+/* Class = "NSTextFieldCell"; title = "Upload Picture"; ObjectID = "S7J-Ty-QIg"; */
+"S7J-Ty-QIg.title" = "图床设置";
+
 
 /* Class = "NSTextFieldCell"; title = "Storage location"; ObjectID = "fmS-eE-nne"; */
 "fmS-eE-nne.title" = "存储位置";

@@ -37,7 +37,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 && textStorage?.string.last == "\n"
                 && selectedRange().location != textStorage?.length
         ) {
-            newRect.size.height = newRect.size.height
+            newRect.size.height = newRect.size.height - 6.0
+            newRect.origin.y = newRect.origin.y + 4
         }
 
         super.drawInsertionPoint(in: newRect, color: EditTextView.fontColor, turnedOn: flag)
@@ -951,6 +952,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
         paragraphStyle.alignment = .left
+        paragraphStyle.lineHeightMultiple = CGFloat(UserDefaultsManagement.editorLineHeight)
         typingAttributes[.paragraphStyle] = paragraphStyle
         defaultParagraphStyle = paragraphStyle
         textStorage?.updateParagraphStyle()
@@ -1076,7 +1078,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
             let tempPath = URL(fileURLWithPath: imagePath)
 
-            if UserDefaultsManagement.defaultPicUpload == "picGo" {
+            if UserDefaultsManagement.defaultPicUpload == "PicGo" {
                 vc.toastUpload(status: true)
                 postToPicGo(imagePath: imagePath) { result, error in
                     if let result = result {
@@ -1093,7 +1095,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
                     self.breakUndoCoalescing()
                 }
             } else {
-                if UserDefaultsManagement.defaultPicUpload == "uPic" {
+                if UserDefaultsManagement.defaultPicUpload == "UPic" {
                     vc.toastUpload(status: true)
                     let runList = run("/Applications/uPic.app/Contents/MacOS/uPic -o url -u \(imagePath)")
                     let imageDesc = runList?.components(separatedBy: "\n") ?? []
