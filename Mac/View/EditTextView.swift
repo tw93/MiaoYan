@@ -77,7 +77,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override func mouseMoved(with event: NSEvent) {
         let viewController = window?.contentViewController as! ViewController
         if !viewController.emptyEditAreaView.isHidden {
-            NSCursor.pointingHand.set()
+            NSCursor.arrow.set()
             return
         }
 
@@ -360,6 +360,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         if let viewController = window?.contentViewController as? ViewController {
             viewController.emptyEditAreaImage.image = NSImage(imageLiteralResourceName: "makeNoteAsset")
             viewController.emptyEditAreaView.isHidden = false
+            viewController.refreshMiaoYanNum()
             viewController.titleBarView.isHidden = true
             viewController.updateTitle(newTitle: "")
         }
