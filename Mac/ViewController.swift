@@ -47,6 +47,7 @@ class ViewController: NSViewController,
     @IBOutlet var editArea: EditTextView!
     @IBOutlet var editAreaScroll: EditorScrollView!
     @IBOutlet var search: SearchTextField!
+
     @IBOutlet var notesTableView: NotesTableView!
     @IBOutlet var noteMenu: NSMenu!
     @IBOutlet var storageOutlineView: SidebarProjectView!
@@ -1494,6 +1495,8 @@ class ViewController: NSViewController,
             self.notesTableView.window?.makeFirstResponder(self.notesTableView)
             self.notesTableView.selectRowIndexes([index], byExtendingSelection: true)
             self.notesTableView.scrollRowToVisible(index)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.06) {
             self.titleLabel.saveTitle()
             self.search.becomeFirstResponder()
         }
