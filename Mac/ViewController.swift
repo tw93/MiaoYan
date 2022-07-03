@@ -638,6 +638,9 @@ class ViewController: NSViewController,
             if notesTableView.getSelectedNote() != nil {
                 UserDefaultsManagement.isOnSearch = true
                 disablePreview()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.03) {
+                    self.titleLabel.saveTitle()
+                }
                 focusSearchInput()
                 return true
             }
@@ -1505,7 +1508,6 @@ class ViewController: NSViewController,
             self.notesTableView.scrollRowToVisible(index)
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.06) {
-            self.titleLabel.saveTitle()
             self.search.becomeFirstResponder()
         }
     }
