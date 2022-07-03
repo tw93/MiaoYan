@@ -2,6 +2,28 @@
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
   <channel>
     <title>妙言 / MiaoYan</title>
+      <item>
+      <title>0.7.0</title>
+      <description><![CDATA[
+            <h3>更新记录：</h3>
+            <ol>
+             <li>🎉 终于支持 uPic、PicGo 图床了,你可以设置打开试试</li>
+             <li>🍭 完成 LaTeX 性能优化，不需要设置默认开启</li>
+             <li>🏓 支持从预览界面 command+c 直接复制选中富文本</li>
+             <li>🙈 持续优化编辑器体验，如新建、删除、行高、焦点、搜索、笔记数</li>
+            </ol>
+           <h3>Update Notes：</h3>
+           <ol>
+             <li>🎉 Finally, uPic and PicGo upload are supported, You can set them to open and try.</li>
+             <li>🍭 To complete latex performance optimization, You do not need to set the default on.</li>
+             <li>🏓 Support to copy the selected rich text directly from the preview interface with command+c.</li>
+             <li>🙈 Continuously optimize the editor experience, such as new creation, deletion, row height, focus, search, and number of notes.</li>
+            </ol>
+            ]]></description>
+      <pubDate>周日, 3 7月 2022 21:48:44 +0800</pubDate>
+      <enclosure url="https://qpluspicture.oss-cn-beijing.aliyuncs.com/quTjSR/MiaoYan_V0.7.0.zip" sparkle:shortVersionString="0.7.0" sparkle:version="0.7.0" sparkle:edSignature="6SGKciiJ0w1fGbO+S+heouGnto/zVyLHzKCQPOb9KtTzmYcWggG1rkhVz3c46Y6Iyz30gz4SzpqC/c9hcfGODA==" length="31643945" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
     <item>
       <title>0.6.2</title>
       <description><![CDATA[
