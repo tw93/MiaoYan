@@ -193,10 +193,14 @@ class PreferencesGeneralViewController: NSViewController {
     }
 
     @IBAction func picPopUp(_ sender: NSPopUpButton) {
+        guard let vc = ViewController.shared() else { return }
         guard let item = sender.selectedItem else {
             return
         }
         UserDefaultsManagement.defaultPicUpload = item.title
+        if(item.title != "None"){
+            vc.toastImageSet(name: item.title)
+        }
     }
 
     @IBAction func languagePopUp(_ sender: NSPopUpButton) {
