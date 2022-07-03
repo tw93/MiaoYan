@@ -170,8 +170,8 @@
 /* Class = "NSMenuItem"; title = "Paste and Match Style"; ObjectID = "WeT-3V-zwk"; */
 "WeT-3V-zwk.title" = "Paste and Match Style";
 
-/* Class = "NSTextFieldCell"; title = "Appearance:"; ObjectID = "X8u-wB-WWq"; */
-"X8u-wB-WWq.title" = "Appearance:";
+/* Class = "NSTextFieldCell"; title = "Appearance"; ObjectID = "X8u-wB-WWq"; */
+"X8u-wB-WWq.title" = "Appearance";
 
 /* Class = "NSMenuItem"; title = "Rename"; ObjectID = "XBB-Sr-T1D"; */
 "XBB-Sr-T1D.title" = "Rename";
@@ -209,8 +209,8 @@
 /* Class = "NSMenuItem"; title = "System"; ObjectID = "fQA-b2-fKr"; */
 "fQA-b2-fKr.title" = "System";
 
-/* Class = "NSTextFieldCell"; title = "Storage location:"; ObjectID = "fmS-eE-nne"; */
-"fmS-eE-nne.title" = "Storage location:";
+/* Class = "NSTextFieldCell"; title = "Storage Location"; ObjectID = "fmS-eE-nne"; */
+"fmS-eE-nne.title" = "Storage Location";
 
 /* Class = "NSMenuItem"; title = "Rename folder"; ObjectID = "fzU-ZR-Ubv"; */
 "fzU-ZR-Ubv.title" = "Rename folder";
@@ -296,17 +296,17 @@
 /* Class = "NSTextFieldCell"; title = "Name"; ObjectID = "y7T-Rc-etT"; */
 "y7T-Rc-etT.title" = "Name";
 
-/* Class = "NSTextFieldCell"; title = "Appearance:"; ObjectID = "X8u-wB-WWq"; */
-"X8u-wB-WWq.title" = "Appearance:";
+/* Class = "NSTextFieldCell"; title = "Appearance"; ObjectID = "X8u-wB-WWq"; */
+"X8u-wB-WWq.title" = "Appearance";
 
-/* Class = "NSTextFieldCell"; title = "Language:"; ObjectID = "jdI-uU-sfm"; */
-"jdI-uU-sfm.title" = "Language:";
+/* Class = "NSTextFieldCell"; title = "Language"; ObjectID = "jdI-uU-sfm"; */
+"jdI-uU-sfm.title" = "Language";
 
 /* Class = "NSTextFieldCell"; title = "Upload Picture"; ObjectID = "S7J-Ty-QIg"; */
 "S7J-Ty-QIg.title" = "Upload Picture";
 
-/* Class = "NSTextFieldCell"; title = "Storage location:"; ObjectID = "81L-hB-Mc1"; */
-"81L-hB-Mc1.title" = "Storage location:";
+/* Class = "NSTextFieldCell"; title = "Storage Location"; ObjectID = "81L-hB-Mc1"; */
+"81L-hB-Mc1.title" = "Storage Location";
 
 /* Class = "NSMenuItem"; title = "System"; ObjectID = "fQA-b2-fKr"; */
 "fQA-b2-fKr.title" = "System";
