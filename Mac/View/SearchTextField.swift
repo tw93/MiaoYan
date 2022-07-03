@@ -1,13 +1,12 @@
-import Cocoa
 import Carbon.HIToolbox
+import Cocoa
 
 import MiaoYanCore_macOS
 
 class SearchTextField: NSSearchField, NSSearchFieldDelegate {
-
     public var vcDelegate: ViewController!
 
-    private var filterQueue = OperationQueue.init()
+    private var filterQueue = OperationQueue()
     private var searchTimer = Timer()
 
     public var searchQuery = ""
@@ -16,22 +15,47 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
 
     public var timestamp: Int64?
     private var lastQueryLength: Int = 0
-    
+
+    private var trackingArea: NSTrackingArea?
+
+    override func updateTrackingAreas() {
+        if let trackingArea = self.trackingArea {
+            removeTrackingArea(trackingArea)
+        }
+
+        let options: NSTrackingArea.Options = [.mouseEnteredAndExited, .activeAlways]
+        let trackingArea = NSTrackingArea(rect: bounds, options: options, owner: self, userInfo: nil)
+        addTrackingArea(trackingArea)
+    }
+
     override func textDidEndEditing(_ notification: Notification) {
-        if let editor = self.currentEditor(), editor.selectedRange.length > 0 {
+        if let editor = currentEditor(), editor.selectedRange.length > 0 {
             editor.replaceCharacters(in: editor.selectedRange, with: "")
             window?.makeFirstResponder(nil)
         }
     }
 
+    override func mouseDown(with event: NSEvent) {
+        let vc = window?.contentViewController as! ViewController
+        vc.titleLabel.saveTitle()
+    }
+
+    override func mouseEntered(with event: NSEvent) {
+        UserDefaultsManagement.isOnSearch = true
+    }
+
+    override func mouseExited(with event: NSEvent) {
+        UserDefaultsManagement.isOnSearch = false
+    }
+
     override func keyUp(with event: NSEvent) {
-        if (event.keyCode == kVK_DownArrow) {
+        if event.keyCode == kVK_DownArrow {
             vcDelegate.focusTable()
             vcDelegate.notesTableView.selectNext()
             return
         }
 
-        if (event.keyCode == kVK_LeftArrow && stringValue.count == 0) {
+        if event.keyCode == kVK_LeftArrow && stringValue.count == 0 {
             vcDelegate.storageOutlineView.window?.makeFirstResponder(vcDelegate.storageOutlineView)
             vcDelegate.storageOutlineView.selectRowIndexes([1], byExtendingSelection: false)
             return
@@ -42,7 +66,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         }
 
         if event.keyCode == kVK_Delete || event.keyCode == kVK_ForwardDelete {
-            self.skipAutocomplete = true
+            skipAutocomplete = true
             return
         }
     }
@@ -55,13 +79,13 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
                 if query.count == 0 {
                     return false
                 }
-                self.stringValue = String(query)
+                stringValue = String(query)
             }
             return true
         case "cancelOperation:":
             return true
         case "deleteBackward:":
-            self.skipAutocomplete = true
+            skipAutocomplete = true
             textView.deleteBackward(self)
             return true
         case "insertNewline:", "insertNewlineIgnoringFieldEditor:":
@@ -81,7 +105,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
             textView.deleteWordBackward(self)
             return true
         case "noop:":
-            if let event = NSApp.currentEvent, event.modifierFlags.contains(.command) && event.keyCode == kVK_Return {
+            if let event = NSApp.currentEvent, event.modifierFlags.contains(.command), event.keyCode == kVK_Return {
                 vcDelegate.makeNote(self)
                 return true
             }
@@ -93,10 +117,10 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
 
     public func hasFocus() -> Bool {
         var inFocus = false
-        inFocus = (self.window?.firstResponder is NSTextView) && self.window?.fieldEditor(false, for: nil) != nil && self.isEqual(to: (self.window?.firstResponder as? NSTextView)?.delegate)
+        inFocus = (window?.firstResponder is NSTextView) && window?.fieldEditor(false, for: nil) != nil && isEqual(to: (window?.firstResponder as? NSTextView)?.delegate)
         return inFocus
     }
-    
+
     func controlTextDidChange(_ obj: Notification) {
         searchTimer.invalidate()
         searchTimer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(search), userInfo: nil, repeats: false)
@@ -107,29 +131,27 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
 
         if note.title.lowercased().starts(with: filter.lowercased()) {
             stringValue = filter + note.title.suffix(note.title.count - filter.count)
-            editor.selectedRange = NSRange(filter.utf16.count..<note.title.utf16.count)
+            editor.selectedRange = NSRange(filter.utf16.count ..< note.title.utf16.count)
         }
     }
 
     @objc private func search() {
         UserDataService.instance.searchTrigger = true
 
-        let searchText = self.stringValue
-        var sidebarItem: SidebarItem? = nil
+        let searchText = stringValue
+        var sidebarItem: SidebarItem?
 
-        self.lastQueryLength = searchText.count
+        lastQueryLength = searchText.count
 
         let projects = vcDelegate.storageOutlineView.getSidebarProjects()
 
-
         if projects == nil {
-            sidebarItem = self.vcDelegate.getSidebarItem()
+            sidebarItem = vcDelegate.getSidebarItem()
         }
 
-        self.filterQueue.cancelAllOperations()
-        self.filterQueue.addOperation {
-            self.vcDelegate.updateTable(search: true, searchText: searchText, sidebarItem: sidebarItem, projects: projects) {
-            }
+        filterQueue.cancelAllOperations()
+        filterQueue.addOperation {
+            self.vcDelegate.updateTable(search: true, searchText: searchText, sidebarItem: sidebarItem, projects: projects) {}
         }
 
         let pb = NSPasteboard(name: .findPboard)
