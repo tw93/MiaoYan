@@ -233,7 +233,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         let pageHTMLString = try htmlFromTemplate(htmlString, css: css)
 
-        //  print(pageHTMLString)
+//      print(pageHTMLString)
         let indexURL = createTemporaryBundle(pageHTMLString: pageHTMLString)
 
         if let i = indexURL {
@@ -350,12 +350,6 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         var template = try NSString(contentsOf: baseURL, encoding: String.Encoding.utf8.rawValue)
 
         template = template.replacingOccurrences(of: "DOWN_CSS", with: css) as NSString
-
-        var script = ""
-        if UserDefaultsManagement.supportLaTeX {
-            script = "<script id=\"MathJax-script\" async src=\"https://gw.alipayobjects.com/os/lib/mathjax/3.2.2/es5/startup.js\"></script>"
-        }
-        template = template.replacingOccurrences(of: "DOWN_SCRIPT", with: script) as NSString
 
 #if os(iOS)
         if NightNight.theme == .night {
