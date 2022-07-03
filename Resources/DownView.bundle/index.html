@@ -26,49 +26,9 @@
       charset="utf-8"
       type="text/javascript"
     ></script>
-    <script>
-      window.MathJax = {
-        loader: { load: ['input/tex', 'ui/menu'] },
-        startup: {
-          pageReady() {
-            MathJax._.mathjax.mathjax.handleRetriesFor(() =>
-              MathJax.startup.document.render()
-            );
-          },
-        },
-        tex: { inlineMath: { '[+]': [['$', '$']] } },
-        options: {
-          menuOptions: {
-            settings: {
-              assistiveMml: false,
-            },
-          },
-          renderActions: {
-            assistiveMml: [], // disable assistive mathml
-            typeset: [
-              150,
-              (doc) => {
-                for (math of doc.math) {
-                  MathJax.config.renderMathML(math, doc);
-                }
-              },
-              (math, doc) => MathJax.config.renderMathML(math, doc),
-            ],
-          },
-          menuOptions: {
-            settings: {
-              assistiveMml: false,
-            },
-          },
-        },
-        renderMathML(math, doc) {
-          math.typesetRoot = document.createElement('mjx-container');
-          math.typesetRoot.innerHTML = MathJax.startup.toMML(math.root);
-          math.display && math.typesetRoot.setAttribute('display', 'block');
-        },
-      };
-    </script>
-    DOWN_SCRIPT
+    <link rel="stylesheet" href="css/katex.min.css" />
+    <script src="js/katex.min.js"></script>
+    <script src="js/auto-render.min.js"></script>
     <title></title>
     <style>
       DOWN_CSS
@@ -88,13 +48,13 @@
     </script>
 
     <script>
-        function getSelectionAndSendMessage() {
-            var txt = document.getSelection().toString();
-            window.webkit.messageHandlers.newSelectionDetected.postMessage(txt);
-        }
-        document.onmouseup = getSelectionAndSendMessage;
-        document.onkeyup = getSelectionAndSendMessage;
-        document.oncontextmenu = getSelectionAndSendMessage;
+      function getSelectionAndSendMessage() {
+        var txt = document.getSelection().toString();
+        window.webkit.messageHandlers.newSelectionDetected.postMessage(txt);
+      }
+      document.onmouseup = getSelectionAndSendMessage;
+      document.onkeyup = getSelectionAndSendMessage;
+      document.oncontextmenu = getSelectionAndSendMessage;
 
       var darkModeStylesNodeID = 'darkModeStyles';
 
@@ -195,6 +155,20 @@
           pres[i].classList.add('mermaid-image-container');
         }
       }
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false },
+            { left: '\\(', right: '\\)', display: false },
+            { left: '\\[', right: '\\]', display: true },
+          ],
+          // • rendering keys, e.g.:
+          throwOnError: false,
+        });
+      });
     </script>
   </body>
 </html>
