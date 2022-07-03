@@ -23,7 +23,7 @@
 
 ## Features
 
-- 🪂 **Fantastic**: Local use, security, syntax highlighting, dark mode, source file saving, international, Presentation mode, document auto typesetting.
+- 🪂 **Fantastic**: Local use, security, syntax highlighting, dark mode, source file saving, international, Presentation mode, document auto typesetting, picture upload,LaTeX, Mermaid, PlantUML.
 - 🐶 **Beauty**: Minimalist design style, folder + file list + editor 3 column mode.
 - 🏌🏽‍♂️ **Fast**: Using Swift5 native development, the performance experience is much better compared to the Web.
 - 🩴 **Simple**: Very light, pure editor input experience, many shortcut keys to help you fast.
