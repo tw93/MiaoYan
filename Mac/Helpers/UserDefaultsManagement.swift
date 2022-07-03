@@ -57,6 +57,7 @@ public class UserDefaultsManagement {
         static let NoteType = "noteType"
         static let ImagesWidthKey = "imagesWidthKey"
         static let DefaultLanguageKey = "defaultLanguage"
+        static let DefaultPicUpload = "defaultPicUpload"
         static let ImportURLsKey = "ImportURLs"
         static let LastSelectedPath = "lastSelectedPath"
         static let LastProject = "lastProject"
@@ -86,7 +87,6 @@ public class UserDefaultsManagement {
         static let PreviewFontName = "previewFontName"
         static let IsFirstLaunch = "isFirstLaunch"
         static let SortDirection = "sortDirection"
-        static let SupportLaTeX = "supportLaTeX"
     }
 
     static var lastProject: Int {
@@ -111,6 +111,18 @@ public class UserDefaultsManagement {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.DefaultLanguageKey)
+        }
+    }
+    
+    static var defaultPicUpload: String {
+        get {
+            if let dl = UserDefaults.standard.object(forKey: Constants.DefaultPicUpload) as? String {
+                return dl
+            }
+            return "none"
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.DefaultPicUpload)
         }
     }
 
@@ -338,19 +350,7 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(data, forKey: Constants.FontColorKey)
         }
     }
-
-    static var supportLaTeX: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.SupportLaTeX) as? Bool {
-                return result
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.SupportLaTeX)
-        }
-    }
-
+    
     static var bgColor: Color {
         get {
             if let returnBgColor = UserDefaults.standard.object(forKey: Constants.BgColorKey), let color = NSKeyedUnarchiver.unarchiveObject(with: returnBgColor as! Data) as? Color {
