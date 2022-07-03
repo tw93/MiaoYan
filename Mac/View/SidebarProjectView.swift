@@ -304,7 +304,6 @@ class SidebarProjectView: NSOutlineView,
 
     func outlineViewSelectionDidChange(_ notification: Notification) {
         guard let vd = viewDelegate else { return }
-
         if UserDataService.instance.isNotesTableEscape {
             UserDataService.instance.isNotesTableEscape = false
         }
@@ -531,7 +530,6 @@ class SidebarProjectView: NSOutlineView,
         if let root = Storage.sharedInstance().getRootProject() {
             return [root]
         }
-
         return nil
     }
 
