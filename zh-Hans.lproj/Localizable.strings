@@ -153,4 +153,6 @@
 
 "😶‍🌫️ Image upload failed, Use local~" = "😶‍🌫️ 图片上传失败，使用本地图片~";
 
-"%d MiaoYans" = "%d 篇妙言";
+"%d MiaoYan" = "%d 篇妙言";
+
+"🙊 Please make sure your Mac is installed %@ ~" = "🙊 请确保你的 Mac 已安装 %@ ~";

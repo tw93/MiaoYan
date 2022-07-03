@@ -131,7 +131,7 @@ class ViewController: NSViewController,
 
     func refreshMiaoYanNum() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-            let messageText = NSLocalizedString("%d MiaoYans", comment: "")
+            let messageText = NSLocalizedString("%d MiaoYan", comment: "")
 
             self.miaoYanText.stringValue = String(format: messageText, self.notesTableView.noteList.count)
         }
@@ -2015,6 +2015,10 @@ class ViewController: NSViewController,
         } else {
             toast(message: NSLocalizedString("😶‍🌫️ The current Mac system does not support export, please upgrade to above 11.0", comment: ""))
         }
+    }
+
+    public func toastImageSet(name: String) {
+        toast(message: String(format: NSLocalizedString("🙊 Please make sure your Mac is installed %@ ~", comment: ""), name))
     }
 
     public func toastUpload(status: Bool) {
