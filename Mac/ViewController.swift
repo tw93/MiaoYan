@@ -2023,7 +2023,7 @@ class ViewController: NSViewController,
 
     public func toastUpload(status: Bool) {
         if status {
-            toast(message: NSLocalizedString("🙊 Image upload in progress~", comment: ""))
+            toast(message: NSLocalizedString("🍭 Image upload in progress~", comment: ""))
         } else {
             toast(message: NSLocalizedString("😶‍🌫️ Image upload failed, Use local~", comment: ""))
         }
