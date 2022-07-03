@@ -23,7 +23,7 @@ public class UserDefaultsManagement {
     static var DefaultPreviewFontSize = 15
     static var DefaultPresentationFontSize = 24
     static var editorLineSpacing = 3
-    
+
     static var editorLineHeight = 1.3
 
     static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
@@ -45,6 +45,8 @@ public class UserDefaultsManagement {
     static var realSidebarSize = 138
 
     static var sidebarSize = 280
+
+    static var isOnSearch = false
 
     private enum Constants {
         static let AppearanceTypeKey = "appearanceType"
@@ -115,7 +117,7 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.DefaultLanguageKey)
         }
     }
-    
+
     static var defaultPicUpload: String {
         get {
             if let dl = UserDefaults.standard.object(forKey: Constants.DefaultPicUpload) as? String {
@@ -352,7 +354,7 @@ public class UserDefaultsManagement {
             UserDefaults.standard.set(data, forKey: Constants.FontColorKey)
         }
     }
-    
+
     static var bgColor: Color {
         get {
             if let returnBgColor = UserDefaults.standard.object(forKey: Constants.BgColorKey), let color = NSKeyedUnarchiver.unarchiveObject(with: returnBgColor as! Data) as? Color {

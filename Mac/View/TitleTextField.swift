@@ -29,11 +29,9 @@ class TitleTextField: NSTextField {
 
     override func textDidEndEditing(_ notification: Notification) {
         let vc = window?.contentViewController as! ViewController
-        if !UserDefaultsManagement.preview {
+        self.saveTitle()
+        if !UserDefaultsManagement.preview,!UserDefaultsManagement.isOnSearch {
             vc.focusEditArea()
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.saveTitle()
         }
     }
 
@@ -78,6 +76,7 @@ class TitleTextField: NSTextField {
 
     public func editModeOn() {
         MainWindowController.shared()?.makeFirstResponder(self)
+        UserDefaultsManagement.isOnSearch = false
     }
 
     public func updateNotesTableView() {

@@ -624,6 +624,7 @@ class ViewController: NSViewController,
         // Search cmd-f
         if event.keyCode == kVK_ANSI_F, event.modifierFlags.contains(.command), !event.modifierFlags.contains(.control) {
             if notesTableView.getSelectedNote() != nil {
+                UserDefaultsManagement.isOnSearch = true
                 disablePreview()
                 focusSearchInput()
                 return true
@@ -818,7 +819,6 @@ class ViewController: NSViewController,
         guard let vc = ViewController.shared() else { return }
 
         vc.titleLabel.editModeOn()
-
         if let note = EditTextView.note {
             vc.titleLabel.stringValue = note.getShortTitle()
         }
@@ -1494,8 +1494,6 @@ class ViewController: NSViewController,
             self.notesTableView.window?.makeFirstResponder(self.notesTableView)
             self.notesTableView.selectRowIndexes([index], byExtendingSelection: true)
             self.notesTableView.scrollRowToVisible(index)
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.06) {
             self.titleLabel.saveTitle()
             self.search.becomeFirstResponder()
         }
