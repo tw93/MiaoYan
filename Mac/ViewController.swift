@@ -694,14 +694,11 @@ class ViewController: NSViewController,
 
     @IBAction func fileMenuNewNote(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
-
         if let type = vc.getSidebarType(), type == .Trash {
             vc.storageOutlineView.deselectAll(nil)
         }
         vc.focusTable()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            vc.createNote(name: "", content: "")
-        }
+        vc.createNote(name: "", content: "")
     }
 
     @IBAction func importNote(_ sender: NSMenuItem) {
@@ -1603,11 +1600,10 @@ class ViewController: NSViewController,
         EditTextView.note = note
         search.stringValue.removeAll()
         vc.titleLabel.isEditable = true
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        emptyEditAreaView.isHidden = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.06) {
             vc.titleLabel.editModeOn()
         }
-
         updateTable {
             DispatchQueue.main.async {
                 if let index = self.notesTableView.getIndex(note) {
