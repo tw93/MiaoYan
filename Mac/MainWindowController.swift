@@ -27,15 +27,6 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
 
     func refreshEditArea(focusSearch: Bool = false) {
         guard let vc = ViewController.shared() else { return }
-
-        if vc.storageOutlineView.isFirstLaunch || focusSearch {
-            vc.search.window?.makeFirstResponder(vc.search)
-        } else {
-            if !UserDefaultsManagement.preview {
-                vc.focusEditArea()
-            }
-        }
-
         vc.editArea.updateTextContainerInset()
     }
 

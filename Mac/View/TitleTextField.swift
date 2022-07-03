@@ -23,16 +23,17 @@ class TitleTextField: NSTextField {
     override func becomeFirstResponder() -> Bool {
         if let note = EditTextView.note {
             stringValue = note.getShortTitle()
-            
         }
         return super.becomeFirstResponder()
     }
 
     override func textDidEndEditing(_ notification: Notification) {
-        self.saveTitle()
         let vc = window?.contentViewController as! ViewController
         if !UserDefaultsManagement.preview {
             vc.focusEditArea()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.saveTitle()
         }
     }
 

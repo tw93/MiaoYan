@@ -222,6 +222,7 @@ class ViewController: NSViewController,
         emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
+        paragraphStyle.lineHeightMultiple = CGFloat(UserDefaultsManagement.editorLineHeight)
         editArea.defaultParagraphStyle = paragraphStyle
         editArea.typingAttributes[.paragraphStyle] = paragraphStyle
         setTableRowHeight()
@@ -1493,6 +1494,9 @@ class ViewController: NSViewController,
             self.notesTableView.window?.makeFirstResponder(self.notesTableView)
             self.notesTableView.selectRowIndexes([index], byExtendingSelection: true)
             self.notesTableView.scrollRowToVisible(index)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.06) {
+            self.titleLabel.saveTitle()
             self.search.becomeFirstResponder()
         }
     }

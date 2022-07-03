@@ -23,6 +23,8 @@ public class UserDefaultsManagement {
     static var DefaultPreviewFontSize = 15
     static var DefaultPresentationFontSize = 24
     static var editorLineSpacing = 3
+    
+    static var editorLineHeight = 1.3
 
     static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
     static var DefaultBgColor = Color.white
@@ -119,7 +121,7 @@ public class UserDefaultsManagement {
             if let dl = UserDefaults.standard.object(forKey: Constants.DefaultPicUpload) as? String {
                 return dl
             }
-            return "none"
+            return "None"
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.DefaultPicUpload)

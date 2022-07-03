@@ -302,6 +302,9 @@
 /* Class = "NSTextFieldCell"; title = "Language:"; ObjectID = "jdI-uU-sfm"; */
 "jdI-uU-sfm.title" = "Language:";
 
+/* Class = "NSTextFieldCell"; title = "Upload Picture"; ObjectID = "S7J-Ty-QIg"; */
+"S7J-Ty-QIg.title" = "Upload Picture";
+
 /* Class = "NSTextFieldCell"; title = "Storage location:"; ObjectID = "81L-hB-Mc1"; */
 "81L-hB-Mc1.title" = "Storage location:";
 

@@ -61,6 +61,7 @@ class NoteAttachment {
 
         paragraphStyle.alignment = .left
         paragraphStyle.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
+        paragraphStyle.lineHeightMultiple = CGFloat(UserDefaultsManagement.editorLineHeight)
 
         let attributes = [
             titleKey: self.title,
