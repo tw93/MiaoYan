@@ -24,30 +24,14 @@ public extension NSTextStorage {
     func updateParagraphStyle() {
         beginEditing()
 
-        let paragraph = NSMutableParagraphStyle()
-        paragraph.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
-        paragraph.lineHeightMultiple = 1.3
         let attachmentParagraph = NSMutableParagraphStyle()
         attachmentParagraph.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
         attachmentParagraph.alignment = .left
-
-        let leftAttachmentParagraph = NSMutableParagraphStyle()
-        leftAttachmentParagraph.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
-        leftAttachmentParagraph.alignment = .left
+        attachmentParagraph.lineHeightMultiple = CGFloat(UserDefaultsManagement.editorLineHeight)
 
         mutableString.enumerateSubstrings(in: NSRange(0..<length), options: .byParagraphs) { _, range, _, _ in
             let rangeNewline = range.upperBound == self.length ? range : NSRange(range.location..<range.upperBound + 1)
-            self.addAttribute(.paragraphStyle, value: paragraph, range: rangeNewline)
-        }
-
-        enumerateAttribute(.attachment, in: NSRange(location: 0, length: self.length)) { value, range, _ in
-
-            if let attachment = value as? NSTextAttachment,
-               self.attribute(.todo, at: range.location, effectiveRange: nil) == nil
-            {
-                let par = attachment.isFile() ? leftAttachmentParagraph : attachmentParagraph
-                addAttribute(.paragraphStyle, value: par, range: range)
-            }
+            self.addAttribute(.paragraphStyle, value: attachmentParagraph, range: rangeNewline)
         }
 
         endEditing()
