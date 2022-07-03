@@ -7,7 +7,7 @@
       <description><![CDATA[
             <h3>更新记录：</h3>
             <ol>
-             <li>🎉 终于支持 uPic、PicGo 图床了,你可以设置打开试试</li>
+             <li>🎉 终于支持 uPic、PicGo 图床了，你可以设置打开试试</li>
              <li>🍭 完成 LaTeX 性能优化，不需要设置默认开启</li>
              <li>🏓 支持从预览界面 command+c 直接复制选中富文本</li>
              <li>🙈 持续优化编辑器体验，如新建、删除、行高、焦点、搜索、笔记数</li>
