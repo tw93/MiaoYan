@@ -1234,11 +1234,17 @@ CA
                                                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" alphaValue="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="Gz4-4G-Fts">
                                                                 <rect key="frame" x="37" y="54" width="166" height="166"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" animates="YES" imageScaling="proportionallyUpOrDown" image="makeNoteAsset" id="WpA-pT-SDs"/>
+                                                                <imageCell key="cell" alignment="left" animates="YES" imageScaling="proportionallyUpOrDown" image="makeNoteAsset" id="WpA-pT-SDs"/>
                                                                 <color key="contentTintColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                                <connections>
+                                                                    <action selector="openMiaoYan:" target="XfG-lQ-9wD" id="p7O-2X-v0u"/>
+                                                                </connections>
                                                             </imageView>
-                                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kn8-MP-1kR">
-                                                                <rect key="frame" x="66" y="12" width="129" height="36"/>
+                                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kn8-MP-1kR">
+                                                                <rect key="frame" x="-2" y="9" width="244" height="35"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" constant="240" id="x8X-4s-ECk"/>
+                                                                </constraints>
                                                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="MiaoYan" id="mj8-mU-0W4">
                                                                     <font key="font" metaFont="systemBold" size="30"/>
                                                                     <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
@@ -1247,7 +1253,7 @@ CA
                                                             </textField>
                                                         </subviews>
                                                         <constraints>
-                                                            <constraint firstItem="kn8-MP-1kR" firstAttribute="centerX" secondItem="B2U-rx-xCL" secondAttribute="centerX" constant="6" id="7gF-SI-4wa"/>
+                                                            <constraint firstItem="kn8-MP-1kR" firstAttribute="centerX" secondItem="B2U-rx-xCL" secondAttribute="centerX" id="7gF-SI-4wa"/>
                                                             <constraint firstItem="kn8-MP-1kR" firstAttribute="centerY" secondItem="B2U-rx-xCL" secondAttribute="centerY" constant="94" id="XYx-SE-ILt"/>
                                                             <constraint firstAttribute="height" constant="240" id="ocX-MY-dUa"/>
                                                             <constraint firstAttribute="width" constant="240" id="zhs-CF-bHS"/>
@@ -1383,6 +1389,8 @@ CA
                         <outlet property="emptyEditAreaView" destination="B2U-rx-xCL" id="Y00-zR-k4l"/>
                         <outlet property="emptyEditTitle" destination="kn8-MP-1kR" id="epZ-CY-7ib"/>
                         <outlet property="formatButton" destination="Adc-zl-sqX" id="9cU-Es-COa"/>
+                        <outlet property="goMiaoYan" destination="Gz4-4G-Fts" id="1ph-KF-W8q"/>
+                        <outlet property="miaoYanText" destination="kn8-MP-1kR" id="KuB-8D-V6d"/>
                         <outlet property="noteMenu" destination="AaK-Xd-i52" id="t41-7H-k7N"/>
                         <outlet property="notesListCustomView" destination="8ej-mX-KM6" id="yDe-gf-AHy"/>
                         <outlet property="notesScrollView" destination="Kzf-Jh-YEb" id="u8R-Hy-KjV"/>

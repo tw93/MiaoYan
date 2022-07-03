@@ -48,6 +48,7 @@ class ViewController: NSViewController,
     @IBOutlet var editAreaScroll: EditorScrollView!
     @IBOutlet var search: SearchTextField!
 
+    @IBOutlet var miaoYanText: NSTextField!
     @IBOutlet var notesTableView: NotesTableView!
     @IBOutlet var noteMenu: NSMenu!
     @IBOutlet var storageOutlineView: SidebarProjectView!
@@ -125,6 +126,15 @@ class ViewController: NSViewController,
         searchQueue.maxConcurrentOperationCount = 1
         notesTableView.loadingQueue.maxConcurrentOperationCount = 1
         notesTableView.loadingQueue.qualityOfService = QualityOfService.userInteractive
+        emptyEditAreaView.isHidden = true
+    }
+
+    func refreshMiaoYanNum() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            let messageText = NSLocalizedString("%d MiaoYans", comment: "")
+
+            self.miaoYanText.stringValue = String(format: messageText, self.notesTableView.noteList.count)
+        }
     }
 
     override func viewDidAppear() {
@@ -156,6 +166,7 @@ class ViewController: NSViewController,
         let sideSize = vc.sidebarSplitView.subviews[0].frame.width
         setDividerHidden(hidden: size == 0)
         setSideDividerHidden(hidden: sideSize == 0)
+        refreshMiaoYanNum()
     }
 
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
