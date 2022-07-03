@@ -348,7 +348,7 @@ class ViewController: NSViewController,
         } else {
             controller.notesTableView.noteList = storage.noteList
         }
-    
+
         vc.updateTable()
     }
 
@@ -2000,6 +2000,14 @@ class ViewController: NSViewController,
             toast(message: NSLocalizedString("🎉 Exported to desktop~", comment: ""))
         } else {
             toast(message: NSLocalizedString("😶‍🌫️ The current Mac system does not support export, please upgrade to above 11.0", comment: ""))
+        }
+    }
+
+    public func toastUpload(status: Bool) {
+        if status {
+            toast(message: NSLocalizedString("🙊 Image upload in progress~", comment: ""))
+        } else {
+            toast(message: NSLocalizedString("😶‍🌫️ Image upload failed, Use local~", comment: ""))
         }
     }
 
