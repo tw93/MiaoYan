@@ -1035,7 +1035,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         process.standardOutput = pipe
         let fileHandle = pipe.fileHandleForReading
         process.launch()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
             process.terminate()
         }
         process.waitUntilExit()
@@ -1056,8 +1056,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
                             completion(nil, nil)
                         }
 
-                    case .failure(let error):
-                        completion(error, nil)
+                    case .failure:
+                        completion(nil, nil)
                 }
             }
     }
@@ -1096,7 +1096,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
                     self.breakUndoCoalescing()
                 }
             } else {
-                if UserDefaultsManagement.defaultPicUpload == "UPic" {
+                if UserDefaultsManagement.defaultPicUpload == "uPic" {
                     vc.toastUpload(status: true)
                     let runList = run("/Applications/uPic.app/Contents/MacOS/uPic -o url -u \(imagePath)")
                     let imageDesc = runList?.components(separatedBy: "\n") ?? []
