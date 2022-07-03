@@ -1,7 +1,9 @@
+import Alamofire
 import Carbon.HIToolbox
 import Cocoa
 import Highlightr
 import MiaoYanCore_macOS
+import SwiftyJSON
 
 class EditTextView: NSTextView, NSTextFinderClient {
     public static var note: Note?
@@ -1022,30 +1024,90 @@ class EditTextView: NSTextView, NSTextFinderClient {
         return false
     }
 
+    func run(_ cmd: String) -> String? {
+        let pipe = Pipe()
+        let process = Process()
+        process.launchPath = "/bin/bash"
+        process.arguments = ["-c", String(format: "%@", cmd)]
+        process.standardOutput = pipe
+        let fileHandle = pipe.fileHandleForReading
+        process.launch()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            process.terminate()
+        }
+        process.waitUntilExit()
+        return String(data: fileHandle.readDataToEndOfFile(), encoding: .utf8)
+    }
+
+    func postToPicGo(imagePath: String, completion: @escaping (Any?, Error?) -> Void) {
+        let json: [String: Any] = ["list": [imagePath]]
+        Alamofire.request("http://127.0.0.1:36677/upload", method: .post, parameters: json, encoding: JSONEncoding.default)
+            .responseJSON { response in
+                switch response.result {
+                    case .success:
+                        let json = JSON(response.result.value!)
+                        let result = json["result"][0].stringValue
+                        if !result.isEmpty {
+                            completion(result, nil)
+                        } else {
+                            completion(nil, nil)
+                        }
+
+                    case .failure(let error):
+                        completion(error, nil)
+                }
+            }
+    }
+
+    func deleteImage(tempPath: URL) {
+        do {
+            guard let resultingItemUrl = Storage.sharedInstance().trashItem(url: tempPath) else { return }
+            try FileManager.default.moveItem(at: tempPath, to: resultingItemUrl)
+        } catch {
+            print(error)
+        }
+    }
+
     private func saveClipboard(data: Data, note: Note, ext: String? = nil, url: URL? = nil) {
+        guard let vc = ViewController.shared() else { return }
         if let path = ImagesProcessor.writeFile(data: data, url: url, note: note, ext: ext) {
-            guard UserDefaultsManagement.liveImagesPreview else {
-                let newLineImage = NSAttributedString(string: "![](\(path))")
+            var newLineImage = NSAttributedString(string: "![](\(path))")
+            let imagePath = "\(note.project.url.path)\(path)"
+
+            let tempPath = URL(fileURLWithPath: imagePath)
+
+            if UserDefaultsManagement.defaultPicUpload == "picGo" {
+                vc.toastUpload(status: true)
+                postToPicGo(imagePath: imagePath) { result, error in
+                    if let result = result {
+                        newLineImage = NSAttributedString(string: "![](\(result))")
+                        self.deleteImage(tempPath: tempPath)
+                    } else if let error = error {
+                        vc.toastUpload(status: false)
+                        print("error: \(error.localizedDescription)")
+                    } else {
+                        vc.toastUpload(status: false)
+                    }
+                    self.breakUndoCoalescing()
+                    self.insertText(newLineImage, replacementRange: self.selectedRange())
+                    self.breakUndoCoalescing()
+                }
+            } else {
+                if UserDefaultsManagement.defaultPicUpload == "uPic" {
+                    vc.toastUpload(status: true)
+                    let runList = run("/Applications/uPic.app/Contents/MacOS/uPic -o url -u \(imagePath)")
+                    let imageDesc = runList?.components(separatedBy: "\n") ?? []
+                    if imageDesc.count > 3 {
+                        let imagePath = imageDesc[4]
+                        newLineImage = NSAttributedString(string: "![](\(imagePath))")
+                        deleteImage(tempPath: tempPath)
+                    } else {
+                        vc.toastUpload(status: false)
+                    }
+                }
                 breakUndoCoalescing()
                 insertText(newLineImage, replacementRange: selectedRange())
                 breakUndoCoalescing()
-                return
-            }
-
-            guard let path = path.removingPercentEncoding else { return }
-
-            if let imageUrl = note.getImageUrl(imageName: path) {
-                let range = NSRange(location: selectedRange.location, length: 1)
-                let attachment = NoteAttachment(title: "", path: path, url: imageUrl, cache: nil, invalidateRange: range, note: note)
-
-                if let attributedString = attachment.getAttributedString() {
-                    let newLineImage = NSMutableAttributedString(attributedString: attributedString)
-
-                    breakUndoCoalescing()
-                    insertText(newLineImage, replacementRange: selectedRange())
-                    breakUndoCoalescing()
-                    return
-                }
             }
         }
     }

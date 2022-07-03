@@ -7,6 +7,8 @@ def mac_pods
     pod 'MASShortcut', :git => 'https://github.com/shpakovski/MASShortcut.git', :branch => 'master'
     pod 'Sparkle'
     pod 'AppCenter'
+    pod 'Alamofire'
+    pod 'SwiftyJSON'
 end
 
 def ios_pods
