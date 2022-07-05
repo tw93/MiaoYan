@@ -38,6 +38,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     override func mouseDown(with event: NSEvent) {
         let vc = window?.contentViewController as! ViewController
         vc.titleLabel.saveTitle()
+        super.mouseDown(with: event)
     }
 
     override func mouseEntered(with event: NSEvent) {
