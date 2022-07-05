@@ -63,7 +63,7 @@ private extension NSViewController {
         
         let hConstraints = NSLayoutConstraint.constraints(withVisualFormat: "|-5-[m]-5-|", options: .alignAllTop, metrics: nil, views: ["m": m])
         let vConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|-5-[m]-5-|", options: .alignAllTop, metrics: nil, views: ["m": m])
-        let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: "[m(>=50,<=300)]", options: .alignAllTop, metrics: nil, views: ["m": m])
+        let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: "[m(>=50,<=420)]", options: .alignAllTop, metrics: nil, views: ["m": m])
         let heightConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[m(>=17)]", options: .alignAllTop, metrics: nil, views: ["m": m])
         
         NSLayoutConstraint.activate(hConstraints)

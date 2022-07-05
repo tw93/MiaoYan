@@ -433,7 +433,10 @@
 "o8V-Wi-IWO.title" = "保存修订";
 
 /* Class = "NSMenuItem"; title = "Import"; ObjectID = "O8Z-cg-XnH"; */
-"O8Z-cg-XnH.title" = "导入";
+"O8Z-cg-XnH.title" = "单独打开";
+
+/* Class = "NSMenuItem"; title = "Import"; ObjectID = "7wA-Gr-Kyz"; */
+"7wA-Gr-Kyz.title" = "导入";
 
 /* Class = "NSTextFieldCell"; title = "Title"; ObjectID = "O9K-a1-3eu"; */
 "O9K-a1-3eu.title" = "标题";

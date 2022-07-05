@@ -60,23 +60,21 @@ public class ImagesProcessor {
                     self.styleApplier.addAttribute(.font, value: font, range: range)
                 }
             
-                if !UserDefaultsManagement.liveImagesPreview {
-                    NotesTextProcessor.imageOpeningSquareRegex.matches(self.styleApplier.string, range: range) { innerResult in
-                        guard let innerRange = innerResult?.range else {
-                            return
-                        }
+                NotesTextProcessor.imageOpeningSquareRegex.matches(self.styleApplier.string, range: range) { innerResult in
+                    guard let innerRange = innerResult?.range else {
+                        return
+                    }
 
-                        self.styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
-                    }
-                
-                    NotesTextProcessor.imageClosingSquareRegex.matches(self.styleApplier.string, range: range) { innerResult in
-                        guard let innerRange = innerResult?.range else {
-                            return
-                        }
-                        self.styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
-                    }
+                    self.styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
                 }
-            
+                
+                NotesTextProcessor.imageClosingSquareRegex.matches(self.styleApplier.string, range: range) { innerResult in
+                    guard let innerRange = innerResult?.range else {
+                        return
+                    }
+                    self.styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                }
+                
                 NotesTextProcessor.parenRegex.matches(self.styleApplier.string, range: range) { innerResult in
                     guard let innerRange = innerResult?.range else {
                         return

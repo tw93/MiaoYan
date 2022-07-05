@@ -71,7 +71,7 @@ CA
                                         </menuItem>
                                         <menuItem title="Quit MiaoYan" keyEquivalent="q" id="4sb-4s-VLi">
                                             <connections>
-                                                <action selector="terminate:" target="Ady-hI-5gd" id="Te7-pn-YzF"/>
+                                                <action selector="quiteApp:" target="L4m-js-agn" id="3eE-cX-iqp"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -86,9 +86,14 @@ CA
                                                 <action selector="fileMenuNewNote:" target="L4m-js-agn" id="N33-Jf-oOg"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Import" keyEquivalent="o" identifier="fileMenu.import" id="O8Z-cg-XnH">
+                                        <menuItem title="Single Open" keyEquivalent="o" identifier="fileMenu.open" id="O8Z-cg-XnH">
                                             <connections>
-                                                <action selector="importNote:" target="Ady-hI-5gd" id="r4z-z3-fFc"/>
+                                                <action selector="singleOpen:" target="L4m-js-agn" id="48w-4H-ICT"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Import" keyEquivalent="I" identifier="fileMenu.import" id="7wA-Gr-Kyz">
+                                            <connections>
+                                                <action selector="importNote:" target="Ady-hI-5gd" id="A9V-Gq-CDr"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="NDw-wG-Jov"/>
@@ -772,9 +777,9 @@ CA
                                 <rect key="frame" x="34" y="181" width="456" height="5"/>
                             </box>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Xvj-bR-0Af">
-                                <rect key="frame" x="358" y="332" width="98" height="16"/>
+                                <rect key="frame" x="358" y="332" width="94" height="16"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Upload Picture" id="S7J-Ty-QIg">
-                                    <font key="font" size="13" name=".PingFangSC-Regular"/>
+                                    <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -1382,6 +1387,7 @@ CA
                     </view>
                     <connections>
                         <outlet property="AddProjectView" destination="Yei-Or-qiI" id="L5a-zH-And"/>
+                        <outlet property="TitleBarTopConstraint" destination="Nm9-X5-Q67" id="oYN-j7-pbD"/>
                         <outlet property="TitleTopConstraint" destination="Nm9-X5-Q67" id="X4b-Fn-b7P"/>
                         <outlet property="editArea" destination="cmZ-KL-T9k" id="sJd-5P-0mf"/>
                         <outlet property="editAreaScroll" destination="qJO-7f-vkL" id="X69-yq-N67"/>
@@ -1405,6 +1411,7 @@ CA
                         <outlet property="splitView" destination="yWu-3F-P62" id="IYq-T3-4b1"/>
                         <outlet property="storageOutlineView" destination="urA-eK-bWB" id="ytX-z3-4Mi"/>
                         <outlet property="titleBarAdditionalView" destination="Ua8-RE-q01" id="CfN-3p-UH3"/>
+                        <outlet property="titleBarTopConstraint" destination="Ics-3U-dtd" id="lsX-3g-buv"/>
                         <outlet property="titleBarView" destination="xSU-Mk-2F1" id="lbu-pA-1Hs"/>
                         <outlet property="titleLabel" destination="rZx-hk-GcJ" id="wKj-zD-Ovz"/>
                     </connections>

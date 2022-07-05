@@ -28,7 +28,7 @@ class FileSystemEventManager {
                 return
             }
 
-            if !self.storage.allowedExtensions.contains(url.pathExtension) && !self.storage.isValidUTI(url: url) {
+            if !self.storage.allowedExtensions.contains(url.pathExtension) || !self.storage.isValidUTI(url: url) {
                 return
             }
 
@@ -86,7 +86,7 @@ class FileSystemEventManager {
             FileManager.default.fileExists(atPath: url.path)
             && (
                 self.storage.allowedExtensions.contains(url.pathExtension)
-                || self.storage.isValidUTI(url: url)
+                && self.storage.isValidUTI(url: url)
             )
             && pathList.contains(url.deletingLastPathComponent().path)
         )
