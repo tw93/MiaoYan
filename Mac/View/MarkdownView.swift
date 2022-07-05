@@ -61,7 +61,8 @@ open class MarkdownView: WKWebView {
         if UserDefaultsManagement.presentation {
             return "html {font-size: \(UserDefaultsManagement.presentationFontSize)px} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif;} #write { max-width: 1200px;}"
         } else {
-            return "html {font-size: \(UserDefaultsManagement.previewFontSize)px} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif; }"
+            let paddingStyle = UserDefaultsManagement.isOnExport ? " padding-top: 24px" : ""
+            return "html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif; }"
         }
     }
 
