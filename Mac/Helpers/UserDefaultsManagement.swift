@@ -47,6 +47,8 @@ public class UserDefaultsManagement {
     static var sidebarSize = 280
 
     static var isOnSearch = false
+    
+    static var isOnExport = false
 
     private enum Constants {
         static let AppearanceTypeKey = "appearanceType"
