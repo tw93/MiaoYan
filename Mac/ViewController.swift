@@ -567,7 +567,7 @@ class ViewController: NSViewController,
                 UserDefaultsManagement.singleModePath = ""
                 showSidebar("")
                 setSideDividerHidden(hidden: false)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.08) {
                     self.restart()
                 }
             }
