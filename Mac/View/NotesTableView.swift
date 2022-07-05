@@ -54,11 +54,23 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     }
 
     override func mouseDown(with event: NSEvent) {
-        let vc = window?.contentViewController as! ViewController
         UserDataService.instance.searchTrigger = false
-        super.mouseDown(with: event)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            vc.focusTable()
+        let vc = window?.contentViewController as! ViewController
+
+        let point = convert(event.locationInWindow, from: nil)
+        let i = row(at: point)
+
+        if noteList.indices.contains(i) {
+            DispatchQueue.main.async {
+                let selectedRows = self.selectedRowIndexes
+                if !selectedRows.contains(i) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                        vc.focusTable()
+                    }
+                    return
+                }
+            }
+            super.mouseDown(with: event)
         }
     }
 

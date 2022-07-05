@@ -113,6 +113,7 @@ class ViewController: NSViewController,
         configureEditor()
 
         fsManager = FileSystemEventManager(storage: storage, delegate: self)
+
         fsManager?.start()
 
         loadMoveMenu()
@@ -144,7 +145,7 @@ class ViewController: NSViewController,
 
         if let appDelegate = NSApplication.shared.delegate as? AppDelegate {
             if let urls = appDelegate.urls {
-                appDelegate.importNotes(urls: urls)
+                appDelegate.openNotes(urls: urls)
                 return
             }
 
@@ -167,6 +168,16 @@ class ViewController: NSViewController,
         setDividerHidden(hidden: size == 0)
         setSideDividerHidden(hidden: sideSize == 0)
         refreshMiaoYanNum()
+        if UserDefaultsManagement.isSingleMode {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                self.hideSidebar("")
+                self.toastInSingleMode()
+            }
+        }
+    }
+
+    func toastInSingleMode() {
+        toast(message: NSLocalizedString("🙊 In single open mode, Exit with Command+Shift+W ~", comment: ""))
     }
 
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
@@ -184,7 +195,7 @@ class ViewController: NSViewController,
                     menuItem.keyEquivalentModifierMask = [.command]
                 }
 
-                if ["fileMenu.new", "fileMenu.searchAndCreate", "fileMenu.import"].contains(menuItem.identifier?.rawValue) {
+                if ["fileMenu.new", "fileMenu.searchAndCreate", "fileMenu.open", "fileMenu.import"].contains(menuItem.identifier?.rawValue) {
                     return true
                 }
 
@@ -251,11 +262,24 @@ class ViewController: NSViewController,
     }
 
     private func configureNotesList() {
+        var lastSidebarItem = UserDefaultsManagement.lastProject
+        if UserDefaultsManagement.isSingleMode {
+            lastSidebarItem = 0
+        }
         updateTable {
-            let lastSidebarItem = UserDefaultsManagement.lastProject
             if let items = self.storageOutlineView.sidebarItems, items.indices.contains(lastSidebarItem) {
                 DispatchQueue.main.async {
                     self.storageOutlineView.selectRowIndexes([lastSidebarItem], byExtendingSelection: false)
+                }
+                if UserDefaultsManagement.isSingleMode {
+                    let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
+                    if !FileManager.default.directoryExists(atUrl: singleModeUrl), let lastNote = self.storage.getBy(url: singleModeUrl), let i = self.notesTableView.getIndex(lastNote)
+                    {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            self.notesTableView.selectRow(i)
+                            self.notesTableView.scrollRowToVisible(i)
+                        }
+                    }
                 }
             }
         }
@@ -537,6 +561,19 @@ class ViewController: NSViewController,
             return false
         }
 
+        if event.keyCode == kVK_ANSI_W, event.modifierFlags.contains(.command), event.modifierFlags.contains(.shift) {
+            if UserDefaultsManagement.isSingleMode {
+                UserDefaultsManagement.isSingleMode = false
+                UserDefaultsManagement.singleModePath = ""
+                showSidebar("")
+                setSideDividerHidden(hidden: false)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    self.restart()
+                }
+            }
+            return false
+        }
+
         // Return / Cmd + Return navigation
         if event.keyCode == kVK_Return {
             if let fr = NSApp.mainWindow?.firstResponder, alert == nil {
@@ -638,7 +675,7 @@ class ViewController: NSViewController,
             if notesTableView.getSelectedNote() != nil {
                 UserDefaultsManagement.isOnSearch = true
                 disablePreview()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.03) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                     self.titleLabel.saveTitle()
                 }
                 focusSearchInput()
@@ -688,6 +725,21 @@ class ViewController: NSViewController,
         }
     }
 
+    @IBAction func quiteApp(_ sender: Any) {
+        if UserDefaultsManagement.isSingleMode {
+            UserDefaultsManagement.isSingleMode = false
+            UserDefaultsManagement.singleModePath = ""
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                self.showSidebar("")
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                NSApplication.shared.terminate(self)
+            }
+        } else {
+            NSApplication.shared.terminate(self)
+        }
+    }
+
     @IBAction func makeNote(_ sender: SearchTextField) {
         guard let vc = ViewController.shared() else { return }
 
@@ -713,6 +765,34 @@ class ViewController: NSViewController,
         }
         vc.focusTable()
         vc.createNote(name: "", content: "")
+    }
+
+    func restart() {
+        let url = URL(fileURLWithPath: Bundle.main.resourcePath!)
+        let path = url.deletingLastPathComponent().deletingLastPathComponent().absoluteString
+        let task = Process()
+        task.launchPath = "/usr/bin/open"
+        task.arguments = [path]
+        task.launch()
+        exit(0)
+    }
+
+    @IBAction func singleOpen(_ sender: NSMenuItem) {
+        let panel = NSOpenPanel()
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = true
+        panel.canCreateDirectories = false
+        panel.begin { result in
+            if result.rawValue == NSFileHandlingPanelOKButton {
+                let urls = panel.urls
+                UserDefaultsManagement.singleModePath = urls[0].path
+                UserDefaultsManagement.isSingleMode = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    self.restart()
+                }
+            }
+        }
     }
 
     @IBAction func importNote(_ sender: NSMenuItem) {
@@ -878,7 +958,6 @@ class ViewController: NSViewController,
 
             vc.editArea.clear()
             vc.emptyEditAreaView.isHidden = true
-
         }
 
         NSApp.mainWindow?.makeFirstResponder(vc.notesTableView)
@@ -960,6 +1039,10 @@ class ViewController: NSViewController,
     }
 
     @IBAction func toggleSidebar(_ sender: Any) {
+        if UserDefaultsManagement.isSingleMode {
+            toastInSingleMode()
+            return
+        }
         guard let vc = ViewController.shared() else { return }
 
         let size = Int(vc.sidebarSplitView.subviews[0].frame.width)
@@ -1083,6 +1166,11 @@ class ViewController: NSViewController,
     }
 
     func showSidebar(_ sender: Any) {
+        if UserDefaultsManagement.isSingleMode {
+            toastInSingleMode()
+            return
+        }
+
         guard let vc = ViewController.shared() else { return }
         let size = Int(vc.sidebarSplitView.subviews[0].frame.width)
 
@@ -1509,7 +1597,7 @@ class ViewController: NSViewController,
             self.notesTableView.selectRowIndexes([index], byExtendingSelection: true)
             self.notesTableView.scrollRowToVisible(index)
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.06) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             self.search.becomeFirstResponder()
         }
     }
@@ -1616,7 +1704,7 @@ class ViewController: NSViewController,
         search.stringValue.removeAll()
         vc.titleLabel.isEditable = true
         emptyEditAreaView.isHidden = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.06) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             vc.titleLabel.editModeOn()
         }
         updateTable {

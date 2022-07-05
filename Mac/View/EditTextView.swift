@@ -32,15 +32,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn flag: Bool) {
         var newRect = NSRect(origin: rect.origin, size: rect.size)
         newRect.size.width = caretWidth
-        if let range = getParagraphRange(), range.upperBound != textStorage?.length || (
-            range.upperBound == textStorage?.length
-                && textStorage?.string.last == "\n"
-                && selectedRange().location != textStorage?.length
-        ) {
-            newRect.size.height = newRect.size.height - 6.0
-            newRect.origin.y = newRect.origin.y + 4
-        }
-
+        newRect.size.height = newRect.size.height - 6.0
+        newRect.origin.y = newRect.origin.y + 4
         super.drawInsertionPoint(in: newRect, color: EditTextView.fontColor, turnedOn: flag)
     }
 
@@ -300,10 +293,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         guard let storage = textStorage else { return }
 
         if note.isMarkdown(), let content = note.content.mutableCopy() as? NSMutableAttributedString {
-            if UserDefaultsManagement.liveImagesPreview {
-                content.loadImages(note: note)
-            }
-
             EditTextView.shouldForceRescan = true
             storage.setAttributedString(content)
         } else {
@@ -643,7 +632,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         {
             let dropPoint = convert(sender.draggingLocation, from: nil)
             let caretLocation = characterIndexForInsertion(at: dropPoint)
-            var offset = 0
+            let offset = 0
 
             unLoadImages(note: note)
 
@@ -657,27 +646,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 guard let filePath = ImagesProcessor.writeFile(data: data, url: url, note: note) else { return false }
 
                 let insertRange = NSRange(location: caretLocation + offset, length: 0)
-                if UserDefaultsManagement.liveImagesPreview {
-                    let cleanPath = filePath.removingPercentEncoding ?? filePath
-                    guard let url = note.getImageUrl(imageName: cleanPath) else { return false }
-
-                    let invalidateRange = NSRange(location: caretLocation + offset, length: 1)
-                    let attachment = NoteAttachment(title: "", path: cleanPath, url: url, cache: nil, invalidateRange: invalidateRange, note: note)
-
-                    if let string = attachment.getAttributedString() {
-                        EditTextView.shouldForceRescan = true
-
-                        insertText(string, replacementRange: insertRange)
-                        insertNewline(nil)
-                        insertNewline(nil)
-
-                        offset += 3
-                    }
-                } else {
-                    insertText("![](\(filePath))", replacementRange: insertRange)
-                    insertNewline(nil)
-                    insertNewline(nil)
-                }
+                insertText("![](\(filePath))", replacementRange: insertRange)
+                insertNewline(nil)
+                insertNewline(nil)
             }
 
             if let storage = textStorage {
@@ -891,62 +862,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return
         }
 
-        if !UserDefaultsManagement.liveImagesPreview {
-            let url = URL(fileURLWithPath: link as! String)
-            NSWorkspace.shared.open(url)
-            return
-        }
-
-        let pathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
-        let titleKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.title")
-
-        if let event = NSApp.currentEvent,
-           !event.modifierFlags.contains(.command),
-           let note = EditTextView.note,
-           let path = (char?.attribute(pathKey, at: 0, effectiveRange: nil) as? String)?.removingPercentEncoding,
-           let url = note.getImageUrl(imageName: path)
-        {
-            if !url.isImage {
-                NSWorkspace.shared.activateFileViewerSelecting([url])
-                return
-            }
-
-            let isOpened = NSWorkspace.shared.openFile(url.path, withApplication: "Preview", andDeactivate: true)
-
-            if isOpened { return }
-
-            let url = URL(fileURLWithPath: url.path)
-            NSWorkspace.shared.open(url)
-            return
-        }
-
-        guard let window = MainWindowController.shared() else { return }
-        guard let vc = window.contentViewController as? ViewController else { return }
-
-        vc.alert = NSAlert()
-        let field = NSTextField(frame: NSRect(x: 0, y: 0, width: 290, height: 20))
-
-        if let title = char?.attribute(titleKey, at: 0, effectiveRange: nil) as? String {
-            field.stringValue = title
-        }
-
-        vc.alert?.messageText = NSLocalizedString("Please enter image title:", comment: "Edit area")
-        vc.alert?.accessoryView = field
-        vc.alert?.alertStyle = .informational
-        vc.alert?.addButton(withTitle: "OK")
-        vc.alert?.beginSheetModal(for: window) { (returnCode: NSApplication.ModalResponse) in
-            if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
-                self.textStorage?.addAttribute(titleKey, value: field.stringValue, range: range)
-
-                if let note = vc.notesTableView.getSelectedNote() {
-                    note.save(attributed: self.attributedString())
-                }
-            }
-
-            vc.alert = nil
-        }
-
-        field.becomeFirstResponder()
+        let url = URL(fileURLWithPath: link as! String)
+        NSWorkspace.shared.open(url)
     }
 
     public func applyLeftParagraphStyle() {

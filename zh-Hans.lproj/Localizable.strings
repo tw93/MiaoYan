@@ -151,8 +151,10 @@
 
 "🍭 Image upload in progress~" = "🍭 图片上传中~";
 
-"😶‍🌫️ Image upload failed, Use local~" = "😶‍🌫️ 图片上传失败，优先使用本地~";
+"😶‍🌫️ Image upload failed, Use local~" = "😶‍🌫️ 图片上传失败，优先使用本地，可手动上传~";
 
 "%d MiaoYan" = "%d 篇妙言";
 
-"🙊 Please make sure your Mac is installed %@ ~" = "🙊 请确保你的 Mac 已安装 %@ ~";
+"🙊 Please make sure your Mac is installed %@ ~" = "🙊 请确保你的 Mac 已安装并配置好了 %@ ~";
+
+"🙊 In single open mode, Exit with Command+Shift+W ~" = "🙊 单独编辑器模式中，可 Command+Shift+W 退出~";

@@ -35,7 +35,7 @@ extension AppDelegate {
         switch scheme {
         case HandledSchemes.file.rawValue:
             if nil != ViewController.shared() {
-                self.importNotes(urls: urls)
+                self.openNotes(urls: urls)
             } else {
                 self.urls = urls
             }
@@ -49,6 +49,13 @@ extension AppDelegate {
         }
     }
 
+    func openNotes(urls: [URL]) {
+        guard let vc = ViewController.shared() else { return }
+        UserDefaultsManagement.singleModePath = urls[0].path
+        UserDefaultsManagement.isSingleMode = true
+        vc.restart()
+    }
+    
     func importNotes(urls: [URL]) {
         guard let vc = ViewController.shared() else { return }
 

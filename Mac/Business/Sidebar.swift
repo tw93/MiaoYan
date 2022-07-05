@@ -18,6 +18,10 @@ class Sidebar {
         }
         
         let rootProjects = storage.getRootProjects()
+              
+        if(UserDefaultsManagement.isSingleMode){
+            return
+        }
         
         for project in rootProjects {
             let icon = getImage(named: "repository\(night).png")
