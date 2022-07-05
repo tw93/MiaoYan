@@ -100,7 +100,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     public func exportImage() {
         let vc = ViewController.shared()
         if #available(macOS 10.15, *) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
                     if complete != nil {
                         super.evaluateJavaScript("document.body.offsetHeight", completionHandler: { height, _ in

@@ -2084,18 +2084,26 @@ class ViewController: NSViewController,
     }
 
     @IBAction func exportImage(_ sender: Any) {
+        UserDefaultsManagement.isOnExport = true
         toast(message: NSLocalizedString("🙊 Starting export~", comment: ""))
         enablePreview()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
             self.editArea.markdownView?.exportImage()
+            UserDefaultsManagement.isOnExport = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.disablePreview()
+            }
         }
     }
 
     @IBAction func exportPdf(_ sender: Any) {
+        UserDefaultsManagement.isOnExport = true
         toast(message: NSLocalizedString("🙊 Starting export~", comment: ""))
         enablePreview()
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
             self.editArea.markdownView?.exportPdf()
+            UserDefaultsManagement.isOnExport = false
+            self.disablePreview()
         }
     }
 
