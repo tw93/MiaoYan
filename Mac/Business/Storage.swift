@@ -41,9 +41,16 @@ class Storage {
     private var bookmarks = [URL]()
 
     init() {
+        guard var url = UserDefaultsManagement.storageUrl else { return }
 
-        guard let url = UserDefaultsManagement.storageUrl else { return }
-
+        if UserDefaultsManagement.isSingleMode, !UserDefaultsManagement.singleModePath.isEmpty {
+            let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
+            if !FileManager.default.directoryExists(atUrl: singleModeUrl) {
+                url = singleModeUrl.deletingLastPathComponent()
+            } else {
+                url = singleModeUrl
+            }
+        }
         var name = url.lastPathComponent
         if let iCloudURL = getCloudDrive(), iCloudURL == url {
             name = "iCloud Drive"
@@ -262,8 +269,19 @@ class Storage {
             if project.isRoot, skipRoot {
                 continue
             }
+            if UserDefaultsManagement.isSingleMode {
+                let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
+                let singleRootUrl = singleModeUrl.deletingLastPathComponent()
 
-            loadLabel(project)
+                if project.url == singleModeUrl {
+                    loadLabel(project)
+                }
+                if project.url == singleRootUrl {
+                    loadLabel(project)
+                }
+            } else {
+                loadLabel(project)
+            }
         }
     }
 
@@ -463,7 +481,7 @@ class Storage {
             return
                 directoryFiles.filter {
                     allowedExtensions.contains($0.pathExtension)
-                        || self.isValidUTI(url: $0)
+                        && self.isValidUTI(url: $0)
                 }.map {
                     url in (
                         url,

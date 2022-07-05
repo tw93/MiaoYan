@@ -110,8 +110,11 @@
 /* Class = "NSTextFieldCell"; title = "Text Cell"; ObjectID = "NiN-n8-Y4W"; */
 "NiN-n8-Y4W.title" = "Text Cell";
 
-/* Class = "NSMenuItem"; title = "Import"; ObjectID = "O8Z-cg-XnH"; */
-"O8Z-cg-XnH.title" = "Import";
+/* Class = "NSMenuItem"; title = "Single Open"; ObjectID = "O8Z-cg-XnH"; */
+"O8Z-cg-XnH.title" = "Single Open";
+
+/* Class = "NSMenuItem"; title = "Import"; ObjectID = "7wA-Gr-Kyz"; */
+"7wA-Gr-Kyz.title" = "Import";
 
 /* Class = "NSTextFieldCell"; placeholderString = "输入标题"; ObjectID = "O9K-a1-3eu"; */
 "O9K-a1-3eu.placeholderString" = "Input Title";

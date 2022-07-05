@@ -73,7 +73,6 @@ public class UserDefaultsManagement {
         static let NightModeAuto = "nightModeAuto"
         static let NightModeBrightnessLevel = "nightModeBrightnessLevel"
         static let NoteContainer = "noteContainer"
-        static let LiveImagesPreview = "liveImagesPreview"
         static let PinListKey = "pinList"
         static let Preview = "preview"
         static let Presentation = "presentation"
@@ -91,6 +90,8 @@ public class UserDefaultsManagement {
         static let PreviewFontName = "previewFontName"
         static let IsFirstLaunch = "isFirstLaunch"
         static let SortDirection = "sortDirection"
+        static let IsSingleMode = "isSingleMode"
+        static let SingleModePath = "singleModePath"
     }
 
     static var lastProject: Int {
@@ -142,6 +143,30 @@ public class UserDefaultsManagement {
         }
     }
 
+    static var isSingleMode: Bool {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.IsSingleMode) as? Bool {
+                return result
+            }
+            return false
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.IsSingleMode)
+        }
+    }
+
+    static var singleModePath: String {
+        get {
+            if let dl = UserDefaults.standard.object(forKey: Constants.SingleModePath) as? String {
+                return dl
+            }
+            return ""
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.SingleModePath)
+        }
+    }
+
     static var sortDirection: Bool {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.SortDirection) as? Bool {
@@ -151,18 +176,6 @@ public class UserDefaultsManagement {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.SortDirection)
-        }
-    }
-
-    static var liveImagesPreview: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.LiveImagesPreview) {
-                return result as! Bool
-            }
-            return false
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.LiveImagesPreview)
         }
     }
 

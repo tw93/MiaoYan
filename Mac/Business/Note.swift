@@ -38,6 +38,7 @@ public class Note: NSObject {
 
         self.url = url
         self.project = project
+
         super.init()
 
         parseURL(loadProject: false)
@@ -120,7 +121,7 @@ public class Note: NSObject {
     }
 
     public func forceReload() {
-        if  let attributedString = getContent() {
+        if let attributedString = getContent() {
             content = NSMutableAttributedString(attributedString: attributedString)
         }
     }
@@ -540,9 +541,6 @@ public class Note: NSObject {
     public func save(globalStorage: Bool = true) {
         if isMarkdown() {
             content = content.unLoadCheckboxes()
-            if UserDefaultsManagement.liveImagesPreview {
-                content = content.unLoadImages(note: self)
-            }
         }
 
         save(attributedString: content, globalStorage: globalStorage)

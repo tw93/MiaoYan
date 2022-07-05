@@ -731,44 +731,30 @@ public class NotesTextProcessor {
             }
         }
         
-//        // Todo
-//        NotesTextProcessor.todoInlineRegex.matches(string, range: paragraphRange) { result in
-//            guard let range = result?.range else { return }
-//            let substring = attributedString.mutableString.substring(with: range)
-//            
-//            if substring.contains("- [x]") {
-//                let strikeRange = attributedString.mutableString.paragraphRange(for: range)
-//                attributedString.addAttribute(.strikethroughStyle, value: 1, range: strikeRange)
-//            }
-//        }
-        
-        if !UserDefaultsManagement.liveImagesPreview {
-            // We detect and process inline images
-            NotesTextProcessor.imageInlineRegex.matches(string, range: paragraphRange) { result in
-                guard let range = result?.range else { return }
+        NotesTextProcessor.imageInlineRegex.matches(string, range: paragraphRange) { result in
+            guard let range = result?.range else { return }
 
-                if let linkRange = result?.range(at: 3) {
-                    let link = attributedString.mutableString.substring(with: linkRange).removingPercentEncoding
+            if let linkRange = result?.range(at: 3) {
+                let link = attributedString.mutableString.substring(with: linkRange).removingPercentEncoding
 
-                    if let link = link, let url = note.getImageUrl(imageName: link) {
-                        attributedString.addAttribute(.link, value: url, range: linkRange)
-                        attributedString.addAttribute(.foregroundColor, value: linkColor, range: linkRange)
-                    }
+                if let link = link, let url = note.getImageUrl(imageName: link) {
+                    attributedString.addAttribute(.link, value: url, range: linkRange)
+                    attributedString.addAttribute(.foregroundColor, value: linkColor, range: linkRange)
                 }
+            }
 
-                attributedString.addAttribute(.font, value: codeFont, range: range)
-                NotesTextProcessor.imageOpeningSquareRegex.matches(string, range: paragraphRange) { innerResult in
-                    guard let innerRange = innerResult?.range else { return }
-                    attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
-                }
-                NotesTextProcessor.imageClosingSquareRegex.matches(string, range: paragraphRange) { innerResult in
-                    guard let innerRange = innerResult?.range else { return }
-                    attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
-                }
-                NotesTextProcessor.parenRegex.matches(string, range: range) { innerResult in
-                    guard let innerRange = innerResult?.range else { return }
-                    attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
-                }
+            attributedString.addAttribute(.font, value: codeFont, range: range)
+            NotesTextProcessor.imageOpeningSquareRegex.matches(string, range: paragraphRange) { innerResult in
+                guard let innerRange = innerResult?.range else { return }
+                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+            }
+            NotesTextProcessor.imageClosingSquareRegex.matches(string, range: paragraphRange) { innerResult in
+                guard let innerRange = innerResult?.range else { return }
+                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+            }
+            NotesTextProcessor.parenRegex.matches(string, range: range) { innerResult in
+                guard let innerRange = innerResult?.range else { return }
+                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
             }
         }
         
