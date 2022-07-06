@@ -11,9 +11,4 @@ class AboutViewController: NSViewController {
     }
 
     @IBOutlet var versionLabel: NSTextField!
-
-    @IBAction func openContributorsPage(_ sender: Any) {
-        let url = URL(string: "")!
-        NSWorkspace.shared.open(url)
-    }
 }

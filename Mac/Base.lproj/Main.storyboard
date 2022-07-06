@@ -927,14 +927,14 @@ CA
                                         <rect key="frame" x="0.0" y="0.0" width="196" height="640"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <subviews>
-                                            <scrollView fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="50" horizontalPageScroll="10" verticalLineScroll="50" verticalPageScroll="10" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BdT-Ac-GAV">
+                                            <scrollView fixedFrame="YES" borderType="none" autohidesScrollers="YES" horizontalLineScroll="100" horizontalPageScroll="10" verticalLineScroll="100" verticalPageScroll="10" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BdT-Ac-GAV">
                                                 <rect key="frame" x="-3" y="0.0" width="202" height="600"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <clipView key="contentView" drawsBackground="NO" id="ceg-yR-Ncf">
                                                     <rect key="frame" x="0.0" y="0.0" width="202" height="600"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
-                                                        <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" autosaveColumns="NO" rowHeight="50" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="14" outlineTableColumn="Gwp-vX-YaR" id="urA-eK-bWB" customClass="SidebarProjectView" customModule="MiaoYan" customModuleProvider="target">
+                                                        <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" autosaveColumns="NO" rowHeight="100" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="14" outlineTableColumn="Gwp-vX-YaR" id="urA-eK-bWB" customClass="SidebarProjectView" customModule="MiaoYan" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="202" height="599"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1419,6 +1419,18 @@ CA
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <menu id="AaK-Xd-i52">
                     <items>
+                        <menuItem title="Show Info" keyEquivalent="" id="IcI-sb-NY5">
+                            <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                            <connections>
+                                <action selector="showInfo:" target="XfG-lQ-9wD" id="Cf1-66-GyS"/>
+                            </connections>
+                        </menuItem>
+                        <menuItem title="Pin/unpin" keyEquivalent="P" id="jFN-Dp-LON">
+                            <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                            <connections>
+                                <action selector="pinMenu:" target="XfG-lQ-9wD" id="n3K-Qd-LrZ"/>
+                            </connections>
+                        </menuItem>
                         <menuItem title="Duplicate" keyEquivalent="d" id="E6I-n5-dsi">
                             <connections>
                                 <action selector="duplicate:" target="rPt-NT-nkU" id="hUh-qX-nAT"/>
@@ -1427,12 +1439,6 @@ CA
                         <menuItem title="Rename" keyEquivalent="r" identifier="noteMove.rename" id="XBB-Sr-T1D">
                             <connections>
                                 <action selector="renameMenu:" target="XfG-lQ-9wD" id="iYK-OA-0IW"/>
-                            </connections>
-                        </menuItem>
-                        <menuItem title="Pin/unpin" keyEquivalent="P" id="jFN-Dp-LON">
-                            <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
-                            <connections>
-                                <action selector="pinMenu:" target="XfG-lQ-9wD" id="n3K-Qd-LrZ"/>
                             </connections>
                         </menuItem>
                         <menuItem title="Reveal in Finder" alternate="YES" keyEquivalent="i" id="xSO-lW-k8f">

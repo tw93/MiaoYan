@@ -200,6 +200,9 @@
 /* Class = "NSMenuItem"; title = "Duplicate"; ObjectID = "E6I-n5-dsi"; */
 "E6I-n5-dsi.title" = "副本";
 
+/* Class = "NSMenuItem"; title = "Show Info"; ObjectID = "IcI-sb-NY5"; */
+"IcI-sb-NY5.title" = "显示简介";
+
 /* Class = "NSButtonCell"; title = "Hide date"; ObjectID = "e15-ps-th1"; */
 "e15-ps-th1.title" = "隐藏日期";
 
