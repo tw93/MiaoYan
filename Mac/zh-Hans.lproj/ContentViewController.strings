@@ -1,0 +1,12 @@
+
+/* Class = "NSTextFieldCell"; title = "Update Time:"; ObjectID = "GN1-aA-6kJ"; */
+"GN1-aA-6kJ.title" = "更新时间:";
+
+/* Class = "NSTextFieldCell"; title = "Word Count:"; ObjectID = "ITG-Xm-ygA"; */
+"ITG-Xm-ygA.title" = "字数统计:";
+
+/* Class = "NSTextFieldCell"; title = "Create Time:"; ObjectID = "LDe-hw-GD1"; */
+"LDe-hw-GD1.title" = "创建时间:";
+
+/* Class = "NSTextFieldCell"; title = "File Path:"; ObjectID = "RWy-E4-eBm"; */
+"RWy-E4-eBm.title" = "相对路径:";

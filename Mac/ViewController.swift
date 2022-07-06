@@ -6,6 +6,7 @@ import WebKit
 
 class ViewController: NSViewController,
     NSTextViewDelegate,
+    NSPopoverDelegate,
     NSTextFieldDelegate,
     NSSplitViewDelegate,
     NSOutlineViewDelegate,
@@ -26,6 +27,10 @@ class ViewController: NSViewController,
     var sidebarTimer = Timer()
     var rowUpdaterTimer = Timer()
     let searchQueue = OperationQueue()
+    var wordCount: String = ""
+    var updateTime: String = ""
+    var createTime: String = ""
+    var filePath: String = ""
 
     private var isHandlingScrollEvent = false
     private var swipeLeftExecuted = false
@@ -56,7 +61,6 @@ class ViewController: NSViewController,
     @IBOutlet var notesListCustomView: NSView!
     @IBOutlet var outlineHeader: OutlineHeaderView!
 
-    @IBOutlet var AddProjectView: NSButton!
     @IBOutlet var searchTopConstraint: NSLayoutConstraint!
     @IBOutlet var titleLabel: TitleTextField!
 
@@ -102,6 +106,61 @@ class ViewController: NSViewController,
     @IBOutlet var titleBarView: TitleBarView!
     @IBOutlet var sidebarScrollView: NSScrollView!
     @IBOutlet var notesScrollView: NSScrollView!
+
+    lazy var popover: NSPopover = {
+        let popover = NSPopover()
+        popover.behavior = .semitransient
+        popover.contentViewController = ContentViewController()
+        popover.delegate = self
+        return popover
+    }()
+
+    @IBAction func showInfo(_ sender: Any) {
+        popover.appearance = NSAppearance(named: NSAppearance.Name.aqua)!
+
+        let selectedCell = notesTableView.view(atColumn: 0, row: notesTableView.selectedRow, makeIfNecessary: false)
+        let note = notesTableView.getSelectedNote()
+        let words = note?.getPrettifiedContent().count
+
+        wordCount = String(words!)
+
+        updateTime = note?.getUpdateTime() ?? ""
+        createTime = note?.getCreateTime() ?? ""
+        filePath = note?.getRelativePath() ?? ""
+
+        guard let positioningView = selectedCell else { return }
+        let positioningRect = NSZeroRect
+
+        let preferredEdge = NSRectEdge(rectEdge: .maxXEdge)
+
+        popover.show(relativeTo: positioningRect, of: positioningView, preferredEdge: preferredEdge)
+
+        let popoverWindowX = popover.contentViewController?.view.window?.frame.origin.x ?? 0
+        let popoverWindowY = popover.contentViewController?.view.window?.frame.origin.y ?? 0
+        popover.contentViewController?.view.window?.setFrameOrigin(
+            NSPoint(x: popoverWindowX + 18, y: popoverWindowY)
+        )
+        popover.contentViewController?.view.window?.makeKey()
+    }
+
+    func popoverShouldDetach(_ popover: NSPopover) -> Bool {
+        true
+    }
+
+    func detachableWindow(for popover: NSPopover) -> NSWindow? {
+        nil
+    }
+
+    func popoverDidShow(_ notification: Notification) {}
+
+    func popoverDidClose(_ notification: Notification) {
+        let closeReason = notification.userInfo![NSPopover.closeReasonUserInfoKey] as! String
+        if closeReason == NSPopover.CloseReason.standard.rawValue {}
+    }
+
+    @objc func detachedWindowWillClose(notification: NSNotification) {}
+
+    private var popoverVisible: Bool { popover.isShown }
 
     // MARK: - Overrides
 
@@ -558,6 +617,11 @@ class ViewController: NSViewController,
 
         if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), titleLabel.hasFocus() {
             updateTitle(newTitle: "")
+            return false
+        }
+
+        if event.modifierFlags.contains(.command), event.modifierFlags.contains(.shift), event.keyCode == kVK_RightArrow {
+            showInfo("")
             return false
         }
 
