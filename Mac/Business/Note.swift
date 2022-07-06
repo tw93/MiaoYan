@@ -362,6 +362,20 @@ public class Note: NSObject {
         return dateFormatter.formatDateForDisplay(creationDate)
     }
 
+    @objc func getCreateTime() -> String? {
+        guard let createDate = creationDate else { return nil }
+        return dateFormatter.formatTimeForDisplay(createDate)
+    }
+
+    @objc func getUpdateTime() -> String? {
+        guard let updateDate = getFileModifiedDate() else { return nil }
+        return dateFormatter.formatTimeForDisplay(updateDate)
+    }
+
+    @objc func getRelativePath() -> String? {
+        url.path.replacingOccurrences(of: UserDefaultsManagement.storagePath!, with: "")
+    }
+
     func getContent() -> NSAttributedString? {
         guard let url = getContentFileURL() else { return nil }
 

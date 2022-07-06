@@ -74,6 +74,9 @@
 /* Class = "NSMenuItem"; title = "Duplicate"; ObjectID = "E6I-n5-dsi"; */
 "E6I-n5-dsi.title" = "Duplicate";
 
+/* Class = "NSMenuItem"; title = "Show Info"; ObjectID = "IcI-sb-NY5"; */
+"IcI-sb-NY5.title" = "Show Info";
+
 /* Class = "NSMenuItem"; title = "Show in Finder"; ObjectID = "F5A-zs-zwP"; */
 "F5A-zs-zwP.title" = "Show in Finder";
 
