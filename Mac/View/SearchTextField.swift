@@ -28,6 +28,9 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         addTrackingArea(trackingArea)
     }
 
+    override var cancelButtonBounds: NSRect{
+        NSZeroRect
+    }
     override func textDidEndEditing(_ notification: Notification) {
         if let editor = currentEditor(), editor.selectedRange.length > 0 {
             editor.replaceCharacters(in: editor.selectedRange, with: "")
