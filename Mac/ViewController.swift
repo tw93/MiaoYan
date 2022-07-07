@@ -27,10 +27,7 @@ class ViewController: NSViewController,
     var sidebarTimer = Timer()
     var rowUpdaterTimer = Timer()
     let searchQueue = OperationQueue()
-    var wordCount: String = ""
-    var updateTime: String = ""
-    var createTime: String = ""
-    var filePath: String = ""
+    var lastPopSelectRow = -1
 
     private var isHandlingScrollEvent = false
     private var swipeLeftExecuted = false
@@ -119,43 +116,29 @@ class ViewController: NSViewController,
         popover.appearance = NSAppearance(named: NSAppearance.Name.aqua)!
 
         let selectedCell = notesTableView.view(atColumn: 0, row: notesTableView.selectedRow, makeIfNecessary: false)
-        let note = notesTableView.getSelectedNote()
-        let words = note?.getPrettifiedContent().count
-
-        wordCount = String(words!)
-
-        updateTime = note?.getUpdateTime() ?? ""
-        createTime = note?.getCreateTime() ?? ""
-        filePath = note?.getRelativePath() ?? ""
 
         guard let positioningView = selectedCell else { return }
         let positioningRect = NSZeroRect
 
         let preferredEdge = NSRectEdge(rectEdge: .maxXEdge)
-
         popover.show(relativeTo: positioningRect, of: positioningView, preferredEdge: preferredEdge)
+
+        popover.contentViewController?.view.window?.makeKey()
+
+        if lastPopSelectRow != lastPopSelectRow || lastPopSelectRow == -1 {
+            popover.contentViewController?.view.window?.setContentSize(NSZeroSize)
+        }
 
         let popoverWindowX = popover.contentViewController?.view.window?.frame.origin.x ?? 0
         let popoverWindowY = popover.contentViewController?.view.window?.frame.origin.y ?? 0
+
         popover.contentViewController?.view.window?.setFrameOrigin(
             NSPoint(x: popoverWindowX + 18, y: popoverWindowY)
         )
-        popover.contentViewController?.view.window?.makeKey()
     }
-
-    func popoverShouldDetach(_ popover: NSPopover) -> Bool {
-        true
-    }
-
-    func detachableWindow(for popover: NSPopover) -> NSWindow? {
-        nil
-    }
-
-    func popoverDidShow(_ notification: Notification) {}
 
     func popoverDidClose(_ notification: Notification) {
-        let closeReason = notification.userInfo![NSPopover.closeReasonUserInfoKey] as! String
-        if closeReason == NSPopover.CloseReason.standard.rawValue {}
+        lastPopSelectRow = notesTableView.selectedRow
     }
 
     @objc func detachedWindowWillClose(notification: NSNotification) {}
