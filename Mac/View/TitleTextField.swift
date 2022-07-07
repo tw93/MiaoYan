@@ -78,6 +78,7 @@ class TitleTextField: NSTextField {
         MainWindowController.shared()?.makeFirstResponder(self)
         UserDefaultsManagement.isOnSearch = false
     }
+    
 
     public func updateNotesTableView() {
         guard let vc = ViewController.shared(), let note = EditTextView.note else { return }

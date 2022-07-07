@@ -28,9 +28,10 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         addTrackingArea(trackingArea)
     }
 
-    override var cancelButtonBounds: NSRect{
+    override var cancelButtonBounds: NSRect {
         NSZeroRect
     }
+
     override func textDidEndEditing(_ notification: Notification) {
         if let editor = currentEditor(), editor.selectedRange.length > 0 {
             editor.replaceCharacters(in: editor.selectedRange, with: "")
@@ -125,7 +126,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
 
     func controlTextDidChange(_ obj: Notification) {
         searchTimer.invalidate()
-        searchTimer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(search), userInfo: nil, repeats: false)
+        searchTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(search), userInfo: nil, repeats: false)
     }
 
     public func suggestAutocomplete(_ note: Note, filter: String) {
