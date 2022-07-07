@@ -12,7 +12,6 @@ class ContentViewController: NSViewController, NSPopoverDelegate {
     @IBOutlet var wordCount: NSTextField!
     @IBOutlet var updateTime: NSTextField!
     @IBOutlet var createTime: NSTextField!
-    @IBOutlet var filePath: NSTextField!
 
     func replace(validateString: String, regex: String, content: String) -> String {
         do {
@@ -38,7 +37,6 @@ class ContentViewController: NSViewController, NSPopoverDelegate {
         wordCount.stringValue = String(words!.count)
         updateTime.stringValue = note?.getUpdateTime() ?? ""
         createTime.stringValue = note?.getCreateTime() ?? ""
-        filePath.stringValue = note?.getRelativePath() ?? ""
         super.viewDidAppear()
     }
 }
