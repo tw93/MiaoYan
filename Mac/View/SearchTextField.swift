@@ -92,8 +92,6 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         case "insertNewline:", "insertNewlineIgnoringFieldEditor:":
             if let note = vcDelegate.editArea.getSelectedNote(), stringValue.count > 0, note.title.lowercased().starts(with: searchQuery.lowercased()) {
                 vcDelegate.focusEditArea()
-            } else {
-                vcDelegate.makeNote(self)
             }
 
             searchTimer.invalidate()
