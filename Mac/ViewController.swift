@@ -27,7 +27,6 @@ class ViewController: NSViewController,
     var sidebarTimer = Timer()
     var rowUpdaterTimer = Timer()
     let searchQueue = OperationQueue()
-    var lastPopSelectRow = -1
 
     private var isHandlingScrollEvent = false
     private var swipeLeftExecuted = false
@@ -121,13 +120,8 @@ class ViewController: NSViewController,
         let positioningRect = NSZeroRect
 
         let preferredEdge = NSRectEdge(rectEdge: .maxXEdge)
+
         popover.show(relativeTo: positioningRect, of: positioningView, preferredEdge: preferredEdge)
-
-        popover.contentViewController?.view.window?.makeKey()
-
-        if lastPopSelectRow != lastPopSelectRow || lastPopSelectRow == -1 {
-            popover.contentViewController?.view.window?.setContentSize(NSZeroSize)
-        }
 
         let popoverWindowX = popover.contentViewController?.view.window?.frame.origin.x ?? 0
         let popoverWindowY = popover.contentViewController?.view.window?.frame.origin.y ?? 0
@@ -135,10 +129,8 @@ class ViewController: NSViewController,
         popover.contentViewController?.view.window?.setFrameOrigin(
             NSPoint(x: popoverWindowX + 18, y: popoverWindowY)
         )
-    }
 
-    func popoverDidClose(_ notification: Notification) {
-        lastPopSelectRow = notesTableView.selectedRow
+        popover.contentViewController?.view.window?.makeKey()
     }
 
     @objc func detachedWindowWillClose(notification: NSNotification) {}

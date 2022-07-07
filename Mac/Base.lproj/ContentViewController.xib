@@ -10,7 +10,6 @@
         <customObject id="-2" userLabel="File's Owner" customClass="ContentViewController" customModule="MiaoYan" customModuleProvider="target">
             <connections>
                 <outlet property="createTime" destination="ECQ-la-Fx6" id="jay-Rf-48f"/>
-                <outlet property="filePath" destination="r7p-cY-18a" id="MgU-OA-DjO"/>
                 <outlet property="updateTime" destination="07C-vU-AF6" id="lK4-ZW-Cte"/>
                 <outlet property="view" destination="JnG-cl-jqe" id="xc3-HG-H8z"/>
                 <outlet property="wordCount" destination="3M9-D9-aju" id="AAP-OF-lT7"/>
@@ -19,11 +18,11 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <view id="JnG-cl-jqe">
-            <rect key="frame" x="0.0" y="0.0" width="224" height="130"/>
+            <rect key="frame" x="0.0" y="0.0" width="224" height="104"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IT6-BT-LiE">
-                    <rect key="frame" x="20" y="96" width="80" height="16"/>
+                    <rect key="frame" x="26" y="70" width="80" height="16"/>
                     <textFieldCell key="cell" lineBreakMode="clipping" title="Word Count:" id="ITG-Xm-ygA">
                         <font key="font" usesAppearanceFont="YES"/>
                         <color key="textColor" name="mainText"/>
@@ -31,7 +30,7 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dmF-hl-yrS">
-                    <rect key="frame" x="14" y="70" width="86" height="16"/>
+                    <rect key="frame" x="20" y="44" width="86" height="16"/>
                     <textFieldCell key="cell" lineBreakMode="clipping" title="Update Time:" id="GN1-aA-6kJ">
                         <font key="font" usesAppearanceFont="YES"/>
                         <color key="textColor" name="mainText"/>
@@ -39,31 +38,23 @@
                     </textFieldCell>
                 </textField>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mVC-3t-vHG">
-                    <rect key="frame" x="18" y="44" width="82" height="16"/>
+                    <rect key="frame" x="24" y="18" width="82" height="16"/>
                     <textFieldCell key="cell" lineBreakMode="clipping" title="Create Time:" id="LDe-hw-GD1">
                         <font key="font" usesAppearanceFont="YES"/>
                         <color key="textColor" name="mainText"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ies-Jz-rKx">
-                    <rect key="frame" x="13" y="18" width="87" height="16"/>
-                    <textFieldCell key="cell" lineBreakMode="clipping" title="Relative Path:" id="RWy-E4-eBm">
-                        <font key="font" usesAppearanceFont="YES"/>
-                        <color key="textColor" name="mainText"/>
-                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
                 <textField verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3M9-D9-aju">
-                    <rect key="frame" x="105" y="96" width="101" height="16"/>
+                    <rect key="frame" x="105" y="70" width="101" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" title="wordCount" id="Muy-lO-8hh" userLabel="count">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="underlineColor"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="07C-vU-AF6">
-                    <rect key="frame" x="103" y="70" width="103" height="16"/>
+                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="07C-vU-AF6">
+                    <rect key="frame" x="109" y="44" width="95" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" title="updateTime" id="yP9-xN-9tv" userLabel="count">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="underlineColor"/>
@@ -71,16 +62,8 @@
                     </textFieldCell>
                 </textField>
                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ECQ-la-Fx6">
-                    <rect key="frame" x="103" y="44" width="71" height="16"/>
+                    <rect key="frame" x="109" y="18" width="71" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" title="createTime" id="E1l-5G-VcH" userLabel="count">
-                        <font key="font" metaFont="system"/>
-                        <color key="textColor" name="underlineColor"/>
-                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
-                <textField verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r7p-cY-18a">
-                    <rect key="frame" x="103" y="18" width="71" height="16"/>
-                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" title="filePath" id="Cba-a8-XWN" userLabel="count">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="underlineColor"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -88,23 +71,19 @@
                 </textField>
             </subviews>
             <constraints>
-                <constraint firstItem="r7p-cY-18a" firstAttribute="leading" secondItem="3M9-D9-aju" secondAttribute="leading" id="2Y9-8f-XBU"/>
-                <constraint firstItem="IT6-BT-LiE" firstAttribute="leading" secondItem="JnG-cl-jqe" secondAttribute="leading" constant="22" id="8n9-n9-bhh"/>
+                <constraint firstAttribute="bottom" secondItem="mVC-3t-vHG" secondAttribute="bottom" constant="18" id="0ZP-0a-7z3"/>
                 <constraint firstItem="mVC-3t-vHG" firstAttribute="trailing" secondItem="IT6-BT-LiE" secondAttribute="trailing" id="MV2-pS-Pjv"/>
-                <constraint firstItem="r7p-cY-18a" firstAttribute="centerY" secondItem="ies-Jz-rKx" secondAttribute="centerY" id="OBD-R3-p3M"/>
-                <constraint firstAttribute="bottom" secondItem="ies-Jz-rKx" secondAttribute="bottom" constant="18" id="SBu-6I-8KP"/>
                 <constraint firstItem="3M9-D9-aju" firstAttribute="centerY" secondItem="IT6-BT-LiE" secondAttribute="centerY" id="TfC-jq-mTm"/>
                 <constraint firstItem="3M9-D9-aju" firstAttribute="leading" secondItem="IT6-BT-LiE" secondAttribute="trailing" constant="7" id="UzA-x2-JZA"/>
                 <constraint firstItem="dmF-hl-yrS" firstAttribute="top" secondItem="IT6-BT-LiE" secondAttribute="bottom" constant="10" id="VTH-Ue-UbR"/>
-                <constraint firstItem="ies-Jz-rKx" firstAttribute="top" secondItem="mVC-3t-vHG" secondAttribute="bottom" constant="10" id="WL0-bM-ajF"/>
                 <constraint firstItem="dmF-hl-yrS" firstAttribute="trailing" secondItem="IT6-BT-LiE" secondAttribute="trailing" id="Zrj-22-m4B"/>
                 <constraint firstItem="ECQ-la-Fx6" firstAttribute="centerY" secondItem="mVC-3t-vHG" secondAttribute="centerY" id="ePc-NF-Oui"/>
-                <constraint firstAttribute="trailing" secondItem="r7p-cY-18a" secondAttribute="trailing" constant="24" id="hiX-9I-6nJ"/>
+                <constraint firstItem="dmF-hl-yrS" firstAttribute="leading" secondItem="JnG-cl-jqe" secondAttribute="leading" constant="22" id="kVu-Zh-lTo"/>
                 <constraint firstItem="mVC-3t-vHG" firstAttribute="top" secondItem="dmF-hl-yrS" secondAttribute="bottom" constant="10" id="oF9-Uo-Kyy"/>
                 <constraint firstItem="IT6-BT-LiE" firstAttribute="top" secondItem="JnG-cl-jqe" secondAttribute="top" constant="18" id="qWt-kz-cWr"/>
                 <constraint firstItem="07C-vU-AF6" firstAttribute="leading" secondItem="3M9-D9-aju" secondAttribute="leading" id="rPB-aK-rZY"/>
-                <constraint firstItem="ies-Jz-rKx" firstAttribute="trailing" secondItem="IT6-BT-LiE" secondAttribute="trailing" id="rxB-SN-XGj"/>
                 <constraint firstItem="ECQ-la-Fx6" firstAttribute="leading" secondItem="3M9-D9-aju" secondAttribute="leading" id="yu5-xa-2ur"/>
+                <constraint firstAttribute="trailing" secondItem="07C-vU-AF6" secondAttribute="trailing" constant="22" id="za7-HY-eaS"/>
                 <constraint firstItem="07C-vU-AF6" firstAttribute="centerY" secondItem="dmF-hl-yrS" secondAttribute="centerY" id="zov-bc-BCt"/>
             </constraints>
             <point key="canvasLocation" x="-301" y="-19"/>
