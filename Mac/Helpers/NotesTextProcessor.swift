@@ -338,7 +338,7 @@ public class NotesTextProcessor {
             let allowedCharacters = CharacterSet(bitmapRepresentation: CharacterSet.urlPathAllowed.bitmapRepresentation)
             let escapedString = lintTitle.addingPercentEncoding(withAllowedCharacters: allowedCharacters)!
             
-            let newLink = "[\(lintTitle)](miaoyan://find/\(escapedString))"
+            let newLink = "[\(lintTitle)](miaoyan://goto/\(escapedString))"
             resultString = resultString.replacingOccurrences(of: "[[\(lintTitle)]]", with: newLink)
         })
         
@@ -665,7 +665,7 @@ public class NotesTextProcessor {
             _range.length = _range.length - 4
             
             let appLink = attributedString.mutableString.substring(with: _range)
-            attributedString.addAttribute(.link, value: "miaoyan://find/" + appLink, range: innerRange)
+            attributedString.addAttribute(.link, value: "miaoyan://goto/" + appLink, range: innerRange)
         }
         
         // We detect and process quotes
@@ -1339,7 +1339,7 @@ public class NotesTextProcessor {
             let to = String.Index(utf16Offset: innerRange.upperBound - 2, in: storage.string)
             
             let appLink = storage.string[from..<to]
-            storage.addAttribute(.link, value: "miaoyan://find/" + appLink, range: innerRange)
+            storage.addAttribute(.link, value: "miaoyan://goto/" + appLink, range: innerRange)
         }
     }
     

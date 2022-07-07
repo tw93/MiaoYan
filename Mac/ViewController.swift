@@ -2080,7 +2080,7 @@ class ViewController: NSViewController,
 
     @IBAction func copyURL(_ sender: Any) {
         if let note = notesTableView.getSelectedNote(), let title = note.title.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) {
-            let name = "miaoyan://find/\(title)"
+            let name = "miaoyan://goto/\(title)"
             let pasteboard = NSPasteboard.general
             pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
             pasteboard.setString(name, forType: NSPasteboard.PasteboardType.string)
