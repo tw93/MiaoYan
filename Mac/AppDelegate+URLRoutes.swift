@@ -1,31 +1,31 @@
-import Foundation
 import Cocoa
-
+import Foundation
 
 extension AppDelegate {
-    
     enum HandledSchemes: String {
-        case miaoyan = "miaoyan"
-        case nv = "nv"
+        case miaoyan
+        case nv
         case nvALT = "nvalt"
-        case file = "file"
+        case file
     }
     
     enum MiaoYanRoutes: String {
-        case find = "find"
-        case new = "new"
+        case find
+        case new
+        case goto
     }
     
     enum NvALTRoutes: String {
-        case find = "find"
+        case find
         case blank = ""
-        case make = "make"
+        case make
+        case goto
     }
     
     func application(_ application: NSApplication, open urls: [URL]) {
         guard var url = urls.first,
-            let scheme = url.scheme
-            else { return }
+              let scheme = url.scheme
+        else { return }
 
         let path = url.absoluteString.escapePlus()
         if let escaped = URL(string: path) {
@@ -34,8 +34,8 @@ extension AppDelegate {
 
         switch scheme {
         case HandledSchemes.file.rawValue:
-            if nil != ViewController.shared() {
-                self.openNotes(urls: urls)
+            if ViewController.shared() != nil {
+                openNotes(urls: urls)
             } else {
                 self.urls = urls
             }
@@ -59,12 +59,12 @@ extension AppDelegate {
     func importNotes(urls: [URL]) {
         guard let vc = ViewController.shared() else { return }
 
-        var importedNote: Note? = nil
-        var sidebarIndex: Int? = nil
+        var importedNote: Note?
+        var sidebarIndex: Int?
 
         for url in urls {
             if let items = vc.storageOutlineView.sidebarItems, let note = Storage.sharedInstance().getBy(url: url) {
-                if let sidebarItem = items.first(where: { ($0 as? SidebarItem)?.project == note.project}) {
+                if let sidebarItem = items.first(where: { ($0 as? SidebarItem)?.project == note.project }) {
                     sidebarIndex = vc.storageOutlineView.row(forItem: sidebarItem)
                     importedNote = note
                 }
@@ -80,9 +80,9 @@ extension AppDelegate {
         if let note = importedNote, let si = sidebarIndex {
             vc.storageOutlineView.selectRowIndexes([si], byExtendingSelection: false)
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35, execute: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
                 vc.notesTableView.setSelected(note: note)
-            })
+            }
         }
     }
     
@@ -96,6 +96,8 @@ extension AppDelegate {
             RouteMiaoYanFind(url)
         case MiaoYanRoutes.new.rawValue:
             RouteMiaoYanNew(url)
+        case MiaoYanRoutes.goto.rawValue:
+            RouteMiaoYanGoto(url)
         default:
             break
         }
@@ -105,12 +107,35 @@ extension AppDelegate {
     func RouteMiaoYanFind(_ url: URL) {
         let lastPath = url.lastPathComponent
 
-        guard nil != ViewController.shared() else {
-            self.searchQuery = lastPath
+        guard ViewController.shared() != nil else {
+            searchQuery = lastPath
             return
         }
 
         search(query: lastPath)
+    }
+
+    func RouteMiaoYanGoto(_ url: URL) {
+        let lastPath = url.lastPathComponent
+
+        guard ViewController.shared() != nil else {
+            searchQuery = lastPath
+            return
+        }
+        goto(query: lastPath)
+    }
+    
+    func goto(query: String) {
+        guard let controller = ViewController.shared() else { return }
+
+        controller.search.stringValue = query
+        controller.updateTable(search: true, searchText: query) {
+            if let note = controller.notesTableView.noteList.first {
+                DispatchQueue.main.async {
+                    controller.search.suggestAutocomplete(note, filter: query)
+                }
+            }
+        }
     }
 
     func search(query: String) {
@@ -143,14 +168,13 @@ extension AppDelegate {
         
         if let txtParam = url["txt"] {
             body = txtParam
-        }
-        else if let htmlParam = url["html"] {
+        } else if let htmlParam = url["html"] {
             body = htmlParam
         }
         
-        guard nil != ViewController.shared() else {
-            self.newName = title
-            self.newContent = body
+        guard ViewController.shared() != nil else {
+            newName = title
+            newContent = body
             return
         }
 
@@ -163,7 +187,6 @@ extension AppDelegate {
         controller.createNote(name: name, content: content)
     }
     
-    
     // MARK: - nvALT routes, for compatibility
     
     func NvALTRouter(_ url: URL) {
@@ -174,9 +197,10 @@ extension AppDelegate {
             RouteNvAltFind(url)
         case NvALTRoutes.make.rawValue:
             RouteNvAltMake(url)
+        case NvALTRoutes.goto.rawValue:
+            RouteNvAltGoto(url)
         default:
             RouteNvAltBlank(url)
-            break
         }
     }
     
@@ -186,6 +210,10 @@ extension AppDelegate {
     ///
     func RouteNvAltFind(_ url: URL) {
         RouteMiaoYanFind(url)
+    }
+    
+    func RouteNvAltGoto(_ url: URL) {
+        RouteMiaoYanGoto(url)
     }
     
     /// Handle URLs in the format nv://note%20title
@@ -217,8 +245,7 @@ extension AppDelegate {
         
         if let txtParam = url["txt"] {
             body = txtParam
-        }
-        else if let htmlParam = url["html"] {
+        } else if let htmlParam = url["html"] {
             body = htmlParam
         }
         

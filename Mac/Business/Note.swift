@@ -479,9 +479,7 @@ public class Note: NSObject {
     func getPrettifiedContent() -> String {
         var content = content.string
 
-        #if NOT_EXTENSION || os(OSX)
         content = NotesTextProcessor.convertAppLinks(in: content)
-        #endif
 
         return cleanMetaData(content: content)
     }
