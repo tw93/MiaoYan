@@ -81,6 +81,7 @@ class SidebarProjectView: NSOutlineView,
     }
 
     override func keyDown(with event: NSEvent) {
+        guard let vc = ViewController.shared() else { return }
         if event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_N {
             addProject("")
             return
@@ -101,6 +102,15 @@ class SidebarProjectView: NSOutlineView,
             return
         }
 
+        if event.keyCode == kVK_RightArrow {
+            if let fr = window?.firstResponder, fr.isKind(of: NSTextView.self) {
+                super.keyUp(with: event)
+                return
+            }
+
+            vc.notesTableView.window?.makeFirstResponder(vc.notesTableView)
+            vc.notesTableView.selectRowIndexes([0], byExtendingSelection: false)
+        }
         // Tab to search
         if event.keyCode == 48 {
             viewDelegate?.search.becomeFirstResponder()
