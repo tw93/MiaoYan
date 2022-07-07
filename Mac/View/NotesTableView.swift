@@ -43,7 +43,9 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
             }
 
             vc.storageOutlineView.window?.makeFirstResponder(vc.storageOutlineView)
-            vc.storageOutlineView.selectRowIndexes([1], byExtendingSelection: false)
+            let index = vc.storageOutlineView.selectedRow
+            vc.storageOutlineView.selectRowIndexes([index], byExtendingSelection: false)
+            deselectNotes()
         }
 
         super.keyUp(with: event)
