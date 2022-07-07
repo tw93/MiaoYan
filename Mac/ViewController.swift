@@ -582,6 +582,19 @@ class ViewController: NSViewController,
         if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), search.hasFocus() {
             search.stringValue.removeAll()
             configureNotesList()
+            refreshMiaoYanNum()
+            return false
+        }
+
+        if event.keyCode == kVK_Escape, search.hasFocus() {
+            search.stringValue.removeAll()
+            configureNotesList()
+            refreshMiaoYanNum()
+            return false
+        }
+
+        if event.keyCode == kVK_Escape, titleLabel.hasFocus() {
+            switchTitleToEditMode()
             return false
         }
 
@@ -1820,31 +1833,25 @@ class ViewController: NSViewController,
     }
 
     func enablePreview() {
-        // Preview mode doesn't support text search
         cancelTextSearch()
-
-        guard let vc = ViewController.shared() else { return }
-        vc.editArea.window?.makeFirstResponder(vc.notesTableView)
+        editArea.window?.makeFirstResponder(notesTableView)
         view.window!.title = NSLocalizedString("妙言「预览」", comment: "")
         UserDefaultsManagement.preview = true
         refillEditArea()
-        vc.titleLabel.isEditable = false
+        titleLabel.isEditable = false
     }
 
     func disablePreview() {
         view.window!.title = NSLocalizedString("妙言「编辑」", comment: "")
         UserDefaultsManagement.preview = false
-
-        guard let vc = ViewController.shared() else { return }
         editArea.markdownView?.removeFromSuperview()
         editArea.markdownView = nil
 
         guard let editor = editArea else { return }
         editor.subviews.removeAll(where: { $0.isKind(of: MPreviewView.self) })
-
         refillEditArea()
         focusEditArea()
-        vc.titleLabel.isEditable = true
+        titleLabel.isEditable = false
     }
 
     func togglePreview() {
