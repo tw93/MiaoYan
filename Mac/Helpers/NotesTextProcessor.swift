@@ -318,7 +318,7 @@ public class NotesTextProcessor {
     }
     
     /**
-     Coverts App links:`[[Link Title]]` to Markdown: `[Link](miaoyan://find/link%20title)`
+     Coverts App links:`[[Link Title]]` to Markdown: `[Link](miaoyan://goto/link%20title)`
      
      - parameter content:      A string containing CommonMark Markdown
      
@@ -339,6 +339,7 @@ public class NotesTextProcessor {
             let escapedString = lintTitle.addingPercentEncoding(withAllowedCharacters: allowedCharacters)!
             
             let newLink = "[\(lintTitle)](miaoyan://goto/\(escapedString))"
+            
             resultString = resultString.replacingOccurrences(of: "[[\(lintTitle)]]", with: newLink)
         })
         
@@ -665,6 +666,7 @@ public class NotesTextProcessor {
             _range.length = _range.length - 4
             
             let appLink = attributedString.mutableString.substring(with: _range)
+            
             attributedString.addAttribute(.link, value: "miaoyan://goto/" + appLink, range: innerRange)
         }
         

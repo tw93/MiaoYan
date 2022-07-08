@@ -116,25 +116,36 @@ extension AppDelegate {
     }
 
     func RouteMiaoYanGoto(_ url: URL) {
-        let lastPath = url.lastPathComponent
-
-        guard ViewController.shared() != nil else {
-            searchQuery = lastPath
-            return
-        }
-        goto(query: lastPath)
-    }
-    
-    func goto(query: String) {
-        guard let controller = ViewController.shared() else { return }
-
-        controller.search.stringValue = query
-        controller.updateTable(search: true, searchText: query) {
-            if let note = controller.notesTableView.noteList.first {
+        let query = url.lastPathComponent
+        guard let vc = ViewController.shared() else { return }
+        let notes = vc.storage.noteList.filter { $0.title == query }
+        if notes.count > 1 {
+            vc.updateTable {
                 DispatchQueue.main.async {
-                    controller.search.suggestAutocomplete(note, filter: query)
+                    vc.storageOutlineView.selectRowIndexes([0], byExtendingSelection: false)
+                    self.RouteMiaoYanFind(url)
+                    vc.toastMoreTitle()
                 }
             }
+        } else if notes.count == 1 {
+            if let items = vc.storageOutlineView.sidebarItems {
+                if let sidebarItem = items.first(where: { ($0 as? SidebarItem)?.project == notes[0].project }) {
+                    let sidebarIndex = vc.storageOutlineView.row(forItem: sidebarItem)
+                    vc.updateTable {
+                        DispatchQueue.main.async {
+                            vc.storageOutlineView.selectRowIndexes([sidebarIndex], byExtendingSelection: false)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.04) {
+                                if let index = vc.notesTableView.noteList.firstIndex(where: { $0 === notes[0] }) {
+                                    vc.notesTableView.selectRowIndexes([index], byExtendingSelection: false)
+                                    vc.notesTableView.scrollRowToVisible(row: index, animated: true)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            vc.toastNoTitle()
         }
     }
 

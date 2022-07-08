@@ -10,11 +10,11 @@ public extension String {
     // Search the string for the existence of any of the terms in the provided array of terms.
     // Inspired by magic from https://stackoverflow.com/a/41902740/2778502
     func localizedStandardContains<S: StringProtocol>(_ terms: [S]) -> Bool {
-        return terms.first(where: { self.localizedStandardContains($0) }) != nil
+        terms.first(where: { self.localizedStandardContains($0) }) != nil
     }
 
     func trim() -> String {
-        return self.trimmingCharacters(in: NSCharacterSet.whitespaces)
+        self.trimmingCharacters(in: NSCharacterSet.whitespaces)
     }
 
     func getPrefixMatchSequentially(char: String) -> String? {
@@ -37,7 +37,7 @@ public extension String {
 
     func localizedCaseInsensitiveContainsTerms(_ terms: [Substring]) -> Bool {
         // Use magic from https://stackoverflow.com/a/41902740/2778502
-        return terms.first(where: { !self.localizedLowercase.contains($0) }) == nil
+        terms.first(where: { !self.localizedLowercase.contains($0) }) == nil
     }
 
     func removeLastNewLine() -> String {
@@ -58,12 +58,22 @@ public extension String {
         return false
     }
 
+    func isMiaoYanPath() -> Bool {
+        let pattern = ""
+
+        if let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) {
+            return regex.firstMatch(in: self, options: [], range: NSRange(location: 0, length: count)) != nil
+        }
+
+        return false
+    }
+
     var isValidUUID: Bool {
-        return UUID(uuidString: self) != nil
+        UUID(uuidString: self) != nil
     }
 
     func escapePlus() -> String {
-        return self.replacingOccurrences(of: "+", with: "%20")
+        self.replacingOccurrences(of: "+", with: "%20")
     }
 
     func matchingStrings(regex: String) -> [[String]] {
@@ -101,13 +111,13 @@ public extension String {
     }
 
     var isNumber: Bool {
-        return !isEmpty && rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil
+        !isEmpty && rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil
     }
 }
 
 public extension StringProtocol where Index == String.Index {
     func nsRange(from range: Range<Index>) -> NSRange {
-        return NSRange(range, in: self)
+        NSRange(range, in: self)
     }
 }
 
