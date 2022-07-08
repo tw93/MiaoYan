@@ -848,13 +848,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
             NSWorkspace.shared.open(mail)
             return
         }
-
+        
         let range = NSRange(location: charIndex, length: 1)
 
         let char = attributedSubstring(forProposedRange: range, actualRange: nil)
         if char?.attribute(.attachment, at: 0, effectiveRange: nil) == nil {
             if NSEvent.modifierFlags.contains(.command), let link = link as? String, let url = URL(string: link) {
                 _ = try? NSWorkspace.shared.open(url, options: .withoutActivation, configuration: [:])
+
                 return
             }
 
@@ -863,6 +864,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         let url = URL(fileURLWithPath: link as! String)
+
         NSWorkspace.shared.open(url)
     }
 
