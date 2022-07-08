@@ -158,3 +158,7 @@
 "🙊 Please make sure your Mac is installed %@ ~" = "🙊 请确保你的 Mac 已安装并配置好了 %@ ~";
 
 "🙊 In single open mode, Exit with Command+Shift+W ~" = "🙊 单独编辑器模式中，可 Command+Shift+W 退出~";
+
+"😶‍🌫️ Please make sure your title exists~" = "😶‍🌫️ 请确定你填写的标题是否存在~";
+
+"🍭 Found that there are multiple titles of this~" = "🍭 发现这里有多个标题，使用搜索能力~";
