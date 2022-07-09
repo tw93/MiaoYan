@@ -30,7 +30,7 @@
 
 ## Why do this
 
-- I have tried many note-taking applications before, such as WizNote, Ulysses (no preview), Quiver (not updated for years), MWeb (complicated functions), Bear (Markdown images and other rich formats are not supported),Typora (unaccustomed to the WYSIWYG pattern), for various reasons, I did not find a good Markdown application, so I had the idea of doing MiaoYan.
+- I have tried many note-taking applications before, such as WizNote, Ulysses, Quiver, MWeb, Bear, Typora, for various reasons, I did not find a conventional Markdown application, so I had the idea of doing MiaoYan.
 - My job is front-end development, but also can develop iOS App, love to toss new things, so develop MiaoYan as a fun leisure.
 
 ## Download
