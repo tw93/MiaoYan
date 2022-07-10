@@ -2164,7 +2164,7 @@ class ViewController: NSViewController,
     public func toastNoTitle() {
         toast(message: NSLocalizedString("😶‍🌫️ Please make sure your title exists~", comment: ""))
     }
-    
+
     public func toastMoreTitle() {
         toast(message: NSLocalizedString("🍭 Found that there are multiple titles of this~", comment: ""))
     }

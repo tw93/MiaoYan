@@ -841,7 +841,6 @@ public class Note: NSObject {
         let now = dateFormatter.formatForDuplicate(Date())
         url.appendPathComponent(name + " " + now)
         url.appendPathExtension(ext)
-
         try? FileManager.default.copyItem(at: self.url, to: url)
     }
 
