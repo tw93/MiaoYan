@@ -35,7 +35,7 @@
 
 ## 安装
 
-- 方式一：从 <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a> 中下载最新的 MiaoYan.dmg 安装包，双击安装即可，如果在速度慢，也可以试试 <a href="https://miaoyan.vercel.app/Release/MiaoYan.dmg" target="_blank">镜像</a>。
+- 方式一：从 <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a> 中下载最新的 MiaoYan.dmg 安装包，双击安装即可，速度慢的话可以试试 <a href="https://miaoyan.vercel.app/Release/MiaoYan.dmg" target="_blank">镜像</a>。
 - 方式二：使用命令行安装 ```brew install miaoyan --cask```。
 
 ## 初始化使用
