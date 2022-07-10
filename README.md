@@ -38,6 +38,12 @@
 - 从 <a href="https://github.com/tw93/MiaoYan/releases/latest" target="_blank">GitHub Releases</a> 中下载最新的 MiaoYan.dmg 安装包，双击安装即可。
 - 如果在国内下载速度很慢，你可以试试 <a href="https://miaoyan.app/Release/MiaoYan.dmg" target="_blank">Vercel</a> 来下载最新版本。
 
+## 使用Brew安装
+
+```shell
+brew install miaoyan --cask
+```
+
 ## 初始化使用
 
 1. 可以在 iCloud 或根目录下创建一个 `MiaoYan` 的文件夹，打开妙言的设置，将默认存储地址修改成这个。
