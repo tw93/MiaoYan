@@ -848,7 +848,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             NSWorkspace.shared.open(mail)
             return
         }
-        
+
         let range = NSRange(location: charIndex, length: 1)
 
         let char = attributedSubstring(forProposedRange: range, actualRange: nil)
@@ -995,10 +995,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
         if let path = ImagesProcessor.writeFile(data: data, url: url, note: note, ext: ext) {
             var newLineImage = NSAttributedString(string: "![](\(path))")
             let imagePath = "\(note.project.url.path)\(path)"
-
             let tempPath = URL(fileURLWithPath: imagePath)
-
-            if UserDefaultsManagement.defaultPicUpload == "PicGo" {
+            let picType = UserDefaultsManagement.defaultPicUpload
+            if picType == "PicGo" {
                 vc.toastUpload(status: true)
                 postToPicGo(imagePath: imagePath) { result, error in
                     if let result = result {
@@ -1015,9 +1014,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
                     self.breakUndoCoalescing()
                 }
             } else {
-                if UserDefaultsManagement.defaultPicUpload == "uPic" {
+                if picType == "uPic" || picType == "Picsee" {
                     vc.toastUpload(status: true)
-                    let runList = run("/Applications/uPic.app/Contents/MacOS/uPic -o url -u \(imagePath)")
+                    let runList = run("/Applications/\(picType).app/Contents/MacOS/\(picType) -o url -u \(imagePath)")
                     let imageDesc = runList?.components(separatedBy: "\n") ?? []
                     if imageDesc.count > 3 {
                         let imagePath = imageDesc[4]
