@@ -23,9 +23,10 @@
       <pubDate>周一, 11 7月 2022 22:00:44 +0800</pubDate>
       <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V0.8.0.zip" sparkle:shortVersionString="0.8.0" sparkle:version="0.8.0" sparkle:edSignature="ssXpXhLQ1MxdDQQr65EOSL/OjFdBY2esoxcZ+jZMCDpzaK/VV2Kq6+oFJYOUphgO3DkdQBh4sFxIjx+MVmhMCA==" length="31683102" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-      <item>
-        <title>0.7.0</title>
-        <description><![CDATA[
+    </item>
+    <item>
+      <title>0.7.0</title>
+      <description><![CDATA[
             <h3>更新记录：</h3>
             <ol>
              <li>🎉 终于支持 uPic、PicGo 图床了，可设置中打开，支持复制图片和截图上传</li>
@@ -40,14 +41,14 @@
              <li>🏓 Support to copy the selected rich text directly from the preview interface with command+c.</li>
              <li>🙈 Continuously optimize the editor experience, such as new creation, deletion, row height, focus, search, and number of notes.</li>
             </ol>
-            ]]>        </description>
-        <pubDate>周日, 3 7月 2022 21:48:44 +0800</pubDate>
-        <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V0.7.0.zip" sparkle:shortVersionString="0.7.0" sparkle:version="0.7.0" sparkle:edSignature="6SGKciiJ0w1fGbO+S+heouGnto/zVyLHzKCQPOb9KtTzmYcWggG1rkhVz3c46Y6Iyz30gz4SzpqC/c9hcfGODA==" length="31643945" type="application/octet-stream" />
-        <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-      </item>
-      <item>
-        <title>0.6.2</title>
-        <description><![CDATA[
+            ]]>      </description>
+      <pubDate>周日, 3 7月 2022 21:48:44 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V0.7.0.zip" sparkle:shortVersionString="0.7.0" sparkle:version="0.7.0" sparkle:edSignature="6SGKciiJ0w1fGbO+S+heouGnto/zVyLHzKCQPOb9KtTzmYcWggG1rkhVz3c46Y6Iyz30gz4SzpqC/c9hcfGODA==" length="31643945" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
+      <title>0.6.2</title>
+      <description><![CDATA[
             <h3>更新记录：</h3>
             <ol>
              <li>🎉 终于支持了 PlantUML、Mermaid、LaTeX 的渲染，LaTeX 需设置打开</li>
@@ -62,14 +63,14 @@
              <li>🙈  Repair the article and create a new minimum probability crash. Thank sbccznfy for helping to reproduce it.</li>
              <li>🛠 The command + H window is hidden, the reading effect is continuously optimized, menu layout optimization.</li>
             </ol>
-            ]]>        </description>
-        <pubDate>周四, 29 6月 2022 21:48:44 +0800</pubDate>
-        <enclosure url="https://qpluspicture.oss-cn-beijing.aliyuncs.com/9FmyfW/MiaoYan_V0.6.2.zip" sparkle:shortVersionString="0.6.2" sparkle:version="0.6.2" sparkle:edSignature="e1P0Q9VRIRf/3JXZL+xn0qQdkBIvD8XRfbYrzrj8jQKmIYyMaWG6z4Tv0s6/9X+YAte88tJoyIIkQE/FW2dWAA==" length="29801665" type="application/octet-stream" />
-        <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-      </item>
-      <item>
-        <title>0.6.1</title>
-        <description><![CDATA[
+            ]]>      </description>
+      <pubDate>周四, 29 6月 2022 21:48:44 +0800</pubDate>
+      <enclosure url="https://qpluspicture.oss-cn-beijing.aliyuncs.com/9FmyfW/MiaoYan_V0.6.2.zip" sparkle:shortVersionString="0.6.2" sparkle:version="0.6.2" sparkle:edSignature="e1P0Q9VRIRf/3JXZL+xn0qQdkBIvD8XRfbYrzrj8jQKmIYyMaWG6z4Tv0s6/9X+YAte88tJoyIIkQE/FW2dWAA==" length="29801665" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
+      <title>0.6.1</title>
+      <description><![CDATA[
             <h3>更新记录：</h3>
             <ol>
              <li>🎉 侧边栏支持手势收起展开，可以在标题栏位置双指滑动试试</li>
@@ -84,14 +85,14 @@
              <li>🏓 Optimize the editor experience, better support the ability of table display, row height, selection and search.</li>
              <li>🛠 Fixed occasional horizontal scrolling in the sidebar, Initialize Title Focus, and table preview in dark color.</li>
             </ol>
-            ]]>        </description>
-        <pubDate>周五, 24 6月 2022 19:48:44 +0800</pubDate>
-        <enclosure url="https://qpluspicture.oss-cn-beijing.aliyuncs.com/NSfZYH/MiaoYan_V0.6.1.zip" sparkle:shortVersionString="0.6.1" sparkle:version="0.6.1" sparkle:edSignature="za2DuXxkpZ/6vjThZRCLm71a+do4g39DKrDbm6VIWzpcbncHhzeD+JKirgLV2hu7QgXnE4y3BoK5OztUCzJfAQ==" length="29782440" type="application/octet-stream" />
-        <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-      </item>
-      <item>
-        <title>0.6.0</title>
-        <description><![CDATA[
+            ]]>      </description>
+      <pubDate>周五, 24 6月 2022 19:48:44 +0800</pubDate>
+      <enclosure url="https://qpluspicture.oss-cn-beijing.aliyuncs.com/NSfZYH/MiaoYan_V0.6.1.zip" sparkle:shortVersionString="0.6.1" sparkle:version="0.6.1" sparkle:edSignature="za2DuXxkpZ/6vjThZRCLm71a+do4g39DKrDbm6VIWzpcbncHhzeD+JKirgLV2hu7QgXnE4y3BoK5OztUCzJfAQ==" length="29782440" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
+      <title>0.6.0</title>
+      <description><![CDATA[
             <h3>更新记录：</h3>
             <ol>
              <li>🙊 这次真的支持 ARM64 打包了，右键显示简介为「通用架构」🎉 </li>
@@ -106,14 +107,14 @@
              <li>🐱 Double click the title bar in the upper left corner to zoom in to the maximum size of the window and zoom out to the original size.</li>
              <li>🩴 Re optimized the document sorting function and added the ascending and descending options.</li>
             </ol>
-            ]]>        </description>
-        <pubDate>周二, 21 6月 2022 19:48:44 +0800</pubDate>
-        <enclosure url="https://qpluspicture.oss-cn-beijing.aliyuncs.com/ctDUin/MiaoYan_V0.6.0.zip" sparkle:shortVersionString="0.6.0" sparkle:version="0.6.0" sparkle:edSignature="BtQTAxSEVpsR0/0cGgkTbXiB0o/d4ME2DIVNG4K4YDqAbahfqSPhpAnqwtC9Qqoz1vQMldqEkBXoX5vYSfZNCw==" length="29781049" type="application/octet-stream" />
-        <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-      </item>
-      <item>
-        <title>0.5.1</title>
-        <description><![CDATA[
+            ]]>      </description>
+      <pubDate>周二, 21 6月 2022 19:48:44 +0800</pubDate>
+      <enclosure url="https://qpluspicture.oss-cn-beijing.aliyuncs.com/ctDUin/MiaoYan_V0.6.0.zip" sparkle:shortVersionString="0.6.0" sparkle:version="0.6.0" sparkle:edSignature="BtQTAxSEVpsR0/0cGgkTbXiB0o/d4ME2DIVNG4K4YDqAbahfqSPhpAnqwtC9Qqoz1vQMldqEkBXoX5vYSfZNCw==" length="29781049" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
+      <title>0.5.1</title>
+      <description><![CDATA[
             <h3>更新记录：</h3>
             <ol>
              <li>🎉 支持 ARM64 打包，不过我不是M1电脑，辛苦你帮忙试试 </li>
@@ -128,14 +129,14 @@
              <li>🐱 Optimize the default width and folder when using it for the first time, and change the app name in Chinese to 妙言.</li>
              <li>🩴 Change the domain name of miaoyan to <a href="https://miaoyan.app/">miaoyan.app</a>.</li>
             </ol>
-            ]]>        </description>
-        <pubDate>周日, 19 6月 2022 09:48:44 +0800</pubDate>
-        <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.5.1.zip" sparkle:shortVersionString="0.5.1" sparkle:version="0.5.1" sparkle:edSignature="/PikEGIJ6J2Ij02bEHccTXupqgvMNXGwy/MJPw7AnuAAxOBusNGCkSzOf1zaXg2MitCTowZnuRcbPnvN5BcUCg==" length="27959489" type="application/octet-stream" />
-        <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-      </item>
-      <item>
-        <title>0.5.0</title>
-        <description><![CDATA[
+            ]]>      </description>
+      <pubDate>周日, 19 6月 2022 09:48:44 +0800</pubDate>
+      <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.5.1.zip" sparkle:shortVersionString="0.5.1" sparkle:version="0.5.1" sparkle:edSignature="/PikEGIJ6J2Ij02bEHccTXupqgvMNXGwy/MJPw7AnuAAxOBusNGCkSzOf1zaXg2MitCTowZnuRcbPnvN5BcUCg==" length="27959489" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
+      <title>0.5.0</title>
+      <description><![CDATA[
             <h3>更新记录：</h3>
             <ol>
              <li>🎉 支持演示模式，去试试 command + 4 </li>
@@ -152,14 +153,14 @@
              <li>😂 Support preview mode, full right click copy rich text to other places.</li>
              <li>🛠 Fixed reset of selected current item in settings, completed compatibility with Mojave system.</li>
             </ol>
-            ]]>        </description>
-        <pubDate>周六, 18 6月 2022 09:48:44 +0800</pubDate>
-        <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.5.0.zip" sparkle:shortVersionString="0.5.0" sparkle:version="0.5.0" sparkle:edSignature="m/4ilavuIJDeGA0AoRL/07TJs0nW0QqXmJ3iFxBdc6yIWYsfvIvNc722Pi8WpqdMKT0IjI2fJlEhkzZq4Wd4DA==" length="27976779" type="application/octet-stream" />
-        <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-      </item>
-      <item>
-        <title>0.4.2</title>
-        <description><![CDATA[
+            ]]>      </description>
+      <pubDate>周六, 18 6月 2022 09:48:44 +0800</pubDate>
+      <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.5.0.zip" sparkle:shortVersionString="0.5.0" sparkle:version="0.5.0" sparkle:edSignature="m/4ilavuIJDeGA0AoRL/07TJs0nW0QqXmJ3iFxBdc6yIWYsfvIvNc722Pi8WpqdMKT0IjI2fJlEhkzZq4Wd4DA==" length="27976779" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
+      <title>0.4.2</title>
+      <description><![CDATA[
             <h3>更新记录：</h3>
             <ol>
              <li>🎉 终于支持设置字体和字号啦🙊🙊🙊🙊 </li>
@@ -175,14 +176,14 @@
             <li> 🍭 The code supports pre tags, adds fade background, and optimizes visual presentation.</li>
             <li> 🏂 The copied pictures can be pasted, default width optimization, editing and preview switching optimization.</li> <li> 🛠 Fix the problem that the title can be edited in preview mode.</li>
             </ol>
-            ]]>        </description>
-        <pubDate>周二, 14 6月 2022 23:48:44 +0800</pubDate>
-        <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.4.0.zip" sparkle:shortVersionString="0.4.0" sparkle:version="0.4.0" sparkle:edSignature="kFMDQRB2RiplVKeMJXO4bnC157ieOXZ1LRUoqg+95dT2tINfVsB6/8mTblImlaD8kvojd4M7nU/o5lEVBX2iBg==" length="27952152" type="application/octet-stream" />
-        <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-      </item>
-      <item>
-        <title>0.3.2</title>
-        <description><![CDATA[
+            ]]>      </description>
+      <pubDate>周二, 14 6月 2022 23:48:44 +0800</pubDate>
+      <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.4.0.zip" sparkle:shortVersionString="0.4.0" sparkle:version="0.4.0" sparkle:edSignature="kFMDQRB2RiplVKeMJXO4bnC157ieOXZ1LRUoqg+95dT2tINfVsB6/8mTblImlaD8kvojd4M7nU/o5lEVBX2iBg==" length="27952152" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
+      <title>0.3.2</title>
+      <description><![CDATA[
             <h3>更新记录：</h3>
             <ol>
              <li>🛠 修复预览页面默认字体不是霞鹜文楷的 Bug</li>
@@ -193,14 +194,14 @@
              <li>🛠 Fix bug that the default font of preview is not LXGW WenKai</li>
              <li>🛠 Fix bug that will not appear in the mission control after the window is hidden</li>
             </ol>
-            ]]>        </description>
-        <pubDate>周日, 11 6月 2022 23:48:44 +0800</pubDate>
-        <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.3.2.zip" sparkle:shortVersionString="0.3.2" sparkle:version="0.3.2" sparkle:edSignature="i4dbBbhS9gyedCAsuI6/zpqBp23iDNDIX2qIZwW7oMxLyXRgbALednobRutpUSXAY1LsjlkVCdr0lT2ZFZghAQ==" length="31237022" type="application/octet-stream" />
-        <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-      </item>
-      <item>
-        <title>0.3.1</title>
-        <description><![CDATA[
+            ]]>      </description>
+      <pubDate>周日, 11 6月 2022 23:48:44 +0800</pubDate>
+      <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.3.2.zip" sparkle:shortVersionString="0.3.2" sparkle:version="0.3.2" sparkle:edSignature="i4dbBbhS9gyedCAsuI6/zpqBp23iDNDIX2qIZwW7oMxLyXRgbALednobRutpUSXAY1LsjlkVCdr0lT2ZFZghAQ==" length="31237022" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
+      <title>0.3.1</title>
+      <description><![CDATA[
             <h3>更新记录：</h3>
             <ol>
              <li>🛠 修复全屏高度的问题</li>
@@ -211,29 +212,29 @@
              <li>🛠 Fix full screen height bug.</li>
              <li>🎉 The official website is ready. <a href="https://miaoyan.vercel.app">https://miaoyan.vercel.app</a> </li>
             </ol>
-            ]]>        </description>
-        <pubDate>周六, 11 6月 2022 11:48:44 +0800</pubDate>
-        <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.3.1.zip" sparkle:shortVersionString="0.3.1" sparkle:version="0.3.1" sparkle:edSignature="3SWeDCsn/OOZ0j78JeIUSQ/HLCbLYuzSSdDsQ6u37DiF7w1p+7sIFoSRyZQLoV77HEmJ5Q/N7uP7PHWl1USLBQ==" length="20443833" type="application/octet-stream" />
-        <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-      </item>
+            ]]>      </description>
+      <pubDate>周六, 11 6月 2022 11:48:44 +0800</pubDate>
+      <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.3.1.zip" sparkle:shortVersionString="0.3.1" sparkle:version="0.3.1" sparkle:edSignature="3SWeDCsn/OOZ0j78JeIUSQ/HLCbLYuzSSdDsQ6u37DiF7w1p+7sIFoSRyZQLoV77HEmJ5Q/N7uP7PHWl1USLBQ==" length="20443833" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
 
-      <item>
-        <title>0.3.0</title>
-        <description><![CDATA[
+    <item>
+      <title>0.3.0</title>
+      <description><![CDATA[
             <ol>
              <li>🎉 支持英语，可去设置中更改 / Support English, you can go to the settings to change.</li>
              <li>🍭 视觉优化，如文档日期显示时间、小 icon 优化、显示等 / Visual beautification, such as document date display time, small icon beautification, display, etc.</li>
              <li>😂 新增帮助菜单，可以关注我以及给妙言反馈问题 / New help menu, you can follow me and give feedback to MiaoYan</li>
             </ul>
-            ]]>        </description>
-        <pubDate>周四, 09 6月 2022 14:48:44 +0800</pubDate>
-        <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.3.0.zip" sparkle:shortVersionString="0.3.0" sparkle:version="0.3.0" sparkle:edSignature="uopBc6FIbDk9imGrJN89zx7nGPrre3PkTeHF41yYWemJbcpayqyCACxj84FBY22aMPfYqwIoa5y0xKk2HR8aCA==" length="19903432" type="application/octet-stream" />
-        <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-      </item>
+            ]]>      </description>
+      <pubDate>周四, 09 6月 2022 14:48:44 +0800</pubDate>
+      <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.3.0.zip" sparkle:shortVersionString="0.3.0" sparkle:version="0.3.0" sparkle:edSignature="uopBc6FIbDk9imGrJN89zx7nGPrre3PkTeHF41yYWemJbcpayqyCACxj84FBY22aMPfYqwIoa5y0xKk2HR8aCA==" length="19903432" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
 
-      <item>
-        <title>0.2.0</title>
-        <description><![CDATA[
+    <item>
+      <title>0.2.0</title>
+      <description><![CDATA[
             <ol>
             <li>全新视觉和编辑预览体验升级，兼容 macOS Monterey 版本</li>
             <li>序号分号等支持自动递增，效果不错</li>
@@ -243,10 +244,10 @@
             <li>支持本地图片的展示和引入</li>
             <li>支持自动更新 App</li>
             </ol>
-            ]]>        </description>
-        <pubDate>周三, 08 6月 2022 14:48:44 +0800</pubDate>
-        <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.2.0.zip" sparkle:shortVersionString="0.2.0" sparkle:version="0.2.0" sparkle:edSignature="qRtdNH5/DxEaS5YjEVFI57w0H2QHmctL/lsU3W4SXj/Es6iZS/FAVYKbBESfYd0397T7Sw2Pd3WxW1lzJEYCBg==" length="19889101" type="application/octet-stream" />
-        <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-      </item>
-    </channel>
-  </rss>
+            ]]>      </description>
+      <pubDate>周三, 08 6月 2022 14:48:44 +0800</pubDate>
+      <enclosure url="https://miaoyan.vercel.app/Release/MiaoYan_V0.2.0.zip" sparkle:shortVersionString="0.2.0" sparkle:version="0.2.0" sparkle:edSignature="qRtdNH5/DxEaS5YjEVFI57w0H2QHmctL/lsU3W4SXj/Es6iZS/FAVYKbBESfYd0397T7Sw2Pd3WxW1lzJEYCBg==" length="19889101" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+  </channel>
+</rss>
