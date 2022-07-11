@@ -91,14 +91,8 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         let i = row(at: point)
 
         if noteList.indices.contains(i) {
-            DispatchQueue.main.async {
-                let selectedRows = self.selectedRowIndexes
-                if !selectedRows.contains(i) {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                        vc.focusTable()
-                    }
-                    return
-                }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.04) {
+                vc.focusTable()
             }
             super.mouseDown(with: event)
         }
@@ -399,7 +393,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         note.invalidateCache()
         DispatchQueue.main.async {
             if let i = self.noteList.firstIndex(of: note) {
-                
                 if let row = self.rowView(atRow: i, makeIfNecessary: false) as? NoteRowView, let cell = row.subviews.first as? NoteCellView {
                     cell.date.stringValue = note.getDateForLabel()
                     cell.attachHeaders(note: note)

@@ -203,14 +203,16 @@ class ViewController: NSViewController,
         guard let vc = ViewController.shared() else { return }
         let size = vc.splitView.subviews[0].frame.width
         let sideSize = vc.sidebarSplitView.subviews[0].frame.width
-        setDividerHidden(hidden: size == 0)
         setSideDividerHidden(hidden: sideSize == 0)
-        setButtonHidden(hidden: size == 0)
         refreshMiaoYanNum()
         if UserDefaultsManagement.isSingleMode {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                 self.hideSidebar("")
                 self.toastInSingleMode()
+            }
+        } else {
+            if size == 0 {
+                showNoteList("")
             }
         }
     }
@@ -530,7 +532,9 @@ class ViewController: NSViewController,
 
         updateTable {
             if let selected = selectedNote, let index = notesTable.getIndex(selected) {
-                notesTable.selectRowIndexes([index], byExtendingSelection: false)
+                DispatchQueue.main.sync {
+                    notesTable.selectRowIndexes([index], byExtendingSelection: false)
+                }
                 self.refillEditArea(cursor: cursor)
             }
         }
@@ -597,7 +601,7 @@ class ViewController: NSViewController,
         }
 
         if event.keyCode == kVK_Escape, titleLabel.hasFocus() {
-            switchTitleToEditMode()
+            focusEditArea()
             return false
         }
 
@@ -651,6 +655,11 @@ class ViewController: NSViewController,
 
                     if let note = EditTextView.note, fr.isKind(of: NotesTableView.self), !(UserDefaultsManagement.preview && !note.isRTF()) {
                         NSApp.mainWindow?.makeFirstResponder(editArea)
+                        return false
+                    }
+
+                    if titleLabel.hasFocus() {
+                        focusEditArea()
                         return false
                     }
                 }
@@ -728,7 +737,6 @@ class ViewController: NSViewController,
         // Search cmd-f
         if event.keyCode == kVK_ANSI_F, event.modifierFlags.contains(.command), !event.modifierFlags.contains(.control) {
             if notesTableView.getSelectedNote() != nil {
-                UserDefaultsManagement.isOnSearch = true
                 disablePreview()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                     self.titleLabel.saveTitle()
@@ -958,7 +966,6 @@ class ViewController: NSViewController,
     @IBAction func renameMenu(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
         vc.titleLabel.restoreResponder = vc.view.window?.firstResponder
-
         switchTitleToEditMode()
     }
 
@@ -1812,7 +1819,6 @@ class ViewController: NSViewController,
         notesTableView.reloadData(forRowIndexes: newIndexes, columnIndexes: [0])
         notesTableView.selectRowIndexes(newIndexes, byExtendingSelection: false)
         notesTableView.endUpdates()
-
         filteredNoteList = resorted
     }
 
@@ -1834,8 +1840,7 @@ class ViewController: NSViewController,
         guard let editor = editArea else { return }
         editor.subviews.removeAll(where: { $0.isKind(of: MPreviewView.self) })
         refillEditArea()
-        focusEditArea()
-        titleLabel.isEditable = false
+        titleLabel.isEditable = true
     }
 
     func togglePreview() {

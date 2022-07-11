@@ -290,6 +290,8 @@ public class NotesTextProcessor {
     fileprivate static var quoteIndendationStyle: NSParagraphStyle {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
+        paragraphStyle.alignment = .left
+        paragraphStyle.lineHeightMultiple = CGFloat(UserDefaultsManagement.editorLineHeight)
         return paragraphStyle
     }
     

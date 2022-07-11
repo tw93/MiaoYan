@@ -45,8 +45,6 @@ public class UserDefaultsManagement {
     static var realSidebarSize = 138
 
     static var sidebarSize = 280
-
-    static var isOnSearch = false
     
     static var isOnExport = false
 
