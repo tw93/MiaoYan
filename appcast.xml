@@ -5,16 +5,16 @@
     <item>
       <title>0.8.0</title>
       <description><![CDATA[
-            <h3>建议升级：</h3>
-            🎉 支持文档间跳转，试试 [[对应文档标题]] 点击即可无缝跳转到对应文档<br/>
-            🏂 支持单独编辑器模式，试试 Command+O 打开文件，或者文件拖到图标<br/>
-            🍭 Command+Shift+ → 可显示字数等属性，上下左右箭头可以控制文档导航，支持 Command+Option+M 全局唤起妙言 <br/>
-            🙊 优化导出的样式、焦点选择、高亮、搜索框样式、ESC 失焦、升级，支持 Picsee 图床<br/>
-           <h3>Update Notes：</h3>
-            🎉 Jump between documents is supported. Try [[document title]] Click to seamlessly jump to the corresponding document.<br/>
-            🏂 Support separate editor mode. Try Command + O to open the file, or drag the file to the icon.<br/>
-            🍭 Command + shift + → attributes such as number of words can be displayed, and the up, down, left and right arrows can control document navigation, Support command+option+m global evoke wonderful words.<br/>
-            🙊 Optimize the exported style, focus selection, highlighting, search box style, ESC out of focus, upgrading, and support picsee upload.<br/>
+       <h3>建议升级：</h3>
+        🎉 支持文档间跳转，试试 [[对应文档标题]] 点击即可无缝跳转到对应文档<br/>
+        🏂 支持单独编辑器模式，试试 command+o 打开文件，或者文件拖到图标<br/>
+        🍭 command+shift+ → 可显示字数等属性，上下左右箭头可以控制文档导航，支持 command+option+m 全局唤起妙言 <br/>
+        🙊 优化导出的样式、焦点选择、高亮、搜索框样式、ESC 失焦、升级，支持 Picsee 图床<br/>
+        <h3>Update Notes：</h3>
+        🎉 Jump between documents is supported. Try [[document title]] Click to seamlessly jump to the corresponding document.<br/>
+        🏂 Support separate editor mode. Try command+o to open the file, or drag the file to the icon.<br/>
+        🍭 command+shift + → attributes such as number of words can be displayed, and the up, down, left and right arrows can control document navigation, Support command+option+m global evoke wonderful words.<br/>
+        🙊 Optimize the exported style, focus selection, highlighting, search box style, ESC out of focus, upgrading, and support picsee upload.<br/>
             ]]>      </description>
       <pubDate>周一, 11 7月 2022 22:00:44 +0800</pubDate>
       <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V0.8.0.zip" sparkle:shortVersionString="0.8.0" sparkle:version="0.8.0" sparkle:edSignature="ssXpXhLQ1MxdDQQr65EOSL/OjFdBY2esoxcZ+jZMCDpzaK/VV2Kq6+oFJYOUphgO3DkdQBh4sFxIjx+MVmhMCA==" length="31683102" type="application/octet-stream" />
