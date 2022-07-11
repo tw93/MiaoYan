@@ -205,6 +205,7 @@ class ViewController: NSViewController,
         let sideSize = vc.sidebarSplitView.subviews[0].frame.width
         setDividerHidden(hidden: size == 0)
         setSideDividerHidden(hidden: sideSize == 0)
+        setButtonHidden(hidden: size == 0)
         refreshMiaoYanNum()
         if UserDefaultsManagement.isSingleMode {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
@@ -315,7 +316,7 @@ class ViewController: NSViewController,
                     {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                             self.notesTableView.selectRow(i)
-                            self.notesTableView.scrollRowToVisible(i)
+                            self.notesTableView.scrollRowToVisible(row: i, animated: true)
                         }
                     }
                 }
