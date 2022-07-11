@@ -117,14 +117,18 @@
 			<string>One</string>
 		</dict>
 	</dict>
+	<key>SUAllowsAutomaticUpdates</key>
+	<true/>
 	<key>SUAutomaticallyUpdate</key>
+	<true/>
+	<key>SUEnableAutomaticChecks</key>
 	<true/>
 	<key>SUFeedURL</key>
 	<string>https://miaoyan.app/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>4IB5REPPZ6ya7EP1aIYpaleXXOEVmenFqN4DFnsVbHc=</string>
 	<key>SUScheduledCheckInterval</key>
-	<integer>3600</integer>
+	<real>3666</real>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
