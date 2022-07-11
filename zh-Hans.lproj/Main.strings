@@ -86,6 +86,9 @@
 /* Class = "NSMenuItem"; title = "Hide MiaoYan"; ObjectID = "bxj-82-bcY"; */
 "bxj-82-bcY.title" = "隐藏妙言";
 
+/* Class = "NSMenuItem"; title = "Active Window"; ObjectID = "Gaz-Td-mWB"; */
+"Gaz-Td-mWB.title" = "全局唤起妙言";
+
 /* Class = "NSMenuItem"; title = "Hide Others"; ObjectID = "gJ8-Jq-hrI"; */
 "gJ8-Jq-hrI.title" = "隐藏其他";
 

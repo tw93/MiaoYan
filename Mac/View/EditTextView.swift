@@ -445,6 +445,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             breakUndoCoalescing()
             let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
             formatter.newLine()
+            viewDelegate?.refillEditArea()
             breakUndoCoalescing()
             return
         }
