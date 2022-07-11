@@ -44,15 +44,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         vc.titleLabel.saveTitle()
         super.mouseDown(with: event)
     }
-
-    override func mouseEntered(with event: NSEvent) {
-        UserDefaultsManagement.isOnSearch = true
-    }
-
-    override func mouseExited(with event: NSEvent) {
-        UserDefaultsManagement.isOnSearch = false
-    }
-
+    
     override func keyUp(with event: NSEvent) {
         if event.keyCode == kVK_DownArrow {
             vcDelegate.focusTable()
