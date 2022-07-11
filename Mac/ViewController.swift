@@ -85,6 +85,10 @@ class ViewController: NSViewController,
         }
     }
 
+    @IBAction func activeWindow(_ sender: Any) {
+        activeShortcut()
+    }
+
     @IBOutlet var descendingCheckItem: NSMenuItem! {
         didSet {
             ascendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .off : .on
@@ -332,12 +336,10 @@ class ViewController: NSViewController,
     }
 
     private func configureShortcuts() {
-        MASShortcutMonitor.shared().register(UserDefaultsManagement.newNoteShortcut, withAction: {
-            self.makeNoteShortcut()
-        })
+        let activeShortcut = MASShortcut(keyCode: kVK_ANSI_M, modifierFlags: [.command, .option])
 
-        MASShortcutMonitor.shared().register(UserDefaultsManagement.searchNoteShortcut, withAction: {
-            self.searchShortcut()
+        MASShortcutMonitor.shared().register(activeShortcut, withAction: {
+            self.activeShortcut()
         })
 
         NSEvent.addLocalMonitorForEvents(matching: NSEvent.EventTypeMask.flagsChanged) {
@@ -1671,21 +1673,7 @@ class ViewController: NSViewController,
         editArea.clear()
     }
 
-    func makeNoteShortcut() {
-        let clipboard = NSPasteboard.general.string(forType: NSPasteboard.PasteboardType.string)
-        if clipboard != nil {
-            let project = Storage.sharedInstance().getMainProject()
-            createNote(content: clipboard!, project: project)
-
-            let notification = NSUserNotification()
-            notification.title = "妙言"
-            notification.informativeText = "复制保存成功"
-            notification.soundName = NSUserNotificationDefaultSoundName
-            NSUserNotificationCenter.default.deliver(notification)
-        }
-    }
-
-    func searchShortcut() {
+    func activeShortcut() {
         guard let mainWindow = MainWindowController.shared() else { return }
 
         if
@@ -1699,11 +1687,6 @@ class ViewController: NSViewController,
 
         NSApp.activate(ignoringOtherApps: true)
         mainWindow.makeKeyAndOrderFront(self)
-
-        guard let controller = mainWindow.contentViewController as? ViewController
-        else { return }
-
-        mainWindow.makeFirstResponder(controller.search)
     }
 
     func moveNoteToTop(note index: Int) {
