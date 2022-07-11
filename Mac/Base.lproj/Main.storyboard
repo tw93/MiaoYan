@@ -42,6 +42,12 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="uUY-TO-1UN"/>
+                                        <menuItem title="Active Window" keyEquivalent="m" id="Gaz-Td-mWB">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="activeWindow:" target="L4m-js-agn" id="ixL-Vu-G2c"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Hide MiaoYan" keyEquivalent="h" id="bxj-82-bcY">
                                             <connections>
                                                 <action selector="hide:" target="Ady-hI-5gd" id="Qbc-aH-8P0"/>
