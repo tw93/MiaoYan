@@ -27,6 +27,7 @@ class ViewController: NSViewController,
     var sidebarTimer = Timer()
     var rowUpdaterTimer = Timer()
     let searchQueue = OperationQueue()
+    var isFocusedTitle: Bool = false
 
     private var isHandlingScrollEvent = false
     private var swipeLeftExecuted = false
@@ -1823,6 +1824,7 @@ class ViewController: NSViewController,
     }
 
     func enablePreview() {
+        isFocusedTitle = titleLabel.hasFocus()
         cancelTextSearch()
         editArea.window?.makeFirstResponder(notesTableView)
         view.window!.title = NSLocalizedString("妙言「预览」", comment: "")
@@ -1840,6 +1842,9 @@ class ViewController: NSViewController,
         guard let editor = editArea else { return }
         editor.subviews.removeAll(where: { $0.isKind(of: MPreviewView.self) })
         refillEditArea()
+        if !isFocusedTitle {
+            focusEditArea()
+        }
         titleLabel.isEditable = true
     }
 
