@@ -28,11 +28,7 @@ class TitleTextField: NSTextField {
     }
 
     override func textDidEndEditing(_ notification: Notification) {
-        let vc = window?.contentViewController as! ViewController
         self.saveTitle()
-        if !UserDefaultsManagement.preview,!UserDefaultsManagement.isOnSearch {
-            vc.focusEditArea()
-        }
     }
 
     public func saveTitle() {
@@ -51,7 +47,6 @@ class TitleTextField: NSTextField {
 
             if !FileManager.default.fileExists(atPath: dst.path), note.move(to: dst) {
                 vc.updateTitle(newTitle: currentTitle)
-
                 self.updateNotesTableView()
                 return
             } else {
@@ -76,9 +71,7 @@ class TitleTextField: NSTextField {
 
     public func editModeOn() {
         MainWindowController.shared()?.makeFirstResponder(self)
-        UserDefaultsManagement.isOnSearch = false
     }
-    
 
     public func updateNotesTableView() {
         guard let vc = ViewController.shared(), let note = EditTextView.note else { return }

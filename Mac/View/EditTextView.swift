@@ -417,6 +417,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     override func keyDown(with event: NSEvent) {
+        guard let vc = ViewController.shared() else { return }
         guard !(
             event.modifierFlags.contains(.shift) &&
                 [
@@ -445,6 +446,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             breakUndoCoalescing()
             let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
             formatter.newLine()
+            vc.refillEditArea()
             breakUndoCoalescing()
             return
         }
