@@ -233,6 +233,9 @@
 /* Class = "NSMenuItem"; title = "Hide MiaoYan"; ObjectID = "bxj-82-bcY"; */
 "bxj-82-bcY.title" = "Hide MiaoYan";
 
+/* Class = "NSMenuItem"; title = "Active Window"; ObjectID = "Gaz-Td-mWB"; */
+"Gaz-Td-mWB.title" = "Active Window";
+
 /* Class = "NSMenuItem"; title = "Hide Others"; ObjectID = "gJ8-Jq-hrI"; */
 "gJ8-Jq-hrI.title" = "Hide Others";
 
