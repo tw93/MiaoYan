@@ -432,9 +432,11 @@ blockquote blockquote {
   margin-block-start: 12px;
   margin-block-end: 24px;
 }
-.heti ul,
+.heti ul {
+  padding-inline-start: calc(24px + 0.5em);
+}
 .heti ol {
-  padding-inline-start: 32px;
+  padding-inline-start: calc(24px + 1em);
 }
 .heti ul ul,
 .heti ul ol,
