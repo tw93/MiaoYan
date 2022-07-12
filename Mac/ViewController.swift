@@ -142,6 +142,14 @@ class ViewController: NSViewController,
 
     private var popoverVisible: Bool { popover.isShown }
 
+    func toggleInfo() {
+        if popoverVisible {
+            popover.performClose(nil)
+        } else {
+            showInfo("")
+        }
+    }
+
     // MARK: - Overrides
 
     override func viewDidLoad() {
@@ -617,7 +625,7 @@ class ViewController: NSViewController,
         }
 
         if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_I {
-            showInfo("")
+            toggleInfo()
             return false
         }
 
