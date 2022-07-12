@@ -1426,8 +1426,8 @@ CA
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <menu id="AaK-Xd-i52">
                     <items>
-                        <menuItem title="Show Info" keyEquivalent="" id="IcI-sb-NY5">
-                            <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                        <menuItem title="Show Info" keyEquivalent="i" id="IcI-sb-NY5">
+                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                             <connections>
                                 <action selector="showInfo:" target="XfG-lQ-9wD" id="Cf1-66-GyS"/>
                             </connections>
