@@ -23,7 +23,7 @@
 
 ## Features
 
-- 🪂 **Fantastic**: Local use, security, syntax highlighting, dark mode, source file saving, international, Presentation mode, document auto typesetting, picture upload,LaTeX, Mermaid, PlantUML.
+- 🪂 **Fantastic**: Local use, security, syntax highlighting, dark mode, source file saving, international, presentation mode, single edit mode, export file, internal jump, document auto typesetting, picture upload,LaTeX, Mermaid, PlantUML.
 - 🐶 **Beauty**: Minimalist design style, folder + file list + editor 3 column mode.
 - 🏌🏽‍♂️ **Fast**: Using Swift5 native development, the performance experience is much better compared to the Web.
 - 🩴 **Simple**: Very light, pure editor input experience, many shortcut keys to help you fast.
@@ -52,6 +52,7 @@
 - `command + 2`: Expand the list of documents
 - `command + 3`: Switching between edit and preview states
 - `command + 4`: Switching between edit and presentation states
+- `command + option + m`: Global active/hide MiaoYan
 
 #### File Operations
 
@@ -60,9 +61,10 @@
 - `command + i`: Displaying document in Finder
 - `command + shift + p`: Pin document
 - `command + delete`: Delete document
-- `command + shift + l`：Auto typesetting
+- `command + shift + l`: Auto typesetting
+- `command + shift + →`: Display document attributes such as word count
 
-🏂 There are also many other shortcuts waiting for you to find if you like to toss and turn~
+🏂 There are also many other shortcuts 👆🏻 👇🏻 👈🏻 👉🏻 waiting for you to find if you like to toss and turn~
 
 ## Support
 
