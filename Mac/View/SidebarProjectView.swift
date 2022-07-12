@@ -82,7 +82,7 @@ class SidebarProjectView: NSOutlineView,
 
     override func keyDown(with event: NSEvent) {
         guard let vc = ViewController.shared() else { return }
-        if event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_N {
+        if event.modifierFlags.contains(.command), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_N {
             addProject("")
             return
         }
@@ -432,6 +432,12 @@ class SidebarProjectView: NSOutlineView,
                         try FileManager.default.moveItem(at: project.url, to: resultingItemUrl)
 
                         v.removeProject(project: project)
+
+                        vc.updateTable {
+                            DispatchQueue.main.async {
+                                vc.storageOutlineView.selectRowIndexes([0], byExtendingSelection: false)
+                            }
+                        }
                     } catch {
                         print(error)
                     }

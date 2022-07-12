@@ -92,7 +92,7 @@ CA
                                                 <action selector="fileMenuNewNote:" target="L4m-js-agn" id="N33-Jf-oOg"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Single Open" keyEquivalent="o" identifier="fileMenu.open" id="O8Z-cg-XnH">
+                                        <menuItem title="Single open" keyEquivalent="o" identifier="fileMenu.open" id="O8Z-cg-XnH">
                                             <connections>
                                                 <action selector="singleOpen:" target="L4m-js-agn" id="48w-4H-ICT"/>
                                             </connections>
@@ -119,7 +119,8 @@ CA
                                                 <action selector="renameMenu:" target="L4m-js-agn" id="H0Y-Fe-qfr"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Reveal in Finder" keyEquivalent="i" id="rXU-X3-UjC">
+                                        <menuItem title="Reveal in finder" keyEquivalent="r" id="rXU-X3-UjC">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="finderMenu:" target="Ady-hI-5gd" id="Ift-tc-85m"/>
                                             </connections>
@@ -149,21 +150,20 @@ CA
                             </menuItem>
                             <menuItem title="Folder" id="Fuh-qO-nt2">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Folder" identifier="folderMenu" id="BYI-2F-BJo">
+                                <menu key="submenu" title="Folder" identifier="folderMenu.showInFinder" id="BYI-2F-BJo">
                                     <items>
-                                        <menuItem title="Show in Finder" keyEquivalent="r" id="F5A-zs-zwP">
+                                        <menuItem title="Show in finder" alternate="YES" keyEquivalent="r" identifier="folderMenu.showInFinder" id="F5A-zs-zwP">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="revealInFinder:" target="yxb-XH-bXh" id="7V6-4X-pMA"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="New folder" keyEquivalent="N" id="SrH-fe-Hog">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES"/>
+                                        <menuItem title="New folder" keyEquivalent="N" identifier="folderMenu.newFolder" id="SrH-fe-Hog">
                                             <connections>
-                                                <action selector="addProject:" target="yxb-XH-bXh" id="vwO-zV-96Q"/>
+                                                <action selector="add:" target="3kq-Pd-JKK" id="fyK-RN-gx8"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Rename folder" keyEquivalent="e" id="Tap-iY-hyA">
+                                        <menuItem title="Rename folder" keyEquivalent="e" identifier="folderMenu.renameFolder" id="Tap-iY-hyA">
                                             <connections>
                                                 <action selector="renameMenu:" target="yxb-XH-bXh" id="fjN-9b-ISI"/>
                                             </connections>
@@ -237,6 +237,49 @@ CA
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>
                                                 <action selector="toggleFullScreen:" target="Ady-hI-5gd" id="dU3-MA-1Rq"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Format" id="pEY-cr-bnn">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Format" identifier="formatMenu" id="iRO-fj-L79">
+                                    <items>
+                                        <menuItem title="Bold" keyEquivalent="b" id="1Yd-6R-e7Y">
+                                            <connections>
+                                                <action selector="boldMenu:" target="N0L-g4-qwj" id="mOv-Hg-4Ol"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Italic" keyEquivalent="i" id="O3Z-9P-RfY">
+                                            <connections>
+                                                <action selector="italicMenu:" target="N0L-g4-qwj" id="85z-fY-Svh"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Underline" keyEquivalent="u" id="6nc-Nb-dtR">
+                                            <connections>
+                                                <action selector="underlineMenu:" target="N0L-g4-qwj" id="yrX-J3-OGF"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Deleteline" keyEquivalent="X" id="Jwm-Wb-uwl">
+                                            <connections>
+                                                <action selector="deletelineMenu:" target="N0L-g4-qwj" id="1hN-4O-b5m"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Link" keyEquivalent="k" id="cnW-gr-ceF">
+                                            <connections>
+                                                <action selector="linkMenu:" target="N0L-g4-qwj" id="gfx-yL-BHP"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="3qd-xT-Shm"/>
+                                        <menuItem title="Shift Left" keyEquivalent="[" id="Iba-Po-ajH">
+                                            <connections>
+                                                <action selector="shiftLeft:" target="Ady-hI-5gd" id="5Ud-4n-H8x"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Shift Right" keyEquivalent="]" id="6f5-hD-IGa">
+                                            <connections>
+                                                <action selector="shiftRight:" target="Ady-hI-5gd" id="grw-c0-v2G"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -1248,9 +1291,6 @@ CA
                                                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                                 <imageCell key="cell" alignment="left" animates="YES" imageScaling="proportionallyUpOrDown" image="makeNoteAsset" id="WpA-pT-SDs"/>
                                                                 <color key="contentTintColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                                <connections>
-                                                                    <action selector="openMiaoYan:" target="XfG-lQ-9wD" id="p7O-2X-v0u"/>
-                                                                </connections>
                                                             </imageView>
                                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kn8-MP-1kR">
                                                                 <rect key="frame" x="-2" y="9" width="244" height="35"/>
@@ -1393,16 +1433,12 @@ CA
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="AddProjectView" destination="Yei-Or-qiI" id="L5a-zH-And"/>
-                        <outlet property="TitleBarTopConstraint" destination="Nm9-X5-Q67" id="oYN-j7-pbD"/>
-                        <outlet property="TitleTopConstraint" destination="Nm9-X5-Q67" id="X4b-Fn-b7P"/>
                         <outlet property="editArea" destination="cmZ-KL-T9k" id="sJd-5P-0mf"/>
                         <outlet property="editAreaScroll" destination="qJO-7f-vkL" id="X69-yq-N67"/>
                         <outlet property="emptyEditAreaImage" destination="Gz4-4G-Fts" id="Wan-oZ-dmP"/>
                         <outlet property="emptyEditAreaView" destination="B2U-rx-xCL" id="Y00-zR-k4l"/>
                         <outlet property="emptyEditTitle" destination="kn8-MP-1kR" id="epZ-CY-7ib"/>
                         <outlet property="formatButton" destination="Adc-zl-sqX" id="9cU-Es-COa"/>
-                        <outlet property="goMiaoYan" destination="Gz4-4G-Fts" id="1ph-KF-W8q"/>
                         <outlet property="miaoYanText" destination="kn8-MP-1kR" id="KuB-8D-V6d"/>
                         <outlet property="noteMenu" destination="AaK-Xd-i52" id="t41-7H-k7N"/>
                         <outlet property="notesListCustomView" destination="8ej-mX-KM6" id="yDe-gf-AHy"/>
@@ -1418,7 +1454,6 @@ CA
                         <outlet property="splitView" destination="yWu-3F-P62" id="IYq-T3-4b1"/>
                         <outlet property="storageOutlineView" destination="urA-eK-bWB" id="ytX-z3-4Mi"/>
                         <outlet property="titleBarAdditionalView" destination="Ua8-RE-q01" id="CfN-3p-UH3"/>
-                        <outlet property="titleBarTopConstraint" destination="Ics-3U-dtd" id="lsX-3g-buv"/>
                         <outlet property="titleBarView" destination="xSU-Mk-2F1" id="lbu-pA-1Hs"/>
                         <outlet property="titleLabel" destination="rZx-hk-GcJ" id="wKj-zD-Ovz"/>
                     </connections>
@@ -1448,7 +1483,8 @@ CA
                                 <action selector="renameMenu:" target="XfG-lQ-9wD" id="iYK-OA-0IW"/>
                             </connections>
                         </menuItem>
-                        <menuItem title="Reveal in Finder" alternate="YES" keyEquivalent="i" id="xSO-lW-k8f">
+                        <menuItem title="Reveal in Finder" alternate="YES" keyEquivalent="r" id="xSO-lW-k8f">
+                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                             <connections>
                                 <action selector="finderMenu:" target="rPt-NT-nkU" id="HN5-My-jcv"/>
                             </connections>
