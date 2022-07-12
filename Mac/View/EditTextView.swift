@@ -212,9 +212,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
     @IBAction func boldMenu(_ sender: Any) {
         guard let vc = ViewController.shared(),
               let editArea = vc.editArea,
-              let note = vc.getCurrentNote(),
-              !UserDefaultsManagement.preview
-        else { return }
+              let note = EditTextView.note,
+              !UserDefaultsManagement.preview,
+              editArea.hasFocus() else { return }
 
         let formatter = TextFormatter(textView: editArea, note: note)
         formatter.bold()
@@ -223,9 +223,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
     @IBAction func italicMenu(_ sender: Any) {
         guard let vc = ViewController.shared(),
               let editArea = vc.editArea,
-              let note = vc.getCurrentNote(),
-              !UserDefaultsManagement.preview
-        else { return }
+              let note = EditTextView.note,
+              !UserDefaultsManagement.preview,
+              editArea.hasFocus() else { return }
 
         let formatter = TextFormatter(textView: editArea, note: note)
         formatter.italic()
@@ -234,9 +234,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
     @IBAction func linkMenu(_ sender: Any) {
         guard let vc = ViewController.shared(),
               let editArea = vc.editArea,
-              let note = vc.getCurrentNote(),
-              !UserDefaultsManagement.preview
-        else { return }
+              let note = EditTextView.note,
+              !UserDefaultsManagement.preview,
+              editArea.hasFocus() else { return }
 
         let formatter = TextFormatter(textView: editArea, note: note)
         formatter.link()
@@ -245,9 +245,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
     @IBAction func underlineMenu(_ sender: Any) {
         guard let vc = ViewController.shared(),
               let editArea = vc.editArea,
-              let note = vc.getCurrentNote(),
-              !UserDefaultsManagement.preview
-        else { return }
+              let note = EditTextView.note,
+              !UserDefaultsManagement.preview,
+              editArea.hasFocus() else { return }
 
         let formatter = TextFormatter(textView: editArea, note: note)
         formatter.underline()
@@ -256,9 +256,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
     @IBAction func deletelineMenu(_ sender: Any) {
         guard let vc = ViewController.shared(),
               let editArea = vc.editArea,
-              let note = vc.getCurrentNote(),
-              !UserDefaultsManagement.preview
-        else { return }
+              let note = EditTextView.note,
+              !UserDefaultsManagement.preview,
+              editArea.hasFocus() else { return }
 
         let formatter = TextFormatter(textView: editArea, note: note)
         formatter.deleteline()
@@ -768,28 +768,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         f.tab()
     }
 
-    @IBAction func pressBold(_ sender: Any) {
-        guard let vc = ViewController.shared(),
-              let editArea = vc.editArea,
-              let note = vc.getCurrentNote(),
-              !UserDefaultsManagement.preview,
-              editArea.isEditable else { return }
-
-        let formatter = TextFormatter(textView: editArea, note: note)
-        formatter.bold()
-    }
-
-    @IBAction func pressItalic(_ sender: Any) {
-        guard let vc = ViewController.shared(),
-              let editArea = vc.editArea,
-              let note = vc.getCurrentNote(),
-              !UserDefaultsManagement.preview,
-              editArea.isEditable else { return }
-
-        let formatter = TextFormatter(textView: editArea, note: note)
-        formatter.italic()
-    }
-
     @IBAction func insertFileOrImage(_ sender: Any) {
         guard let note = EditTextView.note else { return }
 
@@ -869,17 +847,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         insertText("``", replacementRange: currentRange)
         setSelectedRange(NSRange(location: currentRange.location + 1, length: 0))
-    }
-
-    @IBAction func insertLink(_ sender: Any) {
-        guard let vc = ViewController.shared(),
-              let editArea = vc.editArea,
-              let note = vc.getCurrentNote(),
-              !UserDefaultsManagement.preview,
-              editArea.isEditable else { return }
-
-        let formatter = TextFormatter(textView: editArea, note: note)
-        formatter.link()
     }
 
     private func getTextFormatter() -> TextFormatter? {
