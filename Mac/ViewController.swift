@@ -616,7 +616,7 @@ class ViewController: NSViewController,
             return false
         }
 
-        if event.modifierFlags.contains(.command), event.modifierFlags.contains(.shift), event.keyCode == kVK_RightArrow {
+        if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_I {
             showInfo("")
             return false
         }
