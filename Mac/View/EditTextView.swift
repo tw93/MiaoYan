@@ -209,6 +209,61 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
     }
 
+    @IBAction func boldMenu(_ sender: Any) {
+        guard let vc = ViewController.shared(),
+              let editArea = vc.editArea,
+              let note = vc.getCurrentNote(),
+              !UserDefaultsManagement.preview
+        else { return }
+
+        let formatter = TextFormatter(textView: editArea, note: note)
+        formatter.bold()
+    }
+
+    @IBAction func italicMenu(_ sender: Any) {
+        guard let vc = ViewController.shared(),
+              let editArea = vc.editArea,
+              let note = vc.getCurrentNote(),
+              !UserDefaultsManagement.preview
+        else { return }
+
+        let formatter = TextFormatter(textView: editArea, note: note)
+        formatter.italic()
+    }
+
+    @IBAction func linkMenu(_ sender: Any) {
+        guard let vc = ViewController.shared(),
+              let editArea = vc.editArea,
+              let note = vc.getCurrentNote(),
+              !UserDefaultsManagement.preview
+        else { return }
+
+        let formatter = TextFormatter(textView: editArea, note: note)
+        formatter.link()
+    }
+
+    @IBAction func underlineMenu(_ sender: Any) {
+        guard let vc = ViewController.shared(),
+              let editArea = vc.editArea,
+              let note = vc.getCurrentNote(),
+              !UserDefaultsManagement.preview
+        else { return }
+
+        let formatter = TextFormatter(textView: editArea, note: note)
+        formatter.underline()
+    }
+
+    @IBAction func deletelineMenu(_ sender: Any) {
+        guard let vc = ViewController.shared(),
+              let editArea = vc.editArea,
+              let note = vc.getCurrentNote(),
+              !UserDefaultsManagement.preview
+        else { return }
+
+        let formatter = TextFormatter(textView: editArea, note: note)
+        formatter.deleteline()
+    }
+
     @IBAction func togglePreview(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
 
@@ -438,6 +493,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 let formatter = TextFormatter(textView: self, note: note)
                 formatter.unTab()
                 saveCursorPosition()
+                return
+            } else {
+                shiftRight("")
                 return
             }
         }

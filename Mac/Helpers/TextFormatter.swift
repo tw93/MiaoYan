@@ -79,6 +79,16 @@ public class TextFormatter {
 
     public func underline() {
         if note.isMarkdown() {
+            let string = "<u>" + attributedString.string + "</u>"
+            let location = string.count == 7 ? range.location + 3 : range.upperBound + 7
+
+            replaceWith(string: string)
+            setSelectedRange(NSMakeRange(location, 0))
+        }
+    }
+    
+    public func deleteline() {
+        if note.isMarkdown() {
             let string = "~~" + attributedString.string + "~~"
             let location = string.count == 4 ? range.location + 2 : range.upperBound + 4
 
