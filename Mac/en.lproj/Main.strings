@@ -98,6 +98,30 @@
 /* Class = "NSMenu"; title = "View"; ObjectID = "HyV-fh-RgO"; */
 "HyV-fh-RgO.title" = "View";
 
+/* Class = "NSMenu"; title = "Format"; ObjectID = "iRO-fj-L79"; */
+"iRO-fj-L79.title" = "Format";
+
+/* Class = "NSMenuItem"; title = "Bold"; ObjectID = "1Yd-6R-e7Y"; */
+"1Yd-6R-e7Y.title" = "Bold";
+
+/* Class = "NSMenuItem"; title = "Italic"; ObjectID = "O3Z-9P-RfY"; */
+"O3Z-9P-RfY.title" = "Italic";
+
+/* Class = "NSMenuItem"; title = "Underline"; ObjectID = "6nc-Nb-dtR"; */
+"6nc-Nb-dtR.title" = "Underline";
+
+/* Class = "NSMenuItem"; title = "Deleteline"; ObjectID = "Jwm-Wb-uwl"; */
+"Jwm-Wb-uwl.title" = "Deleteline";
+
+/* Class = "NSMenuItem"; title = "Link"; ObjectID = "cnW-gr-ceF"; */
+"cnW-gr-ceF.title" = "Link";
+
+/* Class = "NSMenuItem"; title = "Shift Right"; ObjectID = "Iba-Po-ajH"; */
+"Iba-Po-ajH.title" = "Shift Right";
+
+/* Class = "NSMenuItem"; title = "Shift Left"; ObjectID = "6f5-hD-IGa"; */
+"6f5-hD-IGa.title" = "Shift Left";
+
 /* Class = "NSWindow"; title = "MiaoYan"; ObjectID = "IQv-IB-iLA"; */
 "IQv-IB-iLA.title" = "MiaoYan";
 
@@ -113,8 +137,8 @@
 /* Class = "NSTextFieldCell"; title = "Text Cell"; ObjectID = "NiN-n8-Y4W"; */
 "NiN-n8-Y4W.title" = "Text Cell";
 
-/* Class = "NSMenuItem"; title = "Single Open"; ObjectID = "O8Z-cg-XnH"; */
-"O8Z-cg-XnH.title" = "Single Open";
+/* Class = "NSMenuItem"; title = "Single open"; ObjectID = "O8Z-cg-XnH"; */
+"O8Z-cg-XnH.title" = "Single open";
 
 /* Class = "NSMenuItem"; title = "Import"; ObjectID = "7wA-Gr-Kyz"; */
 "7wA-Gr-Kyz.title" = "Import";

@@ -221,7 +221,9 @@ class ViewController: NSViewController,
             }
         } else {
             if size == 0 {
-                showNoteList("")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                    self.showNoteList("")
+                }
             }
         }
     }
@@ -254,7 +256,7 @@ class ViewController: NSViewController,
                 }
 
             case "folderMenu":
-                if ["folderMenu.attachStorage"].contains(menuItem.identifier?.rawValue) {
+                if ["folderMenu.newFolder", "folderMenu.showInFinder", "folderMenu.renameFolder"].contains(menuItem.identifier?.rawValue) {
                     return true
                 }
 
