@@ -92,7 +92,7 @@ class SidebarProjectView: NSOutlineView,
             return
         }
 
-        if event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_E {
+        if event.modifierFlags.contains(.shift), event.keyCode == kVK_F6 {
             renameMenu("")
             return
         }

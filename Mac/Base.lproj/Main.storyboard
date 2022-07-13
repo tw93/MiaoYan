@@ -163,7 +163,8 @@ CA
                                                 <action selector="add:" target="3kq-Pd-JKK" id="fyK-RN-gx8"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Rename folder" keyEquivalent="e" identifier="folderMenu.renameFolder" id="Tap-iY-hyA">
+                                        <menuItem title="Rename folder" keyEquivalent="" identifier="folderMenu.renameFolder" id="Tap-iY-hyA">
+                                            <modifierMask key="keyEquivalentModifierMask" shift="YES"/>
                                             <connections>
                                                 <action selector="renameMenu:" target="yxb-XH-bXh" id="fjN-9b-ISI"/>
                                             </connections>
@@ -1526,7 +1527,8 @@ CA
                                 <action selector="addProject:" target="rPt-NT-nkU" id="yjG-Jc-AJN"/>
                             </connections>
                         </menuItem>
-                        <menuItem title="Rename folder" keyEquivalent="e" id="fzU-ZR-Ubv">
+                        <menuItem title="Rename folder" keyEquivalent="" id="fzU-ZR-Ubv">
+                            <modifierMask key="keyEquivalentModifierMask" shift="YES"/>
                             <connections>
                                 <action selector="renameMenu:" target="urA-eK-bWB" id="Jh4-4H-wc0"/>
                             </connections>
