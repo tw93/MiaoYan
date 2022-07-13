@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="css/katex.min.css" />
     <script src="js/katex.min.js"></script>
     <script src="js/auto-render.min.js"></script>
+    <script src="js/emoji.min.js"></script>
     <title></title>
     <style>
       DOWN_CSS
@@ -45,6 +46,13 @@
     <script>
       hljs.configure({ cssSelector: 'pre code' });
       hljs.highlightAll();
+    </script>
+    <script>
+      const html = document.getElementById('write').innerHTML;
+      const emoji = new EmojiConvertor();
+      if(/:[^:\s]*(?:::[^:\s]*)*:/.test(html)){
+        document.getElementById('write').innerHTML = emoji.replace_colons(html);
+      }
     </script>
 
     <script>
@@ -126,7 +134,7 @@
       mermaid.initialize(config);
       window.mermaid.init(
         undefined,
-        document.querySelectorAll('.language-mermaid')
+        document.querySelectorAll('.language-mermaid'),
       );
 
       let plantumlPrefix = 'language-plantuml';
@@ -141,7 +149,7 @@
             plantumlEncoder.encode(code.innerText);
           code.parentNode.insertBefore(image, code);
           code.style.display = 'none';
-        }
+        },
       );
       var pres = document.getElementsByTagName('pre'),
         length = pres.length,
