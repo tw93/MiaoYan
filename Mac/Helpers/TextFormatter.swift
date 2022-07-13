@@ -71,7 +71,7 @@ public class TextFormatter {
 
     func italic() {
         if note.isMarkdown() {
-            let string = "_" + attributedString.string + "_"
+            let string = "*" + attributedString.string + "*"
             let location = string.count == 2 ? range.location + 1 : range.upperBound + 2
             insertText(string, selectRange: NSMakeRange(location, 0))
         }
