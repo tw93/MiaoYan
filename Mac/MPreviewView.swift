@@ -233,7 +233,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         let pageHTMLString = try htmlFromTemplate(htmlString, css: css)
 
-        // print(pageHTMLString)
+//        print(pageHTMLString)
         let indexURL = createTemporaryBundle(pageHTMLString: pageHTMLString)
 
         if let i = indexURL {
@@ -342,6 +342,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     func htmlFromTemplate(_ htmlString: String, css: String) throws -> String {
+        guard let vc = ViewController.shared() else { return "" }
         let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle")
         let url = NSURL.fileURL(withPath: path!)
         let bundle = Bundle(url: url)
@@ -360,7 +361,12 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
         }
 #endif
-        return template.replacingOccurrences(of: "DOWN_HTML", with: htmlString)
+        var htmlContent = htmlString
+        let currentName = vc.titleLabel.stringValue
+        if UserDefaultsManagement.isOnExport, !htmlString.hasPrefix("<h1>") {
+            htmlContent = "<h1>\(String(describing: currentName))</h1>" + htmlString
+        }
+        return template.replacingOccurrences(of: "DOWN_HTML", with: htmlContent)
     }
 }
 
