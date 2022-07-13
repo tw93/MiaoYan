@@ -172,7 +172,7 @@ body {
   content: 'Feel Good?';
 }
 .i18n-footer-desc:before {
-  content: '将妙言分享给你志同道合的朋友吧~';
+  content: '将妙言分享给你志同道合的朋友~';
 }
 [lang='en'] .i18n-footer-desc:before {
   content: 'Share MiaoYan with your like-minded friends~';
