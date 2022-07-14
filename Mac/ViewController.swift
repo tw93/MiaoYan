@@ -547,10 +547,9 @@ class ViewController: NSViewController,
         let notesTable = notesTableView!
         let selectedNote = notesTable.getSelectedNote()
         let cursor = editArea.selectedRanges[0].rangeValue.location
-
         updateTable {
             if let selected = selectedNote, let index = notesTable.getIndex(selected) {
-                DispatchQueue.main.sync {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                     notesTable.selectRowIndexes([index], byExtendingSelection: false)
                 }
                 self.refillEditArea(cursor: cursor)
@@ -1921,7 +1920,8 @@ class ViewController: NSViewController,
         if let note = notesTableView.getSelectedNote() {
             note.content = NSMutableAttributedString(string: note.content.string.spaced)
             note.save()
-            reloadView()
+            let cursor = editArea.selectedRanges[0].rangeValue.location
+            refillEditArea(cursor: cursor)
             toast(message: NSLocalizedString("🎉 Automatic typesetting succeeded~", comment: "")
             )
         }
