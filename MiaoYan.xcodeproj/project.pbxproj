@@ -183,10 +183,10 @@
 		272CAC2528758C6A0026EF50 /* ContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentViewController.swift; sourceTree = "<group>"; };
 		2747D5B1284E05CD00D0127B /* LXGWWenKaiLite-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LXGWWenKaiLite-Regular.ttf"; sourceTree = "<group>"; };
 		2747D5B2284E05CE00D0127B /* LXGWWenKaiLite-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LXGWWenKaiLite-Bold.ttf"; sourceTree = "<group>"; };
-		2752E9CE285EE68400EE0009 /* MiaoYan.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MiaoYan.entitlements; sourceTree = "<group>"; };
 		275592961F3AE9B5006B8988 /* MainWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
 		277A61D7244B538E000F0033 /* SidebarTableRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarTableRowView.swift; sourceTree = "<group>"; };
 		27838E67287521C0009E8012 /* DetachedWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetachedWindowController.swift; sourceTree = "<group>"; };
+		2789B1E3287FD9C500BF8BC1 /* MiaoYan.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = MiaoYan.entitlements; sourceTree = "<group>"; };
 		2795956327B12CDC000B754C /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiaoYan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2799407B218484C900727B20 /* TitleBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleBarView.swift; sourceTree = "<group>"; };
 		27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MiaoYanCore_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -253,7 +253,6 @@
 		D7793C741F211C6000CA39B7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		D7793C791F211C6000CA39B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D7793C7B1F211C6000CA39B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D7793C7C1F211C6000CA39B7 /* MiaoYan.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MiaoYan.entitlements; sourceTree = "<group>"; };
 		D779C7BA1F415BE300FADEE1 /* PrefsWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefsWindowController.swift; sourceTree = "<group>"; };
 		D77CC040216A608500582B97 /* EditorScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorScrollView.swift; sourceTree = "<group>"; };
 		D783B504208A1BFD00328A41 /* EditorSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorSplitView.swift; sourceTree = "<group>"; };
@@ -438,23 +437,15 @@
 			path = Business;
 			sourceTree = "<group>";
 		};
-		D75C903C223EF727002A9CAD /* Preferences */ = {
-			isa = PBXGroup;
-			children = (
-				D7F5C0EE223ED0570038F172 /* PreferencesGeneralViewController.swift */,
-			);
-			path = Preferences;
-			sourceTree = "<group>";
-		};
 		D7793C661F211C6000CA39B7 = {
 			isa = PBXGroup;
 			children = (
-				2752E9CE285EE68400EE0009 /* MiaoYan.entitlements */,
 				6F13BB2320FEDE230005E120 /* Common */,
 				D7D61FCC1F32EEA1004357C2 /* Resources */,
 				D7793C711F211C6000CA39B7 /* Mac */,
 				C5F4774EAA923C4003B182F8 /* Frameworks */,
 				32CE416A4DFCDD098D5DAF53 /* Pods */,
+				2789B1E3287FD9C500BF8BC1 /* MiaoYan.entitlements */,
 				27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */,
 				270678FD2446861D00D9935F /* Recovered References */,
 				2795956327B12CDC000B754C /* MiaoYan.app */,
@@ -464,7 +455,6 @@
 		D7793C711F211C6000CA39B7 /* Mac */ = {
 			isa = PBXGroup;
 			children = (
-				D75C903C223EF727002A9CAD /* Preferences */,
 				D7CD5F6A1F51184A006AA35D /* Extensions */,
 				D7B6E59C20794B4C00FE0E20 /* Business */,
 				D7E6D9D520808652003ECAFC /* Helpers */,
@@ -477,6 +467,7 @@
 				D7793C741F211C6000CA39B7 /* ViewController.swift */,
 				D792297421A845B4005F468F /* ProjectSettingsViewController.swift */,
 				D779C7BA1F415BE300FADEE1 /* PrefsWindowController.swift */,
+				D7F5C0EE223ED0570038F172 /* PreferencesGeneralViewController.swift */,
 				D7508FCD1F3438540047AB76 /* PrefsViewController.swift */,
 				D7153DFC2285A93300A2C20F /* AboutWindowController.swift */,
 				D7153E042285C09C00A2C20F /* AboutViewController.swift */,
@@ -487,7 +478,6 @@
 				D7793C781F211C6000CA39B7 /* Main.storyboard */,
 				D7465F27207F2CD600E46A52 /* Images.xcassets */,
 				D7793C7B1F211C6000CA39B7 /* Info.plist */,
-				D7793C7C1F211C6000CA39B7 /* MiaoYan.entitlements */,
 				2714D863285196D70026BDE4 /* InfoPlist.strings */,
 			);
 			path = Mac;
