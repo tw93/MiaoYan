@@ -113,13 +113,6 @@ public class NotesTextProcessor {
             }
         }
 
-        public static var quoteColor: NSColor {
-            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-                return NSColor(named: "quoteColor")!
-            } else {
-                return NSColor.darkGray
-            }
-        }
         
         public static var underlineColor: NSColor {
             if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
@@ -148,11 +141,7 @@ public class NotesTextProcessor {
                 return UIColor(red: 0.94, green: 0.95, blue: 0.95, alpha: 1.0)
             }
         }
-        
-        public static var quoteColor: UIColor {
-            UIColor.darkGray
-        }
-        
+
         public static var underlineColor: UIColor {
             UIColor.black
         }
@@ -302,14 +291,7 @@ public class NotesTextProcessor {
         // let style = TextFormatter.getCodeParagraphStyle()
         // attributedString.addAttribute(.paragraphStyle, value: style, range: range)
     }
-    
-    fileprivate static var quoteIndendationStyle: NSParagraphStyle {
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
-        paragraphStyle.alignment = .left
-        paragraphStyle.lineHeightMultiple = CGFloat(UserDefaultsManagement.editorLineHeight)
-        return paragraphStyle
-    }
+
     
     public static var languages: [String]?
     
@@ -697,11 +679,10 @@ public class NotesTextProcessor {
             guard let range = result?.range else { return }
             attributedString.addAttribute(.font, value: quoteFont, range: range)
             attributedString.fixAttributes(in: range)
-            attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: range)
-            attributedString.addAttribute(.paragraphStyle, value: quoteIndendationStyle, range: range)
+            attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.listColor, range: range)
             NotesTextProcessor.blockQuoteOpeningRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
-                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.listColor, range: innerRange)
                 hideSyntaxIfNecessary(range: innerRange)
             }
         }
