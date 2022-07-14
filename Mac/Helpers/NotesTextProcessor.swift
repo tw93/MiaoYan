@@ -30,13 +30,21 @@ public class NotesTextProcessor {
             }
         }
     
-    public static var listColor: NSColor {
-        if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-            return NSColor(named: "list")!
-        } else {
-            return NSColor(red: 0.79, green: 0.35, blue: 0.00, alpha: 1.0)
+        public static var listColor: NSColor {
+            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
+                return NSColor(named: "list")!
+            } else {
+                return NSColor(red: 0.79, green: 0.35, blue: 0.00, alpha: 1.0)
+            }
         }
-    }
+    
+        public static var htmlColor: NSColor {
+            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
+                return NSColor(named: "html")!
+            } else {
+                return NSColor(red: 0.79, green: 0.35, blue: 0.00, alpha: 1.0)
+            }
+        }
     
         public static var titleColor: NSColor {
             if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
@@ -487,51 +495,32 @@ public class NotesTextProcessor {
                 }
             }
         #endif
-    
-        // We detect and process inline links not formatted
-        NotesTextProcessor.autolinkRegex.matches(string, range: paragraphRange) { result in
-           
+        
+        NotesTextProcessor.italicRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range else { return }
-            let substring = attributedString.mutableString.substring(with: range)
-            guard substring.lengthOfBytes(using: .utf8) > 0 else { return }
-            let pattern =
-            "((?:http|https)://)?(?:www\\.)?[\\w\\d\\-_]+\\.\\w{2,3}(\\.\\w{2})?(/(?<=/)(?:[\\w\\d\\-./_]+)?)?";
-            let regex = try! NSRegularExpression(pattern: pattern, options: [NSRegularExpression.Options.caseInsensitive])
-            
-            regex.enumerateMatches(
-                in: string,
-                options: NSRegularExpression.MatchingOptions(),
-                range: range,
-                using: { result, _, _ in
-                    if let range = result?.range {
-                       
-                        guard attributedString.length >= range.location + range.length else {
-                            return
-                        }
-
-                        var str = attributedString.mutableString.substring(with: range)
-                        
-                        if str.starts(with: "www.") {
-                            str = "http://" + str
-                        }
-            
-                        guard let url = URL(string: str) else { return }
-
-                        attributedString.addAttribute(.link, value: url, range: range)
-                    }
-                }
-            )
-            
-            if NotesTextProcessor.hideSyntax {
-                NotesTextProcessor.autolinkPrefixRegex.matches(string, range: range) { innerResult in
-                    guard let innerRange = innerResult?.range else { return }
-                    attributedString.addAttribute(.font, value: hiddenFont, range: innerRange)
-                    attributedString.fixAttributes(in: innerRange)
-                    attributedString.addAttribute(.foregroundColor, value: hiddenColor, range: innerRange)
-                }
-            }
+            attributedString.fixAttributes(in: range)
+            attributedString.addAttribute(.foregroundColor, value: htmlColor, range: range)
         }
         
+        NotesTextProcessor.boldRegex.matches(string, range: paragraphRange) { result in
+            guard let range = result?.range else { return }
+            attributedString.fixAttributes(in: range)
+            attributedString.addAttribute(.foregroundColor, value: htmlColor, range: range)
+        }
+        
+        NotesTextProcessor.strikeRegex.matches(string, range: paragraphRange) { result in
+            guard let range = result?.range else { return }
+            attributedString.fixAttributes(in: range)
+            attributedString.addAttribute(.foregroundColor, value: htmlColor, range: range)
+        }
+        
+        NotesTextProcessor.htmlRegex.matches(string, range: paragraphRange) { result in
+            guard let range = result?.range else { return }
+            attributedString.fixAttributes(in: range)
+            attributedString.addAttribute(.foregroundColor, value: htmlColor, range: range)
+        }
+        
+
         // We detect and process underlined headers
         NotesTextProcessor.headersSetextRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range else { return }
@@ -715,34 +704,6 @@ public class NotesTextProcessor {
                 attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
                 hideSyntaxIfNecessary(range: innerRange)
             }
-        }
-        
-        // We detect and process italics
-        NotesTextProcessor.italicRegex.matches(string, range: paragraphRange) { result in
-            guard let range = result?.range else { return }
-            attributedString.fixAttributes(in: range)
-            
-            let preRange = NSMakeRange(range.location, 1)
-            attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: preRange)
-            hideSyntaxIfNecessary(range: preRange)
-            
-            let postRange = NSMakeRange(range.location + range.length - 1, 1)
-            attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: postRange)
-            hideSyntaxIfNecessary(range: postRange)
-        }
-        
-        // We detect and process bolds
-        NotesTextProcessor.boldRegex.matches(string, range: paragraphRange) { result in
-            guard let range = result?.range else { return }
-            attributedString.fixAttributes(in: range)
-            
-            let preRange = NSMakeRange(range.location, 2)
-            attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: preRange)
-            hideSyntaxIfNecessary(range: preRange)
-            
-            let postRange = NSMakeRange(range.location + range.length - 2, 2)
-            attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: postRange)
-            hideSyntaxIfNecessary(range: postRange)
         }
         
         // We detect and process inline mailto links not formatted
@@ -1166,18 +1127,13 @@ public class NotesTextProcessor {
     public static let blockQuoteOpeningRegex = MarklightRegex(pattern: blockQuoteOpeningPattern, options: [.anchorsMatchLines])
     
     // MARK: App url
-    
+
     fileprivate static let appUrlPattern = "(\\[\\[)(.+?[\\[\\]]*)\\]\\]"
     
     public static let appUrlRegex = MarklightRegex(pattern: appUrlPattern, options: [.anchorsMatchLines])
     
     // MARK: Bold
-    
-    /*
-     **Bold**
-     __Bold__
-     */
-    
+
     fileprivate static let strictBoldPattern = "(^|[\\W_])(?:(?!\\1)|(?=^))(\\*|_)\\2(?=\\S)(.*?\\S)\\2\\2(?!\\2)(?=[\\W_]|$)"
     
     public static let strictBoldRegex = MarklightRegex(pattern: strictBoldPattern, options: [.anchorsMatchLines])
@@ -1186,24 +1142,28 @@ public class NotesTextProcessor {
     
     public static let boldRegex = MarklightRegex(pattern: boldPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
     
+    // MARK: Strike
+
+    fileprivate static let strikePattern = "(\\~\\~) (?=\\S) (.+?[~]*) (?<=\\S) \\1"
+
+    public static let strikeRegex = MarklightRegex(pattern: strikePattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
+    
+    // MARK: HTML
+
+    fileprivate static let htmlPattern = "<(?:span|u|small|strong)>(.*?)</(?:span|u|small|strong)>"
+
+    public static let htmlRegex = MarklightRegex(pattern: htmlPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
+
     // MARK: Italic
-    
-    /*
-     *Italic*
-     _Italic_
-     */
-    
-    fileprivate static let strictItalicPattern = "(^|[\\W_])(?:(?!\\1)|(?=^))(\\*|_)(?=\\S)((?:(?!\\2).)*?\\S)\\2(?!\\2)(?=[\\W_]|$)"
-    
+
+    fileprivate static let strictItalicPattern = "(^|[\\s_])(?:(?!\\1)|(?=^))(\\*|_)(?=\\S)((?:(?!\\2).)*?\\S)\\2(?!\\2)(?=[\\s]|(?:[.,!?]\\s)|$)"
+
     public static let strictItalicRegex = MarklightRegex(pattern: strictItalicPattern, options: [.anchorsMatchLines])
     
-    fileprivate static let italicPattern = "(\\*|_) (?=\\S) (.+?) (?<=\\S) \\1"
+    fileprivate static let italicPattern = "(\\*|_) (?=\\S) (.+?[*_]*) (?<=\\S) \\1"
     
     public static let italicRegex = MarklightRegex(pattern: italicPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
     
-    fileprivate static let autolinkPattern = "([\\(]*(https?|ftp):[^`\'\">\\s]+)"
-
-    public static let autolinkRegex = MarklightRegex(pattern: autolinkPattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
     
     fileprivate static let autolinkPrefixPattern = "((https?|ftp)://)"
     
@@ -1317,7 +1277,7 @@ public class NotesTextProcessor {
         
         storage.removeAttribute(.link, range: range)
         
-        let pattern = "(https?:\\/\\/(?:www\\.|(?!www))[^\\s\\.]+\\.[^\\s]{2,}|www\\.[^\\s]+\\.[^\\s]{2,})"
+        let pattern = "((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,7})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(www.[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,7})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)"
         let regex = try! NSRegularExpression(pattern: pattern, options: [NSRegularExpression.Options.caseInsensitive])
         
         regex.enumerateMatches(
@@ -1331,12 +1291,17 @@ public class NotesTextProcessor {
                     }
                     
                     var str = storage.mutableString.substring(with: range)
+                   
+                    var _range = NSRange(location: range.location, length: range.length)
                     
-                    if str.starts(with: "www.") {
-                        str = "http://" + str
+                    if str.hasSuffix(">") {
+                        str = String(str.dropLast())
+                        _range = NSRange(location: range.location, length: range.length - 1)
                     }
+                 
                     guard let url = URL(string: str) else { return }
-                    storage.addAttribute(.link, value: url, range: range)
+                  
+                    storage.addAttribute(.link, value: url, range: _range)
                 }
             }
         )

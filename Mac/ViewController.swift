@@ -350,7 +350,7 @@ class ViewController: NSViewController,
         if #available(OSX 10.13, *) {
             self.editArea?.linkTextAttributes = [
                 .foregroundColor: NSColor(named: "highlight")!,
-                .cursor: NSCursor.pointingHand
+                .cursor: NSCursor.pointingHand,
             ]
         }
         editArea.viewDelegate = self
@@ -1967,7 +1967,7 @@ class ViewController: NSViewController,
             "noteMove.print",
             "noteMove.copyTitle",
             "noteMove.copyUrl",
-            "noteMove.rename"
+            "noteMove.rename",
         ]
 
         for menu in noteMenu.items {

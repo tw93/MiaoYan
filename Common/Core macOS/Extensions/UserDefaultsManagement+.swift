@@ -38,8 +38,8 @@ extension UserDefaultsManagement {
 
             if #available(OSX 10.14, *) {
                 if NSAppearance.current.isDark {
-                    UserDefaults.standard.set("atom-one-dark", forKey: Constants.codeTheme)
-                    return "atom-one-dark"
+                    UserDefaults.standard.set("night-owl", forKey: Constants.codeTheme)
+                    return "night-owl"
                 } else {
                     UserDefaults.standard.set("vs", forKey: Constants.codeTheme)
                     return "vs"
