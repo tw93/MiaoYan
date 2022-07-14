@@ -243,6 +243,10 @@ pre {
   padding: 5px 28px 80px;
 }
 
+a,
+.heti a heti-spacing {
+  color: #2BA44E;
+}
 .heti {
   font-weight: 400;
   -webkit-font-smoothing: subpixel-antialiased;
@@ -296,8 +300,8 @@ pre {
   }
 }
 .heti p {
-  margin-block-start: 12px;
-  margin-block-end: 24px;
+  margin-block-start: 18px;
+  margin-block-end: 18px;
   text-align: justify;
 }
 
@@ -358,11 +362,11 @@ blockquote blockquote {
   white-space: pre;
   word-wrap: normal;
   border-radius: 4px;
-  background-color: rgba(0, 0, 0, 0.054);
+  background-color: rgba(0, 0, 0, 0.03);
 }
 @media (prefers-color-scheme: dark) {
   .heti pre {
-    background-color: rgba(255, 255, 255, 0.054);
+    background-color: rgba(255, 255, 255, 0.03);
   }
 }
 .heti pre code {
@@ -389,7 +393,7 @@ blockquote blockquote {
 
 .heti h1 {
   margin-block-end: 24px;
-  font-size: 2.0em;
+  font-size: 2em;
 }
 .heti h2 {
   font-size: 1.5em;
@@ -1004,14 +1008,14 @@ blockquote blockquote {
 .hljs-comment,
 .hljs-quote,
 .hljs-variable {
-  color: green;
+  color: #035c21;
 }
 .hljs-built_in,
 .hljs-keyword,
 .hljs-name,
 .hljs-selector-tag,
 .hljs-tag {
-  color: #00f;
+  color: #0a69d9;
 }
 .hljs-addition,
 .hljs-attribute,
@@ -1022,24 +1026,24 @@ blockquote blockquote {
 .hljs-template-variable,
 .hljs-title,
 .hljs-type {
-  color: #a31515;
+  color: #bf3889;
 }
 .hljs-deletion,
 .hljs-meta,
 .hljs-selector-attr,
 .hljs-selector-pseudo {
-  color: #2b91af;
+  color: #208bff;
 }
 .hljs-doctag {
-  color: grey;
+  color: #6e7781;
 }
 .hljs-attr {
-  color: red;
+  color: #cf212e;
 }
 .hljs-bullet,
 .hljs-link,
 .hljs-symbol {
-  color: #00b0e8;
+  color: #8250df;
 }
 .hljs-emphasis {
   font-style: italic;
@@ -1074,48 +1078,48 @@ mjx-container[display='block'] {
 }
 
 span.emoji {
-	display: -moz-inline-box;
-	-moz-box-orient: vertical;
-	display: inline-block;
-	vertical-align: baseline;
-	*vertical-align: auto;
-	*zoom: 1;
-	*display: inline;
-	width: 1em;
-	height: 1em;
-	background-size: 1em;
-	background-repeat: no-repeat;
-	text-indent: -9999px;
-	background-position: 50%, 50%;
-	background-size: contain;
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: baseline;
+  *vertical-align: auto;
+  *zoom: 1;
+  *display: inline;
+  width: 1em;
+  height: 1em;
+  background-size: 1em;
+  background-repeat: no-repeat;
+  text-indent: -9999px;
+  background-position: 50%, 50%;
+  background-size: contain;
 }
 
 span.emoji-sizer {
-	line-height: 0.81em;
-	font-size: 1em;
- 	margin: -2px 0;
+  line-height: 0.81em;
+  font-size: 1em;
+  margin: -2px 0;
 }
 
 span.emoji-outer {
-	display: -moz-inline-box;
-	display: inline-block;
-	*display: inline;
-	height: 1em;
-	width: 1em;
+  display: -moz-inline-box;
+  display: inline-block;
+  *display: inline;
+  height: 1em;
+  width: 1em;
 }
 
 span.emoji-inner {
-	display: -moz-inline-box;
-	display: inline-block;
-	text-indent: -9999px;
-	width: 100%;
-	height: 100%;
-	vertical-align: baseline;
-	*vertical-align: auto;
-	*zoom: 1;
+  display: -moz-inline-box;
+  display: inline-block;
+  text-indent: -9999px;
+  width: 100%;
+  height: 100%;
+  vertical-align: baseline;
+  *vertical-align: auto;
+  *zoom: 1;
 }
 
 img.emoji {
-	width: 1em;
-	height: 1em;
+  width: 1em;
+  height: 1em;
 }
