@@ -178,5 +178,20 @@
         });
       });
     </script>
+    <script>
+      document
+        .querySelectorAll('h1, h2, h3, h4, h5, h6,h7')
+        .forEach((h) => (h.id = h.innerText));
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          document
+            .querySelector(decodeURIComponent(this.getAttribute('href')))
+            .scrollIntoView({
+              behavior: 'smooth',
+            });
+        });
+      });
+    </script>
   </body>
 </html>
