@@ -1368,7 +1368,7 @@ CA
                                                                             <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                                                                             <font key="font" metaFont="system"/>
                                                                         </buttonCell>
-                                                                        <color key="contentTintColor" name="highlight"/>
+                                                                        <color key="contentTintColor" name="link"/>
                                                                         <connections>
                                                                             <action selector="togglePreview:" target="XfG-lQ-9wD" id="Mf0-5U-8VP"/>
                                                                         </connections>
@@ -1655,7 +1655,10 @@ CA
             <color red="0.89999997615814209" green="0.89999997615814209" blue="0.89999997615814209" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="highlight">
-            <color red="0.18000000715255737" green="0.40999999642372131" blue="0.10999999940395355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.039999999105930328" green="0.40999999642372131" blue="0.85000002384185791" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="link">
+            <color red="0.0099999997764825821" green="0.36000001430511475" blue="0.12999999523162842" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="mainBackground">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
