@@ -86,7 +86,7 @@ public class TextFormatter {
             setSelectedRange(NSMakeRange(location, 0))
         }
     }
-    
+
     public func deleteline() {
         if note.isMarkdown() {
             let string = "~~" + attributedString.string + "~~"
