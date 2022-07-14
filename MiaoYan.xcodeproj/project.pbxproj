@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		270678F22445FE8B00D9935F /* Pods_MiaoYan.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 951EFB1C1F695127AE454696 /* Pods_MiaoYan.framework */; };
-		270678F32445FE8B00D9935F /* Pods_MiaoYan.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 951EFB1C1F695127AE454696 /* Pods_MiaoYan.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1CC5664BA969B438568B7C05 /* Pods_MiaoYan.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47543B75E5BE7E1CFD287CA1 /* Pods_MiaoYan.framework */; };
+		1DECF68F5F272E5A1F2687C6 /* Pods_MiaoYanCore_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 260AEA7AD6D39CFD60C015CF /* Pods_MiaoYanCore_macOS.framework */; };
+		270678F32445FE8B00D9935F /* (null) in Embed Frameworks */ = {isa = PBXBuildFile; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		270678F6244601C000D9935F /* MiaoYanCore_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */; };
 		270678F7244601C000D9935F /* MiaoYanCore_macOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2714D861285196D70026BDE4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2714D863285196D70026BDE4 /* InfoPlist.strings */; };
@@ -20,7 +21,6 @@
 		275592971F3AE9B5006B8988 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275592961F3AE9B5006B8988 /* MainWindowController.swift */; };
 		277A61D8244B538F000F0033 /* SidebarTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277A61D7244B538E000F0033 /* SidebarTableRowView.swift */; };
 		27838E68287521C0009E8012 /* DetachedWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27838E67287521C0009E8012 /* DetachedWindowController.swift */; };
-		278782AA2446910D000D5B82 /* Pods_MiaoYanCore_macOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E9D36FA8E1C6FB67A485A09 /* Pods_MiaoYanCore_macOS.framework */; };
 		2799407C218484C900727B20 /* TitleBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799407B218484C900727B20 /* TitleBarView.swift */; };
 		27D95115285B21EF00F40306 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D95114285B21EF00F40306 /* Typography.swift */; };
 		27D95122285B5E4400F40306 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D95121285B5E4400F40306 /* Toast.swift */; };
@@ -156,7 +156,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				270678F7244601C000D9935F /* MiaoYanCore_macOS.framework in Embed Frameworks */,
-				270678F32445FE8B00D9935F /* Pods_MiaoYan.framework in Embed Frameworks */,
+				270678F32445FE8B00D9935F /* (null) in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -173,6 +173,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		260AEA7AD6D39CFD60C015CF /* Pods_MiaoYanCore_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MiaoYanCore_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2714D862285196D70026BDE4 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2714D864285197CA0026BDE4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2714D86728519FB20026BDE4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
@@ -193,19 +194,16 @@
 		27D95114285B21EF00F40306 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		27D95121285B5E4400F40306 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		27D9A4F62873D345006317AD /* FileManager+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+.swift"; sourceTree = "<group>"; };
-		469FA7126FC57EFF16B8CA67 /* Pods-MiaoYanCore macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYanCore macOS.release.xcconfig"; path = "Target Support Files/Pods-MiaoYanCore macOS/Pods-MiaoYanCore macOS.release.xcconfig"; sourceTree = "<group>"; };
-		5665A4534543CBBCB417646F /* Pods-MiaoYanCore macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYanCore macOS.debug.xcconfig"; path = "Target Support Files/Pods-MiaoYanCore macOS/Pods-MiaoYanCore macOS.debug.xcconfig"; sourceTree = "<group>"; };
-		638C3D39232D70961B32583F /* Pods-MiaoYan.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYan.release.xcconfig"; path = "Target Support Files/Pods-MiaoYan/Pods-MiaoYan.release.xcconfig"; sourceTree = "<group>"; };
+		47543B75E5BE7E1CFD287CA1 /* Pods_MiaoYan.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MiaoYan.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		541AD5C60D506416D2DC1848 /* Pods-MiaoYan.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYan.release.xcconfig"; path = "Target Support Files/Pods-MiaoYan/Pods-MiaoYan.release.xcconfig"; sourceTree = "<group>"; };
 		6F13BB0620FEDDF50005E120 /* MiaoYanCore_macOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MiaoYanCore_macOS.h; sourceTree = "<group>"; };
 		6F13BB0720FEDDF50005E120 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6F13BB2820FEDE230005E120 /* DateFormatter+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+.swift"; sourceTree = "<group>"; };
 		6F13BB2920FEDE230005E120 /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
 		6F13BB2A20FEDE230005E120 /* URL+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+.swift"; sourceTree = "<group>"; };
 		6F13BB3820FEDE230005E120 /* UserDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataService.swift; sourceTree = "<group>"; };
-		7E9D36FA8E1C6FB67A485A09 /* Pods_MiaoYanCore_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MiaoYanCore_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		86BACB4E8DB50EDCD1369A2D /* Pods-MiaoYan.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYan.debug.xcconfig"; path = "Target Support Files/Pods-MiaoYan/Pods-MiaoYan.debug.xcconfig"; sourceTree = "<group>"; };
 		8F7136ED23490CBF004DFA6E /* Markdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Markdown.swift; sourceTree = "<group>"; };
-		91B2C247C287A5BDC802D510 /* Pods-MiaoYan.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYan.debug.xcconfig"; path = "Target Support Files/Pods-MiaoYan/Pods-MiaoYan.debug.xcconfig"; sourceTree = "<group>"; };
-		951EFB1C1F695127AE454696 /* Pods_MiaoYan.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MiaoYan.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7038E1C20FA86C100A54E69 /* SharingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingService.swift; sourceTree = "<group>"; };
 		D7038E2520FB24E000A54E69 /* NoteAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteAttachment.swift; sourceTree = "<group>"; };
 		D708AC662000EF5800A1760F /* NoteType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteType.swift; sourceTree = "<group>"; };
@@ -291,6 +289,8 @@
 		D7F76C49232D648D00E8D8BA /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = SOURCE_ROOT; };
 		D7F76C4B232D648D00E8D8BA /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "../zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		D7F95F391FF2759300E2A447 /* NotesTextProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesTextProcessor.swift; sourceTree = "<group>"; };
+		E1780AB87DF0A7EA043372E8 /* Pods-MiaoYanCore macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYanCore macOS.release.xcconfig"; path = "Target Support Files/Pods-MiaoYanCore macOS/Pods-MiaoYanCore macOS.release.xcconfig"; sourceTree = "<group>"; };
+		ECCEEEEAFE41BF266125D8F5 /* Pods-MiaoYanCore macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYanCore macOS.debug.xcconfig"; path = "Target Support Files/Pods-MiaoYanCore macOS/Pods-MiaoYanCore macOS.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -298,7 +298,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				278782AA2446910D000D5B82 /* Pods_MiaoYanCore_macOS.framework in Frameworks */,
+				1DECF68F5F272E5A1F2687C6 /* Pods_MiaoYanCore_macOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,7 +307,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				270678F6244601C000D9935F /* MiaoYanCore_macOS.framework in Frameworks */,
-				270678F22445FE8B00D9935F /* Pods_MiaoYan.framework in Frameworks */,
+				1CC5664BA969B438568B7C05 /* Pods_MiaoYan.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -333,10 +333,10 @@
 		32CE416A4DFCDD098D5DAF53 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				91B2C247C287A5BDC802D510 /* Pods-MiaoYan.debug.xcconfig */,
-				638C3D39232D70961B32583F /* Pods-MiaoYan.release.xcconfig */,
-				5665A4534543CBBCB417646F /* Pods-MiaoYanCore macOS.debug.xcconfig */,
-				469FA7126FC57EFF16B8CA67 /* Pods-MiaoYanCore macOS.release.xcconfig */,
+				86BACB4E8DB50EDCD1369A2D /* Pods-MiaoYan.debug.xcconfig */,
+				541AD5C60D506416D2DC1848 /* Pods-MiaoYan.release.xcconfig */,
+				ECCEEEEAFE41BF266125D8F5 /* Pods-MiaoYanCore macOS.debug.xcconfig */,
+				E1780AB87DF0A7EA043372E8 /* Pods-MiaoYanCore macOS.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -414,11 +414,11 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
-		C5F4774EAA923C4003B182F8 /* Frameworks */ = {
+		A374B951E36976FC7794F7D2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				951EFB1C1F695127AE454696 /* Pods_MiaoYan.framework */,
-				7E9D36FA8E1C6FB67A485A09 /* Pods_MiaoYanCore_macOS.framework */,
+				47543B75E5BE7E1CFD287CA1 /* Pods_MiaoYan.framework */,
+				260AEA7AD6D39CFD60C015CF /* Pods_MiaoYanCore_macOS.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -443,12 +443,12 @@
 				6F13BB2320FEDE230005E120 /* Common */,
 				D7D61FCC1F32EEA1004357C2 /* Resources */,
 				D7793C711F211C6000CA39B7 /* Mac */,
-				C5F4774EAA923C4003B182F8 /* Frameworks */,
 				32CE416A4DFCDD098D5DAF53 /* Pods */,
 				2789B1E3287FD9C500BF8BC1 /* MiaoYan.entitlements */,
 				27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */,
 				270678FD2446861D00D9935F /* Recovered References */,
 				2795956327B12CDC000B754C /* MiaoYan.app */,
+				A374B951E36976FC7794F7D2 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -587,7 +587,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6F13BB2020FEDDF50005E120 /* Build configuration list for PBXNativeTarget "MiaoYanCore macOS" */;
 			buildPhases = (
-				E455DB381CF1C8CED1820400 /* [CP] Check Pods Manifest.lock */,
+				AFC1DC23959948A2842E3346 /* [CP] Check Pods Manifest.lock */,
 				6F13BAFF20FEDDF40005E120 /* Headers */,
 				6F13BB0020FEDDF40005E120 /* Sources */,
 				6F13BB0120FEDDF40005E120 /* Frameworks */,
@@ -607,13 +607,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D7793C951F211C6000CA39B7 /* Build configuration list for PBXNativeTarget "MiaoYan" */;
 			buildPhases = (
-				262A4AB937367FE4AA6909D2 /* [CP] Check Pods Manifest.lock */,
+				7C46BB67BE3DC06B967D49D9 /* [CP] Check Pods Manifest.lock */,
 				D7793C6B1F211C6000CA39B7 /* Sources */,
 				D7793C6C1F211C6000CA39B7 /* Frameworks */,
 				D7793C6D1F211C6000CA39B7 /* Resources */,
 				6F13BB1A20FEDDF50005E120 /* Embed Frameworks */,
-				87E69F0E68207EC309B3E16E /* [CP] Embed Pods Frameworks */,
 				D7D7CD58232791810016AC15 /* CopyFiles */,
+				13E4466039F63073477ED5B0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -713,7 +713,53 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		262A4AB937367FE4AA6909D2 /* [CP] Check Pods Manifest.lock */ = {
+		13E4466039F63073477ED5B0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MiaoYan/Pods-MiaoYan-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/MASShortcut/MASShortcut.framework",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/Highlightr/Highlightr.framework",
+				"${BUILT_PRODUCTS_DIR}/Punycode/Punycode.framework",
+				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
+				"${PODS_ROOT}/Sparkle/Sparkle.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
+				"${BUILT_PRODUCTS_DIR}/libcmark_gfm/libcmark_gfm.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MASShortcut.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Highlightr.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Punycode.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Sparkle.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libcmark_gfm.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MiaoYan/Pods-MiaoYan-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6F13BB7720FEE3500005E120 /* SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = SwiftLint;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n    swiftlint\nelif which \"${PODS_ROOT}/SwiftLint/swiftlint\" >/dev/null; then\n    \"${PODS_ROOT}/SwiftLint/swiftlint\"\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+		7C46BB67BE3DC06B967D49D9 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -735,51 +781,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		6F13BB7720FEE3500005E120 /* SwiftLint */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = SwiftLint;
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if which swiftlint >/dev/null; then\n    swiftlint\nelif which \"${PODS_ROOT}/SwiftLint/swiftlint\" >/dev/null; then\n    \"${PODS_ROOT}/SwiftLint/swiftlint\"\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
-		};
-		87E69F0E68207EC309B3E16E /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MiaoYan/Pods-MiaoYan-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/MASShortcut/MASShortcut.framework",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/Highlightr/Highlightr.framework",
-				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
-				"${PODS_ROOT}/Sparkle/Sparkle.framework",
-				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
-				"${BUILT_PRODUCTS_DIR}/libcmark_gfm/libcmark_gfm.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MASShortcut.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Highlightr.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Sparkle.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libcmark_gfm.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MiaoYan/Pods-MiaoYan-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E455DB381CF1C8CED1820400 /* [CP] Check Pods Manifest.lock */ = {
+		AFC1DC23959948A2842E3346 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -990,7 +992,7 @@
 /* Begin XCBuildConfiguration section */
 		6F13BB1C20FEDDF50005E120 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5665A4534543CBBCB417646F /* Pods-MiaoYanCore macOS.debug.xcconfig */;
+			baseConfigurationReference = ECCEEEEAFE41BF266125D8F5 /* Pods-MiaoYanCore macOS.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
@@ -1023,7 +1025,7 @@
 		};
 		6F13BB1D20FEDDF50005E120 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 469FA7126FC57EFF16B8CA67 /* Pods-MiaoYanCore macOS.release.xcconfig */;
+			baseConfigurationReference = E1780AB87DF0A7EA043372E8 /* Pods-MiaoYanCore macOS.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
@@ -1181,7 +1183,7 @@
 		};
 		D7793C961F211C6000CA39B7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 91B2C247C287A5BDC802D510 /* Pods-MiaoYan.debug.xcconfig */;
+			baseConfigurationReference = 86BACB4E8DB50EDCD1369A2D /* Pods-MiaoYan.debug.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1202,7 +1204,7 @@
 				);
 				INFOPLIST_FILE = Mac/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MARKETING_VERSION = 0.8.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.MiaoYan;
@@ -1217,7 +1219,7 @@
 		};
 		D7793C971F211C6000CA39B7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 638C3D39232D70961B32583F /* Pods-MiaoYan.release.xcconfig */;
+			baseConfigurationReference = 541AD5C60D506416D2DC1848 /* Pods-MiaoYan.release.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1239,7 +1241,7 @@
 				);
 				INFOPLIST_FILE = Mac/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MARKETING_VERSION = 0.8.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.MiaoYan;

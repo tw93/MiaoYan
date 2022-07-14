@@ -1,7 +1,7 @@
 use_frameworks!
 
-MAC_TARGET_VERSION = '10.11'
-IOS_TARGET_VERSION = '10'
+MAC_TARGET_VERSION = '10.12'
+IOS_TARGET_VERSION = '12'
 
 def mac_pods
     pod 'MASShortcut', :git => 'https://github.com/shpakovski/MASShortcut.git', :branch => 'master'
@@ -24,7 +24,7 @@ def common_pods
 end
 
 def framework_pods
-    pod 'SwiftLint', '~> 0.47.0'
+    pod 'SwiftLint'
 end
 
 target 'MiaoYanCore macOS' do

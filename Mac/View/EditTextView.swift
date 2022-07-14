@@ -167,7 +167,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         if pasteImageFromClipboard(in: note) {
             return
         }
-
+        
         if let clipboard = NSPasteboard.general.string(forType: NSPasteboard.PasteboardType.string) {
             EditTextView.shouldForceRescan = true
 
@@ -354,6 +354,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
             storage.setAttributedString(note.content)
         }
 
+        fillHiglightLinks(note: note, saveTyping: saveTyping)
+        
         if highlight {
             let search = getSearchText()
             let processor = NotesTextProcessor(storage: storage)
@@ -909,7 +911,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         guard let note = EditTextView.note else { return }
 
         UserDataService.instance.isDark = effectiveAppearance.isDark
-        UserDefaultsManagement.codeTheme = effectiveAppearance.isDark ? "atom-one-dark" : "vs"
+        UserDefaultsManagement.codeTheme = effectiveAppearance.isDark ? "night-owl" : "vs"
 
         NotesTextProcessor.hl = nil
         NotesTextProcessor.highlight(note: note)
@@ -919,6 +921,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         downView?.evaluateJavaScript(switchScript)
         viewDelegate?.refillEditArea()
+    }
+
+    private func fillHiglightLinks(note: Note, saveTyping: Bool) {
+        guard let storage = textStorage else { return }
+
+        let range = NSRange(0..<storage.length)
+        let processor = NotesTextProcessor(storage: storage, range: range)
+        processor.higlightLinks()
     }
 
     private func pasteImageFromClipboard(in note: Note) -> Bool {
@@ -990,22 +1000,22 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     func postToPicGo(imagePath: String, completion: @escaping (Any?, Error?) -> Void) {
         let json: [String: Any] = ["list": [imagePath]]
-        Alamofire.request("http://127.0.0.1:36677/upload", method: .post, parameters: json, encoding: JSONEncoding.default)
-            .responseJSON { response in
-                switch response.result {
-                    case .success:
-                        let json = JSON(response.result.value!)
-                        let result = json["result"][0].stringValue
-                        if !result.isEmpty {
-                            completion(result, nil)
-                        } else {
-                            completion(nil, nil)
-                        }
-
-                    case .failure:
+        struct DecodableType: Decodable { let url: String }
+        AF.request("http://127.0.0.1:36677/upload", method: .post, parameters: json).responseDecodable(of: DecodableType.self) { response in
+            switch response.result {
+                case .success:
+                    let json = JSON(response.value!)
+                    let result = json["result"][0].stringValue
+                    if !result.isEmpty {
+                        completion(result, nil)
+                    } else {
                         completion(nil, nil)
-                }
+                    }
+
+                case .failure:
+                    completion(nil, nil)
             }
+        }
     }
 
     func deleteImage(tempPath: URL) {
