@@ -213,6 +213,7 @@ class ViewController: NSViewController,
         let size = vc.splitView.subviews[0].frame.width
         let sideSize = vc.sidebarSplitView.subviews[0].frame.width
         setSideDividerHidden(hidden: sideSize == 0)
+        setDividerHidden(hidden: size == 0)
         refreshMiaoYanNum()
         if UserDefaultsManagement.isSingleMode {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
@@ -346,6 +347,12 @@ class ViewController: NSViewController,
         editArea.isAutomaticTextReplacementEnabled = false
         editArea.isAutomaticDashSubstitutionEnabled = false
         editArea.textStorage?.delegate = editArea.textStorage
+        if #available(OSX 10.13, *) {
+            self.editArea?.linkTextAttributes = [
+                .foregroundColor: NSColor(named: "highlight")!,
+                .cursor: NSCursor.pointingHand
+            ]
+        }
         editArea.viewDelegate = self
     }
 
@@ -1960,7 +1967,7 @@ class ViewController: NSViewController,
             "noteMove.print",
             "noteMove.copyTitle",
             "noteMove.copyUrl",
-            "noteMove.rename",
+            "noteMove.rename"
         ]
 
         for menu in noteMenu.items {
