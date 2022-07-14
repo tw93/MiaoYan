@@ -30,6 +30,14 @@ public class NotesTextProcessor {
             }
         }
     
+    public static var listColor: NSColor {
+        if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
+            return NSColor(named: "list")!
+        } else {
+            return NSColor(red: 0.79, green: 0.35, blue: 0.00, alpha: 1.0)
+        }
+    }
+    
         public static var titleColor: NSColor {
             if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
                 return NSColor(named: "title")!
@@ -479,18 +487,40 @@ public class NotesTextProcessor {
                 }
             }
         #endif
-        
+    
         // We detect and process inline links not formatted
         NotesTextProcessor.autolinkRegex.matches(string, range: paragraphRange) { result in
+           
             guard let range = result?.range else { return }
             let substring = attributedString.mutableString.substring(with: range)
             guard substring.lengthOfBytes(using: .utf8) > 0 else { return }
+            let pattern =
+            "((?:http|https)://)?(?:www\\.)?[\\w\\d\\-_]+\\.\\w{2,3}(\\.\\w{2})?(/(?<=/)(?:[\\w\\d\\-./_]+)?)?";
+            let regex = try! NSRegularExpression(pattern: pattern, options: [NSRegularExpression.Options.caseInsensitive])
             
-            if #available(OSX 10.13, *) {
-                attributedString.addAttribute(.foregroundColor, value: highlightColor, range: range)
-            } else {
-                attributedString.addAttribute(.foregroundColor, value: UserDefaultsManagement.linkColor, range: range)
-            }
+            regex.enumerateMatches(
+                in: string,
+                options: NSRegularExpression.MatchingOptions(),
+                range: range,
+                using: { result, _, _ in
+                    if let range = result?.range {
+                       
+                        guard attributedString.length >= range.location + range.length else {
+                            return
+                        }
+
+                        var str = attributedString.mutableString.substring(with: range)
+                        
+                        if str.starts(with: "www.") {
+                            str = "http://" + str
+                        }
+            
+                        guard let url = URL(string: str) else { return }
+
+                        attributedString.addAttribute(.link, value: url, range: range)
+                    }
+                }
+            )
             
             if NotesTextProcessor.hideSyntax {
                 NotesTextProcessor.autolinkPrefixRegex.matches(string, range: range) { innerResult in
@@ -545,7 +575,7 @@ public class NotesTextProcessor {
             guard let range = result?.range else { return }
             NotesTextProcessor.listOpeningRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
-                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                attributedString.addAttribute(.foregroundColor, value: listColor, range: innerRange)
             }
         }
         
@@ -600,12 +630,8 @@ public class NotesTextProcessor {
                     
                     destinationLink = substring
                     
-                    if #available(OSX 10.13, *) {
-                        attributedString.addAttribute(.foregroundColor, value: highlightColor, range: linkRange)
-                    } else {
-                        attributedString.addAttribute(.foregroundColor, value: UserDefaultsManagement.linkColor, range: range)
-                    }
-                    
+                    attributedString.addAttribute(.foregroundColor, value: highlightColor, range: linkRange)
+                
                     hideSyntaxIfNecessary(range: innerRange)
                 }
                 
@@ -632,11 +658,7 @@ public class NotesTextProcessor {
                     let substring = attributedString.mutableString.substring(with: _range)
                     guard substring.lengthOfBytes(using: .utf8) > 0 else { return }
                     
-                    if #available(OSX 10.13, *) {
-                        attributedString.addAttribute(.foregroundColor, value: linkColor, range: range)
-                    } else {
-                        attributedString.addAttribute(.foregroundColor, value: UserDefaultsManagement.linkColor, range: range)
-                    }
+                    attributedString.addAttribute(.foregroundColor, value: linkColor, range: _range)
                 }
             }
         #endif
@@ -652,7 +674,7 @@ public class NotesTextProcessor {
             }
             NotesTextProcessor.imageOpeningSquareRegex.matches(string, range: paragraphRange) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
-                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                attributedString.addAttribute(.foregroundColor, value: linkColor, range: innerRange)
             }
             NotesTextProcessor.imageClosingSquareRegex.matches(string, range: paragraphRange) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
@@ -662,14 +684,23 @@ public class NotesTextProcessor {
         
         // We detect and process app urls [[link]]
         NotesTextProcessor.appUrlRegex.matches(string, range: paragraphRange) { result in
+            
             guard let innerRange = result?.range else { return }
             var _range = innerRange
             _range.location = _range.location + 2
             _range.length = _range.length - 4
             
             let appLink = attributedString.mutableString.substring(with: _range)
-            
-            attributedString.addAttribute(.link, value: "miaoyan://goto/" + appLink, range: innerRange)
+      
+            attributedString.addAttribute(.link, value: "miaoyan://goto/" + appLink, range: _range)
+            attributedString.addAttribute(.foregroundColor, value: linkColor, range: _range)
+            if let range = result?.range(at: 0) {
+                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: range)
+            }
+
+            if let range = result?.range(at: 2) {
+                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: range)
+            }
         }
         
         // We detect and process quotes
@@ -677,7 +708,7 @@ public class NotesTextProcessor {
             guard let range = result?.range else { return }
             attributedString.addAttribute(.font, value: quoteFont, range: range)
             attributedString.fixAttributes(in: range)
-            attributedString.addAttribute(.foregroundColor, value: quoteColor, range: range)
+            attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: range)
             attributedString.addAttribute(.paragraphStyle, value: quoteIndendationStyle, range: range)
             NotesTextProcessor.blockQuoteOpeningRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
@@ -720,10 +751,12 @@ public class NotesTextProcessor {
             let substring = attributedString.mutableString.substring(with: range)
             guard substring.lengthOfBytes(using: .utf8) > 0 else { return }
             
-            if #available(OSX 10.13, *) {
-                attributedString.addAttribute(.foregroundColor, value: linkColor, range: range)
+            attributedString.addAttribute(.foregroundColor, value: linkColor, range: range)
+            
+            if substring.isValidEmail() {
+                attributedString.addAttribute(.link, value: "mailto:\(substring)", range: range)
             } else {
-                attributedString.addAttribute(.foregroundColor, value: UserDefaultsManagement.linkColor, range: range)
+                attributedString.addAttribute(.link, value: substring, range: range)
             }
             
             if NotesTextProcessor.hideSyntax {
@@ -912,36 +945,12 @@ public class NotesTextProcessor {
     
     fileprivate static let _markerUL = "[*+-]"
     fileprivate static let _markerOL = "[0-9-]+[.]"
-    
+
     fileprivate static let _listMarker = "(?:\\p{Z}|\\t)*(?:\(_markerUL)|\(_markerOL))"
-    fileprivate static let _wholeList = [
-        "(                               # $1 = whole list",
-        "  (                             # $2",
-        "    \\p{Z}{0,\(_tabWidth - 1)}",
-        "    (\(_listMarker))            # $3 = first list item marker",
-        "    \\p{Z}+",
-        "  )",
-        "  (?s:.+?)",
-        "  (                             # $4",
-        "      \\z",
-        "    |",
-        "      \\n{2,}",
-        "      (?=\\S)",
-        "      (?!                       # Negative lookahead for another list item marker",
-        "        \\p{Z}*",
-        "        \(_listMarker)\\p{Z}+",
-        "      )",
-        "  )",
-        ")"
-    ].joined(separator: "\n")
-    
-    fileprivate static let listPattern = "(?:(?<=\\n)|\\A\\n?)" + _wholeList
-    
-    private static let listSingleLinePattern = "\\A(?:\\p{Z}|\\t)*((?:[*+-]|\\d+[.]))\\p{Z}+"
-    
-    public static let listRegex = MarklightRegex(pattern: listPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
+    fileprivate static let _listSingleLinePattern = "^(?:\\p{Z}|\\t)*((?:[*+-]|\\d+[.]))\\p{Z}+"
+
+    public static let listRegex = MarklightRegex(pattern: _listSingleLinePattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
     public static let listOpeningRegex = MarklightRegex(pattern: _listMarker, options: [.allowCommentsAndWhitespace])
-    public static let listSingleLineRegex = MarklightRegex(pattern: listSingleLinePattern, options: [.allowCommentsAndWhitespace])
     
     // MARK: Anchors
     
@@ -1192,8 +1201,8 @@ public class NotesTextProcessor {
     
     public static let italicRegex = MarklightRegex(pattern: italicPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
     
-    fileprivate static let autolinkPattern = "((https?|ftp):[^\\)'\">\\s]+)"
-    
+    fileprivate static let autolinkPattern = "([\\(]*(https?|ftp):[^`\'\">\\s]+)"
+
     public static let autolinkRegex = MarklightRegex(pattern: autolinkPattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
     
     fileprivate static let autolinkPrefixPattern = "((https?|ftp)://)"
@@ -1326,12 +1335,8 @@ public class NotesTextProcessor {
                     if str.starts(with: "www.") {
                         str = "http://" + str
                     }
-        
-                    if #available(OSX 10.13, *) {
-                        storage.addAttribute(.foregroundColor, value: linkColor, range: range)
-                    } else {
-                        storage.addAttribute(.foregroundColor, value: UserDefaultsManagement.linkColor, range: range)
-                    }
+                    guard let url = URL(string: str) else { return }
+                    storage.addAttribute(.link, value: url, range: range)
                 }
             }
         )
@@ -1343,7 +1348,15 @@ public class NotesTextProcessor {
             let to = String.Index(utf16Offset: innerRange.upperBound - 2, in: storage.string)
             
             let appLink = storage.string[from..<to]
+            
             storage.addAttribute(.link, value: "miaoyan://goto/" + appLink, range: innerRange)
+            if let range = result?.range(at: 0) {
+                storage.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: range)
+            }
+
+            if let range = result?.range(at: 2) {
+                storage.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: range)
+            }
         }
     }
     
