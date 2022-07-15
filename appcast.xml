@@ -13,10 +13,10 @@
         😂 修复反复格式化偶现 crash 问题、修复黑暗下虚线展示、修复超链接高亮偶尔错误问题 <br/>
         <h3>Beautiful Upgrade：</h3>
         🍭 Complement editor a large number of syntax color highlights. You will find that the editor is more fashionable.<br/>
-        🎉 Support shortcut key output bold / italic / strike / underline / link, and support block tab to move left and right. <br/>
-        🩴 Support Emoji shortname, The most suitable line height of different fonts, export document add titles, set anchor scrolling, and open external chain.<br/>
+        🎉 Support shortcut key output bold/italic/strike/underline/link, Support block tab to move left and right. <br/>
+        🩴 Support Emoji shortname, The most suitable line height of different fonts, Export document auto add title, Set anchor scrolling, Can copy external url.<br/>
         🙊 Shortcut keys are normalized, Number of displayed words is changed to command+option+i, Finder is opened and unified as command+option+r, New folder is unified as command+shift+n.<br/>
-        😂 Fix the occasional crash of repeated formatting, the dotted line display in the dark, and the occasional error of hyperlink highlighting.<br/>
+        😂 Fix the occasional crash of repeated formatting, Fixed the dotted line display in the dark, and the occasional error of hyperlink highlighting.<br/>
             ]]>      </description>
       <pubDate>周五, 15 7月 2022 23:24:20 +0800</pubDate>
       <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V0.9.0.zip" sparkle:shortVersionString="0.9.0" sparkle:version="0.9.0" sparkle:edSignature="VaYUYDurUk/t8ukNqNfrZaWJ+Gn5qR9tjztrXkiJOjzWI47z06TwWrWiHE4onbHHiZU2ftFD6E61SCkq8tE9Bw==" length="32907174" type="application/octet-stream" />
