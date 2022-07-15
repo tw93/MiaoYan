@@ -174,7 +174,6 @@ class ViewController: NSViewController,
         searchQueue.maxConcurrentOperationCount = 1
         notesTableView.loadingQueue.maxConcurrentOperationCount = 1
         notesTableView.loadingQueue.qualityOfService = QualityOfService.userInteractive
-        emptyEditAreaView.isHidden = true
     }
 
     func refreshMiaoYanNum() {
@@ -291,6 +290,7 @@ class ViewController: NSViewController,
     // MARK: - Initial configuration
 
     private func configureLayout() {
+        emptyEditAreaView.isHidden = true
         updateTitle(newTitle: "")
 
         DispatchQueue.main.async {
