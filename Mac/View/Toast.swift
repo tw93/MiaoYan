@@ -124,7 +124,6 @@ private extension NSViewController {
         toastLayer.backgroundColor = NSColor.black.withAlphaComponent(1).cgColor
         toastLayer.cornerRadius = 8
         toastLayer.opacity = 0.0
-        
         return toastLayer
     }
     
