@@ -33,7 +33,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         var newRect = NSRect(origin: rect.origin, size: rect.size)
         newRect.size.width = caretWidth
         newRect.size.height = newRect.size.height - 6.0
-        newRect.origin.y = newRect.origin.y + 4
+        newRect.origin.y = newRect.origin.y + 3.7
         super.drawInsertionPoint(in: newRect, color: EditTextView.fontColor, turnedOn: flag)
     }
 
