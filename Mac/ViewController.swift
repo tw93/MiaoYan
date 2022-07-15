@@ -185,6 +185,16 @@ class ViewController: NSViewController,
         }
     }
 
+    func checkLineHeight() {
+        if UserDefaultsManagement.fontName == UserDefaultsManagement.DefaultFont {
+            UserDefaultsManagement.editorLineHeight = UserDefaultsManagement.DefaultEditorLineHeight
+            UserDefaultsManagement.editorLineSpacing = UserDefaultsManagement.DefaultEditorLineSpacing
+        } else {
+            UserDefaultsManagement.editorLineHeight = UserDefaultsManagement.HackEditorLineHeight
+            UserDefaultsManagement.editorLineSpacing = UserDefaultsManagement.HackEditorLineSpacing
+        }
+    }
+
     override func viewDidAppear() {
         if UserDefaultsManagement.fullScreen {
             view.window?.toggleFullScreen(nil)
@@ -312,6 +322,7 @@ class ViewController: NSViewController,
         notesScrollView.scrollerStyle = .overlay
         sidebarScrollView.scrollerStyle = .overlay
         sidebarScrollView.horizontalScroller = .none
+        checkLineHeight()
     }
 
     private func configureNotesList() {
@@ -636,7 +647,7 @@ class ViewController: NSViewController,
             toggleInfo()
             return false
         }
-        
+
         if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_U {
             copyURL("")
             return false
@@ -969,7 +980,6 @@ class ViewController: NSViewController,
             NSWorkspace.shared.activateFileViewerSelecting(urls)
         }
     }
-
 
     @IBAction func makeMenu(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
@@ -2097,7 +2107,7 @@ class ViewController: NSViewController,
             let pasteboard = NSPasteboard.general
             pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
             pasteboard.setString(name, forType: NSPasteboard.PasteboardType.string)
-            toast(message:  NSLocalizedString("🎉 URL is successfully copied, Use it anywhere~", comment: ""))
+            toast(message: NSLocalizedString("🎉 URL is successfully copied, Use it anywhere~", comment: ""))
         }
     }
 

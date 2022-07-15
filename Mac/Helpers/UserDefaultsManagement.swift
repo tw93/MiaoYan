@@ -22,9 +22,12 @@ public class UserDefaultsManagement {
     static var DefaultFontSize = 15
     static var DefaultPreviewFontSize = 15
     static var DefaultPresentationFontSize = 24
-    static var editorLineSpacing = 3
 
-    static var editorLineHeight = 1.3
+    static var DefaultEditorLineSpacing = 3.0
+    static var DefaultEditorLineHeight = 1.3
+    
+    static var HackEditorLineSpacing = 2.4
+    static var HackEditorLineHeight = 1.18
 
     static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
     static var DefaultBgColor = Color.white
@@ -45,7 +48,7 @@ public class UserDefaultsManagement {
     static var realSidebarSize = 138
 
     static var sidebarSize = 280
-    
+
     static var isOnExport = false
 
     private enum Constants {
@@ -92,6 +95,8 @@ public class UserDefaultsManagement {
         static let SortDirection = "sortDirection"
         static let IsSingleMode = "isSingleMode"
         static let SingleModePath = "singleModePath"
+        static let EditorLineHeight = "editorLineHeight"
+        static let EditorLineSpacing = "editorLineSpacing"
     }
 
     static var lastProject: Int {
@@ -195,6 +200,30 @@ public class UserDefaultsManagement {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.FontSizeKey)
+        }
+    }
+
+    static var editorLineSpacing: CGFloat {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.EditorLineSpacing) as? CGFloat {
+                return result
+            }
+            return DefaultEditorLineSpacing
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.EditorLineSpacing)
+        }
+    }
+
+    static var editorLineHeight: CGFloat {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.EditorLineHeight) as? CGFloat {
+                return result
+            }
+            return DefaultEditorLineHeight
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.EditorLineHeight)
         }
     }
 
