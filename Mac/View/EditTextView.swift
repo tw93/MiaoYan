@@ -912,6 +912,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         guard let note = EditTextView.note else { return }
 
         UserDataService.instance.isDark = effectiveAppearance.isDark
+
         UserDefaultsManagement.codeTheme = effectiveAppearance.isDark ? "night-owl" : "vs"
 
         NotesTextProcessor.hl = nil

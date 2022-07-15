@@ -113,7 +113,6 @@ public class NotesTextProcessor {
             }
         }
 
-        
         public static var underlineColor: NSColor {
             if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
                 return NSColor(named: "underlineColor")!
@@ -292,7 +291,6 @@ public class NotesTextProcessor {
         // attributedString.addAttribute(.paragraphStyle, value: style, range: range)
     }
 
-    
     public static var languages: [String]?
     
     public static func getLanguage(_ code: String) -> String? {
@@ -502,7 +500,6 @@ public class NotesTextProcessor {
             attributedString.addAttribute(.foregroundColor, value: htmlColor, range: range)
         }
         
-
         // We detect and process underlined headers
         NotesTextProcessor.headersSetextRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range else { return }
@@ -1146,7 +1143,6 @@ public class NotesTextProcessor {
     
     public static let italicRegex = MarklightRegex(pattern: italicPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
     
-    
     fileprivate static let autolinkPrefixPattern = "((https?|ftp)://)"
     
     public static let autolinkPrefixRegex = MarklightRegex(pattern: autolinkPrefixPattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
@@ -1259,7 +1255,7 @@ public class NotesTextProcessor {
         
         storage.removeAttribute(.link, range: range)
         
-        let pattern = "((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,7})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(www.[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,7})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)"
+        let pattern = "((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,7})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(www.[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,7})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(miaoyan://[a-zA-Z0-9]+\\/[a-zA-Z0-9|%]*)"
         let regex = try! NSRegularExpression(pattern: pattern, options: [NSRegularExpression.Options.caseInsensitive])
         
         regex.enumerateMatches(
@@ -1273,7 +1269,7 @@ public class NotesTextProcessor {
                     }
                     
                     var str = storage.mutableString.substring(with: range)
-                   
+                  
                     var _range = NSRange(location: range.location, length: range.length)
                     
                     if str.hasSuffix(">") {
@@ -1295,7 +1291,7 @@ public class NotesTextProcessor {
             let to = String.Index(utf16Offset: innerRange.upperBound - 2, in: storage.string)
             
             let appLink = storage.string[from..<to]
-            
+
             storage.addAttribute(.link, value: "miaoyan://goto/" + appLink, range: innerRange)
             if let range = result?.range(at: 0) {
                 storage.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: range)

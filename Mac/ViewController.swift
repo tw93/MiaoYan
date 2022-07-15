@@ -185,7 +185,7 @@ class ViewController: NSViewController,
         }
     }
 
-    func checkLineHeight() {
+    func checkDefaultSetting() {
         if UserDefaultsManagement.fontName == UserDefaultsManagement.DefaultFont {
             UserDefaultsManagement.editorLineHeight = UserDefaultsManagement.DefaultEditorLineHeight
             UserDefaultsManagement.editorLineSpacing = UserDefaultsManagement.DefaultEditorLineSpacing
@@ -322,7 +322,7 @@ class ViewController: NSViewController,
         notesScrollView.scrollerStyle = .overlay
         sidebarScrollView.scrollerStyle = .overlay
         sidebarScrollView.horizontalScroller = .none
-        checkLineHeight()
+        checkDefaultSetting()
     }
 
     private func configureNotesList() {
