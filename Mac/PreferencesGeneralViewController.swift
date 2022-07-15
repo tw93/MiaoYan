@@ -49,8 +49,8 @@ class PreferencesGeneralViewController: NSViewController {
         }
 
         UserDefaultsManagement.fontName = item.title
-
         NotesTextProcessor.hl = nil
+        vc.checkLineHeight()
         vc.refillEditArea()
         vc.disablePreview()
     }
@@ -197,7 +197,7 @@ class PreferencesGeneralViewController: NSViewController {
             return
         }
         UserDefaultsManagement.defaultPicUpload = item.title
-        if(item.title != "None"){
+        if item.title != "None" {
             vc.toastImageSet(name: item.title)
         }
     }
