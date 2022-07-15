@@ -3,6 +3,26 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>0.9.0</title>
+      <description><![CDATA[
+       <h3>漂亮升级：</h3>
+        🍭 深度重新定义了下编辑器语法颜色高亮，你会发现编辑器更加潮流了<br/>
+        🎉 支持快捷键输出粗体/斜体/删除线/下划线/链接，支持块 tab 左右移动<br/>
+        🩴 支持 Emoji shortName、导出文档支持添加标题、支持设置锚点滚动、支持外链打开 <br/>
+        🙊 快捷键规范化，显示字数修改成 command+option+i，打开 Finder 统一成 command+option+r，新建文件夹统一成 command+shift+n <br/>
+        😂 修复反复格式化偶现 crash 问题、修复黑暗下虚线展示、修复超链接高亮偶尔错误问题 <br/>
+        <h3>Beautiful Upgrade：</h3>
+        🍭 The depth redefines the editor syntax, and the color highlights. You will find that the editor is more fashionable.<br/>
+        🎉 Support shortcut key output bold / italic / strike / underline / link, and support block tab to move left and right. <br/>
+        🩴 Support Emoji shortname, export documents, add titles, set anchor scrolling, and open external chain.<br/>
+        🙊 The shortcut keys are normalized, and the number of displayed words is changed to command+option+i, the finder is opened and unified as command+option+r, and the new folder is unified as command+shift+n.<br/>
+        😂 Fix the occasional crash of repeated formatting, the dotted line display in the dark, and the occasional error of hyperlink highlighting.<br/>
+            ]]>      </description>
+      <pubDate>周五, 15 7月 2022 23:24:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V0.9.0.zip" sparkle:shortVersionString="0.9.0" sparkle:version="0.9.0" sparkle:edSignature="VaYUYDurUk/t8ukNqNfrZaWJ+Gn5qR9tjztrXkiJOjzWI47z06TwWrWiHE4onbHHiZU2ftFD6E61SCkq8tE9Bw==" length="32907174" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>0.8.0</title>
       <description><![CDATA[
        <h3>建议升级：</h3>
