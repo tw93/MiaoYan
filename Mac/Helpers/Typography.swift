@@ -51,7 +51,8 @@ public extension String {
 
         result = result.passWithRule((PanguRegex.fix_bracket, "$1$3$5"))
         result = result.passWithRule((PanguRegex.cjk_hash, "$1 $2"))
-        result = result.passWithRule((PanguRegex.hash_cjk, "$1 $3"))
+        // 防止锚点问题
+//        result = result.passWithRule((PanguRegex.hash_cjk, "$1 $3"))
         result = result.passWithRule((PanguRegex.cjk_ans, "$1 $2"))
         result = result.passWithRule((PanguRegex.ans_cjk, "$1 $2"))
         return result

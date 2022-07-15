@@ -636,6 +636,11 @@ class ViewController: NSViewController,
             toggleInfo()
             return false
         }
+        
+        if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_U {
+            copyURL("")
+            return false
+        }
 
         if event.keyCode == kVK_ANSI_W, event.modifierFlags.contains(.command), event.modifierFlags.contains(.shift) {
             if UserDefaultsManagement.isSingleMode {
@@ -964,6 +969,7 @@ class ViewController: NSViewController,
             NSWorkspace.shared.activateFileViewerSelecting(urls)
         }
     }
+
 
     @IBAction func makeMenu(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
@@ -1964,9 +1970,6 @@ class ViewController: NSViewController,
         }
 
         let personalSelection = [
-            "noteMove.print",
-            "noteMove.copyTitle",
-            "noteMove.copyUrl",
             "noteMove.rename",
         ]
 
@@ -2094,12 +2097,7 @@ class ViewController: NSViewController,
             let pasteboard = NSPasteboard.general
             pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
             pasteboard.setString(name, forType: NSPasteboard.PasteboardType.string)
-
-            let notification = NSUserNotification()
-            notification.title = "妙言"
-            notification.informativeText = NSLocalizedString("URL has been copied to clipboard", comment: "")
-            notification.soundName = NSUserNotificationDefaultSoundName
-            NSUserNotificationCenter.default.deliver(notification)
+            toast(message:  NSLocalizedString("🎉 URL is successfully copied, Use it anywhere~", comment: ""))
         }
     }
 

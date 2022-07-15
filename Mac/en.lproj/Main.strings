@@ -326,6 +326,9 @@
 /* Class = "NSMenuItem"; title = "Reveal in Finder"; ObjectID = "xSO-lW-k8f"; */
 "xSO-lW-k8f.title" = "Reveal in Finder";
 
+/* Class = "NSMenuItem"; title = "Copy URL"; ObjectID = "9Fg-2C-7a5"; */
+"9Fg-2C-7a5.title" = "Copy URL";
+
 /* Class = "NSTextFieldCell"; title = "Name"; ObjectID = "y7T-Rc-etT"; */
 "y7T-Rc-etT.title" = "Name";
 
