@@ -167,7 +167,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         if pasteImageFromClipboard(in: note) {
             return
         }
-        
+
         if let clipboard = NSPasteboard.general.string(forType: NSPasteboard.PasteboardType.string) {
             EditTextView.shouldForceRescan = true
 
@@ -178,6 +178,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             breakUndoCoalescing()
 
             saveTextStorageContent(to: note)
+            fillHiglightLinks()
             return
         }
         super.paste(sender)
@@ -354,8 +355,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
             storage.setAttributedString(note.content)
         }
 
-        fillHiglightLinks(note: note, saveTyping: saveTyping)
-        
+        fillHiglightLinks()
+
         if highlight {
             let search = getSearchText()
             let processor = NotesTextProcessor(storage: storage)
@@ -515,9 +516,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
             deleteWordBackward(nil)
             return
         }
-
         super.keyDown(with: event)
         saveCursorPosition()
+        fillHiglightLinks()
     }
 
     override func shouldChangeText(in affectedCharRange: NSRange, replacementString: String?) -> Bool {
@@ -923,7 +924,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         viewDelegate?.refillEditArea()
     }
 
-    private func fillHiglightLinks(note: Note, saveTyping: Bool) {
+    private func fillHiglightLinks() {
         guard let storage = textStorage else { return }
 
         let range = NSRange(0..<storage.length)

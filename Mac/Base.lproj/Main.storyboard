@@ -1468,6 +1468,19 @@ CA
                                 <action selector="showInfo:" target="XfG-lQ-9wD" id="Cf1-66-GyS"/>
                             </connections>
                         </menuItem>
+                        <menuItem title="Reveal in Finder" alternate="YES" keyEquivalent="r" id="xSO-lW-k8f">
+                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                            <connections>
+                                <action selector="finderMenu:" target="rPt-NT-nkU" id="HN5-My-jcv"/>
+                            </connections>
+                        </menuItem>
+                        <menuItem title="Copy URL" keyEquivalent="u" id="9Fg-2C-7a5">
+                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                            <connections>
+                                <action selector="copyURL:" target="XfG-lQ-9wD" id="OX3-4O-Cg1"/>
+                            </connections>
+                        </menuItem>
+                        <menuItem isSeparatorItem="YES" id="a1l-Gt-eA9"/>
                         <menuItem title="Pin/unpin" keyEquivalent="P" id="jFN-Dp-LON">
                             <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                             <connections>
@@ -1482,12 +1495,6 @@ CA
                         <menuItem title="Rename" keyEquivalent="r" identifier="noteMove.rename" id="XBB-Sr-T1D">
                             <connections>
                                 <action selector="renameMenu:" target="XfG-lQ-9wD" id="iYK-OA-0IW"/>
-                            </connections>
-                        </menuItem>
-                        <menuItem title="Reveal in Finder" alternate="YES" keyEquivalent="r" id="xSO-lW-k8f">
-                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                            <connections>
-                                <action selector="finderMenu:" target="rPt-NT-nkU" id="HN5-My-jcv"/>
                             </connections>
                         </menuItem>
                         <menuItem title="Delete" id="fHG-zk-g0k">
@@ -1655,10 +1662,10 @@ CA
             <color red="0.89999997615814209" green="0.89999997615814209" blue="0.89999997615814209" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="highlight">
-            <color red="0.039999999105930328" green="0.40999999642372131" blue="0.85000002384185791" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.15000000596046448" green="0.55000001192092896" blue="0.81999999284744263" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="link">
-            <color red="0.0099999997764825821" green="0.36000001430511475" blue="0.12999999523162842" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.17000000178813934" green="0.63999998569488525" blue="0.31000000238418579" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="mainBackground">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

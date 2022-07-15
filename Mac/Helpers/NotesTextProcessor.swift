@@ -544,6 +544,7 @@ public class NotesTextProcessor {
         // We detect and process lists
         NotesTextProcessor.listRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range else { return }
+           
             NotesTextProcessor.listOpeningRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
                 attributedString.addAttribute(.foregroundColor, value: listColor, range: innerRange)

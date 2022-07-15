@@ -309,6 +309,7 @@ public class TextFormatter {
         guard string.length >= match.range.upperBound else { return }
 
         let found = string.attributedSubstring(from: match.range).string
+
         var newLine = 1
 
         if textView.selectedRange.upperBound == storage.length {
