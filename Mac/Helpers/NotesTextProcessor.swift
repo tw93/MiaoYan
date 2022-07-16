@@ -445,7 +445,6 @@ public class NotesTextProcessor {
         
         func hideSyntaxIfNecessary(range: @autoclosure () -> NSRange) {
             guard NotesTextProcessor.hideSyntax else { return }
-            
             attributedString.addAttributes(hiddenAttributes, range: range())
         }
         
@@ -493,6 +492,12 @@ public class NotesTextProcessor {
         }
         
         NotesTextProcessor.strikeRegex.matches(string, range: paragraphRange) { result in
+            guard let range = result?.range else { return }
+            attributedString.fixAttributes(in: range)
+            attributedString.addAttribute(.foregroundColor, value: htmlColor, range: range)
+        }
+        
+        NotesTextProcessor.codeLineRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range else { return }
             attributedString.fixAttributes(in: range)
             attributedString.addAttribute(.foregroundColor, value: htmlColor, range: range)
@@ -774,11 +779,11 @@ public class NotesTextProcessor {
                 
                 NotesTextProcessor.codeSpanOpeningRegex.matches(styleApplier.string, range: range) { innerResult in
                     guard let innerRange = innerResult?.range else { return }
-                    styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                    styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.htmlColor, range: innerRange)
                 }
                 NotesTextProcessor.codeSpanClosingRegex.matches(styleApplier.string, range: range) { innerResult in
                     guard let innerRange = innerResult?.range else { return }
-                    styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                    styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.htmlColor, range: innerRange)
                 }
             }
         }
@@ -1130,6 +1135,11 @@ public class NotesTextProcessor {
     fileprivate static let strikePattern = "(\\~\\~) (?=\\S) (.+?[~]*) (?<=\\S) \\1"
 
     public static let strikeRegex = MarklightRegex(pattern: strikePattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
+    
+    
+    fileprivate static let codeLinePattern = "(\\`\\`\\`) (?=\\S) (.+?[`]*) (?<=\\S) \\1"
+
+    public static let codeLineRegex = MarklightRegex(pattern: codeLinePattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
     
     // MARK: HTML
 
