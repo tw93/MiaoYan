@@ -150,7 +150,7 @@ CA
                             </menuItem>
                             <menuItem title="Folder" id="Fuh-qO-nt2">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Folder" identifier="folderMenu.showInFinder" id="BYI-2F-BJo">
+                                <menu key="submenu" title="Folder" id="BYI-2F-BJo">
                                     <items>
                                         <menuItem title="Show in finder" alternate="YES" keyEquivalent="r" identifier="folderMenu.showInFinder" id="F5A-zs-zwP">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
