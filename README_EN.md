@@ -71,7 +71,7 @@
 ## Support
 
 - I have two cats, one is called TangYuan, and one is called Coke, If you think MiaoYan makes your life better, you can give my cats <a href="https://miaoyan.app/cats.html" target="_blank">feed canned food 🥩🍤</a>.
-- If you like MiaoYan, you can star it in Github. We are more welcome to [recommend them](https://twitter.com/intent/tweet?text=MiaoYan%20-%20a%20simple%20and%20good-looking%20open-source%20mac%20markdown%20editor,%20without%20any%20redundant%20functions,%20is%20developed%20using%20native%20swift,%20pure%20local%20use,%20has%20functions%20such%20as%20syntax%20highlighting,%20automatic%20formatting,%20presentation%20mode%20etc.&url=https://miaoyan.app/&via=HiTw93) to your like-minded friends.
+- If you like MiaoYan, you can star it in Github. We are more welcome to [recommend them](https://twitter.com/intent/tweet?text=MiaoYan%20-%20a%20simple%20and%20good-looking%20open-source%20mac%20markdown%20editor,%20without%20any%20redundant%20functions,%20is%20developed%20using%20native%20swift,%20pure%20local%20use,%20has%20functions%20such%20as%20syntax%20highlighting,%20automatic%20formatting,%20presentation%20mode%20etc.&url=https://miaoyan.app&via=HiTw93) to your like-minded friends.
 
 ## Thanks
 
