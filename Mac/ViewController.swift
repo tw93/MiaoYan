@@ -560,7 +560,7 @@ class ViewController: NSViewController,
         let cursor = editArea.selectedRanges[0].rangeValue.location
         updateTable {
             if let selected = selectedNote, let index = notesTable.getIndex(selected) {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.08) {
                     notesTable.selectRowIndexes([index], byExtendingSelection: false)
                 }
                 self.refillEditArea(cursor: cursor)
