@@ -1354,7 +1354,7 @@ CA
                                                                             <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                                                                             <font key="font" metaFont="system"/>
                                                                         </buttonCell>
-                                                                        <color key="contentTintColor" name="highlight"/>
+                                                                        <color key="contentTintColor" name="link"/>
                                                                         <connections>
                                                                             <action selector="togglePresentation:" target="XfG-lQ-9wD" id="jW2-Vm-rj9"/>
                                                                         </connections>
@@ -1661,11 +1661,8 @@ CA
         <namedColor name="divider">
             <color red="0.89999997615814209" green="0.89999997615814209" blue="0.89999997615814209" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="highlight">
-            <color red="0.15000000596046448" green="0.55000001192092896" blue="0.81999999284744263" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <namedColor name="link">
-            <color red="0.17000000178813934" green="0.63999998569488525" blue="0.31000000238418579" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.33000001311302185" green="0.76999998092651367" blue="0.62000000476837158" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="mainBackground">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
