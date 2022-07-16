@@ -25,7 +25,7 @@ public class UserDefaultsManagement {
 
     static var DefaultEditorLineSpacing = 3.0
     static var DefaultEditorLineHeight = 1.3
-    
+
     static var HackEditorLineSpacing = 2.4
     static var HackEditorLineHeight = 1.18
 
@@ -56,7 +56,6 @@ public class UserDefaultsManagement {
         static let BgColorKey = "bgColorKeyed"
         static let CellFrameOriginY = "cellFrameOriginY"
         static let CodeFontNameKey = "codeFont"
-        static let codeTheme = "codeTheme"
         static let FontNameKey = "font"
         static let FontSizeKey = "fontsize"
         static let FontColorKey = "fontColorKeyed"
@@ -97,6 +96,23 @@ public class UserDefaultsManagement {
         static let SingleModePath = "singleModePath"
         static let EditorLineHeight = "editorLineHeight"
         static let EditorLineSpacing = "editorLineSpacing"
+    }
+
+    static var appearanceType: AppearanceType {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.AppearanceTypeKey) as? Int {
+                return AppearanceType(rawValue: result)!
+            }
+
+            if #available(OSX 10.14, *) {
+                return AppearanceType.System
+            } else {
+                return AppearanceType.Custom
+            }
+        }
+        set {
+            UserDefaults.standard.set(newValue.rawValue, forKey: Constants.AppearanceTypeKey)
+        }
     }
 
     static var lastProject: Int {
