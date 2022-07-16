@@ -113,25 +113,8 @@ class PreferencesGeneralViewController: NSViewController {
             if UserDefaultsManagement.appearanceType == type {
                 return
             }
-
             UserDefaultsManagement.appearanceType = type
-
-            if type == .Dark {
-                UserDefaultsManagement.codeTheme = "night-owl"
-            } else if type == .System {
-                if #available(OSX 10.14, *) {
-                    let mode = UserDefaults.standard.string(forKey: "AppleInterfaceStyle")
-                    if mode == "Dark" {
-                        UserDefaultsManagement.codeTheme = "night-owl"
-                    } else {
-                        UserDefaultsManagement.codeTheme = "vs"
-                    }
-                }
-            } else {
-                UserDefaultsManagement.codeTheme = "vs"
-            }
         }
-
         restart()
     }
 
