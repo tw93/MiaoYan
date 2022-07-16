@@ -56,13 +56,14 @@
 
 #### File Operations
 
-- `command + d`: Copy document
-- `command + r`: Rename document
-- `command + i`: Displaying document in Finder
-- `command + shift + p`: Pin document
-- `command + delete`: Delete document
-- `command + shift + l`: Auto typesetting
-- `command + shift + →`: Display document attributes such as word count
+- `command + n`：New document
+- `command + r`：Rename document
+- `command + d`：Copy document
+- `command + delete`：Delete document
+- `command + shift + n`：New folder
+- `command + shift + l`：Auto typesetting
+- `command + option + r`：Displaying document in Finder
+- `command + option + i`：Display document attributes such as word count
 
 🏂 There are also many other shortcuts 👆🏻 👇🏻 👈🏻 👉🏻 waiting for you to find if you like to toss and turn~
 
@@ -74,13 +75,11 @@
 ## Thanks
 
 - <a href="https://github.com/KristopherGBaker/libcmark_gfm" target="_blank">KristopherGBaker/libcmark_gfm</a>: Swift-compatible framework for cmark-gfm.
-- <a href="https://github.com/Remix-Design/RemixIcon" target="_blank">Remix-Design/RemixIcon</a>: Clean and simple icon.
 - <a href="https://github.com/draveness/NightNight" target="_blank">draveness/NightNight</a>: Dark Mode.
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>: Syntax highlighting capability.
 - <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: MiaoYan has part of the framework code from this.
 - <a href="https://github.com/shpakovski/MASShortcut" target="_blank">hpakovski/MASShortcut</a>: Shortcut Key Plugin.
 - <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>: A beautiful open source Chinese font, MiaoYan has made it the default font.
-- <a href="https://github.com/X140Yu/pangu.Swift" target="_blank">X140Yu/pangu.Swift</a>：How can you do without spaces between Chinese and English?
 - <a href="https://github.com/sivan/heti" target="_blank">sivan/heti</a>：Enhanced typography for Chinese content presentation.
 
 # License
