@@ -509,7 +509,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
             formatter.newLine()
             vc.refillEditArea()
             breakUndoCoalescing()
+            fillHiglightLinks()
             return
+        }
+
+        if event.keyCode == kVK_Delete {
+            DispatchQueue.main.async {
+                self.fillHiglightLinks()
+            }
         }
 
         if event.keyCode == kVK_Delete, event.modifierFlags.contains(.option) {
@@ -518,7 +525,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         super.keyDown(with: event)
         saveCursorPosition()
-        fillHiglightLinks()
     }
 
     override func shouldChangeText(in affectedCharRange: NSRange, replacementString: String?) -> Bool {
