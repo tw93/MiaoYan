@@ -59,6 +59,7 @@
 - `command + n`：New document
 - `command + r`：Rename document
 - `command + d`：Copy document
+- `command + o`：Single open document separately
 - `command + delete`：Delete document
 - `command + shift + n`：New folder
 - `command + shift + l`：Auto typesetting

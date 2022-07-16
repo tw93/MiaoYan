@@ -59,6 +59,7 @@
 - `command + n`：新建文档
 - `command + r`：重命名文档
 - `command + d`：复制文档
+- `command + o`：单独打开文档
 - `command + delete`：删除文档
 - `command + shift + n`：新建文件夹
 - `command + shift + l`：自动排版

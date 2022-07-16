@@ -47,6 +47,7 @@
 - `command + r`：Rename document
 - `command + d`：Copy document
 - `command + delete`：Delete document
+- `command + o`：Single open document separately
 - `command + shift + n`：New folder
 - `command + shift + l`：Auto typesetting
 - `command + option + r`：Displaying document in Finder
