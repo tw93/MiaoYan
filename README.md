@@ -54,15 +54,16 @@
 - `command + 4`：切换到演示模式
 - `command + option + m`：全局唤起/隐藏妙言
 
-#### 文件操作
+#### 文档操作
 
-- `command + d`：复制文档
+- `command + n`：新建文档
 - `command + r`：重命名文档
-- `command + i`：在文件中显示文档
-- `command + shift + p`：pin 置顶文档
+- `command + d`：复制文档
 - `command + delete`：删除文档
+- `command + shift + n`：新建文件夹
 - `command + shift + l`：自动排版
-- `command + shift + →`：显示字数等文档属性
+- `command + option + r`：在 Finder 中显示
+- `command + option + i`：显示字数等文档属性
 
 🏂 此外还有很多快捷键 👆🏻 👇🏻 👈🏻 👉🏻 等着爱折腾的你去寻找~
 
