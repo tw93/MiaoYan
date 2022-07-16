@@ -245,7 +245,7 @@ pre {
 
 a,
 .heti a heti-spacing {
-  color: #1D9BF0;
+  color: #1d9bf0;
 }
 .heti {
   font-weight: 400;
@@ -377,6 +377,7 @@ blockquote blockquote {
   background-color: transparent;
   color: inherit;
 }
+
 .heti h1,
 .heti h2,
 .heti h3,
@@ -481,9 +482,20 @@ blockquote blockquote {
   border-color: #ccc;
   word-break: break-word;
 }
+
+.heti p > code {
+  background-color: #eef1f2;
+  padding: 2px;
+  border-radius: 4px;
+}
+
 @media (prefers-color-scheme: dark) {
   .heti table {
     border-color: #404040;
+  }
+  .heti p > code {
+    background-color: #343941;
+    color: #E8E8EB;
   }
 }
 .heti table {

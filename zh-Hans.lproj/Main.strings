@@ -570,7 +570,7 @@
 "RwR-P0-ycK.title" = "删除文件夹";
 
 /* Class = "NSMenuItem"; title = "Reveal in Finder"; ObjectID = "rXU-X3-UjC"; */
-"rXU-X3-UjC.title" = "在Finder中显示";
+"rXU-X3-UjC.title" = "在Finder中打开";
 
 /* Class = "NSMenuItem"; title = "Jump to Selection"; ObjectID = "S0p-oC-mLd"; */
 "S0p-oC-mLd.title" = "跳到所选内容";
