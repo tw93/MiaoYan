@@ -76,13 +76,11 @@
 ## 感谢
 
 - <a href="https://github.com/KristopherGBaker/libcmark_gfm" target="_blank">KristopherGBaker/libcmark_gfm</a>：适用于 cmark-gfm 的 Swift 兼容框架
-- <a href="https://github.com/Remix-Design/RemixIcon" target="_blank">Remix-Design/RemixIcon</a>：简洁的 icon
 - <a href="https://github.com/draveness/NightNight" target="_blank">draveness/NightNight</a>：黑暗模式
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>：语法高亮能力
 - <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>：妙言部分初始化代码来源于此
 - <a href="https://github.com/shpakovski/MASShortcut" target="_blank">hpakovski/MASShortcut</a>：快捷键插件
 - <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>：一款漂亮的开源中文字体，妙言将其作为默认字体
-- <a href="https://github.com/X140Yu/pangu.Swift" target="_blank">X140Yu/pangu.Swift</a>：中文和英文之间没有空格可怎么行？
 - <a href="https://github.com/sivan/heti" target="_blank">sivan/heti</a>：专为中文内容展示设计的排版样式增强
 
 # 协议
