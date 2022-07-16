@@ -23,8 +23,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     func applicationWillFinishLaunching(_ notification: Notification) {
-        loadDockIcon()
-
         let storage = Storage.sharedInstance()
         storage.loadProjects()
         storage.loadDocuments {}
@@ -244,27 +242,5 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         if event.type == NSEvent.EventType.leftMouseDown {
             mainWindowController?.makeNew()
         }
-    }
-
-    public func loadDockIcon() {
-        var image: Image?
-
-        switch UserDefaultsManagement.dockIcon {
-        case 0:
-            image = NSImage(named: "icon.png")
-        case 1:
-            image = NSImage(named: "icon_alt.png")
-        default:
-            break
-        }
-
-        guard let im = image else { return }
-
-        let appDockTile = NSApplication.shared.dockTile
-        if #available(OSX 10.12, *) {
-            appDockTile.contentView = NSImageView(image: im)
-        }
-
-        appDockTile.display()
     }
 }

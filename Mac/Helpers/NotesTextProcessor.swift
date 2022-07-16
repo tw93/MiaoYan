@@ -225,8 +225,12 @@ public class NotesTextProcessor {
         guard let highlightr = Highlightr() else {
             return nil
         }
-        
-        highlightr.setTheme(to: UserDefaultsManagement.codeTheme)
+
+        var codeTheme = "atom-one-light"
+        if UserDataService.instance.isDark {
+            codeTheme = "atom-one-dark"
+        }
+        highlightr.setTheme(to: codeTheme)
         
         hl = highlightr
         
