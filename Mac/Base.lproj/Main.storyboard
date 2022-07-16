@@ -152,12 +152,6 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Folder" id="BYI-2F-BJo">
                                     <items>
-                                        <menuItem title="Show in finder" alternate="YES" keyEquivalent="r" identifier="folderMenu.showInFinder" id="F5A-zs-zwP">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="revealInFinder:" target="yxb-XH-bXh" id="7V6-4X-pMA"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem title="New folder" keyEquivalent="N" identifier="folderMenu.newFolder" id="SrH-fe-Hog">
                                             <connections>
                                                 <action selector="add:" target="3kq-Pd-JKK" id="fyK-RN-gx8"/>
@@ -167,6 +161,12 @@ CA
                                             <modifierMask key="keyEquivalentModifierMask" shift="YES"/>
                                             <connections>
                                                 <action selector="renameMenu:" target="yxb-XH-bXh" id="fjN-9b-ISI"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Show  in finder" keyEquivalent="r" identifier="folderMenu.showInFinder" id="F5A-zs-zwP">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="revealInFinder:" target="yxb-XH-bXh" id="7V6-4X-pMA"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -1662,7 +1662,7 @@ CA
             <color red="0.89999997615814209" green="0.89999997615814209" blue="0.89999997615814209" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="link">
-            <color red="0.33000001311302185" green="0.76999998092651367" blue="0.62000000476837158" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.019999999552965164" green="0.64999997615814209" blue="0.60000002384185791" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="mainBackground">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
