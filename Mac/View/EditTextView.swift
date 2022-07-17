@@ -363,9 +363,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
             processor.highlightKeyword(search: search)
             isHighlighted = true
         }
-
-        restoreCursorPosition()
         applyLeftParagraphStyle()
+        restoreCursorPosition()
     }
 
     private func setTextColor() {
