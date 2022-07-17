@@ -324,6 +324,7 @@ a,
   border-radius: 4px;
   color: #777;
   border-left: 4px solid #f1f3f4;
+  line-height: 1;
 }
 
 .heti blockquote p {
@@ -387,8 +388,8 @@ blockquote blockquote {
   position: relative;
   margin: 0;
   line-height: 1.8;
-  margin-block-start: 24px;
-  margin-block-end: 12px;
+  margin-block-start: 36px;
+  margin-block-end: 16px;
   font-weight: bold;
 }
 
