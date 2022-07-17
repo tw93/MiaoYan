@@ -36,7 +36,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
             vc.editArea.updateTextContainerInset()
         }
 
-        if event.keyCode == kVK_LeftArrow {
+        if event.keyCode == kVK_LeftArrow, !UserDefaultsManagement.magicPPT {
             if let fr = window?.firstResponder, fr.isKind(of: NSTextView.self) {
                 super.keyUp(with: event)
                 return
@@ -365,6 +365,9 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     }
 
     override func keyDown(with event: NSEvent) {
+        if UserDefaultsManagement.magicPPT {
+            return
+        }
         let vc = window?.contentViewController as? ViewController
         if event.modifierFlags.contains(.control), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_P {
             vc?.exportPdf("")
