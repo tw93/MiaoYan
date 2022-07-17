@@ -671,6 +671,9 @@
 /* Class = "NSMenuItem"; title = "Copy URL"; ObjectID = "9Fg-2C-7a5"; */
 "9Fg-2C-7a5.title" = "复制外链";
 
+/* Class = "NSMenuItem"; title = "Magic PPT"; ObjectID = "uUS-sg-zGt"; */
+"uUS-sg-zGt.title" = "魔力 PPT";
+
 /* Class = "NSButtonCell"; title = "Code block live highlighting (app restart required)"; ObjectID = "xX0-9b-KDq"; */
 "xX0-9b-KDq.title" = "代码块实时高亮显示（需要重新启动妙言）";
 
