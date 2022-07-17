@@ -495,6 +495,8 @@ public class UserDefaultsManagement {
     static var preview = false
 
     static var presentation = false
+    
+    static var magicPPT = false
 
     static var lastSync: Date? {
         get {

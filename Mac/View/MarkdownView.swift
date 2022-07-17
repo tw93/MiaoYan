@@ -58,6 +58,9 @@ open class MarkdownView: WKWebView {
     }
 
     public static func getPreviewStyle() -> String {
+        if(UserDefaultsManagement.magicPPT){
+            return ":root { --r-main-font: \(UserDefaultsManagement.previewFontName), sans-serif;}"
+        }
         if UserDefaultsManagement.presentation {
             return "html {font-size: \(UserDefaultsManagement.presentationFontSize)px} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif;} #write { max-width: 1200px;}"
         } else {
@@ -69,6 +72,8 @@ open class MarkdownView: WKWebView {
     let bundle: Bundle
 
     fileprivate lazy var baseURL: URL = self.bundle.url(forResource: "index", withExtension: "html")!
+
+    fileprivate lazy var pptURL: URL = self.bundle.url(forResource: "ppt", withExtension: "html")!
 
     fileprivate var didLoadSuccessfully: DownViewClosure?
 

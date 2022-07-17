@@ -51,6 +51,24 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             return false
         }
 
+        if event.keyCode == kVK_RightArrow, UserDefaultsManagement.magicPPT {
+            DispatchQueue.main.async {
+                self.evaluateJavaScript("Reveal.next();", completionHandler: nil)
+            }
+            return false
+        }
+
+        if event.keyCode == kVK_LeftArrow, UserDefaultsManagement.magicPPT {
+            DispatchQueue.main.async {
+                self.evaluateJavaScript("Reveal.prev();", completionHandler: nil)
+            }
+            return false
+        }
+
+        if UserDefaultsManagement.magicPPT {
+            return false
+        }
+
         return super.performKeyEquivalent(with: event)
     }
 
@@ -184,9 +202,18 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle")
         let url = NSURL.fileURL(withPath: path!)
         let bundle = Bundle(url: url)
-        let baseURL = bundle!.url(forResource: "index", withExtension: "html")!
+        var baseURL = bundle!.url(forResource: "index", withExtension: "html")!
+
+        if UserDefaultsManagement.magicPPT {
+            baseURL = bundle!.url(forResource: "ppt", withExtension: "html")!
+        }
 
         guard var template = try? NSString(contentsOf: baseURL, encoding: String.Encoding.utf8.rawValue) else { return nil }
+
+        if UserDefaultsManagement.magicPPT {
+            return template as String
+        }
+
         template = template.replacingOccurrences(of: "DOWN_CSS", with: css) as NSString
 
 #if os(iOS)
@@ -231,8 +258,13 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             htmlString = loadImages(imagesStorage: imagesStorage, html: htmlString)
         }
 
-        let pageHTMLString = try htmlFromTemplate(htmlString, css: css)
+        var pageHTMLString = try htmlFromTemplate(htmlString, css: css)
 
+        if UserDefaultsManagement.magicPPT {
+            pageHTMLString = try htmlFromTemplate(markdownString, css: css)
+        }
+
+//        print(">>>>!!!!")
 //        print(pageHTMLString)
         let indexURL = createTemporaryBundle(pageHTMLString: pageHTMLString)
 
@@ -346,11 +378,25 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle")
         let url = NSURL.fileURL(withPath: path!)
         let bundle = Bundle(url: url)
-        let baseURL = bundle!.url(forResource: "index", withExtension: "html")!
+
+        var baseURL = bundle!.url(forResource: "index", withExtension: "html")!
+
+        if UserDefaultsManagement.magicPPT {
+            baseURL = bundle!.url(forResource: "ppt", withExtension: "html")!
+        }
 
         var template = try NSString(contentsOf: baseURL, encoding: String.Encoding.utf8.rawValue)
 
         template = template.replacingOccurrences(of: "DOWN_CSS", with: css) as NSString
+
+        if UserDefaultsManagement.magicPPT {
+            var downTheme = "<link rel=\"stylesheet\" href=\"ppt/dist/theme/white.css\" id=\"theme\" />"
+            if UserDataService.instance.isDark {
+                downTheme = "<link rel=\"stylesheet\" href=\"ppt/dist/theme/night.css\" id=\"theme\" />"
+            }
+            template = template.replacingOccurrences(of: "DOWN_THEME", with: downTheme) as NSString
+            return template.replacingOccurrences(of: "DOWN_RAW", with: htmlString)
+        }
 
 #if os(iOS)
         if NightNight.theme == .night {

@@ -1481,6 +1481,13 @@ CA
                             </connections>
                         </menuItem>
                         <menuItem isSeparatorItem="YES" id="a1l-Gt-eA9"/>
+                        <menuItem title="Magic PPT" keyEquivalent="p" id="uUS-sg-zGt">
+                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                            <connections>
+                                <action selector="toggleMagicPPT:" target="XfG-lQ-9wD" id="dOP-eh-8uc"/>
+                            </connections>
+                        </menuItem>
+                        <menuItem isSeparatorItem="YES" id="fyq-Vp-Cdw"/>
                         <menuItem title="Pin/unpin" keyEquivalent="P" id="jFN-Dp-LON">
                             <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                             <connections>

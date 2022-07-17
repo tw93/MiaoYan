@@ -666,6 +666,11 @@ class ViewController: NSViewController,
             return false
         }
 
+        if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_P {
+            toggleMagicPPT()
+            return false
+        }
+
         if event.keyCode == kVK_ANSI_W, event.modifierFlags.contains(.command), event.modifierFlags.contains(.shift) {
             if UserDefaultsManagement.isSingleMode {
                 UserDefaultsManagement.isSingleMode = false
@@ -1868,6 +1873,26 @@ class ViewController: NSViewController,
         filteredNoteList = resorted
     }
 
+    func toggleMagicPPT() {
+        titleLabel.saveTitle()
+        if let note = notesTableView.getSelectedNote() {
+            let content = note.content.string
+            if content.contains("---") {
+                if UserDefaultsManagement.magicPPT {
+                    disablePresentation()
+                    UserDefaultsManagement.magicPPT = false
+                } else {
+                    enablePresentation()
+                    UserDefaultsManagement.magicPPT = true
+                }
+            } else {
+                toast(message: NSLocalizedString("😶‍🌫️ No delimiter --- identification, Cannot use magic PPT~", comment: ""))
+            }
+        } else {
+            return
+        }
+    }
+
     func enablePreview() {
         isFocusedTitle = titleLabel.hasFocus()
         cancelTextSearch()
@@ -1921,6 +1946,7 @@ class ViewController: NSViewController,
     func disablePresentation() {
         previewButton.state = .off
         UserDefaultsManagement.presentation = false
+        UserDefaultsManagement.magicPPT = false
         if UserDefaultsManagement.fullScreen {
             view.window?.toggleFullScreen(nil)
         }
@@ -2148,6 +2174,10 @@ class ViewController: NSViewController,
     }
 
     // MARK: Share Service
+
+    @IBAction func toggleMagicPPT(_ sender: Any) {
+        toggleMagicPPT()
+    }
 
     @IBAction func togglePreview(_ sender: NSButton) {
         togglePreview()
