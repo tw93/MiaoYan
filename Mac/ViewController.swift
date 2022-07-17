@@ -1976,7 +1976,7 @@ class ViewController: NSViewController,
             note.content = NSMutableAttributedString(string: note.content.string.spaced)
             note.save()
             let cursor = editArea.selectedRanges[0].rangeValue.location
-            refillEditArea(cursor: cursor)
+            refillEditArea(cursor: cursor, saveTyping: true)
             toast(message: NSLocalizedString("🎉 Automatic typesetting succeeded~", comment: "")
             )
         }
