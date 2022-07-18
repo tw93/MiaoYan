@@ -1,0 +1,23 @@
+section.has-dark-background,
+section.has-dark-background h1,
+section.has-dark-background h2,
+section.has-dark-background h3,
+section.has-dark-background h4,
+section.has-dark-background h5,
+section.has-dark-background h6 {
+    color: #fff;
+}
+/*********************************************
+ * GLOBAL STYLES
+ *********************************************/
+:root {
+    --r-main-color: #262626;
+    --r-background-color: #fff;
+    --r-heading-color: #262626;
+    --r-link-color: #1C9CF0;
+    --r-link-color-dark: #1C9CF0;
+    --r-link-color-hover: #6ca0e8;
+    --r-selection-background-color: #98bdef;
+    --r-selection-color: #fff;
+    --r-highlight-color: #05A699;
+}
