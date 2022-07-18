@@ -5,15 +5,14 @@ import MiaoYanCore_macOS
 import WebKit
 
 class ViewController: NSViewController,
-    NSTextViewDelegate,
-    NSPopoverDelegate,
-    NSTextFieldDelegate,
-    NSSplitViewDelegate,
-    NSOutlineViewDelegate,
-    NSOutlineViewDataSource,
-    WebFrameLoadDelegate,
-    NSMenuItemValidation, NSUserNotificationCenterDelegate
-{
+        NSTextViewDelegate,
+        NSPopoverDelegate,
+        NSTextFieldDelegate,
+        NSSplitViewDelegate,
+        NSOutlineViewDelegate,
+        NSOutlineViewDataSource,
+        WebFrameLoadDelegate,
+        NSMenuItemValidation, NSUserNotificationCenterDelegate {
     // MARK: - Properties
 
     public var fsManager: FileSystemEventManager?
@@ -37,7 +36,8 @@ class ViewController: NSViewController,
     private var updateViews = [Note]()
 
     override var representedObject: Any? {
-        didSet {}
+        didSet {
+        }
         // Update the view, if already loaded.
     }
 
@@ -136,13 +136,14 @@ class ViewController: NSViewController,
         let popoverWindowY = popover.contentViewController?.view.window?.frame.origin.y ?? 0
 
         popover.contentViewController?.view.window?.setFrameOrigin(
-            NSPoint(x: popoverWindowX + 18, y: popoverWindowY)
+                NSPoint(x: popoverWindowX + 18, y: popoverWindowY)
         )
 
         popover.contentViewController?.view.window?.makeKey()
     }
 
-    @objc func detachedWindowWillClose(notification: NSNotification) {}
+    @objc func detachedWindowWillClose(notification: NSNotification) {
+    }
 
     private var popoverVisible: Bool {
         popover.isShown
@@ -765,11 +766,10 @@ class ViewController: NSViewController,
 
         // Focus search bar on ESC
         if
-            event.characters == ".",
-            event.modifierFlags.contains(.command),
+                event.characters == ".",
+                event.modifierFlags.contains(.command),
 
-            NSApplication.shared.mainWindow == NSApplication.shared.keyWindow
-        {
+                NSApplication.shared.mainWindow == NSApplication.shared.keyWindow {
             UserDataService.instance.resetLastSidebar()
 
             if let view = NSApplication.shared.mainWindow?.firstResponder as? NSTextView, let textField = view.superview?.superview, textField.isKind(of: NameTextField.self) {
@@ -841,8 +841,7 @@ class ViewController: NSViewController,
         }
 
         if let fr = mw.firstResponder, !fr.isKind(of: EditTextView.self), !fr.isKind(of: NSTextView.self), !event.modifierFlags.contains(.command),
-           !event.modifierFlags.contains(.control)
-        {
+           !event.modifierFlags.contains(.control) {
             if let char = event.characters {
                 let newSet = CharacterSet(charactersIn: char)
                 if newSet.isSubset(of: CharacterSet.alphanumerics) {
@@ -1094,8 +1093,7 @@ class ViewController: NSViewController,
         vc.storage.removeNotes(notes: notes) { urls in
 
             if let appd = NSApplication.shared.delegate as? AppDelegate,
-               let md = appd.mainWindowController
-            {
+               let md = appd.mainWindowController {
                 let undoManager = md.notesListUndoManager
 
                 if let ntv = vc.notesTableView {
@@ -1416,7 +1414,7 @@ class ViewController: NSViewController,
         }
 
         if let sidebarItem = vc.getSidebarItem(), sidebarItem.isTrash() {
-            let indexSet = IndexSet(integersIn: 0 ..< vc.notesTableView.noteList.count)
+            let indexSet = IndexSet(integersIn: 0..<vc.notesTableView.noteList.count)
             vc.notesTableView.removeRows(at: indexSet, withAnimation: .effectFade)
         }
 
@@ -1434,8 +1432,7 @@ class ViewController: NSViewController,
         }
 
         if let controller = vc.storyboard?.instantiateController(withIdentifier: "ProjectSettingsViewController")
-            as? ProjectSettingsViewController
-        {
+                as? ProjectSettingsViewController {
             projectSettingsViewController = controller
 
             if let project = vc.getSidebarProject() {
@@ -1589,7 +1586,8 @@ class ViewController: NSViewController,
 
     private var selectRowTimer = Timer()
 
-    func updateTable(search: Bool = false, searchText: String? = nil, sidebarItem: SidebarItem? = nil, projects: [Project]? = nil, completion: @escaping () -> Void = {}) {
+    func updateTable(search: Bool = false, searchText: String? = nil, sidebarItem: SidebarItem? = nil, projects: [Project]? = nil, completion: @escaping () -> Void = {
+    }) {
         var sidebarItem: SidebarItem? = sidebarItem
         var projects: [Project]? = projects
         var sidebarName: String?
@@ -1614,9 +1612,8 @@ class ViewController: NSViewController,
         // Global search if sidebar not checked
         if type == nil,
            projects == nil || (
-               projects!.count < 2 && projects!.first!.isRoot
-           )
-        {
+                   projects!.count < 2 && projects!.first!.isRoot
+           ) {
             type = .All
         }
 
@@ -1732,18 +1729,18 @@ class ViewController: NSViewController,
         }
 
         return !note.name.isEmpty
-            && (filter.isEmpty || isMatched(note: note, terms: terms!)
-            ) && (
+                && (filter.isEmpty || isMatched(note: note, terms: terms!)
+        ) && (
                 type == .All && note.project.showInCommon
-                    || (
+                        || (
                         type != .All && projects!.contains(note.project)
-                            || (note.project.parent != nil && projects!.contains(note.project.parent!))
-                    )
-                    || type == .Trash
-            ) && (
+                                || (note.project.parent != nil && projects!.contains(note.project.parent!))
+                )
+                        || type == .Trash
+        ) && (
                 type == .Trash && note.isTrash()
-                    || type != .Trash && !note.isTrash()
-            )
+                        || type != .Trash && !note.isTrash()
+        )
     }
 
     public func contains(tag name: String, in tags: [String]) -> Bool {
@@ -1827,10 +1824,9 @@ class ViewController: NSViewController,
         }
 
         if
-            NSApplication.shared.isActive,
-            !NSApplication.shared.isHidden,
-            !mainWindow.isMiniaturized
-        {
+                NSApplication.shared.isActive,
+                !NSApplication.shared.isHidden,
+                !mainWindow.isMiniaturized {
             NSApplication.shared.hide(nil)
             return
         }
@@ -1969,15 +1965,15 @@ class ViewController: NSViewController,
         }
 
         let nowUnpinned = updatedNotes
-            .filter { _, note -> Bool in
-                !note.isPinned
-            }
-            .compactMap { _, note -> (Int, Note)? in
-                guard let curRow = state.firstIndex(where: { $0 === note }) else {
-                    return nil
+                .filter { _, note -> Bool in
+                    !note.isPinned
                 }
-                return (curRow, note)
-            }
+                .compactMap { _, note -> (Int, Note)? in
+                    guard let curRow = state.firstIndex(where: { $0 === note }) else {
+                        return nil
+                    }
+                    return (curRow, note)
+                }
         for (row, note) in nowUnpinned.reversed() {
             guard let newRow = resorted.firstIndex(where: { $0 === note }) else {
                 continue
@@ -1995,6 +1991,9 @@ class ViewController: NSViewController,
     }
 
     func toggleMagicPPT() {
+        guard let vc = ViewController.shared() else {
+            return
+        }
         titleLabel.saveTitle()
         if let note = notesTableView.getSelectedNote() {
             let content = note.content.string
@@ -2002,7 +2001,9 @@ class ViewController: NSViewController,
                 if UserDefaultsManagement.magicPPT {
                     disablePresentation()
                     UserDefaultsManagement.magicPPT = false
-                    titiebarHeight.constant = 46.0
+                    DispatchQueue.main.async {
+                        self.titiebarHeight.constant = 46.0
+                    }
                 } else {
                     enablePresentation()
                     UserDefaultsManagement.magicPPT = true
@@ -2034,7 +2035,9 @@ class ViewController: NSViewController,
         editArea.markdownView?.removeFromSuperview()
         editArea.markdownView = nil
 
-        guard let editor = editArea else { return }
+        guard let editor = editArea else {
+            return
+        }
         editor.subviews.removeAll(where: { $0.isKind(of: MPreviewView.self) })
         refillEditArea()
         if !isFocusedTitle {
@@ -2073,7 +2076,9 @@ class ViewController: NSViewController,
         previewButton.state = .off
         UserDefaultsManagement.presentation = false
         UserDefaultsManagement.magicPPT = false
-        titiebarHeight.constant = 46.0
+        DispatchQueue.main.async {
+            self.titiebarHeight.constant = 46.0
+        }
         if UserDefaultsManagement.fullScreen {
             view.window?.toggleFullScreen(nil)
         }
@@ -2153,8 +2158,7 @@ class ViewController: NSViewController,
 
         for menu in noteMenu.items {
             if let identifier = menu.identifier?.rawValue,
-               personalSelection.contains(identifier)
-            {
+               personalSelection.contains(identifier) {
                 menu.isHidden = (vc.notesTableView.selectedRowIndexes.count > 1)
             }
         }
@@ -2167,11 +2171,11 @@ class ViewController: NSViewController,
         let sortByLabel = NSLocalizedString("Sort by", comment: "View menu")
 
         guard
-            let menu = NSApp.menu,
-            let view = menu.item(withTitle: viewLabel),
-            let submenu = view.submenu,
-            let sortMenu = submenu.item(withTitle: sortByLabel),
-            let sortItems = sortMenu.submenu
+                let menu = NSApp.menu,
+                let view = menu.item(withTitle: viewLabel),
+                let submenu = view.submenu,
+                let sortMenu = submenu.item(withTitle: sortByLabel),
+                let sortItems = sortMenu.submenu
         else {
             return
         }
