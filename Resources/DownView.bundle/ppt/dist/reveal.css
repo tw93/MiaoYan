@@ -671,7 +671,7 @@ html.reveal-full-page {
     pointer-events: none;
     overflow: visible;
     z-index: 1;
-    text-align: center;
+    text-align: left;
     perspective: 600px;
     perspective-origin: 50% 40%
 }
@@ -716,7 +716,13 @@ html.reveal-full-page {
 .reveal .slides > section.present, .reveal .slides > section > section.present {
     display: block;
     z-index: 11;
-    opacity: 1
+    opacity: 1;
+    padding: 90px 48px;
+}
+
+.reveal .slides > section.present.section-center, .reveal .slides > section > section.present.section-center{
+    padding: 0;
+    text-align: center;
 }
 
 .reveal .slides > section:empty, .reveal .slides > section > section:empty, .reveal .slides > section > section[data-background-interactive], .reveal .slides > section[data-background-interactive] {
