@@ -37,7 +37,8 @@ class ViewController: NSViewController,
     private var updateViews = [Note]()
 
     override var representedObject: Any? {
-        didSet {} // Update the view, if already loaded.
+        didSet {}
+        // Update the view, if already loaded.
     }
 
     // MARK: - IBOutlets
@@ -58,6 +59,7 @@ class ViewController: NSViewController,
     @IBOutlet var notesListCustomView: NSView!
     @IBOutlet var outlineHeader: OutlineHeaderView!
 
+    @IBOutlet var titiebarHeight: NSLayoutConstraint!
     @IBOutlet var searchTopConstraint: NSLayoutConstraint!
     @IBOutlet var titleLabel: TitleTextField!
 
@@ -121,7 +123,9 @@ class ViewController: NSViewController,
 
         let selectedCell = notesTableView.view(atColumn: 0, row: notesTableView.selectedRow, makeIfNecessary: false)
 
-        guard let positioningView = selectedCell else { return }
+        guard let positioningView = selectedCell else {
+            return
+        }
         let positioningRect = NSZeroRect
 
         let preferredEdge = NSRectEdge(rectEdge: .maxXEdge)
@@ -140,7 +144,9 @@ class ViewController: NSViewController,
 
     @objc func detachedWindowWillClose(notification: NSNotification) {}
 
-    private var popoverVisible: Bool { popover.isShown }
+    private var popoverVisible: Bool {
+        popover.isShown
+    }
 
     func toggleInfo() {
         if popoverVisible {
@@ -168,7 +174,7 @@ class ViewController: NSViewController,
         checkSidebarConstraint()
 
         #if CLOUDKIT
-            registerKeyValueObserver()
+        registerKeyValueObserver()
         #endif
 
         searchQueue.maxConcurrentOperationCount = 1
@@ -218,7 +224,9 @@ class ViewController: NSViewController,
             }
         }
 
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         let size = vc.splitView.subviews[0].frame.width
         let sideSize = vc.sidebarSplitView.subviews[0].frame.width
         setSideDividerHidden(hidden: sideSize == 0)
@@ -243,7 +251,9 @@ class ViewController: NSViewController,
     }
 
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
-        guard let vc = ViewController.shared() else { return false }
+        guard let vc = ViewController.shared() else {
+            return false
+        }
 
         if let title = menuItem.menu?.identifier?.rawValue {
             switch title {
@@ -337,8 +347,7 @@ class ViewController: NSViewController,
                 }
                 if UserDefaultsManagement.isSingleMode {
                     let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
-                    if !FileManager.default.directoryExists(atUrl: singleModeUrl), let lastNote = self.storage.getBy(url: singleModeUrl), let i = self.notesTableView.getIndex(lastNote)
-                    {
+                    if !FileManager.default.directoryExists(atUrl: singleModeUrl), let lastNote = self.storage.getBy(url: singleModeUrl), let i = self.notesTableView.getIndex(lastNote) {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                             self.notesTableView.selectRow(i)
                             self.notesTableView.scrollRowToVisible(row: i, animated: true)
@@ -397,7 +406,9 @@ class ViewController: NSViewController,
     // MARK: - Actions
 
     @IBAction func searchAndCreate(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
 
         let size = vc.splitView.subviews[0].frame.width
 
@@ -423,7 +434,9 @@ class ViewController: NSViewController,
     @IBAction func sortBy(_ sender: NSMenuItem) {
         if let id = sender.identifier {
             let key = String(id.rawValue.dropFirst(3))
-            guard let sortBy = SortBy(rawValue: key) else { return }
+            guard let sortBy = SortBy(rawValue: key) else {
+                return
+            }
 
             UserDefaultsManagement.sort = sortBy
 
@@ -439,10 +452,14 @@ class ViewController: NSViewController,
     }
 
     func resort() {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         ascendingCheckItem.state = UserDefaultsManagement.sortDirection ? .off : .on
         descendingCheckItem.state = UserDefaultsManagement.sortDirection ? .on : .off
-        guard let controller = ViewController.shared() else { return }
+        guard let controller = ViewController.shared() else {
+            return
+        }
 
         // Sort all notes
         storage.noteList = storage.sortNotes(noteList: storage.noteList, filter: controller.search.stringValue)
@@ -537,7 +554,9 @@ class ViewController: NSViewController,
                 let find = prefix + imagePath + postfix
                 let replace = prefix + dstPrefix + fileName + postfix
 
-                guard find != replace else { return }
+                guard find != replace else {
+                    return
+                }
 
                 while note.content.mutableString.contains(find) {
                     let range = note.content.mutableString.range(of: find)
@@ -548,7 +567,9 @@ class ViewController: NSViewController,
     }
 
     func viewDidResize() {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         vc.checkSidebarConstraint()
 
         if !refilled {
@@ -561,7 +582,9 @@ class ViewController: NSViewController,
     }
 
     func reloadSideBar() {
-        guard let outline = storageOutlineView else { return }
+        guard let outline = storageOutlineView else {
+            return
+        }
 
         sidebarTimer.invalidate()
         sidebarTimer = Timer.scheduledTimer(timeInterval: 1.2, target: outline, selector: #selector(outline.reloadSidebar), userInfo: nil, repeats: false)
@@ -616,7 +639,9 @@ class ViewController: NSViewController,
     }
 
     public func keyDown(with event: NSEvent) -> Bool {
-        guard let mw = MainWindowController.shared() else { return false }
+        guard let mw = MainWindowController.shared() else {
+            return false
+        }
 
         guard alert == nil else {
             if event.keyCode == kVK_Escape, let unwrapped = alert {
@@ -855,7 +880,9 @@ class ViewController: NSViewController,
     }
 
     @IBAction func makeNote(_ sender: SearchTextField) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
 
         if let type = vc.getSidebarType(), type == .Trash {
             vc.storageOutlineView.deselectAll(nil)
@@ -873,7 +900,9 @@ class ViewController: NSViewController,
     }
 
     @IBAction func fileMenuNewNote(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         if let type = vc.getSidebarType(), type == .Trash {
             vc.storageOutlineView.deselectAll(nil)
         }
@@ -928,7 +957,9 @@ class ViewController: NSViewController,
     }
 
     @IBAction func moveMenu(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
 
         if vc.notesTableView.selectedRow >= 0 {
             vc.loadMoveMenu()
@@ -944,7 +975,9 @@ class ViewController: NSViewController,
     }
 
     @IBAction func fileName(_ sender: NSTextField) {
-        guard let note = notesTableView.getNoteFromSelectedRow() else { return }
+        guard let note = notesTableView.getNoteFromSelectedRow() else {
+            return
+        }
 
         let value = sender.stringValue
         let url = note.url
@@ -954,7 +987,9 @@ class ViewController: NSViewController,
 
         if note.project.fileExist(fileName: value, ext: note.url.pathExtension), !isSoftRename {
             self.alert = NSAlert()
-            guard let alert = alert else { return }
+            guard let alert = alert else {
+                return
+            }
 
             alert.messageText = "Hmm, something goes wrong 🙈"
             alert.informativeText = "Note with name \"\(value)\" already exists in selected storage."
@@ -1000,7 +1035,9 @@ class ViewController: NSViewController,
     }
 
     @IBAction func makeMenu(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
 
         if let type = vc.getSidebarType(), type == .Trash {
             vc.storageOutlineView.deselectAll(nil)
@@ -1010,18 +1047,24 @@ class ViewController: NSViewController,
     }
 
     @IBAction func pinMenu(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         vc.pin(vc.notesTableView.selectedRowIndexes)
     }
 
     @IBAction func renameMenu(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         vc.titleLabel.restoreResponder = vc.view.window?.firstResponder
         switchTitleToEditMode()
     }
 
     @objc func switchTitleToEditMode() {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
 
         vc.titleLabel.editModeOn()
         if let note = EditTextView.note {
@@ -1030,7 +1073,9 @@ class ViewController: NSViewController,
     }
 
     @IBAction func deleteNote(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         guard let notes = vc.notesTableView.getSelectedNotes() else {
             return
         }
@@ -1077,14 +1122,18 @@ class ViewController: NSViewController,
     }
 
     func setButtonHidden(hidden: Bool) {
-        guard let mainWindow = MainWindowController.shared() else { return }
+        guard let mainWindow = MainWindowController.shared() else {
+            return
+        }
         mainWindow.standardWindowButton(NSWindow.ButtonType.closeButton)?.isHidden = hidden
         mainWindow.standardWindowButton(NSWindow.ButtonType.miniaturizeButton)?.isHidden = hidden
         mainWindow.standardWindowButton(NSWindow.ButtonType.zoomButton)?.isHidden = hidden
     }
 
     func setDividerHidden(hidden: Bool) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         if hidden {
             if #available(macOS 10.13, *) {
                 vc.splitView.setValue(NSColor(named: "mainBackground"), forKey: "dividerColor")
@@ -1101,7 +1150,9 @@ class ViewController: NSViewController,
     }
 
     func setSideDividerHidden(hidden: Bool) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         if hidden {
             if #available(macOS 10.13, *) {
                 vc.sidebarSplitView.setValue(NSColor(named: "mainBackground"), forKey: "dividerColor")
@@ -1118,7 +1169,9 @@ class ViewController: NSViewController,
     }
 
     @IBAction func toggleNoteList(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
 
         let size = vc.splitView.subviews[0].frame.width
 
@@ -1156,7 +1209,9 @@ class ViewController: NSViewController,
             toastInSingleMode()
             return
         }
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
 
         let size = Int(vc.sidebarSplitView.subviews[0].frame.width)
         if size != 0 {
@@ -1194,7 +1249,9 @@ class ViewController: NSViewController,
             swipeRightExecuted = false
             scrollDeltaX = 0
         case .changed:
-            guard isHandlingScrollEvent else { break }
+            guard isHandlingScrollEvent else {
+                break
+            }
 
             let directionChanged = scrollDeltaX.sign != event.scrollingDeltaX.sign
 
@@ -1206,7 +1263,9 @@ class ViewController: NSViewController,
             scrollDeltaX += event.scrollingDeltaX
 
             // throttle
-            guard abs(scrollDeltaX) > 50 else { break }
+            guard abs(scrollDeltaX) > 50 else {
+                break
+            }
 
             let flippedScrollDelta = scrollDeltaX * -1
             let swipedLeft = flippedScrollDelta > 0
@@ -1236,9 +1295,13 @@ class ViewController: NSViewController,
     }
 
     private func swipe(deltaX: CGFloat) {
-        guard deltaX != 0 else { return }
+        guard deltaX != 0 else {
+            return
+        }
 
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         let siderbarSize = Int(vc.sidebarSplitView.subviews[0].frame.width)
         let notelistSize = Int(vc.splitView.subviews[0].frame.width)
 
@@ -1265,7 +1328,9 @@ class ViewController: NSViewController,
     }
 
     func hideSidebar(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         let size = Int(vc.sidebarSplitView.subviews[0].frame.width)
 
         if size != 0 {
@@ -1284,7 +1349,9 @@ class ViewController: NSViewController,
             return
         }
 
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         let size = Int(vc.sidebarSplitView.subviews[0].frame.width)
 
         if size == 0 {
@@ -1297,7 +1364,9 @@ class ViewController: NSViewController,
     }
 
     func showNoteList(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         let size = vc.splitView.subviews[0].frame.width
 
         if size == 0 {
@@ -1314,7 +1383,9 @@ class ViewController: NSViewController,
     }
 
     func hideNoteList(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         let size = vc.splitView.subviews[0].frame.width
 
         if size != 0 {
@@ -1340,7 +1411,9 @@ class ViewController: NSViewController,
     }
 
     @IBAction func emptyTrash(_ sender: NSMenuItem) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
 
         if let sidebarItem = vc.getSidebarItem(), sidebarItem.isTrash() {
             let indexSet = IndexSet(integersIn: 0 ..< vc.notesTableView.noteList.count)
@@ -1373,7 +1446,9 @@ class ViewController: NSViewController,
     }
 
     func controlTextDidEndEditing(_ obj: Notification) {
-        guard let textField = obj.object as? NSTextField, textField == titleLabel else { return }
+        guard let textField = obj.object as? NSTextField, textField == titleLabel else {
+            return
+        }
 
         if titleLabel.isEditable == true {
             fileName(titleLabel)
@@ -1393,7 +1468,9 @@ class ViewController: NSViewController,
 
     // Changed main edit view
     func textDidChange(_ notification: Notification) {
-        guard let note = getCurrentNote() else { return }
+        guard let note = getCurrentNote() else {
+            return
+        }
 
         blockFSUpdates()
 
@@ -1417,13 +1494,21 @@ class ViewController: NSViewController,
     }
 
     private func removeForever() {
-        guard let vc = ViewController.shared() else { return }
-        guard let notes = vc.notesTableView.getSelectedNotes() else { return }
-        guard let window = MainWindowController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
+        guard let notes = vc.notesTableView.getSelectedNotes() else {
+            return
+        }
+        guard let window = MainWindowController.shared() else {
+            return
+        }
 
         vc.alert = NSAlert()
 
-        guard let alert = vc.alert else { return }
+        guard let alert = vc.alert else {
+            return
+        }
 
         alert.messageText = String(format: NSLocalizedString("Are you sure you want to irretrievably delete %d note(s)?", comment: ""), notes.count)
 
@@ -1537,7 +1622,9 @@ class ViewController: NSViewController,
 
         let operation = BlockOperation()
         operation.addExecutionBlock { [weak self] in
-            guard let self = self else { return }
+            guard let self = self else {
+                return
+            }
 
             if let projects = projects {
                 for project in projects {
@@ -1614,7 +1701,9 @@ class ViewController: NSViewController,
      */
     private func preLoadNoteTitles(in project: Project) {
         if UserDefaultsManagement.sort == .title || project.sortBy == .title {
-            _ = storage.noteList.filter { $0.project == project }
+            _ = storage.noteList.filter {
+                $0.project == project
+            }
         }
     }
 
@@ -1733,7 +1822,9 @@ class ViewController: NSViewController,
     }
 
     func activeShortcut() {
-        guard let mainWindow = MainWindowController.shared() else { return }
+        guard let mainWindow = MainWindowController.shared() else {
+            return
+        }
 
         if
             NSApplication.shared.isActive,
@@ -1761,7 +1852,9 @@ class ViewController: NSViewController,
     }
 
     func createNote(name: String = "", content: String = "", type: NoteType? = nil, project: Project? = nil, load: Bool = false) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
 
         let selectedProjects = vc.storageOutlineView.getSidebarProjects()
         var sidebarProject = project ?? selectedProjects?.first
@@ -1772,7 +1865,9 @@ class ViewController: NSViewController,
             sidebarProject = projects.first
         }
 
-        guard let project = sidebarProject else { return }
+        guard let project = sidebarProject else {
+            return
+        }
 
         let note = Note(name: name, project: project, type: type)
         note.content = NSMutableAttributedString(string: text)
@@ -1784,11 +1879,15 @@ class ViewController: NSViewController,
 
         UserDefaultsManagement.preview = false
 
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         editArea.markdownView?.removeFromSuperview()
         editArea.markdownView = nil
 
-        guard let editor = editArea else { return }
+        guard let editor = editArea else {
+            return
+        }
         editor.subviews.removeAll(where: { $0.isKind(of: MPreviewView.self) })
 
         refillEditArea()
@@ -1812,11 +1911,17 @@ class ViewController: NSViewController,
     }
 
     public func sortAndMove(note: Note) {
-        guard let notes = filteredNoteList else { return }
-        guard let srcIndex = notesTableView.noteList.firstIndex(of: note) else { return }
+        guard let notes = filteredNoteList else {
+            return
+        }
+        guard let srcIndex = notesTableView.noteList.firstIndex(of: note) else {
+            return
+        }
 
         let resorted = storage.sortNotes(noteList: notes, filter: search.stringValue)
-        guard let dstIndex = resorted.firstIndex(of: note) else { return }
+        guard let dstIndex = resorted.firstIndex(of: note) else {
+            return
+        }
 
         if srcIndex != dstIndex {
             notesTableView.moveRow(at: srcIndex, to: dstIndex)
@@ -1826,14 +1931,18 @@ class ViewController: NSViewController,
     }
 
     func pin(_ selectedRows: IndexSet) {
-        guard !selectedRows.isEmpty, let notes = filteredNoteList, var state = filteredNoteList else { return }
+        guard !selectedRows.isEmpty, let notes = filteredNoteList, var state = filteredNoteList else {
+            return
+        }
 
         var updatedNotes = [(Int, Note)]()
         for row in selectedRows {
             guard let rowView = notesTableView.rowView(atRow: row, makeIfNecessary: false) as? NoteRowView,
                   let cell = rowView.view(atColumn: 0) as? NoteCellView,
                   let note = cell.objectValue as? Note
-            else { continue }
+            else {
+                continue
+            }
 
             updatedNotes.append((row, note))
             note.togglePin()
@@ -1841,26 +1950,38 @@ class ViewController: NSViewController,
         }
 
         let resorted = storage.sortNotes(noteList: notes, filter: search.stringValue)
-        let indexes = updatedNotes.compactMap { _, note in resorted.firstIndex(where: { $0 === note }) }
+        let indexes = updatedNotes.compactMap { _, note in
+            resorted.firstIndex(where: { $0 === note })
+        }
         let newIndexes = IndexSet(indexes)
 
         notesTableView.beginUpdates()
-        let nowPinned = updatedNotes.filter { _, note in note.isPinned }
+        let nowPinned = updatedNotes.filter { _, note in
+            note.isPinned
+        }
         for (row, note) in nowPinned {
-            guard let newRow = resorted.firstIndex(where: { $0 === note }) else { continue }
+            guard let newRow = resorted.firstIndex(where: { $0 === note }) else {
+                continue
+            }
             notesTableView.moveRow(at: row, to: newRow)
             let toMove = state.remove(at: row)
             state.insert(toMove, at: newRow)
         }
 
         let nowUnpinned = updatedNotes
-            .filter { _, note -> Bool in !note.isPinned }
+            .filter { _, note -> Bool in
+                !note.isPinned
+            }
             .compactMap { _, note -> (Int, Note)? in
-                guard let curRow = state.firstIndex(where: { $0 === note }) else { return nil }
+                guard let curRow = state.firstIndex(where: { $0 === note }) else {
+                    return nil
+                }
                 return (curRow, note)
             }
         for (row, note) in nowUnpinned.reversed() {
-            guard let newRow = resorted.firstIndex(where: { $0 === note }) else { continue }
+            guard let newRow = resorted.firstIndex(where: { $0 === note }) else {
+                continue
+            }
             notesTableView.moveRow(at: row, to: newRow)
             let toMove = state.remove(at: row)
             state.insert(toMove, at: newRow)
@@ -1881,9 +2002,13 @@ class ViewController: NSViewController,
                 if UserDefaultsManagement.magicPPT {
                     disablePresentation()
                     UserDefaultsManagement.magicPPT = false
+                    titiebarHeight.constant = 46.0
                 } else {
                     enablePresentation()
                     UserDefaultsManagement.magicPPT = true
+                    DispatchQueue.main.async {
+                        self.titiebarHeight.constant = 0.0
+                    }
                 }
             } else {
                 toast(message: NSLocalizedString("😶‍🌫️ No delimiter --- identification, Cannot use magic PPT~", comment: ""))
@@ -1933,11 +2058,12 @@ class ViewController: NSViewController,
         if UserDefaultsManagement.preview {
             disablePreview()
         }
-        setButtonHidden(hidden: true)
         enablePreview()
-        if UserDefaultsManagement.fullScreen {} else {
+        if UserDefaultsManagement.fullScreen {
+        } else {
             view.window?.toggleFullScreen(nil)
         }
+        setButtonHidden(hidden: true)
         formatButton.isHidden = true
         previewButton.isHidden = true
         toast(message: NSLocalizedString("🙊 Press ESC key to exit~", comment: ""))
@@ -1947,6 +2073,7 @@ class ViewController: NSViewController,
         previewButton.state = .off
         UserDefaultsManagement.presentation = false
         UserDefaultsManagement.magicPPT = false
+        titiebarHeight.constant = 46.0
         if UserDefaultsManagement.fullScreen {
             view.window?.toggleFullScreen(nil)
         }
@@ -1983,7 +2110,9 @@ class ViewController: NSViewController,
     }
 
     func loadMoveMenu() {
-        guard let vc = ViewController.shared(), let note = vc.notesTableView.getSelectedNote() else { return }
+        guard let vc = ViewController.shared(), let note = vc.notesTableView.getSelectedNote() else {
+            return
+        }
 
         let moveTitle = NSLocalizedString("Move", comment: "Menu")
         if let prevMenu = noteMenu.item(withTitle: moveTitle) {
@@ -2107,7 +2236,9 @@ class ViewController: NSViewController,
     @IBAction func duplicate(_ sender: Any) {
         if let notes = notesTableView.getSelectedNotes() {
             for note in notes {
-                guard let name = note.getDupeName() else { continue }
+                guard let name = note.getDupeName() else {
+                    continue
+                }
 
                 let noteDupe = Note(name: name, project: note.project, type: note.type)
                 noteDupe.content = NSMutableAttributedString(string: note.content.string)
@@ -2129,7 +2260,9 @@ class ViewController: NSViewController,
     }
 
     @IBAction func noteCopy(_ sender: Any) {
-        guard let fr = view.window?.firstResponder else { return }
+        guard let fr = view.window?.firstResponder else {
+            return
+        }
 
         if fr.isKind(of: EditTextView.self) {
             editArea.copy(sender)
@@ -2262,7 +2395,9 @@ class ViewController: NSViewController,
     }
 
     @IBAction func textFinder(_ sender: NSMenuItem) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
 
         if !vc.editAreaScroll.isFindBarVisible, [NSFindPanelAction.next.rawValue, NSFindPanelAction.previous.rawValue].contains(UInt(sender.tag)) {
             if UserDefaultsManagement.preview, vc.notesTableView.selectedRow > -1 {
@@ -2294,7 +2429,9 @@ class ViewController: NSViewController,
     }
 
     public static func shared() -> ViewController? {
-        guard let delegate = NSApplication.shared.delegate as? AppDelegate else { return nil }
+        guard let delegate = NSApplication.shared.delegate as? AppDelegate else {
+            return nil
+        }
 
         return delegate.mainWindowController?.window?.contentViewController as? ViewController
     }
