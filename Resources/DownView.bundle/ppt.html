@@ -1,167 +1,84 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="initial-scale=1.0" />
-    <link rel="stylesheet" href="webfont/lxgwwenkailite-bold.css" />
-    <link rel="stylesheet" href="webfont/lxgwwenkailite-regular.css" />
-    <link rel="stylesheet" href="ppt/dist/reveal.css" />
-     DOWN_THEME
-    <link rel="stylesheet" href="ppt/plugin/highlight/monokai.css" />
-    <script
-      src="js/highlight.min.js"
-      charset="utf-8"
-      type="text/javascript"
-    ></script>
-    <script
-      src="js/mermaid.min.js"
-      charset="utf-8"
-      type="text/javascript"
-    ></script>
-    <script
-      src="js/plantuml-encoder.min.js"
-      charset="utf-8"
-      type="text/javascript"
-    ></script>
-    <link rel="stylesheet" href="css/katex.min.css" />
-    <script src="js/katex.min.js"></script>
-    <script src="js/auto-render.min.js"></script>
-    <script src="js/emoji.min.js"></script>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="initial-scale=1.0"/>
+    <link rel="stylesheet" href="webfont/lxgwwenkailite-bold.css"/>
+    <link rel="stylesheet" href="webfont/lxgwwenkailite-regular.css"/>
+    <link rel="stylesheet" href="ppt/dist/reveal.css"/>
+    DOWN_THEME
+    <link rel="stylesheet" href="ppt/plugin/highlight/monokai.css"/>
     <title></title>
     <style>
-      DOWN_CSS
+        DOWN_CSS
     </style>
-  </head>
+</head>
 
-  <body>
-    <div class="reveal" id="write">
-          <div class="slides">
-            <section data-markdown>
-              <script type="text/template">
+<body>
+<div class="reveal" id="write">
+    <div class="slides">
+        <section data-markdown>
+            <script type="text/template">
                 DOWN_RAW
-              </script>
-            </section>
-          </div>
-        </div>
+            </script>
+        </section>
+    </div>
+</div>
 
-    <script>
-      const html = document.getElementById('write').innerHTML;
-      const emoji = new EmojiConvertor();
-      if (/:[^:\s]*(?:::[^:\s]*)*:/.test(html)) {
-        document.getElementById('write').innerHTML = emoji.replace_colons(html);
-      }
-    </script>
+<script>
+  function getSelectionAndSendMessage() {
+    var txt = document.getSelection().toString();
+    window.webkit.messageHandlers.newSelectionDetected.postMessage(txt);
+  }
 
-    <script>
-      function getSelectionAndSendMessage() {
-        var txt = document.getSelection().toString();
-        window.webkit.messageHandlers.newSelectionDetected.postMessage(txt);
-      }
-      document.onmouseup = getSelectionAndSendMessage;
-      document.onkeyup = getSelectionAndSendMessage;
-      document.oncontextmenu = getSelectionAndSendMessage;
+  document.onmouseup = getSelectionAndSendMessage;
+  document.onkeyup = getSelectionAndSendMessage;
+  document.oncontextmenu = getSelectionAndSendMessage;
 
-    </script>
+</script>
 
-    <script>
-      var preList = document.getElementsByTagName('input'),
-        length = preList.length,
-        i = 0;
+<script>
+  var preList = document.getElementsByTagName('input'),
+    length = preList.length,
+    i = 0;
 
-      for (i; i < length; i++) {
-        preList[i].disabled = true;
+  for (i; i < length; i++) {
+    preList[i].disabled = true;
 
-        if (
-          preList[i].parentNode.tagName == 'P' &&
-          preList[i].parentNode.parentNode.tagName == 'LI'
-        ) {
-          preList[i].parentNode.parentNode.parentNode.classList.add('cb');
-          continue;
-        }
+    if (
+      preList[i].parentNode.tagName == 'P' &&
+      preList[i].parentNode.parentNode.tagName == 'LI'
+    ) {
+      preList[i].parentNode.parentNode.parentNode.classList.add('cb');
+      continue;
+    }
 
-        if (preList[i].parentNode.tagName != 'LI') {
-          continue;
-        }
+    if (preList[i].parentNode.tagName != 'LI') {
+      continue;
+    }
 
-        preList[i].parentNode.parentNode.classList.add('cb');
-      }
-    </script>
+    preList[i].parentNode.parentNode.classList.add('cb');
+  }
+</script>
+<script src="ppt/dist/reveal.js"></script>
+<script src="ppt/plugin/markdown/markdown.js"></script>
+<script src="ppt/plugin/highlight/highlight.js"></script>
+<script src="ppt/plugin/notes/notes.js"></script>
 
-    <script>
-      var config = {
-        startOnLoad: true,
-        theme: 'forest',
-        flowchart: {
-          useMaxWidth: false,
-          htmlLabels: true,
-        },
-      };
-
-      mermaid.initialize(config);
-      window.mermaid.init(
-        undefined,
-        document.querySelectorAll('.language-mermaid'),
-      );
-
-      let plantumlPrefix = 'language-plantuml';
-      Array.prototype.forEach.call(
-        document.querySelectorAll('[class^=' + plantumlPrefix + ']'),
-        function (code) {
-          let image = document.createElement('img');
-          image.className = 'plantuml-image';
-          image.loading = 'lazy';
-          image.src =
-            'http://www.plantuml.com/plantuml/svg/~1' +
-            plantumlEncoder.encode(code.innerText);
-          code.parentNode.insertBefore(image, code);
-          code.style.display = 'none';
-        },
-      );
-      var pres = document.getElementsByTagName('pre'),
-        length = pres.length,
-        i = 0;
-
-      for (i; i < length; i++) {
-        if (pres[i].querySelector('.plantuml-image')) {
-          pres[i].classList.add('plantuml-image-container');
-        }
-        if (pres[i].querySelector('.language-mermaid')) {
-          pres[i].classList.add('mermaid-image-container');
-        }
-      }
-    </script>
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        renderMathInElement(document.body, {
-          delimiters: [
-            { left: '$$', right: '$$', display: true },
-            { left: '$', right: '$', display: false },
-            { left: '\\(', right: '\\)', display: false },
-            { left: '\\[', right: '\\]', display: true },
-          ],
-          // • rendering keys, e.g.:
-          throwOnError: false,
-        });
-      });
-    </script>
-    <script src="ppt/dist/reveal.js"></script>
-    <script src="ppt/plugin/markdown/markdown.js"></script>
-    <script src="ppt/plugin/highlight/highlight.js"></script>
-    <script src="ppt/plugin/notes/notes.js"></script>
-
-    <script>
-      Reveal.initialize({
-        controls: true,
-        progress: true,
-        history: true,
-        center: true,
-
-        plugins: [
-          RevealMarkdown,
-          RevealHighlight,
-          RevealNotes,
-        ],
-      });
-    </script>
-  </body>
+<script>
+  Reveal.initialize({
+    width: "100%",
+    height: "100%",
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+    plugins: [
+      RevealMarkdown,
+      RevealHighlight,
+      RevealNotes,
+    ],
+  });
+</script>
+</body>
 </html>
