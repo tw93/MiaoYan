@@ -21,3 +21,58 @@ section.has-dark-background h6 {
     --r-selection-color: #fff;
     --r-highlight-color: #05A699;
 }
+
+
+.hljs {
+  background: #f8f8f8;
+  color: #000;
+  padding: 0.5em;
+  display: block;
+  overflow-x: auto;
+}
+.hljs-comment,
+.hljs-quote,
+.hljs-variable {
+  color: #035c21;
+}
+.hljs-built_in,
+.hljs-keyword,
+.hljs-name,
+.hljs-selector-tag,
+.hljs-tag {
+  color: #0a69d9;
+}
+.hljs-addition,
+.hljs-attribute,
+.hljs-literal,
+.hljs-section,
+.hljs-string,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-title,
+.hljs-type {
+  color: #bf3889;
+}
+.hljs-deletion,
+.hljs-meta,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+  color: #208bff;
+}
+.hljs-doctag {
+  color: #6e7781;
+}
+.hljs-attr {
+  color: #cf212e;
+}
+.hljs-bullet,
+.hljs-link,
+.hljs-symbol {
+  color: #8250df;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: bold;
+}
