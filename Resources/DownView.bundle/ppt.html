@@ -72,8 +72,8 @@
     controls: true,
     progress: true,
     history: true,
+    transition: 'slide',
     center: false,
-    backgroundTransition: 'fade',
     plugins: [
       RevealMarkdown,
       RevealHighlight,
@@ -90,6 +90,13 @@
       if (item.childElementCount === 1) {
         item.classList.add('section-center')
         item.classList.add('center')
+
+      } else {
+        const option = item.clientHeight / document.body.offsetHeight;
+        console.log(item.clientHeight,document.body.offsetHeight)
+        if (option > 1.06) {
+          item.classList.add('section-option')
+        }
       }
     })
   });

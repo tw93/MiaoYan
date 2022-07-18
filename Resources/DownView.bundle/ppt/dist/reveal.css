@@ -725,6 +725,11 @@ html.reveal-full-page {
     text-align: center;
 }
 
+.reveal .slides > section.present.section-option, .reveal .slides > section > section.present.section-option {
+    padding: 48px;
+    zoom: 0.8;
+}
+
 .reveal .slides > section:empty, .reveal .slides > section > section:empty, .reveal .slides > section > section[data-background-interactive], .reveal .slides > section[data-background-interactive] {
     pointer-events: none
 }

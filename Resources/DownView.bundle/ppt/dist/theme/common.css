@@ -105,8 +105,14 @@
 .reveal img,
 .reveal video,
 .reveal iframe {
-    max-width: 95%;
-    max-height: 95%;
+    max-width: calc(100vw - 80px);
+    max-height: calc(100vh - 120px);
+}
+
+.section-center p img,
+.section-center p video,
+.section-center p iframe {
+    margin: -20px 0;
 }
 
 .reveal strong,
