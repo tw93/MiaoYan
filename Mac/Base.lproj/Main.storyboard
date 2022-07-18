@@ -1312,8 +1312,8 @@ CA
                                                             <constraint firstAttribute="width" constant="240" id="zhs-CF-bHS"/>
                                                         </constraints>
                                                     </customView>
-                                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="xSU-Mk-2F1" customClass="TitleBarView" customModule="MiaoYan" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="594" width="559" height="46"/>
+                                                    <customView misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xSU-Mk-2F1" customClass="TitleBarView" customModule="MiaoYan" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="595" width="559" height="46"/>
                                                         <subviews>
                                                             <textField focusRingType="none" horizontalHuggingPriority="1" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="rZx-hk-GcJ" customClass="TitleTextField" customModule="MiaoYan" customModuleProvider="target">
                                                                 <rect key="frame" x="25" y="5" width="378" height="32"/>
@@ -1454,6 +1454,7 @@ CA
                         <outlet property="sidebarSplitView" destination="dO0-pK-Ktm" id="2FH-Og-FOV"/>
                         <outlet property="splitView" destination="yWu-3F-P62" id="IYq-T3-4b1"/>
                         <outlet property="storageOutlineView" destination="urA-eK-bWB" id="ytX-z3-4Mi"/>
+                        <outlet property="titiebarHeight" destination="pX3-IZ-w1v" id="I3W-XP-fj0"/>
                         <outlet property="titleBarAdditionalView" destination="Ua8-RE-q01" id="CfN-3p-UH3"/>
                         <outlet property="titleBarView" destination="xSU-Mk-2F1" id="lbu-pA-1Hs"/>
                         <outlet property="titleLabel" destination="rZx-hk-GcJ" id="wKj-zD-Ovz"/>
