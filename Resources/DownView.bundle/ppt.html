@@ -72,13 +72,26 @@
     controls: true,
     progress: true,
     history: true,
-    center: true,
+    center: false,
+    backgroundTransition: 'fade',
     plugins: [
       RevealMarkdown,
       RevealHighlight,
       RevealNotes,
       RevealZoom,
     ],
+  });
+  document.addEventListener('DOMContentLoaded', function () {
+    const sections = document.getElementsByTagName("section");
+    if (sections.length < 1) {
+      return
+    }
+    sections.forEach((item) => {
+      if (item.childElementCount === 1) {
+        item.classList.add('section-center')
+        item.classList.add('center')
+      }
+    })
   });
 </script>
 </body>

@@ -7,6 +7,7 @@ section.has-dark-background h5,
 section.has-dark-background h6 {
     color: #fff;
 }
+
 /*********************************************
  * GLOBAL STYLES
  *********************************************/
@@ -24,24 +25,24 @@ section.has-dark-background h6 {
 
 
 .hljs {
-  background: #f8f8f8;
-  color: #000;
-  padding: 0.5em;
-  display: block;
-  overflow-x: auto;
+    background: #f8f8f8;
+    color: #000;
 }
+
 .hljs-comment,
 .hljs-quote,
 .hljs-variable {
-  color: #035c21;
+    color: #035c21;
 }
+
 .hljs-built_in,
 .hljs-keyword,
 .hljs-name,
 .hljs-selector-tag,
 .hljs-tag {
-  color: #0a69d9;
+    color: #0a69d9;
 }
+
 .hljs-addition,
 .hljs-attribute,
 .hljs-literal,
@@ -51,28 +52,34 @@ section.has-dark-background h6 {
 .hljs-template-variable,
 .hljs-title,
 .hljs-type {
-  color: #bf3889;
+    color: #bf3889;
 }
+
 .hljs-deletion,
 .hljs-meta,
 .hljs-selector-attr,
 .hljs-selector-pseudo {
-  color: #208bff;
+    color: #208bff;
 }
+
 .hljs-doctag {
-  color: #6e7781;
+    color: #6e7781;
 }
+
 .hljs-attr {
-  color: #cf212e;
+    color: #cf212e;
 }
+
 .hljs-bullet,
 .hljs-link,
 .hljs-symbol {
-  color: #8250df;
+    color: #8250df;
 }
+
 .hljs-emphasis {
-  font-style: italic;
+    font-style: italic;
 }
+
 .hljs-strong {
-  font-weight: bold;
+    font-weight: bold;
 }
