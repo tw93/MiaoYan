@@ -23,14 +23,6 @@ section.has-light-background h6 {
     --r-highlight-color: #05A699;
 }
 
-.reveal .slides > section {
-  background: #110F18;
-}
-
-.reveal .slides > section[data-background] {
-  background: none;
-}
-
 .hljs {
     color: #ABB2BF;
     background: #191F25;
