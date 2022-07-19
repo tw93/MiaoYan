@@ -2009,6 +2009,8 @@ class ViewController: NSViewController,
                     UserDefaultsManagement.magicPPT = true
                     DispatchQueue.main.async {
                         self.titiebarHeight.constant = 0.0
+                        vc.sidebarSplitView.setValue(NSColor.black, forKey: "dividerColor")
+                        vc.splitView.setValue(NSColor.black, forKey: "dividerColor")
                     }
                 }
             } else {
