@@ -791,6 +791,7 @@ html.reveal-full-page {
   padding: 90px 48px;
 }
 
+
 .reveal.overview .slides > section.section-option,
 .reveal .slides > section.present.section-option,
 .reveal .slides > section > section.present.section-option {
@@ -1493,7 +1494,7 @@ html.reveal-full-page {
 
 .reveal.overview .slides section.present,
 .reveal.overview .slides section:hover {
-  outline: 16px solid #01a699;
+  outline: 12px solid #01a699;
 }
 
 .reveal.overview .slides section .fragment {
@@ -1522,7 +1523,7 @@ html.reveal-full-page {
 .reveal.overview .backgrounds .slide-background {
   opacity: 1;
   visibility: visible;
-  outline: 16px solid #DCDFE2;
+  outline: 12px solid #e6e6e6;
 }
 
 .reveal.overview .backgrounds .slide-background.stack {
