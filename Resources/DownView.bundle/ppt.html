@@ -73,6 +73,7 @@
     progress: true,
     history: true,
     transition: 'slide',
+    backgroundTransition: 'slide',
     center: false,
     plugins: [
       RevealMarkdown,
@@ -93,7 +94,7 @@
 
       } else {
         const option = item.clientHeight / document.body.offsetHeight;
-        if (option > 1.06) {
+        if (option > 0.9) {
           item.classList.add('section-option')
         }
       }

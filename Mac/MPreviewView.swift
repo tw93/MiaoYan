@@ -79,7 +79,6 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             return false
         }
 
-
         if UserDefaultsManagement.magicPPT {
             return false
         }
