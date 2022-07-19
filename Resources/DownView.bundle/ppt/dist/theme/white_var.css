@@ -23,17 +23,6 @@ section.has-dark-background h6 {
     --r-highlight-color: #05A699;
 }
 
-.reveal .slides > section {
-  background-color: #fff;
-}
-
-.reveal .slides > section[data-background] {
-  background: none;
-}
-
-.reveal.overview {
-  background-color: #EAEAEA;
-}
 
 .hljs {
     background: #f8f8f8;
