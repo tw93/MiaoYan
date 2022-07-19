@@ -57,6 +57,7 @@ class ProjectSettingsViewController: NSViewController {
 
     override func keyDown(with event: NSEvent) {
         if event.keyCode == kVK_Return || event.keyCode == kVK_Escape {
+            print("12121")
             self.dismiss(nil)
         }
     }
