@@ -45,14 +45,14 @@
     preList[i].disabled = true;
 
     if (
-      preList[i].parentNode.tagName == 'P' &&
-      preList[i].parentNode.parentNode.tagName == 'LI'
+      preList[i].parentNode.tagName === 'P' &&
+      preList[i].parentNode.parentNode.tagName === 'LI'
     ) {
       preList[i].parentNode.parentNode.parentNode.classList.add('cb');
       continue;
     }
 
-    if (preList[i].parentNode.tagName != 'LI') {
+    if (preList[i].parentNode.tagName !== 'LI') {
       continue;
     }
 
@@ -93,7 +93,6 @@
 
       } else {
         const option = item.clientHeight / document.body.offsetHeight;
-        console.log(item.clientHeight,document.body.offsetHeight)
         if (option > 1.06) {
           item.classList.add('section-option')
         }
