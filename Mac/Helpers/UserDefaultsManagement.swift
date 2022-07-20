@@ -1,20 +1,20 @@
 import Foundation
 
 #if os(OSX)
-    import Cocoa
+import Cocoa
 #else
-    import UIKit
+import UIKit
 #endif
 
-public class UserDefaultsManagement {
+public enum UserDefaultsManagement {
     #if os(OSX)
-        typealias Color = NSColor
-        typealias Image = NSImage
-        typealias Font = NSFont
+    typealias Color = NSColor
+    typealias Image = NSImage
+    typealias Font = NSFont
     #else
-        typealias Color = UIColor
-        typealias Image = UIImage
-        typealias Font = UIFont
+    typealias Color = UIColor
+    typealias Image = UIImage
+    typealias Font = UIFont
     #endif
 
     static var DefaultFont = "LXGW WenKai Lite"
@@ -29,10 +29,11 @@ public class UserDefaultsManagement {
     static var HackEditorLineSpacing = 2.4
     static var HackEditorLineHeight = 1.18
 
+    static var scrollPer = 0.0
+
     static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
     static var DefaultBgColor = Color.white
 
-    static var codeFontName = DefaultFont
     static var lineWidth = 1000
     static var linkColor = Color(red: 0.23, green: 0.23, blue: 0.23, alpha: 1.00)
     static var fullScreen = false
@@ -96,6 +97,8 @@ public class UserDefaultsManagement {
         static let SingleModePath = "singleModePath"
         static let EditorLineHeight = "editorLineHeight"
         static let EditorLineSpacing = "editorLineSpacing"
+        static let PreviewWidth = "previewWidth"
+        static let PreviewLocation = "previewLocation"
     }
 
     static var appearanceType: AppearanceType {
@@ -203,15 +206,15 @@ public class UserDefaultsManagement {
     static var fontSize: Int {
         get {
             #if os(iOS)
-                if UserDefaultsManagement.dynamicTypeFont {
-                    return self.DefaultFontSize
-                }
+            if UserDefaultsManagement.dynamicTypeFont {
+                return DefaultFontSize
+            }
             #endif
 
             if let returnFontSize = UserDefaults.standard.object(forKey: Constants.FontSizeKey) {
                 return returnFontSize as! Int
             } else {
-                return self.DefaultFontSize
+                return DefaultFontSize
             }
         }
         set {
@@ -240,6 +243,30 @@ public class UserDefaultsManagement {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.EditorLineHeight)
+        }
+    }
+
+    static var previewWidth: String {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.PreviewWidth) as? String {
+                return result
+            }
+            return "900px"
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.PreviewWidth)
+        }
+    }
+
+    static var previewLocation: String {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.PreviewLocation) as? String {
+                return result
+            }
+            return "Begin"
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.PreviewLocation)
         }
     }
 
@@ -303,99 +330,123 @@ public class UserDefaultsManagement {
         }
     }
 
+    static var codeFontName: String {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.CodeFontNameKey) as? String {
+                return result
+            }
+            return DefaultFont
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.CodeFontNameKey)
+        }
+    }
+
     static var codeFont: Font! {
         get {
-            if let font = Font(name: self.codeFontName, size: CGFloat(self.fontSize)) {
+            if let font = Font(name: codeFontName, size: CGFloat(fontSize)) {
                 return font
             }
 
-            return Font.systemFont(ofSize: CGFloat(self.fontSize))
+            return Font.systemFont(ofSize: CGFloat(fontSize))
         }
         set {
-            guard let newValue = newValue else { return }
+            guard let newValue = newValue else {
+                return
+            }
 
-            self.codeFontName = newValue.fontName
-            self.fontSize = Int(newValue.pointSize)
+            codeFontName = newValue.fontName
+            fontSize = Int(newValue.pointSize)
         }
     }
 
     static var noteFont: Font! {
         get {
-            if let font = Font(name: self.fontName, size: CGFloat(self.fontSize)) {
+            if let font = Font(name: fontName, size: CGFloat(fontSize)) {
                 return font
             }
 
-            return Font.systemFont(ofSize: CGFloat(self.fontSize))
+            return Font.systemFont(ofSize: CGFloat(fontSize))
         }
         set {
-            guard let newValue = newValue else { return }
+            guard let newValue = newValue else {
+                return
+            }
 
-            self.fontName = newValue.fontName
-            self.fontSize = Int(newValue.pointSize)
+            fontName = newValue.fontName
+            fontSize = Int(newValue.pointSize)
         }
     }
 
     static var titleFont: Font! {
         get {
-            if let font = Font(name: self.windowFontName, size: CGFloat(self.titleFontSize)) {
+            if let font = Font(name: windowFontName, size: CGFloat(titleFontSize)) {
                 return font
             }
 
-            return Font.systemFont(ofSize: CGFloat(self.titleFontSize))
+            return Font.systemFont(ofSize: CGFloat(titleFontSize))
         }
         set {
-            guard let newValue = newValue else { return }
+            guard let newValue = newValue else {
+                return
+            }
 
-            self.fontName = newValue.fontName
-            self.fontSize = Int(newValue.pointSize)
+            fontName = newValue.fontName
+            fontSize = Int(newValue.pointSize)
         }
     }
 
     static var emptyEditTitleFont: Font! {
         get {
-            if let font = Font(name: self.windowFontName, size: CGFloat(self.emptyEditTitleFontSize)) {
+            if let font = Font(name: windowFontName, size: CGFloat(emptyEditTitleFontSize)) {
                 return font
             }
 
-            return Font.systemFont(ofSize: CGFloat(self.emptyEditTitleFontSize))
+            return Font.systemFont(ofSize: CGFloat(emptyEditTitleFontSize))
         }
         set {
-            guard let newValue = newValue else { return }
+            guard let newValue = newValue else {
+                return
+            }
 
-            self.fontName = newValue.fontName
-            self.fontSize = Int(newValue.pointSize)
+            fontName = newValue.fontName
+            fontSize = Int(newValue.pointSize)
         }
     }
 
     static var nameFont: Font! {
         get {
-            if let font = Font(name: self.windowFontName, size: CGFloat(self.nameFontSize)) {
+            if let font = Font(name: windowFontName, size: CGFloat(nameFontSize)) {
                 return font
             }
 
-            return Font.systemFont(ofSize: CGFloat(self.nameFontSize))
+            return Font.systemFont(ofSize: CGFloat(nameFontSize))
         }
         set {
-            guard let newValue = newValue else { return }
+            guard let newValue = newValue else {
+                return
+            }
 
-            self.fontName = newValue.fontName
-            self.fontSize = Int(newValue.pointSize)
+            fontName = newValue.fontName
+            fontSize = Int(newValue.pointSize)
         }
     }
 
     static var dateFont: Font! {
         get {
-            if let font = Font(name: self.windowFontName, size: CGFloat(self.dateFontSize)) {
+            if let font = Font(name: windowFontName, size: CGFloat(dateFontSize)) {
                 return font
             }
 
-            return Font.systemFont(ofSize: CGFloat(self.dateFontSize))
+            return Font.systemFont(ofSize: CGFloat(dateFontSize))
         }
         set {
-            guard let newValue = newValue else { return }
+            guard let newValue = newValue else {
+                return
+            }
 
-            self.fontName = newValue.fontName
-            self.fontSize = Int(newValue.pointSize)
+            fontName = newValue.fontName
+            fontSize = Int(newValue.pointSize)
         }
     }
 
@@ -404,7 +455,7 @@ public class UserDefaultsManagement {
             if let returnFontColor = UserDefaults.standard.object(forKey: Constants.FontColorKey), let color = NSKeyedUnarchiver.unarchiveObject(with: returnFontColor as! Data) as? Color {
                 return color
             } else {
-                return self.DefaultFontColor
+                return DefaultFontColor
             }
         }
         set {
@@ -418,7 +469,7 @@ public class UserDefaultsManagement {
             if let returnBgColor = UserDefaults.standard.object(forKey: Constants.BgColorKey), let color = NSKeyedUnarchiver.unarchiveObject(with: returnBgColor as! Data) as? Color {
                 return color
             } else {
-                return self.DefaultBgColor
+                return DefaultBgColor
             }
         }
         set {
@@ -465,16 +516,16 @@ public class UserDefaultsManagement {
                 }
             }
 
-            if let iCloudDocumentsURL = self.iCloudDocumentsContainer {
+            if let iCloudDocumentsURL = iCloudDocumentsContainer {
                 return iCloudDocumentsURL.path
             }
 
             #if os(iOS)
-                return self.localDocumentsContainer?.path
+            return localDocumentsContainer?.path
             #elseif CLOUDKIT && os(macOS)
-                return nil
+            return nil
             #else
-                return self.localDocumentsContainer?.path
+            return localDocumentsContainer?.path
             #endif
         }
         set {
@@ -495,7 +546,7 @@ public class UserDefaultsManagement {
     static var preview = false
 
     static var presentation = false
-    
+
     static var magicPPT = false
 
     static var lastSync: Date? {
@@ -555,17 +606,17 @@ public class UserDefaultsManagement {
     static var restoreCursorPosition = true
 
     #if os(iOS)
-        static var nightModeType: NightMode {
-            get {
-                if let result = UserDefaults.standard.object(forKey: Constants.NightModeType) {
-                    return NightMode(rawValue: result as! Int) ?? .disabled
-                }
-                return NightMode(rawValue: 0x00) ?? .disabled
+    static var nightModeType: NightMode {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.NightModeType) {
+                return NightMode(rawValue: result as! Int) ?? .disabled
             }
-            set {
-                UserDefaults.standard.set(newValue.rawValue, forKey: Constants.NightModeType)
-            }
+            return NightMode(rawValue: 0x00) ?? .disabled
         }
+        set {
+            UserDefaults.standard.set(newValue.rawValue, forKey: Constants.NightModeType)
+        }
+    }
     #endif
 
     static var imagesWidth: Float {
@@ -583,10 +634,10 @@ public class UserDefaultsManagement {
     static var fileContainer: NoteContainer {
         get {
             #if SHARE_EXT
-                let defaults = UserDefaults(suiteName: "group.miaoyan-manager")
-                if let result = defaults?.object(forKey: Constants.SharedContainerKey) as? Int, let container = NoteContainer(rawValue: result) {
-                    return container
-                }
+            let defaults = UserDefaults(suiteName: "group.miaoyan-manager")
+            if let result = defaults?.object(forKey: Constants.SharedContainerKey) as? Int, let container = NoteContainer(rawValue: result) {
+                return container
+            }
             #endif
 
             if let result = UserDefaults.standard.object(forKey: Constants.NoteContainer) as? Int, let container = NoteContainer(rawValue: result) {
@@ -596,7 +647,7 @@ public class UserDefaultsManagement {
         }
         set {
             #if os(iOS)
-                UserDefaults(suiteName: "group.miaoyan-manager")?.set(newValue.rawValue, forKey: Constants.SharedContainerKey)
+            UserDefaults(suiteName: "group.miaoyan-manager")?.set(newValue.rawValue, forKey: Constants.SharedContainerKey)
             #endif
 
             UserDefaults.standard.set(newValue.rawValue, forKey: Constants.NoteContainer)
@@ -605,7 +656,9 @@ public class UserDefaultsManagement {
 
     static var projects: [URL] {
         get {
-            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else { return [] }
+            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else {
+                return []
+            }
 
             if let result = defaults.object(forKey: Constants.ProjectsKey) as? Data, let urls = NSKeyedUnarchiver.unarchiveObject(with: result) as? [URL] {
                 return urls
@@ -614,7 +667,9 @@ public class UserDefaultsManagement {
             return []
         }
         set {
-            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else { return }
+            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else {
+                return
+            }
 
             let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
             defaults.set(data, forKey: Constants.ProjectsKey)
@@ -623,7 +678,9 @@ public class UserDefaultsManagement {
 
     static var importURLs: [URL] {
         get {
-            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else { return [] }
+            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else {
+                return []
+            }
 
             if let result = defaults.object(forKey: Constants.ImportURLsKey) as? Data, let urls = NSKeyedUnarchiver.unarchiveObject(with: result) as? [URL] {
                 return urls
@@ -632,7 +689,9 @@ public class UserDefaultsManagement {
             return []
         }
         set {
-            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else { return }
+            guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else {
+                return
+            }
 
             let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
             defaults.set(data, forKey: Constants.ImportURLsKey)

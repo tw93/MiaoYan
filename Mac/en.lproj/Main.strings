@@ -371,6 +371,15 @@
 /* Class = "NSTextFieldCell"; title = "Editor FontSize"; ObjectID = "Mhq-eB-UoB"; */
 "Mhq-eB-UoB.title" = "Editor FontSize";
 
+/* Class = "NSTextField"; title = "Code FontName"; ObjectID = "0UJ-Ss-20u"; */
+"0UJ-Ss-20u.title" = "Code FontName";
+
+/* Class = "NSTextField"; title = "Preview Width"; ObjectID = "rbf-EY-CzN"; */
+"rbf-EY-CzN.title" = "Preview Width";
+
+/* Class = "NSTextField"; title = "Preview Location"; ObjectID = "7FA-ez-4mb"; */
+"7FA-ez-4mb.title" = "Preview Location";
+
 /* Class = "NSTextFieldCell"; title = "Preview FontSize"; ObjectID = "euf-Xu-FDz"; */
 "euf-Xu-FDz.title" = "Preview FontSize";
 

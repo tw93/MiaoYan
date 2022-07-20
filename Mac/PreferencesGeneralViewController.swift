@@ -21,6 +21,10 @@ class PreferencesGeneralViewController: NSViewController {
     @IBOutlet var presentationFontSize: NSPopUpButton!
     @IBOutlet var picPopUp: NSPopUpButton!
 
+    @IBOutlet var previewLocation: NSPopUpButton!
+    @IBOutlet var previewWidth: NSPopUpButton!
+    @IBOutlet var codeFontName: NSPopUpButton!
+
     // MARK: global variables
 
     let storage = Storage.sharedInstance()
@@ -68,6 +72,49 @@ class PreferencesGeneralViewController: NSViewController {
 
         NotesTextProcessor.hl = nil
         restart()
+    }
+
+    @IBAction func codeFontNameClick(_ sender: NSPopUpButton) {
+        guard let vc = ViewController.shared() else { return }
+        guard let item = sender.selectedItem else {
+            return
+        }
+        if item.title == "Editor Font" {
+            UserDefaultsManagement.codeFontName = UserDefaultsManagement.fontName
+        } else {
+            UserDefaultsManagement.codeFontName = item.title
+        }
+
+        NotesTextProcessor.codeFont = Font(name: UserDefaultsManagement.codeFontName, size: CGFloat(UserDefaultsManagement.fontSize))
+        NotesTextProcessor.hl = nil
+        vc.disablePreview()
+        vc.refillEditArea(force: true)
+    }
+
+    @IBAction func previewWidthClick(_ sender: NSPopUpButton) {
+        guard let vc = ViewController.shared() else { return }
+        guard let item = sender.selectedItem else {
+            return
+        }
+        UserDefaultsManagement.previewWidth = item.title
+        NotesTextProcessor.hl = nil
+
+        vc.disablePreview()
+        vc.enablePreview()
+    }
+
+    @IBAction func previewLocation(_ sender: NSPopUpButton) {
+        guard let vc = ViewController.shared() else { return }
+        guard let item = sender.selectedItem else {
+            return
+        }
+
+        UserDefaultsManagement.previewLocation = item.title
+
+        NotesTextProcessor.hl = nil
+
+        vc.disablePreview()
+        vc.enablePreview()
     }
 
     @IBAction func previewFontNameClick(_ sender: NSPopUpButton) {
@@ -154,6 +201,15 @@ class PreferencesGeneralViewController: NSViewController {
         windowFontName.selectItem(withTitle: String(UserDefaultsManagement.windowFontName))
         previewFontName.selectItem(withTitle: String(UserDefaultsManagement.previewFontName))
         picPopUp.selectItem(withTitle: String(UserDefaultsManagement.defaultPicUpload))
+
+        if UserDefaultsManagement.codeFontName == UserDefaultsManagement.fontName {
+            codeFontName.selectItem(withTitle: "Editor Font")
+        } else {
+            codeFontName.selectItem(withTitle: String(UserDefaultsManagement.codeFontName))
+        }
+        previewWidth.selectItem(withTitle: String(UserDefaultsManagement.previewWidth))
+
+        previewLocation.selectItem(withTitle: String(UserDefaultsManagement.previewLocation))
     }
 
     @IBAction func changeDefaultStorage(_ sender: Any) {

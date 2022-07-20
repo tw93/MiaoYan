@@ -129,6 +129,31 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         } else {}
     }
 
+    public func scrollToPosition(pre: CGFloat) {
+        if pre == 0.0 {
+            return
+        }
+        if #available(macOS 10.15, *) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
+                    if complete != nil {
+                        super.evaluateJavaScript("document.body.offsetHeight", completionHandler: { height, _ in
+                            guard let contentHeight = height as? CGFloat else { print("Content height could not be obtained"); return }
+                            super.evaluateJavaScript("document.documentElement.clientHeight", completionHandler: { [weak self] wHeight, _ in
+                                let windowHeight = wHeight as! CGFloat
+                                let offset = contentHeight - windowHeight
+                                if offset > 0 {
+                                    let scrollerTop = offset * pre
+                                    self?.evaluateJavaScript("window.scrollTo({ top: \(scrollerTop), behavior: 'instant' })", completionHandler: nil)
+                                }
+                            })
+                        })
+                    }
+                })
+            }
+        } else {}
+    }
+
     public func exportImage() {
         let vc = ViewController.shared()
         if #available(macOS 10.15, *) {
