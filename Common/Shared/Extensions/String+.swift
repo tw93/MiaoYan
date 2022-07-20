@@ -40,6 +40,13 @@ public extension String {
         terms.first(where: { !self.localizedLowercase.contains($0) }) == nil
     }
 
+    func startsWith(string: String) -> Bool {
+        guard let range = range(of: string, options: [.caseInsensitive, .diacriticInsensitive]) else {
+            return false
+        }
+        return range.lowerBound == startIndex
+    }
+
     func removeLastNewLine() -> String {
         if self.last == "\n" {
             return String(self.dropLast())

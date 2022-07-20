@@ -58,14 +58,23 @@ open class MarkdownView: WKWebView {
     }
 
     public static func getPreviewStyle() -> String {
-        if(UserDefaultsManagement.magicPPT){
+        if UserDefaultsManagement.magicPPT {
             return ":root { --r-main-font: \(UserDefaultsManagement.previewFontName), sans-serif;}"
         }
+
+        var codeFontName = UserDefaultsManagement.previewFontName
+        if UserDefaultsManagement.codeFontName != UserDefaultsManagement.previewFontName {
+            codeFontName = UserDefaultsManagement.codeFontName
+        }
         if UserDefaultsManagement.presentation {
-            return "html {font-size: \(UserDefaultsManagement.presentationFontSize)px} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif;} #write { max-width: 1200px;}"
+            var presentationWidth = "1200px"
+            if UserDefaultsManagement.previewWidth == "100%" {
+                presentationWidth = "100%"
+            }
+            return "html {font-size: \(UserDefaultsManagement.presentationFontSize)px} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif; --code-text-font: \(codeFontName),sans-serif; } #write { max-width: 1200px;} #write { max-width: \(presentationWidth);}"
         } else {
             let paddingStyle = UserDefaultsManagement.isOnExport ? " padding-top: 24px" : ""
-            return "html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif; }"
+            return "html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif; --code-text-font: \(codeFontName),sans-serif; } #write { max-width: \(UserDefaultsManagement.previewWidth);}"
         }
     }
 
