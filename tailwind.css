@@ -36,7 +36,7 @@ body {
 }
 
 .i18n-miao-people-desc:before {
-  content: '每周手动更新，人数和虚拟世界中匹配';
+  content: '数据每周手动更新，朋友数和虚拟世界中匹配';
 }
 [lang='en'] .i18n-miao-people-desc:before {
   content: 'Weekly manual update, matching the number with that in the virtual world';
@@ -50,10 +50,10 @@ body {
 }
 
 .i18n-miao-people-nums:before {
-  content: '木子君、Jerk、芸璟、薛定谔的盲盒、沙溪、忸祁、*锐、木呀、π~mong、Hsin、Kake、喜多🍒、*飞、陆蔚青 sluke、红色的弓箭手、Catch、子岚，当前 17 个朋友喜欢 ❤️ 妙言。';
+  content: '木子君、Jerk、芸璟、薛定谔的盲盒、沙溪、忸祁、*锐、木呀、π~mong、Hsin、Kake、喜多🍒、*飞、陆蔚青 sluke、红色的弓箭手、Catch、子岚、Linmi，当前 18 个朋友喜欢 ❤️ 妙言。';
 }
 [lang='en'] .i18n-miao-people-nums:before {
-  content: '木子君、Jerk、芸璟、薛定谔的盲盒、沙溪、忸祁、*锐、木呀、π~mong、Hsin、Kake、喜多🍒、*飞、陆蔚青 sluke、红色的弓箭手、Catch、子岚, 17 friends like ❤ MiaoYan.';
+  content: '木子君、Jerk、芸璟、薛定谔的盲盒、沙溪、忸祁、*锐、木呀、π~mong、Hsin、Kake、喜多🍒、*飞、陆蔚青 sluke、红色的弓箭手、Catch、子岚、Linmi, 18 friends like ❤ MiaoYan.';
 }
 
 .i18n-home-href:before {
