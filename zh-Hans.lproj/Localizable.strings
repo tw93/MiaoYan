@@ -141,9 +141,9 @@
 
 "🙊 Press ESC key to exit~" = "🙊 按 ESC 键退出演示~";
 
-"😶‍🌫️ Format is only possible after exiting preview mode~" = "😶‍🌫️ 文档排版需要退出预览模式才可使用~";
+"😶‍🌫 Format is only possible after exiting preview mode~" = "😶‍🌫 文档排版需要退出预览模式才可使用~";
 
-"😶‍🌫️ The current Mac system does not support export, please upgrade to above 11.0~" = "😶‍🌫️ 当前 Mac 系统不支持导出，请升级到 11.0 以上~";
+"😶‍🌫 The current Mac system does not support export, please upgrade to above 11.0~" = "😶‍🌫 当前 Mac 系统不支持导出，请升级到 11.0 以上~";
 
 "🎉 Exported to desktop~" = "🎉 已导出到桌面~";
 
@@ -151,7 +151,7 @@
 
 "🍭 Image upload in progress~" = "🍭 图片上传中~";
 
-"😶‍🌫️ Image upload failed, Use local~" = "😶‍🌫️ 图片上传失败，优先使用本地，可手动上传~";
+"😶‍🌫 Image upload failed, Use local~" = "😶‍🌫 图片上传失败，优先使用本地，可手动上传~";
 
 "%d MiaoYan" = "%d 篇妙言";
 
@@ -159,10 +159,10 @@
 
 "🙊 In single open mode, Exit with Command+Shift+W ~" = "🙊 单独编辑器模式中，可 Command+Shift+W 退出~";
 
-"😶‍🌫️ Please make sure your title exists~" = "😶‍🌫️ 请确定你填写的标题是否存在~";
+"😶‍🌫 Please make sure your title exists~" = "😶‍🌫 请确定你填写的标题是否存在~";
 
 "🍭 Found that there are multiple titles of this~" = "🍭 发现这里有多个标题，使用搜索能力~";
 
 "🎉 URL is successfully copied, Use it anywhere~" = "🎉 外链成功复制，你可以在任何地方使用~";
 
-"😶‍🌫️ No delimiter --- identification, Cannot use MiaoYan PPT~" = "😶‍🌫️ 没有分隔符 --- 标识，无法使用妙言 PPT~";
+"😶‍🌫 No delimiter --- identification, Cannot use MiaoYan PPT~" = "😶‍🌫 没有分隔符 --- 标识，无法使用妙言 PPT~";
