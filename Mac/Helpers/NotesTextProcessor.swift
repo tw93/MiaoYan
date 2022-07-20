@@ -253,7 +253,6 @@ public class NotesTextProcessor {
     public static func highlightCode(attributedString: NSMutableAttributedString, range: NSRange, language: String? = nil) {
         guard let highlighter = NotesTextProcessor.getHighlighter() else { return }
         let codeString = attributedString.mutableString.substring(with: range)
-        
         let preDefinedLanguage = language ?? getLanguage(codeString)
         
         if let code = highlighter.highlight(codeString, as: preDefinedLanguage) {
@@ -371,31 +370,18 @@ public class NotesTextProcessor {
             using: { result, _, _ in
                 guard let r = result else { return }
                 fencedRanges.append(r.range)
-                
                 NotesTextProcessor.highlightCode(attributedString: attributedString, range: r.range)
             }
         )
-        
-        // Indent code blocks
-        let codeTextProcessor = CodeTextProcessor(textStorage: attributedString)
-        if let codeBlockRanges = codeTextProcessor.getCodeBlockRanges() {
-            for range in codeBlockRanges {
-                if isIntersect(fencedRanges: fencedRanges, indentRange: range) {
-                    continue
-                }
-                
-                NotesTextProcessor.highlightCode(attributedString: attributedString, range: range)
-            }
-        }
+
     }
-    
+
     public static func isIntersect(fencedRanges: [NSRange], indentRange: NSRange) -> Bool {
         for fencedRange in fencedRanges {
             if fencedRange.intersection(indentRange) != nil {
                 return true
             }
         }
-        
         return false
     }
     
@@ -560,7 +546,6 @@ public class NotesTextProcessor {
         // We detect and process anchors (links)
         NotesTextProcessor.anchorRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range else { return }
-            attributedString.addAttribute(.font, value: codeFont, range: range)
             attributedString.fixAttributes(in: range)
             NotesTextProcessor.openingSquareRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
@@ -584,11 +569,10 @@ public class NotesTextProcessor {
             // We detect and process inline anchors (links)
             NotesTextProcessor.anchorInlineRegex.matches(string, range: paragraphRange) { result in
                 guard let range = result?.range else { return }
-                attributedString.addAttribute(.font, value: codeFont, range: range)
                 attributedString.fixAttributes(in: range)
                 
                 var destinationLink: String?
-                
+            
                 NotesTextProcessor.coupleRoundRegex.matches(string, range: range) { innerResult in
                     guard let innerRange = innerResult?.range else { return }
                     attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
@@ -608,8 +592,7 @@ public class NotesTextProcessor {
                     
                     destinationLink = substring
                     
-                    attributedString.addAttribute(.foregroundColor, value: highlightColor, range: linkRange)
-                
+                    attributedString.addAttribute(.link, value: substring, range: linkRange)
                     hideSyntaxIfNecessary(range: innerRange)
                 }
                 
@@ -643,7 +626,6 @@ public class NotesTextProcessor {
         
         NotesTextProcessor.imageRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range else { return }
-            attributedString.addAttribute(.font, value: codeFont, range: range)
             attributedString.fixAttributes(in: range)
             
             // TODO: add image attachment
@@ -729,7 +711,6 @@ public class NotesTextProcessor {
                 }
             }
 
-            attributedString.addAttribute(.font, value: codeFont, range: range)
             NotesTextProcessor.imageOpeningSquareRegex.matches(string, range: paragraphRange) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
                 attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
@@ -1136,7 +1117,6 @@ public class NotesTextProcessor {
 
     public static let strikeRegex = MarklightRegex(pattern: strikePattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
     
-    
     fileprivate static let codeLinePattern = "(\\`\\`\\`) (?=\\S) (.+?[`]*) (?<=\\S) \\1"
 
     public static let codeLineRegex = MarklightRegex(pattern: codeLinePattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
@@ -1269,7 +1249,7 @@ public class NotesTextProcessor {
         
         storage.removeAttribute(.link, range: range)
         
-        let pattern = "((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,7})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(www.[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,7})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(miaoyan://[a-zA-Z0-9]+\\/[a-zA-Z0-9|%]*)"
+        let pattern = "((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,7})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(www.[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,7})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(miaoyan://[a-zA-Z0-9]+\\/[a-zA-Z0-9|%]*)|(/[i|files]/[a-zA-Z0-9-]+\\.[a-zA-Z0-9]*)"
         let regex = try! NSRegularExpression(pattern: pattern, options: [NSRegularExpression.Options.caseInsensitive])
         
         regex.enumerateMatches(
@@ -1283,7 +1263,6 @@ public class NotesTextProcessor {
                     }
                     
                     var str = storage.mutableString.substring(with: range)
-                  
                     var _range = NSRange(location: range.location, length: range.length)
                     
                     if str.hasSuffix(">") {
@@ -1291,8 +1270,16 @@ public class NotesTextProcessor {
                         _range = NSRange(location: range.location, length: range.length - 1)
                     }
                  
+                    guard let note = EditTextView.note else { return }
+                    
+                    if str.starts(with: "/i/") || str.starts(with: "/files/"), let path = note.project.url.appendingPathComponent(str).path.removingPercentEncoding {
+                        str = "file://" + path
+                        storage.addAttribute(.link, value: str, range: _range)
+                        return
+                    }
+                    
                     guard let url = URL(string: str) else { return }
-                  
+               
                     storage.addAttribute(.link, value: url, range: _range)
                 }
             }
