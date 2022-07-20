@@ -762,16 +762,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     @IBAction func shiftLeft(_ sender: Any) {
         guard let note = EditTextView.note else { return }
-        let f = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
-
+        let f = TextFormatter(textView: self, note: note, shouldScanMarkdown: true)
         EditTextView.shouldForceRescan = true
         f.unTab()
     }
 
     @IBAction func shiftRight(_ sender: Any) {
         guard let note = EditTextView.note else { return }
-        let f = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
-
+        let f = TextFormatter(textView: self, note: note, shouldScanMarkdown: true)
         EditTextView.shouldForceRescan = true
         f.tab()
     }
@@ -934,6 +932,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let range = NSRange(0..<storage.length)
         let processor = NotesTextProcessor(storage: storage, range: range)
         processor.higlightLinks()
+        
     }
 
     private func pasteImageFromClipboard(in note: Note) -> Bool {
@@ -1004,12 +1003,13 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     func postToPicGo(imagePath: String, completion: @escaping (Any?, Error?) -> Void) {
-        let json: [String: Any] = ["list": [imagePath]]
-        struct DecodableType: Decodable { let url: String }
-        AF.request("http://127.0.0.1:36677/upload", method: .post, parameters: json).responseDecodable(of: DecodableType.self) { response in
+        let parameters: [String: [String]] = [
+            "list": [imagePath]
+        ]
+        AF.request("http://127.0.0.1:36677/upload", method: .post, parameters: parameters, encoder: JSONParameterEncoder.default).response { response in
             switch response.result {
                 case .success:
-                    let json = JSON(response.value!)
+                    let json = JSON(response.value as Any)
                     let result = json["result"][0].stringValue
                     if !result.isEmpty {
                         completion(result, nil)
