@@ -6,6 +6,7 @@
 
 :root {
   --text-font: 'LXGW WenKai Lite', sans-serif;
+  --code-text-font: 'LXGW WenKai Lite', sans-serif;
 }
 
 @font-face {
@@ -360,7 +361,7 @@ blockquote blockquote {
   padding-inline-start: 16px;
   padding-inline-end: 16px;
   overflow: auto;
-  font-family: var(--text-font);
+  font-family: var(--code-text-font);
   white-space: pre;
   word-wrap: normal;
   border-radius: 4px;
@@ -548,8 +549,8 @@ blockquote blockquote {
 .heti code {
   margin-inline-start: 0.25em;
   margin-inline-end: 0.25em;
-  font-family: var(--text-font);
-  font-size: 0.875em;
+  font-family: var(--code-text-font);
+  font-size: 1em;
 }
 .heti dfn {
   font-weight: bold;
