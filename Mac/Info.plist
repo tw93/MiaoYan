@@ -119,8 +119,6 @@
 	</dict>
 	<key>SUAllowsAutomaticUpdates</key>
 	<true/>
-	<key>SUAutomaticallyUpdate</key>
-	<true/>
 	<key>SUEnableAutomaticChecks</key>
 	<true/>
 	<key>SUFeedURL</key>
