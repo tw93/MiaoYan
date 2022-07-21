@@ -1,3 +1,5 @@
+import AppCenter
+import AppCenterAnalytics
 import Cocoa
 import LocalAuthentication
 import MASShortcut
@@ -153,6 +155,7 @@ class ViewController: NSViewController,
             popover.performClose(nil)
         } else {
             showInfo("")
+            Analytics.trackEvent("MiaoYan ShowInfo")
         }
     }
 
@@ -678,6 +681,12 @@ class ViewController: NSViewController,
 
         if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), titleLabel.hasFocus() {
             updateTitle(newTitle: "")
+            return false
+        }
+
+        if event.keyCode == kVK_ANSI_Z, event.modifierFlags.contains(.command), titleLabel.hasFocus() {
+            let currentNote = notesTableView.getSelectedNote()
+            updateTitle(newTitle: currentNote?.getTitleWithoutLabel() ?? NSLocalizedString("Untitled Note", comment: "Untitled Note"))
             return false
         }
 
@@ -1916,6 +1925,7 @@ class ViewController: NSViewController,
                 }
             }
         }
+        Analytics.trackEvent("MiaoYan NewNote")
     }
 
     public func sortAndMove(note: Note) {
@@ -2000,6 +2010,7 @@ class ViewController: NSViewController,
         notesTableView.selectRowIndexes(newIndexes, byExtendingSelection: false)
         notesTableView.endUpdates()
         filteredNoteList = resorted
+        Analytics.trackEvent("MiaoYan Pin")
     }
 
     func toggleMagicPPT() {
@@ -2024,6 +2035,7 @@ class ViewController: NSViewController,
                         vc.sidebarSplitView.setValue(NSColor.black, forKey: "dividerColor")
                         vc.splitView.setValue(NSColor.black, forKey: "dividerColor")
                     }
+                    Analytics.trackEvent("MiaoYan PPT")
                 }
             } else {
                 toast(message: NSLocalizedString("😶‍🌫 No delimiter --- identification, Cannot use MiaoYan PPT~", comment: ""))
@@ -2082,6 +2094,7 @@ class ViewController: NSViewController,
             disablePreview()
         } else {
             enablePreview()
+            Analytics.trackEvent("MiaoYan Preview")
         }
     }
 
@@ -2125,6 +2138,7 @@ class ViewController: NSViewController,
             disablePresentation()
         } else {
             enablePresentation()
+            Analytics.trackEvent("MiaoYan Presentation")
         }
     }
 
@@ -2141,6 +2155,7 @@ class ViewController: NSViewController,
             refillEditArea(cursor: cursor, saveTyping: true)
             toast(message: NSLocalizedString("🎉 Automatic typesetting succeeded~", comment: "")
             )
+            Analytics.trackEvent("MiaoYan Format")
         }
     }
 
@@ -2370,6 +2385,7 @@ class ViewController: NSViewController,
                 self.disablePreview()
             }
         }
+        Analytics.trackEvent("MiaoYan Export", withProperties: ["Type": "Image"])
     }
 
     @IBAction func exportPdf(_ sender: Any) {
@@ -2381,6 +2397,7 @@ class ViewController: NSViewController,
             UserDefaultsManagement.isOnExport = false
             self.disablePreview()
         }
+        Analytics.trackEvent("MiaoYan Export", withProperties: ["Type": "PDF"])
     }
 
     public func toastExport(status: Bool) {
