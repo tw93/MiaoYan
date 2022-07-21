@@ -226,7 +226,7 @@ public class NotesTextProcessor {
             return nil
         }
 
-        var codeTheme = "xcode"
+        var codeTheme = "vs"
         if UserDataService.instance.isDark {
             codeTheme = "hybrid"
         }
@@ -488,7 +488,6 @@ public class NotesTextProcessor {
             attributedString.addAttribute(.foregroundColor, value: htmlColor, range: range)
         }
         
- 
         NotesTextProcessor.htmlRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range else { return }
             attributedString.fixAttributes(in: range)
@@ -500,7 +499,6 @@ public class NotesTextProcessor {
             attributedString.fixAttributes(in: range)
             NotesTextProcessor.highlightCode(attributedString: attributedString, range: range)
         }
-        
         
         // We detect and process underlined headers
         NotesTextProcessor.headersSetextRegex.matches(string, range: paragraphRange) { result in
@@ -759,21 +757,10 @@ public class NotesTextProcessor {
             }
         }
         
-        if let codeFont = NotesTextProcessor.codeFont {
-            NotesTextProcessor.codeSpanRegex.matches(styleApplier.string, range: range) { result in
-                guard let range = result?.range else { return }
-                styleApplier.addAttribute(.font, value: codeFont, range: range)
-                styleApplier.addAttribute(.backgroundColor, value: NotesTextProcessor.codeBackground, range: range)
-                
-                NotesTextProcessor.codeSpanOpeningRegex.matches(styleApplier.string, range: range) { innerResult in
-                    guard let innerRange = innerResult?.range else { return }
-                    styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.htmlColor, range: innerRange)
-                }
-                NotesTextProcessor.codeSpanClosingRegex.matches(styleApplier.string, range: range) { innerResult in
-                    guard let innerRange = innerResult?.range else { return }
-                    styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.htmlColor, range: innerRange)
-                }
-            }
+        NotesTextProcessor.codeSpanRegex.matches(styleApplier.string, range: range) { result in
+            guard let range = result?.range else { return }
+                 
+            styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.htmlColor, range: range)
         }
     }
     
@@ -1129,6 +1116,7 @@ public class NotesTextProcessor {
     public static let codeLineRegex = MarklightRegex(pattern: codeLinePattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
     
     // MARK: HTML
+
     fileprivate static let htmlPattern = "<(\\S*)[^>]*>[^<]*<\\/(\\1)>"
 
     public static let htmlRegex = MarklightRegex(pattern: htmlPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
