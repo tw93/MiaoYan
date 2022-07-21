@@ -18,7 +18,7 @@
 </p>
 
 <kbd>
-  <img src=https://gw.alipayobjects.com/zos/k/4f/ch.gif width=1000>
+  <img src=https://gw.alipayobjects.com/zos/k/4f/ch.gif width="100%">
 </kbd>
 
 ## 特点
