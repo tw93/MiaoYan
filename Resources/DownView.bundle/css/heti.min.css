@@ -361,7 +361,7 @@ blockquote blockquote {
   padding-inline-start: 16px;
   padding-inline-end: 16px;
   overflow: auto;
-  font-family: var(--code-text-font);
+  font-family: var(--text-font);
   white-space: pre;
   word-wrap: normal;
   border-radius: 4px;
@@ -486,7 +486,7 @@ blockquote blockquote {
   word-break: break-word;
 }
 
-.heti p > code {
+.heti p > code,.heti li > code {
   background-color: #eef1f2;
   padding: 2px;
   border-radius: 4px;
@@ -549,8 +549,11 @@ blockquote blockquote {
 .heti code {
   margin-inline-start: 0.25em;
   margin-inline-end: 0.25em;
-  font-family: var(--code-text-font);
   font-size: 1em;
+  font-family: var(--text-font);
+}
+.heti pre code{
+  font-family: var(--code-text-font);
 }
 .heti dfn {
   font-weight: bold;
