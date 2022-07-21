@@ -52,11 +52,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             return
         }
 
-        AppCenter.start(withAppSecret: "e4d22300-3bd7-427f-8f3c-41f315c2bb76", services: [
-            Analytics.self,
-            Crashes.self
-        ])
-
         let storyboard = NSStoryboard(name: "Main", bundle: nil)
 
         guard let mainWC = storyboard.instantiateController(withIdentifier: "MainWindowController") as? MainWindowController else {
@@ -71,6 +66,25 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
         mainWC.window?.makeKeyAndOrderFront(nil)
         mainWindowController = mainWC
+
+        AppCenter.start(withAppSecret: "e4d22300-3bd7-427f-8f3c-41f315c2bb76", services: [
+            Analytics.self,
+            Crashes.self,
+        ])
+        Analytics.trackEvent("MiaoYan Attribute", withProperties: [
+            "Appearance": String(UserDataService.instance.isDark),
+            "SingleMode": String(UserDefaultsManagement.isSingleMode),
+            "Language": String(UserDefaultsManagement.defaultLanguage),
+            "UploadType": UserDefaultsManagement.defaultPicUpload,
+            "EditorFont": UserDefaultsManagement.fontName,
+            "PreviewFont": UserDefaultsManagement.previewFontName,
+            "WindowFont": UserDefaultsManagement.windowFontName,
+            "EditorFontSize": String(UserDefaultsManagement.fontSize),
+            "PreviewFontSize": String(UserDefaultsManagement.previewFontSize),
+            "CodeFont": UserDefaultsManagement.codeFontName,
+            "PreviewWidth": UserDefaultsManagement.previewWidth,
+            "PreviewLocation": UserDefaultsManagement.previewLocation,
+        ])
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
