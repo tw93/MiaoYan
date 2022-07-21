@@ -679,7 +679,7 @@ class ViewController: NSViewController,
             return false
         }
 
-        if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), titleLabel.hasFocus() {
+        if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), titleLabel.hasFocus(), !UserDefaultsManagement.preview {
             updateTitle(newTitle: "")
             return false
         }
@@ -1093,6 +1093,11 @@ class ViewController: NSViewController,
         guard let vc = ViewController.shared() else {
             return
         }
+
+        if vc.titleLabel.hasFocus() || vc.editArea.hasFocus() || vc.search.hasFocus() || UserDefaultsManagement.preview {
+            return
+        }
+
         guard let notes = vc.notesTableView.getSelectedNotes() else {
             return
         }
