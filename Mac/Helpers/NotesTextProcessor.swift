@@ -373,7 +373,6 @@ public class NotesTextProcessor {
                 NotesTextProcessor.highlightCode(attributedString: attributedString, range: r.range)
             }
         )
-
     }
 
     public static func isIntersect(fencedRanges: [NSRange], indentRange: NSRange) -> Bool {
@@ -489,11 +488,19 @@ public class NotesTextProcessor {
             attributedString.addAttribute(.foregroundColor, value: htmlColor, range: range)
         }
         
+ 
         NotesTextProcessor.htmlRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range else { return }
             attributedString.fixAttributes(in: range)
-            attributedString.addAttribute(.foregroundColor, value: htmlColor, range: range)
+            NotesTextProcessor.highlightCode(attributedString: attributedString, range: range)
         }
+        
+        NotesTextProcessor.imageHtmlRegex.matches(string, range: paragraphRange) { result in
+            guard let range = result?.range else { return }
+            attributedString.fixAttributes(in: range)
+            NotesTextProcessor.highlightCode(attributedString: attributedString, range: range)
+        }
+        
         
         // We detect and process underlined headers
         NotesTextProcessor.headersSetextRegex.matches(string, range: paragraphRange) { result in
@@ -1122,10 +1129,13 @@ public class NotesTextProcessor {
     public static let codeLineRegex = MarklightRegex(pattern: codeLinePattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
     
     // MARK: HTML
-
-    fileprivate static let htmlPattern = "<(?:span|u|small|strong)>(.*?)</(?:span|u|small|strong)>"
+    fileprivate static let htmlPattern = "<(\\S*)[^>]*>[^<]*<\\/(\\1)>"
 
     public static let htmlRegex = MarklightRegex(pattern: htmlPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
+    
+    fileprivate static let imageHtmlPattern = "<(img|br|hr|input)[^>]*>"
+
+    public static let imageHtmlRegex = MarklightRegex(pattern: imageHtmlPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
     // MARK: Italic
 
