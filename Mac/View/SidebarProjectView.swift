@@ -1,3 +1,5 @@
+import AppCenter
+import AppCenterAnalytics
 import Carbon.HIToolbox
 import Cocoa
 import Foundation
@@ -385,6 +387,8 @@ class SidebarProjectView: NSOutlineView,
         guard let si = getSidebarItem(), let p = si.project else { return }
 
         NSWorkspace.shared.activateFileViewerSelecting([p.url])
+
+        Analytics.trackEvent("MiaoYan RevealInFinder")
     }
 
     @IBAction func renameMenu(_ sender: Any) {
@@ -467,12 +471,14 @@ class SidebarProjectView: NSOutlineView,
         }
 
         field.becomeFirstResponder()
+        Analytics.trackEvent("MiaoYan NewProject")
     }
 
     @IBAction func openSettings(_ sender: NSMenuItem) {
         guard let vc = ViewController.shared() else { return }
 
         vc.openProjectViewSettings(sender)
+        Analytics.trackEvent("MiaoYan OpenSetting")
     }
 
     private func removeProject(project: Project) {
