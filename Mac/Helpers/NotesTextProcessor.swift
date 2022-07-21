@@ -226,9 +226,9 @@ public class NotesTextProcessor {
             return nil
         }
 
-        var codeTheme = "atom-one-light"
+        var codeTheme = "xcode"
         if UserDataService.instance.isDark {
-            codeTheme = "atom-one-dark"
+            codeTheme = "hybrid"
         }
         highlightr.setTheme(to: codeTheme)
         
