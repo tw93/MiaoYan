@@ -32,8 +32,18 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn flag: Bool) {
         var newRect = NSRect(origin: rect.origin, size: rect.size)
         newRect.size.width = caretWidth
-        newRect.size.height = newRect.size.height - 6.0
-        newRect.origin.y = newRect.origin.y + 3.7
+        if let range = getParagraphRange(), range.upperBound != textStorage?.length || (
+            range.upperBound == textStorage?.length
+                && textStorage?.string.last == "\n"
+                && selectedRange().location != textStorage?.length
+        ) {
+            newRect.size.height = newRect.size.height - 6.0
+            newRect.origin.y = newRect.origin.y + 4.0
+        } else {
+            newRect.size.height = newRect.size.height - 4.0
+            newRect.origin.y = newRect.origin.y + 4.0
+        }
+       
         super.drawInsertionPoint(in: newRect, color: EditTextView.fontColor, turnedOn: flag)
     }
 
@@ -932,7 +942,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let range = NSRange(0..<storage.length)
         let processor = NotesTextProcessor(storage: storage, range: range)
         processor.higlightLinks()
-        
     }
 
     private func pasteImageFromClipboard(in note: Note) -> Bool {
