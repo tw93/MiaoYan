@@ -71,7 +71,7 @@
 
 ## 妙言 PPT
 
-<a href=https://gw.alipayobjects.com/zos/k/app/12.gif target="_blank"><img src="https://gw.alipayobjects.com/zos/k/app/12.gif" width="100%"></a>
+<a href=https://gw.alipayobjects.com/zos/k/app2/123.gif target="_blank"><img src="https://user-images.githubusercontent.com/8736212/180579306-4f2504ee-8377-4d5c-b560-2d0d83ac12f6.gif" width="100%"></a>
 
 1. 新朋友默认初始化会生成模版，如果是老朋友需升级到 1.0，可以 Copy [此文件](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/%E5%A6%99%E8%A8%80%20PPT.md) 到妙言玩一玩。
 2. 执行 `command + option + p` 可以启动妙言 PPT 预览，同时你也可以选中文档点击右键，选择 `妙言 PPT` 打开。
@@ -86,12 +86,11 @@
 ## 感谢
 
 - <a href="https://github.com/KristopherGBaker/libcmark_gfm" target="_blank">KristopherGBaker/libcmark_gfm</a>：适用于 cmark-gfm 的 Swift 兼容框架
-- <a href="https://github.com/draveness/NightNight" target="_blank">draveness/NightNight</a>：黑暗模式
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>：语法高亮能力
-- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>：妙言部分初始化代码来源于此
-- <a href="https://github.com/shpakovski/MASShortcut" target="_blank">hpakovski/MASShortcut</a>：快捷键插件
+- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>：妙言有部分初始化代码来源于此
 - <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>：一款漂亮的开源中文字体，妙言将其作为默认字体
 - <a href="https://github.com/sivan/heti" target="_blank">sivan/heti</a>：专为中文内容展示设计的排版样式增强
+- <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>：妙言 PPT 底层渲染依赖此框架
 
 # 协议
 
