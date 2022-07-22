@@ -65,8 +65,16 @@
 - `command + shift + l`：Auto typesetting
 - `command + option + r`：Displaying document in Finder
 - `command + option + i`：Display document attributes such as word count
+- `command + option + p`：Launch MiaoYan PPT preview.
 
 🏂 There are also many other shortcuts 👆🏻 👇🏻 👈🏻 👉🏻 waiting for you to find if you like to toss and turn~
+
+## MiaoYan PPT
+
+1. The default initialization of new friends will generate templates. If it is an old friend, You can try to copy [this file](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/MiaoYan%20PPT.md) to MiaoYan.
+2. Execute `command + option + p` to start MiaoYan PPT preview. At the same time, you can also select the document, right-click and select 'MiaoYan PPT' to open it.
+3. PPT mode can be enabled only in documents marked with `---` separator. During the presentation, You can preview the outline of the speech with `Enter Key` and exit ppt mode with `ESC Key`.
+4. You can use HTML to customize the effect. For more complex usage, Please refer to [reveal](https://revealjs.com/markdown/) Documentation.
 
 ## Support
 
