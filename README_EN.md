@@ -73,7 +73,7 @@
 
 <a href=https://gw.alipayobjects.com/zos/k/app1/ScreenFlow1.gif target="_blank"><img src="https://gw.alipayobjects.com/zos/k/app1/ScreenFlow1.gif" width="100%"></a>
 
-1. The default initialization of new friends will generate templates. If it is an old friend, You can try to copy [this file](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/MiaoYan%20PPT.md) to MiaoYan.
+1. The default initialization of new friends will generate templates. If you are an old friend, You need to upgrade to 1.0 then try copy [this file](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/MiaoYan%20PPT.md) to MiaoYan.
 2. Execute `command + option + p` to start MiaoYan PPT preview. At the same time, you can also select the document, right-click and select 'MiaoYan PPT' to open it.
 3. PPT mode can be enabled only in documents marked with `---` separator. During the presentation, You can preview the outline of the speech with `Enter Key` and exit ppt mode with `ESC Key`.
 4. You can use HTML to customize the effect. For more complex usage, Please refer to [reveal](https://revealjs.com/markdown/) Documentation.
