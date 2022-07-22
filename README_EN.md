@@ -71,7 +71,7 @@
 
 ## MiaoYan PPT
 
-<a href=https://gw.alipayobjects.com/zos/k/app2/ScreenFlow1.gif target="_blank"><img src="https://gw.alipayobjects.com/zos/k/app2/ScreenFlow1.gif" width="100%"></a>
+<a href=https://gw.alipayobjects.com/zos/k/app3/ScreenFlow1.gif target="_blank"><img src="https://user-images.githubusercontent.com/8736212/180579489-a8ac6f0f-1d47-44fa-a8bb-0be998f7895f.gif" width="100%"></a>
 
 1. The default initialization of new friends will generate templates. If you are an old friend, You need to upgrade to 1.0 then try copy [this file](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/MiaoYan%20PPT.md) to MiaoYan.
 2. Execute `command + option + p` to start MiaoYan PPT preview. At the same time, you can also select the document, right-click and select 'MiaoYan PPT' to open it.
@@ -85,13 +85,12 @@
 
 ## Thanks
 
-- <a href="https://github.com/KristopherGBaker/libcmark_gfm" target="_blank">KristopherGBaker/libcmark_gfm</a>: Swift-compatible framework for cmark-gfm.
-- <a href="https://github.com/draveness/NightNight" target="_blank">draveness/NightNight</a>: Dark Mode.
+- <a href="https://github.com/KristopherGBaker/libcmark_gfm" target="_blank">KristopherGBaker/libcmark_gfm</a>: Swift Compatible framework for cmark-gfm.
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>: Syntax highlighting capability.
-- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: MiaoYan has part of the framework code from this.
-- <a href="https://github.com/shpakovski/MASShortcut" target="_blank">hpakovski/MASShortcut</a>: Shortcut Key Plugin.
-- <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>: A beautiful open source Chinese font, MiaoYan has made it the default font.
+- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: MiaoYan has part of the framework code from this project.
+- <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>: A beautiful open source chinese font, MiaoYan has made it the default font.
 - <a href="https://github.com/sivan/heti" target="_blank">sivan/heti</a>：Enhanced typography for Chinese content presentation.
+- <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>：An open source HTML presentation framework.
 
 # License
 
