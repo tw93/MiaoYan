@@ -23,7 +23,7 @@
 
 ## Features
 
-- 🪂 **Fantastic**: Local use, security, syntax highlighting, dark mode, source file saving, international, presentation mode, single edit mode, export file, internal jump, document auto typesetting, picture upload, LaTeX, Mermaid, PlantUML.
+- 🪂 **Fantastic**: Local use, security, syntax highlighting, dark mode, source file saving, international, presentation mode, [PPT Mode](#miaoYan-ppt), single edit mode, export file, internal jump, document auto typesetting, picture upload, LaTeX, Mermaid, PlantUML.
 - 🐶 **Beauty**: Minimalist design style, folder + file list + editor 3 column mode.
 - 🏌🏽‍♂️ **Fast**: Using Swift5 native development, the performance experience is much better compared to the Web.
 - 🩴 **Simple**: Very light, pure editor input experience, many shortcut keys to help you fast.
@@ -70,6 +70,10 @@
 🏂 There are also many other shortcuts 👆🏻 👇🏻 👈🏻 👉🏻 waiting for you to find if you like to toss and turn~
 
 ## MiaoYan PPT
+
+<kbd>
+  <img src=https://img.alicdn.com/imgextra/i3/O1CN01JZq2RQ1W4Dc5kr0ES_!!6000000002734-1-tps-1536-960.gif width="100%">
+</kbd>
 
 1. The default initialization of new friends will generate templates. If it is an old friend, You can try to copy [this file](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/MiaoYan%20PPT.md) to MiaoYan.
 2. Execute `command + option + p` to start MiaoYan PPT preview. At the same time, you can also select the document, right-click and select 'MiaoYan PPT' to open it.
