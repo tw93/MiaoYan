@@ -72,7 +72,7 @@
 ## 妙言 PPT
 
 <kbd>
-  <img src=https://img.alicdn.com/imgextra/i2/O1CN01ZNUZh91zgnpvCToge_!!6000000006744-1-tps-1536-960.gif width="100%">
+  <img src=https://img.alicdn.com/imgextra/i4/O1CN017sdlOy21J6ZWJp8hh_!!6000000006963-1-tps-1536-960.gif width="100%">
 </kbd>
 
 1. 新朋友默认初始化会生成模版，如果是老朋友，可以 Copy [此文件](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/%E5%A6%99%E8%A8%80%20PPT.md) 到妙言玩一玩。
