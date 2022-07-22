@@ -23,7 +23,7 @@
 
 ## 特点
 
-- 🪂 **妙**：纯本地使用、安全、语法高亮、黑暗模式、源文件保存、国际化、演示模式、单独编辑模式、文档自动排版、文档导出、内部跳转、图床、LaTeX、Mermaid、PlantUML
+- 🪂 **妙**：纯本地使用、安全、语法高亮、黑暗模式、源文件保存、国际化、演示模式、[PPT 模式](#妙言-ppt)、单独编辑模式、文档自动排版、文档导出、内部跳转、图床、LaTeX、Mermaid、PlantUML
 - 🐶 **美**：极简的设计风格，文件夹 + 文件列表 + 编辑器方式 3 列模式
 - 🏌🏽‍♂️ **快**：使用 Swift5 原生开发，相比 Web 套壳方式性能体验好
 - 🩴 **简**：很轻巧，纯编辑器输入体验，众多快捷键助你快人一步
@@ -71,10 +71,14 @@
 
 ## 妙言 PPT
 
+<kbd>
+  <img src=https://img.alicdn.com/imgextra/i2/O1CN01ZNUZh91zgnpvCToge_!!6000000006744-1-tps-1536-960.gif width="100%">
+</kbd>
+
 1. 新朋友默认初始化会生成模版，如果是老朋友，可以 Copy [此文件](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/%E5%A6%99%E8%A8%80%20PPT.md) 到妙言玩一玩。
 2. 执行 `command + option + p` 可以启动妙言 PPT 预览，同时你也可以选中文档点击右键，选择 `妙言 PPT` 打开。
 3. 只有在有 `---` 分隔符标志的文档中，才可启用 PPT 模式，演示过程中你可以 `回车键` 预览演讲大纲，`ESC` 键可退出 PPT 模式。
-4. 你可以擅用HTML来自定义效果，更多复杂的用法可以参考 [Reveal](https://revealjs.com/markdown/) 文档。
+4. 你可以使用 HTML 来自定义效果，更多复杂的用法可以参考 [Reveal](https://revealjs.com/markdown/) 文档。
 
 ## 支持
 
