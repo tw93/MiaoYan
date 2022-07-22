@@ -226,9 +226,9 @@ public class NotesTextProcessor {
             return nil
         }
 
-        var codeTheme = "vs"
+        var codeTheme = "atom-one-light"
         if UserDataService.instance.isDark {
-            codeTheme = "hybrid"
+            codeTheme = "tomorrow-night-blue"
         }
         highlightr.setTheme(to: codeTheme)
         
@@ -389,7 +389,6 @@ public class NotesTextProcessor {
         let isFullScan = attributedString.length == paragraphRange.upperBound && paragraphRange.lowerBound == 0
         let string = attributedString.string
         
-        let codeFont = NotesTextProcessor.codeFont(CGFloat(UserDefaultsManagement.fontSize))
         let quoteFont = NotesTextProcessor.quoteFont(CGFloat(UserDefaultsManagement.fontSize))
         
         #if os(OSX)
@@ -487,19 +486,7 @@ public class NotesTextProcessor {
             attributedString.fixAttributes(in: range)
             attributedString.addAttribute(.foregroundColor, value: htmlColor, range: range)
         }
-        
-        NotesTextProcessor.htmlRegex.matches(string, range: paragraphRange) { result in
-            guard let range = result?.range else { return }
-            attributedString.fixAttributes(in: range)
-            NotesTextProcessor.highlightCode(attributedString: attributedString, range: range)
-        }
-        
-        NotesTextProcessor.imageHtmlRegex.matches(string, range: paragraphRange) { result in
-            guard let range = result?.range else { return }
-            attributedString.fixAttributes(in: range)
-            NotesTextProcessor.highlightCode(attributedString: attributedString, range: range)
-        }
-        
+                
         // We detect and process underlined headers
         NotesTextProcessor.headersSetextRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range else { return }
@@ -728,6 +715,21 @@ public class NotesTextProcessor {
                 guard let innerRange = innerResult?.range else { return }
                 attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
             }
+        }
+        
+        NotesTextProcessor.htmlRegex.matches(string, range: paragraphRange) { result in
+            guard let range = result?.range else { return }
+            attributedString.fixAttributes(in: range)
+//            let substring = attributedString.mutableString.substring(with: range)
+//            print(">>>htmlRegex")
+//            print(substring)
+            NotesTextProcessor.highlightCode(attributedString: attributedString, range: range)
+        }
+        
+        NotesTextProcessor.imageHtmlRegex.matches(string, range: paragraphRange) { result in
+            guard let range = result?.range else { return }
+            attributedString.fixAttributes(in: range)
+            NotesTextProcessor.highlightCode(attributedString: attributedString, range: range)
         }
         
         attributedString.enumerateAttribute(.attachment, in: paragraphRange, options: []) { value, range, _ in

@@ -59,7 +59,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
 
         if UserDefaultsManagement.isFirstLaunch {
-            let size = NSSize(width: 1200, height: 640)
+            let size = NSSize(width: 1280, height: 700)
             mainWC.window?.setContentSize(size)
             mainWC.window?.center()
             UserDefaultsManagement.isFirstLaunch = false

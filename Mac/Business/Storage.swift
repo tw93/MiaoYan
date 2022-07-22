@@ -34,7 +34,9 @@ class Storage {
     #else
         let initialFiles = [
             "介绍妙言.md",
-            "Introduction to MiaoYan.md"
+            "妙言 PPT.md",
+            "Introduction to MiaoYan.md",
+            "MiaoYan PPT.md"
         ]
     #endif
 
