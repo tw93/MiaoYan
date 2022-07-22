@@ -73,7 +73,7 @@
 
 <a href=https://gw.alipayobjects.com/zos/k/app/12.gif target="_blank"><img src="https://gw.alipayobjects.com/zos/k/app/12.gif" width="100%"></a>
 
-1. 新朋友默认初始化会生成模版，如果是老朋友，可以 Copy [此文件](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/%E5%A6%99%E8%A8%80%20PPT.md) 到妙言玩一玩。
+1. 新朋友默认初始化会生成模版，如果是老朋友需升级到 1.0，可以 Copy [此文件](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/%E5%A6%99%E8%A8%80%20PPT.md) 到妙言玩一玩。
 2. 执行 `command + option + p` 可以启动妙言 PPT 预览，同时你也可以选中文档点击右键，选择 `妙言 PPT` 打开。
 3. 只有在有 `---` 分隔符标志的文档中，才可启用 PPT 模式，演示过程中你可以 `回车键` 预览演讲大纲，`ESC` 键可退出 PPT 模式。
 4. 你可以使用 HTML 来自定义效果，更多复杂的用法可以参考 [Reveal](https://revealjs.com/markdown/) 文档。
