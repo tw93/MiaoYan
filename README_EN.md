@@ -71,7 +71,7 @@
 
 ## MiaoYan PPT
 
-<a href=https://gw.alipayobjects.com/zos/k/app/ScreenFlow1.gif target="_blank"><img src="https://gw.alipayobjects.com/zos/k/app/ScreenFlow1.gif" width="100%"></a>
+<a href=https://gw.alipayobjects.com/zos/k/app1/ScreenFlow1.gif target="_blank"><img src="https://gw.alipayobjects.com/zos/k/app1/ScreenFlow1.gif" width="100%"></a>
 
 1. The default initialization of new friends will generate templates. If it is an old friend, You can try to copy [this file](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/MiaoYan%20PPT.md) to MiaoYan.
 2. Execute `command + option + p` to start MiaoYan PPT preview. At the same time, you can also select the document, right-click and select 'MiaoYan PPT' to open it.
