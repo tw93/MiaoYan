@@ -72,7 +72,7 @@
 ## MiaoYan PPT
 
 <kbd>
-  <img src=https://gw.alipayobjects.com/zos/k/app/ScreenFlow1.gif width="100%">
+  <img src="https://gw.alipayobjects.com/mdn/rms_3ca2f1/afts/img/A*YyK-Rb9RfaoAAAAAAAAAAAAAARQnAQ" width="100%">
 </kbd>
 
 1. The default initialization of new friends will generate templates. If it is an old friend, You can try to copy [this file](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/MiaoYan%20PPT.md) to MiaoYan.
