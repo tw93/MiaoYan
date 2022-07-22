@@ -251,7 +251,7 @@ public enum UserDefaultsManagement {
             if let result = UserDefaults.standard.object(forKey: Constants.PreviewWidth) as? String {
                 return result
             }
-            return "900px"
+            return "1000px"
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.PreviewWidth)
@@ -579,7 +579,7 @@ public enum UserDefaultsManagement {
             if let result = UserDefaults.standard.object(forKey: "sortBy"), let sortBy = SortBy(rawValue: result as! String) {
                 return sortBy
             } else {
-                return .modificationDate
+                return .creationDate
             }
         }
         set {

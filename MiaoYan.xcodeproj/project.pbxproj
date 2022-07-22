@@ -172,7 +172,6 @@
 		260AEA7AD6D39CFD60C015CF /* Pods_MiaoYanCore_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MiaoYanCore_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2714D862285196D70026BDE4 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		2714D864285197CA0026BDE4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		2714D86728519FB20026BDE4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		272ABB5E285F305500CCD651 /* SidebarProjectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarProjectView.swift; sourceTree = "<group>"; };
 		272CAC1F287577E70026EF50 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ContentViewController.xib; sourceTree = "<group>"; };
 		272CAC22287577E90026EF50 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ContentViewController.strings; sourceTree = "<group>"; };
@@ -182,6 +181,7 @@
 		2747D5B2284E05CE00D0127B /* LXGWWenKaiLite-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "LXGWWenKaiLite-Bold.ttf"; sourceTree = "<group>"; };
 		275592961F3AE9B5006B8988 /* MainWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
 		277A61D7244B538E000F0033 /* SidebarTableRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarTableRowView.swift; sourceTree = "<group>"; };
+		277DB692288AB6E9003DA090 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		27838E67287521C0009E8012 /* DetachedWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetachedWindowController.swift; sourceTree = "<group>"; };
 		2789B1E3287FD9C500BF8BC1 /* MiaoYan.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = MiaoYan.entitlements; sourceTree = "<group>"; };
 		2795956327B12CDC000B754C /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiaoYan.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -956,7 +956,7 @@
 			children = (
 				D7793C791F211C6000CA39B7 /* Base */,
 				D7F76C4B232D648D00E8D8BA /* zh-Hans */,
-				2714D86728519FB20026BDE4 /* en */,
+				277DB692288AB6E9003DA090 /* en */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
