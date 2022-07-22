@@ -71,9 +71,7 @@
 
 ## 妙言 PPT
 
-<kbd>
-  <img src="https://gw.alipayobjects.com/mdn/rms_3ca2f1/afts/img/A*Z0hQQoV-hMAAAAAAAAAAAAAAARQnAQ" width="100%">
-</kbd>
+<img src="https://gw.alipayobjects.com/mdn/rms_3ca2f1/afts/img/A*Z0hQQoV-hMAAAAAAAAAAAAAAARQnAQ" width="100%">
 
 1. 新朋友默认初始化会生成模版，如果是老朋友，可以 Copy [此文件](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/%E5%A6%99%E8%A8%80%20PPT.md) 到妙言玩一玩。
 2. 执行 `command + option + p` 可以启动妙言 PPT 预览，同时你也可以选中文档点击右键，选择 `妙言 PPT` 打开。
