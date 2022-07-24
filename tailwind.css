@@ -32,11 +32,11 @@ body {
   content: '喂猫的朋友们';
 }
 [lang='en'] .i18n-miao-people:before {
-  content: 'Friends who feed the cat';
+  content: 'Friends who feed cats';
 }
 
 .i18n-miao-people-desc:before {
-  content: '数据每周手动更新，朋友数和虚拟世界中匹配';
+  content: '数据每周手动更新，朋友数大概和虚拟世界中匹配';
 }
 [lang='en'] .i18n-miao-people-desc:before {
   content: 'Weekly manual update, matching the number with that in the virtual world';
