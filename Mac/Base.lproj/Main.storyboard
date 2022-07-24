@@ -1665,6 +1665,12 @@ CA
                                             <action selector="exportImage:" target="XfG-lQ-9wD" id="CHV-dY-HtD"/>
                                         </connections>
                                     </menuItem>
+                                    <menuItem title="MiaoYan PPT PDF" alternate="YES" keyEquivalent="P" id="DhD-mk-T1u">
+                                        <modifierMask key="keyEquivalentModifierMask" shift="YES" control="YES" option="YES"/>
+                                        <connections>
+                                            <action selector="exportMiaoYanPPT:" target="XfG-lQ-9wD" id="st2-pS-SiJ"/>
+                                        </connections>
+                                    </menuItem>
                                 </items>
                             </menu>
                         </menuItem>

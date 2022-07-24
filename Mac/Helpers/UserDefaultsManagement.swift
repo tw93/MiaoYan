@@ -52,6 +52,8 @@ public enum UserDefaultsManagement {
 
     static var isOnExport = false
 
+    static var isOnExportPPT = false
+
     private enum Constants {
         static let AppearanceTypeKey = "appearanceType"
         static let BgColorKey = "bgColorKeyed"

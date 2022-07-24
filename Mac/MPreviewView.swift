@@ -25,15 +25,15 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         navigationDelegate = self
 
-#if os(OSX)
+        #if os(OSX)
         if #available(macOS 10.13, *) {
             setValue(false, forKey: "drawsBackground")
         }
-#else
+        #else
         isOpaque = false
         backgroundColor = UIColor.clear
         scrollView.backgroundColor = UIColor.clear
-#endif
+        #endif
 
         load(note: note)
     }
@@ -89,11 +89,10 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {
         for menuItem in menu.items {
             if menuItem.identifier?.rawValue == "WKMenuItemIdentifierSpeechMenu" ||
-                menuItem.identifier?.rawValue == "WKMenuItemIdentifierTranslate" ||
-                menuItem.identifier?.rawValue == "WKMenuItemIdentifierSearchWeb" ||
-                menuItem.identifier?.rawValue == "WKMenuItemIdentifierShareMenu" ||
-                menuItem.identifier?.rawValue == "WKMenuItemIdentifierLookUp"
-            {
+                       menuItem.identifier?.rawValue == "WKMenuItemIdentifierTranslate" ||
+                       menuItem.identifier?.rawValue == "WKMenuItemIdentifierSearchWeb" ||
+                       menuItem.identifier?.rawValue == "WKMenuItemIdentifierShareMenu" ||
+                       menuItem.identifier?.rawValue == "WKMenuItemIdentifierLookUp" {
                 menuItem.isHidden = true
             }
         }
@@ -126,7 +125,8 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                     }
                 }
             }
-        } else {}
+        } else {
+        }
     }
 
     public func scrollToPosition(pre: CGFloat) {
@@ -138,7 +138,9 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
                     if complete != nil {
                         super.evaluateJavaScript("document.body.offsetHeight", completionHandler: { height, _ in
-                            guard let contentHeight = height as? CGFloat else { print("Content height could not be obtained"); return }
+                            guard let contentHeight = height as? CGFloat else {
+                                print("Content height could not be obtained"); return
+                            }
                             super.evaluateJavaScript("document.documentElement.clientHeight", completionHandler: { [weak self] wHeight, _ in
                                 let windowHeight = wHeight as! CGFloat
                                 let offset = contentHeight - windowHeight
@@ -151,7 +153,8 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                     }
                 })
             }
-        } else {}
+        } else {
+        }
     }
 
     public func exportImage() {
@@ -161,7 +164,9 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
                     if complete != nil {
                         super.evaluateJavaScript("document.body.offsetHeight", completionHandler: { height, _ in
-                            guard let contentHeight = height as? CGFloat else { print("Content height could not be obtained"); return }
+                            guard let contentHeight = height as? CGFloat else {
+                                print("Content height could not be obtained"); return
+                            }
                             super.evaluateJavaScript("document.body.offsetWidth", completionHandler: { [weak self] width, _ in
                                 let contentWidth = width as! CGFloat
                                 let config = WKSnapshotConfiguration()
@@ -187,11 +192,14 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                     }
                 })
             }
-        } else {}
+        } else {
+        }
     }
 
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        guard let url = navigationAction.request.url else { return }
+        guard let url = navigationAction.request.url else {
+            return
+        }
 
         switch navigationAction.navigationType {
         case .linkActivated:
@@ -201,11 +209,11 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 return
             }
 
-#if os(iOS)
+            #if os(iOS)
             UIApplication.shared.openURL(url)
-#elseif os(OSX)
+            #elseif os(OSX)
             NSWorkspace.shared.open(url)
-#endif
+            #endif
         default:
             decisionHandler(.allow)
         }
@@ -213,7 +221,9 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
     public func load(note: Note, force: Bool = false) {
         /// Do not re-load already loaded view
-        guard self.note != note || force else { return }
+        guard self.note != note || force else {
+            return
+        }
 
         let markdownString = note.getPrettifiedContent()
         let imagesStorage = note.project.url
@@ -247,7 +257,9 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             baseURL = bundle!.url(forResource: "ppt", withExtension: "html")!
         }
 
-        guard var template = try? NSString(contentsOf: baseURL, encoding: String.Encoding.utf8.rawValue) else { return nil }
+        guard var template = try? NSString(contentsOf: baseURL, encoding: String.Encoding.utf8.rawValue) else {
+            return nil
+        }
 
         if UserDefaultsManagement.magicPPT {
             return template as String
@@ -255,24 +267,24 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         template = template.replacingOccurrences(of: "DOWN_CSS", with: css) as NSString
 
-#if os(iOS)
+        #if os(iOS)
         if NightNight.theme == .night {
             template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
         }
-#else
+        #else
         if UserDataService.instance.isDark {
             template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
         }
-#endif
+        #endif
 
         return template as String
     }
 
     private func isFootNotes(url: URL) -> Bool {
         let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory())
-            .appendingPathComponent("wkPreview")
-            .appendingPathComponent("index.html")
-            .absoluteString
+                .appendingPathComponent("wkPreview")
+                .appendingPathComponent("index.html")
+                .absoluteString
 
         let link = url.absoluteString.replacingOccurrences(of: webkitPreview, with: "")
         if link.starts(with: "#") {
@@ -319,7 +331,9 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         let bundle = Bundle(url: url)
 
         guard let bundleResourceURL = bundle?.resourceURL
-        else { return nil }
+        else {
+            return nil
+        }
 
         let customCSS = UserDefaultsManagement.markdownPreviewCSS
 
@@ -389,8 +403,8 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
 
                 let create = webkitPreview
-                    .appendingPathComponent(localPathClean)
-                    .deletingLastPathComponent()
+                        .appendingPathComponent(localPathClean)
+                        .deletingLastPathComponent()
                 let destination = webkitPreview.appendingPathComponent(localPathClean)
 
                 try? FileManager.default.createDirectory(atPath: create.path, withIntermediateDirectories: true, attributes: nil)
@@ -413,7 +427,9 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     func htmlFromTemplate(_ htmlString: String, css: String) throws -> String {
-        guard let vc = ViewController.shared() else { return "" }
+        guard let vc = ViewController.shared() else {
+            return ""
+        }
         let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle")
         let url = NSURL.fileURL(withPath: path!)
         let bundle = Bundle(url: url)
@@ -428,6 +444,10 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         template = template.replacingOccurrences(of: "DOWN_CSS", with: css) as NSString
 
+        if (UserDefaultsManagement.isOnExport) {
+            template = template.replacingOccurrences(of: "DOWN_EXPORT_TYPE", with: "ppt") as NSString
+        }
+
         if UserDefaultsManagement.magicPPT {
             var downTheme = "<link rel=\"stylesheet\" href=\"ppt/dist/theme/white.css\" id=\"theme\" />"
             if UserDataService.instance.isDark {
@@ -437,15 +457,15 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             return template.replacingOccurrences(of: "DOWN_RAW", with: htmlString)
         }
 
-#if os(iOS)
+        #if os(iOS)
         if NightNight.theme == .night {
             template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
         }
-#else
+        #else
         if UserDataService.instance.isDark {
             template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
         }
-#endif
+        #endif
         var htmlContent = htmlString
         let currentName = vc.titleLabel.stringValue
         if UserDefaultsManagement.isOnExport, !htmlString.hasPrefix("<h1>") {
@@ -458,15 +478,16 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 class HandlerCodeCopy: NSObject, WKScriptMessageHandler {
     public static var selectionString: String? {
         didSet {
-            guard let copyBlock = selectionString else { return }
+            guard let copyBlock = selectionString else {
+                return
+            }
             NSPasteboard.general.clearContents()
             NSPasteboard.general.setString(copyBlock, forType: .string)
         }
     }
 
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage)
-    {
+                               didReceive message: WKScriptMessage) {
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
 
         HandlerCodeCopy.selectionString = message
@@ -477,8 +498,7 @@ class HandlerSelection: NSObject, WKScriptMessageHandler {
     public static var selectionString: String?
 
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage)
-    {
+                               didReceive message: WKScriptMessage) {
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
 
         HandlerSelection.selectionString = message

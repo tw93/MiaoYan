@@ -796,3 +796,6 @@
 
 /* Class = "NSMenuItem"; title = "Image"; ObjectID = "GsA-uj-XlT"; */
 "GsA-uj-XlT.title" = "图片";
+
+/* Class = "NSMenuItem"; title = "MiaoYan PPT PDF"; ObjectID = "DhD-mk-T1u"; */
+"DhD-mk-T1u.title" = "妙言 PPT PDF";

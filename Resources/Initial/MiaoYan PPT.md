@@ -16,10 +16,13 @@
 - Item 2: The second appear <!-- .element: class="fragment" data-fragment-index="2" -->
 - Item 3: First appear <!-- .element: class="fragment" data-fragment-index="1" -->
 ---
-# It's easy to show the code 
+# It's easy to show the code
+
 ```js [1|2-4|5]
-import {withTable，useTable} from 'table-render';
-const Page = () => {const { refresh} = useTable();}
+import { withTable，useTable } from 'table-render';
+const Page = () => {
+    const { refresh } = useTable();
+}
 export default withTable(Page)
 ```
 ---

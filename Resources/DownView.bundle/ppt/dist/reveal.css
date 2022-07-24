@@ -766,44 +766,44 @@ html.reveal-full-page {
     height: 100%;
 }
 
-.reveal .slides > section.present,
-.reveal .slides > section > section.present {
+.reveal .slides section.present,
+.reveal .slides section section.present {
     display: block;
     z-index: 11;
     opacity: 1;
     padding: 90px 48px;
 }
 
-.reveal .slides > section.present.section-center,
-.reveal .slides > section > section.present.section-center {
+.reveal .slides  section.present.section-center,
+.reveal .slides  section > section.present.section-center {
     padding: 0;
     text-align: center;
 }
 
-.reveal.overview .slides > section.section-center {
+.reveal.overview .slides  section.section-center {
     display: flex !important;
     justify-content: center;
     align-items: center;
 }
 
-.reveal.overview .slides > section.future,
-.reveal.overview .slides > section.past {
+.reveal.overview .slides section.future,
+.reveal.overview .slides section.past {
     padding: 90px 48px;
 }
 
 
-.reveal.overview .slides > section.section-option,
-.reveal .slides > section.present.section-option,
-.reveal .slides > section > section.present.section-option {
+.reveal.overview .slides  section.section-option,
+.reveal .slides  section.present.section-option,
+.reveal .slides  section > section.present.section-option {
     padding: 48px;
 }
 
-.reveal.overview .slides > section pre,
-.reveal .slides > section pre {
+.reveal.overview .slides  section pre,
+.reveal .slides  section pre {
     float: left;
 }
 
-.reveal.overview .slides > section.section-center pre, .reveal .slides > section.section-center pre {
+.reveal.overview .slides  section.section-center pre, .reveal .slides  section.section-center pre {
     float: none;
 }
 
@@ -2016,7 +2016,6 @@ html.print-pdf .reveal .slides section {
     display: block !important;
     position: absolute !important;
     margin: 0 !important;
-    padding: 0 !important;
     box-sizing: border-box !important;
     min-height: 1px;
     opacity: 1 !important;
