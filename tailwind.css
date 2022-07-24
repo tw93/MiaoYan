@@ -73,8 +73,10 @@ body {
 .i18n-title:before {
   content: '妙言';
 }
+
 [lang='en'] .i18n-title {
   letter-spacing: normal;
+  zoom: 0.9;
 }
 [lang='en'] .i18n-title:before {
   content: 'MiaoYan';
@@ -92,6 +94,10 @@ body {
 }
 [lang='en'] .i18n-description:before {
   content: 'Lightweight Markdown app to help you write great sentences.';
+}
+
+[lang='en'] .i18n-description{
+  width: 110%;
 }
 
 .i18n-download:before {
