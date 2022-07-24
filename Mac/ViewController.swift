@@ -2055,9 +2055,6 @@ class ViewController: NSViewController,
     }
 
     func disableMiaoYanPPT() {
-        guard let vc = ViewController.shared() else {
-            return
-        }
         disablePresentation()
         UserDefaultsManagement.magicPPT = false
         DispatchQueue.main.async {
