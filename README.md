@@ -85,7 +85,7 @@
 
 ## 感谢
 
-- 感谢 Vercel 给妙言 [官网](https://miaoyan.app/) 提供静态渲染能力 <a href="https://vercel.com?utm_source=miaoyan&utm_campaign=oss"><a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img src=https://gw.alipayobjects.com/zos/k/app/1618983297-powered-by-vercel.svg width="120px"></a>
+- 感谢 <a href="https://vercel.com?utm_source=miaoyan&utm_campaign=oss"><a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img src=https://gw.alipayobjects.com/zos/k/app/vercel-logotype-dark.png height="26px"></a> 给妙言 [官网](https://miaoyan.app/) 提供静态渲染能力
 - <a href="https://github.com/KristopherGBaker/libcmark_gfm" target="_blank">KristopherGBaker/libcmark_gfm</a>：适用于 cmark-gfm 的 Swift 兼容框架
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>：语法高亮能力
 - <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>：妙言有部分初始化代码来源于此
