@@ -85,7 +85,7 @@
 
 ## Thanks
 
-- Thanks to <a href="https://vercel.com?utm_source=miaoyan&utm_campaign=oss"><a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img src=https://gw.alipayobjects.com/zos/k/app/vercel-logotype-dark.png height="14px"></a>  for providing static rendering capability to [MiaoYan](https://miaoyan.app/). <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss">
+- Thanks to <a href="https://vercel.com?utm_source=miaoyan&utm_campaign=oss"><a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img src="https://gw.alipayobjects.com/zos/k/app/vercel-logotype-dark.png#gh-light-mode-only" height="14px"><img src="https://gw.alipayobjects.com/zos/k/app/vercel-logotype-light.png#gh-dark-mode-only" height="14px"></a>  for providing static rendering capability to [MiaoYan](https://miaoyan.app/). <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss">
 - <a href="https://github.com/KristopherGBaker/libcmark_gfm" target="_blank">KristopherGBaker/libcmark_gfm</a>: Swift Compatible framework for cmark-gfm.
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>: Syntax highlighting capability.
 - <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: MiaoYan has part of the framework code from this project.
