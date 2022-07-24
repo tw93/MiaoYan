@@ -33,7 +33,7 @@ class PreferencesGeneralViewController: NSViewController {
         super.viewDidLoad()
     }
 
-    @IBAction func eidtorFontSizeClick(_ sender: NSPopUpButton) {
+    @IBAction func editorFontSizeClick(_ sender: NSPopUpButton) {
         guard let vc = ViewController.shared() else { return }
         guard let item = sender.selectedItem else {
             return
@@ -46,7 +46,7 @@ class PreferencesGeneralViewController: NSViewController {
         vc.disablePreview()
     }
 
-    @IBAction func eidtorFontNameClick(_ sender: NSPopUpButton) {
+    @IBAction func editorFontNameClick(_ sender: NSPopUpButton) {
         guard let vc = ViewController.shared() else { return }
         guard let item = sender.selectedItem else {
             return
@@ -219,7 +219,7 @@ class PreferencesGeneralViewController: NSViewController {
         openPanel.canCreateDirectories = true
         openPanel.canChooseFiles = false
         openPanel.begin { result in
-            if result.rawValue == NSFileHandlingPanelOKButton {
+            if result == NSApplication.ModalResponse.OK {
                 guard let url = openPanel.url else { return }
                 guard UserDefaultsManagement.storageUrl != nil else { return }
 

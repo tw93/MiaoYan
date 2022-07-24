@@ -1,6 +1,6 @@
 use_frameworks!
 
-MAC_TARGET_VERSION = '10.12'
+MAC_TARGET_VERSION = '10.13'
 IOS_TARGET_VERSION = '12'
 
 def mac_pods
