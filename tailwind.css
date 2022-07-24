@@ -76,7 +76,8 @@ body {
 
 [lang='en'] .i18n-title {
   letter-spacing: normal;
-  zoom: 0.9;
+  zoom: 0.86;
+  margin-right: 12px;
 }
 [lang='en'] .i18n-title:before {
   content: 'MiaoYan';
@@ -97,7 +98,7 @@ body {
 }
 
 [lang='en'] .i18n-description{
-  width: 110%;
+  width: 105%;
 }
 
 .i18n-download:before {
