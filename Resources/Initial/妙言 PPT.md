@@ -16,10 +16,13 @@
 - Item 2：第二个出现 <!-- .element: class="fragment" data-fragment-index="2" -->
 - Item 3：第一个出现 <!-- .element: class="fragment" data-fragment-index="1" -->
 ---
-# 展示代码也好弄
+# 展示代码也好弄
+
 ```js [1|2-4|5]
-import {withTable，useTable} from 'table-render';
-const Page = () => {const { refresh} = useTable();}
+import { withTable，useTable } from 'table-render';
+const Page = () => {
+    const { refresh } = useTable();
+}
 export default withTable(Page)
 ```
 ---

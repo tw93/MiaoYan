@@ -369,13 +369,20 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
             return
         }
         let vc = window?.contentViewController as? ViewController
-        if event.modifierFlags.contains(.control), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_P {
+        if event.modifierFlags.contains(.control),
+           !event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_P
+        {
             vc?.exportPdf("")
             return
         }
 
-        if event.modifierFlags.contains(.control), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_I {
+        if event.modifierFlags.contains(.control), !event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_I {
             vc?.exportImage("")
+            return
+        }
+
+        if event.modifierFlags.contains(.option), event.modifierFlags.contains(.control), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_P {
+            vc?.exportMiaoYanPPT("")
             return
         }
 

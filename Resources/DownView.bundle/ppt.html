@@ -66,6 +66,30 @@
 <script src="ppt/plugin/zoom/zoom.js"></script>
 
 <script>
+  if ('DOWN_EXPORT_TYPE' === 'ppt') {
+    if (window.location.search.indexOf("print-pdf") === -1) {
+      window.location.search = "print-pdf"
+    }
+    document.getElementById("write").hidden = true
+    document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(() => {
+        document.getElementById("write").hidden = false
+      }, 10)
+    })
+    setTimeout(() => {
+      const iframeEle = document.querySelector('.pdf-page .slide-background-content iframe');
+      const iframeBg = document.querySelector('.pdf-page section[data-background-iframe]');
+      const pdfSections = document.getElementsByClassName('pdf-page');
+      pdfSections.forEach((item) => {
+        if (item.contains(iframeEle)) {
+          item.hidden = true
+        }
+        if (item.contains(iframeBg)) {
+          item.hidden = true
+        }
+      })
+    }, 600)
+  }
   Reveal.initialize({
     width: "100%",
     height: "100%",
@@ -75,6 +99,7 @@
     transition: 'slide',
     backgroundTransition: 'none',
     center: false,
+    pdfSeparateFragments: false,
     plugins: [
       RevealMarkdown,
       RevealHighlight,
@@ -91,7 +116,6 @@
       if (item.childElementCount === 1) {
         item.classList.add('section-center')
         item.classList.add('center')
-
       } else {
         const option = item.clientHeight / document.body.offsetHeight;
         if (option > 0.9) {
@@ -100,6 +124,7 @@
       }
     })
   });
+
 </script>
 </body>
 </html>
