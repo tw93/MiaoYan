@@ -380,6 +380,9 @@
 /* Class = "NSTextField"; title = "Preview Location"; ObjectID = "7FA-ez-4mb"; */
 "7FA-ez-4mb.title" = "Preview Location";
 
+/* Class = "NSTextField"; title = "Line Break Style"; ObjectID = "3WC-Uz-bSc"; */
+"3WC-Uz-bSc.title" = "Line Break Style";
+
 /* Class = "NSTextFieldCell"; title = "Preview FontSize"; ObjectID = "euf-Xu-FDz"; */
 "euf-Xu-FDz.title" = "Preview FontSize";
 
