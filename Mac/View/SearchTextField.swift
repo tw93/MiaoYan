@@ -149,7 +149,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
             self.vcDelegate.updateTable(search: true, searchText: searchText, sidebarItem: sidebarItem, projects: projects) {}
         }
 
-        let pb = NSPasteboard(name: .findPboard)
+        let pb = NSPasteboard(name: NSPasteboard.Name.find)
         pb.declareTypes([.textFinderOptions, .string], owner: nil)
         pb.setString(searchText, forType: NSPasteboard.PasteboardType.string)
     }

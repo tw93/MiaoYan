@@ -25,12 +25,26 @@ class PreferencesGeneralViewController: NSViewController {
     @IBOutlet var previewWidth: NSPopUpButton!
     @IBOutlet var codeFontName: NSPopUpButton!
 
+    @IBOutlet var editorLineBreak: NSPopUpButton!
+
     // MARK: global variables
 
     let storage = Storage.sharedInstance()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+
+    @IBAction func editorLineBreakClick(_ sender: NSPopUpButton) {
+        guard let vc = ViewController.shared() else { return }
+        guard let item = sender.selectedItem else {
+            return
+        }
+        UserDefaultsManagement.editorLineBreak = item.title
+        NotesTextProcessor.hl = nil
+
+        vc.disablePreview()
+        vc.enablePreview()
     }
 
     @IBAction func editorFontSizeClick(_ sender: NSPopUpButton) {
@@ -201,6 +215,7 @@ class PreferencesGeneralViewController: NSViewController {
         windowFontName.selectItem(withTitle: String(UserDefaultsManagement.windowFontName))
         previewFontName.selectItem(withTitle: String(UserDefaultsManagement.previewFontName))
         picPopUp.selectItem(withTitle: String(UserDefaultsManagement.defaultPicUpload))
+        editorLineBreak.selectItem(withTitle: String(UserDefaultsManagement.editorLineBreak))
 
         if UserDefaultsManagement.codeFontName == UserDefaultsManagement.fontName {
             codeFontName.selectItem(withTitle: "Editor Font")

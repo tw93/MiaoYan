@@ -943,7 +943,7 @@ class ViewController: NSViewController,
         panel.canChooseFiles = true
         panel.canCreateDirectories = false
         panel.begin { result in
-            if result.rawValue == NSFileHandlingPanelOKButton {
+            if result == NSApplication.ModalResponse.OK {
                 let urls = panel.urls
                 UserDefaultsManagement.singleModePath = urls[0].path
                 UserDefaultsManagement.isSingleMode = true
@@ -961,7 +961,7 @@ class ViewController: NSViewController,
         panel.canChooseFiles = true
         panel.canCreateDirectories = false
         panel.begin { result in
-            if result.rawValue == NSFileHandlingPanelOKButton {
+            if result == NSApplication.ModalResponse.OK {
                 let urls = panel.urls
                 let project = self.getSidebarProject() ?? self.storage.getMainProject()
 
