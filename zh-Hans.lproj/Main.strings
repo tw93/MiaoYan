@@ -744,6 +744,9 @@
 /* Class = "NSTextField"; title = "Preview Location"; ObjectID = "7FA-ez-4mb"; */
 "7FA-ez-4mb.title" = "预览位置";
 
+/* Class = "NSTextField"; title = "Line Break Style"; ObjectID = "3WC-Uz-bSc"; */
+"3WC-Uz-bSc.title" = "预览换行风格";
+
 /* Class = "NSTextField"; title = "Presentation FontSize"; ObjectID = "euf-Xu-FDz"; */
 "euf-Xu-FDz.title" = "预览字号";
 
