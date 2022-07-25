@@ -101,6 +101,7 @@ public enum UserDefaultsManagement {
         static let EditorLineSpacing = "editorLineSpacing"
         static let PreviewWidth = "previewWidth"
         static let PreviewLocation = "previewLocation"
+        static let EditorLineBreak = "editorLineBreak"
     }
 
     static var appearanceType: AppearanceType {
@@ -154,6 +155,18 @@ public enum UserDefaultsManagement {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.DefaultPicUpload)
+        }
+    }
+    
+    static var editorLineBreak: String {
+        get {
+            if let dl = UserDefaults.standard.object(forKey: Constants.EditorLineBreak) as? String {
+                return dl
+            }
+            return "Default"
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.EditorLineBreak)
         }
     }
 

@@ -516,7 +516,7 @@ class SidebarProjectView: NSOutlineView,
         openPanel.canCreateDirectories = true
         openPanel.canChooseFiles = false
         openPanel.begin { result in
-            if result.rawValue == NSFileHandlingPanelOKButton {
+            if result == NSApplication.ModalResponse.OK {
                 guard let url = openPanel.url else {
                     return
                 }

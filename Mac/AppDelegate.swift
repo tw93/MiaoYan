@@ -156,7 +156,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         panel.canCreateDirectories = true
         panel.message = "Please select default storage directory"
         panel.begin { result in
-            if result.rawValue == NSFileHandlingPanelOKButton {
+            if result == NSApplication.ModalResponse.OK {
                 guard let url = panel.url else {
                     return
                 }

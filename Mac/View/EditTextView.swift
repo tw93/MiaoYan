@@ -793,7 +793,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         panel.canChooseFiles = true
         panel.canCreateDirectories = true
         panel.begin { result in
-            if result.rawValue == NSFileHandlingPanelOKButton {
+            if result == NSApplication.ModalResponse.OK {
                 let urls = panel.urls
 
                 let last = urls.last
