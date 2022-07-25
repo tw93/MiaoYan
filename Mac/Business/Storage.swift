@@ -2,9 +2,9 @@ import CoreServices
 import Foundation
 
 #if os(OSX)
-    import Cocoa
+import Cocoa
 #else
-    import UIKit
+import UIKit
 #endif
 
 class Storage {
@@ -27,23 +27,25 @@ class Storage {
     var pinned: Int = 0
 
     #if os(iOS)
-        let initialFiles = [
-            "MiaoYan - Readme.md",
-            "MiaoYan - Code Highlighting.md"
-        ]
+    let initialFiles = [
+        "MiaoYan - Readme.md",
+        "MiaoYan - Code Highlighting.md"
+    ]
     #else
-        let initialFiles = [
-            "介绍妙言.md",
-            "妙言 PPT.md",
-            "Introduction to MiaoYan.md",
-            "MiaoYan PPT.md"
-        ]
+    let initialFiles = [
+        "介绍妙言.md",
+        "妙言 PPT.md",
+        "Introduction to MiaoYan.md",
+        "MiaoYan PPT.md"
+    ]
     #endif
 
     private var bookmarks = [URL]()
 
     init() {
-        guard var url = UserDefaultsManagement.storageUrl else { return }
+        guard var url = UserDefaultsManagement.storageUrl else {
+            return
+        }
 
         if UserDefaultsManagement.isSingleMode, !UserDefaultsManagement.singleModePath.isEmpty {
             let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
@@ -61,18 +63,18 @@ class Storage {
         let project = Project(url: url, label: name, isRoot: true, isDefault: true)
 
         #if os(iOS)
-            projects.append(project)
+        projects.append(project)
 
-            for bookmark in bookmarks {
-                let externalProject = Project(url: bookmark, label: bookmark.lastPathComponent, isTrash: false, isRoot: true, isDefault: false, isExternal: true)
+        for bookmark in bookmarks {
+            let externalProject = Project(url: bookmark, label: bookmark.lastPathComponent, isTrash: false, isRoot: true, isDefault: false, isExternal: true)
 
-                projects.append(externalProject)
-            }
+            projects.append(externalProject)
+        }
 
-            #if NOT_EXTENSION
-                checkTrashForVolume(url: project.url)
-            #endif
-            return
+        #if NOT_EXTENSION
+        checkTrashForVolume(url: project.url)
+        #endif
+        return
         #endif
 
         _ = add(project: project)
@@ -94,7 +96,10 @@ class Storage {
     }
 
     public func getChildProjects(project: Project) -> [Project] {
-        projects.filter { $0.parent == project }.sorted(by: { $0.label.lowercased() < $1.label.lowercased() })
+        projects.filter {
+                    $0.parent == project
+                }
+                .sorted(by: { $0.label.lowercased() < $1.label.lowercased() })
     }
 
     public func getRootProject() -> Project? {
@@ -154,6 +159,12 @@ class Storage {
     }
 
     private func checkTrashForVolume(url: URL) {
+
+        //防止单独打开模式生成 Trash
+        if (UserDefaultsManagement.isSingleMode) {
+            return
+        }
+
         var trashURL = getTrash(url: url)
 
         do {
@@ -163,7 +174,9 @@ class Storage {
                 throw "Trash not found"
             }
         } catch {
-            guard let trash = getDefault()?.url.appendingPathComponent("Trash") else { return }
+            guard let trash = getDefault()?.url.appendingPathComponent("Trash") else {
+                return
+            }
 
             var isDir = ObjCBool(false)
             if !FileManager.default.fileExists(atPath: trash.path, isDirectory: &isDir), !isDir.boolValue {
@@ -180,7 +193,9 @@ class Storage {
         }
 
         if let trashURL = trashURL {
-            guard !projectExist(url: trashURL) else { return }
+            guard !projectExist(url: trashURL) else {
+                return
+            }
 
             let project = Project(url: trashURL, isTrash: true)
             projects.append(project)
@@ -203,8 +218,9 @@ class Storage {
     }
 
     public func removeBy(project: Project) {
-        let list = noteList.filter { $0.project ==
-            project
+        let list = noteList.filter {
+            $0.project ==
+                    project
         }
 
         for note in list {
@@ -236,13 +252,13 @@ class Storage {
 
     func getTrash(url: URL) -> URL? {
         #if os(OSX)
-            return try? FileManager.default.url(for: .trashDirectory, in: .allDomainsMask, appropriateFor: url, create: false)
+        return try? FileManager.default.url(for: .trashDirectory, in: .allDomainsMask, appropriateFor: url, create: false)
         #else
-            if #available(iOS 11.0, *) {
-                return try? FileManager.default.url(for: .trashDirectory, in: .allDomainsMask, appropriateFor: url, create: false)
-            } else {
-                return nil
-            }
+        if #available(iOS 11.0, *) {
+            return try? FileManager.default.url(for: .trashDirectory, in: .allDomainsMask, appropriateFor: url, create: false)
+        } else {
+            return nil
+        }
         #endif
     }
 
@@ -294,14 +310,14 @@ class Storage {
         var i = 0
 
         #if os(iOS)
-            for note in noteList {
-                note.load()
-                i += 1
-                if i == count {
-                    print("Loaded notes: \(count)")
-                    completion()
-                }
+        for note in noteList {
+            note.load()
+            i += 1
+            if i == count {
+                print("Loaded notes: \(count)")
+                completion()
             }
+        }
         #endif
 
         noteList = sortNotes(noteList: noteList, filter: "")
@@ -309,7 +325,8 @@ class Storage {
         guard !checkFirstRun() else {
             if tryCount == 0 {
                 loadProjects()
-                loadDocuments(tryCount: 1) {}
+                loadDocuments(tryCount: 1) {
+                }
                 return
             }
             return
@@ -333,11 +350,15 @@ class Storage {
     }
 
     public func getCloudDriveProjects() -> [Project] {
-        projects.filter { $0.isCloudDrive == true }
+        projects.filter {
+            $0.isCloudDrive == true
+        }
     }
 
     public func getLocalProjects() -> [Project] {
-        projects.filter { $0.isCloudDrive == false }
+        projects.filter {
+            $0.isCloudDrive == false
+        }
     }
 
     public func getProjectPaths() -> [String] {
@@ -355,10 +376,10 @@ class Storage {
         let projectURL = url.deletingLastPathComponent()
 
         return
-            projects.first(where: {
-                $0.url == projectURL
+                projects.first(where: {
+                    $0.url == projectURL
 
-            })
+                })
     }
 
     func sortNotes(noteList: [Note], filter: String, project: Project? = nil, operation: BlockOperation? = nil) -> [Note] {
@@ -415,11 +436,10 @@ class Storage {
             let url = document.0 as URL
 
             #if os(OSX)
-                if let currentNoteURL = EditTextView.note?.url,
-                   currentNoteURL == url
-                {
-                    continue
-                }
+            if let currentNoteURL = EditTextView.note?.url,
+               currentNoteURL == url {
+                continue
+            }
             #endif
 
             let note = Note(url: url.resolvingSymlinksInPath(), with: item)
@@ -434,17 +454,17 @@ class Storage {
 
             #if CLOUDKIT
             #else
-                if let data = try? note.url.extendedAttribute(forName: "com.tw93.miaoyan.pin") {
-                    let isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
-                        ptr.load(as: Bool.self)
-                    }
-
-                    note.isPinned = isPinned
+            if let data = try? note.url.extendedAttribute(forName: "com.tw93.miaoyan.pin") {
+                let isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
+                    ptr.load(as: Bool.self)
                 }
+
+                note.isPinned = isPinned
+            }
             #endif
 
             #if os(OSX)
-                note.load()
+            note.load()
             #endif
 
             if loadContent {
@@ -478,21 +498,23 @@ class Storage {
 
         do {
             let directoryFiles =
-                try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: [.contentModificationDateKey, .creationDateKey, .typeIdentifierKey], options: .skipsHiddenFiles)
+                    try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: [.contentModificationDateKey, .creationDateKey, .typeIdentifierKey], options: .skipsHiddenFiles)
 
             return
-                directoryFiles.filter {
-                    allowedExtensions.contains($0.pathExtension)
-                        && self.isValidUTI(url: $0)
-                }.map {
-                    url in (
-                        url,
-                        (try? url.resourceValues(forKeys: [.contentModificationDateKey])
-                        )?.contentModificationDate ?? Date.distantPast,
-                        (try? url.resourceValues(forKeys: [.creationDateKey])
-                        )?.creationDate ?? Date.distantPast
-                    )
-                }
+                    directoryFiles.filter {
+                                allowedExtensions.contains($0.pathExtension)
+                                        && self.isValidUTI(url: $0)
+                            }
+                            .map {
+                                url in
+                                (
+                                        url,
+                                        (try? url.resourceValues(forKeys: [.contentModificationDateKey])
+                                        )?.contentModificationDate ?? Date.distantPast,
+                                        (try? url.resourceValues(forKeys: [.creationDateKey])
+                                        )?.creationDate ?? Date.distantPast
+                                )
+                            }
         } catch {
             print("Storage not found, url: \(url) – \(error)")
         }
@@ -501,9 +523,13 @@ class Storage {
     }
 
     public func isValidUTI(url: URL) -> Bool {
-        guard url.fileSize < 100000000 else { return false }
+        guard url.fileSize < 100000000 else {
+            return false
+        }
 
-        guard let typeIdentifier = (try? url.resourceValues(forKeys: [.typeIdentifierKey]))?.typeIdentifier else { return false }
+        guard let typeIdentifier = (try? url.resourceValues(forKeys: [.typeIdentifierKey]))?.typeIdentifier else {
+            return false
+        }
 
         let type = typeIdentifier as CFString
         if type == kUTTypeFolder {
@@ -530,9 +556,13 @@ class Storage {
     }
 
     func checkFirstRun() -> Bool {
-        guard noteList.isEmpty, let resourceURL = Bundle.main.resourceURL else { return false }
+        guard noteList.isEmpty, let resourceURL = Bundle.main.resourceURL else {
+            return false
+        }
 
-        guard let destination = getDemoSubdirURL() else { return false }
+        guard let destination = getDemoSubdirURL() else {
+            return false
+        }
 
         let initialPath = resourceURL.appendingPathComponent("Initial").path
         let path = destination.path
@@ -543,7 +573,9 @@ class Storage {
                 guard initialFiles.contains(file) else {
                     continue
                 }
-                try? FileManager.default.copyItem(atPath: "\(initialPath)/\(file)", toPath: "\(path)/\(file)")
+                if (!UserDefaultsManagement.isSingleMode) {
+                    try? FileManager.default.copyItem(atPath: "\(initialPath)/\(file)", toPath: "\(path)/\(file)")
+                }
             }
         } catch {
             print("Initial copy error: \(error)")
@@ -560,11 +592,11 @@ class Storage {
         let resolvedPath = url.path.lowercased()
 
         return
-            noteList.first(where: {
-                $0.url.path.lowercased() == resolvedPath
-                    || "/private" + $0.url.path.lowercased() == resolvedPath
+                noteList.first(where: {
+                    $0.url.path.lowercased() == resolvedPath
+                            || "/private" + $0.url.path.lowercased() == resolvedPath
 
-            })
+                })
     }
 
     func getBy(name: String) -> Note? {
@@ -589,17 +621,17 @@ class Storage {
 
     func getDemoSubdirURL() -> URL? {
         #if os(OSX)
-            if let project = projects.first {
-                return project.url
-            }
+        if let project = projects.first {
+            return project.url
+        }
 
-            return nil
+        return nil
         #else
-            if let icloud = UserDefaultsManagement.iCloudDocumentsContainer {
-                return icloud
-            }
+        if let icloud = UserDefaultsManagement.iCloudDocumentsContainer {
+            return icloud
+        }
 
-            return UserDefaultsManagement.storageUrl
+        return UserDefaultsManagement.storageUrl
         #endif
     }
 
@@ -631,7 +663,9 @@ class Storage {
     }
 
     func getSubFolders(url: URL) -> [NSURL]? {
-        guard let fileEnumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions()) else { return nil }
+        guard let fileEnumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions()) else {
+            return nil
+        }
 
         var extensions = allowedExtensions
         for ext in ["jpg", "png", "gif", "jpeg", "json", "JPG", "PNG", ".icloud"] {
@@ -639,7 +673,9 @@ class Storage {
         }
         let lastPatch = ["assets", ".cache", "i", ".Trash"]
 
-        let urls = fileEnumerator.allObjects.filter { !extensions.contains(($0 as? NSURL)!.pathExtension!) && !lastPatch.contains(($0 as? NSURL)!.lastPathComponent!) } as! [NSURL]
+        let urls = fileEnumerator.allObjects.filter {
+            !extensions.contains(($0 as? NSURL)!.pathExtension!) && !lastPatch.contains(($0 as? NSURL)!.lastPathComponent!)
+        } as! [NSURL]
         var subdirs = [NSURL]()
         var i = 0
 
@@ -654,8 +690,7 @@ class Storage {
                 try url.getResourceValue(&isPackageResourceValue, forKey: URLResourceKey.isPackageKey)
 
                 if isDirectoryResourceValue as? Bool == true,
-                   isPackageResourceValue as? Bool == false
-                {
+                   isPackageResourceValue as? Bool == false {
                     subdirs.append(url)
                 }
             } catch let error as NSError {
@@ -693,20 +728,21 @@ class Storage {
     public func syncDirectory(url: URL) {
         do {
             let directoryFiles =
-                try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: [.contentModificationDateKey, .creationDateKey])
+                    try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: [.contentModificationDateKey, .creationDateKey])
 
             let files =
-                directoryFiles.filter {
-                    !self.isDownloaded(url: $0)
-                }
+                    directoryFiles.filter {
+                        !self.isDownloaded(url: $0)
+                    }
 
             let images = files.map {
-                url in (
-                    url,
-                    (try? url.resourceValues(forKeys: [.contentModificationDateKey])
-                    )?.contentModificationDate ?? Date.distantPast,
-                    (try? url.resourceValues(forKeys: [.creationDateKey])
-                    )?.creationDate ?? Date.distantPast
+                url in
+                (
+                        url,
+                        (try? url.resourceValues(forKeys: [.contentModificationDateKey])
+                        )?.contentModificationDate ?? Date.distantPast,
+                        (try? url.resourceValues(forKeys: [.creationDateKey])
+                        )?.creationDate ?? Date.distantPast
                 )
             }
 
@@ -729,7 +765,8 @@ class Storage {
 
         do {
             try (url as NSURL).getResourceValue(&isDownloaded, forKey: URLResourceKey.ubiquitousItemDownloadingStatusKey)
-        } catch _ {}
+        } catch _ {
+        }
 
         if isDownloaded as? URLUbiquitousItemDownloadingStatus == URLUbiquitousItemDownloadingStatus.current {
             return true
@@ -740,25 +777,27 @@ class Storage {
 
     #if os(iOS)
 
-        public func createProject(name: String) -> Project {
-            let storageURL = UserDefaultsManagement.storageUrl!
+    public func createProject(name: String) -> Project {
+        let storageURL = UserDefaultsManagement.storageUrl!
 
-            var url = storageURL.appendingPathComponent(name)
+        var url = storageURL.appendingPathComponent(name)
 
-            if FileManager.default.fileExists(atPath: url.path, isDirectory: nil) {
-                url = storageURL.appendingPathComponent("\(name) \(String(Date().toMillis()))")
-            }
-
-            let project = Project(url: url)
-            project.createDirectory()
-
-            _ = add(project: project)
-            return project
+        if FileManager.default.fileExists(atPath: url.path, isDirectory: nil) {
+            url = storageURL.appendingPathComponent("\(name) \(String(Date().toMillis()))")
         }
+
+        let project = Project(url: url)
+        project.createDirectory()
+
+        _ = add(project: project)
+        return project
+    }
     #endif
 
     public func initNote(url: URL) -> Note? {
-        guard let project = getProjectBy(url: url) else { return nil }
+        guard let project = getProjectBy(url: url) else {
+            return nil
+        }
 
         let note = Note(url: url, with: project)
 
@@ -767,7 +806,9 @@ class Storage {
 
     private func cleanTrash() {
         if #available(iOS 11.0, *) {
-            guard let trash = try? FileManager.default.url(for: .trashDirectory, in: .allDomainsMask, appropriateFor: UserDefaultsManagement.storageUrl, create: false) else { return }
+            guard let trash = try? FileManager.default.url(for: .trashDirectory, in: .allDomainsMask, appropriateFor: UserDefaultsManagement.storageUrl, create: false) else {
+                return
+            }
 
             do {
                 let fileURLs = try FileManager.default.contentsOfDirectory(at: trash, includingPropertiesForKeys: nil, options: [])
@@ -775,24 +816,26 @@ class Storage {
                 for fileURL in fileURLs {
                     try FileManager.default.removeItem(at: fileURL)
                 }
-            } catch { print(error) }
+            } catch {
+                print(error)
+            }
         }
     }
 
     public func saveCloudPins() {
         #if CLOUDKIT || os(iOS)
-            if let pinned = getPinned() {
-                var names = [String]()
-                for note in pinned {
-                    names.append(note.name)
-                }
-
-                let keyStore = NSUbiquitousKeyValueStore()
-                keyStore.set(names, forKey: "com.tw93.miaoyan.pins.shared")
-                keyStore.synchronize()
-
-                print("Pins successfully saved: \(names)")
+        if let pinned = getPinned() {
+            var names = [String]()
+            for note in pinned {
+                names.append(note.name)
             }
+
+            let keyStore = NSUbiquitousKeyValueStore()
+            keyStore.set(names, forKey: "com.tw93.miaoyan.pins.shared")
+            keyStore.synchronize()
+
+            print("Pins successfully saved: \(names)")
+        }
         #endif
     }
 
@@ -801,26 +844,26 @@ class Storage {
         var removed = [Note]()
 
         #if CLOUDKIT || os(iOS)
-            let keyStore = NSUbiquitousKeyValueStore()
-            keyStore.synchronize()
+        let keyStore = NSUbiquitousKeyValueStore()
+        keyStore.synchronize()
 
-            if let names = keyStore.array(forKey: "com.tw93.miaoyan.pins.shared") as? [String] {
-                if let pinned = getPinned() {
-                    for note in pinned {
-                        if !names.contains(note.name) {
-                            note.removePin(cloudSave: false)
-                            removed.append(note)
-                        }
-                    }
-                }
-
-                for name in names {
-                    if let note = getBy(name: name) {
-                        note.addPin(cloudSave: false)
-                        added.append(note)
+        if let names = keyStore.array(forKey: "com.tw93.miaoyan.pins.shared") as? [String] {
+            if let pinned = getPinned() {
+                for note in pinned {
+                    if !names.contains(note.name) {
+                        note.removePin(cloudSave: false)
+                        removed.append(note)
                     }
                 }
             }
+
+            for name in names {
+                if let note = getBy(name: name) {
+                    note.addPin(cloudSave: false)
+                    added.append(note)
+                }
+            }
+        }
         #endif
 
         return (removed, added)
@@ -837,7 +880,9 @@ class Storage {
     }
 
     public func getNotesBy(project: Project) -> [Note] {
-        noteList.filter { $0.project == project }
+        noteList.filter {
+            $0.project == project
+        }
     }
 
     public func loadProjects(from urls: [URL]) {
@@ -852,7 +897,9 @@ class Storage {
         }
 
         let projects =
-            result.compactMap { Project(url: $0) }
+                result.compactMap {
+                    Project(url: $0)
+                }
 
         guard projects.count > 0 else {
             return
@@ -866,7 +913,9 @@ class Storage {
     }
 
     public func trashItem(url: URL) -> URL? {
-        guard let trashURL = Storage.sharedInstance().getDefaultTrash()?.url else { return nil }
+        guard let trashURL = Storage.sharedInstance().getDefaultTrash()?.url else {
+            return nil
+        }
 
         let fileName = url.deletingPathExtension().lastPathComponent
         let fileExtension = url.pathExtension
@@ -885,4 +934,5 @@ class Storage {
     }
 }
 
-extension String: Error {}
+extension String: Error {
+}

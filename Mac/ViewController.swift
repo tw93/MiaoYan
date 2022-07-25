@@ -237,13 +237,13 @@ class ViewController: NSViewController,
         setDividerHidden(hidden: size == 0)
         refreshMiaoYanNum()
         if UserDefaultsManagement.isSingleMode {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.04) {
                 self.hideSidebar("")
                 self.toastInSingleMode()
             }
         } else {
             if size == 0 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     self.showNoteList("")
                 }
             }
@@ -709,6 +709,7 @@ class ViewController: NSViewController,
         if event.keyCode == kVK_ANSI_W, event.modifierFlags.contains(.command), event.modifierFlags.contains(.shift) {
             if UserDefaultsManagement.isSingleMode {
                 UserDefaultsManagement.isSingleMode = false
+                UserDefaultsManagement.isFirstLaunch = true
                 UserDefaultsManagement.singleModePath = ""
                 showSidebar("")
                 setSideDividerHidden(hidden: false)
@@ -1828,7 +1829,7 @@ class ViewController: NSViewController,
             let index = self.notesTableView.selectedRow > -1 ? self.notesTableView.selectedRow : 0
             self.notesTableView.window?.makeFirstResponder(self.notesTableView)
             self.notesTableView.selectRowIndexes([index], byExtendingSelection: true)
-            self.notesTableView.scrollRowToVisible(index)
+            self.notesTableView.scrollRowToVisible(row: index, animated: true)
         }
     }
 
