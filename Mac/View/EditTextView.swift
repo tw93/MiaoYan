@@ -1147,6 +1147,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
     }
 
+    @available(OSX 10.12.2, *)
+    override func makeTouchBar() -> NSTouchBar? {
+        let touchBar = NSTouchBar()
+        touchBar.delegate = self
+        touchBar.defaultItemIdentifiers = []
+        return touchBar
+    }
+    
     override func menu(for event: NSEvent) -> NSMenu? {
         let menu = super.menu(for: event)
 
