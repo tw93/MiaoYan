@@ -26,6 +26,7 @@ class PreferencesGeneralViewController: NSViewController {
     @IBOutlet var codeFontName: NSPopUpButton!
 
     @IBOutlet var editorLineBreak: NSPopUpButton!
+    @IBOutlet var buttonShow: NSPopUpButton!
 
     // MARK: global variables
 
@@ -36,7 +37,9 @@ class PreferencesGeneralViewController: NSViewController {
     }
 
     @IBAction func editorLineBreakClick(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         guard let item = sender.selectedItem else {
             return
         }
@@ -48,7 +51,9 @@ class PreferencesGeneralViewController: NSViewController {
     }
 
     @IBAction func editorFontSizeClick(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         guard let item = sender.selectedItem else {
             return
         }
@@ -61,7 +66,9 @@ class PreferencesGeneralViewController: NSViewController {
     }
 
     @IBAction func editorFontNameClick(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         guard let item = sender.selectedItem else {
             return
         }
@@ -71,6 +78,21 @@ class PreferencesGeneralViewController: NSViewController {
         vc.checkDefaultSetting()
         vc.refillEditArea()
         vc.disablePreview()
+    }
+
+    @IBAction func buttonShow(_ sender: NSPopUpButton) {
+        guard let item = sender.selectedItem else {
+            return
+        }
+
+        if UserDefaultsManagement.buttonShow == item.title {
+            return
+        }
+
+        UserDefaultsManagement.buttonShow = item.title
+
+        NotesTextProcessor.hl = nil
+        restart()
     }
 
     @IBAction func windowFontNameClick(_ sender: NSPopUpButton) {
@@ -89,7 +111,9 @@ class PreferencesGeneralViewController: NSViewController {
     }
 
     @IBAction func codeFontNameClick(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         guard let item = sender.selectedItem else {
             return
         }
@@ -106,7 +130,9 @@ class PreferencesGeneralViewController: NSViewController {
     }
 
     @IBAction func previewWidthClick(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         guard let item = sender.selectedItem else {
             return
         }
@@ -118,7 +144,9 @@ class PreferencesGeneralViewController: NSViewController {
     }
 
     @IBAction func previewLocation(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         guard let item = sender.selectedItem else {
             return
         }
@@ -132,7 +160,9 @@ class PreferencesGeneralViewController: NSViewController {
     }
 
     @IBAction func previewFontNameClick(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         guard let item = sender.selectedItem else {
             return
         }
@@ -146,7 +176,9 @@ class PreferencesGeneralViewController: NSViewController {
     }
 
     @IBAction func previewFontSizeClick(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         guard let item = sender.selectedItem else {
             return
         }
@@ -158,7 +190,9 @@ class PreferencesGeneralViewController: NSViewController {
     }
 
     @IBAction func presentationFontSizeClick(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         guard let item = sender.selectedItem else {
             return
         }
@@ -235,8 +269,12 @@ class PreferencesGeneralViewController: NSViewController {
         openPanel.canChooseFiles = false
         openPanel.begin { result in
             if result == NSApplication.ModalResponse.OK {
-                guard let url = openPanel.url else { return }
-                guard UserDefaultsManagement.storageUrl != nil else { return }
+                guard let url = openPanel.url else {
+                    return
+                }
+                guard UserDefaultsManagement.storageUrl != nil else {
+                    return
+                }
 
                 UserDefaultsManagement.storagePath = url.path
                 self.defaultStoragePath.stringValue = url.path
@@ -246,7 +284,9 @@ class PreferencesGeneralViewController: NSViewController {
     }
 
     @IBAction func picPopUp(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            return
+        }
         guard let item = sender.selectedItem else {
             return
         }
