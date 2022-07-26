@@ -241,7 +241,7 @@ pre {
 #write {
   margin: 0;
   max-width: 900px;
-  padding: 5px 28px 80px;
+  padding: 6px 28px 80px;
 }
 
 a,
@@ -390,13 +390,12 @@ blockquote blockquote {
   position: relative;
   margin: 0;
   line-height: 1.8;
-  margin-block-start: 36px;
-  margin-block-end: 16px;
+  margin-block-start: 24px;
+  margin-block-end: 12px;
   font-weight: bold;
 }
 
 .heti h1 {
-  margin-block-end: 24px;
   font-size: 2em;
 }
 .heti h2 {
@@ -404,15 +403,19 @@ blockquote blockquote {
 }
 .heti h3 {
   font-size: 1.25em;
+  margin-block-end: 8px;
 }
 .heti h4 {
   font-size: 1em;
+  margin-block-end: 8px;
 }
 .heti h5 {
   font-size: 1em;
+  margin-block-end: 8px;
 }
 .heti h6 {
   font-size: 1em;
+  margin-block-end: 8px;
 }
 .heti h1,
 .heti h2,
@@ -496,7 +499,7 @@ blockquote blockquote {
   .heti table {
     border-color: #404040;
   }
-  .heti p > code {
+  .heti p > code,.heti li > code {
     background-color: #343941;
     color: #E8E8EB;
   }
