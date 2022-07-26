@@ -73,6 +73,26 @@ class ViewController: NSViewController,
             layer.backgroundColor = .clear
             titleBarAdditionalView.wantsLayer = true
             titleBarAdditionalView.layer = layer
+            if (UserDefaultsManagement.buttonShow == "Hover") {
+                titleBarAdditionalView.alphaValue = 0
+            } else {
+                titleBarAdditionalView.alphaValue = 1
+            }
+        }
+    }
+
+    @IBOutlet var addProjectButton: NSButton! {
+        didSet {
+            let layer = CALayer()
+            layer.frame = addProjectButton.bounds
+            layer.backgroundColor = .clear
+            addProjectButton.wantsLayer = true
+            addProjectButton.layer = layer
+            if (UserDefaultsManagement.buttonShow == "Hover") {
+                addProjectButton.alphaValue = 0
+            } else {
+                addProjectButton.alphaValue = 1
+            }
         }
     }
 
@@ -108,7 +128,60 @@ class ViewController: NSViewController,
         }
     }
 
-    @IBOutlet var titleBarView: TitleBarView!
+    @IBOutlet var titleBarView: TitleBarView! {
+        didSet {
+            titleBarView.onMouseExitedClosure = { [weak self] in
+                if (UserDefaultsManagement.buttonShow != "Hover") {
+                    return
+                }
+                DispatchQueue.main.async {
+                    NSAnimationContext.runAnimationGroup({ context in
+                        context.duration = 0.20
+                        self?.titleBarAdditionalView.alphaValue = 0
+                    }, completionHandler: nil)
+                }
+            }
+            titleBarView.onMouseEnteredClosure = { [weak self] in
+                if (UserDefaultsManagement.buttonShow != "Hover") {
+                    return
+                }
+                DispatchQueue.main.async {
+                    NSAnimationContext.runAnimationGroup({ context in
+                        context.duration = 0.20
+                        self?.titleBarAdditionalView.alphaValue = 1
+                    }, completionHandler: nil)
+                }
+            }
+        }
+    }
+
+    @IBOutlet var projectHeaderView: OutlineHeaderView! {
+        didSet {
+            projectHeaderView.onMouseExitedClosure = { [weak self] in
+                if (UserDefaultsManagement.buttonShow != "Hover") {
+                    return
+                }
+                DispatchQueue.main.async {
+                    NSAnimationContext.runAnimationGroup({ context in
+                        context.duration = 0.20
+                        self?.addProjectButton.alphaValue = 0
+                    }, completionHandler: nil)
+                }
+            }
+            projectHeaderView.onMouseEnteredClosure = { [weak self] in
+                if (UserDefaultsManagement.buttonShow != "Hover") {
+                    return
+                }
+                DispatchQueue.main.async {
+                    NSAnimationContext.runAnimationGroup({ context in
+                        context.duration = 0.20
+                        self?.addProjectButton.alphaValue = 1
+                    }, completionHandler: nil)
+                }
+            }
+        }
+    }
+
     @IBOutlet var sidebarScrollView: NSScrollView!
     @IBOutlet var notesScrollView: NSScrollView!
 
@@ -2130,7 +2203,7 @@ class ViewController: NSViewController,
         setButtonHidden(hidden: true)
         formatButton.isHidden = true
         previewButton.isHidden = true
-        if (!UserDefaultsManagement.isOnExportPPT) {
+        if !UserDefaultsManagement.isOnExportPPT {
             toast(message: NSLocalizedString("🙊 Press ESC key to exit~", comment: ""))
         }
     }

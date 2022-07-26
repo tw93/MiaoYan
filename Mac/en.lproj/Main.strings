@@ -383,6 +383,9 @@
 /* Class = "NSTextField"; title = "Line Break Style"; ObjectID = "3WC-Uz-bSc"; */
 "3WC-Uz-bSc.title" = "Line Break Style";
 
+/* Class = "NSTextField"; title = "Button Display"; ObjectID = "ZkY-LA-CH2"; */
+"ZkY-LA-CH2.title" = "Button Display";
+
 /* Class = "NSTextFieldCell"; title = "Preview FontSize"; ObjectID = "euf-Xu-FDz"; */
 "euf-Xu-FDz.title" = "Preview FontSize";
 
