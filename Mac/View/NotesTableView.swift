@@ -3,8 +3,7 @@ import Cocoa
 import MiaoYanCore_macOS
 
 class NotesTableView: NSTableView, NSTableViewDataSource,
-    NSTableViewDelegate
-{
+        NSTableViewDelegate {
     var noteList = [Note]()
     var defaultCell = NoteCellView()
     var pinnedCell = NoteCellView()
@@ -67,16 +66,17 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
             let rowRect = rect(ofRow: row)
             var scrollOrigin = rowRect.origin
 
-            let tableHalfHeight = clipView.frame.height * 0.5
-            let rowRectHalfHeight = rowRect.height * 0.5
-
-            scrollOrigin.y = (scrollOrigin.y - tableHalfHeight) + rowRectHalfHeight
-
-            if scrollView.responds(to: #selector(NSScrollView.flashScrollers)) {
-                scrollView.flashScrollers()
+            // 滚动优化一下
+            if (clipView.frame.height - scrollOrigin.y < rowRect.height) {
+                scrollOrigin.y = scrollOrigin.y - 8.0
+                if scrollView.responds(to: #selector(NSScrollView.flashScrollers)) {
+                    scrollView.flashScrollers()
+                }
+                clipView.animator().setBoundsOrigin(scrollOrigin)
+            } else {
+                scrollRowToVisible(row)
             }
 
-            clipView.animator().setBoundsOrigin(scrollOrigin)
 
         } else {
             scrollRowToVisible(row)
@@ -157,7 +157,9 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
             let operation = BlockOperation()
             operation.addExecutionBlock { [weak self] in
                 DispatchQueue.main.async {
-                    guard !operation.isCancelled, self?.fillTimestamp == timestamp else { return }
+                    guard !operation.isCancelled, self?.fillTimestamp == timestamp else {
+                        return
+                    }
 
                     vc.editArea.fill(note: note, highlight: true)
                 }
@@ -278,7 +280,9 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
             return
         }
 
-        guard let vc = window?.contentViewController as? ViewController else { return }
+        guard let vc = window?.contentViewController as? ViewController else {
+            return
+        }
         vc.loadMoveMenu()
     }
 
@@ -352,7 +356,9 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     }
 
     public func insertNew(note: Note) {
-        guard let vc = window?.contentViewController as? ViewController else { return }
+        guard let vc = window?.contentViewController as? ViewController else {
+            return
+        }
 
         let at = countVisiblePinned()
         noteList.insert(note, at: at)
@@ -370,8 +376,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         }
         let vc = window?.contentViewController as? ViewController
         if event.modifierFlags.contains(.control),
-           !event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_P
-        {
+           !event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_P {
             vc?.exportPdf("")
             return
         }
