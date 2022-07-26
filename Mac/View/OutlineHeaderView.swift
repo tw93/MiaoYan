@@ -1,6 +1,9 @@
 import Cocoa
 
 class OutlineHeaderView: NSView {
+    var onMouseEnteredClosure: (()->())?
+    var onMouseExitedClosure: (()->())?
+
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
 
@@ -10,5 +13,27 @@ class OutlineHeaderView: NSView {
         } else {
             layer?.backgroundColor = NSColor.white.cgColor
         }
+    }
+    
+    override func awakeFromNib() {
+        addTrackingArea(NSTrackingArea(rect: bounds, options: [.activeAlways, .mouseEnteredAndExited], owner: self, userInfo: nil))
+    }
+    
+    override func layout() {
+        super.layout()
+        
+        trackingAreas.forEach { [weak self] area in
+            self?.removeTrackingArea(area)
+        }
+        
+        addTrackingArea(NSTrackingArea(rect: bounds, options: [.activeAlways, .mouseEnteredAndExited], owner: self, userInfo: nil))
+    }
+    
+    override func mouseEntered(with event: NSEvent) {
+        onMouseEnteredClosure?()
+    }
+    
+    override func mouseExited(with event: NSEvent) {
+        onMouseExitedClosure?()
     }
 }

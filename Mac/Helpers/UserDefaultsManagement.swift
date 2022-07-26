@@ -102,6 +102,7 @@ public enum UserDefaultsManagement {
         static let PreviewWidth = "previewWidth"
         static let PreviewLocation = "previewLocation"
         static let EditorLineBreak = "editorLineBreak"
+        static let ButtonShow = "buttonShow"
     }
 
     static var appearanceType: AppearanceType {
@@ -157,7 +158,7 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.DefaultPicUpload)
         }
     }
-    
+
     static var editorLineBreak: String {
         get {
             if let dl = UserDefaults.standard.object(forKey: Constants.EditorLineBreak) as? String {
@@ -167,6 +168,18 @@ public enum UserDefaultsManagement {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.EditorLineBreak)
+        }
+    }
+
+    static var buttonShow: String {
+        get {
+            if let dl = UserDefaults.standard.object(forKey: Constants.ButtonShow) as? String {
+                return dl
+            }
+            return "Always"
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.ButtonShow)
         }
     }
 
