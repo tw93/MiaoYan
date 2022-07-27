@@ -71,11 +71,9 @@
       window.location.search = "print-pdf"
     }
     document.getElementById("write").hidden = true
-    document.addEventListener('DOMContentLoaded', function () {
-      setTimeout(() => {
-        document.getElementById("write").hidden = false
-      }, 14)
-    })
+    setTimeout(() => {
+      document.getElementById("write").hidden = false
+    }, 30)
     setTimeout(() => {
       const iframeEle = document.querySelector('.pdf-page .slide-background-content iframe');
       const iframeBg = document.querySelector('.pdf-page section[data-background-iframe]');

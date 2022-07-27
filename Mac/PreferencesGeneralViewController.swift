@@ -250,6 +250,7 @@ class PreferencesGeneralViewController: NSViewController {
         previewFontName.selectItem(withTitle: String(UserDefaultsManagement.previewFontName))
         picPopUp.selectItem(withTitle: String(UserDefaultsManagement.defaultPicUpload))
         editorLineBreak.selectItem(withTitle: String(UserDefaultsManagement.editorLineBreak))
+        buttonShow.selectItem(withTitle: String(UserDefaultsManagement.buttonShow))
 
         if UserDefaultsManagement.codeFontName == UserDefaultsManagement.fontName {
             codeFontName.selectItem(withTitle: "Editor Font")
