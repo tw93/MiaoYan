@@ -2470,7 +2470,7 @@ class ViewController: NSViewController,
         UserDefaultsManagement.isOnExport = true
         toast(message: NSLocalizedString("🙊 Starting export~", comment: ""))
         enablePreview()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             self.editArea.markdownView?.exportImage()
             UserDefaultsManagement.isOnExport = false
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
