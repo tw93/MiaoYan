@@ -84,6 +84,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             "CodeFont": UserDefaultsManagement.codeFontName,
             "PreviewWidth": UserDefaultsManagement.previewWidth,
             "PreviewLocation": UserDefaultsManagement.previewLocation,
+            "ButtonShow": UserDefaultsManagement.buttonShow,
+            "EditorLineBreak": UserDefaultsManagement.editorLineBreak,
         ])
     }
 
@@ -192,7 +194,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     @IBAction func openTwitter(_ sender: Any) {
-        NSWorkspace.shared.open(URL(string: "https://twitter.com/HiTw93")!)
+        NSWorkspace.shared.open(URL(string: "https://twitter.com/intent/follow?&original_referer=https://miaoyan.app&screen_name=HiTw93")!)
     }
 
     @IBAction func openIssue(_ sender: Any) {
