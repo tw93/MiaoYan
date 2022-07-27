@@ -234,14 +234,14 @@ img {
   object-fit: cover;
 }
 
-pre {
+pre, iframe {
   max-width: 100%;
 }
 
 #write {
   margin: 0;
   max-width: 900px;
-  padding: 6px 28px 80px;
+  padding: 1px 28px 80px;
 }
 
 a,
