@@ -1,8 +1,8 @@
 :root {
     --r-main-font-size: 42px;
     --r-block-margin: 20px;
-    --r-heading-margin: 0 0 20px 0;
-    --r-heading-line-height: 1.2;
+    --r-heading-margin: 20px 0 20px 0;
+    --r-heading-line-height: 1.5;
     --r-heading-letter-spacing: normal;
     --r-heading-text-shadow: none;
     --r-heading-font-weight: 600;
