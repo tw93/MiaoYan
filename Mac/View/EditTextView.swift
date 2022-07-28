@@ -188,7 +188,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             breakUndoCoalescing()
 
             saveTextStorageContent(to: note)
-            fillHiglightLinks()
+            fillHighlightLinks()
             return
         }
         super.paste(sender)
@@ -365,7 +365,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             storage.setAttributedString(note.content)
         }
 
-        fillHiglightLinks()
+        fillHighlightLinks()
 
         if highlight {
             let search = getSearchText()
@@ -518,13 +518,13 @@ class EditTextView: NSTextView, NSTextFinderClient {
             formatter.newLine()
             vc.refillEditArea()
             breakUndoCoalescing()
-            fillHiglightLinks()
+            fillHighlightLinks()
             return
         }
 
         if event.keyCode == kVK_Delete {
             DispatchQueue.main.async {
-                self.fillHiglightLinks()
+                self.fillHighlightLinks()
             }
         }
 
@@ -936,12 +936,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
         viewDelegate?.refillEditArea()
     }
 
-    private func fillHiglightLinks() {
+    private func fillHighlightLinks() {
         guard let storage = textStorage else { return }
 
         let range = NSRange(0..<storage.length)
         let processor = NotesTextProcessor(storage: storage, range: range)
-        processor.higlightLinks()
+        processor.highlightLinks()
     }
 
     private func pasteImageFromClipboard(in note: Note) -> Bool {
