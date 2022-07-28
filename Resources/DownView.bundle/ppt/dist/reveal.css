@@ -1239,6 +1239,11 @@ html.reveal-full-page {
     background-size: cover;
 }
 
+.reveal .slide-background-content iframe {
+    border: none;
+}
+
+
 .reveal .slide-background.stack {
     display: block;
 }
