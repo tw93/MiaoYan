@@ -766,9 +766,10 @@ html.reveal-full-page {
     height: 100%;
 }
 
-.reveal .slides section{
+.reveal .slides section {
     box-sizing: border-box;
 }
+
 .reveal .slides section.present,
 .reveal .slides section section.present {
     display: block;
@@ -786,6 +787,7 @@ html.reveal-full-page {
 .reveal.overview .slides section.section-center {
     display: flex !important;
     justify-content: center;
+    align-items: center;
 }
 
 .reveal.overview .slides section.future,
@@ -796,7 +798,7 @@ html.reveal-full-page {
 .reveal.overview .slides section.section-option,
 .reveal .slides section.present.section-option,
 .reveal .slides section > section.present.section-option {
-    padding: 48px;
+    padding: 16px 48px;
 }
 
 .reveal.overview .slides section pre,
