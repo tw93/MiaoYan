@@ -3,6 +3,26 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>1.1.0</title>
+      <description><![CDATA[
+       <h3>好用一些 🎉：</h3>
+        🎉 支持更简洁的妙言，你可以在设置中设置 Hover 才显示按钮<br/>
+        🍭 支持嵌入各类有趣的东西，codepen、codeSandbox、youtube 等等<br/>
+        🩴 妙言 PPT 结合真实使用场景优化了很多，同时支持导出 PPT 的 PDF<br/>
+        🙊 解决预览时标题可能会闪一下问题、解决复杂 Latex 输入问题，可用`<span>`包裹<br/>
+        😂 TouchBar 菜单栏没啥用干掉了，整体框架视觉继续优化，标题处有间距调整<br/>
+        <h3>Easy to use 🎉：</h3>
+        🎉 Support more simple about MiaoYan. You can use Hover button in the setting.<br/>
+        🍭 Support embedding all kinds of interesting things, codepen/codeSandbox/youtube etc.<br/>
+        🩴 Miaoyan ppt optimizes a lot in combination with real use scenarios, and supports PDF export of PPT.<br/>
+        🙊 Solved problem that the title may flash during preview, and solve the complex latex input problem, you can use `<span>` surround.<br/>
+        😂 The TouchBar is useless, the spacing is adjusted at the title.<br/>
+            ]]>      </description>
+      <pubDate>周四, 28 7月 2022 23:00:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.1.0.zip" sparkle:shortVersionString="1.1.0" sparkle:version="1.1.0" sparkle:edSignature="jL3vXvdP85GOO0SMDEF24u4OuXOCTwY4sXMOjlScl+W9kAuro96jKritR4+DeIaGqojFZ7v1PG0yNIGJH/gRBA==" length="33130746" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>1.0.0</title>
       <description><![CDATA[
        <h3>终于来了 ❤️：</h3>
