@@ -1168,7 +1168,7 @@ class ViewController: NSViewController,
             return
         }
 
-        if vc.titleLabel.hasFocus() || vc.editArea.hasFocus() || vc.search.hasFocus() || UserDefaultsManagement.preview {
+        if vc.titleLabel.hasFocus() || vc.editArea.hasFocus() || vc.search.hasFocus() || UserDefaultsManagement.magicPPT || UserDefaultsManagement.presentation {
             return
         }
 
