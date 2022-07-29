@@ -70,10 +70,7 @@
     if (window.location.search.indexOf("print-pdf") === -1) {
       window.location.search = "print-pdf"
     }
-    document.getElementById("write").hidden = true
-    setTimeout(() => {
-      document.getElementById("write").hidden = false
-    }, 30)
+    document.getElementById("write").style.visibility = "hidden"
     setTimeout(() => {
       const iframeEle = document.querySelector('.pdf-page .slide-background-content iframe');
       const iframeBg = document.querySelector('.pdf-page section[data-background-iframe]');
@@ -86,6 +83,7 @@
           item.hidden = true
         }
       })
+      document.getElementById("write").style.visibility = "visible"
     }, 600)
   }
   Reveal.initialize({
