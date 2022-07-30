@@ -234,7 +234,8 @@ img {
   object-fit: cover;
 }
 
-pre, iframe {
+pre,
+iframe {
   max-width: 100%;
 }
 
@@ -270,6 +271,15 @@ a,
 .heti td > *:first-child {
   margin-block-start: 0 !important;
 }
+.heti > h1:first-child,
+.heti > h2:first-child,
+.heti > h3:first-child,
+.heti > h4:first-child,
+.heti > h5:first-child,
+.heti > h6:first-child {
+  margin-block-start: 10px !important;
+}
+
 .heti > *:last-child,
 .heti section > *:last-child,
 .heti td > *:last-child {
@@ -294,7 +304,7 @@ a,
   margin-inline-end: auto;
   border: 0;
   margin-bottom: -12px;
-  background-color: #E6E6E6;
+  background-color: #e6e6e6;
 }
 @media (prefers-color-scheme: dark) {
   .heti hr {
@@ -489,7 +499,8 @@ blockquote blockquote {
   word-break: break-word;
 }
 
-.heti p > code,.heti li > code {
+.heti p > code,
+.heti li > code {
   background-color: #eef1f2;
   padding: 2px;
   border-radius: 4px;
@@ -499,9 +510,10 @@ blockquote blockquote {
   .heti table {
     border-color: #404040;
   }
-  .heti p > code,.heti li > code {
+  .heti p > code,
+  .heti li > code {
     background-color: #343941;
-    color: #E8E8EB;
+    color: #e8e8eb;
   }
 }
 .heti table {
@@ -555,7 +567,7 @@ blockquote blockquote {
   font-size: 1em;
   font-family: var(--text-font);
 }
-.heti pre code{
+.heti pre code {
   font-family: var(--code-text-font);
 }
 .heti dfn {
@@ -1021,6 +1033,21 @@ blockquote blockquote {
 .heti ul.cb {
   list-style-type: none;
   padding-inline-start: 12px;
+}
+.heti ul.cb ul.cb {
+  padding-inline-start: 24px;
+}
+
+.heti ul.cb input[type='checkbox'] {
+  position: relative;
+}
+.heti ul.cb input[type='checkbox']::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  bottom: -6px;
+  left: -6px;
+  right: -6px;
 }
 .hljs {
   background: #f8f8f8;
