@@ -15,6 +15,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     init(frame: CGRect, note: Note, closure: MPreviewViewClosure?) {
         self.closure = closure
         let userContentController = WKUserContentController()
+        userContentController.add(HandlerCheckbox(), name: "checkbox")
         userContentController.add(HandlerSelection(), name: "newSelectionDetected")
         userContentController.add(HandlerCodeCopy(), name: "notification")
 
@@ -89,10 +90,11 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {
         for menuItem in menu.items {
             if menuItem.identifier?.rawValue == "WKMenuItemIdentifierSpeechMenu" ||
-                       menuItem.identifier?.rawValue == "WKMenuItemIdentifierTranslate" ||
-                       menuItem.identifier?.rawValue == "WKMenuItemIdentifierSearchWeb" ||
-                       menuItem.identifier?.rawValue == "WKMenuItemIdentifierShareMenu" ||
-                       menuItem.identifier?.rawValue == "WKMenuItemIdentifierLookUp" {
+                menuItem.identifier?.rawValue == "WKMenuItemIdentifierTranslate" ||
+                menuItem.identifier?.rawValue == "WKMenuItemIdentifierSearchWeb" ||
+                menuItem.identifier?.rawValue == "WKMenuItemIdentifierShareMenu" ||
+                menuItem.identifier?.rawValue == "WKMenuItemIdentifierLookUp"
+            {
                 menuItem.isHidden = true
             }
         }
@@ -125,8 +127,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                     }
                 }
             }
-        } else {
-        }
+        } else {}
     }
 
     public func scrollToPosition(pre: CGFloat) {
@@ -153,8 +154,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                     }
                 })
             }
-        } else {
-        }
+        } else {}
     }
 
     public func exportImage() {
@@ -192,8 +192,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                     }
                 })
             }
-        } else {
-        }
+        } else {}
     }
 
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
@@ -282,9 +281,9 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
     private func isFootNotes(url: URL) -> Bool {
         let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory())
-                .appendingPathComponent("wkPreview")
-                .appendingPathComponent("index.html")
-                .absoluteString
+            .appendingPathComponent("wkPreview")
+            .appendingPathComponent("index.html")
+            .absoluteString
 
         let link = url.absoluteString.replacingOccurrences(of: webkitPreview, with: "")
         if link.starts(with: "#") {
@@ -403,8 +402,8 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
 
                 let create = webkitPreview
-                        .appendingPathComponent(localPathClean)
-                        .deletingLastPathComponent()
+                    .appendingPathComponent(localPathClean)
+                    .deletingLastPathComponent()
                 let destination = webkitPreview.appendingPathComponent(localPathClean)
 
                 try? FileManager.default.createDirectory(atPath: create.path, withIntermediateDirectories: true, attributes: nil)
@@ -444,7 +443,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         template = template.replacingOccurrences(of: "DOWN_CSS", with: css) as NSString
 
-        if (UserDefaultsManagement.isOnExport) {
+        if UserDefaultsManagement.isOnExport {
             template = template.replacingOccurrences(of: "DOWN_EXPORT_TYPE", with: "ppt") as NSString
         }
 
@@ -475,6 +474,37 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 }
 
+class HandlerCheckbox: NSObject, WKScriptMessageHandler {
+    func userContentController(_ userContentController: WKUserContentController,
+                               didReceive message: WKScriptMessage)
+    {
+        guard let position = message.body as? String else { return }
+        guard let note = EditTextView.note else { return }
+
+        let content = note.content.unLoadCheckboxes().unLoadImages()
+        let string = content.string
+        let range = NSRange(0 ..< string.count)
+
+        var i = 0
+        NotesTextProcessor.allTodoInlineRegex.matches(string, range: range) { result in
+            guard let range = result?.range else { return }
+
+            if i == Int(position) {
+                let substring = content.mutableString.substring(with: range)
+
+                if substring.contains("- [x] ") {
+                    content.replaceCharacters(in: range, with: "- [ ] ")
+                } else {
+                    content.replaceCharacters(in: range, with: "- [x] ")
+                }
+                note.save(content: content)
+            }
+
+            i = i + 1
+        }
+    }
+}
+
 class HandlerCodeCopy: NSObject, WKScriptMessageHandler {
     public static var selectionString: String? {
         didSet {
@@ -487,7 +517,8 @@ class HandlerCodeCopy: NSObject, WKScriptMessageHandler {
     }
 
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
+                               didReceive message: WKScriptMessage)
+    {
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
 
         HandlerCodeCopy.selectionString = message
@@ -498,7 +529,8 @@ class HandlerSelection: NSObject, WKScriptMessageHandler {
     public static var selectionString: String?
 
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
+                               didReceive message: WKScriptMessage)
+    {
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
 
         HandlerSelection.selectionString = message
