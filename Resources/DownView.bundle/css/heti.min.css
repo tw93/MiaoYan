@@ -242,7 +242,7 @@ iframe {
 #write {
   margin: 0;
   max-width: 900px;
-  padding: 1px 28px 80px;
+  padding: 0 28px 80px;
 }
 
 a,
@@ -253,7 +253,7 @@ a,
   font-weight: 400;
   -webkit-font-smoothing: subpixel-antialiased;
   line-height: 1.74;
-  letter-spacing: 0.045em;
+  letter-spacing: 0.04em;
   overflow-wrap: break-word;
   word-wrap: break-word;
   hyphens: auto;
@@ -266,11 +266,13 @@ a,
 .heti::after {
   clear: both;
 }
+
 .heti > *:first-child,
 .heti section > *:first-child,
 .heti td > *:first-child {
   margin-block-start: 0 !important;
 }
+
 .heti > h1:first-child,
 .heti > h2:first-child,
 .heti > h3:first-child,
@@ -278,6 +280,16 @@ a,
 .heti > h5:first-child,
 .heti > h6:first-child {
   margin-block-start: 10px !important;
+}
+
+.heti > ol:first-child {
+  margin-block-start: 5px !important;
+  padding-inline-start: calc(12px + 1em);
+}
+
+.heti > ul:first-child {
+  margin-block-start: 5px !important;
+  padding-inline-start: 20px;
 }
 
 .heti > *:last-child,
@@ -340,7 +352,9 @@ a,
 }
 
 .heti blockquote p {
-  margin-block-end: 12px;
+  margin-block-end: 6px;
+  margin-block-start: 6px;
+  line-height: 1.74;
 }
 
 blockquote blockquote {
@@ -413,18 +427,22 @@ blockquote blockquote {
 }
 .heti h3 {
   font-size: 1.25em;
+  margin-block-start: 8px;
   margin-block-end: 8px;
 }
 .heti h4 {
   font-size: 1em;
+  margin-block-start: 8px;
   margin-block-end: 8px;
 }
 .heti h5 {
   font-size: 1em;
+  margin-block-start: 8px;
   margin-block-end: 8px;
 }
 .heti h6 {
   font-size: 1em;
+  margin-block-start: 8px;
   margin-block-end: 8px;
 }
 .heti h1,

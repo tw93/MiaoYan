@@ -272,8 +272,8 @@
 /* Class = "NSMenuItem"; title = "Search"; ObjectID = "hPY-aY-QOE"; */
 "hPY-aY-QOE.title" = "Search";
 
-/* Class = "NSMenuItem"; title = "Pin/unpin"; ObjectID = "jFN-Dp-LON"; */
-"jFN-Dp-LON.title" = "Pin/unpin";
+/* Class = "NSMenuItem"; title = "Pin/unPin"; ObjectID = "jFN-Dp-LON"; */
+"jFN-Dp-LON.title" = "Pin/unPin";
 
 /* Class = "NSMenuItem"; title = "Rename"; ObjectID = "jLq-8F-n0X"; */
 "jLq-8F-n0X.title" = "Rename";
