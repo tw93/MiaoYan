@@ -35,12 +35,12 @@
 
 ## 安装
 
-从 <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a> 中下载最新的 MiaoYan.dmg 安装包，双击安装即可，如安装出现问题请参考 [文档](https://zhuanlan.zhihu.com/p/52389383)。
+
 
 ## 初始化使用
-
-1. 可以在 iCloud 或根目录下创建一个 `MiaoYan` 的文件夹，打开妙言的设置，将默认存储地址修改成这个。
-2. 点击妙言左上角新增文件夹的图标，创建好自己的文档分类文件夹，就可以开始使用了。
+1. 从 <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a> 中下载最新的 MiaoYan.dmg 安装包，双击安装即可，如安装出现问题请参考 [文档](https://zhuanlan.zhihu.com/p/52389383)。
+2. 可以在 iCloud 或根目录下创建一个 `MiaoYan` 的文件夹，打开妙言的设置，将默认存储地址修改成这个。
+3. 点击妙言左上角新增文件夹的图标，创建好自己的文档分类文件夹，就可以开始使用了。
 3. 同样假如你不习惯默认的字体，可以在设置中修改成其他的正常字体。
 
 ## 快捷键
