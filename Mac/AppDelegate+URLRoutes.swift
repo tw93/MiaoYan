@@ -87,7 +87,6 @@ extension AppDelegate {
     }
     
     // MARK: - MiaoYan routes
-    
     func MiaoYanRouter(_ url: URL) {
         guard let directive = url.host else { return }
         
