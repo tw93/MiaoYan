@@ -21,15 +21,12 @@
 - I have tried many note-taking applications before, such as WizNote, Ulysses, Quiver, MWeb, Bear, Typora, for various reasons, I did not find a conventional Markdown application, so I had the idea of doing MiaoYan.
 - My job is front-end development, but also can develop iOS App, love to toss new things, so develop MiaoYan as a fun leisure.
 
-## Install
-
-Download the latest `MiaoYan.dmg` installation package from <a href="https://github.com/tw93/MiaoYan/releases/latest" target="_blank">GitHub Releases</a> and double-click to install it.
-
 ## First Use
 
-1. You can create a `MiaoYan` folder in iCloud or the root directory, open MiaoYan's Settings, and change the default storage address to this.
-2. Click icon of the new folder in the upper left corner of MiaoYan, create your own document category folder, and you can start using it.
-3. Similarly, if you are not used to the default font, you can change it to other normal fonts in the settings.
+1. Download the latest `MiaoYan.dmg` installation package from <a href="https://github.com/tw93/MiaoYan/releases/latest" target="_blank">GitHub Releases</a> and double-click to install it.
+2. You can create a `MiaoYan` folder in iCloud or the root directory, open MiaoYan's Settings, and change the default storage address to this.
+3. Click icon of the new folder in the upper left corner of MiaoYan, create your own document category folder, and you can start using it.
+4. Similarly, if you are not used to the default font, you can change it to other normal fonts in the settings.
 
 ## Shortcut Keys
 
