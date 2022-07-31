@@ -1975,9 +1975,6 @@ class ViewController: NSViewController,
 
         UserDefaultsManagement.preview = false
 
-        guard let vc = ViewController.shared() else {
-            return
-        }
         editArea.markdownView?.removeFromSuperview()
         editArea.markdownView = nil
 
@@ -1985,13 +1982,11 @@ class ViewController: NSViewController,
             return
         }
         editor.subviews.removeAll(where: { $0.isKind(of: MPreviewView.self) })
-
-        refillEditArea()
         notesTableView.deselectNotes()
         editArea.string = text
         EditTextView.note = note
         search.stringValue.removeAll()
-        vc.titleLabel.isEditable = true
+        titleLabel.isEditable = true
         emptyEditAreaView.isHidden = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             vc.titleLabel.editModeOn()
