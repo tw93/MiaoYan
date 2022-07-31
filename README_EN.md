@@ -28,11 +28,6 @@
 - 🏌🏽‍♂️ **Fast**: Using Swift5 native development, the performance experience is much better compared to the Web.
 - 🩴 **Simple**: Very light, pure editor input experience, many shortcut keys to help you fast.
 
-## Why do this
-
-- I have tried many note-taking applications before, such as WizNote, Ulysses, Quiver, MWeb, Bear, Typora, for various reasons, I did not find a conventional Markdown application, so I had the idea of doing MiaoYan.
-- My job is front-end development, but also can develop iOS App, love to toss new things, so develop MiaoYan as a fun leisure.
-
 ## First Use
 
 1. Download the latest `MiaoYan.dmg` installation package from <a href="https://github.com/tw93/MiaoYan/releases/latest" target="_blank">GitHub Releases</a> and double-click to install it.
@@ -73,6 +68,11 @@
 2. Execute `command + option + p` to start MiaoYan PPT preview. At the same time, you can also select the document, right-click and select 'MiaoYan PPT' to open it.
 3. PPT mode can be enabled only in documents marked with `---` separator. During the presentation, You can preview the outline of the speech with `Enter` Key and exit ppt mode with `ESC` Key.
 4. You can use HTML to customize the effect. For more complex usage, Please refer to [reveal](https://revealjs.com/markdown/) Documentation.
+
+## Why do this
+
+- I have tried many note-taking applications before, such as WizNote, Ulysses, Quiver, MWeb, Bear, Typora, for various reasons, I did not find a conventional Markdown application, so I had the idea of doing MiaoYan.
+- My job is front-end development, but also can develop iOS App, love to toss new things, so develop MiaoYan as a fun leisure.
 
 ## Support
 

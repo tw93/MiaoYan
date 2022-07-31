@@ -16,11 +16,6 @@
 - 🏌🏽‍♂️ **Fast**: Using Swift5 native development, the performance experience is much better compared to the Web.
 - 🩴 **Simple**: Very light, pure editor input experience, many shortcut keys to help you fast.
 
-## Why do this
-
-- I have tried many note-taking applications before, such as WizNote, Ulysses, Quiver, MWeb, Bear, Typora, for various reasons, I did not find a conventional Markdown application, so I had the idea of doing MiaoYan.
-- My job is front-end development, but also can develop iOS App, love to toss new things, so develop MiaoYan as a fun leisure.
-
 ## First Use
 
 1. Download the latest `MiaoYan.dmg` installation package from <a href="https://github.com/tw93/MiaoYan/releases/latest" target="_blank">GitHub Releases</a> and double-click to install it.
@@ -50,6 +45,11 @@
 - `command + option + i`：Display document attributes such as word count
 
 🏂 There are also many other shortcuts waiting for you to find if you like to toss and turn~
+
+## Why do this
+
+- I have tried many note-taking applications before, such as WizNote, Ulysses, Quiver, MWeb, Bear, Typora, for various reasons, I did not find a conventional Markdown application, so I had the idea of doing MiaoYan.
+- My job is front-end development, but also can develop iOS App, love to toss new things, so develop MiaoYan as a fun leisure.
 
 ## Support
 
