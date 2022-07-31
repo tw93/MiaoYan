@@ -28,11 +28,6 @@
 - 🏌🏽‍♂️ **快**：使用 Swift5 原生开发，相比 Web 套壳方式性能体验好
 - 🩴 **简**：很轻巧，纯编辑器输入体验，众多快捷键助你快人一步
 
-## 为什么要做妙言
-
-- 之前有尝试过众多的笔记应用，大学时期为知笔记、印象笔记，工作时候用过 Ulysses、Quiver、MWeb、Bear、Typora，种种原因，没有找到一个习惯的 Markdown 应用，才有了做妙言的想法。
-- 本职工作为前端开发，会一点 iOS 开发，喜欢折腾，借妙言来玩一下 Swift 以及 macOS 开发，当做一个很愉快的事情。
-
 ## 首次使用
 
 1. 从 <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a> 中下载最新的 MiaoYan.dmg 安装包，双击安装即可，如安装出现问题请参考 [文档](https://zhuanlan.zhihu.com/p/52389383)。
@@ -73,6 +68,11 @@
 2. 执行 `command + option + p` 可以启动妙言 PPT 预览，同时你也可以选中文档点击右键，选择 `妙言 PPT` 打开。
 3. 只有在有 `---` 分隔符标志的文档中，才可启用 PPT 模式，演示过程中你可以 `回车键` 预览演讲大纲，`ESC` 键可退出 PPT 模式。
 4. 你可以使用 HTML 来自定义效果，更多复杂的用法可以参考 [Reveal](https://revealjs.com/markdown/) 文档。
+
+## 为什么要做妙言
+
+- 之前有尝试过众多的笔记应用，大学时期为知笔记、印象笔记，工作时候用过 Ulysses、Quiver、MWeb、Bear、Typora，种种原因，没有找到一个习惯的 Markdown 应用，才有了做妙言的想法。
+- 本职工作为前端开发，会一点 iOS 开发，喜欢折腾，借妙言来玩一下 Swift 以及 macOS 开发，当做一个很愉快的事情。
 
 ## 支持
 
