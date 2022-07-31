@@ -261,7 +261,6 @@ class ViewController: NSViewController,
     func refreshMiaoYanNum() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
             let messageText = NSLocalizedString("%d MiaoYan", comment: "")
-
             self.miaoYanText.stringValue = String(format: messageText, self.notesTableView.noteList.count)
         }
     }
@@ -309,13 +308,13 @@ class ViewController: NSViewController,
         setDividerHidden(hidden: size == 0)
         refreshMiaoYanNum()
         if UserDefaultsManagement.isSingleMode {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.04) {
+            DispatchQueue.main.async {
                 self.hideSidebar("")
                 self.toastInSingleMode()
             }
         } else {
             if size == 0 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                DispatchQueue.main.async {
                     self.showNoteList("")
                 }
             }
@@ -905,7 +904,7 @@ class ViewController: NSViewController,
         if event.keyCode == kVK_ANSI_F, event.modifierFlags.contains(.command), !event.modifierFlags.contains(.control) {
             if notesTableView.getSelectedNote() != nil {
                 disablePreview()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                DispatchQueue.main.async {
                     self.titleLabel.saveTitle()
                 }
                 focusSearchInput()
@@ -1022,7 +1021,7 @@ class ViewController: NSViewController,
                 let urls = panel.urls
                 UserDefaultsManagement.singleModePath = urls[0].path
                 UserDefaultsManagement.isSingleMode = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                DispatchQueue.main.async {
                     self.restart()
                 }
             }
@@ -1895,7 +1894,7 @@ class ViewController: NSViewController,
             self.notesTableView.selectRowIndexes([index], byExtendingSelection: true)
             self.notesTableView.scrollRowToVisible(index)
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+        DispatchQueue.main.async {
             self.search.becomeFirstResponder()
         }
     }
@@ -1993,7 +1992,7 @@ class ViewController: NSViewController,
         search.stringValue.removeAll()
         vc.titleLabel.isEditable = true
         emptyEditAreaView.isHidden = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+        DispatchQueue.main.async {
             vc.titleLabel.editModeOn()
         }
         updateTable {
