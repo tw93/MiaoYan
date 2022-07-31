@@ -164,7 +164,7 @@ public enum UserDefaultsManagement {
             if let dl = UserDefaults.standard.object(forKey: Constants.EditorLineBreak) as? String {
                 return dl
             }
-            return "Default"
+            return "MiaoYan"
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.EditorLineBreak)

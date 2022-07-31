@@ -121,6 +121,55 @@
       }
     </script>
 
+
+    <script>
+        var addCheckboxEvent = function(element) {
+            if (element.parentNode.nodeName == 'LI') {
+                element.parentNode.classList.remove('strike');
+            }
+
+            let id = element.dataset.checkbox;
+            window.webkit.messageHandlers.checkbox.postMessage(id);
+
+            let input = document.createElement("input");
+            input.type = "checkbox";
+            input.dataset.checkbox = id;
+
+            if (!element.hasAttribute('checked')) {
+                input.defaultChecked = true;
+
+                if (element.parentNode.nodeName == 'LI') {
+                    element.parentNode.classList.add('strike');
+                }
+            }
+
+            element.parentNode.replaceChild(input, element);
+
+            input.addEventListener("click", function(event) {
+                addCheckboxEvent(input);
+            });
+        };
+
+        var inputs = document.querySelectorAll('input[type=checkbox]'),
+            length = inputs.length,
+            i = 0;
+
+        for (i; i < length; i++) {
+            if (inputs[i].parentNode.nodeName == "LI" && inputs[i].hasAttribute('checked')) {
+                inputs[i].parentNode.classList.add("strike");
+            }
+
+            inputs[i].disabled = false
+            inputs[i].dataset.checkbox = i;
+
+            inputs[i].addEventListener("click", function(event) {
+                let element = event.target;
+                addCheckboxEvent(element);
+            });
+        }
+
+    </script>
+
     <script>
       var config = {
         startOnLoad: true,

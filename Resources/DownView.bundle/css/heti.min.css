@@ -234,14 +234,15 @@ img {
   object-fit: cover;
 }
 
-pre, iframe {
+pre,
+iframe {
   max-width: 100%;
 }
 
 #write {
   margin: 0;
   max-width: 900px;
-  padding: 1px 28px 80px;
+  padding: 0 28px 80px;
 }
 
 a,
@@ -252,7 +253,7 @@ a,
   font-weight: 400;
   -webkit-font-smoothing: subpixel-antialiased;
   line-height: 1.74;
-  letter-spacing: 0.045em;
+  letter-spacing: 0.04em;
   overflow-wrap: break-word;
   word-wrap: break-word;
   hyphens: auto;
@@ -265,11 +266,32 @@ a,
 .heti::after {
   clear: both;
 }
+
 .heti > *:first-child,
 .heti section > *:first-child,
 .heti td > *:first-child {
   margin-block-start: 0 !important;
 }
+
+.heti > h1:first-child,
+.heti > h2:first-child,
+.heti > h3:first-child,
+.heti > h4:first-child,
+.heti > h5:first-child,
+.heti > h6:first-child {
+  margin-block-start: 10px !important;
+}
+
+.heti > ol:first-child {
+  margin-block-start: 5px !important;
+  padding-inline-start: calc(12px + 1em);
+}
+
+.heti > ul:first-child {
+  margin-block-start: 5px !important;
+  padding-inline-start: 20px;
+}
+
 .heti > *:last-child,
 .heti section > *:last-child,
 .heti td > *:last-child {
@@ -294,7 +316,7 @@ a,
   margin-inline-end: auto;
   border: 0;
   margin-bottom: -12px;
-  background-color: #E6E6E6;
+  background-color: #e6e6e6;
 }
 @media (prefers-color-scheme: dark) {
   .heti hr {
@@ -330,7 +352,9 @@ a,
 }
 
 .heti blockquote p {
-  margin-block-end: 12px;
+  margin-block-end: 6px;
+  margin-block-start: 6px;
+  line-height: 1.74;
 }
 
 blockquote blockquote {
@@ -403,18 +427,22 @@ blockquote blockquote {
 }
 .heti h3 {
   font-size: 1.25em;
+  margin-block-start: 8px;
   margin-block-end: 8px;
 }
 .heti h4 {
   font-size: 1em;
+  margin-block-start: 8px;
   margin-block-end: 8px;
 }
 .heti h5 {
   font-size: 1em;
+  margin-block-start: 8px;
   margin-block-end: 8px;
 }
 .heti h6 {
   font-size: 1em;
+  margin-block-start: 8px;
   margin-block-end: 8px;
 }
 .heti h1,
@@ -489,7 +517,8 @@ blockquote blockquote {
   word-break: break-word;
 }
 
-.heti p > code,.heti li > code {
+.heti p > code,
+.heti li > code {
   background-color: #eef1f2;
   padding: 2px;
   border-radius: 4px;
@@ -499,9 +528,10 @@ blockquote blockquote {
   .heti table {
     border-color: #404040;
   }
-  .heti p > code,.heti li > code {
+  .heti p > code,
+  .heti li > code {
     background-color: #343941;
-    color: #E8E8EB;
+    color: #e8e8eb;
   }
 }
 .heti table {
@@ -555,7 +585,7 @@ blockquote blockquote {
   font-size: 1em;
   font-family: var(--text-font);
 }
-.heti pre code{
+.heti pre code {
   font-family: var(--code-text-font);
 }
 .heti dfn {
@@ -1021,6 +1051,21 @@ blockquote blockquote {
 .heti ul.cb {
   list-style-type: none;
   padding-inline-start: 12px;
+}
+.heti ul.cb ul.cb {
+  padding-inline-start: 24px;
+}
+
+.heti ul.cb input[type='checkbox'] {
+  position: relative;
+}
+.heti ul.cb input[type='checkbox']::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  bottom: -6px;
+  left: -6px;
+  right: -6px;
 }
 .hljs {
   background: #f8f8f8;

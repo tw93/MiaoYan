@@ -76,8 +76,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
             } else {
                 scrollRowToVisible(row)
             }
-
-
         } else {
             scrollRowToVisible(row)
         }
