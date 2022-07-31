@@ -1032,8 +1032,7 @@ public class NotesTextProcessor {
     fileprivate static let todoInlinePattern = "(^(-\\ \\[(?:\\ |x)\\])\\ )"
 
     public static let todoInlineRegex = MarklightRegex(pattern: todoInlinePattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
-    
-    
+
     fileprivate static let allTodoInlinePattern = "((-\\ \\[(?:\\ |x)\\])\\ )"
 
     public static let allTodoInlineRegex = MarklightRegex(pattern: allTodoInlinePattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
@@ -1352,6 +1351,7 @@ public class NotesTextProcessor {
                             attributedString.addAttribute(NoteAttribute.highlight, value: true, range: subRange)
                         }
                         attributedString.addAttribute(NSAttributedString.Key.backgroundColor, value: titleColor, range: subRange)
+                        attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: subRange)
                     }
                 }
             )
