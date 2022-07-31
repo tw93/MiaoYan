@@ -23,8 +23,7 @@
 
 ## Install
 
-- Way1: Download the latest `MiaoYan.dmg` installation package from <a href="https://github.com/tw93/MiaoYan/releases/latest" target="_blank">GitHub Releases</a> and double-click to install it.
-- Way2: Install with brew ```brew install miaoyan --cask```.
+Download the latest `MiaoYan.dmg` installation package from <a href="https://github.com/tw93/MiaoYan/releases/latest" target="_blank">GitHub Releases</a> and double-click to install it.
 
 ## First Use
 
