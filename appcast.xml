@@ -6,14 +6,14 @@
       <title>1.1.1</title>
       <description><![CDATA[
        <h3>好用一些 🎉：</h3>
-        🐶 较 1.1.0 版本，修复了 PPT 导出的闪动、预览体验优化、支持 TodoList 的使用<br/>
+        🐶 较 V1.1.0，修复了 PPT 导出时闪动、预览效果优化、支持 TodoList 使用<br/>
         🎉 支持更简洁的妙言，你可以在设置中设置 Hover 才显示按钮<br/>
         🍭 支持嵌入各类有趣的东西，codepen、codeSandbox、youtube 等等<br/>
         🩴 妙言 PPT 结合真实使用场景优化了很多，同时支持导出 PPT 的 PDF<br/>
         🙊 解决预览时标题可能会闪一下、解决复杂 LaTeX 输入，可用 span 标签包裹、优化输入 Emoji 的体验<br/>
         😂 TouchBar 菜单栏没啥用干掉了，整体框架视觉继续优化，标题处有间距调整<br/>
         <h3>Easy to use 🎉：</h3>
-        🐶 Compared with Version 1.1.0, it fixes the flicker of PPT export, the optimization of preview experience, and supports the use of todolist.<br/>
+        🐶 Compared with V1.1.0, Fixes the flicker of PPT export, Optimization of preview experience, Supports the use of todolist.<br/>
         🎉 Support more simple about MiaoYan. You can use Hover button in the setting.<br/>
         🍭 Support embedding all kinds of interesting things, codepen/codeSandbox/youtube etc.<br/>
         🩴 Miaoyan ppt optimizes a lot in combination with real use scenarios, and supports PDF export of PPT.<br/>
