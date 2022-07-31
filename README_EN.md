@@ -28,21 +28,12 @@
 - 🏌🏽‍♂️ **Fast**: Using Swift5 native development, the performance experience is much better compared to the Web.
 - 🩴 **Simple**: Very light, pure editor input experience, many shortcut keys to help you fast.
 
-## Why do this
-
-- I have tried many note-taking applications before, such as WizNote, Ulysses, Quiver, MWeb, Bear, Typora, for various reasons, I did not find a conventional Markdown application, so I had the idea of doing MiaoYan.
-- My job is front-end development, but also can develop iOS App, love to toss new things, so develop MiaoYan as a fun leisure.
-
-## Install
-
-- Way1: Download the latest `MiaoYan.dmg` installation package from <a href="https://github.com/tw93/MiaoYan/releases/latest" target="_blank">GitHub Releases</a> and double-click to install it.
-- Way2: Install with brew ```brew install miaoyan --cask```.
-
 ## First Use
 
-1. You can create a `MiaoYan` folder in iCloud or the root directory, open MiaoYan's Settings, and change the default storage address to this.
-2. Click icon of the new folder in the upper left corner of MiaoYan, create your own document category folder, and you can start using it.
-3. Similarly, if you are not used to the default font, you can change it to other normal fonts in the settings.
+1. **Download** the latest `MiaoYan.dmg` installation package from <a href="https://github.com/tw93/MiaoYan/releases/latest" target="_blank">GitHub Releases</a> and double-click to install it.
+2. You can create a `MiaoYan` folder in iCloud or the root directory, open MiaoYan's Settings, and change the default storage address to this.
+3. Click icon of the new folder in the upper left corner of MiaoYan, create your own document category folder, and you can start using it.
+4. Similarly, if you are not used to the default font, you can change it to other normal fonts in the settings.
 
 ## Shortcut Keys
 
@@ -78,12 +69,15 @@
 3. PPT mode can be enabled only in documents marked with `---` separator. During the presentation, You can preview the outline of the speech with `Enter` Key and exit ppt mode with `ESC` Key.
 4. You can use HTML to customize the effect. For more complex usage, Please refer to [reveal](https://revealjs.com/markdown/) Documentation.
 
+## Why do this
+
+- I have tried many note-taking applications before, such as WizNote, Ulysses, Quiver, MWeb, Bear, Typora, for various reasons, I did not find a conventional Markdown application, so I had the idea of doing MiaoYan.
+- My job is front-end development, but also can develop iOS App, love to toss new things, so develop MiaoYan as a fun leisure.
+
 ## Support
 
 - I have two cats, one is called TangYuan, and one is called Coke, If you think MiaoYan makes your life better, you can give my cats <a href="https://miaoyan.app/cats.html" target="_blank">feed canned food 🥩🍤</a>.
 - If you like MiaoYan, you can star it in Github. We are more welcome to [recommend MiaoYan](https://twitter.com/intent/tweet?text=%23%E5%A6%99%E8%A8%80%20MiaoYan%20-%20a%20simple%20and%20good-looking%20open-source%20mac%20markdown%20editor,%20without%20any%20redundant%20functions,%20is%20developed%20using%20swift,%20pure%20local%20use,%20has%20functions%20such%20as%20syntax%20highlighting,%20automatic%20formatting,%20presentation%20mode%20etc.&url=https://github.com/tw93/MiaoYan&via=HiTw93) to your like-minded friends.
-
-
 
 ## Thanks
 
