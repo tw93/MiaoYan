@@ -91,7 +91,7 @@
 
     <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img
         src=https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg
-        width="180px"/></a>
+        width="150px"/></a>
 
 # License
 
