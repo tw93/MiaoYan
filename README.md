@@ -81,13 +81,17 @@
 
 ## 感谢
 
-- 感谢 <a href="https://vercel.com?utm_source=miaoyan&utm_campaign=oss"><a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img src="https://gw.alipayobjects.com/zos/k/app/vercel-logotype-dark.jpg" height="13px"></a> 给妙言 [官网](https://miaoyan.app/) 提供静态渲染能力
 - <a href="https://github.com/KristopherGBaker/libcmark_gfm" target="_blank">KristopherGBaker/libcmark_gfm</a>：适用于 cmark-gfm 的 Swift 兼容框架
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>：语法高亮能力
 - <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>：妙言有部分初始化代码来源于此
 - <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>：一款漂亮的开源中文字体，妙言将其作为默认字体
 - <a href="https://github.com/sivan/heti" target="_blank">sivan/heti</a>：专为中文内容展示设计的排版样式增强
 - <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>：妙言 PPT 底层渲染依赖此框架
+- 感谢 Vercel 给妙言 [官网](https://miaoyan.app/) 提供静态渲染能力
+    <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"
+        ><img
+        src=https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg
+        class="h-8 inline-block"/></a>
 
 # 协议
 

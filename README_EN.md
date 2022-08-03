@@ -81,13 +81,17 @@
 
 ## Thanks
 
-- Thanks to <a href="https://vercel.com?utm_source=miaoyan&utm_campaign=oss"><a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img src="https://gw.alipayobjects.com/zos/k/app/vercel-logotype-dark.jpg" height="13px"></a>  for providing static rendering capability to [MiaoYan](https://miaoyan.app/). <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss">
 - <a href="https://github.com/KristopherGBaker/libcmark_gfm" target="_blank">KristopherGBaker/libcmark_gfm</a>: Swift Compatible framework for cmark-gfm.
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>: Syntax highlighting capability.
 - <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: MiaoYan has part of the framework code from this project.
 - <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>: A beautiful open source chinese font, MiaoYan has made it the default font.
 - <a href="https://github.com/sivan/heti" target="_blank">sivan/heti</a>：Enhanced typography for Chinese content presentation.
 - <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>：An open source HTML presentation framework.
+- Thanks to Vercel for providing static rendering capability to [MiaoYan](https://miaoyan.app/).
+    <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"
+        ><img
+        src=https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg
+        class="h-8 inline-block"/></a>
 
 # License
 
