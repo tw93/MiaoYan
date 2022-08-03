@@ -435,7 +435,7 @@ class ViewController: NSViewController,
     }
 
     private func configureEditor() {
-        editArea.usesFindBar = false
+        editArea.usesFindBar = true
         editArea.isIncrementalSearchingEnabled = true
         editArea.isAutomaticLinkDetectionEnabled = false
         editArea.isAutomaticQuoteSubstitutionEnabled = false
@@ -901,16 +901,24 @@ class ViewController: NSViewController,
             return true
         }
 
-        // Search cmd-f
-        if event.keyCode == kVK_ANSI_F, event.modifierFlags.contains(.command), !event.modifierFlags.contains(.control) {
+        // 文章搜索
+        if event.keyCode == kVK_ANSI_F, event.modifierFlags.contains(.shift), event.modifierFlags.contains(.command),!event.modifierFlags.contains(.control), editArea.hasFocus()
+        {
             if notesTableView.getSelectedNote() != nil {
                 disablePreview()
+                return true
+            }
+        }
+
+        if event.keyCode == kVK_ANSI_F, event.modifierFlags.contains(.command),!event.modifierFlags.contains(.control)
+        {
+            if notesTableView.getSelectedNote() != nil {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                     self.titleLabel.saveTitle()
                 }
-                focusSearchInput()
-                return true
+                disablePreview()
             }
+            return true
         }
 
         // Pin note shortcut (cmd+shift+p)
@@ -1168,7 +1176,7 @@ class ViewController: NSViewController,
             return
         }
 
-        if vc.titleLabel.hasFocus() || vc.editArea.hasFocus() || vc.search.hasFocus() || UserDefaultsManagement.magicPPT || UserDefaultsManagement.presentation {
+        if vc.titleLabel.hasFocus() || vc.editArea.hasFocus() || vc.search.hasFocus() || UserDefaultsManagement.magicPPT || UserDefaultsManagement.presentation || vc.editAreaScroll.isFindBarVisible {
             return
         }
 
