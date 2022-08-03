@@ -72,7 +72,6 @@ extension NSTextStorage: NSTextStorageDelegate {
             return
         }
 
-        let codeTextProcessor = CodeTextProcessor(textStorage: textStorage)
         let parRange = textStorage.mutableString.paragraphRange(for: editedRange)
 
         if let fencedRange = NotesTextProcessor.getFencedCodeBlockRange(paragraphRange: parRange, string: textStorage) {
@@ -86,8 +85,6 @@ extension NSTextStorage: NSTextStorageDelegate {
                 textStorage.removeAttribute(.backgroundColor, range: NSRange(location: fencedRange.upperBound, length: 1))
             }
 
-        } else if let codeBlockRanges = codeTextProcessor.getCodeBlockRanges(), let intersectedRange = codeTextProcessor.getIntersectedRange(range: parRange, ranges: codeBlockRanges) {
-            highlight(textStorage: textStorage, indentedRange: codeBlockRanges, intersectedRange: intersectedRange, editedRange: editedRange)
         } else {
             highlightParagraph(textStorage: textStorage, editedRange: editedRange)
         }
@@ -155,17 +152,12 @@ extension NSTextStorage: NSTextStorageDelegate {
 
     private func highlightMultiline(textStorage: NSTextStorage, editedRange: NSRange) {
         let parRange = textStorage.mutableString.paragraphRange(for: editedRange)
-        let codeTextProcessor = CodeTextProcessor(textStorage: textStorage)
 
         if let fencedRange = NotesTextProcessor.getFencedCodeBlockRange(paragraphRange: parRange, string: textStorage) {
             let code = textStorage.mutableString.substring(with: fencedRange)
             let language = NotesTextProcessor.getLanguage(code)
             NotesTextProcessor.highlightCode(attributedString: textStorage, range: parRange, language: language)
             textStorage.addAttribute(.backgroundColor, value: NotesTextProcessor.codeBackground, range: parRange)
-        } else if let codeBlockRanges = codeTextProcessor.getCodeBlockRanges(),
-                  let intersectedRange = codeTextProcessor.getIntersectedRange(range: parRange, ranges: codeBlockRanges) {
-            let checkRange = intersectedRange.length > 1000 ? editedRange : intersectedRange
-            NotesTextProcessor.highlightCode(attributedString: textStorage, range: checkRange)
         } else {
             guard let note = EditTextView.note else { return }
             NotesTextProcessor.highlightMarkdown(attributedString: textStorage, paragraphRange: parRange, note: note)
