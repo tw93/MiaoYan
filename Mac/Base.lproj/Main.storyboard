@@ -337,7 +337,7 @@ CA
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Find" identifier="findMenu" id="1b7-l0-nxx">
                                                 <items>
-                                                    <menuItem title="Find…" tag="1" keyEquivalent="f" identifier="findMenu.find" id="Xz5-n4-O0W">
+                                                    <menuItem title="Find…" tag="1" keyEquivalent="F" identifier="findMenu.find" id="Xz5-n4-O0W">
                                                         <connections>
                                                             <action selector="textFinder:" target="L4m-js-agn" id="mFD-Ug-i7L"/>
                                                         </connections>

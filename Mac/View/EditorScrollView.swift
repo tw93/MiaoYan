@@ -19,13 +19,12 @@ class EditorScrollView: NSScrollView {
             super.isFindBarVisible = newValue
         }
         get {
-            return super.isFindBarVisible
+            super.isFindBarVisible
         }
     }
 
-
     override func findBarViewDidChangeHeight() {
-       if #available(OSX 10.14, *) {
+        if #available(OSX 10.14, *) {
             guard let currentHeight = findBarView?.frame.height else { return }
 
             guard let initialHeight = self.initialHeight else {
