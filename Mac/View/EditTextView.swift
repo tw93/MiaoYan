@@ -43,7 +43,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             newRect.size.height = newRect.size.height - 4.0
             newRect.origin.y = newRect.origin.y + 4.0
         }
-       
+
         super.drawInsertionPoint(in: newRect, color: EditTextView.fontColor, turnedOn: flag)
     }
 
@@ -1154,7 +1154,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         touchBar.defaultItemIdentifiers = []
         return touchBar
     }
-    
+
     override func menu(for event: NSEvent) -> NSMenu? {
         let menu = super.menu(for: event)
 
