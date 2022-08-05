@@ -309,13 +309,13 @@ class ViewController: NSViewController,
         setDividerHidden(hidden: size == 0)
         refreshMiaoYanNum()
         if UserDefaultsManagement.isSingleMode {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.04) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.hideSidebar("")
                 self.toastInSingleMode()
             }
         } else {
             if size == 0 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     self.showNoteList("")
                 }
             }
@@ -967,10 +967,10 @@ class ViewController: NSViewController,
         if UserDefaultsManagement.isSingleMode {
             UserDefaultsManagement.isSingleMode = false
             UserDefaultsManagement.singleModePath = ""
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            DispatchQueue.main.async {
                 self.showSidebar("")
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.16) {
                 NSApplication.shared.terminate(self)
             }
         } else {
