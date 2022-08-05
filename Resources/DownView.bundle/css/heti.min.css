@@ -1061,7 +1061,7 @@ blockquote blockquote {
   font-size: 1rem;
   width: 1rem;
   height: 1rem;
-  top: 0.13rem;
+  top: 0.1rem;
   cursor: pointer;
 }
 .heti ul.cb input[type='checkbox']::before {
