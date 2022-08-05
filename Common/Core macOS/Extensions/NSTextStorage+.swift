@@ -41,8 +41,7 @@ public extension NSTextStorage {
     func sizeAttachmentImages() {
         enumerateAttribute(.attachment, in: NSRange(location: 0, length: self.length)) { value, range, _ in
             if let attachment = value as? NSTextAttachment,
-               attribute(.todo, at: range.location, effectiveRange: nil) == nil
-            {
+               attribute(.todo, at: range.location, effectiveRange: nil) == nil {
                 if let imageData = attachment.fileWrapper?.regularFileContents, var image = NSImage(data: imageData) {
                     if let rep = image.representations.first {
                         var maxWidth = UserDefaultsManagement.imagesWidth
