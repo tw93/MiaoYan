@@ -73,7 +73,7 @@ class NoteAttachment {
         ] as [NSAttributedString.Key: Any]
 
         mutableAttributedString.addAttributes(attributes, range: NSRange(0..<1))
-
+        
         return mutableAttributedString
     }
 

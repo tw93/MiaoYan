@@ -32,6 +32,7 @@ public extension NSTextStorage {
         mutableString.enumerateSubstrings(in: NSRange(0..<length), options: .byParagraphs) { _, range, _, _ in
             let rangeNewline = range.upperBound == self.length ? range : NSRange(range.location..<range.upperBound + 1)
             self.addAttribute(.paragraphStyle, value: attachmentParagraph, range: rangeNewline)
+            self.addAttribute(.kern, value: UserDefaultsManagement.DefaultEditorLetterSpacing, range: rangeNewline)
         }
 
         endEditing()
@@ -40,7 +41,8 @@ public extension NSTextStorage {
     func sizeAttachmentImages() {
         enumerateAttribute(.attachment, in: NSRange(location: 0, length: self.length)) { value, range, _ in
             if let attachment = value as? NSTextAttachment,
-               attribute(.todo, at: range.location, effectiveRange: nil) == nil {
+               attribute(.todo, at: range.location, effectiveRange: nil) == nil
+            {
                 if let imageData = attachment.fileWrapper?.regularFileContents, var image = NSImage(data: imageData) {
                     if let rep = image.representations.first {
                         var maxWidth = UserDefaultsManagement.imagesWidth
