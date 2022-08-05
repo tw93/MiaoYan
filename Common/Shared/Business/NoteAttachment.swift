@@ -1,5 +1,5 @@
-import Foundation
 import AVKit
+import Foundation
 
 #if os(OSX)
     import Cocoa
@@ -23,7 +23,7 @@ class NoteAttachment {
         self.title = title
         self.url = url
         self.path = path
-        self.cacheDir = cache
+        cacheDir = cache
         self.invalidateRange = invalidateRange
         self.note = note
 
@@ -31,7 +31,7 @@ class NoteAttachment {
             let imageName = url.removingFragment().absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
 
             if let directory = cache,
-                let imageName = imageName {
+               let imageName = imageName {
                 imageCache = directory.appendingPathComponent(imageName)
             }
         }
@@ -46,13 +46,13 @@ class NoteAttachment {
 
         if let dst = imageCache {
             if FileManager.default.fileExists(atPath: dst.path) {
-                self.url = dst
+                url = dst
             } else {
                 shouldWriteCache = true
             }
         }
 
-        guard FileManager.default.fileExists(atPath: self.url.path) else { return nil }
+        guard FileManager.default.fileExists(atPath: url.path) else { return nil }
         guard let attachment = load(lazy: lazy) else { return nil }
 
         let attributedString = NSAttributedString(attachment: attachment)
@@ -64,16 +64,16 @@ class NoteAttachment {
         paragraphStyle.lineHeightMultiple = CGFloat(UserDefaultsManagement.editorLineHeight)
 
         let attributes = [
-            titleKey: self.title,
-            pathKey: self.path,
-            imageKey: self.url,
-            .link: self.url,
+            titleKey: title,
+            pathKey: path,
+            imageKey: url,
+            .link: url,
             .attachment: attachment,
             .paragraphStyle: paragraphStyle
         ] as [NSAttributedString.Key: Any]
 
-        mutableAttributedString.addAttributes(attributes, range: NSRange(0..<1))
-        
+        mutableAttributedString.addAttributes(attributes, range: NSRange(0 ..< 1))
+
         return mutableAttributedString
     }
 
@@ -83,8 +83,8 @@ class NoteAttachment {
         do {
             var isDirectory = ObjCBool(true)
 
-            if let cacheDir = self.cacheDir,
-                !FileManager.default.fileExists(atPath: cacheDir.path, isDirectory: &isDirectory) || !isDirectory.boolValue {
+            if let cacheDir = cacheDir,
+               !FileManager.default.fileExists(atPath: cacheDir.path, isDirectory: &isDirectory) || !isDirectory.boolValue {
                 try FileManager.default.createDirectory(at: cacheDir, withIntermediateDirectories: false, attributes: nil)
             }
 
@@ -115,7 +115,7 @@ class NoteAttachment {
             height = imageProperties?[kCGImagePropertyPixelHeight] as? Int ?? 0
             orientation = imageProperties?[kCGImagePropertyOrientation] as? Int ?? 0
 
-            if case 5...8 = orientation {
+            if case 5 ... 8 = orientation {
                 height = imageProperties?[kCGImagePropertyPixelWidth] as? Int ?? 0
                 width = imageProperties?[kCGImagePropertyPixelHeight] as? Int ?? 0
             }
@@ -129,7 +129,6 @@ class NoteAttachment {
         temporary.appendPathComponent(prefix)
 
         if let filePath = url.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) {
-
             return temporary.appendingPathComponent(filePath)
         }
 
@@ -144,7 +143,7 @@ class NoteAttachment {
             try? FileManager.default.createDirectory(at: temporary, withIntermediateDirectories: true, attributes: nil)
         }
 
-        if let url = self.getCacheUrl(from: url, prefix: prefix) {
+        if let url = getCacheUrl(from: url, prefix: prefix) {
             if let data = image.jpgData {
                 try? data.write(to: url)
             }
