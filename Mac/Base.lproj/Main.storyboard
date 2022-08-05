@@ -342,8 +342,7 @@ CA
                                                             <action selector="textFinder:" target="L4m-js-agn" id="mFD-Ug-i7L"/>
                                                         </connections>
                                                     </menuItem>
-                                                    <menuItem title="Find and Replace…" tag="12" keyEquivalent="f" identifier="findMenu.findAndReplace" id="YEy-JH-Tfz">
-                                                        <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                                    <menuItem title="Find and Replace…" tag="12" keyEquivalent="R" identifier="findMenu.findAndReplace" id="YEy-JH-Tfz">
                                                         <connections>
                                                             <action selector="textFinder:" target="L4m-js-agn" id="Poh-Ps-jaI"/>
                                                         </connections>
