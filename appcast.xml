@@ -6,8 +6,8 @@
       <title>1.2.0</title>
       <description><![CDATA[
        <h3>内在美 🍒：</h3>
-        🎉 你会发现编辑器的文字更舒服一些了，细调文字间距<br/>
-        🍭 支持文章内部的搜索和替换，快捷键为 command+shift+f 和 command+shift+r <br/>
+        🎉 你会发现编辑器的文字更舒服一些了，细调了下文字间距<br/>
+        🍭 支持文章内容的搜索替换，快捷键 command+shift+f 和 command+shift+r <br/>
         🩴 修复了几个容易 Crash 的点，顺便减少了下包体系到 23M <br/>
         <h3>Inner Beauty 🍒：</h3>
         🎉 You will find that text of editor is more comfortable, optimize text spacing.<br/>
