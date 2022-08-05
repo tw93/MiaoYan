@@ -25,6 +25,7 @@ public enum UserDefaultsManagement {
 
     static var DefaultEditorLineSpacing = 3.0
     static var DefaultEditorLineHeight = 1.3
+    static var DefaultEditorLetterSpacing = 0.66
 
     static var HackEditorLineSpacing = 2.4
     static var HackEditorLineHeight = 1.18
