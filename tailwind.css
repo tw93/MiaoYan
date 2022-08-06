@@ -87,10 +87,10 @@ body {
   content: 'MiaoYan';
 }
 
-.i18n-cats-decs:before {
+.i18n-cats-desc:before {
   content: '喜欢妙言？可以给我家「汤圆 & 可乐」买 🥩🍤 罐头吃！';
 }
-[lang='en'] .i18n-cats-decs:before {
+[lang='en'] .i18n-cats-desc:before {
   content: 'Like MiaoYan? Buy 🥩🍤 cans for my「TangYuan & Coke」.';
 }
 
@@ -124,10 +124,10 @@ body {
 [lang='en'] .i18n-miao:before {
   content: 'Fantastic';
 }
-.i18n-miao-decs:before {
+.i18n-miao-desc:before {
   content: '1. 纯本地使用，无需联网即可使用，源文件保存\a 2. 安全，完全开源 Github，不会上传用户信息\a 3. 支持语法高亮、黑暗模式、国际化、演示模式、单独编辑模式、PPT 模式、导出文件、内部跳转、自动排版、图床、LaTeX、Mermaid、PlantUML';
 }
-[lang='en'] .i18n-miao-decs:before {
+[lang='en'] .i18n-miao-desc:before {
   content: '1. Purely local, no internet access required, source files saved.\a 2. Secure, fully open source Github, no user information uploaded.\a 3. Supports syntax highlighting, dark mode, internationalization, presentation mode, PPT mode, single edit mode, export file, internal jump, document auto typesetting, picture upload, laTeX, mermaid, plantUML.';
 }
 
@@ -143,10 +143,10 @@ body {
 [lang='en'] .i18n-mei:before {
   content: 'Beauty';
 }
-.i18n-mei-decs:before {
+.i18n-mei-desc:before {
   content: '1. 极简的设计风格，没有多余的东西\a 2. 文件夹 + 文件列表 + 编辑器三栏设计，可收起\a 3. 中文默认使用霞鹜文楷字体，让文字也很美';
 }
-[lang='en'] .i18n-mei-decs:before {
+[lang='en'] .i18n-mei-desc:before {
   content: '1. Minimalist design style, no unnecessary stuff.\a 2. Folder + Note list + Editor three-column design, can be tucked away.\a 3. Chinese default use LxgwWenKai font, make the text is also beautiful.';
 }
 
@@ -156,10 +156,10 @@ body {
 [lang='en'] .i18n-kuai:before {
   content: 'Fast';
 }
-.i18n-kuai-decs:before {
+.i18n-kuai-desc:before {
   content: '1. 使用 Swift5 开发，原生极致性能\a 2. 对多文件做了特别的性能优化，确保不卡顿\a 3. 相比当前市面上套壳 Web 的方式轻巧很多';
 }
-[lang='en'] .i18n-kuai-decs:before {
+[lang='en'] .i18n-kuai-desc:before {
   content: '1. Developed in Swift5 for the ultimate in native performance.\a 2. Specially optimized for multi-file performance to ensure no lag.\a 3. Much lighter than any electron app on the market.';
 }
 
@@ -169,10 +169,10 @@ body {
 [lang='en'] .i18n-jian:before {
   content: 'Simple';
 }
-.i18n-jian-decs:before {
+.i18n-jian-desc:before {
   content: '1. 操作过程很轻巧，不耽误你的时间\a 2. 编辑体验媲美原生代码编辑器\a 3. 内置众多快捷键助你快人一步';
 }
-[lang='en'] .i18n-jian-decs:before {
+[lang='en'] .i18n-jian-desc:before {
   content: '1. The operation process is very light and does not delay your time.\a 2. Editing experience comparable to native code editor.\a 3. Many built-in shortcuts to help you get up to speed.';
 }
 
