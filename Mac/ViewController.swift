@@ -307,6 +307,9 @@ class ViewController:
         if UserDefaultsManagement.isSingleMode {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.hideSidebar("")
+            }
+            // hack for crash
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
                 self.toastInSingleMode()
             }
         } else {
