@@ -17,52 +17,52 @@
 @font-face {
   font-family: 'Heti Hei SC';
   src: local('PingFang SC Regular'), local('Heiti SC Regular'),
-    local('Microsoft YaHei'), local('Source Han Sans CN Regular'),
-    local('Noto Sans CJK SC Regular'), local('WenQuanYi Micro Hei'),
-    local('Droid Sans Fallback');
+  local('Microsoft YaHei'), local('Source Han Sans CN Regular'),
+  local('Noto Sans CJK SC Regular'), local('WenQuanYi Micro Hei'),
+  local('Droid Sans Fallback');
 }
 
 @font-face {
   font-family: 'Heti Hei TC';
   src: local('PingFang TC Regular'), local('Heiti TC Regular'),
-    local('Microsoft Jhenghei'), local('Source Han Sans HK Regular'),
-    local('Source Han Sans TW Regular'), local('Noto Sans CJK TC Regular'),
-    local('WenQuanYi Micro Hei'), local('Droid Sans Fallback');
+  local('Microsoft Jhenghei'), local('Source Han Sans HK Regular'),
+  local('Source Han Sans TW Regular'), local('Noto Sans CJK TC Regular'),
+  local('WenQuanYi Micro Hei'), local('Droid Sans Fallback');
 }
 
 @font-face {
   font-family: 'Heti Hei JP';
   src: local('Hiragino Sans GB W3'), local('Source Han Sans JP Regular'),
-    local('Noto Sans CJK JP Regular'), local('Droid Sans Fallback');
+  local('Noto Sans CJK JP Regular'), local('Droid Sans Fallback');
 }
 
 @font-face {
   font-family: 'Heti Hei KR';
   src: local('Source Han Sans KR Regular'), local('Noto Sans CJK KR Regular'),
-    local('Droid Sans Fallback');
+  local('Droid Sans Fallback');
 }
 
 @font-face {
   font-family: 'Heti Hei';
   font-weight: 200;
   src: 'Heti Hei SC Light', 'Heti Hei TC Light', 'Heti Hei JP Light',
-    'Heti Hei KR Light';
+  'Heti Hei KR Light';
 }
 
 @font-face {
   font-family: 'Heti Hei SC Light';
   font-weight: 200;
   src: local('PingFang SC Light'), local('Heiti SC Light'),
-    'Heti Hei SC Light Fallback', local('Source Han Sans CN Light'),
-    local('Noto Sans CJK SC Light');
+  'Heti Hei SC Light Fallback', local('Source Han Sans CN Light'),
+  local('Noto Sans CJK SC Light');
 }
 
 @font-face {
   font-family: 'Heti Hei TC Light';
   font-weight: 200;
   src: local('PingFang TC Light'), local('Heiti TC Light'),
-    local('Microsoft Jhenghei Light'), local('Source Han Sans HK Light'),
-    local('Source Han Sans TW Light'), local('Noto Sans CJK TC Light');
+  local('Microsoft Jhenghei Light'), local('Source Han Sans HK Light'),
+  local('Source Han Sans TW Light'), local('Noto Sans CJK TC Light');
 }
 
 @font-face {
@@ -87,30 +87,30 @@
   font-family: 'Heti Hei';
   font-weight: 600;
   src: 'Heti Hei SC Bold', 'Heti Hei TC Bold', 'Heti Hei JP Bold',
-    'Heti Hei KR Bold';
+  'Heti Hei KR Bold';
 }
 
 @font-face {
   font-family: 'Heti Hei SC Bold';
   font-weight: 600;
   src: local('PingFang SC Medium'), local('Heiti SC Medium'),
-    'Heti Hei SC Bold Fallback', local('Source Han Sans CN Bold'),
-    local('Noto Sans CJK SC Bold');
+  'Heti Hei SC Bold Fallback', local('Source Han Sans CN Bold'),
+  local('Noto Sans CJK SC Bold');
 }
 
 @font-face {
   font-family: 'Heti Hei TC Bold';
   font-weight: 600;
   src: local('PingFang TC Medium'), local('Heiti TC Medium'),
-    local('Microsoft Jhenghei Bold'), local('Source Han Sans HK Bold'),
-    local('Source Han Sans TW Bold'), local('Noto Sans CJK TC Bold');
+  local('Microsoft Jhenghei Bold'), local('Source Han Sans HK Bold'),
+  local('Source Han Sans TW Bold'), local('Noto Sans CJK TC Bold');
 }
 
 @font-face {
   font-family: 'Heti Hei JP Bold';
   font-weight: 600;
   src: local('Hiragino Sans GB W6'), local('Source Han Sans JP Bold'),
-    local('Noto Sans CJK JP Bold');
+  local('Noto Sans CJK JP Bold');
 }
 
 @font-face {
@@ -129,31 +129,31 @@
   font-family: 'Heti Hei Black';
   font-weight: 800;
   src: 'Heti Hei SC Black', 'Heti Hei TC Black', 'Heti Hei JP Black',
-    'Heti Hei KR Black';
+  'Heti Hei KR Black';
 }
 
 @font-face {
   font-family: 'Heti Hei SC Black';
   font-weight: 800;
   src: local('Lantinghei SC Heavy'), local('PingFang SC Semibold'),
-    local('Heiti SC Medium'), 'Heti Hei SC Black Fallback',
-    local('Source Han Sans CN Heavy'), local('Noto Sans CJK SC Heavy');
+  local('Heiti SC Medium'), 'Heti Hei SC Black Fallback',
+  local('Source Han Sans CN Heavy'), local('Noto Sans CJK SC Heavy');
 }
 
 @font-face {
   font-family: 'Heti Hei TC Black';
   font-weight: 800;
   src: local('Lantinghei TC Heavy'), local('PingFang TC Semibold'),
-    local('Heiti TC Medium'), local('Microsoft Jhenghei Bold'),
-    local('Source Han Sans HK Heavy'), local('Source Han Sans TW Heavy'),
-    local('Noto Sans CJK TC Heavy');
+  local('Heiti TC Medium'), local('Microsoft Jhenghei Bold'),
+  local('Source Han Sans HK Heavy'), local('Source Han Sans TW Heavy'),
+  local('Noto Sans CJK TC Heavy');
 }
 
 @font-face {
   font-family: 'Heti Hei JP Black';
   font-weight: 800;
   src: local('Hiragino Sans GB W6'), local('Source Han Sans JP Heavy'),
-    local('Noto Sans CJK JP Heavy');
+  local('Noto Sans CJK JP Heavy');
 }
 
 @font-face {
@@ -177,7 +177,7 @@ font-face {
   font-family: 'Heti Song';
   font-weight: 200;
   src: local('Songti SC Light'), local('Songti TC Light'),
-    'Heti Song Light Fallback';
+  'Heti Song Light Fallback';
 }
 
 @font-face {
@@ -190,7 +190,7 @@ font-face {
   font-family: 'Heti Song';
   font-weight: 600;
   src: local('Songti SC Bold'), local('Songti TC Bold'),
-    'Heti Song Bold Fallback';
+  'Heti Song Bold Fallback';
 }
 
 @font-face {
@@ -208,7 +208,7 @@ font-face {
 @font-face {
   font-family: 'Georgia';
   src: local('charter'), local('Georgia'), local('Cambria'),
-    local('Times New Roman'), local('Times');
+  local('Times New Roman'), local('Times');
 }
 
 html {
@@ -222,6 +222,7 @@ body {
   padding: 0;
   margin: 0;
 }
+
 @media (prefers-color-scheme: dark) {
   .html {
     color: #ede6f5;
@@ -248,7 +249,9 @@ iframe {
 a,
 .heti a heti-spacing {
   color: #1d9bf0;
+  cursor: pointer;
 }
+
 .heti {
   font-weight: 400;
   -webkit-font-smoothing: subpixel-antialiased;
@@ -258,11 +261,13 @@ a,
   word-wrap: break-word;
   hyphens: auto;
 }
+
 .heti::before,
 .heti::after {
   content: '';
   display: table;
 }
+
 .heti::after {
   clear: both;
 }
@@ -302,11 +307,13 @@ a,
   display: block;
   text-align: center;
 }
+
 .heti figure > img {
   display: block;
   margin-inline-start: auto;
   margin-inline-end: auto;
 }
+
 .heti hr {
   width: 100%;
   height: 1px;
@@ -318,11 +325,13 @@ a,
   margin-bottom: -12px;
   background-color: #e6e6e6;
 }
+
 @media (prefers-color-scheme: dark) {
   .heti hr {
     background-color: #121212;
   }
 }
+
 .heti p {
   margin-block-start: 18px;
   margin-block-end: 18px;
@@ -332,6 +341,7 @@ a,
 .heti p[align='center'] {
   text-align: center;
 }
+
 .heti p[align='left'] {
   text-align: left;
 }
@@ -360,6 +370,7 @@ a,
 blockquote blockquote {
   padding-right: 0;
 }
+
 .heti blockquote {
   margin: 0;
   overflow: hidden;
@@ -391,11 +402,13 @@ blockquote blockquote {
   border-radius: 4px;
   background-color: rgba(0, 0, 0, 0.03);
 }
+
 @media (prefers-color-scheme: dark) {
   .heti pre {
     background-color: rgba(255, 255, 255, 0.03);
   }
 }
+
 .heti pre code {
   margin: 0;
   padding: 0;
@@ -422,34 +435,41 @@ blockquote blockquote {
 .heti h1 {
   font-size: 2em;
 }
+
 .heti h2 {
   font-size: 1.5em;
 }
+
 .heti h3 {
   font-size: 1.25em;
   margin-block-start: 8px;
   margin-block-end: 8px;
 }
+
 .heti h4 {
   font-size: 1em;
   margin-block-start: 8px;
   margin-block-end: 8px;
 }
+
 .heti h5 {
   font-size: 1em;
   margin-block-start: 8px;
   margin-block-end: 8px;
 }
+
 .heti h6 {
   font-size: 1em;
   margin-block-start: 8px;
   margin-block-end: 8px;
 }
+
 .heti h1,
 .heti h2,
 .heti h3 {
   letter-spacing: 0.05em;
 }
+
 .heti h1:not(:lang(zh)):not(:lang(ja)):not(:lang(kr)),
 .heti h1:not(:lang(zh)),
 .heti h2:not(:lang(zh)):not(:lang(ja)):not(:lang(kr)),
@@ -458,6 +478,7 @@ blockquote blockquote {
 .heti h3:not(:lang(zh)) {
   letter-spacing: 0;
 }
+
 .heti h1 + h2,
 .heti h2 + h3,
 .heti h3 + h4,
@@ -465,18 +486,22 @@ blockquote blockquote {
 .heti h5 + h6 {
   margin-block-start: 12px;
 }
+
 .heti ul,
 .heti ol,
 .heti dl {
   margin-block-start: 12px;
   margin-block-end: 24px;
 }
+
 .heti ul {
   padding-inline-start: calc(24px + 0.5em);
 }
+
 .heti ol {
   padding-inline-start: calc(24px + 1em);
 }
+
 .heti ul ul,
 .heti ul ol,
 .heti ol ul,
@@ -484,25 +509,31 @@ blockquote blockquote {
   margin-block-start: 0;
   margin-block-end: 0;
 }
+
 .heti ul {
   list-style-type: disc;
 }
+
 .heti ol {
   list-style-type: decimal;
 }
+
 .heti ul ul,
 .heti ol ul {
   list-style-type: circle;
 }
+
 .heti ul ul ul,
 .heti ul ol ul,
 .heti ol ul ul,
 .heti ol ol ul {
   list-style-type: square;
 }
+
 .heti li {
   list-style-type: unset;
 }
+
 .heti table {
   box-sizing: border-box;
   table-layout: fixed;
@@ -528,16 +559,19 @@ blockquote blockquote {
   .heti table {
     border-color: #404040;
   }
+
   .heti p > code,
   .heti li > code {
     background-color: #343941;
     color: #e8e8eb;
   }
 }
+
 .heti table {
   margin-right: auto;
   margin-left: 0px;
 }
+
 .heti th,
 .heti td {
   padding-block-start: 6px;
@@ -548,12 +582,14 @@ blockquote blockquote {
   border-style: solid;
   border-color: #ccc;
 }
+
 @media (prefers-color-scheme: dark) {
   .heti th,
   .heti td {
     border-color: #404040;
   }
 }
+
 .heti caption {
   caption-side: bottom;
   margin-block-start: 2px;
@@ -561,58 +597,71 @@ blockquote blockquote {
   font-size: 14px;
   line-height: 24px;
 }
+
 .heti a {
   text-decoration: none;
 }
+
 .heti a:hover {
   padding-block-end: 1px;
   border-block-end: 1px solid currentColor;
   text-decoration: none;
 }
+
 .heti abbr[title] {
   padding-block-end: 1px;
   border-block-end: 1px dotted;
   text-decoration: none;
   cursor: help;
 }
+
 .heti b,
 .heti strong {
   font-weight: bold;
 }
+
 .heti code {
   margin-inline-start: 0.25em;
   margin-inline-end: 0.25em;
   font-size: 1em;
   font-family: var(--text-font);
 }
+
 .heti pre code {
   font-family: var(--code-text-font);
 }
+
 .heti dfn {
   font-weight: bold;
 }
+
 .heti dfn:not(:lang(zh)):not(:lang(ja)):not(:lang(kr)),
 .heti dfn:not(:lang(zh)) {
   font-weight: 400;
 }
+
 .heti em {
   font-weight: bold;
 }
+
 .heti figcaption {
   display: inline-block;
   vertical-align: top;
   font-size: 14px;
   text-align: start;
 }
+
 .heti i {
   font-style: italic;
 }
+
 .heti ins,
 .heti u {
   padding-block-end: 1px;
   border-block-end: 1px solid;
   text-decoration: none;
 }
+
 .heti mark {
   padding-block-start: 2px;
   padding-block-end: 2px;
@@ -623,29 +672,36 @@ blockquote blockquote {
   background-color: rgba(255, 247, 0, 0.88);
   color: inherit;
 }
+
 @media (prefers-color-scheme: dark) {
   .heti mark {
     background-color: rgba(77, 74, 0, 0.88);
   }
 }
+
 .heti q {
   quotes: '「' '」' '『' '』';
 }
+
 .heti q:not(:lang(zh)):not(:lang(ja)):not(:lang(kr)),
 .heti q:not(:lang(zh)) {
   quotes: initial;
   quotes: auto;
 }
+
 .heti rt {
   font-size: 0.875em;
   font-weight: 400;
 }
+
 .heti small {
   font-size: 0.875em;
 }
+
 .heti strong {
   font-weight: bold;
 }
+
 .heti sub,
 .heti sup {
   position: relative;
@@ -657,42 +713,51 @@ blockquote blockquote {
   line-height: 1;
   vertical-align: baseline;
 }
+
 .heti sub {
   bottom: -0.25em;
 }
+
 .heti sup {
   top: -0.5em;
 }
+
 .heti sup:target,
 .heti sup a:target {
   background-color: #dbedff;
 }
+
 @media (prefers-color-scheme: dark) {
   .heti sup:target,
   .heti sup a:target {
     background-color: #3a6188;
   }
 }
+
 .heti summary {
   padding-inline-start: 1em;
   outline: 0;
   cursor: pointer;
 }
+
 .heti summary::-webkit-details-marker {
   width: 0.6em;
   margin-inline-end: 0.4em;
 }
+
 .heti u[title] {
   cursor: help;
   border-block-end-width: 3px;
   border-block-end-style: double;
   border-block-end-color: rgba(0, 0, 0, 0.54);
 }
+
 @media (prefers-color-scheme: dark) {
   .heti u[title] {
     border-block-end-color: rgba(255, 255, 255, 0.54);
   }
 }
+
 .heti address,
 .heti cite,
 .heti dfn,
@@ -700,6 +765,7 @@ blockquote blockquote {
 .heti em {
   font-style: normal;
 }
+
 .heti address:not(:lang(zh)):not(:lang(ja)):not(:lang(kr)),
 .heti address:not(:lang(zh)),
 .heti cite:not(:lang(zh)):not(:lang(ja)):not(:lang(kr)),
@@ -712,6 +778,7 @@ blockquote blockquote {
 .heti em:not(:lang(zh)) {
   font-style: italic;
 }
+
 .heti abbr[title],
 .heti del,
 .heti ins,
@@ -720,16 +787,20 @@ blockquote blockquote {
   margin-inline-start: 1px;
   margin-inline-end: 1px;
 }
+
 .heti,
 .heti--sans {
   font-family: var(--text-font);
 }
+
 .heti--serif {
   font-family: var(--text-font);
 }
+
 .heti--classic {
   font-family: var(--text-font);
 }
+
 .heti--classic h1,
 .heti--classic h2,
 .heti--classic h3,
@@ -739,22 +810,27 @@ blockquote blockquote {
   font-family: var(--text-font);
   font-weight: 800;
 }
+
 .heti--classic blockquote,
 .heti--classic cite,
 .heti--classic q {
   font-family: var(--text-font);
 }
+
 .heti--classic figcaption,
 .heti--classic caption,
 .heti--classic th {
   font-family: var(--text-font);
 }
+
 .heti--hei {
   font-family: var(--text-font);
 }
+
 .heti--song {
   font-family: var(--text-font);
 }
+
 .heti--columns-1,
 .heti--columns-2,
 .heti--columns-3,
@@ -772,6 +848,7 @@ blockquote blockquote {
   max-width: none;
   column-gap: 2em;
 }
+
 .heti--columns-1 p,
 .heti--columns-2 p,
 .heti--columns-3 p,
@@ -790,51 +867,66 @@ blockquote blockquote {
   margin-block-end: 12px;
   text-indent: 2em;
 }
+
 .heti--columns-1 {
   column-count: 1;
 }
+
 .heti--columns-2 {
   column-count: 2;
 }
+
 .heti--columns-3 {
   column-count: 3;
 }
+
 .heti--columns-4 {
   column-count: 4;
 }
+
 .heti--columns-16em {
   column-width: 16em;
 }
+
 .heti--columns-20em {
   column-width: 20em;
 }
+
 .heti--columns-24em {
   column-width: 24em;
 }
+
 .heti--columns-28em {
   column-width: 28em;
 }
+
 .heti--columns-32em {
   column-width: 32em;
 }
+
 .heti--columns-36em {
   column-width: 36em;
 }
+
 .heti--columns-40em {
   column-width: 40em;
 }
+
 .heti--columns-44em {
   column-width: 44em;
 }
+
 .heti--columns-48em {
   column-width: 48em;
 }
+
 .heti--vertical {
   max-width: none;
   max-height: 42em;
   writing-mode: vertical-rl;
   letter-spacing: 0.125em;
 }
+
 .heti--vertical h1,
 .heti--vertical h2,
 .heti--vertical h3,
@@ -843,13 +935,16 @@ blockquote blockquote {
 .heti--vertical h6 {
   text-align: start;
 }
+
 .heti--vertical q {
   quotes: '「' '」' '『' '』';
 }
+
 .heti--ancient,
 .heti--poetry {
   font-family: var(--text-font);
 }
+
 .heti--ancient h1,
 .heti--ancient h2,
 .heti--ancient h3,
@@ -866,6 +961,7 @@ blockquote blockquote {
   font-weight: 800;
   text-align: center;
 }
+
 .heti--ancient h1 .heti-meta,
 .heti--ancient h2 .heti-meta,
 .heti--ancient h3 .heti-meta,
@@ -880,6 +976,7 @@ blockquote blockquote {
 .heti--poetry h6 .heti-meta {
   font-weight: 400;
 }
+
 @media screen and (min-width: 640px) {
   .heti--ancient h1 .heti-meta,
   .heti--ancient h2 .heti-meta,
@@ -901,81 +998,101 @@ blockquote blockquote {
     margin-inline-start: 8px;
   }
 }
+
 .heti--ancient .heti-meta,
 .heti--poetry .heti-meta {
   line-height: 24px;
   text-align: center;
   text-indent: 0;
 }
+
 .heti--ancient p {
   text-indent: 2em;
 }
+
 .heti--poetry p {
   text-align: center;
   text-indent: 0;
 }
+
 .heti--annotation p {
   margin-block-start: 0;
   margin-block-end: 0;
   line-height: 2.25;
   text-indent: 2em;
 }
+
 .heti--annotation em {
   -webkit-text-emphasis: filled circle;
   -webkit-text-emphasis-position: under;
   font-weight: 400;
 }
+
 .heti--annotation em:not(:lang(zh)):not(:lang(ja)):not(:lang(kr)),
 .heti--annotation em:not(:lang(zh)) {
   -webkit-text-emphasis: none;
 }
+
 .heti--annotation .heti-meta {
   margin-block-start: 12px;
   margin-block-end: 24px;
 }
+
 .heti .heti-meta {
   display: block;
   text-indent: 0;
 }
+
 .heti .heti-verse {
   text-align: center;
   text-indent: 0;
 }
+
 .heti .heti-large {
   font-size: 18px;
   line-height: 24px;
 }
+
 .heti .heti-x-large {
   font-size: 20px;
   line-height: 30px;
   letter-spacing: 0.05em;
 }
+
 .heti .heti-small {
   font-size: 14px;
   line-height: 24px;
 }
+
 .heti .heti-x-small {
   font-size: 12px;
   line-height: 18px;
 }
+
 .heti .heti-list-latin {
   list-style-type: upper-latin;
 }
+
 .heti .heti-list-latin ol {
   list-style-type: lower-roman;
 }
+
 .heti .heti-list-latin ol ol {
   list-style-type: lower-latin;
 }
+
 .heti .heti-list-han {
   list-style-type: cjk-ideographic;
 }
+
 .heti .heti-list-han ol {
   list-style-type: decimal;
 }
+
 .heti .heti-list-han ol ol {
   list-style-type: decimal-leading-zero;
 }
+
 .heti .heti-fn {
   margin-block-start: 59px;
   border-block-start: 1px solid;
@@ -984,66 +1101,82 @@ blockquote blockquote {
   font-family: var(--text-font);
   line-height: 24px;
 }
+
 @media (prefers-color-scheme: dark) {
   .heti .heti-fn {
     border-block-start-color: #404040;
   }
 }
+
 .heti .heti-fn ol {
   margin-block-start: 12px;
   margin-block-end: 0;
 }
+
 .heti .heti-fn li:target {
   background-color: #dbedff;
 }
+
 @media (prefers-color-scheme: dark) {
   .heti .heti-fn li:target {
     background-color: #3a6188;
   }
 }
+
 .heti .heti-hang {
   position: absolute;
   line-height: inherit;
   text-indent: 0;
 }
+
 .heti .heti-em {
   -webkit-text-emphasis: filled circle;
   -webkit-text-emphasis-position: under;
 }
+
 .heti .heti-em:not(:lang(zh)):not(:lang(ja)):not(:lang(kr)),
 .heti .heti-em:not(:lang(zh)) {
   -webkit-text-emphasis: none;
 }
+
 .heti .heti-ruby--inline {
   display: inline-flex;
   flex-direction: column-reverse;
   height: 1.5em;
 }
+
 .heti .heti-ruby--inline rt {
   display: inline;
   margin-bottom: -0.25em;
   line-height: 1;
   text-align: center;
 }
+
 .heti heti-spacing {
   display: inline;
 }
+
 .heti heti-spacing + sup,
 .heti heti-spacing + sub {
   margin-inline-start: 0;
 }
+
 .heti .heti-spacing-start {
   margin-inline-end: 0.25em;
 }
+
 .heti .heti-spacing-end {
   margin-inline-start: 0.25em;
 }
+
 .heti heti-adjacent {
   display: inline;
 }
+
 .heti .heti-adjacent-half {
   margin-inline-end: -0.5em;
 }
+
 .heti .heti-adjacent-quarter {
   margin-inline-end: -0.25em;
 }
@@ -1052,6 +1185,7 @@ blockquote blockquote {
   list-style-type: none;
   padding-inline-start: 12px;
 }
+
 .heti ul.cb ul.cb {
   padding-inline-start: 24px;
 }
@@ -1064,6 +1198,7 @@ blockquote blockquote {
   top: 0.1rem;
   cursor: pointer;
 }
+
 .heti ul.cb input[type='checkbox']::before {
   content: '';
   position: absolute;
@@ -1072,15 +1207,18 @@ blockquote blockquote {
   left: -6px;
   right: -6px;
 }
+
 .hljs {
   background: #f8f8f8;
   color: #000;
 }
+
 .hljs-comment,
 .hljs-quote,
 .hljs-variable {
   color: #035c21;
 }
+
 .hljs-built_in,
 .hljs-keyword,
 .hljs-name,
@@ -1088,6 +1226,7 @@ blockquote blockquote {
 .hljs-tag {
   color: #0a69d9;
 }
+
 .hljs-addition,
 .hljs-attribute,
 .hljs-literal,
@@ -1099,26 +1238,32 @@ blockquote blockquote {
 .hljs-type {
   color: #bf3889;
 }
+
 .hljs-deletion,
 .hljs-meta,
 .hljs-selector-attr,
 .hljs-selector-pseudo {
   color: #208bff;
 }
+
 .hljs-doctag {
   color: #6e7781;
 }
+
 .hljs-attr {
   color: #cf212e;
 }
+
 .hljs-bullet,
 .hljs-link,
 .hljs-symbol {
   color: #8250df;
 }
+
 .hljs-emphasis {
   font-style: italic;
 }
+
 .hljs-strong {
   font-weight: bold;
 }
