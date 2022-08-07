@@ -378,7 +378,7 @@ class ViewController:
         // hack for first shack
         emptyEditAreaView.isHidden = true
         titleLabel.isHidden = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
             self.titleLabel.isHidden = false
         }
 
