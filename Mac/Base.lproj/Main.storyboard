@@ -1629,8 +1629,8 @@ CA
                                     </splitView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="1000" id="gS8-dF-Fzu"/>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="640" id="zaW-bx-dxz"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="788" id="gS8-dF-Fzu"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="480" id="zaW-bx-dxz"/>
                                 </constraints>
                                 <holdingPriorities>
                                     <real value="250"/>
