@@ -40,7 +40,7 @@ class TitleTextField: NSTextField {
         defer {
             updateNotesTableView()
         }
-
+        
         if currentName != currentTitle {
             let ext = note.url.pathExtension
             let dst = note.project.url.appendingPathComponent(currentTitle).appendingPathExtension(ext)
@@ -48,8 +48,11 @@ class TitleTextField: NSTextField {
             if !FileManager.default.fileExists(atPath: dst.path), note.move(to: dst) {
                 vc.updateTitle(newTitle: currentTitle)
                 self.updateNotesTableView()
-                return
             } else {
+                vc.updateTitle(newTitle: currentName)
+                self.resignFirstResponder()
+                self.updateNotesTableView()
+
                 let alert = NSAlert()
                 alert.alertStyle = .informational
                 alert.informativeText = NSLocalizedString("此文件夹下该名称 \"\(currentTitle)\" 已经存在!", comment: "")
@@ -57,10 +60,6 @@ class TitleTextField: NSTextField {
                 alert.runModal()
             }
         }
-
-        vc.updateTitle(newTitle: currentName)
-        self.resignFirstResponder()
-        self.updateNotesTableView()
     }
 
     public func hasFocus() -> Bool {
