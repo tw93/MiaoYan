@@ -33,9 +33,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
         var newRect = NSRect(origin: rect.origin, size: rect.size)
         newRect.size.width = caretWidth
         if let range = getParagraphRange(), range.upperBound != textStorage?.length || (
-            range.upperBound == textStorage?.length
-                && textStorage?.string.last == "\n"
-                && selectedRange().location != textStorage?.length
+                range.upperBound == textStorage?.length
+                        && textStorage?.string.last == "\n"
+                        && selectedRange().location != textStorage?.length
         ) {
             newRect.size.height = newRect.size.height - 6.0
             newRect.origin.y = newRect.origin.y + 4.0
@@ -114,14 +114,13 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {
         for menuItem in menu.items {
             if menuItem.identifier?.rawValue == "_searchWithGoogleFromMenu:" ||
-                menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierSpellingAndGrammar" ||
-                menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierSubstitutions" ||
-                menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierTransformations" ||
-                menuItem.identifier?.rawValue == "_NS:290" ||
-                menuItem.identifier?.rawValue == "_NS:291" ||
-                menuItem.identifier?.rawValue == "_NS:328" ||
-                menuItem.identifier?.rawValue == "_NS:353"
-            {
+                       menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierSpellingAndGrammar" ||
+                       menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierSubstitutions" ||
+                       menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierTransformations" ||
+                       menuItem.identifier?.rawValue == "_NS:290" ||
+                       menuItem.identifier?.rawValue == "_NS:291" ||
+                       menuItem.identifier?.rawValue == "_NS:328" ||
+                       menuItem.identifier?.rawValue == "_NS:353" {
                 menuItem.isHidden = true
             }
         }
@@ -159,12 +158,18 @@ class EditTextView: NSTextView, NSTextFinderClient {
         return false
     }
 
-    // 清除最后一行
     override func copy(_ sender: Any?) {
-        let pasteboard = NSPasteboard.general
-        pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
+        if selectedRanges.count > 1 {
+            let combined = String()
+            let pasteboard = NSPasteboard.general
+            pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
+            pasteboard.setString(combined.trim().removeLastNewLine(), forType: NSPasteboard.PasteboardType.string)
+            return
+        }
 
         if selectedRange.length == 0, let paragraphRange = getParagraphRange(), let paragraph = attributedSubstring(forProposedRange: paragraphRange, actualRange: nil) {
+            let pasteboard = NSPasteboard.general
+            pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
             pasteboard.setString(paragraph.string.trim().removeLastNewLine(), forType: NSPasteboard.PasteboardType.string)
             return
         }
@@ -174,11 +179,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override func paste(_ sender: Any?) {
         guard let note = EditTextView.note else { return }
 
-        if pasteImageFromClipboard(in: note) {
-            return
-        }
-
-        if let clipboard = NSPasteboard.general.string(forType: NSPasteboard.PasteboardType.string) {
+        if let clipboard = NSPasteboard.general.string(forType: NSPasteboard.PasteboardType.string), NSPasteboard.general.string(forType: NSPasteboard.PasteboardType.fileURL) == nil {
             EditTextView.shouldForceRescan = true
 
             let currentRange = selectedRange()
@@ -188,9 +189,16 @@ class EditTextView: NSTextView, NSTextFinderClient {
             breakUndoCoalescing()
 
             saveTextStorageContent(to: note)
-            fillHighlightLinks()
+            DispatchQueue.main.async {
+                self.fillHighlightLinks()
+            }
             return
         }
+
+        if pasteImageFromClipboard(in: note) {
+            return
+        }
+
         super.paste(sender)
     }
 
@@ -213,8 +221,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
             if let note = EditTextView.note,
                let imageData = textAttachment.fileWrapper?.regularFileContents,
-               let path = ImagesProcessor.writeFile(data: imageData, note: note)
-            {
+               let path = ImagesProcessor.writeFile(data: imageData, note: note) {
                 storage.addAttribute(filePathKey, value: path, range: range)
             }
         }
@@ -320,8 +327,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         undoManager?.removeAllActions(withTarget: self)
 
         if let appd = NSApplication.shared.delegate as? AppDelegate,
-           let md = appd.mainWindowController
-        {
+           let md = appd.mainWindowController {
             md.editorUndoManager = note.undoManager
         }
 
@@ -655,8 +661,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         if let data = board.data(forType: .rtfd),
            let text = NSAttributedString(rtfd: data, documentAttributes: nil),
            text.length > 0,
-           range.length > 0
-        {
+           range.length > 0 {
             insertText("", replacementRange: range)
 
             let dropPoint = convert(sender.draggingLocation, from: nil)
@@ -683,9 +688,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
             let positionKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.position")
 
             guard
-                let path = attributedText.attribute(filePathKey, at: 0, effectiveRange: nil) as? String,
-                let title = attributedText.attribute(titleKey, at: 0, effectiveRange: nil) as? String,
-                let position = attributedText.attribute(positionKey, at: 0, effectiveRange: nil) as? Int else { return false }
+                    let path = attributedText.attribute(filePathKey, at: 0, effectiveRange: nil) as? String,
+                    let title = attributedText.attribute(titleKey, at: 0, effectiveRange: nil) as? String,
+                    let position = attributedText.attribute(positionKey, at: 0, effectiveRange: nil) as? Int
+            else { return false }
 
             guard let imageUrl = note.getImageUrl(imageName: path) else { return false }
 
@@ -707,8 +713,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         if let urls = board.readObjects(forClasses: [NSURL.self], options: nil) as? [URL],
-           urls.count > 0
-        {
+           urls.count > 0 {
             let dropPoint = convert(sender.draggingLocation, from: nil)
             let caretLocation = characterIndexForInsertion(at: dropPoint)
             let offset = 0
@@ -1018,17 +1023,17 @@ class EditTextView: NSTextView, NSTextFinderClient {
         ]
         AF.request("http://127.0.0.1:36677/upload", method: .post, parameters: parameters, encoder: JSONParameterEncoder.default).response { response in
             switch response.result {
-                case .success:
-                    let json = JSON(response.value as Any)
-                    let result = json["result"][0].stringValue
-                    if !result.isEmpty {
-                        completion(result, nil)
-                    } else {
-                        completion(nil, nil)
-                    }
-
-                case .failure:
+            case .success:
+                let json = JSON(response.value as Any)
+                let result = json["result"][0].stringValue
+                if !result.isEmpty {
+                    completion(result, nil)
+                } else {
                     completion(nil, nil)
+                }
+
+            case .failure:
+                completion(nil, nil)
             }
         }
     }
