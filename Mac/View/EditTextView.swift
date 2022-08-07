@@ -516,9 +516,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
             breakUndoCoalescing()
             let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
             formatter.newLine()
-            vc.refillEditArea()
             breakUndoCoalescing()
-            fillHighlightLinks()
+            DispatchQueue.main.async {
+                self.fillHighlightLinks()
+            }
             return
         }
 
