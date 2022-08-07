@@ -359,7 +359,7 @@ public class Note: NSObject {
 
     @objc func getCreationDateForLabel() -> String? {
         guard let creationDate = creationDate else { return nil }
-        return dateFormatter.formatDateForDisplay(creationDate)
+        return dateFormatter.formatTimeForDisplay(creationDate)
     }
 
     @objc func getCreateTime() -> String? {
