@@ -310,13 +310,9 @@ class ViewController:
         refreshMiaoYanNum()
         if UserDefaultsManagement.isSingleMode {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
-                if !FileManager.default.directoryExists(atUrl: singleModeUrl) {
-                    self.hideNoteList("")
-                } else {
-                    self.hideSidebar("")
-                }
+                self.hideSidebar("")
             }
+
             // hack for crash
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 self.toastInSingleMode()
