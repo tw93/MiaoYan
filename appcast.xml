@@ -2,6 +2,22 @@
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
   <channel>
     <title>妙言 / MiaoYan</title>
+        <item>
+      <title>1.3.0</title>
+      <description><![CDATA[
+       <h3>快一些 🩴：</h3>
+        🎉 单独打开模式下支持打开单文件，同时速度快了不少<br/>
+        🍭 编辑模式下支持左上角3个按钮自适应显示、最小高宽度支持分屏使用<br/>
+        🙊 修复文章超过一屏，回车易抖动问题、继续优化启动效果、减少易Crash的点 <br/>
+        <h3>Hurry up 🩴：</h3>
+        🎉 Single file can be opened in separate open mode, and the speed is much faster.<br/>
+        🍭 Editing mode supports split screen use, the adaptive display of three buttons at the upper left corner.<br/>
+        🙊 Fix the problem that the article is more than one screen, and it is easy to shake when entering, continue to optimize the startup effect, and reduce the points prone to crash.<br/>
+          ]]>      </description>
+      <pubDate>周一, 08 8月 2022 22:00:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app1/MiaoYan_V1.3.0.zip" sparkle:shortVersionString="1.3.0" sparkle:version="1.3.0" sparkle:edSignature="lxJfsH9gXheklFDnTRGfkNQ/Eo2fshvj4iwS6smfhNLqVeD00lmHIiIf1I27xGADd+VbSN6/6HbRIW6+7l6DDA==" length="24066104" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
     <item>
       <title>1.2.0</title>
       <description><![CDATA[
