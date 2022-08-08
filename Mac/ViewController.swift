@@ -2127,7 +2127,7 @@ class ViewController:
         disablePresentation()
         UserDefaultsManagement.magicPPT = false
         DispatchQueue.main.async {
-            self.titiebarHeight.constant = 46.0
+            self.titiebarHeight.constant = 52.0
         }
     }
 
@@ -2209,7 +2209,7 @@ class ViewController:
         UserDefaultsManagement.presentation = false
         UserDefaultsManagement.magicPPT = false
         DispatchQueue.main.async {
-            self.titiebarHeight.constant = 46.0
+            self.titiebarHeight.constant = 52.0
         }
         if UserDefaultsManagement.fullScreen {
             view.window?.toggleFullScreen(nil)
@@ -2368,11 +2368,11 @@ class ViewController:
     func checkTitlebarTopConstraint() {
         if splitView.subviews[0].frame.width < 50,!UserDefaultsManagement.isWillFullScreen {
             titlebarTopConstraint.constant = 22.0
-            titiebarHeight.constant = 57.0
+            titiebarHeight.constant = 62.0
             return
         }
-        titlebarTopConstraint.constant = 11.0
-        titiebarHeight.constant = 46.0
+        titlebarTopConstraint.constant = 10.0
+        titiebarHeight.constant = 52.0
     }
 
     @IBAction func duplicate(_ sender: Any) {
