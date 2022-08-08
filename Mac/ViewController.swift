@@ -309,7 +309,7 @@ class ViewController:
         setDividerHidden(hidden: size == 0)
         refreshMiaoYanNum()
         if UserDefaultsManagement.isSingleMode {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
                 if !FileManager.default.directoryExists(atUrl: singleModeUrl) {
                     self.hideNoteList("")
@@ -800,7 +800,7 @@ class ViewController:
                 UserDefaultsManagement.singleModePath = ""
                 showSidebar("")
                 setSideDividerHidden(hidden: false)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     self.restart()
                 }
             }
