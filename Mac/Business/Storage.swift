@@ -55,27 +55,14 @@ class Storage {
                 url = singleModeUrl
             }
         }
+
         var name = url.lastPathComponent
+
         if let iCloudURL = getCloudDrive(), iCloudURL == url {
             name = "iCloud Drive"
         }
 
         let project = Project(url: url, label: name, isRoot: true, isDefault: true)
-
-        #if os(iOS)
-        projects.append(project)
-
-        for bookmark in bookmarks {
-            let externalProject = Project(url: bookmark, label: bookmark.lastPathComponent, isTrash: false, isRoot: true, isDefault: false, isExternal: true)
-
-            projects.append(externalProject)
-        }
-
-        #if NOT_EXTENSION
-        checkTrashForVolume(url: project.url)
-        #endif
-        return
-        #endif
 
         _ = add(project: project)
 
@@ -97,9 +84,9 @@ class Storage {
 
     public func getChildProjects(project: Project) -> [Project] {
         projects.filter {
-                    $0.parent == project
-                }
-                .sorted(by: { $0.label.lowercased() < $1.label.lowercased() })
+            $0.parent == project
+        }
+        .sorted(by: { $0.label.lowercased() < $1.label.lowercased() })
     }
 
     public func getRootProject() -> Project? {
@@ -148,7 +135,6 @@ class Storage {
                 else {
                     continue
                 }
-
                 let project = Project(url: surl, label: surl.lastPathComponent, parent: parent)
                 projects.append(project)
                 added.append(project)
@@ -159,9 +145,8 @@ class Storage {
     }
 
     private func checkTrashForVolume(url: URL) {
-
-        //防止单独打开模式生成 Trash
-        if (UserDefaultsManagement.isSingleMode) {
+        // 防止单独打开模式生成 Trash
+        if UserDefaultsManagement.isSingleMode {
             return
         }
 
@@ -220,7 +205,7 @@ class Storage {
     public func removeBy(project: Project) {
         let list = noteList.filter {
             $0.project ==
-                    project
+                project
         }
 
         for note in list {
@@ -242,7 +227,8 @@ class Storage {
             added.append(project)
         }
 
-        if project.isRoot {
+        // 防止单文件模式太卡
+        if project.isRoot, !UserDefaultsManagement.isSingleMode {
             let addedSubProjects = chechSub(url: project.url, parent: project)
             added = added + addedSubProjects
         }
@@ -325,8 +311,7 @@ class Storage {
         guard !checkFirstRun() else {
             if tryCount == 0 {
                 loadProjects()
-                loadDocuments(tryCount: 1) {
-                }
+                loadDocuments(tryCount: 1) {}
                 return
             }
             return
@@ -376,10 +361,10 @@ class Storage {
         let projectURL = url.deletingLastPathComponent()
 
         return
-                projects.first(where: {
-                    $0.url == projectURL
+            projects.first(where: {
+                $0.url == projectURL
 
-                })
+            })
     }
 
     func sortNotes(noteList: [Note], filter: String, project: Project? = nil, operation: BlockOperation? = nil) -> [Note] {
@@ -437,7 +422,8 @@ class Storage {
 
             #if os(OSX)
             if let currentNoteURL = EditTextView.note?.url,
-               currentNoteURL == url {
+               currentNoteURL == url
+            {
                 continue
             }
             #endif
@@ -498,23 +484,23 @@ class Storage {
 
         do {
             let directoryFiles =
-                    try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: [.contentModificationDateKey, .creationDateKey, .typeIdentifierKey], options: .skipsHiddenFiles)
+                try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: [.contentModificationDateKey, .creationDateKey, .typeIdentifierKey], options: .skipsHiddenFiles)
 
             return
-                    directoryFiles.filter {
-                                allowedExtensions.contains($0.pathExtension)
-                                        && self.isValidUTI(url: $0)
-                            }
-                            .map {
-                                url in
-                                (
-                                        url,
-                                        (try? url.resourceValues(forKeys: [.contentModificationDateKey])
-                                        )?.contentModificationDate ?? Date.distantPast,
-                                        (try? url.resourceValues(forKeys: [.creationDateKey])
-                                        )?.creationDate ?? Date.distantPast
-                                )
-                            }
+                directoryFiles.filter {
+                    allowedExtensions.contains($0.pathExtension)
+                        && self.isValidUTI(url: $0)
+                }
+                .map {
+                    url in
+                    (
+                        url,
+                        (try? url.resourceValues(forKeys: [.contentModificationDateKey])
+                        )?.contentModificationDate ?? Date.distantPast,
+                        (try? url.resourceValues(forKeys: [.creationDateKey])
+                        )?.creationDate ?? Date.distantPast
+                    )
+                }
         } catch {
             print("Storage not found, url: \(url) – \(error)")
         }
@@ -573,7 +559,7 @@ class Storage {
                 guard initialFiles.contains(file) else {
                     continue
                 }
-                if (!UserDefaultsManagement.isSingleMode) {
+                if !UserDefaultsManagement.isSingleMode {
                     try? FileManager.default.copyItem(atPath: "\(initialPath)/\(file)", toPath: "\(path)/\(file)")
                 }
             }
@@ -592,11 +578,11 @@ class Storage {
         let resolvedPath = url.path.lowercased()
 
         return
-                noteList.first(where: {
-                    $0.url.path.lowercased() == resolvedPath
-                            || "/private" + $0.url.path.lowercased() == resolvedPath
+            noteList.first(where: {
+                $0.url.path.lowercased() == resolvedPath
+                    || "/private" + $0.url.path.lowercased() == resolvedPath
 
-                })
+            })
     }
 
     func getBy(name: String) -> Note? {
@@ -681,7 +667,6 @@ class Storage {
 
         for url in urls {
             i = i + 1
-
             do {
                 var isDirectoryResourceValue: AnyObject?
                 try url.getResourceValue(&isDirectoryResourceValue, forKey: URLResourceKey.isDirectoryKey)
@@ -690,7 +675,8 @@ class Storage {
                 try url.getResourceValue(&isPackageResourceValue, forKey: URLResourceKey.isPackageKey)
 
                 if isDirectoryResourceValue as? Bool == true,
-                   isPackageResourceValue as? Bool == false {
+                   isPackageResourceValue as? Bool == false
+                {
                     subdirs.append(url)
                 }
             } catch let error as NSError {
@@ -728,21 +714,21 @@ class Storage {
     public func syncDirectory(url: URL) {
         do {
             let directoryFiles =
-                    try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: [.contentModificationDateKey, .creationDateKey])
+                try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: [.contentModificationDateKey, .creationDateKey])
 
             let files =
-                    directoryFiles.filter {
-                        !self.isDownloaded(url: $0)
-                    }
+                directoryFiles.filter {
+                    !self.isDownloaded(url: $0)
+                }
 
             let images = files.map {
                 url in
                 (
-                        url,
-                        (try? url.resourceValues(forKeys: [.contentModificationDateKey])
-                        )?.contentModificationDate ?? Date.distantPast,
-                        (try? url.resourceValues(forKeys: [.creationDateKey])
-                        )?.creationDate ?? Date.distantPast
+                    url,
+                    (try? url.resourceValues(forKeys: [.contentModificationDateKey])
+                    )?.contentModificationDate ?? Date.distantPast,
+                    (try? url.resourceValues(forKeys: [.creationDateKey])
+                    )?.creationDate ?? Date.distantPast
                 )
             }
 
@@ -765,8 +751,7 @@ class Storage {
 
         do {
             try (url as NSURL).getResourceValue(&isDownloaded, forKey: URLResourceKey.ubiquitousItemDownloadingStatusKey)
-        } catch _ {
-        }
+        } catch _ {}
 
         if isDownloaded as? URLUbiquitousItemDownloadingStatus == URLUbiquitousItemDownloadingStatus.current {
             return true
@@ -897,9 +882,9 @@ class Storage {
         }
 
         let projects =
-                result.compactMap {
-                    Project(url: $0)
-                }
+            result.compactMap {
+                Project(url: $0)
+            }
 
         guard projects.count > 0 else {
             return
@@ -934,5 +919,4 @@ class Storage {
     }
 }
 
-extension String: Error {
-}
+extension String: Error {}
