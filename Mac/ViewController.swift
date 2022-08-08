@@ -58,6 +58,7 @@ class ViewController:
     @IBOutlet var notesListCustomView: NSView!
     @IBOutlet var outlineHeader: OutlineHeaderView!
 
+    @IBOutlet var titlebarTopConstraint: NSLayoutConstraint!
     @IBOutlet var titiebarHeight: NSLayoutConstraint!
     @IBOutlet var searchTopConstraint: NSLayoutConstraint!
     @IBOutlet var titleLabel: TitleTextField!
@@ -245,6 +246,7 @@ class ViewController:
         loadMoveMenu()
         loadSortBySetting()
         checkSidebarConstraint()
+        checkTitlebarTopConstraint()
 
         #if CLOUDKIT
         registerKeyValueObserver()
@@ -296,21 +298,27 @@ class ViewController:
                 appDelegate.create(name: name, content: content)
             }
         }
+        handleForAppMode()
+    }
 
-        guard let vc = ViewController.shared() else {
-            return
-        }
+    func handleForAppMode() {
+        guard let vc = ViewController.shared() else { return }
         let size = vc.splitView.subviews[0].frame.width
         let sideSize = vc.sidebarSplitView.subviews[0].frame.width
         setSideDividerHidden(hidden: sideSize == 0)
         setDividerHidden(hidden: size == 0)
         refreshMiaoYanNum()
         if UserDefaultsManagement.isSingleMode {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.hideSidebar("")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
+                if !FileManager.default.directoryExists(atUrl: singleModeUrl) {
+                    self.hideNoteList("")
+                } else {
+                    self.hideSidebar("")
+                }
             }
             // hack for crash
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 self.toastInSingleMode()
             }
         } else {
@@ -374,6 +382,7 @@ class ViewController:
     }
 
     // MARK: - Initial configuration
+
     private func configureLayout() {
         // hack for first shack
         emptyEditAreaView.isHidden = true
@@ -652,6 +661,7 @@ class ViewController:
             return
         }
         vc.checkSidebarConstraint()
+        vc.checkTitlebarTopConstraint()
 
         if !refilled {
             refilled = true
@@ -1228,15 +1238,6 @@ class ViewController:
         NSApp.mainWindow?.makeFirstResponder(vc.notesTableView)
     }
 
-    func setButtonHidden(hidden: Bool) {
-        guard let mainWindow = MainWindowController.shared() else {
-            return
-        }
-        mainWindow.standardWindowButton(NSWindow.ButtonType.closeButton)?.isHidden = hidden
-        mainWindow.standardWindowButton(NSWindow.ButtonType.miniaturizeButton)?.isHidden = hidden
-        mainWindow.standardWindowButton(NSWindow.ButtonType.zoomButton)?.isHidden = hidden
-    }
-
     func setDividerHidden(hidden: Bool) {
         guard let vc = ViewController.shared() else {
             return
@@ -1290,12 +1291,10 @@ class ViewController:
             vc.splitView.shouldHideDivider = false
             setDividerHidden(hidden: false)
             vc.splitView.setPosition(CGFloat(size), ofDividerAt: 0)
-            setButtonHidden(hidden: false)
         } else if vc.splitView.shouldHideDivider {
             vc.splitView.shouldHideDivider = false
             setDividerHidden(hidden: false)
             vc.splitView.setPosition(CGFloat(UserDefaultsManagement.sidebarSize), ofDividerAt: 0)
-            setButtonHidden(hidden: false)
         } else {
             UserDefaultsManagement.sidebarSize = Int(size)
             vc.splitView.shouldHideDivider = true
@@ -1306,7 +1305,6 @@ class ViewController:
             }
             // 防止空出现
             hideSidebar("")
-            setButtonHidden(hidden: true)
         }
         vc.editArea.updateTextContainerInset()
     }
@@ -1329,7 +1327,6 @@ class ViewController:
             showNoteList("")
             vc.sidebarSplitView.setPosition(CGFloat(UserDefaultsManagement.realSidebarSize), ofDividerAt: 0)
             setSideDividerHidden(hidden: false)
-            setButtonHidden(hidden: false)
         }
 
         vc.editArea.updateTextContainerInset()
@@ -1444,8 +1441,6 @@ class ViewController:
             UserDefaultsManagement.realSidebarSize = size
             vc.sidebarSplitView.setPosition(0, ofDividerAt: 0)
             setSideDividerHidden(hidden: true)
-        } else {
-            setButtonHidden(hidden: false)
         }
         vc.editArea.updateTextContainerInset()
     }
@@ -1465,7 +1460,6 @@ class ViewController:
             showNoteList("")
             vc.sidebarSplitView.setPosition(CGFloat(UserDefaultsManagement.realSidebarSize), ofDividerAt: 0)
             setSideDividerHidden(hidden: false)
-            setButtonHidden(hidden: false)
         }
         vc.editArea.updateTextContainerInset()
     }
@@ -1484,7 +1478,6 @@ class ViewController:
             vc.splitView.shouldHideDivider = false
             setDividerHidden(hidden: false)
             vc.splitView.setPosition(CGFloat(size), ofDividerAt: 0)
-            setButtonHidden(hidden: false)
         }
         vc.editArea.updateTextContainerInset()
     }
@@ -1500,7 +1493,6 @@ class ViewController:
                 vc.splitView.shouldHideDivider = false
                 setDividerHidden(hidden: false)
                 vc.splitView.setPosition(CGFloat(UserDefaultsManagement.sidebarSize), ofDividerAt: 0)
-                setButtonHidden(hidden: false)
             } else {
                 UserDefaultsManagement.sidebarSize = Int(size)
                 vc.splitView.shouldHideDivider = true
@@ -1511,7 +1503,6 @@ class ViewController:
                 }
                 // 防止空出现
                 hideSidebar("")
-                setButtonHidden(hidden: true)
             }
         }
         vc.editArea.updateTextContainerInset()
@@ -2206,7 +2197,6 @@ class ViewController:
         } else {
             view.window?.toggleFullScreen(nil)
         }
-        setButtonHidden(hidden: true)
         formatButton.isHidden = true
         previewButton.isHidden = true
         if !UserDefaultsManagement.isOnExportPPT {
@@ -2225,7 +2215,6 @@ class ViewController:
             view.window?.toggleFullScreen(nil)
         }
         disablePreview()
-        setButtonHidden(hidden: false)
         formatButton.isHidden = false
         previewButton.isHidden = false
         showSidebar("")
@@ -2369,17 +2358,21 @@ class ViewController:
     }
 
     func checkSidebarConstraint() {
-        if sidebarSplitView.subviews[0].frame.width > 50 {
-            searchTopConstraint.constant = 11
+        if sidebarSplitView.subviews[0].frame.width < 50,!UserDefaultsManagement.isWillFullScreen {
+            searchTopConstraint.constant = 25.0
             return
         }
+        searchTopConstraint.constant = 11.0
+    }
 
-        if sidebarSplitView.subviews[0].frame.width < 50 {
-            searchTopConstraint.constant = CGFloat(25)
+    func checkTitlebarTopConstraint() {
+        if splitView.subviews[0].frame.width < 50,!UserDefaultsManagement.isWillFullScreen {
+            titlebarTopConstraint.constant = 22.0
+            titiebarHeight.constant = 57.0
             return
         }
-
-        searchTopConstraint.constant = 11
+        titlebarTopConstraint.constant = 11.0
+        titiebarHeight.constant = 46.0
     }
 
     @IBAction func duplicate(_ sender: Any) {

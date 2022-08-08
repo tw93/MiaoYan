@@ -38,6 +38,7 @@ public enum UserDefaultsManagement {
     static var lineWidth = 1000
     static var linkColor = Color(red: 0.23, green: 0.23, blue: 0.23, alpha: 1.00)
     static var fullScreen = false
+    static var isWillFullScreen = false
 
     static var titleFontSize = 20
     static var emptyEditTitleFontSize = 36

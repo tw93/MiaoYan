@@ -16,13 +16,13 @@ class Sidebar {
         if system.count > 0 {
             list = system
         }
-        
-        let rootProjects = storage.getRootProjects()
-              
+
         if(UserDefaultsManagement.isSingleMode){
             return
         }
-        
+
+        let rootProjects = storage.getRootProjects()
+
         for project in rootProjects {
             let icon = getImage(named: "repository\(night).png")
             
