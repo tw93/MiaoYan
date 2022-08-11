@@ -124,7 +124,6 @@ public class ImagesProcessor {
             let title = link[match]
             return String(title.dropLast().dropFirst())
         }
-        
         return ""
     }
     

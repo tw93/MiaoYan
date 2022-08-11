@@ -768,6 +768,11 @@ class ViewController:
             return false
         }
 
+        //聚焦的时候就不要新建了
+        if event.keyCode == kVK_ANSI_D, event.modifierFlags.contains(.command), editArea.hasFocus() {
+            return false
+        }
+
         if event.keyCode == kVK_ANSI_Z, event.modifierFlags.contains(.command), titleLabel.hasFocus() {
             let currentNote = notesTableView.getSelectedNote()
             updateTitle(newTitle: currentNote?.getTitleWithoutLabel() ?? NSLocalizedString("Untitled Note", comment: "Untitled Note"))
@@ -2377,7 +2382,6 @@ class ViewController:
                 guard let name = note.getDupeName() else {
                     continue
                 }
-
                 let noteDupe = Note(name: name, project: note.project, type: note.type)
                 noteDupe.content = NSMutableAttributedString(string: note.content.string)
 
