@@ -7,6 +7,7 @@
 :root {
   --text-font: 'LXGW WenKai Lite', sans-serif;
   --code-text-font: 'LXGW WenKai Lite', sans-serif;
+  --markmap-height: '300px';
 }
 
 @font-face {
@@ -1288,6 +1289,10 @@ code.language-mermaid {
   background: #fff;
 }
 
+.heti pre.markmap-image-container {
+  padding: 0;
+}
+
 mjx-container[display='block'] {
   display: block;
   margin: 1em 0;
@@ -1338,4 +1343,15 @@ span.emoji-inner {
 img.emoji {
   width: 1em;
   height: 1em;
+}
+
+.language-markmap{
+  visibility: hidden;
+}
+.markmap {
+  visibility: visible;
+  width: 100%;
+  height: var(--markmap-height);
+  font-family: var(--text-font) !important;
+  font-size: 0.8em !important;
 }
