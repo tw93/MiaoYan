@@ -44,7 +44,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         vc.titleLabel.saveTitle()
         super.mouseDown(with: event)
     }
-    
+
     override func keyUp(with event: NSEvent) {
         if event.keyCode == kVK_DownArrow {
             vcDelegate.focusTable()
@@ -117,6 +117,9 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     }
 
     func controlTextDidChange(_ obj: Notification) {
+        if UserDefaultsManagement.magicPPT {
+            return
+        }
         searchTimer.invalidate()
         searchTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(search), userInfo: nil, repeats: false)
     }

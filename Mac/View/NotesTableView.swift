@@ -67,7 +67,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
             var scrollOrigin = rowRect.origin
 
             // 滚动优化一下
-            if (clipView.frame.height - scrollOrigin.y < rowRect.height) {
+            if clipView.frame.height - scrollOrigin.y < rowRect.height {
                 scrollOrigin.y = scrollOrigin.y - 8.0
                 if scrollView.responds(to: #selector(NSScrollView.flashScrollers)) {
                     scrollView.flashScrollers()
@@ -107,11 +107,13 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     }
 
     // Custom note highlight style
+
     func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
         NoteRowView()
     }
 
     // Populate table data
+
     func numberOfRows(in tableView: NSTableView) -> Int {
         noteList.count
     }
@@ -126,6 +128,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     }
 
     // On selected row show notes in right panel
+
     func tableViewSelectionDidChange(_ notification: Notification) {
         let timestamp = Date().toMillis()
         fillTimestamp = timestamp

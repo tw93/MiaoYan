@@ -312,7 +312,6 @@ class ViewController:
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.hideSidebar("")
             }
-
             // hack for crash
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 self.toastInSingleMode()
@@ -332,6 +331,10 @@ class ViewController:
 
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         guard let vc = ViewController.shared() else {
+            return false
+        }
+
+        if UserDefaultsManagement.magicPPT || UserDefaultsManagement.presentation {
             return false
         }
 
@@ -739,6 +742,15 @@ class ViewController:
             return true
         }
 
+        if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_P {
+            toggleMagicPPT()
+            return false
+        }
+
+        if event.keyCode == kVK_Escape, UserDefaultsManagement.presentation {
+            disablePresentation()
+        }
+
         if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), search.hasFocus() {
             search.stringValue.removeAll()
             configureNotesList()
@@ -758,7 +770,7 @@ class ViewController:
             return false
         }
 
-        if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), editArea.hasFocus() {
+        if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), editArea.hasFocus(), !UserDefaultsManagement.presentation {
             editArea.deleteToBeginningOfLine(nil)
             return false
         }
@@ -768,7 +780,7 @@ class ViewController:
             return false
         }
 
-        //聚焦的时候就不要新建了
+        // 聚焦的时候就不要新建了
         if event.keyCode == kVK_ANSI_D, event.modifierFlags.contains(.command), editArea.hasFocus() {
             return false
         }
@@ -779,18 +791,13 @@ class ViewController:
             return false
         }
 
-        if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_I {
+        if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_I,!UserDefaultsManagement.presentation {
             toggleInfo()
             return false
         }
 
         if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_U {
             copyURL("")
-            return false
-        }
-
-        if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_P {
-            toggleMagicPPT()
             return false
         }
 
@@ -864,12 +871,6 @@ class ViewController:
             }
         }
 
-        if event.keyCode == kVK_Escape {
-            if UserDefaultsManagement.presentation {
-                disablePresentation()
-            }
-        }
-
         // Focus search bar on ESC
         if
             event.characters == ".",
@@ -936,13 +937,13 @@ class ViewController:
         }
 
         // Pin note shortcut (cmd+shift+p)
-        if event.keyCode == kVK_ANSI_P, event.modifierFlags.contains(.shift), event.modifierFlags.contains(.command) {
+        if event.keyCode == kVK_ANSI_P, event.modifierFlags.contains(.shift), event.modifierFlags.contains(.command),!UserDefaultsManagement.presentation {
             pin(notesTableView.selectedRowIndexes)
             return true
         }
 
         // 展开 sidebar cmd+1
-        if event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_1 {
+        if event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_1,!UserDefaultsManagement.presentation {
             toggleSidebar("")
             return false
         }
@@ -1014,6 +1015,9 @@ class ViewController:
 
     @IBAction func fileMenuNewNote(_ sender: Any) {
         guard let vc = ViewController.shared() else {
+            return
+        }
+        if UserDefaultsManagement.magicPPT {
             return
         }
         if let type = vc.getSidebarType(), type == .Trash {
@@ -2117,9 +2121,11 @@ class ViewController:
         enablePresentation()
         UserDefaultsManagement.magicPPT = true
         DispatchQueue.main.async {
-            self.titiebarHeight.constant = 0.0
+            vc.titiebarHeight.constant = 0.0
             vc.sidebarSplitView.setValue(NSColor.black, forKey: "dividerColor")
             vc.splitView.setValue(NSColor.black, forKey: "dividerColor")
+            // 兼容空格下一个的场景
+            NSApp.mainWindow?.makeFirstResponder(vc.editArea.markdownView)
         }
         Analytics.trackEvent("MiaoYan PPT")
     }
@@ -2359,7 +2365,7 @@ class ViewController:
     }
 
     func checkSidebarConstraint() {
-        if sidebarSplitView.subviews[0].frame.width < 50,!UserDefaultsManagement.isWillFullScreen {
+        if sidebarSplitView.subviews[0].frame.width < 50, !UserDefaultsManagement.isWillFullScreen {
             searchTopConstraint.constant = 25.0
             return
         }
