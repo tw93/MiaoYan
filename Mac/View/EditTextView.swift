@@ -616,9 +616,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         if position <= storage.length {
             setSelectedRange(NSMakeRange(position, 0))
+            scrollToCursor()
         }
-
-        scrollToCursor()
     }
 
     func saveTextStorageContent(to note: Note) {
