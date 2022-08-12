@@ -3,7 +3,8 @@ import Cocoa
 import MiaoYanCore_macOS
 
 class NotesTableView: NSTableView, NSTableViewDataSource,
-        NSTableViewDelegate {
+    NSTableViewDelegate
+{
     var noteList = [Note]()
     var defaultCell = NoteCellView()
     var pinnedCell = NoteCellView()
@@ -377,7 +378,8 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         }
         let vc = window?.contentViewController as? ViewController
         if event.modifierFlags.contains(.control),
-           !event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_P {
+           !event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_P
+        {
             vc?.exportPdf("")
             return
         }
@@ -398,7 +400,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     public func reloadRow(note: Note) {
         note.invalidateCache()
         // hack for crash
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             if let i = self.noteList.firstIndex(of: note) {
                 if let row = self.rowView(atRow: i, makeIfNecessary: false) as? NoteRowView, let cell = row.subviews.first as? NoteCellView {
                     cell.date.stringValue = note.getDateForLabel()
