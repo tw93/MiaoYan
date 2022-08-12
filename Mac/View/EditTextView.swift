@@ -604,17 +604,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return
         }
 
-        var position = storage.length
-
-        if let note = EditTextView.note {
-            if let data = try? note.url.extendedAttribute(forName: "com.tw93.miaoyan.cursor") {
-                position = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Int in
-                    ptr.load(as: Int.self)
-                }
-            }
-        }
-
-        if position <= storage.length {
+        if let position = EditTextView.note?.getCursorPosition(), position <= storage.length {
             setSelectedRange(NSMakeRange(position, 0))
             scrollToCursor()
         }
