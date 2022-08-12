@@ -60,8 +60,8 @@ public class Note: NSObject {
         self.type = type ?? .Markdown
 
         let ext = container == .none
-            ? self.type.getExtension(for: container)
-            : "textbundle"
+                ? self.type.getExtension(for: container)
+                : "textbundle"
 
         url = NameHelper.getUniqueFileName(name: name, project: project, ext: ext)
 
@@ -206,8 +206,8 @@ public class Note: NSObject {
 
     func getNewURL(name: String) -> URL {
         let escapedName = name
-            .replacingOccurrences(of: ":", with: "-")
-            .replacingOccurrences(of: "/", with: ":")
+                .replacingOccurrences(of: ":", with: "-")
+                .replacingOccurrences(of: "/", with: ":")
 
         var newUrl = url.deletingLastPathComponent()
         newUrl.appendPathComponent(escapedName + "." + url.pathExtension)
@@ -227,6 +227,20 @@ public class Note: NSObject {
                 removePin()
             }
         }
+    }
+
+    public func getCursorPosition() -> Int? {
+        var position: Int?
+
+        if let data = try? url.extendedAttribute(forName: "com.tw93.miaoyan.cursor") {
+            position = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Int in
+                ptr.load(as: Int.self)
+            }
+
+            return position
+        }
+
+        return nil
     }
 
     public func isEmpty() -> Bool {
@@ -351,8 +365,8 @@ public class Note: NSObject {
 
     @objc func getDateForLabel() -> String {
         guard let date = (project.sortBy == .creationDate || UserDefaultsManagement.sort == .creationDate)
-            ? creationDate
-            : modifiedLocalAt
+                ? creationDate
+                : modifiedLocalAt
         else { return String() }
         return dateFormatter.formatTimeForDisplay(date)
     }
@@ -499,8 +513,7 @@ public class Note: NSObject {
                 let info = url.appendingPathComponent("info.json")
 
                 if let jsonData = try? Data(contentsOf: info),
-                   let info = try? JSONDecoder().decode(TextBundleInfo.self, from: jsonData)
-                {
+                   let info = try? JSONDecoder().decode(TextBundleInfo.self, from: jsonData) {
                     if info.version == 0x02 {
                         type = NoteType.withUTI(rawValue: info.type)
                         container = .textBundleV2
@@ -526,10 +539,10 @@ public class Note: NSObject {
 
     private func loadTitle() {
         title = url
-            .deletingPathExtension()
-            .pathComponents
-            .last!
-            .replacingOccurrences(of: ":", with: "/")
+                .deletingPathExtension()
+                .pathComponents
+                .last!
+                .replacingOccurrences(of: ":", with: "/")
     }
 
     public func save(attributed: NSAttributedString) {
@@ -617,8 +630,7 @@ public class Note: NSObject {
                 url = url.deletingLastPathComponent()
 
                 if let dirList = try? FileManager.default.contentsOfDirectory(atPath: url.path),
-                   let first = dirList.first(where: { $0.starts(with: "text.") })
-                {
+                   let first = dirList.first(where: { $0.starts(with: "text.") }) {
                     url = url.appendingPathComponent(first)
 
                     return url
@@ -665,24 +677,24 @@ public class Note: NSObject {
     private func getTextBundleJsonInfo() -> String {
         if let originalExtension = originalExtension {
             return """
-            {
-                "transient" : true,
-                "type" : "\(type.uti)",
-                "creatorIdentifier" : "com.tw93.miaoyan",
-                "version" : 2,
-                "flatExtension" : "\(originalExtension)"
-            }
-            """
+                   {
+                       "transient" : true,
+                       "type" : "\(type.uti)",
+                       "creatorIdentifier" : "com.tw93.miaoyan",
+                       "version" : 2,
+                       "flatExtension" : "\(originalExtension)"
+                   }
+                   """
         }
 
         return """
-        {
-            "transient" : true,
-            "type" : "\(type.uti)",
-            "creatorIdentifier" : "com.tw93.miaoyan",
-            "version" : 2
-        }
-        """
+               {
+                   "transient" : true,
+                   "type" : "\(type.uti)",
+                   "creatorIdentifier" : "com.tw93.miaoyan",
+                   "version" : 2
+               }
+               """
     }
 
     private func getAssetsFileWrapper() -> FileWrapper {
@@ -813,17 +825,17 @@ public class Note: NSObject {
         let content = content ?? self.content
         var res = [(url: URL, path: String)]()
 
-        NotesTextProcessor.imageInlineRegex.regularExpression.enumerateMatches(in: content.string, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSRange(0 ..< content.length), using:
-            { result, _, _ in
+        NotesTextProcessor.imageInlineRegex.regularExpression.enumerateMatches(in: content.string, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSRange(0..<content.length), using:
+        { result, _, _ in
 
-                guard let range = result?.range(at: 3), content.length >= range.location else { return }
+            guard let range = result?.range(at: 3), content.length >= range.location else { return }
 
-                let imagePath = content.attributedSubstring(from: range).string.removingPercentEncoding
+            let imagePath = content.attributedSubstring(from: range).string.removingPercentEncoding
 
-                if let imagePath = imagePath, let url = self.getImageUrl(imageName: imagePath), !url.isRemote() {
-                    res.append((url: url, path: imagePath))
-                }
-            })
+            if let imagePath = imagePath, let url = self.getImageUrl(imageName: imagePath), !url.isRemote() {
+                res.append((url: url, path: imagePath))
+            }
+        })
 
         return res
     }
@@ -952,8 +964,7 @@ public class Note: NSObject {
         let json = textBundleURL.appendingPathComponent("info.json")
 
         if let jsonData = try? Data(contentsOf: json),
-           let info = try? JSONDecoder().decode(TextBundleInfo.self, from: jsonData)
-        {
+           let info = try? JSONDecoder().decode(TextBundleInfo.self, from: jsonData) {
             if let flatExtension = info.flatExtension {
                 let ext = NoteType.withUTI(rawValue: info.type).getExtension(for: .textBundleV2)
                 let fileName = "text.\(ext)"
