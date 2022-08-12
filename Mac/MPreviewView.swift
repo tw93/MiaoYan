@@ -65,6 +65,13 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             }
             return false
         }
+        
+        if event.keyCode == kVK_Space, UserDefaultsManagement.magicPPT {
+            DispatchQueue.main.async {
+                self.evaluateJavaScript("Reveal.next();", completionHandler: nil)
+            }
+            return false
+        }
 
         if event.keyCode == kVK_LeftArrow, UserDefaultsManagement.magicPPT {
             DispatchQueue.main.async {
