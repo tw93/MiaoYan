@@ -124,7 +124,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
             let note = noteList[row]
             note.dealContent()
         }
-
         return CGFloat(52)
     }
 

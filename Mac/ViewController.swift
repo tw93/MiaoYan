@@ -2374,11 +2374,11 @@ class ViewController:
 
     func checkTitlebarTopConstraint() {
         if splitView.subviews[0].frame.width < 50,!UserDefaultsManagement.isWillFullScreen {
-            titlebarTopConstraint.constant = 22.0
-            titiebarHeight.constant = 62.0
+            titlebarTopConstraint.constant = 27.0
+            titiebarHeight.constant = 60.0
             return
         }
-        titlebarTopConstraint.constant = 10.0
+        titlebarTopConstraint.constant = 14.5
         titiebarHeight.constant = 52.0
     }
 
