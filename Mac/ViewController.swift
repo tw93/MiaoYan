@@ -14,7 +14,6 @@ class ViewController:
     NSSplitViewDelegate,
     NSOutlineViewDelegate,
     NSOutlineViewDataSource,
-    WebFrameLoadDelegate,
     NSMenuItemValidation,
     NSUserNotificationCenterDelegate
 {

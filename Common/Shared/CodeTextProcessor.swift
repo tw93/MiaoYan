@@ -188,10 +188,8 @@ class CodeTextProcessor {
     }
 
     public func getIntersectedRange(range: NSRange, ranges: [NSRange]) -> NSRange? {
-        for rangeItem in ranges {
-            if range.intersection(rangeItem) != nil {
-                return rangeItem
-            }
+        for rangeItem in ranges where range.intersection(rangeItem) != nil {
+            return rangeItem
         }
 
         return nil
