@@ -122,7 +122,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                     case .success(let data):
                         if let path = NSSearchPathForDirectoriesInDomains(.desktopDirectory, .userDomainMask, true).first {
                             let currentName = self.note?.getTitle()
-                            let filePath: String = path + "/" + currentName! + ".pdf"
+                            let filePath: String = path + "/" + (currentName ?? "MiaoYan") + ".pdf"
                             try! data.write(to: URL(fileURLWithPath: filePath))
                             vc?.toastExport(status: true)
                         }
