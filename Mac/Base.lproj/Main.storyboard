@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="21223" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21223"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -1230,7 +1229,7 @@ CA
                                                                                     <imageCell key="cell" refusesFirstResponder="YES" imageScaling="proportionallyDown" image="repository.png" id="WHo-8O-PFO"/>
                                                                                 </imageView>
                                                                                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kTp-qw-RCd">
-                                                                                    <rect key="frame" x="22" y="17" width="156" height="17"/>
+                                                                                    <rect key="frame" x="22" y="16" width="156" height="17"/>
                                                                                     <constraints>
                                                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="LXx-x4-6KI"/>
                                                                                     </constraints>
@@ -1243,16 +1242,17 @@ CA
                                                                                         <action selector="projectName:" target="I0q-sX-uBq" id="Mx3-zh-Tac"/>
                                                                                     </connections>
                                                                                 </textField>
-                                                                                <box hidden="YES" verticalHuggingPriority="750" ambiguous="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="bVt-gT-Six">
+                                                                                <box hidden="YES" verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="bVt-gT-Six">
                                                                                     <rect key="frame" x="0.0" y="-2" width="182" height="5"/>
                                                                                 </box>
                                                                             </subviews>
                                                                             <constraints>
+                                                                                <constraint firstItem="bVt-gT-Six" firstAttribute="top" secondItem="kTp-qw-RCd" secondAttribute="bottom" constant="15" id="EAg-NG-SyS"/>
                                                                                 <constraint firstAttribute="trailing" secondItem="kTp-qw-RCd" secondAttribute="trailing" constant="6" id="KQI-N7-7qH"/>
                                                                                 <constraint firstItem="1dd-W4-MiY" firstAttribute="leading" secondItem="I0q-sX-uBq" secondAttribute="leading" constant="3" id="KTq-ca-aXt"/>
                                                                                 <constraint firstAttribute="trailing" secondItem="bVt-gT-Six" secondAttribute="trailing" id="VUS-Wa-wfe"/>
                                                                                 <constraint firstItem="kTp-qw-RCd" firstAttribute="leading" secondItem="I0q-sX-uBq" secondAttribute="leading" constant="24" id="bav-Au-PqY"/>
-                                                                                <constraint firstItem="kTp-qw-RCd" firstAttribute="centerY" secondItem="I0q-sX-uBq" secondAttribute="centerY" id="fox-W9-Kiy"/>
+                                                                                <constraint firstItem="kTp-qw-RCd" firstAttribute="centerY" secondItem="1dd-W4-MiY" secondAttribute="centerY" constant="1" id="fox-W9-Kiy"/>
                                                                                 <constraint firstItem="bVt-gT-Six" firstAttribute="leading" secondItem="I0q-sX-uBq" secondAttribute="leading" id="oLU-KS-Pam"/>
                                                                                 <constraint firstItem="1dd-W4-MiY" firstAttribute="centerY" secondItem="I0q-sX-uBq" secondAttribute="centerY" id="slG-ke-sdb"/>
                                                                             </constraints>
@@ -1355,7 +1355,7 @@ CA
                                                             <rect key="frame" x="0.0" y="0.0" width="237" height="598"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnResizing="NO" autosaveColumns="NO" rowHeight="48" viewBased="YES" id="8X8-yh-5EA" customClass="NotesTableView" customModule="MiaoYan" customModuleProvider="target">
+                                                                <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" columnResizing="NO" autosaveColumns="NO" rowHeight="48" viewBased="YES" id="8X8-yh-5EA" customClass="NotesTableView" customModule="MiaoYan" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="0.0" width="237" height="598"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <size key="intercellSpacing" width="1" height="1"/>
@@ -1403,7 +1403,7 @@ CA
                                                                                             </textFieldCell>
                                                                                         </textField>
                                                                                         <imageView identifier="pin" hidden="YES" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9h5-Ob-Nej">
-                                                                                            <rect key="frame" x="52" y="7" width="12" height="12"/>
+                                                                                            <rect key="frame" x="50" y="9" width="12" height="12"/>
                                                                                             <constraints>
                                                                                                 <constraint firstAttribute="height" constant="12" id="QQS-Ef-avR"/>
                                                                                                 <constraint firstAttribute="width" constant="12" id="hpI-x0-6Kw"/>
@@ -1413,10 +1413,10 @@ CA
                                                                                     </subviews>
                                                                                     <constraints>
                                                                                         <constraint firstItem="UvD-jB-7Ok" firstAttribute="top" secondItem="8qL-z4-nzh" secondAttribute="top" constant="11" id="AtV-FX-Ffi"/>
-                                                                                        <constraint firstItem="9h5-Ob-Nej" firstAttribute="leading" secondItem="abw-Lq-K7d" secondAttribute="trailing" constant="8" id="F5A-5T-FXC"/>
+                                                                                        <constraint firstItem="9h5-Ob-Nej" firstAttribute="leading" secondItem="abw-Lq-K7d" secondAttribute="trailing" constant="6" id="F5A-5T-FXC"/>
                                                                                         <constraint firstItem="UvD-jB-7Ok" firstAttribute="leading" secondItem="8qL-z4-nzh" secondAttribute="leading" constant="6" id="eyU-qZ-ACw"/>
                                                                                         <constraint firstAttribute="bottom" secondItem="abw-Lq-K7d" secondAttribute="bottom" constant="7" id="hKA-pJ-rpa"/>
-                                                                                        <constraint firstItem="9h5-Ob-Nej" firstAttribute="centerY" secondItem="abw-Lq-K7d" secondAttribute="centerY" constant="1.5" id="jki-SD-fdc"/>
+                                                                                        <constraint firstItem="9h5-Ob-Nej" firstAttribute="centerY" secondItem="abw-Lq-K7d" secondAttribute="centerY" constant="-0.5" id="jki-SD-fdc"/>
                                                                                         <constraint firstItem="UvD-jB-7Ok" firstAttribute="left" secondItem="abw-Lq-K7d" secondAttribute="left" id="ngR-5z-x5I"/>
                                                                                         <constraint firstAttribute="trailing" secondItem="UvD-jB-7Ok" secondAttribute="trailing" id="vb9-2V-r5G"/>
                                                                                     </constraints>
