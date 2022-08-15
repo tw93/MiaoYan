@@ -127,6 +127,8 @@
 	<string>4IB5REPPZ6ya7EP1aIYpaleXXOEVmenFqN4DFnsVbHc=</string>
 	<key>SUScheduledCheckInterval</key>
 	<real>3666</real>
+	<key>UILaunchStoryboardName</key>
+	<string>Main.storyboard</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
