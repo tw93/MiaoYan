@@ -35,7 +35,7 @@ class TitleTextField: NSTextField {
         guard stringValue.count > 0, let vc = ViewController.shared(), let note = EditTextView.note else { return }
 
         let currentTitle = stringValue
-        let currentName = note.getShortTitle()
+        let currentName = note.getFileName()
 
         defer {
             updateNotesTableView()
