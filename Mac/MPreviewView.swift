@@ -52,37 +52,9 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             return false
         }
 
-        if event.keyCode == kVK_RightArrow, UserDefaultsManagement.magicPPT {
-            DispatchQueue.main.async {
-                self.evaluateJavaScript("Reveal.next();", completionHandler: nil)
-            }
-            return false
-        }
-
-        if event.keyCode == kVK_DownArrow, UserDefaultsManagement.magicPPT {
-            DispatchQueue.main.async {
-                self.evaluateJavaScript("Reveal.next();", completionHandler: nil)
-            }
-            return false
-        }
-        
         if event.keyCode == kVK_Space, UserDefaultsManagement.magicPPT {
             DispatchQueue.main.async {
                 self.evaluateJavaScript("Reveal.next();", completionHandler: nil)
-            }
-            return false
-        }
-
-        if event.keyCode == kVK_LeftArrow, UserDefaultsManagement.magicPPT {
-            DispatchQueue.main.async {
-                self.evaluateJavaScript("Reveal.prev();", completionHandler: nil)
-            }
-            return false
-        }
-
-        if event.keyCode == kVK_UpArrow, UserDefaultsManagement.magicPPT {
-            DispatchQueue.main.async {
-                self.evaluateJavaScript("Reveal.prev();", completionHandler: nil)
             }
             return false
         }
