@@ -73,13 +73,6 @@ class SidebarProjectView: NSOutlineView,
             NSPasteboard.PasteboardType(rawValue: "public.data"),
             NSPasteboard.PasteboardType(rawValue: "notesTable")
         ])
-
-        if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-            NSColor(named: "mainBackground")!.setFill()
-            __NSRectFill(dirtyRect)
-        } else {
-            layer?.backgroundColor = NSColor.white.cgColor
-        }
         super.draw(dirtyRect)
     }
 

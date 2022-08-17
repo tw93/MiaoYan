@@ -190,7 +190,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             breakUndoCoalescing()
 
             saveTextStorageContent(to: note)
-            DispatchQueue.main.async {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0001) {
                 self.fillHighlightLinks()
             }
             return
@@ -373,9 +373,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         } else {
             storage.setAttributedString(note.content)
         }
-
-        fillHighlightLinks()
-
+        
         if highlight {
             let search = getSearchText()
             let processor = NotesTextProcessor(storage: storage)
@@ -384,6 +382,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         applyLeftParagraphStyle()
         restoreCursorPosition()
+        fillHighlightLinks()
     }
 
     private func setTextColor() {
@@ -525,14 +524,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
             let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
             formatter.newLine()
             breakUndoCoalescing()
-            DispatchQueue.main.async {
-                self.fillHighlightLinks()
-            }
+            fillHighlightLinks()
             return
         }
 
         if event.keyCode == kVK_Delete {
-            DispatchQueue.main.async {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0001) {
                 self.fillHighlightLinks()
             }
         }
@@ -1066,8 +1063,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
             } else {
                 if picType == "uPic" || picType == "Picsee" {
                     vc.toastUpload(status: true)
-                    let runList = run("/Applications/\(picType).app/Contents/MacOS/\(picType) -o url -u \(imagePath)")
+                    let runList = run("/Applications/\(picType).app/Contents/MacOS/\(picType) -o url -u \(tempPath)")
                     let imageDesc = runList?.components(separatedBy: "\n") ?? []
+                    
                     if imageDesc.count > 3 {
                         let imagePath = imageDesc[4]
                         newLineImage = NSAttributedString(string: "![](\(imagePath))")
