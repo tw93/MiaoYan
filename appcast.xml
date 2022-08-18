@@ -6,7 +6,7 @@
       <title>1.4.1</title>
       <description><![CDATA[
        <h3>稳一点 😂：</h3>
-        🎉 支持使用 markmap 方式快捷写脑图，```markmap ``` <br/>
+        🎉 支持使用 markmap 方式快捷写脑图，用 ```markmap ``` <br/>
         🍭 开始着手去适配 macOS Ventura 版本，基本差不多了<br/>
         🙊 PPT模式下支持 LaTex 数学公式、使用体验优化<br/>
         😂 持续优化代码，包括 Crash，不够还有少量问题未复现，欢迎反馈<br/>
