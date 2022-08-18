@@ -9,14 +9,14 @@
         😵 原来证书貌似过期了，辛苦使用最新版本<br/>
         🎉 支持使用 markmap 方式快捷写脑图，用 ```markmap ```代码语法即可，参考<a href="https://miaoyan.app/Release/demo/MiaoYan%20Markmap.md">写法</a> <br/>
         🍭 开始着手去适配 macOS Ventura 版本，基本差不多了<br/>
-        🙊 PPT模式下支持 LaTex 数学公式、使用体验优化<br/>
-        😂 持续优化代码，包括 Crash，不够还有少量问题未复现，欢迎反馈<br/>
+        🙊 PPT模式下支持 LaTeX 数学公式、使用体验优化<br/>
+        😂 持续优化代码，包括 crash，不够还有少量问题未复现，欢迎反馈<br/>
         <h3>More steady 😂：</h3>
         😵 The original certificate seems to have expired, you have to use this latest version.<br/>
         🎉 Support the use of markmap, use ```markmap ``` code syntax, reference this<a href="https://miaoyan.app/Release/demo/MiaoYan%20Markmap.md">demo</a> .<br/>
         🍭 Start to adapt the MacOS Ventura version, basically almost.<br/>
-        🙊 In PPT mode, Supports LaTex and optimization of user experience.<br/>
-        😂 Continue to optimize code, including Crash. There are still a few problems that haven't been solved. Welcome to feedback.<br/>
+        🙊 In PPT mode, supports LaTeX and optimization of user experience.<br/>
+        😂 Continue to optimize code, including crash. There are still a few problems that haven't been solved. Welcome to feedback.<br/>
           ]]>      </description>
       <pubDate>周四, 08 8月 2022 21:00:20 +0800</pubDate>
       <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.4.3.zip" sparkle:shortVersionString="1.4.3" sparkle:version="1.4.3" sparkle:edSignature="9r9IjhaRMMRCss848nN2ly4k0ZVtGnZ/sLF6XhuS2SGbCja+czN8mi1SdBOYMAzVRMnnasZDI0r1tMbz/qbXCw==" length="20924093" type="application/octet-stream" />
