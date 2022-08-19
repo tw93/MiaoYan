@@ -373,7 +373,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
         } else {
             storage.setAttributedString(note.content)
         }
-        
+
+        fillHighlightLinks()
+
         if highlight {
             let search = getSearchText()
             let processor = NotesTextProcessor(storage: storage)
@@ -382,7 +384,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         applyLeftParagraphStyle()
         restoreCursorPosition()
-        fillHighlightLinks()
     }
 
     private func setTextColor() {
