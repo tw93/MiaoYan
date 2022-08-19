@@ -1230,7 +1230,7 @@ CA
                                                                                     <imageCell key="cell" refusesFirstResponder="YES" imageScaling="proportionallyDown" image="repository.png" id="WHo-8O-PFO"/>
                                                                                 </imageView>
                                                                                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kTp-qw-RCd">
-                                                                                    <rect key="frame" x="22" y="16" width="156" height="17"/>
+                                                                                    <rect key="frame" x="22" y="18" width="156" height="17"/>
                                                                                     <constraints>
                                                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="LXx-x4-6KI"/>
                                                                                     </constraints>
@@ -1248,12 +1248,12 @@ CA
                                                                                 </box>
                                                                             </subviews>
                                                                             <constraints>
-                                                                                <constraint firstItem="bVt-gT-Six" firstAttribute="top" secondItem="kTp-qw-RCd" secondAttribute="bottom" constant="15" id="EAg-NG-SyS"/>
                                                                                 <constraint firstAttribute="trailing" secondItem="kTp-qw-RCd" secondAttribute="trailing" constant="6" id="KQI-N7-7qH"/>
                                                                                 <constraint firstItem="1dd-W4-MiY" firstAttribute="leading" secondItem="I0q-sX-uBq" secondAttribute="leading" constant="3" id="KTq-ca-aXt"/>
                                                                                 <constraint firstAttribute="trailing" secondItem="bVt-gT-Six" secondAttribute="trailing" id="VUS-Wa-wfe"/>
                                                                                 <constraint firstItem="kTp-qw-RCd" firstAttribute="leading" secondItem="I0q-sX-uBq" secondAttribute="leading" constant="24" id="bav-Au-PqY"/>
-                                                                                <constraint firstItem="kTp-qw-RCd" firstAttribute="centerY" secondItem="1dd-W4-MiY" secondAttribute="centerY" constant="1" id="fox-W9-Kiy"/>
+                                                                                <constraint firstItem="kTp-qw-RCd" firstAttribute="centerY" secondItem="1dd-W4-MiY" secondAttribute="centerY" constant="-1" id="etK-XI-kVT"/>
+                                                                                <constraint firstAttribute="bottom" secondItem="bVt-gT-Six" secondAttribute="bottom" id="h6b-pM-7dD"/>
                                                                                 <constraint firstItem="bVt-gT-Six" firstAttribute="leading" secondItem="I0q-sX-uBq" secondAttribute="leading" id="oLU-KS-Pam"/>
                                                                                 <constraint firstItem="1dd-W4-MiY" firstAttribute="centerY" secondItem="I0q-sX-uBq" secondAttribute="centerY" id="slG-ke-sdb"/>
                                                                             </constraints>
@@ -1599,10 +1599,9 @@ CA
                                                             </customView>
                                                         </subviews>
                                                         <constraints>
-                                                            <constraint firstAttribute="bottom" secondItem="rZx-hk-GcJ" secondAttribute="bottom" constant="10" id="0qE-6r-sxc"/>
                                                             <constraint firstItem="rZx-hk-GcJ" firstAttribute="leading" secondItem="xSU-Mk-2F1" secondAttribute="leading" constant="25" id="1I0-Qm-T21"/>
-                                                            <constraint firstItem="rZx-hk-GcJ" firstAttribute="top" secondItem="xSU-Mk-2F1" secondAttribute="top" constant="10" id="Ics-3U-dtd"/>
                                                             <constraint firstAttribute="trailing" secondItem="Ua8-RE-q01" secondAttribute="trailing" id="Uos-hm-kn6"/>
+                                                            <constraint firstItem="rZx-hk-GcJ" firstAttribute="centerY" secondItem="xSU-Mk-2F1" secondAttribute="centerY" id="dAk-7a-dZK"/>
                                                             <constraint firstItem="Ua8-RE-q01" firstAttribute="leading" secondItem="rZx-hk-GcJ" secondAttribute="trailing" constant="16" id="eWY-C1-IBp"/>
                                                             <constraint firstItem="Ua8-RE-q01" firstAttribute="top" secondItem="xSU-Mk-2F1" secondAttribute="top" id="esv-qQ-apf"/>
                                                             <constraint firstAttribute="bottom" secondItem="Ua8-RE-q01" secondAttribute="bottom" id="nac-xp-D3Y"/>
@@ -1675,7 +1674,6 @@ CA
                         <outlet property="titleBarAdditionalView" destination="Ua8-RE-q01" id="CfN-3p-UH3"/>
                         <outlet property="titleBarView" destination="xSU-Mk-2F1" id="lbu-pA-1Hs"/>
                         <outlet property="titleLabel" destination="rZx-hk-GcJ" id="wKj-zD-Ovz"/>
-                        <outlet property="titlebarTopConstraint" destination="Ics-3U-dtd" id="Vql-cs-Klm"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

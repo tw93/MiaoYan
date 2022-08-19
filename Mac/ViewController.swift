@@ -57,7 +57,6 @@ class ViewController:
     @IBOutlet var notesListCustomView: NSView!
     @IBOutlet var outlineHeader: OutlineHeaderView!
 
-    @IBOutlet var titlebarTopConstraint: NSLayoutConstraint!
     @IBOutlet var titiebarHeight: NSLayoutConstraint!
     @IBOutlet var searchTopConstraint: NSLayoutConstraint!
     @IBOutlet var titleLabel: TitleTextField!
@@ -2373,11 +2372,9 @@ class ViewController:
 
     func checkTitlebarTopConstraint() {
         if splitView.subviews[0].frame.width < 50,!UserDefaultsManagement.isWillFullScreen {
-            titlebarTopConstraint.constant = 24.0
             titiebarHeight.constant = 66.0
             return
         }
-        titlebarTopConstraint.constant = 10.0
         titiebarHeight.constant = 52.0
     }
 
