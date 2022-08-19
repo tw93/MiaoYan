@@ -5,10 +5,6 @@
     <div align="center"><a href="https://github.com/tw93/MiaoYan/blob/master/README_CN.md">中文</a> | <strong>English</strong></div>
 </p>
 
-<kbd>
-    <img src=https://gw.alipayobjects.com/zos/k/8m/en.gif width=1000>
-</kbd>
-
 ## Features
 
 - 🪂 **Fantastic**: Local use, security, syntax highlighting, dark mode, source file saving, international, Presentation mode, document auto typesetting.
