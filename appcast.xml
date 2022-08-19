@@ -3,6 +3,26 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>1.4.4</title>
+      <description><![CDATA[
+       <h3>稳一点 🙏：</h3>
+        😵 修复证书过期的问题，较 1.4.3 版本修复部分机型重新安装失败的问题<br/>
+        🎉 支持使用 markmap 方式快捷写脑图，用 ```markmap ```代码语法即可，参考<a href="https://miaoyan.app/Release/demo/MiaoYan%20Markmap.md">写法</a> <br/>
+        🍭 开始着手去适配 macOS Ventura 版本，基本差不多了<br/>
+        🙊 PPT模式下支持 LaTeX 数学公式、使用体验优化<br/>
+        😂 持续优化代码，包括 crash，不够还有少量问题未复现，欢迎反馈<br/>
+        <h3>More stable 🙏：</h3>
+        😵 Fix the problem of certificate expiration, and fix the problem of reinstallation failure of some models compared with version 1.4.3.<br/>
+        🎉 Support the use of markmap, use ```markmap ``` code syntax, reference this<a href="https://miaoyan.app/Release/demo/MiaoYan%20Markmap.md">demo</a> .<br/>
+        🍭 Start to adapt the MacOS Ventura version, basically almost.<br/>
+        🙊 In PPT mode, supports LaTeX, optimization of user experience.<br/>
+        😂 Continue to optimize code, including crash. There are still a few problems that haven't been solved, welcome to feedback.<br/>
+          ]]>      </description>
+      <pubDate>周五, 08 8月 2022 21:00:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.4.4.zip" sparkle:shortVersionString="1.4.4" sparkle:version="1.4.4" sparkle:edSignature="NZvtrVAi5zIaK7UmJr27+y+mD/rxn0QM5O/XhkNvXMdsn/3/SU9k0FC3jZVdaaMJDndhSCtkCNJTl0N+3mYyAQ==" length="24418607" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>1.4.3</title>
       <description><![CDATA[
        <h3>稳一点 🙏：</h3>
