@@ -13,7 +13,7 @@
         😂 持续优化代码，包括 crash，不够还有少量问题未复现，欢迎反馈<br/>
         <h3>More stable 🙏：</h3>
         😵 Fix the problem of certificate expiration, and fix the problem of reinstallation failure of some models compared with version 1.4.3.<br/>
-        🎉 Support the use of markmap, use ```markmap ``` code syntax, reference this<a href="https://miaoyan.app/Release/demo/MiaoYan%20Markmap.md">demo</a> .<br/>
+        🎉 Support the use of markmap, use ```markmap ``` code syntax, reference this <a href="https://miaoyan.app/Release/demo/MiaoYan%20Markmap.md">demo</a> .<br/>
         🍭 Start to adapt the MacOS Ventura version, basically almost.<br/>
         🙊 In PPT mode, supports LaTeX, optimization of user experience.<br/>
         😂 Continue to optimize code, including crash. There are still a few problems that haven't been solved, welcome to feedback.<br/>
@@ -40,62 +40,6 @@
           ]]>      </description>
       <pubDate>周四, 08 8月 2022 21:00:20 +0800</pubDate>
       <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.4.3.zip" sparkle:shortVersionString="1.4.3" sparkle:version="1.4.3" sparkle:edSignature="9r9IjhaRMMRCss848nN2ly4k0ZVtGnZ/sLF6XhuS2SGbCja+czN8mi1SdBOYMAzVRMnnasZDI0r1tMbz/qbXCw==" length="20924093" type="application/octet-stream" />
-      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-    </item>
-    <item>
-      <title>1.3.1</title>
-      <description><![CDATA[
-       <h3>快一些 🩴：</h3>
-        🎉 单独打开模式下支持打开文件速度快了不少<br/>
-        🍭 编辑模式下支持左上角3个按钮自适应显示、最小高宽度支持分屏使用<br/>
-        🙊 修复文章超过一屏，回车易抖动问题、继续优化启动效果、减少易Crash的点 <br/>
-        😂 较 1.3.0 修复了单文件打开的 bug<br/>
-        <h3>Hurry up 🩴：</h3>
-        🎉 In the separate open mode, you can open files much faster.<br/>
-        🍭 Editing mode supports split screen use, the adaptive display of three buttons at the upper left corner.<br/>
-        🙊 Fix the problem that the article is more than one screen, and it is easy to shake when entering, continue to optimize the startup effect, and reduce the points prone to crash.<br/>
-        😂 Compared with 1.3.0, fixed the bug of single file opening.<br/>
-          ]]>      </description>
-      <pubDate>周一, 08 8月 2022 22:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.3.1.zip" sparkle:shortVersionString="1.3.1" sparkle:version="1.3.1" sparkle:edSignature="ONsqA8GOWsitojt3I2O+sF+xVCcHZY+/v6bdBK0yylnM5/rwReovV02B+cqUhIIptun1HiVzz05lhnrtKUd/Cw==" length="24065927" type="application/octet-stream" />
-      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-    </item>
-    <item>
-      <title>1.2.0</title>
-      <description><![CDATA[
-       <h3>内在美🍒：</h3>
-        🎉 你会发现编辑器的文字更舒服一些了，细调了下文字间距<br/>
-        🍭 支持文章内容的搜索替换，快捷键 command+shift+f 和 command+shift+r <br/>
-        🩴 修复了几个容易 Crash 的点，顺便减少了下包体积到 23M <br/>
-        <h3>Inner Beauty🍒：</h3>
-        🎉 You will find that text of editor is more comfortable, optimize text spacing.<br/>
-        🍭 Support search and replacement within the note, shortcut keys are command+shift+f and command+shift+r.<br/>
-        🩴 Fixed several points that are easy to crash, and reduced the size to 23M.<br/>
-          ]]>      </description>
-      <pubDate>周五, 05 8月 2022 21:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.2.0.zip" sparkle:shortVersionString="1.2.0" sparkle:version="1.2.0" sparkle:edSignature="A5UJ6kFl0gaQ57GciRAM2BaVL5r40MvjEeyOPTh/LIqvRFbuhhGaSwDjlPQZOI9QF4nHdjszW0C8wiaJB8iYBw==" length="24061063" type="application/octet-stream" />
-      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-    </item>
-    <item>
-      <title>1.1.1</title>
-      <description><![CDATA[
-       <h3>好用一些 🎉：</h3>
-        🐶 较 V1.1.0，修复了 PPT 导出时闪动、预览效果优化、支持 TodoList 使用<br/>
-        🎉 支持更简洁的妙言，你可以在设置中设置 Hover 才显示按钮<br/>
-        🍭 支持嵌入各类有趣的东西，codepen、codeSandbox、youtube 等等<br/>
-        🩴 妙言 PPT 结合真实使用场景优化了很多，同时支持导出 PPT 的 PDF<br/>
-        🙊 解决预览时标题可能会闪一下、解决复杂 LaTeX 输入，可用 span 标签包裹、优化输入 Emoji 的体验<br/>
-        😂 TouchBar 菜单栏没啥用干掉了，整体框架视觉继续优化，标题处有间距调整<br/>
-        <h3>Easy to use 🎉：</h3>
-        🐶 Compared with V1.1.0, Fixes the flicker of PPT export, Optimization of preview experience, Supports the use of todolist.<br/>
-        🎉 Support more simple about MiaoYan. You can use Hover button in the setting.<br/>
-        🍭 Support embedding all kinds of interesting things, codepen/codeSandbox/youtube etc.<br/>
-        🩴 Miaoyan ppt optimizes a lot in combination with real use scenarios, and supports PDF export of PPT.<br/>
-        🙊 Solved problem that the title may flash during preview, and solve the complex LaTeX input problem, you can use span surround.<br/>
-        😂 The TouchBar is useless, the spacing is adjusted at the title.<br/>
-            ]]>      </description>
-      <pubDate>周日, 31 7月 2022 13:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.1.1.zip" sparkle:shortVersionString="1.1.1" sparkle:version="1.1.1" sparkle:edSignature="p5vBnjEfUK9XYkHwMz7e4VRbLHhLu8rtbiFzTTWmal1aPdEyflfHl3TkULDL4ONmnp9fIN1yhgRqBXJ06buJCg==" length="33138021" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
     </item>
   </channel>
