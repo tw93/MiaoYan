@@ -1874,17 +1874,26 @@ class ViewController:
         notesTableView.scrollRowToVisible(0)
     }
 
+    
     func focusEditArea(firstResponder: NSResponder? = nil) {
         guard EditTextView.note != nil else { return }
-
-        editArea.window?.makeFirstResponder(editArea)
+        var resp: NSResponder = editArea
+        if let responder = firstResponder {
+            resp = responder
+        }
 
         if notesTableView.selectedRow > -1 {
             DispatchQueue.main.async {
                 self.editArea.isEditable = true
                 self.emptyEditAreaView.isHidden = true
+                self.titleBarView.isHidden = false
+                self.editArea.window?.makeFirstResponder(resp)
+                self.editArea.restoreCursorPosition()
             }
+            return
         }
+
+        editArea.window?.makeFirstResponder(resp)
     }
 
     func focusSearchInput(firstResponder: NSResponder? = nil) {
