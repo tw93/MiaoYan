@@ -16,9 +16,10 @@
 
 ## 修改默认高度
 
-```txt
+```text
+// 默认显示 300px 的高度，假如有那种很长的 markdown，加上这个注释就可以设置高度了
 // markmap代码中第一行加上这段，空行分开原有描述内容，如下所示
-<!--markmap-height=400-->
+<!--markmap-height=800-->
 
-- markdown 内容
+- 妙言 markmap
 ```
