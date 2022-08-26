@@ -6,7 +6,7 @@
       <title>1.4.7</title>
       <description><![CDATA[
        <h3>稳一点 🙏：</h3>
-        😵 修复证书过期的问题，较 1.4.3 修复部分机型重新安装失败的问题<br/>
+        😵 修复证书过期的问题，较之前版本修复部分机型重新安装失败的问题<br/>
         🎉 支持使用 markmap 方式快捷写脑图，用 ```markmap ```代码语法即可，参考<a href="https://miaoyan.app/Release/demo/MiaoYan%20Markmap.md">写法</a> <br/>
         🍭 开始着手去适配 macOS Ventura 版本，基本差不多了<br/>
         🙊 PPT模式下支持 LaTeX 数学公式、使用体验优化<br/>
