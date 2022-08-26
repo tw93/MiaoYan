@@ -3,7 +3,7 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
-      <title>1.4.6</title>
+      <title>1.4.7</title>
       <description><![CDATA[
        <h3>稳一点 🙏：</h3>
         😵 修复证书过期的问题，较 1.4.3 修复部分机型重新安装失败的问题<br/>
@@ -18,8 +18,8 @@
         🙊 In PPT mode, supports LaTeX, optimization of user experience.<br/>
         😂 Continue to optimize code, including crash. There are still a few problems that haven't been solved, welcome to feedback.<br/>
           ]]>      </description>
-      <pubDate>周六, 08 8月 2022 10:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.4.6.zip" sparkle:shortVersionString="1.4.6" sparkle:version="1.4.6" sparkle:edSignature="SE0b2Zizq4o74d5MstIQ6JLq4qBczXDwxL9NqmIl837tLQl7P+pNSDRrTEyYhtxvyFLcda59gIcH/AwKpPZyBw==" length="24419798" type="application/octet-stream" />
+      <pubDate>周六, 26 8月 2022 10:00:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.4.7.zip" sparkle:shortVersionString="1.4.7" sparkle:version="1.4.7" sparkle:edSignature="8pkYqAiIzTznd5+WMFlEg12IMWZWLu9VQX2Egxii2wdlUzbl3asqe3IMM/ujqhak7y9NfiLPSws8IZioFpchCw==" length="24187517" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
     </item>
     <item>
