@@ -128,20 +128,22 @@ extension AppDelegate {
             }
         } else if notes.count == 1 {
             if let items = vc.storageOutlineView.sidebarItems {
-                if let sidebarItem = items.first(where: { ($0 as? SidebarItem)?.project == notes[0].project }) {
-                    let sidebarIndex = vc.storageOutlineView.row(forItem: sidebarItem)
-                    vc.updateTable {
-                        DispatchQueue.main.async {
-                            vc.storageOutlineView.selectRowIndexes([sidebarIndex], byExtendingSelection: false)
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.04) {
-                                if let index = vc.notesTableView.noteList.firstIndex(where: { $0 === notes[0] }) {
-                                    vc.notesTableView.selectRowIndexes([index], byExtendingSelection: false)
-                                    vc.notesTableView.scrollRowToVisible(row: index, animated: true)
-                                }
+                // 修复在根目录的场景
+                var sidebarIndex = 0
+                if let sidebarItem = items.first(where: { ($0 as? SidebarItem)?.project == notes[0].project }){
+                    sidebarIndex = vc.storageOutlineView.row(forItem: sidebarItem)
+                }
+                vc.updateTable {
+                    DispatchQueue.main.async {
+                        vc.storageOutlineView.selectRowIndexes([sidebarIndex], byExtendingSelection: false)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.04) {
+                            if let index = vc.notesTableView.noteList.firstIndex(where: { $0 === notes[0] }) {
+                                vc.notesTableView.selectRowIndexes([index], byExtendingSelection: false)
+                                vc.notesTableView.scrollRowToVisible(row: index, animated: true)
                             }
                         }
                     }
-                }
+                }  
             }
         } else {
             vc.toastNoTitle()
