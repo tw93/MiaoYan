@@ -536,7 +536,7 @@ class Storage {
             noteList.remove(at: i)
         }
     }
-
+    
     func getNextId() -> Int {
         noteList.count
     }
