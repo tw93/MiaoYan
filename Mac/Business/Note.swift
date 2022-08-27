@@ -491,11 +491,8 @@ public class Note: NSObject {
     }
 
     func getPrettifiedContent() -> String {
-        var content = content.string
-
-        content = NotesTextProcessor.convertAppLinks(in: content)
-
-        return cleanMetaData(content: content)
+        let content = NotesTextProcessor.convertAppLinks(in: content)
+        return cleanMetaData(content: content.string)
     }
 
     public func overwrite(url: URL) {
