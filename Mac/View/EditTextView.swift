@@ -920,16 +920,18 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     override func viewDidChangeEffectiveAppearance() {
         guard let note = EditTextView.note else { return }
-
+        guard let vc = ViewController.shared() else { return }
         UserDataService.instance.isDark = effectiveAppearance.isDark
 
         NotesTextProcessor.hl = nil
         NotesTextProcessor.highlight(note: note)
-
-        let funcName = effectiveAppearance.isDark ? "switchToDarkMode" : "switchToLightMode"
-        let switchScript = "if (typeof(\(funcName)) == 'function') { \(funcName)(); }"
-
-        downView?.evaluateJavaScript(switchScript)
+        
+        //用于自动模式下切换时候的效果
+        if UserDefaultsManagement.preview {
+            vc.disablePreview()
+            vc.enablePreview()
+        }
+        
         viewDelegate?.refillEditArea()
     }
 
