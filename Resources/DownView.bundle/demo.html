@@ -20,7 +20,8 @@
         font-style: normal;
         font-weight: 800;
         font-display: fallback;
-        src: url('/Users/tw/Library/Developer/Xcode/DerivedData/MiaoYan-gtwqkuvaxbdtmuavqchvixatopep/Build/Products/Debug/MiaoYan.app/Contents/Resources/LXGWWenKaiLite-Bold.ttf') format('truetype');
+        src: url('/Users/tw/Library/Developer/Xcode/DerivedData/MiaoYan-gtwqkuvaxbdtmuavqchvixatopep/Build/Products/Debug/MiaoYan.app/Contents/Resources/LXGWWenKaiLite-Bold.ttf')
+          format('truetype');
       }
 
       @font-face {
@@ -28,70 +29,51 @@
         font-style: normal;
         font-weight: 400;
         font-display: fallback;
-        src: url('/Users/tw/Library/Developer/Xcode/DerivedData/MiaoYan-gtwqkuvaxbdtmuavqchvixatopep/Build/Products/Debug/MiaoYan.app/Contents/Resources/LXGWWenKaiLite-Regular.ttf') format('truetype');
+        src: url('/Users/tw/Library/Developer/Xcode/DerivedData/MiaoYan-gtwqkuvaxbdtmuavqchvixatopep/Build/Products/Debug/MiaoYan.app/Contents/Resources/LXGWWenKaiLite-Regular.ttf')
+          format('truetype');
       }
 
-      html {font-size: 15px; } :root { --text-font: LXGW WenKai Lite, sans-serif; --code-text-font: LXGW WenKai Lite,sans-serif; } #write { max-width: 1000px;}
+      html {
+        font-size: 15px;
+      }
+      :root {
+        --text-font: LXGW WenKai Lite, sans-serif;
+        --code-text-font: LXGW WenKai Lite, sans-serif;
+      }
+      #write {
+        max-width: 1000px;
+      }
     </style>
   </head>
 
   <body>
-    <div class="markdown-body heti" id="write"><h3>1.5.0</h3>
-<ol>
-<li>继续兼容 macOS Ventura 版本，主要是标题高度的问题，会出现闪一下的问题</li>
-<li>对于大图片加载的时候支持懒加载，现在会白很久</li>
-<li>预览模式下黑暗模式同步不对等、预览模式中代码中的会被渲染成超链接的形式✅</li>
-<li>格式化的时候会修改代码的格式✅</li>
-<li>文本选中的时候会出现残留的痕迹</li>
-<li>两个代码块之间标题颜色会出错，正则的错误✅</li>
-<li>中文和英文标点混用时格式化会导致光标错位，因为使用中文标点不支持 markdown 语法✅</li>
-<li>继续解决 crash 的问题，有几个妙友反馈的问题继续排查</li>
-<li>markmap 形式中高度设置会影响所有的、注释必须隔一行的问题</li>
-<li>预览模式下对于 <a href="https://mail.qq.com/cgi-bin/loginpage?s=session_timeout&amp;from=&amp;r=c72752a78e54bb72dba15589c491c4be&amp;tiptype=LOGIN_ERR_COOKIE_FORBIDDEN">https://mail.qq.com/cgi-bin/loginpage?s=session_timeout&amp;from=&amp;r=c72752a78e54bb72dba15589c491c4be&amp;tiptype=LOGIN_ERR_COOKIE_FORBIDDEN</a>长链接，会出现稀疏文字的问题</li>
-</ol>
-<p>预览模式下对于 <a href="https://mail.qq.com/cgi-bin/loginpage?s=session_timeout&amp;from=&amp;r=c72752a78e54bb72dba15589c491c4be&amp;tiptype=LOGIN_ERR_COOKIE_FORBIDDEN">https://mail.qq.com/cgi-bin/loginpage?s=session_timeout&amp;from=&amp;r=c72752a78e54bb72dba15589c491c4be&amp;tiptype=LOGIN_ERR_COOKIE_FORBIDDEN</a>长链接，会出现稀疏文字的问题</p>
-<h3>1.4.0</h3>
-<ol>
-<li>支持写脑图，很便捷的样子，默认高度为 300，可以自定义 <code>&lt;!--markmap-height=400--&gt;</code></li>
-<li>继续优化预览的效果，ppt 和演示模式下防止误触其他快捷键，副本模式下命名规范</li>
-<li>PPT 场景下支持 LaTex 能力</li>
-<li>持续增强稳定性，减少各类异常情况下的 Crash</li>
-</ol>
-<h3>1.3.0</h3>
-<ol>
-<li>继续解决容易 crash 的点</li>
-<li>解决长篇文章超过屏幕底部回车时候容易抖动的问题，包括内容过多时粘贴时候的抖动</li>
-<li>修改妙用的最小高宽度，这样分屏场景可以很方便使用</li>
-<li>优化启动时候的体验、预览模式链接鼠标样式、优化列表页面时间标签的显示</li>
-<li>支持单独模式下单文件打开妙言、打开速度提升、支持左上角按钮自适应展示</li>
-</ol>
-<h3>1.2.0</h3>
-<ol>
-<li>文章中的字距调整，整体变得更好看一些了，字体优化</li>
-<li>支持文章内的搜索替换的能力</li>
-<li>修复一些容易 crash 的点，包提及减少到 23m</li>
-<li>基本上本地将即时编辑模式给跑起来了</li>
-</ol>
-<h3>1.1.1</h3>
-<ol>
-<li>好好弄一下 pdf 的导出体验 (√)</li>
-<li>支持 todolist 可以选中的场景 (√)</li>
-<li>修复 line break 默认值的问题，虽然不影响（√）</li>
-<li>继续优化预览的体验，特别是间距这一块 (√)</li>
-</ol>
-<h3>1.1.0</h3>
-<ol>
-<li>支持妙言 ppt 导出 pdf，并分页 (√)</li>
-<li>解决 latex 格式的一些小问题，支持 line break 设置、临时文件夹（√）</li>
-<li>整体视觉优化一下，包括标题预览间距、标题和正文之间太近的问题、按钮位置 (√)</li>
-<li>全部的警告想办法解决一下 (√)</li>
-<li>修复一下 touchbar 的使用，最好是不启动就好了 (√)</li>
-<li>支持设置隐藏不常用的按钮试试（√）</li>
-<li>支持嵌入各类有趣的东西，codepen、codeSandbox、youtube 等等 (√)</li>
-<li>需要解决一下 preview 光标会去标题闪一下的问题 (√)</li>
-<li>输入 emoji 的时候高度抖动问题（√）</li>
-</ol>
-</div>
+    <div class="markdown-body heti" id="write">
+      <h2>妙言 Markmap</h2>
+      <pre><code class="language-markmap">- 妙言
+  - 好不好看
+    - 好看
+    - 好用
+  - 好不好玩
+    - 好玩
+    - 漂亮
+  - 还可以这样
+    - 试试链接
+    - [Github](https://github.com/tw93/MiaoYan/releases/tag/V1.4.3)
+</code></pre>
+      <pre><code class="language-markmap">&lt;!--markmap-height=500--&gt;
+  
+- 妙言
+  - 好不好看
+    - 好看
+    - 好用
+  - 好不好玩
+    - 好玩
+    - 漂亮
+  - 还可以这样
+    - 试试链接
+    - [Github](https://github.com/tw93/MiaoYan/releases/tag/V1.4.3)
+</code></pre>
+    </div>
 
     <script>
       const heti = new Heti('.heti');
@@ -303,17 +285,17 @@
     <script>
       var markmapList = document.querySelectorAll('.language-markmap');
       markmapList &&
-        markmapList.forEach((item) => {
+        markmapList.forEach((item, index) => {
           var heightAttr = item.textContent.match(
             /\<\!\-\-markmap-height\=(\S*)\-\-\>/
           );
-          var height = '300px';
           if (heightAttr && heightAttr.length > 0 && !isNaN(heightAttr[1])) {
-            height = heightAttr[1] + 'px';
+            setTimeout(() => {
+              item.style.height = heightAttr[1] + 'px';
+              item.getElementsByTagName('svg')[0].style.height =
+                heightAttr[1] + 'px';
+            }, 50);
           }
-          document
-            .querySelector(':root')
-            .style.setProperty('--markmap-height', height);
           item.classList.add('markmap');
         });
     </script>
