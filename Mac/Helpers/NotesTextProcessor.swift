@@ -417,18 +417,18 @@ public class NotesTextProcessor {
             }
         )
         
-        let codeTextProcessor = CodeTextProcessor(textStorage: attributedString)
-        if let codeBlockRanges = codeTextProcessor.getCodeBlockRanges() {
-
-            for range in codeBlockRanges {
-
-                if isIntersect(fencedRanges: fencedRanges, indentRange: range) {
-                    continue
-                }
-
-                NotesTextProcessor.highlightCode(attributedString: attributedString, range: range)
-            }
-        }
+//        let codeTextProcessor = CodeTextProcessor(textStorage: attributedString)
+//        if let codeBlockRanges = codeTextProcessor.getCodeBlockRanges() {
+//
+//            for range in codeBlockRanges {
+//
+//                if isIntersect(fencedRanges: fencedRanges, indentRange: range) {
+//                    continue
+//                }
+//
+//                NotesTextProcessor.highlightCode(attributedString: attributedString, range: range)
+//            }
+//        }
         
     }
 
