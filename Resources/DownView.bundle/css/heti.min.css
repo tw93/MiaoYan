@@ -336,7 +336,7 @@ a,
 .heti p {
   margin-block-start: 18px;
   margin-block-end: 18px;
-  text-align: justify;
+  text-align: left;
 }
 
 .heti p[align='center'] {
