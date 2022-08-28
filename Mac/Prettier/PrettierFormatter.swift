@@ -160,7 +160,11 @@ private extension PrettierFormatter {
     }
 
     private func loadScriptsIntoContext() {
-        let standaloneFileURL = Bundle.module.url(forResource: "standalone", withExtension: "js", subdirectory: "js")
+        let path = Bundle.main.path(forResource: "Prettier", ofType: ".bundle")
+        let url = NSURL.fileURL(withPath: path!)
+        let bundle = Bundle(url: url)
+        let standaloneFileURL = bundle!.url(forResource: "standalone", withExtension: "js")!
+        
         let pluginFileURLs = plugins.map(\.fileURL)
         let fileURLs = ([standaloneFileURL] + pluginFileURLs).compactMap { $0 }
         let script = fileURLs.compactMap { try? String(contentsOf: $0) }.joined(separator: "\n")

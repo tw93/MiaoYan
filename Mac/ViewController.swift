@@ -2251,12 +2251,22 @@ class ViewController:
             return
         }
         if let note = notesTableView.getSelectedNote() {
-            note.content = NSMutableAttributedString(string: note.content.string.spaced)
-            note.save()
-            let cursor = editArea.selectedRanges[0].rangeValue.location
-            refillEditArea(cursor: cursor, saveTyping: true)
-            toast(message: NSLocalizedString("🎉 Automatic typesetting succeeded~", comment: "")
-            )
+            // 最牛逼格式化的方式
+            let formatter = PrettierFormatter(plugins: [MarkdownPlugin()] , parser: MarkdownParser())
+            formatter.prepare()
+      
+            let result = formatter.format(note.content.string)
+            switch result {
+            case .success(let formattedCode):
+                note.content = NSMutableAttributedString(string: formattedCode)
+                let cursor = editArea.selectedRanges[0].rangeValue.location
+                refillEditArea(cursor: cursor, saveTyping: true)
+                note.save()
+                toast(message: NSLocalizedString("🎉 Automatic typesetting succeeded~", comment: ""))
+            case .failure(let error):
+                print(error)
+            }
+            
             Analytics.trackEvent("MiaoYan Format")
         }
     }

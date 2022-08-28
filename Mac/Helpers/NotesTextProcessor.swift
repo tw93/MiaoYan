@@ -242,11 +242,12 @@ public class NotesTextProcessor {
             return nil
         }
 
-        var codeTheme = "atom-one-light"
+        var codeTheme = "vs"
         if UserDataService.instance.isDark {
-            codeTheme = "tomorrow-night-blue"
+            codeTheme = "monakal-sublime"
         }
         highlightr.setTheme(to: codeTheme)
+        highlightr.ignoreIllegals = true
 
         hl = highlightr
 
@@ -270,7 +271,7 @@ public class NotesTextProcessor {
         guard let highlighter = NotesTextProcessor.getHighlighter() else { return }
         let codeString = attributedString.mutableString.substring(with: range)
         let preDefinedLanguage = language ?? getLanguage(codeString)
-
+        
         if let code = highlighter.highlight(codeString, as: preDefinedLanguage) {
             if (range.location + range.length) > attributedString.length {
                 return
@@ -279,7 +280,7 @@ public class NotesTextProcessor {
             if attributedString.length >= range.upperBound, code.string != attributedString.mutableString.substring(with: range) {
                 return
             }
-
+            
             code.enumerateAttributes(
                 in: NSMakeRange(0, code.length),
                 options: [],
@@ -306,8 +307,8 @@ public class NotesTextProcessor {
     }
 
     public static func applyCodeBlockStyle(attributedString: NSMutableAttributedString, range: NSRange) {
-        // let style = TextFormatter.getCodeParagraphStyle()
-        // attributedString.addAttribute(.paragraphStyle, value: style, range: range)
+//         let style = TextFormatter.getCodeParagraphStyle()
+//         attributedString.addAttribute(.paragraphStyle, value: style, range: range)
     }
 
     public static var languages: [String]?
@@ -327,6 +328,10 @@ public class NotesTextProcessor {
             languages = getHighlighter()?.supportedLanguages()
 
             if let lang = languages, lang.contains(detectedLang) {
+                // 兼容一下go
+                if(detectedLang == "go"){
+                    return nil
+                }
                 return detectedLang
             }
         }
@@ -411,6 +416,20 @@ public class NotesTextProcessor {
                 NotesTextProcessor.highlightCode(attributedString: attributedString, range: r.range)
             }
         )
+        
+        let codeTextProcessor = CodeTextProcessor(textStorage: attributedString)
+        if let codeBlockRanges = codeTextProcessor.getCodeBlockRanges() {
+
+            for range in codeBlockRanges {
+
+                if isIntersect(fencedRanges: fencedRanges, indentRange: range) {
+                    continue
+                }
+
+                NotesTextProcessor.highlightCode(attributedString: attributedString, range: range)
+            }
+        }
+        
     }
 
     public static func isIntersect(fencedRanges: [NSRange], indentRange: NSRange) -> Bool {
