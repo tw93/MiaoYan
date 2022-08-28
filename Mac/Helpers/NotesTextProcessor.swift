@@ -242,10 +242,11 @@ public class NotesTextProcessor {
             return nil
         }
 
-        var codeTheme = "vs"
+        var codeTheme = "atom-one-light"
         if UserDataService.instance.isDark {
-            codeTheme = "monakal-sublime"
+            codeTheme = "tomorrow-night-blue"
         }
+        
         highlightr.setTheme(to: codeTheme)
         highlightr.ignoreIllegals = true
 
