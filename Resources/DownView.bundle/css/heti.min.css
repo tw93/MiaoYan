@@ -7,7 +7,7 @@
 :root {
   --text-font: 'LXGW WenKai Lite', sans-serif;
   --code-text-font: 'LXGW WenKai Lite', sans-serif;
-  --markmap-height: '300px';
+  --markmap-height: 300px;
 }
 
 @font-face {
