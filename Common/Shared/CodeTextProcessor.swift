@@ -127,7 +127,7 @@ class CodeTextProcessor {
     }
 
     private func isCodeBlock(_ attributedString: NSAttributedString) -> Bool {
-        if attributedString.string.starts(with: "\t") || attributedString.string.starts(with: "    ") {
+        if attributedString.string.starts(with: "\t") || attributedString.string.starts(with: "  ") {
             return true
         }
 
@@ -193,7 +193,7 @@ class CodeTextProcessor {
     }
 
     public func isCodeBlockParagraph(_ paragraph: String) -> Bool {
-        if paragraph.starts(with: "\t") || paragraph.starts(with: "    ") {
+        if paragraph.starts(with: "\t") || paragraph.starts(with: "  ") {
             return true
         }
 
