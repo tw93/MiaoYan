@@ -928,6 +928,10 @@ blockquote blockquote {
   letter-spacing: 0.125em;
 }
 
+::marker {
+  letter-spacing: -1px !important;
+}
+
 .heti--vertical h1,
 .heti--vertical h2,
 .heti--vertical h3,
@@ -1345,9 +1349,10 @@ img.emoji {
   height: 1em;
 }
 
-.language-markmap{
+.language-markmap {
   visibility: hidden;
 }
+
 .markmap {
   visibility: visible;
   width: 100%;
