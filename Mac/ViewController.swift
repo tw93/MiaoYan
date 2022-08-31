@@ -29,6 +29,7 @@ class ViewController:
     var rowUpdaterTimer = Timer()
     let searchQueue = OperationQueue()
     var isFocusedTitle: Bool = false
+    var isNeedClearLine: Bool = false
 
     private var isHandlingScrollEvent = false
     private var swipeLeftExecuted = false
@@ -45,7 +46,14 @@ class ViewController:
     @IBOutlet var emptyEditAreaImage: NSImageView!
     @IBOutlet var emptyEditAreaView: NSView!
     @IBOutlet var splitView: EditorSplitView!
-    @IBOutlet var editArea: EditTextView!
+    @IBOutlet var editArea: EditTextView! {
+        didSet {
+            NotificationCenter.default.addObserver(self,
+                    selector: #selector(updateUIForSelectionChange(_:)),
+                    name: NSTextView.didChangeSelectionNotification,
+                    object: nil)
+        }
+    }
     @IBOutlet var editAreaScroll: EditorScrollView!
     @IBOutlet var search: SearchTextField!
 
@@ -227,6 +235,13 @@ class ViewController:
             Analytics.trackEvent("MiaoYan ShowInfo")
         }
     }
+
+    @objc func updateUIForSelectionChange(_: NSNotification) {
+        if let selection = editArea?.selectedRange() {
+            isNeedClearLine = (selection.length > 0)
+        }
+    }
+
 
     // MARK: - Overrides
 
@@ -2252,9 +2267,9 @@ class ViewController:
         }
         if let note = notesTableView.getSelectedNote() {
             // 最牛逼格式化的方式
-            let formatter = PrettierFormatter(plugins: [MarkdownPlugin()] , parser: MarkdownParser())
+            let formatter = PrettierFormatter(plugins: [MarkdownPlugin()], parser: MarkdownParser())
             formatter.prepare()
-      
+
             let result = formatter.format(note.content.string)
             switch result {
             case .success(let formattedCode):
@@ -2266,7 +2281,7 @@ class ViewController:
             case .failure(let error):
                 print(error)
             }
-            
+
             Analytics.trackEvent("MiaoYan Format")
         }
     }
@@ -2315,8 +2330,7 @@ class ViewController:
 
         for menu in noteMenu.items {
             if let identifier = menu.identifier?.rawValue,
-               personalSelection.contains(identifier)
-            {
+               personalSelection.contains(identifier) {
                 menu.isHidden = (vc.notesTableView.selectedRowIndexes.count > 1)
             }
         }
@@ -2329,11 +2343,11 @@ class ViewController:
         let sortByLabel = NSLocalizedString("Sort by", comment: "View menu")
 
         guard
-            let menu = NSApp.menu,
-            let view = menu.item(withTitle: viewLabel),
-            let submenu = view.submenu,
-            let sortMenu = submenu.item(withTitle: sortByLabel),
-            let sortItems = sortMenu.submenu
+                let menu = NSApp.menu,
+                let view = menu.item(withTitle: viewLabel),
+                let submenu = view.submenu,
+                let sortMenu = submenu.item(withTitle: sortByLabel),
+                let sortItems = sortMenu.submenu
         else {
             return
         }
@@ -2390,7 +2404,7 @@ class ViewController:
     }
 
     func checkTitlebarTopConstraint() {
-        if splitView.subviews[0].frame.width < 50,!UserDefaultsManagement.isWillFullScreen {
+        if splitView.subviews[0].frame.width < 50, !UserDefaultsManagement.isWillFullScreen {
             titiebarHeight.constant = 66.0
             return
         }
