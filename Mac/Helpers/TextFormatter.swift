@@ -145,7 +145,7 @@ public class TextFormatter {
             var text = storage.attributedSubstring(from: pRange).string
             if text.starts(with: "  ") {
                 diff = 2
-                text = String(text.dropFirst(4))
+                text = String(text.dropFirst(2))
             } else if text.starts(with: "\t") {
                 diff = 1
                 text = String(text.dropFirst())
