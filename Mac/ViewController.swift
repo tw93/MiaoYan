@@ -38,6 +38,7 @@ class ViewController:
     private var scrollDeltaX: CGFloat = 0
 
     private var updateViews = [Note]()
+    public var breakUndoTimer = Timer()
 
     override var representedObject: Any? {
         didSet {}
@@ -526,20 +527,18 @@ class ViewController:
         let name = sender.identifier!.rawValue
         if name == "Ascending", UserDefaultsManagement.sortDirection {
             UserDefaultsManagement.sortDirection = false
-            resort()
+            reSortByDirection()
         }
         if name == "Descending", !UserDefaultsManagement.sortDirection {
             UserDefaultsManagement.sortDirection = true
-            resort()
+            reSortByDirection()
         }
     }
 
     @IBAction func sortBy(_ sender: NSMenuItem) {
         if let id = sender.identifier {
             let key = String(id.rawValue.dropFirst(3))
-            guard let sortBy = SortBy(rawValue: key) else {
-                return
-            }
+            guard let sortBy = SortBy(rawValue: key) else { return }
 
             UserDefaultsManagement.sort = sortBy
 
@@ -550,11 +549,12 @@ class ViewController:
             }
 
             sender.state = NSControl.StateValue.on
-            resort()
+
+            reSortByDirection()
         }
     }
 
-    func resort() {
+    func reSortByDirection() {
         guard let vc = ViewController.shared() else {
             return
         }
@@ -575,6 +575,15 @@ class ViewController:
         }
 
         vc.updateTable()
+    }
+
+    public func reSort(note: Note) {
+        if !updateViews.contains(note) {
+            updateViews.append(note)
+        }
+
+        rowUpdaterTimer.invalidate()
+        rowUpdaterTimer = Timer.scheduledTimer(timeInterval: 1.2, target: self, selector: #selector(updateTableViews), userInfo: nil, repeats: false)
     }
 
     @objc func moveNote(_ sender: NSMenuItem) {
@@ -1209,7 +1218,7 @@ class ViewController:
 
         vc.titleLabel.editModeOn()
         if let note = EditTextView.note {
-            vc.titleLabel.stringValue = note.getShortTitle()
+            vc.titleLabel.stringValue = note.getFileName()
         }
     }
 
@@ -1602,19 +1611,16 @@ class ViewController:
 
         blockFSUpdates()
 
-        if editArea.isEditable {
+        if !UserDefaultsManagement.preview && editArea.isEditable {
             editArea.removeHighlight()
             editArea.saveImages()
 
             note.save(attributed: editArea.attributedString())
 
-            if !updateViews.contains(note) {
-                updateViews.append(note)
-            }
-
-            rowUpdaterTimer.invalidate()
-            rowUpdaterTimer = Timer.scheduledTimer(timeInterval: 1.2, target: self, selector: #selector(updateTableViews), userInfo: nil, repeats: false)
+            reSort(note: note)
         }
+        breakUndoTimer.invalidate()
+        breakUndoTimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(breakUndo), userInfo: nil, repeats: true)
     }
 
     public func getCurrentNote() -> Note? {
@@ -1697,6 +1703,7 @@ class ViewController:
 
         return nil
     }
+
 
     func getSidebarType() -> SidebarItemType? {
         let sidebarItem = storageOutlineView.item(atRow: storageOutlineView.selectedRow) as? SidebarItem
@@ -1900,7 +1907,6 @@ class ViewController:
         notesTableView.scrollRowToVisible(0)
     }
 
-    
     func focusEditArea(firstResponder: NSResponder? = nil) {
         guard EditTextView.note != nil else { return }
         var resp: NSResponder = editArea
@@ -2667,6 +2673,12 @@ class ViewController:
             try? FileManager.default.copyItem(at: url, to: baseUrl)
 
             return baseUrl
+        }
+    }
+
+    @objc func breakUndo() {
+        if (!UserDefaultsManagement.preview && editArea.isEditable) {
+            editArea.breakUndoCoalescing()
         }
     }
 }
