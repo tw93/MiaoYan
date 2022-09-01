@@ -30,6 +30,7 @@ class ViewController:
     let searchQueue = OperationQueue()
     var isFocusedTitle: Bool = false
     var isNeedClearLine: Bool = false
+    var formatContent: String = ""
 
     private var isHandlingScrollEvent = false
     private var swipeLeftExecuted = false
@@ -802,6 +803,16 @@ class ViewController:
             let currentNote = notesTableView.getSelectedNote()
             updateTitle(newTitle: currentNote?.getTitleWithoutLabel() ?? NSLocalizedString("Untitled Note", comment: "Untitled Note"))
             return false
+        }
+
+        if event.keyCode == kVK_ANSI_Z, event.modifierFlags.contains(.command), editArea.hasFocus(), formatContent != "" {
+            if let note = notesTableView.getSelectedNote(), note.content.string == formatContent {
+                let cursor = editArea.selectedRanges[0].rangeValue.location
+                DispatchQueue.main.async {
+                    self.editArea.setSelectedRange(NSRange(location: cursor, length: 0))
+                }
+                formatContent = ""
+            }
         }
 
         if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_I,!UserDefaultsManagement.presentation {
@@ -2275,10 +2286,10 @@ class ViewController:
             case .success(let formatResult):
                 let newContent = formatResult.formattedString
                 editArea.insertText(newContent, replacementRange: NSRange(0..<note.content.length))
-                note.save()
-
                 editArea.fill(note: note, saveTyping: true, force: false)
                 editArea.setSelectedRange(NSRange(location: formatResult.cursorOffset, length: 0))
+                formatContent = newContent
+                note.save()
                 toast(message: NSLocalizedString("🎉 Automatic typesetting succeeded~", comment: ""))
             case .failure(let error):
                 print(error)
