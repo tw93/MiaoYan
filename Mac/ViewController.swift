@@ -2269,14 +2269,16 @@ class ViewController:
             // 最牛逼格式化的方式
             let formatter = PrettierFormatter(plugins: [MarkdownPlugin()], parser: MarkdownParser())
             formatter.prepare()
-
-            let result = formatter.format(note.content.string)
+            let cursor = editArea.selectedRanges[0].rangeValue.location
+            let result = formatter.format(note.content.string, withCursorAtLocation: cursor)
             switch result {
-            case .success(let formattedCode):
-                note.content = NSMutableAttributedString(string: formattedCode)
-                let cursor = editArea.selectedRanges[0].rangeValue.location
-                refillEditArea(cursor: cursor, saveTyping: true)
+            case .success(let formatResult):
+                let newContent = formatResult.formattedString
+                editArea.insertText(newContent, replacementRange: NSRange(0..<note.content.length))
                 note.save()
+
+                editArea.fill(note: note, saveTyping: true, force: false)
+                editArea.setSelectedRange(NSRange(location: formatResult.cursorOffset, length: 0))
                 toast(message: NSLocalizedString("🎉 Automatic typesetting succeeded~", comment: ""))
             case .failure(let error):
                 print(error)
