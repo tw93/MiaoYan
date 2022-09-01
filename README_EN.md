@@ -23,10 +23,10 @@
 
 ## Features
 
-- 🪂 **Fantastic**: Local use, security, syntax highlighting, dark mode, source file saving, international, presentation mode, [PPT Mode](#miaoYan-ppt), single edit mode, export file, internal jump, document auto typesetting, picture upload, LaTeX, Mermaid, PlantUML.
-- 🐶 **Beauty**: Minimalist design style, folder + file list + editor 3 column mode.
-- 🏌🏽‍♂️ **Fast**: Using Swift5 native development, the performance experience is much better compared to the Web.
-- 🩴 **Simple**: Very light, pure editor input experience, many shortcut keys to help you fast.
+- 🏂 **Fantastic**: Local use, security, syntax highlighting, dark mode, source file saving, international, presentation mode, [PPT Mode](#miaoYan-ppt), single edit mode, export file, internal jump, document auto typesetting, picture upload, LaTeX, Mermaid, PlantUML.
+- 🎊 **Beauty**: Minimalist design style, folder + file list + editor 3 column mode.
+- 🚄‍ **Fast**: Using Swift5 native development, the performance experience is much better compared to the Web.
+- 🥛 **Simple**: Very light, pure editor input experience, many shortcut keys to help you fast.
 
 ## First Use
 
