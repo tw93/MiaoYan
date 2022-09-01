@@ -166,3 +166,6 @@
 "🎉 URL is successfully copied, Use it anywhere~" = "🎉 外链成功复制，你可以在任何地方使用~";
 
 "😶‍🌫 No delimiter --- identification, Cannot use MiaoYan PPT~" = "😶‍🌫 没有分隔符 --- 标识，无法使用妙言 PPT~";
+
+"This %@ under this folder already exists!" = "此文件夹下 %@ 已经存在!";
+"Please change the title" = "请换一个标题";

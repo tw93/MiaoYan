@@ -169,11 +169,11 @@ public class Note: NSObject {
         }
     }
 
-    func move(to: URL, project: Project? = nil) -> Bool {
+    func move(to: URL, project: Project? = nil, forceRewrite: Bool = false) -> Bool {
         do {
             var destination = to
 
-            if FileManager.default.fileExists(atPath: to.path) {
+            if FileManager.default.fileExists(atPath: to.path) && !forceRewrite {
                 guard let project = project ?? sharedStorage.getProjectBy(url: to) else { return false }
 
                 let ext = getExtensionForContainer()
@@ -1125,9 +1125,10 @@ public class Note: NSObject {
 
     public func getTitle() -> String? {
         if title.count > 0 {
-            if title.isValidUUID {
-                return getDefaultTitle()
+            if title.starts(with: "![") {
+                return nil;
             }
+
             return title
         }
 
