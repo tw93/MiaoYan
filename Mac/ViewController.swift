@@ -343,9 +343,11 @@ class ViewController:
         
         // 兼容新系统 13.0 的标题闪动问题
         if isFirstClick, #available(OSX 13.0, *) {
-            DispatchQueue.main.async {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                self.titleLabel.editModeOn()
                 self.enablePreview()
                 self.disablePreview()
+                self.focusEditArea()
             }
             isFirstClick = false
         }
