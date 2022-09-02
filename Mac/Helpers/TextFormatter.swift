@@ -99,7 +99,7 @@ public class TextFormatter {
 
     public func tab() {
         guard let pRange = getParagraphRange() else { return }
-        let padding = "    "
+        let padding = "  "
 
         guard range.length > 0 else {
             let text = storage.attributedSubstring(from: pRange).string
@@ -143,9 +143,9 @@ public class TextFormatter {
         guard range.length > 0 else {
             var diff = 0
             var text = storage.attributedSubstring(from: pRange).string
-            if text.starts(with: "    ") {
-                diff = 4
-                text = String(text.dropFirst(4))
+            if text.starts(with: "  ") {
+                diff = 2
+                text = String(text.dropFirst(2))
             } else if text.starts(with: "\t") {
                 diff = 1
                 text = String(text.dropFirst())
@@ -172,8 +172,8 @@ public class TextFormatter {
             if !line.isEmpty {
                 if line.first == "\t" {
                     line = String(line.dropFirst())
-                } else if line.starts(with: "    ") {
-                    line = String(line.dropFirst(4))
+                } else if line.starts(with: "  ") {
+                    line = String(line.dropFirst(2))
                 }
             }
 
@@ -409,7 +409,7 @@ public class TextFormatter {
             return
         }
 
-        if currentParagraph.string.starts(with: "    "),
+        if currentParagraph.string.starts(with: "  "),
            let prefix = currentParagraph.string.getPrefixMatchSequentially(char: " ")
         {
             if selectedRange.location != currentParagraphRange.location {
@@ -720,6 +720,8 @@ public class TextFormatter {
             let parRange = NSRange(location: range.location, length: replaceString.count)
             let parStyle = NSMutableParagraphStyle()
             parStyle.alignment = .left
+            parStyle.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
+            parStyle.lineHeightMultiple = CGFloat(UserDefaultsManagement.editorLineHeight)
             textView.textStorage.addAttribute(.paragraphStyle, value: parStyle, range: parRange)
 
             textView.undoManager?.endUndoGrouping()

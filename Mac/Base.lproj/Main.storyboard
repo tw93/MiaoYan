@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="21223" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="20037"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21223"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -1252,7 +1252,7 @@ CA
                                                                                 <constraint firstItem="1dd-W4-MiY" firstAttribute="leading" secondItem="I0q-sX-uBq" secondAttribute="leading" constant="3" id="KTq-ca-aXt"/>
                                                                                 <constraint firstAttribute="trailing" secondItem="bVt-gT-Six" secondAttribute="trailing" id="VUS-Wa-wfe"/>
                                                                                 <constraint firstItem="kTp-qw-RCd" firstAttribute="leading" secondItem="I0q-sX-uBq" secondAttribute="leading" constant="24" id="bav-Au-PqY"/>
-                                                                                <constraint firstItem="kTp-qw-RCd" firstAttribute="centerY" secondItem="1dd-W4-MiY" secondAttribute="centerY" constant="-1" id="etK-XI-kVT"/>
+                                                                                <constraint firstItem="kTp-qw-RCd" firstAttribute="centerY" secondItem="1dd-W4-MiY" secondAttribute="centerY" constant="-1.2" id="etK-XI-kVT"/>
                                                                                 <constraint firstAttribute="bottom" secondItem="bVt-gT-Six" secondAttribute="bottom" id="h6b-pM-7dD"/>
                                                                                 <constraint firstItem="bVt-gT-Six" firstAttribute="leading" secondItem="I0q-sX-uBq" secondAttribute="leading" id="oLU-KS-Pam"/>
                                                                                 <constraint firstItem="1dd-W4-MiY" firstAttribute="centerY" secondItem="I0q-sX-uBq" secondAttribute="centerY" id="slG-ke-sdb"/>
@@ -1527,10 +1527,10 @@ CA
                                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="xSU-Mk-2F1" customClass="TitleBarView" customModule="MiaoYan" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="588" width="559" height="52"/>
                                                         <subviews>
-                                                            <textField focusRingType="none" horizontalHuggingPriority="1" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="rZx-hk-GcJ" customClass="TitleTextField" customModule="MiaoYan" customModuleProvider="target">
-                                                                <rect key="frame" x="25" y="9" width="378" height="34"/>
+                                                            <textField autoresizesSubviews="NO" focusRingType="none" horizontalHuggingPriority="1" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="rZx-hk-GcJ" customClass="TitleTextField" customModule="MiaoYan" customModuleProvider="target">
+                                                                <rect key="frame" x="25" y="10" width="378" height="32"/>
                                                                 <constraints>
-                                                                    <constraint firstAttribute="height" constant="34" id="3QH-0a-na2"/>
+                                                                    <constraint firstAttribute="height" constant="32" id="3QH-0a-na2"/>
                                                                 </constraints>
                                                                 <textFieldCell key="cell" lineBreakMode="truncatingMiddle" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" focusRingType="none" alignment="left" title="Title" placeholderString="输入标题" drawsBackground="YES" id="O9K-a1-3eu">
                                                                     <font key="font" metaFont="systemBold" size="20"/>
@@ -1601,7 +1601,7 @@ CA
                                                         <constraints>
                                                             <constraint firstItem="rZx-hk-GcJ" firstAttribute="leading" secondItem="xSU-Mk-2F1" secondAttribute="leading" constant="25" id="1I0-Qm-T21"/>
                                                             <constraint firstAttribute="trailing" secondItem="Ua8-RE-q01" secondAttribute="trailing" id="Uos-hm-kn6"/>
-                                                            <constraint firstItem="rZx-hk-GcJ" firstAttribute="centerY" secondItem="xSU-Mk-2F1" secondAttribute="centerY" id="dAk-7a-dZK"/>
+                                                            <constraint firstItem="rZx-hk-GcJ" firstAttribute="top" secondItem="xSU-Mk-2F1" secondAttribute="top" constant="10" id="Vst-qt-Crj"/>
                                                             <constraint firstItem="Ua8-RE-q01" firstAttribute="leading" secondItem="rZx-hk-GcJ" secondAttribute="trailing" constant="16" id="eWY-C1-IBp"/>
                                                             <constraint firstItem="Ua8-RE-q01" firstAttribute="top" secondItem="xSU-Mk-2F1" secondAttribute="top" id="esv-qQ-apf"/>
                                                             <constraint firstAttribute="bottom" secondItem="Ua8-RE-q01" secondAttribute="bottom" id="nac-xp-D3Y"/>
@@ -1648,6 +1648,7 @@ CA
                     </view>
                     <connections>
                         <outlet property="ProjectHeaderView" destination="vp7-cq-QSI" id="kED-nV-8xh"/>
+                        <outlet property="TitleTopConstraint" destination="Vst-qt-Crj" id="bsj-AS-wer"/>
                         <outlet property="addProjectButton" destination="Yei-Or-qiI" id="bPx-nk-z5u"/>
                         <outlet property="editArea" destination="cmZ-KL-T9k" id="sJd-5P-0mf"/>
                         <outlet property="editAreaScroll" destination="qJO-7f-vkL" id="X69-yq-N67"/>
@@ -1674,6 +1675,7 @@ CA
                         <outlet property="titleBarAdditionalView" destination="Ua8-RE-q01" id="CfN-3p-UH3"/>
                         <outlet property="titleBarView" destination="xSU-Mk-2F1" id="lbu-pA-1Hs"/>
                         <outlet property="titleLabel" destination="rZx-hk-GcJ" id="wKj-zD-Ovz"/>
+                        <outlet property="titleTopConstraint" destination="Vst-qt-Crj" id="ZOq-K2-BNC"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -1880,8 +1882,8 @@ CA
         </scene>
     </scenes>
     <resources>
-        <image name="NSQuickLookTemplate" width="21" height="13"/>
-        <image name="NSSlideshowTemplate" width="18" height="14"/>
+        <image name="NSQuickLookTemplate" width="26" height="17"/>
+        <image name="NSSlideshowTemplate" width="24" height="18"/>
         <image name="makeNoteAsset" width="840" height="788"/>
         <image name="new" width="120" height="120"/>
         <image name="new_rep" width="120" height="120"/>
