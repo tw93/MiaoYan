@@ -31,6 +31,7 @@ class ViewController:
     var isFocusedTitle: Bool = false
     var isNeedClearLine: Bool = false
     var formatContent: String = ""
+    var isFirstClick: Bool = true
 
     private var isHandlingScrollEvent = false
     private var swipeLeftExecuted = false
@@ -70,7 +71,8 @@ class ViewController:
     @IBOutlet var titiebarHeight: NSLayoutConstraint!
     @IBOutlet var searchTopConstraint: NSLayoutConstraint!
     @IBOutlet var titleLabel: TitleTextField!
-
+    @IBOutlet var titleTopConstraint: NSLayoutConstraint!
+    
     @IBOutlet var sortByOutlet: NSMenuItem!
     @IBOutlet var titleBarAdditionalView: NSVisualEffectView! {
         didSet {
@@ -337,6 +339,15 @@ class ViewController:
                     self.showNoteList("")
                 }
             }
+        }
+        
+        // 兼容新系统 13.0 的标题闪动问题
+        if isFirstClick, #available(OSX 13.0, *) {
+            DispatchQueue.main.async {
+                self.enablePreview()
+                self.disablePreview()
+            }
+            isFirstClick = false
         }
     }
 
@@ -969,9 +980,8 @@ class ViewController:
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                     self.titleLabel.saveTitle()
                 }
-                disablePreview()
+                return true
             }
-            return true
         }
 
         // Pin note shortcut (cmd+shift+p)
@@ -2181,7 +2191,7 @@ class ViewController:
         disablePresentation()
         UserDefaultsManagement.magicPPT = false
         DispatchQueue.main.async {
-            self.titiebarHeight.constant = 52.0
+            self.checkTitlebarTopConstraint()
         }
     }
 
@@ -2263,7 +2273,7 @@ class ViewController:
         UserDefaultsManagement.presentation = false
         UserDefaultsManagement.magicPPT = false
         DispatchQueue.main.async {
-            self.titiebarHeight.constant = 52.0
+            self.checkTitlebarTopConstraint()
         }
         if UserDefaultsManagement.fullScreen {
             view.window?.toggleFullScreen(nil)
@@ -2432,9 +2442,11 @@ class ViewController:
 
     func checkTitlebarTopConstraint() {
         if splitView.subviews[0].frame.width < 50, !UserDefaultsManagement.isWillFullScreen {
-            titiebarHeight.constant = 66.0
+            titiebarHeight.constant = 60.0
+            titleTopConstraint.constant = 24.0
             return
         }
+        titleTopConstraint.constant = 10.0
         titiebarHeight.constant = 52.0
     }
 
