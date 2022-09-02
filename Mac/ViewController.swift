@@ -560,21 +560,26 @@ class ViewController:
         }
         ascendingCheckItem.state = UserDefaultsManagement.sortDirection ? .off : .on
         descendingCheckItem.state = UserDefaultsManagement.sortDirection ? .on : .off
-        guard let controller = ViewController.shared() else {
-            return
-        }
+
 
         // Sort all notes
-        storage.noteList = storage.sortNotes(noteList: storage.noteList, filter: controller.search.stringValue)
+        storage.noteList = storage.sortNotes(noteList: storage.noteList, filter: vc.search.stringValue)
 
         // Sort notes in the current project
-        if let filtered = controller.filteredNoteList {
-            controller.notesTableView.noteList = storage.sortNotes(noteList: filtered, filter: controller.search.stringValue)
+        if let filtered = vc.filteredNoteList {
+            vc.notesTableView.noteList = storage.sortNotes(noteList: filtered, filter: vc.search.stringValue)
         } else {
-            controller.notesTableView.noteList = storage.noteList
+            vc.notesTableView.noteList = storage.noteList
         }
 
         vc.updateTable()
+        //修复排序后不选中问题
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.04) {
+            let selectedRow = vc.notesTableView.selectedRowIndexes.min()
+            if(selectedRow == nil){
+                vc.notesTableView.selectRowIndexes([0], byExtendingSelection: true)
+            }
+        }
     }
 
     public func reSort(note: Note) {
@@ -1617,10 +1622,13 @@ class ViewController:
 
             note.save(attributed: editArea.attributedString())
 
-            reSort(note: note)
+            if !updateViews.contains(note) {
+                updateViews.append(note)
+            }
+
+            rowUpdaterTimer.invalidate()
+            rowUpdaterTimer = Timer.scheduledTimer(timeInterval: 1.2, target: self, selector: #selector(updateTableViews), userInfo: nil, repeats: false)
         }
-        breakUndoTimer.invalidate()
-        breakUndoTimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(breakUndo), userInfo: nil, repeats: true)
     }
 
     public func getCurrentNote() -> Note? {
