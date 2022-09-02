@@ -4,7 +4,6 @@ import Cocoa
 class TitleTextField: NSTextField {
     public var vcDelegate: ViewController!
     public var restoreResponder: NSResponder?
-    var isFirstClick: Bool = true
 
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
         if event.modifierFlags.contains(.command),
@@ -25,17 +24,6 @@ class TitleTextField: NSTextField {
         if let note = EditTextView.note {
             stringValue = note.getFileName()
         }
-
-        // 兼容新系统
-        if isFirstClick, #available(OSX 13.0, *) {
-            guard let vc = ViewController.shared() else { return false }
-            DispatchQueue.main.async {
-                vc.enablePreview()
-                vc.disablePreview()
-            }
-            isFirstClick = false
-        }
-
         return super.becomeFirstResponder()
     }
 
@@ -76,6 +64,10 @@ class TitleTextField: NSTextField {
                 alert.messageText = NSLocalizedString("Please change the title", comment: "")
                 alert.runModal()
             }
+        } else {
+            vc.updateTitle(newTitle: currentTitle)
+            resignFirstResponder()
+            updateNotesTableView()
         }
     }
 
