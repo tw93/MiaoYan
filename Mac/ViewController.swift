@@ -29,6 +29,9 @@ class ViewController:
     var rowUpdaterTimer = Timer()
     let searchQueue = OperationQueue()
     var isFocusedTitle: Bool = false
+    var isNeedClearLine: Bool = false
+    var formatContent: String = ""
+    var isFirstClick: Bool = true
 
     private var isHandlingScrollEvent = false
     private var swipeLeftExecuted = false
@@ -36,6 +39,7 @@ class ViewController:
     private var scrollDeltaX: CGFloat = 0
 
     private var updateViews = [Note]()
+    public var breakUndoTimer = Timer()
 
     override var representedObject: Any? {
         didSet {}
@@ -45,7 +49,14 @@ class ViewController:
     @IBOutlet var emptyEditAreaImage: NSImageView!
     @IBOutlet var emptyEditAreaView: NSView!
     @IBOutlet var splitView: EditorSplitView!
-    @IBOutlet var editArea: EditTextView!
+    @IBOutlet var editArea: EditTextView! {
+        didSet {
+            NotificationCenter.default.addObserver(self,
+                    selector: #selector(updateUIForSelectionChange(_:)),
+                    name: NSTextView.didChangeSelectionNotification,
+                    object: nil)
+        }
+    }
     @IBOutlet var editAreaScroll: EditorScrollView!
     @IBOutlet var search: SearchTextField!
 
@@ -60,7 +71,8 @@ class ViewController:
     @IBOutlet var titiebarHeight: NSLayoutConstraint!
     @IBOutlet var searchTopConstraint: NSLayoutConstraint!
     @IBOutlet var titleLabel: TitleTextField!
-
+    @IBOutlet var titleTopConstraint: NSLayoutConstraint!
+    
     @IBOutlet var sortByOutlet: NSMenuItem!
     @IBOutlet var titleBarAdditionalView: NSVisualEffectView! {
         didSet {
@@ -228,6 +240,13 @@ class ViewController:
         }
     }
 
+    @objc func updateUIForSelectionChange(_: NSNotification) {
+        if let selection = editArea?.selectedRange() {
+            isNeedClearLine = (selection.length > 0)
+        }
+    }
+
+
     // MARK: - Overrides
 
     override func viewDidLoad() {
@@ -320,6 +339,15 @@ class ViewController:
                     self.showNoteList("")
                 }
             }
+        }
+        
+        // 兼容新系统 13.0 的标题闪动问题
+        if isFirstClick, #available(OSX 13.0, *) {
+            DispatchQueue.main.async {
+                self.enablePreview()
+                self.disablePreview()
+            }
+            isFirstClick = false
         }
     }
 
@@ -510,20 +538,18 @@ class ViewController:
         let name = sender.identifier!.rawValue
         if name == "Ascending", UserDefaultsManagement.sortDirection {
             UserDefaultsManagement.sortDirection = false
-            resort()
+            reSortByDirection()
         }
         if name == "Descending", !UserDefaultsManagement.sortDirection {
             UserDefaultsManagement.sortDirection = true
-            resort()
+            reSortByDirection()
         }
     }
 
     @IBAction func sortBy(_ sender: NSMenuItem) {
         if let id = sender.identifier {
             let key = String(id.rawValue.dropFirst(3))
-            guard let sortBy = SortBy(rawValue: key) else {
-                return
-            }
+            guard let sortBy = SortBy(rawValue: key) else { return }
 
             UserDefaultsManagement.sort = sortBy
 
@@ -534,31 +560,46 @@ class ViewController:
             }
 
             sender.state = NSControl.StateValue.on
-            resort()
+
+            reSortByDirection()
         }
     }
 
-    func resort() {
+    func reSortByDirection() {
         guard let vc = ViewController.shared() else {
             return
         }
         ascendingCheckItem.state = UserDefaultsManagement.sortDirection ? .off : .on
         descendingCheckItem.state = UserDefaultsManagement.sortDirection ? .on : .off
-        guard let controller = ViewController.shared() else {
-            return
-        }
+
 
         // Sort all notes
-        storage.noteList = storage.sortNotes(noteList: storage.noteList, filter: controller.search.stringValue)
+        storage.noteList = storage.sortNotes(noteList: storage.noteList, filter: vc.search.stringValue)
 
         // Sort notes in the current project
-        if let filtered = controller.filteredNoteList {
-            controller.notesTableView.noteList = storage.sortNotes(noteList: filtered, filter: controller.search.stringValue)
+        if let filtered = vc.filteredNoteList {
+            vc.notesTableView.noteList = storage.sortNotes(noteList: filtered, filter: vc.search.stringValue)
         } else {
-            controller.notesTableView.noteList = storage.noteList
+            vc.notesTableView.noteList = storage.noteList
         }
 
         vc.updateTable()
+        //修复排序后不选中问题
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.04) {
+            let selectedRow = vc.notesTableView.selectedRowIndexes.min()
+            if(selectedRow == nil){
+                vc.notesTableView.selectRowIndexes([0], byExtendingSelection: true)
+            }
+        }
+    }
+
+    public func reSort(note: Note) {
+        if !updateViews.contains(note) {
+            updateViews.append(note)
+        }
+
+        rowUpdaterTimer.invalidate()
+        rowUpdaterTimer = Timer.scheduledTimer(timeInterval: 1.2, target: self, selector: #selector(updateTableViews), userInfo: nil, repeats: false)
     }
 
     @objc func moveNote(_ sender: NSMenuItem) {
@@ -789,6 +830,16 @@ class ViewController:
             return false
         }
 
+        if event.keyCode == kVK_ANSI_Z, event.modifierFlags.contains(.command), editArea.hasFocus(), formatContent != "" {
+            if let note = notesTableView.getSelectedNote(), note.content.string == formatContent {
+                let cursor = editArea.selectedRanges[0].rangeValue.location
+                DispatchQueue.main.async {
+                    self.editArea.setSelectedRange(NSRange(location: cursor, length: 0))
+                }
+                formatContent = ""
+            }
+        }
+
         if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_I,!UserDefaultsManagement.presentation {
             toggleInfo()
             return false
@@ -929,9 +980,8 @@ class ViewController:
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                     self.titleLabel.saveTitle()
                 }
-                disablePreview()
+                return true
             }
-            return true
         }
 
         // Pin note shortcut (cmd+shift+p)
@@ -1183,7 +1233,7 @@ class ViewController:
 
         vc.titleLabel.editModeOn()
         if let note = EditTextView.note {
-            vc.titleLabel.stringValue = note.getShortTitle()
+            vc.titleLabel.stringValue = note.getFileName()
         }
     }
 
@@ -1576,7 +1626,7 @@ class ViewController:
 
         blockFSUpdates()
 
-        if editArea.isEditable {
+        if !UserDefaultsManagement.preview && editArea.isEditable {
             editArea.removeHighlight()
             editArea.saveImages()
 
@@ -1671,6 +1721,7 @@ class ViewController:
 
         return nil
     }
+
 
     func getSidebarType() -> SidebarItemType? {
         let sidebarItem = storageOutlineView.item(atRow: storageOutlineView.selectedRow) as? SidebarItem
@@ -1874,7 +1925,6 @@ class ViewController:
         notesTableView.scrollRowToVisible(0)
     }
 
-    
     func focusEditArea(firstResponder: NSResponder? = nil) {
         guard EditTextView.note != nil else { return }
         var resp: NSResponder = editArea
@@ -2141,7 +2191,7 @@ class ViewController:
         disablePresentation()
         UserDefaultsManagement.magicPPT = false
         DispatchQueue.main.async {
-            self.titiebarHeight.constant = 52.0
+            self.checkTitlebarTopConstraint()
         }
     }
 
@@ -2223,7 +2273,7 @@ class ViewController:
         UserDefaultsManagement.presentation = false
         UserDefaultsManagement.magicPPT = false
         DispatchQueue.main.async {
-            self.titiebarHeight.constant = 52.0
+            self.checkTitlebarTopConstraint()
         }
         if UserDefaultsManagement.fullScreen {
             view.window?.toggleFullScreen(nil)
@@ -2251,12 +2301,24 @@ class ViewController:
             return
         }
         if let note = notesTableView.getSelectedNote() {
-            note.content = NSMutableAttributedString(string: note.content.string.spaced)
-            note.save()
+            // 最牛逼格式化的方式
+            let formatter = PrettierFormatter(plugins: [MarkdownPlugin()], parser: MarkdownParser())
+            formatter.prepare()
             let cursor = editArea.selectedRanges[0].rangeValue.location
-            refillEditArea(cursor: cursor, saveTyping: true)
-            toast(message: NSLocalizedString("🎉 Automatic typesetting succeeded~", comment: "")
-            )
+            let result = formatter.format(note.content.string, withCursorAtLocation: cursor)
+            switch result {
+            case .success(let formatResult):
+                let newContent = formatResult.formattedString
+                editArea.insertText(newContent, replacementRange: NSRange(0..<note.content.length))
+                editArea.fill(note: note, saveTyping: true, force: false)
+                editArea.setSelectedRange(NSRange(location: formatResult.cursorOffset, length: 0))
+                formatContent = newContent
+                note.save()
+                toast(message: NSLocalizedString("🎉 Automatic typesetting succeeded~", comment: ""))
+            case .failure(let error):
+                print(error)
+            }
+
             Analytics.trackEvent("MiaoYan Format")
         }
     }
@@ -2305,8 +2367,7 @@ class ViewController:
 
         for menu in noteMenu.items {
             if let identifier = menu.identifier?.rawValue,
-               personalSelection.contains(identifier)
-            {
+               personalSelection.contains(identifier) {
                 menu.isHidden = (vc.notesTableView.selectedRowIndexes.count > 1)
             }
         }
@@ -2319,11 +2380,11 @@ class ViewController:
         let sortByLabel = NSLocalizedString("Sort by", comment: "View menu")
 
         guard
-            let menu = NSApp.menu,
-            let view = menu.item(withTitle: viewLabel),
-            let submenu = view.submenu,
-            let sortMenu = submenu.item(withTitle: sortByLabel),
-            let sortItems = sortMenu.submenu
+                let menu = NSApp.menu,
+                let view = menu.item(withTitle: viewLabel),
+                let submenu = view.submenu,
+                let sortMenu = submenu.item(withTitle: sortByLabel),
+                let sortItems = sortMenu.submenu
         else {
             return
         }
@@ -2380,10 +2441,12 @@ class ViewController:
     }
 
     func checkTitlebarTopConstraint() {
-        if splitView.subviews[0].frame.width < 50,!UserDefaultsManagement.isWillFullScreen {
-            titiebarHeight.constant = 66.0
+        if splitView.subviews[0].frame.width < 50, !UserDefaultsManagement.isWillFullScreen {
+            titiebarHeight.constant = 60.0
+            titleTopConstraint.constant = 24.0
             return
         }
+        titleTopConstraint.constant = 10.0
         titiebarHeight.constant = 52.0
     }
 
@@ -2630,6 +2693,12 @@ class ViewController:
             try? FileManager.default.copyItem(at: url, to: baseUrl)
 
             return baseUrl
+        }
+    }
+
+    @objc func breakUndo() {
+        if (!UserDefaultsManagement.preview && editArea.isEditable) {
+            editArea.breakUndoCoalescing()
         }
     }
 }

@@ -20,7 +20,8 @@
         font-style: normal;
         font-weight: 800;
         font-display: fallback;
-        src: url('DOWN_FONT_PATH/LXGWWenKaiLite-Bold.ttf') format('truetype');
+        src: url('/Users/tw/Library/Developer/Xcode/DerivedData/MiaoYan-gtwqkuvaxbdtmuavqchvixatopep/Build/Products/Debug/MiaoYan.app/Contents/Resources/LXGWWenKaiLite-Bold.ttf')
+          format('truetype');
       }
 
       @font-face {
@@ -28,15 +29,51 @@
         font-style: normal;
         font-weight: 400;
         font-display: fallback;
-        src: url('DOWN_FONT_PATH/LXGWWenKaiLite-Regular.ttf') format('truetype');
+        src: url('/Users/tw/Library/Developer/Xcode/DerivedData/MiaoYan-gtwqkuvaxbdtmuavqchvixatopep/Build/Products/Debug/MiaoYan.app/Contents/Resources/LXGWWenKaiLite-Regular.ttf')
+          format('truetype');
       }
 
-      DOWN_CSS
+      html {
+        font-size: 15px;
+      }
+      :root {
+        --text-font: LXGW WenKai Lite, sans-serif;
+        --code-text-font: LXGW WenKai Lite, sans-serif;
+      }
+      #write {
+        max-width: 1000px;
+      }
     </style>
   </head>
 
   <body>
-    <div class="markdown-body heti" id="write">DOWN_HTML</div>
+    <div class="markdown-body heti" id="write">
+      <h2>妙言 Markmap</h2>
+      <pre><code class="language-markmap">- 妙言
+  - 好不好看
+    - 好看
+    - 好用
+  - 好不好玩
+    - 好玩
+    - 漂亮
+  - 还可以这样
+    - 试试链接
+    - [Github](https://github.com/tw93/MiaoYan/releases/tag/V1.4.3)
+</code></pre>
+      <pre><code class="language-markmap">&lt;!--markmap-height=500--&gt;
+  
+- 妙言
+  - 好不好看
+    - 好看
+    - 好用
+  - 好不好玩
+    - 好玩
+    - 漂亮
+  - 还可以这样
+    - 试试链接
+    - [Github](https://github.com/tw93/MiaoYan/releases/tag/V1.4.3)
+</code></pre>
+    </div>
 
     <script>
       const heti = new Heti('.heti');
@@ -248,17 +285,17 @@
     <script>
       var markmapList = document.querySelectorAll('.language-markmap');
       markmapList &&
-        markmapList.forEach((item) => {
+        markmapList.forEach((item, index) => {
           var heightAttr = item.textContent.match(
             /\<\!\-\-markmap-height\=(\S*)\-\-\>/
           );
-          var height = '300px';
           if (heightAttr && heightAttr.length > 0 && !isNaN(heightAttr[1])) {
-            height = heightAttr[1] + 'px';
+            setTimeout(() => {
+              item.style.height = heightAttr[1] + 'px';
+              item.getElementsByTagName('svg')[0].style.height =
+                heightAttr[1] + 'px';
+            }, 50);
           }
-          document
-            .querySelector(':root')
-            .style.setProperty('--markmap-height', height);
           item.classList.add('markmap');
         });
     </script>

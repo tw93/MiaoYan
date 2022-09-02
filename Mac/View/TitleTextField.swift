@@ -4,7 +4,6 @@ import Cocoa
 class TitleTextField: NSTextField {
     public var vcDelegate: ViewController!
     public var restoreResponder: NSResponder?
-    var isFirstClick: Bool = true
 
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
         if event.modifierFlags.contains(.command),
@@ -25,17 +24,6 @@ class TitleTextField: NSTextField {
         if let note = EditTextView.note {
             stringValue = note.getShortTitle()
         }
-        
-        // 兼容新系统
-        if isFirstClick, #available(OSX 13.0, *) {
-            guard let vc = ViewController.shared() else { return false }
-            DispatchQueue.main.async {
-                vc.enablePreview()
-                vc.disablePreview()
-            }
-            isFirstClick = false
-        }
-        
         return super.becomeFirstResponder()
     }
 
@@ -55,24 +43,32 @@ class TitleTextField: NSTextField {
 
         if currentName != currentTitle {
             let ext = note.url.pathExtension
-            let dst = note.project.url.appendingPathComponent(currentTitle).appendingPathExtension(ext)
+            let fileName =
+                    currentTitle
+                            .trimmingCharacters(in: CharacterSet.whitespaces)
+                            .replacingOccurrences(of: ":", with: "-")
+                            .replacingOccurrences(of: "/", with: ":")
+            let dst = note.project.url.appendingPathComponent(fileName).appendingPathExtension(ext)
 
-            if !FileManager.default.fileExists(atPath: dst.path), note.move(to: dst) {
+            if !FileManager.default.fileExists(atPath: dst.path), note.move(to: dst){
                 vc.updateTitle(newTitle: currentTitle)
-                self.updateNotesTableView()
-                return
+                updateNotesTableView()
+                vc.reSort(note: note)
             } else {
+                vc.updateTitle(newTitle: currentTitle)
+                resignFirstResponder()
+                updateNotesTableView()
                 let alert = NSAlert()
                 alert.alertStyle = .informational
-                alert.informativeText = NSLocalizedString("此文件夹下该名称 \"\(currentTitle)\" 已经存在!", comment: "")
-                alert.messageText = NSLocalizedString("请换一个标题", comment: "")
+                alert.informativeText = String(format: NSLocalizedString("This %@ under this folder already exists!", comment: ""), currentTitle)
+                alert.messageText = NSLocalizedString("Please change the title", comment: "")
                 alert.runModal()
             }
+        } else {
+            vc.updateTitle(newTitle: currentTitle)
+            resignFirstResponder()
+            updateNotesTableView()
         }
-
-        vc.updateTitle(newTitle: currentName)
-        self.resignFirstResponder()
-        self.updateNotesTableView()
     }
 
     public func hasFocus() -> Bool {

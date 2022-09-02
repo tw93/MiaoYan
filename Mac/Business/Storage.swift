@@ -391,12 +391,9 @@ class Storage {
     }
 
     private func sortQuery(note: Note, next: Note, project: Project?) -> Bool {
-        var sortDirection: SortDirection = UserDefaultsManagement.sortDirection ? .desc : .asc
-        if let project = project, project.sortBySettings != .none {
-            sortDirection = project.sortDirection
-        }
+        let sortDirection: SortDirection = UserDefaultsManagement.sortDirection ? .desc : .asc
 
-        let sort = project?.sortBy ?? UserDefaultsManagement.sort
+        let sort =  UserDefaultsManagement.sort
 
         if note.isPinned == next.isPinned {
             switch sort {
@@ -536,7 +533,7 @@ class Storage {
             noteList.remove(at: i)
         }
     }
-
+    
     func getNextId() -> Int {
         noteList.count
     }
