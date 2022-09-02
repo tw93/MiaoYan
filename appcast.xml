@@ -3,6 +3,23 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>1.5.0</title>
+      <description><![CDATA[
+       <h3>聪明点 🤩：</h3>
+        🎉 真正意义上的支持自动格式化排版，使用 Swift 调用 Prettier，聪明多了 <br/>
+        🎊 macOS Ventura 全面兼容完成、排序功能更加好用、标题支持'/'形式、tab 宽度变成2 <br/>
+        🙊 修复快速扫动出现划线、格式化时候光标位置、代码块之间标题高亮、预览模式下代码显示、自动外观模式下切换预览不会跟着变化、预览效果优化、列表 todoList 展示缩进等问题，感谢 shell-Raining、
+jievince、熏锅锅帮忙捉虫 <br/>
+        <h3>Much smarter 🤩：</h3>
+        🎉 Real support for auto-formatted typesetting, using Swift to call Prettier, much smarter. <br/>
+        🎊 macOS Ventura is fully compatible with completion, sorting ability is better, title support '/', tab width becomes 2. <br/>
+        🙊 Fix problems such as underlining in quick sweep, cursor position when formatting, highlighting of titles between code blocks, code display in preview mode, preview not changing when switching between automatic appearance modes, preview effect optimization, indentation of list todoList display, etc. Thanks to shell-Raining、jievince、熏锅锅 to help catch bugs. <br/>
+          ]]>      </description>
+      <pubDate>周五, 02 9月 2022 16:00:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.5.0.1.zip" sparkle:shortVersionString="1.5.0" sparkle:version="1.5.0" sparkle:edSignature="7j3tfGHxblyK64RuZipdVxE7zqWdloB58MCHTwNVyofLGQLzHwSF0JcAp8JxuwhHdzTq6uGqtoTj/bURt/xUBQ==" length="24347058" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>1.4.7</title>
       <description><![CDATA[
        <h3>稳一点 🙏：</h3>
@@ -20,26 +37,6 @@
           ]]>      </description>
       <pubDate>周六, 26 8月 2022 10:00:20 +0800</pubDate>
       <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.4.7.1.zip" sparkle:shortVersionString="1.4.7" sparkle:version="1.4.7" sparkle:edSignature="x0L4R0/w+Tq+QnyOLki0EG/wicPi1KowXEDoiVaIszyo7H9LMa2xihMJ3Hl3fxq75KbRG2UbpnZ5vDYNwErBAw==" length="24187586" type="application/octet-stream" />
-      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-    </item>
-    <item>
-      <title>1.4.3</title>
-      <description><![CDATA[
-       <h3>稳一点 🙏：</h3>
-        😵 原来证书貌似过期了，辛苦使用最新版本<br/>
-        🎉 支持使用 markmap 方式快捷写脑图，用 ```markmap ```代码语法即可，参考<a href="https://miaoyan.app/Release/demo/MiaoYan%20Markmap.md">写法</a> <br/>
-        🍭 开始着手去适配 macOS Ventura 版本，基本差不多了<br/>
-        🙊 PPT模式下支持 LaTeX 数学公式、使用体验优化<br/>
-        😂 持续优化代码，包括 crash，不够还有少量问题未复现，欢迎反馈<br/>
-        <h3>More stable 🙏：</h3>
-        😵 The original certificate seems to have expired, you have to use this latest version.<br/>
-        🎉 Support the use of markmap, use ```markmap ``` code syntax, reference this<a href="https://miaoyan.app/Release/demo/MiaoYan%20Markmap.md">demo</a> .<br/>
-        🍭 Start to adapt the MacOS Ventura version, basically almost.<br/>
-        🙊 In PPT mode, supports LaTeX, optimization of user experience.<br/>
-        😂 Continue to optimize code, including crash. There are still a few problems that haven't been solved, welcome to feedback.<br/>
-          ]]>      </description>
-      <pubDate>周四, 08 8月 2022 21:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.4.3.zip" sparkle:shortVersionString="1.4.3" sparkle:version="1.4.3" sparkle:edSignature="9r9IjhaRMMRCss848nN2ly4k0ZVtGnZ/sLF6XhuS2SGbCja+czN8mi1SdBOYMAzVRMnnasZDI0r1tMbz/qbXCw==" length="20924093" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
     </item>
   </channel>
