@@ -7,7 +7,7 @@
 :root {
   --text-font: 'LXGW WenKai Lite', sans-serif;
   --code-text-font: 'LXGW WenKai Lite', sans-serif;
-  --markmap-height: '300px';
+  --markmap-height: 300px;
 }
 
 @font-face {
@@ -336,7 +336,7 @@ a,
 .heti p {
   margin-block-start: 18px;
   margin-block-end: 18px;
-  text-align: justify;
+  text-align: left;
 }
 
 .heti p[align='center'] {
@@ -928,6 +928,10 @@ blockquote blockquote {
   letter-spacing: 0.125em;
 }
 
+::marker {
+  letter-spacing: -1px !important;
+}
+
 .heti--vertical h1,
 .heti--vertical h2,
 .heti--vertical h3,
@@ -1345,9 +1349,10 @@ img.emoji {
   height: 1em;
 }
 
-.language-markmap{
+.language-markmap {
   visibility: hidden;
 }
+
 .markmap {
   visibility: visible;
   width: 100%;

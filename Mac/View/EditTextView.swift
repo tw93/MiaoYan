@@ -21,6 +21,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     public var markdownView: MPreviewView?
     public static var imagesLoaderQueue = OperationQueue()
 
+
     public static var fontColor: NSColor {
         if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
             return NSColor(named: "mainText")!
@@ -58,7 +59,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     override func mouseDown(with event: NSEvent) {
+
         guard EditTextView.note != nil else { return }
+        guard let vc = ViewController.shared() else { return }
 
         guard let container = textContainer, let manager = layoutManager else { return }
 
@@ -75,6 +78,15 @@ class EditTextView: NSTextView, NSTextFinderClient {
         if !UserDefaultsManagement.preview {
             isEditable = true
         }
+
+        // 兼容一下划痕
+        if vc.isNeedClearLine {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                self.fillHighlightLinks()
+            }
+            vc.isNeedClearLine = false
+        }
+
     }
 
     override func mouseMoved(with event: NSEvent) {
@@ -920,16 +932,18 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     override func viewDidChangeEffectiveAppearance() {
         guard let note = EditTextView.note else { return }
-
+        guard let vc = ViewController.shared() else { return }
         UserDataService.instance.isDark = effectiveAppearance.isDark
 
         NotesTextProcessor.hl = nil
         NotesTextProcessor.highlight(note: note)
 
-        let funcName = effectiveAppearance.isDark ? "switchToDarkMode" : "switchToLightMode"
-        let switchScript = "if (typeof(\(funcName)) == 'function') { \(funcName)(); }"
+        //用于自动模式下切换时候的效果
+        if UserDefaultsManagement.preview {
+            vc.disablePreview()
+            vc.enablePreview()
+        }
 
-        downView?.evaluateJavaScript(switchScript)
         viewDelegate?.refillEditArea()
     }
 
@@ -1066,7 +1080,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
                     vc.toastUpload(status: true)
                     let runList = run("/Applications/\(picType).app/Contents/MacOS/\(picType) -o url -u \(tempPath)")
                     let imageDesc = runList?.components(separatedBy: "\n") ?? []
-                    
+
                     if imageDesc.count > 3 {
                         let imagePath = imageDesc[4]
                         newLineImage = NSAttributedString(string: "![](\(imagePath))")

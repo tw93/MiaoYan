@@ -7,6 +7,19 @@ class CodeTextProcessor {
         self.textStorage = textStorage
     }
 
+    public func getCodeBlockRanges() -> [NSRange]? {
+        var paragraphRanges = [NSRange]()
+        var paragraphList = [String]()
+
+        let string = textStorage.string as NSString
+        string.enumerateSubstrings(in: NSRange(0..<string.length), options: .byParagraphs) {value, range, _, _ in
+            paragraphRanges.append(range)
+            paragraphList.append(value!)
+        }
+
+        return getBlockRanges(ranges: paragraphRanges, pars: paragraphList)
+    }
+
     public func getCodeBlockRanges(parRange: NSRange) -> [NSRange]? {
         let min = scanCodeBlockUp(location: parRange.location - 1)
         let max = scanCodeBlockDown(location: parRange.upperBound)
@@ -114,7 +127,7 @@ class CodeTextProcessor {
     }
 
     private func isCodeBlock(_ attributedString: NSAttributedString) -> Bool {
-        if attributedString.string.starts(with: "\t") || attributedString.string.starts(with: "    ") {
+        if attributedString.string.starts(with: "\t") || attributedString.string.starts(with: "  ") {
             return true
         }
 
@@ -180,7 +193,7 @@ class CodeTextProcessor {
     }
 
     public func isCodeBlockParagraph(_ paragraph: String) -> Bool {
-        if paragraph.starts(with: "\t") || paragraph.starts(with: "    ") {
+        if paragraph.starts(with: "\t") || paragraph.starts(with: "  ") {
             return true
         }
 

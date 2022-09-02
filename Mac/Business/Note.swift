@@ -491,11 +491,8 @@ public class Note: NSObject {
     }
 
     func getPrettifiedContent() -> String {
-        var content = content.string
-
-        content = NotesTextProcessor.convertAppLinks(in: content)
-
-        return cleanMetaData(content: content)
+        let content = NotesTextProcessor.convertAppLinks(in: content)
+        return cleanMetaData(content: content.string)
     }
 
     public func overwrite(url: URL) {
@@ -1128,9 +1125,15 @@ public class Note: NSObject {
 
     public func getTitle() -> String? {
         if title.count > 0 {
+
             if title.isValidUUID {
                 return getDefaultTitle()
             }
+
+            if title.starts(with: "![") {
+                return nil;
+            }
+
             return title
         }
 
