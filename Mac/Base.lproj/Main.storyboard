@@ -1545,7 +1545,7 @@ CA
                                                                 <rect key="frame" x="419" y="0.0" width="140" height="52"/>
                                                                 <subviews>
                                                                     <button toolTip="Format" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Adc-zl-sqX">
-                                                                        <rect key="frame" x="41" y="14" width="16" height="25"/>
+                                                                        <rect key="frame" x="41" y="15" width="16" height="25"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="18" id="7Xj-w1-apm"/>
                                                                         </constraints>
@@ -1558,7 +1558,7 @@ CA
                                                                         </connections>
                                                                     </button>
                                                                     <button toolTip="Demonstrate" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AZ7-aG-pPz">
-                                                                        <rect key="frame" x="97" y="15.5" width="18" height="21"/>
+                                                                        <rect key="frame" x="97" y="16.5" width="18" height="21"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="16" id="iZ9-9y-SLm"/>
                                                                         </constraints>
@@ -1572,7 +1572,7 @@ CA
                                                                         </connections>
                                                                     </button>
                                                                     <button toolTip="Preview" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bn7-FD-jzc">
-                                                                        <rect key="frame" x="67" y="16" width="21.5" height="20"/>
+                                                                        <rect key="frame" x="67" y="17" width="21.5" height="20"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="16" id="mhf-Ok-C0D"/>
                                                                         </constraints>
@@ -1592,7 +1592,7 @@ CA
                                                                     <constraint firstAttribute="trailing" secondItem="AZ7-aG-pPz" secondAttribute="trailing" constant="25" id="HN9-BC-vOW"/>
                                                                     <constraint firstItem="Adc-zl-sqX" firstAttribute="leading" secondItem="Ua8-RE-q01" secondAttribute="leading" constant="41" id="Rxl-eO-cY7"/>
                                                                     <constraint firstAttribute="width" constant="140" id="VrO-x5-8Ao"/>
-                                                                    <constraint firstItem="Adc-zl-sqX" firstAttribute="top" secondItem="Ua8-RE-q01" secondAttribute="top" constant="17" id="doq-EZ-7DK"/>
+                                                                    <constraint firstItem="Adc-zl-sqX" firstAttribute="top" secondItem="Ua8-RE-q01" secondAttribute="top" constant="16" id="doq-EZ-7DK"/>
                                                                     <constraint firstItem="AZ7-aG-pPz" firstAttribute="centerY" secondItem="Adc-zl-sqX" secondAttribute="centerY" id="kiq-MU-dd8"/>
                                                                     <constraint firstItem="AZ7-aG-pPz" firstAttribute="leading" secondItem="Bn7-FD-jzc" secondAttribute="trailing" constant="9" id="wD9-OR-RBG"/>
                                                                 </constraints>
