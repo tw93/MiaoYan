@@ -90,7 +90,7 @@
 - Thanks to Vercel for providing static rendering capability to [MiaoYan](https://miaoyan.app/).  
     <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img
       src=https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg
-      width="148px"/></a>
+      width="118px"/></a>
 
 # License
 

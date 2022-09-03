@@ -90,7 +90,7 @@
 - 感谢 Vercel 给妙言 [官网](https://miaoyan.app/) 提供静态渲染能力  
     <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img
         src=https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg
-        width="148px"/></a>
+        width="118px"/></a>
 
 # 协议
 
