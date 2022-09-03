@@ -87,7 +87,7 @@
 - <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>: A beautiful open source chinese font, MiaoYan has made it the default font.
 - <a href="https://github.com/michaelhenry/Prettier.swift" target="_blank">michaelhenry/Prettier.swift</a>：MiaoYan document auto typesetting is from Prettier.
 - <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>：An open source HTML presentation framework.
-- Thanks to Vercel for providing static rendering capability to [MiaoYan](https://miaoyan.app/).
+- Thanks to Vercel for providing static rendering capability to [MiaoYan](https://miaoyan.app/).  
     <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img
       src=https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg
       width="148px"/></a>
