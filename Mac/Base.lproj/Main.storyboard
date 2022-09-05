@@ -1356,7 +1356,7 @@ CA
                                                             <rect key="frame" x="0.0" y="0.0" width="237" height="598"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnSelection="YES" columnResizing="NO" autosaveColumns="NO" rowHeight="48" viewBased="YES" id="8X8-yh-5EA" customClass="NotesTableView" customModule="MiaoYan" customModuleProvider="target">
+                                                                <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnResizing="NO" autosaveColumns="NO" rowHeight="48" viewBased="YES" id="8X8-yh-5EA" customClass="NotesTableView" customModule="MiaoYan" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="0.0" width="237" height="598"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <size key="intercellSpacing" width="1" height="1"/>

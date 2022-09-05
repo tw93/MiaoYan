@@ -185,6 +185,7 @@ extension NSTextStorage: NSTextStorageDelegate {
                 paragraph.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
                 paragraph.lineHeightMultiple = CGFloat(UserDefaultsManagement.editorLineHeight)
                 textStorage.addAttribute(.paragraphStyle, value: paragraph, range: range)
+                textStorage.addAttribute(.kern, value: UserDefaultsManagement.DefaultEditorLetterSpacing, range: range)
 
                 let imageKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.url")
                 if let url = textStorage.attribute(imageKey, at: range.location, effectiveRange: nil) as? URL {
