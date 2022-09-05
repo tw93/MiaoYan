@@ -65,10 +65,9 @@ public extension String {
         return false
     }
 
-    func isMiaoYanPath() -> Bool {
-        let pattern = ""
-
-        if let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) {
+    func isNumberList() -> Bool {
+        let pattern = "^[0-9-]+[.]"
+        if let regex = try? NSRegularExpression(pattern: pattern, options: .allowCommentsAndWhitespace) {
             return regex.firstMatch(in: self, options: [], range: NSRange(location: 0, length: count)) != nil
         }
 

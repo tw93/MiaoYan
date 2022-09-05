@@ -81,7 +81,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         // 兼容一下划痕
         if vc.isNeedClearLine {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            DispatchQueue.main.async {
                 self.fillHighlightLinks()
             }
             vc.isNeedClearLine = false
@@ -202,7 +202,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             breakUndoCoalescing()
 
             saveTextStorageContent(to: note)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0001) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
                 self.fillHighlightLinks()
             }
             return
@@ -537,12 +537,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
             let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
             formatter.newLine()
             breakUndoCoalescing()
-            fillHighlightLinks()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+                self.fillHighlightLinks()
+            }
             return
         }
 
         if event.keyCode == kVK_Delete {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.0001) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
                 self.fillHighlightLinks()
             }
         }

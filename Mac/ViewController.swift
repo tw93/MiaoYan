@@ -2306,11 +2306,16 @@ class ViewController:
             // 最牛逼格式化的方式
             let formatter = PrettierFormatter(plugins: [MarkdownPlugin()], parser: MarkdownParser())
             formatter.prepare()
+            let content = note.content.string
             let cursor = editArea.selectedRanges[0].rangeValue.location
-            let result = formatter.format(note.content.string, withCursorAtLocation: cursor)
+            let result = formatter.format(content, withCursorAtLocation: cursor)
             switch result {
             case .success(let formatResult):
-                let newContent = formatResult.formattedString
+                // 防止 Prettier 自动加空行
+                var newContent = formatResult.formattedString
+                if(content.last != "\n"){
+                    newContent = formatResult.formattedString.removeLastNewLine()
+                }
                 editArea.insertText(newContent, replacementRange: NSRange(0..<note.content.length))
                 editArea.fill(note: note, saveTyping: true, force: false)
                 editArea.setSelectedRange(NSRange(location: formatResult.cursorOffset, length: 0))

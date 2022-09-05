@@ -99,10 +99,14 @@ public class TextFormatter {
 
     public func tab() {
         guard let pRange = getParagraphRange() else { return }
-        let padding = "  "
+        var padding = "  "
 
         guard range.length > 0 else {
             let text = storage.attributedSubstring(from: pRange).string
+            // todo 有点儿问题，应该判断上一行
+            if text.isNumberList() {
+                padding = "   "
+            }
             #if os(OSX)
                 let location = textView.selectedRange().location
                 textView.insertText(padding + text, replacementRange: pRange)
@@ -115,6 +119,10 @@ public class TextFormatter {
         }
 
         let string = storage.attributedSubstring(from: pRange).string
+        if string.isNumberList() {
+            padding = "   "
+        }
+
         var lines = [String]()
         string.enumerateLines { line, _ in
             lines.append(padding + line)
@@ -143,10 +151,14 @@ public class TextFormatter {
         guard range.length > 0 else {
             var diff = 0
             var text = storage.attributedSubstring(from: pRange).string
-            if text.starts(with: "  ") {
+            if text.starts(with: "   ") {
+                diff = 3
+                text = String(text.dropFirst(3))
+            } else if text.starts(with: "  ") {
                 diff = 2
                 text = String(text.dropFirst(2))
-            } else if text.starts(with: "\t") {
+            }
+            else if text.starts(with: "\t") {
                 diff = 1
                 text = String(text.dropFirst())
             } else {
@@ -172,6 +184,8 @@ public class TextFormatter {
             if !line.isEmpty {
                 if line.first == "\t" {
                     line = String(line.dropFirst())
+                } else if line.starts(with: "   ") {
+                    line = String(line.dropFirst(3))
                 } else if line.starts(with: "  ") {
                     line = String(line.dropFirst(2))
                 }
@@ -336,7 +350,6 @@ public class TextFormatter {
         let selectedRange = textView.selectedRange
 
         // Autocomplete todo lists
-
         if selectedRange.location != currentParagraphRange.location, currentParagraphRange.upperBound - 2 < selectedRange.location, currentParagraph.length >= 2 {
             if textView.selectedRange.upperBound > 2 {
                 let char = storage.attributedSubstring(from: NSRange(location: textView.selectedRange.upperBound - 2, length: 1))
@@ -382,7 +395,6 @@ public class TextFormatter {
         }
 
         // Autocomplete ordered and unordered lists
-
         if selectedRange.location != currentParagraphRange.location, currentParagraphRange.upperBound - 2 < selectedRange.location {
             if let charsMatch = TextFormatter.getAutocompleteCharsMatch(string: currentParagraph.string) {
                 matchChars(string: currentParagraph, match: charsMatch)
@@ -554,7 +566,7 @@ public class TextFormatter {
             }
         }
 
-        if self.shouldScanMarkdown, let paragraphRange = getParagraphRange() {
+        if shouldScanMarkdown, let paragraphRange = getParagraphRange() {
             NotesTextProcessor.highlightMarkdown(attributedString: storage, paragraphRange: paragraphRange, note: note)
         }
 
@@ -723,6 +735,7 @@ public class TextFormatter {
             parStyle.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
             parStyle.lineHeightMultiple = CGFloat(UserDefaultsManagement.editorLineHeight)
             textView.textStorage.addAttribute(.paragraphStyle, value: parStyle, range: parRange)
+            textView.textStorage.addAttribute(.kern, value: UserDefaultsManagement.DefaultEditorLetterSpacing, range: parRange)
 
             textView.undoManager?.endUndoGrouping()
         #else
