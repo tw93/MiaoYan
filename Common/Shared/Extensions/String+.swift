@@ -66,12 +66,23 @@ public extension String {
     }
 
     func isNumberList() -> Bool {
-        let pattern = "^[0-9-]+[.]"
-        if let regex = try? NSRegularExpression(pattern: pattern, options: .allowCommentsAndWhitespace) {
+        let pattern = "^(( |\t)*[0-9]+\\. )"
+        if let regex = try? NSRegularExpression(pattern: pattern) {
             return regex.firstMatch(in: self, options: [], range: NSRange(location: 0, length: count)) != nil
         }
 
         return false
+    }
+
+
+     func regexReplace(regex: String, content: String) -> String {
+        do {
+            let RE = try NSRegularExpression(pattern: regex, options: .caseInsensitive)
+            let modified = RE.stringByReplacingMatches(in: self, options: .reportProgress, range: NSRange(location: 0, length: count), withTemplate: content)
+            return modified
+        } catch {
+            return self
+        }
     }
 
     var isValidUUID: Bool {
@@ -164,5 +175,16 @@ public extension String {
 private extension String {
     func index(at offset: Int) -> String.Index {
         self.index(startIndex, offsetBy: offset)
+    }
+}
+
+public extension NSString {
+    func getLineRangeBefore(_ lineRange: NSRange) -> NSRange? {
+        var lineStart = 0
+        getLineStart(&lineStart, end: nil, contentsEnd: nil, for: lineRange)
+        if lineStart == 0 {
+            return nil
+        }
+        return self.lineRange(for: NSRange(location: lineStart - 1, length: 0))
     }
 }

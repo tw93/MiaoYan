@@ -78,15 +78,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         if !UserDefaultsManagement.preview {
             isEditable = true
         }
-
-        // 兼容一下划痕
-        if vc.isNeedClearLine {
-            DispatchQueue.main.async {
-                self.fillHighlightLinks()
-            }
-            vc.isNeedClearLine = false
-        }
-
     }
 
     override func mouseMoved(with event: NSEvent) {
@@ -949,7 +940,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         viewDelegate?.refillEditArea()
     }
 
-    private func fillHighlightLinks() {
+    public func fillHighlightLinks() {
         guard let storage = textStorage else { return }
 
         let range = NSRange(0..<storage.length)
