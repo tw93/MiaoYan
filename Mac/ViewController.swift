@@ -29,7 +29,6 @@ class ViewController:
     var rowUpdaterTimer = Timer()
     let searchQueue = OperationQueue()
     var isFocusedTitle: Bool = false
-    var isNeedClearLine: Bool = false
     var formatContent: String = ""
     var isFirstClick: Bool = true
 
@@ -240,9 +239,13 @@ class ViewController:
         }
     }
 
+    // 用于兼容滑动时候的划痕
     @objc func updateUIForSelectionChange(_: NSNotification) {
-        if let selection = editArea?.selectedRange() {
-            isNeedClearLine = (selection.length > 0)
+        if let range = editArea?.selectedRange(), range.length > 0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+                self.editArea.applyLeftParagraphStyle()
+            }
+
         }
     }
 
@@ -2708,4 +2711,15 @@ class ViewController:
             editArea.breakUndoCoalescing()
         }
     }
+
+    public func replace(validateString: String, regex: String, content: String) -> String {
+        do {
+            let RE = try NSRegularExpression(pattern: regex, options: .caseInsensitive)
+            let modified = RE.stringByReplacingMatches(in: validateString, options: .reportProgress, range: NSRange(location: 0, length: validateString.count), withTemplate: content)
+            return modified
+        } catch {
+            return validateString
+        }
+    }
+
 }
