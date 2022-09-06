@@ -74,11 +74,10 @@ public extension String {
         return false
     }
 
-
-     func regexReplace(regex: String, content: String) -> String {
+    func regexReplace(regex: String, content: String) -> String {
         do {
-            let RE = try NSRegularExpression(pattern: regex, options: .caseInsensitive)
-            let modified = RE.stringByReplacingMatches(in: self, options: .reportProgress, range: NSRange(location: 0, length: count), withTemplate: content)
+            let regexExpression = try NSRegularExpression(pattern: regex, options: .caseInsensitive)
+            let modified = regexExpression.stringByReplacingMatches(in: self, options: .reportProgress, range: NSRange(location: 0, length: count), withTemplate: content)
             return modified
         } catch {
             return self
