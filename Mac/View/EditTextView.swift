@@ -61,7 +61,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override func mouseDown(with event: NSEvent) {
 
         guard EditTextView.note != nil else { return }
-        guard let vc = ViewController.shared() else { return }
 
         guard let container = textContainer, let manager = layoutManager else { return }
 
