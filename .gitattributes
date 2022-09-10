@@ -1,2 +1,5 @@
 *.pbxproj merge=union
-
+parser-markdown.js -linguist-vendored
+standalone.js -linguist-vendored
+reveal.js -linguist-vendored
+*.min.js -linguist-vendored
