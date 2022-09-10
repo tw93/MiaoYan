@@ -23,14 +23,14 @@
 
 ## Features
 
-- 🏂 **Fantastic**: Local use, security, syntax highlighting, dark mode, source file saving, international, presentation mode, [PPT Mode](#miaoYan-ppt), single edit mode, export file, internal jump, document auto typesetting, picture upload, LaTeX, Mermaid, PlantUML.
+- 🏂 **Fantastic**: Local use, security, syntax highlighting, dark mode, source file saving, international, presentation mode, [PPT Mode](#miaoYan-ppt), single edit mode, export file, internal jump, document auto typesetting, picture upload, LaTeX, Mermaid, PlantUML、Markmap.
 - 🎊 **Beauty**: Minimalist design style, folder + file list + editor 3 column mode.
 - 🚄‍ **Fast**: Using Swift5 native development, the performance experience is much better compared to the Web.
 - 🥛 **Simple**: Very light, pure editor input experience, many shortcut keys to help you fast.
 
 ## First Use
 
-1. **Download** the latest dmg installation package from <a href="https://github.com/tw93/MiaoYan/releases/latest" target="_blank">GitHub Releases</a> and double-click to install it, also support `brew install miaoyan -- cask` installation.
+1. **Download** the latest dmg installation package from <a href="https://github.com/tw93/MiaoYan/releases/latest" target="_blank">GitHub Releases</a> and double-click to install it, macOS Big Sur and above have a better experience. Also support `brew install miaoyan -- cask` installation.
 2. You can create a `MiaoYan` folder in iCloud or the root directory, open MiaoYan's Settings, and change the default storage address to this.
 3. Click icon of the new folder in the upper left corner of MiaoYan, create your own document category folder, and you can start using it.
 4. Similarly, if you are not used to the default font, you can change it to other normal fonts in the settings.
