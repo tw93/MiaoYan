@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="initial-scale=1.0" />
-    <link href="css/heti.min.css" rel="stylesheet" />
-    <link href="css/katex.min.css" rel="stylesheet" />
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="initial-scale=1.0"/>
+    <link href="css/heti.min.css" rel="stylesheet"/>
+    <link href="css/katex.min.css" rel="stylesheet"/>
     <script src="js/heti-addon.min.js"></script>
     <script src="js/highlight.min.js"></script>
     <script src="js/mermaid.min.js"></script>
@@ -33,234 +33,245 @@
 
       DOWN_CSS
     </style>
-  </head>
+</head>
 
-  <body>
-    <div class="markdown-body heti" id="write">DOWN_HTML</div>
+<body>
+<div class="markdown-body heti" id="write">DOWN_HTML</div>
 
-    <script>
-      const heti = new Heti('.heti');
-      heti.autoSpacing();
-    </script>
-    <script>
-      hljs.configure({ cssSelector: 'pre code' });
-      hljs.highlightAll();
-    </script>
-    <script>
-      const html = document.getElementById('write').innerHTML;
-      const emoji = new EmojiConvertor();
-      if (/:[^:\s]*(?:::[^:\s]*)*:/.test(html)) {
-        document.getElementById('write').innerHTML = emoji.replace_colons(html);
+<script>
+  const heti = new Heti('.heti');
+  heti.autoSpacing();
+</script>
+<script>
+  hljs.configure({ cssSelector: 'pre code' });
+  hljs.highlightAll();
+</script>
+<script>
+  const html = document.getElementById('write').innerHTML;
+  const emoji = new EmojiConvertor();
+  if (/:[^:\s]*(?:::[^:\s]*)*:/.test(html)) {
+    document.getElementById('write').innerHTML = emoji.replace_colons(html);
+  }
+</script>
+
+<script>
+  function getSelectionAndSendMessage() {
+    var txt = document.getSelection().toString();
+    window.webkit.messageHandlers.newSelectionDetected.postMessage(txt);
+  }
+
+  document.onmouseup = getSelectionAndSendMessage;
+  document.onkeyup = getSelectionAndSendMessage;
+  document.oncontextmenu = getSelectionAndSendMessage;
+
+  var darkModeStylesNodeID = 'darkModeStyles';
+
+  function addStyleString(str, nodeID) {
+    var node = document.createElement('style');
+    node.id = nodeID;
+    node.innerHTML = str;
+
+    document.getElementsByTagName('head')[0].appendChild(node);
+  }
+
+  function switchToDarkMode() {
+    var darkModeStyleElement =
+      document.getElementById(darkModeStylesNodeID);
+    if (darkModeStyleElement == null) {
+      var darkModeStyles =
+        "* { color: #E7E9EA; } body { background: #21262B; } code { background: #454545; } a, .heti a heti-spacing { color: #1D9BF0 } table td, table th { color: #E7E9EA; } input[type='checkbox'] { border: 1px solid white; }.hljs{color:#ABB2BF;background:#191F25}.hljs-comment,.hljs-quote{color:#ABB2BF;}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#9B79F7}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#ED716C}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#8FFCCD}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#F7CC8F}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#99E0FC}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#ED716C}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}";
+      addStyleString(darkModeStyles, darkModeStylesNodeID);
+    }
+  }
+
+  function switchToLightMode() {
+    var darkModeStyleElement =
+      document.getElementById(darkModeStylesNodeID);
+    if (darkModeStyleElement != null) {
+      darkModeStyleElement.parentElement.removeChild(darkModeStyleElement);
+    }
+  }
+
+  if ('CUSTOM_CSS' == 'darkmode') {
+    switchToDarkMode();
+  }
+</script>
+
+<script>
+  var preList = document.getElementsByTagName('input'),
+    length = preList.length,
+    i = 0;
+
+  for (i; i < length; i++) {
+    preList[i].disabled = true;
+
+    if (
+      preList[i].parentNode.tagName == 'P' &&
+      preList[i].parentNode.parentNode.tagName == 'LI'
+    ) {
+      preList[i].parentNode.parentNode.parentNode.classList.add('cb');
+      continue;
+    }
+
+    if (preList[i].parentNode.tagName != 'LI') {
+      continue;
+    }
+
+    preList[i].parentNode.parentNode.classList.add('cb');
+  }
+</script>
+
+<script>
+  var addCheckboxEvent = function (element) {
+    if (element.parentNode.nodeName == 'LI') {
+      element.parentNode.classList.remove('strike');
+    }
+
+    let id = element.dataset.checkbox;
+    window.webkit.messageHandlers.checkbox.postMessage(id);
+
+    let input = document.createElement('input');
+    input.type = 'checkbox';
+    input.dataset.checkbox = id;
+
+    if (!element.hasAttribute('checked')) {
+      input.defaultChecked = true;
+
+      if (element.parentNode.nodeName == 'LI') {
+        element.parentNode.classList.add('strike');
       }
-    </script>
+    }
 
-    <script>
-      function getSelectionAndSendMessage() {
-        var txt = document.getSelection().toString();
-        window.webkit.messageHandlers.newSelectionDetected.postMessage(txt);
-      }
+    element.parentNode.replaceChild(input, element);
 
-      document.onmouseup = getSelectionAndSendMessage;
-      document.onkeyup = getSelectionAndSendMessage;
-      document.oncontextmenu = getSelectionAndSendMessage;
+    input.addEventListener('click', function (event) {
+      addCheckboxEvent(input);
+    });
+  };
 
-      var darkModeStylesNodeID = 'darkModeStyles';
+  var inputs = document.querySelectorAll('input[type=checkbox]'),
+    length = inputs.length,
+    i = 0;
 
-      function addStyleString(str, nodeID) {
-        var node = document.createElement('style');
-        node.id = nodeID;
-        node.innerHTML = str;
+  for (i; i < length; i++) {
+    if (
+      inputs[i].parentNode.nodeName == 'LI' &&
+      inputs[i].hasAttribute('checked')
+    ) {
+      inputs[i].parentNode.classList.add('strike');
+    }
 
-        document.getElementsByTagName('head')[0].appendChild(node);
-      }
+    inputs[i].disabled = false;
+    inputs[i].dataset.checkbox = i;
 
-      function switchToDarkMode() {
-        var darkModeStyleElement =
-          document.getElementById(darkModeStylesNodeID);
-        if (darkModeStyleElement == null) {
-          var darkModeStyles =
-            "* { color: #E7E9EA; } body { background: #21262B; } code { background: #454545; } a, .heti a heti-spacing { color: #1D9BF0 } table td, table th { color: #E7E9EA; } input[type='checkbox'] { border: 1px solid white; }.hljs{color:#ABB2BF;background:#191F25}.hljs-comment,.hljs-quote{color:#ABB2BF;}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#9B79F7}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#ED716C}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#8FFCCD}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#F7CC8F}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#99E0FC}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#ED716C}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}";
-          addStyleString(darkModeStyles, darkModeStylesNodeID);
-        }
-      }
+    inputs[i].addEventListener('click', function (event) {
+      let element = event.target;
+      addCheckboxEvent(element);
+    });
+  }
+</script>
 
-      function switchToLightMode() {
-        var darkModeStyleElement =
-          document.getElementById(darkModeStylesNodeID);
-        if (darkModeStyleElement != null) {
-          darkModeStyleElement.parentElement.removeChild(darkModeStyleElement);
-        }
-      }
+<script>
+  var config = {
+    startOnLoad: true,
+    theme: 'forest',
+    flowchart: {
+      useMaxWidth: false,
+      htmlLabels: true,
+    },
+  };
 
-      if ('CUSTOM_CSS' == 'darkmode') {
-        switchToDarkMode();
-      }
-    </script>
+  mermaid.initialize(config);
+  window.mermaid.init(
+    undefined,
+    document.querySelectorAll('.language-mermaid')
+  );
 
-    <script>
-      var preList = document.getElementsByTagName('input'),
-        length = preList.length,
-        i = 0;
+  let plantumlPrefix = 'language-plantuml';
+  Array.prototype.forEach.call(
+    document.querySelectorAll('[class^=' + plantumlPrefix + ']'),
+    function (code) {
+      let image = document.createElement('img');
+      image.className = 'plantuml-image';
+      image.loading = 'lazy';
+      image.src =
+        'http://www.plantuml.com/plantuml/svg/~1' +
+        plantumlEncoder.encode(code.innerText);
+      code.parentNode.insertBefore(image, code);
+      code.style.display = 'none';
+    }
+  );
+  var pres = document.getElementsByTagName('pre'),
+    length = pres.length,
+    i = 0;
 
-      for (i; i < length; i++) {
-        preList[i].disabled = true;
-
-        if (
-          preList[i].parentNode.tagName == 'P' &&
-          preList[i].parentNode.parentNode.tagName == 'LI'
-        ) {
-          preList[i].parentNode.parentNode.parentNode.classList.add('cb');
-          continue;
-        }
-
-        if (preList[i].parentNode.tagName != 'LI') {
-          continue;
-        }
-
-        preList[i].parentNode.parentNode.classList.add('cb');
-      }
-    </script>
-
-    <script>
-      var addCheckboxEvent = function (element) {
-        if (element.parentNode.nodeName == 'LI') {
-          element.parentNode.classList.remove('strike');
-        }
-
-        let id = element.dataset.checkbox;
-        window.webkit.messageHandlers.checkbox.postMessage(id);
-
-        let input = document.createElement('input');
-        input.type = 'checkbox';
-        input.dataset.checkbox = id;
-
-        if (!element.hasAttribute('checked')) {
-          input.defaultChecked = true;
-
-          if (element.parentNode.nodeName == 'LI') {
-            element.parentNode.classList.add('strike');
-          }
-        }
-
-        element.parentNode.replaceChild(input, element);
-
-        input.addEventListener('click', function (event) {
-          addCheckboxEvent(input);
-        });
-      };
-
-      var inputs = document.querySelectorAll('input[type=checkbox]'),
-        length = inputs.length,
-        i = 0;
-
-      for (i; i < length; i++) {
-        if (
-          inputs[i].parentNode.nodeName == 'LI' &&
-          inputs[i].hasAttribute('checked')
-        ) {
-          inputs[i].parentNode.classList.add('strike');
-        }
-
-        inputs[i].disabled = false;
-        inputs[i].dataset.checkbox = i;
-
-        inputs[i].addEventListener('click', function (event) {
-          let element = event.target;
-          addCheckboxEvent(element);
-        });
-      }
-    </script>
-
-    <script>
-      var config = {
-        startOnLoad: true,
-        theme: 'forest',
-        flowchart: {
-          useMaxWidth: false,
-          htmlLabels: true,
-        },
-      };
-
-      mermaid.initialize(config);
-      window.mermaid.init(
-        undefined,
-        document.querySelectorAll('.language-mermaid')
-      );
-
-      let plantumlPrefix = 'language-plantuml';
-      Array.prototype.forEach.call(
-        document.querySelectorAll('[class^=' + plantumlPrefix + ']'),
-        function (code) {
-          let image = document.createElement('img');
-          image.className = 'plantuml-image';
-          image.loading = 'lazy';
-          image.src =
-            'http://www.plantuml.com/plantuml/svg/~1' +
-            plantumlEncoder.encode(code.innerText);
-          code.parentNode.insertBefore(image, code);
-          code.style.display = 'none';
-        }
-      );
-      var pres = document.getElementsByTagName('pre'),
-        length = pres.length,
-        i = 0;
-
-      for (i; i < length; i++) {
-        if (pres[i].querySelector('.plantuml-image')) {
-          pres[i].classList.add('plantuml-image-container');
-        }
-        if (pres[i].querySelector('.language-mermaid')) {
-          pres[i].classList.add('mermaid-image-container');
-        }
-        if (pres[i].querySelector('.language-markmap')) {
-          pres[i].classList.add('markmap-image-container');
-        }
-      }
-    </script>
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        renderMathInElement(document.body, {
-          delimiters: [
-            { left: '$$', right: '$$', display: true },
-            { left: '$', right: '$', display: false },
-            { left: '\\(', right: '\\)', display: false },
-            { left: '\\[', right: '\\]', display: true },
-          ],
-          throwOnError: false,
-        });
-      });
-    </script>
-    <script>
+  for (i; i < length; i++) {
+    if (pres[i].querySelector('.plantuml-image')) {
+      pres[i].classList.add('plantuml-image-container');
+    }
+    if (pres[i].querySelector('.language-mermaid')) {
+      pres[i].classList.add('mermaid-image-container');
+    }
+    if (pres[i].querySelector('.language-markmap')) {
+      pres[i].classList.add('markmap-image-container');
+    }
+  }
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '$', right: '$', display: false },
+        { left: '\\(', right: '\\)', display: false },
+        { left: '\\[', right: '\\]', display: true },
+      ],
+      throwOnError: false,
+    });
+  });
+</script>
+<script>
+  document
+    .querySelectorAll('h1, h2, h3, h4, h5, h6,h7')
+    .forEach((h) => (h.id = h.innerText));
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
       document
-        .querySelectorAll('h1, h2, h3, h4, h5, h6,h7')
-        .forEach((h) => (h.id = h.innerText));
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener('click', function (e) {
-          e.preventDefault();
-          document
-            .querySelector(decodeURIComponent(this.getAttribute('href')))
-            .scrollIntoView({
-              behavior: 'smooth',
-            });
+        .querySelector(decodeURIComponent(this.getAttribute('href')))
+        .scrollIntoView({
+          behavior: 'smooth',
         });
-      });
-    </script>
-    <script>
-      var markmapList = document.querySelectorAll('.language-markmap');
-      markmapList &&
-        markmapList.forEach((item) => {
-          var heightAttr = item.textContent.match(
-            /\<\!\-\-markmap-height\=(\S*)\-\-\>/
-          );
-          var height = '300px';
-          if (heightAttr && heightAttr.length > 0 && !isNaN(heightAttr[1])) {
-            height = heightAttr[1] + 'px';
-          }
-          document
-            .querySelector(':root')
-            .style.setProperty('--markmap-height', height);
-          item.classList.add('markmap');
-        });
-    </script>
-  </body>
+    });
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const markMapList = document.querySelectorAll('.language-markmap');
+    markMapList && markMapList.length > 0 &&
+    markMapList.forEach((item, i) => {
+      const markMapName = 'markmap-' + i;
+      const markMapChildClass = '.' + markMapName + ' .markmap';
+      let heightAttr = item.textContent.match(
+        /\<\!\-\-markmap-height\=(\S*)\-\-\>/,
+      );
+      let height = '300px';
+      if (heightAttr && heightAttr.length > 0 && !isNaN(heightAttr[1])) {
+        height = heightAttr[1] + 'px';
+      }
+      item.classList.add('markmap');
+      item.classList.add(markMapName);
+      setTimeout(() => {
+        const markMapItem = document.querySelector('.' + markMapName);
+        markMapItem.style.maxHeight = height;
+        markMapItem.style.height = height;
+        setTimeout(() => {
+          const markMapItemChild = document.querySelector(markMapChildClass);
+          markMapItemChild.style.height = height;
+        }, 10);
+      }, 10);
+    });
+  });
+</script>
+</body>
 </html>
