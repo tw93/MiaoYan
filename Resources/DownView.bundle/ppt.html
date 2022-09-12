@@ -1,145 +1,172 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="initial-scale=1.0" />
-    <link rel="stylesheet" href="ppt/dist/reveal.css" />
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="initial-scale=1.0"/>
+    <link rel="stylesheet" href="ppt/dist/reveal.css"/>
     DOWN_THEME
     <script src="js/markmap.min.js"></script>
     <title></title>
     <style>
       @font-face {
-          font-family: 'LXGW WenKai Lite';
-          font-style: normal;
-          font-weight: 800;
-          font-display: fallback;
-          src: url('DOWN_FONT_PATH/LXGWWenKaiLite-Bold.ttf') format('truetype');
+        font-family: 'LXGW WenKai Lite';
+        font-style: normal;
+        font-weight: 800;
+        font-display: fallback;
+        src: url('DOWN_FONT_PATH/LXGWWenKaiLite-Bold.ttf') format('truetype');
       }
 
       @font-face {
-          font-family: 'LXGW WenKai Lite';
-          font-style: normal;
-          font-weight: 400;
-          font-display: fallback;
-          src: url('DOWN_FONT_PATH/LXGWWenKaiLite-Regular.ttf') format('truetype');
+        font-family: 'LXGW WenKai Lite';
+        font-style: normal;
+        font-weight: 400;
+        font-display: fallback;
+        src: url('DOWN_FONT_PATH/LXGWWenKaiLite-Regular.ttf') format('truetype');
       }
 
       DOWN_CSS
     </style>
-  </head>
+</head>
 
-  <body>
-    <div class="reveal" id="write">
-      <div class="slides">
+<body>
+<div class="reveal" id="write">
+    <div class="slides">
         <section data-markdown>
-          <script type="text/template">
-            DOWN_RAW
-          </script>
+            <script type="text/template">
+                DOWN_RAW
+            </script>
         </section>
-      </div>
     </div>
+</div>
 
-    <script>
-      function getSelectionAndSendMessage() {
-        const txt = document.getSelection().toString();
-        window.webkit.messageHandlers.newSelectionDetected.postMessage(txt);
+<script>
+  function getSelectionAndSendMessage() {
+    const txt = document.getSelection().toString();
+    window.webkit.messageHandlers.newSelectionDetected.postMessage(txt);
+  }
+
+  document.onmouseup = getSelectionAndSendMessage;
+  document.onkeyup = getSelectionAndSendMessage;
+  document.oncontextmenu = getSelectionAndSendMessage;
+</script>
+
+<script>
+  var preList = document.getElementsByTagName('input'),
+    length = preList.length,
+    i = 0;
+
+  for (i; i < length; i++) {
+    preList[i].disabled = true;
+
+    if (
+      preList[i].parentNode.tagName === 'P' &&
+      preList[i].parentNode.parentNode.tagName === 'LI'
+    ) {
+      preList[i].parentNode.parentNode.parentNode.classList.add('cb');
+      continue;
+    }
+
+    if (preList[i].parentNode.tagName !== 'LI') {
+      continue;
+    }
+
+    preList[i].parentNode.parentNode.classList.add('cb');
+  }
+</script>
+<script src="ppt/dist/reveal.js"></script>
+<script src="ppt/plugin/markdown/markdown.js"></script>
+<script src="ppt/plugin/highlight/highlight.js"></script>
+<script src="ppt/plugin/notes/notes.js"></script>
+<script src="ppt/plugin/zoom/zoom.js"></script>
+<script src="ppt/plugin/math/math.js"></script>
+
+<script>
+  if ('DOWN_EXPORT_TYPE' === 'ppt') {
+    if (window.location.search.indexOf('print-pdf') === -1) {
+      window.location.search = 'print-pdf';
+    }
+    document.getElementById('write').style.visibility = 'hidden';
+    setTimeout(() => {
+      const iframeEle = document.querySelector(
+        '.pdf-page .slide-background-content iframe'
+      );
+      const iframeBg = document.querySelector(
+        '.pdf-page section[data-background-iframe]'
+      );
+      const pdfSections = document.getElementsByClassName('pdf-page');
+      pdfSections.forEach((item) => {
+        if (item.contains(iframeEle)) {
+          item.hidden = true;
+        }
+        if (item.contains(iframeBg)) {
+          item.hidden = true;
+        }
+      });
+      document.getElementById('write').style.visibility = 'visible';
+    }, 600);
+  }
+  Reveal.initialize({
+    width: '100%',
+    height: '100%',
+    controls: true,
+    progress: true,
+    history: true,
+    transition: 'slide',
+    backgroundTransition: 'none',
+    center: false,
+    pdfSeparateFragments: false,
+    plugins: [
+      RevealMarkdown,
+      RevealHighlight,
+      RevealNotes,
+      RevealZoom,
+      RevealMath.KaTeX,
+    ],
+  });
+  document.addEventListener('DOMContentLoaded', function () {
+    const sections = document.getElementsByTagName('section');
+    if (sections.length < 1) {
+      return;
+    }
+    sections.forEach((item) => {
+      if (item.childElementCount === 1) {
+        item.classList.add('section-center');
+        item.classList.add('center');
+      } else {
+        const option = item.clientHeight / document.body.offsetHeight;
+        if (option > 0.75) {
+          item.classList.add('section-option');
+        }
       }
-
-      document.onmouseup = getSelectionAndSendMessage;
-      document.onkeyup = getSelectionAndSendMessage;
-      document.oncontextmenu = getSelectionAndSendMessage;
-    </script>
-
-    <script>
-      var preList = document.getElementsByTagName('input'),
-        length = preList.length,
-        i = 0;
-
-      for (i; i < length; i++) {
-        preList[i].disabled = true;
-
-        if (
-          preList[i].parentNode.tagName === 'P' &&
-          preList[i].parentNode.parentNode.tagName === 'LI'
-        ) {
-          preList[i].parentNode.parentNode.parentNode.classList.add('cb');
-          continue;
-        }
-
-        if (preList[i].parentNode.tagName !== 'LI') {
-          continue;
-        }
-
-        preList[i].parentNode.parentNode.classList.add('cb');
+    });
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const markMapList = document.querySelectorAll('.markmap');
+    markMapList && markMapList.length > 0 &&
+    markMapList.forEach((item, i) => {
+      let markMapName = 'markmap-' + i;
+      const markMapChildName = '.' + markMapName + ' .markmap';
+      let heightAttr = item.textContent.match(
+        /\<\!\-\-markmap-height\=(\S*)\-\-\>/,
+      );
+      let height = '480px';
+      if (heightAttr && heightAttr.length > 0 && !isNaN(heightAttr[1])) {
+        height = heightAttr[1] + 'px';
       }
-    </script>
-    <script src="ppt/dist/reveal.js"></script>
-    <script src="ppt/plugin/markdown/markdown.js"></script>
-    <script src="ppt/plugin/highlight/highlight.js"></script>
-    <script src="ppt/plugin/notes/notes.js"></script>
-    <script src="ppt/plugin/zoom/zoom.js"></script>
-    <script src="ppt/plugin/math/math.js"></script>
-
-    <script>
-      if ('DOWN_EXPORT_TYPE' === 'ppt') {
-        if (window.location.search.indexOf('print-pdf') === -1) {
-          window.location.search = 'print-pdf';
-        }
-        document.getElementById('write').style.visibility = 'hidden';
+      item.classList.add(markMapName);
+      setTimeout(() => {
+        const markMapItem = document.querySelector('.' + markMapName);
+        markMapItem.style.maxHeight = height;
+        markMapItem.style.height = height;
         setTimeout(() => {
-          const iframeEle = document.querySelector(
-            '.pdf-page .slide-background-content iframe'
-          );
-          const iframeBg = document.querySelector(
-            '.pdf-page section[data-background-iframe]'
-          );
-          const pdfSections = document.getElementsByClassName('pdf-page');
-          pdfSections.forEach((item) => {
-            if (item.contains(iframeEle)) {
-              item.hidden = true;
-            }
-            if (item.contains(iframeBg)) {
-              item.hidden = true;
-            }
-          });
-          document.getElementById('write').style.visibility = 'visible';
-        }, 600);
-      }
-      Reveal.initialize({
-        width: '100%',
-        height: '100%',
-        controls: true,
-        progress: true,
-        history: true,
-        transition: 'slide',
-        backgroundTransition: 'none',
-        center: false,
-        pdfSeparateFragments: false,
-        plugins: [
-          RevealMarkdown,
-          RevealHighlight,
-          RevealNotes,
-          RevealZoom,
-          RevealMath.KaTeX,
-        ],
-      });
-      document.addEventListener('DOMContentLoaded', function () {
-        const sections = document.getElementsByTagName('section');
-        if (sections.length < 1) {
-          return;
-        }
-        sections.forEach((item) => {
-          if (item.childElementCount === 1) {
-            item.classList.add('section-center');
-            item.classList.add('center');
-          } else {
-            const option = item.clientHeight / document.body.offsetHeight;
-            if (option > 0.75) {
-              item.classList.add('section-option');
-            }
-          }
-        });
-      });
-    </script>
-  </body>
+          const markMapItemChild = document.querySelector(markMapChildName);
+          markMapItemChild.style.height = height;
+        }, 10);
+      }, 10);
+    });
+  });
+</script>
+</body>
 </html>

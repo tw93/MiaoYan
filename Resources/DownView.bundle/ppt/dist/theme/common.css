@@ -13,6 +13,7 @@
   --r-heading4-size: 1em;
   --r-main-font: Helvetica, sans-serif;
   --r-code-font: monospace;
+  --markmap-height: 480px;
 }
 
 .reveal-viewport {
@@ -213,6 +214,15 @@
   word-wrap: normal;
 }
 
+.reveal pre code.markmap{
+  max-height: var(--markmap-height);
+  padding: 0;
+}
+
+.markmap-foreign a {
+  display: contents;
+}
+
 .reveal .code-wrapper {
   white-space: normal;
 }
@@ -300,7 +310,7 @@
 
 .markmap {
   width: 100%;
-  height: 480px;
+  height: var(--markmap-height);
 }
 
 /*********************************************
