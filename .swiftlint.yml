@@ -9,3 +9,18 @@ line_length:
   ignores_comments: true
   ignores_interpolated_strings: true
   ignores_urls: true
+
+disabled_rules:
+  - force_cast
+  - force_try
+  - function_body_length
+  - nesting
+  - todo
+  - type_body_length
+  - type_name
+  - identifier_name
+file_length:
+  warning: 500
+variable_name_max_length:
+  warning: 45
+  error: 60
