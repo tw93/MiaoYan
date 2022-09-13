@@ -366,8 +366,8 @@ html.reveal-full-page {
     display: none;
     position: absolute;
     top: auto;
-    bottom: 12px;
-    right: 12px;
+    bottom: 18px;
+    right: 24px;
     left: auto;
     z-index: 11;
     color: #000;

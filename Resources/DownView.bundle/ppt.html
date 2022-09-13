@@ -51,7 +51,7 @@
 </script>
 
 <script>
-  var preList = document.getElementsByTagName('input'),
+  let preList = document.getElementsByTagName('input'),
     length = preList.length,
     i = 0;
 
@@ -167,6 +167,23 @@
       }, 10);
     });
   });
+</script>
+<script>
+  function postBackgroundColor(currentSlide){
+    let color = ""
+    if(currentSlide && currentSlide.dataset && currentSlide.dataset.background){
+      color = currentSlide.dataset.background
+    }
+    window.webkit && window.webkit.messageHandlers.revealBackgroundColor.postMessage(color);
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    Reveal.on('ready', event => {
+      postBackgroundColor(event.currentSlide)
+    });
+    Reveal.on('slidechanged', event => {
+      postBackgroundColor(event.currentSlide)
+    });
+  })
 </script>
 </body>
 </html>

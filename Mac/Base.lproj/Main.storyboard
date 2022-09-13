@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="21223" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21223"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21225"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -1473,7 +1473,7 @@ CA
                                                             <rect key="frame" x="0.0" y="0.0" width="561" height="588"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <textView verticallyResizable="YES" usesFontPanel="YES" findStyle="bar" allowsCharacterPickerTouchBarItem="NO" allowsDocumentBackgroundColorChange="YES" allowsUndo="YES" allowsImageEditing="YES" usesRuler="YES" allowsNonContiguousLayout="YES" textCompletion="NO" smartInsertDelete="YES" id="cmZ-KL-T9k" customClass="EditTextView" customModule="MiaoYan" customModuleProvider="target">
+                                                                <textView focusRingType="none" verticallyResizable="YES" usesFontPanel="YES" findStyle="bar" allowsCharacterPickerTouchBarItem="NO" allowsUndo="YES" allowsImageEditing="YES" usesRuler="YES" textCompletion="NO" id="cmZ-KL-T9k" customClass="EditTextView" customModule="MiaoYan" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="0.0" width="561" height="588"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -1745,6 +1745,12 @@ CA
                                         <modifierMask key="keyEquivalentModifierMask" control="YES"/>
                                         <connections>
                                             <action selector="exportImage:" target="XfG-lQ-9wD" id="CHV-dY-HtD"/>
+                                        </connections>
+                                    </menuItem>
+                                    <menuItem title="HTML" alternate="YES" keyEquivalent="H" id="Ge6-vi-x3q">
+                                        <modifierMask key="keyEquivalentModifierMask" control="YES"/>
+                                        <connections>
+                                            <action selector="exportHtml:" target="XfG-lQ-9wD" id="pZF-N2-y4v"/>
                                         </connections>
                                     </menuItem>
                                     <menuItem title="MiaoYan PPT PDF" alternate="YES" keyEquivalent="P" id="DhD-mk-T1u">

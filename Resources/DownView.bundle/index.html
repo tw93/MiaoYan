@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="initial-scale=1.0"/>
+    DOWN_META
     <link href="css/heti.min.css" rel="stylesheet"/>
     <link href="css/katex.min.css" rel="stylesheet"/>
     <script src="js/heti-addon.min.js"></script>
@@ -56,18 +57,18 @@
 
 <script>
   function getSelectionAndSendMessage() {
-    var txt = document.getSelection().toString();
-    window.webkit.messageHandlers.newSelectionDetected.postMessage(txt);
+    const txt = document.getSelection().toString();
+    window.webkit && window.webkit.messageHandlers.newSelectionDetected.postMessage(txt);
   }
 
   document.onmouseup = getSelectionAndSendMessage;
   document.onkeyup = getSelectionAndSendMessage;
   document.oncontextmenu = getSelectionAndSendMessage;
 
-  var darkModeStylesNodeID = 'darkModeStyles';
+  const darkModeStylesNodeID = 'darkModeStyles';
 
   function addStyleString(str, nodeID) {
-    var node = document.createElement('style');
+    const node = document.createElement('style');
     node.id = nodeID;
     node.innerHTML = str;
 
@@ -75,60 +76,58 @@
   }
 
   function switchToDarkMode() {
-    var darkModeStyleElement =
+    const darkModeStyleElement =
       document.getElementById(darkModeStylesNodeID);
     if (darkModeStyleElement == null) {
-      var darkModeStyles =
-        "* { color: #E7E9EA; } body { background: #21262B; } code { background: #454545; } a, .heti a heti-spacing { color: #1D9BF0 } table td, table th { color: #E7E9EA; } input[type='checkbox'] { border: 1px solid white; }.hljs{color:#ABB2BF;background:#191F25}.hljs-comment,.hljs-quote{color:#ABB2BF;}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#9B79F7}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#ED716C}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#8FFCCD}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#F7CC8F}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#99E0FC}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#ED716C}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}";
+      const darkModeStyles =
+        "* { color: #E7E9EA; } body { background: #21262B; } .heti p > code, .heti li > code, code { background: #454545; } a, .heti a heti-spacing { color: #1D9BF0 } table td, table th { color: #E7E9EA; } input[type='checkbox'] { border: 1px solid white; }.hljs{color:#ABB2BF;background:#191F25}.hljs-comment,.hljs-quote{color:#ABB2BF;}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#9B79F7}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#ED716C}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#8FFCCD}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#F7CC8F}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#99E0FC}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#ED716C}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}";
       addStyleString(darkModeStyles, darkModeStylesNodeID);
     }
   }
 
   function switchToLightMode() {
-    var darkModeStyleElement =
+    const darkModeStyleElement =
       document.getElementById(darkModeStylesNodeID);
     if (darkModeStyleElement != null) {
       darkModeStyleElement.parentElement.removeChild(darkModeStyleElement);
     }
   }
 
-  if ('CUSTOM_CSS' == 'darkmode') {
+  if ('CUSTOM_CSS' === 'darkmode') {
     switchToDarkMode();
   }
 </script>
 
 <script>
-  var preList = document.getElementsByTagName('input'),
-    length = preList.length,
-    i = 0;
+  const inputList = document.getElementsByTagName('input');
 
-  for (i; i < length; i++) {
-    preList[i].disabled = true;
+  for (let i = 0; i < inputList.length; i++) {
+    inputList[i].disabled = true;
 
     if (
-      preList[i].parentNode.tagName == 'P' &&
-      preList[i].parentNode.parentNode.tagName == 'LI'
+      inputList[i].parentNode.tagName === 'P' &&
+      inputList[i].parentNode.parentNode.tagName === 'LI'
     ) {
-      preList[i].parentNode.parentNode.parentNode.classList.add('cb');
+      inputList[i].parentNode.parentNode.parentNode.classList.add('cb');
       continue;
     }
 
-    if (preList[i].parentNode.tagName != 'LI') {
+    if (inputList[i].parentNode.tagName !== 'LI') {
       continue;
     }
 
-    preList[i].parentNode.parentNode.classList.add('cb');
+    inputList[i].parentNode.parentNode.classList.add('cb');
   }
 </script>
 
 <script>
-  var addCheckboxEvent = function (element) {
-    if (element.parentNode.nodeName == 'LI') {
+  const addCheckboxEvent = function (element) {
+    if (element.parentNode.nodeName === 'LI') {
       element.parentNode.classList.remove('strike');
     }
 
     let id = element.dataset.checkbox;
-    window.webkit.messageHandlers.checkbox.postMessage(id);
+    window.webkit && window.webkit.messageHandlers.checkbox.postMessage(id);
 
     let input = document.createElement('input');
     input.type = 'checkbox';
@@ -137,7 +136,7 @@
     if (!element.hasAttribute('checked')) {
       input.defaultChecked = true;
 
-      if (element.parentNode.nodeName == 'LI') {
+      if (element.parentNode.nodeName === 'LI') {
         element.parentNode.classList.add('strike');
       }
     }
@@ -149,22 +148,20 @@
     });
   };
 
-  var inputs = document.querySelectorAll('input[type=checkbox]'),
-    length = inputs.length,
-    i = 0;
+  const checkboxList = document.querySelectorAll('input[type=checkbox]');
 
-  for (i; i < length; i++) {
+  for (let i = 0; i < checkboxList.length; i++) {
     if (
-      inputs[i].parentNode.nodeName == 'LI' &&
-      inputs[i].hasAttribute('checked')
+      checkboxList[i].parentNode.nodeName === 'LI' &&
+      checkboxList[i].hasAttribute('checked')
     ) {
-      inputs[i].parentNode.classList.add('strike');
+      checkboxList[i].parentNode.classList.add('strike');
     }
 
-    inputs[i].disabled = false;
-    inputs[i].dataset.checkbox = i;
+    checkboxList[i].disabled = false;
+    checkboxList[i].dataset.checkbox = i;
 
-    inputs[i].addEventListener('click', function (event) {
+    checkboxList[i].addEventListener('click', function (event) {
       let element = event.target;
       addCheckboxEvent(element);
     });
@@ -172,7 +169,7 @@
 </script>
 
 <script>
-  var config = {
+  const config = {
     startOnLoad: true,
     theme: 'forest',
     flowchart: {
@@ -201,19 +198,18 @@
       code.style.display = 'none';
     }
   );
-  var pres = document.getElementsByTagName('pre'),
-    length = pres.length,
-    i = 0;
 
-  for (i; i < length; i++) {
-    if (pres[i].querySelector('.plantuml-image')) {
-      pres[i].classList.add('plantuml-image-container');
+  const preList = document.getElementsByTagName('pre');
+
+  for (let i = 0; i < preList.length; i++) {
+    if (preList[i].querySelector('.plantuml-image')) {
+      preList[i].classList.add('plantuml-image-container');
     }
-    if (pres[i].querySelector('.language-mermaid')) {
-      pres[i].classList.add('mermaid-image-container');
+    if (preList[i].querySelector('.language-mermaid')) {
+      preList[i].classList.add('mermaid-image-container');
     }
-    if (pres[i].querySelector('.language-markmap')) {
-      pres[i].classList.add('markmap-image-container');
+    if (preList[i].querySelector('.language-markmap')) {
+      preList[i].classList.add('markmap-image-container');
     }
   }
 </script>

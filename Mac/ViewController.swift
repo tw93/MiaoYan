@@ -2177,15 +2177,11 @@ class ViewController:
     }
 
     func enableMiaoYanPPT() {
-        guard let vc = ViewController.shared() else {
-            return
-        }
+        guard let vc = ViewController.shared() else { return }
         enablePresentation()
         UserDefaultsManagement.magicPPT = true
         DispatchQueue.main.async {
             vc.titiebarHeight.constant = 0.0
-            vc.sidebarSplitView.setValue(NSColor.black, forKey: "dividerColor")
-            vc.splitView.setValue(NSColor.black, forKey: "dividerColor")
             // 兼容空格下一个的场景
             NSApp.mainWindow?.makeFirstResponder(vc.editArea.markdownView)
         }
@@ -2456,8 +2452,8 @@ class ViewController:
             titleTopConstraint.constant = 24.0
             return
         }
-        titleTopConstraint.constant = 10.0
         titiebarHeight.constant = 52.0
+        titleTopConstraint.constant = 10.0
     }
 
     @IBAction func duplicate(_ sender: Any) {
@@ -2562,6 +2558,22 @@ class ViewController:
             }
         }
         Analytics.trackEvent("MiaoYan Export", withProperties: ["Type": "Image"])
+    }
+    
+    @IBAction func exportHtml(_ sender: Any) {
+        UserDefaultsManagement.isOnExport = true
+        UserDefaultsManagement.isOnExportHtml = true
+        toast(message: NSLocalizedString("🙊 Starting export~", comment: ""))
+        enablePreview()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.editArea.markdownView?.exportHtml()
+            UserDefaultsManagement.isOnExport = false
+            UserDefaultsManagement.isOnExportHtml = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.disablePreview()
+            }
+        }
+        Analytics.trackEvent("MiaoYan Export", withProperties: ["Type": "Html"])
     }
 
     @IBAction func exportPdf(_ sender: Any) {
