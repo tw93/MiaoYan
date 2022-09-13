@@ -18,6 +18,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         userContentController.add(HandlerCheckbox(), name: "checkbox")
         userContentController.add(HandlerSelection(), name: "newSelectionDetected")
         userContentController.add(HandlerCodeCopy(), name: "notification")
+        userContentController.add(HandlerRevealBackgroundColor(), name: "revealBackgroundColor")
 
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = userContentController
@@ -134,6 +135,31 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             }
         } else {}
     }
+    
+    public func exportHtml() {
+        let vc = ViewController.shared()
+        if #available(macOS 10.15, *) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
+                    if complete != nil {
+                        super.evaluateJavaScript("document.documentElement.outerHTML.toString()", completionHandler: { html, _ in
+                            guard let contentHtml = html as? String else {
+                                print("Content html could not be obtained"); return
+                            }
+                            if let path = NSSearchPathForDirectoriesInDomains(.desktopDirectory, .userDomainMask, true).first {
+                                let currentName = self.note?.getTitle()
+                                let filePath: String = path + "/" + (currentName ?? "MiaoYan") + ".html"
+                                try! contentHtml.write(to: URL(fileURLWithPath: filePath), atomically: false, encoding: .utf8)
+                                vc?.toastExport(status: true)
+                            }
+                        })
+                    }
+                })
+            }
+        } else {
+        }
+    }
+
 
     public func exportImage() {
         let vc = ViewController.shared()
@@ -170,7 +196,8 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                     }
                 })
             }
-        } else {}
+        } else {
+        }
     }
 
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
@@ -418,9 +445,17 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         template = template.replacingOccurrences(of: "DOWN_CSS", with: css) as NSString
 
-        let fontPath = Bundle.main.resourceURL!.path
+        var fontPath = Bundle.main.resourceURL!.path
+        var downMeta = ""
+
+        // 兼容一下 Html 的场景
+        if UserDefaultsManagement.isOnExportHtml {
+            fontPath = "https://gw.alipayobjects.com/os/k/html/Fonts"
+            downMeta = "<base href=\"https://gw.alipayobjects.com/os/k/html/\">"
+        }
 
         template = template.replacingOccurrences(of: "DOWN_FONT_PATH", with: fontPath) as NSString
+        template = template.replacingOccurrences(of: "DOWN_META", with: downMeta) as NSString
 
         if UserDefaultsManagement.isOnExport {
             template = template.replacingOccurrences(of: "DOWN_EXPORT_TYPE", with: "ppt") as NSString
@@ -510,5 +545,21 @@ class HandlerSelection: NSObject, WKScriptMessageHandler {
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
 
         HandlerSelection.selectionString = message
+    }
+}
+
+//用于解决ppt模式下背景颜色变化左侧边框颜色的适配
+class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
+    func userContentController(_ userContentController: WKUserContentController,
+                               didReceive message: WKScriptMessage) {
+        guard let vc = ViewController.shared() else { return }
+        let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
+        if message == "" {
+            vc.setDividerHidden(hidden: true)
+            vc.setSideDividerHidden(hidden: true)
+        } else {
+            vc.sidebarSplitView.setValue(NSColor(hex: message), forKey: "dividerColor")
+            vc.splitView.setValue(NSColor(hex: message), forKey: "dividerColor")
+        }
     }
 }
