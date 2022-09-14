@@ -565,7 +565,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             typingAttributes.removeValue(forKey: .todo)
 
             if let paragraphStyle = typingAttributes[.paragraphStyle] as? NSMutableParagraphStyle {
-                paragraphStyle.alignment = .left
+                applyLeftParagraphStyle()
             }
 
             if textStorage?.length == 0 {
