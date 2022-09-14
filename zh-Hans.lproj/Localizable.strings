@@ -169,3 +169,6 @@
 
 "This %@ under this folder already exists!" = "此文件夹下 %@ 已经存在!";
 "Please change the title" = "请换一个标题";
+
+"Edit Link…" = "编辑链接";
+"Remove Link" = "移除链接";

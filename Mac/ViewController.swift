@@ -862,7 +862,7 @@ class ViewController:
                 UserDefaultsManagement.singleModePath = ""
                 showSidebar("")
                 setSideDividerHidden(hidden: false)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                     self.restart()
                 }
             }
@@ -1035,10 +1035,8 @@ class ViewController:
         if UserDefaultsManagement.isSingleMode {
             UserDefaultsManagement.isSingleMode = false
             UserDefaultsManagement.singleModePath = ""
-            DispatchQueue.main.async {
-                self.showSidebar("")
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.16) {
+            showSidebar("")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                 NSApplication.shared.terminate(self)
             }
         } else {

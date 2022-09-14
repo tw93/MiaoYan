@@ -19,8 +19,3 @@ disabled_rules:
   - type_body_length
   - type_name
   - identifier_name
-file_length:
-  warning: 500
-variable_name_max_length:
-  warning: 45
-  error: 60
