@@ -23,11 +23,11 @@ public enum UserDefaultsManagement {
     static var DefaultPreviewFontSize = 15
     static var DefaultPresentationFontSize = 24
 
-    static var DefaultEditorLineSpacing = 3.0
+    static var DefaultEditorLineSpacing = 2.6
     static var DefaultEditorLineHeight = 1.3
     static var DefaultEditorLetterSpacing = 0.66
 
-    static var HackEditorLineSpacing = 2.4
+    static var HackEditorLineSpacing = 1.8
     static var HackEditorLineHeight = 1.18
 
     static var scrollPer = 0.0
