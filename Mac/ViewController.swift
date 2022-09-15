@@ -2203,7 +2203,6 @@ class ViewController:
     }
 
     func disablePreview() {
-        UserDefaultsManagement.scrollPer = 0.0
         UserDefaultsManagement.preview = false
         editArea.markdownView?.removeFromSuperview()
         editArea.markdownView = nil
@@ -2287,6 +2286,7 @@ class ViewController:
             formatter.prepare()
             let content = note.content.string
             let cursor = editArea.selectedRanges[0].rangeValue.location
+            let top = editAreaScroll.contentView.bounds.origin.y
             let result = formatter.format(content, withCursorAtLocation: cursor)
             switch result {
             case .success(let formatResult):
@@ -2296,8 +2296,9 @@ class ViewController:
                     newContent = formatResult.formattedString.removeLastNewLine()
                 }
                 editArea.insertText(newContent, replacementRange: NSRange(0..<note.content.length))
-                editArea.fill(note: note, saveTyping: true, force: false)
+                editArea.fill(note: note, saveTyping: true, force: false, needScrollToCursor: false)
                 editArea.setSelectedRange(NSRange(location: formatResult.cursorOffset, length: 0))
+                editAreaScroll.documentView?.scroll(NSPoint(x: 0, y: top))
                 formatContent = newContent
                 note.save()
                 toast(message: NSLocalizedString("🎉 Automatic typesetting succeeded~", comment: ""))
