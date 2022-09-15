@@ -1359,3 +1359,16 @@ img.emoji {
   font-family: var(--text-font) !important;
   font-size: 0.8em !important;
 }
+
+
+img[loading="lazy"] {
+  background-color: #eef1f2;
+  outline-color: #eef1f2;
+}
+
+@media (prefers-color-scheme: dark) {
+  img[loading="lazy"] {
+    background-color: #343941;
+    outline-color: #343941;
+  }
+}
