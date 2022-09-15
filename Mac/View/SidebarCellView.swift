@@ -1,13 +1,15 @@
 import Cocoa
 
 class SidebarCellView: NSTableCellView {
-    @IBOutlet weak var icon: NSImageView!
-    @IBOutlet weak var label: NSTextField!
+    @IBOutlet var icon: NSImageView!
+    @IBOutlet var label: NSTextField!
+    @IBOutlet var labelToIconConstraint: NSLayoutConstraint!
     
     var storage = Storage.sharedInstance()
     
     override func draw(_ dirtyRect: NSRect) {
         label.font = UserDefaultsManagement.nameFont
+        checkLabelTopConstraint()
         super.draw(dirtyRect)
     }
     
@@ -15,14 +17,13 @@ class SidebarCellView: NSTableCellView {
     
     override func updateTrackingAreas() {
         if let trackingArea = self.trackingArea {
-            self.removeTrackingArea(trackingArea)
+            removeTrackingArea(trackingArea)
         }
         
         let options: NSTrackingArea.Options = [.mouseEnteredAndExited, .activeAlways]
-        let trackingArea = NSTrackingArea(rect: self.bounds, options: options, owner: self, userInfo: nil)
-        self.addTrackingArea(trackingArea)
+        let trackingArea = NSTrackingArea(rect: bounds, options: options, owner: self, userInfo: nil)
+        addTrackingArea(trackingArea)
     }
-    
     
     @IBAction func projectName(_ sender: NSTextField) {
         let cell = sender.superview as? SidebarCellView
@@ -42,7 +43,7 @@ class SidebarCellView: NSTableCellView {
             alert.runModal()
         }
         
-        guard let vc = self.window?.contentViewController as? ViewController else { return }
+        guard let vc = window?.contentViewController as? ViewController else { return }
         vc.storage.removeBy(project: project)
         vc.storage.loadLabel(project)
         vc.updateTable()
@@ -53,4 +54,13 @@ class SidebarCellView: NSTableCellView {
         vc.storageOutlineView.addProject(self)
     }
     
+    func checkLabelTopConstraint() {
+        if UserDefaultsManagement.windowFontName == "JetBrains Mono" {
+            labelToIconConstraint.constant = -1.8
+        } else if UserDefaultsManagement.windowFontName == "Helvetica Neue" {
+            labelToIconConstraint.constant = -1.3
+        } else {
+            labelToIconConstraint.constant = -0.9
+        }
+    }
 }
