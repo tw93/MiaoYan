@@ -139,7 +139,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     public func exportHtml() {
         let vc = ViewController.shared()
         if #available(macOS 10.15, *) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
                     if complete != nil {
                         super.evaluateJavaScript("document.documentElement.outerHTML.toString()", completionHandler: { html, _ in
