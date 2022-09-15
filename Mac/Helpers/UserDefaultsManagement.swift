@@ -23,14 +23,12 @@ public enum UserDefaultsManagement {
     static var DefaultPreviewFontSize = 15
     static var DefaultPresentationFontSize = 24
 
-    static var DefaultEditorLineSpacing = 2.8
+    static var DefaultEditorLineSpacing = 3.0
     static var DefaultEditorLineHeight = 1.3
     static var DefaultEditorLetterSpacing = 0.66
 
     static var HackEditorLineSpacing = 1.8
     static var HackEditorLineHeight = 1.18
-
-    static var scrollPer = 0.0
 
     static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
     static var DefaultBgColor = Color.white
