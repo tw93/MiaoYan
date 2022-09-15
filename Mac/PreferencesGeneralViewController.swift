@@ -73,8 +73,10 @@ class PreferencesGeneralViewController: NSViewController {
             return
         }
 
+        // 处理好代码字体变化
         if UserDefaultsManagement.codeFontName == UserDefaultsManagement.fontName {
             UserDefaultsManagement.codeFontName = item.title
+            NotesTextProcessor.codeFont = Font(name: UserDefaultsManagement.codeFontName, size: CGFloat(UserDefaultsManagement.fontSize))
         }
 
         UserDefaultsManagement.fontName = item.title
