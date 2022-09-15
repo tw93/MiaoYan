@@ -210,9 +210,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             breakUndoCoalescing()
 
             saveTextStorageContent(to: note)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
-                self.fillHighlightLinks()
-            }
+            fillHighlightLinks()
             return
         }
 
@@ -545,23 +543,19 @@ class EditTextView: NSTextView, NSTextFinderClient {
             let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
             formatter.newLine()
             breakUndoCoalescing()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
-                self.fillHighlightLinks()
-            }
+            fillHighlightLinks()
+            saveCursorPosition()
             return
-        }
-
-        if event.keyCode == kVK_Delete {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
-                self.fillHighlightLinks()
-            }
         }
 
         if event.keyCode == kVK_Delete, event.modifierFlags.contains(.option) {
             deleteWordBackward(nil)
             return
         }
+        
         super.keyDown(with: event)
+        
+        fillHighlightLinks()
         saveCursorPosition()
     }
 
