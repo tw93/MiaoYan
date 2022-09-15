@@ -66,6 +66,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
         super.setNeedsDisplay(newInvalidRect)
     }
 
+    override var acceptableDragTypes: [NSPasteboard.PasteboardType] { [] }
+
     override func mouseDown(with event: NSEvent) {
 
         guard EditTextView.note != nil else { return }
@@ -85,8 +87,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
             isEditable = true
         }
 
-        if initRange.location > 0 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+        if initRange.length > 0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                 self.textStorage?.updateParagraphStyle()
                 self.initRange =  NSRange(location: 0, length: 0)
             }
@@ -208,7 +210,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             breakUndoCoalescing()
 
             saveTextStorageContent(to: note)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
                 self.fillHighlightLinks()
             }
             return
@@ -334,7 +336,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         return true
     }
 
-    func fill(note: Note, highlight: Bool = false, saveTyping: Bool = false, force: Bool = false) {
+    func fill(note: Note, highlight: Bool = false, saveTyping: Bool = false, force: Bool = false, needScrollToCursor: Bool = true) {
         let viewController = window?.contentViewController as! ViewController
         viewController.emptyEditAreaView.isHidden = true
         viewController.titleBarView.isHidden = false
@@ -401,7 +403,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             isHighlighted = true
         }
         applyLeftParagraphStyle()
-        restoreCursorPosition()
+        restoreCursorPosition(needScrollToCursor: needScrollToCursor)
     }
 
     private func setTextColor() {
@@ -543,14 +545,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
             let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
             formatter.newLine()
             breakUndoCoalescing()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
                 self.fillHighlightLinks()
             }
             return
         }
 
         if event.keyCode == kVK_Delete {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
                 self.fillHighlightLinks()
             }
         }
@@ -614,7 +616,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         try? note.url.setExtendedAttribute(data: data, forName: "com.tw93.miaoyan.cursor")
     }
 
-    func restoreCursorPosition() {
+    func restoreCursorPosition(needScrollToCursor:Bool = true) {
         guard let storage = textStorage else { return }
 
         guard UserDefaultsManagement.restoreCursorPosition else {
@@ -624,7 +626,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         if let position = EditTextView.note?.getCursorPosition(), position <= storage.length {
             setSelectedRange(NSMakeRange(position, 0))
-            scrollToCursor()
+            if needScrollToCursor {
+                scrollToCursor()
+            }
         }
     }
 
