@@ -196,8 +196,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                     }
                 })
             }
-        } else {
-        }
+        } else {}
     }
 
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {

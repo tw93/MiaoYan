@@ -17,6 +17,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
     let storage = Storage.sharedInstance()
     let caretWidth: CGFloat = 1
     var downView: MarkdownView?
+    var initRange = NSRange(location: 0, length: 0)
+
     public var timer: Timer?
     public var markdownView: MPreviewView?
     public static var imagesLoaderQueue = OperationQueue()
@@ -49,6 +51,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     override func updateInsertionPointStateAndRestartTimer(_ restartFlag: Bool) {
+        if let range = self.selectedRanges[0] as? NSRange, range.length > 0, range != initRange {
+            DispatchQueue.main.async {
+                self.textStorage?.updateParagraphStyle()
+                self.initRange = range
+            }
+        }
         super.updateInsertionPointStateAndRestartTimer(true)
     }
 
@@ -71,12 +79,20 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         _ = manager.boundingRect(forGlyphRange: NSRange(location: index, length: 1), in: container)
 
-        super.mouseDown(with: event)
         saveCursorPosition()
 
         if !UserDefaultsManagement.preview {
             isEditable = true
         }
+
+        if initRange.location > 0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                self.textStorage?.updateParagraphStyle()
+                self.initRange =  NSRange(location: 0, length: 0)
+            }
+        }
+
+        super.mouseDown(with: event)
     }
 
     override func mouseMoved(with event: NSEvent) {
@@ -192,7 +208,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             breakUndoCoalescing()
 
             saveTextStorageContent(to: note)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                 self.fillHighlightLinks()
             }
             return
@@ -527,14 +543,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
             let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
             formatter.newLine()
             breakUndoCoalescing()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                 self.fillHighlightLinks()
             }
             return
         }
 
         if event.keyCode == kVK_Delete {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.001) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                 self.fillHighlightLinks()
             }
         }
@@ -564,7 +580,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
             typingAttributes.removeValue(forKey: .todo)
 
-            if let paragraphStyle = typingAttributes[.paragraphStyle] as? NSMutableParagraphStyle {
+            if typingAttributes[.paragraphStyle] is NSMutableParagraphStyle {
                 applyLeftParagraphStyle()
             }
 
@@ -914,9 +930,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     public func applyLeftParagraphStyle() {
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
         paragraphStyle.alignment = .left
+        paragraphStyle.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
         paragraphStyle.lineHeightMultiple = CGFloat(UserDefaultsManagement.editorLineHeight)
+        paragraphStyle.lineBreakMode = .byTruncatingTail
         typingAttributes[.paragraphStyle] = paragraphStyle
         defaultParagraphStyle = paragraphStyle
         textStorage?.updateParagraphStyle()
