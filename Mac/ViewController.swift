@@ -48,14 +48,7 @@ class ViewController:
     @IBOutlet var emptyEditAreaImage: NSImageView!
     @IBOutlet var emptyEditAreaView: NSView!
     @IBOutlet var splitView: EditorSplitView!
-    @IBOutlet var editArea: EditTextView! {
-        didSet {
-            NotificationCenter.default.addObserver(self,
-                    selector: #selector(updateUIForSelectionChange(_:)),
-                    name: NSTextView.didChangeSelectionNotification,
-                    object: nil)
-        }
-    }
+    @IBOutlet var editArea: EditTextView!
     @IBOutlet var editAreaScroll: EditorScrollView!
     @IBOutlet var search: SearchTextField!
 
@@ -238,17 +231,6 @@ class ViewController:
             Analytics.trackEvent("MiaoYan ShowInfo")
         }
     }
-
-    // 用于兼容滑动时候的划痕
-    @objc func updateUIForSelectionChange(_: NSNotification) {
-        if let range = editArea?.selectedRange(), range.length > 0 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
-                self.editArea.applyLeftParagraphStyle()
-            }
-
-        }
-    }
-
 
     // MARK: - Overrides
 
