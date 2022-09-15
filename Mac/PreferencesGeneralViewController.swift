@@ -73,7 +73,12 @@ class PreferencesGeneralViewController: NSViewController {
             return
         }
 
+        if UserDefaultsManagement.codeFontName == UserDefaultsManagement.fontName {
+            UserDefaultsManagement.codeFontName = item.title
+        }
+
         UserDefaultsManagement.fontName = item.title
+
         NotesTextProcessor.hl = nil
         vc.checkDefaultSetting()
         vc.refillEditArea()
