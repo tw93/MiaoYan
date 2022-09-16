@@ -14,7 +14,7 @@ public extension String {
     }
 
     func trim() -> String {
-        self.trimmingCharacters(in: NSCharacterSet.whitespaces)
+        trimmingCharacters(in: NSCharacterSet.whitespaces)
     }
 
     func getPrefixMatchSequentially(char: String) -> String? {

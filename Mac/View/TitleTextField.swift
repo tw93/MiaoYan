@@ -10,8 +10,7 @@ class TitleTextField: NSTextField {
            event.keyCode == kVK_ANSI_C,
            !event.modifierFlags.contains(.shift),
            !event.modifierFlags.contains(.control),
-           !event.modifierFlags.contains(.option)
-        {
+           !event.modifierFlags.contains(.option) {
             let pasteboard = NSPasteboard.general
             pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
             pasteboard.setString(self.stringValue, forType: NSPasteboard.PasteboardType.string)
@@ -28,13 +27,13 @@ class TitleTextField: NSTextField {
     }
 
     override func textDidEndEditing(_ notification: Notification) {
-        self.saveTitle()
+        saveTitle()
     }
 
     public func saveTitle() {
         guard stringValue.count > 0, let vc = ViewController.shared(), let note = EditTextView.note else { return }
 
-        let currentTitle = stringValue
+        let currentTitle = stringValue.trimmingCharacters(in: NSCharacterSet.newlines)
         let currentName = note.getFileName()
 
         defer {
@@ -50,7 +49,7 @@ class TitleTextField: NSTextField {
                             .replacingOccurrences(of: "/", with: ":")
             let dst = note.project.url.appendingPathComponent(fileName).appendingPathExtension(ext)
 
-            if !FileManager.default.fileExists(atPath: dst.path), note.move(to: dst){
+            if !FileManager.default.fileExists(atPath: dst.path), note.move(to: dst) {
                 vc.updateTitle(newTitle: currentTitle)
                 updateNotesTableView()
                 vc.reSort(note: note)

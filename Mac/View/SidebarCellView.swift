@@ -55,12 +55,11 @@ class SidebarCellView: NSTableCellView {
     }
     
     func checkLabelTopConstraint() {
-        if UserDefaultsManagement.windowFontName == "JetBrains Mono" {
+        let font = UserDefaultsManagement.windowFontName
+        if font == "JetBrains Mono" || font == "Helvetica Neue"{
             labelToIconConstraint.constant = -1.8
-        } else if UserDefaultsManagement.windowFontName == "Helvetica Neue" {
-            labelToIconConstraint.constant = -1.3
         } else {
-            labelToIconConstraint.constant = -0.9
+            labelToIconConstraint.constant = -1.3
         }
     }
 }
