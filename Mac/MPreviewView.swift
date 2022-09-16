@@ -147,7 +147,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                                 print("Content html could not be obtained"); return
                             }
                             if let path = NSSearchPathForDirectoriesInDomains(.desktopDirectory, .userDomainMask, true).first {
-                                let currentName = self.note?.getTitle()
+                                let currentName = self.note?.getShortTitle()
                                 let filePath: String = path + "/" + (currentName ?? "MiaoYan") + ".html"
                                 try! contentHtml.write(to: URL(fileURLWithPath: filePath), atomically: false, encoding: .utf8)
                                 vc?.toastExport(status: true)
@@ -449,8 +449,8 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         // 兼容一下 Html 的场景
         if UserDefaultsManagement.isOnExportHtml {
-            fontPath = "https://gw.alipayobjects.com/os/k/html/Fonts"
-            downMeta = "<base href=\"https://gw.alipayobjects.com/os/k/html/\">"
+            fontPath = "https://gw.alipayobjects.com/os/k/html1/Fonts"
+            downMeta = "<base href=\"https://gw.alipayobjects.com/os/k/html1/\">"
         }
 
         template = template.replacingOccurrences(of: "DOWN_FONT_PATH", with: fontPath) as NSString
