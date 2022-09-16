@@ -625,13 +625,10 @@ CA
                                             <menuItem title="LXGW WenKai Lite" state="on" id="U0d-Y0-lbU">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
+                                            <menuItem title="Times New Roman" id="IUe-Hi-7b6">
+                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                            </menuItem>
                                             <menuItem title="JetBrains Mono" id="gHy-s3-JDh">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                            </menuItem>
-                                            <menuItem title="Georgia" id="IUe-Hi-7b6">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                            </menuItem>
-                                            <menuItem title="Avenir Next" id="a6S-Gr-Ch8">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
                                             <menuItem title="Helvetica Neue" id="SS2-e6-ZUi">
@@ -657,16 +654,10 @@ CA
                                             <menuItem title="LXGW WenKai Lite" state="on" id="Lx0-fl-9t0">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
-                                            <menuItem title="Heti Hei" id="PV7-CS-tpO">
+                                            <menuItem title="Times New Roman" id="uW5-RQ-wqF">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
-                                            <menuItem title="Heti Song" id="0yO-nw-meF">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                            </menuItem>
-                                            <menuItem title="Georgia" id="uW5-RQ-wqF">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                            </menuItem>
-                                            <menuItem title="Avenir Next" id="j7g-D4-pKi">
+                                            <menuItem title="JetBrains Mono" id="RSK-NX-AjP">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
                                             <menuItem title="Helvetica Neue" id="ne1-PN-WcW">
@@ -794,13 +785,10 @@ CA
                                             <menuItem title="LXGW WenKai Lite" state="on" id="QwH-At-JGa">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
+                                            <menuItem title="Times New Roman" id="n5K-Sw-Jli">
+                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                            </menuItem>
                                             <menuItem title="JetBrains Mono" id="Bwp-Pv-g0O">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                            </menuItem>
-                                            <menuItem title="Georgia" id="n5K-Sw-Jli">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                            </menuItem>
-                                            <menuItem title="Avenir Next" id="ek3-JP-viq">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
                                             <menuItem title="Helvetica Neue" id="0cu-dn-9sf">
@@ -1477,7 +1465,7 @@ CA
                                                             <rect key="frame" x="0.0" y="0.0" width="561" height="588"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <textView focusRingType="none" importsGraphics="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="bar" allowsCharacterPickerTouchBarItem="NO" allowsDocumentBackgroundColorChange="YES" allowsUndo="YES" usesRuler="YES" textCompletion="NO" id="cmZ-KL-T9k" customClass="EditTextView" customModule="MiaoYan" customModuleProvider="target">
+                                                                <textView focusRingType="none" importsGraphics="NO" richText="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="bar" allowsCharacterPickerTouchBarItem="NO" allowsDocumentBackgroundColorChange="YES" allowsUndo="YES" usesRuler="YES" textCompletion="NO" smartInsertDelete="YES" id="cmZ-KL-T9k" customClass="EditTextView" customModule="MiaoYan" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="0.0" width="561" height="588"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>

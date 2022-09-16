@@ -56,8 +56,10 @@ class SidebarCellView: NSTableCellView {
     
     func checkLabelTopConstraint() {
         let font = UserDefaultsManagement.windowFontName
-        if font == "JetBrains Mono" || font == "Helvetica Neue"{
+        if font == "JetBrains Mono" || font == "Helvetica Neue" {
             labelToIconConstraint.constant = -1.8
+        } else if font == "Times New Roman" {
+            labelToIconConstraint.constant = 1.0
         } else {
             labelToIconConstraint.constant = -1.3
         }

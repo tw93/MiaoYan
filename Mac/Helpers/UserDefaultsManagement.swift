@@ -27,7 +27,7 @@ public enum UserDefaultsManagement {
     static var DefaultEditorLineHeight = 1.3
     static var DefaultEditorLetterSpacing = 0.66
 
-    static var HackEditorLineSpacing = 1.8
+    static var HackEditorLineSpacing = 2.4
     static var HackEditorLineHeight = 1.18
 
     static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
