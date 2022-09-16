@@ -771,6 +771,11 @@ class ViewController:
             toggleMagicPPT()
             return false
         }
+        
+        if event.modifierFlags.contains(.shift), event.modifierFlags.contains(.control), event.keyCode == kVK_ANSI_H {
+            exportHtml("")
+            return false
+        }
 
         if event.keyCode == kVK_Escape, UserDefaultsManagement.presentation {
             disablePresentation()
@@ -843,7 +848,7 @@ class ViewController:
                 UserDefaultsManagement.singleModePath = ""
                 showSidebar("")
                 setSideDividerHidden(hidden: false)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                     self.restart()
                 }
             }

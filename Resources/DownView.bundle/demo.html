@@ -3,8 +3,16 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="initial-scale=1.0"/>
-    <link rel="stylesheet" href="ppt/dist/reveal.css"/>
-    <link rel="stylesheet" href="ppt/dist/theme/night.css" id="theme" />
+
+    <link href="css/heti.min.css" rel="stylesheet"/>
+    <link href="css/katex.min.css" rel="stylesheet"/>
+    <script src="js/heti-addon.min.js"></script>
+    <script src="js/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script src="js/plantuml-encoder.min.js"></script>
+    <script src="js/katex.min.js"></script>
+    <script src="js/auto-render.min.js"></script>
+    <script src="js/emoji.min.js"></script>
     <script src="js/markmap.min.js"></script>
     <title></title>
     <style>
@@ -24,169 +32,257 @@
         src: url('/Users/tw93/Library/Caches/JetBrains/AppCode2022.2/DerivedData/MiaoYan-ewsrmoabmeedsdcthfnzdflwwokk/Build/Products/Debug/MiaoYan.app/Contents/Resources/LXGWWenKaiLite-Regular.ttf') format('truetype');
       }
 
-      :root { --r-main-font: LXGW WenKai Lite, sans-serif;}
+      html {font-size: 15px; } :root { --text-font: Georgia, sans-serif; --code-text-font: LXGW WenKai Lite,sans-serif; } #write { max-width: 100%;}
     </style>
 </head>
 
 <body>
-<div class="reveal" id="write">
-    <div class="slides">
-        <section data-markdown>
-            <script type="text/template">
-                # 经济
-                ---
-                <!-- .slide: data-background="#F48225" -->
-
-                ![fit](https://gw.alipayobjects.com/zos/k/dc/voLFrs.jpg)
-                ---
-            </script>
-        </section>
-    </div>
+<div class="markdown-body heti" id="write"><pre><code class="language-mermaid">erDiagram
+    CAR ||--o{ NAMED-DRIVER : allows
+    CAR {
+        string registrationNumber
+        string make
+        string model
+    }
+    PERSON ||--o{ NAMED-DRIVER : is
+    PERSON {
+        string firstName
+        string lastName
+        int age
+    }
+</code></pre>
 </div>
+
+<script>
+  const heti = new Heti('.heti');
+  heti.autoSpacing();
+</script>
+<script>
+  hljs.configure({ cssSelector: 'pre code' });
+  hljs.highlightAll();
+</script>
+<script>
+  const html = document.getElementById('write').innerHTML;
+  const emoji = new EmojiConvertor();
+  if (/:[^:\s]*(?:::[^:\s]*)*:/.test(html)) {
+    document.getElementById('write').innerHTML = emoji.replace_colons(html);
+  }
+</script>
 
 <script>
   function getSelectionAndSendMessage() {
     const txt = document.getSelection().toString();
-    window.webkit.messageHandlers.newSelectionDetected.postMessage(txt);
+    window.webkit && window.webkit.messageHandlers.newSelectionDetected.postMessage(txt);
   }
 
   document.onmouseup = getSelectionAndSendMessage;
   document.onkeyup = getSelectionAndSendMessage;
   document.oncontextmenu = getSelectionAndSendMessage;
+
+  const darkModeStylesNodeID = 'darkModeStyles';
+
+  function addStyleString(str, nodeID) {
+    const node = document.createElement('style');
+    node.id = nodeID;
+    node.innerHTML = str;
+
+    document.getElementsByTagName('head')[0].appendChild(node);
+  }
+
+  function switchToDarkMode() {
+    const darkModeStyleElement =
+      document.getElementById(darkModeStylesNodeID);
+    if (darkModeStyleElement == null) {
+      const darkModeStyles =
+        "* { color: #E7E9EA; } body { background: #21262B; } .heti p > code, .heti li > code, code { background: #454545; } a, .heti a heti-spacing { color: #1D9BF0 } table td, table th { color: #E7E9EA; } input[type='checkbox'] { border: 1px solid white; }.hljs{color:#ABB2BF;background:#191F25}.hljs-comment,.hljs-quote{color:#ABB2BF;}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#9B79F7}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#ED716C}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#8FFCCD}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#F7CC8F}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#99E0FC}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#ED716C}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}";
+      addStyleString(darkModeStyles, darkModeStylesNodeID);
+    }
+  }
+
+  function switchToLightMode() {
+    const darkModeStyleElement =
+      document.getElementById(darkModeStylesNodeID);
+    if (darkModeStyleElement != null) {
+      darkModeStyleElement.parentElement.removeChild(darkModeStyleElement);
+    }
+  }
+
+  if ('CUSTOM_CSS' === 'darkmode') {
+    switchToDarkMode();
+  }
 </script>
 
 <script>
-  var preList = document.getElementsByTagName('input'),
-    length = preList.length,
-    i = 0;
+  const inputList = document.getElementsByTagName('input');
 
-  for (i; i < length; i++) {
-    preList[i].disabled = true;
+  for (let i = 0; i < inputList.length; i++) {
+    inputList[i].disabled = true;
 
     if (
-      preList[i].parentNode.tagName === 'P' &&
-      preList[i].parentNode.parentNode.tagName === 'LI'
+      inputList[i].parentNode.tagName === 'P' &&
+      inputList[i].parentNode.parentNode.tagName === 'LI'
     ) {
-      preList[i].parentNode.parentNode.parentNode.classList.add('cb');
+      inputList[i].parentNode.parentNode.parentNode.classList.add('cb');
       continue;
     }
 
-    if (preList[i].parentNode.tagName !== 'LI') {
+    if (inputList[i].parentNode.tagName !== 'LI') {
       continue;
     }
 
-    preList[i].parentNode.parentNode.classList.add('cb');
+    inputList[i].parentNode.parentNode.classList.add('cb');
   }
 </script>
-<script src="ppt/dist/reveal.js"></script>
-<script src="ppt/plugin/markdown/markdown.js"></script>
-<script src="ppt/plugin/highlight/highlight.js"></script>
-<script src="ppt/plugin/notes/notes.js"></script>
-<script src="ppt/plugin/zoom/zoom.js"></script>
-<script src="ppt/plugin/math/math.js"></script>
 
 <script>
-  if ('DOWN_EXPORT_TYPE' === 'ppt') {
-    if (window.location.search.indexOf('print-pdf') === -1) {
-      window.location.search = 'print-pdf';
+  const addCheckboxEvent = function (element) {
+    if (element.parentNode.nodeName === 'LI') {
+      element.parentNode.classList.remove('strike');
     }
-    document.getElementById('write').style.visibility = 'hidden';
-    setTimeout(() => {
-      const iframeEle = document.querySelector(
-        '.pdf-page .slide-background-content iframe'
-      );
-      const iframeBg = document.querySelector(
-        '.pdf-page section[data-background-iframe]'
-      );
-      const pdfSections = document.getElementsByClassName('pdf-page');
-      pdfSections.forEach((item) => {
-        if (item.contains(iframeEle)) {
-          item.hidden = true;
-        }
-        if (item.contains(iframeBg)) {
-          item.hidden = true;
-        }
-      });
-      document.getElementById('write').style.visibility = 'visible';
-    }, 600);
-  }
-  Reveal.initialize({
-    width: '100%',
-    height: '100%',
-    controls: true,
-    progress: true,
-    history: true,
-    transition: 'slide',
-    backgroundTransition: 'none',
-    center: false,
-    pdfSeparateFragments: false,
-    plugins: [
-      RevealMarkdown,
-      RevealHighlight,
-      RevealNotes,
-      RevealZoom,
-      RevealMath.KaTeX,
-    ],
-  });
-  document.addEventListener('DOMContentLoaded', function () {
-    const sections = document.getElementsByTagName('section');
-    if (sections.length < 1) {
-      return;
-    }
-    sections.forEach((item) => {
-      if (item.childElementCount === 1) {
-        item.classList.add('section-center');
-        item.classList.add('center');
-      } else {
-        const option = item.clientHeight / document.body.offsetHeight;
-        if (option > 0.75) {
-          item.classList.add('section-option');
-        }
+
+    let id = element.dataset.checkbox;
+    window.webkit && window.webkit.messageHandlers.checkbox.postMessage(id);
+
+    let input = document.createElement('input');
+    input.type = 'checkbox';
+    input.dataset.checkbox = id;
+
+    if (!element.hasAttribute('checked')) {
+      input.defaultChecked = true;
+
+      if (element.parentNode.nodeName === 'LI') {
+        element.parentNode.classList.add('strike');
       }
+    }
+
+    element.parentNode.replaceChild(input, element);
+
+    input.addEventListener('click', function (event) {
+      addCheckboxEvent(input);
+    });
+  };
+
+  const checkboxList = document.querySelectorAll('input[type=checkbox]');
+
+  for (let i = 0; i < checkboxList.length; i++) {
+    if (
+      checkboxList[i].parentNode.nodeName === 'LI' &&
+      checkboxList[i].hasAttribute('checked')
+    ) {
+      checkboxList[i].parentNode.classList.add('strike');
+    }
+
+    checkboxList[i].disabled = false;
+    checkboxList[i].dataset.checkbox = i;
+
+    checkboxList[i].addEventListener('click', function (event) {
+      let element = event.target;
+      addCheckboxEvent(element);
+    });
+  }
+</script>
+
+<script>
+  const config = {
+    startOnLoad: true,
+    theme: 'forest',
+    flowchart: {
+      useMaxWidth: false,
+      htmlLabels: true,
+    },
+  };
+
+  mermaid.initialize(config);
+  window.mermaid.init(
+    undefined,
+    document.querySelectorAll('.language-mermaid')
+  );
+
+  let plantumlPrefix = 'language-plantuml';
+  Array.prototype.forEach.call(
+    document.querySelectorAll('[class^=' + plantumlPrefix + ']'),
+    function (code) {
+      let image = document.createElement('img');
+      image.className = 'plantuml-image';
+      image.loading = 'lazy';
+      image.src =
+        'http://www.plantuml.com/plantuml/svg/~1' +
+        plantumlEncoder.encode(code.innerText);
+      code.parentNode.insertBefore(image, code);
+      code.style.display = 'none';
+    }
+  );
+
+  const preList = document.getElementsByTagName('pre');
+
+  for (let i = 0; i < preList.length; i++) {
+    if (preList[i].querySelector('.plantuml-image')) {
+      preList[i].classList.add('plantuml-image-container');
+    }
+    if (preList[i].querySelector('.language-mermaid')) {
+      preList[i].classList.add('mermaid-image-container');
+    }
+    if (preList[i].querySelector('.language-markmap')) {
+      preList[i].classList.add('markmap-image-container');
+    }
+  }
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '$', right: '$', display: false },
+        { left: '\\(', right: '\\)', display: false },
+        { left: '\\[', right: '\\]', display: true },
+      ],
+      throwOnError: false,
+    });
+  });
+</script>
+<script>
+  document
+    .querySelectorAll('h1, h2, h3, h4, h5, h6,h7')
+    .forEach((h) => (h.id = h.innerText));
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      document
+        .querySelector(decodeURIComponent(this.getAttribute('href')))
+        .scrollIntoView({
+          behavior: 'smooth',
+        });
     });
   });
 </script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const markMapList = document.querySelectorAll('.markmap');
+    const markMapList = document.querySelectorAll('.language-markmap');
     markMapList && markMapList.length > 0 &&
     markMapList.forEach((item, i) => {
-      let markMapName = 'markmap-' + i;
-      const markMapChildName = '.' + markMapName + ' .markmap';
+      const markMapName = 'markmap-' + i;
+      const markMapChildClass = '.' + markMapName + ' .markmap';
       let heightAttr = item.textContent.match(
         /\<\!\-\-markmap-height\=(\S*)\-\-\>/,
       );
-      let height = '480px';
+      let height = '300px';
       if (heightAttr && heightAttr.length > 0 && !isNaN(heightAttr[1])) {
         height = heightAttr[1] + 'px';
       }
+      item.classList.add('markmap');
       item.classList.add(markMapName);
       setTimeout(() => {
         const markMapItem = document.querySelector('.' + markMapName);
         markMapItem.style.maxHeight = height;
         markMapItem.style.height = height;
         setTimeout(() => {
-          const markMapItemChild = document.querySelector(markMapChildName);
+          const markMapItemChild = document.querySelector(markMapChildClass);
           markMapItemChild.style.height = height;
         }, 10);
       }, 10);
     });
   });
 </script>
-<script>
-  function postBackgroundColor(currentSlide){
-    if(currentSlide && currentSlide.dataset && currentSlide.dataset.background){
-      window.webkit && window.webkit.messageHandlers.revealBackgroundColor.postMessage(currentSlide.dataset.background);
-    }
-  }
-  document.addEventListener('DOMContentLoaded', function () {
-    Reveal.on('ready', event => {
-      postBackgroundColor(event.currentSlide)
-    });
-    Reveal.on('slidechanged', event => {
-      postBackgroundColor(event.currentSlide)
-    });
-  })
-</script>
 </body>
 </html>
+
