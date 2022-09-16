@@ -931,7 +931,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         paragraphStyle.alignment = .left
         paragraphStyle.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
         paragraphStyle.lineHeightMultiple = CGFloat(UserDefaultsManagement.editorLineHeight)
-        paragraphStyle.lineBreakMode = .byTruncatingTail
         typingAttributes[.paragraphStyle] = paragraphStyle
         defaultParagraphStyle = paragraphStyle
         textStorage?.updateParagraphStyle()
