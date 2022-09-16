@@ -64,7 +64,7 @@ class ViewController:
     @IBOutlet var searchTopConstraint: NSLayoutConstraint!
     @IBOutlet var titleLabel: TitleTextField!
     @IBOutlet var titleTopConstraint: NSLayoutConstraint!
-    
+
     @IBOutlet var sortByOutlet: NSMenuItem!
     @IBOutlet var titleBarAdditionalView: NSVisualEffectView! {
         didSet {
@@ -325,7 +325,7 @@ class ViewController:
                 }
             }
         }
-        
+
         // 兼容新系统 13.0 的标题闪动问题
         if isFirstClick, #available(OSX 13.0, *) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
@@ -559,7 +559,6 @@ class ViewController:
         ascendingCheckItem.state = UserDefaultsManagement.sortDirection ? .off : .on
         descendingCheckItem.state = UserDefaultsManagement.sortDirection ? .on : .off
 
-
         // Sort all notes
         storage.noteList = storage.sortNotes(noteList: storage.noteList, filter: vc.search.stringValue)
 
@@ -571,10 +570,10 @@ class ViewController:
         }
 
         vc.updateTable()
-        //修复排序后不选中问题
+        // 修复排序后不选中问题
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.04) {
             let selectedRow = vc.notesTableView.selectedRowIndexes.min()
-            if(selectedRow == nil){
+            if selectedRow == nil {
                 vc.notesTableView.selectRowIndexes([0], byExtendingSelection: true)
             }
         }
@@ -1611,7 +1610,7 @@ class ViewController:
 
         blockFSUpdates()
 
-        if !UserDefaultsManagement.preview && editArea.isEditable {
+        if !UserDefaultsManagement.preview, editArea.isEditable {
             editArea.removeHighlight()
             editArea.saveImages()
 
@@ -1706,7 +1705,6 @@ class ViewController:
 
         return nil
     }
-
 
     func getSidebarType() -> SidebarItemType? {
         let sidebarItem = storageOutlineView.item(atRow: storageOutlineView.selectedRow) as? SidebarItem
@@ -2292,10 +2290,10 @@ class ViewController:
             case .success(let formatResult):
                 // 防止 Prettier 自动加空行
                 var newContent = formatResult.formattedString
-                if(content.last != "\n"){
+                if content.last != "\n" {
                     newContent = formatResult.formattedString.removeLastNewLine()
                 }
-                editArea.insertText(newContent, replacementRange: NSRange(0..<note.content.length))
+                editArea.insertText(newContent, replacementRange: NSRange(0 ..< note.content.length))
                 editArea.fill(note: note, saveTyping: true, force: false, needScrollToCursor: false)
                 editArea.setSelectedRange(NSRange(location: formatResult.cursorOffset, length: 0))
                 editAreaScroll.documentView?.scroll(NSPoint(x: 0, y: top))
@@ -2354,7 +2352,8 @@ class ViewController:
 
         for menu in noteMenu.items {
             if let identifier = menu.identifier?.rawValue,
-               personalSelection.contains(identifier) {
+               personalSelection.contains(identifier)
+            {
                 menu.isHidden = (vc.notesTableView.selectedRowIndexes.count > 1)
             }
         }
@@ -2367,11 +2366,11 @@ class ViewController:
         let sortByLabel = NSLocalizedString("Sort by", comment: "View menu")
 
         guard
-                let menu = NSApp.menu,
-                let view = menu.item(withTitle: viewLabel),
-                let submenu = view.submenu,
-                let sortMenu = submenu.item(withTitle: sortByLabel),
-                let sortItems = sortMenu.submenu
+            let menu = NSApp.menu,
+            let view = menu.item(withTitle: viewLabel),
+            let submenu = view.submenu,
+            let sortMenu = submenu.item(withTitle: sortByLabel),
+            let sortItems = sortMenu.submenu
         else {
             return
         }
@@ -2434,7 +2433,11 @@ class ViewController:
             return
         }
         titiebarHeight.constant = 52.0
-        titleTopConstraint.constant = 10.0
+        if UserDefaultsManagement.windowFontName == "Helvetica Neue" {
+            titleTopConstraint.constant = 13.0
+        } else {
+            titleTopConstraint.constant = 10.0
+        }
     }
 
     @IBAction func duplicate(_ sender: Any) {
@@ -2540,7 +2543,7 @@ class ViewController:
         }
         Analytics.trackEvent("MiaoYan Export", withProperties: ["Type": "Image"])
     }
-    
+
     @IBAction func exportHtml(_ sender: Any) {
         UserDefaultsManagement.isOnExport = true
         UserDefaultsManagement.isOnExportHtml = true
@@ -2700,7 +2703,7 @@ class ViewController:
     }
 
     @objc func breakUndo() {
-        if (!UserDefaultsManagement.preview && editArea.isEditable) {
+        if !UserDefaultsManagement.preview, editArea.isEditable {
             editArea.breakUndoCoalescing()
         }
     }
@@ -2714,5 +2717,4 @@ class ViewController:
             return validateString
         }
     }
-
 }
