@@ -317,12 +317,30 @@ class PreferencesGeneralViewController: NSViewController {
     }
 
     private func restart() {
-        let url = URL(fileURLWithPath: Bundle.main.resourcePath!)
-        let path = url.deletingLastPathComponent().deletingLastPathComponent().absoluteString
-        let task = Process()
-        task.launchPath = "/usr/bin/open"
-        task.arguments = [path]
-        task.launch()
-        exit(0)
+        guard let vc = ViewController.shared(), let w = vc.view.window else {
+            return
+        }
+
+        let alert = NSAlert()
+        alert.messageText = NSLocalizedString("Restart to MiaoYan to take effect", comment: "")
+        alert.addButton(withTitle: NSLocalizedString("Confirm", comment: ""))
+        alert.addButton(withTitle: NSLocalizedString("Cancel", comment: ""))
+        alert.beginSheetModal(for: w) { (returnCode: NSApplication.ModalResponse) in
+            if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
+                UserDefaultsManagement.isFirstLaunch = true
+                do {
+                    let url = URL(fileURLWithPath: Bundle.main.resourcePath!)
+                    let path = url.deletingLastPathComponent().deletingLastPathComponent().absoluteString
+                    let task = Process()
+                    task.launchPath = "/usr/bin/open"
+                    task.arguments = [path]
+                    task.launch()
+                    exit(0)
+                } catch {
+                    print(error)
+                }
+            }
+        }
+
     }
 }
