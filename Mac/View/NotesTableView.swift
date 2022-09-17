@@ -82,6 +82,13 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     }
 
     override func rightMouseDown(with event: NSEvent) {
+        guard let vc = window?.contentViewController as? ViewController else { return }
+
+        // 初始化不能删除的问题
+        if vc.titleLabel.hasFocus() || vc.editArea.hasFocus() || vc.search.hasFocus() {
+            vc.notesTableView.window?.makeFirstResponder(vc.notesTableView)
+        }
+
         UserDataService.instance.searchTrigger = false
 
         let point = convert(event.locationInWindow, from: nil)
@@ -96,7 +103,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
                     return
                 }
             }
-
             super.rightMouseDown(with: event)
         }
     }

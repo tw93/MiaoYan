@@ -336,11 +336,8 @@ class PreferencesGeneralViewController: NSViewController {
                     task.arguments = [path]
                     task.launch()
                     exit(0)
-                } catch {
-                    print(error)
                 }
             }
         }
-
     }
 }
