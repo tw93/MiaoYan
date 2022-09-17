@@ -7,16 +7,15 @@ import MiaoYanCore_macOS
 import WebKit
 
 class ViewController:
-    NSViewController,
-    NSTextViewDelegate,
-    NSPopoverDelegate,
-    NSTextFieldDelegate,
-    NSSplitViewDelegate,
-    NSOutlineViewDelegate,
-    NSOutlineViewDataSource,
-    NSMenuItemValidation,
-    NSUserNotificationCenterDelegate
-{
+        NSViewController,
+        NSTextViewDelegate,
+        NSPopoverDelegate,
+        NSTextFieldDelegate,
+        NSSplitViewDelegate,
+        NSOutlineViewDelegate,
+        NSOutlineViewDataSource,
+        NSMenuItemValidation,
+        NSUserNotificationCenterDelegate {
     public var fsManager: FileSystemEventManager?
     private var projectSettingsViewController: ProjectSettingsViewController?
 
@@ -211,7 +210,7 @@ class ViewController:
         let popoverWindowY = popover.contentViewController?.view.window?.frame.origin.y ?? 0
 
         popover.contentViewController?.view.window?.setFrameOrigin(
-            NSPoint(x: popoverWindowX + 18, y: popoverWindowY)
+                NSPoint(x: popoverWindowX + 18, y: popoverWindowY)
         )
 
         popover.contentViewController?.view.window?.makeKey()
@@ -264,16 +263,6 @@ class ViewController:
             let messageText = NSLocalizedString("%d MiaoYan", comment: "")
 
             self.miaoYanText.stringValue = String(format: messageText, self.notesTableView.noteList.count)
-        }
-    }
-
-    func checkDefaultSetting() {
-        if UserDefaultsManagement.fontName == UserDefaultsManagement.DefaultFont {
-            UserDefaultsManagement.editorLineHeight = UserDefaultsManagement.DefaultEditorLineHeight
-            UserDefaultsManagement.editorLineSpacing = UserDefaultsManagement.DefaultEditorLineSpacing
-        } else {
-            UserDefaultsManagement.editorLineHeight = UserDefaultsManagement.HackEditorLineHeight
-            UserDefaultsManagement.editorLineSpacing = UserDefaultsManagement.HackEditorLineSpacing
         }
     }
 
@@ -413,14 +402,14 @@ class ViewController:
         editArea.isEditable = false
 
         editArea.layoutManager?.defaultAttachmentScaling = .scaleProportionallyDown
+        editArea.layoutManager?.typesetterBehavior = .behavior_10_2_WithCompatibility
 
         editArea.font = UserDefaultsManagement.noteFont
         titleLabel.font = UserDefaultsManagement.titleFont.titleBold()
 
         emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
-        paragraphStyle.lineHeightMultiple = CGFloat(UserDefaultsManagement.editorLineHeight)
+
+        let paragraphStyle = NSTextStorage.getParagraphStyle()
         editArea.defaultParagraphStyle = paragraphStyle
         editArea.typingAttributes[.paragraphStyle] = paragraphStyle
         setTableRowHeight()
@@ -434,7 +423,6 @@ class ViewController:
         notesScrollView.scrollerStyle = .overlay
         sidebarScrollView.scrollerStyle = .overlay
         sidebarScrollView.horizontalScroller = .none
-        checkDefaultSetting()
     }
 
     private func configureNotesList() {
@@ -771,7 +759,7 @@ class ViewController:
             toggleMagicPPT()
             return false
         }
-        
+
         if event.modifierFlags.contains(.shift), event.modifierFlags.contains(.control), event.keyCode == kVK_ANSI_H {
             exportHtml("")
             return false
@@ -831,7 +819,7 @@ class ViewController:
             }
         }
 
-        if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_I,!UserDefaultsManagement.presentation {
+        if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_I, !UserDefaultsManagement.presentation {
             toggleInfo()
             return false
         }
@@ -913,11 +901,10 @@ class ViewController:
 
         // Focus search bar on ESC
         if
-            event.characters == ".",
-            event.modifierFlags.contains(.command),
+                event.characters == ".",
+                event.modifierFlags.contains(.command),
 
-            NSApplication.shared.mainWindow == NSApplication.shared.keyWindow
-        {
+                NSApplication.shared.mainWindow == NSApplication.shared.keyWindow {
             UserDataService.instance.resetLastSidebar()
 
             if let view = NSApplication.shared.mainWindow?.firstResponder as? NSTextView, let textField = view.superview?.superview, textField.isKind(of: NameTextField.self) {
@@ -976,13 +963,13 @@ class ViewController:
         }
 
         // Pin note shortcut (cmd+shift+p)
-        if event.keyCode == kVK_ANSI_P, event.modifierFlags.contains(.shift), event.modifierFlags.contains(.command),!UserDefaultsManagement.presentation {
+        if event.keyCode == kVK_ANSI_P, event.modifierFlags.contains(.shift), event.modifierFlags.contains(.command), !UserDefaultsManagement.presentation {
             pin(notesTableView.selectedRowIndexes)
             return true
         }
 
         // 展开 sidebar cmd+1
-        if event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_1,!UserDefaultsManagement.presentation {
+        if event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_1, !UserDefaultsManagement.presentation {
             toggleSidebar("")
             return false
         }
@@ -994,8 +981,7 @@ class ViewController:
         }
 
         if let fr = mw.firstResponder, !fr.isKind(of: EditTextView.self), !fr.isKind(of: NSTextView.self), !event.modifierFlags.contains(.command),
-           !event.modifierFlags.contains(.control)
-        {
+           !event.modifierFlags.contains(.control) {
             if let char = event.characters {
                 let newSet = CharacterSet(charactersIn: char)
                 if newSet.isSubset(of: CharacterSet.alphanumerics) {
@@ -1253,8 +1239,7 @@ class ViewController:
         vc.storage.removeNotes(notes: notes) { urls in
 
             if let appd = NSApplication.shared.delegate as? AppDelegate,
-               let md = appd.mainWindowController
-            {
+               let md = appd.mainWindowController {
                 let undoManager = md.notesListUndoManager
 
                 if let ntv = vc.notesTableView {
@@ -1556,7 +1541,7 @@ class ViewController:
         }
 
         if let sidebarItem = vc.getSidebarItem(), sidebarItem.isTrash() {
-            let indexSet = IndexSet(integersIn: 0 ..< vc.notesTableView.noteList.count)
+            let indexSet = IndexSet(integersIn: 0..<vc.notesTableView.noteList.count)
             vc.notesTableView.removeRows(at: indexSet, withAnimation: .effectFade)
         }
 
@@ -1574,8 +1559,7 @@ class ViewController:
         }
 
         if let controller = vc.storyboard?.instantiateController(withIdentifier: "ProjectSettingsViewController")
-            as? ProjectSettingsViewController
-        {
+                as? ProjectSettingsViewController {
             projectSettingsViewController = controller
 
             if let project = vc.getSidebarProject() {
@@ -1755,9 +1739,8 @@ class ViewController:
         // Global search if sidebar not checked
         if type == nil,
            projects == nil || (
-               projects!.count < 2 && projects!.first!.isRoot
-           )
-        {
+                   projects!.count < 2 && projects!.first!.isRoot
+           ) {
             type = .All
         }
 
@@ -1873,18 +1856,18 @@ class ViewController:
         }
 
         return !note.name.isEmpty
-            && (filter.isEmpty || isMatched(note: note, terms: terms!)
-            ) && (
+                && (filter.isEmpty || isMatched(note: note, terms: terms!)
+        ) && (
                 type == .All && note.project.showInCommon
-                    || (
+                        || (
                         type != .All && projects!.contains(note.project)
-                            || (note.project.parent != nil && projects!.contains(note.project.parent!))
-                    )
-                    || type == .Trash
-            ) && (
+                                || (note.project.parent != nil && projects!.contains(note.project.parent!))
+                )
+                        || type == .Trash
+        ) && (
                 type == .Trash && note.isTrash()
-                    || type != .Trash && !note.isTrash()
-            )
+                        || type != .Trash && !note.isTrash()
+        )
     }
 
     public func contains(tag name: String, in tags: [String]) -> Bool {
@@ -1969,10 +1952,9 @@ class ViewController:
         }
 
         if
-            NSApplication.shared.isActive,
-            !NSApplication.shared.isHidden,
-            !mainWindow.isMiniaturized
-        {
+                NSApplication.shared.isActive,
+                !NSApplication.shared.isHidden,
+                !mainWindow.isMiniaturized {
             NSApplication.shared.hide(nil)
             return
         }
@@ -2107,15 +2089,15 @@ class ViewController:
         }
 
         let nowUnpinned = updatedNotes
-            .filter { _, note -> Bool in
-                !note.isPinned
-            }
-            .compactMap { _, note -> (Int, Note)? in
-                guard let curRow = state.firstIndex(where: { $0 === note }) else {
-                    return nil
+                .filter { _, note -> Bool in
+                    !note.isPinned
                 }
-                return (curRow, note)
-            }
+                .compactMap { _, note -> (Int, Note)? in
+                    guard let curRow = state.firstIndex(where: { $0 === note }) else {
+                        return nil
+                    }
+                    return (curRow, note)
+                }
         for (row, note) in nowUnpinned.reversed() {
             guard let newRow = resorted.firstIndex(where: { $0 === note }) else {
                 continue
@@ -2298,7 +2280,7 @@ class ViewController:
                 if content.last != "\n" {
                     newContent = formatResult.formattedString.removeLastNewLine()
                 }
-                editArea.insertText(newContent, replacementRange: NSRange(0 ..< note.content.length))
+                editArea.insertText(newContent, replacementRange: NSRange(0..<note.content.length))
                 editArea.fill(note: note, saveTyping: true, force: false, needScrollToCursor: false)
                 editArea.setSelectedRange(NSRange(location: formatResult.cursorOffset, length: 0))
                 editAreaScroll.documentView?.scroll(NSPoint(x: 0, y: top))
@@ -2357,8 +2339,7 @@ class ViewController:
 
         for menu in noteMenu.items {
             if let identifier = menu.identifier?.rawValue,
-               personalSelection.contains(identifier)
-            {
+               personalSelection.contains(identifier) {
                 menu.isHidden = (vc.notesTableView.selectedRowIndexes.count > 1)
             }
         }
@@ -2371,11 +2352,11 @@ class ViewController:
         let sortByLabel = NSLocalizedString("Sort by", comment: "View menu")
 
         guard
-            let menu = NSApp.menu,
-            let view = menu.item(withTitle: viewLabel),
-            let submenu = view.submenu,
-            let sortMenu = submenu.item(withTitle: sortByLabel),
-            let sortItems = sortMenu.submenu
+                let menu = NSApp.menu,
+                let view = menu.item(withTitle: viewLabel),
+                let submenu = view.submenu,
+                let sortMenu = submenu.item(withTitle: sortByLabel),
+                let sortItems = sortMenu.submenu
         else {
             return
         }
@@ -2438,7 +2419,7 @@ class ViewController:
             return
         }
         titiebarHeight.constant = 52.0
-        if UserDefaultsManagement.windowFontName == "Helvetica Neue" || UserDefaultsManagement.windowFontName == "Times New Roman"  {
+        if UserDefaultsManagement.windowFontName == "Helvetica Neue" || UserDefaultsManagement.windowFontName == "Times New Roman" {
             titleTopConstraint.constant = 14.0
         } else {
             titleTopConstraint.constant = 10.0

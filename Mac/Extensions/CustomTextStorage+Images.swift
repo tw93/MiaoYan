@@ -24,7 +24,6 @@ extension NSTextStorage {
                             manager.invalidateLayout(forCharacterRange: range, actualCharacterRange: nil)
                         }
                     }
-
                     manager.invalidateDisplay(forCharacterRange: range)
                 }
             }

@@ -214,20 +214,20 @@ public class NotesTextProcessor {
 
         return foundRange
     }
-    
+
     public static func getSpanCodeBlockRange(content: NSMutableAttributedString, range: NSRange) -> NSRange? {
         var codeSpan: NSRange?
         let paragraphRange = content.mutableString.paragraphRange(for: range)
         let paragraph = content.attributedSubstring(from: paragraphRange).string
 
         if paragraph.contains("`") {
-            NotesTextProcessor.codeSpanRegex.matches(content.string, range: paragraphRange) { (result) -> Void in
+            NotesTextProcessor.codeSpanRegex.matches(content.string, range: paragraphRange) { result in
                 if let spanRange = result?.range, spanRange.intersection(range) != nil {
                     codeSpan = spanRange
                 }
             }
         }
-        
+
         return codeSpan
     }
 
@@ -246,7 +246,7 @@ public class NotesTextProcessor {
         if UserDataService.instance.isDark {
             codeTheme = "tomorrow-night-blue"
         }
-        
+
         highlightr.setTheme(to: codeTheme)
         highlightr.ignoreIllegals = true
 
@@ -272,7 +272,7 @@ public class NotesTextProcessor {
         guard let highlighter = NotesTextProcessor.getHighlighter() else { return }
         let codeString = attributedString.mutableString.substring(with: range)
         let preDefinedLanguage = language ?? getLanguage(codeString)
-        
+
         if let code = highlighter.highlight(codeString, as: preDefinedLanguage) {
             if (range.location + range.length) > attributedString.length {
                 return
@@ -281,7 +281,7 @@ public class NotesTextProcessor {
             if attributedString.length >= range.upperBound, code.string != attributedString.mutableString.substring(with: range) {
                 return
             }
-            
+
             code.enumerateAttributes(
                 in: NSMakeRange(0, code.length),
                 options: [],
@@ -330,7 +330,7 @@ public class NotesTextProcessor {
 
             if let lang = languages, lang.contains(detectedLang) {
                 // 兼容一下go
-                if(detectedLang == "go"){
+                if detectedLang == "go" {
                     return nil
                 }
                 return detectedLang
@@ -353,7 +353,7 @@ public class NotesTextProcessor {
         let range = NSRange(0..<content.string.count)
         let tagQuery = "miaoyan://goto/"
 
-        NotesTextProcessor.appUrlRegex.matches(content.string, range: range, completion: { (result) -> (Void) in
+        NotesTextProcessor.appUrlRegex.matches(content.string, range: range, completion: { result in
             guard let innerRange = result?.range else { return }
 
             var substring = attributedString.mutableString.substring(with: innerRange)
@@ -367,13 +367,12 @@ public class NotesTextProcessor {
             attributedString.addAttribute(.link, value: "\(tagQuery)\(tag)", range: innerRange)
         })
 
-        attributedString.enumerateAttribute(.link, in: range) { (value, range, _) in
+        attributedString.enumerateAttribute(.link, in: range) { value, range, _ in
             if let value = value as? String, value.starts(with: tagQuery) {
                 if let tag = value
                     .replacingOccurrences(of: tagQuery, with: "")
                     .removingPercentEncoding
                 {
-
                     if NotesTextProcessor.getSpanCodeBlockRange(content: attributedString, range: range) != nil {
                         return
                     }
@@ -387,7 +386,7 @@ public class NotesTextProcessor {
                 }
             }
         }
-        
+
         return attributedString
     }
 
@@ -417,7 +416,7 @@ public class NotesTextProcessor {
                 NotesTextProcessor.highlightCode(attributedString: attributedString, range: r.range)
             }
         )
-        
+
 //        let codeTextProcessor = CodeTextProcessor(textStorage: attributedString)
 //        if let codeBlockRanges = codeTextProcessor.getCodeBlockRanges() {
 //
@@ -430,7 +429,6 @@ public class NotesTextProcessor {
 //                NotesTextProcessor.highlightCode(attributedString: attributedString, range: range)
 //            }
 //        }
-        
     }
 
     public static func isIntersect(fencedRanges: [NSRange], indentRange: NSRange) -> Bool {
