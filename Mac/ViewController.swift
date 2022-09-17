@@ -2516,46 +2516,51 @@ class ViewController:
         formatText()
     }
 
-    @IBAction func exportImage(_ sender: Any) {
+    func exportFile(type: String) {
         UserDefaultsManagement.isOnExport = true
+
+        if type == "Html" {
+            UserDefaultsManagement.isOnExportHtml = true
+        }
         toast(message: NSLocalizedString("🙊 Starting export~", comment: ""))
+
+        if UserDefaultsManagement.preview {
+            disablePreview()
+        }
+
         enablePreview()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            self.editArea.markdownView?.exportImage()
-            UserDefaultsManagement.isOnExport = false
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 6.0) {
+            switch type {
+            case "Image":
+                self.editArea.markdownView?.exportImage()
+            case "Html":
+                self.editArea.markdownView?.exportHtml()
+            case "PDF":
+                self.editArea.markdownView?.exportPdf()
+            default:
+                print("Export no Type")
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                UserDefaultsManagement.isOnExport = false
+                if type == "Html" {
+                    UserDefaultsManagement.isOnExportHtml = false
+                }
                 self.disablePreview()
             }
         }
-        Analytics.trackEvent("MiaoYan Export", withProperties: ["Type": "Image"])
+        Analytics.trackEvent("MiaoYan Export", withProperties: ["Type": type])
+    }
+
+    @IBAction func exportImage(_ sender: Any) {
+        exportFile(type: "Image")
     }
 
     @IBAction func exportHtml(_ sender: Any) {
-        UserDefaultsManagement.isOnExport = true
-        UserDefaultsManagement.isOnExportHtml = true
-        toast(message: NSLocalizedString("🙊 Starting export~", comment: ""))
-        enablePreview()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.editArea.markdownView?.exportHtml()
-            UserDefaultsManagement.isOnExport = false
-            UserDefaultsManagement.isOnExportHtml = false
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.disablePreview()
-            }
-        }
-        Analytics.trackEvent("MiaoYan Export", withProperties: ["Type": "Html"])
+        exportFile(type: "Html")
     }
 
     @IBAction func exportPdf(_ sender: Any) {
-        UserDefaultsManagement.isOnExport = true
-        toast(message: NSLocalizedString("🙊 Starting export~", comment: ""))
-        enablePreview()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-            self.editArea.markdownView?.exportPdf()
-            UserDefaultsManagement.isOnExport = false
-            self.disablePreview()
-        }
-        Analytics.trackEvent("MiaoYan Export", withProperties: ["Type": "PDF"])
+        exportFile(type: "PDF")
     }
 
     @IBAction func exportMiaoYanPPT(_ sender: Any) {

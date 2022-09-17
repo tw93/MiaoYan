@@ -84,10 +84,10 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     public func exportPdf() {
-        let vc = ViewController.shared()
+        guard let vc = ViewController.shared() else { return }
 
         if #available(macOS 11.0.0, *) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 let config = WKPDFConfiguration()
                 // Render the PDF
                 super.createPDF(configuration: config) { result in
@@ -97,16 +97,18 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                             let currentName = self.note?.getTitle()
                             let filePath: String = path + "/" + (currentName ?? "MiaoYan") + ".pdf"
                             try! data.write(to: URL(fileURLWithPath: filePath))
-                            vc?.toastExport(status: true)
+                            vc.toastExport(status: true)
                         }
 
                     case .failure(let error):
                         print(error)
-                        vc?.toastExport(status: false)
+                        vc.toastExport(status: false)
                     }
                 }
             }
-        } else {}
+        } else {
+            vc.toastExport(status: false)
+        }
     }
 
     public func scrollToPosition(pre: CGFloat) {
@@ -133,13 +135,14 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                     }
                 })
             }
-        } else {}
+        } else {
+        }
     }
-    
+
     public func exportHtml() {
-        let vc = ViewController.shared()
+        guard let vc = ViewController.shared() else { return }
         if #available(macOS 10.15, *) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
                     if complete != nil {
                         super.evaluateJavaScript("document.documentElement.outerHTML.toString()", completionHandler: { html, _ in
@@ -150,19 +153,20 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                                 let currentName = self.note?.getShortTitle()
                                 let filePath: String = path + "/" + (currentName ?? "MiaoYan") + ".html"
                                 try! contentHtml.write(to: URL(fileURLWithPath: filePath), atomically: false, encoding: .utf8)
-                                vc?.toastExport(status: true)
+                                vc.toastExport(status: true)
                             }
                         })
                     }
                 })
             }
         } else {
+            vc.toastExport(status: false)
         }
     }
 
 
     public func exportImage() {
-        let vc = ViewController.shared()
+        guard let vc = ViewController.shared() else { return }
         if #available(macOS 10.15, *) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
@@ -172,31 +176,34 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                                 print("Content height could not be obtained"); return
                             }
                             super.evaluateJavaScript("document.body.offsetWidth", completionHandler: { [weak self] width, _ in
-                                let contentWidth = width as! CGFloat
-                                let config = WKSnapshotConfiguration()
-                                config.rect = CGRect(x: 0, y: 0, width: contentWidth, height: contentHeight)
-                                config.afterScreenUpdates = false
-                                self?.frame.size.height = contentHeight
-                                self?.takeSnapshot(with: config, completionHandler: { image, error in
-                                    if let image = image {
-                                        if let desktopURL = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first {
-                                            let currentName = self?.note?.getTitle()
-                                            let destinationURL = desktopURL.appendingPathComponent(currentName! + ".jpeg")
-                                            try! image.saveJPEGRepresentationToURL(url: destinationURL)
+                                if let contentWidth = width as? CGFloat {
+                                    let config = WKSnapshotConfiguration()
+                                    config.rect = CGRect(x: 0, y: 0, width: contentWidth, height: contentHeight)
+                                    config.afterScreenUpdates = false
+                                    self?.frame.size.height = contentHeight
+                                    self?.takeSnapshot(with: config, completionHandler: { image, error in
+                                        if let image = image {
+                                            if let desktopURL = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first {
+                                                let currentName = self?.note?.getTitle()
+                                                let destinationURL = desktopURL.appendingPathComponent(currentName! + ".jpeg")
+                                                try! image.saveJPEGRepresentationToURL(url: destinationURL)
+                                            }
+                                            vc.toastExport(status: true)
+                                            print("Got snapshot")
+                                        } else {
+                                            print("Failed taking snapshot: \(error?.localizedDescription ?? "--")")
+                                            vc.toastExport(status: false)
                                         }
-                                        vc?.toastExport(status: true)
-                                        print("Got snapshot")
-                                    } else {
-                                        print("Failed taking snapshot: \(error?.localizedDescription ?? "--")")
-                                        vc?.toastExport(status: false)
-                                    }
-                                })
+                                    })
+                                }
                             })
                         })
                     }
                 })
             }
-        } else {}
+        } else {
+            vc.toastExport(status: false)
+        }
     }
 
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
@@ -449,8 +456,8 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         // 兼容一下 Html 的场景
         if UserDefaultsManagement.isOnExportHtml {
-            fontPath = "https://gw.alipayobjects.com/os/k/html1/Fonts"
-            downMeta = "<base href=\"https://gw.alipayobjects.com/os/k/html1/\">"
+            fontPath = "https://gw.alipayobjects.com/os/k/html2/Fonts"
+            downMeta = "<base href=\"https://gw.alipayobjects.com/os/k/html2/\">"
         }
 
         template = template.replacingOccurrences(of: "DOWN_FONT_PATH", with: fontPath) as NSString
@@ -548,6 +555,7 @@ class HandlerSelection: NSObject, WKScriptMessageHandler {
 }
 
 //用于解决ppt模式下背景颜色变化左侧边框颜色的适配
+
 class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController,
                                didReceive message: WKScriptMessage) {

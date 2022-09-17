@@ -152,7 +152,7 @@ private extension NSViewController {
         animation.keyPath = "opacity"
         animation.values = [0, 0.8, 0.8, 0]
         animation.keyTimes = [0, 0.01, 0.8, 1]
-        animation.duration = 3
+        animation.duration = 4.0
         animation.isAdditive = true
         
         CATransaction.begin()
