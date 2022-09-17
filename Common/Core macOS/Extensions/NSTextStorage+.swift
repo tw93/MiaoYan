@@ -8,8 +8,8 @@ public extension NSTextStorage {
         enumerateAttribute(.font, in: NSRange(location: 0, length: self.length)) { value, range, _ in
             if let font = value as? NSFont, let familyName = UserDefaultsManagement.noteFont.familyName {
                 let newFontDescriptor = font.fontDescriptor
-                        .withFamily(familyName)
-                        .withSymbolicTraits(font.fontDescriptor.symbolicTraits)
+                    .withFamily(familyName)
+                    .withSymbolicTraits(font.fontDescriptor.symbolicTraits)
 
                 if let newFont = NSFont(descriptor: newFontDescriptor, size: CGFloat(UserDefaultsManagement.fontSize)) {
                     removeAttribute(.font, range: range)
@@ -25,7 +25,7 @@ public extension NSTextStorage {
         let paragraphStyle = NSMutableParagraphStyle()
         let fontSize = UserDefaultsManagement.fontSize
 
-        //优先使用默认的
+        // 优先使用默认的
         let editorLineHeight = UserDefaultsManagement.DefaultEditorLineHeight
         let editorLineSpacing = UserDefaultsManagement.DefaultEditorLineSpacing
         let lineHeight = CGFloat(editorLineHeight * CGFloat(fontSize)) + editorLineSpacing
@@ -52,7 +52,8 @@ public extension NSTextStorage {
     func sizeAttachmentImages() {
         enumerateAttribute(.attachment, in: NSRange(location: 0, length: self.length)) { value, range, _ in
             if let attachment = value as? NSTextAttachment,
-               attribute(.todo, at: range.location, effectiveRange: nil) == nil {
+               attribute(.todo, at: range.location, effectiveRange: nil) == nil
+            {
                 if let imageData = attachment.fileWrapper?.regularFileContents, var image = NSImage(data: imageData) {
                     if let rep = image.representations.first {
                         var maxWidth = UserDefaultsManagement.imagesWidth
