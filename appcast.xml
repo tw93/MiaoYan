@@ -11,7 +11,7 @@
         <li>导出格式支持 Html，同时优化 PDF、Image 导出效果</li>
         <li>脑图可单独设置<a href="https://miaoyan.app/Release/demo/MiaoYan%20Markmap.md">高度</a>，此外 PPT 模式中也支持 MarkMap 脑图了</li>
         <li>格式化更加好用无感并记住位置，一种很无感的格式化体验</li>
-        <li>对于大图预览场景可使用 img 标签 loading="lazy" 进行懒加载，渲染快不少</li>
+        <li>大图预览场景可使用 img 标签 loading="lazy" 进行懒加载，渲染快不少</li>
         <li>修复了极少机器底部回车闪动问题、重启场景增加二次确认、彻底解决蓝色划线、换行标题复制问题、序号回车优化、关闭文字拖拽、mermaid 增加更多特性、PPT下翻页位置优化、文档删除体验优化</li>
         </ol>
         <h3>Better use 👰：</h3>
