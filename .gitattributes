@@ -1,5 +1,8 @@
 *.pbxproj merge=union
-parser-markdown.js -linguist-vendored
-standalone.js -linguist-vendored
-reveal.js -linguist-vendored
-*.min.js -linguist-vendored
+Resources/DownView.bundle/js/highlight.min.js                 linguist-vendored
+Resources/DownView.bundle/js/markmap.min.js                   linguist-vendored
+Resources/DownView.bundle/ppt/plugin/highlight/plugin.js      linguist-vendored
+Resources/DownView.bundle/ppt/plugin/markdown/plugin.js       linguist-vendored
+Resources/DownView.bundle/ppt/plugin/notes/plugin.js          linguist-vendored
+Resources/DownView.bundle/ppt/plugin/zoom/plugin.js           linguist-vendored
+Resources/Prettier.bundle/standalone.js                       linguist-vendored
