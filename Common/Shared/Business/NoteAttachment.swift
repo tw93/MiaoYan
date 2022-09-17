@@ -2,9 +2,9 @@ import AVKit
 import Foundation
 
 #if os(OSX)
-    import Cocoa
+import Cocoa
 #else
-    import UIKit
+import UIKit
 #endif
 
 class NoteAttachment {
@@ -57,11 +57,7 @@ class NoteAttachment {
 
         let attributedString = NSAttributedString(attachment: attachment)
         let mutableAttributedString = NSMutableAttributedString(attributedString: attributedString)
-        let paragraphStyle = NSMutableParagraphStyle()
-
-        paragraphStyle.alignment = .left
-        paragraphStyle.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
-        paragraphStyle.lineHeightMultiple = CGFloat(UserDefaultsManagement.editorLineHeight)
+        let paragraphStyle = NSTextStorage.getParagraphStyle()
 
         let attributes = [
             titleKey: title,

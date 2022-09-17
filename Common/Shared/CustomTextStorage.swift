@@ -5,15 +5,15 @@ import UIKit
 #endif
 
 extension NSTextStorage: NSTextStorageDelegate {
-#if os(iOS)
+    #if os(iOS)
     public func textStorage(
         _ textStorage: NSTextStorage,
         didProcessEditing editedMask: NSTextStorage.EditActions,
         range editedRange: NSRange, changeInLength delta: Int) {
-            guard editedMask != .editedAttributes else { return }
-            process(textStorage: textStorage, range: editedRange, changeInLength: delta)
-        }
-#else
+        guard editedMask != .editedAttributes else { return }
+        process(textStorage: textStorage, range: editedRange, changeInLength: delta)
+    }
+    #else
     public func textStorage(
         _ textStorage: NSTextStorage,
         didProcessEditing editedMask: NSTextStorageEditActions,
@@ -22,7 +22,7 @@ extension NSTextStorage: NSTextStorageDelegate {
         guard editedMask != .editedAttributes else { return }
         process(textStorage: textStorage, range: editedRange, changeInLength: delta)
     }
-#endif
+    #endif
 
     private func process(textStorage: NSTextStorage, range editedRange: NSRange, changeInLength delta: Int) {
         guard let note = EditTextView.note, note.isMarkdown() else { return }
@@ -180,10 +180,8 @@ extension NSTextStorage: NSTextStorageDelegate {
         let affectedRange = NSRange(start..<finish)
         textStorage.enumerateAttribute(.attachment, in: affectedRange) { value, range, _ in
             if let value = value as? NSTextAttachment, textStorage.attribute(.todo, at: range.location, effectiveRange: nil) == nil {
-                let paragraph = NSMutableParagraphStyle()
-                paragraph.alignment = .left
-                paragraph.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
-                paragraph.lineHeightMultiple = CGFloat(UserDefaultsManagement.editorLineHeight)
+                let paragraph = NSTextStorage.getParagraphStyle()
+
                 textStorage.addAttribute(.paragraphStyle, value: paragraph, range: range)
                 textStorage.addAttribute(.kern, value: UserDefaultsManagement.DefaultEditorLetterSpacing, range: range)
 

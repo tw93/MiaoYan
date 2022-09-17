@@ -115,7 +115,7 @@ public class TextFormatter {
         }
         guard range.length > 0 else {
             var text = storage.attributedSubstring(from: pRange).string
-            if (text.isNumberList()) {
+            if text.isNumberList() {
                 text = vc.replace(validateString: text, regex: "^[0-9-]+[.]", content: "1.")
             }
 
@@ -136,7 +136,7 @@ public class TextFormatter {
         var num = 0
         string.enumerateLines { line, _ in
             var newLine = line
-            if (newLine.isNumberList()) {
+            if newLine.isNumberList() {
                 num += 1
                 newLine = vc.replace(validateString: newLine, regex: "^[0-9-]+[.]", content: "\(num).")
             }
@@ -274,7 +274,8 @@ public class TextFormatter {
         // Middle
         if sRange.location != 0 || sRange.location != storage.length,
            paragraph.count == 1,
-           note.isMarkdown() {
+           note.isMarkdown()
+        {
             insertText("\t", replacementRange: sRange)
             return
         }
@@ -301,7 +302,7 @@ public class TextFormatter {
 
     public static func getAutocompleteCharsMatch(string: String) -> NSTextCheckingResult? {
         guard let regex = try? NSRegularExpression(pattern:
-        "^(( |\t)*\\- \\[[x| ]*\\] )|^(( |\t)*[-|–|—|*|•|>|\\+]{1} )"), let result = regex.firstMatch(in: string, range: NSRange(0..<string.count))
+            "^(( |\t)*\\- \\[[x| ]*\\] )|^(( |\t)*[-|–|—|*|•|>|\\+]{1} )"), let result = regex.firstMatch(in: string, range: NSRange(0..<string.count))
         else { return nil }
 
         return result
@@ -436,7 +437,8 @@ public class TextFormatter {
         }
 
         if currentParagraph.string.starts(with: "  "),
-           let prefix = currentParagraph.string.getPrefixMatchSequentially(char: " ") {
+           let prefix = currentParagraph.string.getPrefixMatchSequentially(char: " ")
+        {
             if selectedRange.location != currentParagraphRange.location {
                 newLine += prefix
             }
@@ -545,7 +547,8 @@ public class TextFormatter {
         if let range = range,
            let start = textView.position(from: textView.beginningOfDocument, offset: range.location),
            let end = textView.position(from: start, offset: range.length),
-           let sRange = textView.textRange(from: start, to: end) {
+           let sRange = textView.textRange(from: start, to: end)
+        {
             selectedRange = sRange
         } else {
             selectedRange = textView.selectedTextRange!
@@ -709,9 +712,8 @@ public class TextFormatter {
     }
 
     public static func getCodeParagraphStyle() -> NSMutableParagraphStyle {
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
-        paragraphStyle.lineHeightMultiple = CGFloat(UserDefaultsManagement.editorLineHeight)
+        let paragraphStyle = NSTextStorage.getParagraphStyle()
+
         #if os(OSX)
         paragraphStyle.textBlocks = [CodeBlock()]
         #endif
@@ -724,9 +726,9 @@ public class TextFormatter {
 
         #if os(iOS)
         guard
-                let start = textView.position(from: textView.beginningOfDocument, offset: range.location),
-                let end = textView.position(from: start, offset: range.length),
-                let selectedRange = textView.textRange(from: start, to: end)
+            let start = textView.position(from: textView.beginningOfDocument, offset: range.location),
+            let end = textView.position(from: start, offset: range.length),
+            let selectedRange = textView.textRange(from: start, to: end)
         else { return }
 
         var replaceString = String()
@@ -742,13 +744,11 @@ public class TextFormatter {
         textView.replace(selectedRange, withText: replaceString)
 
         let parRange = NSRange(location: range.location, length: replaceString.count)
-        let parStyle = NSMutableParagraphStyle()
-        parStyle.alignment = .left
-        parStyle.lineSpacing = CGFloat(UserDefaultsManagement.editorLineSpacing)
-        parStyle.lineHeightMultiple = CGFloat(UserDefaultsManagement.editorLineHeight)
+        let parStyle = NSTextStorage.getParagraphStyle()
+
         textView.textStorage.addAttribute(.paragraphStyle, value: parStyle, range: parRange)
         textView.textStorage.addAttribute(.kern, value: UserDefaultsManagement.DefaultEditorLetterSpacing, range: parRange)
-
+        
         textView.undoManager?.endUndoGrouping()
         #else
         textView.insertText(string, replacementRange: range)

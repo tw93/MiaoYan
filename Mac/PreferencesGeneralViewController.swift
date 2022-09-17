@@ -82,7 +82,6 @@ class PreferencesGeneralViewController: NSViewController {
         UserDefaultsManagement.fontName = item.title
 
         NotesTextProcessor.hl = nil
-        vc.checkDefaultSetting()
         vc.refillEditArea()
         vc.disablePreview()
     }
