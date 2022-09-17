@@ -12,7 +12,7 @@
         <li>脑图可单独设置<a href="https://miaoyan.app/Release/demo/MiaoYan%20Markmap.md">高度</a>，此外 PPT 模式中也支持 MarkMap 脑图了<li>
         <li>格式化更加好用无感并记住位置，一种很无感的格式化体验<li>
         <li>对于大图预览场景可使用 img 标签 loading="lazy" 进行懒加载，渲染快不少<li>
-        <li>修复了极少机器底部回车闪动问题、重启场景增加二次确认、彻底解决蓝色划线、换行标题复制问题、序号回车优化、关闭文字拖拽、mermaid 增加更多特性、PPT下翻页位置优化<li>
+        <li>修复了极少机器底部回车闪动问题、重启场景增加二次确认、彻底解决蓝色划线、换行标题复制问题、序号回车优化、关闭文字拖拽、mermaid 增加更多特性、PPT下翻页位置优化、文档删除体验优化<li>
         </ol>
         <h3>Better use 👰：</h3>
        <ol>
@@ -21,7 +21,7 @@
         <li>Markmap height can be set individually, and Markmap are now supported in PPT mode.<li>
         <li>Formatting is even better with no sensation and remembering the position, a very senseless formatting experience.<li>
         <li>For large preview scenes you can use the img tag loading="lazy" for lazy loading, which renders much faster<li>
-        <li>Fixing the carriage return flicker at the bottom of very few machines, adding a second confirmation for restart scenes, completely solving the blue underline, duplication of line feed titles, optimizing the carriage return, turning off text dragging, adding more features to mermaid, optimizing the position of PPT page turns.<li>
+        <li>Fixing the carriage return flicker at the bottom of very few machines, adding a second confirmation for restart scenes, completely solving the blue underline, duplication of line feed titles, optimizing the carriage return, turning off text dragging, adding more features to mermaid, optimizing the position of PPT page turns, document deletion experience optimization.<li>
         </ol>
           ]]>      </description>
       <pubDate>周六, 17 9月 2022 20:00:20 +0800</pubDate>
