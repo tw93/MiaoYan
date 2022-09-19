@@ -711,16 +711,6 @@ public class TextFormatter {
         #endif
     }
 
-    public static func getCodeParagraphStyle() -> NSMutableParagraphStyle {
-        let paragraphStyle = NSTextStorage.getParagraphStyle()
-
-        #if os(OSX)
-        paragraphStyle.textBlocks = [CodeBlock()]
-        #endif
-
-        return paragraphStyle
-    }
-
     private func insertText(_ string: Any, replacementRange: NSRange? = nil, selectRange: NSRange? = nil) {
         let range = replacementRange ?? textView.selectedRange
 
