@@ -205,9 +205,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
             breakUndoCoalescing()
             insertText(clipboard, replacementRange: currentRange)
             breakUndoCoalescing()
-
             saveTextStorageContent(to: note)
             fillHighlightLinks()
+            applyLeftParagraphStyle()
             return
         }
 

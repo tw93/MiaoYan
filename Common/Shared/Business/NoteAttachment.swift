@@ -65,10 +65,11 @@ class NoteAttachment {
             imageKey: url,
             .link: url,
             .attachment: attachment,
-            .paragraphStyle: paragraphStyle
+            .paragraphStyle: paragraphStyle,
+            .kern: UserDefaultsManagement.DefaultEditorLetterSpacing
         ] as [NSAttributedString.Key: Any]
 
-        mutableAttributedString.addAttributes(attributes, range: NSRange(0 ..< 1))
+        mutableAttributedString.addAttributes(attributes, range: NSRange(0..<1))
 
         return mutableAttributedString
     }
@@ -111,7 +112,7 @@ class NoteAttachment {
             height = imageProperties?[kCGImagePropertyPixelHeight] as? Int ?? 0
             orientation = imageProperties?[kCGImagePropertyOrientation] as? Int ?? 0
 
-            if case 5 ... 8 = orientation {
+            if case 5...8 = orientation {
                 height = imageProperties?[kCGImagePropertyPixelWidth] as? Int ?? 0
                 width = imageProperties?[kCGImagePropertyPixelHeight] as? Int ?? 0
             }
