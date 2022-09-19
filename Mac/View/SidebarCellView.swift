@@ -61,7 +61,7 @@ class SidebarCellView: NSTableCellView {
         } else if font == "Times New Roman" {
             labelToIconConstraint.constant = 1.0
         } else {
-            labelToIconConstraint.constant = -1.3
+            labelToIconConstraint.constant = -1.26
         }
     }
 }
