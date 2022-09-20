@@ -738,7 +738,7 @@ public class TextFormatter {
 
         textView.textStorage.addAttribute(.paragraphStyle, value: parStyle, range: parRange)
         textView.textStorage.addAttribute(.kern, value: UserDefaultsManagement.DefaultEditorLetterSpacing, range: parRange)
-        
+
         textView.undoManager?.endUndoGrouping()
         #else
         textView.insertText(string, replacementRange: range)

@@ -11,11 +11,12 @@ class SidebarNotesView: NSView {
             layer?.backgroundColor = NSColor.white.cgColor
         }
     }
+
     override func awakeFromNib() {
-        var f = self.frame;
-        f.size.width = 280;
-        self.frame = f;
-        self.setFrameSize(f.size)
-        self.setBoundsSize(f.size)
+        var f = frame
+        f.size.width = 280
+        frame = f
+        setFrameSize(f.size)
+        setBoundsSize(f.size)
     }
 }

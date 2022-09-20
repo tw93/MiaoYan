@@ -1,7 +1,7 @@
 /*
  Copyright (C) 2016 Apple Inc. All Rights Reserved.
  See LICENSE.txt for this sample’s licensing information
- 
+
  Abstract:
  A struct for accessing generic password keychain items.
  */
@@ -26,15 +26,11 @@ struct KeychainPasswordItem {
 
     let accessGroup: String?
 
-    // MARK: Intialization
-
     init(service: String, account: String, accessGroup: String? = nil) {
         self.service = service
         self.account = account
         self.accessGroup = accessGroup
     }
-
-    // MARK: Keychain access
 
     func readPassword() throws -> String {
         /*
@@ -58,10 +54,10 @@ struct KeychainPasswordItem {
 
         // Parse the password string from the query result.
         guard let existingItem = queryResult as? [String: AnyObject],
-            let passwordData = existingItem[kSecValueData as String] as? Data,
-            let password = String(data: passwordData, encoding: String.Encoding.utf8)
-            else {
-                throw KeychainError.unexpectedPasswordData
+              let passwordData = existingItem[kSecValueData as String] as? Data,
+              let password = String(data: passwordData, encoding: String.Encoding.utf8)
+        else {
+            throw KeychainError.unexpectedPasswordData
         }
 
         return password
@@ -107,13 +103,13 @@ struct KeychainPasswordItem {
         var attributesToUpdate = [String: AnyObject]()
         attributesToUpdate[kSecAttrAccount as String] = newAccountName as AnyObject?
 
-        let query = KeychainPasswordItem.keychainQuery(withService: service, account: self.account, accessGroup: accessGroup)
+        let query = KeychainPasswordItem.keychainQuery(withService: service, account: account, accessGroup: accessGroup)
         let status = SecItemUpdate(query as CFDictionary, attributesToUpdate as CFDictionary)
 
         // Throw an error if an unexpected status was returned.
         guard status == noErr || status == errSecItemNotFound else { throw KeychainError.unhandledError(status: status) }
 
-        self.account = newAccountName
+        account = newAccountName
     }
 
     func deleteItem() throws {
@@ -150,7 +146,7 @@ struct KeychainPasswordItem {
         // Create a `KeychainPasswordItem` for each dictionary in the query result.
         var passwordItems = [KeychainPasswordItem]()
         for result in resultData {
-            guard let account  = result[kSecAttrAccount as String] as? String else { throw KeychainError.unexpectedItemData }
+            guard let account = result[kSecAttrAccount as String] as? String else { throw KeychainError.unexpectedItemData }
 
             let passwordItem = KeychainPasswordItem(service: service, account: account, accessGroup: accessGroup)
             passwordItems.append(passwordItem)

@@ -8,6 +8,4 @@
 
 import AppKit
 
-class DetachedWindowController: NSWindowController {
-    
-}
+class DetachedWindowController: NSWindowController {}

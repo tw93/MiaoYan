@@ -19,7 +19,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     private var trackingArea: NSTrackingArea?
 
     override func updateTrackingAreas() {
-        if let trackingArea = self.trackingArea {
+        if let trackingArea = trackingArea {
             removeTrackingArea(trackingArea)
         }
 

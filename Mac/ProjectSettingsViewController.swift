@@ -1,19 +1,18 @@
-import Cocoa
 import Carbon.HIToolbox
+import Cocoa
 
 class ProjectSettingsViewController: NSViewController {
-
     private var project: Project?
 
-    @IBOutlet weak var modificationDate: NSButton!
-    @IBOutlet weak var creationDate: NSButton!
-    @IBOutlet weak var titleButton: NSButton!
-    @IBOutlet weak var sortByGlobal: NSButton!
+    @IBOutlet var modificationDate: NSButton!
+    @IBOutlet var creationDate: NSButton!
+    @IBOutlet var titleButton: NSButton!
+    @IBOutlet var sortByGlobal: NSButton!
 
-    @IBOutlet weak var directionASC: NSButton!
-    @IBOutlet weak var directionDESC: NSButton!
+    @IBOutlet var directionASC: NSButton!
+    @IBOutlet var directionDESC: NSButton!
 
-    @IBOutlet weak var showInAll: NSButton!
+    @IBOutlet var showInAll: NSButton!
 
     @IBAction func sortBy(_ sender: NSButton) {
         guard let project = project else { return }
@@ -45,19 +44,18 @@ class ProjectSettingsViewController: NSViewController {
         vc.updateTable()
     }
 
-
     @IBAction func showNotesInMainList(_ sender: NSButton) {
         project?.showInCommon = sender.state == .on
         project?.saveSettings()
     }
 
     @IBAction func close(_ sender: Any) {
-        self.dismiss(nil)
+        dismiss(nil)
     }
 
     override func keyDown(with event: NSEvent) {
         if event.keyCode == kVK_Return || event.keyCode == kVK_Escape {
-            self.dismiss(nil)
+            dismiss(nil)
         }
     }
 

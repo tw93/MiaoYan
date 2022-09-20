@@ -14,8 +14,8 @@ class FileSystemEventManager {
     }
 
     public func start() {
-        watcher = FileWatcher(self.observedFolders)
-        watcher?.callback = { event in
+        self.watcher = FileWatcher(self.observedFolders)
+        self.watcher?.callback = { event in
             if UserDataService.instance.fsUpdatesDisabled {
                 return
             }
@@ -54,13 +54,13 @@ class FileSystemEventManager {
             }
 
             if event.fileChange,
-                let note = self.storage.getBy(url: self.handleTextBundle(url: url))
+               let note = self.storage.getBy(url: self.handleTextBundle(url: url))
             {
                 self.reloadNote(note: note)
             }
         }
 
-        watcher?.start()
+        self.watcher?.start()
     }
 
     private func moveHandler(url: URL, pathList: [String]) {
@@ -74,31 +74,29 @@ class FileSystemEventManager {
         }
 
         if fileExistInFS {
-            renameNote(note: note)
+            self.renameNote(note: note)
             return
         }
 
-        removeNote(note: note)
+        self.removeNote(note: note)
     }
 
     private func checkFile(url: URL, pathList: [String]) -> Bool {
-        return (
-            FileManager.default.fileExists(atPath: url.path)
+        FileManager.default.fileExists(atPath: url.path)
             && (
                 self.storage.allowedExtensions.contains(url.pathExtension)
-                && self.storage.isValidUTI(url: url)
+                    && self.storage.isValidUTI(url: url)
             )
             && pathList.contains(url.deletingLastPathComponent().path)
-        )
     }
 
     private func importNote(_ url: URL) {
         let url = self.handleTextBundle(url: url)
 
-        let n = storage.getBy(url: url)
+        let n = self.storage.getBy(url: url)
         guard n == nil else {
             if let nUnwrapped = n, nUnwrapped.url == UserDataService.instance.focusOnImport {
-                self.delegate.updateTable() {
+                self.delegate.updateTable {
                     self.delegate.notesTableView.setSelected(note: nUnwrapped)
                     UserDataService.instance.focusOnImport = nil
                 }
@@ -106,7 +104,7 @@ class FileSystemEventManager {
             return
         }
 
-        guard storage.getProjectBy(url: url) != nil else {
+        guard self.storage.getProjectBy(url: url) != nil else {
             return
         }
 
@@ -119,7 +117,7 @@ class FileSystemEventManager {
 
         DispatchQueue.main.async {
             if let url = UserDataService.instance.focusOnImport, let note = self.storage.getBy(url: url) {
-                self.delegate.updateTable() {
+                self.delegate.updateTable {
                     self.delegate.notesTableView.setSelected(note: note)
                     UserDataService.instance.focusOnImport = nil
                     self.delegate.reloadSideBar()
@@ -134,7 +132,7 @@ class FileSystemEventManager {
         }
 
         if note.name == "MiaoYan - Readme.md" {
-            self.delegate.updateTable() {
+            self.delegate.updateTable {
                 self.delegate.notesTableView.selectRow(0)
                 note.addPin()
 
@@ -145,12 +143,12 @@ class FileSystemEventManager {
 
     private func renameNote(note: Note) {
         if note.url == UserDataService.instance.focusOnImport {
-            self.delegate.updateTable() {
+            self.delegate.updateTable {
                 self.delegate.notesTableView.setSelected(note: note)
                 UserDataService.instance.focusOnImport = nil
             }
 
-        // On TextBundle import
+            // On TextBundle import
         } else {
             self.reloadNote(note: note)
         }
@@ -171,10 +169,11 @@ class FileSystemEventManager {
     private func reloadNote(note: Note) {
         guard let fsContent = note.getContent() else { return }
 
-        let memoryContent = note.content.attributedSubstring(from: NSRange(0..<note.content.length))
+        let memoryContent = note.content.attributedSubstring(from: NSRange(0 ..< note.content.length))
 
         if (note.isRTF() && fsContent != memoryContent)
-            || (!note.isRTF() && fsContent.string != memoryContent.string) {
+            || (!note.isRTF() && fsContent.string != memoryContent.string)
+        {
             note.content = NSMutableAttributedString(attributedString: fsContent)
 
             self.delegate.notesTableView.reloadRow(note: note)
@@ -186,7 +185,7 @@ class FileSystemEventManager {
     }
 
     private func handleTextBundle(url: URL) -> URL {
-        if ["text.markdown", "text.md", "text.txt", "text.rtf"].contains(url.lastPathComponent) && url.path.contains(".textbundle") {
+        if ["text.markdown", "text.md", "text.txt", "text.rtf"].contains(url.lastPathComponent), url.path.contains(".textbundle") {
             let path = url.deletingLastPathComponent().path
             return URL(fileURLWithPath: path)
         }
@@ -195,8 +194,8 @@ class FileSystemEventManager {
     }
 
     public func restart() {
-        watcher?.stop()
+        self.watcher?.stop()
         self.observedFolders = self.storage.getProjectPaths()
-        start()
+        self.start()
     }
 }

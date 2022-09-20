@@ -2,11 +2,10 @@ import Cocoa
 
 extension ViewController: NSSharingServicePickerDelegate {
     func sharingServicePicker(_ sharingServicePicker: NSSharingServicePicker, sharingServicesForItems items: [Any], proposedSharingServices proposedServices: [NSSharingService]) -> [NSSharingService] {
-        
         guard let image = NSImage(named: "copy.png") else {
             return proposedServices
         }
-        
+
         var share = proposedServices
         let titlePlain = NSLocalizedString("Copy Plain Text", comment: "")
         let plainText = NSSharingService(title: titlePlain, image: image, alternateImage: image, handler: {
@@ -19,7 +18,7 @@ extension ViewController: NSSharingServicePickerDelegate {
             self.saveHtmlAtClipboard()
         })
         share.insert(html, at: 1)
-        
+
         return share
     }
 }

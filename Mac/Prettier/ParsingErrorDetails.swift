@@ -11,7 +11,7 @@ public struct ParsingErrorDetails: CustomDebugStringConvertible {
     public let column: Int
     public let codeFrame: String
     public var debugDescription: String {
-        return "Parsing error at line \(line), column \(column):\n\(codeFrame)"
+        "Parsing error at line \(line), column \(column):\n\(codeFrame)"
     }
 
     init?(object: [String: Any]) {

@@ -22,4 +22,4 @@ dev         <--- Develop/PR
 please use <https://github.com/tw93/cz-emoji-chinese>
 
 ## More
-It is a good habit to create a feature request issue to disscuss whether the feature is necessary before you implement it. However, it's unnecessary to create an issue to claim that you found a typo or improved the readability of documentaion, just create a pull request.
+It is a good habit to create a feature request issue to discuss whether the feature is necessary before you implement it. However, it's unnecessary to create an issue to claim that you found a typo or improved the readability of documentation, just create a pull request.

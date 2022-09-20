@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+
 extension FileManager {
     func directoryExists(atUrl url: URL) -> Bool {
         var isDirectory: ObjCBool = false

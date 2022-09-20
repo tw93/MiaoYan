@@ -9,7 +9,7 @@ import Foundation
 public extension URL {
     /// Get extended attribute.
     func extendedAttribute(forName name: String) throws -> Data {
-        return try self.withUnsafeFileSystemRepresentation { fileSystemPath -> Data in
+        try self.withUnsafeFileSystemRepresentation { fileSystemPath -> Data in
 
             // Determine attribute size:
             let length = getxattr(fileSystemPath, name, nil, 0, 0, 0)
@@ -30,7 +30,6 @@ public extension URL {
 
     /// Set extended attribute.
     func setExtendedAttribute(data: Data, forName name: String) throws {
-
         try self.withUnsafeFileSystemRepresentation { fileSystemPath in
             let result = data.withUnsafeBytes {
                 setxattr(fileSystemPath, name, $0.baseAddress, data.count, 0, 0)
@@ -41,7 +40,6 @@ public extension URL {
 
     /// Remove extended attribute.
     func removeExtendedAttribute(forName name: String) throws {
-
         try self.withUnsafeFileSystemRepresentation { fileSystemPath in
             let result = removexattr(fileSystemPath, name, 0)
             guard result == 0 else { throw URL.posixError(errno) }
@@ -76,8 +74,8 @@ public extension URL {
 
     /// Helper function to create an NSError from a Unix errno.
     private static func posixError(_ err: Int32) -> NSError {
-        return NSError(domain: NSPOSIXErrorDomain, code: Int(err),
-                       userInfo: [NSLocalizedDescriptionKey: String(cString: strerror(err))])
+        NSError(domain: NSPOSIXErrorDomain, code: Int(err),
+                userInfo: [NSLocalizedDescriptionKey: String(cString: strerror(err))])
     }
 
     // Access the URL parameters eg nv://make?title=blah&txt=body like so:
@@ -88,7 +86,7 @@ public extension URL {
     }
 
     func isRemote() -> Bool {
-        return (self.absoluteString.starts(with: "http://") || self.absoluteString.starts(with: "https://"))
+        self.absoluteString.starts(with: "http://") || self.absoluteString.starts(with: "https://")
     }
 
     var attributes: [FileAttributeKey: Any]? {
@@ -101,7 +99,7 @@ public extension URL {
     }
 
     var fileSize: UInt64 {
-        return attributes?[.size] as? UInt64 ?? UInt64(0)
+        self.attributes?[.size] as? UInt64 ?? UInt64(0)
     }
 
     func removingFragment() -> URL {
@@ -118,7 +116,7 @@ public extension URL {
     }
 
     var typeIdentifier: String? {
-        return (try? resourceValues(forKeys: [.typeIdentifierKey]))?.typeIdentifier
+        (try? resourceValues(forKeys: [.typeIdentifierKey]))?.typeIdentifier
     }
 
     var fileUTType: CFString? {

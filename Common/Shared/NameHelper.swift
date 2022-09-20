@@ -21,8 +21,7 @@ class NameHelper {
         if fileManager.fileExists(atPath: fileUrl.path) {
             let regex = try? NSRegularExpression(pattern: "(.+)\\s(\\d)+", options: .caseInsensitive)
 
-            if let result = regex?.firstMatch(in: name, range: NSRange(0..<name.count)) {
-
+            if let result = regex?.firstMatch(in: name, range: NSRange(0 ..< name.count)) {
                 if let range = Range(result.range(at: 1), in: name) {
                     name = String(name[range])
                 }

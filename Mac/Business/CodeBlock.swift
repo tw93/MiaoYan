@@ -2,7 +2,7 @@ import AppKit
 
 class CodeBlock: NSTextBlock {
     override func drawBackground(withFrame frameRect: NSRect, in controlView: NSView, characterRange charRange: NSRange, layoutManager: NSLayoutManager) {
-        let selectionPath = NSBezierPath.init(roundedRect: frameRect, xRadius: 5, yRadius: 5)
+        let selectionPath = NSBezierPath(roundedRect: frameRect, xRadius: 5, yRadius: 5)
 
         NotesTextProcessor.codeBackground.setFill()
         selectionPath.fill()

@@ -10,10 +10,11 @@ class TitleTextField: NSTextField {
            event.keyCode == kVK_ANSI_C,
            !event.modifierFlags.contains(.shift),
            !event.modifierFlags.contains(.control),
-           !event.modifierFlags.contains(.option) {
+           !event.modifierFlags.contains(.option)
+        {
             let pasteboard = NSPasteboard.general
             pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
-            pasteboard.setString(self.stringValue, forType: NSPasteboard.PasteboardType.string)
+            pasteboard.setString(stringValue, forType: NSPasteboard.PasteboardType.string)
         }
 
         return super.performKeyEquivalent(with: event)
@@ -43,10 +44,10 @@ class TitleTextField: NSTextField {
         if currentName != currentTitle {
             let ext = note.url.pathExtension
             let fileName =
-                    currentTitle
-                            .trimmingCharacters(in: CharacterSet.whitespaces)
-                            .replacingOccurrences(of: ":", with: "-")
-                            .replacingOccurrences(of: "/", with: ":")
+                currentTitle
+                    .trimmingCharacters(in: CharacterSet.whitespaces)
+                    .replacingOccurrences(of: ":", with: "-")
+                    .replacingOccurrences(of: "/", with: ":")
             let dst = note.project.url.appendingPathComponent(fileName).appendingPathExtension(ext)
 
             if !FileManager.default.fileExists(atPath: dst.path), note.move(to: dst) {
@@ -72,7 +73,7 @@ class TitleTextField: NSTextField {
 
     public func hasFocus() -> Bool {
         var inFocus = false
-        inFocus = (self.window?.firstResponder is NSTextView) && self.window?.fieldEditor(false, for: nil) != nil && self.isEqual(to: (self.window?.firstResponder as? NSTextView)?.delegate)
+        inFocus = (window?.firstResponder is NSTextView) && window?.fieldEditor(false, for: nil) != nil && isEqual(to: (window?.firstResponder as? NSTextView)?.delegate)
         return inFocus
     }
 

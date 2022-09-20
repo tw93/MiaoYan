@@ -1,12 +1,11 @@
 import Cocoa
-import MASShortcut
 import CoreData
+import MASShortcut
 import MiaoYanCore_macOS
 
-class PrefsViewController: NSTabViewController  {
-
+class PrefsViewController: NSTabViewController {
     override func viewDidLoad() {
-        self.title = "Preferences"
+        title = "Preferences"
         super.viewDidLoad()
     }
 
@@ -22,7 +21,7 @@ class PrefsViewController: NSTabViewController  {
                 return toolbarItem
             }
 
-            if let name = tabViewItem.identifier as? String, !["advanced", "security"].contains(name)  {
+            if let name = tabViewItem.identifier as? String, !["advanced", "security"].contains(name) {
                 toolbarItem.label = "\(tabViewItem.label)    "
             }
         }
