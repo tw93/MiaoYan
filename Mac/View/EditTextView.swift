@@ -542,7 +542,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         if event.keyCode == kVK_Return, !hasMarkedText() {
             breakUndoCoalescing()
             let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
-            //对于有shift的直接回车
+            // 对于有shift的直接回车
             if event.modifierFlags.contains(.shift) {
                 insertNewline(nil)
             } else {
