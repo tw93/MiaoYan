@@ -9,7 +9,8 @@ extension NSTextStorage: NSTextStorageDelegate {
     public func textStorage(
         _ textStorage: NSTextStorage,
         didProcessEditing editedMask: NSTextStorage.EditActions,
-        range editedRange: NSRange, changeInLength delta: Int) {
+        range editedRange: NSRange, changeInLength delta: Int)
+    {
         guard editedMask != .editedAttributes else { return }
         process(textStorage: textStorage, range: editedRange, changeInLength: delta)
     }
@@ -18,7 +19,8 @@ extension NSTextStorage: NSTextStorageDelegate {
         _ textStorage: NSTextStorage,
         didProcessEditing editedMask: NSTextStorageEditActions,
         range editedRange: NSRange,
-        changeInLength delta: Int) {
+        changeInLength delta: Int)
+    {
         guard editedMask != .editedAttributes else { return }
         process(textStorage: textStorage, range: editedRange, changeInLength: delta)
     }
@@ -28,7 +30,7 @@ extension NSTextStorage: NSTextStorageDelegate {
         guard let note = EditTextView.note, note.isMarkdown() else { return }
         guard editedRange.length != textStorage.length || EditTextView.shouldForceRescan else { return }
 
-        if shouldScanСompletely(textStorage: textStorage, editedRange: editedRange) {
+        if shouldScanCompletely(textStorage: textStorage, editedRange: editedRange) {
             rescanAll(textStorage: textStorage)
         } else {
             rescanPartial(textStorage: textStorage, delta: delta, editedRange: editedRange)
@@ -40,7 +42,7 @@ extension NSTextStorage: NSTextStorageDelegate {
         EditTextView.lastRemoved = nil
     }
 
-    private func shouldScanСompletely(textStorage: NSTextStorage, editedRange: NSRange) -> Bool {
+    private func shouldScanCompletely(textStorage: NSTextStorage, editedRange: NSRange) -> Bool {
         if editedRange.length == textStorage.length {
             return true
         }
@@ -81,7 +83,8 @@ extension NSTextStorage: NSTextStorageDelegate {
             if delta == 1,
                textStorage.mutableString.substring(with: editedRange) == "\n",
                textStorage.length >= fencedRange.upperBound + 1,
-               textStorage.attribute(.backgroundColor, at: fencedRange.upperBound, effectiveRange: nil) != nil {
+               textStorage.attribute(.backgroundColor, at: fencedRange.upperBound, effectiveRange: nil) != nil
+            {
                 textStorage.removeAttribute(.backgroundColor, range: NSRange(location: fencedRange.upperBound, length: 1))
             }
 

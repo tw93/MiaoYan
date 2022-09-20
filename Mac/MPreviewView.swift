@@ -70,10 +70,11 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {
         for menuItem in menu.items {
             if menuItem.identifier?.rawValue == "WKMenuItemIdentifierSpeechMenu" ||
-                       menuItem.identifier?.rawValue == "WKMenuItemIdentifierTranslate" ||
-                       menuItem.identifier?.rawValue == "WKMenuItemIdentifierSearchWeb" ||
-                       menuItem.identifier?.rawValue == "WKMenuItemIdentifierShareMenu" ||
-                       menuItem.identifier?.rawValue == "WKMenuItemIdentifierLookUp" {
+                menuItem.identifier?.rawValue == "WKMenuItemIdentifierTranslate" ||
+                menuItem.identifier?.rawValue == "WKMenuItemIdentifierSearchWeb" ||
+                menuItem.identifier?.rawValue == "WKMenuItemIdentifierShareMenu" ||
+                menuItem.identifier?.rawValue == "WKMenuItemIdentifierLookUp"
+            {
                 menuItem.isHidden = true
             }
         }
@@ -135,8 +136,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                     }
                 })
             }
-        } else {
-        }
+        } else {}
     }
 
     public func exportHtml() {
@@ -163,7 +163,6 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             vc.toastExport(status: false)
         }
     }
-
 
     public func exportImage() {
         guard let vc = ViewController.shared() else { return }
@@ -292,9 +291,9 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
     private func isFootNotes(url: URL) -> Bool {
         let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory())
-                .appendingPathComponent("wkPreview")
-                .appendingPathComponent("index.html")
-                .absoluteString
+            .appendingPathComponent("wkPreview")
+            .appendingPathComponent("index.html")
+            .absoluteString
 
         let link = url.absoluteString.replacingOccurrences(of: webkitPreview, with: "")
         if link.starts(with: "#") {
@@ -410,8 +409,8 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
 
                 let create = webkitPreview
-                        .appendingPathComponent(localPathClean)
-                        .deletingLastPathComponent()
+                    .appendingPathComponent(localPathClean)
+                    .deletingLastPathComponent()
                 let destination = webkitPreview.appendingPathComponent(localPathClean)
 
                 try? FileManager.default.createDirectory(atPath: create.path, withIntermediateDirectories: true, attributes: nil)
@@ -496,13 +495,14 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
 class HandlerCheckbox: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
+                               didReceive message: WKScriptMessage)
+    {
         guard let position = message.body as? String else { return }
         guard let note = EditTextView.note else { return }
 
         let content = note.content.unLoadCheckboxes().unLoadImages()
         let string = content.string
-        let range = NSRange(0..<string.count)
+        let range = NSRange(0 ..< string.count)
 
         var i = 0
         NotesTextProcessor.allTodoInlineRegex.matches(string, range: range) { result in
@@ -536,7 +536,8 @@ class HandlerCodeCopy: NSObject, WKScriptMessageHandler {
     }
 
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
+                               didReceive message: WKScriptMessage)
+    {
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
 
         HandlerCodeCopy.selectionString = message
@@ -547,18 +548,20 @@ class HandlerSelection: NSObject, WKScriptMessageHandler {
     public static var selectionString: String?
 
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
+                               didReceive message: WKScriptMessage)
+    {
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
 
         HandlerSelection.selectionString = message
     }
 }
 
-//用于解决ppt模式下背景颜色变化左侧边框颜色的适配
+// 用于解决ppt模式下背景颜色变化左侧边框颜色的适配
 
 class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
+                               didReceive message: WKScriptMessage)
+    {
         guard let vc = ViewController.shared() else { return }
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
         if message == "" {

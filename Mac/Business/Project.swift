@@ -2,12 +2,13 @@ import Foundation
 
 public class Project: Equatable {
     var url: URL
-    public var label: String
     var isTrash: Bool
     var isCloudDrive: Bool = false
     var isRoot: Bool
     var parent: Project?
     var isDefault: Bool
+
+    public var label: String
     public var isExternal: Bool = false
 
     public var sortBy: SortBy = UserDefaultsManagement.sort
@@ -18,7 +19,7 @@ public class Project: Equatable {
 
     public var showInCommon: Bool
     public var showInSidebar: Bool = true
-    
+
     init(url: URL, label: String? = nil, isTrash: Bool = false, isRoot: Bool = false, parent: Project? = nil, isDefault: Bool = false, isExternal: Bool = false) {
         self.url = url.resolvingSymlinksInPath()
         self.isTrash = isTrash
@@ -30,7 +31,7 @@ public class Project: Equatable {
         showInCommon = isTrash ? false : true
 
         #if os(iOS)
-        if isRoot && isDefault {
+        if isRoot, isDefault {
             showInSidebar = false
         }
         #endif
@@ -46,41 +47,54 @@ public class Project: Equatable {
         if let name = localizedName as? String, name.count > 0 {
             self.label = name
         }
-        
+
         isCloudDrive = isCloudDriveFolder(url: url)
         loadSettings()
     }
-    
-    func fileExist(fileName: String, ext: String) -> Bool {        
+
+    func fileExist(fileName: String, ext: String) -> Bool {
         let fileURL = url.appendingPathComponent(fileName + "." + ext)
-        
+
         return FileManager.default.fileExists(atPath: fileURL.path)
     }
-    
-    public static func == (lhs: Project, rhs: Project) -> Bool {
-        return lhs.url == rhs.url
+
+    public static func ==(lhs: Project, rhs: Project) -> Bool {
+        lhs.url == rhs.url
     }
-    
+
+    public func loadLabel(_ label: String? = nil) {
+        if let l = label {
+            self.label = l
+        } else {
+            self.label = url.lastPathComponent
+        }
+
+        var localizedName: AnyObject?
+        try? (url as NSURL).getResourceValue(&localizedName, forKey: URLResourceKey.localizedNameKey)
+        if let name = localizedName as? String, name.count > 0 {
+            self.label = name
+        }
+    }
+
     private func isCloudDriveFolder(url: URL) -> Bool {
         if let iCloudDocumentsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents").resolvingSymlinksInPath() {
-            
             if FileManager.default.fileExists(atPath: iCloudDocumentsURL.path, isDirectory: nil), url.path.contains(iCloudDocumentsURL.path) {
                 return true
             }
         }
-        
+
         return false
     }
-    
+
     public func getParent() -> Project {
         if isRoot {
             return self
         }
-        
-        if let parent = self.parent {
+
+        if let parent = parent {
             return parent.getParent()
         }
-        
+
         return self
     }
 
@@ -90,7 +104,7 @@ public class Project: Equatable {
             "sortDirection": sortDirectionSettings.rawValue,
             "showInCommon": showInCommon,
             "showInSidebar": showInSidebar
-        ] as [String : Any]
+        ] as [String: Any]
 
         if let relativePath = getRelativePath() {
             let keyStore = NSUbiquitousKeyValueStore()
@@ -111,11 +125,11 @@ public class Project: Equatable {
 
             if let settings = keyStore.dictionary(forKey: key) {
                 if let common = settings["showInCommon"] as? Bool {
-                    self.showInCommon = common
+                    showInCommon = common
                 }
 
                 if let sidebar = settings["showInSidebar"] as? Bool {
-                    self.showInSidebar = sidebar
+                    showInSidebar = sidebar
                 }
 
                 if let sortString = settings["sortBy"] as? String, let sort = SortBy(rawValue: sortString) {
@@ -135,11 +149,11 @@ public class Project: Equatable {
 
         if let settings = UserDefaults.standard.object(forKey: url.path) as? NSObject {
             if let common = settings.value(forKey: "showInCommon") as? Bool {
-                self.showInCommon = common
+                showInCommon = common
             }
 
             if let sidebar = settings.value(forKey: "showInSidebar") as? Bool {
-                self.showInSidebar = sidebar
+                showInSidebar = sidebar
             }
 
             if let sortString = settings.value(forKey: "sortBy") as? String, let sort = SortBy(rawValue: sortString) {
@@ -158,7 +172,7 @@ public class Project: Equatable {
     }
 
     public func getRelativePath() -> String? {
-        if let iCloudRoot =  FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents").resolvingSymlinksInPath() {
+        if let iCloudRoot = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents").resolvingSymlinksInPath() {
             return url.path.replacingOccurrences(of: iCloudRoot.path, with: "")
         }
 
@@ -190,6 +204,6 @@ public class Project: Equatable {
     }
 
     public func getShortSign() -> String {
-        return String(getParent().url.path.md5.prefix(4))
+        String(getParent().url.path.md5.prefix(4))
     }
 }

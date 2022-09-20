@@ -86,10 +86,11 @@ public final class PrettierFormatter {
     /// - Parameter code: Code to format.
     /// - Returns: Result carriying the formatted code.
     public func format(_ code: String) -> Result<String, PrettierFormatterError> {
-        return makeConfiguration().flatMap { configuration in
-            return format(code, withConfiguration: configuration)
-        }.flatMap { value in
-            return mapString(from: value)
+        makeConfiguration().flatMap { configuration in
+            format(code, withConfiguration: configuration)
+        }
+        .flatMap { value in
+            mapString(from: value)
         }
     }
 
@@ -99,11 +100,12 @@ public final class PrettierFormatter {
     ///   - range: Range in the string where the code to be formatted resides.
     /// - Returns: Result carrying the formatted code.
     public func format(_ code: String, limitedTo range: ClosedRange<Int>) -> Result<String, PrettierFormatterError> {
-        return makeConfiguration().flatMap { configuration in
+        makeConfiguration().flatMap { configuration in
             configuration.setObject(range.lowerBound, forKeyedSubscript: .rangeStart)
             configuration.setObject(range.upperBound, forKeyedSubscript: .rangeEnd)
             return format(code, withConfiguration: configuration)
-        }.flatMap(mapString)
+        }
+        .flatMap(mapString)
     }
 
     /// Formats the inputted code and translates the cursor location from the unformatted code to the formatted code.
@@ -112,17 +114,19 @@ public final class PrettierFormatter {
     ///   - cursorOffset: The cursor's current location in the code.
     /// - Returns: Result carrying the formatted code.
     public func format(_ code: String, withCursorAtLocation cursorOffset: Int) -> Result<FormatWithCursorResult, PrettierFormatterError> {
-        return makeConfiguration().flatMap { configuration in
+        makeConfiguration().flatMap { configuration in
             configuration.setObject(cursorOffset, forKeyedSubscript: .cursorOffset)
             return format(code, withConfiguration: configuration, prettierFunctionName: "formatWithCursor")
-        }.flatMap(mapFormatWithCursoResult)
+        }
+        .flatMap(mapFormatWithCursoResult)
     }
 }
 
 private extension PrettierFormatter {
     private func format(_ code: String,
                         withConfiguration configuration: JSValue,
-                        prettierFunctionName: String = "format") -> Result<JSValue, PrettierFormatterError> {
+                        prettierFunctionName: String = "format") -> Result<JSValue, PrettierFormatterError>
+    {
         context.exception = nil
         guard let prettier = context.objectForKeyedSubscript("prettier") else {
             return .failure(.unprepared)
@@ -136,7 +140,8 @@ private extension PrettierFormatter {
         if result.isUndefined,
            let exception = context.exception, exception.isObject,
            let object = exception.toObject() as? [String: Any],
-           let errorDetails = ParsingErrorDetails(object: object) {
+           let errorDetails = ParsingErrorDetails(object: object)
+        {
             return .failure(.parsingError(errorDetails))
         } else {
             return .success(result)
@@ -164,7 +169,7 @@ private extension PrettierFormatter {
         let url = NSURL.fileURL(withPath: path!)
         let bundle = Bundle(url: url)
         let standaloneFileURL = bundle!.url(forResource: "standalone", withExtension: "js")!
-        
+
         let pluginFileURLs = plugins.map(\.fileURL)
         let fileURLs = ([standaloneFileURL] + pluginFileURLs).compactMap { $0 }
         let script = fileURLs.compactMap { try? String(contentsOf: $0) }.joined(separator: "\n")

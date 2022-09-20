@@ -1,9 +1,9 @@
-extension NSFont {
-    public var lineHeight: CGFloat {
-        return CGFloat(ceilf(Float(ascender + abs(descender) + leading)))
+public extension NSFont {
+    var lineHeight: CGFloat {
+        CGFloat(ceilf(Float(ascender + abs(descender) + leading)))
     }
 
-    public var lineHeightCustom: CGFloat {
-        return CGFloat(ceilf(Float(ascender + abs(descender) + leading)))
+    var lineHeightCustom: CGFloat {
+        CGFloat(ceilf(Float(ascender + abs(descender) + leading)))
     }
 }

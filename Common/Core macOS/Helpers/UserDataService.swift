@@ -3,21 +3,21 @@ import Foundation
 public class UserDataService {
     public static let instance = UserDataService()
 
-    fileprivate var _searchTrigger = false
-    fileprivate var _lastRenamed: URL?
-    fileprivate var _fsUpdates = false
-    fileprivate var _isNotesTableEscape = false
-    fileprivate var _isDark = false
+    private var _searchTrigger = false
+    private var _lastRenamed: URL?
+    private var _fsUpdates = false
+    private var _isNotesTableEscape = false
+    private var _isDark = false
 
-    fileprivate var _lastType: Int?
-    fileprivate var _lastProject: URL?
-    fileprivate var _lastName: String?
+    private var _lastType: Int?
+    private var _lastProject: URL?
+    private var _lastName: String?
 
-    fileprivate var _importProgress = false
+    private var _importProgress = false
 
     public var searchTrigger: Bool {
         get {
-            return _searchTrigger
+            _searchTrigger
         }
         set {
             _searchTrigger = newValue
@@ -26,7 +26,7 @@ public class UserDataService {
 
     public var focusOnImport: URL? {
         get {
-            return _lastRenamed
+            _lastRenamed
         }
         set {
             _lastRenamed = newValue
@@ -35,7 +35,7 @@ public class UserDataService {
 
     public var fsUpdatesDisabled: Bool {
         get {
-            return _fsUpdates
+            _fsUpdates
         }
         set {
             _fsUpdates = newValue
@@ -44,7 +44,7 @@ public class UserDataService {
 
     public var isNotesTableEscape: Bool {
         get {
-            return _isNotesTableEscape
+            _isNotesTableEscape
         }
         set {
             _isNotesTableEscape = newValue
@@ -53,7 +53,7 @@ public class UserDataService {
 
     public var isDark: Bool {
         get {
-            return _isDark
+            _isDark
         }
         set {
             _isDark = newValue
@@ -62,7 +62,7 @@ public class UserDataService {
 
     public var lastType: Int? {
         get {
-            return _lastType
+            _lastType
         }
         set {
             _lastType = newValue
@@ -71,7 +71,7 @@ public class UserDataService {
 
     public var lastName: String? {
         get {
-            return _lastName
+            _lastName
         }
         set {
             _lastName = newValue
@@ -80,7 +80,7 @@ public class UserDataService {
 
     public var lastProject: URL? {
         get {
-            return _lastProject
+            _lastProject
         }
         set {
             _lastProject = newValue
@@ -95,7 +95,7 @@ public class UserDataService {
 
     public var skipSidebarSelection: Bool {
         get {
-            return _importProgress
+            _importProgress
         }
         set {
             _importProgress = newValue

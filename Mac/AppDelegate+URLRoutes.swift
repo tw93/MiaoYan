@@ -87,6 +87,7 @@ extension AppDelegate {
     }
     
     // MARK: - MiaoYan routes
+
     func MiaoYanRouter(_ url: URL) {
         guard let directive = url.host else { return }
         
@@ -130,7 +131,7 @@ extension AppDelegate {
             if let items = vc.storageOutlineView.sidebarItems {
                 // 修复在根目录的场景
                 var sidebarIndex = 0
-                if let sidebarItem = items.first(where: { ($0 as? SidebarItem)?.project == notes[0].project }){
+                if let sidebarItem = items.first(where: { ($0 as? SidebarItem)?.project == notes[0].project }) {
                     sidebarIndex = vc.storageOutlineView.row(forItem: sidebarItem)
                 }
                 vc.updateTable {
@@ -143,7 +144,7 @@ extension AppDelegate {
                             }
                         }
                     }
-                }  
+                }
             }
         } else {
             vc.toastNoTitle()

@@ -1,9 +1,6 @@
 /* No comment provided by engineer. */
 "Add" = "添加";
 
-/* Sidebar label */
-"Archive" = "存档";
-
 /* No comment provided by engineer. */
 "Are you sure you want to irretrievably delete %d note(s)?" = "确定要永久删除%d个笔记？";
 
@@ -12,18 +9,6 @@
 
 /* Delete menu */
 "Cancel" = "取消";
-
-/* No comment provided by engineer. */
-"Check Grammar With Spelling" = "检查拼写和语法";
-
-/* No comment provided by engineer. */
-"Check Spelling While Typing" = "键入时检查拼写";
-
-/* No comment provided by engineer. */
-"Code Block" = "代码块";
-
-/* No comment provided by engineer. */
-"Code Span" = "代码缩进";
 
 /* No comment provided by engineer. */
 "Copy HTML" = "拷贝HTML";
@@ -35,25 +20,14 @@
 "Copy Plain Text" = "拷贝纯文本";
 
 /* No comment provided by engineer. */
-"Correct Spelling Automatically" = "拼写正确";
-
-/* No comment provided by engineer. */
-"Data Detectors" = "数据检测器";
-
-/* No comment provided by engineer. */
 "Delete" = "删除";
 
 /* No comment provided by engineer. */
 "Delete folder" = "删除文件夹";
 
-/* No comment provided by engineer. */
-"MiaoYan [edit]" = "妙言 [编辑]";
 
 /* No comment provided by engineer. */
 "MiaoYan [preview]" = "妙言 [预览]";
-
-/* Menu */
-"History" = "历史";
 
 /* No comment provided by engineer. */
 "Link" = "链接";

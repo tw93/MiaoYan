@@ -12,7 +12,7 @@ class CodeTextProcessor {
         var paragraphList = [String]()
 
         let string = textStorage.string as NSString
-        string.enumerateSubstrings(in: NSRange(0..<string.length), options: .byParagraphs) {value, range, _, _ in
+        string.enumerateSubstrings(in: NSRange(0..<string.length), options: .byParagraphs) { value, range, _, _ in
             paragraphRanges.append(range)
             paragraphList.append(value!)
         }
@@ -135,7 +135,8 @@ class CodeTextProcessor {
     }
 
     public func getBlockRanges(ranges: [NSRange],
-                               pars: [String]) -> [NSRange]? {
+                               pars: [String]) -> [NSRange]?
+    {
         let digitSet = CharacterSet.decimalDigits
         var codeBlocks = [NSRange]()
         var index = 0
@@ -152,7 +153,8 @@ class CodeTextProcessor {
                 }
 
                 if let char = prevParagraph.unicodeScalars.first,
-                    (digitSet.contains(char) && prevParagraph.starts(with: "\(char). ")) || prevParagraph.starts(with: "- ") || prevParagraph.starts(with: " - ") || prevParagraph.starts(with: "*") {
+                   (digitSet.contains(char) && prevParagraph.starts(with: "\(char). ")) || prevParagraph.starts(with: "- ") || prevParagraph.starts(with: " - ") || prevParagraph.starts(with: "*")
+                {
                     skipFlag = true
                     index += 1
                     continue

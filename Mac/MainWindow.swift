@@ -10,7 +10,7 @@ class MainWindow: NSWindow {
             let x = (screenWidth - frame.width) / 2
             let y = (screenHeight - frame.height) / 2
             let rect = NSRect(x: x, y: y, width: frame.width, height: 680)
-            self.setFrame(rect, display: true)
+            setFrame(rect, display: true)
         }
     }
 

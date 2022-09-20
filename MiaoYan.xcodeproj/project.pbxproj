@@ -226,7 +226,6 @@
 		D140A66628BB1ACA00637ED1 /* ConfigurationKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigurationKey.swift; sourceTree = "<group>"; };
 		D140A66728BB1ACA00637ED1 /* ProseWrapStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProseWrapStrategy.swift; sourceTree = "<group>"; };
 		D140A66828BB1ACA00637ED1 /* HTMLWhitespaceSensitivityStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTMLWhitespaceSensitivityStrategy.swift; sourceTree = "<group>"; };
-		D140A66A28BB1ACA00637ED1 /* standalone.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = standalone.js; path = ../js/standalone.js; sourceTree = "<group>"; };
 		D140A66B28BB1ACA00637ED1 /* FormatWithCursorResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormatWithCursorResult.swift; sourceTree = "<group>"; };
 		D140A66C28BB1ACA00637ED1 /* PrettierFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrettierFormatter.swift; sourceTree = "<group>"; };
 		D140A67028BB1ACA00637ED1 /* MarkdownParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkdownParser.swift; sourceTree = "<group>"; };
@@ -470,7 +469,6 @@
 		D140A66028BB1ACA00637ED1 /* Configuration */ = {
 			isa = PBXGroup;
 			children = (
-				D140A66A28BB1ACA00637ED1 /* standalone.js */,
 				D140A66128BB1ACA00637ED1 /* TrailingCommaStrategy.swift */,
 				D140A66228BB1ACA00637ED1 /* EndOfLineStrategy.swift */,
 				D140A66328BB1ACA00637ED1 /* ArrowFunctionParenthesesStrategy.swift */,
@@ -798,6 +796,7 @@
 				"${BUILT_PRODUCTS_DIR}/SSZipArchive/SSZipArchive.framework",
 				"${PODS_ROOT}/Sparkle/Sparkle.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
+				"${BUILT_PRODUCTS_DIR}/anim/anim.framework",
 				"${BUILT_PRODUCTS_DIR}/libcmark_gfm/libcmark_gfm.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -808,6 +807,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SSZipArchive.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Sparkle.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/anim.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libcmark_gfm.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;

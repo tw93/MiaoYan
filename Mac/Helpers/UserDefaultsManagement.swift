@@ -539,7 +539,7 @@ public enum UserDefaultsManagement {
                 if FileManager.default.isWritableFile(atPath: storagePath as! String) {
                     return storagePath as? String
                 } else {
-                    print("Storage path not accessible, settings resetted to default")
+                    print("Storage path not accessible, settings resettled to default")
                 }
             }
 

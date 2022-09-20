@@ -29,7 +29,7 @@ class NoteCellView: NSTableCellView {
         super.draw(dirtyRect)
 
         renderPin()
-        udpateSelectionHighlight()
+        updateSelectionHighlight()
 
         pin.frame.origin.y = CGFloat(-4) + CGFloat(cellSpacing) + CGFloat(0)
 
@@ -45,14 +45,14 @@ class NoteCellView: NSTableCellView {
     // these views' color when the cell is selected.
     override var backgroundStyle: NSView.BackgroundStyle {
         set {
-            udpateSelectionHighlight()
+            updateSelectionHighlight()
         }
         get {
             super.backgroundStyle
         }
     }
 
-    public func udpateSelectionHighlight() {
+    public func updateSelectionHighlight() {
         if backgroundStyle == NSView.BackgroundStyle.dark {
             date.textColor = NSColor.white
             name.textColor = NSColor.white
@@ -133,6 +133,6 @@ class NoteCellView: NSTableCellView {
             date.stringValue = note.getDateForLabel()
         }
 
-        udpateSelectionHighlight()
+        updateSelectionHighlight()
     }
 }

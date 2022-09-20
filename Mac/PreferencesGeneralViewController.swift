@@ -25,6 +25,12 @@ class PreferencesGeneralViewController: NSViewController {
     @IBOutlet var previewWidth: NSPopUpButton!
     @IBOutlet var codeFontName: NSPopUpButton!
 
+    @IBOutlet var editorFontWidthConstraint: NSLayoutConstraint!
+    @IBOutlet var previewFontWidthConstraint: NSLayoutConstraint!
+    @IBOutlet var windowFontWidthConstraint: NSLayoutConstraint!
+    @IBOutlet var languageFontWidthConstraint: NSLayoutConstraint!
+    @IBOutlet var codeFontWidthConstraint: NSLayoutConstraint!
+
     @IBOutlet var editorLineBreak: NSPopUpButton!
     @IBOutlet var buttonShow: NSPopUpButton!
 
@@ -33,6 +39,13 @@ class PreferencesGeneralViewController: NSViewController {
     let storage = Storage.sharedInstance()
 
     override func viewDidLoad() {
+        // 为了隐藏xcode警告的被迫操作
+        editorFontWidthConstraint.constant = 100.0
+        previewFontWidthConstraint.constant = 100.0
+        windowFontWidthConstraint.constant = 100.0
+        languageFontWidthConstraint.constant = 100.0
+        codeFontWidthConstraint.constant = 100.0
+
         super.viewDidLoad()
     }
 

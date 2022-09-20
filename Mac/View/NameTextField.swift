@@ -5,9 +5,9 @@ class NameTextField: NSTextField {
         let status = super.becomeFirstResponder()
 
         if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-            self.textColor = NSColor.init(named: "mainText")
+            textColor = NSColor(named: "mainText")
         } else {
-            self.textColor = NSColor.black
+            textColor = NSColor.black
         }
 
         return status

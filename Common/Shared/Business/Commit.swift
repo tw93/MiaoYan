@@ -13,10 +13,10 @@ class Commit {
     }
 
     public func getDate() -> String? {
-        return date
+        date
     }
 
     public func getHash() -> String {
-        return hash
+        hash
     }
 }

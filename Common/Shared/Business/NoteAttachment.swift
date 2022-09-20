@@ -31,7 +31,8 @@ class NoteAttachment {
             let imageName = url.removingFragment().absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
 
             if let directory = cache,
-               let imageName = imageName {
+               let imageName = imageName
+            {
                 imageCache = directory.appendingPathComponent(imageName)
             }
         }
@@ -69,7 +70,7 @@ class NoteAttachment {
             .kern: UserDefaultsManagement.DefaultEditorLetterSpacing
         ] as [NSAttributedString.Key: Any]
 
-        mutableAttributedString.addAttributes(attributes, range: NSRange(0..<1))
+        mutableAttributedString.addAttributes(attributes, range: NSRange(0 ..< 1))
 
         return mutableAttributedString
     }
@@ -81,7 +82,8 @@ class NoteAttachment {
             var isDirectory = ObjCBool(true)
 
             if let cacheDir = cacheDir,
-               !FileManager.default.fileExists(atPath: cacheDir.path, isDirectory: &isDirectory) || !isDirectory.boolValue {
+               !FileManager.default.fileExists(atPath: cacheDir.path, isDirectory: &isDirectory) || !isDirectory.boolValue
+            {
                 try FileManager.default.createDirectory(at: cacheDir, withIntermediateDirectories: false, attributes: nil)
             }
 
@@ -112,7 +114,7 @@ class NoteAttachment {
             height = imageProperties?[kCGImagePropertyPixelHeight] as? Int ?? 0
             orientation = imageProperties?[kCGImagePropertyOrientation] as? Int ?? 0
 
-            if case 5...8 = orientation {
+            if case 5 ... 8 = orientation {
                 height = imageProperties?[kCGImagePropertyPixelWidth] as? Int ?? 0
                 width = imageProperties?[kCGImagePropertyPixelHeight] as? Int ?? 0
             }

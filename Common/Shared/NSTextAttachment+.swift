@@ -1,7 +1,7 @@
 #if os(OSX)
-import Cocoa
+    import Cocoa
 #else
-import UIKit
+    import UIKit
 #endif
 
 extension NSTextAttachment {

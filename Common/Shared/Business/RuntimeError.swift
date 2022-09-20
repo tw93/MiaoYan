@@ -6,6 +6,6 @@ struct RuntimeError: Error {
     }
 
     public var localizedDescription: String {
-        return message
+        message
     }
 }

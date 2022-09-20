@@ -1024,11 +1024,11 @@ CA
                             <constraint firstItem="s0A-Pa-PN8" firstAttribute="leading" secondItem="KBr-V4-nMQ" secondAttribute="leading" id="7zC-4l-JTq"/>
                             <constraint firstItem="OWg-LC-xkn" firstAttribute="leading" secondItem="4Xk-4f-czc" secondAttribute="leading" constant="34" id="89F-Ed-6cG"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="VRJ-V9-T1H" secondAttribute="trailing" constant="20" symbolic="YES" id="8Eu-yz-xJY"/>
-                            <constraint firstItem="6PF-7C-RLR" firstAttribute="leading" secondItem="O4C-hp-wJQ" secondAttribute="leading" id="8Ko-bY-tJ0"/>
                             <constraint firstItem="5lh-Cd-xzy" firstAttribute="leading" secondItem="KBr-V4-nMQ" secondAttribute="leading" id="8zb-AH-HnK"/>
                             <constraint firstItem="bwB-QU-Wbj" firstAttribute="centerY" secondItem="JVp-1k-yaa" secondAttribute="centerY" id="9Eu-bf-lMr"/>
                             <constraint firstItem="9BT-WY-5cD" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="R65-ng-mKz" secondAttribute="trailing" constant="8" symbolic="YES" id="9R9-0Z-0La"/>
                             <constraint firstItem="hGy-RZ-sE8" firstAttribute="leading" secondItem="dkg-Hb-c1w" secondAttribute="leading" id="9iJ-gp-GhR"/>
+                            <constraint firstItem="6PF-7C-RLR" firstAttribute="leading" secondItem="EMH-T5-er6" secondAttribute="trailing" constant="60" id="9qW-mt-fxe"/>
                             <constraint firstAttribute="bottom" secondItem="M4h-Tm-bV8" secondAttribute="bottom" constant="40" id="AFe-mI-ldi"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="nbv-Zo-swV" secondAttribute="trailing" constant="20" symbolic="YES" id="AIV-jt-oKD"/>
                             <constraint firstItem="OWg-LC-xkn" firstAttribute="top" secondItem="dkg-Hb-c1w" secondAttribute="bottom" constant="23" id="B8r-qa-9kj"/>
@@ -1056,6 +1056,7 @@ CA
                             <constraint firstItem="dkg-Hb-c1w" firstAttribute="leading" secondItem="81L-hB-Mc1" secondAttribute="leading" id="RlF-el-Kxn"/>
                             <constraint firstItem="bwB-QU-Wbj" firstAttribute="leading" secondItem="V00-bE-URD" secondAttribute="leading" id="SFO-bp-5QJ"/>
                             <constraint firstItem="V00-bE-URD" firstAttribute="centerY" secondItem="JmF-Jk-1fQ" secondAttribute="centerY" id="SZ0-c4-UVr"/>
+                            <constraint firstAttribute="trailing" secondItem="6PF-7C-RLR" secondAttribute="trailing" constant="64" id="T2T-MS-Has"/>
                             <constraint firstItem="TrE-Qn-Cw5" firstAttribute="top" secondItem="4Xk-4f-czc" secondAttribute="top" constant="40" id="TLP-yP-rrg"/>
                             <constraint firstAttribute="trailing" secondItem="9BT-WY-5cD" secondAttribute="trailing" constant="64" id="TLt-iW-EyH"/>
                             <constraint firstItem="KBr-V4-nMQ" firstAttribute="leading" secondItem="quk-zT-1KE" secondAttribute="leading" id="Tgm-n3-A6b"/>
@@ -1063,6 +1064,7 @@ CA
                             <constraint firstItem="4OB-NE-ZD8" firstAttribute="top" secondItem="Xvj-bR-0Af" secondAttribute="bottom" constant="10" id="VMT-6B-fSE"/>
                             <constraint firstItem="sK1-7b-9Ux" firstAttribute="leading" secondItem="hGy-RZ-sE8" secondAttribute="leading" id="VaD-VC-h92"/>
                             <constraint firstItem="sK1-7b-9Ux" firstAttribute="top" secondItem="hGy-RZ-sE8" secondAttribute="bottom" constant="10" id="Viv-OI-8eJ"/>
+                            <constraint firstItem="R65-ng-mKz" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5lh-Cd-xzy" secondAttribute="trailing" constant="8" symbolic="YES" id="W8V-7z-1Ya"/>
                             <constraint firstItem="Nyw-AY-Ude" firstAttribute="leading" secondItem="VRJ-V9-T1H" secondAttribute="leading" id="W9e-Pi-RA7"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="hU4-gw-1Hb" secondAttribute="trailing" constant="20" symbolic="YES" id="WTr-lv-sVP"/>
                             <constraint firstItem="VRJ-V9-T1H" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="s0A-Pa-PN8" secondAttribute="trailing" constant="8" symbolic="YES" id="WUI-le-oNY"/>
@@ -1118,6 +1120,7 @@ CA
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="81L-hB-Mc1" secondAttribute="trailing" constant="20" symbolic="YES" id="xeI-6p-Xx2"/>
                             <constraint firstItem="81L-hB-Mc1" firstAttribute="top" secondItem="nbv-Zo-swV" secondAttribute="bottom" constant="46" id="y1b-rv-TJV"/>
                             <constraint firstItem="6PF-7C-RLR" firstAttribute="firstBaseline" secondItem="EMH-T5-er6" secondAttribute="firstBaseline" id="yOi-HS-hdP"/>
+                            <constraint firstItem="EMH-T5-er6" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="sK1-7b-9Ux" secondAttribute="trailing" constant="8" symbolic="YES" id="yld-8r-dKI"/>
                             <constraint firstItem="TrE-Qn-Cw5" firstAttribute="leading" secondItem="81L-hB-Mc1" secondAttribute="leading" id="zLT-lX-g2m"/>
                         </constraints>
                     </view>
@@ -1128,19 +1131,25 @@ CA
                         <outlet property="appearanceLabel" destination="TrE-Qn-Cw5" id="6OY-nG-s9U"/>
                         <outlet property="buttonShow" destination="Nyw-AY-Ude" id="Yp9-FH-ogG"/>
                         <outlet property="codeFontName" destination="5lh-Cd-xzy" id="L0R-wn-jxQ"/>
+                        <outlet property="codeFontWidthConstraint" destination="UTd-hW-8Gf" id="dSY-dQ-Rqd"/>
                         <outlet property="defaultStoragePath" destination="dkg-Hb-c1w" id="ly3-HH-jj3"/>
                         <outlet property="editorFontName" destination="sK1-7b-9Ux" id="t31-SO-Rp7"/>
                         <outlet property="editorFontSize" destination="JPv-4n-4vL" id="meJ-LQ-abo"/>
+                        <outlet property="editorFontWidthConstraint" destination="B7P-q6-Pdl" id="73g-IM-sYU"/>
                         <outlet property="editorLineBreak" destination="M4h-Tm-bV8" id="ReA-gF-SdS"/>
+                        <outlet property="languageFontWidthConstraint" destination="jjP-Iu-goD" id="PGz-I4-Tm4"/>
                         <outlet property="languagePopUp" destination="I8N-rL-amz" id="47F-nH-5hW"/>
                         <outlet property="picPopUp" destination="4OB-NE-ZD8" id="0m0-2a-d2i"/>
+                        <outlet property="popUpWidthConstraint" destination="B7P-q6-Pdl" id="F6k-tA-e3n"/>
                         <outlet property="presentationFontSize" destination="2dj-xM-00O" id="hWn-td-ZHW"/>
                         <outlet property="previewFontName" destination="EMH-T5-er6" id="eM2-ad-fay"/>
                         <outlet property="previewFontSize" destination="hU4-gw-1Hb" id="Awy-QD-lry"/>
+                        <outlet property="previewFontWidthConstraint" destination="R7i-Pg-040" id="INf-bR-rM1"/>
                         <outlet property="previewLocation" destination="9BT-WY-5cD" id="ovV-wD-PdE"/>
                         <outlet property="previewWidth" destination="R65-ng-mKz" id="4zE-Mo-MA0"/>
                         <outlet property="previewWith" destination="R65-ng-mKz" id="k17-i8-qim"/>
                         <outlet property="windowFontName" destination="6PF-7C-RLR" id="oVB-yw-PFN"/>
+                        <outlet property="windowFontWidthConstraint" destination="mgB-uJ-Ggb" id="nlz-hQ-Urc"/>
                     </connections>
                 </viewController>
                 <customObject id="o4P-dg-Cec" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -1179,7 +1188,7 @@ CA
                             <splitView arrangesAllSubviews="NO" dividerStyle="thin" vertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dO0-pK-Ktm" customClass="SidebarSplitView" customModule="MiaoYan" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="1000" height="640"/>
                                 <subviews>
-                                    <customView autoresizesSubviews="NO" misplaced="YES" id="5sB-7J-vgE" customClass="StorageView" customModule="MiaoYan" customModuleProvider="target">
+                                    <customView autoresizesSubviews="NO" id="5sB-7J-vgE" customClass="StorageView" customModule="MiaoYan" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="196" height="640"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <subviews>
@@ -1278,10 +1287,10 @@ CA
                                                 </scroller>
                                             </scrollView>
                                             <customView autoresizesSubviews="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vp7-cq-QSI" customClass="OutlineHeaderView" customModule="MiaoYan" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="592" width="200" height="48"/>
+                                                <rect key="frame" x="0.0" y="592" width="196" height="48"/>
                                                 <subviews>
                                                     <button autoresizesSubviews="NO" toolTip="New Project" translatesAutoresizingMaskIntoConstraints="NO" id="Yei-Or-qiI" userLabel="Add Project">
-                                                        <rect key="frame" x="174" y="12" width="18" height="18"/>
+                                                        <rect key="frame" x="170" y="12" width="18" height="18"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="18" id="qVi-vf-K2q"/>
                                                             <constraint firstAttribute="height" constant="18" id="xZe-bb-IRl"/>
@@ -1306,7 +1315,7 @@ CA
                                             <constraint firstItem="vp7-cq-QSI" firstAttribute="top" secondItem="5sB-7J-vgE" secondAttribute="top" id="Xgz-yp-rlQ"/>
                                             <constraint firstAttribute="trailing" secondItem="vp7-cq-QSI" secondAttribute="trailing" id="ZNY-ja-tha"/>
                                             <constraint firstItem="vp7-cq-QSI" firstAttribute="leading" secondItem="5sB-7J-vgE" secondAttribute="leading" id="eGb-8z-ori"/>
-                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="200" id="tmy-ZK-4qh"/>
+                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="196" id="tmy-ZK-4qh"/>
                                         </constraints>
                                     </customView>
                                     <splitView fixedFrame="YES" arrangesAllSubviews="NO" autosaveName="" dividerStyle="thin" vertical="YES" id="yWu-3F-P62" customClass="EditorSplitView" customModule="MiaoYan" customModuleProvider="target">
@@ -1455,22 +1464,22 @@ CA
                                                     <constraint firstItem="Kzf-Jh-YEb" firstAttribute="top" secondItem="bd7-O3-GQF" secondAttribute="bottom" id="z4N-Ag-s6x"/>
                                                 </constraints>
                                             </customView>
-                                            <customView autoresizesSubviews="NO" misplaced="YES" id="at7-wA-VAS" customClass="EditorView" customModule="MiaoYan" customModuleProvider="target">
+                                            <customView autoresizesSubviews="NO" id="at7-wA-VAS" customClass="EditorView" customModule="MiaoYan" customModuleProvider="target">
                                                 <rect key="frame" x="238" y="0.0" width="565" height="640"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="qJO-7f-vkL" customClass="EditorScrollView" customModule="MiaoYan" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="561" height="588"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="565" height="588"/>
                                                         <clipView key="contentView" focusRingType="none" drawsBackground="NO" copiesOnScroll="NO" id="FJ2-Yo-v0A">
-                                                            <rect key="frame" x="0.0" y="0.0" width="561" height="588"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="565" height="588"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <textView focusRingType="none" verticallyResizable="YES" usesFontPanel="YES" findStyle="bar" allowsCharacterPickerTouchBarItem="NO" allowsDocumentBackgroundColorChange="YES" allowsUndo="YES" usesRuler="YES" textCompletion="NO" smartInsertDelete="YES" id="cmZ-KL-T9k" customClass="EditTextView" customModule="MiaoYan" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="561" height="588"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="565" height="588"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="mainBackground"/>
-                                                                    <size key="minSize" width="561" height="588"/>
+                                                                    <size key="minSize" width="565" height="588"/>
                                                                     <size key="maxSize" width="817" height="10000000"/>
                                                                     <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                                 </textView>
@@ -1492,7 +1501,7 @@ CA
                                                         </scroller>
                                                     </scrollView>
                                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="B2U-rx-xCL">
-                                                        <rect key="frame" x="161" y="200" width="240" height="240"/>
+                                                        <rect key="frame" x="163" y="200" width="240" height="240"/>
                                                         <subviews>
                                                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" alphaValue="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="Gz4-4G-Fts">
                                                                 <rect key="frame" x="37" y="54" width="166" height="166"/>
@@ -1517,10 +1526,10 @@ CA
                                                         </constraints>
                                                     </customView>
                                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="xSU-Mk-2F1" customClass="TitleBarView" customModule="MiaoYan" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="588" width="559" height="52"/>
+                                                        <rect key="frame" x="0.0" y="588" width="563" height="52"/>
                                                         <subviews>
                                                             <textField autoresizesSubviews="NO" focusRingType="none" horizontalHuggingPriority="1" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="rZx-hk-GcJ" customClass="TitleTextField" customModule="MiaoYan" customModuleProvider="target">
-                                                                <rect key="frame" x="25" y="10" width="378" height="32"/>
+                                                                <rect key="frame" x="25" y="10" width="382" height="32"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="32" id="3QH-0a-na2"/>
                                                                 </constraints>
@@ -1534,7 +1543,7 @@ CA
                                                                 </connections>
                                                             </textField>
                                                             <customView horizontalHuggingPriority="249" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="Ua8-RE-q01">
-                                                                <rect key="frame" x="419" y="0.0" width="140" height="52"/>
+                                                                <rect key="frame" x="423" y="0.0" width="140" height="52"/>
                                                                 <subviews>
                                                                     <button toolTip="Format" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Adc-zl-sqX">
                                                                         <rect key="frame" x="41" y="14" width="16" height="25"/>

@@ -3,11 +3,12 @@ import Foundation
 
 public extension String {
     func condenseWhitespace() -> String {
-        let components = self.components(separatedBy: NSCharacterSet.whitespacesAndNewlines)
+        let components = components(separatedBy: NSCharacterSet.whitespacesAndNewlines)
         return components.filter { !$0.isEmpty }.joined(separator: " ")
     }
 
     // Search the string for the existence of any of the terms in the provided array of terms.
+
     // Inspired by magic from https://stackoverflow.com/a/41902740/2778502
     func localizedStandardContains<S: StringProtocol>(_ terms: [S]) -> Bool {
         terms.first(where: { self.localizedStandardContains($0) }) != nil
@@ -37,7 +38,7 @@ public extension String {
 
     func localizedCaseInsensitiveContainsTerms(_ terms: [Substring]) -> Bool {
         // Use magic from https://stackoverflow.com/a/41902740/2778502
-        terms.first(where: { !self.localizedLowercase.contains($0) }) == nil
+        terms.first(where: { !localizedLowercase.contains($0) }) == nil
     }
 
     func startsWith(string: String) -> Bool {
@@ -48,7 +49,7 @@ public extension String {
     }
 
     func removeLastNewLine() -> String {
-        if self.last == "\n" {
+        if last == "\n" {
             return String(self.dropLast())
         }
 
@@ -107,7 +108,7 @@ public extension String {
     }
 
     var md5: String {
-        let data = Data(self.utf8)
+        let data = Data(utf8)
         let hash = data.withUnsafeBytes { (bytes: UnsafeRawBufferPointer) -> [UInt8] in
             var hash = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
             CC_MD5(bytes.baseAddress, CC_LONG(data.count), &hash)
@@ -121,7 +122,7 @@ public extension String {
 
         let whitespaceChars = NSCharacterSet.whitespacesAndNewlines
 
-        return self.unicodeScalars
+        return unicodeScalars
             .filter { (unicodeScalar: UnicodeScalar) -> Bool in !whitespaceChars.contains(unicodeScalar) }
             .count == 0
     }

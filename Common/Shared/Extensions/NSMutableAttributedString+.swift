@@ -6,15 +6,16 @@ import UIKit
 import Cocoa
 #endif
 
-extension NSMutableAttributedString {
-    public func unLoadImages(note: Note? = nil) -> NSMutableAttributedString {
+public extension NSMutableAttributedString {
+    func unLoadImages(note: Note? = nil) -> NSMutableAttributedString {
         var offset = 0
-        let content = self.mutableCopy() as? NSMutableAttributedString
+        let content = mutableCopy() as? NSMutableAttributedString
 
-        self.enumerateAttribute(.attachment, in: NSRange(location: 0, length: self.length)) { (value, range, _) in
+        enumerateAttribute(.attachment, in: NSRange(location: 0, length: length)) { value, range, _ in
 
             if let textAttachment = value as? NSTextAttachment,
-                self.attribute(.todo, at: range.location, effectiveRange: nil) == nil {
+               self.attribute(.todo, at: range.location, effectiveRange: nil) == nil
+            {
                 var path: String?
                 var title: String?
 
@@ -22,14 +23,15 @@ extension NSMutableAttributedString {
                 let titleKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.title")
 
                 if let filePath = self.attribute(filePathKey, at: range.location, effectiveRange: nil) as? String {
-
                     path = filePath.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
                     title = self.attribute(titleKey, at: range.location, effectiveRange: nil) as? String
                 } else if let note = note,
-                    let imageData = textAttachment.fileWrapper?.regularFileContents {
+                          let imageData = textAttachment.fileWrapper?.regularFileContents
+                {
                     path = ImagesProcessor.writeFile(data: imageData, note: note)
                 } else if let note = note,
-                    let imageData = textAttachment.contents {
+                          let imageData = textAttachment.contents
+                {
                     path = ImagesProcessor.writeFile(data: imageData, note: note)
                 }
 
@@ -48,16 +50,16 @@ extension NSMutableAttributedString {
         return content!
     }
 
-    public func unLoadCheckboxes() -> NSMutableAttributedString {
+    func unLoadCheckboxes() -> NSMutableAttributedString {
         var offset = 0
-        let content = self.mutableCopy() as? NSMutableAttributedString
+        let content = mutableCopy() as? NSMutableAttributedString
 
-        self.enumerateAttribute(.attachment, in: NSRange(location: 0, length: self.length)) { (value, range, _) in
+        enumerateAttribute(.attachment, in: NSRange(location: 0, length: length)) { value, range, _ in
             if value != nil {
                 let newRange = NSRange(location: range.location + offset, length: 1)
 
                 guard range.length == 1,
-                    let value = self.attribute(.todo, at: range.location, effectiveRange: nil) as? Int
+                      let value = self.attribute(.todo, at: range.location, effectiveRange: nil) as? Int
                 else { return }
 
                 var gfm = "- [ ]"
@@ -72,15 +74,15 @@ extension NSMutableAttributedString {
         return content!
     }
 
-    public func unLoad() -> NSMutableAttributedString {
-        return unLoadCheckboxes().unLoadImages()
+    func unLoad() -> NSMutableAttributedString {
+        unLoadCheckboxes().unLoadImages()
     }
 
     #if os(OSX)
-    public func unLoadUnderlines() -> NSMutableAttributedString {
-        self.enumerateAttribute(.underlineStyle, in: NSRange(location: 0, length: self.length)) { (value, range, _) in
+    func unLoadUnderlines() -> NSMutableAttributedString {
+        enumerateAttribute(.underlineStyle, in: NSRange(location: 0, length: length)) { value, range, _ in
             if value != nil {
-                self.addAttribute(.underlineColor, value: NSColor.black, range: range)
+                addAttribute(.underlineColor, value: NSColor.black, range: range)
             }
         }
 
@@ -88,10 +90,10 @@ extension NSMutableAttributedString {
     }
     #endif
 
-    public func loadUnderlines() {
-        self.enumerateAttribute(.underlineStyle, in: NSRange(location: 0, length: self.length)) { (value, range, _) in
+    func loadUnderlines() {
+        enumerateAttribute(.underlineStyle, in: NSRange(location: 0, length: length)) { value, range, _ in
             if value != nil {
-                self.addAttribute(.underlineColor, value: NotesTextProcessor.underlineColor, range: range)
+                addAttribute(.underlineColor, value: NotesTextProcessor.underlineColor, range: range)
             }
         }
     }

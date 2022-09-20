@@ -1,12 +1,12 @@
-import Cocoa
 import AVKit
+import Cocoa
 
-extension NoteAttachment {
-    public func load(lazy: Bool = true) -> NSTextAttachment? {
+public extension NoteAttachment {
+    func load(lazy: Bool = true) -> NSTextAttachment? {
         let attachment = NSTextAttachment()
 
-        let imageSize = getSize(url: self.url)
-        var size = self.getSize(width: imageSize.width, height: imageSize.height)
+        let imageSize = getSize(url: url)
+        var size = getSize(width: imageSize.width, height: imageSize.height)
 
         if url.isImage {
             attachment.bounds = CGRect(x: 0, y: 0, width: size.width, height: size.height)
@@ -32,14 +32,14 @@ extension NoteAttachment {
         return nil
     }
 
-    public func getSize(width: CGFloat, height: CGFloat) -> NSSize {
+    func getSize(width: CGFloat, height: CGFloat) -> NSSize {
         var maxWidth = UserDefaultsManagement.imagesWidth
 
         if maxWidth == Float(1000) {
             maxWidth = Float(width)
         }
 
-        let ratio: Float = Float(maxWidth) / Float(width)
+        let ratio = Float(maxWidth) / Float(width)
         var size = NSSize(width: Int(width), height: Int(height))
 
         if ratio < 1 {
@@ -49,13 +49,12 @@ extension NoteAttachment {
         return size
     }
 
-    public static func getImageAndCacheData(url: URL, note: Note) -> Image? {
+    static func getImageAndCacheData(url: URL, note: Note) -> Image? {
         var data: Data?
 
         let cacheDirectoryUrl = note.project.url.appendingPathComponent("/.cache/")
 
         if url.isRemote() || url.pathExtension.lowercased() == "png", let cacheName = url.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) {
-
             let imageCacheUrl = cacheDirectoryUrl.appendingPathComponent(cacheName)
 
             if !FileManager.default.fileExists(atPath: imageCacheUrl.path) {
@@ -86,7 +85,7 @@ extension NoteAttachment {
         return Image(data: imageData)
     }
 
-    public static func getImage(url: URL, size: CGSize) -> NSImage? {
+    static func getImage(url: URL, size: CGSize) -> NSImage? {
         let imageData = try? Data(contentsOf: url)
         var finalImage: NSImage?
 
@@ -104,13 +103,11 @@ extension NoteAttachment {
         var thumbImage: NSImage?
         thumbImage = finalImage
 
-        if let cacheURL = self.getCacheUrl(from: url, prefix: "ThumbnailsBig"), FileManager.default.fileExists(atPath: cacheURL.path) {
+        if let cacheURL = getCacheUrl(from: url, prefix: "ThumbnailsBig"), FileManager.default.fileExists(atPath: cacheURL.path) {
             thumbImage = NSImage(contentsOfFile: cacheURL.path)
-        } else if
-            let resizedImage = image.resized(to: size) {
+        } else if let resizedImage = image.resized(to: size) {
             thumbImage = resizedImage
-
-            self.savePreviewImage(url: url, image: resizedImage, prefix: "ThumbnailsBig")
+            savePreviewImage(url: url, image: resizedImage, prefix: "ThumbnailsBig")
         }
 
         return thumbImage

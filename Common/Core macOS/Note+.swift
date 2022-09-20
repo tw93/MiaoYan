@@ -1,5 +1,3 @@
 import Foundation
 
-extension Note {
-
-}
+extension Note {}

@@ -105,7 +105,7 @@ class Storage {
         projects.first(where: { $0.isTrash })
     }
 
-    private func chechSub(url: URL, parent: Project) -> [Project] {
+    private func checkSub(url: URL, parent: Project) -> [Project] {
         var added = [Project]()
         let parentPath = url.path + "/i/"
         let filesPath = url.path + "/files/"
@@ -121,21 +121,21 @@ class Storage {
                     return added
                 }
 
-                let surl = subFolder as URL
+                let subUrl = subFolder as URL
 
-                guard !projectExist(url: surl),
-                      surl.lastPathComponent != "i",
-                      surl.lastPathComponent != "files",
-                      !surl.path.contains(".Trash"),
-                      !surl.path.contains("Trash"),
-                      !surl.path.contains("/."),
-                      !surl.path.contains(parentPath),
-                      !surl.path.contains(filesPath),
-                      !surl.path.contains(".textbundle")
+                guard !projectExist(url: subUrl),
+                      subUrl.lastPathComponent != "i",
+                      subUrl.lastPathComponent != "files",
+                      !subUrl.path.contains(".Trash"),
+                      !subUrl.path.contains("Trash"),
+                      !subUrl.path.contains("/."),
+                      !subUrl.path.contains(parentPath),
+                      !subUrl.path.contains(filesPath),
+                      !subUrl.path.contains(".textbundle")
                 else {
                     continue
                 }
-                let project = Project(url: surl, label: surl.lastPathComponent, parent: parent)
+                let project = Project(url: subUrl, label: subUrl.lastPathComponent, parent: parent)
                 projects.append(project)
                 added.append(project)
             }
@@ -229,7 +229,7 @@ class Storage {
 
         // 防止单文件模式太卡
         if project.isRoot, !UserDefaultsManagement.isSingleMode {
-            let addedSubProjects = chechSub(url: project.url, parent: project)
+            let addedSubProjects = checkSub(url: project.url, parent: project)
             added = added + addedSubProjects
         }
 
@@ -393,7 +393,7 @@ class Storage {
     private func sortQuery(note: Note, next: Note, project: Project?) -> Bool {
         let sortDirection: SortDirection = UserDefaultsManagement.sortDirection ? .desc : .asc
 
-        let sort =  UserDefaultsManagement.sort
+        let sort = UserDefaultsManagement.sort
 
         if note.isPinned == next.isPinned {
             switch sort {
@@ -466,6 +466,15 @@ class Storage {
         }
     }
 
+    public func unload(project: Project) {
+        let notes = noteList.filter { $0.project == project }
+        for note in notes {
+            if let i = noteList.firstIndex(where: { $0 === note }) {
+                noteList.remove(at: i)
+            }
+        }
+    }
+
     public func reLoadTrash() {
         noteList.removeAll(where: { $0.isTrash() })
 
@@ -486,7 +495,7 @@ class Storage {
             return
                 directoryFiles.filter {
                     allowedExtensions.contains($0.pathExtension)
-                        && self.isValidUTI(url: $0)
+                        && isValidUTI(url: $0)
                 }
                 .map {
                     url in
@@ -533,7 +542,7 @@ class Storage {
             noteList.remove(at: i)
         }
     }
-    
+
     func getNextId() -> Int {
         noteList.count
     }
@@ -659,7 +668,7 @@ class Storage {
         let urls = fileEnumerator.allObjects.filter {
             !extensions.contains(($0 as? NSURL)!.pathExtension!) && !lastPatch.contains(($0 as? NSURL)!.lastPathComponent!)
         } as! [NSURL]
-        var subdirs = [NSURL]()
+        var subDirs = [NSURL]()
         var i = 0
 
         for url in urls {
@@ -674,7 +683,7 @@ class Storage {
                 if isDirectoryResourceValue as? Bool == true,
                    isPackageResourceValue as? Bool == false
                 {
-                    subdirs.append(url)
+                    subDirs.append(url)
                 }
             } catch let error as NSError {
                 print("Error: ", error.localizedDescription)
@@ -685,7 +694,7 @@ class Storage {
             }
         }
 
-        return subdirs
+        return subDirs
     }
 
     public func getCurrentProject() -> Project? {
@@ -715,7 +724,7 @@ class Storage {
 
             let files =
                 directoryFiles.filter {
-                    !self.isDownloaded(url: $0)
+                    !isDownloaded(url: $0)
                 }
 
             let images = files.map {

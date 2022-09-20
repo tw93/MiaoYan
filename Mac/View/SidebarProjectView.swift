@@ -7,9 +7,10 @@ import Foundation
 import MiaoYanCore_macOS
 
 class SidebarProjectView: NSOutlineView,
-        NSOutlineViewDelegate,
-        NSOutlineViewDataSource,
-        NSMenuItemValidation {
+    NSOutlineViewDelegate,
+    NSOutlineViewDataSource,
+    NSMenuItemValidation
+{
     var sidebarItems: [Any]?
     var viewDelegate: ViewController?
 
@@ -343,7 +344,8 @@ class SidebarProjectView: NSOutlineView,
 
             if sidebar.indices.contains(i), let item = sidebar[i] as? SidebarItem {
                 if UserDataService.instance.lastType == item.type.rawValue, UserDataService.instance.lastProject == item.project?.url,
-                   UserDataService.instance.lastName == item.name {
+                   UserDataService.instance.lastName == item.name
+                {
                     return
                 }
 
@@ -369,7 +371,8 @@ class SidebarProjectView: NSOutlineView,
                 if self.isFirstLaunch {
                     if let url = UserDefaultsManagement.lastSelectedURL,
                        let lastNote = vd.storage.getBy(url: url),
-                       let i = vd.notesTableView.getIndex(lastNote) {
+                       let i = vd.notesTableView.getIndex(lastNote)
+                    {
                         vd.notesTableView.selectRow(i)
 
                         DispatchQueue.main.async {
@@ -417,10 +420,10 @@ class SidebarProjectView: NSOutlineView,
         }
 
         guard
-                let sidebarItem = si[selected] as? SidebarItem,
-                sidebarItem.type == .Category,
-                let projectRow = v.rowView(atRow: selected, makeIfNecessary: false),
-                let cell = projectRow.view(atColumn: 0) as? SidebarCellView
+            let sidebarItem = si[selected] as? SidebarItem,
+            sidebarItem.type == .Category,
+            let projectRow = v.rowView(atRow: selected, makeIfNecessary: false),
+            let cell = projectRow.view(atColumn: 0) as? SidebarCellView
         else {
             return
         }
