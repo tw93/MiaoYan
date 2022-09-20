@@ -14,8 +14,7 @@ public extension NSMutableAttributedString {
         enumerateAttribute(.attachment, in: NSRange(location: 0, length: length)) { value, range, _ in
 
             if let textAttachment = value as? NSTextAttachment,
-               self.attribute(.todo, at: range.location, effectiveRange: nil) == nil
-            {
+               self.attribute(.todo, at: range.location, effectiveRange: nil) == nil {
                 var path: String?
                 var title: String?
 
@@ -26,12 +25,10 @@ public extension NSMutableAttributedString {
                     path = filePath.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
                     title = self.attribute(titleKey, at: range.location, effectiveRange: nil) as? String
                 } else if let note = note,
-                          let imageData = textAttachment.fileWrapper?.regularFileContents
-                {
+                          let imageData = textAttachment.fileWrapper?.regularFileContents {
                     path = ImagesProcessor.writeFile(data: imageData, note: note)
                 } else if let note = note,
-                          let imageData = textAttachment.contents
-                {
+                          let imageData = textAttachment.contents {
                     path = ImagesProcessor.writeFile(data: imageData, note: note)
                 }
 

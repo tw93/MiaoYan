@@ -135,8 +135,7 @@ class CodeTextProcessor {
     }
 
     public func getBlockRanges(ranges: [NSRange],
-                               pars: [String]) -> [NSRange]?
-    {
+                               pars: [String]) -> [NSRange]? {
         let digitSet = CharacterSet.decimalDigits
         var codeBlocks = [NSRange]()
         var index = 0
@@ -153,8 +152,7 @@ class CodeTextProcessor {
                 }
 
                 if let char = prevParagraph.unicodeScalars.first,
-                   (digitSet.contains(char) && prevParagraph.starts(with: "\(char). ")) || prevParagraph.starts(with: "- ") || prevParagraph.starts(with: " - ") || prevParagraph.starts(with: "*")
-                {
+                   (digitSet.contains(char) && prevParagraph.starts(with: "\(char). ")) || prevParagraph.starts(with: "- ") || prevParagraph.starts(with: " - ") || prevParagraph.starts(with: "*") {
                     skipFlag = true
                     index += 1
                     continue

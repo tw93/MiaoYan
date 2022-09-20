@@ -9,7 +9,6 @@ def mac_pods
     pod 'AppCenter'
     pod 'Alamofire'
     pod 'SwiftyJSON'
-    pod 'anim'
 end
 
 def ios_pods
