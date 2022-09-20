@@ -31,8 +31,7 @@ class NoteAttachment {
             let imageName = url.removingFragment().absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
 
             if let directory = cache,
-               let imageName = imageName
-            {
+               let imageName = imageName {
                 imageCache = directory.appendingPathComponent(imageName)
             }
         }
@@ -82,8 +81,7 @@ class NoteAttachment {
             var isDirectory = ObjCBool(true)
 
             if let cacheDir = cacheDir,
-               !FileManager.default.fileExists(atPath: cacheDir.path, isDirectory: &isDirectory) || !isDirectory.boolValue
-            {
+               !FileManager.default.fileExists(atPath: cacheDir.path, isDirectory: &isDirectory) || !isDirectory.boolValue {
                 try FileManager.default.createDirectory(at: cacheDir, withIntermediateDirectories: false, attributes: nil)
             }
 

@@ -19,3 +19,4 @@ disabled_rules:
   - type_body_length
   - type_name
   - identifier_name
+  - opening_brace

@@ -6,7 +6,7 @@ import Cocoa
 typealias ImageView = NSImageView
 #endif
 
-public extension NoteCellView {
+extension NoteCellView {
     func loadImagesPreview(position: Int? = nil, urls: [URL]? = nil) {
         DispatchQueue.global(qos: .userInteractive).async {
             let current = Date().toMillis()

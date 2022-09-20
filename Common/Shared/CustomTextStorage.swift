@@ -9,8 +9,7 @@ extension NSTextStorage: NSTextStorageDelegate {
     public func textStorage(
         _ textStorage: NSTextStorage,
         didProcessEditing editedMask: NSTextStorage.EditActions,
-        range editedRange: NSRange, changeInLength delta: Int)
-    {
+        range editedRange: NSRange, changeInLength delta: Int) {
         guard editedMask != .editedAttributes else { return }
         process(textStorage: textStorage, range: editedRange, changeInLength: delta)
     }
@@ -19,8 +18,7 @@ extension NSTextStorage: NSTextStorageDelegate {
         _ textStorage: NSTextStorage,
         didProcessEditing editedMask: NSTextStorageEditActions,
         range editedRange: NSRange,
-        changeInLength delta: Int)
-    {
+        changeInLength delta: Int) {
         guard editedMask != .editedAttributes else { return }
         process(textStorage: textStorage, range: editedRange, changeInLength: delta)
     }
@@ -83,8 +81,7 @@ extension NSTextStorage: NSTextStorageDelegate {
             if delta == 1,
                textStorage.mutableString.substring(with: editedRange) == "\n",
                textStorage.length >= fencedRange.upperBound + 1,
-               textStorage.attribute(.backgroundColor, at: fencedRange.upperBound, effectiveRange: nil) != nil
-            {
+               textStorage.attribute(.backgroundColor, at: fencedRange.upperBound, effectiveRange: nil) != nil {
                 textStorage.removeAttribute(.backgroundColor, range: NSRange(location: fencedRange.upperBound, length: 1))
             }
 

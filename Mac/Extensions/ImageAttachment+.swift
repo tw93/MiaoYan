@@ -1,7 +1,7 @@
 import AVKit
 import Cocoa
 
-public extension NoteAttachment {
+extension NoteAttachment {
     func load(lazy: Bool = true) -> NSTextAttachment? {
         let attachment = NSTextAttachment()
 
