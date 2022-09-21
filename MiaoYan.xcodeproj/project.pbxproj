@@ -25,6 +25,7 @@
 		27D95122285B5E4400F40306 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D95121285B5E4400F40306 /* Toast.swift */; };
 		27D9A4F72873D345006317AD /* FileManager+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D9A4F62873D345006317AD /* FileManager+.swift */; };
 		3680D9AAFD00848F18DD5EF5 /* NSColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3680D9AA33A891E0F14496C6 /* NSColor+.swift */; };
+		3680DE38C941303E615282C4 /* MPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3680DA19202046722D9BEEA2 /* MPreviewView.swift */; };
 		6F13BB1620FEDDF50005E120 /* MiaoYanCore_macOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F13BB0620FEDDF50005E120 /* MiaoYanCore_macOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F13BB6A20FEE0450005E120 /* DateFormatter+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F13BB2820FEDE230005E120 /* DateFormatter+.swift */; };
 		6F13BB6C20FEE04A0005E120 /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F13BB2920FEDE230005E120 /* String+.swift */; };
@@ -63,7 +64,6 @@
 		D72189362102099B00FE3AF2 /* NSTextStorage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72189352102099B00FE3AF2 /* NSTextStorage+.swift */; };
 		D721894121020DDF00FE3AF2 /* UserDefaultsManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76447DB1F3A4F0700965F01 /* UserDefaultsManagement.swift */; };
 		D7218945210211D800FE3AF2 /* SortBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7679375201F0BFD000F7BBF /* SortBy.swift */; };
-		D730829223084340003185D1 /* MPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730829123084340003185D1 /* MPreviewView.swift */; };
 		D730BD27222BF30700E69C93 /* KeychainConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730BD26222BF30700E69C93 /* KeychainConfiguration.swift */; };
 		D730BD2A222BF32A00E69C93 /* KeychainPasswordItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D730BD29222BF32A00E69C93 /* KeychainPasswordItem.swift */; };
 		D730BD2C222DA97800E69C93 /* NoteType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D708AC662000EF5800A1760F /* NoteType.swift */; };
@@ -208,6 +208,7 @@
 		27D95121285B5E4400F40306 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		27D9A4F62873D345006317AD /* FileManager+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+.swift"; sourceTree = "<group>"; };
 		3680D9AA33A891E0F14496C6 /* NSColor+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+.swift"; sourceTree = "<group>"; };
+		3680DA19202046722D9BEEA2 /* MPreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPreviewView.swift; sourceTree = "<group>"; };
 		47543B75E5BE7E1CFD287CA1 /* Pods_MiaoYan.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MiaoYan.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		541AD5C60D506416D2DC1848 /* Pods-MiaoYan.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYan.release.xcconfig"; path = "Target Support Files/Pods-MiaoYan/Pods-MiaoYan.release.xcconfig"; sourceTree = "<group>"; };
 		6F13BB0620FEDDF50005E120 /* MiaoYanCore_macOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MiaoYanCore_macOS.h; sourceTree = "<group>"; };
@@ -245,7 +246,6 @@
 		D7170C1C20F8565B001DDB36 /* FileSystemEventManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSystemEventManager.swift; sourceTree = "<group>"; };
 		D71C4A4D1F520F0E00EBA30B /* DownView.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = DownView.bundle; sourceTree = "<group>"; };
 		D72189352102099B00FE3AF2 /* NSTextStorage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSTextStorage+.swift"; sourceTree = "<group>"; };
-		D730829123084340003185D1 /* MPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPreviewView.swift; sourceTree = "<group>"; };
 		D730BD26222BF30700E69C93 /* KeychainConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainConfiguration.swift; sourceTree = "<group>"; };
 		D730BD29222BF32A00E69C93 /* KeychainPasswordItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainPasswordItem.swift; sourceTree = "<group>"; };
 		D730BD2D222DABA100E69C93 /* NoteContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteContainer.swift; sourceTree = "<group>"; };
@@ -529,7 +529,6 @@
 				D7E6D9D2208085BB003ECAFC /* View */,
 				D7793C721F211C6000CA39B7 /* AppDelegate.swift */,
 				D74112271FABA21B00AB619A /* MainWindow.swift */,
-				D730829123084340003185D1 /* MPreviewView.swift */,
 				D7E6ACE820832D40003599A2 /* AppDelegate+URLRoutes.swift */,
 				275592961F3AE9B5006B8988 /* MainWindowController.swift */,
 				D7793C741F211C6000CA39B7 /* ViewController.swift */,
@@ -619,6 +618,7 @@
 				2799407B218484C900727B20 /* TitleBarView.swift */,
 				D7153E082285EC6100A2C20F /* TitleTextField.swift */,
 				27D95121285B5E4400F40306 /* Toast.swift */,
+				3680DA19202046722D9BEEA2 /* MPreviewView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -958,7 +958,6 @@
 				D7793C731F211C6000CA39B7 /* AppDelegate.swift in Sources */,
 				D7E51713220D814D00A9CAD9 /* UTI.swift in Sources */,
 				D7DCFED32108E3210059B37B /* Note+.swift in Sources */,
-				D730829223084340003185D1 /* MPreviewView.swift in Sources */,
 				D75EE7FA2078B3C00055F159 /* Sidebar.swift in Sources */,
 				D7169A5D2077BA140025D2C9 /* StorageView.swift in Sources */,
 				D7D1DE68216D05A800AC1845 /* NameTextField.swift in Sources */,
@@ -1006,6 +1005,7 @@
 				D7153E092285EC6100A2C20F /* TitleTextField.swift in Sources */,
 				D7D372F4207B5B0F00AFBD9F /* SidebarNotesView.swift in Sources */,
 				3680D9AAFD00848F18DD5EF5 /* NSColor+.swift in Sources */,
+				3680DE38C941303E615282C4 /* MPreviewView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
