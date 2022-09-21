@@ -404,7 +404,11 @@ class Storage {
             case .modificationDate, .none:
                 return sortDirection == .asc && note.modifiedLocalAt < next.modifiedLocalAt || sortDirection == .desc && note.modifiedLocalAt > next.modifiedLocalAt
             case .title:
-                return sortDirection == .asc && note.title.lowercased() < next.title.lowercased() || sortDirection == .desc && note.title.lowercased() > next.title.lowercased()
+                let title = note.title.lowercased()
+                let nextTitle = next.title.lowercased()
+                return
+                    sortDirection == .asc && title < nextTitle ||
+                    sortDirection == .desc && title > nextTitle
             }
         }
 
@@ -419,8 +423,7 @@ class Storage {
 
             #if os(OSX)
             if let currentNoteURL = EditTextView.note?.url,
-               currentNoteURL == url
-            {
+               currentNoteURL == url {
                 continue
             }
             #endif
@@ -681,8 +684,7 @@ class Storage {
                 try url.getResourceValue(&isPackageResourceValue, forKey: URLResourceKey.isPackageKey)
 
                 if isDirectoryResourceValue as? Bool == true,
-                   isPackageResourceValue as? Bool == false
-                {
+                   isPackageResourceValue as? Bool == false {
                     subDirs.append(url)
                 }
             } catch let error as NSError {
