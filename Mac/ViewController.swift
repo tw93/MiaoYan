@@ -15,8 +15,7 @@ class ViewController:
     NSOutlineViewDelegate,
     NSOutlineViewDataSource,
     NSMenuItemValidation,
-    NSUserNotificationCenterDelegate
-{
+    NSUserNotificationCenterDelegate {
     public var fsManager: FileSystemEventManager?
     private var projectSettingsViewController: ProjectSettingsViewController?
 
@@ -405,6 +404,7 @@ class ViewController:
         editArea.layoutManager?.defaultAttachmentScaling = .scaleProportionallyDown
         editArea.layoutManager?.typesetterBehavior = .behavior_10_2_WithCompatibility
 
+        search.font = UserDefaultsManagement.searchFont
         editArea.font = UserDefaultsManagement.noteFont
         titleLabel.font = UserDefaultsManagement.titleFont.titleBold()
 
@@ -571,7 +571,8 @@ class ViewController:
     }
 
     public func reSort(note: Note) {
-        if !updateViews.contains(note) {
+        // 编辑内容，标题排序的时候有bug，先关掉
+        if !updateViews.contains(note), UserDefaultsManagement.sort != .title {
             updateViews.append(note)
         }
 
@@ -694,20 +695,6 @@ class ViewController:
 
         sidebarTimer.invalidate()
         sidebarTimer = Timer.scheduledTimer(timeInterval: 1.2, target: outline, selector: #selector(outline.reloadSidebar), userInfo: nil, repeats: false)
-    }
-
-    func reloadView(note: Note? = nil) {
-        let notesTable = notesTableView!
-        let selectedNote = notesTable.getSelectedNote()
-        let cursor = editArea.selectedRanges[0].rangeValue.location
-        updateTable {
-            if let selected = selectedNote, let index = notesTable.getIndex(selected) {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    notesTable.selectRowIndexes([index], byExtendingSelection: false)
-                }
-                self.refillEditArea(cursor: cursor)
-            }
-        }
     }
 
     func setTableRowHeight() {
@@ -907,8 +894,7 @@ class ViewController:
             event.characters == ".",
             event.modifierFlags.contains(.command),
 
-            NSApplication.shared.mainWindow == NSApplication.shared.keyWindow
-        {
+            NSApplication.shared.mainWindow == NSApplication.shared.keyWindow {
             UserDataService.instance.resetLastSidebar()
 
             if let view = NSApplication.shared.mainWindow?.firstResponder as? NSTextView, let textField = view.superview?.superview, textField.isKind(of: NameTextField.self) {
@@ -985,8 +971,7 @@ class ViewController:
         }
 
         if let fr = mw.firstResponder, !fr.isKind(of: EditTextView.self), !fr.isKind(of: NSTextView.self), !event.modifierFlags.contains(.command),
-           !event.modifierFlags.contains(.control)
-        {
+           !event.modifierFlags.contains(.control) {
             if let char = event.characters {
                 let newSet = CharacterSet(charactersIn: char)
                 if newSet.isSubset(of: CharacterSet.alphanumerics) {
@@ -1244,8 +1229,7 @@ class ViewController:
         vc.storage.removeNotes(notes: notes) { urls in
 
             if let appd = NSApplication.shared.delegate as? AppDelegate,
-               let md = appd.mainWindowController
-            {
+               let md = appd.mainWindowController {
                 let undoManager = md.notesListUndoManager
 
                 if let ntv = vc.notesTableView {
@@ -1420,8 +1404,8 @@ class ViewController:
             }
             swipe(deltaX: flippedScrollDelta)
             return
-        case .ended,
-             .cancelled,
+        case .cancelled,
+             .ended,
              .mayBegin:
             isHandlingScrollEvent = false
         default:
@@ -1565,8 +1549,7 @@ class ViewController:
         }
 
         if let controller = vc.storyboard?.instantiateController(withIdentifier: "ProjectSettingsViewController")
-            as? ProjectSettingsViewController
-        {
+            as? ProjectSettingsViewController {
             projectSettingsViewController = controller
 
             if let project = vc.getSidebarProject() {
@@ -1612,7 +1595,8 @@ class ViewController:
 
             note.save(attributed: editArea.attributedString())
 
-            if !updateViews.contains(note) {
+            // 编辑内容，标题排序的时候有bug，先关掉
+            if !updateViews.contains(note), UserDefaultsManagement.sort != .title {
                 updateViews.append(note)
             }
 
@@ -1679,12 +1663,14 @@ class ViewController:
         for note in updateViews {
             notesTableView.reloadRow(note: note)
 
-            if UserDefaultsManagement.sort == .modificationDate, UserDefaultsManagement.sortDirection == true {
-                if let index = notesTableView.noteList.firstIndex(of: note) {
-                    moveNoteToTop(note: index)
+            if search.stringValue.count == 0 {
+                if UserDefaultsManagement.sort == .modificationDate, UserDefaultsManagement.sortDirection == true {
+                    if let index = notesTableView.noteList.firstIndex(of: note) {
+                        moveNoteToTop(note: index)
+                    }
+                } else {
+                    sortAndMove(note: note)
                 }
-            } else {
-                sortAndMove(note: note)
             }
         }
 
@@ -1748,11 +1734,7 @@ class ViewController:
         var type = sidebarItem?.type
 
         // Global search if sidebar not checked
-        if type == nil,
-           projects == nil || (
-               projects!.count < 2 && projects!.first!.isRoot
-           )
-        {
+        if type == nil, projects == nil || (projects!.count < 2 && projects!.first!.isRoot) {
             type = .All
         }
 
@@ -1812,7 +1794,6 @@ class ViewController:
 
             DispatchQueue.main.async {
                 self.notesTableView.reloadData()
-
                 if search {
                     if self.notesTableView.noteList.count > 0 {
                         if filter.count > 0, note.title.lowercased() == self.search.stringValue.lowercased() {
@@ -1824,7 +1805,6 @@ class ViewController:
                         self.editArea.clear()
                     }
                 }
-
                 completion()
             }
         }
@@ -1966,8 +1946,7 @@ class ViewController:
         if
             NSApplication.shared.isActive,
             !NSApplication.shared.isHidden,
-            !mainWindow.isMiniaturized
-        {
+            !mainWindow.isMiniaturized {
             NSApplication.shared.hide(nil)
             return
         }
@@ -2044,17 +2023,11 @@ class ViewController:
     }
 
     public func sortAndMove(note: Note) {
-        guard let notes = filteredNoteList else {
-            return
-        }
-        guard let srcIndex = notesTableView.noteList.firstIndex(of: note) else {
-            return
-        }
+        guard let notes = filteredNoteList else { return }
+        guard let srcIndex = notesTableView.noteList.firstIndex(of: note) else { return }
 
         let resorted = storage.sortNotes(noteList: notes, filter: search.stringValue)
-        guard let dstIndex = resorted.firstIndex(of: note) else {
-            return
-        }
+        guard let dstIndex = resorted.firstIndex(of: note) else { return }
 
         if srcIndex != dstIndex {
             notesTableView.moveRow(at: srcIndex, to: dstIndex)
@@ -2352,8 +2325,7 @@ class ViewController:
 
         for menu in noteMenu.items {
             if let identifier = menu.identifier?.rawValue,
-               personalSelection.contains(identifier)
-            {
+               personalSelection.contains(identifier) {
                 menu.isHidden = (vc.notesTableView.selectedRowIndexes.count > 1)
             }
         }
