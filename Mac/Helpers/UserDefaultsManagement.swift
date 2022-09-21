@@ -38,6 +38,7 @@ public enum UserDefaultsManagement {
     static var titleFontSize = 20
     static var emptyEditTitleFontSize = 36
     static var nameFontSize = 14
+    static var searchFontSize = 13
     static var dateFontSize = 11
     static var maxNightModeBrightnessLevel = 35
 
@@ -448,6 +449,24 @@ public enum UserDefaultsManagement {
             }
 
             return Font.systemFont(ofSize: CGFloat(nameFontSize))
+        }
+        set {
+            guard let newValue = newValue else {
+                return
+            }
+
+            fontName = newValue.fontName
+            fontSize = Int(newValue.pointSize)
+        }
+    }
+
+    static var searchFont: Font! {
+        get {
+            if let font = Font(name: windowFontName, size: CGFloat(searchFontSize)) {
+                return font
+            }
+
+            return Font.systemFont(ofSize: CGFloat(searchFontSize))
         }
         set {
             guard let newValue = newValue else {
