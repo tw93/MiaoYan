@@ -24,6 +24,7 @@
 		27C34C0E28928D0B007369E5 /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C34C0D28928D0B007369E5 /* Emoji.swift */; };
 		27D95122285B5E4400F40306 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D95121285B5E4400F40306 /* Toast.swift */; };
 		27D9A4F72873D345006317AD /* FileManager+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D9A4F62873D345006317AD /* FileManager+.swift */; };
+		3680D573468EA822F427197E /* NSTextField+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3680D20013301CC48E2BEC53 /* NSTextField+.swift */; };
 		3680D9AAFD00848F18DD5EF5 /* NSColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3680D9AA33A891E0F14496C6 /* NSColor+.swift */; };
 		3680DE38C941303E615282C4 /* MPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3680DA19202046722D9BEEA2 /* MPreviewView.swift */; };
 		6F13BB1620FEDDF50005E120 /* MiaoYanCore_macOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F13BB0620FEDDF50005E120 /* MiaoYanCore_macOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -207,6 +208,7 @@
 		27C34C0D28928D0B007369E5 /* Emoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emoji.swift; sourceTree = "<group>"; };
 		27D95121285B5E4400F40306 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		27D9A4F62873D345006317AD /* FileManager+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+.swift"; sourceTree = "<group>"; };
+		3680D20013301CC48E2BEC53 /* NSTextField+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTextField+.swift"; sourceTree = "<group>"; };
 		3680D9AA33A891E0F14496C6 /* NSColor+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+.swift"; sourceTree = "<group>"; };
 		3680DA19202046722D9BEEA2 /* MPreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPreviewView.swift; sourceTree = "<group>"; };
 		47543B75E5BE7E1CFD287CA1 /* Pods_MiaoYan.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MiaoYan.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -578,6 +580,7 @@
 				D7315ED4215ED95600AB49D4 /* NSAppearance+.swift */,
 				D7C302C421F320FD0041627F /* ImageAttachment+.swift */,
 				27D9A4F62873D345006317AD /* FileManager+.swift */,
+				3680D20013301CC48E2BEC53 /* NSTextField+.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1006,6 +1009,7 @@
 				D7D372F4207B5B0F00AFBD9F /* SidebarNotesView.swift in Sources */,
 				3680D9AAFD00848F18DD5EF5 /* NSColor+.swift in Sources */,
 				3680DE38C941303E615282C4 /* MPreviewView.swift in Sources */,
+				3680D573468EA822F427197E /* NSTextField+.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1289,7 +1293,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.6.0;
+				CURRENT_PROJECT_VERSION = 1.6.2;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 5EH69Y5X38;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
@@ -1308,7 +1312,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MARKETING_VERSION = 1.6.0;
+				MARKETING_VERSION = 1.6.2;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.MiaoYan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1332,7 +1336,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.6.0;
+				CURRENT_PROJECT_VERSION = 1.6.2;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DEVELOPMENT_TEAM = 5EH69Y5X38;
@@ -1352,7 +1356,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MARKETING_VERSION = 1.6.0;
+				MARKETING_VERSION = 1.6.2;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.MiaoYan;
 				PRODUCT_NAME = "$(TARGET_NAME)";

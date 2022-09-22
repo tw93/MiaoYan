@@ -318,7 +318,7 @@ class ViewController:
         // 兼容新系统 13.0 的标题闪动问题
         if isFirstClick, #available(OSX 13.0, *) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-                self.titleLabel.editModeOn()
+//                self.titleLabel.editModeOn()
                 self.enablePreview()
                 self.disablePreview()
                 self.focusEditArea()
@@ -407,9 +407,7 @@ class ViewController:
         search.font = UserDefaultsManagement.searchFont
         editArea.font = UserDefaultsManagement.noteFont
         titleLabel.font = UserDefaultsManagement.titleFont.titleBold()
-
         emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont
-
         let paragraphStyle = NSTextStorage.getParagraphStyle()
         editArea.defaultParagraphStyle = paragraphStyle
         editArea.typingAttributes[.paragraphStyle] = paragraphStyle
