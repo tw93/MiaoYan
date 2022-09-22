@@ -8,7 +8,7 @@
        <h3>更好用 🧛‍♀️：</h3>
        <ol>
         <li>较 1.6.0 版本，修复 copy 图片到编辑器、按标题排序问题、窗口文字间距舒服调整、支持 shift+回车 不自动补充序号的模式</li>
-        <li>底层细调 3 种字体渲染逻辑，Times New Roman、Helvetica Neue、JetBrains Mono，换一种风格</li>
+        <li>底层细调 3 种字体渲染逻辑，Times New Roman、Helvetica Neue、JetBrains Mono，换一种风格，详细介绍在 <a href="https://www.v2ex.com/t/880859">V2EX</a></li>
         <li>导出格式支持 Html，同时优化 PDF、Image 导出效果</li>
         <li>脑图可单独设置<a href="https://miaoyan.app/Release/demo/MiaoYan%20Markmap.md">高度</a>，此外 PPT 模式中也支持 Markmap 脑图了</li>
         <li>格式化更加好用无感并记住位置，一种很无感的格式化体验</li>
