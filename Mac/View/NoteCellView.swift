@@ -21,7 +21,6 @@ class NoteCellView: NSTableCellView {
         if let originY = UserDefaultsManagement.cellViewFrameOriginY {
             adjustTopMargin(margin: originY)
         }
-
         super.viewWillDraw()
     }
 
@@ -42,6 +41,7 @@ class NoteCellView: NSTableCellView {
     }
 
     // This NoteCellView has multiple contained views; this method changes
+
     // these views' color when the cell is selected.
     override var backgroundStyle: NSView.BackgroundStyle {
         set {
@@ -126,12 +126,15 @@ class NoteCellView: NSTableCellView {
            let sidebarItem = viewController.getSidebarItem(),
            let sort = sidebarItem.project?.sortBy,
            sort == .creationDate,
-           let date = note.getCreationDateForLabel()
-        {
+           let date = note.getCreationDateForLabel() {
             self.date.stringValue = date
         } else {
             date.stringValue = note.getDateForLabel()
         }
+
+        // 增加间距
+        name.addCharacterSpacing()
+        date.addCharacterSpacing()
 
         updateSelectionHighlight()
     }

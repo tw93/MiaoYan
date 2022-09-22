@@ -10,8 +10,7 @@ class TitleTextField: NSTextField {
            event.keyCode == kVK_ANSI_C,
            !event.modifierFlags.contains(.shift),
            !event.modifierFlags.contains(.control),
-           !event.modifierFlags.contains(.option)
-        {
+           !event.modifierFlags.contains(.option) {
             let pasteboard = NSPasteboard.general
             pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
             pasteboard.setString(stringValue, forType: NSPasteboard.PasteboardType.string)

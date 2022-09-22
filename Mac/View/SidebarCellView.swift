@@ -9,6 +9,7 @@ class SidebarCellView: NSTableCellView {
 
     override func draw(_ dirtyRect: NSRect) {
         label.font = UserDefaultsManagement.nameFont
+        label.addCharacterSpacing()
         checkLabelTopConstraint()
         super.draw(dirtyRect)
     }
