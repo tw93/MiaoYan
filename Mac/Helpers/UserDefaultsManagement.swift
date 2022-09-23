@@ -23,10 +23,6 @@ public enum UserDefaultsManagement {
     static var DefaultPreviewFontSize = 15
     static var DefaultPresentationFontSize = 24
 
-    static var DefaultEditorLineSpacing = 3.28
-    static var DefaultEditorLineHeight = 1.3
-    static var DefaultEditorLetterSpacing = 0.66
-
     static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
     static var DefaultBgColor = Color.white
 
@@ -35,23 +31,22 @@ public enum UserDefaultsManagement {
     static var fullScreen = false
     static var isWillFullScreen = false
 
+    static var editorLineSpacing = 3.2
+    static var editorLineHeight = 1.3
+    static var editorLetterSpacing = 0.6
+    static var windowLetterSpacing = 0.38
+
     static var titleFontSize = 20
     static var emptyEditTitleFontSize = 36
     static var nameFontSize = 14
     static var searchFontSize = 13
     static var dateFontSize = 11
-    static var maxNightModeBrightnessLevel = 35
-
     static var marginSize = 24
-
     static var realSidebarSize = 138
-
     static var sidebarSize = 280
 
     static var isOnExport = false
-
     static var isOnExportPPT = false
-
     static var isOnExportHtml = false
 
     private enum Constants {
@@ -76,7 +71,6 @@ public enum UserDefaultsManagement {
         static let MarkdownPreviewCSS = "markdownPreviewCSS"
         static let NightModeType = "nightModeType"
         static let NightModeAuto = "nightModeAuto"
-        static let NightModeBrightnessLevel = "nightModeBrightnessLevel"
         static let NoteContainer = "noteContainer"
         static let PinListKey = "pinList"
         static let Preview = "preview"
@@ -89,7 +83,6 @@ public enum UserDefaultsManagement {
         static let SharedContainerKey = "sharedContainer"
         static let SortBy = "sortBy"
         static let StoragePathKey = "storageUrl"
-        static let TextMatchAutoSelection = "textMatchAutoSelection"
         static let FontName = "fontName"
         static let WindowFontName = "windowFontName"
         static let PreviewFontName = "previewFontName"
@@ -97,8 +90,6 @@ public enum UserDefaultsManagement {
         static let SortDirection = "sortDirection"
         static let IsSingleMode = "isSingleMode"
         static let SingleModePath = "singleModePath"
-        static let EditorLineHeight = "editorLineHeight"
-        static let EditorLineSpacing = "editorLineSpacing"
         static let PreviewWidth = "previewWidth"
         static let PreviewLocation = "previewLocation"
         static let EditorLineBreak = "editorLineBreak"
@@ -250,29 +241,6 @@ public enum UserDefaultsManagement {
         }
     }
 
-    static var editorLineSpacing: CGFloat {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.EditorLineSpacing) as? CGFloat {
-                return result
-            }
-            return DefaultEditorLineSpacing
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.EditorLineSpacing)
-        }
-    }
-
-    static var editorLineHeight: CGFloat {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.EditorLineHeight) as? CGFloat {
-                return result
-            }
-            return DefaultEditorLineHeight
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.EditorLineHeight)
-        }
-    }
 
     static var previewWidth: String {
         get {
@@ -546,7 +514,7 @@ public enum UserDefaultsManagement {
         if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
             let miaoyanPath: String = path + "/MiaoYan"
             try! FileManager.default.createDirectory(atPath: miaoyanPath,
-                                                     withIntermediateDirectories: true, attributes: nil)
+                    withIntermediateDirectories: true, attributes: nil)
             return URL(fileURLWithPath: miaoyanPath)
         }
         return nil
@@ -747,8 +715,7 @@ public enum UserDefaultsManagement {
     static var markdownPreviewCSS: URL? {
         get {
             if let path = UserDefaults.standard.object(forKey: Constants.MarkdownPreviewCSS) as? String,
-               let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
-            {
+               let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) {
                 if FileManager.default.fileExists(atPath: path) {
                     return URL(string: "file://" + encodedPath)
                 }

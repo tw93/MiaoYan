@@ -737,7 +737,7 @@ public class TextFormatter {
         let parStyle = NSTextStorage.getParagraphStyle()
 
         textView.textStorage.addAttribute(.paragraphStyle, value: parStyle, range: parRange)
-        textView.textStorage.addAttribute(.kern, value: UserDefaultsManagement.DefaultEditorLetterSpacing, range: parRange)
+        textView.textStorage.addAttribute(.kern, value: UserDefaultsManagement.editorLetterSpacing, range: parRange)
 
         textView.undoManager?.endUndoGrouping()
         #else

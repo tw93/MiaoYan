@@ -411,7 +411,7 @@ class ViewController:
         let paragraphStyle = NSTextStorage.getParagraphStyle()
         editArea.defaultParagraphStyle = paragraphStyle
         editArea.typingAttributes[.paragraphStyle] = paragraphStyle
-        editArea.typingAttributes[.kern] = UserDefaultsManagement.DefaultEditorLetterSpacing
+        editArea.typingAttributes[.kern] = UserDefaultsManagement.editorLetterSpacing
 
         setTableRowHeight()
         storageOutlineView.sidebarItems = Sidebar().getList()

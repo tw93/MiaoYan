@@ -12,8 +12,10 @@ extension NSTextField {
         let attributedString = NSMutableAttributedString(string: labelText)
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineBreakMode = .byTruncatingTail
+        paragraphStyle.alignment = .left
+        paragraphStyle.allowsDefaultTighteningForTruncation = false
 
-        attributedString.addAttribute(.kern, value: 0.5, range: range)
+        attributedString.addAttribute(.kern, value: UserDefaultsManagement.windowLetterSpacing, range: range)
         attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: range)
 
         attributedStringValue = attributedString
