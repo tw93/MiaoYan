@@ -231,6 +231,7 @@ blockquote blockquote {
   border-radius: 0;
   background-color: transparent;
   color: inherit;
+  white-space: pre-wrap;
 }
 
 .heti h1,
