@@ -21,6 +21,9 @@ class NoteCellView: NSTableCellView {
         if let originY = UserDefaultsManagement.cellViewFrameOriginY {
             adjustTopMargin(margin: originY)
         }
+        // 增加间距
+        name.addCharacterSpacing()
+        date.addCharacterSpacing()
         super.viewWillDraw()
     }
 
@@ -131,11 +134,6 @@ class NoteCellView: NSTableCellView {
         } else {
             date.stringValue = note.getDateForLabel()
         }
-
-        // 增加间距
-        name.addCharacterSpacing()
-        date.addCharacterSpacing()
-
         updateSelectionHighlight()
     }
 }

@@ -625,13 +625,10 @@ CA
                                             <menuItem title="LXGW WenKai Lite" state="on" id="U0d-Y0-lbU">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
+                                            <menuItem title="SF Mono" id="gHy-s3-JDh">
+                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                            </menuItem>
                                             <menuItem title="Times New Roman" id="IUe-Hi-7b6">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                            </menuItem>
-                                            <menuItem title="JetBrains Mono" id="gHy-s3-JDh">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                            </menuItem>
-                                            <menuItem title="Helvetica Neue" id="SS2-e6-ZUi">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
                                         </items>
@@ -654,13 +651,10 @@ CA
                                             <menuItem title="LXGW WenKai Lite" state="on" id="Lx0-fl-9t0">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
+                                            <menuItem title="SF Pro Text" id="RSK-NX-AjP">
+                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                            </menuItem>
                                             <menuItem title="Times New Roman" id="uW5-RQ-wqF">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                            </menuItem>
-                                            <menuItem title="JetBrains Mono" id="RSK-NX-AjP">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                            </menuItem>
-                                            <menuItem title="Helvetica Neue" id="ne1-PN-WcW">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
                                         </items>
@@ -725,7 +719,7 @@ CA
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="NxN-X7-d1a"/>
                                 </constraints>
-                                <popUpButtonCell key="cell" type="push" title="16" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="DTe-57-Kqf" id="bL4-tX-2xd">
+                                <popUpButtonCell key="cell" type="push" title="15" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="IF0-dQ-WWn" id="bL4-tX-2xd">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="menu"/>
                                     <menu key="menu" id="xrE-0h-GOl">
@@ -733,8 +727,8 @@ CA
                                             <menuItem title="12" id="vYJ-nZ-Rkv"/>
                                             <menuItem title="13" id="2Uz-7H-8jH"/>
                                             <menuItem title="14" id="Wju-FE-YsQ"/>
-                                            <menuItem title="15" id="IF0-dQ-WWn"/>
-                                            <menuItem title="16" state="on" id="DTe-57-Kqf"/>
+                                            <menuItem title="15" state="on" id="IF0-dQ-WWn"/>
+                                            <menuItem title="16" id="DTe-57-Kqf"/>
                                             <menuItem title="17" id="i29-ed-qEr"/>
                                             <menuItem title="18" id="Z7j-si-A12"/>
                                             <menuItem title="19" id="g4e-PC-JbI"/>
@@ -785,13 +779,10 @@ CA
                                             <menuItem title="LXGW WenKai Lite" state="on" id="QwH-At-JGa">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
+                                            <menuItem title="SF Pro Text" id="Bwp-Pv-g0O">
+                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                            </menuItem>
                                             <menuItem title="Times New Roman" id="n5K-Sw-Jli">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                            </menuItem>
-                                            <menuItem title="JetBrains Mono" id="Bwp-Pv-g0O">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                            </menuItem>
-                                            <menuItem title="Helvetica Neue" id="0cu-dn-9sf">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
                                         </items>
@@ -822,6 +813,9 @@ CA
                                             <menuItem title="Editor Font" state="on" id="46V-wl-D4j">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
+                                            <menuItem title="SF Mono" id="ScQ-Rg-wZ1">
+                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                            </menuItem>
                                             <menuItem title="JetBrains Mono" id="U3E-6j-h9N">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
@@ -832,9 +826,6 @@ CA
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
                                             <menuItem title="Fira Code" id="MNF-77-EaP">
-                                                <modifierMask key="keyEquivalentModifierMask"/>
-                                            </menuItem>
-                                            <menuItem title="SF Mono" id="ScQ-Rg-wZ1">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
                                         </items>

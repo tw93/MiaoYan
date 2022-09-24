@@ -6,18 +6,13 @@
 import Cocoa
 
 extension NSTextField {
-    func addCharacterSpacing() {
-        let labelText = stringValue
-        let range = NSMakeRange(0, labelText.count - 1)
-        let attributedString = NSMutableAttributedString(string: labelText)
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineBreakMode = .byTruncatingTail
-        paragraphStyle.alignment = .left
-        paragraphStyle.allowsDefaultTighteningForTruncation = false
-
-        attributedString.addAttribute(.kern, value: UserDefaultsManagement.windowLetterSpacing, range: range)
-        attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: range)
-
-        attributedStringValue = attributedString
+    func addCharacterSpacing(isTitle: Bool = false) {
+        if let string = attributedStringValue.mutableCopy() as? NSMutableAttributedString {
+            let labelText = stringValue
+            let range = NSMakeRange(0, labelText.count-1)
+            string.addAttribute(.kern, value: UserDefaultsManagement.windowLetterSpacing, range: range)
+            string.fixAttributes(in: range)
+            attributedStringValue = string
+        }
     }
 }

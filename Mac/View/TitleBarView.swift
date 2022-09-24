@@ -10,11 +10,9 @@ class TitleBarView: NSView {
     
     override func layout() {
         super.layout()
-        
         trackingAreas.forEach { [weak self] area in
             self?.removeTrackingArea(area)
         }
-        
         addTrackingArea(NSTrackingArea(rect: bounds, options: [.activeAlways, .mouseEnteredAndExited], owner: self, userInfo: nil))
     }
     
