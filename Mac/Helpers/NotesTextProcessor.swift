@@ -168,6 +168,12 @@ public class NotesTextProcessor {
     }
     #endif
 
+    public static var georgiaFont = NSFont(name: "Georgia", size: CGFloat(UserDefaultsManagement.fontSize))
+
+    public static var publicFont = NSFont(name: "Helvetica Neue", size: CGFloat(UserDefaultsManagement.fontSize))
+
+    public static var titleFont = NSFont(name: UserDefaultsManagement.windowFontName, size: CGFloat(UserDefaultsManagement.titleFontSize))
+
     /**
      If the markdown syntax should be hidden or visible
      */
@@ -366,8 +372,7 @@ public class NotesTextProcessor {
             if let value = value as? String, value.starts(with: tagQuery) {
                 if let tag = value
                     .replacingOccurrences(of: tagQuery, with: "")
-                    .removingPercentEncoding
-                {
+                    .removingPercentEncoding {
                     if NotesTextProcessor.getSpanCodeBlockRange(content: attributedString, range: range) != nil {
                         return
                     }
@@ -411,19 +416,6 @@ public class NotesTextProcessor {
                 NotesTextProcessor.highlightCode(attributedString: attributedString, range: r.range)
             }
         )
-
-//        let codeTextProcessor = CodeTextProcessor(textStorage: attributedString)
-//        if let codeBlockRanges = codeTextProcessor.getCodeBlockRanges() {
-//
-//            for range in codeBlockRanges {
-//
-//                if isIntersect(fencedRanges: fencedRanges, indentRange: range) {
-//                    continue
-//                }
-//
-//                NotesTextProcessor.highlightCode(attributedString: attributedString, range: range)
-//            }
-//        }
     }
 
     public static func isIntersect(fencedRanges: [NSRange], indentRange: NSRange) -> Bool {
@@ -784,8 +776,30 @@ public class NotesTextProcessor {
             guard let range = result?.range else { return }
             let substring = attributedString.mutableString.substring(with: range)
             if !substring.isNumber {
-                attributedString.removeAttribute(.backgroundColor, range: range)
                 attributedString.addAttribute(.font, value: NSFont.systemFont(ofSize: CGFloat(UserDefaultsManagement.fontSize - 2)), range: range)
+                attributedString.fixAttributes(in: range)
+            }
+        }
+
+        if UserDefaultsManagement.fontName == "Times New Roman" {
+            NotesTextProcessor.englishAndSymbolRegex.matches(string, range: paragraphRange) { result in
+                guard let range = result?.range else { return }
+                attributedString.addAttribute(.font, value: georgiaFont!, range: range)
+                attributedString.fixAttributes(in: range)
+            }
+        }
+
+        if UserDefaultsManagement.fontName == "SF Mono" {
+            NotesTextProcessor.blankRegex.matches(string, range: paragraphRange) { result in
+                guard let range = result?.range else { return }
+                attributedString.addAttribute(.font, value: publicFont!, range: range)
+                attributedString.fixAttributes(in: range)
+            }
+
+            NotesTextProcessor.allTodoInlineRegex.matches(string, range: paragraphRange) { result in
+                guard let range = result?.range else { return }
+                let middleRange = NSMakeRange(range.location + 3, 1)
+                attributedString.addAttribute(.font, value: publicFont!, range: middleRange)
                 attributedString.fixAttributes(in: range)
             }
         }
@@ -797,6 +811,7 @@ public class NotesTextProcessor {
             }
         }
 
+        // 兼容一下这里这个字体有些问题
         if isFullScan {
             checkBackTick(styleApplier: attributedString)
         }
@@ -819,8 +834,14 @@ public class NotesTextProcessor {
 
         NotesTextProcessor.codeSpanRegex.matches(styleApplier.string, range: range) { result in
             guard let range = result?.range else { return }
-
             styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.htmlColor, range: range)
+        }
+        
+        if UserDefaultsManagement.fontName == "Times New Roman" {
+            NotesTextProcessor.englishAndSymbolRegex.matches(styleApplier.string, range: range) { result in
+                guard let range = result?.range else { return }
+                styleApplier.addAttribute(.font, value: georgiaFont!, range: range)
+            }
         }
     }
 
@@ -1191,6 +1212,11 @@ public class NotesTextProcessor {
 
     public static let emojiRegex = MarklightRegex(pattern: EmojiPattern, options: [.allowCommentsAndWhitespace])
 
+    public static let englishAndSymbolPattern = "([a-zA-Z]+|[\\x21-\\x2f\\x3a-\\x40\\x5b-\\x60\\x7B-\\x7F])"
+    public static let englishAndSymbolRegex = MarklightRegex(pattern: englishAndSymbolPattern, options: [.allowCommentsAndWhitespace])
+
+    public static let blankRegex = MarklightRegex(pattern: "\\s+", options: [.allowCommentsAndWhitespace])
+
     // MARK: Italic
 
     fileprivate static let strictItalicPattern = "(^|[\\s_])(?:(?!\\1)|(?=^))(\\*|_)(?=\\S)((?:(?!\\2).)*?\\S)\\2(?!\\2)(?=[\\s]|(?:[.,!?]\\s)|$)"
@@ -1446,8 +1472,7 @@ public struct MarklightRegex {
     }
 
     public func matches(_ input: String, range: NSRange,
-                        completion: @escaping (_ result: NSTextCheckingResult?) -> Void)
-    {
+                        completion: @escaping (_ result: NSTextCheckingResult?) -> Void) {
         let s = input as NSString
         // NSRegularExpression.
         let options = NSRegularExpression.MatchingOptions(rawValue: 0)

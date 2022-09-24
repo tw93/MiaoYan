@@ -31,9 +31,9 @@ public enum UserDefaultsManagement {
     static var fullScreen = false
     static var isWillFullScreen = false
 
-    static var editorLineSpacing = 3.2
+    static var editorLineSpacing = 3.0
     static var editorLineHeight = 1.3
-    static var editorLetterSpacing = 0.6
+    static var editorLetterSpacing = 0.5
     static var windowLetterSpacing = 0.38
 
     static var titleFontSize = 20

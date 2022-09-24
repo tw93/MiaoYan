@@ -79,12 +79,8 @@ class PreferencesGeneralViewController: NSViewController {
     }
 
     @IBAction func editorFontNameClick(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else {
-            return
-        }
-        guard let item = sender.selectedItem else {
-            return
-        }
+        guard let vc = ViewController.shared() else { return }
+        guard let item = sender.selectedItem else { return }
 
         // 处理好代码字体变化
         if UserDefaultsManagement.codeFontName == UserDefaultsManagement.fontName {
@@ -94,7 +90,10 @@ class PreferencesGeneralViewController: NSViewController {
 
         UserDefaultsManagement.fontName = item.title
 
+        guard let note = EditTextView.note else { return }
         NotesTextProcessor.hl = nil
+        NotesTextProcessor.highlight(note: note)
+
         vc.refillEditArea()
         vc.disablePreview()
     }

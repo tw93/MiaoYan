@@ -12,43 +12,18 @@
 
 @font-face {
   font-family: 'Times New Roman';
-  src: local('Times New Roman'), local('Times'), local('Songti SC Regular'), local('Songti TC Regular');
+  src: local('Georgia'), local('Times New Roman'), local('Times'), local('Songti SC Regular'), local('Songti TC Regular');
 }
 
 @font-face {
   font-family: 'Times New Roman';
-  font-weight: 200;
-  src: local('Times New Roman'), local('Times'), local('Songti SC Light'), local('Songti TC Light');
-}
-
-
-@font-face {
-  font-family: 'Times New Roman';
-  font-weight: 600;
-  src: local('Times New Roman'), local('Times'), local('Songti SC Bold'), local('Songti TC Bold');
+  src: local('Times New Roman'), local('Songti SC Regular'), local('Songti TC Regular');
+  unicode-range: U+0600-06FF, U+0030-0039;
 }
 
 @font-face {
-  font-family: 'Times New Roman';
-  font-weight: 800;
-  src: local('Times New Roman'), local('Times'), local('Songti SC Bold'), local('Songti TC Bold');
-}
-
-@font-face {
-  font-family: 'Times New Roman';
-  font-weight: bold;
-  src: local('Times New Roman'), local('Times'), local('Songti SC Bold'), local('Songti TC Bold');
-}
-
-@font-face {
-  font-family: 'Helvetica Neue';
-  src: local('Helvetica Neue'), local('Helvetica'), local('PingFang SC'),
-  local('Hiragino Sans GB'), local('WenQuanYi Micro Hei'), local('Microsoft Yahei');
-}
-
-@font-face {
-  font-family: 'JetBrains Mono';
-  src: local('JetBrains Mono'), local('Helvetica Neue'), local('Helvetica'), local('PingFang SC'),
+  font-family: 'SF Pro Text';
+  src: local('SF Pro Text'), local('Helvetica Neue'), local('PingFang SC'),
   local('Hiragino Sans GB'), local('WenQuanYi Micro Hei'), local('Microsoft Yahei');
 }
 
@@ -97,7 +72,7 @@ a,
   font-weight: 400;
   -webkit-font-smoothing: subpixel-antialiased;
   line-height: 1.74;
-  letter-spacing: 0.036em;
+  letter-spacing: 0.03em;
   overflow-wrap: break-word;
   word-wrap: break-word;
   hyphens: auto;
