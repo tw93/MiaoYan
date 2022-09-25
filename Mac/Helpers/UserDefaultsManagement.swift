@@ -174,7 +174,7 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.ButtonShow)
         }
     }
-    
+
     static var codeBackground: String {
         get {
             if let dl = UserDefaults.standard.object(forKey: Constants.CodeBackground) as? String {
@@ -253,7 +253,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.FontSizeKey)
         }
     }
-
 
     static var previewWidth: String {
         get {
@@ -390,6 +389,9 @@ public enum UserDefaultsManagement {
     static var titleFont: Font! {
         get {
             if let font = Font(name: windowFontName, size: CGFloat(titleFontSize)) {
+                if windowFontName == "SF Pro Text" {
+                    return Font(name: "Helvetica Neue", size: CGFloat(titleFontSize))
+                }
                 return font
             }
 
@@ -527,7 +529,7 @@ public enum UserDefaultsManagement {
         if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
             let miaoyanPath: String = path + "/MiaoYan"
             try! FileManager.default.createDirectory(atPath: miaoyanPath,
-                    withIntermediateDirectories: true, attributes: nil)
+                                                     withIntermediateDirectories: true, attributes: nil)
             return URL(fileURLWithPath: miaoyanPath)
         }
         return nil
