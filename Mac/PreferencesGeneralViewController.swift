@@ -35,8 +35,6 @@ class PreferencesGeneralViewController: NSViewController {
     @IBOutlet var buttonShow: NSPopUpButton!
     @IBOutlet var codeBackground: NSPopUpButton!
 
-    // MARK: global variables
-
     let storage = Storage.sharedInstance()
 
     override func viewDidLoad() {
@@ -46,41 +44,42 @@ class PreferencesGeneralViewController: NSViewController {
         windowFontWidthConstraint.constant = 100.0
         languageFontWidthConstraint.constant = 100.0
         codeFontWidthConstraint.constant = 100.0
-
         super.viewDidLoad()
     }
 
-    @IBAction func editorLineBreakClick(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else {
-            return
-        }
-        guard let item = sender.selectedItem else {
-            return
-        }
-        UserDefaultsManagement.editorLineBreak = item.title
+    func refreshEditor() {
+        guard let vc = ViewController.shared() else { return }
         NotesTextProcessor.hl = nil
+        if UserDefaultsManagement.preview {
+            vc.disablePreview()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            vc.refillEditArea()
+        }
+    }
 
-        vc.disablePreview()
+    func refreshPreview() {
+        guard let vc = ViewController.shared() else { return }
+        NotesTextProcessor.hl = nil
+        if UserDefaultsManagement.preview {
+            vc.disablePreview()
+        }
         vc.enablePreview()
     }
 
+    @IBAction func editorLineBreakClick(_ sender: NSPopUpButton) {
+        guard let item = sender.selectedItem else { return }
+        UserDefaultsManagement.editorLineBreak = item.title
+        refreshPreview()
+    }
+
     @IBAction func editorFontSizeClick(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else {
-            return
-        }
-        guard let item = sender.selectedItem else {
-            return
-        }
-
+        guard let item = sender.selectedItem else { return }
         UserDefaultsManagement.fontSize = Int(item.title) ?? UserDefaultsManagement.DefaultFontSize
-
-        NotesTextProcessor.hl = nil
-        vc.refillEditArea()
-        vc.disablePreview()
+        refreshEditor()
     }
 
     @IBAction func editorFontNameClick(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else { return }
         guard let item = sender.selectedItem else { return }
 
         // 处理好代码字体变化
@@ -88,64 +87,31 @@ class PreferencesGeneralViewController: NSViewController {
             UserDefaultsManagement.codeFontName = item.title
             NotesTextProcessor.codeFont = Font(name: UserDefaultsManagement.codeFontName, size: CGFloat(UserDefaultsManagement.fontSize))
         }
-
         UserDefaultsManagement.fontName = item.title
-
-        guard let note = EditTextView.note else { return }
-        NotesTextProcessor.hl = nil
-        NotesTextProcessor.highlight(note: note)
-
-        vc.refillEditArea()
-        vc.disablePreview()
+        refreshEditor()
     }
 
     @IBAction func buttonShow(_ sender: NSPopUpButton) {
-        guard let item = sender.selectedItem else {
-            return
-        }
-
-        if UserDefaultsManagement.buttonShow == item.title {
-            return
-        }
-
+        guard let item = sender.selectedItem else { return }
         UserDefaultsManagement.buttonShow = item.title
-
         NotesTextProcessor.hl = nil
         restart()
     }
 
     @IBAction func codeBackground(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else { return }
         guard let item = sender.selectedItem else { return }
-
-        if UserDefaultsManagement.codeBackground == item.title { return }
         UserDefaultsManagement.codeBackground = item.title
-
-        NotesTextProcessor.hl = nil
-
-        vc.disablePreview()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            vc.refillEditArea()
-        }
+        refreshEditor()
     }
 
     @IBAction func windowFontNameClick(_ sender: NSPopUpButton) {
-        guard let item = sender.selectedItem else {
-            return
-        }
-
-        if UserDefaultsManagement.windowFontName == item.title {
-            return
-        }
-
+        guard let item = sender.selectedItem else { return }
+        if UserDefaultsManagement.windowFontName == item.title { return }
         UserDefaultsManagement.windowFontName = item.title
-
-        NotesTextProcessor.hl = nil
         restart()
     }
 
     @IBAction func codeFontNameClick(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else { return }
         guard let item = sender.selectedItem else { return }
         if item.title == "Editor Font" {
             UserDefaultsManagement.codeFontName = UserDefaultsManagement.fontName
@@ -154,69 +120,31 @@ class PreferencesGeneralViewController: NSViewController {
         }
 
         NotesTextProcessor.codeFont = Font(name: UserDefaultsManagement.codeFontName, size: CGFloat(UserDefaultsManagement.fontSize))
-        NotesTextProcessor.hl = nil
-        vc.disablePreview()
-        vc.refillEditArea(force: true)
+        refreshEditor()
     }
 
     @IBAction func previewWidthClick(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else {
-            return
-        }
-        guard let item = sender.selectedItem else {
-            return
-        }
+        guard let item = sender.selectedItem else { return }
         UserDefaultsManagement.previewWidth = item.title
-        NotesTextProcessor.hl = nil
-
-        vc.disablePreview()
-        vc.enablePreview()
+        refreshPreview()
     }
 
     @IBAction func previewLocation(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else {
-            return
-        }
-        guard let item = sender.selectedItem else {
-            return
-        }
-
+        guard let item = sender.selectedItem else { return }
         UserDefaultsManagement.previewLocation = item.title
-
-        NotesTextProcessor.hl = nil
-
-        vc.disablePreview()
-        vc.enablePreview()
+        refreshPreview()
     }
 
     @IBAction func previewFontNameClick(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else {
-            return
-        }
-        guard let item = sender.selectedItem else {
-            return
-        }
-
+        guard let item = sender.selectedItem else { return }
         UserDefaultsManagement.previewFontName = item.title
-
-        NotesTextProcessor.hl = nil
-
-        vc.disablePreview()
-        vc.enablePreview()
+        refreshPreview()
     }
 
     @IBAction func previewFontSizeClick(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else {
-            return
-        }
-        guard let item = sender.selectedItem else {
-            return
-        }
-
+        guard let item = sender.selectedItem else { return }
         UserDefaultsManagement.previewFontSize = Int(item.title) ?? UserDefaultsManagement.DefaultPreviewFontSize
-
-        vc.disablePreview()
-        vc.enablePreview()
+        refreshPreview()
     }
 
     @IBAction func presentationFontSizeClick(_ sender: NSPopUpButton) {
