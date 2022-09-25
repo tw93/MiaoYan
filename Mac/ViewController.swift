@@ -848,11 +848,6 @@ class ViewController:
                         NSApp.mainWindow?.makeFirstResponder(storageOutlineView)
                         return false
                     }
-
-                    if fr.isKind(of: EditTextView.self) {
-                        NSApp.mainWindow?.makeFirstResponder(notesTableView)
-                        return false
-                    }
                 } else {
                     if fr.isKind(of: SidebarProjectView.self) {
                         notesTableView.selectNext()

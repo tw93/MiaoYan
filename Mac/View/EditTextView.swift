@@ -35,9 +35,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
         var newRect = NSRect(origin: rect.origin, size: rect.size)
         newRect.size.width = caretWidth
         if let range = getParagraphRange(), range.upperBound != textStorage?.length || (
-                range.upperBound == textStorage?.length
-                        && textStorage?.string.last == "\n"
-                        && selectedRange().location != textStorage?.length
+            range.upperBound == textStorage?.length
+                && textStorage?.string.last == "\n"
+                && selectedRange().location != textStorage?.length
         ) {
             newRect.size.height = newRect.size.height - 6.0
             newRect.origin.y = newRect.origin.y + 4.0
@@ -132,13 +132,13 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {
         for menuItem in menu.items {
             if menuItem.identifier?.rawValue == "_searchWithGoogleFromMenu:" ||
-                       menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierSpellingAndGrammar" ||
-                       menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierSubstitutions" ||
-                       menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierTransformations" ||
-                       menuItem.identifier?.rawValue == "_NS:290" ||
-                       menuItem.identifier?.rawValue == "_NS:291" ||
-                       menuItem.identifier?.rawValue == "_NS:328" ||
-                       menuItem.identifier?.rawValue == "_NS:353" {
+                menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierSpellingAndGrammar" ||
+                menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierSubstitutions" ||
+                menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierTransformations" ||
+                menuItem.identifier?.rawValue == "_NS:290" ||
+                menuItem.identifier?.rawValue == "_NS:291" ||
+                menuItem.identifier?.rawValue == "_NS:328" ||
+                menuItem.identifier?.rawValue == "_NS:353" {
                 menuItem.isHidden = true
             }
         }
@@ -512,13 +512,13 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     override func keyDown(with event: NSEvent) {
         guard !(
-                event.modifierFlags.contains(.shift) &&
-                        [
-                            kVK_UpArrow,
-                            kVK_DownArrow,
-                            kVK_LeftArrow,
-                            kVK_RightArrow
-                        ].contains(Int(event.keyCode))
+            event.modifierFlags.contains(.shift) &&
+                [
+                    kVK_UpArrow,
+                    kVK_DownArrow,
+                    kVK_LeftArrow,
+                    kVK_RightArrow
+                ].contains(Int(event.keyCode))
         )
         else {
             super.keyDown(with: event)
@@ -539,7 +539,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             }
         }
 
-        if event.keyCode == kVK_Return, !hasMarkedText() {
+        if event.keyCode == kVK_Return, !event.modifierFlags.contains(.command), !hasMarkedText() {
             breakUndoCoalescing()
             let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
             // 对于有shift的直接回车
@@ -550,6 +550,16 @@ class EditTextView: NSTextView, NSTextFinderClient {
             }
             breakUndoCoalescing()
             fillHighlightLinks()
+            saveCursorPosition()
+            return
+        }
+
+        // 切换todo的快捷键
+        if event.keyCode == kVK_Return, event.modifierFlags.contains(.command) {
+            breakUndoCoalescing()
+            let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
+            formatter.toggleTodo()
+            breakUndoCoalescing()
             saveCursorPosition()
             return
         }
@@ -638,9 +648,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let string = storage.attributedSubstring(from: NSRange(0..<storage.length))
 
         note.content =
-                NSMutableAttributedString(attributedString: string)
-                        .unLoadImages()
-                        .unLoadCheckboxes()
+            NSMutableAttributedString(attributedString: string)
+                .unLoadImages()
+                .unLoadCheckboxes()
     }
 
     func setEditorTextColor(_ color: NSColor) {
@@ -701,9 +711,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
             let positionKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.position")
 
             guard
-                    let path = attributedText.attribute(filePathKey, at: 0, effectiveRange: nil) as? String,
-                    let title = attributedText.attribute(titleKey, at: 0, effectiveRange: nil) as? String,
-                    let position = attributedText.attribute(positionKey, at: 0, effectiveRange: nil) as? Int
+                let path = attributedText.attribute(filePathKey, at: 0, effectiveRange: nil) as? String,
+                let title = attributedText.attribute(titleKey, at: 0, effectiveRange: nil) as? String,
+                let position = attributedText.attribute(positionKey, at: 0, effectiveRange: nil) as? Int
             else { return false }
 
             guard let imageUrl = note.getImageUrl(imageName: path) else { return false }
