@@ -250,7 +250,7 @@ class ViewController:
         checkTitlebarTopConstraint()
 
         #if CLOUDKIT
-        registerKeyValueObserver()
+            registerKeyValueObserver()
         #endif
 
         searchQueue.maxConcurrentOperationCount = 1
@@ -1841,19 +1841,7 @@ class ViewController:
             terms = search.stringValue.split(separator: " ")
         }
 
-        return !note.name.isEmpty
-            && (filter.isEmpty || isMatched(note: note, terms: terms!)
-            ) && (
-                type == .All && note.project.showInCommon
-                    || (
-                        type != .All && projects!.contains(note.project)
-                            || (note.project.parent != nil && projects!.contains(note.project.parent!))
-                    )
-                    || type == .Trash
-            ) && (
-                type == .Trash && note.isTrash()
-                    || type != .Trash && !note.isTrash()
-            )
+        return !note.name.isEmpty && (filter.isEmpty || isMatched(note: note, terms: terms!)) && (type == .All && note.project.showInCommon || (type != .All && projects!.contains(note.project) || (note.project.parent != nil && projects!.contains(note.project.parent!))) || type == .Trash) && (type == .Trash && note.isTrash() || type != .Trash && !note.isTrash())
     }
 
     public func contains(tag name: String, in tags: [String]) -> Bool {
