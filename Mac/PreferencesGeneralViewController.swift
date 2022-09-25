@@ -50,20 +50,15 @@ class PreferencesGeneralViewController: NSViewController {
     func refreshEditor() {
         guard let vc = ViewController.shared() else { return }
         NotesTextProcessor.hl = nil
-        if UserDefaultsManagement.preview {
-            vc.disablePreview()
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        vc.disablePreview()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             vc.refillEditArea()
         }
     }
 
     func refreshPreview() {
         guard let vc = ViewController.shared() else { return }
-        NotesTextProcessor.hl = nil
-        if UserDefaultsManagement.preview {
-            vc.disablePreview()
-        }
+        if UserDefaultsManagement.preview { vc.disablePreview() }
         vc.enablePreview()
     }
 
