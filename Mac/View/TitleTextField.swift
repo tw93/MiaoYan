@@ -43,10 +43,10 @@ class TitleTextField: NSTextField {
         if currentName != currentTitle {
             let ext = note.url.pathExtension
             let fileName =
-                    currentTitle
-                            .trimmingCharacters(in: CharacterSet.whitespaces)
-                            .replacingOccurrences(of: ":", with: "-")
-                            .replacingOccurrences(of: "/", with: ":")
+                currentTitle
+                    .trimmingCharacters(in: CharacterSet.whitespaces)
+                    .replacingOccurrences(of: ":", with: "-")
+                    .replacingOccurrences(of: "/", with: ":")
             let dst = note.project.url.appendingPathComponent(fileName).appendingPathExtension(ext)
 
             if !FileManager.default.fileExists(atPath: dst.path), note.move(to: dst) {

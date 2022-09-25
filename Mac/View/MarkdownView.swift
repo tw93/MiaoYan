@@ -239,8 +239,7 @@ extension MarkdownView: WKNavigationDelegate {
 
 class HandlerCopyCode: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage)
-    {
+                               didReceive message: WKScriptMessage) {
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
         let pasteboard = NSPasteboard.general
         pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
@@ -250,16 +249,14 @@ class HandlerCopyCode: NSObject, WKScriptMessageHandler {
 
 class HandlerMouseOver: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage)
-    {
+                               didReceive message: WKScriptMessage) {
         NSCursor.pointingHand.set()
     }
 }
 
 class HandlerMouseOut: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage)
-    {
+                               didReceive message: WKScriptMessage) {
         NSCursor.arrow.set()
     }
 }
