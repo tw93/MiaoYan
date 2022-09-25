@@ -2387,7 +2387,7 @@ class ViewController:
             return
         }
         titiebarHeight.constant = 52.0
-        if UserDefaultsManagement.windowFontName == "Helvetica Neue" || UserDefaultsManagement.windowFontName == "Times New Roman" {
+        if UserDefaultsManagement.windowFontName == "SF Pro Text" || UserDefaultsManagement.windowFontName == "Times New Roman" {
             titleTopConstraint.constant = 14.0
         } else {
             titleTopConstraint.constant = 10.0
