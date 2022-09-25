@@ -33,6 +33,7 @@ class PreferencesGeneralViewController: NSViewController {
 
     @IBOutlet var editorLineBreak: NSPopUpButton!
     @IBOutlet var buttonShow: NSPopUpButton!
+    @IBOutlet var codeBackground: NSPopUpButton!
 
     // MARK: global variables
 
@@ -113,6 +114,21 @@ class PreferencesGeneralViewController: NSViewController {
         restart()
     }
 
+    @IBAction func codeBackground(_ sender: NSPopUpButton) {
+        guard let vc = ViewController.shared() else { return }
+        guard let item = sender.selectedItem else { return }
+
+        if UserDefaultsManagement.codeBackground == item.title { return }
+        UserDefaultsManagement.codeBackground = item.title
+
+        NotesTextProcessor.hl = nil
+
+        vc.disablePreview()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            vc.refillEditArea()
+        }
+    }
+
     @IBAction func windowFontNameClick(_ sender: NSPopUpButton) {
         guard let item = sender.selectedItem else {
             return
@@ -129,12 +145,8 @@ class PreferencesGeneralViewController: NSViewController {
     }
 
     @IBAction func codeFontNameClick(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else {
-            return
-        }
-        guard let item = sender.selectedItem else {
-            return
-        }
+        guard let vc = ViewController.shared() else { return }
+        guard let item = sender.selectedItem else { return }
         if item.title == "Editor Font" {
             UserDefaultsManagement.codeFontName = UserDefaultsManagement.fontName
         } else {
@@ -223,9 +235,7 @@ class PreferencesGeneralViewController: NSViewController {
 
     @IBAction func appearanceClick(_ sender: NSPopUpButton) {
         if let type = AppearanceType(rawValue: sender.indexOfSelectedItem) {
-            if UserDefaultsManagement.appearanceType == type {
-                return
-            }
+            if UserDefaultsManagement.appearanceType == type { return }
             UserDefaultsManagement.appearanceType = type
         }
         restart()
@@ -269,6 +279,7 @@ class PreferencesGeneralViewController: NSViewController {
         picPopUp.selectItem(withTitle: String(UserDefaultsManagement.defaultPicUpload))
         editorLineBreak.selectItem(withTitle: String(UserDefaultsManagement.editorLineBreak))
         buttonShow.selectItem(withTitle: String(UserDefaultsManagement.buttonShow))
+        codeBackground.selectItem(withTitle: String(UserDefaultsManagement.codeBackground))
 
         if UserDefaultsManagement.codeFontName == UserDefaultsManagement.fontName {
             codeFontName.selectItem(withTitle: "Editor Font")
@@ -322,17 +333,13 @@ class PreferencesGeneralViewController: NSViewController {
             return
         }
         UserDefaultsManagement.defaultLanguage = type.rawValue
-
         UserDefaults.standard.set([type.code], forKey: "AppleLanguages")
         UserDefaults.standard.synchronize()
         restart()
     }
 
     private func restart() {
-        guard let vc = ViewController.shared(), let w = vc.view.window else {
-            return
-        }
-
+        guard let vc = ViewController.shared(), let w = vc.view.window else { return }
         let alert = NSAlert()
         alert.messageText = NSLocalizedString("Restart to MiaoYan to take effect", comment: "")
         alert.addButton(withTitle: NSLocalizedString("Confirm", comment: ""))
@@ -340,14 +347,16 @@ class PreferencesGeneralViewController: NSViewController {
         alert.beginSheetModal(for: w) { (returnCode: NSApplication.ModalResponse) in
             if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
                 UserDefaultsManagement.isFirstLaunch = true
-                do {
-                    let url = URL(fileURLWithPath: Bundle.main.resourcePath!)
-                    let path = url.deletingLastPathComponent().deletingLastPathComponent().absoluteString
-                    let task = Process()
-                    task.launchPath = "/usr/bin/open"
-                    task.arguments = [path]
-                    task.launch()
-                    exit(0)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    do {
+                        let url = URL(fileURLWithPath: Bundle.main.resourcePath!)
+                        let path = url.deletingLastPathComponent().deletingLastPathComponent().absoluteString
+                        let task = Process()
+                        task.launchPath = "/usr/bin/open"
+                        task.arguments = [path]
+                        task.launch()
+                        exit(0)
+                    }
                 }
             }
         }
