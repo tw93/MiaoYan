@@ -3,7 +3,7 @@
   <a href="https://miaoyan.app/" target="_blank"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 /></a>
   <h1 align="center">MiaoYan</h1>
   <div align="center">
-    <a href="https://twitter.com/intent/follow?&original_referer=https://github.com/tw93/MiaoYan&screen_name=HiTw93" target="_blank">
+    <a href="https://twitter.com/HiTw93" target="_blank">
        <img alt="twitter" src="https://img.shields.io/twitter/follow/Hitw93?color=%231D9BF0&label=MiaoYan%20%F0%9F%93%A2%20&logo=Twitter&style=flat-square"></a>
     <a href="https://t.me/miaoyan" target="_blank">
       <img alt="Telegram" src="https://img.shields.io/badge/chat-Telegram-blueviolet?style=flat-square&logo=Telegram"></a>
@@ -77,7 +77,7 @@
 ## Support
 
 - I have two cats, one is called TangYuan, and one is called Coke, If you think MiaoYan makes your life better, you can give my cats <a href="https://miaoyan.app/cats.html" target="_blank">feed canned food 🥩🍤</a>.
-- If you like MiaoYan, you can star it in Github. We are more welcome to [recommend MiaoYan](https://twitter.com/intent/tweet?text=%23%E5%A6%99%E8%A8%80%20MiaoYan%20-%20a%20simple%20and%20good-looking%20open-source%20mac%20markdown%20editor,%20without%20any%20redundant%20functions,%20is%20developed%20using%20swift,%20pure%20local%20use,%20has%20functions%20such%20as%20syntax%20highlighting,%20automatic%20formatting,%20presentation%20mode%20etc.&url=https://github.com/tw93/MiaoYan&via=HiTw93) to your like-minded friends.
+- If you like MiaoYan, you can star it in Github. We are more welcome to [recommend MiaoYan](https://twitter.com/intent/tweet?text=%23%E5%A6%99%E8%A8%80%20MiaoYan%20-%20a%20simple%20and%20good-looking%20open-source%20mac%20markdown%20editor,%20without%20any%20redundant%20functions,%20is%20developed%20using%20swift,%20pure%20local%20use,%20has%20functions%20such%20as%20syntax%20highlighting,%20automatic%20formatting,%20presentation%20mode%20etc.&url=https://github.com/tw93/MiaoYan) to your like-minded friends.
 
 ## Thanks
 
