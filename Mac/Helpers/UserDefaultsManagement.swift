@@ -94,6 +94,7 @@ public enum UserDefaultsManagement {
         static let PreviewLocation = "previewLocation"
         static let EditorLineBreak = "editorLineBreak"
         static let ButtonShow = "buttonShow"
+        static let CodeBackground = "CodeBackground"
     }
 
     static var appearanceType: AppearanceType {
@@ -171,6 +172,18 @@ public enum UserDefaultsManagement {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.ButtonShow)
+        }
+    }
+    
+    static var codeBackground: String {
+        get {
+            if let dl = UserDefaults.standard.object(forKey: Constants.CodeBackground) as? String {
+                return dl
+            }
+            return "No"
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.CodeBackground)
         }
     }
 

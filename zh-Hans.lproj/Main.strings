@@ -467,6 +467,9 @@
 /* Class = "NSTextField"; title = "Button Display"; ObjectID = "ZkY-LA-CH2"; */
 "ZkY-LA-CH2.title" = "按钮显示";
 
+/* Class = "NSTextField"; title = "Code Background"; ObjectID = "yMw-SJ-DAY"; */
+"yMw-SJ-DAY.title" = "代码背景";
+
 /* Class = "NSTextField"; title = "Presentation FontSize"; ObjectID = "euf-Xu-FDz"; */
 "euf-Xu-FDz.title" = "预览字号";
 

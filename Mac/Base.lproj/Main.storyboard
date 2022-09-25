@@ -1003,11 +1003,45 @@ CA
                                     <action selector="buttonShow:" target="NHv-lG-vxt" id="hMG-Lt-r86"/>
                                 </connections>
                             </popUpButton>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5dt-Rm-H7q">
+                                <rect key="frame" x="358" y="70" width="113" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Code Background" id="yMw-SJ-DAY">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Wr5-TR-hrW">
+                                <rect key="frame" x="357" y="36" width="107" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="ive-nZ-j3e"/>
+                                </constraints>
+                                <popUpButtonCell key="cell" type="push" title="No" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="hYP-Nc-TTj" id="na0-ue-fi0">
+                                    <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="menu"/>
+                                    <menu key="menu" id="tva-e3-uD0">
+                                        <items>
+                                            <menuItem title="No" state="on" id="hYP-Nc-TTj">
+                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                            </menuItem>
+                                            <menuItem title="Yes" id="lra-33-O1F">
+                                                <modifierMask key="keyEquivalentModifierMask"/>
+                                            </menuItem>
+                                        </items>
+                                    </menu>
+                                </popUpButtonCell>
+                                <connections>
+                                    <action selector="codeBackground:" target="NHv-lG-vxt" id="GG6-Hl-t8f"/>
+                                </connections>
+                            </popUpButton>
                         </subviews>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Wr5-TR-hrW" secondAttribute="trailing" constant="64" id="0Ys-7I-Lb3"/>
                             <constraint firstItem="R65-ng-mKz" firstAttribute="leading" secondItem="JVp-1k-yaa" secondAttribute="leading" id="0ds-LD-MNq"/>
                             <constraint firstItem="hU4-gw-1Hb" firstAttribute="top" secondItem="JmF-Jk-1fQ" secondAttribute="bottom" constant="10" id="1DF-SK-Scj"/>
                             <constraint firstItem="2dj-xM-00O" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="V00-bE-URD" secondAttribute="leading" id="449-bR-VBq"/>
+                            <constraint firstItem="Wr5-TR-hrW" firstAttribute="leading" secondItem="5dt-Rm-H7q" secondAttribute="leading" id="4MF-WY-PfR"/>
+                            <constraint firstItem="Wr5-TR-hrW" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5dt-Rm-H7q" secondAttribute="leading" id="4Sd-Or-mU3"/>
                             <constraint firstItem="quk-zT-1KE" firstAttribute="top" secondItem="sK1-7b-9Ux" secondAttribute="bottom" constant="24" id="675-gw-kpl"/>
                             <constraint firstItem="hU4-gw-1Hb" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="AY8-g1-9tW" secondAttribute="trailing" constant="8" symbolic="YES" id="6Zr-iN-AtA"/>
                             <constraint firstAttribute="trailing" secondItem="Xvj-bR-0Af" secondAttribute="trailing" constant="74" id="6b2-um-mV1"/>
@@ -1031,6 +1065,7 @@ CA
                             <constraint firstAttribute="trailing" secondItem="Y4u-by-JNn" secondAttribute="trailing" constant="34" id="Fyh-nb-p59"/>
                             <constraint firstItem="hGy-RZ-sE8" firstAttribute="top" secondItem="dkg-Hb-c1w" secondAttribute="bottom" constant="46" id="Hgw-G9-YQb"/>
                             <constraint firstItem="VRJ-V9-T1H" firstAttribute="centerY" secondItem="s0A-Pa-PN8" secondAttribute="centerY" id="IKH-hK-wth"/>
+                            <constraint firstItem="5dt-Rm-H7q" firstAttribute="centerY" secondItem="VRJ-V9-T1H" secondAttribute="centerY" id="ILN-fN-lmS"/>
                             <constraint firstItem="M4h-Tm-bV8" firstAttribute="leading" secondItem="s0A-Pa-PN8" secondAttribute="leading" id="JSJ-bb-44I"/>
                             <constraint firstItem="gRV-aP-Cxd" firstAttribute="leading" secondItem="4Xk-4f-czc" secondAttribute="leading" constant="34" id="JeN-JY-HZE"/>
                             <constraint firstAttribute="trailing" secondItem="gRV-aP-Cxd" secondAttribute="trailing" constant="34" id="KRI-8i-cJr"/>
@@ -1050,6 +1085,7 @@ CA
                             <constraint firstAttribute="trailing" secondItem="6PF-7C-RLR" secondAttribute="trailing" constant="64" id="T2T-MS-Has"/>
                             <constraint firstItem="TrE-Qn-Cw5" firstAttribute="top" secondItem="4Xk-4f-czc" secondAttribute="top" constant="40" id="TLP-yP-rrg"/>
                             <constraint firstAttribute="trailing" secondItem="9BT-WY-5cD" secondAttribute="trailing" constant="64" id="TLt-iW-EyH"/>
+                            <constraint firstItem="5dt-Rm-H7q" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="9BT-WY-5cD" secondAttribute="leading" id="Tfh-hV-pB8"/>
                             <constraint firstItem="KBr-V4-nMQ" firstAttribute="leading" secondItem="quk-zT-1KE" secondAttribute="leading" id="Tgm-n3-A6b"/>
                             <constraint firstItem="JmF-Jk-1fQ" firstAttribute="leading" secondItem="nLz-A7-TaR" secondAttribute="leading" id="V6c-0f-4yO"/>
                             <constraint firstItem="4OB-NE-ZD8" firstAttribute="top" secondItem="Xvj-bR-0Af" secondAttribute="bottom" constant="10" id="VMT-6B-fSE"/>
@@ -1059,11 +1095,13 @@ CA
                             <constraint firstItem="Nyw-AY-Ude" firstAttribute="leading" secondItem="VRJ-V9-T1H" secondAttribute="leading" id="W9e-Pi-RA7"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="hU4-gw-1Hb" secondAttribute="trailing" constant="20" symbolic="YES" id="WTr-lv-sVP"/>
                             <constraint firstItem="VRJ-V9-T1H" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="s0A-Pa-PN8" secondAttribute="trailing" constant="8" symbolic="YES" id="WUI-le-oNY"/>
+                            <constraint firstAttribute="trailing" secondItem="5dt-Rm-H7q" secondAttribute="trailing" constant="55" id="WsD-JH-SDT"/>
                             <constraint firstItem="nLz-A7-TaR" firstAttribute="leading" secondItem="hGy-RZ-sE8" secondAttribute="trailing" constant="24" id="WtJ-ah-Ugk"/>
                             <constraint firstItem="Y4u-by-JNn" firstAttribute="top" secondItem="5lh-Cd-xzy" secondAttribute="bottom" constant="23" id="YCs-ig-FvR"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="XZf-Ag-G2L" secondAttribute="trailing" constant="40" id="Yth-by-soR"/>
                             <constraint firstAttribute="trailing" secondItem="SPE-82-mf1" secondAttribute="trailing" constant="34" id="Z0v-wj-G0q"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="V00-bE-URD" secondAttribute="trailing" constant="12" id="Zu8-nF-eSZ"/>
+                            <constraint firstItem="Wr5-TR-hrW" firstAttribute="top" secondItem="5dt-Rm-H7q" secondAttribute="bottom" constant="10" id="ZuO-c7-vDO"/>
                             <constraint firstItem="Nyw-AY-Ude" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="M4h-Tm-bV8" secondAttribute="trailing" constant="8" symbolic="YES" id="aOB-BZ-Kb9"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="TrE-Qn-Cw5" secondAttribute="trailing" constant="20" symbolic="YES" id="aQ9-dc-jos"/>
                             <constraint firstItem="XZf-Ag-G2L" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Xvj-bR-0Af" secondAttribute="leading" id="aTU-95-Sfu"/>
@@ -1121,6 +1159,7 @@ CA
                         <outlet property="appearance" destination="nbv-Zo-swV" id="X07-uA-Cb7"/>
                         <outlet property="appearanceLabel" destination="TrE-Qn-Cw5" id="6OY-nG-s9U"/>
                         <outlet property="buttonShow" destination="Nyw-AY-Ude" id="Yp9-FH-ogG"/>
+                        <outlet property="codeBackground" destination="Wr5-TR-hrW" id="6cJ-2T-hSL"/>
                         <outlet property="codeFontName" destination="5lh-Cd-xzy" id="L0R-wn-jxQ"/>
                         <outlet property="codeFontWidthConstraint" destination="UTd-hW-8Gf" id="dSY-dQ-Rqd"/>
                         <outlet property="defaultStoragePath" destination="dkg-Hb-c1w" id="ly3-HH-jj3"/>
