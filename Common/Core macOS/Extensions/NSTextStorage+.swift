@@ -35,6 +35,7 @@ public extension NSTextStorage {
         paragraphStyle.lineHeightMultiple = editorLineHeight
         paragraphStyle.maximumLineHeight = lineHeight
         paragraphStyle.minimumLineHeight = lineHeight
+
         return paragraphStyle
     }
 

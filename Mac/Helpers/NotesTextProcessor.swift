@@ -172,6 +172,8 @@ public class NotesTextProcessor {
 
     public static var publicFont = NSFont(name: "Helvetica Neue", size: CGFloat(UserDefaultsManagement.fontSize))
 
+    public static var monacoFont = NSFont(name: "Monaco", size: CGFloat(UserDefaultsManagement.fontSize))
+
     public static var titleFont = NSFont(name: UserDefaultsManagement.windowFontName, size: CGFloat(UserDefaultsManagement.titleFontSize))
 
     /**
@@ -306,9 +308,11 @@ public class NotesTextProcessor {
                 }
             )
 
-            attributedString.mutableString.enumerateSubstrings(in: range, options: .byParagraphs) { _, range, _, _ in
-                let rangeNewline = range.upperBound == attributedString.length ? range : NSRange(range.location..<range.upperBound + 1)
-                attributedString.addAttribute(.backgroundColor, value: NotesTextProcessor.codeBackground, range: rangeNewline)
+            if UserDefaultsManagement.codeBackground == "Yes" {
+                attributedString.mutableString.enumerateSubstrings(in: range, options: .byParagraphs) { _, range, _, _ in
+                    let rangeNewline = range.upperBound == attributedString.length ? range : NSRange(range.location..<range.upperBound + 1)
+                    attributedString.addAttribute(.backgroundColor, value: NotesTextProcessor.codeBackground, range: rangeNewline)
+                }
             }
         }
     }
@@ -777,15 +781,7 @@ public class NotesTextProcessor {
             let substring = attributedString.mutableString.substring(with: range)
             if !substring.isNumber {
                 attributedString.addAttribute(.font, value: NSFont.systemFont(ofSize: CGFloat(UserDefaultsManagement.fontSize - 2)), range: range)
-                attributedString.fixAttributes(in: range)
-            }
-        }
-
-        if UserDefaultsManagement.fontName == "Times New Roman" {
-            NotesTextProcessor.englishAndSymbolRegex.matches(string, range: paragraphRange) { result in
-                guard let range = result?.range else { return }
-                attributedString.addAttribute(.font, value: georgiaFont!, range: range)
-                attributedString.fixAttributes(in: range)
+                attributedString.fixFontAttribute(in: range)
             }
         }
 
@@ -793,14 +789,22 @@ public class NotesTextProcessor {
             NotesTextProcessor.blankRegex.matches(string, range: paragraphRange) { result in
                 guard let range = result?.range else { return }
                 attributedString.addAttribute(.font, value: publicFont!, range: range)
-                attributedString.fixAttributes(in: range)
             }
+        }
 
+        if UserDefaultsManagement.fontName == "Times New Roman", georgiaFont != nil {
+            NotesTextProcessor.englishAndSymbolRegex.matches(string, range: paragraphRange) { result in
+                guard let range = result?.range else { return }
+                attributedString.addAttribute(.font, value: georgiaFont!, range: range)
+            }
+        }
+
+        if monacoFont != nil {
             NotesTextProcessor.allTodoInlineRegex.matches(string, range: paragraphRange) { result in
                 guard let range = result?.range else { return }
                 let middleRange = NSMakeRange(range.location + 3, 1)
-                attributedString.addAttribute(.font, value: publicFont!, range: middleRange)
-                attributedString.fixAttributes(in: range)
+
+                attributedString.addAttribute(.font, value: monacoFont!, range: middleRange)
             }
         }
 
@@ -836,11 +840,19 @@ public class NotesTextProcessor {
             guard let range = result?.range else { return }
             styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.htmlColor, range: range)
         }
-        
+
         if UserDefaultsManagement.fontName == "Times New Roman" {
             NotesTextProcessor.englishAndSymbolRegex.matches(styleApplier.string, range: range) { result in
                 guard let range = result?.range else { return }
                 styleApplier.addAttribute(.font, value: georgiaFont!, range: range)
+            }
+
+            if monacoFont != nil {
+                NotesTextProcessor.allTodoInlineRegex.matches(styleApplier.string, range: range) { result in
+                    guard let range = result?.range else { return }
+                    let middleRange = NSMakeRange(range.location + 3, 1)
+                    styleApplier.addAttribute(.font, value: monacoFont!, range: middleRange)
+                }
             }
         }
     }
