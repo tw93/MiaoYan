@@ -279,6 +279,17 @@ class EditTextView: NSTextView, NSTextFinderClient {
         formatter.link()
     }
 
+    @IBAction func todoMenu(_ sender: Any) {
+        guard let vc = ViewController.shared(),
+              let editArea = vc.editArea,
+              let note = EditTextView.note,
+              !UserDefaultsManagement.preview,
+              editArea.hasFocus()
+        else { return }
+        let formatter = TextFormatter(textView: editArea, note: note, shouldScanMarkdown: false)
+        formatter.toggleTodo()
+    }
+
     @IBAction func underlineMenu(_ sender: Any) {
         guard let vc = ViewController.shared(),
               let editArea = vc.editArea,
@@ -539,7 +550,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             }
         }
 
-        if event.keyCode == kVK_Return, !event.modifierFlags.contains(.command), !hasMarkedText() {
+        if event.keyCode == kVK_Return, !hasMarkedText() {
             breakUndoCoalescing()
             let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
             // 对于有shift的直接回车
@@ -550,16 +561,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             }
             breakUndoCoalescing()
             fillHighlightLinks()
-            saveCursorPosition()
-            return
-        }
-
-        // 切换todo的快捷键
-        if event.keyCode == kVK_Return, event.modifierFlags.contains(.command) {
-            breakUndoCoalescing()
-            let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
-            formatter.toggleTodo()
-            breakUndoCoalescing()
             saveCursorPosition()
             return
         }

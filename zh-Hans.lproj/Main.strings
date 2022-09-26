@@ -233,6 +233,9 @@
 /* Class = "NSMenuItem"; title = "Link"; ObjectID = "cnW-gr-ceF"; */
 "cnW-gr-ceF.title" = "链接";
 
+/* Class = "NSMenuItem"; title = "Todo"; ObjectID = "FxB-UV-FA4"; */
+"FxB-UV-FA4.title" = "待办";
+
 /* Class = "NSMenuItem"; title = "Shift Right"; ObjectID = "Iba-Po-ajH"; */
 "Iba-Po-ajH.title" = "右移";
 
