@@ -272,6 +272,11 @@ CA
                                                 <action selector="linkMenu:" target="N0L-g4-qwj" id="gfx-yL-BHP"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Todo" keyEquivalent="t" id="FxB-UV-FA4">
+                                            <connections>
+                                                <action selector="todoMenu:" target="N0L-g4-qwj" id="az6-KC-Ymg"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="3qd-xT-Shm"/>
                                         <menuItem title="Shift Left" keyEquivalent="[" id="Iba-Po-ajH">
                                             <connections>
