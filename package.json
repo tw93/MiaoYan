@@ -10,9 +10,6 @@
     "anywhere": "anywhere",
     "dev": "npm-run-all --parallel anywhere watch"
   },
-  "pre-push": [
-    "build"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tw93/MiaoYan.git"
