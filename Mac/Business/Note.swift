@@ -183,16 +183,16 @@ public class Note: NSObject {
             try FileManager.default.moveItem(at: url, to: destination)
 
             #if os(OSX)
-            let restorePin = isPinned
-            if isPinned {
-                removePin()
-            }
+                let restorePin = isPinned
+                if isPinned {
+                    removePin()
+                }
 
-            overwrite(url: destination)
+                overwrite(url: destination)
 
-            if restorePin {
-                addPin()
-            }
+                if restorePin {
+                    addPin()
+                }
             #endif
 
             NSLog("File moved from \"\(url.deletingPathExtension().lastPathComponent)\" to \"\(destination.deletingPathExtension().lastPathComponent)\"")
@@ -248,79 +248,79 @@ public class Note: NSObject {
     }
 
     #if os(iOS)
-    // Return URL moved in
-    func removeFile(completely: Bool = false) -> [URL]? {
-        if FileManager.default.fileExists(atPath: url.path) {
-            if isTrash() || completely || isEmpty() {
+        // Return URL moved in
+        func removeFile(completely: Bool = false) -> [URL]? {
+            if FileManager.default.fileExists(atPath: url.path) {
+                if isTrash() || completely || isEmpty() {
+                    try? FileManager.default.removeItem(at: url)
+                    return nil
+                }
+
+                guard let trashUrl = getDefaultTrashURL() else {
+                    print("Trash not found")
+
+                    var resultingItemUrl: NSURL?
+                    if #available(iOS 11.0, *) {
+                        try? FileManager.default.trashItem(at: url, resultingItemURL: &resultingItemUrl)
+
+                        if let result = resultingItemUrl, let path = result.path {
+                            return [URL(fileURLWithPath: path), url]
+                        }
+                    }
+
+                    return nil
+                }
+
+                var trashUrlTo = trashUrl.appendingPathComponent(name)
+
+                if FileManager.default.fileExists(atPath: trashUrlTo.path) {
+                    let reserveName = "\(Int(Date().timeIntervalSince1970)) \(name)"
+                    trashUrlTo = trashUrl.appendingPathComponent(reserveName)
+                }
+
+                print("Note moved in custom Trash folder")
+                try? FileManager.default.moveItem(at: url, to: trashUrlTo)
+
+                return [trashUrlTo, url]
+            }
+
+            return nil
+        }
+    #endif
+
+    #if os(OSX)
+        func removeFile(completely: Bool = false) -> [URL]? {
+            guard FileManager.default.fileExists(atPath: url.path) else { return nil }
+
+            if isTrash() {
                 try? FileManager.default.removeItem(at: url)
                 return nil
             }
 
-            guard let trashUrl = getDefaultTrashURL() else {
-                print("Trash not found")
+            do {
+                guard let dst = Storage.sharedInstance().trashItem(url: url) else {
+                    var resultingItemUrl: NSURL?
+                    try FileManager.default.trashItem(at: url, resultingItemURL: &resultingItemUrl)
 
-                var resultingItemUrl: NSURL?
-                if #available(iOS 11.0, *) {
-                    try? FileManager.default.trashItem(at: url, resultingItemURL: &resultingItemUrl)
+                    guard let dst = resultingItemUrl else { return nil }
 
-                    if let result = resultingItemUrl, let path = result.path {
-                        return [URL(fileURLWithPath: path), url]
-                    }
+                    let originalURL = url
+                    overwrite(url: dst as URL)
+                    return [url, originalURL]
                 }
 
-                return nil
-            }
-
-            var trashUrlTo = trashUrl.appendingPathComponent(name)
-
-            if FileManager.default.fileExists(atPath: trashUrlTo.path) {
-                let reserveName = "\(Int(Date().timeIntervalSince1970)) \(name)"
-                trashUrlTo = trashUrl.appendingPathComponent(reserveName)
-            }
-
-            print("Note moved in custom Trash folder")
-            try? FileManager.default.moveItem(at: url, to: trashUrlTo)
-
-            return [trashUrlTo, url]
-        }
-
-        return nil
-    }
-    #endif
-
-    #if os(OSX)
-    func removeFile(completely: Bool = false) -> [URL]? {
-        guard FileManager.default.fileExists(atPath: url.path) else { return nil }
-
-        if isTrash() {
-            try? FileManager.default.removeItem(at: url)
-            return nil
-        }
-
-        do {
-            guard let dst = Storage.sharedInstance().trashItem(url: url) else {
-                var resultingItemUrl: NSURL?
-                try FileManager.default.trashItem(at: url, resultingItemURL: &resultingItemUrl)
-
-                guard let dst = resultingItemUrl else { return nil }
+                try FileManager.default.moveItem(at: url, to: dst)
 
                 let originalURL = url
-                overwrite(url: dst as URL)
+                overwrite(url: dst)
                 return [url, originalURL]
+
+            } catch {
+                print("Trash error: \(error)")
             }
 
-            try FileManager.default.moveItem(at: url, to: dst)
-
-            let originalURL = url
-            overwrite(url: dst)
-            return [url, originalURL]
-
-        } catch {
-            print("Trash error: \(error)")
+            return nil
         }
-
-        return nil
-    }
     #endif
 
     private func getDefaultTrashURL() -> URL? {
@@ -340,7 +340,7 @@ public class Note: NSObject {
             if text == nil {
                 let startIndex = content.index(content.startIndex, offsetBy: 0)
                 let endIndex = content.index(content.startIndex, offsetBy: 250)
-                preview = String(content[startIndex...endIndex])
+                preview = String(content[startIndex ... endIndex])
             } else {
                 preview = String(content.prefix(250))
             }
@@ -422,13 +422,13 @@ public class Note: NSObject {
         isPinned = true
 
         #if CLOUDKIT || os(iOS)
-        if cloudSave {
-            sharedStorage.saveCloudPins()
-        }
+            if cloudSave {
+                sharedStorage.saveCloudPins()
+            }
         #elseif os(OSX)
-        var pin = true
-        let data = Data(bytes: &pin, count: 1)
-        try? url.setExtendedAttribute(data: data, forName: "com.tw93.miaoyan.pin")
+            var pin = true
+            let data = Data(bytes: &pin, count: 1)
+            try? url.setExtendedAttribute(data: data, forName: "com.tw93.miaoyan.pin")
         #endif
     }
 
@@ -438,13 +438,13 @@ public class Note: NSObject {
             isPinned = false
 
             #if CLOUDKIT || os(iOS)
-            if cloudSave {
-                sharedStorage.saveCloudPins()
-            }
+                if cloudSave {
+                    sharedStorage.saveCloudPins()
+                }
             #elseif os(OSX)
-            var pin = false
-            let data = Data(bytes: &pin, count: 1)
-            try? url.setExtendedAttribute(data: data, forName: "com.tw93.miaoyan.pin")
+                var pin = false
+                let data = Data(bytes: &pin, count: 1)
+                try? url.setExtendedAttribute(data: data, forName: "com.tw93.miaoyan.pin")
             #endif
         }
     }
@@ -467,20 +467,13 @@ public class Note: NSObject {
                 let headerList = list[1].components(separatedBy: "\n")
                 for header in headerList {
                     let nsHeader = header as NSString
-                    let regex = try! NSRegularExpression(pattern: "title: \"(.*?)\"", options: [])
+                    let regex = try! NSRegularExpression(pattern: "title: (.*?)", options: [])
                     let matches = regex.matches(in: String(nsHeader), options: [], range: NSMakeRange(0, (nsHeader as String).count))
 
                     if let match = matches.first {
-                        let range = match.range(at: 1)
-                        extractedTitle = nsHeader.substring(with: range)
+                        list.remove(at: 1)
                         break
                     }
-                }
-
-                if extractedTitle.count > 0 {
-                    list.removeSubrange(Range(0...1))
-
-                    return "## " + extractedTitle + "\n\n" + list.joined()
                 }
 
                 return list.joined()
@@ -510,8 +503,7 @@ public class Note: NSObject {
                 let info = url.appendingPathComponent("info.json")
 
                 if let jsonData = try? Data(contentsOf: info),
-                   let info = try? JSONDecoder().decode(TextBundleInfo.self, from: jsonData)
-                {
+                   let info = try? JSONDecoder().decode(TextBundleInfo.self, from: jsonData) {
                     if info.version == 0x02 {
                         type = NoteType.withUTI(rawValue: info.type)
                         container = .textBundleV2
@@ -552,7 +544,7 @@ public class Note: NSObject {
     public func save(content: NSMutableAttributedString) {
         if isRTF() {
             #if os(OSX)
-            self.content = content.unLoadUnderlines()
+                self.content = content.unLoadUnderlines()
             #endif
         } else {
             self.content = content.unLoad()
@@ -628,8 +620,7 @@ public class Note: NSObject {
                 url = url.deletingLastPathComponent()
 
                 if let dirList = try? FileManager.default.contentsOfDirectory(atPath: url.path),
-                   let first = dirList.first(where: { $0.starts(with: "text.") })
-                {
+                   let first = dirList.first(where: { $0.starts(with: "text.") }) {
                     url = url.appendingPathComponent(first)
 
                     return url
@@ -841,30 +832,30 @@ public class Note: NSObject {
 
     #if os(OSX)
 
-    public func duplicate() {
-        var url = url
-        let ext = url.pathExtension
-        url.deletePathExtension()
+        public func duplicate() {
+            var url = url
+            let ext = url.pathExtension
+            url.deletePathExtension()
 
-        let name = url.lastPathComponent
-        url.deleteLastPathComponent()
+            let name = url.lastPathComponent
+            url.deleteLastPathComponent()
 
-        let now = dateFormatter.formatForDuplicate(Date())
-        url.appendPathComponent(name + " " + now)
-        url.appendPathExtension(ext)
-        try? FileManager.default.copyItem(at: self.url, to: url)
-    }
+            let now = dateFormatter.formatForDuplicate(Date())
+            url.appendPathComponent(name + " " + now)
+            url.appendPathExtension(ext)
+            try? FileManager.default.copyItem(at: self.url, to: url)
+        }
 
-    public func getDupeName() -> String? {
-        var url = url
-        url.deletePathExtension()
+        public func getDupeName() -> String? {
+            var url = url
+            url.deletePathExtension()
 
-        let name = url.lastPathComponent
-        url.deleteLastPathComponent()
+            let name = url.lastPathComponent
+            url.deleteLastPathComponent()
 
-        let now = dateFormatter.formatForDuplicate(Date())
-        return name + " " + now
-    }
+            let now = dateFormatter.formatForDuplicate(Date())
+            return name + " " + now
+        }
     #endif
 
     public func dealContent() {
@@ -963,8 +954,7 @@ public class Note: NSObject {
         let json = textBundleURL.appendingPathComponent("info.json")
 
         if let jsonData = try? Data(contentsOf: json),
-           let info = try? JSONDecoder().decode(TextBundleInfo.self, from: jsonData)
-        {
+           let info = try? JSONDecoder().decode(TextBundleInfo.self, from: jsonData) {
             if let flatExtension = info.flatExtension {
                 let ext = NoteType.withUTI(rawValue: info.type).getExtension(for: .textBundleV2)
                 let fileName = "text.\(ext)"

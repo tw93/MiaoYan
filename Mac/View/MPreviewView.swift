@@ -2,7 +2,7 @@ import Carbon.HIToolbox
 import WebKit
 
 #if os(iOS)
-import NightNight
+    import NightNight
 #endif
 
 public typealias MPreviewViewClosure = () -> Void
@@ -28,13 +28,13 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         navigationDelegate = self
 
         #if os(OSX)
-        if #available(macOS 10.13, *) {
-            setValue(false, forKey: "drawsBackground")
-        }
+            if #available(macOS 10.13, *) {
+                setValue(false, forKey: "drawsBackground")
+            }
         #else
-        isOpaque = false
-        backgroundColor = UIColor.clear
-        scrollView.backgroundColor = UIColor.clear
+            isOpaque = false
+            backgroundColor = UIColor.clear
+            scrollView.backgroundColor = UIColor.clear
         #endif
 
         load(note: note)
@@ -218,9 +218,9 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             }
 
             #if os(iOS)
-            UIApplication.shared.openURL(url)
+                UIApplication.shared.openURL(url)
             #elseif os(OSX)
-            NSWorkspace.shared.open(url)
+                NSWorkspace.shared.open(url)
             #endif
         default:
             decisionHandler(.allow)
@@ -234,6 +234,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         }
 
         let markdownString = note.getPrettifiedContent()
+
         let imagesStorage = note.project.url
         let css = MarkdownView.getPreviewStyle()
 
@@ -276,13 +277,13 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         template = template.replacingOccurrences(of: "DOWN_CSS", with: css) as NSString
 
         #if os(iOS)
-        if NightNight.theme == .night {
-            template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
-        }
+            if NightNight.theme == .night {
+                template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
+            }
         #else
-        if UserDataService.instance.isDark {
-            template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
-        }
+            if UserDataService.instance.isDark {
+                template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
+            }
         #endif
 
         return template as String
@@ -323,7 +324,6 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             pageHTMLString = try htmlFromTemplate(markdownString, css: css)
         }
 
-//        print(">>>>>>>>>>")
 //        print(pageHTMLString)
         let indexURL = createTemporaryBundle(pageHTMLString: pageHTMLString)
 
@@ -475,13 +475,13 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         }
 
         #if os(iOS)
-        if NightNight.theme == .night {
-            template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
-        }
+            if NightNight.theme == .night {
+                template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
+            }
         #else
-        if UserDataService.instance.isDark {
-            template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
-        }
+            if UserDataService.instance.isDark {
+                template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
+            }
         #endif
         var htmlContent = htmlString
         let currentName = vc.titleLabel.stringValue
