@@ -458,8 +458,6 @@ public class Note: NSObject {
     }
 
     func cleanMetaData(content: String) -> String {
-        var extractedTitle = ""
-
         if content.hasPrefix("---\n") {
             var list = content.components(separatedBy: "---")
 
@@ -470,7 +468,7 @@ public class Note: NSObject {
                     let regex = try! NSRegularExpression(pattern: "title: (.*?)", options: [])
                     let matches = regex.matches(in: String(nsHeader), options: [], range: NSMakeRange(0, (nsHeader as String).count))
 
-                    if let match = matches.first {
+                    if matches.first != nil {
                         list.remove(at: 1)
                         break
                     }
