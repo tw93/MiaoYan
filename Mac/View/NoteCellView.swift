@@ -21,9 +21,6 @@ class NoteCellView: NSTableCellView {
         if let originY = UserDefaultsManagement.cellViewFrameOriginY {
             adjustTopMargin(margin: originY)
         }
-        // 增加间距
-        name.addCharacterSpacing()
-        date.addCharacterSpacing()
         super.viewWillDraw()
     }
 
@@ -37,6 +34,8 @@ class NoteCellView: NSTableCellView {
 
         name.font = UserDefaultsManagement.nameFont
         date.font = UserDefaultsManagement.dateFont
+        name.addCharacterSpacing()
+        date.addCharacterSpacing()
     }
 
     public func configure(note: Note) {
