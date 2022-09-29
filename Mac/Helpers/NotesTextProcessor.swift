@@ -781,7 +781,7 @@ public class NotesTextProcessor {
             let substring = attributedString.mutableString.substring(with: range)
             if !substring.isNumber {
                 attributedString.addAttribute(.font, value: NSFont.systemFont(ofSize: CGFloat(UserDefaultsManagement.fontSize - 2)), range: range)
-                attributedString.fixFontAttribute(in: range)
+                attributedString.fixAttributes(in: range)
             }
         }
 
