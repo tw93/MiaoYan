@@ -50,13 +50,11 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     override func updateInsertionPointStateAndRestartTimer(_ restartFlag: Bool) {
-        if let range = selectedRanges[0] as? NSRange, range.length > 0, range != initRange {
-            DispatchQueue.main.async {
-                self.textStorage?.updateParagraphStyle()
-                self.initRange = range
-            }
-        }
         super.updateInsertionPointStateAndRestartTimer(true)
+        if let range = selectedRanges[0] as? NSRange, range.length > 0, range != initRange {
+            textStorage?.updateParagraphStyle()
+            initRange = range
+        }
     }
 
     override func setNeedsDisplay(_ invalidRect: NSRect) {
@@ -79,6 +77,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         _ = manager.boundingRect(forGlyphRange: NSRange(location: index, length: 1), in: container)
 
+        super.mouseDown(with: event)
+
         saveCursorPosition()
 
         if !UserDefaultsManagement.preview {
@@ -86,13 +86,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         if initRange.length > 0 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                self.textStorage?.updateParagraphStyle()
-                self.initRange = NSRange(location: 0, length: 0)
-            }
+            initRange = NSRange(location: 0, length: 0)
+            textStorage?.updateParagraphStyle()
         }
-
-        super.mouseDown(with: event)
     }
 
     override func mouseMoved(with event: NSEvent) {
@@ -403,16 +399,16 @@ class EditTextView: NSTextView, NSTextFinderClient {
             storage.setAttributedString(note.content)
         }
 
-        fillHighlightLinks()
-
         if highlight {
             let search = getSearchText()
             let processor = NotesTextProcessor(storage: storage)
             processor.highlightKeyword(search: search)
             isHighlighted = true
         }
-        applyLeftParagraphStyle()
+
         restoreCursorPosition(needScrollToCursor: needScrollToCursor)
+        fillHighlightLinks()
+        applyLeftParagraphStyle()
     }
 
     private func setTextColor() {
@@ -592,10 +588,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             deleteUnusedImages(checkRange: affectedCharRange)
 
             typingAttributes.removeValue(forKey: .todo)
-
-            if typingAttributes[.paragraphStyle] is NSMutableParagraphStyle {
-                applyLeftParagraphStyle()
-            }
 
             if textStorage?.length == 0 {
                 typingAttributes[.foregroundColor] = UserDataService.instance.isDark ? NSColor.white : NSColor.black
@@ -967,7 +959,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     public func fillHighlightLinks() {
         guard let storage = textStorage else { return }
-
         let range = NSRange(0..<storage.length)
         let processor = NotesTextProcessor(storage: storage, range: range)
         processor.highlightLinks()
