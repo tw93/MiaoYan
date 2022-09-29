@@ -294,24 +294,27 @@ class ViewController:
 
     func handleForAppMode() {
         guard let vc = ViewController.shared() else { return }
+
         let size = Int(vc.splitView.subviews[0].frame.width)
         let sideSize = Int(vc.sidebarSplitView.subviews[0].frame.width)
+
         setSideDividerHidden(hidden: sideSize == 0)
         setDividerHidden(hidden: size == 0)
         refreshMiaoYanNum()
+
         if UserDefaultsManagement.isSingleMode {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.hideSidebar("")
+                vc.hideSidebar("")
             }
+
             // hack for crash
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 vc.toastInSingleMode()
             }
-        } else {
-            if size == 0 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                    self.showNoteList("")
-                }
+        } else if sideSize == 0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                vc.showSidebar("")
+                vc.setSideDividerHidden(hidden: false)
             }
         }
 
@@ -816,8 +819,6 @@ class ViewController:
                 UserDefaultsManagement.isSingleMode = false
                 UserDefaultsManagement.isFirstLaunch = true
                 UserDefaultsManagement.singleModePath = ""
-                showSidebar("")
-                setSideDividerHidden(hidden: false)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     self.restart()
                 }
@@ -984,8 +985,8 @@ class ViewController:
         if UserDefaultsManagement.isSingleMode {
             UserDefaultsManagement.isSingleMode = false
             UserDefaultsManagement.singleModePath = ""
-            showSidebar("")
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            UserDefaultsManagement.isFirstLaunch = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 NSApplication.shared.terminate(self)
             }
         } else {
