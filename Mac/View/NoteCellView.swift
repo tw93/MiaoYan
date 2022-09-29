@@ -28,12 +28,13 @@ class NoteCellView: NSTableCellView {
         super.draw(dirtyRect)
 
         renderPin()
-        updateSelectionHighlight()
-
         pin.frame.origin.y = CGFloat(-4) + CGFloat(cellSpacing) + CGFloat(0)
+        
+        updateSelectionHighlight()
 
         name.font = UserDefaultsManagement.nameFont
         date.font = UserDefaultsManagement.dateFont
+
         name.addCharacterSpacing()
         date.addCharacterSpacing()
     }
@@ -60,7 +61,6 @@ class NoteCellView: NSTableCellView {
             name.textColor = NSColor.white
         } else {
             date.textColor = labelColor
-
             if #available(OSX 10.13, *) {
                 name.textColor = NSColor(named: "mainText")
             } else {
@@ -134,5 +134,7 @@ class NoteCellView: NSTableCellView {
             date.stringValue = note.getDateForLabel()
         }
         updateSelectionHighlight()
+        name.addCharacterSpacing()
+        date.addCharacterSpacing()
     }
 }
