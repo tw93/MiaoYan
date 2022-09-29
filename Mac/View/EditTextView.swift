@@ -52,8 +52,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override func updateInsertionPointStateAndRestartTimer(_ restartFlag: Bool) {
         super.updateInsertionPointStateAndRestartTimer(true)
         if let range = selectedRanges[0] as? NSRange, range.length > 0, range != initRange {
-            textStorage?.updateParagraphStyle()
-            initRange = range
+            DispatchQueue.main.async {
+                self.textStorage?.updateParagraphStyle()
+                self.initRange = range
+            }
         }
     }
 
@@ -86,8 +88,11 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         if initRange.length > 0 {
-            initRange = NSRange(location: 0, length: 0)
-            textStorage?.updateParagraphStyle()
+            DispatchQueue.main.async {
+                self.textStorage?.updateParagraphStyle()
+                self.initRange = NSRange(location: 0, length: 0)
+            }
+
         }
     }
 
