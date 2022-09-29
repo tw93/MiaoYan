@@ -197,7 +197,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             EditTextView.shouldForceRescan = true
 
             let currentRange = selectedRange()
-
             breakUndoCoalescing()
             insertText(clipboard, replacementRange: currentRange)
             breakUndoCoalescing()
@@ -229,6 +228,13 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
             if (storage.attribute(filePathKey, at: range.location, effectiveRange: nil) as? String) != nil {
                 return
+            }
+
+            // 防止文件其实是一个文件夹的场景
+            if let url = NSURL(from: NSPasteboard.general), let ext = url.pathExtension {
+                if !url.isFileURL || ["app", "xcodeproj", "screenflow", "xcworkspace", "bundle", "lproj"].firstIndex(where: { $0 == ext })! > -1 {
+                    return
+                }
             }
 
             if let note = EditTextView.note,
@@ -969,7 +975,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             if !url.isFileURL {
                 return false
             }
-
             return saveFile(url: url as URL, in: note)
         }
 
