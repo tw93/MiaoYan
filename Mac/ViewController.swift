@@ -294,10 +294,8 @@ class ViewController:
 
     func handleForAppMode() {
         guard let vc = ViewController.shared() else { return }
-
-        let size = Int(vc.splitView.subviews[0].frame.width)
-        let sideSize = Int(vc.sidebarSplitView.subviews[0].frame.width)
-
+        let size = vc.splitView.subviews[0].frame.width
+        let sideSize = vc.sidebarSplitView.subviews[0].frame.width
         setSideDividerHidden(hidden: sideSize == 0)
         setDividerHidden(hidden: size == 0)
         refreshMiaoYanNum()
@@ -321,7 +319,7 @@ class ViewController:
         // 兼容新系统 13.0 的标题闪动问题
         if isFirstClick, #available(OSX 13.0, *) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-                vc.titleLabel.editModeOn()
+                self.titleLabel.editModeOn()
                 self.enablePreview()
                 self.disablePreview()
                 self.focusEditArea()
@@ -501,14 +499,17 @@ class ViewController:
     // MARK: - Actions
 
     @IBAction func searchAndCreate(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
-        let size = Int(vc.splitView.subviews[0].frame.width)
+        guard let vc = ViewController.shared() else {
+            return
+        }
+
+        let size = vc.splitView.subviews[0].frame.width
 
         if size == 0 {
             toggleNoteList(self)
         }
 
-        vc.search.window?.makeFirstResponder(search)
+        vc.search.window?.makeFirstResponder(vc.search)
     }
 
     @IBAction func sortDirectionBy(_ sender: NSMenuItem) {
@@ -933,7 +934,7 @@ class ViewController:
 
         if event.keyCode == kVK_ANSI_F, event.modifierFlags.contains(.command), !event.modifierFlags.contains(.control) {
             if notesTableView.getSelectedNote() != nil {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     self.titleLabel.saveTitle()
                 }
                 return true
@@ -1076,11 +1077,11 @@ class ViewController:
 
             let moveTitle = NSLocalizedString("Move", comment: "Menu")
             let moveMenu = vc.noteMenu.item(withTitle: moveTitle)
-            let view = vc.notesTableView.rect(ofRow: notesTableView.selectedRow)
-            let x = Int(vc.splitView.subviews[0].frame.width) + 5
+            let view = vc.notesTableView.rect(ofRow: vc.notesTableView.selectedRow)
+            let x = vc.splitView.subviews[0].frame.width + 5
             let general = moveMenu?.submenu?.item(at: 0)
 
-            moveMenu?.submenu?.popUp(positioning: general, at: NSPoint(x: x, y: Int(view.origin.y) + 8), in: vc.notesTableView)
+            moveMenu?.submenu?.popUp(positioning: general, at: NSPoint(x: x, y: view.origin.y + 8), in: vc.notesTableView)
         }
     }
 
@@ -1165,23 +1166,28 @@ class ViewController:
     }
 
     @objc func switchTitleToEditMode() {
-        guard let vc = ViewController.shared() else { return }
-        if vc.notesTableView.selectedRow > -1 {
-            vc.titleLabel.editModeOn()
-            if let note = EditTextView.note {
-                vc.titleLabel.stringValue = note.getFileName()
-            }
+        guard let vc = ViewController.shared() else {
             return
+        }
+
+        vc.titleLabel.editModeOn()
+        if let note = EditTextView.note {
+            vc.titleLabel.stringValue = note.getFileName()
         }
     }
 
     @IBAction func deleteNote(_ sender: Any) {
-        if titleLabel.hasFocus() || editArea.hasFocus() || search.hasFocus() || UserDefaultsManagement.magicPPT || UserDefaultsManagement.presentation || editAreaScroll.isFindBarVisible {
+        guard let vc = ViewController.shared() else {
             return
         }
 
-        guard let vc = ViewController.shared() else { return }
-        guard let notes = vc.notesTableView.getSelectedNotes() else { return }
+        if vc.titleLabel.hasFocus() || vc.editArea.hasFocus() || vc.search.hasFocus() || UserDefaultsManagement.magicPPT || UserDefaultsManagement.presentation || vc.editAreaScroll.isFindBarVisible {
+            return
+        }
+
+        guard let notes = vc.notesTableView.getSelectedNotes() else {
+            return
+        }
 
         if let si = vc.getSidebarItem(), si.isTrash() {
             removeForever()
@@ -1206,11 +1212,7 @@ class ViewController:
                 }
 
                 if let i = selectedRow, i > -1 {
-                    if vc.notesTableView.noteList.count > i {
-                        vc.notesTableView.selectRow(i)
-                    } else {
-                        vc.notesTableView.selectRow(vc.notesTableView.noteList.count - 1)
-                    }
+                    vc.notesTableView.selectRow(i)
                 }
 
                 UserDataService.instance.searchTrigger = false
@@ -1262,8 +1264,11 @@ class ViewController:
     }
 
     @IBAction func toggleNoteList(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
-        let size = Int(vc.splitView.subviews[0].frame.width)
+        guard let vc = ViewController.shared() else {
+            return
+        }
+
+        let size = vc.splitView.subviews[0].frame.width
 
         if size == 0 {
             var size = UserDefaultsManagement.sidebarSize
@@ -1436,8 +1441,10 @@ class ViewController:
     }
 
     func showNoteList(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
-        let size = Int(vc.splitView.subviews[0].frame.width)
+        guard let vc = ViewController.shared() else {
+            return
+        }
+        let size = vc.splitView.subviews[0].frame.width
 
         if size == 0 {
             var size = UserDefaultsManagement.sidebarSize
@@ -1452,8 +1459,10 @@ class ViewController:
     }
 
     func hideNoteList(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
-        let size = Int(splitView.subviews[0].frame.width)
+        guard let vc = ViewController.shared() else {
+            return
+        }
+        let size = vc.splitView.subviews[0].frame.width
 
         if size != 0 {
             if vc.splitView.shouldHideDivider {
@@ -1476,8 +1485,11 @@ class ViewController:
     }
 
     @IBAction func emptyTrash(_ sender: NSMenuItem) {
-        guard let vc = ViewController.shared() else { return }
-        if let sidebarItem = getSidebarItem(), sidebarItem.isTrash() {
+        guard let vc = ViewController.shared() else {
+            return
+        }
+
+        if let sidebarItem = vc.getSidebarItem(), sidebarItem.isTrash() {
             let indexSet = IndexSet(integersIn: 0..<vc.notesTableView.noteList.count)
             vc.notesTableView.removeRows(at: indexSet, withAnimation: .effectFade)
         }
@@ -1491,8 +1503,11 @@ class ViewController:
     }
 
     @IBAction func openProjectViewSettings(_ sender: NSMenuItem) {
-        guard let vc = ViewController.shared() else { return }
-        if let controller = storyboard?.instantiateController(withIdentifier: "ProjectSettingsViewController")
+        guard let vc = ViewController.shared() else {
+            return
+        }
+
+        if let controller = vc.storyboard?.instantiateController(withIdentifier: "ProjectSettingsViewController")
             as? ProjectSettingsViewController {
             projectSettingsViewController = controller
 
@@ -1527,14 +1542,15 @@ class ViewController:
     // Changed main edit view
 
     func textDidChange(_ notification: Notification) {
-        guard let vc = ViewController.shared() else { return }
-        guard let note = getCurrentNote() else { return }
+        guard let note = getCurrentNote() else {
+            return
+        }
 
         blockFSUpdates()
 
         if !UserDefaultsManagement.preview, editArea.isEditable {
-            vc.editArea.removeHighlight()
-            vc.editArea.saveImages()
+            editArea.removeHighlight()
+            editArea.saveImages()
 
             note.save(attributed: editArea.attributedString())
 
@@ -1554,7 +1570,7 @@ class ViewController:
 
     private func removeForever() {
         guard let vc = ViewController.shared() else { return }
-        guard let notes = notesTableView.getSelectedNotes() else { return }
+        guard let notes = vc.notesTableView.getSelectedNotes() else { return }
         guard let window = MainWindowController.shared() else { return }
 
         vc.alert = NSAlert()
@@ -1781,7 +1797,19 @@ class ViewController:
             terms = search.stringValue.split(separator: " ")
         }
 
-        return !note.name.isEmpty && (filter.isEmpty || isMatched(note: note, terms: terms!)) && (type == .All && note.project.showInCommon || (type != .All && projects!.contains(note.project) || (note.project.parent != nil && projects!.contains(note.project.parent!))) || type == .Trash) && (type == .Trash && note.isTrash() || type != .Trash && !note.isTrash())
+        return !note.name.isEmpty
+            && (filter.isEmpty || isMatched(note: note, terms: terms!)
+        ) && (
+            type == .All && note.project.showInCommon
+                || (
+                type != .All && projects!.contains(note.project)
+                    || (note.project.parent != nil && projects!.contains(note.project.parent!))
+            )
+                || type == .Trash
+        ) && (
+            type == .Trash && note.isTrash()
+                || type != .Trash && !note.isTrash()
+        )
     }
 
     public func contains(tag name: String, in tags: [String]) -> Bool {
@@ -2308,7 +2336,7 @@ class ViewController:
     }
 
     func checkSidebarConstraint() {
-        if Int(sidebarSplitView.subviews[0].frame.width) < 50, !UserDefaultsManagement.isWillFullScreen {
+        if sidebarSplitView.subviews[0].frame.width < 50, !UserDefaultsManagement.isWillFullScreen {
             searchTopConstraint.constant = 25.0
             return
         }
@@ -2316,7 +2344,7 @@ class ViewController:
     }
 
     func checkTitlebarTopConstraint() {
-        if Int(splitView.subviews[0].frame.width) < 50, !UserDefaultsManagement.isWillFullScreen {
+        if splitView.subviews[0].frame.width < 50, !UserDefaultsManagement.isWillFullScreen {
             titiebarHeight.constant = 60.0
             titleTopConstraint.constant = 24.0
             return
