@@ -1173,7 +1173,7 @@ class ViewController:
 
         vc.titleLabel.editModeOn()
         if let note = EditTextView.note {
-            vc.titleLabel.stringValue = note.getFileName()
+            vc.titleLabel.stringValue = note.getShortTitle()
         }
     }
 
