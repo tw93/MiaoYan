@@ -3,6 +3,30 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>1.7.1</title>
+      <description>
+        <![CDATA[
+          <h3>更快乐 🎉：</h3>
+          <ol>
+            <li>大幅度优化超大文本下的编辑性能</li>
+            <li>Command+t 可以快捷切换 todo 的状态</li>
+            <li>字体强迫症继续细调，保留 LXGW WenKai Lite、SF Mono、Times New Roman</li>
+            <li>支持设置代码块是否有背景色、代码预览场景自动换行、编辑器有 Front matter 预览直接隐藏</li>
+            </ol>
+            <h3>Be happier 🎉：</h3>
+          <ol>
+            <li>Greatly optimize the editing performance of oversized text.</li>
+            <li>Command+t can quickly switch todo status.</li>
+            <li>Continue to optimize font effects，Keep LXGW WenKai Lite、SF Mono、Times New Roman.</li>
+            <li>Support setting whether the code block has a background color、Code preview line wrap、Hidden directly with Front matter preview.</li>
+            </ol>
+          ]]>
+      </description>
+      <pubDate>周六, 01 10月 2022 10:00:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.7.1.zip" sparkle:shortVersionString="1.7.1" sparkle:version="1.7.1" sparkle:edSignature="n3wLjiS0CcQx1g25XG9fT1f4/2iihQKu0yJsc8PpDWYrbtJkj8kjRLXHTQUkFZoXgq15tOakUt8AQ+2lH94tCA==" length="24669154" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>1.6.4</title>
       <description><![CDATA[
        <h3>更好用 🧛‍♀️：</h3>
@@ -30,32 +54,5 @@
       <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.6.4.zip" sparkle:shortVersionString="1.6.4" sparkle:version="1.6.4" sparkle:edSignature="yRnEzpM5usKmadA+kBuh68lmgLtzUUZpl3Pu8kq7ua57dC10qkPhW5mqhWS9N8rnpi5VPtVpvf3gtIr+XbX+CQ==" length="24516706" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
     </item>
-    <item>
-      <title>1.6.0</title>
-      <description><![CDATA[
-       <h3>更好用 🧛‍♀️：</h3>
-       <ol>
-        <li>底层细调 3 种字体渲染逻辑，Times New Roman、Helvetica Neue、JetBrains Mono，换一种风格，详细介绍在 <a href="https://www.v2ex.com/t/880859">V2EX</a></li>
-        <li>导出格式支持 Html，同时优化 PDF、Image 导出效果</li>
-        <li>脑图可单独设置<a href="https://miaoyan.app/Release/demo/MiaoYan%20Markmap.md">高度</a>，此外 PPT 模式中也支持 Markmap 脑图了</li>
-        <li>格式化更加好用无感并记住位置，一种很无感的格式化体验</li>
-        <li>大图预览场景可使用 img 标签 loading="lazy" 进行懒加载，渲染快不少</li>
-        <li>修复了极少机器底部回车闪动问题、重启场景增加二次确认、彻底解决蓝色划线、换行标题复制问题、序号回车优化、关闭文字拖拽、mermaid 增加更多特性、PPT 下翻页位置优化、文档删除体验优化</li>
-        </ol>
-        <h3>Better use 🧛‍♀️：</h3>
-       <ol>
-        <li>Fine tune 3 font rendering logics, Times New Roman, Helvetica Neue, JetBrains Mono, for a different style.</li>
-        <li>Export format support for Html, with improved PDF and Image export effects.</li>
-        <li>Markmap height can be set individually, and Markmap are now supported in PPT mode.</li>
-        <li>Formatting is even better with no sensation and remembering the position, a very senseless formatting experience.</li>
-        <li>For large preview scenes you can use the img tag loading="lazy" for lazy loading, which renders much faster.</li>
-        <li>Fixing the carriage return flicker at the bottom of very few machines, adding a second confirmation for restart scenes, completely solving the blue underline, duplication of line feed titles, optimizing the carriage return, turning off text dragging, adding more features to mermaid, optimizing the position of PPT page turns, document deletion experience optimization.</li>
-        </ol>
-          ]]>      </description>
-      <pubDate>周六, 17 9月 2022 20:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.6.0.zip" sparkle:shortVersionString="1.6.0" sparkle:version="1.6.0" sparkle:edSignature="HKcE2dw1mh17Iwl3gJ9huVcckIzm1nLi67vVTt5osRl3dEfnRVmnfP3LbLN6UfA3X/kKdgASTWqbk4+vxo9oBg==" length="24519732" type="application/octet-stream" />
-      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-    </item>
-
   </channel>
 </rss>
