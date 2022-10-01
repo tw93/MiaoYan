@@ -403,8 +403,9 @@ class ViewController:
         editArea.isEditable = false
 
         editArea.layoutManager?.defaultAttachmentScaling = .scaleProportionallyDown
-        editArea.layoutManager?.typesetterBehavior = .behavior_10_2_WithCompatibility
-
+        if UserDefaultsManagement.fontName != "LXGW WenKai Lite" {
+            editArea.layoutManager?.typesetterBehavior = .behavior_10_2_WithCompatibility
+        }
         search.font = UserDefaultsManagement.searchFont
         editArea.font = UserDefaultsManagement.noteFont
         titleLabel.font = UserDefaultsManagement.titleFont.titleBold()
@@ -1799,17 +1800,17 @@ class ViewController:
 
         return !note.name.isEmpty
             && (filter.isEmpty || isMatched(note: note, terms: terms!)
-        ) && (
-            type == .All && note.project.showInCommon
-                || (
-                type != .All && projects!.contains(note.project)
-                    || (note.project.parent != nil && projects!.contains(note.project.parent!))
+            ) && (
+                type == .All && note.project.showInCommon
+                    || (
+                        type != .All && projects!.contains(note.project)
+                            || (note.project.parent != nil && projects!.contains(note.project.parent!))
+                    )
+                    || type == .Trash
+            ) && (
+                type == .Trash && note.isTrash()
+                    || type != .Trash && !note.isTrash()
             )
-                || type == .Trash
-        ) && (
-            type == .Trash && note.isTrash()
-                || type != .Trash && !note.isTrash()
-        )
     }
 
     public func contains(tag name: String, in tags: [String]) -> Bool {
