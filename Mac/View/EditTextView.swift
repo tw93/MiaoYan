@@ -92,7 +92,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 self.textStorage?.updateParagraphStyle()
                 self.initRange = NSRange(location: 0, length: 0)
             }
-
         }
     }
 
@@ -417,9 +416,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
             isHighlighted = true
         }
 
-        restoreCursorPosition(needScrollToCursor: needScrollToCursor)
         fillHighlightLinks()
         applyLeftParagraphStyle()
+        restoreCursorPosition(needScrollToCursor: needScrollToCursor)
     }
 
     private func setTextColor() {
