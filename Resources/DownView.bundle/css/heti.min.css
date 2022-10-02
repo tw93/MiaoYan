@@ -234,6 +234,11 @@ blockquote blockquote {
   white-space: pre-wrap;
 }
 
+.heti pre code span {
+  line-break: anywhere;
+}
+
+
 .heti h1,
 .heti h2,
 .heti h3,
