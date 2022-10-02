@@ -324,6 +324,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             pageHTMLString = try htmlFromTemplate(markdownString, css: css)
         }
 
+//        print(">>>>>>")
 //        print(pageHTMLString)
         let indexURL = createTemporaryBundle(pageHTMLString: pageHTMLString)
 
