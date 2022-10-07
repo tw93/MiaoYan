@@ -17,26 +17,24 @@ class NoteCellView: NSTableCellView {
         return vc.notesTableView
     }
 
-    override func viewWillDraw() {
-        if let originY = UserDefaultsManagement.cellViewFrameOriginY {
-            adjustTopMargin(margin: originY)
-        }
-        super.viewWillDraw()
-    }
+//    override func viewWillDraw() {
+//        if let originY = UserDefaultsManagement.cellViewFrameOriginY {
+//            adjustTopMargin(margin: originY)
+//        }
+//        super.viewWillDraw()
+//    }
 
     override func draw(_ dirtyRect: NSRect) {
+        name.font = UserDefaultsManagement.nameFont
+        date.font = UserDefaultsManagement.dateFont
+        updateSelectionHighlight()
+        
         super.draw(dirtyRect)
-
+        
         renderPin()
         pin.frame.origin.y = CGFloat(-4) + CGFloat(cellSpacing) + CGFloat(0)
         
-        updateSelectionHighlight()
-
-        name.font = UserDefaultsManagement.nameFont
-        date.font = UserDefaultsManagement.dateFont
-
-        name.addCharacterSpacing()
-        date.addCharacterSpacing()
+        
     }
 
     public func configure(note: Note) {
@@ -67,6 +65,8 @@ class NoteCellView: NSTableCellView {
                 name.textColor = NSColor.black
             }
         }
+        name.addCharacterSpacing()
+        date.addCharacterSpacing()
     }
 
     func renderPin() {
@@ -134,7 +134,5 @@ class NoteCellView: NSTableCellView {
             date.stringValue = note.getDateForLabel()
         }
         updateSelectionHighlight()
-        name.addCharacterSpacing()
-        date.addCharacterSpacing()
     }
 }
