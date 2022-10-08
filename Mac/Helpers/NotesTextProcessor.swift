@@ -1432,7 +1432,9 @@ public class NotesTextProcessor {
                     if remove {
                         if attributedString.attributes(at: subRange.location, effectiveRange: nil).keys.contains(NoteAttribute.highlight) {
                             storage.removeAttribute(NoteAttribute.highlight, range: subRange)
-                            storage.addAttribute(NSAttributedString.Key.backgroundColor, value: NotesTextProcessor.codeBackground, range: subRange)
+                            if UserDefaultsManagement.codeBackground == "Yes" {
+                                storage.addAttribute(NSAttributedString.Key.backgroundColor, value: NotesTextProcessor.codeBackground, range: subRange)
+                            }
                             return
                         } else {
                             storage.removeAttribute(NSAttributedString.Key.backgroundColor, range: subRange)
