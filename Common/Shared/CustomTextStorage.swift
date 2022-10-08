@@ -105,7 +105,9 @@ extension NSTextStorage: NSTextStorageDelegate {
                     ? NSRange(parRange.location..<parRange.upperBound + 1)
                     : parRange
 
-            textStorage.addAttribute(.backgroundColor, value: NotesTextProcessor.codeBackground, range: backgroundRange)
+            if UserDefaultsManagement.codeBackground == "Yes" {
+                textStorage.addAttribute(.backgroundColor, value: NotesTextProcessor.codeBackground, range: backgroundRange)
+            }
         }
     }
 
@@ -157,7 +159,9 @@ extension NSTextStorage: NSTextStorageDelegate {
             let code = textStorage.mutableString.substring(with: fencedRange)
             let language = NotesTextProcessor.getLanguage(code)
             NotesTextProcessor.highlightCode(attributedString: textStorage, range: parRange, language: language)
-            textStorage.addAttribute(.backgroundColor, value: NotesTextProcessor.codeBackground, range: parRange)
+            if UserDefaultsManagement.codeBackground == "Yes" {
+                textStorage.addAttribute(.backgroundColor, value: NotesTextProcessor.codeBackground, range: parRange)
+            }
         } else {
             guard let note = EditTextView.note else { return }
             NotesTextProcessor.highlightMarkdown(attributedString: textStorage, paragraphRange: parRange, note: note)
