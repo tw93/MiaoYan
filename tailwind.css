@@ -3,14 +3,14 @@
 @import 'tailwindcss/utilities';
 
 :root {
-  --data-friend: '木子君、Jerk、芸璟、薛定谔的盲盒、沙溪、忸祁、*锐、木呀、π~mong、Hsin、Kake、喜多🍒、**飞、陆蔚青 sluke、红色的弓箭手、Catch、子岚、Linmi、小小小小小国、zhyncs、YuYuMi、匿名妙友、**辉、robin、孑虚乌有、嗨嗨皮、熏锅锅、**泰、EugEnE 六金、Chen Chen、走鹃、飞🇨🇳🇨🇳、刘奇、**雄、邓旭东、**主、**得、*过、Wayne、再见孙悟空、牧野 Peikon、Grug';
+  --data-friend: '木子君、Jerk、芸璟、薛定谔的盲盒、沙溪、忸祁、*锐、木呀、π~mong、Hsin、Kake、喜多🍒、**飞、陆蔚青 sluke、红色的弓箭手、Catch、子岚、Linmi、小小小小小国、zhyncs、YuYuMi、匿名妙友、**辉、robin、孑虚乌有、嗨嗨皮、熏锅锅、**泰、EugEnE 六金、Chen Chen、走鹃、飞🇨🇳🇨🇳、刘奇、**雄、邓旭东、**主、**得、*过、Wayne、再见孙悟空、牧野 Peikon、Grug、**文';
 }
 
 .i18n-miao-people-desc:before {
-  content: '数据每周手动更新，当前 42 位朋友喜欢汤圆可乐';
+  content: '数据每周手动更新，当前 43 位朋友喜欢汤圆可乐';
 }
 [lang='en'] .i18n-miao-people-desc:before {
-  content: 'Weekly manual update, 42 friends like TangYuan and Coke';
+  content: 'Weekly manual update, 43 friends like TangYuan and Coke';
 }
 
 body {
