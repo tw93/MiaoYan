@@ -65,14 +65,14 @@
 <a href=https://gw.alipayobjects.com/zos/k/app2/123.gif target="_blank"><img src="https://user-images.githubusercontent.com/8736212/180579306-4f2504ee-8377-4d5c-b560-2d0d83ac12f6.gif" width="100%"></a>
 
 1. 新朋友默认初始化会生成模版，如果是老朋友需升级到 1.0，可以 Copy [此文件](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/%E5%A6%99%E8%A8%80%20PPT.md) 到妙言玩一玩。
-2. 执行 `command + option + p` 可以启动妙言 PPT 预览，同时你也可以选中文档点击右键，选择 `妙言 PPT` 打开。
+2. 执行 `command + option + p` 可以启动妙言 PPT 预览，也可以选中文档点击右键，选择 `妙言 PPT` 打开。
 3. 只有在有 `---` 分隔符标志的文档中，才可启用 PPT 模式，演示过程中你可以 `回车键` 预览演讲大纲，`ESC` 键可退出 PPT 模式。
 4. 你可以使用 HTML 来自定义效果，更多复杂的用法可以参考 [Reveal](https://revealjs.com/markdown/) 文档。
 
 ## 为什么要做妙言
 
 - 之前有尝试过众多的笔记应用，大学时期为知笔记、印象笔记，工作时候用过 Ulysses、Quiver、MWeb、Bear、Typora，种种原因，没有找到一个习惯的 Markdown 应用，才有了做妙言的想法。
-- 本职工作为前端开发，会一点 iOS 开发，喜欢折腾，借妙言来玩一下 Swift 以及 macOS 开发，当做一个很愉快的事情。
+- 本职为前端开发，会一点 iOS 开发，喜欢折腾，借妙言来玩一下 Swift 以及 macOS 开发，当做一个很愉快的事情。
 - 更多介绍可见 V2EX [妙言 - 更适合工程师用的笔记应用](https://www.v2ex.com/t/878942)，很欢迎交流和建议
 
 ## 支持
