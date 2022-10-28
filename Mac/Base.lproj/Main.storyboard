@@ -1803,7 +1803,6 @@ CA
                 <menu id="nuz-kc-UUC">
                     <items>
                         <menuItem title="New folder" keyEquivalent="N" id="3zv-SD-lSX">
-                            <modifierMask key="keyEquivalentModifierMask" option="YES"/>
                             <connections>
                                 <action selector="addProject:" target="rPt-NT-nkU" id="yjG-Jc-AJN"/>
                             </connections>
