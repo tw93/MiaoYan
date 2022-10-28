@@ -65,20 +65,21 @@
 <a href=https://gw.alipayobjects.com/zos/k/app2/123.gif target="_blank"><img src="https://user-images.githubusercontent.com/8736212/180579306-4f2504ee-8377-4d5c-b560-2d0d83ac12f6.gif" width="100%"></a>
 
 1. 新朋友默认初始化会生成模版，如果是老朋友需升级到 1.0，可以 Copy [此文件](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/%E5%A6%99%E8%A8%80%20PPT.md) 到妙言玩一玩。
-2. 执行 `command + option + p` 可以启动妙言 PPT 预览，同时你也可以选中文档点击右键，选择 `妙言 PPT` 打开。
+2. 执行 `command + option + p` 可以启动妙言 PPT 预览，也可以选中文档点击右键，选择 `妙言 PPT` 打开。
 3. 只有在有 `---` 分隔符标志的文档中，才可启用 PPT 模式，演示过程中你可以 `回车键` 预览演讲大纲，`ESC` 键可退出 PPT 模式。
 4. 你可以使用 HTML 来自定义效果，更多复杂的用法可以参考 [Reveal](https://revealjs.com/markdown/) 文档。
 
 ## 为什么要做妙言
 
 - 之前有尝试过众多的笔记应用，大学时期为知笔记、印象笔记，工作时候用过 Ulysses、Quiver、MWeb、Bear、Typora，种种原因，没有找到一个习惯的 Markdown 应用，才有了做妙言的想法。
-- 本职工作为前端开发，会一点 iOS 开发，喜欢折腾，借妙言来玩一下 Swift 以及 macOS 开发，当做一个很愉快的事情。
+- 本职为前端开发，会一点 iOS 开发，爱折腾，借妙言来玩一下 Swift 以及独立产品，当做一个很愉快的事情。
 - 更多介绍可见 V2EX [妙言 - 更适合工程师用的笔记应用](https://www.v2ex.com/t/878942)，很欢迎交流和建议
 
 ## 支持
 
 - 我有两只猫，一只叫汤圆，一只叫可乐，假如觉得妙言让你生活更美好，可以给汤圆可乐 <a href="https://miaoyan.app/cats.html" target="_blank">喂罐头 🥩🍤</a>。
 - 如果你喜欢妙言，可以在 Github Star，更欢迎 [推荐](https://twitter.com/intent/tweet?text=%23%E5%A6%99%E8%A8%80%20-%20%E4%B8%80%E4%B8%AA%E7%AE%80%E6%B4%81%E5%A5%BD%E7%9C%8B%E7%9A%84%E5%BC%80%E6%BA%90%E7%9A%84%20Mac%20%20Markdown%20%E7%BC%96%E8%BE%91%E5%99%A8%EF%BC%8C%E6%B2%A1%E6%9C%89%E4%BB%BB%E4%BD%95%E5%A4%9A%E4%BD%99%E7%9A%84%E5%8A%9F%E8%83%BD%EF%BC%8C%E4%BD%BF%E7%94%A8%E5%8E%9F%E7%94%9F%20Swift%20%E5%BC%80%E5%8F%91%EF%BC%8C%E8%BD%BB%E9%87%8F%E6%80%A7%E8%83%BD%E9%AB%98%EF%BC%8C%E5%AE%89%E5%85%A8%E7%BA%AF%E6%9C%AC%E5%9C%B0%E4%BD%BF%E7%94%A8%EF%BC%8C%E5%85%B7%E5%A4%87%E8%AF%AD%E6%B3%95%E9%AB%98%E4%BA%AE%E3%80%81%E9%BB%91%E6%9A%97%E6%A8%A1%E5%BC%8F%E3%80%81%E8%87%AA%E5%8A%A8%E6%A0%BC%E5%BC%8F%E5%8C%96%E3%80%81%E5%8D%95%E7%8B%AC%E7%BC%96%E8%BE%91%E3%80%81%E6%BC%94%E7%A4%BA%E6%A8%A1%E5%BC%8F%E3%80%81%E5%9B%BE%E5%BA%8A%E7%AD%89%E5%8A%9F%E8%83%BD%E3%80%82&url=https://github.com/tw93/MiaoYan) 给你志同道合的朋友使用。
+- 可以关注我的 [Twitter](https://twitter.com/HiTw93) 获取到最新的妙言更新消息，也欢迎加入 [Telegram](https://t.me/miaoyan) 聊天群。
 
 ## 感谢
 
