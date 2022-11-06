@@ -8,7 +8,8 @@
     "build": "postcss tailwind.css -o build.css",
     "watch": "postcss tailwind.css -o build.css  --watch",
     "anywhere": "anywhere",
-    "dev": "npm-run-all --parallel anywhere watch"
+    "dev": "npm-run-all --parallel anywhere watch",
+    "start": "npm run dev"
   },
   "repository": {
     "type": "git",

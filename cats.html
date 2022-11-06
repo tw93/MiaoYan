@@ -232,6 +232,8 @@
   </div>
 </body>
 <script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const name = urlParams.get('name');
   const ua = window.navigator.userAgent.toLowerCase();
   const $langSwitch = document.querySelector('.lang-switcher');
   const langStorage = localStorage.getItem('miaoyanLang');
@@ -268,6 +270,12 @@
       } else {
         setLang('en');
       }
+    }
+    // 兼容多产品
+    if(name === "Pake"){
+      const $title=document.querySelector(".i18n-title");
+      $title.classList.add('hide-before');
+      $title.textContent = "Pake"
     }
   });
 </script>

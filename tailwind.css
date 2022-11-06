@@ -74,24 +74,30 @@ body {
   content: '中文';
 }
 
-.i18n-title:before {
-  content: '妙言';
-}
 
 [lang='en'] .i18n-title {
   letter-spacing: normal;
   zoom: 0.86;
   margin-right: 12px;
 }
+
+.hide-before:before {
+  display: none !important;
+}
+
+.i18n-title:before {
+  content: '妙言';
+}
+
 [lang='en'] .i18n-title:before {
   content: 'MiaoYan';
 }
 
 .i18n-cats-desc:before {
-  content: '喜欢妙言？可以给我家「汤圆 & 可乐」买 🥩🍤 罐头吃！';
+  content: '喜欢产品？可以给我家「汤圆 & 可乐」买 🥩🍤 罐头吃！';
 }
 [lang='en'] .i18n-cats-desc:before {
-  content: 'Like MiaoYan? Buy 🥩🍤 cans for my「TangYuan & Coke」.';
+  content: 'Like it? Buy 🥩🍤 cans for my「TangYuan & Coke」.';
 }
 
 .i18n-description:before {
