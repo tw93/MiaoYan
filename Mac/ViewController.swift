@@ -300,14 +300,9 @@ class ViewController:
         setDividerHidden(hidden: size == 0)
         refreshMiaoYanNum()
 
-        if UserDefaultsManagement.isSingleMode {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        if UserDefaultsManagement.isSingleMode, isLaunch {
+             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 vc.hideSidebar("")
-            }
-
-            // hack for crash
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                vc.toastInSingleMode()
             }
         } else if UserDefaultsManagement.isFirstLaunch {
             //用于恢复单独模式后打开复原的效果
@@ -316,8 +311,10 @@ class ViewController:
                 vc.setSideDividerHidden(hidden: false)
             }
             UserDefaultsManagement.isFirstLaunch = false
-        } else if isLaunch, size == 0 {
-            //用于恢复聚焦模式时候重启应用后的效果
+        }
+
+        //用于恢复聚焦模式时候重启应用后的效果
+        if isLaunch, size == 0 {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 vc.showNoteList("")
                 vc.setDividerHidden(hidden: false)
@@ -450,9 +447,10 @@ class ViewController:
                 if UserDefaultsManagement.isSingleMode {
                     let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
                     if !FileManager.default.directoryExists(atUrl: singleModeUrl), let lastNote = self.storage.getBy(url: singleModeUrl), let i = self.notesTableView.getIndex(lastNote) {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        DispatchQueue.main.async {
                             self.notesTableView.selectRow(i)
-                            self.notesTableView.scrollRowToVisible(row: i, animated: true)
+                            self.notesTableView.scrollRowToVisible(row: i, animated: false)
+                            self.hideNoteList("")
                         }
                     }
                 }
