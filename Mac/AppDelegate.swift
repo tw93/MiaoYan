@@ -62,7 +62,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             let size = NSSize(width: 1280, height: 700)
             mainWC.window?.setContentSize(size)
             mainWC.window?.center()
-            UserDefaultsManagement.isFirstLaunch = false
         }
         mainWC.window?.makeKeyAndOrderFront(nil)
         mainWindowController = mainWC
