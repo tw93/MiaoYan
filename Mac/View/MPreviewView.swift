@@ -472,7 +472,10 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 downTheme = "<link rel=\"stylesheet\" href=\"ppt/dist/theme/night.css\" id=\"theme\" />"
             }
             template = template.replacingOccurrences(of: "DOWN_THEME", with: downTheme) as NSString
-            return template.replacingOccurrences(of: "DOWN_RAW", with: htmlString)
+
+            //兼容一些ppt下面图片拖动进去，相对位置的问题
+            let newHtmlString = htmlString.replacingOccurrences(of: "](/i/", with: "](./i/")
+            return template.replacingOccurrences(of: "DOWN_RAW", with: newHtmlString)
         }
 
         #if os(iOS)
