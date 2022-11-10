@@ -14,7 +14,7 @@ class SidebarProjectView: NSOutlineView,
     var viewDelegate: ViewController?
 
     private var storage = Storage.sharedInstance()
-    public var isFirstLaunch = true
+    public var isLaunch = true
 
     private var selectedProjects = [Project]()
 
@@ -356,7 +356,7 @@ class SidebarProjectView: NSOutlineView,
 
             vd.editArea.clear()
 
-            if !isFirstLaunch {
+            if !isLaunch {
                 vd.search.stringValue = ""
             }
 
@@ -366,7 +366,7 @@ class SidebarProjectView: NSOutlineView,
             }
 
             vd.updateTable {
-                if self.isFirstLaunch {
+                if self.isLaunch {
                     if let url = UserDefaultsManagement.lastSelectedURL,
                        let lastNote = vd.storage.getBy(url: url),
                        let i = vd.notesTableView.getIndex(lastNote) {
@@ -378,7 +378,7 @@ class SidebarProjectView: NSOutlineView,
                     } else if vd.notesTableView.noteList.count > 0 {
                         vd.focusTable()
                     }
-                    self.isFirstLaunch = false
+                    self.isLaunch = false
                 }
             }
         }
