@@ -469,8 +469,7 @@ class ViewController:
         editArea.textStorage?.delegate = editArea.textStorage
         if #available(OSX 10.13, *) {
             editArea?.linkTextAttributes = [
-                .foregroundColor: NSColor(named: "highlight")!,
-                .cursor: NSCursor.pointingHand,
+                .foregroundColor: NSColor(named: "highlight")!
             ]
         }
         editArea.viewDelegate = self
