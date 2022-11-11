@@ -115,6 +115,22 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return
         }
 
+        // 给链接在 command 的时候加上一个手
+        if NSEvent.modifierFlags.contains(.command) {
+            if #available(OSX 10.13, *) {
+                linkTextAttributes = [
+                    .foregroundColor: NSColor(named: "highlight")!,
+                    .cursor: NSCursor.pointingHand
+                ]
+            }
+        } else {
+            if #available(OSX 10.13, *) {
+                linkTextAttributes = [
+                    .foregroundColor: NSColor(named: "highlight")!
+                ]
+            }
+        }
+
         super.mouseMoved(with: event)
     }
 
@@ -176,6 +192,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
         return false
     }
 
+    // 修复下在剪切地址的时候，链接高亮问题
+    override func cut(_ sender: Any?) {
+        super.cut(sender)
+        fillHighlightLinks()
+    }
+
     override func copy(_ sender: Any?) {
         if selectedRanges.count > 1 {
             let combined = String()
@@ -192,6 +214,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return
         }
         super.copy(sender)
+        fillHighlightLinks()
     }
 
     override func paste(_ sender: Any?) {
@@ -928,9 +951,22 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         let char = attributedSubstring(forProposedRange: range, actualRange: nil)
         if char?.attribute(.attachment, at: 0, effectiveRange: nil) == nil {
-            if NSEvent.modifierFlags.contains(.command), let link = link as? String, let url = URL(string: link) {
-                _ = try? NSWorkspace.shared.open(url, options: .withoutActivation, configuration: [:])
+            // 只有 command 加点击的时候才外跳
+            if !NSEvent.modifierFlags.contains(.command) {
+                setSelectedRange(NSRange(location: charIndex, length: 0))
+                saveCursorPosition()
+                return
+            }
 
+            // String 外跳
+            if let link = link as? String, let url = URL(string: link) {
+                _ = try? NSWorkspace.shared.open(url, options: .withoutActivation, configuration: [:])
+                return
+            }
+
+            // URL 链接外跳
+            if let link = link as? URL {
+                _ = try? NSWorkspace.shared.open(link, options: .withoutActivation, configuration: [:])
                 return
             }
 
