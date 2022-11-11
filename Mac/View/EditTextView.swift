@@ -573,10 +573,15 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 formatter.unTab()
                 saveCursorPosition()
                 return
-            } else {
-                shiftRight("")
-                return
             }
+        }
+
+        if event.keyCode == kVK_Tab, !hasMarkedText() {
+            breakUndoCoalescing()
+            let tab = TextFormatter.getAttributedCode(string: "    ")
+            insertText(tab, replacementRange: selectedRange())
+            breakUndoCoalescing()
+            return
         }
 
         if event.keyCode == kVK_Return, !hasMarkedText() {
