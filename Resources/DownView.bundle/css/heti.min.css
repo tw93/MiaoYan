@@ -51,6 +51,10 @@ img {
   object-fit: cover;
 }
 
+.heti p > img {
+  margin-top: 8px;
+}
+
 pre,
 iframe {
   max-width: 100%;
@@ -148,8 +152,8 @@ a,
 }
 
 .heti p {
-  margin-block-start: 18px;
-  margin-block-end: 18px;
+  margin-block-start: 20px;
+  margin-block-end: 20px;
   text-align: left;
 }
 
