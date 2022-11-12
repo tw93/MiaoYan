@@ -137,8 +137,8 @@ a,
 .heti hr {
   width: 100%;
   height: 1px;
-  margin-block-start: 24px;
-  margin-block-end: 24px;
+  margin-block-start: 1.6em;
+  margin-block-end: 1.6em;
   margin-inline-start: auto;
   margin-inline-end: auto;
   border: 0;
@@ -152,8 +152,8 @@ a,
 }
 
 .heti p {
-  margin-block-start: 20px;
-  margin-block-end: 20px;
+  margin-block-start: 1.6em;
+  margin-block-end: 1.6em;
   text-align: left;
 }
 
@@ -170,8 +170,8 @@ a,
 }
 
 .heti blockquote {
-  margin-block-start: 12px;
-  margin-block-end: 24px;
+  margin-block-start: 0.8em;
+  margin-block-end: 1.6em;
   padding-inline-start: 16px;
   padding-inline-end: 16px;
   border-radius: 4px;
@@ -181,8 +181,8 @@ a,
 }
 
 .heti blockquote p {
-  margin-block-end: 6px;
-  margin-block-start: 6px;
+  margin-block-end: 0.4em;
+  margin-block-start: 0.4em;
   line-height: 1.74;
 }
 
@@ -206,8 +206,8 @@ blockquote blockquote {
 }
 
 .heti pre {
-  margin-block-start: 12px;
-  margin-block-end: 24px;
+  margin-block-start: 0.8em;
+  margin-block-end: 1.6em;
   margin-inline-start: 0;
   margin-inline-end: 0;
   padding-block-start: 12px;
@@ -252,8 +252,8 @@ blockquote blockquote {
   position: relative;
   margin: 0;
   line-height: 1.8;
-  margin-block-start: 24px;
-  margin-block-end: 12px;
+  margin-block-start: 1.6em;
+  margin-block-end: 0.8em;
   font-weight: bold;
 }
 
@@ -267,26 +267,26 @@ blockquote blockquote {
 
 .heti h3 {
   font-size: 1.25em;
-  margin-block-start: 8px;
-  margin-block-end: 8px;
+  margin-block-start: 0.6em;
+  margin-block-end: 0.6em;
 }
 
 .heti h4 {
   font-size: 1em;
-  margin-block-start: 8px;
-  margin-block-end: 8px;
+  margin-block-start: 0.6em;
+  margin-block-end: 0.6em;
 }
 
 .heti h5 {
   font-size: 1em;
-  margin-block-start: 8px;
-  margin-block-end: 8px;
+  margin-block-start: 0.6em;
+  margin-block-end: 0.6em;
 }
 
 .heti h6 {
   font-size: 1em;
-  margin-block-start: 8px;
-  margin-block-end: 8px;
+  margin-block-start: 0.6em;
+  margin-block-end: 0.6em;
 }
 
 .heti h1,
@@ -309,14 +309,14 @@ blockquote blockquote {
 .heti h3 + h4,
 .heti h4 + h5,
 .heti h5 + h6 {
-  margin-block-start: 12px;
+  margin-block-start: 0.8em;
 }
 
 .heti ul,
 .heti ol,
 .heti dl {
-  margin-block-start: 12px;
-  margin-block-end: 24px;
+  margin-block-start: 0.8em;
+  margin-block-end: 1.6em;
 }
 
 .heti ul {
@@ -362,8 +362,8 @@ blockquote blockquote {
 .heti table {
   box-sizing: border-box;
   table-layout: fixed;
-  margin-block-start: 12px;
-  margin-block-end: 24px;
+  margin-block-start: 0.8em;
+  margin-block-end: 1.6em;
   margin-inline-start: auto;
   margin-inline-end: auto;
   border-collapse: collapse;
@@ -688,8 +688,8 @@ blockquote blockquote {
 .heti--columns-44em p,
 .heti--columns-48em p,
 .heti comma p {
-  margin-block-start: 6px;
-  margin-block-end: 12px;
+  margin-block-start: 0.4em;
+  margin-block-end: 0.8em;
   text-indent: 2em;
 }
 
@@ -863,8 +863,8 @@ blockquote blockquote {
 }
 
 .heti--annotation .heti-meta {
-  margin-block-start: 12px;
-  margin-block-end: 24px;
+  margin-block-start: 0.8em;
+  margin-block-end: 1.6em;
 }
 
 .heti .heti-meta {
@@ -938,7 +938,7 @@ blockquote blockquote {
 }
 
 .heti .heti-fn ol {
-  margin-block-start: 12px;
+  margin-block-start: 0.8em;
   margin-block-end: 0;
 }
 
