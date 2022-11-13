@@ -469,6 +469,11 @@ blockquote blockquote {
   font-weight: bold;
 }
 
+.heti > p > small{
+  display: inherit;
+  margin-top: -1.2em;
+}
+
 .heti figcaption {
   display: inline-block;
   vertical-align: top;
