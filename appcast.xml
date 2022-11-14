@@ -3,6 +3,30 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>1.8.0</title>
+      <description><![CDATA[
+      <h3>更巧妙 🐝：</h3>
+       <ol>
+        <li>编辑器中的链接需 Command 点击才跳转，正常为编辑</li>
+        <li>编辑器 Tab 切换正常使用，左右区块移动统一成 Command + [] </li>
+        <li>预览能力优化，整体段落等间距自适应高度，演示下效果更好</li>
+        <li>单独模式下，文件打开为仅编辑器，文件夹打开为侧边栏，去掉反复提示</li>
+        <li>修复PPT模式下本地图片使用问题，记住3栏模式上次使用状态，输入框焦点优化</li>
+       </ol>
+       <h3>More ingenious 🐝：</h3>
+      <ol>
+        <li>Links in the editor require a Command click to jump, normal for editing.</li>
+        <li>Editor Tab works normally, left and right block movement is unified into Command + [].</li>
+        <li>Preview capability optimization, overall paragraph equal spacing adaptive height.</li>
+        <li>In standalone mode, files open as editor only, folders open as sidebar, remove repeated prompts.</li>
+        <li>Fix the problem of using local pictures in PPT mode, remember the last use status of 3-column mode, and optimize the focus of input box.</li>
+      </ol>
+          ]]>      </description>
+      <pubDate>周一, 14 11月 2022 09:00:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.8.0.zip" sparkle:shortVersionString="1.8.0" sparkle:version="1.8.0" sparkle:edSignature="QG3FqSjJ3q4aPEcc5yeMALPbOF+/p84tDMKgdfFlp6WB2A12wWgTpVgGXN+wh9QdyYusQwWtDX14wf8f0/RfDw==" length="24675056" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>1.7.1</title>
       <description>
         <![CDATA[
@@ -24,34 +48,6 @@
       </description>
       <pubDate>周六, 01 10月 2022 10:00:20 +0800</pubDate>
       <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.7.1.zip" sparkle:shortVersionString="1.7.1" sparkle:version="1.7.1" sparkle:edSignature="n3wLjiS0CcQx1g25XG9fT1f4/2iihQKu0yJsc8PpDWYrbtJkj8kjRLXHTQUkFZoXgq15tOakUt8AQ+2lH94tCA==" length="24669154" type="application/octet-stream" />
-      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-    </item>
-    <item>
-      <title>1.6.4</title>
-      <description><![CDATA[
-       <h3>更好用 🧛‍♀️：</h3>
-       <ol>
-        <li>较 1.6.0 版本，修复 copy 图片到编辑器、按标题排序问题、窗口文字间距舒服调整、支持 shift+回车 不自动补充序号的模式</li>
-        <li>底层细调 3 种字体渲染逻辑，Times New Roman、Helvetica Neue、JetBrains Mono，换一种风格，详细介绍在 <a href="https://www.v2ex.com/t/880859">V2EX</a></li>
-        <li>导出格式支持 Html，同时优化 PDF、Image 导出效果</li>
-        <li>脑图可单独设置<a href="https://miaoyan.app/Release/demo/MiaoYan%20Markmap.md">高度</a>，此外 PPT 模式中也支持 Markmap 脑图了</li>
-        <li>格式化更加好用无感并记住位置，一种很无感的格式化体验</li>
-        <li>大图预览场景可使用 img 标签 loading="lazy" 进行懒加载，渲染快不少</li>
-        <li>修复了极少机器底部回车闪动问题、重启场景增加二次确认、彻底解决蓝色划线、换行标题复制问题、序号回车优化、关闭文字拖拽、mermaid 增加更多特性、PPT 下翻页位置优化、文档删除体验优化</li>
-        </ol>
-        <h3>Better use 🧛‍♀️：</h3>
-       <ol>
-        <li>Compared with 1.6.0, it fixes the problem of copy pictures to the editor, sorting by title, comfortable adjustment of window text spacing, and supports the mode of shift + enter without automatically adding serial numbers.</li>
-        <li>Fine tune 3 font rendering logics, Times New Roman, Helvetica Neue, JetBrains Mono, for a different style.</li>
-        <li>Export format support for Html, with improved PDF and Image export effects.</li>
-        <li>Markmap height can be set individually, and Markmap are now supported in PPT mode.</li>
-        <li>Formatting is even better with no sensation and remembering the position, a very senseless formatting experience.</li>
-        <li>For large preview scenes you can use the img tag loading="lazy" for lazy loading, which renders much faster.</li>
-        <li>Fixing the carriage return flicker at the bottom of very few machines, adding a second confirmation for restart scenes, completely solving the blue underline, duplication of line feed titles, optimizing the carriage return, turning off text dragging, adding more features to mermaid, optimizing the position of PPT page turns, document deletion experience optimization.</li>
-        </ol>
-          ]]>      </description>
-      <pubDate>周五, 22 9月 2022 13:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.6.4.zip" sparkle:shortVersionString="1.6.4" sparkle:version="1.6.4" sparkle:edSignature="yRnEzpM5usKmadA+kBuh68lmgLtzUUZpl3Pu8kq7ua57dC10qkPhW5mqhWS9N8rnpi5VPtVpvf3gtIr+XbX+CQ==" length="24516706" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
     </item>
   </channel>
