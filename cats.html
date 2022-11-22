@@ -47,12 +47,12 @@
   <div style="display:none;"><img src="https://miaoyan.app/Release/img/logo.png" alt="logo"></div>
   <a href="/" class="text-center w-20 absolute lg:top-12 xl:right-36 lg:right-32 top-8 right-28 text-white py-2 px-2 font-bold rounded-xl shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out i18n-home-href"></a>
   <!--Hero-->
-  <button class="text-center w-20 absolute lg:top-12 top-8 xl:right-12 lg:right-8 right-6 text-white py-2 px-2 font-bold rounded-xl shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out lang-switcher i18n-switch-lang xl:right-12 xl:top-12"></button>
+  <button class="text-center w-20 absolute lg:top-12 top-8 lg:right-8 right-6 text-white py-2 px-2 font-bold rounded-xl shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out lang-switcher i18n-switch-lang xl:right-12 xl:top-12"></button>
   <div class="md:pb-0 lg:pt-16 pt-10 mx-auto relative sm:overflow-y-hidden md:overflow-x-hidden sm:overflow-x-auto overflow-hidden">
     <div class="pt-0 xl:px-12 px-6 xl:mt-12 w-full mx-auto flex flex-wrap flex-col md:flex-row items-center">
       <div class="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left text-white">
         <img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138  alt="logo"/>
-        <h1 class="i18n-title my-4 lg:text-8xl text-7xl font-extrabold leading-tight tracking-widest">
+        <h1 class="i18n-title my-4 lg:text-8xl text-7xl font-extrabold tracking-widest">
         </h1>
         <h2 class="i18n-cats-desc z-10 lg:text-3xl text-2xl text-left font-bold leading-tight text-white xl:mt-0 md:whitespace-nowrap">
         </h2>
@@ -272,10 +272,10 @@
       }
     }
     // 兼容多产品
-    if(name === "Pake"){
+    if(name){
       const $title=document.querySelector(".i18n-title");
       $title.classList.add('hide-before');
-      $title.textContent = "Pake"
+      $title.textContent = name
     }
   });
 </script>
