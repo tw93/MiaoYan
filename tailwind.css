@@ -94,7 +94,7 @@ body {
 }
 
 .i18n-cats-desc:before {
-  content: '喜欢产品？可以给我家「汤圆 & 可乐」买 🥩🍤 罐头吃！';
+  content: '觉得不错？可以给我家「汤圆 & 可乐」买 🥩🍤 罐头吃！';
 }
 [lang='en'] .i18n-cats-desc:before {
   content: 'Like it? Buy 🥩🍤 cans for my「TangYuan & Coke」.';
