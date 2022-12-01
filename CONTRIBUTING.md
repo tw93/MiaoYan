@@ -1,4 +1,4 @@
-## How to contribute to Pake
+## How to contribute to MiaoYan
 
 **Welcome to create [pull requests](https://github.com/tw93/MiaoYan/compare/) for bugfix, new component, doc, example, suggestion and anything.**
 
