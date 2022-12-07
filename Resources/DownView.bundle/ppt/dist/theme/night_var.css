@@ -73,3 +73,8 @@ section.has-light-background h6 {
     text-decoration: underline
 }
 
+
+.reveal strong,
+.reveal b {
+  color: #F7B900;
+}

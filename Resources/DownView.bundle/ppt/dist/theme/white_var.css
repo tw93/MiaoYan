@@ -84,3 +84,8 @@ section.has-dark-background h6 {
 .hljs-strong {
     font-weight: bold;
 }
+
+.reveal strong,
+.reveal b {
+  color: #ED220C;
+}
