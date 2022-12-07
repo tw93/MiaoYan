@@ -116,6 +116,10 @@
   margin: -20px 0;
 }
 
+.section-center > h1, .section-center > h2 , .section-center > h3 {
+    margin-block-start: 0;
+}
+
 .reveal strong,
 .reveal b {
   font-weight: bold;
@@ -130,7 +134,7 @@
 .reveal ul {
   display: inline-block;
   text-align: left;
-  margin: 0 0 0 1em;
+  margin: 0.6em 0 0 1em;
   padding-left: 0px;
 }
 
@@ -157,6 +161,10 @@
 .reveal ol ul {
   display: block;
   margin-left: 40px;
+}
+
+.reveal li{
+    margin-top: 0.3em;
 }
 
 .reveal dt {
