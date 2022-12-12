@@ -301,11 +301,11 @@ class ViewController:
         refreshMiaoYanNum()
 
         if UserDefaultsManagement.isSingleMode, isLaunch {
-             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 vc.hideSidebar("")
             }
         } else if UserDefaultsManagement.isFirstLaunch {
-            //用于恢复单独模式后打开复原的效果
+            // 用于恢复单独模式后打开复原的效果
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 vc.showSidebar("")
                 vc.setSideDividerHidden(hidden: false)
@@ -313,15 +313,15 @@ class ViewController:
             UserDefaultsManagement.isFirstLaunch = false
         }
 
-        //用于恢复聚焦模式时候重启应用后的效果
+        // 用于恢复聚焦模式时候重启应用后的效果
         if isLaunch, size == 0 {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 vc.showNoteList("")
                 vc.setDividerHidden(hidden: false)
             }
         }
-        
-        //解决标题高度计算的问题，首次使用的时候
+
+        // 解决标题高度计算的问题，首次使用的时候
         if isLaunch, #available(OSX 13.0, *) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
                 self.titleLabel.editModeOn()
@@ -469,7 +469,7 @@ class ViewController:
         editArea.textStorage?.delegate = editArea.textStorage
         if #available(OSX 10.13, *) {
             editArea?.linkTextAttributes = [
-                .foregroundColor: NSColor(named: "highlight")!
+                .foregroundColor: NSColor(named: "highlight")!,
             ]
         }
         editArea.viewDelegate = self
@@ -2082,12 +2082,21 @@ class ViewController:
 
     func enableMiaoYanPPT() {
         guard let vc = ViewController.shared() else { return }
+        let range = editArea.selectedRange
+        let beforeString = editArea.string[..<range.location]
+        let hrCount = beforeString.components(separatedBy: "---").count
+
         enablePresentation()
         UserDefaultsManagement.magicPPT = true
         DispatchQueue.main.async {
             vc.titiebarHeight.constant = 0.0
             // 兼容空格下一个的场景
             NSApp.mainWindow?.makeFirstResponder(vc.editArea.markdownView)
+
+            // PPT场景下的自动跳转
+            if UserDefaultsManagement.previewLocation == "Editing", hrCount > 1 {
+                vc.editArea.markdownView?.slideTo(index: hrCount - 1)
+            }
         }
         Analytics.trackEvent("MiaoYan PPT")
     }

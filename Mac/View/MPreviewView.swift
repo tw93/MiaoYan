@@ -111,6 +111,19 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         }
     }
 
+    public func slideTo(index: Int) {
+        if #available(macOS 10.15, *) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
+                    if complete != nil {
+                        let javascript = "Reveal.slide(\(index));"
+                        self.evaluateJavaScript(javascript, completionHandler: nil)
+                    }
+                })
+            }
+        } else {}
+    }
+
     public func scrollToPosition(pre: CGFloat) {
         if pre == 0.0 {
             return
@@ -473,7 +486,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             }
             template = template.replacingOccurrences(of: "DOWN_THEME", with: downTheme) as NSString
 
-            //兼容一些ppt下面图片拖动进去，相对位置的问题
+            // 兼容一些ppt下面图片拖动进去，相对位置的问题
             let newHtmlString = htmlString.replacingOccurrences(of: "](/i/", with: "](./i/")
             return template.replacingOccurrences(of: "DOWN_RAW", with: newHtmlString)
         }
