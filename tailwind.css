@@ -3,14 +3,14 @@
 @import 'tailwindcss/utilities';
 
 :root {
-  --data-friend: '木子君、Jerk、芸璟、薛定谔的盲盒、沙溪、忸祁、*锐、木呀、π~mong、Hsin、Kake、喜多🍒、**飞、陆蔚青 sluke、红色的弓箭手、Catch、子岚、Linmi、小小小小小国、zhyncs、YuYuMi、匿名妙友、**辉、Robin、孑虚乌有、嗨嗨皮、熏锅锅、**泰、EugEnE 六金、Chen Chen、走鹃、飞🇨🇳🇨🇳、刘奇、**雄、邓旭东、**主、**得、*过、Wayne、再见孙悟空、牧野 Peikon、Grug、**文、奥特饭、LXC、瓮 J、董超、永遇乐、匿名妙友、Koobal、simonkuang、大团🐱、xiang、凨、Jimmy、互花米草、嘟嘟噜、晶晶、CLICK、折宝亭、*懂、*双、*泰、January、**招、Kamus、MING、WZ、夏清昕_Nicole';
+  --data-friend: '木子君、Jerk、芸璟、薛定谔的盲盒、沙溪、忸祁、*锐、木呀、π~mong、Hsin、Kake、喜多🍒、**飞、陆蔚青 sluke、红色的弓箭手、Catch、子岚、Linmi、小小小小小国、zhyncs、YuYuMi、匿名妙友、**辉、Robin、孑虚乌有、嗨嗨皮、熏锅锅、**泰、EugEnE 六金、Chen Chen、走鹃、飞🇨🇳🇨🇳、刘奇、**雄、邓旭东、**主、**得、*过、Wayne、再见孙悟空、牧野 Peikon、Grug、**文、奥特饭、LXC、瓮 J、董超、永遇乐、匿名妙友、Koobal、simonkuang、大团🐱、xiang、凨、Jimmy、互花米草、嘟嘟噜、晶晶、CLICK、折宝亭、*懂、*双、*泰、January、**招、Kamus、MING、WZ、夏清昕_Nicole、Rio :)';
 }
 
 .i18n-miao-people-desc:before {
-  content: '数据每周手动更新，当前 70 位朋友喜欢汤圆可乐';
+  content: '数据每周手动更新，当前 71 位朋友喜欢汤圆可乐';
 }
 [lang='en'] .i18n-miao-people-desc:before {
-  content: 'Weekly manual update, 70 friends like TangYuan and Coke';
+  content: 'Weekly manual update, 71 friends like TangYuan and Coke';
 }
 
 body {
