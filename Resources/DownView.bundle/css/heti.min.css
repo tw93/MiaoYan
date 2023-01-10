@@ -55,8 +55,7 @@ img {
   margin-top: 8px;
 }
 
-pre,
-iframe {
+pre, video, iframe {
   max-width: 100%;
 }
 
