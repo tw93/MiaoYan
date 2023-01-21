@@ -4,7 +4,7 @@
   <h1 align="center">MiaoYan</h1>
   <div align="center">
     <a href="https://twitter.com/HiTw93" target="_blank">
-       <img alt="twitter" src="https://img.shields.io/twitter/follow/Hitw93?color=%231D9BF0&label=MiaoYan%20%F0%9F%93%A2%20&logo=Twitter&style=flat-square"></a>
+       <img alt="twitter" src="https://img.shields.io/badge/Follow-Tw93-red?style=flat-square&logo=Twitter"></a>
     <a href="https://t.me/miaoyan" target="_blank">
       <img alt="Telegram" src="https://img.shields.io/badge/chat-Telegram-blueviolet?style=flat-square&logo=Telegram"></a>
      <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">
