@@ -10,7 +10,7 @@
     "anywhere": "anywhere",
     "dev": "npm-run-all --parallel anywhere watch",
     "start": "npm run dev",
-    "precommit": "npm run build"
+    "prepush": "npm run build"
   },
   "repository": {
     "type": "git",
