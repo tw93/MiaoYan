@@ -9,8 +9,7 @@
     "watch": "postcss tailwind.css -o build.css  --watch",
     "anywhere": "anywhere",
     "dev": "npm-run-all --parallel anywhere watch",
-    "start": "npm run dev",
-    "prepush": "npm run build"
+    "start": "npm run dev"
   },
   "repository": {
     "type": "git",
