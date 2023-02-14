@@ -1,148 +1,148 @@
 /* No comment provided by engineer. */
-"Add" = "添加";
+"Add" = "追加";
 
 /* No comment provided by engineer. */
-"Are you sure you want to irretrievably delete %d note(s)?" = "确定要永久删除%d个笔记？";
+"Are you sure you want to irretrievably delete %d note(s)?" = "%dのメモを削除しても宜しいでしょうか？";
 
 /* No comment provided by engineer. */
-"Are you sure you want to remove project \"%@\" and all files inside?" = "您确定要删除项目\"%@\"和它下面的所有文件吗？";
+"Are you sure you want to remove project \"%@\" and all files inside?" = "フォルダ\"%@\"と中の全てファイルを削除してもよろしいですか?";
 
 /* Delete menu */
-"Cancel" = "取消";
+"Cancel" = "キャンセル";
 
 /* No comment provided by engineer. */
-"Copy HTML" = "拷贝HTML";
+"Copy HTML" = "HTMLをコピー";
 
 /* No comment provided by engineer. */
-"Copy Link" = "拷贝链接";
+"Copy Link" = "リンクをコピー";
 
 /* No comment provided by engineer. */
-"Copy Plain Text" = "拷贝纯文本";
+"Copy Plain Text" = "プレーンテキストをコピー";
 
 /* No comment provided by engineer. */
-"Delete" = "删除";
+"Delete" = "削除";
 
 /* No comment provided by engineer. */
-"Delete folder" = "删除文件夹";
+"Delete folder" = "フォルダを削除";
 
 
 /* No comment provided by engineer. */
-"MiaoYan [preview]" = "妙言 [预览]";
+"MiaoYan [preview]" = "妙言を「プレビュー」";
 
 /* No comment provided by engineer. */
-"Link" = "链接";
+"Link" = "リンク";
 
 /* Menu */
-"Move" = "移动";
+"Move" = "移動";
 
 /* No comment provided by engineer. */
-"New" = "新建";
+"New" = "新規作成";
 
 /* No comment provided by engineer. */
-"New folder" = "新建文件夹";
+"New folder" = "新規フォルダ";
 
 /* No comment provided by engineer. */
-"New project" = "新建文件夹";
+"New project" = "新規フォルダ";
 
 /* Sidebar label */
 "Notes" = "妙言";
 
 /* No comment provided by engineer. */
-"OK" = "好的";
+"OK" = "はい";
 
 /* Edit area */
-"Please enter image title:" = "请输入图片标题：";
+"Please enter image title:" = "画像のタイトルを入力してください：";
 
 /* No comment provided by engineer. */
-"Please enter project name:" = "请输入名称：";
+"Please enter project name:" = "プロジェクト名を入力してください：";
 
 /* No comment provided by engineer. */
-"Please try again" = "请再试一次";
+"Please try again" = "もう一度お試しください";
 
 /* No comment provided by engineer. */
-"Preferences" = "偏好设置";
+"Preferences" = "環境設定";
 
 /* No comment provided by engineer. */
-"Quit MiaoYan" = "退出妙言";
+"Quit MiaoYan" = "妙言を終了する";
 
 /* Delete menu */
-"Remove" = "移除";
+"Remove" = "削除";
 
 /* No comment provided by engineer. */
-"Remove note(s)" = "确定删除";
+"Remove note(s)" = "メモを削除しても宜しいでしょうか";
 
 /* No comment provided by engineer. */
-"Rename folder" = "重命名文件夹";
+"Rename folder" = "フォルダの名前を変更";
 
 /* No comment provided by engineer. */
-"Show in Finder" = "在Finder中显示";
+"Show in Finder" = "Finderに表示";
 
 /* View menu */
-"Sort by" = "排序方式";
+"Sort by" = "並び替え";
 
 /* No comment provided by engineer. */
-"Strikethrough" = "删除线";
+"Strikethrough" = "取り消し線";
 
 /* Delete menu */
-"This action cannot be undone." = "此操作无法恢复。";
+"This action cannot be undone." = "この操作は元に戻せません。宜しいでしょうか？";
 
 /* No comment provided by engineer. */
-"Toggle preview" = "切换预览";
+"Toggle preview" = "プレビューを切り替え";
 
 /* Sidebar label */
-"Trash" = "删除";
+"Trash" = "削除";
 
 /* No comment provided by engineer. */
-"Underline" = "下划线";
+"Underline" = "アンダーライン";
 
 /* Untitled Note */
-"Untitled Note" = "无标题";
+"Untitled Note" = "名称未設定";
 
 /* No comment provided by engineer. */
-"URL has been copied to clipboard" = "URL已复制到剪贴板";
+"URL has been copied to clipboard" = "URLがクリップボードにコピーされました。";
 
 /* Menu */
 "View" = "视图";
 
-"Search" = "搜索";
+"Search" = "検索";
 
-"MiaoYan" = "妙言日语";
+"MiaoYan" = "妙言";
 
-"🎉 Automatic typesetting succeeded~" = "🎉 自动化排版完成~";
+"🎉 Automatic typesetting succeeded~" = "🎉 自動組版完了しました。";
 
-"🙊 Press ESC key to exit~" = "🙊 按 ESC 键退出演示~";
+"🙊 Press ESC key to exit~" = "🙊 ESC キーを押して終了します。";
 
-"😶‍🌫 Format is only possible after exiting preview mode~" = "😶‍🌫 文档排版需要退出预览模式才可使用~";
+"😶‍🌫 Format is only possible after exiting preview mode~" = "😶‍🌫 フォーマットの為に、プレビューモードを終了してください。";
 
-"😶‍🌫 The current Mac system does not support export, please upgrade to above 11.0~" = "😶‍🌫 当前 Mac 系统不支持导出，请升级到 11.0 以上~";
+"😶‍🌫 The current Mac system does not support export, please upgrade to above 11.0~" = "😶‍🌫 現在利用の環境は出力をサポートしていません。11.0にアップグレードしてください。";
 
-"🎉 Exported to desktop~" = "🎉 已导出到桌面~";
+"🎉 Exported to desktop~" = "🎉 デスクトップに保存しました。";
 
-"🙊 Starting export~" = "🙊 开始导出中~";
+"🙊 Starting export~" = "🙊 出力開始〜";
 
-"🍭 Image upload in progress~" = "🍭 图片上传中~";
+"🍭 Image upload in progress~" = "🍭 画像アップロード中~";
 
-"😶‍🌫 Image upload failed, Use local~" = "😶‍🌫 图片上传失败，优先使用本地，可手动上传~";
+"😶‍🌫 Image upload failed, Use local~" = "😶‍🌫 画像のアップロードに失敗しました。ローカルを使用してください";
 
-"%d MiaoYan" = "%d 篇妙言";
+"%d MiaoYan" = "%d つ妙言";
 
-"🙊 Please make sure your Mac is installed %@ ~" = "🙊 请确保你的 Mac 已安装并配置好了 %@ ~";
+"🙊 Please make sure your Mac is installed %@ ~" = "🙊 Macに %@ をインストールされていることを確認してください。";
 
-"🙊 In single open mode, Exit with Command+Shift+W ~" = "🙊 单独编辑器模式中，可 Command+Shift+W 退出~";
+"🙊 In single open mode, Exit with Command+Shift+W ~" = "🙊 シングルモードでは、Command+Shift+W で終了します";
 
-"😶‍🌫 Please make sure your title exists~" = "😶‍🌫 请确定你填写的标题是否存在~";
+"😶‍🌫 Please make sure your title exists~" = "😶‍🌫 タイトルが既にあることを確認してください";
 
-"🍭 Found that there are multiple titles of this~" = "🍭 发现这里有多个标题，使用搜索能力~";
+"🍭 Found that there are multiple titles of this~" = "🍭 複数のタイトルが見つかりました、検索を利用ください。";
 
-"🎉 URL is successfully copied, Use it anywhere~" = "🎉 外链成功复制，你可以在任何地方使用~";
+"🎉 URL is successfully copied, Use it anywhere~" = "🎉 URLがコピーされました。ご利用ください。";
 
-"😶‍🌫 No delimiter --- identification, Cannot use MiaoYan PPT~" = "😶‍🌫 没有分隔符 --- 标识，无法使用妙言 PPT~";
+"😶‍🌫 No delimiter --- identification, Cannot use MiaoYan PPT~" = "😶‍🌫 区切り「---」がなければ、MiaoYan PPT使えません。";
 
-"This %@ under this folder already exists!" = "此文件夹下 %@ 已经存在!";
-"Please change the title" = "请换一个标题";
+"This %@ under this folder already exists!" = "このフォルダの下に %@ は既に存在します";
+"Please change the title" = "タイトルを変更してください。";
 
-"Edit Link…" = "编辑链接";
-"Remove Link" = "移除链接";
+"Edit Link…" = "リンクを編集";
+"Remove Link" = "リンクを削除";
 
-"Restart to MiaoYan to take effect" = "重新启动妙言后生效";
-"Confirm" = "确定";
+"Restart to MiaoYan to take effect" = "妙言を再起動して有効にします。";
+"Confirm" = "確認";

@@ -1,14 +1,14 @@
 /* Class = "NSTextFieldCell"; title = "Update Time:"; ObjectID = "GN1-aA-6kJ"; */
-"GN1-aA-6kJ.title" = "Update Time:";
+"GN1-aA-6kJ.title" = "更新時間:";
 
 /* Class = "NSTextFieldCell"; title = "Word Count:"; ObjectID = "ITG-Xm-ygA"; */
-"ITG-Xm-ygA.title" = "Word Count:";
+"ITG-Xm-ygA.title" = "文字数:";
 
 /* Class = "NSTextFieldCell"; title = "Create Time:"; ObjectID = "LDe-hw-GD1"; */
-"LDe-hw-GD1.title" = "Create Time日语:";
+"LDe-hw-GD1.title" = "作成日時:";
 
 /* Class = "NSTextFieldCell"; title = "wordCount"; ObjectID = "Muy-lO-8hh"; */
-"Muy-lO-8hh.title" = "wordCount";
+"Muy-lO-8hh.title" = "文字数カウント";
 
 /* Class = "NSTextFieldCell"; title = "updateTime"; ObjectID = "yP9-xN-9tv"; */
-"yP9-xN-9tv.title" = "updateTime";
+"yP9-xN-9tv.title" = "更新時間";
