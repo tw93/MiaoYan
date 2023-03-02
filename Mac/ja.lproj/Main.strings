@@ -21,7 +21,7 @@
 "1qV-pJ-ZQT.title" = "タイトル";
 
 /* Class = "NSMenuItem"; title = "New"; ObjectID = "2Ci-Yj-aWK"; */
-"2Ci-Yj-aWK.title" = "新規";
+"2Ci-Yj-aWK.title" = "新規作成";
 
 /* Class = "NSMenuItem"; title = "13"; ObjectID = "2Uz-7H-8jH"; */
 "2Uz-7H-8jH.title" = "13";
@@ -42,7 +42,7 @@
 "46V-wl-D4j.title" = "エディタのフォント";
 
 /* Class = "NSMenuItem"; title = "Find"; ObjectID = "4EN-yA-p0u"; */
-"4EN-yA-p0u.title" = "Find";
+"4EN-yA-p0u.title" = "検索";
 
 /* Class = "NSMenuItem"; title = "Enter Full Screen"; ObjectID = "4J7-dP-txa"; */
 "4J7-dP-txa.title" = "Enter Full Screen";
@@ -51,19 +51,19 @@
 "4sb-4s-VLi.title" = "Quit MiaoYan";
 
 /* Class = "NSMenuItem"; title = "Edit"; ObjectID = "5QF-Oa-p0T"; */
-"5QF-Oa-p0T.title" = "Edit";
+"5QF-Oa-p0T.title" = "編集";
 
 /* Class = "NSMenuItem"; title = "Redo"; ObjectID = "6dh-zS-Vam"; */
 "6dh-zS-Vam.title" = "Redo";
 
 /* Class = "NSMenuItem"; title = "Shift Right"; ObjectID = "6f5-hD-IGa"; */
-"6f5-hD-IGa.title" = "Shift Right";
+"6f5-hD-IGa.title" = "シフトライト";
 
 /* Class = "NSMenu"; title = "Help"; ObjectID = "6fQ-gK-hbI"; */
 "6fQ-gK-hbI.title" = "ヘルプ";
 
 /* Class = "NSMenuItem"; title = "Underline"; ObjectID = "6nc-Nb-dtR"; */
-"6nc-Nb-dtR.title" = "Underline";
+"6nc-Nb-dtR.title" = "下線";
 
 /* Class = "NSMenuItem"; title = "Dark"; ObjectID = "73o-2j-rWk"; */
 "73o-2j-rWk.title" = "ダーク";
@@ -90,7 +90,7 @@
 "9QN-Rt-DpO.title" = "100%";
 
 /* Class = "NSMenuItem"; title = "Toggle Presentation"; ObjectID = "9ib-os-JZv"; */
-"9ib-os-JZv.title" = "Toggle Presentation";
+"9ib-os-JZv.title" = "プレゼンテーションの切り替え";
 
 /* Class = "NSTextFieldCell"; title = "2/23/11"; ObjectID = "9w3-fa-di3"; */
 "9w3-fa-di3.title" = "2/23/11";
@@ -108,19 +108,19 @@
 "AZ7-aG-pPz.ibShadowedToolTip" = "Demonstrate";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Format"; ObjectID = "Adc-zl-sqX"; */
-"Adc-zl-sqX.ibShadowedToolTip" = "Format";
+"Adc-zl-sqX.ibShadowedToolTip" = "フォーマット";
 
 /* Class = "NSSearchFieldCell"; placeholderString = "Search"; ObjectID = "B7t-9v-bSk"; */
-"B7t-9v-bSk.placeholderString" = "Search";
+"B7t-9v-bSk.placeholderString" = "検索";
 
 /* Class = "NSMenuItem"; title = "Preferences…"; ObjectID = "BOF-NM-1cW"; */
 "BOF-NM-1cW.title" = "Preferences…";
 
 /* Class = "NSMenuItem"; title = "Check for Updates"; ObjectID = "BWp-m7-ySj"; */
-"BWp-m7-ySj.title" = "Check for Updates";
+"BWp-m7-ySj.title" = "アップデートを確認";
 
 /* Class = "NSMenu"; title = "Folder"; ObjectID = "BYI-2F-BJo"; */
-"BYI-2F-BJo.title" = "Folder";
+"BYI-2F-BJo.title" = "フォルダ";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Preview"; ObjectID = "Bn7-FD-jzc"; */
 "Bn7-FD-jzc.ibShadowedToolTip" = "Preview";
@@ -135,10 +135,10 @@
 "CIa-Sz-unx.title" = "12";
 
 /* Class = "NSMenuItem"; title = "Move"; ObjectID = "CvG-Kp-kdK"; */
-"CvG-Kp-kdK.title" = "Move";
+"CvG-Kp-kdK.title" = "移動";
 
 /* Class = "NSMenuItem"; title = "Hide/show sidebar"; ObjectID = "DCh-5P-PZe"; */
-"DCh-5P-PZe.title" = "Hide/show sidebar";
+"DCh-5P-PZe.title" = "サイドバーの表示／非表示";
 
 /* Class = "NSTextFieldCell"; title = "Preview FontName"; ObjectID = "DSZ-lK-z6c"; */
 "DSZ-lK-z6c.title" = "Preview FontName";
@@ -150,10 +150,10 @@
 "DhD-mk-T1u.title" = "MiaoYan PPT PDF";
 
 /* Class = "NSMenuItem"; title = "Duplicate"; ObjectID = "E6I-n5-dsi"; */
-"E6I-n5-dsi.title" = "Duplicate";
+"E6I-n5-dsi.title" = "複写する";
 
 /* Class = "NSMenuItem"; title = "Show  in finder"; ObjectID = "F5A-zs-zwP"; */
-"F5A-zs-zwP.title" = "Show  in finder";
+"F5A-zs-zwP.title" = "Finderに表示";
 
 /* Class = "NSMenuItem"; title = "Zoom"; ObjectID = "FQV-5x-ffs"; */
 "FQV-5x-ffs.title" = "Zoom";
@@ -162,7 +162,7 @@
 "Fuh-qO-nt2.title" = "フォルダ";
 
 /* Class = "NSMenuItem"; title = "Todo"; ObjectID = "FxB-UV-FA4"; */
-"FxB-UV-FA4.title" = "Todo";
+"FxB-UV-FA4.title" = "ToDoリスト";
 
 /* Class = "NSMenuItem"; title = "Empty Trash"; ObjectID = "G9H-Lg-TXE"; */
 "G9H-Lg-TXE.title" = "Empty Trash";
@@ -180,13 +180,13 @@
 "Gwp-vX-YaR.headerCell.title" = "Library";
 
 /* Class = "NSMenuItem"; title = "View"; ObjectID = "H8h-7b-M4v"; */
-"H8h-7b-M4v.title" = "View";
+"H8h-7b-M4v.title" = "表示";
 
 /* Class = "NSMenuItem"; title = "29"; ObjectID = "HMx-8U-9lC"; */
 "HMx-8U-9lC.title" = "29";
 
 /* Class = "NSMenu"; title = "View"; ObjectID = "HyV-fh-RgO"; */
-"HyV-fh-RgO.title" = "View";
+"HyV-fh-RgO.title" = "表示";
 
 /* Class = "NSMenuItem"; title = "15"; ObjectID = "IF0-dQ-WWn"; */
 "IF0-dQ-WWn.title" = "15";
@@ -198,7 +198,7 @@
 "IUe-Hi-7b6.title" = "Times New Roman";
 
 /* Class = "NSMenuItem"; title = "Shift Left"; ObjectID = "Iba-Po-ajH"; */
-"Iba-Po-ajH.title" = "Shift Left";
+"Iba-Po-ajH.title" = "シフトレフト";
 
 /* Class = "NSMenuItem"; title = "Show Info"; ObjectID = "IcI-sb-NY5"; */
 "IcI-sb-NY5.title" = "Show Info";
@@ -210,7 +210,7 @@
 "J0P-Qc-LaU.title" = "18";
 
 /* Class = "NSMenuItem"; title = "Deleteline"; ObjectID = "Jwm-Wb-uwl"; */
-"Jwm-Wb-uwl.title" = "Deleteline";
+"Jwm-Wb-uwl.title" = "取り消し線";
 
 /* Class = "NSMenu"; title = "Export"; ObjectID = "LoU-Gc-oM3"; */
 "LoU-Gc-oM3.title" = "Export";
@@ -243,10 +243,10 @@
 "NiN-n8-Y4W.title" = "Text Cell";
 
 /* Class = "NSMenuItem"; title = "Italic"; ObjectID = "O3Z-9P-RfY"; */
-"O3Z-9P-RfY.title" = "Italic";
+"O3Z-9P-RfY.title" = "斜体";
 
 /* Class = "NSMenuItem"; title = "Single open"; ObjectID = "O8Z-cg-XnH"; */
-"O8Z-cg-XnH.title" = "Single open";
+"O8Z-cg-XnH.title" = "開く";
 
 /* Class = "NSTextFieldCell"; placeholderString = "输入标题"; ObjectID = "O9K-a1-3eu"; */
 "O9K-a1-3eu.placeholderString" = "タイトルを入力してください。";
@@ -264,7 +264,7 @@
 "PM6-HD-5pk.title" = "Version";
 
 /* Class = "NSMenuItem"; title = "Toggle preview"; ObjectID = "PdU-Em-Ugm"; */
-"PdU-Em-Ugm.title" = "Toggle preview";
+"PdU-Em-Ugm.title" = "プレビューの切り替え";
 
 /* Class = "NSMenuItem"; title = "13"; ObjectID = "Q3T-TQ-ewQ"; */
 "Q3T-TQ-ewQ.title" = "13";
@@ -276,10 +276,10 @@
 "RSK-NX-AjP.title" = "SF Pro Text";
 
 /* Class = "NSMenuItem"; title = "Select All"; ObjectID = "Ruw-6m-B2m"; */
-"Ruw-6m-B2m.title" = "Select All";
+"Ruw-6m-B2m.title" = "全て選択";
 
 /* Class = "NSMenuItem"; title = "Delete folder"; ObjectID = "RwR-P0-ycK"; */
-"RwR-P0-ycK.title" = "Delete folder";
+"RwR-P0-ycK.title" = "フォルダを削除";
 
 /* Class = "NSMenuItem"; title = "Jump to Selection"; ObjectID = "S0p-oC-mLd"; */
 "S0p-oC-mLd.title" = "Jump to Selection";
@@ -297,16 +297,16 @@
 "SdL-vK-KjH.title" = "Window";
 
 /* Class = "NSMenuItem"; title = "File"; ObjectID = "SeY-r8-n3w"; */
-"SeY-r8-n3w.title" = "File";
+"SeY-r8-n3w.title" = "ファイル";
 
 /* Class = "NSMenuItem"; title = "New folder"; ObjectID = "SrH-fe-Hog"; */
-"SrH-fe-Hog.title" = "New folder";
+"SrH-fe-Hog.title" = "新規フォルダ";
 
 /* Class = "NSMenuItem"; title = "Rename folder"; ObjectID = "Tap-iY-hyA"; */
-"Tap-iY-hyA.title" = "Rename folder";
+"Tap-iY-hyA.title" = "フォルダ名変更";
 
 /* Class = "NSMenuItem"; title = "Delete"; ObjectID = "TjZ-PX-YVo"; */
-"TjZ-PX-YVo.title" = "Delete";
+"TjZ-PX-YVo.title" = "削除";
 
 /* Class = "NSMenuItem"; title = "Picsee"; ObjectID = "Tog-9P-3TK"; */
 "Tog-9P-3TK.title" = "Picsee";
@@ -330,10 +330,10 @@
 "Vgd-TL-GH7.title" = "Hover";
 
 /* Class = "NSMenu"; title = "Edit"; ObjectID = "W48-6f-4Dl"; */
-"W48-6f-4Dl.title" = "Edit";
+"W48-6f-4Dl.title" = "編集";
 
 /* Class = "NSMenuItem"; title = "Hide/show note list"; ObjectID = "WHt-T4-l9c"; */
-"WHt-T4-l9c.title" = "Hide/show note list";
+"WHt-T4-l9c.title" = "リストバーの表示／非表示";
 
 /* Class = "NSMenuItem"; title = "Paste and Match Style"; ObjectID = "WeT-3V-zwk"; */
 "WeT-3V-zwk.title" = "Paste and Match Style";
@@ -348,10 +348,10 @@
 "XBB-Sr-T1D.title" = "Rename";
 
 /* Class = "NSMenuItem"; title = "Find…"; ObjectID = "Xz5-n4-O0W"; */
-"Xz5-n4-O0W.title" = "Find…";
+"Xz5-n4-O0W.title" = "検索…";
 
 /* Class = "NSMenuItem"; title = "Find and Replace…"; ObjectID = "YEy-JH-Tfz"; */
-"YEy-JH-Tfz.title" = "Find and Replace…";
+"YEy-JH-Tfz.title" = "検索と置換…";
 
 /* Class = "NSViewController"; title = "About MiaoYan"; ObjectID = "YNW-vn-A3h"; */
 "YNW-vn-A3h.title" = "About MiaoYan";
@@ -387,10 +387,10 @@
 "cO1-tX-rzO.title" = "Help";
 
 /* Class = "NSMenuItem"; title = "Link"; ObjectID = "cnW-gr-ceF"; */
-"cnW-gr-ceF.title" = "Link";
+"cnW-gr-ceF.title" = "リンク";
 
 /* Class = "NSMenuItem"; title = "Modification date"; ObjectID = "dCc-l5-XB2"; */
-"dCc-l5-XB2.title" = "Modification date";
+"dCc-l5-XB2.title" = "更新日時";
 
 /* Class = "NSMenuItem"; title = "Undo"; ObjectID = "dRJ-4n-Yzg"; */
 "dRJ-4n-Yzg.title" = "Undo";
@@ -399,7 +399,7 @@
 "dx8-sq-a90.title" = "Light";
 
 /* Class = "NSMenuItem"; title = "Creation date"; ObjectID = "eTL-dh-GvM"; */
-"eTL-dh-GvM.title" = "Creation date";
+"eTL-dh-GvM.title" = "作成日時";
 
 /* Class = "NSTextFieldCell"; title = "Preview FontSize"; ObjectID = "euf-Xu-FDz"; */
 "euf-Xu-FDz.title" = "フォントサイズのプレビュー";
@@ -444,7 +444,7 @@
 "gh6-SU-E0i.title" = "編集";
 
 /* Class = "NSMenuItem"; title = "Show in Finder"; ObjectID = "goN-LO-L7l"; */
-"goN-LO-L7l.title" = "Show in Finder";
+"goN-LO-L7l.title" = "Finderに表示";
 
 /* Class = "NSMenuItem"; title = "Always"; ObjectID = "h0Q-Zx-pSP"; */
 "h0Q-Zx-pSP.title" = "Always";
@@ -510,10 +510,10 @@
 "pgG-Re-tuF.title" = "1000px";
 
 /* Class = "NSMenuItem"; title = "Duplicate"; ObjectID = "pnm-dP-GKO"; */
-"pnm-dP-GKO.title" = "Duplicate";
+"pnm-dP-GKO.title" = "複写する";
 
 /* Class = "NSMenuItem"; title = "Find Next"; ObjectID = "q09-fT-Sye"; */
-"q09-fT-Sye.title" = "Find Next";
+"q09-fT-Sye.title" = "次を検索";
 
 /* Class = "NSMenuItem"; title = "Main Window"; ObjectID = "qZf-Xp-kDW"; */
 "qZf-Xp-kDW.title" = "Main Window";
@@ -522,10 +522,10 @@
 "qod-hp-9wd.title" = "Window";
 
 /* Class = "NSMenuItem"; title = "Sort by"; ObjectID = "rHB-xF-GgG"; */
-"rHB-xF-GgG.title" = "Sort by";
+"rHB-xF-GgG.title" = "並べ替え";
 
 /* Class = "NSMenuItem"; title = "Reveal in finder"; ObjectID = "rXU-X3-UjC"; */
-"rXU-X3-UjC.title" = "Reveal in finder";
+"rXU-X3-UjC.title" = "Finderで表示 ";
 
 /* Class = "NSTextFieldCell"; title = "Preview Width"; ObjectID = "rbf-EY-CzN"; */
 "rbf-EY-CzN.title" = "Preview Width";
@@ -537,7 +537,7 @@
 "s6A-tQ-Sbe.title" = "Bring All to Front";
 
 /* Class = "NSMenu"; title = "File"; ObjectID = "uMZ-sI-7ja"; */
-"uMZ-sI-7ja.title" = "File";
+"uMZ-sI-7ja.title" = "ファイル";
 
 /* Class = "NSMenu"; title = "MiaoYan"; ObjectID = "uQy-DD-JDr"; */
 "uQy-DD-JDr.title" = "MiaoYan";
@@ -573,7 +573,7 @@
 "x3v-GG-iWU.title" = "コピー";
 
 /* Class = "NSMenuItem"; title = "Reveal in Finder"; ObjectID = "xSO-lW-k8f"; */
-"xSO-lW-k8f.title" = "Reveal in Finder";
+"xSO-lW-k8f.title" = "Finderで表示";
 
 /* Class = "NSTextFieldCell"; title = "Editor FontName"; ObjectID = "xdH-tR-vpQ"; */
 "xdH-tR-vpQ.title" = "Editor FontName";
@@ -591,10 +591,10 @@
 "yiX-qe-QKb.title" = "Report Issues";
 
 /* Class = "NSMenuItem"; title = "Descending"; ObjectID = "ytU-K8-Ilj"; */
-"ytU-K8-Ilj.title" = "Descending";
+"ytU-K8-Ilj.title" = "降順";
 
 /* Class = "NSMenuItem"; title = "Ascending"; ObjectID = "yw9-Qh-ngF"; */
-"yw9-Qh-ngF.title" = "Ascending";
+"yw9-Qh-ngF.title" = "昇順";
 
 /* Class = "NSMenuItem"; title = "Feeding 2 cats"; ObjectID = "zeb-Y9-O9j"; */
 "zeb-Y9-O9j.title" = "Feeding 2 cats";
