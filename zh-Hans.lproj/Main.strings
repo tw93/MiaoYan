@@ -238,7 +238,7 @@
 /* Class = "NSWindow"; title = "MiaoYan"; ObjectID = "IQv-IB-iLA"; */
 "IQv-IB-iLA.title" = "妙言";
 
-/* Class = "NSMenuItem"; title = "Pin/unpin"; ObjectID = "jFN-Dp-LON"; */
+/* Class = "NSMenuItem"; title = "Pin/unPin"; ObjectID = "jFN-Dp-LON"; */
 "jFN-Dp-LON.title" = "置顶/取消置顶";
 
 /* Class = "NSMenuItem"; title = "Rename"; ObjectID = "jLq-8F-n0X"; */
