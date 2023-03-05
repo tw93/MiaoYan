@@ -69,7 +69,7 @@
 "73o-2j-rWk.title" = "ダーク";
 
 /* Class = "NSTextFieldCell"; title = "Preview Location"; ObjectID = "7FA-ez-4mb"; */
-"7FA-ez-4mb.title" = "Preview Location";
+"7FA-ez-4mb.title" = "プレビューの場所";
 
 /* Class = "NSMenuItem"; title = "Begin"; ObjectID = "7Zn-jP-4ko"; */
 "7Zn-jP-4ko.title" = "Begin";
@@ -99,13 +99,13 @@
 "A5V-Wm-if2.title" = "最小化する";
 
 /* Class = "NSTextFieldCell"; title = "Presentation FontSize"; ObjectID = "AOs-Fb-J09"; */
-"AOs-Fb-J09.title" = "Presentation FontSize";
+"AOs-Fb-J09.title" = "プレゼンテーション";
 
 /* Class = "NSMenu"; title = "Main Menu"; ObjectID = "AYu-sK-qS6"; */
 "AYu-sK-qS6.title" = "メインメニュー";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Demonstrate"; ObjectID = "AZ7-aG-pPz"; */
-"AZ7-aG-pPz.ibShadowedToolTip" = "Demonstrate";
+"AZ7-aG-pPz.ibShadowedToolTip" = "デモンストレーションする";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Format"; ObjectID = "Adc-zl-sqX"; */
 "Adc-zl-sqX.ibShadowedToolTip" = "フォーマット";
