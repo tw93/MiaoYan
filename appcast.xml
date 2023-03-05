@@ -3,6 +3,28 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>1.9.0</title>
+      <description><![CDATA[
+      <h3>久等了 ❤️：</h3>
+       <ol>
+        <li>妙言支持日文版本了，感谢 @CharlesKan 共建</li>
+        <li>将原有的 tab 移动问题优化成之前的效果，更顺手 </li>
+        <li>预览样式根据使用过程持续优化</li>
+        <li>修复了一些 Bug</li>
+       </ol>
+       <h3>Sorry for the long wait ❤️：</h3>
+      <ol>
+        <li>Now supports Japanese version, thanks to @CharlesKan for the collaboration.</li>
+        <li>Optimize the problem of moving tabs to achieve a smoother and more user-friendly experience.</li>
+        <li>Preview styles are continuously optimized based on usage.</li>
+        <li>Fixed some bugs.</li>
+      </ol>
+          ]]>      </description>
+      <pubDate>周日, 05 03月 2023 23:58:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.9.0.zip" sparkle:shortVersionString="1.9.0" sparkle:version="1.9.0" sparkle:edSignature="qn4H1aEw1NbR3dhQ0Ma0E7ZuE7qNpLmSyfe+b0Xd+sSqXhmTvlr0hRTkNdOXmZj05yPH7JIUcKsese49lIg5Dw==" length="24698757" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>1.8.0</title>
       <description><![CDATA[
       <h3>更巧妙 🐝：</h3>
