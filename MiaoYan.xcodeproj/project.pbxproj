@@ -147,13 +147,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		270678F8244601C000D9935F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D7793C671F211C6000CA39B7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6F13BB0320FEDDF40005E120;
-			remoteInfo = "MiaoYanCore macOS";
-		};
 		6F13BB1720FEDDF50005E120 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D7793C671F211C6000CA39B7 /* Project object */;
@@ -695,7 +688,6 @@
 			);
 			dependencies = (
 				6F13BB1820FEDDF50005E120 /* PBXTargetDependency */,
-				270678F9244601C000D9935F /* PBXTargetDependency */,
 			);
 			name = MiaoYan;
 			productName = MiaoYan;
@@ -1021,11 +1013,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		270678F9244601C000D9935F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 6F13BB0320FEDDF40005E120 /* MiaoYanCore macOS */;
-			targetProxy = 270678F8244601C000D9935F /* PBXContainerItemProxy */;
-		};
 		6F13BB1820FEDDF50005E120 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 6F13BB0320FEDDF40005E120 /* MiaoYanCore macOS */;
