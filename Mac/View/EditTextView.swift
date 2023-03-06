@@ -45,8 +45,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         newRect.size.height = newRect.size.height - diff
         newRect.origin.y = newRect.origin.y + 4.0
-
         super.drawInsertionPoint(in: newRect, color: EditTextView.fontColor, turnedOn: flag)
+
+        // 防止格式化时候样式的抖动
+        DispatchQueue.main.async {
+            self.applyLeftParagraphStyle()
+        }
     }
 
     override func updateInsertionPointStateAndRestartTimer(_ restartFlag: Bool) {
