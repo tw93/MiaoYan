@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21225"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21507"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -1265,7 +1265,7 @@ CA
                                                                                     <imageCell key="cell" refusesFirstResponder="YES" imageScaling="proportionallyDown" image="repository.png" id="WHo-8O-PFO"/>
                                                                                 </imageView>
                                                                                 <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kTp-qw-RCd">
-                                                                                    <rect key="frame" x="22" y="18" width="156" height="17"/>
+                                                                                    <rect key="frame" x="22" y="16" width="156" height="17"/>
                                                                                     <constraints>
                                                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="LXx-x4-6KI"/>
                                                                                     </constraints>
@@ -1286,7 +1286,7 @@ CA
                                                                                 <constraint firstAttribute="trailing" secondItem="kTp-qw-RCd" secondAttribute="trailing" constant="6" id="KQI-N7-7qH"/>
                                                                                 <constraint firstItem="1dd-W4-MiY" firstAttribute="leading" secondItem="I0q-sX-uBq" secondAttribute="leading" constant="3" id="KTq-ca-aXt"/>
                                                                                 <constraint firstAttribute="trailing" secondItem="bVt-gT-Six" secondAttribute="trailing" id="VUS-Wa-wfe"/>
-                                                                                <constraint firstItem="kTp-qw-RCd" firstAttribute="centerY" secondItem="I0q-sX-uBq" secondAttribute="centerY" constant="-1.26" id="VrP-aS-JzK"/>
+                                                                                <constraint firstItem="kTp-qw-RCd" firstAttribute="centerY" secondItem="I0q-sX-uBq" secondAttribute="centerY" constant="0.59999999999999998" id="VrP-aS-JzK"/>
                                                                                 <constraint firstItem="kTp-qw-RCd" firstAttribute="leading" secondItem="I0q-sX-uBq" secondAttribute="leading" constant="24" id="bav-Au-PqY"/>
                                                                                 <constraint firstAttribute="bottom" secondItem="bVt-gT-Six" secondAttribute="bottom" id="h6b-pM-7dD"/>
                                                                                 <constraint firstItem="bVt-gT-Six" firstAttribute="leading" secondItem="I0q-sX-uBq" secondAttribute="leading" id="oLU-KS-Pam"/>
@@ -1296,7 +1296,6 @@ CA
                                                                                 <outlet property="icon" destination="1dd-W4-MiY" id="cb4-9r-kd2"/>
                                                                                 <outlet property="imageView" destination="1dd-W4-MiY" id="B95-xv-93h"/>
                                                                                 <outlet property="label" destination="kTp-qw-RCd" id="72n-qf-ujw"/>
-                                                                                <outlet property="labelToIconConstraint" destination="VrP-aS-JzK" id="ufO-7l-jKl"/>
                                                                                 <outlet property="textField" destination="kTp-qw-RCd" id="2KP-pc-Kir"/>
                                                                             </connections>
                                                                         </tableCellView>
