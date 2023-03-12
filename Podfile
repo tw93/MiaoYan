@@ -1,7 +1,6 @@
 use_frameworks!
 
-MAC_TARGET_VERSION = '10.13'
-IOS_TARGET_VERSION = '12'
+MAC_TARGET_VERSION = '10.15'
 
 def mac_pods
     pod 'MASShortcut', :git => 'https://github.com/shpakovski/MASShortcut.git', :branch => 'master'
