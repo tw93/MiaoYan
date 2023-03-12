@@ -106,14 +106,18 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         }
     }
 
-    // Custom note highlight style
-
     func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
-        NoteRowView()
+        let rowView = NoteRowView()
+        let isLastRow = row == tableView.numberOfRows - 1
+
+        // 隐藏最后一个的分割线
+        if isLastRow {
+            rowView.isSeparatorHidden = true
+        }
+        return rowView
     }
 
     // Populate table data
-
     func numberOfRows(in tableView: NSTableView) -> Int {
         noteList.count
     }
@@ -127,7 +131,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     }
 
     // On selected row show notes in right panel
-
     func tableViewSelectionDidChange(_ notification: Notification) {
         let timestamp = Date().toMillis()
         fillTimestamp = timestamp
