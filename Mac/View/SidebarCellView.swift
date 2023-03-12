@@ -3,14 +3,12 @@ import Cocoa
 class SidebarCellView: NSTableCellView {
     @IBOutlet var icon: NSImageView!
     @IBOutlet var label: NSTextField!
-    @IBOutlet var labelToIconConstraint: NSLayoutConstraint!
 
     var storage = Storage.sharedInstance()
 
     override func draw(_ dirtyRect: NSRect) {
         label.font = UserDefaultsManagement.nameFont
         label.addCharacterSpacing()
-        checkLabelTopConstraint()
         super.draw(dirtyRect)
     }
 
@@ -59,16 +57,5 @@ class SidebarCellView: NSTableCellView {
     @IBAction func add(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
         vc.storageOutlineView.addProject(self)
-    }
-
-    func checkLabelTopConstraint() {
-        let font = UserDefaultsManagement.windowFontName
-        if font == "Times New Roman" {
-            labelToIconConstraint.constant = 1.0
-        } else if font == "SF Pro Text" {
-            labelToIconConstraint.constant = -0.8
-        } else {
-            labelToIconConstraint.constant = -1.26
-        }
     }
 }
