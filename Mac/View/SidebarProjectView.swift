@@ -129,7 +129,7 @@ class SidebarProjectView: NSOutlineView,
 
         switch sidebarItem.type {
         case .Category, .Trash:
-            if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "notesTable")), let rows = NSKeyedUnarchiver.unarchiveObject(with: data) as? IndexSet {
+            if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "notesTable")), let rows = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? IndexSet {
                 var notes = [Note]()
                 for row in rows {
                     let note = vc.notesTableView.noteList[row]
