@@ -173,11 +173,12 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     }
 
     func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
-        let data = NSKeyedArchiver.archivedData(withRootObject: rowIndexes)
+        if let data = try? NSKeyedArchiver.archivedData(withRootObject: rowIndexes, requiringSecureCoding: false) {
+            let type = NSPasteboard.PasteboardType(rawValue: "notesTable")
+            pboard.declareTypes([type], owner: self)
+            pboard.setData(data, forType: type)
+        }
 
-        let type = NSPasteboard.PasteboardType(rawValue: "notesTable")
-        pboard.declareTypes([type], owner: self)
-        pboard.setData(data, forType: type)
         return true
     }
 
