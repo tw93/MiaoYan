@@ -2367,11 +2367,7 @@ class ViewController:
             return
         }
         titiebarHeight.constant = 52.0
-        if UserDefaultsManagement.windowFontName == "SF Pro Text" || UserDefaultsManagement.windowFontName == "Times New Roman" {
-            titleTopConstraint.constant = 14.0
-        } else {
-            titleTopConstraint.constant = 10.0
-        }
+        titleTopConstraint.constant = 14.0
     }
 
     @IBAction func duplicate(_ sender: Any) {
