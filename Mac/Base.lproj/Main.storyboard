@@ -1413,11 +1413,11 @@ CA
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                             <prototypeCellViews>
                                                                                 <tableCellView identifier="NoteCellView" id="8qL-z4-nzh" customClass="NoteCellView" customModule="MiaoYan" customModuleProvider="target">
-                                                                                    <rect key="frame" x="10" y="0.0" width="216" height="48"/>
+                                                                                    <rect key="frame" x="10" y="0.0" width="216" height="52"/>
                                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                     <subviews>
                                                                                         <textField identifier="cellName" autoresizesSubviews="NO" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="UvD-jB-7Ok" customClass="NameTextField" customModule="MiaoYan" customModuleProvider="target">
-                                                                                            <rect key="frame" x="4" y="22" width="214" height="17"/>
+                                                                                            <rect key="frame" x="4" y="26" width="214" height="17"/>
                                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" state="on" title="Name" usesSingleLineMode="YES" id="y7T-Rc-etT">
                                                                                                 <font key="font" metaFont="system" size="14"/>
                                                                                                 <color key="textColor" name="mainText"/>
@@ -1683,7 +1683,6 @@ CA
                     </view>
                     <connections>
                         <outlet property="ProjectHeaderView" destination="vp7-cq-QSI" id="kED-nV-8xh"/>
-                        <outlet property="TitleTopConstraint" destination="Vst-qt-Crj" id="bsj-AS-wer"/>
                         <outlet property="addProjectButton" destination="Yei-Or-qiI" id="bPx-nk-z5u"/>
                         <outlet property="editArea" destination="cmZ-KL-T9k" id="sJd-5P-0mf"/>
                         <outlet property="editAreaScroll" destination="qJO-7f-vkL" id="X69-yq-N67"/>

@@ -2,22 +2,21 @@ import AppKit
 import Cocoa
 
 class NoteRowView: NSTableRowView {
-    var isSeparatorHidden = false
-
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
-    }
 
-    override func drawSeparator(in rect: NSRect) {
-        if !isSeparatorHidden {
-            let bounds = bounds
-            NSColor(hex: "#E1E1E1").setStroke()
-            let path = NSBezierPath()
-            path.move(to: NSPoint(x: bounds.minX + 22.0, y: bounds.maxY - 0.4))
-            path.line(to: NSPoint(x: bounds.maxX - 22.0, y: bounds.maxY - 0.4))
-            path.lineWidth = 1.0
-            path.stroke()
+        // 选中的时候不出现分割线
+        if isSelected { return }
+
+        // 选中的行上一个分割线也不出现
+        if let tableView = superview as? NSTableView,
+           let selectedRow = tableView.selectedRowIndexes.first, selectedRow > 0,
+           let previousRow = tableView.rowView(atRow: selectedRow - 1, makeIfNecessary: false),
+           self == previousRow {
+            return
         }
+
+        drawSeparator(in: dirtyRect)
     }
 
     override var isEmphasized: Bool {
