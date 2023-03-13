@@ -13,6 +13,7 @@
       <img alt="GitHub commit" src="https://img.shields.io/github/commit-activity/m/tw93/MiaoYan?style=flat-square"></a>
     <a href="https://github.com/tw93/MiaoYan/issues?q=is%3Aissue+is%3Aclosed" target="_blank">
       <img alt="GitHub closed issues" src="https://img.shields.io/github/issues-closed/tw93/MiaoYan.svg?style=flat-square"></a>
+    <img alt="Minimum supported version" src="https://img.shields.io/badge/macOS-10.15%2B-orange?style=flat-square">
   </div>
   <div align="center">Lightweight Markdown app to help you write great sentences.</div>
 </p>
