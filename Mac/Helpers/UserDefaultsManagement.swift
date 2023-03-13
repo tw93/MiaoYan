@@ -481,29 +481,33 @@ public enum UserDefaultsManagement {
 
     static var fontColor: Color {
         get {
-            if let returnFontColor = UserDefaults.standard.object(forKey: Constants.FontColorKey), let color = NSKeyedUnarchiver.unarchiveObject(with: returnFontColor as! Data) as? Color {
+            if let returnFontColor = UserDefaults.standard.data(forKey: Constants.FontColorKey),
+               let color = try? NSKeyedUnarchiver.unarchivedObject(ofClass: Color.self, from: returnFontColor) {
                 return color
             } else {
                 return DefaultFontColor
             }
         }
         set {
-            let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
-            UserDefaults.standard.set(data, forKey: Constants.FontColorKey)
+            if let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false) {
+                UserDefaults.standard.set(data, forKey: Constants.FontColorKey)
+            }
         }
     }
 
     static var bgColor: Color {
         get {
-            if let returnBgColor = UserDefaults.standard.object(forKey: Constants.BgColorKey), let color = NSKeyedUnarchiver.unarchiveObject(with: returnBgColor as! Data) as? Color {
+            if let returnBgColor = UserDefaults.standard.data(forKey: Constants.BgColorKey),
+               let color = try? NSKeyedUnarchiver.unarchivedObject(ofClass: Color.self, from: returnBgColor) {
                 return color
             } else {
                 return DefaultBgColor
             }
         }
         set {
-            let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
-            UserDefaults.standard.set(data, forKey: Constants.BgColorKey)
+            if let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false) {
+                UserDefaults.standard.set(data, forKey: Constants.BgColorKey)
+            }
         }
     }
 
@@ -689,7 +693,7 @@ public enum UserDefaultsManagement {
                 return []
             }
 
-            if let result = defaults.object(forKey: Constants.ProjectsKey) as? Data, let urls = NSKeyedUnarchiver.unarchiveObject(with: result) as? [URL] {
+            if let result = defaults.object(forKey: Constants.ProjectsKey) as? Data, let urls = try? NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSArray.self, NSURL.self], from: result) as? [URL] {
                 return urls
             }
 
@@ -700,7 +704,7 @@ public enum UserDefaultsManagement {
                 return
             }
 
-            let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
+            let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
             defaults.set(data, forKey: Constants.ProjectsKey)
         }
     }
@@ -711,7 +715,8 @@ public enum UserDefaultsManagement {
                 return []
             }
 
-            if let result = defaults.object(forKey: Constants.ImportURLsKey) as? Data, let urls = NSKeyedUnarchiver.unarchiveObject(with: result) as? [URL] {
+            if let result = defaults.object(forKey: Constants.ImportURLsKey) as? Data,
+               let urls = try? NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSArray.self, NSURL.self], from: result) as? [URL] {
                 return urls
             }
 
@@ -722,8 +727,9 @@ public enum UserDefaultsManagement {
                 return
             }
 
-            let data = NSKeyedArchiver.archivedData(withRootObject: newValue)
-            defaults.set(data, forKey: Constants.ImportURLsKey)
+            if let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false) {
+                defaults.set(data, forKey: Constants.ImportURLsKey)
+            }
         }
     }
 
