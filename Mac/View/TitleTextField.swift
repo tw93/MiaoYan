@@ -52,7 +52,6 @@ class TitleTextField: NSTextField {
             if !FileManager.default.fileExists(atPath: dst.path), note.move(to: dst) {
                 vc.updateTitle(newTitle: currentTitle)
                 updateNotesTableView()
-                vc.reSort(note: note)
             } else {
                 vc.updateTitle(newTitle: currentTitle)
                 resignFirstResponder()
