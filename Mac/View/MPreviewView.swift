@@ -93,7 +93,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 super.createPDF(configuration: config) { result in
                     switch result {
                     case .success(let data):
-                        if let path = NSSearchPathForDirectoriesInDomains(.desktopDirectory, .userDomainMask, true).first {
+                        if let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first {
                             let currentName = self.note?.getTitle()
                             let filePath: String = path + "/" + (currentName ?? "MiaoYan") + ".pdf"
                             try! data.write(to: URL(fileURLWithPath: filePath))
@@ -161,7 +161,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                             guard let contentHtml = html as? String else {
                                 print("Content html could not be obtained"); return
                             }
-                            if let path = NSSearchPathForDirectoriesInDomains(.desktopDirectory, .userDomainMask, true).first {
+                            if let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first {
                                 let currentName = self.note?.getShortTitle()
                                 let filePath: String = path + "/" + (currentName ?? "MiaoYan") + ".html"
                                 try! contentHtml.write(to: URL(fileURLWithPath: filePath), atomically: false, encoding: .utf8)
@@ -194,7 +194,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                                     self?.frame.size.height = contentHeight
                                     self?.takeSnapshot(with: config, completionHandler: { image, error in
                                         if let image = image {
-                                            if let desktopURL = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first {
+                                            if let desktopURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first {
                                                 let currentName = self?.note?.getTitle()
                                                 let destinationURL = desktopURL.appendingPathComponent(currentName! + ".jpeg")
                                                 try! image.saveJPEGRepresentationToURL(url: destinationURL)

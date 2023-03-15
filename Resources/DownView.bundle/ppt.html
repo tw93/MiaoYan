@@ -82,28 +82,31 @@
 
 <script>
   if ('DOWN_EXPORT_TYPE' === 'ppt') {
+      
     if (window.location.search.indexOf('print-pdf') === -1) {
       window.location.search = 'print-pdf';
     }
+    
     document.getElementById('write').style.visibility = 'hidden';
-    setTimeout(() => {
-      const iframeEle = document.querySelector(
-        '.pdf-page .slide-background-content iframe'
-      );
-      const iframeBg = document.querySelector(
-        '.pdf-page section[data-background-iframe]'
-      );
-      const pdfSections = document.getElementsByClassName('pdf-page');
-      pdfSections.forEach((item) => {
-        if (item.contains(iframeEle)) {
-          item.hidden = true;
-        }
-        if (item.contains(iframeBg)) {
-          item.hidden = true;
-        }
-      });
-      document.getElementById('write').style.visibility = 'visible';
-    }, 600);
+    
+    window.addEventListener('load', function () {
+        const iframeEle = document.querySelector(
+          '.pdf-page .slide-background-content iframe'
+        );
+        const iframeBg = document.querySelector(
+          '.pdf-page section[data-background-iframe]'
+        );
+        const pdfSections = document.getElementsByClassName('pdf-page');
+        pdfSections.forEach((item) => {
+          if (item.contains(iframeEle)) {
+            item.hidden = true;
+          }
+          if (item.contains(iframeBg)) {
+            item.hidden = true;
+          }
+        });
+        document.getElementById('write').style.visibility = 'visible';
+    });
   }
   Reveal.initialize({
     width: '100%',
