@@ -37,6 +37,7 @@ html {
 body {
   padding: 0;
   margin: 0;
+  background: #FFFFFF;
 }
 
 @media (prefers-color-scheme: dark) {
