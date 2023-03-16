@@ -379,6 +379,10 @@ class SidebarProjectView: NSOutlineView,
                         vd.focusTable()
                     }
                     self.isLaunch = false
+                } else {
+                    DispatchQueue.main.async {
+                        vd.notesTableView.deselectNotes()
+                    }
                 }
             }
         }
