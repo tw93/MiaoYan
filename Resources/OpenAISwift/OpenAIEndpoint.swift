@@ -32,7 +32,7 @@ extension Endpoint {
     func baseURL() -> String {
         switch self {
             case .completions, .edits, .chat:
-            return "https://api.openai.com"
+            return UserDefaultsManagement.openAIUrl
         }
     }
 }

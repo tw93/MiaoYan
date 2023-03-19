@@ -10,28 +10,29 @@ public enum OpenAIError: Error {
 }
 
 public class OpenAISwift {
-    fileprivate(set) var token: String?
+    private(set) var token: String?
     
     public init(authToken: String) {
         self.token = authToken
     }
 }
 
-extension OpenAISwift {
+public extension OpenAISwift {
     /// Send a Completion to the OpenAI API
     /// - Parameters:
     ///   - prompt: The Text Prompt
     ///   - model: The AI Model to Use. Set to `OpenAIModelType.gpt3(.davinci)` by default which is the most capable model
     ///   - maxTokens: The limit character for the returned response, defaults to 16 as per the API
     ///   - completionHandler: Returns an OpenAI Data Model
-    public func sendCompletion(with prompt: String, model: OpenAIModelType = .gpt3(.davinci), maxTokens: Int = 16, temperature: Double = 1, completionHandler: @escaping (Result<OpenAI<TextResult>, OpenAIError>) -> Void) {
+    func sendCompletion(with prompt: String, model: OpenAIModelType = .gpt3(.davinci), maxTokens: Int = 16, temperature: Double = 1, completionHandler: @escaping (Result<OpenAI<TextResult>, OpenAIError>) -> Void) {
         let endpoint = Endpoint.completions
         let body = Command(prompt: prompt, model: model.modelName, maxTokens: maxTokens, temperature: temperature)
         let request = prepareRequest(endpoint, body: body)
-        
+        print(">>>>>>>>>11",request)
         makeRequest(request: request) { result in
             switch result {
             case .success(let success):
+                print(">>>>>success", success);
                 do {
                     let res = try JSONDecoder().decode(OpenAI<TextResult>.self, from: success)
                     completionHandler(.success(res))
@@ -39,6 +40,7 @@ extension OpenAISwift {
                     completionHandler(.failure(.decodingError(error: error)))
                 }
             case .failure(let failure):
+                print(">>>>>failure", failure);
                 completionHandler(.failure(.genericError(error: failure)))
             }
         }
@@ -50,7 +52,7 @@ extension OpenAISwift {
     ///   - model: The Model to use, the only support model is `text-davinci-edit-001`
     ///   - input: The Input For Example "My nam is Adam"
     ///   - completionHandler: Returns an OpenAI Data Model
-    public func sendEdits(with instruction: String, model: OpenAIModelType = .feature(.davinci), input: String = "", completionHandler: @escaping (Result<OpenAI<TextResult>, OpenAIError>) -> Void) {
+    func sendEdits(with instruction: String, model: OpenAIModelType = .feature(.davinci), input: String = "", completionHandler: @escaping (Result<OpenAI<TextResult>, OpenAIError>) -> Void) {
         let endpoint = Endpoint.edits
         let body = Instruction(instruction: instruction, model: model.modelName, input: input)
         let request = prepareRequest(endpoint, body: body)
@@ -83,17 +85,17 @@ extension OpenAISwift {
     ///   - presencePenalty: Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
     ///   - frequencyPenalty: Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
     ///   - completionHandler: Returns an OpenAI Data Model
-    public func sendChat(with messages: [ChatMessage],
-                         model: OpenAIModelType = .chat(.chatgpt),
-                         user: String? = nil,
-                         temperature: Double? = 1,
-                         topProbabilityMass: Double? = 0,
-                         choices: Int? = 1,
-                         stop: [String]? = nil,
-                         maxTokens: Int? = nil,
-                         presencePenalty: Double? = 0,
-                         frequencyPenalty: Double? = 0,
-                         completionHandler: @escaping (Result<OpenAI<MessageResult>, OpenAIError>) -> Void) {
+    func sendChat(with messages: [ChatMessage],
+                  model: OpenAIModelType = .chat(.chatgpt),
+                  user: String? = nil,
+                  temperature: Double? = 1,
+                  topProbabilityMass: Double? = 0,
+                  choices: Int? = 1,
+                  stop: [String]? = nil,
+                  maxTokens: Int? = nil,
+                  presencePenalty: Double? = 0,
+                  frequencyPenalty: Double? = 0,
+                  completionHandler: @escaping (Result<OpenAI<MessageResult>, OpenAIError>) -> Void) {
         let endpoint = Endpoint.chat
         let body = ChatConversation(user: user,
                                     messages: messages,
@@ -110,22 +112,22 @@ extension OpenAISwift {
         
         makeRequest(request: request) { result in
             switch result {
-                case .success(let success):
-                    do {
-                        let res = try JSONDecoder().decode(OpenAI<MessageResult>.self, from: success)
-                        completionHandler(.success(res))
-                    } catch {
-                        completionHandler(.failure(.decodingError(error: error)))
-                    }
-                case .failure(let failure):
-                    completionHandler(.failure(.genericError(error: failure)))
+            case .success(let success):
+                do {
+                    let res = try JSONDecoder().decode(OpenAI<MessageResult>.self, from: success)
+                    completionHandler(.success(res))
+                } catch {
+                    completionHandler(.failure(.decodingError(error: error)))
+                }
+            case .failure(let failure):
+                completionHandler(.failure(.genericError(error: failure)))
             }
         }
     }
     
     private func makeRequest(request: URLRequest, completionHandler: @escaping (Result<Data, Error>) -> Void) {
         let session = URLSession.shared
-        let task = session.dataTask(with: request) { (data, response, error) in
+        let task = session.dataTask(with: request) { data, _, error in
             if let error = error {
                 completionHandler(.failure(error))
             } else if let data = data {
@@ -142,7 +144,7 @@ extension OpenAISwift {
         var request = URLRequest(url: urlComponents!.url!)
         request.httpMethod = endpoint.method
         
-        if let token = self.token {
+        if let token = token {
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         
@@ -157,7 +159,7 @@ extension OpenAISwift {
     }
 }
 
-extension OpenAISwift {
+public extension OpenAISwift {
     /// Send a Completion to the OpenAI API
     /// - Parameters:
     ///   - prompt: The Text Prompt
@@ -167,8 +169,8 @@ extension OpenAISwift {
     /// - Returns: Returns an OpenAI Data Model
     @available(swift 5.5)
     @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
-    public func sendCompletion(with prompt: String, model: OpenAIModelType = .gpt3(.davinci), maxTokens: Int = 16, temperature: Double = 1) async throws -> OpenAI<TextResult> {
-        return try await withCheckedThrowingContinuation { continuation in
+    func sendCompletion(with prompt: String, model: OpenAIModelType = .gpt3(.davinci), maxTokens: Int = 16, temperature: Double = 1) async throws -> OpenAI<TextResult> {
+        try await withCheckedThrowingContinuation { continuation in
             sendCompletion(with: prompt, model: model, maxTokens: maxTokens, temperature: temperature) { result in
                 continuation.resume(with: result)
             }
@@ -183,8 +185,8 @@ extension OpenAISwift {
     /// - Returns: Returns an OpenAI Data Model
     @available(swift 5.5)
     @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
-    public func sendEdits(with instruction: String, model: OpenAIModelType = .feature(.davinci), input: String = "") async throws -> OpenAI<TextResult> {
-        return try await withCheckedThrowingContinuation { continuation in
+    func sendEdits(with instruction: String, model: OpenAIModelType = .feature(.davinci), input: String = "") async throws -> OpenAI<TextResult> {
+        try await withCheckedThrowingContinuation { continuation in
             sendEdits(with: instruction, model: model, input: input) { result in
                 continuation.resume(with: result)
             }
@@ -206,17 +208,17 @@ extension OpenAISwift {
     ///   - completionHandler: Returns an OpenAI Data Model
     @available(swift 5.5)
     @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
-    public func sendChat(with messages: [ChatMessage],
-                         model: OpenAIModelType = .chat(.chatgpt),
-                         user: String? = nil,
-                         temperature: Double? = 1,
-                         topProbabilityMass: Double? = 0,
-                         choices: Int? = 1,
-                         stop: [String]? = nil,
-                         maxTokens: Int? = nil,
-                         presencePenalty: Double? = 0,
-                         frequencyPenalty: Double? = 0) async throws -> OpenAI<MessageResult> {
-        return try await withCheckedThrowingContinuation { continuation in
+    func sendChat(with messages: [ChatMessage],
+                  model: OpenAIModelType = .chat(.chatgpt),
+                  user: String? = nil,
+                  temperature: Double? = 1,
+                  topProbabilityMass: Double? = 0,
+                  choices: Int? = 1,
+                  stop: [String]? = nil,
+                  maxTokens: Int? = nil,
+                  presencePenalty: Double? = 0,
+                  frequencyPenalty: Double? = 0) async throws -> OpenAI<MessageResult> {
+        try await withCheckedThrowingContinuation { continuation in
             sendChat(with: messages,
                      model: model,
                      user: user,
