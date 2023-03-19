@@ -2526,7 +2526,7 @@ class ViewController:
 
     public func toastExport(status: Bool) {
         if status {
-            toast(message: NSLocalizedString("🎉 Exported to desktop~", comment: ""))
+            toast(message: NSLocalizedString("🎉 Saved to Downloads folder~", comment: ""))
         } else {
             toast(message: NSLocalizedString("😶‍🌫 The current Mac system does not support export, please upgrade to above 11.0~", comment: ""))
         }
