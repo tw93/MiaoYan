@@ -1107,6 +1107,10 @@ code.language-mermaid {
   text-align: center;
 }
 
+code.language-mermaid .edgeLabel{
+  display: inline-block;
+}
+
 .heti pre.plantuml-image-container {
   padding: 0;
   background: transparent;
