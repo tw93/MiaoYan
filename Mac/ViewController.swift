@@ -861,8 +861,11 @@ class ViewController:
                         return false
                     }
 
+                    // 日语环境的输入方式和国内不太一样，兼容一下
                     if titleLabel.hasFocus() {
-                        focusEditArea()
+                        if UserDefaultsManagement.defaultLanguage != 0x02 {
+                            focusEditArea()
+                        }
                         return false
                     }
                 }
