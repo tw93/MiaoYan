@@ -447,7 +447,7 @@ class ViewController:
                 if UserDefaultsManagement.isSingleMode {
                     let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
                     if !FileManager.default.directoryExists(atUrl: singleModeUrl), let lastNote = self.storage.getBy(url: singleModeUrl), let i = self.notesTableView.getIndex(lastNote) {
-                        DispatchQueue.main.async {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                             self.notesTableView.selectRow(i)
                             self.notesTableView.scrollRowToVisible(row: i, animated: false)
                             self.hideNoteList("")
@@ -1051,7 +1051,7 @@ class ViewController:
                 let urls = panel.urls
                 UserDefaultsManagement.singleModePath = urls[0].path
                 UserDefaultsManagement.isSingleMode = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     self.restart()
                 }
             }
