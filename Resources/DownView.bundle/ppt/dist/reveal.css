@@ -801,6 +801,11 @@ html.reveal-full-page {
     padding: 16px 48px;
 }
 
+.reveal .slides section.present.section-option{
+    height: 100%;
+    overflow-y: auto;
+}
+
 .reveal.overview .slides section pre,
 .reveal .slides section pre {
     float: left;
