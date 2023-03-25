@@ -30,7 +30,9 @@ class ViewController:
     var isFocusedTitle: Bool = false
     var formatContent: String = ""
     var isLaunch: Bool = true
+    var needRestorePreview: Bool = false
 
+    private var disablePreviewWorkItem: DispatchWorkItem?
     private var isHandlingScrollEvent = false
     private var swipeLeftExecuted = false
     private var swipeRightExecuted = false
@@ -263,6 +265,34 @@ class ViewController:
             let messageText = NSLocalizedString("%d MiaoYan", comment: "")
 
             self.miaoYanText.stringValue = String(format: messageText, self.notesTableView.noteList.count)
+        }
+    }
+
+    // 解决长时间放置导致的 web 容器的性能影响
+    override func viewDidDisappear() {
+        super.viewWillDisappear()
+
+        if UserDefaultsManagement.preview {
+            disablePreviewWorkItem = DispatchWorkItem { [weak self] in
+                self?.needRestorePreview = true
+                self?.disablePreview()
+            }
+            // 创建延迟执行的工作项，延迟时间为 30 分钟
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1800), execute: disablePreviewWorkItem!)
+        } else {
+            needRestorePreview = false
+        }
+    }
+
+    override func viewWillAppear() {
+        super.viewWillAppear()
+
+        if UserDefaultsManagement.preview {
+            disablePreviewWorkItem?.cancel()
+        }
+        if needRestorePreview {
+            titleLabel.saveTitle()
+            enablePreview()
         }
     }
 
