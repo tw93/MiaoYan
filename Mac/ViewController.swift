@@ -2170,6 +2170,9 @@ class ViewController:
 
     func disablePreview() {
         UserDefaultsManagement.preview = false
+        UserDefaultsManagement.magicPPT = false
+        UserDefaultsManagement.presentation = false
+        
         editArea.markdownView?.removeFromSuperview()
         editArea.markdownView = nil
 
