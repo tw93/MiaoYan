@@ -372,16 +372,14 @@ class ViewController:
             return false
         }
 
-        if UserDefaultsManagement.magicPPT || UserDefaultsManagement.presentation {
-            return false
-        }
+        let canUseMenu = !(UserDefaultsManagement.magicPPT || UserDefaultsManagement.presentation)
 
         if let title = menuItem.menu?.identifier?.rawValue {
             switch title {
             case "miaoyanMenu":
                 if menuItem.identifier?.rawValue == "emptyTrashMenu" {
                     menuItem.keyEquivalentModifierMask = [.command, .option, .shift]
-                    return true
+                    return canUseMenu
                 }
             case "fileMenu":
                 if menuItem.identifier?.rawValue == "fileMenu.delete" {
@@ -389,7 +387,7 @@ class ViewController:
                 }
 
                 if ["fileMenu.new", "fileMenu.searchAndCreate", "fileMenu.open", "fileMenu.import"].contains(menuItem.identifier?.rawValue) {
-                    return true
+                    return canUseMenu
                 }
 
                 if vc.notesTableView.selectedRow == -1 {
@@ -398,7 +396,7 @@ class ViewController:
 
             case "folderMenu":
                 if ["folderMenu.newFolder", "folderMenu.showInFinder", "folderMenu.renameFolder"].contains(menuItem.identifier?.rawValue) {
-                    return true
+                    return canUseMenu
                 }
 
                 guard let p = vc.getSidebarProject(), !p.isTrash else {
@@ -406,7 +404,7 @@ class ViewController:
                 }
             case "findMenu":
                 if ["findMenu.find", "findMenu.findAndReplace", "findMenu.next", "findMenu.prev"].contains(menuItem.identifier?.rawValue), vc.notesTableView.selectedRow > -1 {
-                    return true
+                    return canUseMenu
                 }
 
                 return vc.editAreaScroll.isFindBarVisible || vc.editArea.hasFocus()
@@ -2172,7 +2170,7 @@ class ViewController:
         UserDefaultsManagement.preview = false
         UserDefaultsManagement.magicPPT = false
         UserDefaultsManagement.presentation = false
-        
+
         editArea.markdownView?.removeFromSuperview()
         editArea.markdownView = nil
 
