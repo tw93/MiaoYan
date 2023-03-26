@@ -1269,34 +1269,18 @@ class ViewController:
     func setDividerHidden(hidden: Bool) {
         guard let vc = ViewController.shared() else { return }
         if hidden {
-            if #available(macOS 10.13, *) {
-                vc.splitView.setValue(NSColor(named: "mainBackground"), forKey: "dividerColor")
-            } else {
-                vc.splitView.setValue(NSColor.white, forKey: "dividerColor")
-            }
+            vc.splitView.setValue(NSColor(named: "mainBackground"), forKey: "dividerColor")
         } else {
-            if #available(macOS 10.13, *) {
-                vc.splitView.setValue(NSColor(named: "divider")!, forKey: "dividerColor")
-            } else {
-                vc.splitView.setValue(NSColor(red: 0.83, green: 0.83, blue: 0.83, alpha: 1.0), forKey: "dividerColor")
-            }
+            vc.splitView.setValue(NSColor(named: "divider")!, forKey: "dividerColor")
         }
     }
 
     func setSideDividerHidden(hidden: Bool) {
         guard let vc = ViewController.shared() else { return }
         if hidden {
-            if #available(macOS 10.13, *) {
-                vc.sidebarSplitView.setValue(NSColor(named: "mainBackground"), forKey: "dividerColor")
-            } else {
-                vc.sidebarSplitView.setValue(NSColor.white, forKey: "dividerColor")
-            }
+            vc.sidebarSplitView.setValue(NSColor(named: "mainBackground"), forKey: "dividerColor")
         } else {
-            if #available(macOS 10.13, *) {
-                vc.sidebarSplitView.setValue(NSColor(named: "divider")!, forKey: "dividerColor")
-            } else {
-                vc.sidebarSplitView.setValue(NSColor(red: 0.83, green: 0.83, blue: 0.83, alpha: 1.0), forKey: "dividerColor")
-            }
+            vc.sidebarSplitView.setValue(NSColor(named: "divider")!, forKey: "dividerColor")
         }
     }
 
@@ -2113,15 +2097,17 @@ class ViewController:
 
     func enableMiaoYanPPT() {
         guard let vc = ViewController.shared() else { return }
+
         let range = editArea.selectedRange
-        let beforeString = editArea.string[..<range.location]
+        // 防止刚好在---最后一个
+        let selectedIndex = range.location > 0 ? range.location - 1 : 0
+        let beforeString = editArea.string[..<selectedIndex]
         let hrCount = beforeString.components(separatedBy: "---").count
 
-        enablePresentation()
-        UserDefaultsManagement.magicPPT = true
-        DispatchQueue.main.async {
+        // 处理 PPT 场景下的自动跳转
+        func handlePPTAutoTransition() {
             vc.titiebarHeight.constant = 0.0
-            // 兼容空格下一个的场景
+            // 兼容快捷键透传
             NSApp.mainWindow?.makeFirstResponder(vc.editArea.markdownView)
 
             // PPT场景下的自动跳转
@@ -2129,6 +2115,24 @@ class ViewController:
                 vc.editArea.markdownView?.slideTo(index: hrCount - 1)
             }
         }
+
+        if UserDefaultsManagement.presentation {
+            disablePreview()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                vc.enablePresentation()
+                DispatchQueue.main.async {
+                    handlePPTAutoTransition()
+                }
+            }
+        } else {
+            enablePresentation()
+        }
+
+        UserDefaultsManagement.magicPPT = true
+        DispatchQueue.main.async {
+            handlePPTAutoTransition()
+        }
+
         Analytics.trackEvent("MiaoYan PPT")
     }
 
@@ -2204,8 +2208,7 @@ class ViewController:
             disablePreview()
         }
         enablePreview()
-        if UserDefaultsManagement.fullScreen {
-        } else {
+        if UserDefaultsManagement.fullScreen {} else {
             view.window?.toggleFullScreen(nil)
         }
         formatButton.isHidden = true

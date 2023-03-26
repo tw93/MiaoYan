@@ -28,9 +28,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         navigationDelegate = self
 
         #if os(OSX)
-            if #available(macOS 10.13, *) {
-                setValue(false, forKey: "drawsBackground")
-            }
+            setValue(false, forKey: "drawsBackground")
         #else
             isOpaque = false
             backgroundColor = UIColor.clear
@@ -112,108 +110,97 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     public func slideTo(index: Int) {
-        if #available(macOS 10.15, *) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
-                    if complete != nil {
-                        let javascript = "Reveal.slide(\(index));"
-                        self.evaluateJavaScript(javascript, completionHandler: nil)
-                    }
-                })
-            }
-        } else {}
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
+                if complete != nil {
+                    let javascript = "Reveal.slide(\(index));"
+                    self.evaluateJavaScript(javascript, completionHandler: nil)
+                }
+            })
+        }
     }
 
     public func scrollToPosition(pre: CGFloat) {
-        if pre == 0.0 {
-            return
-        }
-        if #available(macOS 10.15, *) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
-                    if complete != nil {
-                        super.evaluateJavaScript("document.body.offsetHeight", completionHandler: { height, _ in
-                            guard let contentHeight = height as? CGFloat else {
-                                print("Content height could not be obtained"); return
+        if pre == 0.0 { return }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
+                if complete != nil {
+                    super.evaluateJavaScript("document.body.offsetHeight", completionHandler: { height, _ in
+                        guard let contentHeight = height as? CGFloat else {
+                            print("Content height could not be obtained"); return
+                        }
+                        super.evaluateJavaScript("document.documentElement.clientHeight", completionHandler: { [weak self] wHeight, _ in
+                            let windowHeight = wHeight as! CGFloat
+                            let offset = contentHeight - windowHeight
+                            if offset > 0 {
+                                let scrollerTop = offset * pre
+                                self?.evaluateJavaScript("window.scrollTo({ top: \(scrollerTop), behavior: 'instant' })", completionHandler: nil)
                             }
-                            super.evaluateJavaScript("document.documentElement.clientHeight", completionHandler: { [weak self] wHeight, _ in
-                                let windowHeight = wHeight as! CGFloat
-                                let offset = contentHeight - windowHeight
-                                if offset > 0 {
-                                    let scrollerTop = offset * pre
-                                    self?.evaluateJavaScript("window.scrollTo({ top: \(scrollerTop), behavior: 'instant' })", completionHandler: nil)
-                                }
-                            })
                         })
-                    }
-                })
-            }
-        } else {}
+                    })
+                }
+            })
+        }
     }
 
     public func exportHtml() {
         guard let vc = ViewController.shared() else { return }
-        if #available(macOS 10.15, *) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
-                    if complete != nil {
-                        super.evaluateJavaScript("document.documentElement.outerHTML.toString()", completionHandler: { html, _ in
-                            guard let contentHtml = html as? String else {
-                                print("Content html could not be obtained"); return
-                            }
-                            if let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first {
-                                let currentName = self.note?.getShortTitle()
-                                let filePath: String = path + "/" + (currentName ?? "MiaoYan") + ".html"
-                                try! contentHtml.write(to: URL(fileURLWithPath: filePath), atomically: false, encoding: .utf8)
-                                vc.toastExport(status: true)
-                            }
-                        })
-                    }
-                })
-            }
-        } else {
-            vc.toastExport(status: false)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
+                if complete != nil {
+                    super.evaluateJavaScript("document.documentElement.outerHTML.toString()", completionHandler: { html, _ in
+                        guard let contentHtml = html as? String else {
+                            print("Content html could not be obtained"); return
+                        }
+                        if let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first {
+                            let currentName = self.note?.getShortTitle()
+                            let filePath: String = path + "/" + (currentName ?? "MiaoYan") + ".html"
+                            try! contentHtml.write(to: URL(fileURLWithPath: filePath), atomically: false, encoding: .utf8)
+                            vc.toastExport(status: true)
+                        }
+                    })
+                }
+            })
         }
     }
 
     public func exportImage() {
         guard let vc = ViewController.shared() else { return }
-        if #available(macOS 10.15, *) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
-                    if complete != nil {
-                        super.evaluateJavaScript("document.body.offsetHeight", completionHandler: { height, _ in
-                            guard let contentHeight = height as? CGFloat else {
-                                print("Content height could not be obtained"); return
-                            }
-                            super.evaluateJavaScript("document.body.offsetWidth", completionHandler: { [weak self] width, _ in
-                                if let contentWidth = width as? CGFloat {
-                                    let config = WKSnapshotConfiguration()
-                                    config.rect = CGRect(x: 0, y: 0, width: contentWidth, height: contentHeight)
-                                    config.afterScreenUpdates = false
-                                    self?.frame.size.height = contentHeight
-                                    self?.takeSnapshot(with: config, completionHandler: { image, error in
-                                        if let image = image {
-                                            if let desktopURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first {
-                                                let currentName = self?.note?.getTitle()
-                                                let destinationURL = desktopURL.appendingPathComponent(currentName! + ".jpeg")
-                                                try! image.saveJPEGRepresentationToURL(url: destinationURL)
-                                            }
-                                            vc.toastExport(status: true)
-                                            print("Got snapshot")
-                                        } else {
-                                            print("Failed taking snapshot: \(error?.localizedDescription ?? "--")")
-                                            vc.toastExport(status: false)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
+                if complete != nil {
+                    super.evaluateJavaScript("document.body.offsetHeight", completionHandler: { height, _ in
+                        guard let contentHeight = height as? CGFloat else {
+                            print("Content height could not be obtained"); return
+                        }
+                        super.evaluateJavaScript("document.body.offsetWidth", completionHandler: { [weak self] width, _ in
+                            if let contentWidth = width as? CGFloat {
+                                let config = WKSnapshotConfiguration()
+                                config.rect = CGRect(x: 0, y: 0, width: contentWidth, height: contentHeight)
+                                config.afterScreenUpdates = false
+                                self?.frame.size.height = contentHeight
+                                self?.takeSnapshot(with: config, completionHandler: { image, error in
+                                    if let image = image {
+                                        if let desktopURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first {
+                                            let currentName = self?.note?.getTitle()
+                                            let destinationURL = desktopURL.appendingPathComponent(currentName! + ".jpeg")
+                                            try! image.saveJPEGRepresentationToURL(url: destinationURL)
                                         }
-                                    })
-                                }
-                            })
+                                        vc.toastExport(status: true)
+                                        print("Got snapshot")
+                                    } else {
+                                        print("Failed taking snapshot: \(error?.localizedDescription ?? "--")")
+                                        vc.toastExport(status: false)
+                                    }
+                                })
+                            }
                         })
-                    }
-                })
-            }
-        } else {
-            vc.toastExport(status: false)
+                    })
+                }
+            })
         }
     }
 
@@ -570,7 +557,6 @@ class HandlerSelection: NSObject, WKScriptMessageHandler {
 }
 
 // 用于解决ppt模式下背景颜色变化左侧边框颜色的适配
-
 class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController,
                                didReceive message: WKScriptMessage) {
@@ -580,8 +566,8 @@ class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
             vc.setDividerHidden(hidden: true)
             vc.setSideDividerHidden(hidden: true)
         } else {
-            vc.sidebarSplitView.setValue(NSColor(hex: message), forKey: "dividerColor")
-            vc.splitView.setValue(NSColor(hex: message), forKey: "dividerColor")
+            vc.sidebarSplitView.setValue(NSColor(css: message), forKey: "dividerColor")
+            vc.splitView.setValue(NSColor(css: message), forKey: "dividerColor")
         }
     }
 }
