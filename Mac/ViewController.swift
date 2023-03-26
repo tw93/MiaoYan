@@ -2552,7 +2552,7 @@ class ViewController:
         UserDefaultsManagement.isOnExportPPT = true
         toast(message: NSLocalizedString("🙊 Starting export~", comment: ""))
         enableMiaoYanPPT()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
             self.editArea.markdownView?.exportPdf()
             UserDefaultsManagement.isOnExport = false
             UserDefaultsManagement.isOnExportPPT = false
