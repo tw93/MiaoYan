@@ -2024,32 +2024,15 @@ html.print-pdf .reveal .slides .pdf-page {
     overflow: hidden;
     z-index: 1;
     page-break-after: always;
-    border: 8px solid #d1d6ee;
     border-top: none;
     box-sizing: border-box;
     background-color: #fff !important;
 }
 
-html.print-pdf .reveal .slides .pdf-page:first-child {
-    border-top: 8px solid #d1d6ee;
-}
-
-html.print-pdf .reveal-viewport {
-    background-color: #d1d6ee;
-}
 
 @media (prefers-color-scheme: dark) {
     html.print-pdf .reveal .slides .pdf-page {
         background-color: #21262b !important;
-        border: 8px solid #fff;
-    }
-
-    html.print-pdf .reveal .slides .pdf-page:first-child {
-        border-top: 8px solid #fff;
-    }
-
-    html.print-pdf .reveal-viewport {
-        background-color: #fff;
     }
 }
 
