@@ -3,6 +3,36 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>1.10.1</title>
+      <description>
+        <![CDATA[
+          <h3>更妙了 🎉：</h3>
+          <ol>
+            <li>大幅优化PDF的导出体验，支持PPT/文章分页效果</li>
+            <li>PPT模式下的使用优化，超过1屏的可以滚动展示更多</li>
+            <li>预览体验优化，LaTeX, Mermaid, PlantUML 黑暗模式下优化</li>
+            <li>整体使用容错性变好、升级字体版本、单独模式打开问题、放置性能问题、日文体验</li>
+            <li>架构升级，不再兼容10.15以下的版本了，XCode更新到最新</li>
+          </ol>
+          <h3>Even better 🎉:</h3>
+          <ol>
+            <li>Significantly improved the experience of exporting PDF, supporting PPT/article pagination effects.</li>
+            <li>Optimized the use of PPT mode, allowing for scrolling display of more than one screen.</li>
+            <li>Improved preview experience for LaTeX, Mermaid, and PlantUML in dark mode.</li> <li>Overall improved fault tolerance, updated font versions, resolved issues with opening individual modes, placement performance, and Japanese language experience.</li>
+            <li>Upgraded the architecture, no longer compatible with versions below 10.15, and XCode has been updated to the latest version.</li>
+          </ol>
+          <h3>素晴らしいニュース🎉:</h3>
+          <ol>
+            <li>PDFのエクスポート体験が大幅に改善され、PPT / 記事のページネーション効果がサポートされました</li> <li>PPTモードの使用が最適化され、1画面を超えるものはより多くのスクロール表示が可能になりました</li> <li>LaTeX、Mermaid、PlantUMLのプレビュー体験がダークモードで改善されました</li>
+            <li>全体的に容錯性が向上し、フォントバージョンのアップグレード、個別のモードのオープン問題、配置パフォーマンス問題、日本語体験の問題が解決されました</li> <li>アーキテクチャをアップグレードし、10.15未満のバージョンと互換性がなくなり、XCodeが最新版に更新されました</li>
+          </ol>
+          ]]>
+      </description>
+      <pubDate>周六, 30 03月 2023 22:00:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.10.1.zip" sparkle:shortVersionString="1.10.1" sparkle:version="1.10.1" sparkle:edSignature="svAqUL4Wnu2VgO3nAWSwzZ8nlr3zmyfwT+QEOnG3y+SBQthDfFC3T8vgfk1Y6WP/mSsPiQuFwUlnn4YTUw8NBA==" length="21782311" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>1.9.0</title>
       <description><![CDATA[
       <h3>久等了 ❤️：</h3>
@@ -46,30 +76,6 @@
           ]]>      </description>
       <pubDate>周一, 14 11月 2022 09:00:20 +0800</pubDate>
       <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.8.0.zip" sparkle:shortVersionString="1.8.0" sparkle:version="1.8.0" sparkle:edSignature="QG3FqSjJ3q4aPEcc5yeMALPbOF+/p84tDMKgdfFlp6WB2A12wWgTpVgGXN+wh9QdyYusQwWtDX14wf8f0/RfDw==" length="24675056" type="application/octet-stream" />
-      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-    </item>
-    <item>
-      <title>1.7.1</title>
-      <description>
-        <![CDATA[
-          <h3>更快乐 🎉：</h3>
-          <ol>
-            <li>大幅度优化超大文本下的编辑性能</li>
-            <li>Command+t 可以快捷切换 todo 的状态</li>
-            <li>字体强迫症继续细调，保留 LXGW WenKai Lite、SF Mono、Times New Roman</li>
-            <li>支持设置代码块是否有背景色、代码预览场景自动换行、编辑器有 Front matter 预览直接隐藏</li>
-            </ol>
-            <h3>More happy 🎉：</h3>
-          <ol>
-            <li>Greatly optimize the editing performance of oversized text.</li>
-            <li>Command+t can quickly switch todo status.</li>
-            <li>Continue to optimize font effects，Keep LXGW WenKai Lite、SF Mono、Times New Roman.</li>
-            <li>Support setting whether the code block has a background color、Code preview line wrap、Hidden directly with Front matter preview.</li>
-            </ol>
-          ]]>
-      </description>
-      <pubDate>周六, 01 10月 2022 10:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.7.1.zip" sparkle:shortVersionString="1.7.1" sparkle:version="1.7.1" sparkle:edSignature="n3wLjiS0CcQx1g25XG9fT1f4/2iihQKu0yJsc8PpDWYrbtJkj8kjRLXHTQUkFZoXgq15tOakUt8AQ+2lH94tCA==" length="24669154" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
     </item>
   </channel>
