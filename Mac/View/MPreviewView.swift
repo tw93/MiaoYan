@@ -91,7 +91,6 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         }
 
         let pageWidth = a4Size.width
-        let pageHeight = a4Size.height
         let maxHeight: CGFloat = 14355.0
 
         super.frame.size.width = pageWidth
