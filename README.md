@@ -5,7 +5,7 @@
   <div align="center">
     <a href="https://twitter.com/HiTw93" target="_blank">
        <img alt="twitter" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=Twitter"></a>
-    <a href="https://t.me/miaoyan" target="_blank">
+    <a href="https://t.me/+GclQS9ZnxyI2ODQ1" target="_blank">
       <img alt="Telegram" src="https://img.shields.io/badge/chat-Telegram-blueviolet?style=flat-square&logo=Telegram"></a>
      <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">
       <img alt="GitHub downloads" src="https://img.shields.io/github/downloads/tw93/MiaoYan/total.svg?style=flat-square"></a>
@@ -79,7 +79,7 @@
 
 - I have two cats, one is called TangYuan, and one is called Coke, If you think MiaoYan makes your life better, you can give my cats <a href="https://miaoyan.app/cats.html" target="_blank">feed canned food 🥩🍤</a>.
 - If you like MiaoYan, you can star it in Github. We are more welcome to [recommend MiaoYan](https://twitter.com/intent/tweet?text=%23%E5%A6%99%E8%A8%80%20MiaoYan%20-%20a%20simple%20and%20good-looking%20open-source%20mac%20markdown%20editor,%20without%20any%20redundant%20functions,%20is%20developed%20using%20swift,%20pure%20local%20use,%20has%20functions%20such%20as%20syntax%20highlighting,%20automatic%20formatting,%20presentation%20mode%20etc.&url=https://github.com/tw93/MiaoYan) to your like-minded friends.
-- You can follow my [Twitter](https://twitter.com/HiTw93) to get the latest news of MiaoYan, or join [Telegram](https://t.me/miaoyan) chat group.
+- You can follow my [Twitter](https://twitter.com/HiTw93) to get the latest news of MiaoYan, or join [Telegram](https://t.me/+GclQS9ZnxyI2ODQ1) chat group.
 
 ## Thanks
 
