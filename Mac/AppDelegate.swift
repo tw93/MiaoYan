@@ -201,7 +201,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     @IBAction func openTelegram(_ sender: Any) {
-        NSWorkspace.shared.open(URL(string: "https://t.me/miaoyan")!)
+        NSWorkspace.shared.open(URL(string: "https://t.me/+GclQS9ZnxyI2ODQ1")!)
     }
 
     @IBAction func openPreferences(_ sender: Any?) {
