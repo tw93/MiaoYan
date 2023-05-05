@@ -29,6 +29,7 @@
 		279789B429C6C4BE00157A8B /* OpenAISwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279789AD29C6C4BE00157A8B /* OpenAISwift.swift */; };
 		2799407C218484C900727B20 /* TitleBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799407B218484C900727B20 /* TitleBarView.swift */; };
 		27C34C0E28928D0B007369E5 /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C34C0D28928D0B007369E5 /* Emoji.swift */; };
+		27D280452A05480D007A4104 /* IndexSetWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D280442A05480D007A4104 /* IndexSetWrapper.swift */; };
 		27D95122285B5E4400F40306 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D95121285B5E4400F40306 /* Toast.swift */; };
 		27D9A4F72873D345006317AD /* FileManager+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D9A4F62873D345006317AD /* FileManager+.swift */; };
 		3680D573468EA822F427197E /* NSTextField+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3680D20013301CC48E2BEC53 /* NSTextField+.swift */; };
@@ -218,6 +219,7 @@
 		2799407B218484C900727B20 /* TitleBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleBarView.swift; sourceTree = "<group>"; };
 		27A1212C244176470016A14B /* MiaoYanCore_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MiaoYanCore_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		27C34C0D28928D0B007369E5 /* Emoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emoji.swift; sourceTree = "<group>"; };
+		27D280442A05480D007A4104 /* IndexSetWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexSetWrapper.swift; sourceTree = "<group>"; };
 		27D95121285B5E4400F40306 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		27D9A4F62873D345006317AD /* FileManager+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+.swift"; sourceTree = "<group>"; };
 		3680D20013301CC48E2BEC53 /* NSTextField+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTextField+.swift"; sourceTree = "<group>"; };
@@ -589,6 +591,7 @@
 			children = (
 				D7B6E599207912E300FE0E20 /* Project.swift */,
 				D79FE8A01F77D04A00113CFD /* Note.swift */,
+				27D280442A05480D007A4104 /* IndexSetWrapper.swift */,
 				D75EE7F92078B3C00055F159 /* Sidebar.swift */,
 				D75EE7F62078B22D0055F159 /* SidebarItem.swift */,
 				D75EE7FF2078E0C60055F159 /* SidebarItemType.swift */,
@@ -948,6 +951,7 @@
 				D7B3FE7121027A6D00764C39 /* UserDataService.swift in Sources */,
 				279789AF29C6C4BE00157A8B /* OpenAI.swift in Sources */,
 				27D95122285B5E4400F40306 /* Toast.swift in Sources */,
+				27D280452A05480D007A4104 /* IndexSetWrapper.swift in Sources */,
 				27D9A4F72873D345006317AD /* FileManager+.swift in Sources */,
 				D7315ED2215ED15500AB49D4 /* SidebarSplitView.swift in Sources */,
 				D7E6ACE920832D41003599A2 /* AppDelegate+URLRoutes.swift in Sources */,

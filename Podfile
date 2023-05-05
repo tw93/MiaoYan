@@ -3,23 +3,17 @@ use_frameworks!
 MAC_TARGET_VERSION = '10.15'
 
 def mac_pods
-    pod 'MASShortcut', :git => 'https://github.com/shpakovski/MASShortcut.git', :branch => 'master'
+    pod 'MASShortcut'
     pod 'Sparkle'
     pod 'AppCenter'
     pod 'Alamofire'
     pod 'SwiftyJSON'
 end
 
-def ios_pods
-    pod 'NightNight', :git => 'https://github.com/draveness/NightNight.git', :branch => 'master'
-    pod 'DKImagePickerController', '4.1.4'
-    pod 'DropDown', '2.3.13'
-end
-
 def common_pods
-    pod 'Highlightr', :git => 'https://github.com/raspu/Highlightr.git', :branch => 'master'
-    pod 'libcmark_gfm', :git => 'https://github.com/KristopherGBaker/libcmark_gfm.git', :branch => 'master'
-    pod 'SSZipArchive', '2.4.2'
+    pod 'Highlightr'
+    pod 'libcmark_gfm'
+    pod 'SSZipArchive'
 end
 
 def framework_pods
@@ -28,7 +22,7 @@ end
 
 target 'MiaoYanCore macOS' do
     platform :osx, MAC_TARGET_VERSION
-    pod 'MASShortcut', :git => 'https://github.com/shpakovski/MASShortcut.git', :branch => 'master'
+    pod 'MASShortcut'
     framework_pods
 end
 
