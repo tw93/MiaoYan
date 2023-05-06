@@ -571,25 +571,18 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         guard let note = EditTextView.note else { return }
 
-        if event.keyCode == kVK_Tab {
+        // 简化原有的tab切换逻辑
+        if event.keyCode == kVK_Tab, !hasMarkedText() {
+            breakUndoCoalescing()
+            let formatter = TextFormatter(textView: self, note: note)
             if event.modifierFlags.contains(.shift) {
-                let formatter = TextFormatter(textView: self, note: note)
                 formatter.unTab()
-                saveCursorPosition()
-                return
-            }
-        }
-
-        if event.keyCode == kVK_Tab {
-            if event.modifierFlags.contains(.shift) {
-                let formatter = TextFormatter(textView: self, note: note)
-                formatter.unTab()
-                saveCursorPosition()
-                return
             } else {
-                shiftRight("")
-                return
+                formatter.tab()
             }
+            saveCursorPosition()
+            breakUndoCoalescing()
+            return
         }
 
         if event.keyCode == kVK_Return, !hasMarkedText() {
