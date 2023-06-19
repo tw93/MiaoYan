@@ -2202,12 +2202,12 @@ class ViewController:
     }
 
     func enablePresentation() {
-        UserDefaultsManagement.presentation = true
         hideNoteList("")
-        if UserDefaultsManagement.preview {
-            disablePreview()
+        disablePreview()
+        DispatchQueue.main.async {
+            UserDefaultsManagement.presentation = true
+            self.enablePreview()
         }
-        enablePreview()
         if UserDefaultsManagement.fullScreen {} else {
             view.window?.toggleFullScreen(nil)
         }
