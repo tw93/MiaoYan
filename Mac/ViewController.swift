@@ -2094,43 +2094,44 @@ class ViewController:
     func enableMiaoYanPPT() {
         guard let vc = ViewController.shared() else { return }
 
-        let range = editArea.selectedRange
-        // 防止刚好在---最后一个
-        let selectedIndex = range.location > 0 ? range.location - 1 : 0
-        let beforeString = editArea.string[..<selectedIndex]
-        let hrCount = beforeString.components(separatedBy: "---").count
-
-        // 处理 PPT 场景下的自动跳转
-        func handlePPTAutoTransition() {
-            vc.titiebarHeight.constant = 0.0
-            // 兼容快捷键透传
-            NSApp.mainWindow?.makeFirstResponder(vc.editArea.markdownView)
-
-            // PPT场景下的自动跳转
-            if UserDefaultsManagement.previewLocation == "Editing", hrCount > 1 {
-                vc.editArea.markdownView?.slideTo(index: hrCount - 1)
+        let preparePresentation = {
+            vc.enablePresentation()
+            UserDefaultsManagement.magicPPT = true
+            DispatchQueue.main.async {
+                vc.titiebarHeight.constant = 0.0
+                vc.handlePPTAutoTransition()
             }
         }
 
         if UserDefaultsManagement.presentation {
-            disablePreview()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                vc.enablePresentation()
-                DispatchQueue.main.async {
-                    handlePPTAutoTransition()
-                }
-            }
+            disablePresentation()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: preparePresentation)
         } else {
-            enablePresentation()
-        }
-
-        UserDefaultsManagement.magicPPT = true
-        DispatchQueue.main.async {
-            handlePPTAutoTransition()
+            preparePresentation()
         }
 
         Analytics.trackEvent("MiaoYan PPT")
     }
+
+    func handlePPTAutoTransition() {
+        guard let vc = ViewController.shared() else { return }
+
+        // 获取鼠标位置，自动跳转
+        let range = editArea.selectedRange
+        let selectedIndex = range.location > 0 ? range.location - 1 : 0
+        let beforeString = editArea.string[..<selectedIndex]
+        let hrCount = beforeString.components(separatedBy: "---").count
+
+        if UserDefaultsManagement.previewLocation == "Editing", hrCount > 1 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                // 兼容快捷键透传
+                NSApp.mainWindow?.makeFirstResponder(vc.editArea.markdownView)
+                // PPT场景下的自动跳转
+                vc.editArea.markdownView?.slideTo(index: hrCount - 1)
+            }
+        }
+    }
+
 
     func disableMiaoYanPPT() {
         disablePresentation()
