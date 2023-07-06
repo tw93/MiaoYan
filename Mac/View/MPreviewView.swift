@@ -145,7 +145,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                                 if let newPDFData = newDocument.dataRepresentation() {
                                     if let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first {
                                         vc.toastExport(status: true)
-                                        let currentName = self.note?.getTitle()
+                                        let currentName = self.note?.getExportTitle()
                                         let filePath: String = path + "/" + (currentName ?? "MiaoYan") + ".pdf"
                                         try! newPDFData.write(to: URL(fileURLWithPath: filePath))
                                     }
@@ -215,7 +215,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                             print("Content html could not be obtained"); return
                         }
                         if let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first {
-                            let currentName = self.note?.getShortTitle()
+                            let currentName = self.note?.getExportTitle()
                             let filePath: String = path + "/" + (currentName ?? "MiaoYan") + ".html"
                             try! contentHtml.write(to: URL(fileURLWithPath: filePath), atomically: false, encoding: .utf8)
                             vc.toastExport(status: true)
@@ -245,7 +245,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                                 self?.takeSnapshot(with: config, completionHandler: { image, error in
                                     if let image = image {
                                         if let desktopURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first {
-                                            let currentName = self?.note?.getTitle()
+                                            let currentName = self?.note?.getExportTitle()
                                             let destinationURL = desktopURL.appendingPathComponent(currentName! + ".jpeg")
                                             try! image.saveJPEGRepresentationToURL(url: destinationURL)
                                         }
