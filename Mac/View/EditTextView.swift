@@ -46,11 +46,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         newRect.size.height = newRect.size.height - diff
         newRect.origin.y = newRect.origin.y + 4.0
         super.drawInsertionPoint(in: newRect, color: EditTextView.fontColor, turnedOn: flag)
-
-        // 防止格式化时候样式的抖动
-        DispatchQueue.main.async {
-            self.applyLeftParagraphStyle()
-        }
     }
 
     override func updateInsertionPointStateAndRestartTimer(_ restartFlag: Bool) {
@@ -233,7 +228,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             breakUndoCoalescing()
             saveTextStorageContent(to: note)
             fillHighlightLinks()
-            applyLeftParagraphStyle()
+            textStorage?.updateParagraphStyle()
             return
         }
 
@@ -444,7 +439,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         fillHighlightLinks()
-        applyLeftParagraphStyle()
+        textStorage?.updateParagraphStyle()
         restoreCursorPosition(needScrollToCursor: needScrollToCursor)
     }
 
@@ -794,7 +789,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
                 saveTextStorageContent(to: note)
                 note.save()
-                applyLeftParagraphStyle()
+                textStorage?.updateParagraphStyle()
             }
             viewDelegate?.notesTableView.reloadRow(note: note)
 
@@ -984,13 +979,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let url = URL(fileURLWithPath: link as! String)
 
         NSWorkspace.shared.open(url)
-    }
-
-    public func applyLeftParagraphStyle() {
-        let paragraphStyle = NSTextStorage.getParagraphStyle()
-        typingAttributes[.paragraphStyle] = paragraphStyle
-        defaultParagraphStyle = paragraphStyle
-        textStorage?.updateParagraphStyle()
     }
 
     override func viewDidChangeEffectiveAppearance() {
