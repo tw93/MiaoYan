@@ -444,11 +444,6 @@ class ViewController:
         titleLabel.font = UserDefaultsManagement.titleFont.titleBold()
         emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont
 
-        let paragraphStyle = NSTextStorage.getParagraphStyle()
-        editArea.defaultParagraphStyle = paragraphStyle
-        editArea.typingAttributes[.paragraphStyle] = paragraphStyle
-        editArea.typingAttributes[.kern] = UserDefaultsManagement.editorLetterSpacing
-
         setTableRowHeight()
         storageOutlineView.sidebarItems = Sidebar().getList()
 
@@ -500,6 +495,7 @@ class ViewController:
                 .foregroundColor: NSColor(named: "highlight")!,
             ]
         }
+
         editArea.viewDelegate = self
     }
 

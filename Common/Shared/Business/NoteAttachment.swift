@@ -66,7 +66,6 @@ class NoteAttachment {
             .link: url,
             .attachment: attachment,
             .paragraphStyle: paragraphStyle,
-            .kern: UserDefaultsManagement.editorLetterSpacing
         ] as [NSAttributedString.Key: Any]
 
         mutableAttributedString.addAttributes(attributes, range: NSRange(0 ..< 1))
