@@ -8,7 +8,6 @@ class SidebarCellView: NSTableCellView {
 
     override func draw(_ dirtyRect: NSRect) {
         label.font = UserDefaultsManagement.nameFont
-        label.addCharacterSpacing()
         super.draw(dirtyRect)
     }
 
@@ -26,17 +25,15 @@ class SidebarCellView: NSTableCellView {
 
     @IBAction func projectName(_ sender: NSTextField) {
         let cell = sender.superview as? SidebarCellView
+        guard let si = cell?.objectValue as? SidebarItem, let project = si.project else { return }
 
-        guard let project = cell?.objectValue as? Project else { return }
-
-        let src = project.url
-        let dst = project.url.deletingLastPathComponent().appendingPathComponent(sender.stringValue, isDirectory: true)
-
-        project.url = dst
-        project.loadLabel()
+        let newURL = project.url.deletingLastPathComponent().appendingPathComponent(sender.stringValue)
 
         do {
-            try FileManager.default.moveItem(at: src, to: dst)
+            try FileManager.default.moveItem(at: project.url, to: newURL)
+            project.url = newURL
+            project.label = newURL.lastPathComponent
+
         } catch {
             sender.stringValue = project.url.lastPathComponent
             let alert = NSAlert()
@@ -44,13 +41,9 @@ class SidebarCellView: NSTableCellView {
             alert.runModal()
         }
 
-        storage.unload(project: project)
-        storage.loadLabel(project)
-
         guard let vc = window?.contentViewController as? ViewController else { return }
-        vc.fsManager?.restart()
-        vc.loadMoveMenu()
-
+        vc.storage.removeBy(project: project)
+        vc.storage.loadLabel(project)
         vc.updateTable()
     }
 
