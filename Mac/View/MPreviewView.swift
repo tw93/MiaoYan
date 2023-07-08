@@ -103,7 +103,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 let dispatchGroup = DispatchGroup()
                 var pdfDatas: [Data] = []
 
-                for pageIndex in 0..<pageCount {
+                for pageIndex in 0 ..< pageCount {
                     dispatchGroup.enter()
 
                     let pdfConfiguration = WKPDFConfiguration()
@@ -150,7 +150,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         for pdfData in pdfDatas {
             if let dataDocument = PDFDocument(data: pdfData) {
-                for pageIndex in 0..<dataDocument.pageCount {
+                for pageIndex in 0 ..< dataDocument.pageCount {
                     if let page = dataDocument.page(at: pageIndex) {
                         pdfDocument.insert(page, at: pdfDocument.pageCount)
                     }

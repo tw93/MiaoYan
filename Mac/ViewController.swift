@@ -2132,7 +2132,6 @@ class ViewController:
         }
     }
 
-
     func disableMiaoYanPPT() {
         disablePresentation()
         UserDefaultsManagement.magicPPT = false
