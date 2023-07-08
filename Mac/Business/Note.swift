@@ -1138,10 +1138,8 @@ public class Note: NSObject {
     }
 
     public func getExportTitle() -> String {
-        guard let title = getTitle() ?? getDefaultTitle() else {
-            return "MiaoYan"
-        }
 
+        let title = getTitle() ?? getFileName()
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         let sanitizedTitle = trimmedTitle.replacingOccurrences(of: "/", with: "_")
 
