@@ -84,89 +84,81 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
     public func exportPdf() {
         guard let vc = ViewController.shared() else { return }
-        // 获取 WKWebView 的内容大小
-        var a4Size = CGSize(width: 800, height: 1120)
-        if UserDefaultsManagement.isOnExportPPT {
-            a4Size = CGSize(width: 1536, height: 957)
-        }
 
-        let pageWidth = a4Size.width
-        let maxHeight: CGFloat = 14355.0
+        if #available(macOS 11.0, *) {
+            // Calculate the total height of the content
+            self.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] height, error in
+                guard let self = self, let height = height as? CGFloat, error == nil else {
+                    vc.toastExport(status: false)
+                    return
+                }
 
-        super.frame.size.width = pageWidth
+                var pageHeight: CGFloat = 1120.0 // A4 page height
+                if UserDefaultsManagement.isOnExportPPT {
+                    // Scale the height according to the screen width
+                    pageHeight = self.bounds.height - 3.0
+                }
+                let pageCount = Int(ceil(height / pageHeight)) // Calculate the number of pages needed
 
-        super.evaluateJavaScript("document.body.scrollHeight", completionHandler: { height, error in
-            guard let height = height as? CGFloat, error == nil else {
-                vc.toastExport(status: false)
-                return
-            }
-            if #available(macOS 11.0, *) {
-                let numberOfParts = Int(ceil(height / maxHeight))
-                let newDocument = PDFDocument()
+                let dispatchGroup = DispatchGroup()
+                var pdfDatas: [Data] = []
 
-                // 设置 PDF 分页
-                func processPart(_ partIndex: Int) {
-                    let partY = CGFloat(partIndex) * maxHeight
-                    let partHeight = min(maxHeight, height - partY)
+                for pageIndex in 0..<pageCount {
+                    dispatchGroup.enter()
 
                     let pdfConfiguration = WKPDFConfiguration()
-                    pdfConfiguration.rect = CGRect(x: 0, y: partY, width: super.bounds.width, height: partHeight)
+                    pdfConfiguration.rect = CGRect(x: 0, y: pageHeight * CGFloat(pageIndex), width: self.bounds.width, height: pageHeight)
 
-                    super.createPDF(configuration: pdfConfiguration) { result in
+                    self.createPDF(configuration: pdfConfiguration) { result in
                         switch result {
                         case .success(let pdfData):
-                            // 使用 PDFKit 进行分页
-
-                            let pdfDocument = PDFDocument(data: pdfData)
-
-                            for i in 0 ..< (pdfDocument?.pageCount ?? 0) {
-                                guard let page = pdfDocument?.page(at: i) else {
-                                    return
-                                }
-
-                                let pageBounds = page.bounds(for: .cropBox)
-                                let subPageCount = Int(ceil(pageBounds.height / a4Size.height))
-
-                                for j in 0 ..< subPageCount {
-                                    let subPageRect = CGRect(x: 0, y: CGFloat(subPageCount - j - 1) * a4Size.height, width: pageWidth, height: a4Size.height)
-
-                                    guard let subPage = page.copy() as? PDFPage else {
-                                        return
-                                    }
-
-                                    subPage.setBounds(subPageRect, for: .cropBox)
-                                    newDocument.insert(subPage, at: newDocument.pageCount)
-                                }
-                            }
-
-                            if partIndex < numberOfParts - 1 {
-                                processPart(partIndex + 1)
-                            } else {
-                                if let newPDFData = newDocument.dataRepresentation() {
-                                    if let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first {
-                                        vc.toastExport(status: true)
-                                        let currentName = self.note?.getExportTitle()
-                                        let filePath: String = path + "/" + (currentName ?? "MiaoYan") + ".pdf"
-                                        try! newPDFData.write(to: URL(fileURLWithPath: filePath))
-                                    }
-
-                                } else {}
-                            }
-
+                            pdfDatas.append(pdfData)
                         case .failure:
-                            vc.toastExport(status: false)
-                            return
+                            break
                         }
+                        dispatchGroup.leave()
                     }
                 }
 
-                processPart(0)
+                dispatchGroup.notify(queue: .main) {
+                    let finalPdfData = self.combinePDFs(pdfDatas: pdfDatas)
+                    if let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first {
+                        let currentName = self.note?.getExportTitle() ?? "MiaoYan"
+                        let filePath: String = path + "/" + currentName + ".pdf"
+                        let fileURL = URL(fileURLWithPath: filePath)
+                        do {
+                            try finalPdfData?.write(to: fileURL, options: .atomic)
+                            vc.toastExport(status: true)
+                        } catch {
+                            vc.toastExport(status: false)
+                        }
+                    } else {
+                        vc.toastExport(status: false)
+                    }
+                }
 
-            } else {
-                // Fallback on earlier versions
-                vc.toastExport(status: false)
+            })
+        } else {
+            // Fallback on earlier versions
+            vc.toastExport(status: false)
+        }
+    }
+
+    @available(macOS 11.0, *)
+    private func combinePDFs(pdfDatas: [Data]) -> Data? {
+        let pdfDocument = PDFDocument()
+
+        for pdfData in pdfDatas {
+            if let dataDocument = PDFDocument(data: pdfData) {
+                for pageIndex in 0..<dataDocument.pageCount {
+                    if let page = dataDocument.page(at: pageIndex) {
+                        pdfDocument.insert(page, at: pdfDocument.pageCount)
+                    }
+                }
             }
-        })
+        }
+
+        return pdfDocument.dataRepresentation()
     }
 
     public func slideTo(index: Int) {

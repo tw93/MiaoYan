@@ -2545,14 +2545,12 @@ class ViewController:
         if !isMiaoYanPPT() {
             return
         }
-        UserDefaultsManagement.isOnExport = true
-        UserDefaultsManagement.isOnExportPPT = true
         toast(message: NSLocalizedString("🙊 Starting export~", comment: ""))
         enableMiaoYanPPT()
+        UserDefaultsManagement.isOnExport = true
+        UserDefaultsManagement.isOnExportPPT = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
             self.editArea.markdownView?.exportPdf()
-            UserDefaultsManagement.isOnExport = false
-            UserDefaultsManagement.isOnExportPPT = false
             self.disableMiaoYanPPT()
         }
         Analytics.trackEvent("MiaoYan Export", withProperties: ["Type": "MiaoYan PPT PDF"])
@@ -2564,6 +2562,9 @@ class ViewController:
         } else {
             toast(message: NSLocalizedString("😶‍🌫 The current Mac system does not support export, please upgrade to above 11.0~", comment: ""))
         }
+        // After the export is completed, restore the original state.
+        UserDefaultsManagement.isOnExport = false
+        UserDefaultsManagement.isOnExportPPT = false
     }
 
     public func toastNoTitle() {
