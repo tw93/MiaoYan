@@ -495,7 +495,6 @@ class ViewController:
                 .foregroundColor: NSColor(named: "highlight")!,
             ]
         }
-
         editArea.viewDelegate = self
     }
 
@@ -1557,7 +1556,6 @@ class ViewController:
     }
 
     // Changed main edit view
-
     func textDidChange(_ notification: Notification) {
         guard let note = getCurrentNote() else {
             return

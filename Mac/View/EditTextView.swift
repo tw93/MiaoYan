@@ -48,6 +48,17 @@ class EditTextView: NSTextView, NSTextFinderClient {
         super.drawInsertionPoint(in: newRect, color: EditTextView.fontColor, turnedOn: flag)
     }
 
+    override func becomeFirstResponder() -> Bool {
+        let shouldBecomeFirstResponder = super.becomeFirstResponder()
+        if shouldBecomeFirstResponder && string.isEmpty {
+            DispatchQueue.main.async {
+                self.applyParagraphStyle()
+            }
+        }
+
+        return shouldBecomeFirstResponder
+    }
+
     override func updateInsertionPointStateAndRestartTimer(_ restartFlag: Bool) {
         super.updateInsertionPointStateAndRestartTimer(true)
         if let range = selectedRanges[0] as? NSRange, range.length > 0, range != initRange {
@@ -979,6 +990,13 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let url = URL(fileURLWithPath: link as! String)
 
         NSWorkspace.shared.open(url)
+    }
+
+    public func applyParagraphStyle() {
+        let paragraphStyle = NSTextStorage.getParagraphStyle()
+        typingAttributes[.paragraphStyle] = paragraphStyle
+        defaultParagraphStyle = paragraphStyle
+        textStorage?.updateParagraphStyle()
     }
 
     override func viewDidChangeEffectiveAppearance() {
