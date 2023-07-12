@@ -3,6 +3,35 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>1.11.0</title>
+      <description><![CDATA[
+      <h3>更快咯 🏂：</h3>
+       <ol>
+        <li>文字书写体验性能大幅增强，更加轻量化，长文不卡顿</li>
+        <li>解决首行Tab切换时光标可能会错乱的 Bug</li>
+        <li>导出更兼容，PDF 导出长文内容更好用，优化 PPT 导出的效果</li>
+        <li>修复文件夹重命名不生效问题、修复搜索框文字显示效果</li>
+       </ol>
+      <h3>Faster Now 🏂:</h3>
+       <ol>
+        <li>Significantly enhanced text writing performance, lighter, no lag for long texts</li>
+        <li>Fixed a bug where the cursor may be disordered when tabbing at the beginning of the line</li>
+        <li>Better export compatibility, PDF export is more useful for long texts, optimized PPT export effect</li>
+        <li>Fixed the issue where renaming a folder doesn't take effect, fixed the display effect of the text in the search box</li>
+       </ol>
+      <h3>より高速になりました 🏂：</h3>
+       <ol>
+        <li>テキストの書き込みパフォーマンスが大幅に向上し、軽量化され、長いテキストでも遅延しません</li>
+        <li>行頭でタブを切り替えるとカーソルが混乱するバグを修正</li>
+        <li>より互換性の高いエクスポート、PDFエクスポートは長いテキストに更に便利、PPTエクスポート効果の最適化</li>
+        <li>フォルダ名の変更が有効にならない問題を修正、検索ボックス内のテキスト表示効果を修正</li>
+       </ol>
+          ]]>      </description>
+      <pubDate>周三, 12 07月 2023 22:00:20 +0800</pubDate>
+      <enclosure url="https://cdn.fliggy.com/test/app/MiaoYan_V1.11.0.zip" sparkle:shortVersionString="1.11.0" sparkle:version="1.11.0" sparkle:edSignature="UoyP5NRitK3gwVgBxUfRmqRsbZPGNMxxtNMbvVkO4PeKubn0O2OpZjSkSPN5GeQ1kMi04W99qaMC/kp2+xJ9Bg==" length="20621106" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>1.10.1</title>
       <description>
         <![CDATA[
@@ -52,30 +81,6 @@
           ]]>      </description>
       <pubDate>周日, 05 03月 2023 23:58:20 +0800</pubDate>
       <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.9.0.zip" sparkle:shortVersionString="1.9.0" sparkle:version="1.9.0" sparkle:edSignature="qn4H1aEw1NbR3dhQ0Ma0E7ZuE7qNpLmSyfe+b0Xd+sSqXhmTvlr0hRTkNdOXmZj05yPH7JIUcKsese49lIg5Dw==" length="24698757" type="application/octet-stream" />
-      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-    </item>
-    <item>
-      <title>1.8.0</title>
-      <description><![CDATA[
-      <h3>更巧妙 🐝：</h3>
-       <ol>
-        <li>编辑器中的链接需 Command 点击才跳转，正常为编辑</li>
-        <li>编辑器 Tab 切换正常使用，左右区块移动统一成 Command + [] </li>
-        <li>预览能力优化，整体段落等间距自适应高度，演示下效果更好</li>
-        <li>单独模式下，文件打开为仅编辑器，文件夹打开为侧边栏，去掉反复提示</li>
-        <li>修复PPT模式下本地图片使用问题，记住3栏模式上次使用状态，输入框焦点优化</li>
-       </ol>
-       <h3>More ingenious 🐝：</h3>
-      <ol>
-        <li>Links in the editor require a Command click to jump, normal for editing.</li>
-        <li>Editor Tab works normally, left and right block movement is unified into Command + [].</li>
-        <li>Preview capability optimization, overall paragraph equal spacing adaptive height.</li>
-        <li>In standalone mode, files open as editor only, folders open as sidebar, remove repeated prompts.</li>
-        <li>Fix the problem of using local pictures in PPT mode, remember the last use status of 3-column mode, and optimize the focus of input box.</li>
-      </ol>
-          ]]>      </description>
-      <pubDate>周一, 14 11月 2022 09:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.8.0.zip" sparkle:shortVersionString="1.8.0" sparkle:version="1.8.0" sparkle:edSignature="QG3FqSjJ3q4aPEcc5yeMALPbOF+/p84tDMKgdfFlp6WB2A12wWgTpVgGXN+wh9QdyYusQwWtDX14wf8f0/RfDw==" length="24675056" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
     </item>
   </channel>
