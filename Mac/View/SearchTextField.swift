@@ -18,6 +18,14 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
 
     private var trackingArea: NSTrackingArea?
 
+
+    override func rectForSearchText(whenCentered isCentered: Bool) -> NSRect {
+        var rect = super.rectForSearchText(whenCentered: isCentered)
+        rect.origin.y += 1.0
+        rect.size.height += 2.0
+        return rect
+    }
+
     override func updateTrackingAreas() {
         if let trackingArea = trackingArea {
             removeTrackingArea(trackingArea)
