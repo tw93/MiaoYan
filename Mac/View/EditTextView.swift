@@ -51,9 +51,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override func becomeFirstResponder() -> Bool {
         let shouldBecomeFirstResponder = super.becomeFirstResponder()
         if shouldBecomeFirstResponder && string.isEmpty {
-            DispatchQueue.main.async {
-                self.applyParagraphStyle()
-            }
+            let paragraphStyle = NSTextStorage.getParagraphStyle()
+            typingAttributes[.paragraphStyle] = paragraphStyle
+            defaultParagraphStyle = paragraphStyle
         }
 
         return shouldBecomeFirstResponder
@@ -63,7 +63,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         super.updateInsertionPointStateAndRestartTimer(true)
         if let range = selectedRanges[0] as? NSRange, range.length > 0, range != initRange {
             DispatchQueue.main.async {
-                self.textStorage?.updateParagraphStyle()
                 self.initRange = range
             }
         }
@@ -99,7 +98,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         if initRange.length > 0 {
             DispatchQueue.main.async {
-                self.textStorage?.updateParagraphStyle()
                 self.initRange = NSRange(location: 0, length: 0)
             }
         }
@@ -239,7 +237,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             breakUndoCoalescing()
             saveTextStorageContent(to: note)
             fillHighlightLinks()
-            textStorage?.updateParagraphStyle()
             return
         }
 
@@ -397,8 +394,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         undoManager?.removeAllActions(withTarget: self)
 
-        if let appd = NSApplication.shared.delegate as? AppDelegate,
-           let md = appd.mainWindowController {
+        if let appDelegate = NSApplication.shared.delegate as? AppDelegate,
+           let md = appDelegate.mainWindowController {
             md.editorUndoManager = note.undoManager
         }
 
@@ -800,7 +797,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
                 saveTextStorageContent(to: note)
                 note.save()
-                textStorage?.updateParagraphStyle()
             }
             viewDelegate?.notesTableView.reloadRow(note: note)
 
@@ -990,13 +986,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let url = URL(fileURLWithPath: link as! String)
 
         NSWorkspace.shared.open(url)
-    }
-
-    public func applyParagraphStyle() {
-        let paragraphStyle = NSTextStorage.getParagraphStyle()
-        typingAttributes[.paragraphStyle] = paragraphStyle
-        defaultParagraphStyle = paragraphStyle
-        textStorage?.updateParagraphStyle()
     }
 
     override func viewDidChangeEffectiveAppearance() {
