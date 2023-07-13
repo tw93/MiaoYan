@@ -1,4 +1,4 @@
-<h4 align="right"><strong><a href="https://github.com/tw93/MiaoYan/blob/master/README_CN.md">English</a></strong> | <strong><a href="https://github.com/tw93/MiaoYan/blob/master/README_CN.md">中文</a></strong> | 日本語</h4>
+<h4 align="right"><strong><a href="https://github.com/tw93/MiaoYan/blob/master/README.md">English</a></strong> | <strong><a href="https://github.com/tw93/MiaoYan/blob/master/README_CN.md">中文</a></strong> | 日本語</h4>
 <p align="center">
   <a href="https://miaoyan.app/" target="_blank"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 /></a>
   <h1 align="center">MiaoYan</h1>
@@ -19,7 +19,7 @@
 </p>
 
 <kbd>
-<img src=https://gw.alipayobjects.com/zos/k/8m/en.gif width="100%">
+<img src=https://gw.alipayobjects.com/zos/k/4f/ch.gif width="100%">
 </kbd>
 
 ## 機能

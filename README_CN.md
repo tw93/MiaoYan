@@ -1,4 +1,4 @@
-<h4 align="right"><strong><a href="https://github.com/tw93/MiaoYan/blob/master/README.md">English</a></strong> | 中文 | <strong><a href="https://github.com/tw93/MiaoYan/blob/master/README_CN.md">日本語</a></strong></h4>
+<h4 align="right"><strong><a href="https://github.com/tw93/MiaoYan/blob/master/README.md">English</a></strong> | 中文 | <strong><a href="https://github.com/tw93/MiaoYan/blob/master/README_JP.md">日本語</a></strong></h4>
 
 <p align="center">
   <a href="https://miaoyan.app/" target="_blank"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 /></a>
