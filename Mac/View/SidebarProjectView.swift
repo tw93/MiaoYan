@@ -129,31 +129,25 @@ class SidebarProjectView: NSOutlineView,
 
         switch sidebarItem.type {
         case .Category, .Trash:
-            if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "notesTable")) {
-                do {
-                    let indexSetWrapper = try NSKeyedUnarchiver.unarchivedObject(ofClass: IndexSetWrapper.self, from: data)
-                    if let rows = indexSetWrapper?.indexSet {
-                        var notes = [Note]()
-                        for row in rows {
-                            let note = vc.notesTableView.noteList[row]
-                            notes.append(note)
-                        }
+            if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "notesTable")), let rows = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? IndexSet {
+                var notes = [Note]()
+                for row in rows {
+                    let note = vc.notesTableView.noteList[row]
+                    notes.append(note)
+                }
 
-                        if let project = sidebarItem.project {
-                            vc.move(notes: notes, project: project)
-                        } else if sidebarItem.isTrash() {
-                            vc.editArea.clear()
-                            vc.storage.removeNotes(notes: notes) { _ in
-                                DispatchQueue.main.async {
-                                    vc.storageOutlineView.reloadSidebar()
-                                    vc.notesTableView.removeByNotes(notes: notes)
-                                }
-                            }
+                if let project = sidebarItem.project {
+                    vc.move(notes: notes, project: project)
+                } else if sidebarItem.isTrash() {
+                    vc.editArea.clear()
+                    vc.storage.removeNotes(notes: notes) { _ in
+                        DispatchQueue.main.async {
+                            vc.storageOutlineView.reloadSidebar()
+                            vc.notesTableView.removeByNotes(notes: notes)
                         }
                     }
-                } catch {
-                    print("Error unarchiving data: \(error)")
                 }
+
                 return true
             }
 
