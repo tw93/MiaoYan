@@ -2116,7 +2116,10 @@ class ViewController:
 
         // 获取鼠标位置，自动跳转
         let range = editArea.selectedRange
-        let selectedIndex = range.location > 0 ? range.location - 1 : 0
+        
+        // 若 selectedIndex > editArea.string.count()，则使用 string.count() 的值。
+        let selectedIndex = min(max(range.location, 0), editArea.string.count) - 1
+        
         let beforeString = editArea.string[..<selectedIndex]
         let hrCount = beforeString.components(separatedBy: "---").count
 
