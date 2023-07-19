@@ -1,0 +1,18 @@
+/* Class = "NSTextFieldCell"; title = "createTime"; ObjectID = "E1l-5G-VcH"; */
+"E1l-5G-VcH.title" = "createTime";
+
+/* Class = "NSTextFieldCell"; title = "Update Time:"; ObjectID = "GN1-aA-6kJ"; */
+"GN1-aA-6kJ.title" = "更新時間：";
+
+/* Class = "NSTextFieldCell"; title = "Word Count:"; ObjectID = "ITG-Xm-ygA"; */
+"ITG-Xm-ygA.title" = "字數統計：";
+
+/* Class = "NSTextFieldCell"; title = "Create Time:"; ObjectID = "LDe-hw-GD1"; */
+"LDe-hw-GD1.title" = "建立時間：";
+
+/* Class = "NSTextFieldCell"; title = "wordCount"; ObjectID = "Muy-lO-8hh"; */
+"Muy-lO-8hh.title" = "wordCount";
+
+/* Class = "NSTextFieldCell"; title = "updateTime"; ObjectID = "yP9-xN-9tv"; */
+"yP9-xN-9tv.title" = "updateTime";
+
