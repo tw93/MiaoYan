@@ -2118,7 +2118,8 @@ class ViewController:
         let range = editArea.selectedRange
         
         // 若 selectedIndex > editArea.string.count()，则使用 string.count() 的值。
-        let selectedIndex = min(max(range.location, 0), editArea.string.count) - 1
+        // 若最终计算结果为负，则采 0 值。
+        let selectedIndex = max(min(range.location, editArea.string.count) - 1, 0)
         
         let beforeString = editArea.string[..<selectedIndex]
         let hrCount = beforeString.components(separatedBy: "---").count
