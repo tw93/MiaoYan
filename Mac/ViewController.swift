@@ -3,7 +3,6 @@ import AppCenterAnalytics
 import Cocoa
 import LocalAuthentication
 import MASShortcut
-import MiaoYanCore_macOS
 import WebKit
 
 class ViewController:

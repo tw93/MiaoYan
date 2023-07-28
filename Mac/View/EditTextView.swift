@@ -2,7 +2,6 @@ import Alamofire
 import Carbon.HIToolbox
 import Cocoa
 import Highlightr
-import MiaoYanCore_macOS
 import SwiftyJSON
 
 class EditTextView: NSTextView, NSTextFinderClient {
