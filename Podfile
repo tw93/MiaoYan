@@ -33,9 +33,18 @@ target 'MiaoYan' do
 end
 
 post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    if target.name == 'cmark-gfm-swift-macOS'
-      source_files = target.source_build_phase.files
+  installer.pods_project.targets.each do |project|
+    
+    project.build_configurations.each do |config|
+        config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = 'NO'
+    end
+    
+    project.build_configurations.each do |config|
+        config.build_settings['MACOSX_DEPLOYMENT_TARGET'] = '10.15'
+    end
+    
+    if project.name == 'cmark-gfm-swift-macOS'
+      source_files = project.source_build_phase.files
       dummy = source_files.find do |file|
         file.file_ref.name == 'scanners.re'
       end
