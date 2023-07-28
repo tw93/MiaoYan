@@ -4,8 +4,6 @@ import Carbon.HIToolbox
 import Cocoa
 import Foundation
 
-import MiaoYanCore_macOS
-
 class SidebarProjectView: NSOutlineView,
     NSOutlineViewDelegate,
     NSOutlineViewDataSource,

@@ -1,6 +1,5 @@
 import Carbon
 import Cocoa
-import MiaoYanCore_macOS
 
 class NotesTableView: NSTableView, NSTableViewDataSource,
     NSTableViewDelegate {

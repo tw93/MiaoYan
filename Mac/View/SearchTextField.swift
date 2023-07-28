@@ -1,8 +1,6 @@
 import Carbon.HIToolbox
 import Cocoa
 
-import MiaoYanCore_macOS
-
 class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     public var vcDelegate: ViewController!
 

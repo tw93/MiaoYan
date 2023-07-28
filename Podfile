@@ -8,28 +8,17 @@ def mac_pods
     pod 'AppCenter'
     pod 'Alamofire'
     pod 'SwiftyJSON'
-end
-
-def common_pods
     pod 'Highlightr'
     pod 'libcmark_gfm'
     pod 'SSZipArchive'
-end
-
-def framework_pods
     pod 'SwiftLint'
+    pod 'MASShortcut'
 end
 
-target 'MiaoYanCore macOS' do
-    platform :osx, MAC_TARGET_VERSION
-    pod 'MASShortcut'
-    framework_pods
-end
 
 target 'MiaoYan' do
     platform :osx, MAC_TARGET_VERSION
     mac_pods
-    common_pods
 end
 
 post_install do |installer|

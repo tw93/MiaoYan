@@ -13,6 +13,14 @@ extension NSFont {
         return boundingBox.height
     }
 
+    var lineHeight: CGFloat {
+        CGFloat(ceilf(Float(ascender + abs(descender) + leading)))
+    }
+
+    var lineHeightCustom: CGFloat {
+        CGFloat(ceilf(Float(ascender + abs(descender) + leading)))
+    }
+    
     static func italicFont() -> NSFont {
         NSFontManager().convert(UserDefaultsManagement.noteFont, toHaveTrait: .italicFontMask)
     }

@@ -1,5 +1,4 @@
 import Foundation
-import MiaoYanCore_macOS
 
 class FileSystemEventManager {
     private var storage: Storage
