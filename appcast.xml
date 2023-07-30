@@ -3,6 +3,16 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>1.11.1</title>
+      <description><![CDATA[
+      <h3>证书更新，辛苦升级～</h3>
+      <h3>Certificate update, hard upgrade~</h3>
+          ]]>      </description>
+      <pubDate>周日, 30 07月 2023 12:00:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.11.1.zip" sparkle:shortVersionString="1.11.1" sparkle:version="1.11.1" sparkle:edSignature="iLOZv3Iop9GUsqsLFsOXMBDZYubi+uU0Z3SBFGiEKz1gXARKpeEDcC7vR2yCb0tcaqzW4hWGqKnrKTxsb6akCg==" length="21353430" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>1.11.0</title>
       <description><![CDATA[
       <h3>更快咯 🏂：</h3>
