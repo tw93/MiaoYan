@@ -3,13 +3,13 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
-      <title>1.12.0</title>
+      <title>1.12.1</title>
       <description><![CDATA[
       <h3>证书更新，辛苦升级，如有问题建议直接下载 https://miaoyan.app/Release/MiaoYan.dmg 覆盖</h3>
       <h3>Certificate update, hard upgrade~</h3>
           ]]>      </description>
-      <pubDate>周日, 30 07月 2023 12:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.12.0.zip" sparkle:shortVersionString="1.12.0" sparkle:version="1.12.0" sparkle:edSignature="wA2m7Tw4XNjTdp4rasJBSwrkbEBXP9uToO0fKf44kS7aq7dyz6dcbJaXJGQnW7I+Lr6REwy4moxCsgzYh6YVDw==" length="21353473" type="application/octet-stream" />
+      <pubDate>周日, 31 07月 2023 12:00:20 +0800</pubDate>
+      <enclosure url="https://cdn.fliggy.com/upic/YSVAev.zip" sparkle:shortVersionString="1.12.1" sparkle:version="1.12.1" sparkle:edSignature="CWkvmLJ33WYfolg5C1M0QP3BbrSq9f7Qlac/GlkfFNfoQ99yGCtDRnWCLbpjACMxOU8SHB+pd6QGNMeHrkkfAQ==" length="21353428" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
     </item>
     <item>
