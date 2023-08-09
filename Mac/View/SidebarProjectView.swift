@@ -7,7 +7,8 @@ import Foundation
 class SidebarProjectView: NSOutlineView,
     NSOutlineViewDelegate,
     NSOutlineViewDataSource,
-    NSMenuItemValidation {
+    NSMenuItemValidation
+{
     var sidebarItems: [Any]?
     var viewDelegate: ViewController?
 
@@ -127,7 +128,8 @@ class SidebarProjectView: NSOutlineView,
 
         switch sidebarItem.type {
         case .Category, .Trash:
-            if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "notesTable")), let rows = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? IndexSet {
+            if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "notesTable")), let rows = try?
+                NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? IndexSet {
                 var notes = [Note]()
                 for row in rows {
                     let note = vc.notesTableView.noteList[row]
@@ -148,7 +150,6 @@ class SidebarProjectView: NSOutlineView,
 
                 return true
             }
-
 
             guard let urls = board.readObjects(forClasses: [NSURL.self], options: nil) as? [URL],
                   let project = sidebarItem.project
@@ -342,7 +343,8 @@ class SidebarProjectView: NSOutlineView,
 
             if sidebar.indices.contains(i), let item = sidebar[i] as? SidebarItem {
                 if UserDataService.instance.lastType == item.type.rawValue, UserDataService.instance.lastProject == item.project?.url,
-                   UserDataService.instance.lastName == item.name {
+                   UserDataService.instance.lastName == item.name
+                {
                     return
                 }
 
@@ -368,7 +370,8 @@ class SidebarProjectView: NSOutlineView,
                 if self.isLaunch {
                     if let url = UserDefaultsManagement.lastSelectedURL,
                        let lastNote = vd.storage.getBy(url: url),
-                       let i = vd.notesTableView.getIndex(lastNote) {
+                       let i = vd.notesTableView.getIndex(lastNote)
+                    {
                         vd.notesTableView.selectRow(i)
 
                         DispatchQueue.main.async {
