@@ -130,6 +130,7 @@
 		D7F681B62344F4C000F8F971 /* CustomTextStorage+Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = D73794BC233625FB00E75A28 /* CustomTextStorage+Images.swift */; };
 		D7F95F3A1FF2759300E2A447 /* NotesTextProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F95F391FF2759300E2A447 /* NotesTextProcessor.swift */; };
 		D7FBBC2520F151F80014EC5B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D7FBBC2820F151F80014EC5B /* Localizable.strings */; };
+		FFA664572A67FD4C004A3211 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = FFA664552A67FD4C004A3211 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -293,6 +294,12 @@
 		D7F5C0EE223ED0570038F172 /* PreferencesGeneralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesGeneralViewController.swift; sourceTree = "<group>"; };
 		D7F76C4B232D648D00E8D8BA /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "../zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		D7F95F391FF2759300E2A447 /* NotesTextProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesTextProcessor.swift; sourceTree = "<group>"; };
+		E1780AB87DF0A7EA043372E8 /* Pods-MiaoYanCore macOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYanCore macOS.release.xcconfig"; path = "Target Support Files/Pods-MiaoYanCore macOS/Pods-MiaoYanCore macOS.release.xcconfig"; sourceTree = "<group>"; };
+		ECCEEEEAFE41BF266125D8F5 /* Pods-MiaoYanCore macOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiaoYanCore macOS.debug.xcconfig"; path = "Target Support Files/Pods-MiaoYanCore macOS/Pods-MiaoYanCore macOS.debug.xcconfig"; sourceTree = "<group>"; };
+		FFA664522A67F62F004A3211 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/ContentViewController.strings"; sourceTree = "<group>"; };
+		FFA664532A67F62F004A3211 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Main.strings"; sourceTree = "<group>"; };
+		FFA664542A67F62F004A3211 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		FFA664562A67FD4C004A3211 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -439,6 +446,7 @@
 				D7793C781F211C6000CA39B7 /* Main.storyboard */,
 				D7465F27207F2CD600E46A52 /* Images.xcassets */,
 				D7793C7B1F211C6000CA39B7 /* Info.plist */,
+				FFA664552A67FD4C004A3211 /* Localizable.strings */,
 				2714D863285196D70026BDE4 /* InfoPlist.strings */,
 			);
 			path = Mac;
@@ -630,6 +638,7 @@
 				Base,
 				"zh-Hans",
 				ja,
+				"zh-Hant",
 			);
 			mainGroup = D7793C661F211C6000CA39B7;
 			productRefGroup = D7793C661F211C6000CA39B7;
@@ -648,6 +657,7 @@
 			files = (
 				D158E66B28BB248A0090B304 /* Prettier.bundle in Resources */,
 				D71C4A4E1F520F1B00EBA30B /* DownView.bundle in Resources */,
+				FFA664572A67FD4C004A3211 /* Localizable.strings in Resources */,
 				D7465F28207F2CD600E46A52 /* Images.xcassets in Resources */,
 				272CAC1E287577E70026EF50 /* ContentViewController.xib in Resources */,
 				2747D5B5284E05CE00D0127B /* LXGWWenKaiLite-Bold.ttf in Resources */,
@@ -845,6 +855,7 @@
 				2714D862285196D70026BDE4 /* zh-Hans */,
 				2714D864285197CA0026BDE4 /* en */,
 				276CE9F02997D34600280459 /* ja */,
+				FFA664542A67F62F004A3211 /* zh-Hant */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -856,6 +867,7 @@
 				272CAC22287577E90026EF50 /* en */,
 				272CAC24287577EB0026EF50 /* zh-Hans */,
 				276CE9EE2997D34600280459 /* ja */,
+				FFA664522A67F62F004A3211 /* zh-Hant */,
 			);
 			name = ContentViewController.xib;
 			sourceTree = "<group>";
@@ -867,6 +879,7 @@
 				D7F76C4B232D648D00E8D8BA /* zh-Hans */,
 				277DB692288AB6E9003DA090 /* en */,
 				276CE9EF2997D34600280459 /* ja */,
+				FFA664532A67F62F004A3211 /* zh-Hant */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -876,6 +889,14 @@
 			children = (
 				276CE9F12997D37200280459 /* ja */,
 				276CE9F32997D39800280459 /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		FFA664552A67FD4C004A3211 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FFA664562A67FD4C004A3211 /* zh-Hant */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1026,6 +1047,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.12.0;
+				CURRENT_PROJECT_VERSION = 1.12.1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 5EH69Y5X38;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
@@ -1046,6 +1068,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MARKETING_VERSION = 1.12.0;
+				MARKETING_VERSION = 1.12.1;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.MiaoYan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1070,6 +1093,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.12.0;
+				CURRENT_PROJECT_VERSION = 1.12.1;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DEVELOPMENT_TEAM = 5EH69Y5X38;
@@ -1091,6 +1115,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MARKETING_VERSION = 1.12.0;
+				MARKETING_VERSION = 1.12.1;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.MiaoYan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
