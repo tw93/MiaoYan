@@ -95,7 +95,6 @@ public enum UserDefaultsManagement {
         static let EditorLineBreak = "editorLineBreak"
         static let ButtonShow = "buttonShow"
         static let CodeBackground = "CodeBackground"
-        static let OpenAIUrl = "OpenAIUrl"
     }
 
     static var appearanceType: AppearanceType {
@@ -185,18 +184,6 @@ public enum UserDefaultsManagement {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.CodeBackground)
-        }
-    }
-    
-    static var openAIUrl: String {
-        get {
-            if let dl = UserDefaults.standard.object(forKey: Constants.OpenAIUrl) as? String {
-                return dl
-            }
-            return "https://api.openai.com"
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.OpenAIUrl)
         }
     }
 

@@ -22,13 +22,6 @@
 		275592971F3AE9B5006B8988 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275592961F3AE9B5006B8988 /* MainWindowController.swift */; };
 		277A61D8244B538F000F0033 /* SidebarTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277A61D7244B538E000F0033 /* SidebarTableRowView.swift */; };
 		27838E68287521C0009E8012 /* DetachedWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27838E67287521C0009E8012 /* DetachedWindowController.swift */; };
-		279789AE29C6C4BE00157A8B /* OpenAIModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279789A729C6C4BE00157A8B /* OpenAIModelType.swift */; };
-		279789AF29C6C4BE00157A8B /* OpenAI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279789A829C6C4BE00157A8B /* OpenAI.swift */; };
-		279789B029C6C4BE00157A8B /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279789A929C6C4BE00157A8B /* ChatMessage.swift */; };
-		279789B129C6C4BE00157A8B /* Instruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279789AA29C6C4BE00157A8B /* Instruction.swift */; };
-		279789B229C6C4BE00157A8B /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279789AB29C6C4BE00157A8B /* Command.swift */; };
-		279789B329C6C4BE00157A8B /* OpenAIEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279789AC29C6C4BE00157A8B /* OpenAIEndpoint.swift */; };
-		279789B429C6C4BE00157A8B /* OpenAISwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279789AD29C6C4BE00157A8B /* OpenAISwift.swift */; };
 		2799407C218484C900727B20 /* TitleBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799407B218484C900727B20 /* TitleBarView.swift */; };
 		27C34C0E28928D0B007369E5 /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C34C0D28928D0B007369E5 /* Emoji.swift */; };
 		27D280452A05480D007A4104 /* IndexSetWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D280442A05480D007A4104 /* IndexSetWrapper.swift */; };
@@ -177,13 +170,6 @@
 		27838E67287521C0009E8012 /* DetachedWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetachedWindowController.swift; sourceTree = "<group>"; };
 		2789B1E3287FD9C500BF8BC1 /* MiaoYan.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = MiaoYan.entitlements; sourceTree = "<group>"; };
 		2795956327B12CDC000B754C /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiaoYan.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		279789A729C6C4BE00157A8B /* OpenAIModelType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenAIModelType.swift; sourceTree = "<group>"; };
-		279789A829C6C4BE00157A8B /* OpenAI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenAI.swift; sourceTree = "<group>"; };
-		279789A929C6C4BE00157A8B /* ChatMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
-		279789AA29C6C4BE00157A8B /* Instruction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Instruction.swift; sourceTree = "<group>"; };
-		279789AB29C6C4BE00157A8B /* Command.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
-		279789AC29C6C4BE00157A8B /* OpenAIEndpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenAIEndpoint.swift; sourceTree = "<group>"; };
-		279789AD29C6C4BE00157A8B /* OpenAISwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenAISwift.swift; sourceTree = "<group>"; };
 		2799407B218484C900727B20 /* TitleBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleBarView.swift; sourceTree = "<group>"; };
 		27C34C0D28928D0B007369E5 /* Emoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emoji.swift; sourceTree = "<group>"; };
 		27D280442A05480D007A4104 /* IndexSetWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexSetWrapper.swift; sourceTree = "<group>"; };
@@ -317,28 +303,6 @@
 			children = (
 			);
 			name = "Recovered References";
-			sourceTree = "<group>";
-		};
-		279789A529C6C4BE00157A8B /* OpenAISwift */ = {
-			isa = PBXGroup;
-			children = (
-				279789A629C6C4BE00157A8B /* Models */,
-				279789AC29C6C4BE00157A8B /* OpenAIEndpoint.swift */,
-				279789AD29C6C4BE00157A8B /* OpenAISwift.swift */,
-			);
-			path = OpenAISwift;
-			sourceTree = "<group>";
-		};
-		279789A629C6C4BE00157A8B /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				279789A729C6C4BE00157A8B /* OpenAIModelType.swift */,
-				279789A829C6C4BE00157A8B /* OpenAI.swift */,
-				279789A929C6C4BE00157A8B /* ChatMessage.swift */,
-				279789AA29C6C4BE00157A8B /* Instruction.swift */,
-				279789AB29C6C4BE00157A8B /* Command.swift */,
-			);
-			path = Models;
 			sourceTree = "<group>";
 		};
 		27A1AE302844BA83006DF055 /* Fonts */ = {
@@ -507,7 +471,6 @@
 		D7D61FCC1F32EEA1004357C2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				279789A529C6C4BE00157A8B /* OpenAISwift */,
 				D140A65F28BB1ACA00637ED1 /* Prettier */,
 				D158E66A28BB248A0090B304 /* Prettier.bundle */,
 				27A1AE302844BA83006DF055 /* Fonts */,
@@ -737,7 +700,6 @@
 				27838E68287521C0009E8012 /* DetachedWindowController.swift in Sources */,
 				D7DA9E1E21031901001CF0BE /* OutlineHeaderView.swift in Sources */,
 				D7B3FE7121027A6D00764C39 /* UserDataService.swift in Sources */,
-				279789AF29C6C4BE00157A8B /* OpenAI.swift in Sources */,
 				27D95122285B5E4400F40306 /* Toast.swift in Sources */,
 				27D280452A05480D007A4104 /* IndexSetWrapper.swift in Sources */,
 				27D9A4F72873D345006317AD /* FileManager+.swift in Sources */,
@@ -767,7 +729,6 @@
 				D7508FCE1F3438540047AB76 /* PrefsViewController.swift in Sources */,
 				D792297521A845B4005F468F /* ProjectSettingsViewController.swift in Sources */,
 				D7315ED5215ED95600AB49D4 /* NSAppearance+.swift in Sources */,
-				279789B229C6C4BE00157A8B /* Command.swift in Sources */,
 				D7DA9E2121033489001CF0BE /* NSMutableAttributedString+.swift in Sources */,
 				D7C302C521F320FD0041627F /* ImageAttachment+.swift in Sources */,
 				D76447DC1F3A4F0700965F01 /* UserDefaultsManagement.swift in Sources */,
@@ -793,12 +754,10 @@
 				D7169A5D2077BA140025D2C9 /* StorageView.swift in Sources */,
 				D7D1DE68216D05A800AC1845 /* NameTextField.swift in Sources */,
 				D735E5BF1F2F001500173215 /* NoteRowView.swift in Sources */,
-				279789B329C6C4BE00157A8B /* OpenAIEndpoint.swift in Sources */,
 				D76025B2204EEF64000B9F59 /* TextFormatter.swift in Sources */,
 				D7038E2620FB24E000A54E69 /* NoteAttachment.swift in Sources */,
 				D74112281FABA21B00AB619A /* MainWindow.swift in Sources */,
 				D7CDE9DC2161767A00DC5978 /* AppearanceType.swift in Sources */,
-				279789B029C6C4BE00157A8B /* ChatMessage.swift in Sources */,
 				D140A67B28BB1ACA00637ED1 /* ProseWrapStrategy.swift in Sources */,
 				D7E025081F3B6DDB00EDDA32 /* Storage.swift in Sources */,
 				D74DFBAD21661BA400F67D64 /* Date+.swift in Sources */,
@@ -808,7 +767,6 @@
 				D7DD5A8A1F88D50000CE947E /* FileWatcherEvent.swift in Sources */,
 				277A61D8244B538F000F0033 /* SidebarTableRowView.swift in Sources */,
 				27C34C0E28928D0B007369E5 /* Emoji.swift in Sources */,
-				279789B429C6C4BE00157A8B /* OpenAISwift.swift in Sources */,
 				D7487FED2174E62B00D09383 /* NSAttributedStringKey+.swift in Sources */,
 				D7CE196C1FA4BA5E004BF8EE /* PreviewTextField.swift in Sources */,
 				D7679376201F0BFD000F7BBF /* SortBy.swift in Sources */,
@@ -818,7 +776,6 @@
 				D7153DFD2285A93300A2C20F /* AboutWindowController.swift in Sources */,
 				D77CC041216A608500582B97 /* EditorScrollView.swift in Sources */,
 				D140A68228BB1ACA00637ED1 /* MarkdownPlugin.swift in Sources */,
-				279789AE29C6C4BE00157A8B /* OpenAIModelType.swift in Sources */,
 				D140A68528BB1ACA00637ED1 /* Plugin.swift in Sources */,
 				8F7136EE23490CBF004DFA6E /* Markdown.swift in Sources */,
 				D730BD3C222DB9FC00E69C93 /* NameHelper.swift in Sources */,
@@ -830,7 +787,6 @@
 				D7104A64230BD8C500B6D8EE /* SortDirection.swift in Sources */,
 				D735E5BD1F2EF66000173215 /* NoteCellView.swift in Sources */,
 				D78678CB2093AE10001A6620 /* UndoData.swift in Sources */,
-				279789B129C6C4BE00157A8B /* Instruction.swift in Sources */,
 				D730BD2E222DABA100E69C93 /* NoteContainer.swift in Sources */,
 				D730BD35222DB11E00E69C93 /* TextBundleInfo.swift in Sources */,
 				D140A67728BB1ACA00637ED1 /* ArrowFunctionParenthesesStrategy.swift in Sources */,
