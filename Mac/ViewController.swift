@@ -349,17 +349,6 @@ class ViewController:
                 vc.setDividerHidden(hidden: false)
             }
         }
-
-        // 解决标题高度计算的问题，首次使用的时候
-        if isLaunch, #available(OSX 13.0, *) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-                self.titleLabel.editModeOn()
-                self.enablePreview()
-                self.disablePreview()
-                self.focusEditArea()
-            }
-            isLaunch = false
-        }
     }
 
     func toastInSingleMode() {
@@ -2115,11 +2104,11 @@ class ViewController:
 
         // 获取鼠标位置，自动跳转
         let range = editArea.selectedRange
-        
+
         // 若 selectedIndex > editArea.string.count()，则使用 string.count() 的值。
         // 若最终计算结果为负，则采 0 值。
         let selectedIndex = max(min(range.location, editArea.string.count) - 1, 0)
-        
+
         let beforeString = editArea.string[..<selectedIndex]
         let hrCount = beforeString.components(separatedBy: "---").count
 
@@ -2396,12 +2385,12 @@ class ViewController:
 
     func checkTitlebarTopConstraint() {
         if splitView.subviews[0].frame.width < 50, !UserDefaultsManagement.isWillFullScreen {
-            titiebarHeight.constant = 60.0
-            titleTopConstraint.constant = 24.0
+            titiebarHeight.constant = 62.0
+            titleTopConstraint.constant = 28.0
             return
         }
         titiebarHeight.constant = 52.0
-        titleTopConstraint.constant = 14.0
+        titleTopConstraint.constant = 16.0
     }
 
     @IBAction func duplicate(_ sender: Any) {
