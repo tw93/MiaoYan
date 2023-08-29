@@ -69,7 +69,6 @@ public enum UserDefaultsManagement {
         static let LineWidthKey = "lineWidth"
         static let MarginSizeKey = "marginSize"
         static let MarkdownPreviewCSS = "markdownPreviewCSS"
-        static let NightModeType = "nightModeType"
         static let NightModeAuto = "nightModeAuto"
         static let NoteContainer = "noteContainer"
         static let PinListKey = "pinList"
@@ -237,12 +236,6 @@ public enum UserDefaultsManagement {
 
     static var fontSize: Int {
         get {
-            #if os(iOS)
-            if UserDefaultsManagement.dynamicTypeFont {
-                return DefaultFontSize
-            }
-            #endif
-
             if let returnFontSize = UserDefaults.standard.object(forKey: Constants.FontSizeKey) {
                 return returnFontSize as! Int
             } else {
@@ -533,7 +526,7 @@ public enum UserDefaultsManagement {
         if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
             let miaoyanPath: String = path + "/MiaoYan"
             try! FileManager.default.createDirectory(atPath: miaoyanPath,
-                                                     withIntermediateDirectories: true, attributes: nil)
+                    withIntermediateDirectories: true, attributes: nil)
             return URL(fileURLWithPath: miaoyanPath)
         }
         return nil
@@ -576,7 +569,17 @@ public enum UserDefaultsManagement {
         return nil
     }
 
-    static var preview = false
+    static var preview: Bool {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.Preview) as? Bool {
+                return result
+            }
+            return false
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.Preview)
+        }
+    }
 
     static var presentation = false
 
@@ -637,20 +640,6 @@ public enum UserDefaultsManagement {
     }
 
     static var restoreCursorPosition = true
-
-    #if os(iOS)
-    static var nightModeType: NightMode {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.NightModeType) {
-                return NightMode(rawValue: result as! Int) ?? .disabled
-            }
-            return NightMode(rawValue: 0x00) ?? .disabled
-        }
-        set {
-            UserDefaults.standard.set(newValue.rawValue, forKey: Constants.NightModeType)
-        }
-    }
-    #endif
 
     static var imagesWidth: Float {
         get {
