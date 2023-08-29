@@ -128,27 +128,35 @@ class SidebarProjectView: NSOutlineView,
 
         switch sidebarItem.type {
         case .Category, .Trash:
-            if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "notesTable")), let rows = try?
-                NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? IndexSet {
-                var notes = [Note]()
-                for row in rows {
-                    let note = vc.notesTableView.noteList[row]
-                    notes.append(note)
-                }
+            if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "notesTable")) {
+                do {
+                    guard let rows = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSSet.self, NSNumber.self, NSIndexSet.self], from: data) as? IndexSet else {
+                        print("Failed to unarchive IndexSet")
+                        return false
+                    }
+                    var notes = [Note]()
+                    for row in rows {
+                        let note = vc.notesTableView.noteList[row]
+                        notes.append(note)
+                    }
 
-                if let project = sidebarItem.project {
-                    vc.move(notes: notes, project: project)
-                } else if sidebarItem.isTrash() {
-                    vc.editArea.clear()
-                    vc.storage.removeNotes(notes: notes) { _ in
-                        DispatchQueue.main.async {
-                            vc.storageOutlineView.reloadSidebar()
-                            vc.notesTableView.removeByNotes(notes: notes)
+                    if let project = sidebarItem.project {
+                        vc.move(notes: notes, project: project)
+                    } else if sidebarItem.isTrash() {
+                        vc.editArea.clear()
+                        vc.storage.removeNotes(notes: notes) { _ in
+                            DispatchQueue.main.async {
+                                vc.storageOutlineView.reloadSidebar()
+                                vc.notesTableView.removeByNotes(notes: notes)
+                            }
                         }
                     }
-                }
 
-                return true
+                    return true
+                } catch {
+                    print("Failed to unarchive IndexSet: \(error)")
+                    return false
+                }
             }
 
             guard let urls = board.readObjects(forClasses: [NSURL.self], options: nil) as? [URL],
