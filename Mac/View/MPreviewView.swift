@@ -72,7 +72,8 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 menuItem.identifier?.rawValue == "WKMenuItemIdentifierTranslate" ||
                 menuItem.identifier?.rawValue == "WKMenuItemIdentifierSearchWeb" ||
                 menuItem.identifier?.rawValue == "WKMenuItemIdentifierShareMenu" ||
-                menuItem.identifier?.rawValue == "WKMenuItemIdentifierLookUp" {
+                menuItem.identifier?.rawValue == "WKMenuItemIdentifierLookUp"
+            {
                 menuItem.isHidden = true
             }
         }
@@ -550,7 +551,8 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
 class HandlerCheckbox: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
+                               didReceive message: WKScriptMessage)
+    {
         guard let position = message.body as? String else { return }
         guard let note = EditTextView.note else { return }
 
@@ -590,7 +592,8 @@ class HandlerCodeCopy: NSObject, WKScriptMessageHandler {
     }
 
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
+                               didReceive message: WKScriptMessage)
+    {
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
 
         HandlerCodeCopy.selectionString = message
@@ -601,7 +604,8 @@ class HandlerSelection: NSObject, WKScriptMessageHandler {
     public static var selectionString: String?
 
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
+                               didReceive message: WKScriptMessage)
+    {
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
 
         HandlerSelection.selectionString = message
@@ -611,7 +615,8 @@ class HandlerSelection: NSObject, WKScriptMessageHandler {
 // 用于解决ppt模式下背景颜色变化左侧边框颜色的适配
 class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
+                               didReceive message: WKScriptMessage)
+    {
         guard let vc = ViewController.shared() else { return }
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
         if message == "" {

@@ -70,7 +70,9 @@ open class MarkdownView: WKWebView {
             return "html {font-size: \(UserDefaultsManagement.presentationFontSize)px} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif; --code-text-font: \(codeFontName),sans-serif; } #write { max-width: 100%;}"
         } else {
             let paddingStyle = UserDefaultsManagement.isOnExport ? " padding-top: 24px" : ""
-            return "html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif; --code-text-font: \(codeFontName),sans-serif; } #write { max-width: \(UserDefaultsManagement.previewWidth);}"
+            let writeCSS = UserDefaultsManagement.isOnExportHtml ? " max-width: 800px; margin: 0 auto" : "max-width: \(UserDefaultsManagement.previewWidth);"
+
+            return "html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif; --code-text-font: \(codeFontName),sans-serif; } #write { \(writeCSS)}"
         }
     }
 
@@ -239,7 +241,8 @@ extension MarkdownView: WKNavigationDelegate {
 
 class HandlerCopyCode: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
+                               didReceive message: WKScriptMessage)
+    {
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
         let pasteboard = NSPasteboard.general
         pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
@@ -249,14 +252,16 @@ class HandlerCopyCode: NSObject, WKScriptMessageHandler {
 
 class HandlerMouseOver: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
+                               didReceive message: WKScriptMessage)
+    {
         NSCursor.pointingHand.set()
     }
 }
 
 class HandlerMouseOut: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
+                               didReceive message: WKScriptMessage)
+    {
         NSCursor.arrow.set()
     }
 }
