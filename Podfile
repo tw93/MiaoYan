@@ -25,10 +25,8 @@ post_install do |installer|
     project.build_configurations.each do |config|
         config.build_settings['MACOSX_DEPLOYMENT_TARGET'] = '10.15'
         config.build_settings['SWIFT_VERSION'] = '5.0'
-        config.build_settings['CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER'] = 'NO'
         config.build_settings['ONLY_ACTIVE_ARCH'] = 'YES'
         config.build_settings['DEAD_CODE_STRIPPING'] = 'YES'
-        config.build_settings['CLANG_ENABLE_MODULE_VERIFIER'] = 'YES'
         config.build_settings['ENABLE_MODULE_VERIFIER'] = 'NO'
         config.build_settings['STRIP_INSTALLED_PRODUCT'] = 'YES'
         config.build_settings['STRIP_STYLE'] = 'all'
@@ -36,7 +34,7 @@ post_install do |installer|
         config.build_settings['COPY_PHASE_STRIP'] = 'NO'
         config.build_settings.delete('ARCHS')
     end
-    
+
     if project.name == 'cmark-gfm-swift-macOS'
       source_files = project.source_build_phase.files
       dummy = source_files.find do |file|
