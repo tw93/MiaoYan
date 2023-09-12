@@ -15,7 +15,7 @@
       <img alt="GitHub closed issues" src="https://img.shields.io/github/issues-closed/tw93/MiaoYan.svg?style=flat-square"></a>
     <img alt="Minimum supported version" src="https://img.shields.io/badge/macOS-10.15%2B-orange?style=flat-square">
   </div>
-  <div align="center">軽量のMarkdownアプリで、素晴らしい文章を書くのを助けます。</div>
+  <div align="center">軽量のMarkdownアプリで、素晴らしい文章を生み出せます</div>
 </p>
 
 <kbd>
@@ -24,10 +24,10 @@
 
 ## 機能
 
-- 🏂 **素晴らしい**: ローカル利用、セキュリティ、シンタックスハイライト、ダークモード、ソースファイルの保存、国際化、プレゼンテーションモード、[PPT モード](#miaoYan-ppt)、単一編集モード、ファイルのエクスポート、内部ジャンプ、文書の自動タイプセット、画像のアップロード、LaTeX、Mermaid、PlantUML、Markmap。
-- 🎊 **美しい**: ミニマリストのデザインスタイル、フォルダ+ファイルリスト+エディタの 3 カラムモード。
+- 🏂 **素晴らしい**: ローカル利用、セキュリティ、シンタックスハイライト、ダークモード、ソースファイルの保存、国際化、プレゼンテーションモード、[スライド モード](#miaoYan-ppt)、単一編集モード、ファイルのエクスポート、内部ジャンプ、文書の自動タイプセット、画像のアップロード、LaTeX、Mermaid、PlantUML、Markmap。
+- 🎊 **美しさ**: ミニマリストのデザインスタイル、フォルダ+ファイルリスト+エディタの 3 カラムモード。
 - 🚄‍ **高速**: Swift5 ネイティブ開発を使用しており、Web と比較してパフォーマンス体験がはるかに良い。
-- 🥛 **シンプル**: とても軽量で、純粋なエディタ入力体験、多くのショートカットキーがあなたの高速化を助けます。
+- 🥛 **シンプル**: とても軽量で、純粋なエディタ入力体験、多くのショートカットキーで高速化が実現。
 
 ## 最初の使用
 
@@ -40,45 +40,45 @@
 
 #### ウィンドウ操作
 
-- `command + 1`: フォルダリストの折りたたみ拡大
-- `command + 2`: ドキュメントのリストを拡大
+- `command + 1`: フォルダリストの折りたたみを隠す
+- `command + 2`: ドキュメントのリストを隠す
 - `command + 3`: 編集状態とプレビュー状態の切り替え
 - `command + 4`: 編集状態とプレゼンテーション状態の切り替え
-- `command + option + m`: MiaoYan の全体的なアクティブ/非表示
+- `command + option + m`: MiaoYanを表示/非表示
 
 #### ファイル操作
 
 - `command + n`：新規ドキュメント
 - `command + r`：ドキュメントの名前変更
 - `command + d`：ドキュメントのコピー
-- `command + o`：ドキュメントを単独で開く
+- `command + o`：ドキュメントを単体で開く
 - `command + delete`：ドキュメントの削除
 - `command + shift + n`：新規フォルダ
 - `command + shift + l`：自動タイプセット
 - `command + option + r`：Finder でドキュメントを表示
 - `command + option + i`：単語数などのドキュメント属性を表示
-- `command + option + p`：MiaoYan PPT プレビューを起動。
+- `command + option + p`：MiaoYan スライド プレビューを起動。
 
-🏂 他にも多くのショートカットがあります 👆🏻 👇🏻 👈🏻 👉🏻 あなたが探して見つけるのを待っています~
+🏂 他にも多くのショートカットがあります 👆🏻 👇🏻 👈🏻 👉🏻 隠れているショートカットを見つけることに楽しんでください~
 
-## MiaoYan PPT
+## MiaoYan スライド
 
 <a href=https://gw.alipayobjects.com/zos/k/app3/ScreenFlow1.gif target="_blank"><img src="https://user-images.githubusercontent.com/8736212/180579489-a8ac6f0f-1d47-44fa-a8bb-0be998f7895f.gif" width="100%"></a>
 
-1. 新しい友達のデフォルトの初期化はテンプレートを生成します。古い友達の場合は、1.0 にアップグレードしてから[このファイル](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/MiaoYan%20PPT.md)を MiaoYan にコピーしてみてください。
+1. 新しいユーザーさんのデフォルトの初期化はテンプレートを生成します。古いユーザーさんの場合は、1.0 にアップグレードしてから[このファイル](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/MiaoYan%20PPT.md)を MiaoYan にコピーしてみてください。
 2. `command + option + p`を実行して MiaoYan PPT プレビューを開始します。同時に、ドキュメントを選択し、右クリックして'MiaoYan PPT'を選択して開くこともできます。
-3. PPT モードは`---`セパレータでマークされたドキュメントでのみ有効にできます。プレゼンテーション中には、`Enter`キーでスピーチのアウトラインをプレビューし、`ESC`キーで ppt モードを終了できます。
+3. PPT モードは`---`セパレータでマークされたドキュメントでのみ有効にできます。プレゼンテーション中には、`Enter`キーでスピーチのアウトラインをプレビューし、`ESC`キーで スライド モードを終了できます。
 4. HTML を使用して効果をカスタマイズできます。より複雑な使用法については、[reveal](https://revealjs.com/markdown/)のドキュメンテーションを参照してください。
 
 ## なぜこれを行うのか
 
 - 私は以前に多くのノートアプリを試しました、例えば WizNote、Ulysses、Quiver、MWeb、Bear、Typora、様々な理由で、私は従来の Markdown アプリを見つけられませんでした、そこで MiaoYan を作るアイデアが生まれました。
-- 私の仕事はフロントエンド開発ですが、iOS App も開発でき、新しいものをいじるのが好きなので、MiaoYan を楽しみながら開発しました。
+- 私の仕事はフロントエンド開発ですが、iOS App も開発でき、新しいものをいじることも好きなので、MiaoYan を楽しみながら開発しました。
 
 ## サポート
 
-- 私には 2 匹の猫がいます、一つは TangYuan という名前で、一つは Coke という名前です。もし MiaoYan があなたの生活をより良くすると思ったら、私の猫に<a href="https://miaoyan.app/cats.html" target="_blank">缶詰のエサをあげる 🥩🍤</a>ことができます。
-- もしあなたが MiaoYan を気に入っていたら、Github でそれをスターにすることができます。我々はあなたが同じ趣味の友人に[MiaoYan を推薦する](https://twitter.com/intent/tweet?text=%23%E5%A6%99%E8%A8%80%20MiaoYan%20-%20a%20simple%20and%20good-looking%20open-source%20mac%20markdown%20editor,%20without%20any%20redundant%20functions,%20is%20developed%20using%20swift,%20pure%20local%20use,%20has%20functions%20such%20as%20syntax%20highlighting,%20automatic%20formatting,%20presentation%20mode%20etc.&url=https://github.com/tw93/MiaoYan)ことをより歓迎します。
+- 私は2匹の猫を飼っています。一つは TangYuan という名前で、もう一つは Coke という名前です。もし MiaoYan があなたの生活をより良くできたと思ったら、私の猫に<a href="https://miaoyan.app/cats.html" target="_blank">缶詰のエサを 🥩🍤</a>あげてください。
+- もしあなたが MiaoYan を気に入っていたら、Github でそれをスターしてくれたら嬉しいで。我々はあなたが同じ趣味の友人に[MiaoYan を推薦する](https://twitter.com/intent/tweet?text=%23%E5%A6%99%E8%A8%80%20MiaoYan%20-%20a%20simple%20and%20good-looking%20open-source%20mac%20markdown%20editor,%20without%20any%20redundant%20functions,%20is%20developed%20using%20swift,%20pure%20local%20use,%20has%20functions%20such%20as%20syntax%20highlighting,%20automatic%20formatting,%20presentation%20mode%20etc.&url=https://github.com/tw93/MiaoYan)ことをより歓迎します。
 - あなたは私の[Twitter](https://twitter.com/HiTw93)をフォローして MiaoYan の最新ニュースを得るか、または[Telegram](https://t.me/+GclQS9ZnxyI2ODQ1)のチャットグループに参加することができます。
 
 ## 感謝
