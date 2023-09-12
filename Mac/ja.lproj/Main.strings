@@ -137,6 +137,9 @@
 /* Class = "NSMenuItem"; title = "Move"; ObjectID = "CvG-Kp-kdK"; */
 "CvG-Kp-kdK.title" = "移動";
 
+/* Class = "NSMenuItem"; title = "Export"; ObjectID = "e9r-bH-IZj"; */
+"e9r-bH-IZj.title" = "輸出";
+
 /* Class = "NSMenuItem"; title = "Hide/show sidebar"; ObjectID = "DCh-5P-PZe"; */
 "DCh-5P-PZe.title" = "サイドバーの表示／非表示";
 

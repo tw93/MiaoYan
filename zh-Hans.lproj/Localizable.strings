@@ -35,6 +35,9 @@
 /* Menu */
 "Move" = "移动";
 
+/* Menu */
+"Export" = "导出";
+
 /* No comment provided by engineer. */
 "New" = "新建";
 

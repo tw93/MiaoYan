@@ -1104,6 +1104,21 @@ class ViewController:
             moveMenu?.submenu?.popUp(positioning: general, at: NSPoint(x: x, y: view.origin.y + 8), in: vc.notesTableView)
         }
     }
+    
+    
+    @IBAction func exportMenu(_ sender: Any) {
+        guard let vc = ViewController.shared() else { return }
+        if vc.notesTableView.selectedRow >= 0 {
+            let exportTitle = NSLocalizedString("Export", comment: "Menu")
+            let exportMenu = vc.noteMenu.item(withTitle: exportTitle)
+            let view = vc.notesTableView.rect(ofRow: vc.notesTableView.selectedRow)
+            let x = vc.splitView.subviews[0].frame.width + 5
+            let general = exportMenu?.submenu?.item(at: 0)
+
+            exportMenu?.submenu?.popUp(positioning: general, at: NSPoint(x: x, y: view.origin.y + 8), in: vc.notesTableView)
+        }
+    }
+
 
     @IBAction func fileName(_ sender: NSTextField) {
         guard let note = notesTableView.getNoteFromSelectedRow() else {
@@ -2317,7 +2332,7 @@ class ViewController:
 
         noteMenu.setSubmenu(moveMenu, for: moveMenuItem)
     }
-
+    
     func loadSortBySetting() {
         let viewLabel = NSLocalizedString("View", comment: "Menu")
         let sortByLabel = NSLocalizedString("Sort by", comment: "View menu")

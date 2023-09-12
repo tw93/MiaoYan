@@ -82,6 +82,9 @@
 /* Menu */
 "Move" = "移動";
 
+/* Menu */
+"Export" = "導出";
+
 /* No comment provided by engineer. */
 "New project" = "建立專案";
 
