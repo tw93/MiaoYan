@@ -2,6 +2,38 @@
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
   <channel>
     <title>妙言 / MiaoYan</title>
+     <item>
+      <title>1.13.0</title>
+      <description><![CDATA[
+      <h3>舒服了 🦖：</h3>
+       <ol>
+        <li>支持中文繁体模式，累计支持中/英/日/繁四种语言</li>
+        <li>单栏编辑模式下调整标题的位置，更舒服了</li>
+        <li>优化导出 HTML 文件的体验，并推荐使用</li>
+        <li>优化标题的复制/粘贴体验，更符合使用习惯</li>
+        <li>更细 Mermaid 到最新版本，各种新绘图方式支持</li>
+       </ol>
+      <h3>Comfort Improved 🦖：</h3>
+       <ol>
+        <li>Support for Traditional Chinese mode, now supports four languages: Chinese, English, Japanese, and Traditional Chinese</li>
+        <li>Adjusted the position of the title in single column editing mode, more comfortable now</li>
+        <li>Optimized the experience of exporting HTML files, and recommend using it</li>
+        <li>Optimized the copy/paste experience of the title, more in line with usage habits</li>
+        <li>Updated Mermaid to the latest version, supports various new drawing methods</li>
+       </ol>
+      <h3>快適になりました 🦖：</h3>
+      <ol>
+          <li>繁体中国語モードに対応し、合計で中国語/英語/日本語/繁体字の4つの言語をサポート</li>
+          <li>シングルカラム編集モードでタイトルの位置を調整し、より快適に</li>
+          <li>HTML ファイルのエクスポート体験を最適化し、使用を推奨</li>
+          <li>タイトルのコピー/ペースト体験を最適化し、使用習慣により準拠</li>
+          <li>Mermaidを最新バージョンにアップデートし、各種新しい描画方式をサポート</li>
+      </ol>
+          ]]>      </description>
+      <pubDate>周二, 12 09月 2023 22:00:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.13.0.zip" sparkle:shortVersionString="1.13.0" sparkle:version="1.13.0" sparkle:edSignature="YKF+U0+sCTyvjoNjR1UD/k88IhPxhZAM/pVOmwRCFDJ/R0+/w5XzZDInHdh1Mrp+RDgWpGGtNp5TJHUkA9KBCw==" length="21091557" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
     <item>
       <title>1.12.1</title>
       <description><![CDATA[
@@ -10,87 +42,6 @@
           ]]>      </description>
       <pubDate>周日, 31 07月 2023 12:00:20 +0800</pubDate>
       <enclosure url="https://cdn.fliggy.com/upic/YSVAev.zip" sparkle:shortVersionString="1.12.1" sparkle:version="1.12.1" sparkle:edSignature="CWkvmLJ33WYfolg5C1M0QP3BbrSq9f7Qlac/GlkfFNfoQ99yGCtDRnWCLbpjACMxOU8SHB+pd6QGNMeHrkkfAQ==" length="21353428" type="application/octet-stream" />
-      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-    </item>
-    <item>
-      <title>1.11.0</title>
-      <description><![CDATA[
-      <h3>更快咯 🏂：</h3>
-       <ol>
-        <li>文字书写体验性能大幅增强，更加轻量化，长文不卡顿</li>
-        <li>解决首行Tab切换时光标可能会错乱的 Bug</li>
-        <li>导出更兼容，PDF 导出长文内容更好用，优化 PPT 导出的效果</li>
-        <li>修复文件夹重命名不生效问题、修复搜索框文字显示效果</li>
-       </ol>
-      <h3>Faster Now 🏂:</h3>
-       <ol>
-        <li>Significantly enhanced text writing performance, lighter, no lag for long texts</li>
-        <li>Fixed a bug where the cursor may be disordered when tabbing at the beginning of the line</li>
-        <li>Better export compatibility, PDF export is more useful for long texts, optimized PPT export effect</li>
-        <li>Fixed the issue where renaming a folder doesn't take effect, fixed the display effect of the text in the search box</li>
-       </ol>
-      <h3>より高速になりました 🏂：</h3>
-       <ol>
-        <li>テキストの書き込みパフォーマンスが大幅に向上し、軽量化され、長いテキストでも遅延しません</li>
-        <li>行頭でタブを切り替えるとカーソルが混乱するバグを修正</li>
-        <li>より互換性の高いエクスポート、PDFエクスポートは長いテキストに更に便利、PPTエクスポート効果の最適化</li>
-        <li>フォルダ名の変更が有効にならない問題を修正、検索ボックス内のテキスト表示効果を修正</li>
-       </ol>
-          ]]>      </description>
-      <pubDate>周三, 12 07月 2023 22:00:20 +0800</pubDate>
-      <enclosure url="https://cdn.fliggy.com/test/app/MiaoYan_V1.11.0.zip" sparkle:shortVersionString="1.11.0" sparkle:version="1.11.0" sparkle:edSignature="UoyP5NRitK3gwVgBxUfRmqRsbZPGNMxxtNMbvVkO4PeKubn0O2OpZjSkSPN5GeQ1kMi04W99qaMC/kp2+xJ9Bg==" length="20621106" type="application/octet-stream" />
-      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-    </item>
-    <item>
-      <title>1.10.1</title>
-      <description>
-        <![CDATA[
-          <h3>更妙了 🎉：</h3>
-          <ol>
-            <li>大幅优化 PDF 的导出体验，支持 PPT 和文章分页效果</li>
-            <li>PPT模式下的使用优化，超过1屏的可以滚动展示更多</li>
-            <li>预览体验优化，LaTeX, Mermaid, PlantUML 黑暗模式下优化</li>
-            <li>整体使用容错性变好、升级字体版本、单独模式打开问题、放置性能问题、日文体验、格式化体验</li>
-            <li>架构升级，不再兼容 10.15 以下的版本了，XCode更新到最新</li>
-          </ol>
-          <h3>Even better 🎉:</h3>
-          <ol>
-            <li>Significantly improved the experience of exporting PDF, supporting PPT/article pagination effects.</li>
-            <li>Optimized the use of PPT mode, allowing for scrolling display of more than one screen.</li>
-            <li>Improved preview experience for LaTeX, Mermaid, and PlantUML in dark mode.</li> <li>Overall improved fault tolerance, updated font versions, resolved issues with opening individual modes, placement performance, and Japanese language experience.</li>
-            <li>Upgraded the architecture, no longer compatible with versions below 10.15, and XCode has been updated to the latest version.</li>
-          </ol>
-          <h3>素晴らしいニュース🎉:</h3>
-          <ol>
-            <li>PDFのエクスポート体験が大幅に改善され、PPT / 記事のページネーション効果がサポートされました</li> <li>PPTモードの使用が最適化され、1画面を超えるものはより多くのスクロール表示が可能になりました</li> <li>LaTeX、Mermaid、PlantUMLのプレビュー体験がダークモードで改善されました</li>
-            <li>全体的に容錯性が向上し、フォントバージョンのアップグレード、個別のモードのオープン問題、配置パフォーマンス問題、日本語体験の問題が解決されました</li> <li>アーキテクチャをアップグレードし、10.15未満のバージョンと互換性がなくなり、XCodeが最新版に更新されました</li>
-          </ol>
-          ]]>
-      </description>
-      <pubDate>周六, 30 03月 2023 22:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.10.1.zip" sparkle:shortVersionString="1.10.1" sparkle:version="1.10.1" sparkle:edSignature="svAqUL4Wnu2VgO3nAWSwzZ8nlr3zmyfwT+QEOnG3y+SBQthDfFC3T8vgfk1Y6WP/mSsPiQuFwUlnn4YTUw8NBA==" length="21782311" type="application/octet-stream" />
-      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-    </item>
-    <item>
-      <title>1.9.0</title>
-      <description><![CDATA[
-      <h3>久等了 ❤️：</h3>
-       <ol>
-        <li>妙言支持日文版本了，感谢 @CharlesKan 共建</li>
-        <li>将原有的 tab 移动问题优化成之前的效果，更顺手 </li>
-        <li>预览样式根据使用过程持续优化</li>
-        <li>修复了一些 Bug</li>
-       </ol>
-       <h3>Sorry for the long wait ❤️：</h3>
-      <ol>
-        <li>Now supports Japanese version, thanks to @CharlesKan for the collaboration.</li>
-        <li>Optimize the problem of moving tabs to achieve a smoother and more user-friendly experience.</li>
-        <li>Preview styles are continuously optimized based on usage.</li>
-        <li>Fixed some bugs.</li>
-      </ol>
-          ]]>      </description>
-      <pubDate>周日, 05 03月 2023 23:58:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.9.0.zip" sparkle:shortVersionString="1.9.0" sparkle:version="1.9.0" sparkle:edSignature="qn4H1aEw1NbR3dhQ0Ma0E7ZuE7qNpLmSyfe+b0Xd+sSqXhmTvlr0hRTkNdOXmZj05yPH7JIUcKsese49lIg5Dw==" length="24698757" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
     </item>
   </channel>
