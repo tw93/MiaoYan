@@ -6,14 +6,33 @@ class TitleTextField: NSTextField {
     public var restoreResponder: NSResponder?
 
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
+        let pasteboard = NSPasteboard.general
+
         if event.modifierFlags.contains(.command),
            event.keyCode == kVK_ANSI_C,
-           !event.modifierFlags.contains(.shift),
-           !event.modifierFlags.contains(.control),
-           !event.modifierFlags.contains(.option) {
-            let pasteboard = NSPasteboard.general
+           let selectedRange = currentEditor()?.selectedRange,
+           selectedRange.length > 0
+        {
+            // Processing copy commands
+            let selectedString = (stringValue as NSString).substring(with: selectedRange)
             pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
-            pasteboard.setString(stringValue, forType: NSPasteboard.PasteboardType.string)
+            pasteboard.setString(selectedString, forType: NSPasteboard.PasteboardType.string)
+        }
+
+        // Checks if Command + V was pressed and the current NSTextField is the first responder.
+        if event.modifierFlags.contains(.command),
+           event.keyCode == kVK_ANSI_V,
+           window?.firstResponder == currentEditor()
+        {
+            if let items = pasteboard.pasteboardItems {
+                for item in items {
+                    if let string = item.string(forType: .string) {
+                        let noNewlineString = string.replacingOccurrences(of: "\n", with: " ")
+                        pasteboard.clearContents()
+                        pasteboard.setString(noNewlineString, forType: .string)
+                    }
+                }
+            }
         }
 
         return super.performKeyEquivalent(with: event)
