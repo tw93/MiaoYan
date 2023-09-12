@@ -3,7 +3,6 @@ use_frameworks!
 MAC_TARGET_VERSION = '10.15'
 
 def mac_pods
-    pod 'MASShortcut'
     pod 'Sparkle'
     pod 'AppCenter'
     pod 'Alamofire'
@@ -31,7 +30,7 @@ post_install do |installer|
         config.build_settings['DEAD_CODE_STRIPPING'] = 'YES'
         config.build_settings['CLANG_ENABLE_MODULE_VERIFIER'] = 'YES'
         config.build_settings['ENABLE_MODULE_VERIFIER'] = 'NO'
-        config.build_settings['STRIP_INSTALLED_PRODUCT'] = 'NO'
+        config.build_settings['STRIP_INSTALLED_PRODUCT'] = 'YES'
         config.build_settings['STRIP_STYLE'] = 'all'
         config.build_settings['STRIP_SWIFT_SYMBOLS'] = 'YES'
         config.build_settings['COPY_PHASE_STRIP'] = 'NO'
