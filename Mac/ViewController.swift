@@ -1104,8 +1104,8 @@ class ViewController:
             moveMenu?.submenu?.popUp(positioning: general, at: NSPoint(x: x, y: view.origin.y + 8), in: vc.notesTableView)
         }
     }
-    
-    
+
+
     @IBAction func exportMenu(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
         if vc.notesTableView.selectedRow >= 0 {
@@ -2332,7 +2332,7 @@ class ViewController:
 
         noteMenu.setSubmenu(moveMenu, for: moveMenuItem)
     }
-    
+
     func loadSortBySetting() {
         let viewLabel = NSLocalizedString("View", comment: "Menu")
         let sortByLabel = NSLocalizedString("Sort by", comment: "View menu")
@@ -2400,8 +2400,8 @@ class ViewController:
 
     func checkTitlebarTopConstraint() {
         if splitView.subviews[0].frame.width < 50, !UserDefaultsManagement.isWillFullScreen {
-            titiebarHeight.constant = 62.0
-            titleTopConstraint.constant = 28.0
+            titiebarHeight.constant = 64.0
+            titleTopConstraint.constant = 30.0
             return
         }
         titiebarHeight.constant = 52.0
