@@ -157,6 +157,9 @@
 /* Class = "NSMenuItem"; title = "Move"; ObjectID = "CvG-Kp-kdK"; */
 "CvG-Kp-kdK.title" = "移動";
 
+/* Class = "NSMenuItem"; title = "Export"; ObjectID = "e9r-bH-IZj"; */
+"e9r-bH-IZj.title" = "導出";
+
 /* Class = "NSMenuItem"; title = "Modification date"; ObjectID = "dCc-l5-XB2"; */
 "dCc-l5-XB2.title" = "修改日期";
 

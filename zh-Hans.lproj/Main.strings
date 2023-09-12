@@ -99,6 +99,9 @@
 /* Class = "NSMenuItem"; title = "Move"; ObjectID = "CvG-Kp-kdK"; */
 "CvG-Kp-kdK.title" = "移动";
 
+/* Class = "NSMenuItem"; title = "Export"; ObjectID = "e9r-bH-IZj"; */
+"e9r-bH-IZj.title" = "导出";
+
 /* Class = "NSMenuItem"; title = "vs"; ObjectID = "cwc-a7-vkr"; */
 "cwc-a7-vkr.title" = "vs";
 

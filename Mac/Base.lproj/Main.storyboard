@@ -126,18 +126,24 @@ CA
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="Zbi-vT-xIA"/>
-                                        <menuItem title="Move" keyEquivalent="m" id="CvG-Kp-kdK">
-                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="moveMenu:" target="L4m-js-agn" id="CDY-Sr-IPD"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem title="Delete" identifier="fileMenu.delete" id="TjZ-PX-YVo">
                                             <string key="keyEquivalent" base64-UTF8="YES">
 CA
 </string>
                                             <connections>
                                                 <action selector="deleteNote:" target="L4m-js-agn" id="QZA-ii-6Ou"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Export" id="e9r-bH-IZj">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="exportMenu:" target="L4m-js-agn" id="5pU-ef-qZe"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Move" id="CvG-Kp-kdK">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="moveMenu:" target="L4m-js-agn" id="CDY-Sr-IPD"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Close" keyEquivalent="w" id="kIy-TN-XMS">
