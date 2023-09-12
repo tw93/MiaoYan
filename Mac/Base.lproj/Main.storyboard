@@ -1775,10 +1775,10 @@ CA
                             <modifierMask key="keyEquivalentModifierMask"/>
                             <menu key="submenu" title="Export" id="LoU-Gc-oM3">
                                 <items>
-                                    <menuItem title="PDF" alternate="YES" keyEquivalent="P" id="UcZ-Ne-qv1">
+                                    <menuItem title="HTML" alternate="YES" keyEquivalent="H" id="Ge6-vi-x3q">
                                         <modifierMask key="keyEquivalentModifierMask" control="YES"/>
                                         <connections>
-                                            <action selector="exportPdf:" target="XfG-lQ-9wD" id="DiT-Ue-MTm"/>
+                                            <action selector="exportHtml:" target="XfG-lQ-9wD" id="pZF-N2-y4v"/>
                                         </connections>
                                     </menuItem>
                                     <menuItem title="Image" alternate="YES" keyEquivalent="I" id="GsA-uj-XlT">
@@ -1787,10 +1787,10 @@ CA
                                             <action selector="exportImage:" target="XfG-lQ-9wD" id="CHV-dY-HtD"/>
                                         </connections>
                                     </menuItem>
-                                    <menuItem title="HTML" alternate="YES" keyEquivalent="H" id="Ge6-vi-x3q">
+                                    <menuItem title="PDF" alternate="YES" keyEquivalent="P" id="UcZ-Ne-qv1">
                                         <modifierMask key="keyEquivalentModifierMask" control="YES"/>
                                         <connections>
-                                            <action selector="exportHtml:" target="XfG-lQ-9wD" id="pZF-N2-y4v"/>
+                                            <action selector="exportPdf:" target="XfG-lQ-9wD" id="DiT-Ue-MTm"/>
                                         </connections>
                                     </menuItem>
                                     <menuItem title="MiaoYan PPT PDF" alternate="YES" keyEquivalent="P" id="DhD-mk-T1u">
