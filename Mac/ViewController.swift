@@ -14,7 +14,8 @@ class ViewController:
     NSOutlineViewDelegate,
     NSOutlineViewDataSource,
     NSMenuItemValidation,
-    NSUserNotificationCenterDelegate {
+    NSUserNotificationCenterDelegate
+{
     public var fsManager: FileSystemEventManager?
     private var projectSettingsViewController: ProjectSettingsViewController?
 
@@ -586,8 +587,7 @@ class ViewController:
     }
 
     public func reSort(note: Note) {
-        // 编辑内容，标题排序的时候有bug，先关掉
-        if !updateViews.contains(note), UserDefaultsManagement.sort != .title {
+        if !updateViews.contains(note) {
             updateViews.append(note)
         }
 
@@ -903,7 +903,8 @@ class ViewController:
             event.characters == ".",
             event.modifierFlags.contains(.command),
 
-            NSApplication.shared.mainWindow == NSApplication.shared.keyWindow {
+            NSApplication.shared.mainWindow == NSApplication.shared.keyWindow
+        {
             UserDataService.instance.resetLastSidebar()
 
             if let view = NSApplication.shared.mainWindow?.firstResponder as? NSTextView, let textField = view.superview?.superview, textField.isKind(of: NameTextField.self) {
@@ -980,7 +981,8 @@ class ViewController:
         }
 
         if let fr = mw.firstResponder, !fr.isKind(of: EditTextView.self), !fr.isKind(of: NSTextView.self), !event.modifierFlags.contains(.command),
-           !event.modifierFlags.contains(.control) {
+           !event.modifierFlags.contains(.control)
+        {
             if let char = event.characters {
                 let newSet = CharacterSet(charactersIn: char)
                 if newSet.isSubset(of: CharacterSet.alphanumerics) {
@@ -1105,7 +1107,6 @@ class ViewController:
         }
     }
 
-
     @IBAction func exportMenu(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
         if vc.notesTableView.selectedRow >= 0 {
@@ -1118,7 +1119,6 @@ class ViewController:
             exportMenu?.submenu?.popUp(positioning: general, at: NSPoint(x: x, y: view.origin.y + 8), in: vc.notesTableView)
         }
     }
-
 
     @IBAction func fileName(_ sender: NSTextField) {
         guard let note = notesTableView.getNoteFromSelectedRow() else {
@@ -1238,7 +1238,8 @@ class ViewController:
         vc.storage.removeNotes(notes: notes) { urls in
 
             if let appd = NSApplication.shared.delegate as? AppDelegate,
-               let md = appd.mainWindowController {
+               let md = appd.mainWindowController
+            {
                 let undoManager = md.notesListUndoManager
 
                 if let ntv = vc.notesTableView {
@@ -1527,7 +1528,8 @@ class ViewController:
         }
 
         if let controller = vc.storyboard?.instantiateController(withIdentifier: "ProjectSettingsViewController")
-            as? ProjectSettingsViewController {
+            as? ProjectSettingsViewController
+        {
             projectSettingsViewController = controller
 
             if let project = vc.getSidebarProject() {
@@ -1553,7 +1555,7 @@ class ViewController:
 
     public func blockFSUpdates() {
         timer.invalidate()
-        timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(enableFSUpdates), userInfo: nil, repeats: false)
+        timer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(enableFSUpdates), userInfo: nil, repeats: false)
 
         UserDataService.instance.fsUpdatesDisabled = true
     }
@@ -1578,8 +1580,12 @@ class ViewController:
             }
 
             rowUpdaterTimer.invalidate()
-            rowUpdaterTimer = Timer.scheduledTimer(timeInterval: 1.2, target: self, selector: #selector(updateTableViews), userInfo: nil, repeats: false)
+            rowUpdaterTimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(breakUndo), userInfo: nil, repeats: true)
         }
+    }
+
+    @objc func breakUndo() {
+        editArea.breakUndoCoalescing()
     }
 
     public func getCurrentNote() -> Note? {
@@ -1914,7 +1920,8 @@ class ViewController:
         if
             NSApplication.shared.isActive,
             !NSApplication.shared.isHidden,
-            !mainWindow.isMiniaturized {
+            !mainWindow.isMiniaturized
+        {
             NSApplication.shared.hide(nil)
             return
         }
@@ -2325,7 +2332,8 @@ class ViewController:
 
         for menu in noteMenu.items {
             if let identifier = menu.identifier?.rawValue,
-               personalSelection.contains(identifier) {
+               personalSelection.contains(identifier)
+            {
                 menu.isHidden = (vc.notesTableView.selectedRowIndexes.count > 1)
             }
         }
@@ -2671,12 +2679,6 @@ class ViewController:
             try? FileManager.default.copyItem(at: url, to: baseUrl)
 
             return baseUrl
-        }
-    }
-
-    @objc func breakUndo() {
-        if !UserDefaultsManagement.preview, editArea.isEditable {
-            editArea.breakUndoCoalescing()
         }
     }
 
