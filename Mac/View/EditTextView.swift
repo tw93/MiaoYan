@@ -30,6 +30,21 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
     }
 
+    override var textContainerOrigin: NSPoint {
+        let origin = super.textContainerOrigin
+        return NSPoint(x: origin.x, y: origin.y - 7)
+    }
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        registerForDraggedTypes([
+            NSPasteboard.PasteboardType(kUTTypeFileURL as String)
+        ])
+
+        EditTextView.imagesLoaderQueue.maxConcurrentOperationCount = 3
+        EditTextView.imagesLoaderQueue.qualityOfService = .userInteractive
+    }
+    
     override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn flag: Bool) {
         var newRect = NSRect(origin: rect.origin, size: rect.size)
         newRect.size.width = caretWidth
@@ -161,7 +176,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 menuItem.identifier?.rawValue == "_NS:290" ||
                 menuItem.identifier?.rawValue == "_NS:291" ||
                 menuItem.identifier?.rawValue == "_NS:328" ||
-                menuItem.identifier?.rawValue == "_NS:353" {
+                menuItem.identifier?.rawValue == "_NS:353"
+            {
                 menuItem.isHidden = true
             }
         }
@@ -272,7 +288,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
             if let note = EditTextView.note,
                let imageData = textAttachment.fileWrapper?.regularFileContents,
-               let path = ImagesProcessor.writeFile(data: imageData, note: note) {
+               let path = ImagesProcessor.writeFile(data: imageData, note: note)
+            {
                 storage.addAttribute(filePathKey, value: path, range: range)
             }
         }
@@ -394,7 +411,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
         undoManager?.removeAllActions(withTarget: self)
 
         if let appDelegate = NSApplication.shared.delegate as? AppDelegate,
-           let md = appDelegate.mainWindowController {
+           let md = appDelegate.mainWindowController
+        {
             md.editorUndoManager = note.undoManager
         }
 
@@ -693,21 +711,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
     }
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        registerForDraggedTypes([
-            NSPasteboard.PasteboardType(kUTTypeFileURL as String)
-        ])
-
-        EditTextView.imagesLoaderQueue.maxConcurrentOperationCount = 3
-        EditTextView.imagesLoaderQueue.qualityOfService = .userInteractive
-    }
-
-    override var textContainerOrigin: NSPoint {
-        let origin = super.textContainerOrigin
-        return NSPoint(x: origin.x, y: origin.y - 7)
-    }
-
     override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
         let board = sender.draggingPasteboard
         let range = selectedRange
@@ -718,7 +721,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
         if let data = board.data(forType: .rtfd),
            let text = NSAttributedString(rtfd: data, documentAttributes: nil),
            text.length > 0,
-           range.length > 0 {
+           range.length > 0
+        {
             insertText("", replacementRange: range)
 
             let dropPoint = convert(sender.draggingLocation, from: nil)
@@ -770,7 +774,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         if let urls = board.readObjects(forClasses: [NSURL.self], options: nil) as? [URL],
-           urls.count > 0 {
+           urls.count > 0
+        {
             let dropPoint = convert(sender.draggingLocation, from: nil)
             let caretLocation = characterIndexForInsertion(at: dropPoint)
             let offset = 0

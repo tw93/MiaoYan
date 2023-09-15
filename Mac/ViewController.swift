@@ -233,8 +233,6 @@ class ViewController:
         }
     }
 
-    // MARK: - Overrides
-
     override func viewDidLoad() {
         configureShortcuts()
         configureDelegates()
@@ -404,8 +402,6 @@ class ViewController:
 
         return true
     }
-
-    // MARK: - Initial configuration
 
     private func configureLayout() {
         // hack for first shack
