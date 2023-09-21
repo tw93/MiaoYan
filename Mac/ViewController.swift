@@ -2132,11 +2132,14 @@ class ViewController:
 
         if UserDefaultsManagement.previewLocation == "Editing", hrCount > 1 {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                // 兼容快捷键透传
-                NSApp.mainWindow?.makeFirstResponder(vc.editArea.markdownView)
                 // PPT场景下的自动跳转
                 vc.editArea.markdownView?.slideTo(index: hrCount - 1)
             }
+        }
+
+        // 兼容快捷键透传
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+            NSApp.mainWindow?.makeFirstResponder(vc.editArea.markdownView)
         }
     }
 
