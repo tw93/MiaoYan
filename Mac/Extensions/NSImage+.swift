@@ -1,4 +1,4 @@
-import Cocoa
+import AppKit
 
 public extension NSImage {
     var height: CGFloat {

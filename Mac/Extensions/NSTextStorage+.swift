@@ -1,6 +1,5 @@
 import Foundation
-
-import Cocoa
+import AppKit
 
 public extension NSTextStorage {
     func updateFont() {

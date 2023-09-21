@@ -33,6 +33,10 @@ post_install do |installer|
         config.build_settings['STRIP_SWIFT_SYMBOLS'] = 'YES'
         config.build_settings['COPY_PHASE_STRIP'] = 'NO'
         config.build_settings.delete('ARCHS')
+        xcconfig_path = config.base_configuration_reference.real_path
+        xcconfig = File.read(xcconfig_path)
+        xcconfig_mod = xcconfig.gsub(/DT_TOOLCHAIN_DIR/, "TOOLCHAIN_DIR")
+        File.open(xcconfig_path, "w") { |file| file << xcconfig_mod }
     end
 
     if project.name == 'cmark-gfm-swift-macOS'
