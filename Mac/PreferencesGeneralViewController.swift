@@ -58,7 +58,11 @@ class PreferencesGeneralViewController: NSViewController {
     func refreshPreview() {
         guard let vc = ViewController.shared() else { return }
         if UserDefaultsManagement.preview { vc.disablePreview() }
-        vc.enablePreview()
+        
+        // PPT场景下使用预览会很难看
+        if !vc.isMiaoYanPPT() {
+            vc.enablePreview()
+        }
     }
 
     @IBAction func editorLineBreakClick(_ sender: NSPopUpButton) {
@@ -151,8 +155,11 @@ class PreferencesGeneralViewController: NSViewController {
 
         UserDefaultsManagement.presentationFontSize = Int(item.title) ?? UserDefaultsManagement.DefaultPresentationFontSize
 
-        vc.disablePresentation()
-        vc.enablePresentation()
+        // PPT场景下使用预览会很难看
+        if !vc.isMiaoYanPPT() {
+            vc.disablePresentation()
+            vc.enablePresentation()
+        }
     }
 
     @IBAction func appearanceClick(_ sender: NSPopUpButton) {

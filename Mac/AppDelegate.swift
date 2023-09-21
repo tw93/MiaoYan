@@ -206,7 +206,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @IBAction func openPreferences(_ sender: Any?) {
         if prefsWindowController == nil {
             let storyboard = NSStoryboard(name: "Main", bundle: nil)
-
             prefsWindowController = storyboard.instantiateController(withIdentifier: "Preferences") as? PrefsWindowController
         }
 
