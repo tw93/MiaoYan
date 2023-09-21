@@ -6,7 +6,7 @@
 //  Copyright © 2017 Jacob Gold. All rights reserved.
 //
 
-import Cocoa
+import AppKit
 
 // Keep track of existing toast, if there is one
 
