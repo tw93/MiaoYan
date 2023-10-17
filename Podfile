@@ -21,6 +21,7 @@ target 'MiaoYan' do
 end
 
 post_install do |installer|
+  xcode_base_version = `xcodebuild -version | grep 'Xcode' | awk '{print $2}' | cut -d . -f 1`
   installer.pods_project.targets.each do |project|
     project.build_configurations.each do |config|
         config.build_settings['MACOSX_DEPLOYMENT_TARGET'] = '10.15'
@@ -33,10 +34,12 @@ post_install do |installer|
         config.build_settings['STRIP_SWIFT_SYMBOLS'] = 'YES'
         config.build_settings['COPY_PHASE_STRIP'] = 'NO'
         config.build_settings.delete('ARCHS')
-        xcconfig_path = config.base_configuration_reference.real_path
-        xcconfig = File.read(xcconfig_path)
-        xcconfig_mod = xcconfig.gsub(/DT_TOOLCHAIN_DIR/, "TOOLCHAIN_DIR")
-        File.open(xcconfig_path, "w") { |file| file << xcconfig_mod }
+        if config.base_configuration_reference && Integer(xcode_base_version) >= 15
+                xcconfig_path = config.base_configuration_reference.real_path
+                xcconfig = File.read(xcconfig_path)
+                xcconfig_mod = xcconfig.gsub(/DT_TOOLCHAIN_DIR/, "TOOLCHAIN_DIR")
+                File.open(xcconfig_path, "w") { |file| file << xcconfig_mod }
+        end
     end
 
     if project.name == 'cmark-gfm-swift-macOS'
