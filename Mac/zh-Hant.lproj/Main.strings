@@ -68,7 +68,7 @@
 "7wA-Gr-Kyz.title" = "匯入";
 
 /* Class = "NSMenuItem"; title = "Begin"; ObjectID = "7Zn-jP-4ko"; */
-"7Zn-jP-4ko.title" = "最上面";
+"7Zn-jP-4ko.title" = "Begin";
 
 /* Class = "NSMenuItem"; title = "Website"; ObjectID = "8iA-X0-DFH"; */
 "8iA-X0-DFH.title" = "網站";
@@ -89,7 +89,7 @@
 "9w3-fa-di3.title" = "2/23/11";
 
 /* Class = "NSMenuItem"; title = "Editor Font"; ObjectID = "46V-wl-D4j"; */
-"46V-wl-D4j.title" = "編輯器字型";
+"46V-wl-D4j.title" = "Editor Font";
 
 /* Class = "NSMenuItem"; title = "Dark"; ObjectID = "73o-2j-rWk"; */
 "73o-2j-rWk.title" = "暗色模式";
@@ -236,7 +236,7 @@
 "Ge6-vi-x3q.title" = "HTML";
 
 /* Class = "NSMenuItem"; title = "Editing"; ObjectID = "gh6-SU-E0i"; */
-"gh6-SU-E0i.title" = "游標編輯位置";
+"gh6-SU-E0i.title" = "Editing";
 
 /* Class = "NSMenuItem"; title = "SF Mono"; ObjectID = "gHy-s3-JDh"; */
 "gHy-s3-JDh.title" = "SF Mono";
@@ -260,7 +260,7 @@
 "gXN-Ca-moU.title" = "關於妙言";
 
 /* Class = "NSMenuItem"; title = "Always"; ObjectID = "h0Q-Zx-pSP"; */
-"h0Q-Zx-pSP.title" = "持續顯示";
+"h0Q-Zx-pSP.title" = "Always";
 
 /* Class = "NSMenuItem"; title = "View"; ObjectID = "H8h-7b-M4v"; */
 "H8h-7b-M4v.title" = "顯示方式";
@@ -272,7 +272,7 @@
 "hPY-aY-QOE.title" = "尋找";
 
 /* Class = "NSMenuItem"; title = "No"; ObjectID = "hYP-Nc-TTj"; */
-"hYP-Nc-TTj.title" = "不要";
+"hYP-Nc-TTj.title" = "No";
 
 /* Class = "NSMenu"; title = "View"; ObjectID = "HyV-fh-RgO"; */
 "HyV-fh-RgO.title" = "顯示方式";
@@ -335,7 +335,7 @@
 "lPX-8x-F9a.title" = "17";
 
 /* Class = "NSMenuItem"; title = "Yes"; ObjectID = "lra-33-O1F"; */
-"lra-33-O1F.title" = "要";
+"lra-33-O1F.title" = "Yes";
 
 /* Class = "NSMenuItem"; title = "LXGW WenKai Lite"; ObjectID = "Lx0-fl-9t0"; */
 "Lx0-fl-9t0.title" = "LXGW WenKai Lite";
@@ -521,7 +521,7 @@
 "vbn-FE-ciC.title" = "23";
 
 /* Class = "NSMenuItem"; title = "Hover"; ObjectID = "Vgd-TL-GH7"; */
-"Vgd-TL-GH7.title" = "停駐時顯示";
+"Vgd-TL-GH7.title" = "Hover";
 
 /* Class = "NSMenuItem"; title = "Telegram"; ObjectID = "vvp-aA-TcP"; */
 "vvp-aA-TcP.title" = "Telegram";
@@ -530,7 +530,7 @@
 "vYJ-nZ-Rkv.title" = "12";
 
 /* Class = "NSMenuItem"; title = "MiaoYan"; ObjectID = "w6O-2c-LfY"; */
-"w6O-2c-LfY.title" = "妙言";
+"w6O-2c-LfY.title" = "MiaoYan";
 
 /* Class = "NSMenu"; title = "Edit"; ObjectID = "W48-6f-4Dl"; */
 "W48-6f-4Dl.title" = "編輯";
