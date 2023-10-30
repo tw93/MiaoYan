@@ -444,7 +444,7 @@
 "gXN-Ca-moU.title" = "について 妙言";
 
 /* Class = "NSMenuItem"; title = "Editing"; ObjectID = "gh6-SU-E0i"; */
-"gh6-SU-E0i.title" = "編集";
+"gh6-SU-E0i.title" = "Editing";
 
 /* Class = "NSMenuItem"; title = "Show in Finder"; ObjectID = "goN-LO-L7l"; */
 "goN-LO-L7l.title" = "Finderに表示";
