@@ -30,6 +30,9 @@ post_install do |installer|
         config.build_settings['DEAD_CODE_STRIPPING'] = 'YES'
         config.build_settings['ENABLE_MODULE_VERIFIER'] = 'NO'
         config.build_settings['STRIP_INSTALLED_PRODUCT'] = 'YES'
+        # config.build_settings['STRIP_STYLE'] = 'all'
+        config.build_settings['STRIP_SWIFT_SYMBOLS'] = 'YES'
+        config.build_settings['COPY_PHASE_STRIP'] = 'NO'
         config.build_settings.delete('ARCHS')
         if config.base_configuration_reference && Integer(xcode_base_version) >= 15
                 xcconfig_path = config.base_configuration_reference.real_path
