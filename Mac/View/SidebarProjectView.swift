@@ -34,7 +34,7 @@ class SidebarProjectView: NSOutlineView,
             }
         }
 
-        if menuItem.title == NSLocalizedString("Rename folder", comment: "") {
+        if menuItem.title == NSLocalizedString("Rename Folder", comment: "") {
             if sidebarItem.isTrash() {
                 return false
             }
@@ -48,13 +48,13 @@ class SidebarProjectView: NSOutlineView,
             }
         }
 
-        if menuItem.title == NSLocalizedString("Delete folder", comment: "") {
+        if menuItem.title == NSLocalizedString("Delete Folder", comment: "") {
             if sidebarItem.isTrash() {
                 return false
             }
 
             if sidebarItem.project != nil {
-                menuItem.title = NSLocalizedString("Delete folder", comment: "")
+                menuItem.title = NSLocalizedString("Delete Folder", comment: "")
             }
 
             if let project = sidebarItem.project, !project.isDefault {

@@ -35,7 +35,7 @@
 /* Class = "NSTextFieldCell"; title = "Line Break Style"; ObjectID = "3WC-Uz-bSc"; */
 "3WC-Uz-bSc.title" = "改行スタイル";
 
-/* Class = "NSMenuItem"; title = "New folder"; ObjectID = "3zv-SD-lSX"; */
+/* Class = "NSMenuItem"; title = "New Folder"; ObjectID = "3zv-SD-lSX"; */
 "3zv-SD-lSX.title" = "新規フォルダ";
 
 /* Class = "NSMenuItem"; title = "Editor Font"; ObjectID = "46V-wl-D4j"; */
@@ -140,7 +140,7 @@
 /* Class = "NSMenuItem"; title = "Export"; ObjectID = "e9r-bH-IZj"; */
 "e9r-bH-IZj.title" = "輸出";
 
-/* Class = "NSMenuItem"; title = "Hide/show sidebar"; ObjectID = "DCh-5P-PZe"; */
+/* Class = "NSMenuItem"; title = "Hide/Show Sidebar"; ObjectID = "DCh-5P-PZe"; */
 "DCh-5P-PZe.title" = "サイドバーの表示／非表示";
 
 /* Class = "NSTextFieldCell"; title = "Preview FontName"; ObjectID = "DSZ-lK-z6c"; */
@@ -248,7 +248,7 @@
 /* Class = "NSMenuItem"; title = "Italic"; ObjectID = "O3Z-9P-RfY"; */
 "O3Z-9P-RfY.title" = "斜体";
 
-/* Class = "NSMenuItem"; title = "Single open"; ObjectID = "O8Z-cg-XnH"; */
+/* Class = "NSMenuItem"; title = "Single Open"; ObjectID = "O8Z-cg-XnH"; */
 "O8Z-cg-XnH.title" = "開く";
 
 /* Class = "NSTextFieldCell"; placeholderString = "输入标题"; ObjectID = "O9K-a1-3eu"; */
@@ -266,7 +266,7 @@
 /* Class = "NSTextFieldCell"; title = "Version"; ObjectID = "PM6-HD-5pk"; */
 "PM6-HD-5pk.title" = "バージョン";
 
-/* Class = "NSMenuItem"; title = "Toggle preview"; ObjectID = "PdU-Em-Ugm"; */
+/* Class = "NSMenuItem"; title = "Toggle Preview"; ObjectID = "PdU-Em-Ugm"; */
 "PdU-Em-Ugm.title" = "プレビューの切り替え";
 
 /* Class = "NSMenuItem"; title = "13"; ObjectID = "Q3T-TQ-ewQ"; */
@@ -281,7 +281,7 @@
 /* Class = "NSMenuItem"; title = "Select All"; ObjectID = "Ruw-6m-B2m"; */
 "Ruw-6m-B2m.title" = "全て選択";
 
-/* Class = "NSMenuItem"; title = "Delete folder"; ObjectID = "RwR-P0-ycK"; */
+/* Class = "NSMenuItem"; title = "Delete Folder"; ObjectID = "RwR-P0-ycK"; */
 "RwR-P0-ycK.title" = "フォルダを削除";
 
 /* Class = "NSMenuItem"; title = "Jump to Selection"; ObjectID = "S0p-oC-mLd"; */
@@ -302,10 +302,10 @@
 /* Class = "NSMenuItem"; title = "File"; ObjectID = "SeY-r8-n3w"; */
 "SeY-r8-n3w.title" = "ファイル";
 
-/* Class = "NSMenuItem"; title = "New folder"; ObjectID = "SrH-fe-Hog"; */
+/* Class = "NSMenuItem"; title = "New Folder"; ObjectID = "SrH-fe-Hog"; */
 "SrH-fe-Hog.title" = "新規フォルダ";
 
-/* Class = "NSMenuItem"; title = "Rename folder"; ObjectID = "Tap-iY-hyA"; */
+/* Class = "NSMenuItem"; title = "Rename Folder"; ObjectID = "Tap-iY-hyA"; */
 "Tap-iY-hyA.title" = "フォルダ名変更";
 
 /* Class = "NSMenuItem"; title = "Delete"; ObjectID = "TjZ-PX-YVo"; */
@@ -335,7 +335,7 @@
 /* Class = "NSMenu"; title = "Edit"; ObjectID = "W48-6f-4Dl"; */
 "W48-6f-4Dl.title" = "編集";
 
-/* Class = "NSMenuItem"; title = "Hide/show note list"; ObjectID = "WHt-T4-l9c"; */
+/* Class = "NSMenuItem"; title = "Hide/Show NoteList"; ObjectID = "WHt-T4-l9c"; */
 "WHt-T4-l9c.title" = "リストバーの表示／非表示";
 
 /* Class = "NSMenuItem"; title = "Paste and Match Style"; ObjectID = "WeT-3V-zwk"; */
@@ -425,7 +425,7 @@
 /* Class = "NSTextFieldCell"; title = "Storage location"; ObjectID = "fmS-eE-nne"; */
 "fmS-eE-nne.title" = "ストレージの場所";
 
-/* Class = "NSMenuItem"; title = "Rename folder"; ObjectID = "fzU-ZR-Ubv"; */
+/* Class = "NSMenuItem"; title = "Rename Folder"; ObjectID = "fzU-ZR-Ubv"; */
 "fzU-ZR-Ubv.title" = "フォルダの名前を変更する";
 
 /* Class = "NSMenuItem"; title = "19"; ObjectID = "g4e-PC-JbI"; */
