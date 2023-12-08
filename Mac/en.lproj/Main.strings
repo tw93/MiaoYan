@@ -23,8 +23,8 @@
 /* Class = "NSTextFieldCell"; title = "Table View Cell"; ObjectID = "2ZQ-YX-F9M"; */
 "2ZQ-YX-F9M.title" = "Table View Cell";
 
-/* Class = "NSMenuItem"; title = "New folder"; ObjectID = "3zv-SD-lSX"; */
-"3zv-SD-lSX.title" = "New folder";
+/* Class = "NSMenuItem"; title = "New Folder"; ObjectID = "3zv-SD-lSX"; */
+"3zv-SD-lSX.title" = "New Folder";
 
 /* Class = "NSMenuItem"; title = "Find"; ObjectID = "4EN-yA-p0u"; */
 "4EN-yA-p0u.title" = "Find";
@@ -71,8 +71,8 @@
 /* Class = "NSMenuItem"; title = "Export"; ObjectID = "e9r-bH-IZj"; */
 "e9r-bH-IZj.title" = "Export";
 
-/* Class = "NSMenuItem"; title = "Hide/show sidebar"; ObjectID = "DCh-5P-PZe"; */
-"DCh-5P-PZe.title" = "Hide/show sidebar";
+/* Class = "NSMenuItem"; title = "Hide/Show Sidebar"; ObjectID = "DCh-5P-PZe"; */
+"DCh-5P-PZe.title" = "Hide/Show Sidebar";
 
 /* Class = "NSMenuItem"; title = "Duplicate"; ObjectID = "E6I-n5-dsi"; */
 "E6I-n5-dsi.title" = "Duplicate";
@@ -140,8 +140,8 @@
 /* Class = "NSTextFieldCell"; title = "Text Cell"; ObjectID = "NiN-n8-Y4W"; */
 "NiN-n8-Y4W.title" = "Text Cell";
 
-/* Class = "NSMenuItem"; title = "Single open"; ObjectID = "O8Z-cg-XnH"; */
-"O8Z-cg-XnH.title" = "Single open";
+/* Class = "NSMenuItem"; title = "Single Open"; ObjectID = "O8Z-cg-XnH"; */
+"O8Z-cg-XnH.title" = "Single Open";
 
 /* Class = "NSMenuItem"; title = "Import"; ObjectID = "7wA-Gr-Kyz"; */
 "7wA-Gr-Kyz.title" = "Import";
@@ -161,8 +161,8 @@
 /* Class = "NSMenuItem"; title = "Format"; ObjectID = "ieJ-a6-SUU"; */
 "ieJ-a6-SUU.title" = "Format";
 
-/* Class = "NSMenuItem"; title = "Toggle preview"; ObjectID = "PdU-Em-Ugm"; */
-"PdU-Em-Ugm.title" = "Toggle preview";
+/* Class = "NSMenuItem"; title = "Toggle Preview"; ObjectID = "PdU-Em-Ugm"; */
+"PdU-Em-Ugm.title" = "Toggle Preview";
 
 /* Class = "NSMenuItem"; title = "Toggle Presentation"; ObjectID = "9ib-os-JZv"; */
 "9ib-os-JZv.title" = "Toggle Presentation";
@@ -170,8 +170,8 @@
 /* Class = "NSMenuItem"; title = "Select All"; ObjectID = "Ruw-6m-B2m"; */
 "Ruw-6m-B2m.title" = "Select All";
 
-/* Class = "NSMenuItem"; title = "Delete folder"; ObjectID = "RwR-P0-ycK"; */
-"RwR-P0-ycK.title" = "Delete folder";
+/* Class = "NSMenuItem"; title = "Delete Folder"; ObjectID = "RwR-P0-ycK"; */
+"RwR-P0-ycK.title" = "Delete Folder";
 
 /* Class = "NSMenuItem"; title = "Jump to Selection"; ObjectID = "S0p-oC-mLd"; */
 "S0p-oC-mLd.title" = "Jump to Selection";
@@ -185,11 +185,11 @@
 /* Class = "NSMenuItem"; title = "File"; ObjectID = "SeY-r8-n3w"; */
 "SeY-r8-n3w.title" = "File";
 
-/* Class = "NSMenuItem"; title = "New folder"; ObjectID = "SrH-fe-Hog"; */
-"SrH-fe-Hog.title" = "New folder";
+/* Class = "NSMenuItem"; title = "New Folder"; ObjectID = "SrH-fe-Hog"; */
+"SrH-fe-Hog.title" = "New Folder";
 
-/* Class = "NSMenuItem"; title = "Rename folder"; ObjectID = "Tap-iY-hyA"; */
-"Tap-iY-hyA.title" = "Rename folder";
+/* Class = "NSMenuItem"; title = "Rename Folder"; ObjectID = "Tap-iY-hyA"; */
+"Tap-iY-hyA.title" = "Rename Folder";
 
 /* Class = "NSMenuItem"; title = "Delete"; ObjectID = "TjZ-PX-YVo"; */
 "TjZ-PX-YVo.title" = "Delete";
@@ -197,8 +197,8 @@
 /* Class = "NSMenu"; title = "Edit"; ObjectID = "W48-6f-4Dl"; */
 "W48-6f-4Dl.title" = "Edit";
 
-/* Class = "NSMenuItem"; title = "Hide/show note list"; ObjectID = "WHt-T4-l9c"; */
-"WHt-T4-l9c.title" = "Hide/show note list";
+/* Class = "NSMenuItem"; title = "Hide/Show NoteList"; ObjectID = "WHt-T4-l9c"; */
+"WHt-T4-l9c.title" = "Hide/Show NoteList";
 
 /* Class = "NSMenuItem"; title = "Paste and Match Style"; ObjectID = "WeT-3V-zwk"; */
 "WeT-3V-zwk.title" = "Paste and Match Style";
@@ -245,8 +245,8 @@
 /* Class = "NSTextFieldCell"; title = "Storage Location"; ObjectID = "fmS-eE-nne"; */
 "fmS-eE-nne.title" = "Storage Location";
 
-/* Class = "NSMenuItem"; title = "Rename folder"; ObjectID = "fzU-ZR-Ubv"; */
-"fzU-ZR-Ubv.title" = "Rename folder";
+/* Class = "NSMenuItem"; title = "Rename Folder"; ObjectID = "fzU-ZR-Ubv"; */
+"fzU-ZR-Ubv.title" = "Rename Folder";
 
 /* Class = "NSMenuItem"; title = "Paste"; ObjectID = "gVA-U4-sdL"; */
 "gVA-U4-sdL.title" = "Paste";

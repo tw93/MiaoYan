@@ -92,7 +92,7 @@ CA
                                                 <action selector="fileMenuNewNote:" target="L4m-js-agn" id="N33-Jf-oOg"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Single open" keyEquivalent="o" identifier="fileMenu.open" id="O8Z-cg-XnH">
+                                        <menuItem title="Single Open" keyEquivalent="o" identifier="fileMenu.open" id="O8Z-cg-XnH">
                                             <connections>
                                                 <action selector="singleOpen:" target="L4m-js-agn" id="48w-4H-ICT"/>
                                             </connections>
@@ -119,7 +119,7 @@ CA
                                                 <action selector="renameMenu:" target="L4m-js-agn" id="H0Y-Fe-qfr"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Reveal in finder" keyEquivalent="r" id="rXU-X3-UjC">
+                                        <menuItem title="Reveal in Finder" keyEquivalent="r" id="rXU-X3-UjC">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="finderMenu:" target="Ady-hI-5gd" id="Ift-tc-85m"/>
@@ -158,18 +158,18 @@ CA
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Folder" id="BYI-2F-BJo">
                                     <items>
-                                        <menuItem title="New folder" keyEquivalent="N" identifier="folderMenu.newFolder" id="SrH-fe-Hog">
+                                        <menuItem title="New Folder" keyEquivalent="N" identifier="folderMenu.newFolder" id="SrH-fe-Hog">
                                             <connections>
                                                 <action selector="add:" target="3kq-Pd-JKK" id="fyK-RN-gx8"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Rename folder" keyEquivalent="" identifier="folderMenu.renameFolder" id="Tap-iY-hyA">
+                                        <menuItem title="Rename Folder" keyEquivalent="" identifier="folderMenu.renameFolder" id="Tap-iY-hyA">
                                             <modifierMask key="keyEquivalentModifierMask" shift="YES"/>
                                             <connections>
                                                 <action selector="renameMenu:" target="yxb-XH-bXh" id="fjN-9b-ISI"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Show  in finder" keyEquivalent="r" identifier="folderMenu.showInFinder" id="F5A-zs-zwP">
+                                        <menuItem title="Show  in Finder" keyEquivalent="r" identifier="folderMenu.showInFinder" id="F5A-zs-zwP">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="revealInFinder:" target="yxb-XH-bXh" id="7V6-4X-pMA"/>
@@ -220,17 +220,17 @@ CA
                                                 </items>
                                             </menu>
                                         </menuItem>
-                                        <menuItem title="Hide/show sidebar" keyEquivalent="1" id="DCh-5P-PZe">
+                                        <menuItem title="Hide/Show Sidebar" keyEquivalent="1" id="DCh-5P-PZe">
                                             <connections>
                                                 <action selector="toggleSidebar:" target="L4m-js-agn" id="MRM-fh-zTo"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Hide/show note list" keyEquivalent="2" id="WHt-T4-l9c">
+                                        <menuItem title="Hide/Show NoteList" keyEquivalent="2" id="WHt-T4-l9c">
                                             <connections>
                                                 <action selector="toggleNoteList:" target="L4m-js-agn" id="G22-P2-hks"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Toggle preview" keyEquivalent="3" id="PdU-Em-Ugm">
+                                        <menuItem title="Toggle Preview" keyEquivalent="3" id="PdU-Em-Ugm">
                                             <connections>
                                                 <action selector="togglePreview:" target="N0L-g4-qwj" id="2w1-01-aD6"/>
                                             </connections>
@@ -245,6 +245,9 @@ CA
                                             <connections>
                                                 <action selector="toggleFullScreen:" target="Ady-hI-5gd" id="dU3-MA-1Rq"/>
                                             </connections>
+                                        </menuItem>
+                                        <menuItem title="Always on Top" id="Kod-wp-OQm">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
                                     </items>
                                 </menu>
@@ -1806,12 +1809,12 @@ CA
                 </menu>
                 <menu id="nuz-kc-UUC">
                     <items>
-                        <menuItem title="New folder" keyEquivalent="N" id="3zv-SD-lSX">
+                        <menuItem title="New Folder" keyEquivalent="N" id="3zv-SD-lSX">
                             <connections>
                                 <action selector="addProject:" target="rPt-NT-nkU" id="yjG-Jc-AJN"/>
                             </connections>
                         </menuItem>
-                        <menuItem title="Rename folder" keyEquivalent="" id="fzU-ZR-Ubv">
+                        <menuItem title="Rename Folder" keyEquivalent="" id="fzU-ZR-Ubv">
                             <modifierMask key="keyEquivalentModifierMask" shift="YES"/>
                             <connections>
                                 <action selector="renameMenu:" target="urA-eK-bWB" id="Jh4-4H-wc0"/>
@@ -1823,7 +1826,7 @@ CA
                                 <action selector="revealInFinder:" target="urA-eK-bWB" id="lPM-Ou-AK0"/>
                             </connections>
                         </menuItem>
-                        <menuItem title="Delete folder" id="RwR-P0-ycK">
+                        <menuItem title="Delete Folder" id="RwR-P0-ycK">
                             <string key="keyEquivalent" base64-UTF8="YES">
 CA
 </string>

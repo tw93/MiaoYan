@@ -23,7 +23,7 @@
 "Delete" = "削除";
 
 /* No comment provided by engineer. */
-"Delete folder" = "フォルダを削除";
+"Delete Folder" = "フォルダを削除";
 
 
 /* No comment provided by engineer. */
@@ -42,7 +42,7 @@
 "New" = "新規作成";
 
 /* No comment provided by engineer. */
-"New folder" = "新規フォルダ";
+"New Folder" = "新規フォルダ";
 
 /* No comment provided by engineer. */
 "New project" = "新規フォルダ";
@@ -75,7 +75,7 @@
 "Remove note(s)" = "メモを削除しても宜しいでしょうか";
 
 /* No comment provided by engineer. */
-"Rename folder" = "フォルダの名前を変更";
+"Rename Folder" = "フォルダの名前を変更";
 
 /* No comment provided by engineer. */
 "Show in Finder" = "Finderに表示";
@@ -90,7 +90,7 @@
 "This action cannot be undone." = "この操作は元に戻せません。宜しいでしょうか？";
 
 /* No comment provided by engineer. */
-"Toggle preview" = "プレビューを切り替え";
+"Toggle Preview" = "プレビューを切り替え";
 
 /* Sidebar label */
 "Trash" = "削除";

@@ -71,7 +71,7 @@
 "Delete" = "刪除";
 
 /* No comment provided by engineer. */
-"Delete folder" = "刪除檔案夾";
+"Delete Folder" = "刪除檔案夾";
 
 /* No comment provided by engineer. */
 "Edit Link…" = "編輯連結…";
@@ -104,7 +104,7 @@
 "Remove note(s)" = "移除筆記";
 
 /* No comment provided by engineer. */
-"Rename folder" = "重新命名檔案夾";
+"Rename Folder" = "重新命名檔案夾";
 
 /* No comment provided by engineer. */
 "Restart to MiaoYan to take effect" = "重新啟動妙言即可生效";

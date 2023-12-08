@@ -25,7 +25,7 @@
 /* Class = "NSMenuItem"; title = "Search"; ObjectID = "hPY-aY-QOE"; */
 "hPY-aY-QOE.title" = "搜索";
 
-/* Class = "NSMenuItem"; title = "New folder"; ObjectID = "3zv-SD-lSX"; */
+/* Class = "NSMenuItem"; title = "New Folder"; ObjectID = "3zv-SD-lSX"; */
 "3zv-SD-lSX.title" = "新建文件夹";
 
 /* Class = "NSMenuItem"; title = "Find"; ObjectID = "4EN-yA-p0u"; */
@@ -114,7 +114,7 @@
 /* Class = "NSMenuItem"; title = "Modification date"; ObjectID = "dCc-l5-XB2"; */
 "dCc-l5-XB2.title" = "修改日期";
 
-/* Class = "NSMenuItem"; title = "Hide/show sidebar"; ObjectID = "DCh-5P-PZe"; */
+/* Class = "NSMenuItem"; title = "Hide/Show Sidebar"; ObjectID = "DCh-5P-PZe"; */
 "DCh-5P-PZe.title" = "隐藏/显示侧边栏";
 
 /* Class = "NSMenuItem"; title = "Shift Left"; ObjectID = "DeU-hy-pvi"; */
@@ -181,7 +181,7 @@
 /* Class = "NSMenuItem"; title = "Folder"; ObjectID = "Fuh-qO-nt2"; */
 "Fuh-qO-nt2.title" = "文件夹";
 
-/* Class = "NSMenuItem"; title = "Rename folder"; ObjectID = "fzU-ZR-Ubv"; */
+/* Class = "NSMenuItem"; title = "Rename Folder"; ObjectID = "fzU-ZR-Ubv"; */
 "fzU-ZR-Ubv.title" = "重命名文件夹";
 
 /* Class = "NSMenuItem"; title = "Empty Trash"; ObjectID = "G9H-Lg-TXE"; */
@@ -262,7 +262,7 @@
 /* Class = "NSButtonCell"; title = "Change"; ObjectID = "nBn-aV-7mt"; */
 "nBn-aV-7mt.title" = "更改";
 
-/* Class = "NSMenuItem"; title = "Single open"; ObjectID = "O8Z-cg-XnH"; */
+/* Class = "NSMenuItem"; title = "Single Open"; ObjectID = "O8Z-cg-XnH"; */
 "O8Z-cg-XnH.title" = "单独打开";
 
 /* Class = "NSMenuItem"; title = "Import"; ObjectID = "7wA-Gr-Kyz"; */
@@ -277,7 +277,7 @@
 /* Class = "NSMenuItem"; title = "Format"; ObjectID = "ieJ-a6-SUU"; */
 "ieJ-a6-SUU.title" = "文档排版";
 
-/* Class = "NSMenuItem"; title = "Toggle preview"; ObjectID = "PdU-Em-Ugm"; */
+/* Class = "NSMenuItem"; title = "Toggle Preview"; ObjectID = "PdU-Em-Ugm"; */
 "PdU-Em-Ugm.title" = "切换预览";
 
 /* Class = "NSMenuItem"; title = "Toggle Presentation"; ObjectID = "9ib-os-JZv"; */
@@ -310,13 +310,13 @@
 /* Class = "NSMenuItem"; title = "System"; ObjectID = "rSZ-Wo-Rtj"; */
 "rSZ-Wo-Rtj.title" = "跟随系统";
 
-/* Class = "NSMenuItem"; title = "Delete folder"; ObjectID = "RuM-sf-kcZ"; */
+/* Class = "NSMenuItem"; title = "Delete Folder"; ObjectID = "RuM-sf-kcZ"; */
 "RuM-sf-kcZ.title" = "删除文件夹";
 
 /* Class = "NSMenuItem"; title = "Select All"; ObjectID = "Ruw-6m-B2m"; */
 "Ruw-6m-B2m.title" = "选择全部";
 
-/* Class = "NSMenuItem"; title = "Delete folder"; ObjectID = "RwR-P0-ycK"; */
+/* Class = "NSMenuItem"; title = "Delete Folder"; ObjectID = "RwR-P0-ycK"; */
 "RwR-P0-ycK.title" = "删除文件夹";
 
 /* Class = "NSMenuItem"; title = "Reveal in Finder"; ObjectID = "rXU-X3-UjC"; */
@@ -337,13 +337,13 @@
 /* Class = "NSTextFieldCell"; title = "Code Font"; ObjectID = "Shc-VO-eTc"; */
 "Shc-VO-eTc.title" = "代码字体";
 
-/* Class = "NSMenuItem"; title = "New folder"; ObjectID = "SrH-fe-Hog"; */
+/* Class = "NSMenuItem"; title = "New Folder"; ObjectID = "SrH-fe-Hog"; */
 "SrH-fe-Hog.title" = "新建文件夹";
 
 /* Class = "NSViewController"; title = "Editor"; ObjectID = "ssC-ed-19K"; */
 "ssC-ed-19K.title" = "编辑器";
 
-/* Class = "NSMenuItem"; title = "Rename folder"; ObjectID = "Tap-iY-hyA"; */
+/* Class = "NSMenuItem"; title = "Rename Folder"; ObjectID = "Tap-iY-hyA"; */
 "Tap-iY-hyA.title" = "重命名文件夹";
 
 /* Class = "NSButtonCell"; title = "Descending"; ObjectID = "TCI-Xs-mwm"; */
@@ -379,7 +379,7 @@
 /* Class = "NSMenuItem"; title = "Paste and Match Style"; ObjectID = "WeT-3V-zwk"; */
 "WeT-3V-zwk.title" = "粘贴并匹配样式";
 
-/* Class = "NSMenuItem"; title = "Hide/show note list"; ObjectID = "WHt-T4-l9c"; */
+/* Class = "NSMenuItem"; title = "Hide/Show NoteList"; ObjectID = "WHt-T4-l9c"; */
 "WHt-T4-l9c.title" = "隐藏/显示笔记列表";
 
 /* Class = "NSMenuItem"; title = "Copy"; ObjectID = "x3v-GG-iWU"; */

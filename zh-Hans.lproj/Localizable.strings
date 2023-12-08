@@ -23,8 +23,7 @@
 "Delete" = "删除";
 
 /* No comment provided by engineer. */
-"Delete folder" = "删除文件夹";
-
+"Delete Folder" = "删除文件夹";
 
 /* No comment provided by engineer. */
 "MiaoYan [preview]" = "妙言 [预览]";
@@ -42,7 +41,7 @@
 "New" = "新建";
 
 /* No comment provided by engineer. */
-"New folder" = "新建文件夹";
+"New Folder" = "新建文件夹";
 
 /* No comment provided by engineer. */
 "New project" = "新建文件夹";
@@ -75,7 +74,7 @@
 "Remove note(s)" = "确定删除";
 
 /* No comment provided by engineer. */
-"Rename folder" = "重命名文件夹";
+"Rename Folder" = "重命名文件夹";
 
 /* No comment provided by engineer. */
 "Show in Finder" = "在Finder中显示";
@@ -90,7 +89,7 @@
 "This action cannot be undone." = "此操作无法恢复。";
 
 /* No comment provided by engineer. */
-"Toggle preview" = "切换预览";
+"Toggle Preview" = "切换预览";
 
 /* Sidebar label */
 "Trash" = "删除";
