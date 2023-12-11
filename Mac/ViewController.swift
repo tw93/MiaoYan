@@ -1962,7 +1962,11 @@ class ViewController:
             return
         }
 
+        // 防止预览情况下新建preview标没有修改过来
         UserDefaultsManagement.preview = false
+        DispatchQueue.main.async { [weak self] in
+            self?.previewButton.state = UserDefaultsManagement.preview ? .on : .off
+        }
 
         editArea.markdownView?.removeFromSuperview()
         editArea.markdownView = nil
@@ -1980,6 +1984,7 @@ class ViewController:
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             vc.titleLabel.editModeOn()
         }
+        
         updateTable {
             DispatchQueue.main.async {
                 if let index = self.notesTableView.getIndex(note) {
@@ -1988,6 +1993,7 @@ class ViewController:
                 }
             }
         }
+        
         Analytics.trackEvent("MiaoYan NewNote")
     }
 
