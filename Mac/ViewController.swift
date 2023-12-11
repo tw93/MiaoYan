@@ -449,13 +449,13 @@ class ViewController:
         }
         updateTable {
             if let items = self.storageOutlineView.sidebarItems, items.indices.contains(lastSidebarItem) {
-                DispatchQueue.main.async {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     self.storageOutlineView.selectRowIndexes([lastSidebarItem], byExtendingSelection: false)
                 }
                 if UserDefaultsManagement.isSingleMode {
                     let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
                     if !FileManager.default.directoryExists(atUrl: singleModeUrl), let lastNote = self.storage.getBy(url: singleModeUrl), let i = self.notesTableView.getIndex(lastNote) {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                             self.notesTableView.selectRow(i)
                             self.notesTableView.scrollRowToVisible(row: i, animated: false)
                             self.hideNoteList("")
@@ -687,6 +687,7 @@ class ViewController:
         guard let vc = ViewController.shared() else { return }
         vc.checkSidebarConstraint()
         vc.checkTitlebarTopConstraint()
+        vc.checkSidebarDivider()
 
         if !refilled {
             refilled = true
@@ -833,7 +834,7 @@ class ViewController:
                 UserDefaultsManagement.isSingleMode = false
                 UserDefaultsManagement.isFirstLaunch = true
                 UserDefaultsManagement.singleModePath = ""
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     self.restart()
                 }
             }
@@ -2413,6 +2414,31 @@ class ViewController:
         }
         titiebarHeight.constant = 52.0
         titleTopConstraint.constant = 16.0
+    }
+
+    func checkSidebarDivider() {
+        guard let vc = ViewController.shared() else { return }
+        let size = Int(vc.sidebarSplitView.subviews[0].frame.width)
+        if size != 0 {
+            setSideDividerHidden(hidden: false)
+        } else {
+            setSideDividerHidden(hidden: true)
+        }
+    }
+
+    // 单独模式下的限制，不让第一个sidebar可以拖动，默认一直是0
+    func splitView(_ splitView: NSSplitView, constrainMinCoordinate proposedMinimumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
+        if dividerIndex == 0 && UserDefaultsManagement.isSingleMode {
+            return 0
+        }
+        return proposedMinimumPosition
+    }
+
+    func splitView(_ splitView: NSSplitView, constrainMaxCoordinate proposedMaximumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
+        if dividerIndex == 0 && UserDefaultsManagement.isSingleMode {
+            return 0
+        }
+        return proposedMaximumPosition
     }
 
     @IBAction func duplicate(_ sender: Any) {
