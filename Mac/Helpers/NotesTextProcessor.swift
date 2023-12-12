@@ -1194,8 +1194,8 @@ public class NotesTextProcessor {
     // MARK: Bold
     fileprivate static let strictBoldPattern = "(^|[\\W_])(?:(?!\\1)|(?=^))(\\*|_)\\2(?=\\S)(.*?\\S)\\2\\2(?!\\2)(?=[\\W_]|$)"
     public static let strictBoldRegex = MarklightRegex(pattern: strictBoldPattern, options: [.anchorsMatchLines])
-    
-    fileprivate static let boldPattern = "(?<=^|\\s)(\\*\\*|__)(?!\\s)(.+?)(?<!\\s)\\1(?=$|\\s)"
+
+    fileprivate static let boldPattern = "(\\*\\*|__) (?=\\S) (.+?[*_]*) (?<=\\S) \\1"
     public static let boldRegex = MarklightRegex(pattern: boldPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
     // MARK: Strike
