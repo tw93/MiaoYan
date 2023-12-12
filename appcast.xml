@@ -3,7 +3,7 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
-      <title>1.14.0</title>
+      <title>1.14.1</title>
       <description><![CDATA[
       <h3>更精确 🍇：</h3>
        <ol>
@@ -24,8 +24,8 @@
           <li>複数言語の設定における補完、漏れの確認と修正、およびケーススタンダードへの対応に時間をかけ、XCode15との互換性を持たせました。</li>
       </ol>
           ]]>      </description>
-      <pubDate>周二, 12 12月 2023 22:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.14.0.zip" sparkle:shortVersionString="1.14.0" sparkle:version="1.14.0" sparkle:edSignature="IXb+koVHJFUfpjFrJxd+dTbEEplU4dAFdXiqP4TX3b2IabTbn+emAnOz2ooEmsi/tkr02c7qm2C2btCDUXSPCw==" length="20893114" type="application/octet-stream" />
+      <pubDate>周二, 12 12月 2023 23:00:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.14.1.zip" sparkle:shortVersionString="1.14.1" sparkle:version="1.14.1" sparkle:edSignature="gOEMnoC1BwBwK2Kgwh50u5LCAoDggfbvVUshleEyFHQH5hKzmaVGcw1VZGh7ZEoDNEpMamMpbbGKE5A3ovYiAg==" length="20893148" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
     </item>
     <item>
