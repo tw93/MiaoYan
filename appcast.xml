@@ -2,7 +2,33 @@
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
   <channel>
     <title>妙言 / MiaoYan</title>
-     <item>
+    <item>
+      <title>1.14.0</title>
+      <description><![CDATA[
+      <h3>更精确 🍇：</h3>
+       <ol>
+        <li>妙言 PPT 模式下使用体验优化，无需首次触发，预发效果增强</li>
+        <li>修复下划线高亮识别、预览按钮状态、单独模式打开问题、项目列表栏拖动异常 Bug</li>
+        <li>多语言配置情况下的补全和查漏补缺以及大小写规范，花了点时间兼容 XCode15</li>
+       </ol>
+      <h3>More Accurate 🍇:</h3>
+       <ol>
+        <li>Enhanced user experience in MiaoYan PPT mode, activation not required initially, improved pre-launch effect.</li>
+        <li>Fixed bugs with underline recognition, preview button state, opening in single mode, and dragging issues in the project list column.</li>
+        <li>Completed and patched missing parts in multi-language configurations, and conformed to case standards, spent some time compatible with XCode15.</li>
+       </ol>
+      <h3>より正確に 🍇：</h3>
+      <ol>
+          <li>妙言 PPT モードでの使用体験を最適化し、初回トリガーが不要で、事前発行効果が強化されました。</li>
+          <li>下線のハイライト認識、プレビューボタンの状態、単独モードでの開き、プロジェクトリスト列のドラッグのバグを修正しました。</li>
+          <li>複数言語の設定における補完、漏れの確認と修正、およびケーススタンダードへの対応に時間をかけ、XCode15との互換性を持たせました。</li>
+      </ol>
+          ]]>      </description>
+      <pubDate>周二, 12 12月 2023 22:00:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.14.0.zip" sparkle:shortVersionString="1.14.0" sparkle:version="1.14.0" sparkle:edSignature="IXb+koVHJFUfpjFrJxd+dTbEEplU4dAFdXiqP4TX3b2IabTbn+emAnOz2ooEmsi/tkr02c7qm2C2btCDUXSPCw==" length="20893114" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>1.13.0</title>
       <description><![CDATA[
       <h3>舒服了 🦖：</h3>
