@@ -18,7 +18,7 @@
   <div align="center">Lightweight Markdown app to help you write great sentences.</div>
 </p>
 
-<img src="https://gw.alipayobjects.com/zos/k/xg/miaoyan.gif" width="900px">
+<img src="https://gw.alipayobjects.com/zos/k/xg/miaoyan.gif" width="900px" />
 
 ## Features
 
