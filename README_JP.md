@@ -18,9 +18,7 @@
   <div align="center">軽量のMarkdownアプリで、素晴らしい文章を生み出せます</div>
 </p>
 
-<kbd>
-<img src=https://gw.alipayobjects.com/zos/k/xg/miaoyan.gif width="100%">
-</kbd>
+<img src="https://gw.alipayobjects.com/zos/k/xg/miaoyan.gif" width="900px">
 
 ## 機能
 
