@@ -19,7 +19,7 @@
 </p>
 
 <kbd>
-<img src=https://gw.alipayobjects.com/zos/k/8m/en.gif width="100%">
+<img src=https://gw.alipayobjects.com/zos/k/xg/miaoyan.gif width="100%">
 </kbd>
 
 ## Features
