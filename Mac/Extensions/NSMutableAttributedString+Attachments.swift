@@ -1,3 +1,11 @@
+//
+//  NSMutableAttributedString+Attachments.swift
+//  FSNotes
+//
+//  Created by Олександр Глущенко on 10/3/19.
+//  Copyright © 2019 Oleksandr Glushchenko. All rights reserved.
+//
+
 import Foundation
 
 extension NSMutableAttributedString {

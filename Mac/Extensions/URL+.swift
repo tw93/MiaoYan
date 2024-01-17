@@ -1,3 +1,11 @@
+//
+//  URL+.swift
+//  FSNotes
+//
+//  Created by Oleksandr Glushchenko on 3/22/18.
+//  Copyright © 2018 Oleksandr Glushchenko. All rights reserved.
+//
+
 import Foundation
 
 #if os(iOS)

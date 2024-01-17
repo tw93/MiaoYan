@@ -1,3 +1,11 @@
+//
+//  String+.swift
+//  FSNotes
+//
+//  Created by Jeff Hanbury on 29/08/17.
+//  Copyright © 2017 Oleksandr Glushchenko. All rights reserved.
+//
+
 import CommonCrypto
 import CryptoKit
 import Foundation
