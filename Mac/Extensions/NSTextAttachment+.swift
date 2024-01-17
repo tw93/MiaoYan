@@ -1,3 +1,11 @@
+//
+//  NSTextAttachment+.swift
+//  FSNotes
+//
+//  Created by Олександр Глущенко on 10/2/19.
+//  Copyright © 2019 Oleksandr Glushchenko. All rights reserved.
+//
+
 #if os(OSX)
     import Cocoa
 #else

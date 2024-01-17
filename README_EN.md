@@ -83,7 +83,7 @@
 
 - <a href="https://github.com/KristopherGBaker/libcmark_gfm" target="_blank">KristopherGBaker/libcmark_gfm</a>: Swift Compatible framework for cmark-gfm.
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>: Syntax highlighting capability.
-- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: MiaoYan has part of the framework code from this project.
+- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: MiaoYan has part of the framework code from this project, Thank you very much to the author.
 - <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>: A beautiful open source chinese font, MiaoYan has made it the default font.
 - <a href="https://github.com/michaelhenry/Prettier.swift" target="_blank">michaelhenry/Prettier.swift</a>：MiaoYan document auto typesetting is from Prettier.
 - <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>：An open source HTML presentation framework.

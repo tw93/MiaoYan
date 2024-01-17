@@ -83,7 +83,7 @@
 
 - <a href="https://github.com/KristopherGBaker/libcmark_gfm" target="_blank">KristopherGBaker/libcmark_gfm</a>: cmark-gfm 用の Swift 互換フレームワーク。
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>: シンタックスハイライト機能。
-- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: MiaoYan はこのプロジェクトからフレームワークの一部のコードを持っています。
+- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: MiaoYan はこのプロジェクトからフレームワークの一部のコードを持っています, 著者に感謝します。
 - <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>: 美しいオープンソースの中国語フォント、MiaoYan はこれをデフォルトのフォントにしました。
 - <a href="https://github.com/michaelhenry/Prettier.swift" target="_blank">michaelhenry/Prettier.swift</a>：MiaoYan のドキュメント自動タイプセットは Prettier から来ています。
 - <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>：オープンソースの HTML プレゼンテーションフレームワーク。

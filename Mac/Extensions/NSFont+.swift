@@ -1,3 +1,11 @@
+//
+//  NSFont+.swift
+//  FSNotes
+//
+//  Created by Oleksandr Glushchenko on 8/26/17.
+//  Copyright © 2017 Oleksandr Glushchenko. All rights reserved.
+//
+
 import Cocoa
 
 extension NSFont {
@@ -20,7 +28,7 @@ extension NSFont {
     var lineHeightCustom: CGFloat {
         CGFloat(ceilf(Float(ascender + abs(descender) + leading)))
     }
-    
+
     static func italicFont() -> NSFont {
         NSFontManager().convert(UserDefaultsManagement.noteFont, toHaveTrait: .italicFontMask)
     }
