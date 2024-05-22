@@ -545,6 +545,7 @@
 				6F13BB1A20FEDDF50005E120 /* Embed Frameworks */,
 				D7D7CD58232791810016AC15 /* CopyFiles */,
 				13E4466039F63073477ED5B0 /* [CP] Embed Pods Frameworks */,
+				C40FFDE8EDBAD3B8EA18D97B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -563,7 +564,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1000;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1540;
 				ORGANIZATIONNAME = "MiaoYan App";
 				TargetAttributes = {
 					D7793C6E1F211C6000CA39B7 = {
@@ -683,6 +684,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C40FFDE8EDBAD3B8EA18D97B /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MiaoYan/Pods-MiaoYan-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/AppCenter/AppCenterAnalytics.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/AppCenter/AppCenter.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/AppCenter/AppCenterCrashes.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppCenterAnalytics.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppCenter.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AppCenterCrashes.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MiaoYan/Pods-MiaoYan-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -863,6 +886,7 @@
 			buildSettings = {
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -932,6 +956,7 @@
 			buildSettings = {
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1004,7 +1029,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.14.1;
+				CURRENT_PROJECT_VERSION = 1.15.0;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 5EH69Y5X38;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
@@ -1024,7 +1049,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 1.14.1;
+				MARKETING_VERSION = 1.15.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.MiaoYan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1048,7 +1073,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.14.1;
+				CURRENT_PROJECT_VERSION = 1.15.0;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DEVELOPMENT_TEAM = 5EH69Y5X38;
@@ -1069,7 +1094,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 1.14.1;
+				MARKETING_VERSION = 1.15.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.MiaoYan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
