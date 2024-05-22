@@ -83,6 +83,7 @@ section.has-dark-background h6 {
 
 .hljs-strong {
     font-weight: bold;
+    -webkit-font-smoothing: antialiased;
 }
 
 .reveal strong,

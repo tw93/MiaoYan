@@ -31,7 +31,6 @@ html {
   font-size: 15px;
   font-display: block;
   color: #262626;
-  -webkit-font-smoothing: antialiased;
 }
 
 body {
@@ -74,7 +73,6 @@ a,
 
 .heti {
   font-weight: 400;
-  -webkit-font-smoothing: antialiased;
   line-height: 1.74;
   letter-spacing: 0.04em;
   overflow-wrap: break-word;
@@ -255,6 +253,7 @@ blockquote blockquote {
   margin-block-start: 1.6em;
   margin-block-end: 0.8em;
   font-weight: bold;
+  -webkit-font-smoothing: antialiased;
 }
 
 .heti h1 {
@@ -443,6 +442,7 @@ blockquote blockquote {
 .heti b,
 .heti strong {
   font-weight: bold;
+  -webkit-font-smoothing: antialiased;
 }
 
 .heti code {
@@ -458,6 +458,7 @@ blockquote blockquote {
 
 .heti dfn {
   font-weight: bold;
+  -webkit-font-smoothing: antialiased;
 }
 
 .heti dfn:not(:lang(zh)):not(:lang(ja)):not(:lang(kr)),
@@ -467,6 +468,7 @@ blockquote blockquote {
 
 .heti em {
   font-weight: bold;
+  -webkit-font-smoothing: antialiased;
 }
 
 .heti > p > small{
@@ -530,6 +532,7 @@ blockquote blockquote {
 
 .heti strong {
   font-weight: bold;
+  -webkit-font-smoothing: antialiased;
 }
 
 .heti sub,
@@ -1100,6 +1103,7 @@ blockquote blockquote {
 
 .hljs-strong {
   font-weight: bold;
+  -webkit-font-smoothing: antialiased;
 }
 
 code.language-mermaid {
