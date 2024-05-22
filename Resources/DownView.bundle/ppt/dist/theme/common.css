@@ -123,6 +123,7 @@
 .reveal strong,
 .reveal b {
   font-weight: bold;
+  -webkit-font-smoothing: antialiased;
 }
 
 .reveal em {
@@ -171,6 +172,7 @@
 
 .reveal dt {
   font-weight: bold;
+  -webkit-font-smoothing: antialiased;
 }
 
 .reveal dd {
@@ -249,6 +251,7 @@
 
 .reveal table th {
   font-weight: bold;
+  -webkit-font-smoothing: antialiased;
 }
 
 .reveal table th,
