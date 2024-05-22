@@ -17,7 +17,7 @@ public enum UserDefaultsManagement {
     typealias Font = UIFont
     #endif
 
-    static var DefaultFont = "LXGW WenKai Lite"
+    static var DefaultFont = "LXGW WenKai Screen"
 
     static var DefaultFontSize = 15
     static var DefaultPreviewFontSize = 15
@@ -298,6 +298,9 @@ public enum UserDefaultsManagement {
     static var fontName: String {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.FontName) as? String {
+                if result == "LXGW WenKai Lite" {
+                    return DefaultFont
+                }
                 return result
             }
             return DefaultFont
@@ -310,6 +313,9 @@ public enum UserDefaultsManagement {
     static var windowFontName: String {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.WindowFontName) as? String {
+                if result == "LXGW WenKai Lite" {
+                    return DefaultFont
+                }
                 return result
             }
             return DefaultFont
@@ -322,6 +328,9 @@ public enum UserDefaultsManagement {
     static var previewFontName: String {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.PreviewFontName) as? String {
+                if result == "LXGW WenKai Lite" {
+                    return DefaultFont
+                }
                 return result
             }
             return DefaultFont
@@ -334,6 +343,9 @@ public enum UserDefaultsManagement {
     static var codeFontName: String {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.CodeFontNameKey) as? String {
+                if result == "LXGW WenKai Lite" {
+                    return DefaultFont
+                }
                 return result
             }
             return DefaultFont

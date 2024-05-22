@@ -5,8 +5,8 @@
  */
 
 :root {
-  --text-font: 'LXGW WenKai Lite', sans-serif;
-  --code-text-font: 'LXGW WenKai Lite', sans-serif;
+  --text-font: 'LXGW WenKai Screen', sans-serif;
+  --code-text-font: 'LXGW WenKai Screen', sans-serif;
   --markmap-height: 300px;
 }
 
@@ -74,7 +74,7 @@ a,
 
 .heti {
   font-weight: 400;
-  -webkit-font-smoothing: subpixel-antialiased;
+  -webkit-font-smoothing: antialiased;
   line-height: 1.74;
   letter-spacing: 0.04em;
   overflow-wrap: break-word;

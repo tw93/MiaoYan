@@ -421,7 +421,7 @@ class ViewController:
         editArea.isEditable = false
 
         editArea.layoutManager?.defaultAttachmentScaling = .scaleProportionallyDown
-        if UserDefaultsManagement.fontName != "LXGW WenKai Lite" {
+        if UserDefaultsManagement.fontName != "LXGW WenKai Screen" {
             editArea.layoutManager?.typesetterBehavior = .behavior_10_2_WithCompatibility
         }
         search.font = UserDefaultsManagement.searchFont
@@ -1982,7 +1982,7 @@ class ViewController:
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
             vc.titleLabel.editModeOn()
         }
-        
+
         updateTable {
             DispatchQueue.main.async {
                 if let index = self.notesTableView.getIndex(note) {
@@ -1991,7 +1991,7 @@ class ViewController:
                 }
             }
         }
-        
+
         Analytics.trackEvent("MiaoYan NewNote")
     }
 
@@ -2073,19 +2073,22 @@ class ViewController:
         filteredNoteList = resorted
         Analytics.trackEvent("MiaoYan Pin")
     }
-
-    func isMiaoYanPPT() -> Bool {
-        if let note = notesTableView.getSelectedNote() {
-            let content = note.content.string
-            if content.contains("---") {
-                return true
-            } else {
-                toast(message: NSLocalizedString("😶‍🌫 No delimiter --- identification, Cannot use MiaoYan PPT~", comment: ""))
-                return false
-            }
-        } else {
+    
+    func isMiaoYanPPT(needToast: Bool = true) -> Bool {
+        guard let note = notesTableView.getSelectedNote() else {
             return false
         }
+
+        let content = note.content.string
+        if content.contains("---") {
+            return true
+        }
+
+        if needToast {
+            toast(message: NSLocalizedString("😶‍🌫 No delimiter --- identification, Cannot use MiaoYan PPT~", comment: ""))
+        }
+
+        return false
     }
 
     func toggleMagicPPT() {

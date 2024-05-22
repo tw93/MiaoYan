@@ -337,8 +337,8 @@
 /* Class = "NSMenuItem"; title = "Yes"; ObjectID = "lra-33-O1F"; */
 "lra-33-O1F.title" = "Yes";
 
-/* Class = "NSMenuItem"; title = "LXGW WenKai Lite"; ObjectID = "Lx0-fl-9t0"; */
-"Lx0-fl-9t0.title" = "LXGW WenKai Lite";
+/* Class = "NSMenuItem"; title = "LXGW WenKai Screen"; ObjectID = "Lx0-fl-9t0"; */
+"Lx0-fl-9t0.title" = "LXGW WenKai Screen";
 
 /* Class = "NSMenuItem"; title = "Show All"; ObjectID = "M15-Xw-GpW"; */
 "M15-Xw-GpW.title" = "顯示全部";
@@ -421,8 +421,8 @@
 /* Class = "NSWindow"; title = "Window"; ObjectID = "qod-hp-9wd"; */
 "qod-hp-9wd.title" = "視窗";
 
-/* Class = "NSMenuItem"; title = "LXGW WenKai Lite"; ObjectID = "QwH-At-JGa"; */
-"QwH-At-JGa.title" = "LXGW WenKai Lite";
+/* Class = "NSMenuItem"; title = "LXGW WenKai Screen"; ObjectID = "QwH-At-JGa"; */
+"QwH-At-JGa.title" = "LXGW WenKai Screen";
 
 /* Class = "NSMenuItem"; title = "Main Window"; ObjectID = "qZf-Xp-kDW"; */
 "qZf-Xp-kDW.title" = "主視窗";
@@ -481,8 +481,8 @@
 /* Class = "NSMenuItem"; title = "Picsee"; ObjectID = "Tog-9P-3TK"; */
 "Tog-9P-3TK.title" = "Picsee";
 
-/* Class = "NSMenuItem"; title = "LXGW WenKai Lite"; ObjectID = "U0d-Y0-lbU"; */
-"U0d-Y0-lbU.title" = "LXGW WenKai Lite";
+/* Class = "NSMenuItem"; title = "LXGW WenKai Screen"; ObjectID = "U0d-Y0-lbU"; */
+"U0d-Y0-lbU.title" = "LXGW WenKai Screen";
 
 /* Class = "NSMenuItem"; title = "JetBrains Mono"; ObjectID = "U3E-6j-h9N"; */
 "U3E-6j-h9N.title" = "JetBrains Mono";
