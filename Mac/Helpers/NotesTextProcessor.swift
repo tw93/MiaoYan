@@ -384,7 +384,8 @@ public class NotesTextProcessor {
             if let value = value as? String, value.starts(with: tagQuery) {
                 if let tag = value
                     .replacingOccurrences(of: tagQuery, with: "")
-                    .removingPercentEncoding {
+                    .removingPercentEncoding
+                {
                     if NotesTextProcessor.getSpanCodeBlockRange(content: attributedString, range: range) != nil {
                         return
                     }
@@ -521,7 +522,7 @@ public class NotesTextProcessor {
         NotesTextProcessor.italicRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range else { return }
             attributedString.fixAttributes(in: range)
-            attributedString.addAttribute(.foregroundColor, value: htmlColor, range: range)
+            attributedString.addAttribute(.foregroundColor, value: titleColor, range: range)
         }
 
         NotesTextProcessor.boldRegex.matches(string, range: paragraphRange) { result in
@@ -1200,10 +1201,11 @@ public class NotesTextProcessor {
     public static let appUrlRegex = MarklightRegex(pattern: appUrlPattern, options: [.anchorsMatchLines])
 
     // MARK: Bold
+
     fileprivate static let strictBoldPattern = "(^|[\\W_])(?:(?!\\1)|(?=^))(\\*|_)\\2(?=\\S)(.*?\\S)\\2\\2(?!\\2)(?=[\\W_]|$)"
     public static let strictBoldRegex = MarklightRegex(pattern: strictBoldPattern, options: [.anchorsMatchLines])
 
-    fileprivate static let boldPattern = "(\\*\\*|__) (?=\\S) (.+?[*_]*) (?<=\\S) \\1"
+    fileprivate static let boldPattern = "(\\*\\*|__)(?=\\S)(.+?)(?<=\\S)\\1"
     public static let boldRegex = MarklightRegex(pattern: boldPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
     // MARK: Strike
@@ -1235,8 +1237,7 @@ public class NotesTextProcessor {
 
     public static let strictItalicRegex = MarklightRegex(pattern: strictItalicPattern, options: [.anchorsMatchLines])
 
-    fileprivate static let italicPattern = "(?<=^|\\s)(\\*|_)(?!\\s)(.+?)(?<!\\s)\\1(?=$|\\s)"
-
+    fileprivate static let italicPattern = "(?<!\\*|_)(?<!\\*\\*)(\\*|_)(?!\\s)(.+?)(?<!\\s)\\1(?!\\*|_)(?!\\*\\*)"
     public static let italicRegex = MarklightRegex(pattern: italicPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
     fileprivate static let autolinkPrefixPattern = "((https?|ftp)://)"
@@ -1486,7 +1487,8 @@ public struct MarklightRegex {
     }
 
     public func matches(_ input: String, range: NSRange,
-                        completion: @escaping (_ result: NSTextCheckingResult?) -> Void) {
+                        completion: @escaping (_ result: NSTextCheckingResult?) -> Void)
+    {
         let s = input as NSString
         // NSRegularExpression.
         let options = NSRegularExpression.MatchingOptions(rawValue: 0)
