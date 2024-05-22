@@ -364,6 +364,16 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         return false
     }
 
+    func addLazyLoadToImages(in html: String) -> String {
+        // Regular expression matching<img> The tag does not contain the loading="lazy" attribute
+        let pattern = #"<img(?![^>]*\bloading\s*=\s*['"]?lazy['"]?)([^>]*)>"#
+        let regex = try! NSRegularExpression(pattern: pattern, options: [])
+        
+        let modifiedHTML = regex.stringByReplacingMatches(in: html, options: [], range: NSRange(location: 0, length: html.utf16.count), withTemplate: "<img loading=\"lazy\"$1>")
+        
+        return modifiedHTML
+    }
+
     func loadHTMLView(_ markdownString: String, css: String, imagesStorage: URL? = nil) throws {
         var htmlString = renderMarkdownHTML(markdown: markdownString)!
 
@@ -377,8 +387,11 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             pageHTMLString = try htmlFromTemplate(markdownString, css: css)
         }
 
+        pageHTMLString = addLazyLoadToImages(in: pageHTMLString)
+ 
 //        print(">>>>>>")
 //        print(pageHTMLString)
+        
         let indexURL = createTemporaryBundle(pageHTMLString: pageHTMLString)
 
         if let i = indexURL {
