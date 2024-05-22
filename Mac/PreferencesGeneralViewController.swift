@@ -58,9 +58,9 @@ class PreferencesGeneralViewController: NSViewController {
     func refreshPreview() {
         guard let vc = ViewController.shared() else { return }
         if UserDefaultsManagement.preview { vc.disablePreview() }
-        
+
         // PPT场景下使用预览会很难看
-        if !vc.isMiaoYanPPT() {
+        if !vc.isMiaoYanPPT(needToast: false) {
             vc.enablePreview()
         }
     }
@@ -156,7 +156,7 @@ class PreferencesGeneralViewController: NSViewController {
         UserDefaultsManagement.presentationFontSize = Int(item.title) ?? UserDefaultsManagement.DefaultPresentationFontSize
 
         // PPT场景下使用预览会很难看
-        if !vc.isMiaoYanPPT() {
+        if !vc.isMiaoYanPPT(needToast: false) {
             vc.disablePresentation()
             vc.enablePresentation()
         }

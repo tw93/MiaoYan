@@ -218,8 +218,8 @@
 /* Class = "NSMenu"; title = "Export"; ObjectID = "LoU-Gc-oM3"; */
 "LoU-Gc-oM3.title" = "エクスポート";
 
-/* Class = "NSMenuItem"; title = "LXGW WenKai Lite"; ObjectID = "Lx0-fl-9t0"; */
-"Lx0-fl-9t0.title" = "LXGW WenKai Lite";
+/* Class = "NSMenuItem"; title = "LXGW WenKai Screen"; ObjectID = "Lx0-fl-9t0"; */
+"Lx0-fl-9t0.title" = "LXGW WenKai Screen";
 
 /* Class = "NSMenuItem"; title = "Show All"; ObjectID = "M15-Xw-GpW"; */
 "M15-Xw-GpW.title" = "すべて表示する";
@@ -272,8 +272,8 @@
 /* Class = "NSMenuItem"; title = "13"; ObjectID = "Q3T-TQ-ewQ"; */
 "Q3T-TQ-ewQ.title" = "13";
 
-/* Class = "NSMenuItem"; title = "LXGW WenKai Lite"; ObjectID = "QwH-At-JGa"; */
-"QwH-At-JGa.title" = "LXGW WenKai Lite";
+/* Class = "NSMenuItem"; title = "LXGW WenKai Screen"; ObjectID = "QwH-At-JGa"; */
+"QwH-At-JGa.title" = "LXGW WenKai Screen";
 
 /* Class = "NSMenuItem"; title = "SF Pro Text"; ObjectID = "RSK-NX-AjP"; */
 "RSK-NX-AjP.title" = "SF Pro Text";
@@ -314,8 +314,8 @@
 /* Class = "NSMenuItem"; title = "Picsee"; ObjectID = "Tog-9P-3TK"; */
 "Tog-9P-3TK.title" = "Picsee";
 
-/* Class = "NSMenuItem"; title = "LXGW WenKai Lite"; ObjectID = "U0d-Y0-lbU"; */
-"U0d-Y0-lbU.title" = "LXGW WenKai Lite";
+/* Class = "NSMenuItem"; title = "LXGW WenKai Screen"; ObjectID = "U0d-Y0-lbU"; */
+"U0d-Y0-lbU.title" = "LXGW WenKai Screen";
 
 /* Class = "NSMenuItem"; title = "JetBrains Mono"; ObjectID = "U3E-6j-h9N"; */
 "U3E-6j-h9N.title" = "JetBrains Mono";
