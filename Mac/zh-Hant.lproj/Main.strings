@@ -97,8 +97,8 @@
 /* Class = "NSMenuItem"; title = "Minimize"; ObjectID = "A5V-Wm-if2"; */
 "A5V-Wm-if2.title" = "最小化";
 
-/* Class = "NSTextFieldCell"; title = "Copyright © 2023 Tw93"; ObjectID = "ad2-SL-Pni"; */
-"ad2-SL-Pni.title" = "著作權所有 © 2023 Tw93";
+/* Class = "NSTextFieldCell"; title = "Copyright © 2024 Tw93"; ObjectID = "ad2-SL-Pni"; */
+"ad2-SL-Pni.title" = "著作權所有 © 2024 Tw93";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Format"; ObjectID = "Adc-zl-sqX"; */
 "Adc-zl-sqX.ibShadowedToolTip" = "格式";
