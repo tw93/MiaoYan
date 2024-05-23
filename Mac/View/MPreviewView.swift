@@ -225,22 +225,24 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
                 if complete != nil {
-                    super.evaluateJavaScript("document.body.offsetHeight", completionHandler: { height, _ in
+                    super.evaluateJavaScript("document.body.scrollHeight", completionHandler: { height, _ in
                         guard let contentHeight = height as? CGFloat else {
                             print("Content height could not be obtained"); return
                         }
-                        super.evaluateJavaScript("document.body.offsetWidth", completionHandler: { [weak self] width, _ in
+                        super.evaluateJavaScript("document.body.scrollWidth", completionHandler: { [weak self] width, _ in
                             if let contentWidth = width as? CGFloat {
                                 let config = WKSnapshotConfiguration()
                                 config.rect = CGRect(x: 0, y: 0, width: contentWidth, height: contentHeight)
-                                config.afterScreenUpdates = false
+                                config.afterScreenUpdates = true
+                                // Improve resolution
+                                config.snapshotWidth = NSNumber(value: Double(contentWidth) * 2.0)
                                 self?.frame.size.height = contentHeight
                                 self?.takeSnapshot(with: config, completionHandler: { image, error in
                                     if let image = image {
                                         if let desktopURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first {
                                             let currentName = self?.note?.getExportTitle()
-                                            let destinationURL = desktopURL.appendingPathComponent(currentName! + ".jpeg")
-                                            try! image.saveJPEGRepresentationToURL(url: destinationURL)
+                                            let destinationURL = desktopURL.appendingPathComponent(currentName! + ".png")
+                                            try! image.savePNGRepresentationToURL(url: destinationURL)
                                         }
                                         vc.toastExport(status: true)
                                         print("Got snapshot")
@@ -368,9 +370,9 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         // Regular expression matching<img> The tag does not contain the loading="lazy" attribute
         let pattern = #"<img(?![^>]*\bloading\s*=\s*['"]?lazy['"]?)([^>]*)>"#
         let regex = try! NSRegularExpression(pattern: pattern, options: [])
-        
+
         let modifiedHTML = regex.stringByReplacingMatches(in: html, options: [], range: NSRange(location: 0, length: html.utf16.count), withTemplate: "<img loading=\"lazy\"$1>")
-        
+
         return modifiedHTML
     }
 
@@ -387,11 +389,13 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             pageHTMLString = try htmlFromTemplate(markdownString, css: css)
         }
 
-        pageHTMLString = addLazyLoadToImages(in: pageHTMLString)
- 
+        if !UserDefaultsManagement.isOnExport {
+            pageHTMLString = addLazyLoadToImages(in: pageHTMLString)
+        }
+
 //        print(">>>>>>")
 //        print(pageHTMLString)
-        
+
         let indexURL = createTemporaryBundle(pageHTMLString: pageHTMLString)
 
         if let i = indexURL {
