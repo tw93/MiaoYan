@@ -258,6 +258,9 @@ class SidebarProjectView: NSOutlineView,
 
         if let si = item as? SidebarItem {
             cell.textField?.stringValue = si.name
+            
+            cell.label.font = UserDefaultsManagement.nameFont
+            cell.label.addCharacterSpacing()
 
             switch si.type {
             case .All:
