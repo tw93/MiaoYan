@@ -133,10 +133,16 @@ public extension NSImage {
     ///
     /// - parameter url: The location url to which to write the png file.
     func savePNGRepresentationToURL(url: URL) throws {
-        if let png = PNGRepresentation {
-            try png.write(to: url, options: .atomicWrite)
+            guard let tiffData = self.tiffRepresentation,
+                  // Create an NSBitmapImageRep object using TIFF data
+                  let bitmapImage = NSBitmapImageRep(data: tiffData),
+                  // Converts an NSBitmapImageRep object to PNG data
+                  let pngData = bitmapImage.representation(using: .png, properties: [:]) else {
+                throw NSError(domain: "Error creating PNG representation", code: 0, userInfo: nil)
+            }
+            // Writes PNG data to the specified URL
+            try pngData.write(to: url, options: .atomicWrite)
         }
-    }
 
     func saveJPEGRepresentationToURL(url: URL) throws {
         if let jpeg = JPEGRepresentation {
