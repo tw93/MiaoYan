@@ -33,8 +33,8 @@ public enum UserDefaultsManagement {
 
     static var editorLineSpacing = 3.0
     static var editorLineHeight = 1.3
-    static var editorLetterSpacing = 0.5
-    static var windowLetterSpacing = 0.5
+    static var editorLetterSpacing = 0.6
+    static var windowLetterSpacing = 0.6
 
     static var titleFontSize = 20
     static var emptyEditTitleFontSize = 36
