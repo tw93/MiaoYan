@@ -31,6 +31,7 @@ html {
   font-size: 15px;
   font-display: block;
   color: #262626;
+  -webkit-font-smoothing: subpixel-antialiased;
 }
 
 body {
