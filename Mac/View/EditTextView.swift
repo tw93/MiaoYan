@@ -44,7 +44,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         EditTextView.imagesLoaderQueue.maxConcurrentOperationCount = 3
         EditTextView.imagesLoaderQueue.qualityOfService = .userInteractive
     }
-    
+
     override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn flag: Bool) {
         var newRect = NSRect(origin: rect.origin, size: rect.size)
         newRect.size.width = caretWidth
