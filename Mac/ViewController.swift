@@ -425,7 +425,14 @@ class ViewController:
             editArea.layoutManager?.typesetterBehavior = .behavior_10_2_WithCompatibility
         }
         search.font = UserDefaultsManagement.searchFont
-        editArea.font = UserDefaultsManagement.noteFont
+
+        editArea.defaultParagraphStyle = NSTextStorage.getParagraphStyle()
+        editArea.typingAttributes = [
+            .font: UserDefaultsManagement.noteFont!,
+            .kern: UserDefaultsManagement.editorLetterSpacing,
+            .paragraphStyle: NSTextStorage.getParagraphStyle(),
+        ]
+
         titleLabel.font = UserDefaultsManagement.titleFont.titleBold()
         emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont
 
@@ -1557,16 +1564,18 @@ class ViewController:
 
     // Changed main edit view
     func textDidChange(_ notification: Notification) {
-        guard let note = getCurrentNote() else {
-            return
-        }
+        guard let note = getCurrentNote() else { return }
+        guard let textView = notification.object as? NSTextView else { return }
 
         blockFSUpdates()
 
         if !UserDefaultsManagement.preview, editArea.isEditable {
+            let textStorage = textView.textStorage
+            let fullRange = NSRange(location: 0, length: textStorage?.length ?? 0)
+            textStorage?.addAttribute(.kern, value: UserDefaultsManagement.editorLetterSpacing, range: fullRange)
+
             editArea.removeHighlight()
             editArea.saveImages()
-
             note.save(attributed: editArea.attributedString())
 
             // 编辑内容，标题排序的时候有bug，先关掉
@@ -2073,7 +2082,7 @@ class ViewController:
         filteredNoteList = resorted
         Analytics.trackEvent("MiaoYan Pin")
     }
-    
+
     func isMiaoYanPPT(needToast: Bool = true) -> Bool {
         guard let note = notesTableView.getSelectedNote() else {
             return false

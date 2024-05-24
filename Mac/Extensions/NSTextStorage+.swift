@@ -44,6 +44,7 @@ public extension NSTextStorage {
         mutableString.enumerateSubstrings(in: NSRange(0..<length), options: .byParagraphs) { _, range, _, _ in
             let rangeNewline = range.upperBound == self.length ? range : NSRange(range.location..<range.upperBound + 1)
             self.addAttribute(.paragraphStyle, value: attachmentParagraph, range: rangeNewline)
+            self.addAttribute(.kern, value: UserDefaultsManagement.editorLetterSpacing, range: rangeNewline)
         }
         endEditing()
     }
