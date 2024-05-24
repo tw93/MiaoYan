@@ -629,7 +629,7 @@ class HandlerSelection: NSObject, WKScriptMessageHandler {
     }
 }
 
-// 用于解决ppt模式下背景颜色变化左侧边框颜色的适配
+// Used to solve the adaptation of the left border/title color change with background color in PPT mode.
 class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController,
                                didReceive message: WKScriptMessage)
@@ -639,9 +639,11 @@ class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
         if message == "" {
             vc.setDividerHidden(hidden: true)
             vc.setSideDividerHidden(hidden: true)
+            vc.titleLabel.backgroundColor = NSColor(named: "mainBackground")
         } else {
             vc.sidebarSplitView.setValue(NSColor(css: message), forKey: "dividerColor")
             vc.splitView.setValue(NSColor(css: message), forKey: "dividerColor")
+            vc.titleLabel.backgroundColor = NSColor(css: message)
         }
     }
 }
