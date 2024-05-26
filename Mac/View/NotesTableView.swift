@@ -157,12 +157,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
                         return
                     }
                     vc.editArea.fill(note: note, highlight: true)
-                    
-                    // 用一种新方法设置字间距
-                    if let mutableAttrString = vc.editArea.textStorage {
-                        let range = NSRange(location: 0, length: vc.editArea.string.count)
-                        mutableAttrString.addAttribute(NSAttributedString.Key.kern, value: UserDefaultsManagement.editorLetterSpacing, range: range)
-                    }
                 }
             }
             loadingQueue.addOperation(operation)
