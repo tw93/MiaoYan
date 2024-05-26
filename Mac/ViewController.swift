@@ -429,7 +429,6 @@ class ViewController:
         editArea.defaultParagraphStyle = NSTextStorage.getParagraphStyle()
         editArea.typingAttributes = [
             .font: UserDefaultsManagement.noteFont!,
-            .kern: UserDefaultsManagement.editorLetterSpacing,
             .paragraphStyle: NSTextStorage.getParagraphStyle(),
         ]
 
@@ -1008,16 +1007,6 @@ class ViewController:
         }
     }
 
-    // Used to solve the problem of word spacing
-    func textView(_ textView: NSTextView, shouldChangeTextIn affectedCharRange: NSRange, replacementString: String?) -> Bool {
-        if let replacementString = replacementString, replacementString.contains(" ") {
-            let adjustedString = replacementString.replacingOccurrences(of: " ", with: "\u{00A0}") // 使用不间断空格替代普通空格
-            textView.textStorage?.replaceCharacters(in: affectedCharRange, with: adjustedString)
-            return false
-        }
-        return true
-    }
-
     @IBAction func quiteApp(_ sender: Any) {
         if UserDefaultsManagement.isSingleMode {
             UserDefaultsManagement.isSingleMode = false
@@ -1575,15 +1564,10 @@ class ViewController:
     // Changed main edit view
     func textDidChange(_ notification: Notification) {
         guard let note = getCurrentNote() else { return }
-        guard let textView = notification.object as? NSTextView else { return }
 
         blockFSUpdates()
 
         if !UserDefaultsManagement.preview, editArea.isEditable {
-            let textStorage = textView.textStorage
-            let fullRange = NSRange(location: 0, length: textStorage?.length ?? 0)
-            textStorage?.addAttribute(.kern, value: UserDefaultsManagement.editorLetterSpacing, range: fullRange)
-
             editArea.removeHighlight()
             editArea.saveImages()
             note.save(attributed: editArea.attributedString())
