@@ -3,32 +3,32 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
-      <title>1.15.0</title>
+      <title>1.15.1</title>
       <description><![CDATA[
       <h3>好久不见 🥂：</h3>
       <ol>
-        <li>妙言字体显示效果升级，更黑稍粗更便于阅读，好看的字间距回来了。</li>
+        <li>妙言字体显示效果升级，更黑稍粗更便于阅读。</li>
         <li>预览的时候支持懒加载内容，让你可以最快速度看到效果。</li>
         <li>Markdown 效果高亮持续优化，链接、粗体、斜体兼容性优化。</li>
         <li>修复 PPT 预览下窗口适配背景、窗口文字字间距统一、更新版本日期。</li>
       </ol>
       <h3>Long time no see 🥂：</h3>
       <ol>
-        <li>The display effect of the MiaoYan font has been upgraded. It is now blacker and slightly bolder, making it easier to read. The beautiful letter spacing is back.</li>
+        <li>The display effect of the MiaoYan font has been upgraded. It is now blacker and slightly bolder, making it easier to read.</li>
         <li>Supports lazy loading content in preview mode, allowing you to see the effect as quickly as possible.</li>
         <li>Continuous optimization of Markdown rendering effect. Improvements in link, bold, and italic text compatibility.</li>
         <li>Fixed window adaptation background color in PPT preview, unified text letter spacing in windows, and updated version date to 2024.</li>
       </ol>
       <h3>久しぶり 🥂：</h3>
       <ol>
-        <li>妙言フォントの表示効果をアップグレードしました。より黒く、少し太くなり、読みやすくなりました。また、美しい文字間隔も復活しました。</li>
+        <li>妙言フォントの表示効果をアップグレードしました。より黒く、少し太くなり、読みやすくなりました。</li>
         <li>プレビュー時に遅延読み込みをサポートし、最速で効果を見ることができます。</li>
         <li>Markdownのレンダリング効果を継続的に最適化しました。リンク、太字、斜体の互換性の改善。</li>
         <li>PPTプレビューでのウィンドウ適応背景色を修正、ウィンドウの文字間隔を統一し、バージョンの日付を2024年に更新しました。</li>
       </ol>
           ]]>      </description>
       <pubDate>周日, 26 05月 2024 23:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.15.0.zip" sparkle:shortVersionString="1.15.0" sparkle:version="1.15.0" sparkle:edSignature="Pr9Bt6vPqZp56d0YvSGILda0xMZdSlwXt0yg51y6qENPLGqpN9pQHoOsL6W4bBBnJJ2R7xJPCvjODLNAKSOdCQ==" length="21909095" type="application/octet-stream" />
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.15.1.zip" sparkle:shortVersionString="1.15.1" sparkle:version="1.15.1" sparkle:edSignature="6wIdCZlZVZANiiQKe0C+a+Q8i9OVdC+k1Yd0YaT7oo1/gLnJT/wfIrgWUzUPnobfa2CDjtp42SiYdr2bs1n8Dw==" length="21905469" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
     </item>
     <item>
