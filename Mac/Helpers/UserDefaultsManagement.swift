@@ -19,8 +19,8 @@ public enum UserDefaultsManagement {
 
     static var DefaultFont = "LXGW WenKai Screen"
 
-    static var DefaultFontSize = 15
-    static var DefaultPreviewFontSize = 15
+    static var DefaultFontSize = 16
+    static var DefaultPreviewFontSize = 16
     static var DefaultPresentationFontSize = 24
 
     static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
