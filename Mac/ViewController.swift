@@ -329,6 +329,7 @@ class ViewController:
         refreshMiaoYanNum()
 
         if UserDefaultsManagement.isSingleMode, isLaunch {
+            vc.toastInSingleMode()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 vc.hideSidebar("")
             }
