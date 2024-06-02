@@ -9,7 +9,7 @@
     "anywhere": "anywhere",
     "dev": "npm-run-all --parallel anywhere watch",
     "start": "npm run dev",
-    "pre-commit": "npm run build"
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
