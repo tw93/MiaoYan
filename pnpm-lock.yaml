@@ -17,6 +17,9 @@ devDependencies:
   cssnano:
     specifier: ^5.1.11
     version: 5.1.15(postcss@8.4.31)
+  husky:
+    specifier: ^9.0.11
+    version: 9.0.11
   npm-run-all:
     specifier: ^4.1.5
     version: 4.1.5
@@ -1244,6 +1247,12 @@ packages:
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
+    dev: true
+
+  /husky@9.0.11:
+    resolution: {integrity: sha512-AB6lFlbwwyIqMdHYhwPe+kjOC3Oc5P3nThEoW/AaO2BX3vJDjWPFxYLxokUZOo6RNX20He3AaT8sESs9NJcmEw==}
+    engines: {node: '>=18'}
+    hasBin: true
     dev: true
 
   /ignore@5.2.4:
