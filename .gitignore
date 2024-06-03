@@ -18,3 +18,4 @@ docs/
 index.html
 IrEditor
 package-lock.json
+.husky/
