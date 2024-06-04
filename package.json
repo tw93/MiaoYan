@@ -9,7 +9,12 @@
     "anywhere": "anywhere",
     "dev": "npm-run-all --parallel anywhere watch",
     "start": "npm run dev",
-    "prepare": "husky"
+    "prepare": "husky install"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run build"
+    }
   },
   "repository": {
     "type": "git",
