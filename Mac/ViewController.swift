@@ -29,7 +29,6 @@ class ViewController:
     let searchQueue = OperationQueue()
     var isFocusedTitle: Bool = false
     var formatContent: String = ""
-    var isLaunch: Bool = true
     var needRestorePreview: Bool = false
 
     private var disablePreviewWorkItem: DispatchWorkItem?
@@ -328,7 +327,7 @@ class ViewController:
         setDividerHidden(hidden: size == 0)
         refreshMiaoYanNum()
 
-        if UserDefaultsManagement.isSingleMode, isLaunch {
+        if UserDefaultsManagement.isSingleMode {
             vc.toastInSingleMode()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 vc.hideSidebar("")
@@ -340,14 +339,6 @@ class ViewController:
                 vc.setSideDividerHidden(hidden: false)
             }
             UserDefaultsManagement.isFirstLaunch = false
-        }
-
-        // 用于恢复聚焦模式时候重启应用后的效果
-        if isLaunch, size == 0 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                vc.showNoteList("")
-                vc.setDividerHidden(hidden: false)
-            }
         }
     }
 
