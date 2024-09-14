@@ -476,24 +476,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
     }
 
-    func removeHighlight() {
-        guard isHighlighted else {
-            return
-        }
-
-        isHighlighted = false
-
-        // save cursor position
-        let cursorLocation = selectedRanges[0].rangeValue.location
-
-        let search = getSearchText()
-        let processor = NotesTextProcessor(storage: textStorage)
-        processor.highlightKeyword(search: search, remove: true)
-
-        // restore cursor
-        setSelectedRange(NSRange(location: cursorLocation, length: 0))
-    }
-
     public func clear() {
         textStorage?.setAttributedString(NSAttributedString())
         markdownView?.removeFromSuperview()

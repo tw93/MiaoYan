@@ -732,7 +732,7 @@ class ViewController:
             let selected = self.notesTableView.selectedRow
             if selected > -1, self.notesTableView.noteList.indices.contains(selected) {
                 if let note = self.notesTableView.getSelectedNote() {
-                    self.editArea.fill(note: note, saveTyping: saveTyping, force: force)
+                    self.editArea.fill(note: note, highlight: true, saveTyping: saveTyping, force: force)
                     self.editArea.setSelectedRange(NSRange(location: location, length: 0))
                 }
             }
@@ -1560,7 +1560,6 @@ class ViewController:
         blockFSUpdates()
 
         if !UserDefaultsManagement.preview, editArea.isEditable {
-            editArea.removeHighlight()
             editArea.saveImages()
             note.save(attributed: editArea.attributedString())
 
@@ -2278,7 +2277,7 @@ class ViewController:
                     newContent = formatResult.formattedString.removeLastNewLine()
                 }
                 editArea.insertText(newContent, replacementRange: NSRange(0..<note.content.length))
-                editArea.fill(note: note, saveTyping: true, force: false, needScrollToCursor: false)
+                editArea.fill(note: note, highlight: true, saveTyping: true, force: false, needScrollToCursor: false)
                 editArea.setSelectedRange(NSRange(location: formatResult.cursorOffset, length: 0))
                 editAreaScroll.documentView?.scroll(NSPoint(x: 0, y: top))
                 formatContent = newContent
