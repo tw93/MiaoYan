@@ -232,12 +232,10 @@ public class ImagesProcessor {
             try FileManager.default.createDirectory(at: destination, withIntermediateDirectories: false, attributes: nil)
         } catch {}
 
-        guard var fileName = ImagesProcessor.getFileName(from: url, to: destination, ext: ext) else { return nil }
+        guard let fileName = ImagesProcessor.getFileName(from: url, to: destination, ext: ext) else { return nil }
 
         let to = destination.appendingPathComponent(fileName)
         try? data.write(to: to, options: .atomic)
-
-        fileName = fileName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? fileName
 
         return "\(prefix)\(fileName)"
     }
