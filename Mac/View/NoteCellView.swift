@@ -46,7 +46,7 @@ class NoteCellView: NSTableCellView {
         name.addCharacterSpacing()
         date.addCharacterSpacing()
         
-        if backgroundStyle == NSView.BackgroundStyle.dark {
+        if backgroundStyle == NSView.BackgroundStyle.emphasized {
             date.textColor = NSColor.white
             name.textColor = NSColor.white
         } else {

@@ -24,9 +24,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     public static var fontColor: NSColor {
         if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-            return NSColor(named: "mainText")!
+            NSColor(named: "mainText")!
         } else {
-            return UserDefaultsManagement.fontColor
+            UserDefaultsManagement.fontColor
         }
     }
 
@@ -64,7 +64,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     override func becomeFirstResponder() -> Bool {
         let shouldBecomeFirstResponder = super.becomeFirstResponder()
-        if shouldBecomeFirstResponder && string.isEmpty {
+        if shouldBecomeFirstResponder, string.isEmpty {
             let paragraphStyle = NSTextStorage.getParagraphStyle()
             typingAttributes[.paragraphStyle] = paragraphStyle
             defaultParagraphStyle = paragraphStyle
@@ -955,13 +955,17 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
             // String 外跳
             if let link = link as? String, let url = URL(string: link) {
-                _ = try? NSWorkspace.shared.open(url, options: .withoutActivation, configuration: [:])
+                let config = NSWorkspace.OpenConfiguration()
+                config.activates = false
+                NSWorkspace.shared.open(url, configuration: config)
                 return
             }
 
-            // URL 链接外跳
+            // URL 外跳
             if let link = link as? URL {
-                _ = try? NSWorkspace.shared.open(link, options: .withoutActivation, configuration: [:])
+                let config = NSWorkspace.OpenConfiguration()
+                config.activates = false
+                NSWorkspace.shared.open(link, configuration: config)
                 return
             }
 
@@ -1104,10 +1108,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
             if picType == "PicGo" {
                 vc.toastUpload(status: true)
                 postToPicGo(imagePath: imagePath) { result, error in
-                    if let result = result {
+                    if let result {
                         newLineImage = NSAttributedString(string: "![](\(result))")
                         self.deleteImage(tempPath: tempPath)
-                    } else if let error = error {
+                    } else if let error {
                         vc.toastUpload(status: false)
                         print("error: \(error.localizedDescription)")
                     } else {
