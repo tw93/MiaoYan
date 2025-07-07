@@ -1,6 +1,6 @@
 use_frameworks!
 
-MAC_TARGET_VERSION = '10.15'
+MAC_TARGET_VERSION = '11.5'
 
 def mac_pods
     pod 'Sparkle'
@@ -24,7 +24,7 @@ post_install do |installer|
   xcode_base_version = `xcodebuild -version | grep 'Xcode' | awk '{print $2}' | cut -d . -f 1`
   installer.pods_project.targets.each do |project|
     project.build_configurations.each do |config|
-        config.build_settings['MACOSX_DEPLOYMENT_TARGET'] = '10.15'
+        config.build_settings['MACOSX_DEPLOYMENT_TARGET'] = '11.5'
         config.build_settings['SWIFT_VERSION'] = '5.0'
         config.build_settings['ONLY_ACTIVE_ARCH'] = 'YES'
         config.build_settings['DEAD_CODE_STRIPPING'] = 'YES'

@@ -4,7 +4,7 @@ import AppKit
 import UIKit
 #endif
 
-extension NSTextStorage: NSTextStorageDelegate {
+extension NSTextStorage: @retroactive NSTextStorageDelegate {
     #if os(iOS)
     public func textStorage(
         _ textStorage: NSTextStorage,
