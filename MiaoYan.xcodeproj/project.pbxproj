@@ -19,6 +19,7 @@
 		272CAC1E287577E70026EF50 /* ContentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 272CAC20287577E70026EF50 /* ContentViewController.xib */; };
 		272CAC2628758C6A0026EF50 /* ContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272CAC2528758C6A0026EF50 /* ContentViewController.swift */; };
 		275592971F3AE9B5006B8988 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275592961F3AE9B5006B8988 /* MainWindowController.swift */; };
+		27727AFB2E1B9E7200275477 /* TsangerJinKai02-W04.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27727AFA2E1B9E7200275477 /* TsangerJinKai02-W04.ttf */; };
 		277A61D8244B538F000F0033 /* SidebarTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277A61D7244B538E000F0033 /* SidebarTableRowView.swift */; };
 		27838E68287521C0009E8012 /* DetachedWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27838E67287521C0009E8012 /* DetachedWindowController.swift */; };
 		2799407C218484C900727B20 /* TitleBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799407B218484C900727B20 /* TitleBarView.swift */; };
@@ -163,6 +164,7 @@
 		276CE9F02997D34600280459 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		276CE9F12997D37200280459 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ../ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		276CE9F32997D39800280459 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "../zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		27727AFA2E1B9E7200275477 /* TsangerJinKai02-W04.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TsangerJinKai02-W04.ttf"; sourceTree = "<group>"; };
 		277A61D7244B538E000F0033 /* SidebarTableRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarTableRowView.swift; sourceTree = "<group>"; };
 		277DB692288AB6E9003DA090 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		27838E67287521C0009E8012 /* DetachedWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetachedWindowController.swift; sourceTree = "<group>"; };
@@ -306,6 +308,7 @@
 		27A1AE302844BA83006DF055 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				27727AFA2E1B9E7200275477 /* TsangerJinKai02-W04.ttf */,
 				271945EF2BFE0F5400390DFF /* LXGWWenKaiScreen.ttf */,
 			);
 			path = Fonts;
@@ -623,6 +626,7 @@
 				D7FBBC2520F151F80014EC5B /* Localizable.strings in Resources */,
 				271945F02BFE0F5400390DFF /* LXGWWenKaiScreen.ttf in Resources */,
 				2714D861285196D70026BDE4 /* InfoPlist.strings in Resources */,
+				27727AFB2E1B9E7200275477 /* TsangerJinKai02-W04.ttf in Resources */,
 				D7166F541F32F75E001A883F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

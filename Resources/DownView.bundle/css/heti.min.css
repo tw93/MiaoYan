@@ -27,6 +27,11 @@
   local('Hiragino Sans GB'), local('WenQuanYi Micro Hei'), local('Microsoft Yahei');
 }
 
+@font-face {
+  font-family: 'TsangerJinKai02-W04';
+  src: local('TsangerJinKai02-W04'), local('WenQuanYi Micro Hei'), local('Microsoft Yahei');
+}
+
 html {
   font-size: 15px;
   font-display: block;
