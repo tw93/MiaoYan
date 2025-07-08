@@ -1,4 +1,5 @@
 import libcmark_gfm
+import Foundation
 
 func renderMarkdownHTML(markdown: String) -> String? {
     cmark_gfm_core_extensions_ensure_registered()
@@ -17,10 +18,27 @@ func renderMarkdownHTML(markdown: String) -> String? {
     cmark_parser_feed(parser, markdown, markdown.utf8.count)
     guard let node = cmark_parser_finish(parser) else { return nil }
 
-    var res = String(cString: cmark_render_html(node, CMARK_OPT_UNSAFE | CMARK_OPT_HARDBREAKS, nil))
+    var res: String
     if UserDefaultsManagement.editorLineBreak == "Github" {
         res = String(cString: cmark_render_html(node, CMARK_OPT_UNSAFE | CMARK_OPT_NOBREAKS, nil))
+    } else {
+        res = String(cString: cmark_render_html(node, CMARK_OPT_UNSAFE | CMARK_OPT_HARDBREAKS, nil))
     }
 
-    return res
+    // 后处理：去除公式块内的 <br> 和 <br />
+    let pattern = #"<p>(\$\$[\s\S]*?\$\$)<\/p>"#
+    let regex = try? NSRegularExpression(pattern: pattern, options: [])
+    let nsRes = res as NSString
+    var newRes = res
+    regex?.enumerateMatches(in: res, options: [], range: NSRange(location: 0, length: nsRes.length)) { match, _, _ in
+        guard let match = match else { return }
+        let formulaBlock = nsRes.substring(with: match.range(at: 1))
+        let cleaned = formulaBlock.replacingOccurrences(of: "<br>", with: "")
+                                   .replacingOccurrences(of: "<br />", with: "")
+        let fullMatch = nsRes.substring(with: match.range(at: 0))
+        let replaced = "<p>\(cleaned)</p>"
+        newRes = newRes.replacingOccurrences(of: fullMatch, with: replaced)
+    }
+
+    return newRes
 }
