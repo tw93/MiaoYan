@@ -68,7 +68,10 @@ class TitleTextField: NSTextField {
                     .replacingOccurrences(of: "/", with: ":")
             let dst = note.project.url.appendingPathComponent(fileName).appendingPathExtension(ext)
 
-            if !FileManager.default.fileExists(atPath: dst.path), note.move(to: dst) {
+            // 允许仅大小写变化时重命名
+            let isCaseOnlyChange = currentName.lowercased() == currentTitle.lowercased() && currentName != currentTitle
+
+            if (!FileManager.default.fileExists(atPath: dst.path) || isCaseOnlyChange), note.move(to: dst) {
                 vc.updateTitle(newTitle: currentTitle)
                 updateNotesTableView()
             } else {
