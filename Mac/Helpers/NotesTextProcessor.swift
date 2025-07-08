@@ -724,29 +724,6 @@ public class NotesTextProcessor {
             }
         }
 
-        // We detect and process inline mailto links not formatted
-        NotesTextProcessor.autolinkEmailRegex.matches(string, range: paragraphRange) { result in
-            guard let range = result?.range else { return }
-            let substring = attributedString.mutableString.substring(with: range)
-            guard substring.lengthOfBytes(using: .utf8) > 0 else { return }
-
-            attributedString.addAttribute(.foregroundColor, value: linkColor, range: range)
-
-            if substring.isValidEmail() {
-                attributedString.addAttribute(.link, value: "mailto:\(substring)", range: range)
-            } else {
-                attributedString.addAttribute(.link, value: substring, range: range)
-            }
-
-            if NotesTextProcessor.hideSyntax {
-                NotesTextProcessor.mailtoRegex.matches(string, range: range) { innerResult in
-                    guard let innerRange = innerResult?.range else { return }
-                    attributedString.addAttribute(.font, value: hiddenFont, range: innerRange)
-                    attributedString.addAttribute(.foregroundColor, value: hiddenColor, range: innerRange)
-                }
-            }
-        }
-
         NotesTextProcessor.imageInlineRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range else { return }
 
@@ -1243,21 +1220,6 @@ public class NotesTextProcessor {
     fileprivate static let autolinkPrefixPattern = "((https?|ftp)://)"
 
     public static let autolinkPrefixRegex = MarklightRegex(pattern: autolinkPrefixPattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
-
-    fileprivate static let autolinkEmailPattern = [
-        "(?:mailto:)?",
-        "(",
-        "  [-.\\w]+",
-        "  \\@",
-        "  [-a-z0-9]+(\\.[-a-z0-9]+)*\\.[a-z]+",
-        ")"
-    ].joined(separator: "\n")
-
-    public static let autolinkEmailRegex = MarklightRegex(pattern: autolinkEmailPattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
-
-    fileprivate static let mailtoPattern = "mailto:"
-
-    public static let mailtoRegex = MarklightRegex(pattern: mailtoPattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
 
     /// maximum nested depth of [] and () supported by the transform;
     /// implementation detail
