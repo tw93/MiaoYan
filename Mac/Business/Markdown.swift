@@ -8,7 +8,7 @@ func renderMarkdownHTML(markdown: String) -> String? {
     defer { cmark_parser_free(parser) }
 
     // 附加常见的 GFM 扩展
-    let extensions = ["table", "autolink", "emoji", "footnotes", "strikethrough", "tasklist"]
+    let extensions = ["table", "emoji", "footnotes", "strikethrough", "tasklist"]
     for extName in extensions {
         if let ext = cmark_find_syntax_extension(extName) {
             cmark_parser_attach_syntax_extension(parser, ext)

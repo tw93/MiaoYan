@@ -64,17 +64,7 @@ public extension String {
 
         return self
     }
-
-    func isValidEmail() -> Bool {
-        let pattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
-
-        if let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) {
-            return regex.firstMatch(in: self, options: [], range: NSRange(location: 0, length: count)) != nil
-        }
-
-        return false
-    }
-
+    
     func isNumberList() -> Bool {
         let pattern = "^(( |\t)*[0-9]+\\. )"
         if let regex = try? NSRegularExpression(pattern: pattern) {
