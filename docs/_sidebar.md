@@ -1,5 +1,0 @@
-* [功能介绍](/)
-* [首次配置](/first)
-* [妙言 PPT](/ppt)
-* [支持 Markdown](/markdown)
-* [其他导入](/quiver)

@@ -3,6 +3,32 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>1.16.0</title>
+      <description><![CDATA[
+      <h3>小惊喜 🎉：</h3>
+      <ol>
+        <li>新增了个很好看的字体，快去设置中更新 TsangerJinKai</li>
+        <li>最低 Mac 版本支持 11.5，修复输入某些特殊格式奔溃的问题</li>
+        <li>公式 Latex 支持块渲染、修复标题大小写重复提示、邮箱不高亮展示不点击</li>
+      </ol>
+      <h3>Little Surprise 🎉:</h3>
+      <ol>
+        <li>Added a beautiful new font - update to TsangerJinKai in settings</li>
+        <li>Minimum Mac version support raised to 11.5, fixed crashes when inputting certain special formats</li>
+        <li>LaTeX formulas now support block rendering, fixed duplicate capitalization hints in titles, emails now show without highlighting/clickability</li>
+      </ol>
+      <h3>ささやかなサプライズ 🎉：</h3>
+      <ol>
+        <li>美しい新しいフォント「TsangerJinKai」を追加しました。設定からアップデートしてください</li>
+        <li>Macの最低対応バージョンを11.5に引き上げ、特定の特殊形式入力時のクラッシュを修正</li>
+        <li>数式LaTeXのブロックレンダリング対応、タイトルの大文字小文字重複警告の修正、メールアドレスのハイライト非表示（クリック不可）</li>
+      </ol>
+          ]]>      </description>
+      <pubDate>周五, 17 07月 2025 23:00:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.16.0.zip" sparkle:shortVersionString="1.16.0" sparkle:version="1.16.0" sparkle:edSignature="qP3kBRjvE9TmhBO0lZb7VErwehv2PujoX2J22vjG9AZ9lRX4GttafrBsQRoQQjn21zbfK4htoa1eNTsvf8AnAA==" length="33649918" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>1.15.1</title>
       <description><![CDATA[
       <h3>好久不见 🥂：</h3>
@@ -55,38 +81,6 @@
           ]]>      </description>
       <pubDate>周二, 12 12月 2023 23:00:20 +0800</pubDate>
       <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.14.1.zip" sparkle:shortVersionString="1.14.1" sparkle:version="1.14.1" sparkle:edSignature="gOEMnoC1BwBwK2Kgwh50u5LCAoDggfbvVUshleEyFHQH5hKzmaVGcw1VZGh7ZEoDNEpMamMpbbGKE5A3ovYiAg==" length="20893148" type="application/octet-stream" />
-      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-    </item>
-    <item>
-      <title>1.13.0</title>
-      <description><![CDATA[
-      <h3>舒服了 🦖：</h3>
-       <ol>
-        <li>支持中文繁体模式，累计支持中/英/日/繁四种语言</li>
-        <li>单栏编辑模式下调整标题的位置，更舒服了</li>
-        <li>优化导出 HTML 文件的体验，并推荐使用</li>
-        <li>优化标题的复制/粘贴体验，更符合使用习惯</li>
-        <li>更细 Mermaid 到最新版本，各种新绘图方式支持</li>
-       </ol>
-      <h3>Comfort Improved 🦖：</h3>
-       <ol>
-        <li>Support for Traditional Chinese mode, now supports four languages: Chinese, English, Japanese, and Traditional Chinese</li>
-        <li>Adjusted the position of the title in single column editing mode, more comfortable now</li>
-        <li>Optimized the experience of exporting HTML files, and recommend using it</li>
-        <li>Optimized the copy/paste experience of the title, more in line with usage habits</li>
-        <li>Updated Mermaid to the latest version, supports various new drawing methods</li>
-       </ol>
-      <h3>快適になりました 🦖：</h3>
-      <ol>
-          <li>繁体中国語モードに対応し、合計で中国語/英語/日本語/繁体字の4つの言語をサポート</li>
-          <li>シングルカラム編集モードでタイトルの位置を調整し、より快適に</li>
-          <li>HTML ファイルのエクスポート体験を最適化し、使用を推奨</li>
-          <li>タイトルのコピー/ペースト体験を最適化し、使用習慣により準拠</li>
-          <li>Mermaidを最新バージョンにアップデートし、各種新しい描画方式をサポート</li>
-      </ol>
-          ]]>      </description>
-      <pubDate>周二, 12 09月 2023 22:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.13.0.zip" sparkle:shortVersionString="1.13.0" sparkle:version="1.13.0" sparkle:edSignature="YKF+U0+sCTyvjoNjR1UD/k88IhPxhZAM/pVOmwRCFDJ/R0+/w5XzZDInHdh1Mrp+RDgWpGGtNp5TJHUkA9KBCw==" length="21091557" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
     </item>
   </channel>
