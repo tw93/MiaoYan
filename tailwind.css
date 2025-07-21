@@ -14,8 +14,13 @@
 }
 
 body {
-  font-family: 'LXGW WenKai Lite', sans-serif;
+  font-family: "TsangerJinKai02", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
   font-display: swap;
+}
+
+.font-letter {
+  letter-spacing: 0.5px;
+  line-height: 1.7;
 }
 
 .miaoyan-image-container {
@@ -131,7 +136,7 @@ body {
   content: 'Fantastic';
 }
 .i18n-miao-desc:before {
-  content: '1. 纯本地使用，无需联网即可使用，源文件保存\a 2. 安全，完全开源 Github，不会上传用户信息\a 3. 支持语法高亮、黑暗模式、国际化、演示模式、单独编辑模式、PPT 模式、导出文件、内部跳转、自动排版、图床、LaTeX、Mermaid、PlantUML、Markmap';
+  content: '1. 纯本地使用，无需联网即可使用，源文件保存\a 2. 安全，完全开源 Github，不会上传用户信息\a 3. 支持语法高亮、黑暗模式、国际化、演示模式、单独编辑、PPT 模式、导出文件、内部跳转、自动排版、图床、LaTeX、Mermaid、PlantUML、Markmap';
 }
 [lang='en'] .i18n-miao-desc:before {
   content: '1. Purely local, no internet access required, source files saved.\a 2. Secure, fully open source Github, no user information uploaded.\a 3. Supports syntax highlighting, dark mode, internationalization, presentation mode, PPT mode, single edit mode, export file, internal jump, document auto typesetting, picture upload, laTeX, mermaid, plantUML, Markmap.';
