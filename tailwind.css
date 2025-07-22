@@ -14,7 +14,7 @@
 }
 
 body {
-  font-family: "TsangerJinKai02", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+  font-family: "TsangerJinKai02", "STKaiti", "KaiTi", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   font-display: swap;
 }
 
@@ -194,8 +194,8 @@ body {
   content: 'Feel Good?';
 }
 .i18n-footer-desc:before {
-  content: '将妙言分享给你志同道合的朋友~';
+  content: '将妙言分享给你的好朋友~';
 }
 [lang='en'] .i18n-footer-desc:before {
-  content: 'Share MiaoYan with your like-minded friends~';
+  content: 'Share MiaoYan with your friends~';
 }
