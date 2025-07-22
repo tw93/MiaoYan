@@ -7,7 +7,7 @@
 }
 
 .i18n-miao-people-desc:before {
-  content: '数据每周手动更新，当前 196 位朋友喜欢汤圆可乐';
+  content: '数据手工更新，当前 196 位朋友喜欢汤圆可乐';
 }
 [lang='en'] .i18n-miao-people-desc:before {
   content: 'Weekly manual update, 196 friends like TangYuan and Coke';
