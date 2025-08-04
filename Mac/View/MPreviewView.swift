@@ -87,62 +87,118 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         guard let vc = ViewController.shared() else { return }
 
         if #available(macOS 11.0, *) {
-            // Calculate the total height of the content
-            self.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] height, error in
-                guard let self = self, let height = height as? CGFloat, error == nil else {
-                    vc.toastExport(status: false)
-                    return
-                }
+            // Wait for all images to load before exporting
+            self.waitForImagesLoaded { [weak self] in
+                guard let self = self else { return }
 
-                var pageHeight: CGFloat = 1120.0 // A4 page height
-                if UserDefaultsManagement.isOnExportPPT {
-                    // Scale the height according to the screen width
-                    pageHeight = self.bounds.height - 3.0
-                }
-                let pageCount = Int(ceil(height / pageHeight)) // Calculate the number of pages needed
+                // Get the full content height after images are loaded
+                self.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] height, error in
+                    guard let self = self, let contentHeight = height as? CGFloat, error == nil else {
+                        vc.toastExport(status: false)
+                        return
+                    }
 
-                let dispatchGroup = DispatchGroup()
-                var pdfDatas: [Data] = []
+                    // For PPT mode, use the current bounds
+                    if UserDefaultsManagement.isOnExportPPT {
+                        let pdfConfiguration = WKPDFConfiguration()
+                        pdfConfiguration.rect = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height - 3.0)
 
-                for pageIndex in 0 ..< pageCount {
-                    dispatchGroup.enter()
+                        self.createPDF(configuration: pdfConfiguration) { result in
+                            switch result {
+                            case .success(let pdfData):
+                                if let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first {
+                                    let currentName = self.note?.getExportTitle() ?? "MiaoYan"
+                                    let filePath: String = path + "/" + currentName + ".pdf"
+                                    let fileURL = URL(fileURLWithPath: filePath)
+                                    do {
+                                        try pdfData.write(to: fileURL, options: .atomic)
+                                        vc.toastExport(status: true)
+                                    } catch {
+                                        vc.toastExport(status: false)
+                                    }
+                                } else {
+                                    vc.toastExport(status: false)
+                                }
+                            case .failure:
+                                vc.toastExport(status: false)
+                            }
+                        }
+                        return
+                    }
 
+                    // For regular documents, create a single PDF with full content height
                     let pdfConfiguration = WKPDFConfiguration()
-                    pdfConfiguration.rect = CGRect(x: 0, y: pageHeight * CGFloat(pageIndex), width: self.bounds.width, height: pageHeight)
+                    pdfConfiguration.rect = CGRect(x: 0, y: 0, width: self.bounds.width, height: contentHeight)
 
                     self.createPDF(configuration: pdfConfiguration) { result in
                         switch result {
                         case .success(let pdfData):
-                            pdfDatas.append(pdfData)
+                            if let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first {
+                                let currentName = self.note?.getExportTitle() ?? "MiaoYan"
+                                let filePath: String = path + "/" + currentName + ".pdf"
+                                let fileURL = URL(fileURLWithPath: filePath)
+                                do {
+                                    try pdfData.write(to: fileURL, options: .atomic)
+                                    vc.toastExport(status: true)
+                                } catch {
+                                    vc.toastExport(status: false)
+                                }
+                            } else {
+                                vc.toastExport(status: false)
+                            }
                         case .failure:
-                            break
-                        }
-                        dispatchGroup.leave()
-                    }
-                }
-
-                dispatchGroup.notify(queue: .main) {
-                    let finalPdfData = self.combinePDFs(pdfDatas: pdfDatas)
-                    if let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first {
-                        let currentName = self.note?.getExportTitle() ?? "MiaoYan"
-                        let filePath: String = path + "/" + currentName + ".pdf"
-                        let fileURL = URL(fileURLWithPath: filePath)
-                        do {
-                            try finalPdfData?.write(to: fileURL, options: .atomic)
-                            vc.toastExport(status: true)
-                        } catch {
                             vc.toastExport(status: false)
                         }
-                    } else {
-                        vc.toastExport(status: false)
                     }
-                }
-
-            })
+                })
+            }
         } else {
             // Fallback on earlier versions
             vc.toastExport(status: false)
         }
+    }
+
+    private func waitForImagesLoaded(completion: @escaping () -> Void) {
+        let checkImagesScript = """
+        (function() {
+            var images = document.getElementsByTagName('img');
+            var loadedCount = 0;
+            var totalImages = images.length;
+
+            if (totalImages === 0) {
+                return true; // No images to load
+            }
+
+            for (var i = 0; i < totalImages; i++) {
+                if (images[i].complete && images[i].naturalWidth > 0) {
+                    loadedCount++;
+                }
+            }
+
+            return loadedCount === totalImages;
+        })();
+        """
+
+        let maxRetries = 100 // Maximum wait time: 10 seconds (100 * 0.1s)
+        var retryCount = 0
+
+        func checkImages() {
+            self.evaluateJavaScript(checkImagesScript) { result, error in
+                if let allLoaded = result as? Bool, allLoaded {
+                    completion()
+                } else if retryCount < maxRetries {
+                    retryCount += 1
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        checkImages()
+                    }
+                } else {
+                    // Timeout - proceed anyway to avoid infinite waiting
+                    completion()
+                }
+            }
+        }
+
+        checkImages()
     }
 
     @available(macOS 11.0, *)
@@ -222,40 +278,45 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     public func exportImage() {
         guard let vc = ViewController.shared() else { return }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
-                if complete != nil {
-                    super.evaluateJavaScript("document.body.scrollHeight", completionHandler: { height, _ in
-                        guard let contentHeight = height as? CGFloat else {
-                            print("Content height could not be obtained"); return
-                        }
-                        super.evaluateJavaScript("document.body.scrollWidth", completionHandler: { [weak self] width, _ in
-                            if let contentWidth = width as? CGFloat {
-                                let config = WKSnapshotConfiguration()
-                                config.rect = CGRect(x: 0, y: 0, width: contentWidth, height: contentHeight)
-                                config.afterScreenUpdates = true
-                                // Improve resolution
-                                config.snapshotWidth = NSNumber(value: Double(contentWidth) * 2.0)
-                                self?.frame.size.height = contentHeight
-                                self?.takeSnapshot(with: config, completionHandler: { image, error in
-                                    if let image = image {
-                                        if let desktopURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first {
-                                            let currentName = self?.note?.getExportTitle()
-                                            let destinationURL = desktopURL.appendingPathComponent(currentName! + ".png")
-                                            try! image.savePNGRepresentationToURL(url: destinationURL)
-                                        }
-                                        vc.toastExport(status: true)
-                                        print("Got snapshot")
-                                    } else {
-                                        print("Failed taking snapshot: \(error?.localizedDescription ?? "--")")
-                                        vc.toastExport(status: false)
-                                    }
-                                })
+        // Wait for all images to load before taking snapshot
+        self.waitForImagesLoaded { [weak self] in
+            guard let self = self else { return }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
+                    if complete != nil {
+                        self.evaluateJavaScript("document.body.scrollHeight", completionHandler: { height, _ in
+                            guard let contentHeight = height as? CGFloat else {
+                                print("Content height could not be obtained"); return
                             }
+                            self.evaluateJavaScript("document.body.scrollWidth", completionHandler: { [weak self] width, _ in
+                                if let contentWidth = width as? CGFloat {
+                                    let config = WKSnapshotConfiguration()
+                                    config.rect = CGRect(x: 0, y: 0, width: contentWidth, height: contentHeight)
+                                    config.afterScreenUpdates = true
+                                    // Improve resolution
+                                    config.snapshotWidth = NSNumber(value: Double(contentWidth) * 2.0)
+                                    self?.frame.size.height = contentHeight
+                                    self?.takeSnapshot(with: config, completionHandler: { image, error in
+                                        if let image = image {
+                                            if let desktopURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first {
+                                                let currentName = self?.note?.getExportTitle()
+                                                let destinationURL = desktopURL.appendingPathComponent(currentName! + ".png")
+                                                try! image.savePNGRepresentationToURL(url: destinationURL)
+                                            }
+                                            vc.toastExport(status: true)
+                                            print("Got snapshot")
+                                        } else {
+                                            print("Failed taking snapshot: \(error?.localizedDescription ?? "--")")
+                                            vc.toastExport(status: false)
+                                        }
+                                    })
+                                }
+                            })
                         })
-                    })
-                }
-            })
+                    }
+                })
+            }
         }
     }
 
@@ -293,22 +354,9 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         let imagesStorage = note.project.url
         let css = MarkdownView.getPreviewStyle()
 
-        cleanCache()
         try? loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
 
         self.note = note
-    }
-
-    public func cleanCache() {
-        URLCache.shared.removeAllCachedResponses()
-
-        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
-
-        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
-            records.forEach { record in
-                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
-            }
-        }
     }
 
     private func getTemplate(css: String) -> String? {
