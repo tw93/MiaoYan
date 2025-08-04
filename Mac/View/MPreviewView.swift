@@ -85,76 +85,28 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
     public func exportPdf() {
         guard let vc = ViewController.shared() else { return }
-
-        if #available(macOS 11.0, *) {
-            // Wait for all images to load before exporting
-            self.waitForImagesLoaded { [weak self] in
-                guard let self = self else { return }
-
-                // Get the full content height after images are loaded
-                self.evaluateJavaScript("document.body.scrollHeight", completionHandler: { [weak self] height, error in
-                    guard let self = self, let contentHeight = height as? CGFloat, error == nil else {
-                        vc.toastExport(status: false)
-                        return
-                    }
-
-                    // For PPT mode, use the current bounds
-                    if UserDefaultsManagement.isOnExportPPT {
-                        let pdfConfiguration = WKPDFConfiguration()
-                        pdfConfiguration.rect = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height - 3.0)
-
-                        self.createPDF(configuration: pdfConfiguration) { result in
-                            switch result {
-                            case .success(let pdfData):
-                                if let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first {
-                                    let currentName = self.note?.getExportTitle() ?? "MiaoYan"
-                                    let filePath: String = path + "/" + currentName + ".pdf"
-                                    let fileURL = URL(fileURLWithPath: filePath)
-                                    do {
-                                        try pdfData.write(to: fileURL, options: .atomic)
-                                        vc.toastExport(status: true)
-                                    } catch {
-                                        vc.toastExport(status: false)
-                                    }
-                                } else {
-                                    vc.toastExport(status: false)
-                                }
-                            case .failure:
-                                vc.toastExport(status: false)
-                            }
-                        }
-                        return
-                    }
-
-                    // For regular documents, create a single PDF with full content height
-                    let pdfConfiguration = WKPDFConfiguration()
-                    pdfConfiguration.rect = CGRect(x: 0, y: 0, width: self.bounds.width, height: contentHeight)
-
-                    self.createPDF(configuration: pdfConfiguration) { result in
-                        switch result {
-                        case .success(let pdfData):
-                            if let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first {
-                                let currentName = self.note?.getExportTitle() ?? "MiaoYan"
-                                let filePath: String = path + "/" + currentName + ".pdf"
-                                let fileURL = URL(fileURLWithPath: filePath)
-                                do {
-                                    try pdfData.write(to: fileURL, options: .atomic)
-                                    vc.toastExport(status: true)
-                                } catch {
-                                    vc.toastExport(status: false)
-                                }
-                            } else {
-                                vc.toastExport(status: false)
-                            }
-                        case .failure:
-                            vc.toastExport(status: false)
-                        }
-                    }
-                })
-            }
-        } else {
-            // Fallback on earlier versions
+        
+        guard #available(macOS 11.0, *) else {
             vc.toastExport(status: false)
+            return
+        }
+        
+        waitForImagesLoaded { [weak self] in
+            guard let self = self else { return }
+            
+            self.getContentHeight { contentHeight in
+                guard let height = contentHeight else {
+                    vc.toastExport(status: false)
+                    return
+                }
+                
+                let pdfConfiguration = WKPDFConfiguration()
+                pdfConfiguration.rect = CGRect(x: 0, y: 0, width: self.bounds.width, height: height)
+                
+                self.createPDF(configuration: pdfConfiguration) { result in
+                    self.handlePDFExportResult(result, viewController: vc)
+                }
+            }
         }
     }
 
@@ -200,6 +152,114 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         checkImages()
     }
+    
+    // MARK: - Helper Methods
+    
+    private func getContentHeight(completion: @escaping (CGFloat?) -> Void) {
+        evaluateJavaScript("document.body.scrollHeight") { height, error in
+            guard let contentHeight = height as? CGFloat, error == nil else {
+                completion(nil)
+                return
+            }
+            completion(contentHeight)
+        }
+    }
+    
+    private func getContentDimensions(completion: @escaping (CGFloat, CGFloat) -> Void) {
+        evaluateJavaScript("document.body.scrollHeight") { height, _ in
+            guard let contentHeight = height as? CGFloat else { return }
+            
+            self.evaluateJavaScript("document.body.scrollWidth") { width, _ in
+                guard let contentWidth = width as? CGFloat else { return }
+                completion(contentHeight, contentWidth)
+            }
+        }
+    }
+    
+    private func executeJavaScriptWhenReady(_ script: String, completion: (() -> Void)? = nil) {
+        evaluateJavaScript("document.readyState") { complete, _ in
+            guard complete != nil else { return }
+            
+            if let completion = completion {
+                completion()
+            } else {
+                self.evaluateJavaScript(script, completionHandler: nil)
+            }
+        }
+    }
+    
+    private func handlePDFExportResult(_ result: Result<Data, Error>, viewController: Any) {
+        guard let vc = viewController as? ViewController else { return }
+        
+        switch result {
+        case .success(let pdfData):
+            saveToDownloads(data: pdfData, extension: "pdf", viewController: vc)
+        case .failure:
+            vc.toastExport(status: false)
+        }
+    }
+    
+    private func handleImageExportResult(image: NSImage?, error: Error?, viewController: Any) {
+        guard let vc = viewController as? ViewController else { return }
+        
+        if let image = image {
+            guard let desktopURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first else {
+                vc.toastExport(status: false)
+                return
+            }
+            
+            let currentName = note?.getExportTitle() ?? "MiaoYan"
+            let destinationURL = desktopURL.appendingPathComponent(currentName + ".png")
+            
+            do {
+                try image.savePNGRepresentationToURL(url: destinationURL)
+                vc.toastExport(status: true)
+            } catch {
+                vc.toastExport(status: false)
+            }
+        } else {
+            vc.toastExport(status: false)
+        }
+    }
+    
+    private func saveToDownloads(content: String, extension: String, viewController: Any) {
+        guard let vc = viewController as? ViewController else { return }
+        
+        guard let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first else {
+            vc.toastExport(status: false)
+            return
+        }
+        
+        let currentName = note?.getExportTitle() ?? "MiaoYan"
+        let filePath = path + "/" + currentName + "." + `extension`
+        
+        do {
+            try content.write(to: URL(fileURLWithPath: filePath), atomically: true, encoding: .utf8)
+            vc.toastExport(status: true)
+        } catch {
+            vc.toastExport(status: false)
+        }
+    }
+    
+    private func saveToDownloads(data: Data, extension: String, viewController: Any) {
+        guard let vc = viewController as? ViewController else { return }
+        
+        guard let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first else {
+            vc.toastExport(status: false)
+            return
+        }
+        
+        let currentName = note?.getExportTitle() ?? "MiaoYan"
+        let filePath = path + "/" + currentName + "." + `extension`
+        let fileURL = URL(fileURLWithPath: filePath)
+        
+        do {
+            try data.write(to: fileURL, options: .atomic)
+            vc.toastExport(status: true)
+        } catch {
+            vc.toastExport(status: false)
+        }
+    }
 
     @available(macOS 11.0, *)
     private func combinePDFs(pdfDatas: [Data]) -> Data? {
@@ -220,34 +280,21 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
     public func slideTo(index: Int) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
-                if complete != nil {
-                    let javascript = "Reveal.slide(\(index));"
-                    self.evaluateJavaScript(javascript, completionHandler: nil)
-                }
-            })
+            self.executeJavaScriptWhenReady("Reveal.slide(\(index));")
         }
     }
 
     public func scrollToPosition(pre: CGFloat) {
-        if pre == 0.0 { return }
-
+        guard pre != 0.0 else { return }
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
-                if complete != nil {
-                    super.evaluateJavaScript("document.body.offsetHeight", completionHandler: { height, _ in
-                        guard let contentHeight = height as? CGFloat else {
-                            print("Content height could not be obtained"); return
-                        }
-                        super.evaluateJavaScript("document.documentElement.clientHeight", completionHandler: { [weak self] wHeight, _ in
-                            let windowHeight = wHeight as! CGFloat
-                            let offset = contentHeight - windowHeight
-                            if offset > 0 {
-                                let scrollerTop = offset * pre
-                                self?.evaluateJavaScript("window.scrollTo({ top: \(scrollerTop), behavior: 'instant' })", completionHandler: nil)
-                            }
-                        })
-                    })
+            self.executeJavaScriptWhenReady("", completion: {
+                self.getContentDimensions { contentHeight, windowHeight in
+                    let offset = contentHeight - windowHeight
+                    if offset > 0 {
+                        let scrollerTop = offset * pre
+                        self.evaluateJavaScript("window.scrollTo({ top: \(scrollerTop), behavior: 'instant' })", completionHandler: nil)
+                    }
                 }
             })
         }
@@ -255,21 +302,16 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
     public func exportHtml() {
         guard let vc = ViewController.shared() else { return }
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            super.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
-                if complete != nil {
-                    super.evaluateJavaScript("document.documentElement.outerHTML.toString()", completionHandler: { html, _ in
-                        guard let contentHtml = html as? String else {
-                            print("Content html could not be obtained"); return
-                        }
-                        if let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first {
-                            let currentName = self.note?.getExportTitle()
-                            let filePath: String = path + "/" + (currentName ?? "MiaoYan") + ".html"
-                            try! contentHtml.write(to: URL(fileURLWithPath: filePath), atomically: false, encoding: .utf8)
-                            vc.toastExport(status: true)
-                        }
-                    })
+            self.executeJavaScriptWhenReady("", completion: {
+                self.evaluateJavaScript("document.documentElement.outerHTML.toString()") { html, error in
+                    guard let contentHtml = html as? String, error == nil else {
+                        vc.toastExport(status: false)
+                        return
+                    }
+                    
+                    self.saveToDownloads(content: contentHtml, extension: "html", viewController: vc)
                 }
             })
         }
@@ -277,43 +319,22 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
     public func exportImage() {
         guard let vc = ViewController.shared() else { return }
-
-        // Wait for all images to load before taking snapshot
-        self.waitForImagesLoaded { [weak self] in
+        
+        waitForImagesLoaded { [weak self] in
             guard let self = self else { return }
-
+            
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.evaluateJavaScript("document.readyState", completionHandler: { complete, _ in
-                    if complete != nil {
-                        self.evaluateJavaScript("document.body.scrollHeight", completionHandler: { height, _ in
-                            guard let contentHeight = height as? CGFloat else {
-                                print("Content height could not be obtained"); return
-                            }
-                            self.evaluateJavaScript("document.body.scrollWidth", completionHandler: { [weak self] width, _ in
-                                if let contentWidth = width as? CGFloat {
-                                    let config = WKSnapshotConfiguration()
-                                    config.rect = CGRect(x: 0, y: 0, width: contentWidth, height: contentHeight)
-                                    config.afterScreenUpdates = true
-                                    // Improve resolution
-                                    config.snapshotWidth = NSNumber(value: Double(contentWidth) * 2.0)
-                                    self?.frame.size.height = contentHeight
-                                    self?.takeSnapshot(with: config, completionHandler: { image, error in
-                                        if let image = image {
-                                            if let desktopURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first {
-                                                let currentName = self?.note?.getExportTitle()
-                                                let destinationURL = desktopURL.appendingPathComponent(currentName! + ".png")
-                                                try! image.savePNGRepresentationToURL(url: destinationURL)
-                                            }
-                                            vc.toastExport(status: true)
-                                            print("Got snapshot")
-                                        } else {
-                                            print("Failed taking snapshot: \(error?.localizedDescription ?? "--")")
-                                            vc.toastExport(status: false)
-                                        }
-                                    })
-                                }
-                            })
-                        })
+                self.executeJavaScriptWhenReady("", completion: {
+                    self.getContentDimensions { contentHeight, contentWidth in
+                        let config = WKSnapshotConfiguration()
+                        config.rect = CGRect(x: 0, y: 0, width: contentWidth, height: contentHeight)
+                        config.afterScreenUpdates = true
+                        config.snapshotWidth = NSNumber(value: Double(contentWidth) * 2.0)
+                        
+                        self.frame.size.height = contentHeight
+                        self.takeSnapshot(with: config) { image, error in
+                            self.handleImageExportResult(image: image, error: error, viewController: vc)
+                        }
                     }
                 })
             }
@@ -360,36 +381,32 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     private func getTemplate(css: String) -> String? {
-        let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle")
-        let url = NSURL.fileURL(withPath: path!)
-        let bundle = Bundle(url: url)
-        var baseURL = bundle!.url(forResource: "index", withExtension: "html")!
-
-        if UserDefaultsManagement.magicPPT {
-            baseURL = bundle!.url(forResource: "ppt", withExtension: "html")!
+        guard let bundle = getDownViewBundle(),
+              let baseURL = getBaseURL(bundle: bundle) else {
+            return nil
         }
 
-        guard var template = try? NSString(contentsOf: baseURL, encoding: String.Encoding.utf8.rawValue) else {
+        guard var template = try? String(contentsOf: baseURL, encoding: .utf8) else {
             return nil
         }
 
         if UserDefaultsManagement.magicPPT {
-            return template as String
+            return template
         }
 
-        template = template.replacingOccurrences(of: "DOWN_CSS", with: css) as NSString
+        template = template.replacingOccurrences(of: "DOWN_CSS", with: css)
 
         #if os(iOS)
             if NightNight.theme == .night {
-                template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
+                template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode")
             }
         #else
             if UserDataService.instance.isDark {
-                template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
+                template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode")
             }
         #endif
 
-        return template as String
+        return template
     }
 
     private func isFootNotes(url: URL) -> Bool {
@@ -441,8 +458,6 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             pageHTMLString = addLazyLoadToImages(in: pageHTMLString)
         }
 
-//        print(">>>>>>")
-//        print(pageHTMLString)
 
         let indexURL = createTemporaryBundle(pageHTMLString: pageHTMLString)
 
@@ -453,11 +468,10 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     func createTemporaryBundle(pageHTMLString: String) -> URL? {
-        let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle")
-        let url = NSURL.fileURL(withPath: path!)
-        let bundle = Bundle(url: url)
-
-        guard let bundleResourceURL = bundle?.resourceURL else { return nil }
+        guard let bundle = getDownViewBundle(),
+              let bundleResourceURL = bundle.resourceURL else { 
+            return nil 
+        }
 
         let customCSS = UserDefaultsManagement.markdownPreviewCSS
 
@@ -551,65 +565,43 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     func htmlFromTemplate(_ htmlString: String, css: String) throws -> String {
-        guard let vc = ViewController.shared() else {
+        guard let vc = ViewController.shared(),
+              let bundle = getDownViewBundle(),
+              let baseURL = getBaseURL(bundle: bundle) else {
             return ""
         }
-        let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle")
-        let url = NSURL.fileURL(withPath: path!)
-        let bundle = Bundle(url: url)
 
-        var baseURL = bundle!.url(forResource: "index", withExtension: "html")!
+        var template = try String(contentsOf: baseURL, encoding: .utf8)
 
-        if UserDefaultsManagement.magicPPT {
-            baseURL = bundle!.url(forResource: "ppt", withExtension: "html")!
-        }
+        template = template.replacingOccurrences(of: "DOWN_CSS", with: css)
 
-        var template = try NSString(contentsOf: baseURL, encoding: String.Encoding.utf8.rawValue)
-
-        template = template.replacingOccurrences(of: "DOWN_CSS", with: css) as NSString
-
-        var fontPath = Bundle.main.resourceURL!.path
-        var downMeta = ""
-
-        // 兼容一下 Html 的场景
-        if UserDefaultsManagement.isOnExportHtml {
-            fontPath = "https://gw.alipayobjects.com/os/k/html2/Fonts"
-            downMeta = "<base href=\"https://gw.alipayobjects.com/os/k/html2/\">"
-        }
-
-        template = template.replacingOccurrences(of: "DOWN_FONT_PATH", with: fontPath) as NSString
-        template = template.replacingOccurrences(of: "DOWN_META", with: downMeta) as NSString
+        let (fontPath, downMeta) = getFontPathAndMeta()
+        template = template.replacingOccurrences(of: "DOWN_FONT_PATH", with: fontPath)
+        template = template.replacingOccurrences(of: "DOWN_META", with: downMeta)
 
         if UserDefaultsManagement.isOnExport {
-            template = template.replacingOccurrences(of: "DOWN_EXPORT_TYPE", with: "ppt") as NSString
+            template = template.replacingOccurrences(of: "DOWN_EXPORT_TYPE", with: "ppt")
         }
 
         if UserDefaultsManagement.magicPPT {
-            var downTheme = "<link rel=\"stylesheet\" href=\"ppt/dist/theme/white.css\" id=\"theme\" />"
-            if UserDataService.instance.isDark {
-                downTheme = "<link rel=\"stylesheet\" href=\"ppt/dist/theme/night.css\" id=\"theme\" />"
-            }
-            template = template.replacingOccurrences(of: "DOWN_THEME", with: downTheme) as NSString
+            let downTheme = getPPTTheme()
+            template = template.replacingOccurrences(of: "DOWN_THEME", with: downTheme)
 
-            // 兼容一些ppt下面图片拖动进去，相对位置的问题
             let newHtmlString = htmlString.replacingOccurrences(of: "](/i/", with: "](./i/")
             return template.replacingOccurrences(of: "DOWN_RAW", with: newHtmlString)
         }
 
         #if os(iOS)
             if NightNight.theme == .night {
-                template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
+                template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode")
             }
         #else
             if UserDataService.instance.isDark {
-                template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode") as NSString
+                template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode")
             }
         #endif
-        var htmlContent = htmlString
-        let currentName = vc.titleLabel.stringValue
-        if UserDefaultsManagement.isOnExport, !htmlString.hasPrefix("<h1>") {
-            htmlContent = "<h1>\(String(describing: currentName))</h1>" + htmlString
-        }
+        
+        let htmlContent = getHtmlContent(htmlString, currentName: vc.titleLabel.stringValue)
         return template.replacingOccurrences(of: "DOWN_HTML", with: htmlContent)
     }
 }
@@ -693,5 +685,40 @@ class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
             vc.splitView.setValue(NSColor(css: message), forKey: "dividerColor")
             vc.titleLabel.backgroundColor = NSColor(css: message)
         }
+    }
+}
+
+// MARK: - Bundle and Resource Management Extensions
+
+extension MPreviewView {
+    private func getDownViewBundle() -> Bundle? {
+        guard let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle") else { return nil }
+        return Bundle(url: URL(fileURLWithPath: path))
+    }
+    
+    private func getBaseURL(bundle: Bundle) -> URL? {
+        let resourceName = UserDefaultsManagement.magicPPT ? "ppt" : "index"
+        return bundle.url(forResource: resourceName, withExtension: "html")
+    }
+    
+    private func getFontPathAndMeta() -> (String, String) {
+        if UserDefaultsManagement.isOnExportHtml {
+            return ("https://gw.alipayobjects.com/os/k/html2/Fonts", 
+                   "<base href=\"https://gw.alipayobjects.com/os/k/html2/\">")
+        } else {
+            return (Bundle.main.resourceURL?.path ?? "", "")
+        }
+    }
+    
+    private func getPPTTheme() -> String {
+        let themeFile = UserDataService.instance.isDark ? "night.css" : "white.css"
+        return "<link rel=\"stylesheet\" href=\"ppt/dist/theme/\(themeFile)\" id=\"theme\" />"
+    }
+    
+    private func getHtmlContent(_ htmlString: String, currentName: String) -> String {
+        if UserDefaultsManagement.isOnExport && !htmlString.hasPrefix("<h1>") {
+            return "<h1>\(currentName)</h1>" + htmlString
+        }
+        return htmlString
     }
 }
