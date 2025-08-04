@@ -26,6 +26,7 @@
 		27D280452A05480D007A4104 /* IndexSetWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D280442A05480D007A4104 /* IndexSetWrapper.swift */; };
 		27D95122285B5E4400F40306 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D95121285B5E4400F40306 /* Toast.swift */; };
 		27D9A4F72873D345006317AD /* FileManager+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D9A4F62873D345006317AD /* FileManager+.swift */; };
+		27EFD78A2E40E2E400DE6636 /* HtmlManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EFD7892E40E2E400DE6636 /* HtmlManager.swift */; };
 		3680D573468EA822F427197E /* NSTextField+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3680D20013301CC48E2BEC53 /* NSTextField+.swift */; };
 		3680DE38C941303E615282C4 /* MPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3680DA19202046722D9BEEA2 /* MPreviewView.swift */; };
 		8F7136EE23490CBF004DFA6E /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7136ED23490CBF004DFA6E /* Markdown.swift */; };
@@ -97,7 +98,6 @@
 		D7A415141F2FBDA00099B82C /* NotesTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A415131F2FBDA00099B82C /* NotesTableView.swift */; };
 		D7A41C9B2316A8BE00DAAFEB /* CodeBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A41C9A2316A8BE00DAAFEB /* CodeBlock.swift */; };
 		D7A65C5920F11C38003E5ADC /* LanguageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A65C5820F11C38003E5ADC /* LanguageType.swift */; };
-		D7A9FD311FCB4873008ED23C /* MarkdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A9FD301FCB4873008ED23C /* MarkdownView.swift */; };
 		D7B024A72019BCF3008544C3 /* NoteAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B024A62019BCF3008544C3 /* NoteAttribute.swift */; };
 		D7B3FE7121027A6D00764C39 /* UserDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F13BB3820FEDE230005E120 /* UserDataService.swift */; };
 		D7B6E59A207912E300FE0E20 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B6E599207912E300FE0E20 /* Project.swift */; };
@@ -174,6 +174,7 @@
 		27D280442A05480D007A4104 /* IndexSetWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexSetWrapper.swift; sourceTree = "<group>"; };
 		27D95121285B5E4400F40306 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		27D9A4F62873D345006317AD /* FileManager+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+.swift"; sourceTree = "<group>"; };
+		27EFD7892E40E2E400DE6636 /* HtmlManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HtmlManager.swift; sourceTree = "<group>"; };
 		3680D20013301CC48E2BEC53 /* NSTextField+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTextField+.swift"; sourceTree = "<group>"; };
 		3680D9AA33A891E0F14496C6 /* NSColor+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "NSColor+.swift"; path = "../../Common/Shared/Extensions/NSColor+.swift"; sourceTree = "<group>"; };
 		3680DA19202046722D9BEEA2 /* MPreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPreviewView.swift; sourceTree = "<group>"; };
@@ -256,7 +257,6 @@
 		D7A415131F2FBDA00099B82C /* NotesTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesTableView.swift; sourceTree = "<group>"; };
 		D7A41C9A2316A8BE00DAAFEB /* CodeBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBlock.swift; sourceTree = "<group>"; };
 		D7A65C5820F11C38003E5ADC /* LanguageType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageType.swift; sourceTree = "<group>"; };
-		D7A9FD301FCB4873008ED23C /* MarkdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownView.swift; sourceTree = "<group>"; };
 		D7B024A62019BCF3008544C3 /* NoteAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteAttribute.swift; sourceTree = "<group>"; };
 		D7B6E599207912E300FE0E20 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		D7C302C421F320FD0041627F /* ImageAttachment+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageAttachment+.swift"; sourceTree = "<group>"; };
@@ -423,6 +423,7 @@
 				D7104A63230BD8C500B6D8EE /* SortDirection.swift */,
 				D7CA7FC32326519500E9717A /* Commit.swift */,
 				D7B6E599207912E300FE0E20 /* Project.swift */,
+				27EFD7892E40E2E400DE6636 /* HtmlManager.swift */,
 				D79FE8A01F77D04A00113CFD /* Note.swift */,
 				27D280442A05480D007A4104 /* IndexSetWrapper.swift */,
 				D75EE7F92078B3C00055F159 /* Sidebar.swift */,
@@ -482,7 +483,6 @@
 			isa = PBXGroup;
 			children = (
 				D797004B1F3DD10700BAD94D /* EditTextView.swift */,
-				D7A9FD301FCB4873008ED23C /* MarkdownView.swift */,
 				272ABB5E285F305500CCD651 /* SidebarProjectView.swift */,
 				D735E5BC1F2EF66000173215 /* NoteCellView.swift */,
 				D735E5BE1F2F001500173215 /* NoteRowView.swift */,
@@ -716,6 +716,7 @@
 				271FD5A12A73DC9E001EA97B /* NSColor+.swift in Sources */,
 				271FD59D2A73DB9A001EA97B /* NSTextStorage+.swift in Sources */,
 				271FD59E2A73DB9A001EA97B /* DateFormatter+.swift in Sources */,
+				27EFD78A2E40E2E400DE6636 /* HtmlManager.swift in Sources */,
 				271FD59F2A73DB9A001EA97B /* String+.swift in Sources */,
 				271FD5A02A73DB9A001EA97B /* URL+.swift in Sources */,
 				27838E68287521C0009E8012 /* DetachedWindowController.swift in Sources */,
@@ -759,7 +760,6 @@
 				D75EE7FD2078C5460055F159 /* SidebarCellView.swift in Sources */,
 				D797004C1F3DD10700BAD94D /* EditTextView.swift in Sources */,
 				D7EDEDFB219203C9000B8C1A /* NoteCellView+.swift in Sources */,
-				D7A9FD311FCB4873008ED23C /* MarkdownView.swift in Sources */,
 				D7A65C5920F11C38003E5ADC /* LanguageType.swift in Sources */,
 				D730BD27222BF30700E69C93 /* KeychainConfiguration.swift in Sources */,
 				D140A67528BB1ACA00637ED1 /* TrailingCommaStrategy.swift in Sources */,
@@ -1047,7 +1047,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 1.17.0;
+				MARKETING_VERSION = 1.17.1;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.MiaoYan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1092,7 +1092,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 1.17.0;
+				MARKETING_VERSION = 1.17.1;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.MiaoYan;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -15,7 +15,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
     var isHighlighted: Bool = false
     let storage = Storage.sharedInstance()
     let caretWidth: CGFloat = 1
-    var downView: MarkdownView?
     var initRange = NSRange(location: 0, length: 0)
 
     public var timer: Timer?

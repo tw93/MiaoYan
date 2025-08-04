@@ -111,31 +111,11 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     private func waitForImagesLoaded(completion: @escaping () -> Void) {
-        let checkImagesScript = """
-        (function() {
-            var images = document.getElementsByTagName('img');
-            var loadedCount = 0;
-            var totalImages = images.length;
-
-            if (totalImages === 0) {
-                return true; // No images to load
-            }
-
-            for (var i = 0; i < totalImages; i++) {
-                if (images[i].complete && images[i].naturalWidth > 0) {
-                    loadedCount++;
-                }
-            }
-
-            return loadedCount === totalImages;
-        })();
-        """
-
         let maxRetries = 100 // Maximum wait time: 10 seconds (100 * 0.1s)
         var retryCount = 0
 
         func checkImages() {
-            evaluateJavaScript(checkImagesScript) { result, _ in
+            evaluateJavaScript(HtmlManager.checkImagesScript) { result, _ in
                 if let allLoaded = result as? Bool, allLoaded {
                     completion()
                 } else if retryCount < maxRetries {
@@ -373,7 +353,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         let markdownString = note.getPrettifiedContent()
 
         let imagesStorage = note.project.url
-        let css = MarkdownView.getPreviewStyle()
+        let css = HtmlManager.previewStyle()
 
         try? loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
 
@@ -381,8 +361,8 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     private func getTemplate(css: String) -> String? {
-        guard let bundle = getDownViewBundle(),
-              let baseURL = getBaseURL(bundle: bundle)
+        guard let bundle = HtmlManager.getDownViewBundle(),
+              let baseURL = HtmlManager.getBaseURL(bundle: bundle)
         else {
             return nil
         }
@@ -439,16 +419,18 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             htmlString = loadImages(imagesStorage: imagesStorage, html: htmlString)
         }
 
-        var pageHTMLString = try htmlFromTemplate(htmlString, css: css)
+        guard let vc = ViewController.shared() else { return }
+        
+        var pageHTMLString = try HtmlManager.htmlFromTemplate(htmlString, css: css, currentName: vc.titleLabel.stringValue)
 
         if UserDefaultsManagement.magicPPT {
-            pageHTMLString = try htmlFromTemplate(markdownString, css: css)
+            pageHTMLString = try HtmlManager.htmlFromTemplate(markdownString, css: css, currentName: vc.titleLabel.stringValue)
         }
 
         print(">>>>>>")
         print(pageHTMLString)
 
-        let indexURL = createTemporaryBundle(pageHTMLString: pageHTMLString)
+        let indexURL = HtmlManager.createTemporaryBundle(pageHTMLString: pageHTMLString)
 
         if let i = indexURL {
             let accessURL = i.deletingLastPathComponent()
@@ -456,104 +438,11 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         }
     }
 
-    func createTemporaryBundle(pageHTMLString: String) -> URL? {
-        guard let bundle = getDownViewBundle(),
-              let bundleResourceURL = bundle.resourceURL
-        else {
-            return nil
-        }
-
-        let customCSS = UserDefaultsManagement.markdownPreviewCSS
-
-        let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
-
-        try? FileManager.default.createDirectory(at: webkitPreview, withIntermediateDirectories: true, attributes: nil)
-
-        let indexURL = webkitPreview.appendingPathComponent("index.html")
-
-        // If updating markdown contents, no need to re-copy bundle.
-        if !FileManager.default.fileExists(atPath: indexURL.path) {
-            // Copy bundle resources to temporary location.
-            do {
-                let fileList = try FileManager.default.contentsOfDirectory(atPath: bundleResourceURL.path)
-
-                for file in fileList {
-                    if customCSS != nil, file == "css" {
-                        continue
-                    }
-
-                    let tmpURL = webkitPreview.appendingPathComponent(file)
-
-                    try FileManager.default.copyItem(atPath: bundleResourceURL.appendingPathComponent(file).path, toPath: tmpURL.path)
-                }
-            } catch {
-                print(error)
-            }
-        }
-
-        if let customCSS {
-            let cssDst = webkitPreview.appendingPathComponent("css")
-            let styleDst = cssDst.appendingPathComponent("markdown-preview.css", isDirectory: false)
-
-            do {
-                try FileManager.default.createDirectory(at: cssDst, withIntermediateDirectories: false, attributes: nil)
-                _ = try FileManager.default.copyItem(at: customCSS, to: styleDst)
-            } catch {
-                print(error)
-            }
-        }
-
-        // Write generated index.html to temporary location.
-        try? pageHTMLString.write(to: indexURL, atomically: true, encoding: .utf8)
-
-        return indexURL
-    }
 
     private func loadImages(imagesStorage: URL, html: String) -> String {
-        return html.processLocalImages(with: imagesStorage)
+        return HtmlManager.processImages(in: html, imagesStorage: imagesStorage)
     }
 
-    func htmlFromTemplate(_ htmlString: String, css: String) throws -> String {
-        guard let vc = ViewController.shared(),
-              let bundle = getDownViewBundle(),
-              let baseURL = getBaseURL(bundle: bundle)
-        else {
-            return ""
-        }
-
-        var template = try String(contentsOf: baseURL, encoding: .utf8)
-
-        template = template.replacingOccurrences(of: "DOWN_CSS", with: css)
-
-        let (fontPath, downMeta) = getFontPathAndMeta()
-        template = template.replacingOccurrences(of: "DOWN_FONT_PATH", with: fontPath)
-        template = template.replacingOccurrences(of: "DOWN_META", with: downMeta)
-
-        if UserDefaultsManagement.isOnExport {
-            template = template.replacingOccurrences(of: "DOWN_EXPORT_TYPE", with: "ppt")
-        }
-
-        if UserDefaultsManagement.magicPPT {
-            let downTheme = getPPTTheme()
-            template = template.replacingOccurrences(of: "DOWN_THEME", with: downTheme)
-
-            let newHtmlString = htmlString.replacingOccurrences(of: "](/i/", with: "](./i/")
-            return template.replacingOccurrences(of: "DOWN_RAW", with: newHtmlString)
-        }
-
-        #if os(iOS)
-            if NightNight.theme == .night {
-                template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode")
-            }
-        #else
-            if UserDataService.instance.isDark {
-                template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode")
-            }
-        #endif
-
-        let htmlContent = getHtmlContent(htmlString, currentName: vc.titleLabel.stringValue)
-        return template.replacingOccurrences(of: "DOWN_HTML", with: htmlContent)
-    }
 }
 
 class HandlerCheckbox: NSObject, WKScriptMessageHandler {
@@ -638,37 +527,3 @@ class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
     }
 }
 
-// MARK: - Bundle and Resource Management Extensions
-
-extension MPreviewView {
-    private func getDownViewBundle() -> Bundle? {
-        guard let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle") else { return nil }
-        return Bundle(url: URL(fileURLWithPath: path))
-    }
-
-    private func getBaseURL(bundle: Bundle) -> URL? {
-        let resourceName = UserDefaultsManagement.magicPPT ? "ppt" : "index"
-        return bundle.url(forResource: resourceName, withExtension: "html")
-    }
-
-    private func getFontPathAndMeta() -> (String, String) {
-        if UserDefaultsManagement.isOnExportHtml {
-            ("https://gw.alipayobjects.com/os/k/html2/Fonts",
-             "<base href=\"https://gw.alipayobjects.com/os/k/html2/\">")
-        } else {
-            (Bundle.main.resourceURL?.path ?? "", "")
-        }
-    }
-
-    private func getPPTTheme() -> String {
-        let themeFile = UserDataService.instance.isDark ? "night.css" : "white.css"
-        return "<link rel=\"stylesheet\" href=\"ppt/dist/theme/\(themeFile)\" id=\"theme\" />"
-    }
-
-    private func getHtmlContent(_ htmlString: String, currentName: String) -> String {
-        if UserDefaultsManagement.isOnExport, !htmlString.hasPrefix("<h1>") {
-            return "<h1>\(currentName)</h1>" + htmlString
-        }
-        return htmlString
-    }
-}
