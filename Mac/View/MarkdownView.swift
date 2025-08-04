@@ -156,61 +156,7 @@ private extension MarkdownView {
     }
 
     private func loadImages(imagesStorage: URL, html: String) -> String {
-        var htmlString = html
-
-        do {
-            let regex = try NSRegularExpression(pattern: "<img.*?src=\"([^\"]*)\"")
-            let results = regex.matches(in: html, range: NSRange(html.startIndex..., in: html))
-
-            let images = results.map {
-                String(html[Range($0.range, in: html)!])
-            }
-
-            for image in images {
-                var localPath = image.replacingOccurrences(of: "<img src=\"", with: "").dropLast()
-
-                guard !localPath.starts(with: "http://"), !localPath.starts(with: "https://") else {
-                    continue
-                }
-
-                let localPathClean = localPath.removingPercentEncoding ?? String(localPath)
-
-                let fullImageURL = imagesStorage
-                let imageURL = fullImageURL.appendingPathComponent(localPathClean)
-
-                let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
-
-                let create = webkitPreview
-                    .appendingPathComponent(localPathClean)
-                    .deletingLastPathComponent()
-                let destination = webkitPreview.appendingPathComponent(localPathClean)
-
-                try? FileManager.default.createDirectory(atPath: create.path, withIntermediateDirectories: true, attributes: nil)
-                try? FileManager.default.removeItem(at: destination)
-                try? FileManager.default.copyItem(at: imageURL, to: destination)
-
-                var orientation = 0
-                let url = NSURL(fileURLWithPath: imageURL.path)
-                if let imageSource = CGImageSourceCreateWithURL(url, nil) {
-                    let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as Dictionary?
-                    if let orientationProp = imageProperties?[kCGImagePropertyOrientation] as? Int {
-                        orientation = orientationProp
-                    }
-                }
-
-                if localPath.first == "/" {
-                    localPath.remove(at: localPath.startIndex)
-                }
-
-                let imPath = "<img data-orientation=\"\(orientation)\" class=\"miaoyan-preview\" src=\"" + localPath + "\""
-
-                htmlString = htmlString.replacingOccurrences(of: image, with: imPath)
-            }
-        } catch {
-            print("Images regex: \(error.localizedDescription)")
-        }
-
-        return htmlString
+        return html.processLocalImages(with: imagesStorage)
     }
 
     func htmlFromTemplate(_ htmlString: String) throws -> String {
