@@ -3,6 +3,34 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>1.17.0</title>
+      <description><![CDATA[
+      <h3>新变化 🎉:</h3>
+      <ol>
+        <li>适配最新 macOS 26 Tahoe,需要更新不然打不开</li>
+        <li>导出长PDF终于不切割了,此外图片/PPT导出也优化了</li>
+        <li>默认使用仓耳今楷字体,图片/视频渲染效果优化,可点击放大</li>
+      </ol>
+
+      <h3>New Changes 🎉:</h3>
+      <ol>
+        <li>Compatible with the latest macOS Tahoe - update required or the app won't open</li>
+        <li>Long PDF exports are finally no longer split, plus optimized image/PPT export functionality</li>
+        <li>TsangerJinKai font now set as default, improved image/video rendering with click-to-zoom capability</li>
+      </ol>
+
+      <h3>新しい変更点 🎉:</h3>
+      <ol>
+        <li>最新のmacOS Tahoeに対応 - アップデートしないとアプリが開きません</li>
+        <li>長いPDFエクスポートがついに分割されなくなりました。さらに画像/PPTエクスポート機能も最適化</li>
+        <li>仓耳今楷フォントをデフォルトに設定、画像/動画レンダリングを改善しクリック拡大機能を追加</li>
+      </ol>
+          ]]>      </description>
+      <pubDate>周一, 04 08月 2025 23:00:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.17.0.zip" sparkle:shortVersionString="1.17.0" sparkle:version="1.17.0" sparkle:edSignature="8muxuGcf6MeF84MPsgkunePb2LCoPOUhjY1+2E4PPMAaWwkCopeN1wBC1j9NJtp0tvHz7Rtk68xFmPwpQhZxAg==" length="33616595" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>1.16.0</title>
       <description><![CDATA[
       <h3>小惊喜 🎉：</h3>
