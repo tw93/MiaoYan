@@ -17,7 +17,7 @@ public enum UserDefaultsManagement {
     typealias Font = UIFont
     #endif
 
-    static var DefaultFont = "LXGW WenKai Screen"
+    static var DefaultFont = "TsangerJinKai02-W04"
 
     static var DefaultFontSize = 16
     static var DefaultPreviewFontSize = 16
