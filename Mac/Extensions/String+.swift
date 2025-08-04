@@ -183,3 +183,56 @@ public extension NSString {
         return self.lineRange(for: NSRange(location: lineStart - 1, length: 0))
     }
 }
+
+// MARK: - HTML Processing
+public extension String {
+    /// Process local images in HTML string for WebKit preview
+    func processLocalImages(with imagesStorage: URL) -> String {
+        var htmlString = self
+        
+        do {
+            let regex = try NSRegularExpression(pattern: "<img[^>]*?src=\"([^\"]*)\"[^>]*?>")
+            let results = regex.matches(in: self, range: NSRange(self.startIndex..., in: self))
+            
+            let images = results.compactMap { match -> (fullMatch: String, srcPath: String)? in
+                guard let fullRange = Range(match.range, in: self),
+                      let srcRange = Range(match.range(at: 1), in: self) else { return nil }
+                return (String(self[fullRange]), String(self[srcRange]))
+            }
+            
+            for imageInfo in images {
+                var localPath = imageInfo.srcPath
+                
+                // Skip http/https URLs
+                guard !localPath.starts(with: "http://"), !localPath.starts(with: "https://") else {
+                    continue
+                }
+                
+                let localPathClean = localPath.removingPercentEncoding ?? String(localPath)
+                let fullImageURL = imagesStorage
+                let imageURL = fullImageURL.appendingPathComponent(localPathClean)
+                
+                let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
+                let create = webkitPreview
+                    .appendingPathComponent(localPathClean)
+                    .deletingLastPathComponent()
+                let destination = webkitPreview.appendingPathComponent(localPathClean)
+                
+                try? FileManager.default.createDirectory(atPath: create.path, withIntermediateDirectories: true, attributes: nil)
+                try? FileManager.default.removeItem(at: destination)
+                try? FileManager.default.copyItem(at: imageURL, to: destination)
+                
+                if localPath.first == "/" {
+                    localPath.remove(at: localPath.startIndex)
+                }
+                
+                let imPath = "<img src=\"" + localPath + "\""
+                htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: imPath)
+            }
+        } catch {
+            print("Images regex: \(error.localizedDescription)")
+        }
+        
+        return htmlString
+    }
+}
