@@ -2589,7 +2589,9 @@ class ViewController:
         UserDefaultsManagement.isOnExportPPT = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
             self.editArea.markdownView?.exportPdf()
-            self.disableMiaoYanPPT()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.disableMiaoYanPPT()
+            }
         }
         Analytics.trackEvent("MiaoYan Export", withProperties: ["Type": "MiaoYan PPT PDF"])
     }

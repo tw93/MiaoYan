@@ -2024,7 +2024,10 @@ html.print-pdf .reveal .slides .pdf-page {
     overflow: hidden;
     z-index: 1;
     page-break-after: always;
-    border-top: none;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    margin: 20px;
     box-sizing: border-box;
     background-color: #fff !important;
 }
@@ -2032,6 +2035,8 @@ html.print-pdf .reveal .slides .pdf-page {
 
 @media (prefers-color-scheme: dark) {
     html.print-pdf .reveal .slides .pdf-page {
+        border: 1px solid #505050;
+        box-shadow: 0 1px 4px rgba(255,255,255,0.05);
         background-color: #21262b !important;
     }
 }
