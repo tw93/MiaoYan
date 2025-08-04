@@ -29,7 +29,7 @@
 "😶‍🌫 Please make sure your title exists~" = "😶‍🌫 請確定填寫的標題是否存在～";
 
 /* No comment provided by engineer. */
-"😶‍🌫 The current Mac system does not support export, please upgrade to above 11.0~" = "😶‍🌫 目前的 Mac 系統不支援輸出功能，請升級到 11.0 版以上～";
+"😶‍🌫 PDF export failed, please try again~" = "😶‍🌫 PDF 匯出失敗，請重新試試～";
 
 /* No comment provided by engineer. */
 "🙊 In single open mode, Exit with Command+Shift+W ~" = "🙊 在單獨編輯器模式中，可以敲下 Command+Shift+W 結束～";

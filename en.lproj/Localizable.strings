@@ -114,7 +114,7 @@
 
 "😶‍🌫 Format is only possible after exiting preview mode~" = "😶‍🌫 文档排版需要退出预览模式才可使用~";
 
-"😶‍🌫 The current Mac system does not support export, please upgrade to above 11.0~" = "😶‍🌫 当前 Mac 系统不支持导出，请升级到 11.0 以上~";
+"😶‍🌫 PDF export failed, please try again~" = "😶‍🌫 PDF导出失败，请重新试试~";
 
 "🎉 Exported to desktop~" = "🎉 已导出到桌面~";
 
