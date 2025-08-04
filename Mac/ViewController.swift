@@ -2598,7 +2598,7 @@ class ViewController:
         if status {
             toast(message: NSLocalizedString("🎉 Saved to Downloads folder~", comment: ""))
         } else {
-            toast(message: NSLocalizedString("😶‍🌫 The current Mac system does not support export, please upgrade to above 11.0~", comment: ""))
+            toast(message: NSLocalizedString("😶‍🌫 PDF export failed, please try again~", comment: ""))
         }
         // After the export is completed, restore the original state.
         UserDefaultsManagement.isOnExport = false

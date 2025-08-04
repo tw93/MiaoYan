@@ -117,7 +117,7 @@
 
 "😶‍🌫 Format is only possible after exiting preview mode~" = "😶‍🌫 フォーマットの為に、プレビューモードを終了してください。";
 
-"😶‍🌫 The current Mac system does not support export, please upgrade to above 11.0~" = "😶‍🌫 現在利用の環境は出力をサポートしていません。11.0にアップグレードしてください。";
+"😶‍🌫 PDF export failed, please try again~" = "😶‍🌫 PDFエクスポートに失敗しました。もう一度お試しください。";
 
 "🎉 Saved to Downloads folder~" = "🎉 ダウンロードフォルダに保存されました。";
 
