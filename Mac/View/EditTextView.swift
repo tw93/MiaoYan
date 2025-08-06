@@ -20,6 +20,11 @@ class EditTextView: NSTextView, NSTextFinderClient {
     public var timer: Timer?
     public var markdownView: MPreviewView?
     public static var imagesLoaderQueue = OperationQueue()
+    
+    // 图片预览相关
+    private var imagePreviewWindow: ImagePreviewWindow?
+    private var hoverTimer: Timer?
+    private var lastHoveredImageInfo: ImageLinkInfo?
 
     public static var fontColor: NSColor {
         if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
@@ -90,6 +95,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override var acceptableDragTypes: [NSPasteboard.PasteboardType] { [] }
 
     override func mouseDown(with event: NSEvent) {
+        // 隐藏图片预览（用户可能要点击选中/编辑）
+        hideImagePreview()
+        
         guard EditTextView.note != nil else { return }
 
         guard let container = textContainer, let manager = layoutManager else { return }
@@ -120,21 +128,29 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let viewController = window?.contentViewController as! ViewController
         if !viewController.emptyEditAreaView.isHidden {
             NSCursor.arrow.set()
+            hideImagePreview()
             return
         }
 
         let point = convert(event.locationInWindow, from: nil)
         let properPoint = NSPoint(x: point.x - textContainerInset.width, y: point.y)
 
-        guard let container = textContainer, let manager = layoutManager else { return }
+        guard let container = textContainer, let manager = layoutManager else { 
+            hideImagePreview()
+            return 
+        }
 
         let index = manager.characterIndex(for: properPoint, in: container, fractionOfDistanceBetweenInsertionPoints: nil)
 
         _ = manager.boundingRect(forGlyphRange: NSRange(location: index, length: 1), in: container)
 
         if UserDefaultsManagement.preview {
+            hideImagePreview()
             return
         }
+
+        // 检测图片链接悬停（降低频率，避免过度处理）
+        handleImageLinkHover(at: index, mousePoint: event.locationInWindow)
 
         // 给链接在 command 的时候加上一个手
         if NSEvent.modifierFlags.contains(.command) {
@@ -479,6 +495,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         textStorage?.setAttributedString(NSAttributedString())
         markdownView?.removeFromSuperview()
         markdownView = nil
+        hideImagePreview()
 
         isEditable = false
 
@@ -555,62 +572,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         return newFont
     }
 
-    override func keyDown(with event: NSEvent) {
-        guard !(
-            event.modifierFlags.contains(.shift) &&
-                [
-                    kVK_UpArrow,
-                    kVK_DownArrow,
-                    kVK_LeftArrow,
-                    kVK_RightArrow
-                ].contains(Int(event.keyCode))
-        )
-        else {
-            super.keyDown(with: event)
-            return
-        }
-
-        guard let note = EditTextView.note else { return }
-
-        // 简化原有的tab切换逻辑
-        if event.keyCode == kVK_Tab, !hasMarkedText() {
-            breakUndoCoalescing()
-            let formatter = TextFormatter(textView: self, note: note)
-            if event.modifierFlags.contains(.shift) {
-                formatter.unTab()
-            } else {
-                formatter.tab()
-            }
-            saveCursorPosition()
-            breakUndoCoalescing()
-            return
-        }
-
-        if event.keyCode == kVK_Return, !hasMarkedText() {
-            breakUndoCoalescing()
-            let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
-            // 对于有shift的直接回车
-            if event.modifierFlags.contains(.shift) {
-                insertNewline(nil)
-            } else {
-                formatter.newLine()
-            }
-            breakUndoCoalescing()
-            fillHighlightLinks()
-            saveCursorPosition()
-            return
-        }
-
-        if event.keyCode == kVK_Delete, event.modifierFlags.contains(.option) {
-            deleteWordBackward(nil)
-            return
-        }
-
-        super.keyDown(with: event)
-
-        fillHighlightLinks()
-        saveCursorPosition()
-    }
+    // 原有的 keyDown 方法已移动到图片预览功能中
 
     override func shouldChangeText(in affectedCharRange: NSRange, replacementString: String?) -> Bool {
         guard let note = EditTextView.note else {
@@ -1222,5 +1184,170 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         return menu
+    }
+    
+    // MARK: - 图片预览功能
+    
+    private func handleImageLinkHover(at index: Int, mousePoint: NSPoint) {
+        guard let storage = textStorage else {
+            hideImagePreview()
+            return
+        }
+        
+        // 检查是否应该禁用预览
+        if shouldDisableImagePreview() {
+            hideImagePreview()
+            return
+        }
+        
+        let text = storage.string
+        
+        // 检测光标位置是否在图片链接上
+        if let imageInfo = ImageLinkParser.detectImageLink(in: text, at: index) {
+            // 如果是同一个图片链接且在同一范围内，不需要重新处理
+            if let lastInfo = lastHoveredImageInfo,
+               lastInfo.src == imageInfo.src && 
+               lastInfo.range.location == imageInfo.range.location &&
+               lastInfo.range.length == imageInfo.range.length {
+                
+                // 如果预览窗口已经显示，保持不变（避免闪动）
+                return
+            }
+            
+            // 不同的图片链接，重新设置
+            lastHoveredImageInfo = imageInfo
+            
+            // 取消之前的定时器
+            hoverTimer?.invalidate()
+            
+            // 设置延迟显示预览（减少到0.3秒提升响应性）
+            hoverTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
+                // 再次检查是否应该禁用预览（延迟期间可能发生变化）
+                guard let self = self, !self.shouldDisableImagePreview() else { return }
+                self.showImagePreview(for: imageInfo, at: mousePoint)
+            }
+        } else {
+            // 不在图片链接上，隐藏预览
+            if lastHoveredImageInfo != nil {
+                hideImagePreview()
+            }
+        }
+    }
+    
+    private func showImagePreview(for imageInfo: ImageLinkInfo, at mousePoint: NSPoint) {
+        // 确保预览窗口存在
+        if imagePreviewWindow == nil {
+            imagePreviewWindow = ImagePreviewWindow()
+        }
+        
+        guard let window = window else { return }
+        
+        // 直接使用鼠标位置，但只在首次显示时计算位置，后续保持不变
+        let screenPoint = window.convertPoint(toScreen: mousePoint)
+        
+        // 显示预览，但使用新的定位逻辑
+        imagePreviewWindow?.showPreview(for: imageInfo.src, at: screenPoint, isFixed: true)
+    }
+    
+    private func hideImagePreview() {
+        hoverTimer?.invalidate()
+        hoverTimer = nil
+        lastHoveredImageInfo = nil
+        imagePreviewWindow?.hidePreview()
+    }
+    
+    // 检查是否应该禁用图片预览
+    private func shouldDisableImagePreview() -> Bool {
+        // 如果有文本选中，禁用预览
+        let selection = selectedRange()
+        if selection.length > 0 {
+            return true
+        }
+        
+        // 如果正在进行拖拽操作，禁用预览
+        if let window = window, let event = NSApp.currentEvent {
+            if event.type == .leftMouseDragged || event.type == .leftMouseDown {
+                return true
+            }
+        }
+        
+        // 如果正在编辑模式且有标记文本（输入法状态），禁用预览
+        if hasMarkedText() {
+            return true
+        }
+        
+        return false
+    }
+    
+    // 重写 mouseExited 确保离开时隐藏预览
+    override func mouseExited(with event: NSEvent) {
+        super.mouseExited(with: event)
+        hideImagePreview()
+    }
+    
+    // 重写 mouseDragged 在拖拽时隐藏预览
+    override func mouseDragged(with event: NSEvent) {
+        hideImagePreview()
+        super.mouseDragged(with: event)
+    }
+    
+    // 重写 keyDown 确保按键时隐藏预览
+    override func keyDown(with event: NSEvent) {
+        hideImagePreview()
+        
+        guard !(
+            event.modifierFlags.contains(.shift) &&
+                [
+                    kVK_UpArrow,
+                    kVK_DownArrow,
+                    kVK_LeftArrow,
+                    kVK_RightArrow
+                ].contains(Int(event.keyCode))
+        )
+        else {
+            super.keyDown(with: event)
+            return
+        }
+
+        guard let note = EditTextView.note else { return }
+
+        // 简化原有的tab切换逻辑
+        if event.keyCode == kVK_Tab, !hasMarkedText() {
+            breakUndoCoalescing()
+            let formatter = TextFormatter(textView: self, note: note)
+            if event.modifierFlags.contains(.shift) {
+                formatter.unTab()
+            } else {
+                formatter.tab()
+            }
+            saveCursorPosition()
+            breakUndoCoalescing()
+            return
+        }
+
+        if event.keyCode == kVK_Return, !hasMarkedText() {
+            breakUndoCoalescing()
+            let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
+            // 对于有shift的直接回车
+            if event.modifierFlags.contains(.shift) {
+                insertNewline(nil)
+            } else {
+                formatter.newLine()
+            }
+            breakUndoCoalescing()
+            fillHighlightLinks()
+            saveCursorPosition()
+            return
+        }
+
+        if event.keyCode == kVK_Delete, event.modifierFlags.contains(.option) {
+            deleteWordBackward(nil)
+            return
+        }
+
+        super.keyDown(with: event)
+
+        fillHighlightLinks()
+        saveCursorPosition()
     }
 }
