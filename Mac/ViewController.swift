@@ -39,6 +39,8 @@ class ViewController:
 
     private var updateViews = [Note]()
     public var breakUndoTimer = Timer()
+    private var sidebarResizeTimer = Timer()
+    private var isUserDraggingSidebar = false
 
     override var representedObject: Any? {
         didSet {}
@@ -2420,15 +2422,20 @@ class ViewController:
     func checkSidebarDivider() {
         guard let vc = ViewController.shared() else { return }
         let size = Int(vc.sidebarSplitView.subviews[0].frame.width)
-        if size != 0 {
-            setSideDividerHidden(hidden: false)
-        } else {
+        
+        // Only update divider visibility, don't interfere with drag resize logic
+        if size == 0 {
             setSideDividerHidden(hidden: true)
+        } else if size >= 90 {
+            setSideDividerHidden(hidden: false)
         }
     }
 
-    // 单独模式下的限制，不让第一个sidebar可以拖动，默认一直是0
     func splitView(_ splitView: NSSplitView, constrainMinCoordinate proposedMinimumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
+        if splitView == sidebarSplitView && dividerIndex == 0 {
+            return 0
+        }
+        
         if dividerIndex == 0 && UserDefaultsManagement.isSingleMode {
             return 0
         }
@@ -2436,6 +2443,10 @@ class ViewController:
     }
 
     func splitView(_ splitView: NSSplitView, constrainMaxCoordinate proposedMaximumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
+        if splitView == sidebarSplitView && dividerIndex == 0 {
+            return 280
+        }
+        
         if dividerIndex == 0 && UserDefaultsManagement.isSingleMode {
             return 0
         }
@@ -2674,7 +2685,49 @@ class ViewController:
     }
 
     func splitViewWillResizeSubviews(_ notification: Notification) {
+        guard let splitView = notification.object as? NSSplitView else { return }
+        
+        if splitView == sidebarSplitView {
+            isUserDraggingSidebar = true
+        }
+        
         editArea.updateTextContainerInset()
+    }
+    
+    func splitViewDidResizeSubviews(_ notification: Notification) {
+        guard let splitView = notification.object as? NSSplitView else { return }
+        
+        if splitView == sidebarSplitView {
+            let sidebarWidth = splitView.subviews[0].frame.width
+            
+            // Only apply smart behavior when user is actively dragging
+            if isUserDraggingSidebar {
+                sidebarResizeTimer.invalidate()
+                sidebarResizeTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false) { [weak self] _ in
+                    self?.handleSidebarResize(width: sidebarWidth)
+                    self?.isUserDraggingSidebar = false
+                }
+            }
+        }
+    }
+    
+    private func handleSidebarResize(width: CGFloat) {
+        if width < 90 && width > 0 {
+            // Auto collapse when dragged below minimum width
+            UserDefaultsManagement.realSidebarSize = max(Int(width), 90)
+            
+            NSAnimationContext.runAnimationGroup { context in
+                context.duration = 0.18
+                context.timingFunction = CAMediaTimingFunction(name: .easeOut)
+                sidebarSplitView.animator().setPosition(0, ofDividerAt: 0)
+            } completionHandler: { [weak self] in
+                self?.setSideDividerHidden(hidden: true)
+            }
+        } else if width >= 90 {
+            setSideDividerHidden(hidden: false)
+        } else if width == 0 {
+            setSideDividerHidden(hidden: true)
+        }
     }
 
     public static func shared() -> ViewController? {
