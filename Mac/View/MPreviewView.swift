@@ -516,8 +516,8 @@ class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
         guard let vc = ViewController.shared() else { return }
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
         if message == "" {
-            vc.setDividerHidden(hidden: true)
-            vc.setSideDividerHidden(hidden: true)
+            vc.setDividerColor(for: vc.splitView, hidden: true)
+            vc.setDividerColor(for: vc.sidebarSplitView, hidden: true)
             vc.titleLabel.backgroundColor = NSColor(named: "mainBackground")
         } else {
             vc.sidebarSplitView.setValue(NSColor(css: message), forKey: "dividerColor")
