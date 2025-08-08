@@ -366,10 +366,12 @@ class SidebarProjectView: NSOutlineView,
                 UserDataService.instance.lastName = item.name
             }
 
-            vd.editArea.clear()
-
+            // Don't clear edit area during launch to prevent flashing
             if !isLaunch {
+                vd.editArea.clear()
                 vd.search.stringValue = ""
+                // Save current scroll position when switching projects
+                vd.notesTableView.saveScrollPosition()
             }
 
             guard !UserDataService.instance.skipSidebarSelection else {
@@ -379,15 +381,14 @@ class SidebarProjectView: NSOutlineView,
 
             vd.updateTable {
                 if self.isLaunch {
+                    // During launch, restore note selection
                     if let url = UserDefaultsManagement.lastSelectedURL,
                        let lastNote = vd.storage.getBy(url: url),
                        let i = vd.notesTableView.getIndex(lastNote)
                     {
                         vd.notesTableView.selectRow(i)
-
-                        DispatchQueue.main.async {
-                            vd.notesTableView.scrollRowToVisible(row: i, animated: true)
-                        }
+                        // Restore scroll position instead of scrolling to visible row
+                        vd.notesTableView.restoreScrollPosition()
                     } else if vd.notesTableView.noteList.count > 0 {
                         vd.focusTable()
                     }

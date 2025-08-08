@@ -447,21 +447,24 @@ class ViewController:
         if UserDefaultsManagement.isSingleMode {
             lastSidebarItem = 0
         }
+        
         updateTable {
+            // Set sidebar selection after table update to properly trigger selection change
             if let items = self.storageOutlineView.sidebarItems, items.indices.contains(lastSidebarItem) {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                // Use a small delay to ensure table is fully loaded before selection
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                     self.storageOutlineView.selectRowIndexes([lastSidebarItem], byExtendingSelection: false)
                 }
-                if UserDefaultsManagement.isSingleMode {
-                    let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
-                    if !FileManager.default.directoryExists(atUrl: singleModeUrl), let lastNote = self.storage.getBy(url: singleModeUrl), let i = self.notesTableView.getIndex(lastNote) {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                            self.notesTableView.selectRow(i)
-                            self.notesTableView.scrollRowToVisible(row: i, animated: false)
-                            self.hideNoteList("")
-                        }
-                    }
+            }
+            
+            if UserDefaultsManagement.isSingleMode {
+                let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
+                if !FileManager.default.directoryExists(atUrl: singleModeUrl), let lastNote = self.storage.getBy(url: singleModeUrl), let i = self.notesTableView.getIndex(lastNote) {
+                    self.notesTableView.selectRow(i)
+                    self.notesTableView.scrollRowToVisible(row: i, animated: false)
+                    self.hideNoteList("")
                 }
+                self.storageOutlineView.isLaunch = false
             }
         }
     }
@@ -1263,18 +1266,22 @@ class ViewController:
     func setDividerHidden(hidden: Bool) {
         guard let vc = ViewController.shared() else { return }
         if hidden {
-            vc.splitView.setValue(NSColor(named: "mainBackground"), forKey: "dividerColor")
+            let backgroundColor = NSColor(named: "mainBackground") ?? NSColor.windowBackgroundColor
+            vc.splitView.setValue(backgroundColor, forKey: "dividerColor")
         } else {
-            vc.splitView.setValue(NSColor(named: "divider")!, forKey: "dividerColor")
+            let dividerColor = NSColor(named: "divider") ?? NSColor.separatorColor
+            vc.splitView.setValue(dividerColor, forKey: "dividerColor")
         }
     }
 
     func setSideDividerHidden(hidden: Bool) {
         guard let vc = ViewController.shared() else { return }
         if hidden {
-            vc.sidebarSplitView.setValue(NSColor(named: "mainBackground"), forKey: "dividerColor")
+            let backgroundColor = NSColor(named: "mainBackground") ?? NSColor.windowBackgroundColor
+            vc.sidebarSplitView.setValue(backgroundColor, forKey: "dividerColor")
         } else {
-            vc.sidebarSplitView.setValue(NSColor(named: "divider")!, forKey: "dividerColor")
+            let dividerColor = NSColor(named: "divider") ?? NSColor.separatorColor
+            vc.sidebarSplitView.setValue(dividerColor, forKey: "dividerColor")
         }
     }
 
