@@ -16,7 +16,7 @@ The project now uses Swift Package Manager for all dependencies. The `Package.sw
 | [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON)        | 5.0.2+  | JSON parsing library                   |
 | [Highlightr](https://github.com/raspu/Highlightr)             | 2.3.0+  | Syntax highlighting for code blocks    |
 | [ZipArchive](https://github.com/ZipArchive/ZipArchive)        | 2.6.0+  | ZIP file compression and decompression |
-| [Ink](https://github.com/JohnSundell/Ink)                     | 0.6.0+  | Fast Markdown parser                   |
+| [swift-cmark-gfm](https://github.com/stackotter/swift-cmark-gfm) | 1.0.2+  | GitHub Flavored Markdown parsing      |
 | [MASShortcut](https://github.com/shpakovski/MASShortcut)      | master  | Global keyboard shortcuts for macOS    |
 
 ### Migration Notes
@@ -27,20 +27,22 @@ The project was successfully migrated from CocoaPods to Swift Package Manager:
 
 - ✅ **Removed**: `Podfile`, `Podfile.lock`, and all CocoaPods configurations
 - ✅ **Migrated**: All dependencies to SPM equivalents
-- ✅ **Replaced**: `libcmark_gfm` with `Ink` for better Swift integration
+- ✅ **Replaced**: `libcmark_gfm` with `swift-cmark-gfm` for better Swift integration
 - ✅ **Fixed**: Module naming conflicts and import issues
 
 #### Key Changes
 
-1. **Markdown Parser**: Replaced `libcmark_gfm` with `Ink`
+1. **Markdown Parser**: Replaced `libcmark_gfm` with `swift-cmark-gfm`
 
    ```swift
    // Old (libcmark_gfm)
-   let html = markdown_to_html(markdown, extensions)
+   import libcmark_gfm
 
-   // New (Ink)
-   let parser = Ink.MarkdownParser()
-   let html = parser.html(from: markdown)
+   // New (swift-cmark-gfm)
+   import CMarkGFM
+   
+   // Usage remains similar with C API wrapper
+   let html = renderMarkdownHTML(markdown: markdownContent)
    ```
 
 2. **ZIP Archive**: Updated import statement

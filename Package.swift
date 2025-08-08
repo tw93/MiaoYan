@@ -31,6 +31,9 @@ let package = Package(
         .package(url: "https://github.com/ZipArchive/ZipArchive.git", from: "2.6.0"),
         
         
+        // GitHub Flavored Markdown parsing library
+        .package(url: "https://github.com/stackotter/swift-cmark-gfm", from: "1.0.2"),
+        
         // Global keyboard shortcuts for macOS
         .package(url: "https://github.com/shpakovski/MASShortcut.git", branch: "master")
     ],
@@ -46,6 +49,7 @@ let package = Package(
                 "SwiftyJSON", 
                 "Highlightr",
                 "ZipArchive",
+                .product(name: "CMarkGFM", package: "swift-cmark-gfm"),
                 "MASShortcut"
             ],
             path: "Sources"
