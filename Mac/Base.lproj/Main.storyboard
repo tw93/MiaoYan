@@ -222,12 +222,12 @@ CA
                                         </menuItem>
                                         <menuItem title="Hide/Show Sidebar" keyEquivalent="1" id="DCh-5P-PZe">
                                             <connections>
-                                                <action selector="toggleSidebar:" target="L4m-js-agn" id="MRM-fh-zTo"/>
+                                                <action selector="toggleSidebar:" target="Ady-hI-5gd" id="MRM-fh-zTo"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Hide/Show NoteList" keyEquivalent="2" id="WHt-T4-l9c">
                                             <connections>
-                                                <action selector="toggleNoteList:" target="L4m-js-agn" id="G22-P2-hks"/>
+                                                <action selector="toggleNoteList:" target="Ady-hI-5gd" id="G22-P2-hks"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Toggle Preview" keyEquivalent="3" id="PdU-Em-Ugm">
