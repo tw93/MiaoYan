@@ -344,10 +344,24 @@ class ViewController:
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
             guard self.sidebarWidth > 0 && self.storageOutlineView.selectedRow == -1 else { return }
             
-            let lastProject = UserDefaultsManagement.lastProject
+            // Try to find the project by URL first (more reliable after reordering)
+            if let lastProjectURL = UserDataService.instance.lastProject,
+               let items = self.storageOutlineView.sidebarItems {
+                
+                for (index, item) in items.enumerated() {
+                    if let sidebarItem = item as? SidebarItem,
+                       sidebarItem.project?.url == lastProjectURL {
+                        self.storageOutlineView.selectRowIndexes([index], byExtendingSelection: false)
+                        return
+                    }
+                }
+            }
+            
+            // Fallback to index-based selection if URL matching fails
+            let lastProjectIndex = UserDefaultsManagement.lastProject
             if let items = self.storageOutlineView.sidebarItems, 
-               items.indices.contains(lastProject) {
-                self.storageOutlineView.selectRowIndexes([lastProject], byExtendingSelection: false)
+               items.indices.contains(lastProjectIndex) {
+                self.storageOutlineView.selectRowIndexes([lastProjectIndex], byExtendingSelection: false)
             } else if let items = self.storageOutlineView.sidebarItems, !items.isEmpty {
                 self.storageOutlineView.selectRowIndexes([0], byExtendingSelection: false)
             }
