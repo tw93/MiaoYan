@@ -88,7 +88,7 @@
 
 ## 感谢
 
-- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>：5年前项目开始的时候，部分代码参考来源此，非常感谢作者的辛苦付出
+- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>：5年前项目初始时框架代码参考于此，感谢作者辛苦付出
 - <a href="https://github.com/JohnSundell/Ink" target="_blank">JohnSundell/Ink</a>：快速高效的 Swift Markdown 解析器
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>：语法高亮能力
 - <a href="https://tsanger.cn/product" target="_blank">仓耳字库</a>：一款漂亮的开源中文字体仓耳今楷，妙言将其作为默认字体
