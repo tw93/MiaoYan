@@ -86,7 +86,7 @@
 
 ## Thanks
 
-- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: 5 years ago when the project started, part of the code references came from this, Thank you very much to the author for the hard work
+- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: Framework code referenced from this when the project started 5 years ago, thanks to the author's hard work
 - <a href="https://github.com/JohnSundell/Ink" target="_blank">JohnSundell/Ink</a>: A fast and flexible Markdown parser written in Swift
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>: Syntax highlighting capability
 - <a href="https://tsanger.cn/product" target="_blank">Tsanger Fonts</a>: A beautiful open source Chinese font TsangerJinKai, MiaoYan has made it the default font

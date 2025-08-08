@@ -86,7 +86,7 @@
 
 ## 感謝
 
-- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: 5年前プロジェクト開始の時に、部分的なコードの参考元がこちらです、著者のご苦労に深く感謝いたします
+- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: 5年前プロジェクト初期にフレームワークコードをこちらから参考にしました、著者のご苦労に感謝いたします
 - <a href="https://github.com/JohnSundell/Ink" target="_blank">JohnSundell/Ink</a>: Swift で書かれた高速で柔軟な Markdown パーサー
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>: シンタックスハイライト機能
 - <a href="https://tsanger.cn/product" target="_blank">仓耳字库</a>: 美しいオープンソースの中国語フォント仓耳今楷、MiaoYan はこれをデフォルトのフォントにしました
