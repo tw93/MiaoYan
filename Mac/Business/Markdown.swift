@@ -1,5 +1,11 @@
-import libcmark_gfm
+import CMarkGFM
 import Foundation
+
+extension String {
+    func matches(_ pattern: String) -> Bool {
+        return self.range(of: pattern, options: .regularExpression) != nil
+    }
+}
 
 func renderMarkdownHTML(markdown: String) -> String? {
     cmark_gfm_core_extensions_ensure_registered()
@@ -24,7 +30,7 @@ func renderMarkdownHTML(markdown: String) -> String? {
     } else {
         res = String(cString: cmark_render_html(node, CMARK_OPT_UNSAFE | CMARK_OPT_HARDBREAKS, nil))
     }
-
+    
     // 后处理：去除公式块内的 <br> 和 <br />
     let pattern = #"<p>(\$\$[\s\S]*?\$\$)<\/p>"#
     let regex = try? NSRegularExpression(pattern: pattern, options: [])
