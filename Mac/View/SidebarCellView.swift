@@ -7,8 +7,18 @@ class SidebarCellView: NSTableCellView {
     var storage = Storage.sharedInstance()
 
     override func draw(_ dirtyRect: NSRect) {
-        label.font = UserDefaultsManagement.nameFont
+        label?.font = UserDefaultsManagement.nameFont
         super.draw(dirtyRect)
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        guard let label = label else { return }
+        
+        // Basic text truncation
+        label.lineBreakMode = .byTruncatingTail
+        label.cell?.truncatesLastVisibleLine = true
     }
 
     private var trackingArea: NSTrackingArea?

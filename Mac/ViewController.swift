@@ -468,6 +468,8 @@ class ViewController:
         notesScrollView.scrollerStyle = .overlay
         sidebarScrollView.scrollerStyle = .overlay
         sidebarScrollView.horizontalScroller = .none
+        sidebarScrollView.hasHorizontalScroller = false
+        sidebarScrollView.autohidesScrollers = true
     }
 
     private func configureNotesList() {
@@ -1455,7 +1457,7 @@ class ViewController:
             expandNoteList()
         }
         
-        let targetWidth = max(UserDefaultsManagement.realSidebarSize, 138)
+        let targetWidth = max(UserDefaultsManagement.realSidebarSize, 86)
         sidebarSplitView.setPosition(CGFloat(targetWidth), ofDividerAt: 0)
         updateDividers()
         editArea.updateTextContainerInset()

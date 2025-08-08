@@ -328,7 +328,7 @@ class SidebarProjectView: NSOutlineView,
             
             cell.label.font = UserDefaultsManagement.nameFont
             cell.label.addCharacterSpacing()
-
+            
             switch si.type {
             case .All:
                 cell.icon.image = NSImage(imageLiteralResourceName: "home.png")
@@ -377,7 +377,7 @@ class SidebarProjectView: NSOutlineView,
         let itemIndex = outlineView.row(forItem: item)
         guard itemIndex >= 0 else { return nil }
         
-        guard let sidebarItems = sidebarItems else { return nil }
+        guard sidebarItems != nil else { return nil }
         
         // Don't allow dragging the first item (MiaoYan - .All type)
         if itemIndex == 0 {
