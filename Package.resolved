@@ -55,6 +55,15 @@
       }
     },
     {
+      "identity" : "swift-cmark-gfm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/stackotter/swift-cmark-gfm",
+      "state" : {
+        "revision" : "7ec44e7384793e507cf046336aef68586719a24e",
+        "version" : "1.0.2"
+      }
+    },
+    {
       "identity" : "swiftyjson",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SwiftyJSON/SwiftyJSON.git",

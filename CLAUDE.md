@@ -39,21 +39,35 @@ MiaoYan/
 
 - **开发语言**: Swift 5
 - **UI 框架**: AppKit (macOS 原生)
-- **依赖管理**: CocoaPods
+- **依赖管理**: Swift Package Manager
 - **最低支持**: macOS 11.5+
 
-### 主要依赖 (Podfile)
+### 主要依赖 (Swift Package Manager)
 
-```ruby
-pod 'Sparkle'         # 自动更新
-pod 'AppCenter'       # 应用分析和崩溃报告
-pod 'Alamofire'       # 网络请求
-pod 'SwiftyJSON'      # JSON 解析
-pod 'Highlightr'      # 语法高亮
-pod 'libcmark_gfm'    # Markdown 解析 (GitHub Flavored)
-pod 'SSZipArchive'    # 压缩文件处理
-pod 'SwiftLint'       # 代码规范检查
-pod 'MASShortcut'     # 全局快捷键
+```swift
+// 自动更新框架
+.package(url: "https://github.com/sparkle-project/Sparkle.git", from: "2.7.1")
+
+// 应用分析和崩溃报告
+.package(url: "https://github.com/microsoft/appcenter-sdk-apple.git", from: "5.0.6")
+
+// HTTP 网络请求库
+.package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.10.2")
+
+// JSON 解析库
+.package(url: "https://github.com/SwiftyJSON/SwiftyJSON.git", from: "5.0.2")
+
+// 代码语法高亮
+.package(url: "https://github.com/raspu/Highlightr.git", from: "2.3.0")
+
+// ZIP 文件压缩和解压
+.package(url: "https://github.com/ZipArchive/ZipArchive.git", from: "2.6.0")
+
+// GitHub Flavored Markdown 解析库
+.package(url: "https://github.com/stackotter/swift-cmark-gfm", from: "1.0.2")
+
+// 全局键盘快捷键
+.package(url: "https://github.com/shpakovski/MASShortcut.git", branch: "master")
 ```
 
 ## 核心模块
@@ -95,7 +109,6 @@ pod 'MASShortcut'     # 全局快捷键
 - Xcode 12.0+
 - Swift 5.0+
 - macOS 11.5+ (开发环境)
-- CocoaPods 1.10.0+
 
 ### 构建步骤
 
@@ -104,18 +117,16 @@ pod 'MASShortcut'     # 全局快捷键
 git clone https://github.com/tw93/MiaoYan.git
 cd MiaoYan
 
-# 2. 安装依赖
-pod install
+# 2. 打开项目 (依赖会自动解析)
+open MiaoYan.xcodeproj
 
-# 3. 打开工作空间
-open MiaoYan.xcworkspace
-
-# 4. 在 Xcode 中构建和运行
+# 3. 在 Xcode 中构建和运行
+# Xcode 会自动通过 Swift Package Manager 下载和管理依赖
 ```
 
 ### 代码规范
 
-- 使用 SwiftLint 进行代码规范检查
+- 项目已迁移到 Swift Package Manager，不再使用 SwiftLint 作为 Pod 依赖
 - 遵循 Swift 官方代码规范
 - 变量和函数使用驼峰命名法
 - 类名使用大驼峰命名法
@@ -125,7 +136,7 @@ open MiaoYan.xcworkspace
 
 ### 1. Markdown 渲染
 
-- 使用 `libcmark_gfm` 解析 GitHub Flavored Markdown
+- 使用 `swift-cmark-gfm` 解析 GitHub Flavored Markdown
 - `Highlightr` 提供语法高亮支持
 - 支持 LaTeX 数学公式、Mermaid 图表、PlantUML 等
 
