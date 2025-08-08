@@ -1265,7 +1265,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         
         // 如果正在进行拖拽操作，禁用预览
-        if let window = window, let event = NSApp.currentEvent {
+        if let _ = window, let event = NSApp.currentEvent {
             if event.type == .leftMouseDragged || event.type == .leftMouseDown {
                 return true
             }

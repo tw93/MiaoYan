@@ -23,27 +23,17 @@ class EditorSplitView: NSSplitView, NSSplitViewDelegate {
     
     func splitView(_ splitView: NSSplitView, constrainSplitPosition proposedPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
         if dividerIndex == 0 && isUserDragging && !shouldHideDivider {
-            // 实现经典macOS 3栏连锁调整效果
-            if proposedPosition < 180 {
-                // 当notelist宽度小于180px时，开始影响sidebar宽度
+            // Auto-hide when reaching 180px threshold
+            if proposedPosition <= 180 {
                 if let vc = ViewController.shared() {
-                    let sidebarWidth = vc.sidebarSplitView.subviews[0].frame.width
-                    let totalAvailable = sidebarWidth + proposedPosition
-                    
-                    // 计算新的sidebar宽度，确保总宽度保持合理
-                    let newSidebarWidth = max(0, totalAvailable - 180)
-                    let newNotelistWidth = totalAvailable - newSidebarWidth
-                    
-                    // 异步调整sidebar宽度以实现连锁效果
                     DispatchQueue.main.async {
-                        vc.sidebarSplitView.setPosition(newSidebarWidth, ofDividerAt: 0)
+                        vc.hideNoteList("")
+                        vc.hideSidebar("")
                     }
-                    
-                    return newNotelistWidth
                 }
+                return 0
             }
             
-            // 正常范围内的约束
             if proposedPosition > 600 {
                 return 600
             }
@@ -73,9 +63,14 @@ class EditorSplitView: NSSplitView, NSSplitViewDelegate {
         super.mouseUp(with: event)
         isUserDragging = false
         
-        // 拖拽结束后，确保边框线状态正确
         if let vc = ViewController.shared() {
             vc.updateDividers()
+            
+            // Save notelist width when drag ends
+            let notelistWidth = vc.splitView.subviews[0].frame.width
+            if notelistWidth > 0 {
+                UserDefaultsManagement.sidebarSize = Int(notelistWidth)
+            }
         }
     }
 }
