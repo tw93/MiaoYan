@@ -39,8 +39,6 @@ class ViewController:
 
     private var updateViews = [Note]()
     public var breakUndoTimer = Timer()
-    private var sidebarResizeTimer = Timer()
-    private var isUserDraggingSidebar = false
 
     override var representedObject: Any? {
         didSet {}
@@ -456,7 +454,7 @@ class ViewController:
         setTableRowHeight()
         storageOutlineView.sidebarItems = Sidebar().getList()
 
-        storageOutlineView.selectionHighlightStyle = .regular
+        storageOutlineView.selectionHighlightStyle = .none
 
         sidebarSplitView.autosaveName = "SidebarSplitView"
         splitView.autosaveName = "EditorSplitView"
@@ -470,6 +468,13 @@ class ViewController:
         sidebarScrollView.horizontalScroller = .none
         sidebarScrollView.hasHorizontalScroller = false
         sidebarScrollView.autohidesScrollers = true
+        
+        // 确保sidebar列宽随父视图调整
+        if let column = storageOutlineView.tableColumns.first {
+            column.resizingMask = .autoresizingMask
+            column.minWidth = 50
+            column.maxWidth = 1000
+        }
     }
 
     private func configureNotesList() {
@@ -741,6 +746,7 @@ class ViewController:
 
     func setTableRowHeight() {
         notesTableView.rowHeight = CGFloat(52)
+        notesTableView.selectionHighlightStyle = .none
         notesTableView.reloadData()
     }
 
@@ -1453,23 +1459,24 @@ class ViewController:
         }
         guard sidebarWidth == 0 else { return }
         
+        // 使用保存的宽度
+        let targetWidth = UserDefaultsManagement.realSidebarSize
+        sidebarSplitView.setPosition(CGFloat(targetWidth), ofDividerAt: 0)
+        
+        // sidebar展开时，联动展开notelist
         if notelistWidth == 0 {
             expandNoteList()
         }
         
-        let targetWidth = max(UserDefaultsManagement.realSidebarSize, 86)
-        sidebarSplitView.setPosition(CGFloat(targetWidth), ofDividerAt: 0)
         updateDividers()
         editArea.updateTextContainerInset()
     }
 
     func showNoteList(_ sender: Any) {
         if notelistWidth == 0 {
+            // 如果sidebar也是收起的，先展开sidebar再展开notelist
             if sidebarWidth == 0 {
                 showSidebar(sender)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    self.expandNoteList()
-                }
             } else {
                 expandNoteList()
             }
@@ -1486,15 +1493,13 @@ class ViewController:
 
     func hideNoteList(_ sender: Any) {
         if notelistWidth > 0 {
-            if splitView.shouldHideDivider {
-                splitView.shouldHideDivider = false
-                splitView.setPosition(CGFloat(UserDefaultsManagement.sidebarSize), ofDividerAt: 0)
-            } else {
-                UserDefaultsManagement.sidebarSize = Int(notelistWidth)
-                splitView.shouldHideDivider = true
-                splitView.setPosition(0, ofDividerAt: 0)
-                hideSidebar("")
-            }
+            UserDefaultsManagement.sidebarSize = Int(notelistWidth)
+            splitView.shouldHideDivider = true
+            splitView.setPosition(0, ofDividerAt: 0)
+            
+            // notelist收起时，联动收起sidebar
+            hideSidebar("")
+            
             updateDividers()
         }
         editArea.updateTextContainerInset()
@@ -2675,44 +2680,10 @@ class ViewController:
     }
 
     func splitViewWillResizeSubviews(_ notification: Notification) {
-        guard let splitView = notification.object as? NSSplitView else { return }
-        
-        if splitView == sidebarSplitView {
-            isUserDraggingSidebar = true
-        }
-        
         editArea.updateTextContainerInset()
     }
     
     func splitViewDidResizeSubviews(_ notification: Notification) {
-        guard let splitView = notification.object as? NSSplitView else { return }
-        
-        if splitView == sidebarSplitView {
-            let sidebarWidth = splitView.subviews[0].frame.width
-            
-            // Only apply smart behavior when user is actively dragging
-            if isUserDraggingSidebar {
-                sidebarResizeTimer.invalidate()
-                sidebarResizeTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false) { [weak self] _ in
-                    self?.handleSidebarResize(width: sidebarWidth)
-                    self?.isUserDraggingSidebar = false
-                }
-            }
-        }
-    }
-    
-    private func handleSidebarResize(width: CGFloat) {
-        if width < 90 && width > 0 {
-            UserDefaultsManagement.realSidebarSize = max(Int(width), 90)
-            
-            NSAnimationContext.runAnimationGroup { context in
-                context.duration = 0.18
-                context.timingFunction = CAMediaTimingFunction(name: .easeOut)
-                sidebarSplitView.animator().setPosition(0, ofDividerAt: 0)
-            } completionHandler: { [weak self] in
-                self?.updateDividers()
-            }
-        }
         updateDividers()
     }
 

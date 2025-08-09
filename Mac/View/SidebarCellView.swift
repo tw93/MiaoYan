@@ -16,9 +16,13 @@ class SidebarCellView: NSTableCellView {
         
         guard let label = label else { return }
         
-        // Basic text truncation
+        // Enhanced text truncation behavior for better narrow width display
         label.lineBreakMode = .byTruncatingTail
         label.cell?.truncatesLastVisibleLine = true
+        label.cell?.wraps = false
+        
+        // Set maximum layout width to help with text measurement
+        label.preferredMaxLayoutWidth = 200
     }
 
     private var trackingArea: NSTrackingArea?
