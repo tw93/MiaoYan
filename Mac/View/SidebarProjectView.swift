@@ -75,6 +75,11 @@ class SidebarProjectView: NSOutlineView,
             NSPasteboard.PasteboardType(rawValue: "notesTable"),
             NSPasteboard.PasteboardType(rawValue: "SidebarProjectReorder")
         ])
+        
+        // Ensure clean background and proper selection behavior
+        backgroundColor = .clear
+        selectionHighlightStyle = .none
+        
         super.draw(dirtyRect)
     }
 
