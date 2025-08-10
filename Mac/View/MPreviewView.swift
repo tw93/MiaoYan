@@ -85,24 +85,24 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
     public func exportPdf() {
         guard let vc = ViewController.shared() else { return }
-        
+
         guard #available(macOS 11.0, *) else {
             vc.toastExport(status: false)
             return
         }
-        
+
         waitForImagesLoaded { [weak self] in
-            guard let self = self else { return }
-            
-            self.getContentHeight { contentHeight in
+            guard let self else { return }
+
+            getContentHeight { contentHeight in
                 guard let height = contentHeight else {
                     vc.toastExport(status: false)
                     return
                 }
-                
+
                 let pdfConfiguration = WKPDFConfiguration()
                 pdfConfiguration.rect = CGRect(x: 0, y: 0, width: self.bounds.width, height: height)
-                
+
                 self.createPDF(configuration: pdfConfiguration) { result in
                     self.handlePDFExportResult(result, viewController: vc)
                 }
@@ -111,31 +111,11 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     private func waitForImagesLoaded(completion: @escaping () -> Void) {
-        let checkImagesScript = """
-        (function() {
-            var images = document.getElementsByTagName('img');
-            var loadedCount = 0;
-            var totalImages = images.length;
-
-            if (totalImages === 0) {
-                return true; // No images to load
-            }
-
-            for (var i = 0; i < totalImages; i++) {
-                if (images[i].complete && images[i].naturalWidth > 0) {
-                    loadedCount++;
-                }
-            }
-
-            return loadedCount === totalImages;
-        })();
-        """
-
         let maxRetries = 100 // Maximum wait time: 10 seconds (100 * 0.1s)
         var retryCount = 0
 
         func checkImages() {
-            self.evaluateJavaScript(checkImagesScript) { result, error in
+            evaluateJavaScript(HtmlManager.checkImagesScript) { result, _ in
                 if let allLoaded = result as? Bool, allLoaded {
                     completion()
                 } else if retryCount < maxRetries {
@@ -152,9 +132,9 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         checkImages()
     }
-    
+
     // MARK: - Helper Methods
-    
+
     private func getContentHeight(completion: @escaping (CGFloat?) -> Void) {
         evaluateJavaScript("document.body.scrollHeight") { height, error in
             guard let contentHeight = height as? CGFloat, error == nil else {
@@ -164,33 +144,33 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             completion(contentHeight)
         }
     }
-    
+
     private func getContentDimensions(completion: @escaping (CGFloat, CGFloat) -> Void) {
         evaluateJavaScript("document.body.scrollHeight") { height, _ in
             guard let contentHeight = height as? CGFloat else { return }
-            
+
             self.evaluateJavaScript("document.body.scrollWidth") { width, _ in
                 guard let contentWidth = width as? CGFloat else { return }
                 completion(contentHeight, contentWidth)
             }
         }
     }
-    
+
     private func executeJavaScriptWhenReady(_ script: String, completion: (() -> Void)? = nil) {
         evaluateJavaScript("document.readyState") { complete, _ in
             guard complete != nil else { return }
-            
-            if let completion = completion {
+
+            if let completion {
                 completion()
             } else {
                 self.evaluateJavaScript(script, completionHandler: nil)
             }
         }
     }
-    
+
     private func handlePDFExportResult(_ result: Result<Data, Error>, viewController: Any) {
         guard let vc = viewController as? ViewController else { return }
-        
+
         switch result {
         case .success(let pdfData):
             saveToDownloads(data: pdfData, extension: "pdf", viewController: vc)
@@ -198,19 +178,19 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             vc.toastExport(status: false)
         }
     }
-    
+
     private func handleImageExportResult(image: NSImage?, error: Error?, viewController: Any) {
         guard let vc = viewController as? ViewController else { return }
-        
-        if let image = image {
+
+        if let image {
             guard let desktopURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first else {
                 vc.toastExport(status: false)
                 return
             }
-            
+
             let currentName = note?.getExportTitle() ?? "MiaoYan"
             let destinationURL = desktopURL.appendingPathComponent(currentName + ".png")
-            
+
             do {
                 try image.savePNGRepresentationToURL(url: destinationURL)
                 vc.toastExport(status: true)
@@ -221,18 +201,18 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             vc.toastExport(status: false)
         }
     }
-    
+
     private func saveToDownloads(content: String, extension: String, viewController: Any) {
         guard let vc = viewController as? ViewController else { return }
-        
+
         guard let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first else {
             vc.toastExport(status: false)
             return
         }
-        
+
         let currentName = note?.getExportTitle() ?? "MiaoYan"
         let filePath = path + "/" + currentName + "." + `extension`
-        
+
         do {
             try content.write(to: URL(fileURLWithPath: filePath), atomically: true, encoding: .utf8)
             vc.toastExport(status: true)
@@ -240,19 +220,19 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             vc.toastExport(status: false)
         }
     }
-    
+
     private func saveToDownloads(data: Data, extension: String, viewController: Any) {
         guard let vc = viewController as? ViewController else { return }
-        
+
         guard let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first else {
             vc.toastExport(status: false)
             return
         }
-        
+
         let currentName = note?.getExportTitle() ?? "MiaoYan"
         let filePath = path + "/" + currentName + "." + `extension`
         let fileURL = URL(fileURLWithPath: filePath)
-        
+
         do {
             try data.write(to: fileURL, options: .atomic)
             vc.toastExport(status: true)
@@ -286,7 +266,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
     public func scrollToPosition(pre: CGFloat) {
         guard pre != 0.0 else { return }
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.executeJavaScriptWhenReady("", completion: {
                 self.getContentDimensions { contentHeight, windowHeight in
@@ -302,7 +282,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
     public func exportHtml() {
         guard let vc = ViewController.shared() else { return }
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             self.executeJavaScriptWhenReady("", completion: {
                 self.evaluateJavaScript("document.documentElement.outerHTML.toString()") { html, error in
@@ -310,7 +290,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                         vc.toastExport(status: false)
                         return
                     }
-                    
+
                     self.saveToDownloads(content: contentHtml, extension: "html", viewController: vc)
                 }
             })
@@ -319,10 +299,10 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
     public func exportImage() {
         guard let vc = ViewController.shared() else { return }
-        
+
         waitForImagesLoaded { [weak self] in
-            guard let self = self else { return }
-            
+            guard let self else { return }
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.executeJavaScriptWhenReady("", completion: {
                     self.getContentDimensions { contentHeight, contentWidth in
@@ -330,7 +310,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                         config.rect = CGRect(x: 0, y: 0, width: contentWidth, height: contentHeight)
                         config.afterScreenUpdates = true
                         config.snapshotWidth = NSNumber(value: Double(contentWidth) * 2.0)
-                        
+
                         self.frame.size.height = contentHeight
                         self.takeSnapshot(with: config) { image, error in
                             self.handleImageExportResult(image: image, error: error, viewController: vc)
@@ -373,7 +353,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         let markdownString = note.getPrettifiedContent()
 
         let imagesStorage = note.project.url
-        let css = MarkdownView.getPreviewStyle()
+        let css = HtmlManager.previewStyle()
 
         try? loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
 
@@ -381,8 +361,9 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     private func getTemplate(css: String) -> String? {
-        guard let bundle = getDownViewBundle(),
-              let baseURL = getBaseURL(bundle: bundle) else {
+        guard let bundle = HtmlManager.getDownViewBundle(),
+              let baseURL = HtmlManager.getBaseURL(bundle: bundle)
+        else {
             return nil
         }
 
@@ -431,35 +412,25 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         return false
     }
 
-    func addLazyLoadToImages(in html: String) -> String {
-        // Regular expression matching<img> The tag does not contain the loading="lazy" attribute
-        let pattern = #"<img(?![^>]*\bloading\s*=\s*['"]?lazy['"]?)([^>]*)>"#
-        let regex = try! NSRegularExpression(pattern: pattern, options: [])
-
-        let modifiedHTML = regex.stringByReplacingMatches(in: html, options: [], range: NSRange(location: 0, length: html.utf16.count), withTemplate: "<img loading=\"lazy\"$1>")
-
-        return modifiedHTML
-    }
-
     func loadHTMLView(_ markdownString: String, css: String, imagesStorage: URL? = nil) throws {
         var htmlString = renderMarkdownHTML(markdown: markdownString)!
 
-        if let imagesStorage = imagesStorage {
+        if let imagesStorage {
             htmlString = loadImages(imagesStorage: imagesStorage, html: htmlString)
         }
 
-        var pageHTMLString = try htmlFromTemplate(htmlString, css: css)
+        guard let vc = ViewController.shared() else { return }
+        
+        var pageHTMLString = try HtmlManager.htmlFromTemplate(htmlString, css: css, currentName: vc.titleLabel.stringValue)
 
         if UserDefaultsManagement.magicPPT {
-            pageHTMLString = try htmlFromTemplate(markdownString, css: css)
+            pageHTMLString = try HtmlManager.htmlFromTemplate(markdownString, css: css, currentName: vc.titleLabel.stringValue)
         }
 
-        if !UserDefaultsManagement.isOnExport {
-            pageHTMLString = addLazyLoadToImages(in: pageHTMLString)
-        }
+        print(">>>>>>")
+        print(pageHTMLString)
 
-
-        let indexURL = createTemporaryBundle(pageHTMLString: pageHTMLString)
+        let indexURL = HtmlManager.createTemporaryBundle(pageHTMLString: pageHTMLString)
 
         if let i = indexURL {
             let accessURL = i.deletingLastPathComponent()
@@ -467,143 +438,11 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         }
     }
 
-    func createTemporaryBundle(pageHTMLString: String) -> URL? {
-        guard let bundle = getDownViewBundle(),
-              let bundleResourceURL = bundle.resourceURL else { 
-            return nil 
-        }
-
-        let customCSS = UserDefaultsManagement.markdownPreviewCSS
-
-        let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
-
-        try? FileManager.default.createDirectory(at: webkitPreview, withIntermediateDirectories: true, attributes: nil)
-
-        let indexURL = webkitPreview.appendingPathComponent("index.html")
-
-        // If updating markdown contents, no need to re-copy bundle.
-        if !FileManager.default.fileExists(atPath: indexURL.path) {
-            // Copy bundle resources to temporary location.
-            do {
-                let fileList = try FileManager.default.contentsOfDirectory(atPath: bundleResourceURL.path)
-
-                for file in fileList {
-                    if customCSS != nil, file == "css" {
-                        continue
-                    }
-
-                    let tmpURL = webkitPreview.appendingPathComponent(file)
-
-                    try FileManager.default.copyItem(atPath: bundleResourceURL.appendingPathComponent(file).path, toPath: tmpURL.path)
-                }
-            } catch {
-                print(error)
-            }
-        }
-
-        if let customCSS = customCSS {
-            let cssDst = webkitPreview.appendingPathComponent("css")
-            let styleDst = cssDst.appendingPathComponent("markdown-preview.css", isDirectory: false)
-
-            do {
-                try FileManager.default.createDirectory(at: cssDst, withIntermediateDirectories: false, attributes: nil)
-                _ = try FileManager.default.copyItem(at: customCSS, to: styleDst)
-            } catch {
-                print(error)
-            }
-        }
-
-        // Write generated index.html to temporary location.
-        try? pageHTMLString.write(to: indexURL, atomically: true, encoding: .utf8)
-
-        return indexURL
-    }
 
     private func loadImages(imagesStorage: URL, html: String) -> String {
-        var htmlString = html
-
-        do {
-            let regex = try NSRegularExpression(pattern: "<img.*?src=\"([^\"]*)\"")
-            let results = regex.matches(in: html, range: NSRange(html.startIndex..., in: html))
-
-            let images = results.map {
-                String(html[Range($0.range, in: html)!])
-            }
-
-            for image in images {
-                var localPath = image.replacingOccurrences(of: "<img src=\"", with: "").dropLast()
-
-                let localPathClean = localPath.removingPercentEncoding ?? String(localPath)
-
-                let fullImageURL = imagesStorage
-                let imageURL = fullImageURL.appendingPathComponent(localPathClean)
-
-                let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
-
-                let create = webkitPreview
-                    .appendingPathComponent(localPathClean)
-                    .deletingLastPathComponent()
-                let destination = webkitPreview.appendingPathComponent(localPathClean)
-
-                try? FileManager.default.createDirectory(atPath: create.path, withIntermediateDirectories: true, attributes: nil)
-                try? FileManager.default.removeItem(at: destination)
-                try? FileManager.default.copyItem(at: imageURL, to: destination)
-
-                if localPath.first == "/" {
-                    localPath.remove(at: localPath.startIndex)
-                }
-
-                let imPath = "<img src=\"" + localPath + "\""
-
-                htmlString = htmlString.replacingOccurrences(of: image, with: imPath)
-            }
-        } catch {
-            print("Images regex: \(error.localizedDescription)")
-        }
-
-        return htmlString
+        return HtmlManager.processImages(in: html, imagesStorage: imagesStorage)
     }
 
-    func htmlFromTemplate(_ htmlString: String, css: String) throws -> String {
-        guard let vc = ViewController.shared(),
-              let bundle = getDownViewBundle(),
-              let baseURL = getBaseURL(bundle: bundle) else {
-            return ""
-        }
-
-        var template = try String(contentsOf: baseURL, encoding: .utf8)
-
-        template = template.replacingOccurrences(of: "DOWN_CSS", with: css)
-
-        let (fontPath, downMeta) = getFontPathAndMeta()
-        template = template.replacingOccurrences(of: "DOWN_FONT_PATH", with: fontPath)
-        template = template.replacingOccurrences(of: "DOWN_META", with: downMeta)
-
-        if UserDefaultsManagement.isOnExport {
-            template = template.replacingOccurrences(of: "DOWN_EXPORT_TYPE", with: "ppt")
-        }
-
-        if UserDefaultsManagement.magicPPT {
-            let downTheme = getPPTTheme()
-            template = template.replacingOccurrences(of: "DOWN_THEME", with: downTheme)
-
-            let newHtmlString = htmlString.replacingOccurrences(of: "](/i/", with: "](./i/")
-            return template.replacingOccurrences(of: "DOWN_RAW", with: newHtmlString)
-        }
-
-        #if os(iOS)
-            if NightNight.theme == .night {
-                template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode")
-            }
-        #else
-            if UserDataService.instance.isDark {
-                template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode")
-            }
-        #endif
-        
-        let htmlContent = getHtmlContent(htmlString, currentName: vc.titleLabel.stringValue)
-        return template.replacingOccurrences(of: "DOWN_HTML", with: htmlContent)
-    }
 }
 
 class HandlerCheckbox: NSObject, WKScriptMessageHandler {
@@ -677,8 +516,8 @@ class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
         guard let vc = ViewController.shared() else { return }
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
         if message == "" {
-            vc.setDividerHidden(hidden: true)
-            vc.setSideDividerHidden(hidden: true)
+            vc.setDividerColor(for: vc.splitView, hidden: true)
+            vc.setDividerColor(for: vc.sidebarSplitView, hidden: true)
             vc.titleLabel.backgroundColor = NSColor(named: "mainBackground")
         } else {
             vc.sidebarSplitView.setValue(NSColor(css: message), forKey: "dividerColor")
@@ -688,37 +527,3 @@ class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
     }
 }
 
-// MARK: - Bundle and Resource Management Extensions
-
-extension MPreviewView {
-    private func getDownViewBundle() -> Bundle? {
-        guard let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle") else { return nil }
-        return Bundle(url: URL(fileURLWithPath: path))
-    }
-    
-    private func getBaseURL(bundle: Bundle) -> URL? {
-        let resourceName = UserDefaultsManagement.magicPPT ? "ppt" : "index"
-        return bundle.url(forResource: resourceName, withExtension: "html")
-    }
-    
-    private func getFontPathAndMeta() -> (String, String) {
-        if UserDefaultsManagement.isOnExportHtml {
-            return ("https://gw.alipayobjects.com/os/k/html2/Fonts", 
-                   "<base href=\"https://gw.alipayobjects.com/os/k/html2/\">")
-        } else {
-            return (Bundle.main.resourceURL?.path ?? "", "")
-        }
-    }
-    
-    private func getPPTTheme() -> String {
-        let themeFile = UserDataService.instance.isDark ? "night.css" : "white.css"
-        return "<link rel=\"stylesheet\" href=\"ppt/dist/theme/\(themeFile)\" id=\"theme\" />"
-    }
-    
-    private func getHtmlContent(_ htmlString: String, currentName: String) -> String {
-        if UserDefaultsManagement.isOnExport && !htmlString.hasPrefix("<h1>") {
-            return "<h1>\(currentName)</h1>" + htmlString
-        }
-        return htmlString
-    }
-}

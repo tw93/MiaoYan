@@ -23,6 +23,7 @@ class Sidebar {
         }
 
         let rootProjects = storage.getRootProjects()
+        var categoryItems: [SidebarItem] = []
 
         for project in rootProjects {
             let icon = getImage(named: "repository\(night).png")
@@ -30,9 +31,16 @@ class Sidebar {
             let childProjects = storage.getChildProjects(project: project)
 
             for childProject in childProjects {
-                list.append(SidebarItem(name: childProject.label, project: childProject, type: .Category, icon: icon))
+                categoryItems.append(SidebarItem(name: childProject.label, project: childProject, type: .Category, icon: icon))
             }
         }
+        
+        // Apply saved ordering if available
+        if let savedOrder = loadSidebarOrder() {
+            categoryItems = applySavedOrder(to: categoryItems, savedOrder: savedOrder)
+        }
+        
+        list.append(contentsOf: categoryItems)
 
         if storage.getAllTrash().count > 0 {
             let trashProject = Storage.sharedInstance().getDefaultTrash()
@@ -53,5 +61,26 @@ class Sidebar {
         }
 
         return nil
+    }
+    
+    private func loadSidebarOrder() -> [String]? {
+        return UserDefaults.standard.object(forKey: "SidebarProjectOrder") as? [String]
+    }
+    
+    private func applySavedOrder(to items: [SidebarItem], savedOrder: [String]) -> [SidebarItem] {
+        var orderedItems: [SidebarItem] = []
+        var remainingItems = items
+        
+        // First, add items in the saved order
+        for projectPath in savedOrder {
+            if let index = remainingItems.firstIndex(where: { $0.project?.url.path == projectPath }) {
+                orderedItems.append(remainingItems.remove(at: index))
+            }
+        }
+        
+        // Add any remaining items that weren't in the saved order (new projects)
+        orderedItems.append(contentsOf: remainingItems)
+        
+        return orderedItems
     }
 }

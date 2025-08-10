@@ -143,6 +143,14 @@
     </script>
     <script>
       document.addEventListener('DOMContentLoaded', function () {
+        // Add lazy loading to all images
+        const allImages = document.querySelectorAll('img');
+        allImages.forEach((img) => {
+          if (!img.hasAttribute('loading')) {
+            img.setAttribute('loading', 'lazy');
+          }
+        });
+
         const markMapList = document.querySelectorAll('.markmap');
         markMapList &&
           markMapList.length > 0 &&

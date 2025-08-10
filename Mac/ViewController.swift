@@ -320,25 +320,49 @@ class ViewController:
     }
 
     func handleForAppMode() {
-        guard let vc = ViewController.shared() else { return }
-        let size = vc.splitView.subviews[0].frame.width
-        let sideSize = vc.sidebarSplitView.subviews[0].frame.width
-        setSideDividerHidden(hidden: sideSize == 0)
-        setDividerHidden(hidden: size == 0)
+        updateDividers()
         refreshMiaoYanNum()
 
         if UserDefaultsManagement.isSingleMode {
-            vc.toastInSingleMode()
+            toastInSingleMode()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                vc.hideSidebar("")
+                self.hideSidebar("")
             }
         } else if UserDefaultsManagement.isFirstLaunch {
-            // 用于恢复单独模式后打开复原的效果
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                vc.showSidebar("")
-                vc.setSideDividerHidden(hidden: false)
+                self.showSidebar("")
             }
             UserDefaultsManagement.isFirstLaunch = false
+        } else {
+            ensureInitialProjectSelection()
+        }
+    }
+    
+    private func ensureInitialProjectSelection() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            guard self.sidebarWidth > 0 && self.storageOutlineView.selectedRow == -1 else { return }
+            
+            // Try to find the project by URL first (more reliable after reordering)
+            if let lastProjectURL = UserDataService.instance.lastProject,
+               let items = self.storageOutlineView.sidebarItems {
+                
+                for (index, item) in items.enumerated() {
+                    if let sidebarItem = item as? SidebarItem,
+                       sidebarItem.project?.url == lastProjectURL {
+                        self.storageOutlineView.selectRowIndexes([index], byExtendingSelection: false)
+                        return
+                    }
+                }
+            }
+            
+            // Fallback to index-based selection if URL matching fails
+            let lastProjectIndex = UserDefaultsManagement.lastProject
+            if let items = self.storageOutlineView.sidebarItems, 
+               items.indices.contains(lastProjectIndex) {
+                self.storageOutlineView.selectRowIndexes([lastProjectIndex], byExtendingSelection: false)
+            } else if let items = self.storageOutlineView.sidebarItems, !items.isEmpty {
+                self.storageOutlineView.selectRowIndexes([0], byExtendingSelection: false)
+            }
         }
     }
 
@@ -430,14 +454,27 @@ class ViewController:
         setTableRowHeight()
         storageOutlineView.sidebarItems = Sidebar().getList()
 
-        storageOutlineView.selectionHighlightStyle = .regular
+        storageOutlineView.selectionHighlightStyle = .none
 
         sidebarSplitView.autosaveName = "SidebarSplitView"
         splitView.autosaveName = "EditorSplitView"
+        
+        // 设置sidebar outline view的autosave name来保存展开状态
+        storageOutlineView.autosaveExpandedItems = true
+        storageOutlineView.autosaveName = "SidebarOutlineView"
 
         notesScrollView.scrollerStyle = .overlay
         sidebarScrollView.scrollerStyle = .overlay
         sidebarScrollView.horizontalScroller = .none
+        sidebarScrollView.hasHorizontalScroller = false
+        sidebarScrollView.autohidesScrollers = true
+        
+        // 确保sidebar列宽随父视图调整
+        if let column = storageOutlineView.tableColumns.first {
+            column.resizingMask = .autoresizingMask
+            column.minWidth = 50
+            column.maxWidth = 1000
+        }
     }
 
     private func configureNotesList() {
@@ -445,21 +482,24 @@ class ViewController:
         if UserDefaultsManagement.isSingleMode {
             lastSidebarItem = 0
         }
+        
         updateTable {
+            // Set sidebar selection after table update to properly trigger selection change
             if let items = self.storageOutlineView.sidebarItems, items.indices.contains(lastSidebarItem) {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                // Use a small delay to ensure table is fully loaded before selection
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                     self.storageOutlineView.selectRowIndexes([lastSidebarItem], byExtendingSelection: false)
                 }
-                if UserDefaultsManagement.isSingleMode {
-                    let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
-                    if !FileManager.default.directoryExists(atUrl: singleModeUrl), let lastNote = self.storage.getBy(url: singleModeUrl), let i = self.notesTableView.getIndex(lastNote) {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                            self.notesTableView.selectRow(i)
-                            self.notesTableView.scrollRowToVisible(row: i, animated: false)
-                            self.hideNoteList("")
-                        }
-                    }
+            }
+            
+            if UserDefaultsManagement.isSingleMode {
+                let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
+                if !FileManager.default.directoryExists(atUrl: singleModeUrl), let lastNote = self.storage.getBy(url: singleModeUrl), let i = self.notesTableView.getIndex(lastNote) {
+                    self.notesTableView.selectRow(i)
+                    self.notesTableView.scrollRowToVisible(row: i, animated: false)
+                    self.hideNoteList("")
                 }
+                self.storageOutlineView.isLaunch = false
             }
         }
     }
@@ -682,10 +722,9 @@ class ViewController:
     }
 
     func viewDidResize() {
-        guard let vc = ViewController.shared() else { return }
-        vc.checkSidebarConstraint()
-        vc.checkTitlebarTopConstraint()
-        vc.checkSidebarDivider()
+        checkSidebarConstraint()
+        checkTitlebarTopConstraint()
+        updateDividers()
 
         if !refilled {
             refilled = true
@@ -707,6 +746,7 @@ class ViewController:
 
     func setTableRowHeight() {
         notesTableView.rowHeight = CGFloat(52)
+        notesTableView.selectionHighlightStyle = .none
         notesTableView.reloadData()
     }
 
@@ -1258,75 +1298,55 @@ class ViewController:
         NSApp.mainWindow?.makeFirstResponder(vc.notesTableView)
     }
 
-    func setDividerHidden(hidden: Bool) {
-        guard let vc = ViewController.shared() else { return }
-        if hidden {
-            vc.splitView.setValue(NSColor(named: "mainBackground"), forKey: "dividerColor")
-        } else {
-            vc.splitView.setValue(NSColor(named: "divider")!, forKey: "dividerColor")
+    // MARK: - Sidebar Layout Manager
+    
+    func setDividerColor(for splitView: NSSplitView, hidden: Bool) {
+        DispatchQueue.main.async {
+            let color = hidden ? 
+                (NSColor(named: "mainBackground") ?? NSColor.windowBackgroundColor) :
+                (NSColor(named: "divider") ?? NSColor.separatorColor)
+            splitView.setValue(color, forKey: "dividerColor")
+            splitView.needsDisplay = true
         }
     }
-
-    func setSideDividerHidden(hidden: Bool) {
-        guard let vc = ViewController.shared() else { return }
-        if hidden {
-            vc.sidebarSplitView.setValue(NSColor(named: "mainBackground"), forKey: "dividerColor")
-        } else {
-            vc.sidebarSplitView.setValue(NSColor(named: "divider")!, forKey: "dividerColor")
-        }
+    
+    private var sidebarWidth: CGFloat {
+        guard sidebarSplitView.subviews.count > 0 else { return 0 }
+        return sidebarSplitView.subviews[0].frame.width
+    }
+    
+    private var notelistWidth: CGFloat {
+        guard splitView.subviews.count > 0 else { return 0 }
+        return splitView.subviews[0].frame.width
+    }
+    
+    func updateDividers() {
+        guard sidebarSplitView != nil && splitView != nil else { return }
+        setDividerColor(for: sidebarSplitView, hidden: sidebarWidth == 0)
+        setDividerColor(for: splitView, hidden: notelistWidth == 0)
     }
 
     @IBAction func toggleNoteList(_ sender: Any) {
-        guard let vc = ViewController.shared() else {
-            return
-        }
-
-        let size = vc.splitView.subviews[0].frame.width
-
-        if size == 0 {
-            var size = UserDefaultsManagement.sidebarSize
-            if UserDefaultsManagement.sidebarSize == 0 {
-                size = 280
-            }
-            vc.splitView.shouldHideDivider = false
-            setDividerHidden(hidden: false)
-            vc.splitView.setPosition(CGFloat(size), ofDividerAt: 0)
-        } else if vc.splitView.shouldHideDivider {
-            vc.splitView.shouldHideDivider = false
-            setDividerHidden(hidden: false)
-            vc.splitView.setPosition(CGFloat(UserDefaultsManagement.sidebarSize), ofDividerAt: 0)
+        guard splitView != nil else { return }
+        
+        if notelistWidth == 0 {
+            showNoteList(sender)
         } else {
-            UserDefaultsManagement.sidebarSize = Int(size)
-            vc.splitView.shouldHideDivider = true
-            setDividerHidden(hidden: true)
-            vc.splitView.setPosition(0, ofDividerAt: 0)
-            DispatchQueue.main.async {
-                vc.splitView.setPosition(0, ofDividerAt: 0)
-            }
-            // 防止空出现
-            hideSidebar("")
+            hideNoteList(sender)
         }
-        vc.editArea.updateTextContainerInset()
     }
 
     @IBAction func toggleSidebar(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
+        guard sidebarSplitView != nil else { return }
         if UserDefaultsManagement.isSingleMode {
-            vc.toastInSingleMode()
+            toastInSingleMode()
             return
         }
-        let size = Int(vc.sidebarSplitView.subviews[0].frame.width)
-        if size != 0 {
-            UserDefaultsManagement.realSidebarSize = size
-            vc.sidebarSplitView.setPosition(0, ofDividerAt: 0)
-            setSideDividerHidden(hidden: true)
+        if sidebarWidth == 0 {
+            showSidebar(sender)
         } else {
-            showNoteList("")
-            vc.sidebarSplitView.setPosition(CGFloat(UserDefaultsManagement.realSidebarSize), ofDividerAt: 0)
-            setSideDividerHidden(hidden: false)
+            hideSidebar(sender)
         }
-
-        vc.editArea.updateTextContainerInset()
     }
 
     override func wantsScrollEventsForSwipeTracking(on axis: NSEvent.GestureAxis) -> Bool {
@@ -1425,76 +1445,64 @@ class ViewController:
     }
 
     func hideSidebar(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
-        let size = Int(vc.sidebarSplitView.subviews[0].frame.width)
-
-        if size != 0 {
-            UserDefaultsManagement.realSidebarSize = size
-            vc.sidebarSplitView.setPosition(0, ofDividerAt: 0)
-            setSideDividerHidden(hidden: true)
-        }
-        vc.editArea.updateTextContainerInset()
+        guard sidebarWidth > 0 else { return }
+        UserDefaultsManagement.realSidebarSize = Int(sidebarWidth)
+        sidebarSplitView.setPosition(0, ofDividerAt: 0)
+        updateDividers()
+        editArea.updateTextContainerInset()
     }
 
     func showSidebar(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
-        if UserDefaultsManagement.isSingleMode {
-            vc.toastInSingleMode()
+        guard UserDefaultsManagement.isSingleMode == false else {
+            toastInSingleMode()
             return
         }
-
-        let size = Int(vc.sidebarSplitView.subviews[0].frame.width)
-
-        if size == 0 {
-            showNoteList("")
-            vc.sidebarSplitView.setPosition(CGFloat(UserDefaultsManagement.realSidebarSize), ofDividerAt: 0)
-            setSideDividerHidden(hidden: false)
+        guard sidebarWidth == 0 else { return }
+        
+        // 使用保存的宽度
+        let targetWidth = UserDefaultsManagement.realSidebarSize
+        sidebarSplitView.setPosition(CGFloat(targetWidth), ofDividerAt: 0)
+        
+        // sidebar展开时，联动展开notelist
+        if notelistWidth == 0 {
+            expandNoteList()
         }
-        vc.editArea.updateTextContainerInset()
+        
+        updateDividers()
+        editArea.updateTextContainerInset()
     }
 
     func showNoteList(_ sender: Any) {
-        guard let vc = ViewController.shared() else {
-            return
-        }
-        let size = vc.splitView.subviews[0].frame.width
-
-        if size == 0 {
-            var size = UserDefaultsManagement.sidebarSize
-            if UserDefaultsManagement.sidebarSize == 0 {
-                size = 280
+        if notelistWidth == 0 {
+            // 如果sidebar也是收起的，先展开sidebar再展开notelist
+            if sidebarWidth == 0 {
+                showSidebar(sender)
+            } else {
+                expandNoteList()
             }
-            vc.splitView.shouldHideDivider = false
-            setDividerHidden(hidden: false)
-            vc.splitView.setPosition(CGFloat(size), ofDividerAt: 0)
         }
-        vc.editArea.updateTextContainerInset()
+        editArea.updateTextContainerInset()
+    }
+    
+    private func expandNoteList() {
+        let size = UserDefaultsManagement.sidebarSize == 0 ? 280 : UserDefaultsManagement.sidebarSize
+        splitView.shouldHideDivider = false
+        splitView.setPosition(CGFloat(size), ofDividerAt: 0)
+        updateDividers()
     }
 
     func hideNoteList(_ sender: Any) {
-        guard let vc = ViewController.shared() else {
-            return
+        if notelistWidth > 0 {
+            UserDefaultsManagement.sidebarSize = Int(notelistWidth)
+            splitView.shouldHideDivider = true
+            splitView.setPosition(0, ofDividerAt: 0)
+            
+            // notelist收起时，联动收起sidebar
+            hideSidebar("")
+            
+            updateDividers()
         }
-        let size = vc.splitView.subviews[0].frame.width
-
-        if size != 0 {
-            if vc.splitView.shouldHideDivider {
-                vc.splitView.shouldHideDivider = false
-                setDividerHidden(hidden: false)
-                vc.splitView.setPosition(CGFloat(UserDefaultsManagement.sidebarSize), ofDividerAt: 0)
-            } else {
-                UserDefaultsManagement.sidebarSize = Int(size)
-                vc.splitView.shouldHideDivider = true
-                setDividerHidden(hidden: true)
-                vc.splitView.setPosition(0, ofDividerAt: 0)
-                DispatchQueue.main.async {
-                    vc.splitView.setPosition(0, ofDividerAt: 0)
-                }
-                // 防止空出现
-                hideSidebar("")
-            }
-        }
-        vc.editArea.updateTextContainerInset()
+        editArea.updateTextContainerInset()
     }
 
     @IBAction func emptyTrash(_ sender: NSMenuItem) {
@@ -2417,18 +2425,12 @@ class ViewController:
         titleTopConstraint.constant = 16.0
     }
 
-    func checkSidebarDivider() {
-        guard let vc = ViewController.shared() else { return }
-        let size = Int(vc.sidebarSplitView.subviews[0].frame.width)
-        if size != 0 {
-            setSideDividerHidden(hidden: false)
-        } else {
-            setSideDividerHidden(hidden: true)
-        }
-    }
 
-    // 单独模式下的限制，不让第一个sidebar可以拖动，默认一直是0
     func splitView(_ splitView: NSSplitView, constrainMinCoordinate proposedMinimumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
+        if splitView == sidebarSplitView && dividerIndex == 0 {
+            return 0
+        }
+        
         if dividerIndex == 0 && UserDefaultsManagement.isSingleMode {
             return 0
         }
@@ -2436,6 +2438,10 @@ class ViewController:
     }
 
     func splitView(_ splitView: NSSplitView, constrainMaxCoordinate proposedMaximumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
+        if splitView == sidebarSplitView && dividerIndex == 0 {
+            return 280
+        }
+        
         if dividerIndex == 0 && UserDefaultsManagement.isSingleMode {
             return 0
         }
@@ -2675,6 +2681,10 @@ class ViewController:
 
     func splitViewWillResizeSubviews(_ notification: Notification) {
         editArea.updateTextContainerInset()
+    }
+    
+    func splitViewDidResizeSubviews(_ notification: Notification) {
+        updateDividers()
     }
 
     public static func shared() -> ViewController? {

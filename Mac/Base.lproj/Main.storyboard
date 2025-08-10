@@ -222,12 +222,12 @@ CA
                                         </menuItem>
                                         <menuItem title="Hide/Show Sidebar" keyEquivalent="1" id="DCh-5P-PZe">
                                             <connections>
-                                                <action selector="toggleSidebar:" target="L4m-js-agn" id="MRM-fh-zTo"/>
+                                                <action selector="toggleSidebar:" target="Ady-hI-5gd" id="MRM-fh-zTo"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Hide/Show NoteList" keyEquivalent="2" id="WHt-T4-l9c">
                                             <connections>
-                                                <action selector="toggleNoteList:" target="L4m-js-agn" id="G22-P2-hks"/>
+                                                <action selector="toggleNoteList:" target="Ady-hI-5gd" id="G22-P2-hks"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Toggle Preview" keyEquivalent="3" id="PdU-Em-Ugm">
@@ -625,12 +625,12 @@ CA
                             </textField>
                             <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sK1-7b-9Ux">
                                 <rect key="frame" x="37" y="291" width="107" height="25"/>
-                                <popUpButtonCell key="cell" type="push" title="LXGW WenKai Screen" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="U0d-Y0-lbU" id="Qmf-Q9-mtm">
+                                <popUpButtonCell key="cell" type="push" title="LXGW WenKai Screen" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="U0d-Y0-lbU" id="Qmf-Q9-mtm">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="message"/>
                                     <menu key="menu" id="xED-GY-TB1">
                                         <items>
-                                            <menuItem title="LXGW WenKai Screen" id="U0d-Y0-lbU" userLabel="LXGW WenKai Screen">
+                                            <menuItem title="LXGW WenKai Screen" state="on" id="U0d-Y0-lbU" userLabel="LXGW WenKai Screen">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
                                             <menuItem title="SF Mono" id="gHy-s3-JDh">
@@ -639,7 +639,7 @@ CA
                                             <menuItem title="Times New Roman" id="IUe-Hi-7b6">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
-                                            <menuItem title="TsangerJinKai02-W04" state="on" id="Ng8-zp-ypX">
+                                            <menuItem title="TsangerJinKai02-W04" id="Ng8-zp-ypX">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
                                         </items>
@@ -654,12 +654,12 @@ CA
                             </popUpButton>
                             <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EMH-T5-er6">
                                 <rect key="frame" x="197" y="291" width="107" height="25"/>
-                                <popUpButtonCell key="cell" type="push" title="LXGW WenKai Screen" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="Lx0-fl-9t0" id="G0j-GD-0Lt">
+                                <popUpButtonCell key="cell" type="push" title="LXGW WenKai Screen" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="Lx0-fl-9t0" id="G0j-GD-0Lt">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="message"/>
                                     <menu key="menu" id="vU8-KF-9dH">
                                         <items>
-                                            <menuItem title="LXGW WenKai Screen" id="Lx0-fl-9t0">
+                                            <menuItem title="LXGW WenKai Screen" state="on" id="Lx0-fl-9t0">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
                                             <menuItem title="SF Pro Text" id="RSK-NX-AjP">
@@ -668,7 +668,7 @@ CA
                                             <menuItem title="Times New Roman" id="uW5-RQ-wqF">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
-                                            <menuItem title="TsangerJinKai02-W04" state="on" id="ALt-cB-SfU">
+                                            <menuItem title="TsangerJinKai02-W04" id="ALt-cB-SfU">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
                                         </items>
@@ -785,12 +785,12 @@ CA
                             </popUpButton>
                             <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6PF-7C-RLR">
                                 <rect key="frame" x="357" y="291" width="107" height="25"/>
-                                <popUpButtonCell key="cell" type="push" title="LXGW WenKai Screen" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="QwH-At-JGa" id="bMp-ZN-GsA">
+                                <popUpButtonCell key="cell" type="push" title="LXGW WenKai Screen" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="QwH-At-JGa" id="bMp-ZN-GsA">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="message"/>
                                     <menu key="menu" id="8Yp-ZX-yTA">
                                         <items>
-                                            <menuItem title="LXGW WenKai Screen" id="QwH-At-JGa">
+                                            <menuItem title="LXGW WenKai Screen" state="on" id="QwH-At-JGa">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
                                             <menuItem title="SF Pro Text" id="Bwp-Pv-g0O">
@@ -799,7 +799,7 @@ CA
                                             <menuItem title="Times New Roman" id="n5K-Sw-Jli">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
-                                            <menuItem title="TsangerJinKai02-W04" state="on" id="Qfu-Xu-HDh">
+                                            <menuItem title="TsangerJinKai02-W04" id="Qfu-Xu-HDh">
                                                 <modifierMask key="keyEquivalentModifierMask"/>
                                             </menuItem>
                                         </items>
@@ -1306,7 +1306,7 @@ CA
                                                                                 <textField focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kTp-qw-RCd">
                                                                                     <rect key="frame" x="22" y="16" width="156" height="17"/>
                                                                                     <constraints>
-                                                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="LXx-x4-6KI"/>
+                                                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="86" priority="999" id="LXx-x4-6KI"/>
                                                                                     </constraints>
                                                                                     <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="2ZQ-YX-F9M">
                                                                                         <font key="font" metaFont="system" size="14"/>

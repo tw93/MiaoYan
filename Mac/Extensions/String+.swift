@@ -183,3 +183,4 @@ public extension NSString {
         return self.lineRange(for: NSRange(location: lineStart - 1, length: 0))
     }
 }
+

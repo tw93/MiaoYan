@@ -149,6 +149,10 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
 
         if noteList.indices.contains(selectedRow) {
             let note = noteList[selectedRow]
+            
+            // Save scroll position when user selects a note
+            saveScrollPosition()
+            
             loadingQueue.cancelAllOperations()
             let operation = BlockOperation()
             operation.addExecutionBlock { [weak self] in
@@ -403,6 +407,23 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
                     self.noteHeightOfRows(withIndexesChanged: [i])
                 }
             }
+        }
+    }
+    
+    // MARK: - Scroll Position Memory
+    
+    func saveScrollPosition() {
+        guard let clipView = superview as? NSClipView else { return }
+        let scrollPosition = clipView.bounds.origin.y
+        UserDefaultsManagement.notesTableScrollPosition = scrollPosition
+    }
+    
+    func restoreScrollPosition() {
+        guard let clipView = superview as? NSClipView else { return }
+        let savedPosition = UserDefaultsManagement.notesTableScrollPosition
+        if savedPosition > 0 {
+            let newOrigin = NSPoint(x: clipView.bounds.origin.x, y: savedPosition)
+            clipView.setBoundsOrigin(newOrigin)
         }
     }
 }
