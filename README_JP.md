@@ -91,7 +91,9 @@
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>：シンタックスハイライト機能
 - <a href="https://tsanger.cn/product" target="_blank">仓耳字库</a>：美しいオープンソース中国語フォント「仓耳今楷」、妙言ではデフォルトフォントとして使用
 - <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>：妙言のPPT基盤レンダリングはこのフレームワークに依存
-- 妙言の[公式サイト](https://miaoyan.app/)に静的レンダリング機能を提供してくれたVercelに感謝、<a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img
+- 妙言の[公式サイト](https://miaoyan.app/)に静的レンダリング機能を提供してくれたVercelに感謝
+  
+    <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img
         src=https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg
         width="118px"/></a>
 
