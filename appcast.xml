@@ -3,6 +3,39 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>1.18.0</title>
+      <description><![CDATA[
+      <h3>大更新 🎉:</h3>
+      <ol>
+        <li>支持Markdown中的图片预览功能，更好用</li>
+        <li>文件夹支持拖拽修改原有的顺序，更巧妙</li>
+        <li>三栏布局拖拽收起展开的效果重构，更舒服</li>
+        <li>记住上次打开的文档位置，更迅速</li>
+        <li>从原有的 Pod 包管理升级到 Swift 包管理，好维护</li>
+      </ol>
+      <h3>Major Updates 🎉:</h3>
+      <ol>
+        <li>Support for image preview in Markdown, more user-friendly</li>
+        <li>Folder drag-and-drop to reorder, more intuitive</li>
+        <li>Refactored three-column layout drag-to-collapse/expand effects, more comfortable</li>
+        <li>Remember last opened document position, faster access</li>
+        <li>Upgraded from CocoaPods to Swift Package Manager, better maintainability</li>
+      </ol>
+
+      <h3>大型アップデート 🎉:</h3>
+      <ol>
+        <li>Markdownでの画像プレビュー機能をサポート、より使いやすく</li>
+        <li>フォルダのドラッグ&ドロップで順序変更が可能、より直感的</li>
+        <li>3カラムレイアウトのドラッグ折りたたみ・展開効果を再構築、より快適</li>
+        <li>最後に開いたドキュメントの位置を記憶、より迅速</li>
+        <li>CocoaPodsからSwift Package Managerにアップグレード、保守性向上</li>
+      </ol>
+          ]]>      </description>
+      <pubDate>周日, 10 08月 2025 23:00:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.18.0.zip" sparkle:shortVersionString="1.18.0" sparkle:version="1.18.0" sparkle:edSignature="XUvyGhh4M0gaMyNUTQiDXpR/rizmKCKmCy22VTbMQSn2I2VPItQ0O8e7eqPwXA4hgowYaC++aeGALJQ6mW8uAQ==" length="34968544" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>1.17.0</title>
       <description><![CDATA[
       <h3>新变化 🎉:</h3>
