@@ -40,13 +40,13 @@ class NoteRowView: NSTableRowView {
             
             let path = NSBezierPath(roundedRect: selectionRect, xRadius: cornerRadius, yRadius: cornerRadius)
             
-            // Use simple, direct colors that work in both modes
-            if NSApp.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua {
-                // Dark mode: lighter gray for visibility
-                NSColor(calibratedWhite: 0.4, alpha: 1.0).setFill()
+            // Use system-appropriate colors that work across all macOS versions
+            if NSApp.effectiveAppearance.isDark {
+                // Dark mode: subtle highlight with proper contrast
+                NSColor(calibratedWhite: 0.25, alpha: 1.0).setFill()
             } else {
-                // Light mode: darker gray for contrast  
-                NSColor(calibratedWhite: 0.8, alpha: 1.0).setFill()
+                // Light mode: system-like selection with proper contrast
+                NSColor(calibratedWhite: 0.85, alpha: 1.0).setFill()
             }
             
             path.fill()
@@ -108,11 +108,11 @@ class NoteRowView: NSTableRowView {
             height: separatorHeight
         )
         
-        // Use subtle separator color that works in both light and dark mode
-        if NSApp.effectiveAppearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua {
-            NSColor(calibratedWhite: 0.2, alpha: 1.0).setFill()
+        // Use subtle separator color that works across all macOS versions
+        if NSApp.effectiveAppearance.isDark {
+            NSColor(calibratedWhite: 0.15, alpha: 1.0).setFill()
         } else {
-            NSColor(calibratedWhite: 0.9, alpha: 1.0).setFill()
+            NSColor(calibratedWhite: 0.92, alpha: 1.0).setFill()
         }
         
         separatorRect.fill()

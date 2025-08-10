@@ -22,6 +22,11 @@ class SidebarProjectView: NSOutlineView,
     override func awakeFromNib() {
         super.awakeFromNib()
         setDraggingSourceOperationMask(.move, forLocal: true)
+        registerForDraggedTypes([
+            NSPasteboard.PasteboardType(rawValue: "public.data"),
+            NSPasteboard.PasteboardType(rawValue: "notesTable"),
+            NSPasteboard.PasteboardType(rawValue: "SidebarProjectReorder")
+        ])
     }
 
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
@@ -67,19 +72,6 @@ class SidebarProjectView: NSOutlineView,
     }
 
     override func draw(_ dirtyRect: NSRect) {
-        delegate = self
-        dataSource = self
-        setDraggingSourceOperationMask(.move, forLocal: true)
-        registerForDraggedTypes([
-            NSPasteboard.PasteboardType(rawValue: "public.data"),
-            NSPasteboard.PasteboardType(rawValue: "notesTable"),
-            NSPasteboard.PasteboardType(rawValue: "SidebarProjectReorder")
-        ])
-        
-        // Ensure clean background and proper selection behavior
-        backgroundColor = .clear
-        selectionHighlightStyle = .none
-        
         super.draw(dirtyRect)
     }
 
