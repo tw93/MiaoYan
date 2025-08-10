@@ -30,7 +30,7 @@
 
 ## 首次使用
 
-1. 从 <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a> 中 **下载** 最新的 dmg 安装包，macOS Big Sur 及以上版本体验更好，如安装出现问题请参考 [文档](https://zhuanlan.zhihu.com/p/135948430)，此外也支持从 `brew install miaoyan --cask` 安装。
+1. 从 <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a> 中 **下载** 最新的 dmg 安装包，macOS Big Sur 及以上版本体验更好，如安装出现问题请参考 [文档](https://zhuanlan.zhihu.com/p/135948430)。
 2. 可以在 iCloud 或根目录下创建一个 `MiaoYan` 的文件夹，打开妙言的设置，将默认存储地址修改成这个。
 3. 点击妙言左上角新增文件夹的图标，创建好自己的文档分类文件夹，就可以开始使用了。
 4. 同样假如你不习惯默认的字体，可以在设置中修改成其他的正常字体。
