@@ -3,8 +3,12 @@ import Cocoa
 class EditorSplitView: NSSplitView, NSSplitViewDelegate {
     public var shouldHideDivider = false
     
-    override func draw(_ dirtyRect: NSRect) {
+    override func awakeFromNib() {
+        super.awakeFromNib()
         delegate = self
+    }
+    
+    override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
     }
 

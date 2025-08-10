@@ -452,9 +452,16 @@ class ViewController:
         emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont
 
         setTableRowHeight()
+        // Set up delegate and data source before loading data
+        storageOutlineView.delegate = storageOutlineView
+        storageOutlineView.dataSource = storageOutlineView
+        
         storageOutlineView.sidebarItems = Sidebar().getList()
-
+        storageOutlineView.reloadData()
         storageOutlineView.selectionHighlightStyle = .none
+        
+        // Ensure proper display after data is set
+        storageOutlineView.needsDisplay = true
 
         sidebarSplitView.autosaveName = "SidebarSplitView"
         splitView.autosaveName = "EditorSplitView"

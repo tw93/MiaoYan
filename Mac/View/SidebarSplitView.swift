@@ -3,8 +3,12 @@ import Cocoa
 class SidebarSplitView: NSSplitView, NSSplitViewDelegate {
     private var isUserDragging = false
 
-    override func draw(_ dirtyRect: NSRect) {
+    override func awakeFromNib() {
+        super.awakeFromNib()
         delegate = self
+    }
+    
+    override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
     }
     
