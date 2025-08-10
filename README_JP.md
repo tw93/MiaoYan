@@ -86,15 +86,15 @@
 
 ## 感謝
 
-- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: 5年前プロジェクト初期にフレームワークコードをこちらから参考にしました、著者のご苦労に感謝いたします
-- <a href="https://github.com/JohnSundell/Ink" target="_blank">JohnSundell/Ink</a>: Swift で書かれた高速で柔軟な Markdown パーサー
-- <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>: シンタックスハイライト機能
-- <a href="https://tsanger.cn/product" target="_blank">仓耳字库</a>: 美しいオープンソースの中国語フォント仓耳今楷、MiaoYan はこれをデフォルトのフォントにしました
-- <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>: オープンソースの HTML プレゼンテーションフレームワーク
-- Vercel に感謝します、[MiaoYan](https://miaoyan.app/)に静的レンダリング能力を提供してくれたため  
-   <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img
-      src=https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg
-      width="118px"/></a>
+- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>：プロジェクトの初期化コードはこちらを参考にしました、作者に感謝
+- <a href="https://github.com/stackotter/swift-cmark-gfm" target="_blank">stackotter/swift-cmark-gfm</a>：高速で効率的なSwift Markdownパーサー
+- <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>：シンタックスハイライト機能
+- <a href="https://tsanger.cn/product" target="_blank">仓耳字库</a>：美しいオープンソース中国語フォント「仓耳今楷」、妙言ではデフォルトフォントとして使用
+- <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>：妙言のPPT基盤レンダリングはこのフレームワークに依存
+- 妙言の[公式サイト](https://miaoyan.app/)に静的レンダリング機能を提供してくれたVercelに感謝、<a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img
+        src=https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg
+        width="118px"/></a>
+
 
 > **📦 依存関係管理**: プロジェクトは Swift Package Manager を使用して依存関係を管理しています。詳細については、[`DEPENDENCIES.md`](DEPENDENCIES.md) をご覧ください
 

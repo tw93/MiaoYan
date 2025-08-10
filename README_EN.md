@@ -86,15 +86,14 @@
 
 ## Thanks
 
-- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: Framework code referenced from this when the project started 5 years ago, thanks to the author's hard work
-- <a href="https://github.com/JohnSundell/Ink" target="_blank">JohnSundell/Ink</a>: A fast and flexible Markdown parser written in Swift
-- <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>: Syntax highlighting capability
-- <a href="https://tsanger.cn/product" target="_blank">Tsanger Fonts</a>: A beautiful open source Chinese font TsangerJinKai, MiaoYan has made it the default font
-- <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>: An open source HTML presentation framework
-- Thanks to Vercel for providing static rendering capability to [MiaoYan](https://miaoyan.app/)  
-    <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img
-      src=https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg
-      width="118px"/></a>
+- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: Project initialization code referenced from here, thanks to the author
+- <a href="https://github.com/stackotter/swift-cmark-gfm" target="_blank">stackotter/swift-cmark-gfm</a>: Fast and efficient Swift Markdown parser
+- <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>: Syntax highlighting capabilities
+- <a href="https://tsanger.cn/product" target="_blank">TsangerType</a>: A beautiful open-source Chinese font TsangerType JinKai, which MiaoYan uses as the default font
+- <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>: MiaoYan's PPT underlying rendering depends on this framework
+- Thanks to Vercel for providing static rendering capabilities for MiaoYan's [official website](https://miaoyan.app/), <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img
+        src=https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg
+        width="118px"/></a>
 
 > **📦 Dependency Management**: The project uses Swift Package Manager for dependency management. For more details, please see [`DEPENDENCIES.md`](DEPENDENCIES.md)
 
