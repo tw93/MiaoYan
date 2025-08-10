@@ -61,7 +61,12 @@
 
 ## MiaoYan スライド
 
+<details>
+<summary>スライドモードのデモを見る</summary>
+
 <a href=https://gw.alipayobjects.com/zos/k/app3/ScreenFlow1.gif target="_blank"><img src="https://user-images.githubusercontent.com/8736212/180579489-a8ac6f0f-1d47-44fa-a8bb-0be998f7895f.gif" width="100%"></a>
+
+</details>
 
 1. 新しいユーザーさんのデフォルトの初期化はテンプレートを生成します。古いユーザーさんの場合は、1.0 にアップグレードしてから[このファイル](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/MiaoYan%20PPT.md)を MiaoYan にコピーしてみてください。
 2. `command + option + p`を実行して MiaoYan PPT プレビューを開始します。同時に、ドキュメントを選択し、右クリックして'MiaoYan PPT'を選択して開くこともできます。
@@ -81,16 +86,17 @@
 
 ## 感謝
 
-- <a href="https://github.com/KristopherGBaker/libcmark_gfm" target="_blank">KristopherGBaker/libcmark_gfm</a>: cmark-gfm 用の Swift 互換フレームワーク。
-- <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>: シンタックスハイライト機能。
-- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: MiaoYan はこのプロジェクトからフレームワークの一部のコードを持っています, 著者に感謝します。
-- <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>: 美しいオープンソースの中国語フォント、MiaoYan はこれをデフォルトのフォントにしました。
-- <a href="https://github.com/michaelhenry/Prettier.swift" target="_blank">michaelhenry/Prettier.swift</a>：MiaoYan のドキュメント自動タイプセットは Prettier から来ています。
-- <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>：オープンソースの HTML プレゼンテーションフレームワーク。
-- Vercel に感謝します、[MiaoYan](https://miaoyan.app/)に静的レンダリング能力を提供してくれたため。  
+- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: 5年前プロジェクト初期にフレームワークコードをこちらから参考にしました、著者のご苦労に感謝いたします
+- <a href="https://github.com/JohnSundell/Ink" target="_blank">JohnSundell/Ink</a>: Swift で書かれた高速で柔軟な Markdown パーサー
+- <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>: シンタックスハイライト機能
+- <a href="https://tsanger.cn/product" target="_blank">仓耳字库</a>: 美しいオープンソースの中国語フォント仓耳今楷、MiaoYan はこれをデフォルトのフォントにしました
+- <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>: オープンソースの HTML プレゼンテーションフレームワーク
+- Vercel に感謝します、[MiaoYan](https://miaoyan.app/)に静的レンダリング能力を提供してくれたため  
    <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img
       src=https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg
       width="118px"/></a>
+
+> **📦 依存関係管理**: プロジェクトは Swift Package Manager を使用して依存関係を管理しています。詳細については、[`DEPENDENCIES.md`](DEPENDENCIES.md) をご覧ください
 
 # ライセンス
 

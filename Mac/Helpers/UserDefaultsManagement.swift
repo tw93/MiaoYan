@@ -94,6 +94,7 @@ public enum UserDefaultsManagement {
         static let EditorLineBreak = "editorLineBreak"
         static let ButtonShow = "buttonShow"
         static let CodeBackground = "CodeBackground"
+        static let NotesTableScrollPosition = "notesTableScrollPosition"
     }
 
     static var appearanceType: AppearanceType {
@@ -751,6 +752,18 @@ public enum UserDefaultsManagement {
             } else {
                 UserDefaults.standard.set(nil, forKey: Constants.MarkdownPreviewCSS)
             }
+        }
+    }
+    
+    static var notesTableScrollPosition: CGFloat {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.NotesTableScrollPosition) as? CGFloat {
+                return result
+            }
+            return 0.0
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.NotesTableScrollPosition)
         }
     }
 }

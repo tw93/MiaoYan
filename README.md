@@ -62,7 +62,12 @@
 
 ## 妙言 PPT
 
+<details>
+<summary>点击查看 PPT 模式效果演示</summary>
+
 <a href=https://gw.alipayobjects.com/zos/k/app2/123.gif target="_blank"><img src="https://user-images.githubusercontent.com/8736212/180579306-4f2504ee-8377-4d5c-b560-2d0d83ac12f6.gif" width="100%"></a>
+
+</details>
 
 1. 新朋友默认初始化会生成模版，如果是老朋友需升级到 1.0，可以 Copy [此文件](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/%E5%A6%99%E8%A8%80%20PPT.md) 到妙言玩一玩。
 2. 执行 `command + option + p` 可以启动妙言 PPT 预览，也可以选中文档点击右键，选择 `妙言 PPT` 打开。
@@ -83,16 +88,17 @@
 
 ## 感谢
 
-- <a href="https://github.com/KristopherGBaker/libcmark_gfm" target="_blank">KristopherGBaker/libcmark_gfm</a>：适用于 cmark-gfm 的 Swift 兼容框架
+- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>：5年前项目初始时框架代码参考于此，感谢作者辛苦付出
+- <a href="https://github.com/JohnSundell/Ink" target="_blank">JohnSundell/Ink</a>：快速高效的 Swift Markdown 解析器
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>：语法高亮能力
-- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>：妙言部分初始化代码来源于此项目，很感谢作者
-- <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>：一款漂亮的开源中文字体，妙言将其作为默认字体
-- <a href="https://github.com/michaelhenry/Prettier.swift" target="_blank">michaelhenry/Prettier.swift</a>：妙言格式化能力升级成 Prettier 的思路来源
+- <a href="https://tsanger.cn/product" target="_blank">仓耳字库</a>：一款漂亮的开源中文字体仓耳今楷，妙言将其作为默认字体
 - <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>：妙言 PPT 底层渲染依赖此框架
 - 感谢 Vercel 给妙言 [官网](https://miaoyan.app/) 提供静态渲染能力  
     <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img
         src=https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg
         width="118px"/></a>
+
+> **📦 依赖管理**：项目使用 Swift Package Manager 管理依赖，详细信息请查看 [`DEPENDENCIES.md`](DEPENDENCIES.md)
 
 # 协议
 

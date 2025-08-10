@@ -106,6 +106,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     func applicationWillTerminate(_ notification: Notification) {
+        // Save current scroll position before terminating
+        if let vc = ViewController.shared() {
+            vc.notesTableView.saveScrollPosition()
+        }
+        
         let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
         try? FileManager.default.removeItem(at: webkitPreview)
 

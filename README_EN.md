@@ -61,7 +61,12 @@
 
 ## MiaoYan PPT
 
+<details>
+<summary>Click to view PPT mode demo</summary>
+
 <a href=https://gw.alipayobjects.com/zos/k/app3/ScreenFlow1.gif target="_blank"><img src="https://user-images.githubusercontent.com/8736212/180579489-a8ac6f0f-1d47-44fa-a8bb-0be998f7895f.gif" width="100%"></a>
+
+</details>
 
 1. The default initialization of new friends will generate templates. If you are an old friend, You need to upgrade to 1.0 then try copy [this file](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/MiaoYan%20PPT.md) to MiaoYan.
 2. Execute `command + option + p` to start MiaoYan PPT preview. At the same time, you can also select the document, right-click and select 'MiaoYan PPT' to open it.
@@ -81,16 +86,17 @@
 
 ## Thanks
 
-- <a href="https://github.com/KristopherGBaker/libcmark_gfm" target="_blank">KristopherGBaker/libcmark_gfm</a>: Swift Compatible framework for cmark-gfm.
-- <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>: Syntax highlighting capability.
-- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: MiaoYan has part of the framework code from this project, Thank you very much to the author.
-- <a href="https://github.com/lxgw/LxgwWenKai" target="_blank">lxgw/LxgwWenKai</a>: A beautiful open source chinese font, MiaoYan has made it the default font.
-- <a href="https://github.com/michaelhenry/Prettier.swift" target="_blank">michaelhenry/Prettier.swift</a>：MiaoYan document auto typesetting is from Prettier.
-- <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>：An open source HTML presentation framework.
-- Thanks to Vercel for providing static rendering capability to [MiaoYan](https://miaoyan.app/).  
+- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: Framework code referenced from this when the project started 5 years ago, thanks to the author's hard work
+- <a href="https://github.com/JohnSundell/Ink" target="_blank">JohnSundell/Ink</a>: A fast and flexible Markdown parser written in Swift
+- <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>: Syntax highlighting capability
+- <a href="https://tsanger.cn/product" target="_blank">Tsanger Fonts</a>: A beautiful open source Chinese font TsangerJinKai, MiaoYan has made it the default font
+- <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>: An open source HTML presentation framework
+- Thanks to Vercel for providing static rendering capability to [MiaoYan](https://miaoyan.app/)  
     <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img
       src=https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg
       width="118px"/></a>
+
+> **📦 Dependency Management**: The project uses Swift Package Manager for dependency management. For more details, please see [`DEPENDENCIES.md`](DEPENDENCIES.md)
 
 # License
 

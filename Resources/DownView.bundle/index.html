@@ -266,6 +266,14 @@
           }, 10);
         });
 
+      // Add lazy loading to all images
+      const allImages = document.querySelectorAll('img');
+      allImages.forEach((img) => {
+        if (!img.hasAttribute('loading')) {
+          img.setAttribute('loading', 'lazy');
+        }
+      });
+
       // Image zoom
       const zoomImgs = document.querySelectorAll('#write>img, #write>p>img,#write>table img');
       if (zoomImgs.length > 0) {

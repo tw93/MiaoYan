@@ -148,7 +148,7 @@ extension AppDelegate {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.04) {
                             if let index = vc.notesTableView.noteList.firstIndex(where: { $0 === notes[0] }) {
                                 vc.notesTableView.selectRowIndexes([index], byExtendingSelection: false)
-                                vc.notesTableView.scrollRowToVisible(row: index, animated: true)
+                                vc.notesTableView.scrollRowToVisible(row: index, animated: false)
                             }
                         }
                     }

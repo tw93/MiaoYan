@@ -19,8 +19,9 @@ class SidebarProjectView: NSOutlineView,
 
     private var lastSelectedRow: Int?
 
-    override class func awakeFromNib() {
+    override func awakeFromNib() {
         super.awakeFromNib()
+        setDraggingSourceOperationMask(.move, forLocal: true)
     }
 
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
@@ -68,10 +69,17 @@ class SidebarProjectView: NSOutlineView,
     override func draw(_ dirtyRect: NSRect) {
         delegate = self
         dataSource = self
+        setDraggingSourceOperationMask(.move, forLocal: true)
         registerForDraggedTypes([
             NSPasteboard.PasteboardType(rawValue: "public.data"),
-            NSPasteboard.PasteboardType(rawValue: "notesTable")
+            NSPasteboard.PasteboardType(rawValue: "notesTable"),
+            NSPasteboard.PasteboardType(rawValue: "SidebarProjectReorder")
         ])
+        
+        // Ensure clean background and proper selection behavior
+        backgroundColor = .clear
+        selectionHighlightStyle = .none
+        
         super.draw(dirtyRect)
     }
 
@@ -121,6 +129,60 @@ class SidebarProjectView: NSOutlineView,
             return false
         }
         let board = info.draggingPasteboard
+
+        // Handle project reordering
+        if let stringData = board.string(forType: .string),
+           stringData.hasPrefix("SIDEBAR_REORDER:") {
+            let components = stringData.components(separatedBy: ":")
+            if components.count >= 3, let sourceIndex = Int(components[1]),
+               let sidebarItems = sidebarItems {
+                
+                
+                // Make sure we have valid indices
+                guard sourceIndex >= 0 && sourceIndex < sidebarItems.count && index >= 0 && index <= sidebarItems.count else {
+                    return false
+                }
+                
+                // Don't allow moving before first item (MiaoYan)
+                guard index > 0 else {
+                    return false
+                }
+                
+                // Don't allow moving after trash item (if it exists)
+                if index == sidebarItems.count,
+                   let lastItem = sidebarItems[sidebarItems.count - 1] as? SidebarItem,
+                   lastItem.isTrash() {
+                    return false
+                }
+                
+                // Create a mutable copy of the sidebar items
+                var mutableSidebarItems = sidebarItems
+                
+                // Remove the item from its current position
+                let movedItem = mutableSidebarItems.remove(at: sourceIndex)
+                
+                // Insert it at the new position (adjust index if we moved an item from before the target)
+                let insertIndex = sourceIndex < index ? index - 1 : index
+                mutableSidebarItems.insert(movedItem, at: insertIndex)
+                
+                // Update the sidebar items
+                self.sidebarItems = mutableSidebarItems
+                
+                // Save the new order to UserDefaults
+                saveSidebarOrder(mutableSidebarItems)
+                
+                // Reload the outline view
+                reloadData()
+                
+                // Maintain selection
+                selectRowIndexes([insertIndex], byExtendingSelection: false)
+                
+                // Update UserDefaultsManagement.lastProject to reflect new position
+                UserDefaultsManagement.lastProject = insertIndex
+                
+                return true
+            }
+        }
 
         guard let sidebarItem = item as? SidebarItem else {
             return false
@@ -195,6 +257,16 @@ class SidebarProjectView: NSOutlineView,
     func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {
         let board = info.draggingPasteboard
 
+        // Handle project reordering - check if the string has our encoded format
+        if let stringData = board.string(forType: .string),
+           stringData.hasPrefix("SIDEBAR_REORDER:") {
+            let components = stringData.components(separatedBy: ":")
+            if components.count >= 3, let _ = Int(components[1]) {
+                // Allow the move
+                return .move
+            }
+        }
+
         guard let sidebarItem = item as? SidebarItem else {
             return NSDragOperation()
         }
@@ -261,7 +333,7 @@ class SidebarProjectView: NSOutlineView,
             
             cell.label.font = UserDefaultsManagement.nameFont
             cell.label.addCharacterSpacing()
-
+            
             switch si.type {
             case .All:
                 cell.icon.image = NSImage(imageLiteralResourceName: "home.png")
@@ -296,6 +368,37 @@ class SidebarProjectView: NSOutlineView,
 
     func outlineView(_ outlineView: NSOutlineView, rowViewForItem item: Any) -> NSTableRowView? {
         SidebarTableRowView(frame: NSZeroRect)
+    }
+
+    func outlineView(_ outlineView: NSOutlineView, pasteboardWriterForItem item: Any) -> NSPasteboardWriting? {
+        guard let sidebarItem = item as? SidebarItem else { return nil }
+        
+        // Only allow Category type items to be dragged, not Trash items
+        if sidebarItem.type != .Category || sidebarItem.isTrash() {
+            return nil
+        }
+        
+        // Find the index of this item
+        let itemIndex = outlineView.row(forItem: item)
+        guard itemIndex >= 0 else { return nil }
+        
+        guard sidebarItems != nil else { return nil }
+        
+        // Don't allow dragging the first item (MiaoYan - .All type)
+        if itemIndex == 0 {
+            return nil
+        }
+        
+        // Check if this is a Trash item (can appear anywhere when there are deleted files)
+        if sidebarItem.isTrash() {
+            return nil
+        }
+        
+        let pasteboardItem = NSPasteboardItem()
+        let encodedData = "SIDEBAR_REORDER:\(itemIndex):\(sidebarItem.name)"
+        pasteboardItem.setString(encodedData, forType: .string)
+        
+        return pasteboardItem
     }
 
     override func selectRowIndexes(_ indexes: IndexSet, byExtendingSelection extend: Bool) {
@@ -366,10 +469,12 @@ class SidebarProjectView: NSOutlineView,
                 UserDataService.instance.lastName = item.name
             }
 
-            vd.editArea.clear()
-
+            // Don't clear edit area during launch to prevent flashing
             if !isLaunch {
+                vd.editArea.clear()
                 vd.search.stringValue = ""
+                // Save current scroll position when switching projects
+                vd.notesTableView.saveScrollPosition()
             }
 
             guard !UserDataService.instance.skipSidebarSelection else {
@@ -379,15 +484,14 @@ class SidebarProjectView: NSOutlineView,
 
             vd.updateTable {
                 if self.isLaunch {
+                    // During launch, restore note selection
                     if let url = UserDefaultsManagement.lastSelectedURL,
                        let lastNote = vd.storage.getBy(url: url),
                        let i = vd.notesTableView.getIndex(lastNote)
                     {
                         vd.notesTableView.selectRow(i)
-
-                        DispatchQueue.main.async {
-                            vd.notesTableView.scrollRowToVisible(row: i, animated: true)
-                        }
+                        // Restore scroll position instead of scrolling to visible row
+                        vd.notesTableView.restoreScrollPosition()
                     } else if vd.notesTableView.noteList.count > 0 {
                         vd.focusTable()
                     }
@@ -688,5 +792,21 @@ class SidebarProjectView: NSOutlineView,
         vc.storageOutlineView.sidebarItems = Sidebar().getList()
         vc.storageOutlineView.reloadData()
         vc.storageOutlineView.selectRowIndexes([selected], byExtendingSelection: false)
+    }
+    
+    private func saveSidebarOrder(_ items: [Any]) {
+        var projectPaths: [String] = []
+        
+        // Extract project paths from Category items, preserving order
+        for item in items {
+            if let sidebarItem = item as? SidebarItem,
+               sidebarItem.type == .Category,
+               let project = sidebarItem.project {
+                projectPaths.append(project.url.path)
+            }
+        }
+        
+        UserDefaults.standard.set(projectPaths, forKey: "SidebarProjectOrder")
+        UserDefaults.standard.synchronize()
     }
 }

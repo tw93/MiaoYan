@@ -1,6 +1,6 @@
 import Foundation
 import LocalAuthentication
-import SSZipArchive
+import ZipArchive
 
 public class Note: NSObject {
     @objc var title: String = ""
