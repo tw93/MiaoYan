@@ -3,10 +3,11 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
-      <title>1.18.0</title>
+      <title>1.18.1</title>
       <description><![CDATA[
       <h3>大更新 🎉:</h3>
       <ol>
+        <li>1.18.1版本修复了点击视图菜单会闪退的问题</li>
         <li>支持Markdown中的图片预览功能，更好用</li>
         <li>文件夹支持拖拽修改原有的顺序，更巧妙</li>
         <li>三栏布局拖拽收起展开的效果重构，更舒服</li>
@@ -15,6 +16,7 @@
       </ol>
       <h3>Big Updates 🎉:</h3>
       <ol>
+        <li>Version 1.18.1 fixes the issue of crash when clicking on the view menu</li>
         <li>Support for image preview in Markdown, more user-friendly</li>
         <li>Folder drag-and-drop to reorder, more intuitive</li>
         <li>Refactored three-column layout drag-to-collapse/expand effects, more comfortable</li>
@@ -31,8 +33,8 @@
         <li>CocoaPodsからSwift Package Managerにアップグレード、保守性向上</li>
       </ol>
           ]]>      </description>
-      <pubDate>周日, 10 08月 2025 23:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app2/MiaoYan_V1.18.0.zip" sparkle:shortVersionString="1.18.0" sparkle:version="1.18.0" sparkle:edSignature="/hhxikrlvX9nNaUDQ2DhPKOjZ+FvCrC6PWx0C1/IlE5aDbRly3+JBfjpfvx1s8sU9LKuicaO8GgQxv1U1zRFCw==" length="34963928" type="application/octet-stream" />
+      <pubDate>周一, 11 08月 2025 23:00:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.18.1.zip" sparkle:shortVersionString="1.18.1" sparkle:version="1.18.1" sparkle:edSignature="9DqnRA7tRNk0hpSKN6d1HLmWa+x8EG0UV3HRYRJ/hjvBXUx3N/yqFxwYWe+GSqRIUWTJxC766dljiJQYJl5RAg==" length="34966415" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
     </item>
     <item>
