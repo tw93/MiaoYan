@@ -337,15 +337,15 @@ class ViewController:
             ensureInitialProjectSelection()
         }
     }
-    
+
     private func ensureInitialProjectSelection() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
             guard self.sidebarWidth > 0 && self.storageOutlineView.selectedRow == -1 else { return }
-            
+
             // Try to find the project by URL first (more reliable after reordering)
             if let lastProjectURL = UserDataService.instance.lastProject,
                let items = self.storageOutlineView.sidebarItems {
-                
+
                 for (index, item) in items.enumerated() {
                     if let sidebarItem = item as? SidebarItem,
                        sidebarItem.project?.url == lastProjectURL {
@@ -354,10 +354,10 @@ class ViewController:
                     }
                 }
             }
-            
+
             // Fallback to index-based selection if URL matching fails
             let lastProjectIndex = UserDefaultsManagement.lastProject
-            if let items = self.storageOutlineView.sidebarItems, 
+            if let items = self.storageOutlineView.sidebarItems,
                items.indices.contains(lastProjectIndex) {
                 self.storageOutlineView.selectRowIndexes([lastProjectIndex], byExtendingSelection: false)
             } else if let items = self.storageOutlineView.sidebarItems, !items.isEmpty {
@@ -455,17 +455,17 @@ class ViewController:
         // Set up delegate and data source before loading data
         storageOutlineView.delegate = storageOutlineView
         storageOutlineView.dataSource = storageOutlineView
-        
+
         storageOutlineView.sidebarItems = Sidebar().getList()
         storageOutlineView.reloadData()
         storageOutlineView.selectionHighlightStyle = .none
-        
+
         // Ensure proper display after data is set
         storageOutlineView.needsDisplay = true
 
         sidebarSplitView.autosaveName = "SidebarSplitView"
         splitView.autosaveName = "EditorSplitView"
-        
+
         // 设置sidebar outline view的autosave name来保存展开状态
         storageOutlineView.autosaveExpandedItems = true
         storageOutlineView.autosaveName = "SidebarOutlineView"
@@ -475,7 +475,7 @@ class ViewController:
         sidebarScrollView.horizontalScroller = .none
         sidebarScrollView.hasHorizontalScroller = false
         sidebarScrollView.autohidesScrollers = true
-        
+
         // 确保sidebar列宽随父视图调整
         if let column = storageOutlineView.tableColumns.first {
             column.resizingMask = .autoresizingMask
@@ -489,7 +489,7 @@ class ViewController:
         if UserDefaultsManagement.isSingleMode {
             lastSidebarItem = 0
         }
-        
+
         updateTable {
             // Set sidebar selection after table update to properly trigger selection change
             if let items = self.storageOutlineView.sidebarItems, items.indices.contains(lastSidebarItem) {
@@ -498,7 +498,7 @@ class ViewController:
                     self.storageOutlineView.selectRowIndexes([lastSidebarItem], byExtendingSelection: false)
                 }
             }
-            
+
             if UserDefaultsManagement.isSingleMode {
                 let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
                 if !FileManager.default.directoryExists(atUrl: singleModeUrl), let lastNote = self.storage.getBy(url: singleModeUrl), let i = self.notesTableView.getIndex(lastNote) {
@@ -864,6 +864,11 @@ class ViewController:
             }
         }
 
+        if event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_1, !UserDefaultsManagement.presentation {
+            toggleSidebarPanel(self)
+            return false
+        }
+
         if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_I, !UserDefaultsManagement.presentation {
             toggleInfo()
             return false
@@ -1012,7 +1017,7 @@ class ViewController:
 
         // 展开 sidebar cmd+1
         if event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_1, !UserDefaultsManagement.presentation {
-            toggleSidebar("")
+            toggleSidebarPanel("")
             return false
         }
 
@@ -1306,27 +1311,28 @@ class ViewController:
     }
 
     // MARK: - Sidebar Layout Manager
-    
+
     func setDividerColor(for splitView: NSSplitView, hidden: Bool) {
         DispatchQueue.main.async {
-            let color = hidden ? 
+            let color = hidden ?
                 (NSColor(named: "mainBackground") ?? NSColor.windowBackgroundColor) :
                 (NSColor(named: "divider") ?? NSColor.separatorColor)
             splitView.setValue(color, forKey: "dividerColor")
             splitView.needsDisplay = true
         }
     }
-    
+
     private var sidebarWidth: CGFloat {
-        guard sidebarSplitView.subviews.count > 0 else { return 0 }
-        return sidebarSplitView.subviews[0].frame.width
+        guard let splitView = sidebarSplitView,
+              splitView.subviews.count > 0 else { return 0 }
+        return splitView.subviews[0].frame.width
     }
-    
+
     private var notelistWidth: CGFloat {
         guard splitView.subviews.count > 0 else { return 0 }
         return splitView.subviews[0].frame.width
     }
-    
+
     func updateDividers() {
         guard sidebarSplitView != nil && splitView != nil else { return }
         setDividerColor(for: sidebarSplitView, hidden: sidebarWidth == 0)
@@ -1335,7 +1341,7 @@ class ViewController:
 
     @IBAction func toggleNoteList(_ sender: Any) {
         guard splitView != nil else { return }
-        
+
         if notelistWidth == 0 {
             showNoteList(sender)
         } else {
@@ -1343,12 +1349,9 @@ class ViewController:
         }
     }
 
-    @IBAction func toggleSidebar(_ sender: Any) {
+    @IBAction func toggleSidebarPanel(_ sender: Any) {
         guard sidebarSplitView != nil else { return }
-        if UserDefaultsManagement.isSingleMode {
-            toastInSingleMode()
-            return
-        }
+    
         if sidebarWidth == 0 {
             showSidebar(sender)
         } else {
@@ -1465,16 +1468,16 @@ class ViewController:
             return
         }
         guard sidebarWidth == 0 else { return }
-        
+
         // 使用保存的宽度
         let targetWidth = UserDefaultsManagement.realSidebarSize
         sidebarSplitView.setPosition(CGFloat(targetWidth), ofDividerAt: 0)
-        
+
         // sidebar展开时，联动展开notelist
         if notelistWidth == 0 {
             expandNoteList()
         }
-        
+
         updateDividers()
         editArea.updateTextContainerInset()
     }
@@ -1490,7 +1493,7 @@ class ViewController:
         }
         editArea.updateTextContainerInset()
     }
-    
+
     private func expandNoteList() {
         let size = UserDefaultsManagement.sidebarSize == 0 ? 280 : UserDefaultsManagement.sidebarSize
         splitView.shouldHideDivider = false
@@ -1503,10 +1506,10 @@ class ViewController:
             UserDefaultsManagement.sidebarSize = Int(notelistWidth)
             splitView.shouldHideDivider = true
             splitView.setPosition(0, ofDividerAt: 0)
-            
+
             // notelist收起时，联动收起sidebar
             hideSidebar("")
-            
+
             updateDividers()
         }
         editArea.updateTextContainerInset()
@@ -2437,7 +2440,7 @@ class ViewController:
         if splitView == sidebarSplitView && dividerIndex == 0 {
             return 0
         }
-        
+
         if dividerIndex == 0 && UserDefaultsManagement.isSingleMode {
             return 0
         }
@@ -2448,7 +2451,7 @@ class ViewController:
         if splitView == sidebarSplitView && dividerIndex == 0 {
             return 280
         }
-        
+
         if dividerIndex == 0 && UserDefaultsManagement.isSingleMode {
             return 0
         }
@@ -2689,7 +2692,7 @@ class ViewController:
     func splitViewWillResizeSubviews(_ notification: Notification) {
         editArea.updateTextContainerInset()
     }
-    
+
     func splitViewDidResizeSubviews(_ notification: Notification) {
         updateDividers()
     }
