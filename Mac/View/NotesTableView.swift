@@ -15,6 +15,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     override func draw(_ dirtyRect: NSRect) {
         dataSource = self
         delegate = self
+        backgroundColor = NSColor(named: "mainBackground") ?? NSColor.controlBackgroundColor
         super.draw(dirtyRect)
     }
 

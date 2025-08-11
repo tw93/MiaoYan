@@ -108,12 +108,9 @@ class NoteRowView: NSTableRowView {
             height: separatorHeight
         )
         
-        // Use subtle separator color that works across all macOS versions
-        if NSApp.effectiveAppearance.isDark {
-            NSColor(calibratedWhite: 0.15, alpha: 1.0).setFill()
-        } else {
-            NSColor(calibratedWhite: 0.92, alpha: 1.0).setFill()
-        }
+        // Use divider color from Assets catalog
+        let dividerColor = NSColor(named: "divider") ?? NSColor.separatorColor
+        dividerColor.setFill()
         
         separatorRect.fill()
     }
