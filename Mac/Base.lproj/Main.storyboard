@@ -222,7 +222,7 @@ CA
                                         </menuItem>
                                         <menuItem title="Hide/Show Sidebar" keyEquivalent="1" id="DCh-5P-PZe">
                                             <connections>
-                                                <action selector="toggleSidebar:" target="Ady-hI-5gd" id="MRM-fh-zTo"/>
+                                                <action selector="toggleSidebarPanel:" target="Ady-hI-5gd" id="fCd-4G-Daa"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Hide/Show NoteList" keyEquivalent="2" id="WHt-T4-l9c">
