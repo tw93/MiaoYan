@@ -3,11 +3,12 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
-      <title>1.18.2</title>
+      <title>1.18.3</title>
       <description><![CDATA[
       <h3>大更新 🎉:</h3>
       <ol>
-        <li>1.18.2修复名称修改没有立即生效、点击视图菜单会闪退问题，搜索内容快捷键修改成 Command+F</li>
+        <li>1.18.3修复单独模式显示问题、名称修改没有立即生效、点击视图菜单会闪退问题</li>
+        </li>搜索内容快捷键修改成 Command+F，搜索文件改成 Command+P</li>
         <li>支持Markdown中的图片预览功能，更好用</li>
         <li>文件夹支持拖拽修改原有的顺序，更巧妙</li>
         <li>三栏布局拖拽收起展开的效果重构，更舒服</li>
@@ -16,7 +17,8 @@
       </ol>
       <h3>Big Updates 🎉:</h3>
       <ol>
-        <li>1.18.2 Fixed the issue where the name change did not take effect immediately and the view menu would crash when clicked. The search content shortcut key was changed to Command+F.</li>
+        <li>1.18.3 Fixed the single mode display problem, the name change did not take effect immediately, and the problem of clicking the view menu would cause a crash</li>
+        <li>The shortcut keys for searching for content are changed to Command+F, and for searching for files are changed to Command+P</li>
         <li>Support for image preview in Markdown, more user-friendly</li>
         <li>Folder drag-and-drop to reorder, more intuitive</li>
         <li>Refactored three-column layout drag-to-collapse/expand effects, more comfortable</li>
@@ -35,7 +37,7 @@
       </ol>
           ]]>      </description>
       <pubDate>周二, 12 08月 2025 23:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.18.2.zip" sparkle:shortVersionString="1.18.2" sparkle:version="1.18.2" sparkle:edSignature="accHeoOFs++9tEqyERoV0+eh7EvTszcKqzuIiRv0vhj+8WkaJd4czVBHY1iaTHHfawdJge5aRp5lIEnL2qJLDQ==" length="34970842" type="application/octet-stream" />
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.18.3.zip" sparkle:shortVersionString="1.18.3" sparkle:version="1.18.3" sparkle:edSignature="ApcCe/7zA7IrQ2E+d4gQqmMhuu9Abq/xrOnXG5BBY1lX7z7s4Pk2dX8LtrtJqAipJNOVFq3yolWWjK8QVrIEBg==" length="34973190" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
     </item>
     <item>
