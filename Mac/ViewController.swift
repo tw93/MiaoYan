@@ -1734,6 +1734,7 @@ class ViewController:
             let terms = filter.split(separator: " ")
             let source = self.storage.noteList
             var notes = [Note]()
+            let maxResults = search ? 100 : Int.max // Limit search results for performance
 
             for note in source {
                 if operation.isCancelled {
@@ -1743,6 +1744,11 @@ class ViewController:
 
                 if self.isFit(note: note, filter: filter, terms: terms, projects: projects, type: type, sidebarName: sidebarName) {
                     notes.append(note)
+                    
+                    // Early exit for search to improve performance
+                    if search && notes.count >= maxResults {
+                        break
+                    }
                 }
             }
 
@@ -1777,7 +1783,7 @@ class ViewController:
                 self.notesTableView.reloadData()
                 if search {
                     if self.notesTableView.noteList.count > 0 {
-                        if filter.count > 0, note.title.lowercased() == self.search.stringValue.lowercased() {
+                        if filter.count > 0 {
                             self.selectNullTableRow(timer: true)
                         } else {
                             self.editArea.clear()
@@ -1793,6 +1799,23 @@ class ViewController:
         searchQueue.addOperation(operation)
     }
 
+    func cleanSearchAndRestoreSelection() {
+        UserDataService.instance.searchTrigger = false
+        
+        updateTable(search: false) {
+            DispatchQueue.main.async {
+                if let currentNote = EditTextView.note,
+                   let index = self.notesTableView.noteList.firstIndex(of: currentNote) {
+                    self.notesTableView.selectRowIndexes(IndexSet(integer: index), byExtendingSelection: false)
+                    self.notesTableView.scrollRowToVisible(index)
+                    // Ensure title bar is visible when we have a selected note
+                    self.titleBarView.isHidden = false
+                    self.emptyEditAreaView.isHidden = true
+                }
+            }
+        }
+    }
+
     /*
      Load titles in cases sort by Title
      */
@@ -1806,7 +1829,11 @@ class ViewController:
 
     private func isMatched(note: Note, terms: [Substring]) -> Bool {
         for term in terms {
-            if note.name.range(of: term, options: .caseInsensitive, range: nil, locale: nil) != nil || note.content.string.range(of: term, options: .caseInsensitive, range: nil, locale: nil) != nil {
+            if note.name.range(of: term, options: .caseInsensitive, range: nil, locale: nil) != nil {
+                continue
+            }
+            
+            if note.content.string.range(of: term, options: .caseInsensitive, range: nil, locale: nil) != nil {
                 continue
             }
 
