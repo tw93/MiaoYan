@@ -463,7 +463,10 @@ class SidebarProjectView: NSOutlineView,
 
             // Don't clear edit area during launch to prevent flashing
             if !isLaunch {
-                vd.editArea.clear()
+                // 在单独模式下不清除编辑器内容
+                if !UserDefaultsManagement.isSingleMode {
+                    vd.editArea.clear()
+                }
                 vd.search.stringValue = ""
                 // Save current scroll position when switching projects
                 vd.notesTableView.saveScrollPosition()
@@ -490,7 +493,10 @@ class SidebarProjectView: NSOutlineView,
                     self.isLaunch = false
                 } else {
                     DispatchQueue.main.async {
-                        vd.notesTableView.deselectNotes()
+                        // 在单独模式下不清除笔记选择
+                        if !UserDefaultsManagement.isSingleMode {
+                            vd.notesTableView.deselectNotes()
+                        }
                     }
                 }
             }

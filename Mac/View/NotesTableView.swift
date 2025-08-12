@@ -130,6 +130,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         fillTimestamp = timestamp
 
         let vc = window?.contentViewController as! ViewController
+        
 
         if vc.editAreaScroll.isFindBarVisible {
             let menu = NSMenuItem(title: "", action: nil, keyEquivalent: "")
