@@ -992,19 +992,26 @@ class ViewController:
             return true
         }
 
-        // 文章搜索
-        if event.keyCode == kVK_ANSI_F, event.modifierFlags.contains(.shift), event.modifierFlags.contains(.command), !event.modifierFlags.contains(.control), editArea.hasFocus() {
+        // 编辑器内搜索 - Command+F
+        if event.keyCode == kVK_ANSI_F, event.modifierFlags.contains(.command), !event.modifierFlags.contains(.shift), !event.modifierFlags.contains(.control) {
             if notesTableView.getSelectedNote() != nil {
-                disablePreview()
+                if UserDefaultsManagement.preview {
+                    disablePreview()
+                }
+                let menu = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+                menu.tag = NSTextFinder.Action.showFindInterface.rawValue
+                editArea.performTextFinderAction(menu)
                 return true
             }
         }
 
-        if event.keyCode == kVK_ANSI_F, event.modifierFlags.contains(.command), !event.modifierFlags.contains(.control) {
+        // 文件搜索 - Command+P
+        if event.keyCode == kVK_ANSI_P, event.modifierFlags.contains(.command), !event.modifierFlags.contains(.shift), !event.modifierFlags.contains(.control) {
             if notesTableView.getSelectedNote() != nil {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     self.titleLabel.saveTitle()
                 }
+                NSApp.mainWindow?.makeFirstResponder(search)
                 return true
             }
         }
