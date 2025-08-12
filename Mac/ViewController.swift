@@ -44,6 +44,7 @@ class ViewController:
         didSet {}
     }
 
+
     @IBOutlet var emptyEditTitle: NSTextField!
     @IBOutlet var emptyEditAreaImage: NSImageView!
     @IBOutlet var emptyEditAreaView: NSView!
@@ -325,9 +326,6 @@ class ViewController:
 
         if UserDefaultsManagement.isSingleMode {
             toastInSingleMode()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.hideSidebar("")
-            }
         } else if UserDefaultsManagement.isFirstLaunch {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.showSidebar("")
@@ -501,11 +499,26 @@ class ViewController:
 
             if UserDefaultsManagement.isSingleMode {
                 let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
+
+                // 默认关闭 sidebar，但保持 notelist 显示
+                self.hideSidebar("")
+
+                // 单个文件模式
                 if !FileManager.default.directoryExists(atUrl: singleModeUrl), let lastNote = self.storage.getBy(url: singleModeUrl), let i = self.notesTableView.getIndex(lastNote) {
-                    self.notesTableView.selectRow(i)
-                    self.notesTableView.scrollRowToVisible(row: i, animated: false)
-                    self.hideNoteList("")
+                    DispatchQueue.main.async {
+                        self.notesTableView.selectRow(i)
+                        self.notesTableView.scrollRowToVisible(row: i, animated: false)
+                    }
+                } else if FileManager.default.directoryExists(atUrl: singleModeUrl) {
+                    // 文件夹模式：选中第一个文件
+                    DispatchQueue.main.async {
+                        if self.notesTableView.noteList.count > 0 {
+                            self.notesTableView.selectRow(0)
+                            self.notesTableView.scrollRowToVisible(row: 0, animated: false)
+                        }
+                    }
                 }
+
                 self.storageOutlineView.isLaunch = false
             }
         }
@@ -1358,7 +1371,7 @@ class ViewController:
 
     @IBAction func toggleSidebarPanel(_ sender: Any) {
         guard sidebarSplitView != nil else { return }
-    
+
         if sidebarWidth == 0 {
             showSidebar(sender)
         } else {
@@ -1470,10 +1483,6 @@ class ViewController:
     }
 
     func showSidebar(_ sender: Any) {
-        guard UserDefaultsManagement.isSingleMode == false else {
-            toastInSingleMode()
-            return
-        }
         guard sidebarWidth == 0 else { return }
 
         // 使用保存的宽度
@@ -1751,7 +1760,7 @@ class ViewController:
 
                 if self.isFit(note: note, filter: filter, terms: terms, projects: projects, type: type, sidebarName: sidebarName) {
                     notes.append(note)
-                    
+
                     // Early exit for search to improve performance
                     if search && notes.count >= maxResults {
                         break
@@ -1770,6 +1779,7 @@ class ViewController:
             self.filteredNoteList = notes
             self.notesTableView.noteList = orderedNotesList
 
+
             if operation.isCancelled {
                 completion()
                 return
@@ -1777,28 +1787,46 @@ class ViewController:
 
             guard self.notesTableView.noteList.count > 0 else {
                 DispatchQueue.main.async {
-                    self.editArea.clear()
+                    // 在单独模式下不清除编辑器内容
+                    if !UserDefaultsManagement.isSingleMode {
+                        self.editArea.clear()
+                    }
                     self.notesTableView.reloadData()
                     completion()
                 }
                 return
             }
 
-            let note = self.notesTableView.noteList[0]
+            let _ = self.notesTableView.noteList[0]
 
             DispatchQueue.main.async {
+                // 在单独模式下保存当前选择状态
+                let previousSelectedRow = UserDefaultsManagement.isSingleMode ? self.notesTableView.selectedRow : -1
+
                 self.notesTableView.reloadData()
                 if search {
                     if self.notesTableView.noteList.count > 0 {
                         if filter.count > 0 {
                             self.selectNullTableRow(timer: true)
                         } else {
-                            self.editArea.clear()
+                            // 在单独模式下不清除编辑器内容
+                            if !UserDefaultsManagement.isSingleMode {
+                                self.editArea.clear()
+                            }
                         }
                     } else {
-                        self.editArea.clear()
+                        // 在单独模式下不清除编辑器内容
+                        if !UserDefaultsManagement.isSingleMode {
+                            self.editArea.clear()
+                        }
                     }
                 }
+
+                // 在单独模式下恢复选择状态
+                if UserDefaultsManagement.isSingleMode, previousSelectedRow != -1, self.notesTableView.noteList.indices.contains(previousSelectedRow) {
+                    self.notesTableView.selectRow(previousSelectedRow)
+                }
+
                 completion()
             }
         }
@@ -1808,7 +1836,7 @@ class ViewController:
 
     func cleanSearchAndRestoreSelection() {
         UserDataService.instance.searchTrigger = false
-        
+
         updateTable(search: false) {
             DispatchQueue.main.async {
                 if let currentNote = EditTextView.note,
@@ -1839,7 +1867,7 @@ class ViewController:
             if note.name.range(of: term, options: .caseInsensitive, range: nil, locale: nil) != nil {
                 continue
             }
-            
+
             if note.content.string.range(of: term, options: .caseInsensitive, range: nil, locale: nil) != nil {
                 continue
             }
@@ -1949,8 +1977,11 @@ class ViewController:
         search.stringValue = ""
         search.becomeFirstResponder()
 
-        notesTableView.selectRowIndexes(IndexSet(), byExtendingSelection: false)
-        editArea.clear()
+        // 在单独模式下不清除选择状态
+        if !UserDefaultsManagement.isSingleMode {
+            notesTableView.selectRowIndexes(IndexSet(), byExtendingSelection: false)
+            editArea.clear()
+        }
     }
 
     func activeShortcut() {
