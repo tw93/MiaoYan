@@ -398,16 +398,17 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     }
 
     public func reloadRow(note: Note) {
+        let storedTitle = note.title
+        let selectedRow = selectedRow
+        
         note.invalidateCache()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            if let i = self.noteList.firstIndex(of: note) {
-                if let row = self.rowView(atRow: i, makeIfNecessary: false) as? NoteRowView, let cell = row.subviews.first as? NoteCellView {
-                    cell.date.stringValue = note.getDateForLabel()
-                    cell.attachHeaders(note: note)
-                    cell.renderPin()
-                    self.noteHeightOfRows(withIndexesChanged: [i])
-                }
-            }
+        if note.title.isEmpty && !storedTitle.isEmpty {
+            note.title = storedTitle
+        }
+        
+        reloadData()
+        if selectedRow >= 0 {
+            selectRowIndexes(IndexSet(integer: selectedRow), byExtendingSelection: false)
         }
     }
     
