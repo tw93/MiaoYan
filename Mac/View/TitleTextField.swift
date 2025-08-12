@@ -50,14 +50,12 @@ class TitleTextField: NSTextField {
     }
 
     public func saveTitle() {
-        guard stringValue.count > 0, let vc = ViewController.shared(), let note = EditTextView.note else { return }
+        guard stringValue.count > 0, let vc = ViewController.shared(), let note = EditTextView.note else { 
+            return 
+        }
 
         let currentTitle = stringValue.trimmingCharacters(in: NSCharacterSet.newlines)
         let currentName = note.getFileName()
-
-        defer {
-            updateNotesTableView()
-        }
 
         if currentName != currentTitle {
             let ext = note.url.pathExtension
@@ -71,23 +69,19 @@ class TitleTextField: NSTextField {
             // 允许仅大小写变化时重命名
             let isCaseOnlyChange = currentName.lowercased() == currentTitle.lowercased() && currentName != currentTitle
 
-            if (!FileManager.default.fileExists(atPath: dst.path) || isCaseOnlyChange), note.move(to: dst) {
+            if (!FileManager.default.fileExists(atPath: dst.path) || isCaseOnlyChange) && note.move(to: dst) {
+                note.title = currentTitle
                 vc.updateTitle(newTitle: currentTitle)
                 updateNotesTableView()
             } else {
                 vc.updateTitle(newTitle: currentTitle)
                 resignFirstResponder()
-                updateNotesTableView()
                 let alert = NSAlert()
                 alert.alertStyle = .informational
                 alert.informativeText = String(format: NSLocalizedString("This %@ under this folder already exists!", comment: ""), currentTitle)
                 alert.messageText = NSLocalizedString("Please change the title", comment: "")
                 alert.runModal()
             }
-        } else {
-            vc.updateTitle(newTitle: currentTitle)
-            resignFirstResponder()
-            updateNotesTableView()
         }
     }
 
@@ -103,6 +97,11 @@ class TitleTextField: NSTextField {
 
     public func updateNotesTableView() {
         guard let vc = ViewController.shared(), let note = EditTextView.note else { return }
+        
+        let currentTitle = note.title
         vc.notesTableView.reloadRow(note: note)
+        if !currentTitle.isEmpty {
+            note.title = currentTitle
+        }
     }
 }
