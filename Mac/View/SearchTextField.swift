@@ -16,6 +16,16 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
 
     private var trackingArea: NSTrackingArea?
 
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        sendsWholeSearchString = false
+        sendsSearchStringImmediately = true
+        
+        // Remove cancel button
+        if let searchFieldCell = self.cell as? NSSearchFieldCell {
+            searchFieldCell.cancelButtonCell = nil
+        }
+    }
 
     override func rectForSearchText(whenCentered isCentered: Bool) -> NSRect {
         var rect = super.rectForSearchText(whenCentered: isCentered)
@@ -46,8 +56,9 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     }
 
     override func mouseDown(with event: NSEvent) {
-        let vc = window?.contentViewController as! ViewController
-        vc.titleLabel.saveTitle()
+        if let vc = window?.contentViewController as? ViewController {
+            vc.titleLabel.saveTitle()
+        }
         super.mouseDown(with: event)
     }
 
@@ -86,6 +97,8 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
             }
             return true
         case "cancelOperation:":
+            stringValue = ""
+            vcDelegate.cleanSearchAndRestoreSelection()
             return true
         case "deleteBackward:":
             skipAutocomplete = true
@@ -126,8 +139,14 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         if UserDefaultsManagement.magicPPT {
             return
         }
+        
         searchTimer.invalidate()
-        searchTimer = Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(search), userInfo: nil, repeats: false)
+        
+        if stringValue.isEmpty {
+            vcDelegate.cleanSearchAndRestoreSelection()
+        } else {
+            searchTimer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(search), userInfo: nil, repeats: false)
+        }
     }
 
     public func suggestAutocomplete(_ note: Note, filter: String) {
