@@ -1929,6 +1929,12 @@ class ViewController:
     @objc private func selectRowInstant() {
         notesTableView.selectRowIndexes([0], byExtendingSelection: false)
         notesTableView.scrollRowToVisible(0)
+        
+        // 确保内容加载和标题栏显示
+        if notesTableView.noteList.count > 0 {
+            let note = notesTableView.noteList[0]
+            editArea.fill(note: note, highlight: true)
+        }
     }
 
     func focusEditArea(firstResponder: NSResponder? = nil) {
