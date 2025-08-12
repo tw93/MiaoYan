@@ -422,11 +422,14 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     }
     
     func restoreScrollPosition() {
-        guard let clipView = superview as? NSClipView else { return }
-        let savedPosition = UserDefaultsManagement.notesTableScrollPosition
-        if savedPosition > 0 {
-            let newOrigin = NSPoint(x: clipView.bounds.origin.x, y: savedPosition)
-            clipView.setBoundsOrigin(newOrigin)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self,
+                  let clipView = self.superview as? NSClipView else { return }
+            let savedPosition = UserDefaultsManagement.notesTableScrollPosition
+            if savedPosition > 0 {
+                let newOrigin = NSPoint(x: clipView.bounds.origin.x, y: savedPosition)
+                clipView.setBoundsOrigin(newOrigin)
+            }
         }
     }
 }
