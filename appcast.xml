@@ -3,11 +3,11 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
-      <title>1.18.1</title>
+      <title>1.18.2</title>
       <description><![CDATA[
       <h3>大更新 🎉:</h3>
       <ol>
-        <li>1.18.1版本修复了点击视图菜单会闪退的问题</li>
+        <li>1.18.2修复名称修改没有立即生效、点击视图菜单会闪退问题，搜索内容快捷键修改成 Command+F</li>
         <li>支持Markdown中的图片预览功能，更好用</li>
         <li>文件夹支持拖拽修改原有的顺序，更巧妙</li>
         <li>三栏布局拖拽收起展开的效果重构，更舒服</li>
@@ -16,7 +16,7 @@
       </ol>
       <h3>Big Updates 🎉:</h3>
       <ol>
-        <li>Version 1.18.1 fixes the issue of crash when clicking on the view menu</li>
+        <li>1.18.2 Fixed the issue where the name change did not take effect immediately and the view menu would crash when clicked. The search content shortcut key was changed to Command+F.</li>
         <li>Support for image preview in Markdown, more user-friendly</li>
         <li>Folder drag-and-drop to reorder, more intuitive</li>
         <li>Refactored three-column layout drag-to-collapse/expand effects, more comfortable</li>
@@ -26,6 +26,7 @@
 
       <h3>大型アップデート 🎉:</h3>
       <ol>
+        <li>1.18.2 名前の変更がすぐに反映されず、表示メニューをクリックするとクラッシュする問題を修正しました。コンテンツ検索のショートカットキーをCommand+Fに変更しました。く</li>
         <li>Markdownでの画像プレビュー機能をサポート、より使いやすく</li>
         <li>フォルダのドラッグ&ドロップで順序変更が可能、より直感的</li>
         <li>3カラムレイアウトのドラッグ折りたたみ・展開効果を再構築、より快適</li>
@@ -33,8 +34,8 @@
         <li>CocoaPodsからSwift Package Managerにアップグレード、保守性向上</li>
       </ol>
           ]]>      </description>
-      <pubDate>周一, 11 08月 2025 23:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app2/MiaoYan_V1.18.1.zip" sparkle:shortVersionString="1.18.1" sparkle:version="1.18.1" sparkle:edSignature="65ST0z+KChjHKpHfA1eHn+9bDqpUj6yLrmTqiaMQNTZqeJJsFaTXhNe+9279dRyVUWgUIPHHIU1MS4ETHb3RDw==" length="34966432" type="application/octet-stream" />
+      <pubDate>周二, 12 08月 2025 23:00:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.18.2.zip" sparkle:shortVersionString="1.18.2" sparkle:version="1.18.2" sparkle:edSignature="accHeoOFs++9tEqyERoV0+eh7EvTszcKqzuIiRv0vhj+8WkaJd4czVBHY1iaTHHfawdJge5aRp5lIEnL2qJLDQ==" length="34970842" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
     </item>
     <item>
