@@ -1,8 +1,8 @@
 import AVKit
 import Cocoa
 
-public extension NSTextStorage {
-    func loadImage(attachment: NSTextAttachment, url: URL, range: NSRange) {
+extension NSTextStorage {
+    public func loadImage(attachment: NSTextAttachment, url: URL, range: NSRange) {
         EditTextView.imagesLoaderQueue.addOperation {
             guard url.isImage else { return }
 

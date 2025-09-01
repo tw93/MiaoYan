@@ -30,7 +30,7 @@ func renderMarkdownHTML(markdown: String) -> String? {
     } else {
         res = String(cString: cmark_render_html(node, CMARK_OPT_UNSAFE | CMARK_OPT_HARDBREAKS, nil))
     }
-    
+
     // 后处理：去除公式块内的 <br> 和 <br />
     let pattern = #"<p>(\$\$[\s\S]*?\$\$)<\/p>"#
     let regex = try? NSRegularExpression(pattern: pattern, options: [])
@@ -40,7 +40,7 @@ func renderMarkdownHTML(markdown: String) -> String? {
         guard let match = match else { return }
         let formulaBlock = nsRes.substring(with: match.range(at: 1))
         let cleaned = formulaBlock.replacingOccurrences(of: "<br>", with: "")
-                                   .replacingOccurrences(of: "<br />", with: "")
+            .replacingOccurrences(of: "<br />", with: "")
         let fullMatch = nsRes.substring(with: match.range(at: 0))
         let replaced = "<p>\(cleaned)</p>"
         newRes = newRes.replacingOccurrences(of: fullMatch, with: replaced)

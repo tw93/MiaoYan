@@ -12,7 +12,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     private weak var note: Note?
     private var closure: MPreviewViewClosure?
     public static var template: String?
-    
+
     private static var bundleInitialized = false
     private static let initQueue = DispatchQueue(label: "preview.init", qos: .userInitiated)
 
@@ -26,11 +26,11 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = userContentController
-        
+
         // macOS Sequoia beta: 简化配置避免沙盒冲突
         configuration.websiteDataStore = WKWebsiteDataStore.default()
         configuration.suppressesIncrementalRendering = false
-        
+
         let preferences = WKWebpagePreferences()
         preferences.allowsContentJavaScript = true
         configuration.defaultWebpagePreferences = preferences
@@ -46,7 +46,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             backgroundColor = UIColor.clear
             scrollView.backgroundColor = UIColor.clear
         #endif
-        
+
         Self.ensureBundlePreinitialized()
         load(note: note)
     }
@@ -80,11 +80,8 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
     override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {
         for menuItem in menu.items {
-            if menuItem.identifier?.rawValue == "WKMenuItemIdentifierSpeechMenu" ||
-                menuItem.identifier?.rawValue == "WKMenuItemIdentifierTranslate" ||
-                menuItem.identifier?.rawValue == "WKMenuItemIdentifierSearchWeb" ||
-                menuItem.identifier?.rawValue == "WKMenuItemIdentifierShareMenu" ||
-                menuItem.identifier?.rawValue == "WKMenuItemIdentifierLookUp"
+            if menuItem.identifier?.rawValue == "WKMenuItemIdentifierSpeechMenu" || menuItem.identifier?.rawValue == "WKMenuItemIdentifierTranslate" || menuItem.identifier?.rawValue == "WKMenuItemIdentifierSearchWeb"
+                || menuItem.identifier?.rawValue == "WKMenuItemIdentifierShareMenu" || menuItem.identifier?.rawValue == "WKMenuItemIdentifierLookUp"
             {
                 menuItem.isHidden = true
             }
@@ -123,9 +120,9 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     private func waitForImagesLoaded(completion: @escaping () -> Void) {
-        let maxRetries = 50 // 减少重试次数，避免长时间等待
-        let initialDelay = 0.05 // 减少初始延迟
-        let maxDelay = 0.5 // 最大延迟
+        let maxRetries = 50  // 减少重试次数，避免长时间等待
+        let initialDelay = 0.05  // 减少初始延迟
+        let maxDelay = 0.5  // 最大延迟
         var retryCount = 0
 
         func checkImages() {
@@ -174,7 +171,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
     private func executeJavaScriptWhenReady(_ script: String, completion: (() -> Void)? = nil) {
         guard !script.isEmpty || completion != nil else { return }
-        
+
         evaluateJavaScript("document.readyState") { [weak self] complete, _ in
             guard let self = self, complete != nil else { return }
 
@@ -249,7 +246,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         for pdfData in pdfDatas {
             if let dataDocument = PDFDocument(data: pdfData) {
-                for pageIndex in 0 ..< dataDocument.pageCount {
+                for pageIndex in 0..<dataDocument.pageCount {
                     if let page = dataDocument.page(at: pageIndex) {
                         pdfDocument.insert(page, at: pdfDocument.pageCount)
                     }
@@ -270,15 +267,17 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         guard pre != 0.0 else { return }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.executeJavaScriptWhenReady("", completion: {
-                self.getContentDimensions { contentHeight, windowHeight in
-                    let offset = contentHeight - windowHeight
-                    if offset > 0 {
-                        let scrollerTop = offset * pre
-                        self.evaluateJavaScript("window.scrollTo({ top: \(scrollerTop), behavior: 'instant' })", completionHandler: nil)
+            self.executeJavaScriptWhenReady(
+                "",
+                completion: {
+                    self.getContentDimensions { contentHeight, windowHeight in
+                        let offset = contentHeight - windowHeight
+                        if offset > 0 {
+                            let scrollerTop = offset * pre
+                            self.evaluateJavaScript("window.scrollTo({ top: \(scrollerTop), behavior: 'instant' })", completionHandler: nil)
+                        }
                     }
-                }
-            })
+                })
         }
     }
 
@@ -286,16 +285,18 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         guard let vc = ViewController.shared() else { return }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.executeJavaScriptWhenReady("", completion: {
-                self.evaluateJavaScript("document.documentElement.outerHTML.toString()") { html, error in
-                    guard let contentHtml = html as? String, error == nil else {
-                        vc.toastExport(status: false)
-                        return
-                    }
+            self.executeJavaScriptWhenReady(
+                "",
+                completion: {
+                    self.evaluateJavaScript("document.documentElement.outerHTML.toString()") { html, error in
+                        guard let contentHtml = html as? String, error == nil else {
+                            vc.toastExport(status: false)
+                            return
+                        }
 
-                    self.saveToDownloads(content: contentHtml, extension: "html", viewController: vc)
-                }
-            })
+                        self.saveToDownloads(content: contentHtml, extension: "html", viewController: vc)
+                    }
+                })
         }
     }
 
@@ -306,19 +307,21 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             guard let self else { return }
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.executeJavaScriptWhenReady("", completion: {
-                    self.getContentDimensions { contentHeight, contentWidth in
-                        let config = WKSnapshotConfiguration()
-                        config.rect = CGRect(x: 0, y: 0, width: contentWidth, height: contentHeight)
-                        config.afterScreenUpdates = true
-                        config.snapshotWidth = NSNumber(value: Double(contentWidth) * 2.0)
+                self.executeJavaScriptWhenReady(
+                    "",
+                    completion: {
+                        self.getContentDimensions { contentHeight, contentWidth in
+                            let config = WKSnapshotConfiguration()
+                            config.rect = CGRect(x: 0, y: 0, width: contentWidth, height: contentHeight)
+                            config.afterScreenUpdates = true
+                            config.snapshotWidth = NSNumber(value: Double(contentWidth) * 2.0)
 
-                        self.frame.size.height = contentHeight
-                        self.takeSnapshot(with: config) { image, error in
-                            self.handleImageExportResult(image: image, error: error, viewController: vc)
+                            self.frame.size.height = contentHeight
+                            self.takeSnapshot(with: config) { image, error in
+                                self.handleImageExportResult(image: image, error: error, viewController: vc)
+                            }
                         }
-                    }
-                })
+                    })
             }
         }
     }
@@ -353,11 +356,11 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
-            
+
             let markdownString = note.getPrettifiedContent()
             let imagesStorage = note.project.url
             let css = HtmlManager.previewStyle()
-            
+
             DispatchQueue.main.async {
                 try? self.loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
                 self.note = note
@@ -367,7 +370,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
     private func getTemplate(css: String) -> String? {
         guard let bundle = HtmlManager.getDownViewBundle(),
-              let baseURL = HtmlManager.getBaseURL(bundle: bundle)
+            let baseURL = HtmlManager.getBaseURL(bundle: bundle)
         else {
             return nil
         }
@@ -425,7 +428,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         }
 
         guard let vc = ViewController.shared() else { return }
-        
+
         var pageHTMLString = try HtmlManager.htmlFromTemplate(htmlString, css: css, currentName: vc.titleLabel.stringValue)
 
         if UserDefaultsManagement.magicPPT {
@@ -441,21 +444,21 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
 
-
     private static func ensureBundlePreinitialized() {
         guard !bundleInitialized else { return }
-        
+
         initQueue.async {
             guard !Self.bundleInitialized else { return }
-            
+
             let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
-            
+
             if !FileManager.default.fileExists(atPath: webkitPreview.path),
-               let bundle = HtmlManager.getDownViewBundle(),
-               let bundleResourceURL = bundle.resourceURL {
-                
+                let bundle = HtmlManager.getDownViewBundle(),
+                let bundleResourceURL = bundle.resourceURL
+            {
+
                 try? FileManager.default.createDirectory(at: webkitPreview, withIntermediateDirectories: true, attributes: nil)
-                
+
                 do {
                     let fileList = try FileManager.default.contentsOfDirectory(atPath: bundleResourceURL.path)
                     for file in fileList {
@@ -466,7 +469,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                     print("Bundle initialization error: \(error.localizedDescription)")
                 }
             }
-            
+
             Self.bundleInitialized = true
         }
     }
@@ -478,15 +481,16 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 }
 
 class HandlerCheckbox: NSObject, WKScriptMessageHandler {
-    func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage)
-    {
+    func userContentController(
+        _ userContentController: WKUserContentController,
+        didReceive message: WKScriptMessage
+    ) {
         guard let position = message.body as? String else { return }
         guard let note = EditTextView.note else { return }
 
         let content = note.content.unLoadCheckboxes().unLoadImages()
         let string = content.string
-        let range = NSRange(0 ..< string.count)
+        let range = NSRange(0..<string.count)
 
         var i = 0
         NotesTextProcessor.allTodoInlineRegex.matches(string, range: range) { result in
@@ -519,9 +523,10 @@ class HandlerCodeCopy: NSObject, WKScriptMessageHandler {
         }
     }
 
-    func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage)
-    {
+    func userContentController(
+        _ userContentController: WKUserContentController,
+        didReceive message: WKScriptMessage
+    ) {
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
 
         HandlerCodeCopy.selectionString = message
@@ -531,9 +536,10 @@ class HandlerCodeCopy: NSObject, WKScriptMessageHandler {
 class HandlerSelection: NSObject, WKScriptMessageHandler {
     public static var selectionString: String?
 
-    func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage)
-    {
+    func userContentController(
+        _ userContentController: WKUserContentController,
+        didReceive message: WKScriptMessage
+    ) {
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
 
         HandlerSelection.selectionString = message
@@ -542,9 +548,10 @@ class HandlerSelection: NSObject, WKScriptMessageHandler {
 
 // Used to solve the adaptation of the left border/title color change with background color in PPT mode.
 class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
-    func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage)
-    {
+    func userContentController(
+        _ userContentController: WKUserContentController,
+        didReceive message: WKScriptMessage
+    ) {
         guard let vc = ViewController.shared() else { return }
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
         if message == "" {
@@ -558,4 +565,3 @@ class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
         }
     }
 }
-

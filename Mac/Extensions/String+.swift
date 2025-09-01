@@ -10,8 +10,8 @@ import CommonCrypto
 import CryptoKit
 import Foundation
 
-public extension String {
-    func condenseWhitespace() -> String {
+extension String {
+    public func condenseWhitespace() -> String {
         let components = components(separatedBy: NSCharacterSet.whitespacesAndNewlines)
         return components.filter { !$0.isEmpty }.joined(separator: " ")
     }
@@ -19,15 +19,15 @@ public extension String {
     // Search the string for the existence of any of the terms in the provided array of terms.
 
     // Inspired by magic from https://stackoverflow.com/a/41902740/2778502
-    func localizedStandardContains<S: StringProtocol>(_ terms: [S]) -> Bool {
+    public func localizedStandardContains<S: StringProtocol>(_ terms: [S]) -> Bool {
         terms.first(where: { self.localizedStandardContains($0) }) != nil
     }
 
-    func trim() -> String {
+    public func trim() -> String {
         trimmingCharacters(in: NSCharacterSet.whitespaces)
     }
 
-    func getPrefixMatchSequentially(char: String) -> String? {
+    public func getPrefixMatchSequentially(char: String) -> String? {
         var result = String()
 
         for current in self {
@@ -45,27 +45,27 @@ public extension String {
         return nil
     }
 
-    func localizedCaseInsensitiveContainsTerms(_ terms: [Substring]) -> Bool {
+    public func localizedCaseInsensitiveContainsTerms(_ terms: [Substring]) -> Bool {
         // Use magic from https://stackoverflow.com/a/41902740/2778502
         terms.first(where: { !localizedLowercase.contains($0) }) == nil
     }
 
-    func startsWith(string: String) -> Bool {
+    public func startsWith(string: String) -> Bool {
         guard let range = range(of: string, options: [.caseInsensitive, .diacriticInsensitive]) else {
             return false
         }
         return range.lowerBound == startIndex
     }
 
-    func removeLastNewLine() -> String {
+    public func removeLastNewLine() -> String {
         if last == "\n" {
             return String(self.dropLast())
         }
 
         return self
     }
-    
-    func isNumberList() -> Bool {
+
+    public func isNumberList() -> Bool {
         let pattern = "^(( |\t)*[0-9]+\\. )"
         if let regex = try? NSRegularExpression(pattern: pattern) {
             return regex.firstMatch(in: self, options: [], range: NSRange(location: 0, length: count)) != nil
@@ -74,7 +74,7 @@ public extension String {
         return false
     }
 
-    func regexReplace(regex: String, content: String) -> String {
+    public func regexReplace(regex: String, content: String) -> String {
         do {
             let regexExpression = try NSRegularExpression(pattern: regex, options: .caseInsensitive)
             let modified = regexExpression.stringByReplacingMatches(in: self, options: .reportProgress, range: NSRange(location: 0, length: count), withTemplate: content)
@@ -84,15 +84,15 @@ public extension String {
         }
     }
 
-    var isValidUUID: Bool {
+    public var isValidUUID: Bool {
         UUID(uuidString: self) != nil
     }
 
-    func escapePlus() -> String {
+    public func escapePlus() -> String {
         self.replacingOccurrences(of: "+", with: "%20")
     }
 
-    func matchingStrings(regex: String) -> [[String]] {
+    public func matchingStrings(regex: String) -> [[String]] {
         guard let regex = try? NSRegularExpression(pattern: regex, options: [.dotMatchesLineSeparators]) else { return [] }
 
         let nsString = self as NSString
@@ -106,75 +106,76 @@ public extension String {
         }
     }
 
-    var md5: String {
+    public var md5: String {
         let data = Data(self.utf8)
         let hash = Insecure.MD5.hash(data: data)
         return hash.map { String(format: "%02hhx", $0) }.joined()
     }
 
-    var isWhitespace: Bool {
+    public var isWhitespace: Bool {
         guard !isEmpty else { return true }
 
         let whitespaceChars = NSCharacterSet.whitespacesAndNewlines
 
-        return unicodeScalars
+        return
+            unicodeScalars
             .filter { (unicodeScalar: UnicodeScalar) -> Bool in !whitespaceChars.contains(unicodeScalar) }
             .count == 0
     }
 
-    var isNumber: Bool {
+    public var isNumber: Bool {
         !isEmpty && rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil
     }
 }
 
-public extension StringProtocol where Index == String.Index {
-    func nsRange(from range: Range<Index>) -> NSRange {
+extension StringProtocol where Index == String.Index {
+    public func nsRange(from range: Range<Index>) -> NSRange {
         NSRange(range, in: self)
     }
 }
 
-public extension String {
-    subscript(value: Int) -> Character {
+extension String {
+    public subscript(value: Int) -> Character {
         self[index(at: value)]
     }
 }
 
-public extension String {
-    subscript(value: NSRange) -> Substring {
+extension String {
+    public subscript(value: NSRange) -> Substring {
         self[value.lowerBound..<value.upperBound]
     }
 }
 
-public extension String {
-    subscript(value: CountableClosedRange<Int>) -> Substring {
-        self[index(at: value.lowerBound) ... index(at: value.upperBound)]
+extension String {
+    public subscript(value: CountableClosedRange<Int>) -> Substring {
+        self[index(at: value.lowerBound)...index(at: value.upperBound)]
     }
 
-    subscript(value: CountableRange<Int>) -> Substring {
+    public subscript(value: CountableRange<Int>) -> Substring {
         self[index(at: value.lowerBound)..<index(at: value.upperBound)]
     }
 
-    subscript(value: PartialRangeUpTo<Int>) -> Substring {
+    public subscript(value: PartialRangeUpTo<Int>) -> Substring {
         self[..<index(at: value.upperBound)]
     }
 
-    subscript(value: PartialRangeThrough<Int>) -> Substring {
+    public subscript(value: PartialRangeThrough<Int>) -> Substring {
         self[...index(at: value.upperBound)]
     }
 
-    subscript(value: PartialRangeFrom<Int>) -> Substring {
+    public subscript(value: PartialRangeFrom<Int>) -> Substring {
         self[index(at: value.lowerBound)...]
     }
 }
 
-private extension String {
-    func index(at offset: Int) -> String.Index {
+extension String {
+    fileprivate func index(at offset: Int) -> String.Index {
         self.index(startIndex, offsetBy: offset)
     }
 }
 
-public extension NSString {
-    func getLineRangeBefore(_ lineRange: NSRange) -> NSRange? {
+extension NSString {
+    public func getLineRangeBefore(_ lineRange: NSRange) -> NSRange? {
         var lineStart = 0
         getLineStart(&lineStart, end: nil, contentsEnd: nil, for: lineRange)
         if lineStart == 0 {
@@ -183,4 +184,3 @@ public extension NSString {
         return self.lineRange(for: NSRange(location: lineStart - 1, length: 0))
     }
 }
-

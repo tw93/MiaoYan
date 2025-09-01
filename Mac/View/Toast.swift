@@ -14,16 +14,16 @@ private var currentToast: NSView?
 
 // MARK: - External calls
 
-public extension NSViewController {
+extension NSViewController {
     // This makes a toast with an image, message, and title
-    func toast(message: String, title: String) {
+    public func toast(message: String, title: String) {
         let t = makeToast(message: message, title: title)
         handleToastForDisplay(toast: t)
     }
 
     // This is a simple toast, containing only a message
 
-    func toast(message: String) {
+    public func toast(message: String) {
         let t = makeToast(message: message)
         handleToastForDisplay(toast: t)
     }
@@ -33,9 +33,9 @@ public extension NSViewController {
 
 // MARK: - Internal funcs
 
-private extension NSViewController {
+extension NSViewController {
     // Adds the toast to whatever view is calling it, then dismisses it
-    func handleToastForDisplay(toast: NSView) {
+    fileprivate func handleToastForDisplay(toast: NSView) {
         if let t = currentToast {
             t.removeFromSuperview()
         }
@@ -53,7 +53,7 @@ private extension NSViewController {
 
     // Standard toast type, with message
 
-    func makeToast(message: String) -> NSView {
+    fileprivate func makeToast(message: String) -> NSView {
         let v = NSView()
         // Styling
         v.wantsLayer = true
@@ -82,7 +82,7 @@ private extension NSViewController {
 
     // Toast type with image and title
 
-    func makeToast(message: String, title: String) -> NSView {
+    fileprivate func makeToast(message: String, title: String) -> NSView {
         let v = NSView()
         // Styling
         v.wantsLayer = true
@@ -114,7 +114,7 @@ private extension NSViewController {
 
     // Generate the message component of the toast
 
-    func createTextLabel(message: String) -> NSTextField {
+    fileprivate func createTextLabel(message: String) -> NSTextField {
         let tf = NSTextField(frame: NSMakeRect(0, 0, 220, 18))
         tf.stringValue = message
         let stf = styleTextLabel(tf: tf)
@@ -127,7 +127,7 @@ private extension NSViewController {
     // MARK: - Aesthetics
 
     // Style the toast
-    func styleToast() -> CALayer {
+    fileprivate func styleToast() -> CALayer {
         let toastLayer = CALayer()
         toastLayer.backgroundColor = NSColor.black.withAlphaComponent(1).cgColor
         toastLayer.cornerRadius = 8
@@ -137,7 +137,7 @@ private extension NSViewController {
 
     // Style the message text
 
-    func styleTextLabel(tf: NSTextField) -> NSTextField {
+    fileprivate func styleTextLabel(tf: NSTextField) -> NSTextField {
         // Sizing
         var f = tf.frame
         f.size.height = tf.intrinsicContentSize.height
@@ -157,7 +157,7 @@ private extension NSViewController {
 
     // Animate fade out
 
-    func animateToastFade(_ toast: NSView) {
+    fileprivate func animateToastFade(_ toast: NSView) {
         let animation = CAKeyframeAnimation()
         animation.keyPath = "opacity"
         animation.values = [0, 0.8, 0.8, 0]

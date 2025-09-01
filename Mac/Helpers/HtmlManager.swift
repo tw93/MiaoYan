@@ -3,7 +3,7 @@ import WebKit
 
 /// 管理HTML预览和处理的工具类
 class HtmlManager {
-    
+
     /// 获取Markdown预览的CSS样式
     static func previewStyle() -> String {
         if UserDefaultsManagement.magicPPT {
@@ -14,17 +14,18 @@ class HtmlManager {
         if UserDefaultsManagement.codeFontName != UserDefaultsManagement.previewFontName {
             codeFontName = UserDefaultsManagement.codeFontName
         }
-        
+
         if UserDefaultsManagement.presentation {
             return "html {font-size: \(UserDefaultsManagement.presentationFontSize)px} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif; --code-text-font: \(codeFontName),sans-serif; } #write { max-width: 100%;}"
         } else {
             let paddingStyle = UserDefaultsManagement.isOnExport ? " padding-top: 24px" : ""
             let writeCSS = UserDefaultsManagement.isOnExportHtml ? " max-width: 800px; margin: 0 auto" : "max-width: \(UserDefaultsManagement.previewWidth);"
 
-            return "html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif; --code-text-font: \(codeFontName),sans-serif; } #write { \(writeCSS)}"
+            return
+                "html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif; --code-text-font: \(codeFontName),sans-serif; } #write { \(writeCSS)}"
         }
     }
-    
+
     /// 处理HTML中的本地图片，将它们复制到WebKit可访问的临时目录
     /// - Parameters:
     ///   - html: 包含图片标签的HTML字符串
@@ -32,83 +33,87 @@ class HtmlManager {
     /// - Returns: 处理后的HTML字符串
     static func processImages(in html: String, imagesStorage: URL) -> String {
         var htmlString = html
-        
+
         do {
             let regex = try NSRegularExpression(pattern: "<img[^>]*?src=\"([^\"]*)\"[^>]*?>")
             let results = regex.matches(in: html, range: NSRange(html.startIndex..., in: html))
-            
+
             let images = results.compactMap { match -> (fullMatch: String, srcPath: String)? in
                 guard let fullRange = Range(match.range, in: html),
-                      let srcRange = Range(match.range(at: 1), in: html) else { return nil }
+                    let srcRange = Range(match.range(at: 1), in: html)
+                else { return nil }
                 return (String(html[fullRange]), String(html[srcRange]))
             }
-            
+
             for imageInfo in images {
                 var localPath = imageInfo.srcPath
-                
+
                 // 跳过HTTP/HTTPS URL
                 guard !localPath.starts(with: "http://"), !localPath.starts(with: "https://") else {
                     continue
                 }
-                
+
                 let localPathClean = localPath.removingPercentEncoding ?? String(localPath)
                 let fullImageURL = imagesStorage
                 let imageURL = fullImageURL.appendingPathComponent(localPathClean)
-                
+
                 let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
-                let create = webkitPreview
+                let create =
+                    webkitPreview
                     .appendingPathComponent(localPathClean)
                     .deletingLastPathComponent()
                 let destination = webkitPreview.appendingPathComponent(localPathClean)
-                
+
                 try? FileManager.default.createDirectory(atPath: create.path, withIntermediateDirectories: true, attributes: nil)
                 try? FileManager.default.removeItem(at: destination)
                 try? FileManager.default.copyItem(at: imageURL, to: destination)
-                
+
                 if localPath.first == "/" {
                     localPath.remove(at: localPath.startIndex)
                 }
-                
+
                 let imPath = "<img src=\"" + localPath + "\""
                 htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: imPath)
             }
         } catch {
             print("Images regex: \(error.localizedDescription)")
         }
-        
+
         return htmlString
     }
-    
+
     // MARK: - Bundle and Resource Management
-    
+
     /// 获取DownView Bundle
     static func getDownViewBundle() -> Bundle? {
         guard let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle") else { return nil }
         return Bundle(url: URL(fileURLWithPath: path))
     }
-    
+
     /// 获取基础URL
     static func getBaseURL(bundle: Bundle) -> URL? {
         let resourceName = UserDefaultsManagement.magicPPT ? "ppt" : "index"
         return bundle.url(forResource: resourceName, withExtension: "html")
     }
-    
+
     /// 获取字体路径和Meta信息
     static func getFontPathAndMeta() -> (String, String) {
         if UserDefaultsManagement.isOnExportHtml {
-            return ("https://gw.alipayobjects.com/os/k/html2/Fonts",
-                   "<base href=\"https://gw.alipayobjects.com/os/k/html2/\">")
+            return (
+                "https://gw.alipayobjects.com/os/k/html2/Fonts",
+                "<base href=\"https://gw.alipayobjects.com/os/k/html2/\">"
+            )
         } else {
             return (Bundle.main.resourceURL?.path ?? "", "")
         }
     }
-    
+
     /// 获取PPT主题
     static func getPPTTheme() -> String {
         let themeFile = UserDataService.instance.isDark ? "night.css" : "white.css"
         return "<link rel=\"stylesheet\" href=\"ppt/dist/theme/\(themeFile)\" id=\"theme\" />"
     }
-    
+
     /// 处理HTML内容，添加标题
     static func getHtmlContent(_ htmlString: String, currentName: String) -> String {
         if UserDefaultsManagement.isOnExport, !htmlString.hasPrefix("<h1>") {
@@ -116,13 +121,13 @@ class HtmlManager {
         }
         return htmlString
     }
-    
+
     // MARK: - Template Processing
-    
+
     /// 从模板生成HTML
     static func htmlFromTemplate(_ htmlString: String, css: String, currentName: String) throws -> String {
         guard let bundle = getDownViewBundle(),
-              let baseURL = getBaseURL(bundle: bundle)
+            let baseURL = getBaseURL(bundle: bundle)
         else {
             return ""
         }
@@ -160,11 +165,11 @@ class HtmlManager {
         let htmlContent = getHtmlContent(htmlString, currentName: currentName)
         return template.replacingOccurrences(of: "DOWN_HTML", with: htmlContent)
     }
-    
+
     /// 创建临时Bundle
     static func createTemporaryBundle(pageHTMLString: String) -> URL? {
         guard let bundle = getDownViewBundle(),
-              let bundleResourceURL = bundle.resourceURL
+            let bundleResourceURL = bundle.resourceURL
         else {
             return nil
         }
@@ -214,9 +219,9 @@ class HtmlManager {
 
         return indexURL
     }
-    
+
     // MARK: - JavaScript Utilities
-    
+
     /// 等待图片加载完成的JavaScript检查脚本
     static let checkImagesScript = """
         (function() {

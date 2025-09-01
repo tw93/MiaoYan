@@ -1,9 +1,9 @@
 #if os(iOS)
-import UIKit
-typealias ImageView = UIImageView
+    import UIKit
+    typealias ImageView = UIImageView
 #else
-import Cocoa
-typealias ImageView = NSImageView
+    import Cocoa
+    typealias ImageView = NSImageView
 #endif
 
 extension NoteCellView {

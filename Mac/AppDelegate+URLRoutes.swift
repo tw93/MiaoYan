@@ -32,7 +32,7 @@ extension AppDelegate {
 
     func application(_ application: NSApplication, open urls: [URL]) {
         guard var url = urls.first,
-              let scheme = url.scheme
+            let scheme = url.scheme
         else { return }
 
         let path = url.absoluteString.escapePlus()
@@ -50,7 +50,7 @@ extension AppDelegate {
         case HandledSchemes.miaoyan.rawValue:
             MiaoYanRouter(url)
         case HandledSchemes.nv.rawValue,
-             HandledSchemes.nvALT.rawValue:
+            HandledSchemes.nvALT.rawValue:
             NvALTRouter(url)
         default:
             break

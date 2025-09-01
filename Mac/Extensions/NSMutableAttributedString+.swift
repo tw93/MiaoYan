@@ -9,20 +9,21 @@
 import Foundation
 
 #if os(iOS)
-import UIKit
+    import UIKit
 #else
-import Cocoa
+    import Cocoa
 #endif
 
-public extension NSMutableAttributedString {
-    func unLoadImages(note: Note? = nil) -> NSMutableAttributedString {
+extension NSMutableAttributedString {
+    public func unLoadImages(note: Note? = nil) -> NSMutableAttributedString {
         var offset = 0
         let content = mutableCopy() as? NSMutableAttributedString
 
         enumerateAttribute(.attachment, in: NSRange(location: 0, length: length)) { value, range, _ in
 
             if let textAttachment = value as? NSTextAttachment,
-               self.attribute(.todo, at: range.location, effectiveRange: nil) == nil {
+                self.attribute(.todo, at: range.location, effectiveRange: nil) == nil
+            {
                 var path: String?
                 var title: String?
 
@@ -33,10 +34,12 @@ public extension NSMutableAttributedString {
                     path = filePath.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
                     title = self.attribute(titleKey, at: range.location, effectiveRange: nil) as? String
                 } else if let note = note,
-                          let imageData = textAttachment.fileWrapper?.regularFileContents {
+                    let imageData = textAttachment.fileWrapper?.regularFileContents
+                {
                     path = ImagesProcessor.writeFile(data: imageData, note: note)
                 } else if let note = note,
-                          let imageData = textAttachment.contents {
+                    let imageData = textAttachment.contents
+                {
                     path = ImagesProcessor.writeFile(data: imageData, note: note)
                 }
 
@@ -55,7 +58,7 @@ public extension NSMutableAttributedString {
         return content!
     }
 
-    func unLoadCheckboxes() -> NSMutableAttributedString {
+    public func unLoadCheckboxes() -> NSMutableAttributedString {
         var offset = 0
         let content = mutableCopy() as? NSMutableAttributedString
 
@@ -64,7 +67,7 @@ public extension NSMutableAttributedString {
                 let newRange = NSRange(location: range.location + offset, length: 1)
 
                 guard range.length == 1,
-                      let value = self.attribute(.todo, at: range.location, effectiveRange: nil) as? Int
+                    let value = self.attribute(.todo, at: range.location, effectiveRange: nil) as? Int
                 else { return }
 
                 var gfm = "- [ ]"
@@ -79,23 +82,23 @@ public extension NSMutableAttributedString {
         return content!
     }
 
-    func unLoad() -> NSMutableAttributedString {
+    public func unLoad() -> NSMutableAttributedString {
         unLoadCheckboxes().unLoadImages()
     }
 
     #if os(OSX)
-    func unLoadUnderlines() -> NSMutableAttributedString {
-        enumerateAttribute(.underlineStyle, in: NSRange(location: 0, length: length)) { value, range, _ in
-            if value != nil {
-                addAttribute(.underlineColor, value: NSColor.black, range: range)
+        func unLoadUnderlines() -> NSMutableAttributedString {
+            enumerateAttribute(.underlineStyle, in: NSRange(location: 0, length: length)) { value, range, _ in
+                if value != nil {
+                    addAttribute(.underlineColor, value: NSColor.black, range: range)
+                }
             }
-        }
 
-        return self
-    }
+            return self
+        }
     #endif
 
-    func loadUnderlines() {
+    public func loadUnderlines() {
         enumerateAttribute(.underlineStyle, in: NSRange(location: 0, length: length)) { value, range, _ in
             if value != nil {
                 addAttribute(.underlineColor, value: NotesTextProcessor.underlineColor, range: range)

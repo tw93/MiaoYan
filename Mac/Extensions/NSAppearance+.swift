@@ -6,8 +6,8 @@ extension NSAppearance {
 
         switch name {
         case .accessibilityHighContrastDarkAqua,
-             .accessibilityHighContrastVibrantDark,
-             .darkAqua:
+            .accessibilityHighContrastVibrantDark,
+            .darkAqua:
             return true
         default:
             return false

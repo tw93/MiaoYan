@@ -1,7 +1,7 @@
 import Cocoa
 
 class FileWatcher {
-    let filePaths: [String] // -- paths to watch - works on folders and file paths
+    let filePaths: [String]  // -- paths to watch - works on folders and file paths
 
     var callback: ((_ fileWatcherEvent: FileWatcherEvent) -> Void)?
     var queue: DispatchQueue?
@@ -15,7 +15,7 @@ class FileWatcher {
      * Start listening for FSEvents
      */
     func start() {
-        guard !hasStarted else { return } // -- make sure we are not already listening!
+        guard !hasStarted else { return }  // -- make sure we are not already listening!
 
         var context = FSEventStreamContext(
             version: 0, info: Unmanaged.passUnretained(self).toOpaque(),
@@ -37,7 +37,7 @@ class FileWatcher {
      * Stop listening for FSEvents
      */
     func stop() {
-        guard hasStarted else { return } // -- make sure we are indeed listening!
+        guard hasStarted else { return }  // -- make sure we are indeed listening!
 
         FSEventStreamStop(streamRef!)
         FSEventStreamInvalidate(streamRef!)
@@ -52,7 +52,7 @@ class FileWatcher {
         let fileSystemWatcher = Unmanaged<FileWatcher>.fromOpaque(clientCallBackInfo!).takeUnretainedValue()
         let paths = Unmanaged<CFArray>.fromOpaque(eventPaths).takeUnretainedValue() as! [String]
 
-        for index in 0 ..< numEvents {
+        for index in 0..<numEvents {
             fileSystemWatcher.callback?(FileWatcherEvent(eventIds[index], paths[index], eventFlags[index]))
         }
     }

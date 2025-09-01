@@ -122,11 +122,12 @@ public final class PrettierFormatter {
     }
 }
 
-private extension PrettierFormatter {
-    private func format(_ code: String,
-                        withConfiguration configuration: JSValue,
-                        prettierFunctionName: String = "format") -> Result<JSValue, PrettierFormatterError>
-    {
+extension PrettierFormatter {
+    private func format(
+        _ code: String,
+        withConfiguration configuration: JSValue,
+        prettierFunctionName: String = "format"
+    ) -> Result<JSValue, PrettierFormatterError> {
         context.exception = nil
         guard let prettier = context.objectForKeyedSubscript("prettier") else {
             return .failure(.unprepared)
@@ -138,9 +139,9 @@ private extension PrettierFormatter {
             return .failure(.failedCallingFormatFunction)
         }
         if result.isUndefined,
-           let exception = context.exception, exception.isObject,
-           let object = exception.toObject() as? [String: Any],
-           let errorDetails = ParsingErrorDetails(object: object)
+            let exception = context.exception, exception.isObject,
+            let object = exception.toObject() as? [String: Any],
+            let errorDetails = ParsingErrorDetails(object: object)
         {
             return .failure(.parsingError(errorDetails))
         } else {

@@ -61,7 +61,7 @@ class FileSystemEventManager {
             }
 
             if event.fileChange,
-               let note = self.storage.getBy(url: self.handleTextBundle(url: url))
+                let note = self.storage.getBy(url: self.handleTextBundle(url: url))
             {
                 self.reloadNote(note: note)
             }
@@ -90,10 +90,8 @@ class FileSystemEventManager {
 
     private func checkFile(url: URL, pathList: [String]) -> Bool {
         FileManager.default.fileExists(atPath: url.path)
-            && (
-                self.storage.allowedExtensions.contains(url.pathExtension)
-                    && self.storage.isValidUTI(url: url)
-            )
+            && (self.storage.allowedExtensions.contains(url.pathExtension)
+                && self.storage.isValidUTI(url: url))
             && pathList.contains(url.deletingLastPathComponent().path)
     }
 
@@ -176,7 +174,7 @@ class FileSystemEventManager {
     private func reloadNote(note: Note) {
         guard let fsContent = note.getContent() else { return }
 
-        let memoryContent = note.content.attributedSubstring(from: NSRange(0 ..< note.content.length))
+        let memoryContent = note.content.attributedSubstring(from: NSRange(0..<note.content.length))
 
         if (note.isRTF() && fsContent != memoryContent)
             || (!note.isRTF() && fsContent.string != memoryContent.string)

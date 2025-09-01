@@ -43,15 +43,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         applyAppearance()
 
         #if CLOUDKIT
-        if let iCloudDocumentsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents").resolvingSymlinksInPath() {
-            if !FileManager.default.fileExists(atPath: iCloudDocumentsURL.path, isDirectory: nil) {
-                do {
-                    try FileManager.default.createDirectory(at: iCloudDocumentsURL, withIntermediateDirectories: true, attributes: nil)
-                } catch {
-                    print("Home directory creation: \(error)")
+            if let iCloudDocumentsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents").resolvingSymlinksInPath() {
+                if !FileManager.default.fileExists(atPath: iCloudDocumentsURL.path, isDirectory: nil) {
+                    do {
+                        try FileManager.default.createDirectory(at: iCloudDocumentsURL, withIntermediateDirectories: true, attributes: nil)
+                    } catch {
+                        print("Home directory creation: \(error)")
+                    }
                 }
             }
-        }
         #endif
 
         if UserDefaultsManagement.storagePath == nil {
@@ -73,26 +73,30 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         mainWC.window?.makeKeyAndOrderFront(nil)
         mainWindowController = mainWC
 
-        AppCenter.start(withAppSecret: "e4d22300-3bd7-427f-8f3c-41f315c2bb76", services: [
-            Analytics.self,
-            Crashes.self,
-        ])
-        Analytics.trackEvent("MiaoYan Attribute", withProperties: [
-            "Appearance": String(UserDataService.instance.isDark),
-            "SingleMode": String(UserDefaultsManagement.isSingleMode),
-            "Language": String(UserDefaultsManagement.defaultLanguage),
-            "UploadType": UserDefaultsManagement.defaultPicUpload,
-            "EditorFont": UserDefaultsManagement.fontName,
-            "PreviewFont": UserDefaultsManagement.previewFontName,
-            "WindowFont": UserDefaultsManagement.windowFontName,
-            "EditorFontSize": String(UserDefaultsManagement.fontSize),
-            "PreviewFontSize": String(UserDefaultsManagement.previewFontSize),
-            "CodeFont": UserDefaultsManagement.codeFontName,
-            "PreviewWidth": UserDefaultsManagement.previewWidth,
-            "PreviewLocation": UserDefaultsManagement.previewLocation,
-            "ButtonShow": UserDefaultsManagement.buttonShow,
-            "EditorLineBreak": UserDefaultsManagement.editorLineBreak,
-        ])
+        AppCenter.start(
+            withAppSecret: "e4d22300-3bd7-427f-8f3c-41f315c2bb76",
+            services: [
+                Analytics.self,
+                Crashes.self,
+            ])
+        Analytics.trackEvent(
+            "MiaoYan Attribute",
+            withProperties: [
+                "Appearance": String(UserDataService.instance.isDark),
+                "SingleMode": String(UserDefaultsManagement.isSingleMode),
+                "Language": String(UserDefaultsManagement.defaultLanguage),
+                "UploadType": UserDefaultsManagement.defaultPicUpload,
+                "EditorFont": UserDefaultsManagement.fontName,
+                "PreviewFont": UserDefaultsManagement.previewFontName,
+                "WindowFont": UserDefaultsManagement.windowFontName,
+                "EditorFontSize": String(UserDefaultsManagement.fontSize),
+                "PreviewFontSize": String(UserDefaultsManagement.previewFontSize),
+                "CodeFont": UserDefaultsManagement.codeFontName,
+                "PreviewWidth": UserDefaultsManagement.previewWidth,
+                "PreviewLocation": UserDefaultsManagement.previewLocation,
+                "ButtonShow": UserDefaultsManagement.buttonShow,
+                "EditorLineBreak": UserDefaultsManagement.editorLineBreak,
+            ])
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
@@ -110,7 +114,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         if let vc = ViewController.shared() {
             vc.notesTableView.saveScrollPosition()
         }
-        
+
         let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
         try? FileManager.default.removeItem(at: webkitPreview)
 
@@ -269,7 +273,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             mainWindowController?.makeNew()
         }
     }
-    
+
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
         return true
     }

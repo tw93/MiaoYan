@@ -10,17 +10,17 @@ class SidebarCellView: NSTableCellView {
         label?.font = UserDefaultsManagement.nameFont
         super.draw(dirtyRect)
     }
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+
         guard let label = label else { return }
-        
+
         // Enhanced text truncation behavior for better narrow width display
         label.lineBreakMode = .byTruncatingTail
         label.cell?.truncatesLastVisibleLine = true
         label.cell?.wraps = false
-        
+
         // Set maximum layout width to help with text measurement
         label.preferredMaxLayoutWidth = 200
     }

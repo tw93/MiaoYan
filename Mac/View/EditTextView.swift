@@ -20,7 +20,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     public var timer: Timer?
     public var markdownView: MPreviewView?
     public static var imagesLoaderQueue = OperationQueue()
-    
+
     // 图片预览相关
     private var imagePreviewWindow: ImagePreviewWindow?
     private var hoverTimer: Timer?
@@ -53,11 +53,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
         var newRect = NSRect(origin: rect.origin, size: rect.size)
         newRect.size.width = caretWidth
         var diff = 4.0
-        if let range = getParagraphRange(), range.upperBound != textStorage?.length || (
-            range.upperBound == textStorage?.length
-                && textStorage?.string.last == "\n"
-                && selectedRange().location != textStorage?.length
-        ) {
+        if let range = getParagraphRange(),
+            range.upperBound != textStorage?.length
+                || (range.upperBound == textStorage?.length
+                    && textStorage?.string.last == "\n"
+                    && selectedRange().location != textStorage?.length)
+        {
             diff = 6.0
         }
 
@@ -97,7 +98,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override func mouseDown(with event: NSEvent) {
         // 隐藏图片预览（用户可能要点击选中/编辑）
         hideImagePreview()
-        
+
         guard EditTextView.note != nil else { return }
 
         guard let container = textContainer, let manager = layoutManager else { return }
@@ -135,9 +136,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let point = convert(event.locationInWindow, from: nil)
         let properPoint = NSPoint(x: point.x - textContainerInset.width, y: point.y)
 
-        guard let container = textContainer, let manager = layoutManager else { 
+        guard let container = textContainer, let manager = layoutManager else {
             hideImagePreview()
-            return 
+            return
         }
 
         let index = manager.characterIndex(for: properPoint, in: container, fractionOfDistanceBetweenInsertionPoints: nil)
@@ -157,7 +158,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             if #available(OSX 10.13, *) {
                 linkTextAttributes = [
                     .foregroundColor: NSColor(named: "highlight")!,
-                    .cursor: NSCursor.pointingHand
+                    .cursor: NSCursor.pointingHand,
                 ]
             }
         } else {
@@ -184,14 +185,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {
         for menuItem in menu.items {
-            if menuItem.identifier?.rawValue == "_searchWithGoogleFromMenu:" ||
-                menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierSpellingAndGrammar" ||
-                menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierSubstitutions" ||
-                menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierTransformations" ||
-                menuItem.identifier?.rawValue == "_NS:290" ||
-                menuItem.identifier?.rawValue == "_NS:291" ||
-                menuItem.identifier?.rawValue == "_NS:328" ||
-                menuItem.identifier?.rawValue == "_NS:353"
+            if menuItem.identifier?.rawValue == "_searchWithGoogleFromMenu:" || menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierSpellingAndGrammar"
+                || menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierSubstitutions" || menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierTransformations" || menuItem.identifier?.rawValue == "_NS:290"
+                || menuItem.identifier?.rawValue == "_NS:291" || menuItem.identifier?.rawValue == "_NS:328" || menuItem.identifier?.rawValue == "_NS:353"
             {
                 menuItem.isHidden = true
             }
@@ -283,7 +279,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         storage.enumerateAttribute(.attachment, in: NSRange(location: 0, length: storage.length)) { value, range, _ in
 
             guard let textAttachment = value as? NSTextAttachment,
-                  storage.attribute(.todo, at: range.location, effectiveRange: nil) == nil
+                storage.attribute(.todo, at: range.location, effectiveRange: nil) == nil
             else {
                 return
             }
@@ -302,8 +298,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
             }
 
             if let note = EditTextView.note,
-               let imageData = textAttachment.fileWrapper?.regularFileContents,
-               let path = ImagesProcessor.writeFile(data: imageData, note: note)
+                let imageData = textAttachment.fileWrapper?.regularFileContents,
+                let path = ImagesProcessor.writeFile(data: imageData, note: note)
             {
                 storage.addAttribute(filePathKey, value: path, range: range)
             }
@@ -312,10 +308,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     @IBAction func boldMenu(_ sender: Any) {
         guard let vc = ViewController.shared(),
-              let editArea = vc.editArea,
-              let note = EditTextView.note,
-              !UserDefaultsManagement.preview,
-              editArea.hasFocus()
+            let editArea = vc.editArea,
+            let note = EditTextView.note,
+            !UserDefaultsManagement.preview,
+            editArea.hasFocus()
         else { return }
 
         let formatter = TextFormatter(textView: editArea, note: note)
@@ -324,10 +320,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     @IBAction func italicMenu(_ sender: Any) {
         guard let vc = ViewController.shared(),
-              let editArea = vc.editArea,
-              let note = EditTextView.note,
-              !UserDefaultsManagement.preview,
-              editArea.hasFocus()
+            let editArea = vc.editArea,
+            let note = EditTextView.note,
+            !UserDefaultsManagement.preview,
+            editArea.hasFocus()
         else { return }
 
         let formatter = TextFormatter(textView: editArea, note: note)
@@ -336,10 +332,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     @IBAction func linkMenu(_ sender: Any) {
         guard let vc = ViewController.shared(),
-              let editArea = vc.editArea,
-              let note = EditTextView.note,
-              !UserDefaultsManagement.preview,
-              editArea.hasFocus()
+            let editArea = vc.editArea,
+            let note = EditTextView.note,
+            !UserDefaultsManagement.preview,
+            editArea.hasFocus()
         else { return }
 
         let formatter = TextFormatter(textView: editArea, note: note)
@@ -348,10 +344,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     @IBAction func todoMenu(_ sender: Any) {
         guard let vc = ViewController.shared(),
-              let editArea = vc.editArea,
-              let note = EditTextView.note,
-              !UserDefaultsManagement.preview,
-              editArea.hasFocus()
+            let editArea = vc.editArea,
+            let note = EditTextView.note,
+            !UserDefaultsManagement.preview,
+            editArea.hasFocus()
         else { return }
         let formatter = TextFormatter(textView: editArea, note: note, shouldScanMarkdown: false)
         formatter.toggleTodo()
@@ -359,10 +355,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     @IBAction func underlineMenu(_ sender: Any) {
         guard let vc = ViewController.shared(),
-              let editArea = vc.editArea,
-              let note = EditTextView.note,
-              !UserDefaultsManagement.preview,
-              editArea.hasFocus()
+            let editArea = vc.editArea,
+            let note = EditTextView.note,
+            !UserDefaultsManagement.preview,
+            editArea.hasFocus()
         else { return }
 
         let formatter = TextFormatter(textView: editArea, note: note)
@@ -371,10 +367,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     @IBAction func deletelineMenu(_ sender: Any) {
         guard let vc = ViewController.shared(),
-              let editArea = vc.editArea,
-              let note = EditTextView.note,
-              !UserDefaultsManagement.preview,
-              editArea.hasFocus()
+            let editArea = vc.editArea,
+            let note = EditTextView.note,
+            !UserDefaultsManagement.preview,
+            editArea.hasFocus()
         else { return }
 
         let formatter = TextFormatter(textView: editArea, note: note)
@@ -426,7 +422,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         undoManager?.removeAllActions(withTarget: self)
 
         if let appDelegate = NSApplication.shared.delegate as? AppDelegate,
-           let md = appDelegate.mainWindowController
+            let md = appDelegate.mainWindowController
         {
             md.editorUndoManager = note.undoManager
         }
@@ -515,8 +511,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     func getParagraphRange() -> NSRange? {
         guard let vc = ViewController.shared(),
-              let editArea = vc.editArea,
-              let storage = editArea.textStorage
+            let editArea = vc.editArea,
+            let storage = editArea.textStorage
         else {
             return nil
         }
@@ -644,8 +640,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         note.content =
             NSMutableAttributedString(attributedString: string)
-                .unLoadImages()
-                .unLoadCheckboxes()
+            .unLoadImages()
+            .unLoadCheckboxes()
     }
 
     func setEditorTextColor(_ color: NSColor) {
@@ -662,9 +658,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
         guard let note = EditTextView.note, let storage = textStorage else { return false }
 
         if let data = board.data(forType: .rtfd),
-           let text = NSAttributedString(rtfd: data, documentAttributes: nil),
-           text.length > 0,
-           range.length > 0
+            let text = NSAttributedString(rtfd: data, documentAttributes: nil),
+            text.length > 0,
+            range.length > 0
         {
             insertText("", replacementRange: range)
 
@@ -717,7 +713,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         if let urls = board.readObjects(forClasses: [NSURL.self], options: nil) as? [URL],
-           urls.count > 0
+            urls.count > 0
         {
             let dropPoint = convert(sender.draggingLocation, from: nil)
             let caretLocation = characterIndexForInsertion(at: dropPoint)
@@ -985,7 +981,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         if let data = try? Data(contentsOf: url) {
             var ext: String?
 
-            if let _ = NSImage(data: data) {
+            if NSImage(data: data) != nil {
                 ext = "jpg"
                 if let source = CGImageSourceCreateWithData(data as CFData, nil) {
                     let uti = CGImageSourceGetType(source)
@@ -1126,7 +1122,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         var removedImages = [URL: URL]()
 
         storage.enumerateAttribute(.attachment, in: checkRange) { value, range, _ in
-            if let _ = value as? NSTextAttachment, storage.attribute(.todo, at: range.location, effectiveRange: nil) == nil {
+            if value as? NSTextAttachment != nil, storage.attribute(.todo, at: range.location, effectiveRange: nil) == nil {
                 let filePathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
 
                 if let filePath = storage.attribute(filePathKey, at: range.location, effectiveRange: nil) as? String {
@@ -1185,41 +1181,40 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         return menu
     }
-    
+
     // MARK: - 图片预览功能
-    
+
     private func handleImageLinkHover(at index: Int, mousePoint: NSPoint) {
         guard let storage = textStorage else {
             hideImagePreview()
             return
         }
-        
+
         // 检查是否应该禁用预览
         if shouldDisableImagePreview() {
             hideImagePreview()
             return
         }
-        
+
         let text = storage.string
-        
+
         // 检测光标位置是否在图片链接上
         if let imageInfo = ImageLinkParser.detectImageLink(in: text, at: index) {
             // 如果是同一个图片链接且在同一范围内，不需要重新处理
             if let lastInfo = lastHoveredImageInfo,
-               lastInfo.src == imageInfo.src && 
-               lastInfo.range.location == imageInfo.range.location &&
-               lastInfo.range.length == imageInfo.range.length {
-                
+                lastInfo.src == imageInfo.src && lastInfo.range.location == imageInfo.range.location && lastInfo.range.length == imageInfo.range.length
+            {
+
                 // 如果预览窗口已经显示，保持不变（避免闪动）
                 return
             }
-            
+
             // 不同的图片链接，重新设置
             lastHoveredImageInfo = imageInfo
-            
+
             // 取消之前的定时器
             hoverTimer?.invalidate()
-            
+
             // 设置延迟显示预览（减少到0.3秒提升响应性）
             hoverTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
                 // 再次检查是否应该禁用预览（延迟期间可能发生变化）
@@ -1233,29 +1228,29 @@ class EditTextView: NSTextView, NSTextFinderClient {
             }
         }
     }
-    
+
     private func showImagePreview(for imageInfo: ImageLinkInfo, at mousePoint: NSPoint) {
         // 确保预览窗口存在
         if imagePreviewWindow == nil {
             imagePreviewWindow = ImagePreviewWindow()
         }
-        
+
         guard let window = window else { return }
-        
+
         // 直接使用鼠标位置，但只在首次显示时计算位置，后续保持不变
         let screenPoint = window.convertPoint(toScreen: mousePoint)
-        
+
         // 显示预览，但使用新的定位逻辑
         imagePreviewWindow?.showPreview(for: imageInfo.src, at: screenPoint, isFixed: true)
     }
-    
+
     private func hideImagePreview() {
         hoverTimer?.invalidate()
         hoverTimer = nil
         lastHoveredImageInfo = nil
         imagePreviewWindow?.hidePreview()
     }
-    
+
     // 检查是否应该禁用图片预览
     private func shouldDisableImagePreview() -> Bool {
         // 如果有文本选中，禁用预览
@@ -1263,47 +1258,46 @@ class EditTextView: NSTextView, NSTextFinderClient {
         if selection.length > 0 {
             return true
         }
-        
+
         // 如果正在进行拖拽操作，禁用预览
-        if let _ = window, let event = NSApp.currentEvent {
+        if window != nil, let event = NSApp.currentEvent {
             if event.type == .leftMouseDragged || event.type == .leftMouseDown {
                 return true
             }
         }
-        
+
         // 如果正在编辑模式且有标记文本（输入法状态），禁用预览
         if hasMarkedText() {
             return true
         }
-        
+
         return false
     }
-    
+
     // 重写 mouseExited 确保离开时隐藏预览
     override func mouseExited(with event: NSEvent) {
         super.mouseExited(with: event)
         hideImagePreview()
     }
-    
+
     // 重写 mouseDragged 在拖拽时隐藏预览
     override func mouseDragged(with event: NSEvent) {
         hideImagePreview()
         super.mouseDragged(with: event)
     }
-    
+
     // 重写 keyDown 确保按键时隐藏预览
     override func keyDown(with event: NSEvent) {
         hideImagePreview()
-        
-        guard !(
-            event.modifierFlags.contains(.shift) &&
-                [
+
+        guard
+            !(event.modifierFlags.contains(.shift)
+                && [
                     kVK_UpArrow,
                     kVK_DownArrow,
                     kVK_LeftArrow,
-                    kVK_RightArrow
-                ].contains(Int(event.keyCode))
-        )
+                    kVK_RightArrow,
+                ].contains(Int(event.keyCode)))
         else {
             super.keyDown(with: event)
             return

@@ -39,13 +39,13 @@ class NoteCellView: NSTableCellView {
     }
 
     public func updateSelectionHighlight() {
-        
+
         // 字体和间距
         name.font = UserDefaultsManagement.nameFont
         date.font = UserDefaultsManagement.dateFont
         name.addCharacterSpacing()
         date.addCharacterSpacing()
-        
+
         if backgroundStyle == NSView.BackgroundStyle.emphasized {
             date.textColor = NSColor.white
             name.textColor = NSColor.white
@@ -115,10 +115,11 @@ class NoteCellView: NSTableCellView {
         }
 
         if let viewController = ViewController.shared(),
-           let sidebarItem = viewController.getSidebarItem(),
-           let sort = sidebarItem.project?.sortBy,
-           sort == .creationDate,
-           let date = note.getCreationDateForLabel() {
+            let sidebarItem = viewController.getSidebarItem(),
+            let sort = sidebarItem.project?.sortBy,
+            sort == .creationDate,
+            let date = note.getCreationDateForLabel()
+        {
             self.date.stringValue = date
         } else {
             date.stringValue = note.getDateForLabel()
