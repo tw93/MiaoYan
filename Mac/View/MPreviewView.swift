@@ -12,6 +12,9 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     private weak var note: Note?
     private var closure: MPreviewViewClosure?
     public static var template: String?
+    
+    private static var bundleInitialized = false
+    private static let initQueue = DispatchQueue(label: "preview.init", qos: .userInitiated)
 
     init(frame: CGRect, note: Note, closure: MPreviewViewClosure?) {
         self.closure = closure
@@ -23,6 +26,14 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = userContentController
+        
+        // macOS Sequoia beta: 简化配置避免沙盒冲突
+        configuration.websiteDataStore = WKWebsiteDataStore.default()
+        configuration.suppressesIncrementalRendering = false
+        
+        let preferences = WKWebpagePreferences()
+        preferences.allowsContentJavaScript = true
+        configuration.defaultWebpagePreferences = preferences
 
         super.init(frame: frame, configuration: configuration)
 
@@ -35,7 +46,8 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             backgroundColor = UIColor.clear
             scrollView.backgroundColor = UIColor.clear
         #endif
-
+        
+        Self.ensureBundlePreinitialized()
         load(note: note)
     }
 
@@ -111,7 +123,9 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     private func waitForImagesLoaded(completion: @escaping () -> Void) {
-        let maxRetries = 100 // Maximum wait time: 10 seconds (100 * 0.1s)
+        let maxRetries = 50 // 减少重试次数，避免长时间等待
+        let initialDelay = 0.05 // 减少初始延迟
+        let maxDelay = 0.5 // 最大延迟
         var retryCount = 0
 
         func checkImages() {
@@ -120,11 +134,13 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                     completion()
                 } else if retryCount < maxRetries {
                     retryCount += 1
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    // 使用递增延迟策略，避免频繁检查
+                    let delay = min(initialDelay * Double(retryCount), maxDelay)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                         checkImages()
                     }
                 } else {
-                    // Timeout - proceed anyway to avoid infinite waiting
+                    // 超时后直接完成，不再等待
                     completion()
                 }
             }
@@ -157,8 +173,10 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     private func executeJavaScriptWhenReady(_ script: String, completion: (() -> Void)? = nil) {
-        evaluateJavaScript("document.readyState") { complete, _ in
-            guard complete != nil else { return }
+        guard !script.isEmpty || completion != nil else { return }
+        
+        evaluateJavaScript("document.readyState") { [weak self] complete, _ in
+            guard let self = self, complete != nil else { return }
 
             if let completion {
                 completion()
@@ -203,35 +221,19 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     private func saveToDownloads(content: String, extension: String, viewController: Any) {
-        guard let vc = viewController as? ViewController else { return }
-
-        guard let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first else {
-            vc.toastExport(status: false)
-            return
-        }
-
-        let currentName = note?.getExportTitle() ?? "MiaoYan"
-        let filePath = path + "/" + currentName + "." + `extension`
-
-        do {
-            try content.write(to: URL(fileURLWithPath: filePath), atomically: true, encoding: .utf8)
-            vc.toastExport(status: true)
-        } catch {
-            vc.toastExport(status: false)
-        }
+        saveToDownloads(data: content.data(using: .utf8) ?? Data(), extension: `extension`, viewController: viewController)
     }
 
     private func saveToDownloads(data: Data, extension: String, viewController: Any) {
         guard let vc = viewController as? ViewController else { return }
 
-        guard let path = NSSearchPathForDirectoriesInDomains(.downloadsDirectory, .userDomainMask, true).first else {
+        guard let downloadsURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first else {
             vc.toastExport(status: false)
             return
         }
 
         let currentName = note?.getExportTitle() ?? "MiaoYan"
-        let filePath = path + "/" + currentName + "." + `extension`
-        let fileURL = URL(fileURLWithPath: filePath)
+        let fileURL = downloadsURL.appendingPathComponent(currentName + "." + `extension`)
 
         do {
             try data.write(to: fileURL, options: .atomic)
@@ -345,19 +347,22 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     public func load(note: Note, force: Bool = false) {
-        /// Do not re-load already loaded view
         guard self.note != note || force else {
             return
         }
 
-        let markdownString = note.getPrettifiedContent()
-
-        let imagesStorage = note.project.url
-        let css = HtmlManager.previewStyle()
-
-        try? loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
-
-        self.note = note
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            
+            let markdownString = note.getPrettifiedContent()
+            let imagesStorage = note.project.url
+            let css = HtmlManager.previewStyle()
+            
+            DispatchQueue.main.async {
+                try? self.loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
+                self.note = note
+            }
+        }
     }
 
     private func getTemplate(css: String) -> String? {
@@ -427,9 +432,6 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             pageHTMLString = try HtmlManager.htmlFromTemplate(markdownString, css: css, currentName: vc.titleLabel.stringValue)
         }
 
-        print(">>>>>>")
-        print(pageHTMLString)
-
         let indexURL = HtmlManager.createTemporaryBundle(pageHTMLString: pageHTMLString)
 
         if let i = indexURL {
@@ -438,6 +440,36 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         }
     }
 
+
+
+    private static func ensureBundlePreinitialized() {
+        guard !bundleInitialized else { return }
+        
+        initQueue.async {
+            guard !Self.bundleInitialized else { return }
+            
+            let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
+            
+            if !FileManager.default.fileExists(atPath: webkitPreview.path),
+               let bundle = HtmlManager.getDownViewBundle(),
+               let bundleResourceURL = bundle.resourceURL {
+                
+                try? FileManager.default.createDirectory(at: webkitPreview, withIntermediateDirectories: true, attributes: nil)
+                
+                do {
+                    let fileList = try FileManager.default.contentsOfDirectory(atPath: bundleResourceURL.path)
+                    for file in fileList {
+                        let tmpURL = webkitPreview.appendingPathComponent(file)
+                        try? FileManager.default.copyItem(atPath: bundleResourceURL.appendingPathComponent(file).path, toPath: tmpURL.path)
+                    }
+                } catch {
+                    print("Bundle initialization error: \(error.localizedDescription)")
+                }
+            }
+            
+            Self.bundleInitialized = true
+        }
+    }
 
     private func loadImages(imagesStorage: URL, html: String) -> String {
         return HtmlManager.processImages(in: html, imagesStorage: imagesStorage)
