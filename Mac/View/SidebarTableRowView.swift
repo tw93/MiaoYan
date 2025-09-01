@@ -7,7 +7,7 @@ class SidebarTableRowView: NSTableRowView {
             false
         }
     }
-    
+
     override var isSelected: Bool {
         didSet {
             if oldValue != isSelected {
@@ -15,7 +15,7 @@ class SidebarTableRowView: NSTableRowView {
             }
         }
     }
-    
+
     override var backgroundColor: NSColor {
         get {
             return .clear
@@ -24,7 +24,7 @@ class SidebarTableRowView: NSTableRowView {
             // Ignore attempts to set background color
         }
     }
-    
+
     override func drawSelection(in dirtyRect: NSRect) {
         if isSelected {
             // Create subtle rounded selection like modern macOS sidebar
@@ -36,9 +36,9 @@ class SidebarTableRowView: NSTableRowView {
                 width: max(0, bounds.width - 2 * margin),
                 height: bounds.height - 6
             )
-            
+
             let path = NSBezierPath(roundedRect: selectionRect, xRadius: cornerRadius, yRadius: cornerRadius)
-            
+
             // Use system-appropriate colors that work across all macOS versions
             if NSApp.effectiveAppearance.isDark {
                 // Dark mode: subtle highlight with proper contrast
@@ -47,20 +47,20 @@ class SidebarTableRowView: NSTableRowView {
                 // Light mode: system-like selection with proper contrast
                 NSColor(calibratedWhite: 0.85, alpha: 1.0).setFill()
             }
-            
+
             path.fill()
         }
     }
-    
+
     override func draw(_ dirtyRect: NSRect) {
         // Don't call super to avoid any system drawing
-        
+
         // Draw our custom selection if selected
         if isSelected {
             drawSelection(in: dirtyRect)
         }
     }
-    
+
     override func drawBackground(in dirtyRect: NSRect) {
         // Override to prevent any background drawing
     }

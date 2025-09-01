@@ -25,7 +25,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
             return
         }
 
-        if let _ = EditTextView.note, event.keyCode == kVK_Tab, !event.modifierFlags.contains(.control), !UserDefaultsManagement.preview {
+        if EditTextView.note != nil, event.keyCode == kVK_Tab, !event.modifierFlags.contains(.control), !UserDefaultsManagement.preview {
             vc.focusEditArea()
             vc.editArea.updateTextContainerInset()
         }
@@ -52,7 +52,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     func scrollRowToVisible(row: Int, animated: Bool) {
         if animated {
             guard let clipView = superview as? NSClipView,
-                  let scrollView = clipView.superview as? NSScrollView
+                let scrollView = clipView.superview as? NSScrollView
             else {
                 assertionFailure("Unexpected NSTableView view hiearchy")
                 return
@@ -130,7 +130,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         fillTimestamp = timestamp
 
         let vc = window?.contentViewController as! ViewController
-        
+
 
         if vc.editAreaScroll.isFindBarVisible {
             let menu = NSMenuItem(title: "", action: nil, keyEquivalent: "")
@@ -151,10 +151,10 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
 
         if noteList.indices.contains(selectedRow) {
             let note = noteList[selectedRow]
-            
+
             // Save scroll position when user selects a note
             saveScrollPosition()
-            
+
             loadingQueue.cancelAllOperations()
             let operation = BlockOperation()
             operation.addExecutionBlock { [weak self] in
@@ -379,7 +379,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         }
         let vc = window?.contentViewController as? ViewController
         if event.modifierFlags.contains(.control),
-           !event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_P
+            !event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_P
         {
             vc?.exportPdf("")
             return
@@ -401,30 +401,31 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     public func reloadRow(note: Note) {
         let storedTitle = note.title
         let selectedRow = selectedRow
-        
+
         note.invalidateCache()
         if note.title.isEmpty && !storedTitle.isEmpty {
             note.title = storedTitle
         }
-        
+
         reloadData()
         if selectedRow >= 0 {
             selectRowIndexes(IndexSet(integer: selectedRow), byExtendingSelection: false)
         }
     }
-    
+
     // MARK: - Scroll Position Memory
-    
+
     func saveScrollPosition() {
         guard let clipView = superview as? NSClipView else { return }
         let scrollPosition = clipView.bounds.origin.y
         UserDefaultsManagement.notesTableScrollPosition = scrollPosition
     }
-    
+
     func restoreScrollPosition() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self,
-                  let clipView = self.superview as? NSClipView else { return }
+                let clipView = self.superview as? NSClipView
+            else { return }
             let savedPosition = UserDefaultsManagement.notesTableScrollPosition
             if savedPosition > 0 {
                 let newOrigin = NSPoint(x: clipView.bounds.origin.x, y: savedPosition)

@@ -8,18 +8,18 @@
 
 import AppKit
 
-public extension NSImage {
-    var height: CGFloat {
+extension NSImage {
+    public var height: CGFloat {
         size.height
     }
 
     /// Returns the width of the current image.
-    var width: CGFloat {
+    public var width: CGFloat {
         size.width
     }
 
     /// Returns a png representation of the current image.
-    var PNGRepresentation: Data? {
+    public var PNGRepresentation: Data? {
         if let tiff = tiffRepresentation, let tiffData = NSBitmapImageRep(data: tiff) {
             return tiffData.representation(using: .png, properties: [:])
         }
@@ -27,7 +27,7 @@ public extension NSImage {
         return nil
     }
 
-    var JPEGRepresentation: Data? {
+    public var JPEGRepresentation: Data? {
         if let tiff = tiffRepresentation, let tiffData = NSBitmapImageRep(data: tiff) {
             return tiffData.representation(using: .jpeg, properties: [:])
         }
@@ -39,7 +39,7 @@ public extension NSImage {
     ///  - parameter size: The size of the new image.
     ///
     ///  - returns: The resized copy of the given image.
-    func copy(size: NSSize) -> NSImage? {
+    public func copy(size: NSSize) -> NSImage? {
         // Create a new rect with given width and height
         let frame = NSRect(x: 0, y: 0, width: size.width, height: size.height)
 
@@ -70,7 +70,7 @@ public extension NSImage {
     ///  - parameter size: The size of the new image.
     ///
     ///  - returns: The resized copy of the given image.
-    func resizeWhileMaintainingAspectRatioToSize(size: NSSize) -> NSImage? {
+    public func resizeWhileMaintainingAspectRatioToSize(size: NSSize) -> NSImage? {
         let newSize: NSSize
 
         let widthRatio = size.width / width
@@ -90,7 +90,7 @@ public extension NSImage {
     ///  - parameter size: The size of the new image.
     ///
     ///  - returns: The cropped copy of the given image.
-    func crop(size: NSSize) -> NSImage? {
+    public func crop(size: NSSize) -> NSImage? {
         // Resize the current image, while preserving the aspect ratio.
         guard let resized = resizeWhileMaintainingAspectRatioToSize(size: size) else {
             return nil
@@ -132,36 +132,39 @@ public extension NSImage {
     ///  Saves the PNG representation of the current image to the HD.
     ///
     /// - parameter url: The location url to which to write the png file.
-    func savePNGRepresentationToURL(url: URL) throws {
-            guard let tiffData = self.tiffRepresentation,
-                  // Create an NSBitmapImageRep object using TIFF data
-                  let bitmapImage = NSBitmapImageRep(data: tiffData),
-                  // Converts an NSBitmapImageRep object to PNG data
-                  let pngData = bitmapImage.representation(using: .png, properties: [:]) else {
-                throw NSError(domain: "Error creating PNG representation", code: 0, userInfo: nil)
-            }
-            // Writes PNG data to the specified URL
-            try pngData.write(to: url, options: .atomicWrite)
+    public func savePNGRepresentationToURL(url: URL) throws {
+        guard let tiffData = self.tiffRepresentation,
+            // Create an NSBitmapImageRep object using TIFF data
+            let bitmapImage = NSBitmapImageRep(data: tiffData),
+            // Converts an NSBitmapImageRep object to PNG data
+            let pngData = bitmapImage.representation(using: .png, properties: [:])
+        else {
+            throw NSError(domain: "Error creating PNG representation", code: 0, userInfo: nil)
         }
+        // Writes PNG data to the specified URL
+        try pngData.write(to: url, options: .atomicWrite)
+    }
 
-    func saveJPEGRepresentationToURL(url: URL) throws {
+    public func saveJPEGRepresentationToURL(url: URL) throws {
         if let jpeg = JPEGRepresentation {
             try jpeg.write(to: url, options: .atomicWrite)
         }
     }
 
-    func resize(to targetSize: CGSize) -> NSImage? {
+    public func resize(to targetSize: CGSize) -> NSImage? {
         let frame = CGRect(x: 0, y: 0, width: targetSize.width, height: targetSize.height)
         guard let representation = bestRepresentation(for: frame, context: nil, hints: nil) else {
             return nil
         }
-        let image = NSImage(size: targetSize, flipped: false, drawingHandler: { _ -> Bool in
-            representation.draw(in: frame)
-        })
+        let image = NSImage(
+            size: targetSize, flipped: false,
+            drawingHandler: { _ -> Bool in
+                representation.draw(in: frame)
+            })
         return image
     }
 
-    func resized(to newSize: NSSize) -> NSImage? {
+    public func resized(to newSize: NSSize) -> NSImage? {
         if let bitmapRep = NSBitmapImageRep(
             bitmapDataPlanes: nil, pixelsWide: Int(newSize.width), pixelsHigh: Int(newSize.height),
             bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false,
@@ -187,7 +190,7 @@ public extension NSImage {
     ///
     /// - Parameter targetSize:
     /// - Returns: The resized image.
-    func resizeMaintainingAspectRatio(to targetSize: CGSize) -> NSImage? {
+    public func resizeMaintainingAspectRatio(to targetSize: CGSize) -> NSImage? {
         let widthRatio = targetSize.width / size.width
         let heightRatio = targetSize.height / size.height
         let ratio = max(widthRatio, heightRatio)
@@ -203,7 +206,7 @@ public extension NSImage {
     /// - Parameter targetSize:
     /// - Parameter targetSize:
     /// - Returns: The cropped image.
-    func crop(to targetSize: CGSize) -> NSImage? {
+    public func crop(to targetSize: CGSize) -> NSImage? {
         // Resize the current image, while preserving the aspect ratio.
         guard let resized = resizeMaintainingAspectRatio(to: targetSize) else {
             return nil
@@ -233,15 +236,15 @@ public extension NSImage {
         return cropped
     }
 
-    var jpgData: Data? {
+    public var jpgData: Data? {
         guard let tiffRepresentation = tiffRepresentation,
-              let bitmapImage = NSBitmapImageRep(data: tiffRepresentation)
+            let bitmapImage = NSBitmapImageRep(data: tiffRepresentation)
         else { return nil }
 
         return bitmapImage.representation(using: .jpeg, properties: [:])
     }
 
-    func tint(color: NSColor) -> NSImage {
+    public func tint(color: NSColor) -> NSImage {
         if let image = copy() as? NSImage {
             image.lockFocus()
 
@@ -257,17 +260,17 @@ public extension NSImage {
         return self
     }
 
-    func roundCorners(withRadius radius: CGFloat) -> NSImage {
+    public func roundCorners(withRadius radius: CGFloat) -> NSImage {
         let rect = NSRect(origin: NSPoint.zero, size: size)
-        if
-            let cgImage = cgImage,
-            let context = CGContext(data: nil,
-                                    width: Int(size.width),
-                                    height: Int(size.height),
-                                    bitsPerComponent: 8,
-                                    bytesPerRow: 4 * Int(size.width),
-                                    space: CGColorSpaceCreateDeviceRGB(),
-                                    bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue)
+        if let cgImage = cgImage,
+            let context = CGContext(
+                data: nil,
+                width: Int(size.width),
+                height: Int(size.height),
+                bitsPerComponent: 8,
+                bytesPerRow: 4 * Int(size.width),
+                space: CGColorSpaceCreateDeviceRGB(),
+                bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue)
         {
             context.beginPath()
             context.addPath(CGPath(roundedRect: rect, cornerWidth: radius, cornerHeight: radius, transform: nil))
@@ -283,7 +286,7 @@ public extension NSImage {
         return self
     }
 
-    var cgImage: CGImage? {
+    public var cgImage: CGImage? {
         var rect = CGRect(origin: .zero, size: size)
         return self.cgImage(forProposedRect: &rect, context: nil, hints: nil)
     }

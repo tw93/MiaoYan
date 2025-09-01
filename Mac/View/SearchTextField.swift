@@ -20,7 +20,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         super.awakeFromNib()
         sendsWholeSearchString = false
         sendsSearchStringImmediately = true
-        
+
         // Remove cancel button
         if let searchFieldCell = self.cell as? NSSearchFieldCell {
             searchFieldCell.cancelButtonCell = nil
@@ -139,9 +139,9 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         if UserDefaultsManagement.magicPPT {
             return
         }
-        
+
         searchTimer.invalidate()
-        
+
         if stringValue.isEmpty {
             vcDelegate.cleanSearchAndRestoreSelection()
         } else {
@@ -154,7 +154,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
 
         if note.title.lowercased().starts(with: filter.lowercased()) {
             stringValue = filter + note.title.suffix(note.title.count - filter.count)
-            editor.selectedRange = NSRange(filter.utf16.count ..< note.title.utf16.count)
+            editor.selectedRange = NSRange(filter.utf16.count..<note.title.utf16.count)
         }
     }
 

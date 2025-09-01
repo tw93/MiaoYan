@@ -1,20 +1,20 @@
 import Foundation
 
 #if os(OSX)
-import Cocoa
+    import Cocoa
 #else
-import UIKit
+    import UIKit
 #endif
 
 public enum UserDefaultsManagement {
     #if os(OSX)
-    typealias Color = NSColor
-    typealias Image = NSImage
-    typealias Font = NSFont
+        typealias Color = NSColor
+        typealias Image = NSImage
+        typealias Font = NSFont
     #else
-    typealias Color = UIColor
-    typealias Image = UIImage
-    typealias Font = UIFont
+        typealias Color = UIColor
+        typealias Image = UIImage
+        typealias Font = UIFont
     #endif
 
     static var DefaultFont = "TsangerJinKai02-W04"
@@ -488,7 +488,8 @@ public enum UserDefaultsManagement {
     static var fontColor: Color {
         get {
             if let returnFontColor = UserDefaults.standard.data(forKey: Constants.FontColorKey),
-               let color = try? NSKeyedUnarchiver.unarchivedObject(ofClass: Color.self, from: returnFontColor) {
+                let color = try? NSKeyedUnarchiver.unarchivedObject(ofClass: Color.self, from: returnFontColor)
+            {
                 return color
             } else {
                 return DefaultFontColor
@@ -504,7 +505,8 @@ public enum UserDefaultsManagement {
     static var bgColor: Color {
         get {
             if let returnBgColor = UserDefaults.standard.data(forKey: Constants.BgColorKey),
-               let color = try? NSKeyedUnarchiver.unarchivedObject(ofClass: Color.self, from: returnBgColor) {
+                let color = try? NSKeyedUnarchiver.unarchivedObject(ofClass: Color.self, from: returnBgColor)
+            {
                 return color
             } else {
                 return DefaultBgColor
@@ -538,8 +540,9 @@ public enum UserDefaultsManagement {
     static var localDocumentsContainer: URL? {
         if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
             let miaoyanPath: String = path + "/MiaoYan"
-            try! FileManager.default.createDirectory(atPath: miaoyanPath,
-                    withIntermediateDirectories: true, attributes: nil)
+            try! FileManager.default.createDirectory(
+                atPath: miaoyanPath,
+                withIntermediateDirectories: true, attributes: nil)
             return URL(fileURLWithPath: miaoyanPath)
         }
         return nil
@@ -560,11 +563,11 @@ public enum UserDefaultsManagement {
             }
 
             #if os(iOS)
-            return localDocumentsContainer?.path
+                return localDocumentsContainer?.path
             #elseif CLOUDKIT && os(macOS)
-            return nil
+                return nil
             #else
-            return localDocumentsContainer?.path
+                return localDocumentsContainer?.path
             #endif
         }
         set {
@@ -669,10 +672,10 @@ public enum UserDefaultsManagement {
     static var fileContainer: NoteContainer {
         get {
             #if SHARE_EXT
-            let defaults = UserDefaults(suiteName: "group.miaoyan-manager")
-            if let result = defaults?.object(forKey: Constants.SharedContainerKey) as? Int, let container = NoteContainer(rawValue: result) {
-                return container
-            }
+                let defaults = UserDefaults(suiteName: "group.miaoyan-manager")
+                if let result = defaults?.object(forKey: Constants.SharedContainerKey) as? Int, let container = NoteContainer(rawValue: result) {
+                    return container
+                }
             #endif
 
             if let result = UserDefaults.standard.object(forKey: Constants.NoteContainer) as? Int, let container = NoteContainer(rawValue: result) {
@@ -682,7 +685,7 @@ public enum UserDefaultsManagement {
         }
         set {
             #if os(iOS)
-            UserDefaults(suiteName: "group.miaoyan-manager")?.set(newValue.rawValue, forKey: Constants.SharedContainerKey)
+                UserDefaults(suiteName: "group.miaoyan-manager")?.set(newValue.rawValue, forKey: Constants.SharedContainerKey)
             #endif
 
             UserDefaults.standard.set(newValue.rawValue, forKey: Constants.NoteContainer)
@@ -718,7 +721,8 @@ public enum UserDefaultsManagement {
             }
 
             if let result = defaults.object(forKey: Constants.ImportURLsKey) as? Data,
-               let urls = try? NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSArray.self, NSURL.self], from: result) as? [URL] {
+                let urls = try? NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSArray.self, NSURL.self], from: result) as? [URL]
+            {
                 return urls
             }
 
@@ -738,7 +742,8 @@ public enum UserDefaultsManagement {
     static var markdownPreviewCSS: URL? {
         get {
             if let path = UserDefaults.standard.object(forKey: Constants.MarkdownPreviewCSS) as? String,
-               let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) {
+                let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)
+            {
                 if FileManager.default.fileExists(atPath: path) {
                     return URL(string: "file://" + encodedPath)
                 }
@@ -754,7 +759,7 @@ public enum UserDefaultsManagement {
             }
         }
     }
-    
+
     static var notesTableScrollPosition: CGFloat {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.NotesTableScrollPosition) as? CGFloat {

@@ -33,4 +33,3 @@ class IndexSetWrapper: NSObject, NSSecureCoding {
         aCoder.encode(intArray, forKey: "indexSet")
     }
 }
-

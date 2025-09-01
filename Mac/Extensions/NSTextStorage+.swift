@@ -1,8 +1,8 @@
-import Foundation
 import AppKit
+import Foundation
 
-public extension NSTextStorage {
-    func updateFont() {
+extension NSTextStorage {
+    public func updateFont() {
         beginEditing()
         enumerateAttribute(.font, in: NSRange(location: 0, length: length)) { value, range, _ in
             if let font = value as? NSFont, let familyName = UserDefaultsManagement.noteFont.familyName {
@@ -20,7 +20,7 @@ public extension NSTextStorage {
         endEditing()
     }
 
-    static func getParagraphStyle() -> NSMutableParagraphStyle {
+    public static func getParagraphStyle() -> NSMutableParagraphStyle {
         let paragraphStyle = NSMutableParagraphStyle()
         let fontSize = UserDefaultsManagement.fontSize
 
@@ -38,7 +38,7 @@ public extension NSTextStorage {
         return paragraphStyle
     }
 
-    func updateParagraphStyle() {
+    public func updateParagraphStyle() {
         beginEditing()
         let attachmentParagraph = NSTextStorage.getParagraphStyle()
         mutableString.enumerateSubstrings(in: NSRange(0..<length), options: .byParagraphs) { _, range, _, _ in
@@ -48,10 +48,11 @@ public extension NSTextStorage {
         endEditing()
     }
 
-    func sizeAttachmentImages() {
+    public func sizeAttachmentImages() {
         enumerateAttribute(.attachment, in: NSRange(location: 0, length: length)) { value, range, _ in
             if let attachment = value as? NSTextAttachment,
-               attribute(.todo, at: range.location, effectiveRange: nil) == nil {
+                attribute(.todo, at: range.location, effectiveRange: nil) == nil
+            {
                 if let imageData = attachment.fileWrapper?.regularFileContents, var image = NSImage(data: imageData) {
                     if let rep = image.representations.first {
                         var maxWidth = UserDefaultsManagement.imagesWidth

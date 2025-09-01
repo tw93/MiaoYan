@@ -31,9 +31,9 @@ public class Project: Equatable {
         showInCommon = isTrash ? false : true
 
         #if os(iOS)
-        if isRoot, isDefault {
-            showInSidebar = false
-        }
+            if isRoot, isDefault {
+                showInSidebar = false
+            }
         #endif
 
         if let l = label {
@@ -58,7 +58,7 @@ public class Project: Equatable {
         return FileManager.default.fileExists(atPath: fileURL.path)
     }
 
-    public static func ==(lhs: Project, rhs: Project) -> Bool {
+    public static func == (lhs: Project, rhs: Project) -> Bool {
         lhs.url == rhs.url
     }
 
@@ -99,12 +99,13 @@ public class Project: Equatable {
     }
 
     public func saveSettings() {
-        let data = [
-            "sortBy": sortBySettings.rawValue,
-            "sortDirection": sortDirectionSettings.rawValue,
-            "showInCommon": showInCommon,
-            "showInSidebar": showInSidebar
-        ] as [String: Any]
+        let data =
+            [
+                "sortBy": sortBySettings.rawValue,
+                "sortDirection": sortDirectionSettings.rawValue,
+                "showInCommon": showInCommon,
+                "showInSidebar": showInSidebar,
+            ] as [String: Any]
 
         if let relativePath = getRelativePath() {
             let keyStore = NSUbiquitousKeyValueStore()

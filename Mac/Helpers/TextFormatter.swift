@@ -9,18 +9,18 @@
 import Foundation
 
 #if os(OSX)
-import Carbon.HIToolbox
-import Cocoa
+    import Carbon.HIToolbox
+    import Cocoa
 
-typealias Font = NSFont
-typealias TextView = EditTextView
-typealias Color = NSColor
+    typealias Font = NSFont
+    typealias TextView = EditTextView
+    typealias Color = NSColor
 #else
-import UIKit
+    import UIKit
 
-typealias Font = UIFont
-typealias TextView = EditTextView
-typealias Color = UIColor
+    typealias Font = UIFont
+    typealias TextView = EditTextView
+    typealias Color = UIColor
 #endif
 
 public class TextFormatter {
@@ -44,14 +44,14 @@ public class TextFormatter {
         range = textView.selectedRange
 
         #if os(OSX)
-        storage = textView.textStorage!
-        attributedSelected = textView.attributedString()
-        if textView.typingAttributes[.font] == nil {
-            textView.typingAttributes[.font] = UserDefaultsManagement.noteFont
-        }
+            storage = textView.textStorage!
+            attributedSelected = textView.attributedString()
+            if textView.typingAttributes[.font] == nil {
+                textView.typingAttributes[.font] = UserDefaultsManagement.noteFont
+            }
         #else
-        storage = textView.textStorage
-        attributedSelected = textView.attributedText
+            storage = textView.textStorage
+            attributedSelected = textView.attributedText
         #endif
 
         attributedString = NSMutableAttributedString(attributedString: attributedSelected.attributedSubstring(from: range))
@@ -128,12 +128,12 @@ public class TextFormatter {
             }
 
             #if os(OSX)
-            let location = textView.selectedRange().location
-            textView.insertText(padding + text, replacementRange: pRange)
-            setSelectedRange(NSMakeRange(location + padding.count, 0))
+                let location = textView.selectedRange().location
+                textView.insertText(padding + text, replacementRange: pRange)
+                setSelectedRange(NSMakeRange(location + padding.count, 0))
             #else
-            replaceWith(string: padding + text, range: pRange)
-            setSelectedRange(NSMakeRange(range.upperBound + padding.count, 0))
+                replaceWith(string: padding + text, range: pRange)
+                setSelectedRange(NSMakeRange(range.upperBound + padding.count, 0))
             #endif
             return
         }
@@ -157,13 +157,13 @@ public class TextFormatter {
         }
 
         #if os(OSX)
-        if textView.textStorage?.length == 0 {
-            EditTextView.shouldForceRescan = true
-        }
+            if textView.textStorage?.length == 0 {
+                EditTextView.shouldForceRescan = true
+            }
 
-        textView.insertText(result, replacementRange: pRange)
+            textView.insertText(result, replacementRange: pRange)
         #else
-        replaceWith(string: result)
+            replaceWith(string: result)
         #endif
 
         setSelectedRange(NSRange(location: pRange.lowerBound, length: result.count))
@@ -190,9 +190,9 @@ public class TextFormatter {
             guard text.count >= 0 else { return }
 
             #if os(OSX)
-            textView.insertText(text, replacementRange: pRange)
+                textView.insertText(text, replacementRange: pRange)
             #else
-            insertText(text, replacementRange: pRange)
+                insertText(text, replacementRange: pRange)
             #endif
 
             setSelectedRange(NSRange(location: range.location - diff, length: 0))
@@ -222,9 +222,9 @@ public class TextFormatter {
         }
 
         #if os(OSX)
-        textView.insertText(result, replacementRange: pRange)
+            textView.insertText(result, replacementRange: pRange)
         #else
-        replaceWith(string: result)
+            replaceWith(string: result)
         #endif
 
         let finalRange = NSRange(location: pRange.lowerBound, length: result.count)
@@ -239,13 +239,13 @@ public class TextFormatter {
         let paragraph = storage.mutableString.substring(with: pRange)
 
         #if os(OSX)
-        prefix = string + " "
-        #else
-        if paragraph.starts(with: "#") {
-            prefix = string
-        } else {
             prefix = string + " "
-        }
+        #else
+            if paragraph.starts(with: "#") {
+                prefix = string
+            } else {
+                prefix = string + " "
+            }
         #endif
 
         let selectRange = NSRange(location: selected.location + selected.length + prefix.count, length: 0)
@@ -281,8 +281,9 @@ public class TextFormatter {
 
         // Middle
         if sRange.location != 0 || sRange.location != storage.length,
-           paragraph.count == 1,
-           note.isMarkdown() {
+            paragraph.count == 1,
+            note.isMarkdown()
+        {
             insertText("\t", replacementRange: sRange)
             return
         }
@@ -290,13 +291,13 @@ public class TextFormatter {
         // First & Last
         if sRange.location == 0 || sRange.location == storage.length, paragraph.count == 0, note.isMarkdown() {
             #if os(OSX)
-            if textView.textStorage?.length == 0 {
-                EditTextView.shouldForceRescan = true
-            }
+                if textView.textStorage?.length == 0 {
+                    EditTextView.shouldForceRescan = true
+                }
             #else
-            if textView.textStorage.length == 0 {
-                EditTextView.shouldForceRescan = true
-            }
+                if textView.textStorage.length == 0 {
+                    EditTextView.shouldForceRescan = true
+                }
             #endif
 
             insertText("\t\n", replacementRange: sRange)
@@ -308,8 +309,10 @@ public class TextFormatter {
     }
 
     public static func getAutocompleteCharsMatch(string: String) -> NSTextCheckingResult? {
-        guard let regex = try? NSRegularExpression(pattern:
-            "^(( |\t)*\\- \\[[x| ]*\\] )|^(( |\t)*[-|–|—|*|•|>|\\+]{1} )"), let result = regex.firstMatch(in: string, range: NSRange(0..<string.count))
+        guard
+            let regex = try? NSRegularExpression(
+                pattern:
+                    "^(( |\t)*\\- \\[[x| ]*\\] )|^(( |\t)*[-|–|—|*|•|>|\\+]{1} )"), let result = regex.firstMatch(in: string, range: NSRange(0..<string.count))
         else { return nil }
 
         return result
@@ -392,7 +395,7 @@ public class TextFormatter {
             if textView.selectedRange.upperBound > 2 {
                 let char = storage.attributedSubstring(from: NSRange(location: textView.selectedRange.upperBound - 2, length: 1))
 
-                if let _ = char.attribute(.todo, at: 0, effectiveRange: nil) {
+                if char.attribute(.todo, at: 0, effectiveRange: nil) != nil {
                     let selectRange = NSRange(location: currentParagraphRange.location, length: 0)
                     insertText("\n", replacementRange: currentParagraphRange, selectRange: selectRange)
                     return
@@ -415,18 +418,18 @@ public class TextFormatter {
                 }
 
                 #if os(OSX)
-                let string = NSMutableAttributedString(string: "\n" + prefix)
+                    let string = NSMutableAttributedString(string: "\n" + prefix)
 
-                insertText(string)
+                    insertText(string)
                 #else
-                let selectedRange = textView.selectedRange
-                let selectedTextRange = textView.selectedTextRange!
-                let checkbox = NSMutableAttributedString(string: "\n" + prefix)
+                    let selectedRange = textView.selectedRange
+                    let selectedTextRange = textView.selectedTextRange!
+                    let checkbox = NSMutableAttributedString(string: "\n" + prefix)
 
-                textView.undoManager?.beginUndoGrouping()
-                textView.replace(selectedTextRange, withText: checkbox.string)
-                textView.textStorage.replaceCharacters(in: NSRange(location: selectedRange.location, length: checkbox.length), with: checkbox)
-                textView.undoManager?.endUndoGrouping()
+                    textView.undoManager?.beginUndoGrouping()
+                    textView.replace(selectedTextRange, withText: checkbox.string)
+                    textView.textStorage.replaceCharacters(in: NSRange(location: selectedRange.location, length: checkbox.length), with: checkbox)
+                    textView.undoManager?.endUndoGrouping()
                 #endif
                 return
             }
@@ -460,7 +463,8 @@ public class TextFormatter {
         }
 
         if currentParagraph.string.starts(with: "  "),
-           let prefix = currentParagraph.string.getPrefixMatchSequentially(char: " ") {
+            let prefix = currentParagraph.string.getPrefixMatchSequentially(char: " ")
+        {
             if selectedRange.location != currentParagraphRange.location {
                 newLine += prefix
             }
@@ -471,9 +475,9 @@ public class TextFormatter {
         }
 
         #if os(iOS)
-        textView.insertText("\n")
+            textView.insertText("\n")
         #else
-        textView.insertNewline(nil)
+            textView.insertNewline(nil)
         #endif
     }
 
@@ -553,9 +557,9 @@ public class TextFormatter {
 
         var color = Color.black
         #if os(OSX)
-        if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-            color = NSColor(named: "mainText")!
-        }
+            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
+                color = NSColor(named: "mainText")!
+            }
         #endif
 
         string.addAttribute(.foregroundColor, value: color, range: NSRange(1..<string.length))
@@ -564,27 +568,28 @@ public class TextFormatter {
 
     private func replaceWith(string: String, range: NSRange? = nil) {
         #if os(iOS)
-        var selectedRange: UITextRange
+            var selectedRange: UITextRange
 
-        if let range = range,
-           let start = textView.position(from: textView.beginningOfDocument, offset: range.location),
-           let end = textView.position(from: start, offset: range.length),
-           let sRange = textView.textRange(from: start, to: end) {
-            selectedRange = sRange
-        } else {
-            selectedRange = textView.selectedTextRange!
-        }
+            if let range = range,
+                let start = textView.position(from: textView.beginningOfDocument, offset: range.location),
+                let end = textView.position(from: start, offset: range.length),
+                let sRange = textView.textRange(from: start, to: end)
+            {
+                selectedRange = sRange
+            } else {
+                selectedRange = textView.selectedTextRange!
+            }
 
-        textView.undoManager?.beginUndoGrouping()
-        textView.replace(selectedRange, withText: string)
-        textView.undoManager?.endUndoGrouping()
+            textView.undoManager?.beginUndoGrouping()
+            textView.replace(selectedRange, withText: string)
+            textView.undoManager?.endUndoGrouping()
         #else
-        var r = textView.selectedRange
-        if let range = range {
-            r = range
-        }
+            var r = textView.selectedRange
+            if let range = range {
+                r = range
+            }
 
-        textView.insertText(string, replacementRange: r)
+            textView.insertText(string, replacementRange: r)
         #endif
     }
 
@@ -592,10 +597,10 @@ public class TextFormatter {
         if note.isMarkdown() {
             if var font = UserDefaultsManagement.noteFont {
                 #if os(iOS)
-                if #available(iOS 11.0, *), UserDefaultsManagement.dynamicTypeFont {
-                    let fontMetrics = UIFontMetrics(forTextStyle: .body)
-                    font = fontMetrics.scaledFont(for: font)
-                }
+                    if #available(iOS 11.0, *), UserDefaultsManagement.dynamicTypeFont {
+                        let fontMetrics = UIFontMetrics(forTextStyle: .body)
+                        font = fontMetrics.scaledFont(for: font)
+                    }
                 #endif
 
                 setTypingAttributes(font: font)
@@ -610,9 +615,9 @@ public class TextFormatter {
             var text: NSAttributedString?
 
             #if os(OSX)
-            text = textView.attributedString()
+                text = textView.attributedString()
             #else
-            text = textView.attributedText
+                text = textView.attributedText
             #endif
 
             if let attributed = text {
@@ -621,7 +626,7 @@ public class TextFormatter {
         }
 
         #if os(iOS)
-        textView.initUndoRedoButons()
+            textView.initUndoRedoButons()
         #endif
     }
 
@@ -661,74 +666,74 @@ public class TextFormatter {
 
     func getTypingAttributes() -> Font {
         #if os(OSX)
-        return textView.typingAttributes[.font] as! Font
+            return textView.typingAttributes[.font] as! Font
         #else
-        if let typingFont = textView.typingFont {
-            textView.typingFont = nil
-            return typingFont
-        }
+            if let typingFont = textView.typingFont {
+                textView.typingFont = nil
+                return typingFont
+            }
 
-        guard textView.textStorage.length > 0, textView.selectedRange.location > 0 else { return getDefaultFont() }
+            guard textView.textStorage.length > 0, textView.selectedRange.location > 0 else { return getDefaultFont() }
 
-        let i = textView.selectedRange.location - 1
-        let upper = textView.selectedRange.upperBound
-        let substring = textView.attributedText.attributedSubstring(from: NSRange(i..<upper))
+            let i = textView.selectedRange.location - 1
+            let upper = textView.selectedRange.upperBound
+            let substring = textView.attributedText.attributedSubstring(from: NSRange(i..<upper))
 
-        if let prevFont = substring.attribute(.font, at: 0, effectiveRange: nil) as? UIFont {
-            return prevFont
-        }
+            if let prevFont = substring.attribute(.font, at: 0, effectiveRange: nil) as? UIFont {
+                return prevFont
+            }
 
-        return getDefaultFont()
+            return getDefaultFont()
         #endif
     }
 
     #if os(iOS)
-    private func getDefaultFont() -> UIFont {
-        var font = UserDefaultsManagement.noteFont!
+        private func getDefaultFont() -> UIFont {
+            var font = UserDefaultsManagement.noteFont!
 
-        if #available(iOS 11.0, *), UserDefaultsManagement.dynamicTypeFont {
-            let fontMetrics = UIFontMetrics(forTextStyle: .body)
-            font = fontMetrics.scaledFont(for: font)
+            if #available(iOS 11.0, *), UserDefaultsManagement.dynamicTypeFont {
+                let fontMetrics = UIFontMetrics(forTextStyle: .body)
+                font = fontMetrics.scaledFont(for: font)
+            }
+
+            return font
         }
-
-        return font
-    }
     #endif
 
     #if os(OSX)
-    private func getDefaultColor() -> NSColor {
-        var color = Color.black
-        if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-            color = NSColor(named: "mainText")!
+        private func getDefaultColor() -> NSColor {
+            var color = Color.black
+            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
+                color = NSColor(named: "mainText")!
+            }
+            return color
         }
-        return color
-    }
     #endif
 
     func setTypingAttributes(font: Font) {
         #if os(OSX)
-        textView.typingAttributes[.font] = font
+            textView.typingAttributes[.font] = font
         #else
-        textView.typingFont = font
-        textView.typingAttributes[.font] = font
+            textView.typingFont = font
+            textView.typingAttributes[.font] = font
         #endif
     }
 
     public func setSelectedRange(_ range: NSRange) {
         #if os(OSX)
-        if range.upperBound <= storage.length {
-            textView.setSelectedRange(range)
-        }
+            if range.upperBound <= storage.length {
+                textView.setSelectedRange(range)
+            }
         #else
-        textView.selectedRange = range
+            textView.selectedRange = range
         #endif
     }
 
     func getAttributedString() -> NSAttributedString {
         #if os(OSX)
-        return textView.attributedString()
+            return textView.attributedString()
         #else
-        return textView.attributedText
+            return textView.attributedText
         #endif
     }
 
@@ -736,32 +741,32 @@ public class TextFormatter {
         let range = replacementRange ?? textView.selectedRange
 
         #if os(iOS)
-        guard
-            let start = textView.position(from: textView.beginningOfDocument, offset: range.location),
-            let end = textView.position(from: start, offset: range.length),
-            let selectedRange = textView.textRange(from: start, to: end)
-        else { return }
+            guard
+                let start = textView.position(from: textView.beginningOfDocument, offset: range.location),
+                let end = textView.position(from: start, offset: range.length),
+                let selectedRange = textView.textRange(from: start, to: end)
+            else { return }
 
-        var replaceString = String()
-        if let attributedString = string as? NSAttributedString {
-            replaceString = attributedString.string
-        }
+            var replaceString = String()
+            if let attributedString = string as? NSAttributedString {
+                replaceString = attributedString.string
+            }
 
-        if let plainString = string as? String {
-            replaceString = plainString
-        }
+            if let plainString = string as? String {
+                replaceString = plainString
+            }
 
-        textView.undoManager?.beginUndoGrouping()
-        textView.replace(selectedRange, withText: replaceString)
+            textView.undoManager?.beginUndoGrouping()
+            textView.replace(selectedRange, withText: replaceString)
 
-        let parRange = NSRange(location: range.location, length: replaceString.count)
-        let parStyle = NSTextStorage.getParagraphStyle()
+            let parRange = NSRange(location: range.location, length: replaceString.count)
+            let parStyle = NSTextStorage.getParagraphStyle()
 
-        textView.textStorage.addAttribute(.paragraphStyle, value: parStyle, range: parRange)
+            textView.textStorage.addAttribute(.paragraphStyle, value: parStyle, range: parRange)
 
-        textView.undoManager?.endUndoGrouping()
+            textView.undoManager?.endUndoGrouping()
         #else
-        textView.insertText(string, replacementRange: range)
+            textView.insertText(string, replacementRange: range)
         #endif
 
         if let select = selectRange {

@@ -1,27 +1,29 @@
 #if os(OSX)
-import AppKit
+    import AppKit
 #else
-import UIKit
+    import UIKit
 #endif
 
 extension NSTextStorage: @retroactive NSTextStorageDelegate {
     #if os(iOS)
-    public func textStorage(
-        _ textStorage: NSTextStorage,
-        didProcessEditing editedMask: NSTextStorage.EditActions,
-        range editedRange: NSRange, changeInLength delta: Int) {
-        guard editedMask != .editedAttributes else { return }
-        process(textStorage: textStorage, range: editedRange, changeInLength: delta)
-    }
+        public func textStorage(
+            _ textStorage: NSTextStorage,
+            didProcessEditing editedMask: NSTextStorage.EditActions,
+            range editedRange: NSRange, changeInLength delta: Int
+        ) {
+            guard editedMask != .editedAttributes else { return }
+            process(textStorage: textStorage, range: editedRange, changeInLength: delta)
+        }
     #else
-    public func textStorage(
-        _ textStorage: NSTextStorage,
-        didProcessEditing editedMask: NSTextStorageEditActions,
-        range editedRange: NSRange,
-        changeInLength delta: Int) {
-        guard editedMask != .editedAttributes else { return }
-        process(textStorage: textStorage, range: editedRange, changeInLength: delta)
-    }
+        public func textStorage(
+            _ textStorage: NSTextStorage,
+            didProcessEditing editedMask: NSTextStorageEditActions,
+            range editedRange: NSRange,
+            changeInLength delta: Int
+        ) {
+            guard editedMask != .editedAttributes else { return }
+            process(textStorage: textStorage, range: editedRange, changeInLength: delta)
+        }
     #endif
 
     private func process(textStorage: NSTextStorage, range editedRange: NSRange, changeInLength delta: Int) {
@@ -49,12 +51,10 @@ extension NSTextStorage: @retroactive NSTextStorageDelegate {
 
         return
             string == "`"
-                || string == "`\n"
-                || EditTextView.lastRemoved == "`"
-                || (
-                    EditTextView.shouldForceRescan
-                        && string.contains("```")
-                )
+            || string == "`\n"
+            || EditTextView.lastRemoved == "`"
+            || (EditTextView.shouldForceRescan
+                && string.contains("```"))
     }
 
     private func rescanAll(textStorage: NSTextStorage) {
@@ -79,9 +79,10 @@ extension NSTextStorage: @retroactive NSTextStorageDelegate {
             highlight(textStorage: textStorage, fencedRange: fencedRange, parRange: parRange, delta: delta, editedRange: editedRange)
 
             if delta == 1,
-               textStorage.mutableString.substring(with: editedRange) == "\n",
-               textStorage.length >= fencedRange.upperBound + 1,
-               textStorage.attribute(.backgroundColor, at: fencedRange.upperBound, effectiveRange: nil) != nil {
+                textStorage.mutableString.substring(with: editedRange) == "\n",
+                textStorage.length >= fencedRange.upperBound + 1,
+                textStorage.attribute(.backgroundColor, at: fencedRange.upperBound, effectiveRange: nil) != nil
+            {
                 textStorage.removeAttribute(.backgroundColor, range: NSRange(location: fencedRange.upperBound, length: 1))
             }
 
@@ -102,8 +103,8 @@ extension NSTextStorage: @retroactive NSTextStorageDelegate {
 
             let backgroundRange =
                 isNewLine && parRange.upperBound + 1 <= textStorage.length
-                    ? NSRange(parRange.location..<parRange.upperBound + 1)
-                    : parRange
+                ? NSRange(parRange.location..<parRange.upperBound + 1)
+                : parRange
 
             if UserDefaultsManagement.codeBackground == "Yes" {
                 textStorage.addAttribute(.backgroundColor, value: NotesTextProcessor.codeBackground, range: backgroundRange)
@@ -127,8 +128,8 @@ extension NSTextStorage: @retroactive NSTextStorageDelegate {
             if let ranges = codeTextProcessor.getCodeBlockRanges(parRange: parRange) {
                 let invalidateBackgroundRange =
                     ranges.count == 2
-                        ? NSRange(ranges.first!.upperBound..<ranges.last!.location)
-                        : parRange
+                    ? NSRange(ranges.first!.upperBound..<ranges.last!.location)
+                    : parRange
 
                 textStorage.removeAttribute(.backgroundColor, range: invalidateBackgroundRange)
 

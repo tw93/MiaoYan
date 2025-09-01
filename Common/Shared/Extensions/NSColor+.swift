@@ -22,7 +22,7 @@ extension NSColor {
         "navy": "#000080",
         "blue": "#0000FF",
         "teal": "#008080",
-        "aqua": "#00FFFF"
+        "aqua": "#00FFFF",
     ]
 
     convenience init?(css: String) {
@@ -30,7 +30,10 @@ extension NSColor {
         if let hexValue = NSColor.cssColorNames[colorString] {
             colorString = hexValue
         }
-        let r, g, b, a: CGFloat
+        let r: CGFloat
+        let g: CGFloat
+        let b: CGFloat
+        let a: CGFloat
         if colorString.hasPrefix("#") {
             let start = colorString.index(colorString.startIndex, offsetBy: 1)
             let hexColor = String(colorString[start...])

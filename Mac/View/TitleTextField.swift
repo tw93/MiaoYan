@@ -9,9 +9,9 @@ class TitleTextField: NSTextField {
         let pasteboard = NSPasteboard.general
 
         if event.modifierFlags.contains(.command),
-           event.keyCode == kVK_ANSI_C,
-           let selectedRange = currentEditor()?.selectedRange,
-           selectedRange.length > 0
+            event.keyCode == kVK_ANSI_C,
+            let selectedRange = currentEditor()?.selectedRange,
+            selectedRange.length > 0
         {
             // Processing copy commands
             let selectedString = (stringValue as NSString).substring(with: selectedRange)
@@ -21,8 +21,8 @@ class TitleTextField: NSTextField {
 
         // Checks if Command + V was pressed and the current NSTextField is the first responder.
         if event.modifierFlags.contains(.command),
-           event.keyCode == kVK_ANSI_V,
-           window?.firstResponder == currentEditor()
+            event.keyCode == kVK_ANSI_V,
+            window?.firstResponder == currentEditor()
         {
             if let items = pasteboard.pasteboardItems {
                 for item in items {
@@ -50,8 +50,8 @@ class TitleTextField: NSTextField {
     }
 
     public func saveTitle() {
-        guard stringValue.count > 0, let vc = ViewController.shared(), let note = EditTextView.note else { 
-            return 
+        guard stringValue.count > 0, let vc = ViewController.shared(), let note = EditTextView.note else {
+            return
         }
 
         let currentTitle = stringValue.trimmingCharacters(in: NSCharacterSet.newlines)
@@ -61,9 +61,9 @@ class TitleTextField: NSTextField {
             let ext = note.url.pathExtension
             let fileName =
                 currentTitle
-                    .trimmingCharacters(in: CharacterSet.whitespaces)
-                    .replacingOccurrences(of: ":", with: "-")
-                    .replacingOccurrences(of: "/", with: ":")
+                .trimmingCharacters(in: CharacterSet.whitespaces)
+                .replacingOccurrences(of: ":", with: "-")
+                .replacingOccurrences(of: "/", with: ":")
             let dst = note.project.url.appendingPathComponent(fileName).appendingPathExtension(ext)
 
             // 允许仅大小写变化时重命名
@@ -97,7 +97,7 @@ class TitleTextField: NSTextField {
 
     public func updateNotesTableView() {
         guard let vc = ViewController.shared(), let note = EditTextView.note else { return }
-        
+
         let currentTitle = note.title
         vc.notesTableView.reloadRow(note: note)
         if !currentTitle.isEmpty {

@@ -2,9 +2,9 @@ import CoreServices
 import Foundation
 
 #if os(OSX)
-import Cocoa
+    import Cocoa
 #else
-import UIKit
+    import UIKit
 #endif
 
 class Storage {
@@ -21,23 +21,23 @@ class Storage {
 
     var allowedExtensions = [
         "md", "markdown",
-        "txt"
+        "txt",
     ]
 
     var pinned: Int = 0
 
     #if os(iOS)
-    let initialFiles = [
-        "MiaoYan - Readme.md",
-        "MiaoYan - Code Highlighting.md"
-    ]
+        let initialFiles = [
+            "MiaoYan - Readme.md",
+            "MiaoYan - Code Highlighting.md",
+        ]
     #else
-    let initialFiles = [
-        "介绍妙言.md",
-        "妙言 PPT.md",
-        "Introduction to MiaoYan.md",
-        "MiaoYan PPT.md"
-    ]
+        let initialFiles = [
+            "介绍妙言.md",
+            "妙言 PPT.md",
+            "Introduction to MiaoYan.md",
+            "MiaoYan PPT.md",
+        ]
     #endif
 
     private var bookmarks = [URL]()
@@ -124,14 +124,14 @@ class Storage {
                 let subUrl = subFolder as URL
 
                 guard !projectExist(url: subUrl),
-                      subUrl.lastPathComponent != "i",
-                      subUrl.lastPathComponent != "files",
-                      !subUrl.path.contains(".Trash"),
-                      !subUrl.path.contains("Trash"),
-                      !subUrl.path.contains("/."),
-                      !subUrl.path.contains(parentPath),
-                      !subUrl.path.contains(filesPath),
-                      !subUrl.path.contains(".textbundle")
+                    subUrl.lastPathComponent != "i",
+                    subUrl.lastPathComponent != "files",
+                    !subUrl.path.contains(".Trash"),
+                    !subUrl.path.contains("Trash"),
+                    !subUrl.path.contains("/."),
+                    !subUrl.path.contains(parentPath),
+                    !subUrl.path.contains(filesPath),
+                    !subUrl.path.contains(".textbundle")
                 else {
                     continue
                 }
@@ -204,8 +204,7 @@ class Storage {
 
     public func removeBy(project: Project) {
         let list = noteList.filter {
-            $0.project ==
-                project
+            $0.project == project
         }
 
         for note in list {
@@ -238,13 +237,13 @@ class Storage {
 
     func getTrash(url: URL) -> URL? {
         #if os(OSX)
-        return try? FileManager.default.url(for: .trashDirectory, in: .allDomainsMask, appropriateFor: url, create: false)
-        #else
-        if #available(iOS 11.0, *) {
             return try? FileManager.default.url(for: .trashDirectory, in: .allDomainsMask, appropriateFor: url, create: false)
-        } else {
-            return nil
-        }
+        #else
+            if #available(iOS 11.0, *) {
+                return try? FileManager.default.url(for: .trashDirectory, in: .allDomainsMask, appropriateFor: url, create: false)
+            } else {
+                return nil
+            }
         #endif
     }
 
@@ -296,14 +295,14 @@ class Storage {
         var i = 0
 
         #if os(iOS)
-        for note in noteList {
-            note.load()
-            i += 1
-            if i == count {
-                print("Loaded notes: \(count)")
-                completion()
+            for note in noteList {
+                note.load()
+                i += 1
+                if i == count {
+                    print("Loaded notes: \(count)")
+                    completion()
+                }
             }
-        }
         #endif
 
         noteList = sortNotes(noteList: noteList, filter: "")
@@ -407,8 +406,7 @@ class Storage {
                 let title = note.title.lowercased()
                 let nextTitle = next.title.lowercased()
                 return
-                    sortDirection == .asc && title < nextTitle ||
-                    sortDirection == .desc && title > nextTitle
+                    sortDirection == .asc && title < nextTitle || sortDirection == .desc && title > nextTitle
             }
         }
 
@@ -422,10 +420,11 @@ class Storage {
             let url = document.0 as URL
 
             #if os(OSX)
-            if let currentNoteURL = EditTextView.note?.url,
-               currentNoteURL == url {
-                continue
-            }
+                if let currentNoteURL = EditTextView.note?.url,
+                    currentNoteURL == url
+                {
+                    continue
+                }
             #endif
 
             let note = Note(url: url.resolvingSymlinksInPath(), with: item)
@@ -440,17 +439,17 @@ class Storage {
 
             #if CLOUDKIT
             #else
-            if let data = try? note.url.extendedAttribute(forName: "com.tw93.miaoyan.pin") {
-                let isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
-                    ptr.load(as: Bool.self)
-                }
+                if let data = try? note.url.extendedAttribute(forName: "com.tw93.miaoyan.pin") {
+                    let isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
+                        ptr.load(as: Bool.self)
+                    }
 
-                note.isPinned = isPinned
-            }
+                    note.isPinned = isPinned
+                }
             #endif
 
             #if os(OSX)
-            note.load()
+                note.load()
             #endif
 
             if loadContent {
@@ -504,10 +503,8 @@ class Storage {
                     url in
                     (
                         url,
-                        (try? url.resourceValues(forKeys: [.contentModificationDateKey])
-                        )?.contentModificationDate ?? Date.distantPast,
-                        (try? url.resourceValues(forKeys: [.creationDateKey])
-                        )?.creationDate ?? Date.distantPast
+                        (try? url.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate ?? Date.distantPast,
+                        (try? url.resourceValues(forKeys: [.creationDateKey]))?.creationDate ?? Date.distantPast
                     )
                 }
         } catch {
@@ -518,7 +515,7 @@ class Storage {
     }
 
     public func isValidUTI(url: URL) -> Bool {
-        guard url.fileSize < 100000000 else {
+        guard url.fileSize < 100_000_000 else {
             return false
         }
 
@@ -616,17 +613,17 @@ class Storage {
 
     func getDemoSubdirURL() -> URL? {
         #if os(OSX)
-        if let project = projects.first {
-            return project.url
-        }
+            if let project = projects.first {
+                return project.url
+            }
 
-        return nil
+            return nil
         #else
-        if let icloud = UserDefaultsManagement.iCloudDocumentsContainer {
-            return icloud
-        }
+            if let icloud = UserDefaultsManagement.iCloudDocumentsContainer {
+                return icloud
+            }
 
-        return UserDefaultsManagement.storageUrl
+            return UserDefaultsManagement.storageUrl
         #endif
     }
 
@@ -668,9 +665,10 @@ class Storage {
         }
         let lastPatch = ["assets", ".cache", "i", ".Trash"]
 
-        let urls = fileEnumerator.allObjects.filter {
-            !extensions.contains(($0 as? NSURL)!.pathExtension!) && !lastPatch.contains(($0 as? NSURL)!.lastPathComponent!)
-        } as! [NSURL]
+        let urls =
+            fileEnumerator.allObjects.filter {
+                !extensions.contains(($0 as? NSURL)!.pathExtension!) && !lastPatch.contains(($0 as? NSURL)!.lastPathComponent!)
+            } as! [NSURL]
         var subDirs = [NSURL]()
         var i = 0
 
@@ -684,7 +682,8 @@ class Storage {
                 try url.getResourceValue(&isPackageResourceValue, forKey: URLResourceKey.isPackageKey)
 
                 if isDirectoryResourceValue as? Bool == true,
-                   isPackageResourceValue as? Bool == false {
+                    isPackageResourceValue as? Bool == false
+                {
                     subDirs.append(url)
                 }
             } catch let error as NSError {
@@ -733,10 +732,8 @@ class Storage {
                 url in
                 (
                     url,
-                    (try? url.resourceValues(forKeys: [.contentModificationDateKey])
-                    )?.contentModificationDate ?? Date.distantPast,
-                    (try? url.resourceValues(forKeys: [.creationDateKey])
-                    )?.creationDate ?? Date.distantPast
+                    (try? url.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate ?? Date.distantPast,
+                    (try? url.resourceValues(forKeys: [.creationDateKey]))?.creationDate ?? Date.distantPast
                 )
             }
 
@@ -770,21 +767,21 @@ class Storage {
 
     #if os(iOS)
 
-    public func createProject(name: String) -> Project {
-        let storageURL = UserDefaultsManagement.storageUrl!
+        public func createProject(name: String) -> Project {
+            let storageURL = UserDefaultsManagement.storageUrl!
 
-        var url = storageURL.appendingPathComponent(name)
+            var url = storageURL.appendingPathComponent(name)
 
-        if FileManager.default.fileExists(atPath: url.path, isDirectory: nil) {
-            url = storageURL.appendingPathComponent("\(name) \(String(Date().toMillis()))")
+            if FileManager.default.fileExists(atPath: url.path, isDirectory: nil) {
+                url = storageURL.appendingPathComponent("\(name) \(String(Date().toMillis()))")
+            }
+
+            let project = Project(url: url)
+            project.createDirectory()
+
+            _ = add(project: project)
+            return project
         }
-
-        let project = Project(url: url)
-        project.createDirectory()
-
-        _ = add(project: project)
-        return project
-    }
     #endif
 
     public func initNote(url: URL) -> Note? {
@@ -817,18 +814,18 @@ class Storage {
 
     public func saveCloudPins() {
         #if CLOUDKIT || os(iOS)
-        if let pinned = getPinned() {
-            var names = [String]()
-            for note in pinned {
-                names.append(note.name)
+            if let pinned = getPinned() {
+                var names = [String]()
+                for note in pinned {
+                    names.append(note.name)
+                }
+
+                let keyStore = NSUbiquitousKeyValueStore()
+                keyStore.set(names, forKey: "com.tw93.miaoyan.pins.shared")
+                keyStore.synchronize()
+
+                print("Pins successfully saved: \(names)")
             }
-
-            let keyStore = NSUbiquitousKeyValueStore()
-            keyStore.set(names, forKey: "com.tw93.miaoyan.pins.shared")
-            keyStore.synchronize()
-
-            print("Pins successfully saved: \(names)")
-        }
         #endif
     }
 
@@ -837,26 +834,26 @@ class Storage {
         var removed = [Note]()
 
         #if CLOUDKIT || os(iOS)
-        let keyStore = NSUbiquitousKeyValueStore()
-        keyStore.synchronize()
+            let keyStore = NSUbiquitousKeyValueStore()
+            keyStore.synchronize()
 
-        if let names = keyStore.array(forKey: "com.tw93.miaoyan.pins.shared") as? [String] {
-            if let pinned = getPinned() {
-                for note in pinned {
-                    if !names.contains(note.name) {
-                        note.removePin(cloudSave: false)
-                        removed.append(note)
+            if let names = keyStore.array(forKey: "com.tw93.miaoyan.pins.shared") as? [String] {
+                if let pinned = getPinned() {
+                    for note in pinned {
+                        if !names.contains(note.name) {
+                            note.removePin(cloudSave: false)
+                            removed.append(note)
+                        }
+                    }
+                }
+
+                for name in names {
+                    if let note = getBy(name: name) {
+                        note.addPin(cloudSave: false)
+                        added.append(note)
                     }
                 }
             }
-
-            for name in names {
-                if let note = getBy(name: name) {
-                    note.addPin(cloudSave: false)
-                    added.append(note)
-                }
-            }
-        }
         #endif
 
         return (removed, added)

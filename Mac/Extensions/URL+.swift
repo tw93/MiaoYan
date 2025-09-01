@@ -14,9 +14,9 @@ import Foundation
     import CoreServices
 #endif
 
-public extension URL {
+extension URL {
     /// Get extended attribute.
-    func extendedAttribute(forName name: String) throws -> Data {
+    public func extendedAttribute(forName name: String) throws -> Data {
         try self.withUnsafeFileSystemRepresentation { fileSystemPath -> Data in
 
             // Determine attribute size:
@@ -37,7 +37,7 @@ public extension URL {
     }
 
     /// Set extended attribute.
-    func setExtendedAttribute(data: Data, forName name: String) throws {
+    public func setExtendedAttribute(data: Data, forName name: String) throws {
         try self.withUnsafeFileSystemRepresentation { fileSystemPath in
             let result = data.withUnsafeBytes {
                 setxattr(fileSystemPath, name, $0.baseAddress, data.count, 0, 0)
@@ -47,7 +47,7 @@ public extension URL {
     }
 
     /// Remove extended attribute.
-    func removeExtendedAttribute(forName name: String) throws {
+    public func removeExtendedAttribute(forName name: String) throws {
         try self.withUnsafeFileSystemRepresentation { fileSystemPath in
             let result = removexattr(fileSystemPath, name, 0)
             guard result == 0 else { throw URL.posixError(errno) }
@@ -55,7 +55,7 @@ public extension URL {
     }
 
     /// Get list of all extended attributes.
-    func listExtendedAttributes() throws -> [String] {
+    public func listExtendedAttributes() throws -> [String] {
         let list = try self.withUnsafeFileSystemRepresentation { fileSystemPath -> [String] in
             let length = listxattr(fileSystemPath, nil, 0, 0)
             guard length >= 0 else { throw URL.posixError(errno) }
@@ -82,22 +82,23 @@ public extension URL {
 
     /// Helper function to create an NSError from a Unix errno.
     private static func posixError(_ err: Int32) -> NSError {
-        NSError(domain: NSPOSIXErrorDomain, code: Int(err),
-                userInfo: [NSLocalizedDescriptionKey: String(cString: strerror(err))])
+        NSError(
+            domain: NSPOSIXErrorDomain, code: Int(err),
+            userInfo: [NSLocalizedDescriptionKey: String(cString: strerror(err))])
     }
 
     // Access the URL parameters eg nv://make?title=blah&txt=body like so:
     // let titleStr = myURL['title']
-    subscript(queryParam: String) -> String? {
+    public subscript(queryParam: String) -> String? {
         guard let url = URLComponents(string: self.absoluteString) else { return nil }
         return url.queryItems?.first(where: { $0.name == queryParam })?.value
     }
 
-    func isRemote() -> Bool {
+    public func isRemote() -> Bool {
         self.absoluteString.starts(with: "http://") || self.absoluteString.starts(with: "https://")
     }
 
-    var attributes: [FileAttributeKey: Any]? {
+    public var attributes: [FileAttributeKey: Any]? {
         do {
             return try FileManager.default.attributesOfItem(atPath: path)
         } catch let error as NSError {
@@ -106,11 +107,11 @@ public extension URL {
         return nil
     }
 
-    var fileSize: UInt64 {
+    public var fileSize: UInt64 {
         self.attributes?[.size] as? UInt64 ?? UInt64(0)
     }
 
-    func removingFragment() -> URL {
+    public func removingFragment() -> URL {
         var string = self.absoluteString
         if let query = query {
             string = string.replacingOccurrences(of: "?\(query)", with: "")
@@ -123,16 +124,16 @@ public extension URL {
         return URL(string: string) ?? self
     }
 
-    var typeIdentifier: String? {
+    public var typeIdentifier: String? {
         (try? resourceValues(forKeys: [.typeIdentifierKey]))?.typeIdentifier
     }
 
-    var fileUTType: CFString? {
+    public var fileUTType: CFString? {
         let unmanagedFileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension as CFString, nil)
         return unmanagedFileUTI?.takeRetainedValue()
     }
 
-    var isVideo: Bool {
+    public var isVideo: Bool {
         guard let fileUTI = fileUTType else { return false }
 
         return UTTypeConformsTo(fileUTI, kUTTypeMovie)
@@ -146,7 +147,7 @@ public extension URL {
             || UTTypeConformsTo(fileUTI, kUTTypeAVIMovie)
     }
 
-    var isImage: Bool {
+    public var isImage: Bool {
         guard let fileUTI = fileUTType else { return false }
 
         return UTTypeConformsTo(fileUTI, kUTTypeImage)

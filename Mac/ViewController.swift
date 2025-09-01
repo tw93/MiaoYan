@@ -136,10 +136,11 @@ class ViewController:
                     return
                 }
                 DispatchQueue.main.async {
-                    NSAnimationContext.runAnimationGroup({ context in
-                        context.duration = 0.20
-                        self?.titleBarAdditionalView.alphaValue = 0
-                    }, completionHandler: nil)
+                    NSAnimationContext.runAnimationGroup(
+                        { context in
+                            context.duration = 0.20
+                            self?.titleBarAdditionalView.alphaValue = 0
+                        }, completionHandler: nil)
                 }
             }
             titleBarView.onMouseEnteredClosure = { [weak self] in
@@ -147,10 +148,11 @@ class ViewController:
                     return
                 }
                 DispatchQueue.main.async {
-                    NSAnimationContext.runAnimationGroup({ context in
-                        context.duration = 0.20
-                        self?.titleBarAdditionalView.alphaValue = 1
-                    }, completionHandler: nil)
+                    NSAnimationContext.runAnimationGroup(
+                        { context in
+                            context.duration = 0.20
+                            self?.titleBarAdditionalView.alphaValue = 1
+                        }, completionHandler: nil)
                 }
             }
         }
@@ -163,10 +165,11 @@ class ViewController:
                     return
                 }
                 DispatchQueue.main.async {
-                    NSAnimationContext.runAnimationGroup({ context in
-                        context.duration = 0.20
-                        self?.addProjectButton.alphaValue = 0
-                    }, completionHandler: nil)
+                    NSAnimationContext.runAnimationGroup(
+                        { context in
+                            context.duration = 0.20
+                            self?.addProjectButton.alphaValue = 0
+                        }, completionHandler: nil)
                 }
             }
             projectHeaderView.onMouseEnteredClosure = { [weak self] in
@@ -174,10 +177,11 @@ class ViewController:
                     return
                 }
                 DispatchQueue.main.async {
-                    NSAnimationContext.runAnimationGroup({ context in
-                        context.duration = 0.20
-                        self?.addProjectButton.alphaValue = 1
-                    }, completionHandler: nil)
+                    NSAnimationContext.runAnimationGroup(
+                        { context in
+                            context.duration = 0.20
+                            self?.addProjectButton.alphaValue = 1
+                        }, completionHandler: nil)
                 }
             }
         }
@@ -342,11 +346,13 @@ class ViewController:
 
             // Try to find the project by URL first (more reliable after reordering)
             if let lastProjectURL = UserDataService.instance.lastProject,
-               let items = self.storageOutlineView.sidebarItems {
+                let items = self.storageOutlineView.sidebarItems
+            {
 
                 for (index, item) in items.enumerated() {
                     if let sidebarItem = item as? SidebarItem,
-                       sidebarItem.project?.url == lastProjectURL {
+                        sidebarItem.project?.url == lastProjectURL
+                    {
                         self.storageOutlineView.selectRowIndexes([index], byExtendingSelection: false)
                         return
                     }
@@ -356,7 +362,8 @@ class ViewController:
             // Fallback to index-based selection if URL matching fails
             let lastProjectIndex = UserDefaultsManagement.lastProject
             if let items = self.storageOutlineView.sidebarItems,
-               items.indices.contains(lastProjectIndex) {
+                items.indices.contains(lastProjectIndex)
+            {
                 self.storageOutlineView.selectRowIndexes([lastProjectIndex], byExtendingSelection: false)
             } else if let items = self.storageOutlineView.sidebarItems, !items.isEmpty {
                 self.storageOutlineView.selectRowIndexes([0], byExtendingSelection: false)
@@ -535,7 +542,7 @@ class ViewController:
         editArea.textStorage?.delegate = editArea.textStorage
         if #available(OSX 10.13, *) {
             editArea?.linkTextAttributes = [
-                .foregroundColor: NSColor(named: "highlight")!,
+                .foregroundColor: NSColor(named: "highlight")!
             ]
         }
         editArea.viewDelegate = self
@@ -544,9 +551,11 @@ class ViewController:
     private func configureShortcuts() {
         let activeShortcut = MASShortcut(keyCode: kVK_ANSI_M, modifierFlags: [.command, .option])
 
-        MASShortcutMonitor.shared().register(activeShortcut, withAction: {
-            self.activeShortcut()
-        })
+        MASShortcutMonitor.shared().register(
+            activeShortcut,
+            withAction: {
+                self.activeShortcut()
+            })
 
         NSEvent.addLocalMonitorForEvents(matching: NSEvent.EventTypeMask.flagsChanged) {
             $0
@@ -959,8 +968,7 @@ class ViewController:
         }
 
         // Focus search bar on ESC
-        if
-            event.characters == ".",
+        if event.characters == ".",
             event.modifierFlags.contains(.command),
 
             NSApplication.shared.mainWindow == NSApplication.shared.keyWindow
@@ -1048,7 +1056,7 @@ class ViewController:
         }
 
         if let fr = mw.firstResponder, !fr.isKind(of: EditTextView.self), !fr.isKind(of: NSTextView.self), !event.modifierFlags.contains(.command),
-           !event.modifierFlags.contains(.control)
+            !event.modifierFlags.contains(.control)
         {
             if let char = event.characters {
                 let newSet = CharacterSet(charactersIn: char)
@@ -1303,7 +1311,7 @@ class ViewController:
         vc.storage.removeNotes(notes: notes) { urls in
 
             if let appd = NSApplication.shared.delegate as? AppDelegate,
-               let md = appd.mainWindowController
+                let md = appd.mainWindowController
             {
                 let undoManager = md.notesListUndoManager
 
@@ -1334,9 +1342,7 @@ class ViewController:
 
     func setDividerColor(for splitView: NSSplitView, hidden: Bool) {
         DispatchQueue.main.async {
-            let color = hidden ?
-                (NSColor(named: "mainBackground") ?? NSColor.windowBackgroundColor) :
-                (NSColor(named: "divider") ?? NSColor.separatorColor)
+            let color = hidden ? (NSColor(named: "mainBackground") ?? NSColor.windowBackgroundColor) : (NSColor(named: "divider") ?? NSColor.separatorColor)
             splitView.setValue(color, forKey: "dividerColor")
             splitView.needsDisplay = true
         }
@@ -1344,7 +1350,8 @@ class ViewController:
 
     private var sidebarWidth: CGFloat {
         guard let splitView = sidebarSplitView,
-              splitView.subviews.count > 0 else { return 0 }
+            splitView.subviews.count > 0
+        else { return 0 }
         return splitView.subviews[0].frame.width
     }
 
@@ -1422,11 +1429,11 @@ class ViewController:
             let swipedLeft = flippedScrollDelta > 0
 
             switch (swipedLeft, swipeLeftExecuted, swipeRightExecuted) {
-            case (true, false, _): // swiped left
+            case (true, false, _):  // swiped left
                 swipeLeftExecuted = true
-                swipeRightExecuted = false // allow swipe back (right)
-            case (false, _, false): // swiped right
-                swipeLeftExecuted = false // allow swipe back (left)
+                swipeRightExecuted = false  // allow swipe back (right)
+            case (false, _, false):  // swiped right
+                swipeLeftExecuted = false  // allow swipe back (left)
                 swipeRightExecuted = true
             default:
                 super.scrollWheel(with: event)
@@ -1435,8 +1442,8 @@ class ViewController:
             swipe(deltaX: flippedScrollDelta)
             return
         case .cancelled,
-             .ended,
-             .mayBegin:
+            .ended,
+            .mayBegin:
             isHandlingScrollEvent = false
         default:
             break
@@ -1750,7 +1757,7 @@ class ViewController:
             let terms = filter.split(separator: " ")
             let source = self.storage.noteList
             var notes = [Note]()
-            let maxResults = search ? 100 : Int.max // Limit search results for performance
+            let maxResults = search ? 100 : Int.max  // Limit search results for performance
 
             for note in source {
                 if operation.isCancelled {
@@ -1840,7 +1847,8 @@ class ViewController:
         updateTable(search: false) {
             DispatchQueue.main.async {
                 if let currentNote = EditTextView.note,
-                   let index = self.notesTableView.noteList.firstIndex(of: currentNote) {
+                    let index = self.notesTableView.noteList.firstIndex(of: currentNote)
+                {
                     self.notesTableView.selectRowIndexes(IndexSet(integer: index), byExtendingSelection: false)
                     self.notesTableView.scrollRowToVisible(index)
                     // Ensure title bar is visible when we have a selected note
@@ -1891,18 +1899,13 @@ class ViewController:
         }
 
         return !note.name.isEmpty
-            && (filter.isEmpty || isMatched(note: note, terms: terms!)
-            ) && (
-                type == .All && note.project.showInCommon
-                    || (
-                        type != .All && projects!.contains(note.project)
-                            || (note.project.parent != nil && projects!.contains(note.project.parent!))
-                    )
-                    || type == .Trash
-            ) && (
-                type == .Trash && note.isTrash()
-                    || type != .Trash && !note.isTrash()
-            )
+            && (filter.isEmpty || isMatched(note: note, terms: terms!))
+            && (type == .All && note.project.showInCommon
+                || (type != .All && projects!.contains(note.project)
+                    || (note.project.parent != nil && projects!.contains(note.project.parent!)))
+                || type == .Trash)
+            && (type == .Trash && note.isTrash()
+                || type != .Trash && !note.isTrash())
     }
 
     public func contains(tag name: String, in tags: [String]) -> Bool {
@@ -1929,7 +1932,7 @@ class ViewController:
     @objc private func selectRowInstant() {
         notesTableView.selectRowIndexes([0], byExtendingSelection: false)
         notesTableView.scrollRowToVisible(0)
-        
+
         // 确保内容加载和标题栏显示
         if notesTableView.noteList.count > 0 {
             let note = notesTableView.noteList[0]
@@ -1995,8 +1998,7 @@ class ViewController:
             return
         }
 
-        if
-            NSApplication.shared.isActive,
+        if NSApplication.shared.isActive,
             !NSApplication.shared.isHidden,
             !mainWindow.isMiniaturized
         {
@@ -2100,8 +2102,8 @@ class ViewController:
         var updatedNotes = [(Int, Note)]()
         for row in selectedRows {
             guard let rowView = notesTableView.rowView(atRow: row, makeIfNecessary: false) as? NoteRowView,
-                  let cell = rowView.view(atColumn: 0) as? NoteCellView,
-                  let note = cell.objectValue as? Note
+                let cell = rowView.view(atColumn: 0) as? NoteCellView,
+                let note = cell.objectValue as? Note
             else {
                 continue
             }
@@ -2130,7 +2132,8 @@ class ViewController:
             state.insert(toMove, at: newRow)
         }
 
-        let nowUnpinned = updatedNotes
+        let nowUnpinned =
+            updatedNotes
             .filter { _, note -> Bool in
                 !note.isPinned
             }
@@ -2306,7 +2309,8 @@ class ViewController:
             UserDefaultsManagement.presentation = true
             self.enablePreview()
         }
-        if UserDefaultsManagement.fullScreen {} else {
+        if UserDefaultsManagement.fullScreen {
+        } else {
             view.window?.toggleFullScreen(nil)
         }
         formatButton.isHidden = true
@@ -2344,7 +2348,8 @@ class ViewController:
 
     func formatText() {
         if UserDefaultsManagement.preview {
-            toast(message: NSLocalizedString("😶‍🌫 Format is only possible after exiting preview mode~", comment: "")
+            toast(
+                message: NSLocalizedString("😶‍🌫 Format is only possible after exiting preview mode~", comment: "")
             )
             return
         }
@@ -2417,12 +2422,12 @@ class ViewController:
         }
 
         let personalSelection = [
-            "noteMove.rename",
+            "noteMove.rename"
         ]
 
         for menu in noteMenu.items {
             if let identifier = menu.identifier?.rawValue,
-               personalSelection.contains(identifier)
+                personalSelection.contains(identifier)
             {
                 menu.isHidden = (vc.notesTableView.selectedRowIndexes.count > 1)
             }

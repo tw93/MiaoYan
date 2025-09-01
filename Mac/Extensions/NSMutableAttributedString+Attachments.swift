@@ -10,7 +10,7 @@ import Foundation
 
 extension NSMutableAttributedString {
     func loadImages(note: Note) {
-        let paragraphRange = NSRange(0 ..< length)
+        let paragraphRange = NSRange(0..<length)
         var offset = 0
 
         NotesTextProcessor.imageInlineRegex.matches(string, range: paragraphRange) { result in
