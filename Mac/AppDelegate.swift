@@ -269,4 +269,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             mainWindowController?.makeNew()
         }
     }
+    
+    func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
+        return true
+    }
 }

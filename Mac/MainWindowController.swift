@@ -1,6 +1,6 @@
 import AppKit
 
-class MainWindowController: NSWindowController, NSWindowDelegate {
+class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestoration {
     let notesListUndoManager = UndoManager()
     var editorUndoManager = UndoManager()
 
@@ -13,6 +13,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
         window?.titleVisibility = .hidden
         window?.titlebarAppearsTransparent = true
         windowFrameAutosaveName = "myMainWindow"
+        window?.restorationClass = MainWindowController.self
     }
 
     func windowDidResize(_ notification: Notification) {
@@ -69,5 +70,18 @@ class MainWindowController: NSWindowController, NSWindowDelegate {
 
     func windowDidExitFullScreen(_ notification: Notification) {
         UserDefaultsManagement.fullScreen = false
+    }
+    
+    // MARK: - NSWindowRestoration
+    
+    static func restoreWindow(withIdentifier identifier: NSUserInterfaceItemIdentifier, state: NSCoder, completionHandler: @escaping (NSWindow?, Error?) -> Void) {
+        if identifier.rawValue == "myMainWindow" {
+            let storyboard = NSStoryboard(name: "Main", bundle: nil)
+            if let mainWC = storyboard.instantiateController(withIdentifier: "MainWindowController") as? MainWindowController {
+                completionHandler(mainWC.window, nil)
+                return
+            }
+        }
+        completionHandler(nil, nil)
     }
 }
