@@ -25,11 +25,6 @@ class HtmlManager {
         }
     }
     
-    /// 处理HTML中的本地图片，将它们复制到WebKit可访问的临时目录
-    /// - Parameters:
-    ///   - html: 包含图片标签的HTML字符串
-    ///   - imagesStorage: 本地图片存储目录
-    /// - Returns: 处理后的HTML字符串
     static func processImages(in html: String, imagesStorage: URL) -> String {
         var htmlString = html
         
@@ -43,27 +38,24 @@ class HtmlManager {
                 return (String(html[fullRange]), String(html[srcRange]))
             }
             
+            let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
+            
             for imageInfo in images {
                 var localPath = imageInfo.srcPath
                 
-                // 跳过HTTP/HTTPS URL
                 guard !localPath.starts(with: "http://"), !localPath.starts(with: "https://") else {
                     continue
                 }
                 
                 let localPathClean = localPath.removingPercentEncoding ?? String(localPath)
-                let fullImageURL = imagesStorage
-                let imageURL = fullImageURL.appendingPathComponent(localPathClean)
-                
-                let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
-                let create = webkitPreview
-                    .appendingPathComponent(localPathClean)
-                    .deletingLastPathComponent()
+                let imageURL = imagesStorage.appendingPathComponent(localPathClean)
                 let destination = webkitPreview.appendingPathComponent(localPathClean)
                 
-                try? FileManager.default.createDirectory(atPath: create.path, withIntermediateDirectories: true, attributes: nil)
-                try? FileManager.default.removeItem(at: destination)
-                try? FileManager.default.copyItem(at: imageURL, to: destination)
+                if !FileManager.default.fileExists(atPath: destination.path) {
+                    let create = destination.deletingLastPathComponent()
+                    try? FileManager.default.createDirectory(atPath: create.path, withIntermediateDirectories: true, attributes: nil)
+                    try? FileManager.default.copyItem(at: imageURL, to: destination)
+                }
                 
                 if localPath.first == "/" {
                     localPath.remove(at: localPath.startIndex)
@@ -73,7 +65,7 @@ class HtmlManager {
                 htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: imPath)
             }
         } catch {
-            print("Images regex: \(error.localizedDescription)")
+            print("Image processing regex error: \(error.localizedDescription)")
         }
         
         return htmlString
@@ -193,7 +185,7 @@ class HtmlManager {
                     try FileManager.default.copyItem(atPath: bundleResourceURL.appendingPathComponent(file).path, toPath: tmpURL.path)
                 }
             } catch {
-                print(error)
+                print("Bundle resource copy error: \(error.localizedDescription)")
             }
         }
 
@@ -205,7 +197,7 @@ class HtmlManager {
                 try FileManager.default.createDirectory(at: cssDst, withIntermediateDirectories: false, attributes: nil)
                 _ = try FileManager.default.copyItem(at: customCSS, to: styleDst)
             } catch {
-                print(error)
+                print("Custom CSS copy error: \(error.localizedDescription)")
             }
         }
 
