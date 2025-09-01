@@ -165,7 +165,7 @@ public class Note: NSObject {
 
             return attr[FileAttributeKey.modificationDate] as? Date
         } catch {
-            NSLog("Note modification date load error: \(error.localizedDescription)")
+            print("Note modification date load error: \(error.localizedDescription)")
             return nil
         }
     }
@@ -196,7 +196,7 @@ public class Note: NSObject {
                 }
             #endif
 
-            NSLog("File moved from \"\(url.deletingPathExtension().lastPathComponent)\" to \"\(destination.deletingPathExtension().lastPathComponent)\"")
+            print("File moved from \"\(url.deletingPathExtension().lastPathComponent)\" to \"\(destination.deletingPathExtension().lastPathComponent)\"")
         } catch {
             Swift.print(error)
             return false
@@ -592,7 +592,7 @@ public class Note: NSObject {
 
             modifiedLocalAt = Date()
         } catch {
-            NSLog("Write error \(error)")
+            print("Write error \(error)")
             return
         }
 
