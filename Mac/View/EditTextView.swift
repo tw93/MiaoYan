@@ -455,8 +455,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return
         }
 
-        markdownView?.removeFromSuperview()
-        markdownView = nil
+        // WebView 保活：隐藏而不是销毁
+        markdownView?.isHidden = true
 
         guard let storage = textStorage else { return }
 
@@ -489,8 +489,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     public func clear() {
         textStorage?.setAttributedString(NSAttributedString())
-        markdownView?.removeFromSuperview()
-        markdownView = nil
+        // WebView 保活：隐藏而不是销毁
+        markdownView?.isHidden = true
         hideImagePreview()
 
         isEditable = false

@@ -120,29 +120,20 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     private func waitForImagesLoaded(completion: @escaping () -> Void) {
-        let maxRetries = 50  // 减少重试次数，避免长时间等待
-        let initialDelay = 0.05  // 减少初始延迟
-        let maxDelay = 0.5  // 最大延迟
+        // 简化：只等待前3张图片，最多1秒
         var retryCount = 0
-
         func checkImages() {
-            evaluateJavaScript(HtmlManager.checkImagesScript) { result, _ in
-                if let allLoaded = result as? Bool, allLoaded {
+            evaluateJavaScript("document.querySelectorAll('img[loading=\"eager\"]').length === 0 || Array.from(document.querySelectorAll('img[loading=\"eager\"]')).every(img => img.complete)") { result, _ in
+                if let loaded = result as? Bool, loaded || retryCount > 10 {
                     completion()
-                } else if retryCount < maxRetries {
+                } else {
                     retryCount += 1
-                    // 使用递增延迟策略，避免频繁检查
-                    let delay = min(initialDelay * Double(retryCount), maxDelay)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         checkImages()
                     }
-                } else {
-                    // 超时后直接完成，不再等待
-                    completion()
                 }
             }
         }
-
         checkImages()
     }
 
@@ -350,10 +341,9 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     public func load(note: Note, force: Bool = false) {
-        guard self.note != note || force else {
-            return
-        }
-
+        // 简单方案：直接隐藏，等内容加载完再显示
+        self.alphaValue = 0.0
+        
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
 
@@ -364,6 +354,14 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             DispatchQueue.main.async {
                 try? self.loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
                 self.note = note
+                
+                // 等待导航完成再显示
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    NSAnimationContext.runAnimationGroup({ context in
+                        context.duration = 0.2
+                        self.animator().alphaValue = 1.0
+                    })
+                }
             }
         }
     }

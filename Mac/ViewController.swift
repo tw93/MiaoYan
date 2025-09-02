@@ -243,6 +243,11 @@ class ViewController:
         configureLayout()
         configureNotesList()
         configureEditor()
+        
+        // 异步预加载，避免影响启动性能
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.preloadWebView()
+        }
 
         fsManager = FileSystemEventManager(storage: storage, delegate: self)
 
@@ -2256,12 +2261,53 @@ class ViewController:
         }
     }
 
+    // WebView 预加载，避免首次切换时的延迟
+    private func preloadWebView() {
+        // 仅在非预览模式时预加载，避免干扰已有预览
+        guard editArea.markdownView == nil, !UserDefaultsManagement.preview else { return }
+        
+        // 使用最简单的临时 Note
+        let tempProject = getSidebarProject() ?? storage.noteList.first?.project
+        guard let project = tempProject else { return }
+        
+        let tempNote = Note(name: "", project: project, type: .Markdown)
+        tempNote.content = NSMutableAttributedString(string: "")
+        
+        let frame = editArea.bounds
+        editArea.markdownView = MPreviewView(frame: frame, note: tempNote, closure: {})
+        editArea.markdownView?.isHidden = true
+        
+        if let view = editArea.markdownView {
+            editAreaScroll.addSubview(view)
+        }
+    }
+
     func enablePreview() {
         isFocusedTitle = titleLabel.hasFocus()
         cancelTextSearch()
         editArea.window?.makeFirstResponder(notesTableView)
         UserDefaultsManagement.preview = true
-        refillEditArea()
+        
+        // WebView 保活：先隐藏，更新内容后再动画显示
+        if let webView = editArea.markdownView {
+            webView.alphaValue = 0.0
+            webView.isHidden = false
+            
+            // 先更新内容，再显示动画
+            refillEditArea()
+            
+            // 短暂延迟确保内容加载完成后再显示
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                NSAnimationContext.runAnimationGroup({ context in
+                    context.duration = 0.2
+                    context.timingFunction = CAMediaTimingFunction(name: .easeOut)
+                    webView.animator().alphaValue = 1.0
+                })
+            }
+        } else {
+            refillEditArea()
+        }
+        
         titleLabel.isEditable = false
         if UserDefaultsManagement.previewLocation == "Editing", !UserDefaultsManagement.isOnExport {
             let scrollPre = getScrollTop()
@@ -2276,13 +2322,20 @@ class ViewController:
         UserDefaultsManagement.magicPPT = false
         UserDefaultsManagement.presentation = false
 
-        editArea.markdownView?.removeFromSuperview()
-        editArea.markdownView = nil
-
-        guard let editor = editArea else {
-            return
+        // WebView 保活：隐藏并清空内容
+        if let webView = editArea.markdownView {
+            NSAnimationContext.runAnimationGroup({ context in
+                context.duration = 0.15
+                context.timingFunction = CAMediaTimingFunction(name: .easeIn)
+                webView.animator().alphaValue = 0.0
+            }) {
+                webView.isHidden = true
+                webView.alphaValue = 1.0
+                // 清空内容避免下次显示残留
+                webView.loadHTMLString("<html><body style='background:transparent;'></body></html>", baseURL: nil)
+            }
         }
-        editor.subviews.removeAll(where: { $0.isKind(of: MPreviewView.self) })
+
         refillEditArea()
         DispatchQueue.main.async {
             self.titleLabel.isEditable = true
