@@ -4,6 +4,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <style>
+    img {
+      image-rendering: auto;
+      color-scheme: only light;
+      image-orientation: from-image;
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
   DOWN_META
   <link href="css/heti.min.css" rel="stylesheet" />
   <link href="css/katex.min.css" rel="stylesheet" />
@@ -266,12 +276,13 @@
           }, 10);
         });
 
-      // Add lazy loading to all images
+      // 简化图片加载：前3张立即加载，其他延迟
       const allImages = document.querySelectorAll('img');
-      allImages.forEach((img) => {
-        if (!img.hasAttribute('loading')) {
-          img.setAttribute('loading', 'lazy');
-        }
+      allImages.forEach((img, index) => {
+        // 前3张图片立即加载，其他延迟加载
+        img.setAttribute('loading', index < 3 ? 'eager' : 'lazy');
+        img.style.maxWidth = '100%';
+        img.style.height = 'auto';
       });
 
       // Image zoom
