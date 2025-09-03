@@ -30,6 +30,10 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         // macOS Sequoia beta: 简化配置避免沙盒冲突
         configuration.websiteDataStore = WKWebsiteDataStore.default()
         configuration.suppressesIncrementalRendering = false
+        
+        // Basic WebKit configuration for quieter operation
+        configuration.preferences.setValue(false, forKey: "developerExtrasEnabled")
+        configuration.preferences.setValue(false, forKey: "javaScriptCanOpenWindowsAutomatically")
 
         let preferences = WKWebpagePreferences()
         preferences.allowsContentJavaScript = true
