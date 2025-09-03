@@ -12,6 +12,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     public var viewDelegate: ViewController?
 
+    // 性能优化：缓存常用引用
+    private weak var cachedViewController: ViewController?
+
     var isHighlighted: Bool = false
     let storage = Storage.sharedInstance()
     let caretWidth: CGFloat = 1
@@ -21,10 +24,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
     public var markdownView: MPreviewView?
     public static var imagesLoaderQueue = OperationQueue()
 
-    // 图片预览相关
-    private var imagePreviewWindow: ImagePreviewWindow?
-    private var hoverTimer: Timer?
-    private var lastHoveredImageInfo: ImageLinkInfo?
+    // 管理类
+    private var imagePreviewManager: ImagePreviewManager?
+    private var clipboardManager: ClipboardManager?
+    private var menuManager: EditorMenuManager?
 
     public static var fontColor: NSColor {
         if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
@@ -47,6 +50,11 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         EditTextView.imagesLoaderQueue.maxConcurrentOperationCount = 3
         EditTextView.imagesLoaderQueue.qualityOfService = .userInteractive
+
+        // 初始化管理类
+        imagePreviewManager = ImagePreviewManager(textView: self)
+        clipboardManager = ClipboardManager(textView: self)
+        menuManager = EditorMenuManager(textView: self)
     }
 
     override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn flag: Bool) {
@@ -96,8 +104,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override var acceptableDragTypes: [NSPasteboard.PasteboardType] { [] }
 
     override func mouseDown(with event: NSEvent) {
-        // 隐藏图片预览（用户可能要点击选中/编辑）
-        hideImagePreview()
+        // 智能处理图片预览隐藏（考虑容忍区域）
+        imagePreviewManager?.handleMouseClick(at: event.locationInWindow)
 
         guard EditTextView.note != nil else { return }
 
@@ -126,10 +134,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     override func mouseMoved(with event: NSEvent) {
-        let viewController = window?.contentViewController as! ViewController
+        guard let viewController = window?.contentViewController as? ViewController else {
+            imagePreviewManager?.hideImagePreview()
+            return
+        }
+
         if !viewController.emptyEditAreaView.isHidden {
             NSCursor.arrow.set()
-            hideImagePreview()
+            imagePreviewManager?.hideImagePreview()
             return
         }
 
@@ -137,7 +149,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let properPoint = NSPoint(x: point.x - textContainerInset.width, y: point.y)
 
         guard let container = textContainer, let manager = layoutManager else {
-            hideImagePreview()
+            imagePreviewManager?.hideImagePreview()
             return
         }
 
@@ -146,12 +158,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
         _ = manager.boundingRect(forGlyphRange: NSRange(location: index, length: 1), in: container)
 
         if UserDefaultsManagement.preview {
-            hideImagePreview()
+            imagePreviewManager?.hideImagePreview()
             return
         }
 
         // 检测图片链接悬停（降低频率，避免过度处理）
-        handleImageLinkHover(at: index, mousePoint: event.locationInWindow)
+        imagePreviewManager?.handleImageLinkHover(at: index, mousePoint: event.locationInWindow)
 
         // 给链接在 command 的时候加上一个手
         if NSEvent.modifierFlags.contains(.command) {
@@ -233,18 +245,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     override func copy(_ sender: Any?) {
-        if selectedRanges.count > 1 {
-            let combined = String()
-            let pasteboard = NSPasteboard.general
-            pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
-            pasteboard.setString(combined.trim().removeLastNewLine(), forType: NSPasteboard.PasteboardType.string)
-            return
-        }
-
-        if selectedRange.length == 0, let paragraphRange = getParagraphRange(), let paragraph = attributedSubstring(forProposedRange: paragraphRange, actualRange: nil) {
-            let pasteboard = NSPasteboard.general
-            pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
-            pasteboard.setString(paragraph.string.trim().removeLastNewLine(), forType: NSPasteboard.PasteboardType.string)
+        if let handled = clipboardManager?.handleCopy(), handled {
             return
         }
         super.copy(sender)
@@ -254,19 +255,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override func paste(_ sender: Any?) {
         guard let note = EditTextView.note else { return }
 
-        if let clipboard = NSPasteboard.general.string(forType: NSPasteboard.PasteboardType.string), NSPasteboard.general.string(forType: NSPasteboard.PasteboardType.fileURL) == nil {
-            EditTextView.shouldForceRescan = true
-
-            let currentRange = selectedRange()
-            breakUndoCoalescing()
-            insertText(clipboard, replacementRange: currentRange)
-            breakUndoCoalescing()
-            saveTextStorageContent(to: note)
-            fillHighlightLinks()
-            return
-        }
-
-        if pasteImageFromClipboard(in: note) {
+        if let handled = clipboardManager?.handlePaste(in: note), handled {
             return
         }
 
@@ -292,7 +281,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
             // 防止文件其实是一个文件夹的场景
             if let url = NSURL(from: NSPasteboard.general), let ext = url.pathExtension {
-                if !url.isFileURL || ["app", "xcodeproj", "screenflow", "xcworkspace", "bundle", "lproj"].firstIndex(where: { $0 == ext })! > -1 {
+                let excludedExtensions = ["app", "xcodeproj", "screenflow", "xcworkspace", "bundle", "lproj"]
+                if !url.isFileURL || excludedExtensions.contains(ext) {
                     return
                 }
             }
@@ -307,98 +297,54 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     @IBAction func boldMenu(_ sender: Any) {
-        guard let vc = ViewController.shared(),
-            let editArea = vc.editArea,
-            let note = EditTextView.note,
-            !UserDefaultsManagement.preview,
-            editArea.hasFocus()
-        else { return }
-
-        let formatter = TextFormatter(textView: editArea, note: note)
-        formatter.bold()
+        menuManager?.performFormattingAction(.bold)
     }
 
     @IBAction func italicMenu(_ sender: Any) {
-        guard let vc = ViewController.shared(),
-            let editArea = vc.editArea,
-            let note = EditTextView.note,
-            !UserDefaultsManagement.preview,
-            editArea.hasFocus()
-        else { return }
-
-        let formatter = TextFormatter(textView: editArea, note: note)
-        formatter.italic()
+        menuManager?.performFormattingAction(.italic)
     }
 
     @IBAction func linkMenu(_ sender: Any) {
-        guard let vc = ViewController.shared(),
-            let editArea = vc.editArea,
-            let note = EditTextView.note,
-            !UserDefaultsManagement.preview,
-            editArea.hasFocus()
-        else { return }
-
-        let formatter = TextFormatter(textView: editArea, note: note)
-        formatter.link()
+        menuManager?.performFormattingAction(.link)
     }
 
     @IBAction func todoMenu(_ sender: Any) {
-        guard let vc = ViewController.shared(),
-            let editArea = vc.editArea,
-            let note = EditTextView.note,
-            !UserDefaultsManagement.preview,
-            editArea.hasFocus()
-        else { return }
-        let formatter = TextFormatter(textView: editArea, note: note, shouldScanMarkdown: false)
-        formatter.toggleTodo()
+        menuManager?.performFormattingAction(.todo)
     }
 
     @IBAction func underlineMenu(_ sender: Any) {
-        guard let vc = ViewController.shared(),
-            let editArea = vc.editArea,
-            let note = EditTextView.note,
-            !UserDefaultsManagement.preview,
-            editArea.hasFocus()
-        else { return }
-
-        let formatter = TextFormatter(textView: editArea, note: note)
-        formatter.underline()
+        menuManager?.performFormattingAction(.underline)
     }
 
     @IBAction func deletelineMenu(_ sender: Any) {
-        guard let vc = ViewController.shared(),
-            let editArea = vc.editArea,
-            let note = EditTextView.note,
-            !UserDefaultsManagement.preview,
-            editArea.hasFocus()
-        else { return }
-
-        let formatter = TextFormatter(textView: editArea, note: note)
-        formatter.deleteline()
+        menuManager?.performFormattingAction(.deleteline)
     }
 
     @IBAction func togglePreview(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
-
-        vc.togglePreview()
+        menuManager?.togglePreview()
     }
 
     @IBAction func formatText(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
-
-        vc.formatText()
+        menuManager?.formatText()
     }
 
     @IBAction func togglePresentation(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
-
-        vc.togglePresentation()
+        menuManager?.togglePresentation()
     }
 
     func getSelectedNote() -> Note? {
-        guard let vc = ViewController.shared() else { return nil }
+        return getViewController()?.notesTableView.getSelectedNote()
+    }
 
-        return vc.notesTableView.getSelectedNote()
+    // 性能优化：缓存 ViewController 引用
+    private func getViewController() -> ViewController? {
+        if let cached = cachedViewController {
+            return cached
+        }
+
+        let vc = ViewController.shared()
+        cachedViewController = vc
+        return vc
     }
 
     public func isEditable(note: Note) -> Bool {
@@ -410,7 +356,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     func fill(note: Note, highlight: Bool = false, saveTyping: Bool = false, force: Bool = false, needScrollToCursor: Bool = true) {
-        let viewController = window?.contentViewController as! ViewController
+        guard let viewController = window?.contentViewController as? ViewController else { return }
         viewController.emptyEditAreaView.isHidden = true
         viewController.titleBarView.isHidden = false
 
@@ -491,7 +437,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         textStorage?.setAttributedString(NSAttributedString())
         // WebView 保活：隐藏而不是销毁
         markdownView?.isHidden = true
-        hideImagePreview()
+        imagePreviewManager?.hideImagePreview()
 
         isEditable = false
 
@@ -509,8 +455,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
         EditTextView.note = nil
     }
 
+    // MARK: - Removed Large Methods
+    // 大量复杂逻辑已移动到专门的管理类中：
+    // - ImagePreviewManager: 图片预览功能
+    // - ClipboardManager: 剪贴板操作
+    // - EditorMenuManager: 菜单操作
+
     func getParagraphRange() -> NSRange? {
-        guard let vc = ViewController.shared(),
+        guard let vc = getViewController(),
             let editArea = vc.editArea,
             let storage = editArea.textStorage
         else {
@@ -625,7 +577,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return
         }
 
-        if let position = EditTextView.note?.getCursorPosition(), position <= storage.length {
+        if let position = EditTextView.note?.getCursorPosition(),
+            position >= 0 && position <= storage.length
+        {
             setSelectedRange(NSMakeRange(position, 0))
             if needScrollToCursor {
                 scrollToCursor()
@@ -653,20 +607,22 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
         let board = sender.draggingPasteboard
         let range = selectedRange
-        var data: Data
 
         guard let note = EditTextView.note, let storage = textStorage else { return false }
 
-        if let data = board.data(forType: .rtfd),
-            let text = NSAttributedString(rtfd: data, documentAttributes: nil),
-            text.length > 0,
-            range.length > 0
-        {
-            insertText("", replacementRange: range)
+        // 性能优化：提前检查数据类型，避免不必要的处理
+        let availableTypes = board.types ?? []
 
+        // 优先处理 RTFD
+        if availableTypes.contains(.rtfd),
+            let data = board.data(forType: .rtfd),
+            let text = NSAttributedString(rtfd: data, documentAttributes: nil),
+            text.length > 0, range.length > 0
+        {
+
+            insertText("", replacementRange: range)
             let dropPoint = convert(sender.draggingLocation, from: nil)
             let caretLocation = characterIndexForInsertion(at: dropPoint)
-
             let mutable = NSMutableAttributedString(attributedString: text)
 
             insertText(mutable, replacementRange: NSRange(location: caretLocation, length: 0))
@@ -675,78 +631,92 @@ class EditTextView: NSTextView, NSTextFinderClient {
             DispatchQueue.main.async {
                 self.setSelectedRange(NSRange(location: caretLocation, length: mutable.length))
             }
-
             return true
         }
 
-        if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "attributedText")), let attributedText = try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSMutableAttributedString.self, from: data) {
-            let dropPoint = convert(sender.draggingLocation, from: nil)
-            let caretLocation = characterIndexForInsertion(at: dropPoint)
-
-            let filePathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
-            let titleKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.title")
-            let positionKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.position")
-
-            guard
-                let path = attributedText.attribute(filePathKey, at: 0, effectiveRange: nil) as? String,
-                let title = attributedText.attribute(titleKey, at: 0, effectiveRange: nil) as? String,
-                let position = attributedText.attribute(positionKey, at: 0, effectiveRange: nil) as? Int
-            else { return false }
-
-            guard let imageUrl = note.getImageUrl(imageName: path) else { return false }
-
-            let cacheUrl = note.getImageCacheUrl()
-
-            let locationDiff = position > caretLocation ? caretLocation : caretLocation - 1
-            let attachment = NoteAttachment(title: title, path: path, url: imageUrl, cache: cacheUrl, invalidateRange: NSRange(location: locationDiff, length: 1))
-
-            guard let attachmentText = attachment.getAttributedString() else { return false }
-            guard locationDiff < storage.length else { return false }
-
-            textStorage?.deleteCharacters(in: NSRange(location: position, length: 1))
-            textStorage?.replaceCharacters(in: NSRange(location: locationDiff, length: 0), with: attachmentText)
-
-            unLoadImages(note: note)
-            setSelectedRange(NSRange(location: caretLocation, length: 0))
-
-            return true
-        }
-
-        if let urls = board.readObjects(forClasses: [NSURL.self], options: nil) as? [URL],
-            urls.count > 0
+        // 处理属性文本（图片）
+        let attributedTextType = NSPasteboard.PasteboardType(rawValue: "attributedText")
+        if availableTypes.contains(attributedTextType),
+            let data = board.data(forType: attributedTextType),
+            let attributedText = try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSMutableAttributedString.self, from: data)
         {
-            let dropPoint = convert(sender.draggingLocation, from: nil)
-            let caretLocation = characterIndexForInsertion(at: dropPoint)
-            let offset = 0
 
-            unLoadImages(note: note)
+            return handleImageDrop(attributedText: attributedText, sender: sender, note: note, storage: storage)
+        }
 
-            for url in urls {
-                do {
-                    data = try Data(contentsOf: url)
-                } catch {
-                    return false
-                }
-
-                guard let filePath = ImagesProcessor.writeFile(data: data, url: url, note: note) else { return false }
-
-                let insertRange = NSRange(location: caretLocation + offset, length: 0)
-                insertText("![](\(filePath))", replacementRange: insertRange)
-                insertNewline(nil)
-                insertNewline(nil)
-            }
-
-            if let storage = textStorage {
-                NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
-                saveTextStorageContent(to: note)
-                note.save()
-            }
-            viewDelegate?.notesTableView.reloadRow(note: note)
-
-            return true
+        // 处理文件 URLs
+        if let urls = board.readObjects(forClasses: [NSURL.self], options: nil) as? [URL], !urls.isEmpty {
+            return handleFileURLsDrop(urls: urls, sender: sender, note: note, storage: storage)
         }
 
         return false
+    }
+
+    private func handleImageDrop(attributedText: NSMutableAttributedString, sender: NSDraggingInfo, note: Note, storage: NSTextStorage) -> Bool {
+        let dropPoint = convert(sender.draggingLocation, from: nil)
+        let caretLocation = characterIndexForInsertion(at: dropPoint)
+
+        let filePathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
+        let titleKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.title")
+        let positionKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.position")
+
+        guard
+            let path = attributedText.attribute(filePathKey, at: 0, effectiveRange: nil) as? String,
+            let title = attributedText.attribute(titleKey, at: 0, effectiveRange: nil) as? String,
+            let position = attributedText.attribute(positionKey, at: 0, effectiveRange: nil) as? Int,
+            let imageUrl = note.getImageUrl(imageName: path)
+        else { return false }
+
+        let cacheUrl = note.getImageCacheUrl()
+        let locationDiff = max(0, position > caretLocation ? caretLocation : caretLocation - 1)
+
+        guard locationDiff < storage.length else { return false }
+
+        let attachment = NoteAttachment(title: title, path: path, url: imageUrl, cache: cacheUrl, invalidateRange: NSRange(location: locationDiff, length: 1))
+
+        guard let attachmentText = attachment.getAttributedString() else { return false }
+
+        textStorage?.deleteCharacters(in: NSRange(location: position, length: 1))
+        textStorage?.replaceCharacters(in: NSRange(location: locationDiff, length: 0), with: attachmentText)
+
+        unLoadImages(note: note)
+        setSelectedRange(NSRange(location: caretLocation, length: 0))
+        return true
+    }
+
+    private func handleFileURLsDrop(urls: [URL], sender: NSDraggingInfo, note: Note, storage: NSTextStorage) -> Bool {
+        let dropPoint = convert(sender.draggingLocation, from: nil)
+        let caretLocation = characterIndexForInsertion(at: dropPoint)
+
+        unLoadImages(note: note)
+
+        // 性能优化：批量处理文件
+        var successCount = 0
+        for url in urls {
+            guard let data = try? Data(contentsOf: url),
+                let filePath = ImagesProcessor.writeFile(data: data, url: url, note: note)
+            else {
+                continue
+            }
+
+            let insertRange = NSRange(location: caretLocation + successCount * 2, length: 0)
+            insertText("![](\\(filePath))", replacementRange: insertRange)
+            if url != urls.last {
+                insertNewline(nil)
+                insertNewline(nil)
+            }
+            successCount += 1
+        }
+
+        guard successCount > 0 else { return false }
+
+        // 批量处理后统一更新
+        NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
+        saveTextStorageContent(to: note)
+        note.save()
+        viewDelegate?.notesTableView.reloadRow(note: note)
+
+        return true
     }
 
     public func unLoadImages(note: Note) {
@@ -754,10 +724,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     func getSearchText() -> String {
-        guard let search = ViewController.shared()?.search else { return String() }
+        guard let search = getViewController()?.search else { return "" }
 
         if let editor = search.currentEditor(), editor.selectedRange.length > 0 {
-            return (search.stringValue as NSString).substring(with: NSRange(0..<editor.selectedRange.location))
+            let searchString = search.stringValue
+            let endIndex = min(editor.selectedRange.location, searchString.count)
+            return String(searchString.prefix(endIndex))
         }
 
         return search.stringValue
@@ -791,84 +763,15 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     @IBAction func insertFileOrImage(_ sender: Any) {
-        guard let note = EditTextView.note else { return }
-
-        let panel = NSOpenPanel()
-        panel.allowsMultipleSelection = true
-        panel.canChooseDirectories = false
-        panel.canChooseFiles = true
-        panel.canCreateDirectories = true
-        panel.begin { result in
-            if result == NSApplication.ModalResponse.OK {
-                let urls = panel.urls
-
-                let last = urls.last
-                for url in urls {
-                    if self.saveFile(url: url, in: note) {
-                        if last != url {
-                            self.insertNewline(nil)
-                            if let vc = ViewController.shared() {
-                                vc.notesTableView.reloadRow(note: note)
-                            }
-                        }
-                    }
-
-                    if url != urls.last {
-                        self.insertNewline(nil)
-                    }
-                }
-            }
-        }
+        menuManager?.insertFileOrImage()
     }
 
     @IBAction func insertCodeBlock(_ sender: NSButton) {
-        let currentRange = selectedRange()
-
-        if currentRange.length > 0 {
-            let mutable = NSMutableAttributedString(string: "```\n")
-            if let substring = attributedSubstring(forProposedRange: currentRange, actualRange: nil) {
-                mutable.append(substring)
-
-                if substring.string.last != "\n" {
-                    mutable.append(NSAttributedString(string: "\n"))
-                }
-            }
-
-            mutable.append(NSAttributedString(string: "```\n"))
-
-            EditTextView.shouldForceRescan = true
-            insertText(mutable, replacementRange: currentRange)
-            setSelectedRange(NSRange(location: currentRange.location + 3, length: 0))
-
-            return
-        }
-
-        if textStorage?.length == 0 {
-            EditTextView.shouldForceRescan = true
-        }
-
-        insertText("```\n\n```\n", replacementRange: currentRange)
-        setSelectedRange(NSRange(location: currentRange.location + 3, length: 0))
+        menuManager?.insertCodeBlock()
     }
 
     @IBAction func insertCodeSpan(_ sender: NSMenuItem) {
-        let currentRange = selectedRange()
-
-        if currentRange.length > 0 {
-            let mutable = NSMutableAttributedString(string: "`")
-            if let substring = attributedSubstring(forProposedRange: currentRange, actualRange: nil) {
-                mutable.append(substring)
-            }
-
-            mutable.append(NSAttributedString(string: "`"))
-
-            EditTextView.shouldForceRescan = true
-            insertText(mutable, replacementRange: currentRange)
-            return
-        }
-
-        insertText("``", replacementRange: currentRange)
-        setSelectedRange(NSRange(location: currentRange.location + 1, length: 0))
+        menuManager?.insertCodeSpan()
     }
 
     private func getTextFormatter() -> TextFormatter? {
@@ -926,14 +829,15 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return
         }
 
-        let url = URL(fileURLWithPath: link as! String)
+        guard let linkString = link as? String else { return }
+        let url = URL(fileURLWithPath: linkString)
 
         NSWorkspace.shared.open(url)
     }
 
     override func viewDidChangeEffectiveAppearance() {
         guard let note = EditTextView.note else { return }
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = getViewController() else { return }
         UserDataService.instance.isDark = effectiveAppearance.isDark
 
         NotesTextProcessor.hl = nil
@@ -948,152 +852,13 @@ class EditTextView: NSTextView, NSTextFinderClient {
         viewDelegate?.refillEditArea()
     }
 
-    public func fillHighlightLinks() {
+    public func fillHighlightLinks(range: NSRange? = nil) {
         guard let storage = textStorage else { return }
-        let range = NSRange(0..<storage.length)
-        let processor = NotesTextProcessor(storage: storage, range: range)
+        let targetRange = range ?? NSRange(0..<storage.length)
+        let processor = NotesTextProcessor(storage: storage, range: targetRange)
         processor.highlightLinks()
     }
 
-    private func pasteImageFromClipboard(in note: Note) -> Bool {
-        if let url = NSURL(from: NSPasteboard.general) {
-            if !url.isFileURL {
-                return false
-            }
-            return saveFile(url: url as URL, in: note)
-        }
-
-        if let clipboard = NSPasteboard.general.data(forType: .tiff), let image = NSImage(data: clipboard), let jpgData = image.jpgData {
-            EditTextView.shouldForceRescan = true
-
-            saveClipboard(data: jpgData, note: note)
-            saveTextStorageContent(to: note)
-            note.save()
-
-            textStorage?.sizeAttachmentImages()
-            return true
-        }
-
-        return false
-    }
-
-    private func saveFile(url: URL, in note: Note) -> Bool {
-        if let data = try? Data(contentsOf: url) {
-            var ext: String?
-
-            if NSImage(data: data) != nil {
-                ext = "jpg"
-                if let source = CGImageSourceCreateWithData(data as CFData, nil) {
-                    let uti = CGImageSourceGetType(source)
-
-                    if let fileExtension = (uti as String?)?.utiFileExtension {
-                        ext = fileExtension
-                    }
-                }
-            }
-
-            EditTextView.shouldForceRescan = true
-
-            saveClipboard(data: data, note: note, ext: ext, url: url)
-            saveTextStorageContent(to: note)
-            note.save()
-
-            textStorage?.sizeAttachmentImages()
-
-            return true
-        }
-
-        return false
-    }
-
-    func run(_ cmd: String) -> String? {
-        let pipe = Pipe()
-        let process = Process()
-        process.launchPath = "/bin/bash"
-        process.arguments = ["-c", String(format: "%@", cmd)]
-        process.standardOutput = pipe
-        let fileHandle = pipe.fileHandleForReading
-        process.launch()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
-            process.terminate()
-        }
-        process.waitUntilExit()
-        return String(data: fileHandle.readDataToEndOfFile(), encoding: .utf8)
-    }
-
-    func postToPicGo(imagePath: String, completion: @escaping (Any?, Error?) -> Void) {
-        let parameters: [String: [String]] = [
-            "list": [imagePath]
-        ]
-        AF.request("http://127.0.0.1:36677/upload", method: .post, parameters: parameters, encoder: JSONParameterEncoder.default).response { response in
-            switch response.result {
-            case .success:
-                let json = JSON(response.value as Any)
-                let result = json["result"][0].stringValue
-                if !result.isEmpty {
-                    completion(result, nil)
-                } else {
-                    completion(nil, nil)
-                }
-
-            case .failure:
-                completion(nil, nil)
-            }
-        }
-    }
-
-    func deleteImage(tempPath: URL) {
-        do {
-            guard let resultingItemUrl = Storage.sharedInstance().trashItem(url: tempPath) else { return }
-            try FileManager.default.moveItem(at: tempPath, to: resultingItemUrl)
-        } catch {
-            print(error)
-        }
-    }
-
-    private func saveClipboard(data: Data, note: Note, ext: String? = nil, url: URL? = nil) {
-        guard let vc = ViewController.shared() else { return }
-        if let path = ImagesProcessor.writeFile(data: data, url: url, note: note, ext: ext) {
-            var newLineImage = NSAttributedString(string: "![](\(path))")
-            let imagePath = "\(note.project.url.path)\(path)"
-            let tempPath = URL(fileURLWithPath: imagePath)
-            let picType = UserDefaultsManagement.defaultPicUpload
-            if picType == "PicGo" {
-                vc.toastUpload(status: true)
-                postToPicGo(imagePath: imagePath) { result, error in
-                    if let result {
-                        newLineImage = NSAttributedString(string: "![](\(result))")
-                        self.deleteImage(tempPath: tempPath)
-                    } else if let error {
-                        vc.toastUpload(status: false)
-                        print("error: \(error.localizedDescription)")
-                    } else {
-                        vc.toastUpload(status: false)
-                    }
-                    self.breakUndoCoalescing()
-                    self.insertText(newLineImage, replacementRange: self.selectedRange())
-                    self.breakUndoCoalescing()
-                }
-            } else {
-                if picType == "uPic" || picType == "Picsee" {
-                    vc.toastUpload(status: true)
-                    let runList = run("/Applications/\(picType).app/Contents/MacOS/\(picType) -o url -u \(tempPath)")
-                    let imageDesc = runList?.components(separatedBy: "\n") ?? []
-
-                    if imageDesc.count > 3 {
-                        let imagePath = imageDesc[4]
-                        newLineImage = NSAttributedString(string: "![](\(imagePath))")
-                        deleteImage(tempPath: tempPath)
-                    } else {
-                        vc.toastUpload(status: false)
-                    }
-                }
-                breakUndoCoalescing()
-                insertText(newLineImage, replacementRange: selectedRange())
-                breakUndoCoalescing()
-            }
-        }
-    }
 
     public func updateTextContainerInset() {
         let lineWidth = UserDefaultsManagement.lineWidth
@@ -1182,113 +947,22 @@ class EditTextView: NSTextView, NSTextFinderClient {
         return menu
     }
 
-    // MARK: - 图片预览功能
-
-    private func handleImageLinkHover(at index: Int, mousePoint: NSPoint) {
-        guard let storage = textStorage else {
-            hideImagePreview()
-            return
-        }
-
-        // 检查是否应该禁用预览
-        if shouldDisableImagePreview() {
-            hideImagePreview()
-            return
-        }
-
-        let text = storage.string
-
-        // 检测光标位置是否在图片链接上
-        if let imageInfo = ImageLinkParser.detectImageLink(in: text, at: index) {
-            // 如果是同一个图片链接且在同一范围内，不需要重新处理
-            if let lastInfo = lastHoveredImageInfo,
-                lastInfo.src == imageInfo.src && lastInfo.range.location == imageInfo.range.location && lastInfo.range.length == imageInfo.range.length
-            {
-
-                // 如果预览窗口已经显示，保持不变（避免闪动）
-                return
-            }
-
-            // 不同的图片链接，重新设置
-            lastHoveredImageInfo = imageInfo
-
-            // 取消之前的定时器
-            hoverTimer?.invalidate()
-
-            // 设置延迟显示预览（减少到0.3秒提升响应性）
-            hoverTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
-                // 再次检查是否应该禁用预览（延迟期间可能发生变化）
-                guard let self = self, !self.shouldDisableImagePreview() else { return }
-                self.showImagePreview(for: imageInfo, at: mousePoint)
-            }
-        } else {
-            // 不在图片链接上，隐藏预览
-            if lastHoveredImageInfo != nil {
-                hideImagePreview()
-            }
-        }
-    }
-
-    private func showImagePreview(for imageInfo: ImageLinkInfo, at mousePoint: NSPoint) {
-        // 确保预览窗口存在
-        if imagePreviewWindow == nil {
-            imagePreviewWindow = ImagePreviewWindow()
-        }
-
-        guard let window = window else { return }
-
-        // 直接使用鼠标位置，但只在首次显示时计算位置，后续保持不变
-        let screenPoint = window.convertPoint(toScreen: mousePoint)
-
-        // 显示预览，但使用新的定位逻辑
-        imagePreviewWindow?.showPreview(for: imageInfo.src, at: screenPoint, isFixed: true)
-    }
-
-    private func hideImagePreview() {
-        hoverTimer?.invalidate()
-        hoverTimer = nil
-        lastHoveredImageInfo = nil
-        imagePreviewWindow?.hidePreview()
-    }
-
-    // 检查是否应该禁用图片预览
-    private func shouldDisableImagePreview() -> Bool {
-        // 如果有文本选中，禁用预览
-        let selection = selectedRange()
-        if selection.length > 0 {
-            return true
-        }
-
-        // 如果正在进行拖拽操作，禁用预览
-        if window != nil, let event = NSApp.currentEvent {
-            if event.type == .leftMouseDragged || event.type == .leftMouseDown {
-                return true
-            }
-        }
-
-        // 如果正在编辑模式且有标记文本（输入法状态），禁用预览
-        if hasMarkedText() {
-            return true
-        }
-
-        return false
-    }
 
     // 重写 mouseExited 确保离开时隐藏预览
     override func mouseExited(with event: NSEvent) {
         super.mouseExited(with: event)
-        hideImagePreview()
+        imagePreviewManager?.hideImagePreview()
     }
 
     // 重写 mouseDragged 在拖拽时隐藏预览
     override func mouseDragged(with event: NSEvent) {
-        hideImagePreview()
+        imagePreviewManager?.hideImagePreview()
         super.mouseDragged(with: event)
     }
 
     // 重写 keyDown 确保按键时隐藏预览
     override func keyDown(with event: NSEvent) {
-        hideImagePreview()
+        imagePreviewManager?.hideImagePreview()
 
         guard
             !(event.modifierFlags.contains(.shift)
@@ -1341,7 +1015,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         super.keyDown(with: event)
 
-        fillHighlightLinks()
+        // 性能优化：只高亮当前段落的链接
+        if let paragraphRange = getParagraphRange() {
+            fillHighlightLinks(range: paragraphRange)
+        } else {
+            fillHighlightLinks()
+        }
         saveCursorPosition()
     }
 }
