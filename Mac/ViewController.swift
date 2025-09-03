@@ -243,7 +243,7 @@ class ViewController:
         configureLayout()
         configureNotesList()
         configureEditor()
-        
+
         // 异步预加载，避免影响启动性能
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.preloadWebView()
@@ -2265,18 +2265,18 @@ class ViewController:
     private func preloadWebView() {
         // 仅在非预览模式时预加载，避免干扰已有预览
         guard editArea.markdownView == nil, !UserDefaultsManagement.preview else { return }
-        
+
         // 使用最简单的临时 Note
         let tempProject = getSidebarProject() ?? storage.noteList.first?.project
         guard let project = tempProject else { return }
-        
+
         let tempNote = Note(name: "", project: project, type: .Markdown)
         tempNote.content = NSMutableAttributedString(string: "")
-        
+
         let frame = editArea.bounds
         editArea.markdownView = MPreviewView(frame: frame, note: tempNote, closure: {})
         editArea.markdownView?.isHidden = true
-        
+
         if let view = editArea.markdownView {
             editAreaScroll.addSubview(view)
         }
@@ -2287,15 +2287,15 @@ class ViewController:
         cancelTextSearch()
         editArea.window?.makeFirstResponder(notesTableView)
         UserDefaultsManagement.preview = true
-        
+
         // WebView 保活：先隐藏，更新内容后再动画显示
         if let webView = editArea.markdownView {
             webView.alphaValue = 0.0
             webView.isHidden = false
-            
+
             // 先更新内容，再显示动画
             refillEditArea()
-            
+
             // 短暂延迟确保内容加载完成后再显示
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                 NSAnimationContext.runAnimationGroup({ context in
@@ -2307,7 +2307,7 @@ class ViewController:
         } else {
             refillEditArea()
         }
-        
+
         titleLabel.isEditable = false
         if UserDefaultsManagement.previewLocation == "Editing", !UserDefaultsManagement.isOnExport {
             let scrollPre = getScrollTop()

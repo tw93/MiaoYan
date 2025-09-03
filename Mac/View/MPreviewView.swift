@@ -343,7 +343,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     public func load(note: Note, force: Bool = false) {
         // 简单方案：直接隐藏，等内容加载完再显示
         self.alphaValue = 0.0
-        
+
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
 
@@ -354,7 +354,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             DispatchQueue.main.async {
                 try? self.loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
                 self.note = note
-                
+
                 // 等待导航完成再显示
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     NSAnimationContext.runAnimationGroup({ context in

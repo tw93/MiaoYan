@@ -105,6 +105,9 @@ class ImagePreviewWindow: NSWindow {
             DispatchQueue.main.async {
                 guard self?.currentImageURL == imageURL else { return }
 
+                // 立即隐藏loading指示器
+                self?.hideLoadingIndicator()
+
                 if let image = image {
                     Self.imageCache.setObject(image, forKey: imageURL as NSString)
                     self?.displayImage(image, at: displayPoint)
@@ -308,8 +311,9 @@ class ImagePreviewWindow: NSWindow {
             height: 16
         )
 
-        // 添加并排的加载文字
-        if backgroundView.subviews.count == 2 {
+        // 添加并排的加载文字（避免重复添加）
+        let hasLoadingLabel = backgroundView.subviews.contains { $0 is NSTextField }
+        if !hasLoadingLabel {
             let loadingLabel = NSTextField(labelWithString: "Loading...")
             loadingLabel.font = NSFont.systemFont(ofSize: 13, weight: .medium)
             loadingLabel.textColor = .secondaryLabelColor
@@ -346,10 +350,8 @@ class ImagePreviewWindow: NSWindow {
         loadingIndicator.stopAnimation(nil)
         loadingIndicator.isHidden = true
 
-        // 清理可能的加载文字
-        if backgroundView.subviews.count > 2 {
-            backgroundView.subviews.last?.removeFromSuperview()
-        }
+        // 清理加载文字
+        backgroundView.subviews.removeAll { $0 is NSTextField }
     }
 
     private func hideImage() {
@@ -379,6 +381,28 @@ class ImagePreviewWindow: NSWindow {
                     self.alphaValue = 1
                 })
         }
+    }
+
+    // 检查点是否在预览容忍区域内（包括预览窗口和原始链接区域）
+    func isPointInToleranceArea(_ screenPoint: NSPoint, originalPoint: NSPoint) -> Bool {
+        guard isVisible else { return false }
+
+        // 检查是否在预览窗口内
+        let windowFrame = frame
+        if windowFrame.contains(screenPoint) {
+            return true
+        }
+
+        // 检查是否在原始链接附近的容忍区域（扩大50px）
+        let tolerance: CGFloat = 50
+        let toleranceRect = NSRect(
+            x: originalPoint.x - tolerance,
+            y: originalPoint.y - tolerance,
+            width: tolerance * 2,
+            height: tolerance * 2
+        )
+
+        return toleranceRect.contains(screenPoint)
     }
 
     // 重写 setContentSize 强制限制窗口大小
