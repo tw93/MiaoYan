@@ -22,6 +22,9 @@
 		274D62CF2E434B6D003C075F /* ImageLinkParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274D62CE2E434B6D003C075F /* ImageLinkParser.swift */; };
 		274D62D12E434B9C003C075F /* ImagePreviewWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274D62D02E434B9C003C075F /* ImagePreviewWindow.swift */; };
 		275592971F3AE9B5006B8988 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275592961F3AE9B5006B8988 /* MainWindowController.swift */; };
+		275F9F5C2E68150E006BC2AC /* EditorMenuManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F5A2E68150E006BC2AC /* EditorMenuManager.swift */; };
+		275F9F5D2E68150E006BC2AC /* ClipboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F592E68150E006BC2AC /* ClipboardManager.swift */; };
+		275F9F5E2E68150E006BC2AC /* ImagePreviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F5B2E68150E006BC2AC /* ImagePreviewManager.swift */; };
 		27727AFB2E1B9E7200275477 /* TsangerJinKai02-W04.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27727AFA2E1B9E7200275477 /* TsangerJinKai02-W04.ttf */; };
 		277A61D8244B538F000F0033 /* SidebarTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277A61D7244B538E000F0033 /* SidebarTableRowView.swift */; };
 		27838E68287521C0009E8012 /* DetachedWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27838E67287521C0009E8012 /* DetachedWindowController.swift */; };
@@ -172,6 +175,9 @@
 		274D62CE2E434B6D003C075F /* ImageLinkParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLinkParser.swift; sourceTree = "<group>"; };
 		274D62D02E434B9C003C075F /* ImagePreviewWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewWindow.swift; sourceTree = "<group>"; };
 		275592961F3AE9B5006B8988 /* MainWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowController.swift; sourceTree = "<group>"; };
+		275F9F592E68150E006BC2AC /* ClipboardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardManager.swift; sourceTree = "<group>"; };
+		275F9F5A2E68150E006BC2AC /* EditorMenuManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMenuManager.swift; sourceTree = "<group>"; };
+		275F9F5B2E68150E006BC2AC /* ImagePreviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewManager.swift; sourceTree = "<group>"; };
 		276CE9EE2997D34600280459 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/ContentViewController.strings; sourceTree = "<group>"; };
 		276CE9EF2997D34600280459 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
 		276CE9F02997D34600280459 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -522,6 +528,9 @@
 		D7E6D9D520808652003ECAFC /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				275F9F592E68150E006BC2AC /* ClipboardManager.swift */,
+				275F9F5A2E68150E006BC2AC /* EditorMenuManager.swift */,
+				275F9F5B2E68150E006BC2AC /* ImagePreviewManager.swift */,
 				6F13BB3820FEDE230005E120 /* UserDataService.swift */,
 				D7470D062170E890006B2A92 /* CustomTextStorage.swift */,
 				D730BD26222BF30700E69C93 /* KeychainConfiguration.swift */,
@@ -756,6 +765,9 @@
 				D730BD35222DB11E00E69C93 /* TextBundleInfo.swift in Sources */,
 				D140A67728BB1ACA00637ED1 /* ArrowFunctionParenthesesStrategy.swift in Sources */,
 				D79FE8A21F77D04A00113CFD /* Note.swift in Sources */,
+				275F9F5C2E68150E006BC2AC /* EditorMenuManager.swift in Sources */,
+				275F9F5D2E68150E006BC2AC /* ClipboardManager.swift in Sources */,
+				275F9F5E2E68150E006BC2AC /* ImagePreviewManager.swift in Sources */,
 				D140A68428BB1ACA00637ED1 /* ParsingErrorDetails.swift in Sources */,
 				D7A41C9B2316A8BE00DAAFEB /* CodeBlock.swift in Sources */,
 				D7153E092285EC6100A2C20F /* TitleTextField.swift in Sources */,
