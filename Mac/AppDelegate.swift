@@ -11,6 +11,7 @@ import AppCenterAnalytics
 import AppCenterCrashes
 import Cocoa
 import Sparkle
+import os.log
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
@@ -36,6 +37,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        // Configure system logging to reduce harmless warning noise
+        configureSystemLogging()
+        
         // Ensure the font panel is closed when the app starts, in case it was
         // left open when the app quit.
         NSFontManager.shared.fontPanel(false)?.orderOut(self)
@@ -73,12 +77,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         mainWC.window?.makeKeyAndOrderFront(nil)
         mainWindowController = mainWC
 
+        // Configure AppCenter
         AppCenter.start(
             withAppSecret: "e4d22300-3bd7-427f-8f3c-41f315c2bb76",
             services: [
                 Analytics.self,
                 Crashes.self,
             ])
+        
         Analytics.trackEvent(
             "MiaoYan Attribute",
             withProperties: [
@@ -276,5 +282,21 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
         return true
+    }
+    
+    // MARK: - Logging Configuration
+    
+    private func configureSystemLogging() {
+        // Disable verbose system activity tracing
+        setenv("OS_ACTIVITY_MODE", "disable", 1)
+        
+        // Reduce Metal debug output noise
+        setenv("MTL_HUD_ENABLED", "0", 1)
+        setenv("MTL_DEBUG_LAYER", "0", 1)
+        
+        // Simple logging configuration
+        let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "com.tw93.MiaoYan", 
+                           category: "Application")
+        logger.info("System logging configured")
     }
 }
