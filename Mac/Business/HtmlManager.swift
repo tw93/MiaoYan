@@ -139,8 +139,13 @@ class HtmlManager {
             let downTheme = getPPTTheme()
             template = template.replacingOccurrences(of: "DOWN_THEME", with: downTheme)
 
-            let newHtmlString = htmlString.replacingOccurrences(of: "](/i/", with: "](./i/")
-            return template.replacingOccurrences(of: "DOWN_RAW", with: newHtmlString)
+            // Escape the markdown content for JavaScript template literal
+            var escapedContent = htmlString.replacingOccurrences(of: "\\", with: "\\\\")
+            escapedContent = escapedContent.replacingOccurrences(of: "`", with: "\\`")
+            escapedContent = escapedContent.replacingOccurrences(of: "$", with: "\\$")
+            escapedContent = escapedContent.replacingOccurrences(of: "](/i/", with: "](./i/")
+
+            return template.replacingOccurrences(of: "DOWN_RAW", with: escapedContent)
         }
 
         #if os(iOS)

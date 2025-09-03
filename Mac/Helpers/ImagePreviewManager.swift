@@ -80,16 +80,18 @@ class ImagePreviewManager {
         lastShowPoint = nil
         imagePreviewWindow?.hidePreview()
     }
-    
+
     func handleMouseClick(at point: NSPoint) {
         guard let textView = textView,
-              let window = textView.window else { return }
-        
+            let window = textView.window
+        else { return }
+
         let screenPoint = window.convertPoint(toScreen: point)
-        
+
         // 如果点击在容忍区域外，隐藏预览
         if let lastPoint = lastShowPoint,
-           imagePreviewWindow?.isPointInToleranceArea(screenPoint, originalPoint: lastPoint) != true {
+            imagePreviewWindow?.isPointInToleranceArea(screenPoint, originalPoint: lastPoint) != true
+        {
             hideImagePreview()
         }
     }

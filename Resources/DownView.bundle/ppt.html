@@ -13,7 +13,7 @@
         font-display: fallback;
         src: url('DOWN_FONT_PATH/LXGWWenKaiScreen.ttf') format('truetype');
       }
-        
+
       @font-face {
           font-family: 'TsangerJinKai02-W04';
           font-display: fallback;
@@ -118,7 +118,8 @@
           RevealMarkdown,
           RevealHighlight,
           RevealNotes,
-          RevealZoom,
+          // Disable zoom in PPT mode to avoid layout issues
+          // RevealZoom,
           RevealMath.KaTeX,
         ],
       });

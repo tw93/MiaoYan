@@ -42,8 +42,13 @@ class SidebarSplitView: NSSplitView, NSSplitViewDelegate {
         // Save sidebar width when drag ends
         if let vc = ViewController.shared() {
             let sidebarWidth = vc.sidebarSplitView.subviews[0].frame.width
+            // Only save width if sidebar is visible and has reasonable width
             if sidebarWidth > 86 {
                 UserDefaultsManagement.realSidebarSize = Int(sidebarWidth)
+            } else if sidebarWidth == 0 {
+                // If hidden, ensure we preserve the last good width
+                // Don't overwrite realSidebarSize when sidebar is hidden
+                // This prevents the sidebar from getting smaller each time
             }
         }
     }

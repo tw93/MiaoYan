@@ -32,13 +32,16 @@ class ViewController:
     var needRestorePreview: Bool = false
 
     private var disablePreviewWorkItem: DispatchWorkItem?
-    private var isHandlingScrollEvent = false
-    private var swipeLeftExecuted = false
-    private var swipeRightExecuted = false
-    private var scrollDeltaX: CGFloat = 0
+    var isHandlingScrollEvent = false
+    var swipeLeftExecuted = false
+    var swipeRightExecuted = false
+    var scrollDeltaX: CGFloat = 0
 
     private var updateViews = [Note]()
     public var breakUndoTimer = Timer()
+
+    // Presentation mode scroll position preservation
+    var savedPresentationScrollPosition: CGPoint?
 
     override var representedObject: Any? {
         didSet {}
@@ -755,19 +758,6 @@ class ViewController:
         }
     }
 
-    func viewDidResize() {
-        checkSidebarConstraint()
-        checkTitlebarTopConstraint()
-        updateDividers()
-
-        if !refilled {
-            refilled = true
-            DispatchQueue.main.async {
-                self.refillEditArea(previewOnly: true)
-                self.refilled = false
-            }
-        }
-    }
 
     func reloadSideBar() {
         guard let outline = storageOutlineView else {
@@ -784,34 +774,6 @@ class ViewController:
         notesTableView.reloadData()
     }
 
-    func refillEditArea(cursor: Int? = nil, previewOnly: Bool = false, saveTyping: Bool = false, force: Bool = false) {
-        DispatchQueue.main.async { [weak self] in
-            self?.previewButton.state = UserDefaultsManagement.preview ? .on : .off
-            self?.presentationButton.state = UserDefaultsManagement.presentation ? .on : .off
-        }
-
-        guard !previewOnly || previewOnly && UserDefaultsManagement.preview else {
-            return
-        }
-
-        DispatchQueue.main.async {
-            var location: Int = 0
-
-            if let unwrappedCursor = cursor {
-                location = unwrappedCursor
-            } else {
-                location = self.editArea.selectedRanges[0].rangeValue.location
-            }
-
-            let selected = self.notesTableView.selectedRow
-            if selected > -1, self.notesTableView.noteList.indices.contains(selected) {
-                if let note = self.notesTableView.getSelectedNote() {
-                    self.editArea.fill(note: note, highlight: true, saveTyping: saveTyping, force: force)
-                    self.editArea.setSelectedRange(NSRange(location: location, length: 0))
-                }
-            }
-        }
-    }
 
     public func keyDown(with event: NSEvent) -> Bool {
         guard let mw = MainWindowController.shared() else {
@@ -1074,15 +1036,6 @@ class ViewController:
         return true
     }
 
-    func cancelTextSearch() {
-        let menu = NSMenuItem(title: "", action: nil, keyEquivalent: "")
-        menu.tag = NSTextFinder.Action.hideFindInterface.rawValue
-        editArea.performTextFinderAction(menu)
-
-        if !UserDefaultsManagement.preview {
-            NSApp.mainWindow?.makeFirstResponder(editArea)
-        }
-    }
 
     @IBAction func quiteApp(_ sender: Any) {
         if UserDefaultsManagement.isSingleMode {
@@ -1345,203 +1298,6 @@ class ViewController:
 
     // MARK: - Sidebar Layout Manager
 
-    func setDividerColor(for splitView: NSSplitView, hidden: Bool) {
-        DispatchQueue.main.async {
-            let color = hidden ? (NSColor(named: "mainBackground") ?? NSColor.windowBackgroundColor) : (NSColor(named: "divider") ?? NSColor.separatorColor)
-            splitView.setValue(color, forKey: "dividerColor")
-            splitView.needsDisplay = true
-        }
-    }
-
-    private var sidebarWidth: CGFloat {
-        guard let splitView = sidebarSplitView,
-            splitView.subviews.count > 0
-        else { return 0 }
-        return splitView.subviews[0].frame.width
-    }
-
-    private var notelistWidth: CGFloat {
-        guard splitView.subviews.count > 0 else { return 0 }
-        return splitView.subviews[0].frame.width
-    }
-
-    func updateDividers() {
-        guard sidebarSplitView != nil && splitView != nil else { return }
-        setDividerColor(for: sidebarSplitView, hidden: sidebarWidth == 0)
-        setDividerColor(for: splitView, hidden: notelistWidth == 0)
-    }
-
-    @IBAction func toggleNoteList(_ sender: Any) {
-        guard splitView != nil else { return }
-
-        if notelistWidth == 0 {
-            showNoteList(sender)
-        } else {
-            hideNoteList(sender)
-        }
-    }
-
-    @IBAction func toggleSidebarPanel(_ sender: Any) {
-        guard sidebarSplitView != nil else { return }
-
-        if sidebarWidth == 0 {
-            showSidebar(sender)
-        } else {
-            hideSidebar(sender)
-        }
-    }
-
-    override func wantsScrollEventsForSwipeTracking(on axis: NSEvent.GestureAxis) -> Bool {
-        axis == .horizontal
-    }
-
-    override func swipe(with event: NSEvent) {
-        swipe(deltaX: event.deltaX)
-    }
-
-    override func scrollWheel(with event: NSEvent) {
-        if !NSEvent.isSwipeTrackingFromScrollEventsEnabled {
-            super.scrollWheel(with: event)
-            return
-        }
-
-        switch event.phase {
-        case .began:
-            isHandlingScrollEvent = true
-            swipeLeftExecuted = false
-            swipeRightExecuted = false
-            scrollDeltaX = 0
-        case .changed:
-            guard isHandlingScrollEvent else {
-                break
-            }
-
-            let directionChanged = scrollDeltaX.sign != event.scrollingDeltaX.sign
-
-            guard !directionChanged else {
-                scrollDeltaX = event.scrollingDeltaX
-                break
-            }
-
-            scrollDeltaX += event.scrollingDeltaX
-
-            // throttle
-            guard abs(scrollDeltaX) > 50 else {
-                break
-            }
-
-            let flippedScrollDelta = scrollDeltaX * -1
-            let swipedLeft = flippedScrollDelta > 0
-
-            switch (swipedLeft, swipeLeftExecuted, swipeRightExecuted) {
-            case (true, false, _):  // swiped left
-                swipeLeftExecuted = true
-                swipeRightExecuted = false  // allow swipe back (right)
-            case (false, _, false):  // swiped right
-                swipeLeftExecuted = false  // allow swipe back (left)
-                swipeRightExecuted = true
-            default:
-                super.scrollWheel(with: event)
-                return
-            }
-            swipe(deltaX: flippedScrollDelta)
-            return
-        case .cancelled,
-            .ended,
-            .mayBegin:
-            isHandlingScrollEvent = false
-        default:
-            break
-        }
-
-        super.scrollWheel(with: event)
-    }
-
-    private func swipe(deltaX: CGFloat) {
-        guard deltaX != 0 else { return }
-
-        guard let vc = ViewController.shared() else { return }
-        let siderbarSize = Int(vc.sidebarSplitView.subviews[0].frame.width)
-        let notelistSize = Int(vc.splitView.subviews[0].frame.width)
-
-        let swipedLeft = deltaX > 0
-
-        if swipedLeft {
-            if siderbarSize > 0 {
-                hideSidebar("")
-            } else {
-                if notelistSize > 0 {
-                    hideNoteList("")
-                }
-            }
-
-        } else {
-            if notelistSize == 0 {
-                showNoteList("")
-            } else {
-                if siderbarSize == 0 {
-                    showSidebar("")
-                }
-            }
-        }
-    }
-
-    func hideSidebar(_ sender: Any) {
-        guard sidebarWidth > 0 else { return }
-        UserDefaultsManagement.realSidebarSize = Int(sidebarWidth)
-        sidebarSplitView.setPosition(0, ofDividerAt: 0)
-        updateDividers()
-        editArea.updateTextContainerInset()
-    }
-
-    func showSidebar(_ sender: Any) {
-        guard sidebarWidth == 0 else { return }
-
-        // 使用保存的宽度
-        let targetWidth = UserDefaultsManagement.realSidebarSize
-        sidebarSplitView.setPosition(CGFloat(targetWidth), ofDividerAt: 0)
-
-        // sidebar展开时，联动展开notelist
-        if notelistWidth == 0 {
-            expandNoteList()
-        }
-
-        updateDividers()
-        editArea.updateTextContainerInset()
-    }
-
-    func showNoteList(_ sender: Any) {
-        if notelistWidth == 0 {
-            // 如果sidebar也是收起的，先展开sidebar再展开notelist
-            if sidebarWidth == 0 {
-                showSidebar(sender)
-            } else {
-                expandNoteList()
-            }
-        }
-        editArea.updateTextContainerInset()
-    }
-
-    private func expandNoteList() {
-        let size = UserDefaultsManagement.sidebarSize == 0 ? 280 : UserDefaultsManagement.sidebarSize
-        splitView.shouldHideDivider = false
-        splitView.setPosition(CGFloat(size), ofDividerAt: 0)
-        updateDividers()
-    }
-
-    func hideNoteList(_ sender: Any) {
-        if notelistWidth > 0 {
-            UserDefaultsManagement.sidebarSize = Int(notelistWidth)
-            splitView.shouldHideDivider = true
-            splitView.setPosition(0, ofDividerAt: 0)
-
-            // notelist收起时，联动收起sidebar
-            hideSidebar("")
-
-            updateDividers()
-        }
-        editArea.updateTextContainerInset()
-    }
 
     @IBAction func emptyTrash(_ sender: NSMenuItem) {
         guard let vc = ViewController.shared() else {
@@ -1945,26 +1701,6 @@ class ViewController:
         }
     }
 
-    func focusEditArea(firstResponder: NSResponder? = nil) {
-        guard EditTextView.note != nil else { return }
-        var resp: NSResponder = editArea
-        if let responder = firstResponder {
-            resp = responder
-        }
-
-        if notesTableView.selectedRow > -1 {
-            DispatchQueue.main.async {
-                self.editArea.isEditable = true
-                self.emptyEditAreaView.isHidden = true
-                self.titleBarView.isHidden = false
-                self.editArea.window?.makeFirstResponder(resp)
-                self.editArea.restoreCursorPosition()
-            }
-            return
-        }
-
-        editArea.window?.makeFirstResponder(resp)
-    }
 
     func focusSearchInput(firstResponder: NSResponder? = nil) {
         DispatchQueue.main.async {
@@ -1978,14 +1714,6 @@ class ViewController:
         }
     }
 
-    func focusTable() {
-        DispatchQueue.main.async {
-            let index = self.notesTableView.selectedRow > -1 ? self.notesTableView.selectedRow : 0
-            self.notesTableView.window?.makeFirstResponder(self.notesTableView)
-            self.notesTableView.selectRowIndexes([index], byExtendingSelection: true)
-            self.notesTableView.scrollRowToVisible(row: index, animated: true)
-        }
-    }
 
     func cleanSearchAndEditArea() {
         search.stringValue = ""
@@ -2165,278 +1893,6 @@ class ViewController:
         Analytics.trackEvent("MiaoYan Pin")
     }
 
-    func isMiaoYanPPT(needToast: Bool = true) -> Bool {
-        guard let note = notesTableView.getSelectedNote() else {
-            return false
-        }
-
-        let content = note.content.string
-        if content.contains("---") {
-            return true
-        }
-
-        if needToast {
-            toast(message: NSLocalizedString("😶‍🌫 No delimiter --- identification, Cannot use MiaoYan PPT~", comment: ""))
-        }
-
-        return false
-    }
-
-    func toggleMagicPPT() {
-        titleLabel.saveTitle()
-        if !isMiaoYanPPT() {
-            return
-        }
-        if UserDefaultsManagement.magicPPT {
-            disableMiaoYanPPT()
-        } else {
-            enableMiaoYanPPT()
-        }
-    }
-
-    func enableMiaoYanPPT() {
-        guard let vc = ViewController.shared() else { return }
-
-        let preparePresentation = {
-            vc.enablePresentation()
-            UserDefaultsManagement.magicPPT = true
-            DispatchQueue.main.async {
-                vc.titiebarHeight.constant = 0.0
-                vc.handlePPTAutoTransition()
-            }
-        }
-
-        if UserDefaultsManagement.presentation {
-            disablePresentation()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: preparePresentation)
-        } else {
-            preparePresentation()
-        }
-
-        Analytics.trackEvent("MiaoYan PPT")
-    }
-
-    func handlePPTAutoTransition() {
-        guard let vc = ViewController.shared() else { return }
-
-        // 获取鼠标位置，自动跳转
-        let range = editArea.selectedRange
-
-        // 若 selectedIndex > editArea.string.count()，则使用 string.count() 的值。
-        // 若最终计算结果为负，则采 0 值。
-        let selectedIndex = max(min(range.location, editArea.string.count) - 1, 0)
-
-        let beforeString = editArea.string[..<selectedIndex]
-        let hrCount = beforeString.components(separatedBy: "---").count
-
-        if UserDefaultsManagement.previewLocation == "Editing", hrCount > 1 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                // PPT场景下的自动跳转
-                vc.editArea.markdownView?.slideTo(index: hrCount - 1)
-            }
-        }
-
-        // 兼容快捷键透传
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-            NSApp.mainWindow?.makeFirstResponder(vc.editArea.markdownView)
-        }
-    }
-
-    func disableMiaoYanPPT() {
-        disablePresentation()
-        UserDefaultsManagement.magicPPT = false
-        DispatchQueue.main.async {
-            self.checkTitlebarTopConstraint()
-        }
-    }
-
-    func getScrollTop() -> CGFloat {
-        let contentHeight = editAreaScroll.contentSize.height
-        let scrollTop = editAreaScroll.contentView.bounds.origin.y
-        let scrollHeight = editAreaScroll.documentView!.bounds.height
-        if scrollHeight - contentHeight > 0, scrollTop > 0 {
-            return scrollTop / (scrollHeight - contentHeight)
-        } else {
-            return 0.0
-        }
-    }
-
-    // WebView 预加载，避免首次切换时的延迟
-    private func preloadWebView() {
-        // 仅在非预览模式时预加载，避免干扰已有预览
-        guard editArea.markdownView == nil, !UserDefaultsManagement.preview else { return }
-
-        // 使用最简单的临时 Note
-        let tempProject = getSidebarProject() ?? storage.noteList.first?.project
-        guard let project = tempProject else { return }
-
-        let tempNote = Note(name: "", project: project, type: .Markdown)
-        tempNote.content = NSMutableAttributedString(string: "")
-
-        let frame = editArea.bounds
-        editArea.markdownView = MPreviewView(frame: frame, note: tempNote, closure: {})
-        editArea.markdownView?.isHidden = true
-
-        if let view = editArea.markdownView {
-            editAreaScroll.addSubview(view)
-        }
-    }
-
-    func enablePreview() {
-        isFocusedTitle = titleLabel.hasFocus()
-        cancelTextSearch()
-        editArea.window?.makeFirstResponder(notesTableView)
-        UserDefaultsManagement.preview = true
-
-        // WebView 保活：先隐藏，更新内容后再动画显示
-        if let webView = editArea.markdownView {
-            webView.alphaValue = 0.0
-            webView.isHidden = false
-
-            // 先更新内容，再显示动画
-            refillEditArea()
-
-            // 短暂延迟确保内容加载完成后再显示
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                NSAnimationContext.runAnimationGroup({ context in
-                    context.duration = 0.2
-                    context.timingFunction = CAMediaTimingFunction(name: .easeOut)
-                    webView.animator().alphaValue = 1.0
-                })
-            }
-        } else {
-            refillEditArea()
-        }
-
-        titleLabel.isEditable = false
-        if UserDefaultsManagement.previewLocation == "Editing", !UserDefaultsManagement.isOnExport {
-            let scrollPre = getScrollTop()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                self.editArea.markdownView?.scrollToPosition(pre: scrollPre)
-            }
-        }
-    }
-
-    func disablePreview() {
-        UserDefaultsManagement.preview = false
-        UserDefaultsManagement.magicPPT = false
-        UserDefaultsManagement.presentation = false
-
-        // WebView 保活：隐藏并清空内容
-        if let webView = editArea.markdownView {
-            NSAnimationContext.runAnimationGroup({ context in
-                context.duration = 0.15
-                context.timingFunction = CAMediaTimingFunction(name: .easeIn)
-                webView.animator().alphaValue = 0.0
-            }) {
-                webView.isHidden = true
-                webView.alphaValue = 1.0
-                // 清空内容避免下次显示残留
-                webView.loadHTMLString("<html><body style='background:transparent;'></body></html>", baseURL: nil)
-            }
-        }
-
-        refillEditArea()
-        DispatchQueue.main.async {
-            self.titleLabel.isEditable = true
-        }
-        if !isFocusedTitle {
-            focusEditArea()
-        }
-    }
-
-    func togglePreview() {
-        titleLabel.saveTitle()
-        if UserDefaultsManagement.preview {
-            disablePreview()
-        } else {
-            enablePreview()
-            Analytics.trackEvent("MiaoYan Preview")
-        }
-    }
-
-    func enablePresentation() {
-        hideNoteList("")
-        disablePreview()
-        DispatchQueue.main.async {
-            UserDefaultsManagement.presentation = true
-            self.enablePreview()
-        }
-        if UserDefaultsManagement.fullScreen {
-        } else {
-            view.window?.toggleFullScreen(nil)
-        }
-        formatButton.isHidden = true
-        previewButton.isHidden = true
-        if !UserDefaultsManagement.isOnExportPPT {
-            toast(message: NSLocalizedString("🙊 Press ESC key to exit~", comment: ""))
-        }
-    }
-
-    func disablePresentation() {
-        previewButton.state = .off
-        UserDefaultsManagement.presentation = false
-        UserDefaultsManagement.magicPPT = false
-        DispatchQueue.main.async {
-            self.checkTitlebarTopConstraint()
-        }
-        if UserDefaultsManagement.fullScreen {
-            view.window?.toggleFullScreen(nil)
-        }
-        disablePreview()
-        formatButton.isHidden = false
-        previewButton.isHidden = false
-        showSidebar("")
-    }
-
-    func togglePresentation() {
-        titleLabel.saveTitle()
-        if UserDefaultsManagement.presentation {
-            disablePresentation()
-        } else {
-            enablePresentation()
-            Analytics.trackEvent("MiaoYan Presentation")
-        }
-    }
-
-    func formatText() {
-        if UserDefaultsManagement.preview {
-            toast(
-                message: NSLocalizedString("😶‍🌫 Format is only possible after exiting preview mode~", comment: "")
-            )
-            return
-        }
-        if let note = notesTableView.getSelectedNote() {
-            // 先保存一下标题，防止首次的时候
-            titleLabel.saveTitle()
-            // 最牛逼格式化的方式
-            let formatter = PrettierFormatter(plugins: [MarkdownPlugin()], parser: MarkdownParser())
-            formatter.prepare()
-            let content = note.content.string
-            let cursor = editArea.selectedRanges[0].rangeValue.location
-            let top = editAreaScroll.contentView.bounds.origin.y
-            let result = formatter.format(content, withCursorAtLocation: cursor)
-            switch result {
-            case .success(let formatResult):
-                // 防止 Prettier 自动加空行
-                var newContent = formatResult.formattedString
-                if content.last != "\n" {
-                    newContent = formatResult.formattedString.removeLastNewLine()
-                }
-                editArea.insertText(newContent, replacementRange: NSRange(0..<note.content.length))
-                editArea.fill(note: note, highlight: true, saveTyping: true, force: false, needScrollToCursor: false)
-                editArea.setSelectedRange(NSRange(location: formatResult.cursorOffset, length: 0))
-                editAreaScroll.documentView?.scroll(NSPoint(x: 0, y: top))
-                formatContent = newContent
-                note.save()
-                toast(message: NSLocalizedString("🎉 Automatic typesetting succeeded~", comment: ""))
-            case .failure(let error):
-                print(error)
-            }
-
-            Analytics.trackEvent("MiaoYan Format")
-        }
-    }
 
     func loadMoveMenu() {
         guard let vc = ViewController.shared(), let note = vc.notesTableView.getSelectedNote() else { return }
@@ -2546,46 +2002,6 @@ class ViewController:
         }
     }
 
-    func checkSidebarConstraint() {
-        if sidebarSplitView.subviews[0].frame.width < 50, !UserDefaultsManagement.isWillFullScreen {
-            searchTopConstraint.constant = 25.0
-            return
-        }
-        searchTopConstraint.constant = 11.0
-    }
-
-    func checkTitlebarTopConstraint() {
-        if splitView.subviews[0].frame.width < 50, !UserDefaultsManagement.isWillFullScreen {
-            titiebarHeight.constant = 64.0
-            titleTopConstraint.constant = 30.0
-            return
-        }
-        titiebarHeight.constant = 52.0
-        titleTopConstraint.constant = 16.0
-    }
-
-
-    func splitView(_ splitView: NSSplitView, constrainMinCoordinate proposedMinimumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
-        if splitView == sidebarSplitView && dividerIndex == 0 {
-            return 0
-        }
-
-        if dividerIndex == 0 && UserDefaultsManagement.isSingleMode {
-            return 0
-        }
-        return proposedMinimumPosition
-    }
-
-    func splitView(_ splitView: NSSplitView, constrainMaxCoordinate proposedMaximumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
-        if splitView == sidebarSplitView && dividerIndex == 0 {
-            return 280
-        }
-
-        if dividerIndex == 0 && UserDefaultsManagement.isSingleMode {
-            return 0
-        }
-        return proposedMaximumPosition
-    }
 
     @IBAction func duplicate(_ sender: Any) {
         if let notes = notesTableView.getSelectedNotes() {
@@ -2661,21 +2077,6 @@ class ViewController:
 
     // MARK: Share Service
 
-    @IBAction func toggleMagicPPT(_ sender: Any) {
-        toggleMagicPPT()
-    }
-
-    @IBAction func togglePreview(_ sender: NSButton) {
-        togglePreview()
-    }
-
-    @IBAction func togglePresentation(_ sender: NSButton) {
-        togglePresentation()
-    }
-
-    @IBAction func formatText(_ sender: NSButton) {
-        formatText()
-    }
 
     func exportFile(type: String) {
         UserDefaultsManagement.isOnExport = true
@@ -2818,13 +2219,6 @@ class ViewController:
         return menu
     }
 
-    func splitViewWillResizeSubviews(_ notification: Notification) {
-        editArea.updateTextContainerInset()
-    }
-
-    func splitViewDidResizeSubviews(_ notification: Notification) {
-        updateDividers()
-    }
 
     public static func shared() -> ViewController? {
         guard let delegate = NSApplication.shared.delegate as? AppDelegate else {
