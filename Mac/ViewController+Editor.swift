@@ -427,4 +427,41 @@ extension ViewController {
             }
         }
     }
+
+    // MARK: - Title Management Override (fix for title disappearing issue)
+    
+    public func updateTitle(newTitle: String) {
+        let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "MiaoYan"
+
+        var titleString = newTitle
+
+        if newTitle.isValidUUID {
+            titleString = String()
+        }
+        titleLabel.stringValue = titleString
+
+        titleLabel.currentEditor()?.selectedRange = NSRange(location: titleString.utf16.count, length: 0)
+
+        MainWindowController.shared()?.title = appName
+    }
+
+    func controlTextDidEndEditing(_ obj: Notification) {
+        guard let textField = obj.object as? NSTextField, textField == titleLabel else {
+            return
+        }
+
+        if titleLabel.isEditable == true {
+            fileName(titleLabel)
+            // 恢复到之前保存的 first responder，而不是强制设置为 notesTableView
+            if let restoreResponder = titleLabel.restoreResponder {
+                view.window?.makeFirstResponder(restoreResponder)
+                titleLabel.restoreResponder = nil  // 清除保存的状态
+            } else {
+                view.window?.makeFirstResponder(notesTableView)
+            }
+        } else {
+            let currentNote = notesTableView.getSelectedNote()
+            updateTitle(newTitle: currentNote?.getTitleWithoutLabel() ?? NSLocalizedString("Untitled Note", comment: "Untitled Note"))
+        }
+    }
 }

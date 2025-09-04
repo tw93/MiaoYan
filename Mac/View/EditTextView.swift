@@ -359,11 +359,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
         guard let viewController = window?.contentViewController as? ViewController else { return }
         viewController.emptyEditAreaView.isHidden = true
         viewController.titleBarView.isHidden = false
+        viewController.titleLabel.isHidden = false
 
         EditTextView.note = note
         UserDefaultsManagement.lastSelectedURL = note.url
 
-        viewController.updateTitle(newTitle: note.getFileName())
+        viewController.updateTitle(newTitle: note.getTitleWithoutLabel())
 
         undoManager?.removeAllActions(withTarget: self)
 
@@ -700,7 +701,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             }
 
             let insertRange = NSRange(location: caretLocation + successCount * 2, length: 0)
-            insertText("![](\\(filePath))", replacementRange: insertRange)
+            insertText("![](\(filePath))", replacementRange: insertRange)
             if url != urls.last {
                 insertNewline(nil)
                 insertNewline(nil)

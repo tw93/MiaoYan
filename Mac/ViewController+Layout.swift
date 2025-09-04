@@ -288,4 +288,21 @@ extension ViewController {
             }
         }
     }
+
+    // MARK: - Table and Sidebar Layout
+
+    func reloadSideBar() {
+        guard let outline = storageOutlineView else {
+            return
+        }
+
+        sidebarTimer.invalidate()
+        sidebarTimer = Timer.scheduledTimer(timeInterval: 1.2, target: outline, selector: #selector(outline.reloadSidebar), userInfo: nil, repeats: false)
+    }
+
+    func setTableRowHeight() {
+        notesTableView.rowHeight = CGFloat(52)
+        notesTableView.selectionHighlightStyle = .none
+        notesTableView.reloadData()
+    }
 }

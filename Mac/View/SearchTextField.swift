@@ -56,9 +56,6 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     }
 
     override func mouseDown(with event: NSEvent) {
-        if let vc = window?.contentViewController as? ViewController {
-            vc.titleLabel.saveTitle()
-        }
         super.mouseDown(with: event)
     }
 
