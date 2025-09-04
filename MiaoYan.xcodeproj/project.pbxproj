@@ -31,6 +31,8 @@
 		277A61D8244B538F000F0033 /* SidebarTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277A61D7244B538E000F0033 /* SidebarTableRowView.swift */; };
 		27838E68287521C0009E8012 /* DetachedWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27838E67287521C0009E8012 /* DetachedWindowController.swift */; };
 		2799407C218484C900727B20 /* TitleBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799407B218484C900727B20 /* TitleBarView.swift */; };
+		27B4A5AA2E6924CC00C89EFF /* ViewController+Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4A5A82E6924CC00C89EFF /* ViewController+Action.swift */; };
+		27B4A5AB2E6924CC00C89EFF /* ViewController+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4A5A92E6924CC00C89EFF /* ViewController+Data.swift */; };
 		27B5AC602E45F23B00C83B3A /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 27B5AC5F2E45F23B00C83B3A /* SwiftyJSON */; };
 		27B5AC632E45F25100C83B3A /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 27B5AC622E45F25100C83B3A /* Alamofire */; };
 		27B5AC682E45F25F00C83B3A /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = 27B5AC672E45F25F00C83B3A /* Highlightr */; };
@@ -194,6 +196,8 @@
 		2789B1E3287FD9C500BF8BC1 /* MiaoYan.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = MiaoYan.entitlements; sourceTree = "<group>"; };
 		2795956327B12CDC000B754C /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiaoYan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2799407B218484C900727B20 /* TitleBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleBarView.swift; sourceTree = "<group>"; };
+		27B4A5A82E6924CC00C89EFF /* ViewController+Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Action.swift"; sourceTree = "<group>"; };
+		27B4A5A92E6924CC00C89EFF /* ViewController+Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Data.swift"; sourceTree = "<group>"; };
 		27C34C0D28928D0B007369E5 /* Emoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emoji.swift; sourceTree = "<group>"; };
 		27D280442A05480D007A4104 /* IndexSetWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexSetWrapper.swift; sourceTree = "<group>"; };
 		27D95121285B5E4400F40306 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
@@ -415,6 +419,8 @@
 				D7793C741F211C6000CA39B7 /* ViewController.swift */,
 				275F9F5F2E6820F8006BC2AC /* ViewController+Layout.swift */,
 				275F9F612E682239006BC2AC /* ViewController+Editor.swift */,
+				27B4A5A82E6924CC00C89EFF /* ViewController+Action.swift */,
+				27B4A5A92E6924CC00C89EFF /* ViewController+Data.swift */,
 				D792297421A845B4005F468F /* ProjectSettingsViewController.swift */,
 				D779C7BA1F415BE300FADEE1 /* PrefsWindowController.swift */,
 				D7F5C0EE223ED0570038F172 /* PreferencesGeneralViewController.swift */,
@@ -760,6 +766,8 @@
 				8F7136EE23490CBF004DFA6E /* Markdown.swift in Sources */,
 				D730BD3C222DB9FC00E69C93 /* NameHelper.swift in Sources */,
 				D7153E052285C09C00A2C20F /* AboutViewController.swift in Sources */,
+				27B4A5AA2E6924CC00C89EFF /* ViewController+Action.swift in Sources */,
+				27B4A5AB2E6924CC00C89EFF /* ViewController+Data.swift in Sources */,
 				D7CA7FC62326519600E9717A /* Commit.swift in Sources */,
 				D7CD5F6C1F51185F006AA35D /* NSFont+.swift in Sources */,
 				D7508FC81F337E850047AB76 /* SearchTextField.swift in Sources */,

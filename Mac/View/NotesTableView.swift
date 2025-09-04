@@ -139,11 +139,12 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         }
 
         if UserDataService.instance.isNotesTableEscape {
-            if vc.storageOutlineView.selectedRow == -1 {
-                UserDataService.instance.isNotesTableEscape = false
-            }
+            // 重置状态，防止影响后续正常的选择操作
+            UserDataService.instance.isNotesTableEscape = false
 
-            vc.storageOutlineView.deselectAll(nil)
+            if vc.storageOutlineView.selectedRow != -1 {
+                vc.storageOutlineView.deselectAll(nil)
+            }
 
             vc.editArea.clear()
             return
@@ -381,17 +382,17 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         if event.modifierFlags.contains(.control),
             !event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_P
         {
-            vc?.exportPdf("")
+            vc?.exportPdf(self)
             return
         }
 
         if event.modifierFlags.contains(.control), !event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_I {
-            vc?.exportImage("")
+            vc?.exportImage(self)
             return
         }
 
         if event.modifierFlags.contains(.option), event.modifierFlags.contains(.control), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_P {
-            vc?.exportMiaoYanPPT("")
+            vc?.exportMiaoYanPPT(self)
             return
         }
 

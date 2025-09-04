@@ -20,3 +20,4 @@ IrEditor
 package-lock.json
 .husky/
 .build/
+build/
