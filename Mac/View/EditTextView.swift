@@ -366,8 +366,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         viewController.updateTitle(newTitle: note.getTitleWithoutLabel())
 
+        // 统一撤销管理器：清理当前目标的所有撤销动作，确保使用笔记的撤销管理器
         undoManager?.removeAllActions(withTarget: self)
 
+        // 同步更新主窗口控制器的撤销管理器引用
         if let appDelegate = NSApplication.shared.delegate as? AppDelegate,
             let md = appDelegate.mainWindowController
         {
@@ -436,6 +438,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     public func clear() {
         textStorage?.setAttributedString(NSAttributedString())
+        
         // WebView 保活：隐藏而不是销毁
         markdownView?.isHidden = true
         imagePreviewManager?.hideImagePreview()
@@ -909,19 +912,62 @@ class EditTextView: NSTextView, NSTextFinderClient {
             }
         }
 
+        // 为图片删除操作创建独立的撤销组，避免与文本编辑冲突
         if removedImages.count > 0 {
+            note.undoManager.beginUndoGrouping()
+            note.undoManager.setActionName(NSLocalizedString("Delete Images", comment: "Undo action name"))
             note.undoManager.registerUndo(withTarget: self, selector: #selector(unDeleteImages), object: removedImages)
+            note.undoManager.endUndoGrouping()
         }
     }
 
     @objc public func unDeleteImages(_ urls: [URL: URL]) {
+        guard let note = EditTextView.note else { return }
+        
+        // 为反向操作也创建撤销组
+        note.undoManager.beginUndoGrouping()
+        note.undoManager.setActionName(NSLocalizedString("Restore Images", comment: "Undo action name"))
+        
+        var restoredImages = [URL: URL]()
         for (src, dst) in urls {
             do {
                 try FileManager.default.moveItem(at: src, to: dst)
+                restoredImages[dst] = src
             } catch {
                 print(error)
             }
         }
+        
+        // 注册反向撤销操作
+        if restoredImages.count > 0 {
+            note.undoManager.registerUndo(withTarget: self, selector: #selector(deleteRestoredImages), object: restoredImages)
+        }
+        
+        note.undoManager.endUndoGrouping()
+    }
+    
+    @objc private func deleteRestoredImages(_ urls: [URL: URL]) {
+        guard let note = EditTextView.note else { return }
+        
+        note.undoManager.beginUndoGrouping()
+        note.undoManager.setActionName(NSLocalizedString("Delete Images", comment: "Undo action name"))
+        
+        var deletedImages = [URL: URL]()
+        for (src, _) in urls {
+            do {
+                guard let resultingItemUrl = Storage.sharedInstance().trashItem(url: src) else { continue }
+                try FileManager.default.moveItem(at: src, to: resultingItemUrl)
+                deletedImages[resultingItemUrl] = src
+            } catch {
+                print(error)
+            }
+        }
+        
+        if deletedImages.count > 0 {
+            note.undoManager.registerUndo(withTarget: self, selector: #selector(unDeleteImages), object: deletedImages)
+        }
+        
+        note.undoManager.endUndoGrouping()
     }
 
     @available(OSX 10.12.2, *)
@@ -980,7 +1026,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         guard let note = EditTextView.note else { return }
 
-        // 简化原有的tab切换逻辑
+        // 优化tab切换逻辑的撤销组合
         if event.keyCode == kVK_Tab, !hasMarkedText() {
             breakUndoCoalescing()
             let formatter = TextFormatter(textView: self, note: note)
@@ -990,10 +1036,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 formatter.tab()
             }
             saveCursorPosition()
-            breakUndoCoalescing()
             return
         }
 
+        // 优化回车逻辑的撤销组合
         if event.keyCode == kVK_Return, !hasMarkedText() {
             breakUndoCoalescing()
             let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
@@ -1003,7 +1049,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             } else {
                 formatter.newLine()
             }
-            breakUndoCoalescing()
             fillHighlightLinks()
             saveCursorPosition()
             return

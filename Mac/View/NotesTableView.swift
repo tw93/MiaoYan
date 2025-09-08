@@ -153,6 +153,12 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         if noteList.indices.contains(selectedRow) {
             let note = noteList[selectedRow]
 
+            // 在切换笔记前，先保存当前正在编辑的笔记内容
+            if let currentNote = EditTextView.note, currentNote != note {
+                vc.editArea.saveTextStorageContent(to: currentNote)
+                currentNote.save()
+            }
+
             // Save scroll position when user selects a note
             saveScrollPosition()
 
