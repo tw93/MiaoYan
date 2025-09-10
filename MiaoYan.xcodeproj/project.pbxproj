@@ -19,6 +19,10 @@
 		273283282E465228004E1011 /* MASShortcut in Frameworks */ = {isa = PBXBuildFile; productRef = 273283272E465228004E1011 /* MASShortcut */; };
 		2732832B2E465330004E1011 /* MASShortcut in Frameworks */ = {isa = PBXBuildFile; productRef = 2732832A2E465330004E1011 /* MASShortcut */; };
 		2732832D2E4653BF004E1011 /* LXGWWenKaiScreen.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2732832C2E4653BF004E1011 /* LXGWWenKaiScreen.ttf */; };
+		2732D2FF2E70450B00F00158 /* Prettier in Frameworks */ = {isa = PBXBuildFile; productRef = 2732D2FE2E70450B00F00158 /* Prettier */; };
+		2732D3012E7047D400F00158 /* PrettierMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 2732D3002E7047D400F00158 /* PrettierMarkdown */; };
+		2732D3032E70482E00F00158 /* PrettierMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 2732D3022E70482E00F00158 /* PrettierMarkdown */; };
+		2732D3052E70487B00F00158 /* PrettierMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 2732D3042E70487B00F00158 /* PrettierMarkdown */; };
 		274D62CF2E434B6D003C075F /* ImageLinkParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274D62CE2E434B6D003C075F /* ImageLinkParser.swift */; };
 		274D62D12E434B9C003C075F /* ImagePreviewWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274D62D02E434B9C003C075F /* ImagePreviewWindow.swift */; };
 		275592971F3AE9B5006B8988 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275592961F3AE9B5006B8988 /* MainWindowController.swift */; };
@@ -50,22 +54,6 @@
 		3680D573468EA822F427197E /* NSTextField+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3680D20013301CC48E2BEC53 /* NSTextField+.swift */; };
 		3680DE38C941303E615282C4 /* MPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3680DA19202046722D9BEEA2 /* MPreviewView.swift */; };
 		8F7136EE23490CBF004DFA6E /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7136ED23490CBF004DFA6E /* Markdown.swift */; };
-		D140A67528BB1ACA00637ED1 /* TrailingCommaStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D140A66128BB1ACA00637ED1 /* TrailingCommaStrategy.swift */; };
-		D140A67628BB1ACA00637ED1 /* EndOfLineStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D140A66228BB1ACA00637ED1 /* EndOfLineStrategy.swift */; };
-		D140A67728BB1ACA00637ED1 /* ArrowFunctionParenthesesStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D140A66328BB1ACA00637ED1 /* ArrowFunctionParenthesesStrategy.swift */; };
-		D140A67828BB1ACA00637ED1 /* EmbeddedLanguageFormattingStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D140A66428BB1ACA00637ED1 /* EmbeddedLanguageFormattingStrategy.swift */; };
-		D140A67928BB1ACA00637ED1 /* QuotePropertyStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D140A66528BB1ACA00637ED1 /* QuotePropertyStrategy.swift */; };
-		D140A67A28BB1ACA00637ED1 /* ConfigurationKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D140A66628BB1ACA00637ED1 /* ConfigurationKey.swift */; };
-		D140A67B28BB1ACA00637ED1 /* ProseWrapStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D140A66728BB1ACA00637ED1 /* ProseWrapStrategy.swift */; };
-		D140A67C28BB1ACA00637ED1 /* HTMLWhitespaceSensitivityStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D140A66828BB1ACA00637ED1 /* HTMLWhitespaceSensitivityStrategy.swift */; };
-		D140A67E28BB1ACA00637ED1 /* FormatWithCursorResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = D140A66B28BB1ACA00637ED1 /* FormatWithCursorResult.swift */; };
-		D140A67F28BB1ACA00637ED1 /* PrettierFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D140A66C28BB1ACA00637ED1 /* PrettierFormatter.swift */; };
-		D140A68128BB1ACA00637ED1 /* MarkdownParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D140A67028BB1ACA00637ED1 /* MarkdownParser.swift */; };
-		D140A68228BB1ACA00637ED1 /* MarkdownPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D140A67128BB1ACA00637ED1 /* MarkdownPlugin.swift */; };
-		D140A68328BB1ACA00637ED1 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D140A67228BB1ACA00637ED1 /* Parser.swift */; };
-		D140A68428BB1ACA00637ED1 /* ParsingErrorDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = D140A67328BB1ACA00637ED1 /* ParsingErrorDetails.swift */; };
-		D140A68528BB1ACA00637ED1 /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D140A67428BB1ACA00637ED1 /* Plugin.swift */; };
-		D158E66B28BB248A0090B304 /* Prettier.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D158E66A28BB248A0090B304 /* Prettier.bundle */; };
 		D7038E1D20FA86C100A54E69 /* SharingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7038E1C20FA86C100A54E69 /* SharingService.swift */; };
 		D7038E2620FB24E000A54E69 /* NoteAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7038E2520FB24E000A54E69 /* NoteAttachment.swift */; };
 		D708AC672000EF5800A1760F /* NoteType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D708AC662000EF5800A1760F /* NoteType.swift */; };
@@ -211,22 +199,6 @@
 		6F13BB2A20FEDE230005E120 /* URL+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+.swift"; sourceTree = "<group>"; };
 		6F13BB3820FEDE230005E120 /* UserDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataService.swift; sourceTree = "<group>"; };
 		8F7136ED23490CBF004DFA6E /* Markdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Markdown.swift; sourceTree = "<group>"; };
-		D140A66128BB1ACA00637ED1 /* TrailingCommaStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrailingCommaStrategy.swift; sourceTree = "<group>"; };
-		D140A66228BB1ACA00637ED1 /* EndOfLineStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndOfLineStrategy.swift; sourceTree = "<group>"; };
-		D140A66328BB1ACA00637ED1 /* ArrowFunctionParenthesesStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrowFunctionParenthesesStrategy.swift; sourceTree = "<group>"; };
-		D140A66428BB1ACA00637ED1 /* EmbeddedLanguageFormattingStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmbeddedLanguageFormattingStrategy.swift; sourceTree = "<group>"; };
-		D140A66528BB1ACA00637ED1 /* QuotePropertyStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuotePropertyStrategy.swift; sourceTree = "<group>"; };
-		D140A66628BB1ACA00637ED1 /* ConfigurationKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigurationKey.swift; sourceTree = "<group>"; };
-		D140A66728BB1ACA00637ED1 /* ProseWrapStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProseWrapStrategy.swift; sourceTree = "<group>"; };
-		D140A66828BB1ACA00637ED1 /* HTMLWhitespaceSensitivityStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTMLWhitespaceSensitivityStrategy.swift; sourceTree = "<group>"; };
-		D140A66B28BB1ACA00637ED1 /* FormatWithCursorResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormatWithCursorResult.swift; sourceTree = "<group>"; };
-		D140A66C28BB1ACA00637ED1 /* PrettierFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrettierFormatter.swift; sourceTree = "<group>"; };
-		D140A67028BB1ACA00637ED1 /* MarkdownParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkdownParser.swift; sourceTree = "<group>"; };
-		D140A67128BB1ACA00637ED1 /* MarkdownPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkdownPlugin.swift; sourceTree = "<group>"; };
-		D140A67228BB1ACA00637ED1 /* Parser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
-		D140A67328BB1ACA00637ED1 /* ParsingErrorDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParsingErrorDetails.swift; sourceTree = "<group>"; };
-		D140A67428BB1ACA00637ED1 /* Plugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plugin.swift; sourceTree = "<group>"; };
-		D158E66A28BB248A0090B304 /* Prettier.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Prettier.bundle; sourceTree = "<group>"; };
 		D7038E1C20FA86C100A54E69 /* SharingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingService.swift; sourceTree = "<group>"; };
 		D7038E2520FB24E000A54E69 /* NoteAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteAttachment.swift; sourceTree = "<group>"; };
 		D708AC662000EF5800A1760F /* NoteType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteType.swift; sourceTree = "<group>"; };
@@ -318,11 +290,15 @@
 				273283282E465228004E1011 /* MASShortcut in Frameworks */,
 				27B5AC6B2E45F26A00C83B3A /* ZipArchive in Frameworks */,
 				27B5AC712E45F2A100C83B3A /* AppCenterAnalytics in Frameworks */,
+				2732D2FF2E70450B00F00158 /* Prettier in Frameworks */,
 				27B5AC682E45F25F00C83B3A /* Highlightr in Frameworks */,
 				27B5AC732E45F2A100C83B3A /* AppCenterCrashes in Frameworks */,
 				27B5AC602E45F23B00C83B3A /* SwiftyJSON in Frameworks */,
 				27B5AC6E2E45F27A00C83B3A /* Sparkle in Frameworks */,
+				2732D3012E7047D400F00158 /* PrettierMarkdown in Frameworks */,
+				2732D3052E70487B00F00158 /* PrettierMarkdown in Frameworks */,
 				27B5AC782E45F2B400C83B3A /* Parsley in Frameworks */,
+				2732D3032E70482E00F00158 /* PrettierMarkdown in Frameworks */,
 				2732832B2E465330004E1011 /* MASShortcut in Frameworks */,
 				27B5AC7B2E45F3C400C83B3A /* MASShortcut in Frameworks */,
 				27B5AC632E45F25100C83B3A /* Alamofire in Frameworks */,
@@ -353,44 +329,6 @@
 			children = (
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		D140A65F28BB1ACA00637ED1 /* Prettier */ = {
-			isa = PBXGroup;
-			children = (
-				D140A66028BB1ACA00637ED1 /* Configuration */,
-				D140A66B28BB1ACA00637ED1 /* FormatWithCursorResult.swift */,
-				D140A66C28BB1ACA00637ED1 /* PrettierFormatter.swift */,
-				D140A66D28BB1ACA00637ED1 /* PrettierMarkdown */,
-				D140A67228BB1ACA00637ED1 /* Parser.swift */,
-				D140A67328BB1ACA00637ED1 /* ParsingErrorDetails.swift */,
-				D140A67428BB1ACA00637ED1 /* Plugin.swift */,
-			);
-			path = Prettier;
-			sourceTree = "<group>";
-		};
-		D140A66028BB1ACA00637ED1 /* Configuration */ = {
-			isa = PBXGroup;
-			children = (
-				D140A66128BB1ACA00637ED1 /* TrailingCommaStrategy.swift */,
-				D140A66228BB1ACA00637ED1 /* EndOfLineStrategy.swift */,
-				D140A66328BB1ACA00637ED1 /* ArrowFunctionParenthesesStrategy.swift */,
-				D140A66428BB1ACA00637ED1 /* EmbeddedLanguageFormattingStrategy.swift */,
-				D140A66528BB1ACA00637ED1 /* QuotePropertyStrategy.swift */,
-				D140A66628BB1ACA00637ED1 /* ConfigurationKey.swift */,
-				D140A66728BB1ACA00637ED1 /* ProseWrapStrategy.swift */,
-				D140A66828BB1ACA00637ED1 /* HTMLWhitespaceSensitivityStrategy.swift */,
-			);
-			path = Configuration;
-			sourceTree = "<group>";
-		};
-		D140A66D28BB1ACA00637ED1 /* PrettierMarkdown */ = {
-			isa = PBXGroup;
-			children = (
-				D140A67028BB1ACA00637ED1 /* MarkdownParser.swift */,
-				D140A67128BB1ACA00637ED1 /* MarkdownPlugin.swift */,
-			);
-			path = PrettierMarkdown;
 			sourceTree = "<group>";
 		};
 		D7793C661F211C6000CA39B7 = {
@@ -498,8 +436,6 @@
 		D7D61FCC1F32EEA1004357C2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				D140A65F28BB1ACA00637ED1 /* Prettier */,
-				D158E66A28BB248A0090B304 /* Prettier.bundle */,
 				27A1AE302844BA83006DF055 /* Fonts */,
 				D7ED6891200F87BD00FF975A /* Initial */,
 				D71C4A4D1F520F0E00EBA30B /* DownView.bundle */,
@@ -640,6 +576,7 @@
 				27B5AC6F2E45F2A100C83B3A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */,
 				27B5AC762E45F2B400C83B3A /* XCRemoteSwiftPackageReference "Parsley" */,
 				273283292E465330004E1011 /* XCRemoteSwiftPackageReference "MASShortcut" */,
+				2732D2FD2E70450B00F00158 /* XCRemoteSwiftPackageReference "Prettier" */,
 			);
 			productRefGroup = D7793C661F211C6000CA39B7;
 			projectDirPath = "";
@@ -655,7 +592,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D158E66B28BB248A0090B304 /* Prettier.bundle in Resources */,
 				D71C4A4E1F520F1B00EBA30B /* DownView.bundle in Resources */,
 				FFA664572A67FD4C004A3211 /* Localizable.strings in Resources */,
 				D7465F28207F2CD600E46A52 /* Images.xcassets in Resources */,
@@ -691,25 +627,17 @@
 				27D9A4F72873D345006317AD /* FileManager+.swift in Sources */,
 				D7315ED2215ED15500AB49D4 /* SidebarSplitView.swift in Sources */,
 				D7E6ACE920832D41003599A2 /* AppDelegate+URLRoutes.swift in Sources */,
-				D140A67928BB1ACA00637ED1 /* QuotePropertyStrategy.swift in Sources */,
 				D7F681B62344F4C000F8F971 /* CustomTextStorage+Images.swift in Sources */,
 				D752D80823454750006842F9 /* NSTextAttachment+.swift in Sources */,
 				D7170C1D20F8565B001DDB36 /* FileSystemEventManager.swift in Sources */,
 				D779C7BB1F415C0300FADEE1 /* PrefsWindowController.swift in Sources */,
-				D140A67828BB1ACA00637ED1 /* EmbeddedLanguageFormattingStrategy.swift in Sources */,
 				D7CAD81B231D44C10006BE1C /* CodeTextProcessor.swift in Sources */,
 				D7793C751F211C6000CA39B7 /* ViewController.swift in Sources */,
 				D7DD5A881F88D4EA00CE947E /* FileWatcher.swift in Sources */,
-				D140A67C28BB1ACA00637ED1 /* HTMLWhitespaceSensitivityStrategy.swift in Sources */,
 				D7F95F3A1FF2759300E2A447 /* NotesTextProcessor.swift in Sources */,
-				D140A68128BB1ACA00637ED1 /* MarkdownParser.swift in Sources */,
-				D140A67E28BB1ACA00637ED1 /* FormatWithCursorResult.swift in Sources */,
 				D730BD5A223BFEB200E69C93 /* RuntimeError.swift in Sources */,
 				D7B6E59A207912E300FE0E20 /* Project.swift in Sources */,
-				D140A67F28BB1ACA00637ED1 /* PrettierFormatter.swift in Sources */,
 				274D62CF2E434B6D003C075F /* ImageLinkParser.swift in Sources */,
-				D140A68328BB1ACA00637ED1 /* Parser.swift in Sources */,
-				D140A67628BB1ACA00637ED1 /* EndOfLineStrategy.swift in Sources */,
 				D752D80F23463950006842F9 /* NSMutableAttributedString+Attachments.swift in Sources */,
 				D777D7812009115C00D86B33 /* ImagesProcessor.swift in Sources */,
 				D708AC672000EF5800A1760F /* NoteType.swift in Sources */,
@@ -720,14 +648,12 @@
 				D7C302C521F320FD0041627F /* ImageAttachment+.swift in Sources */,
 				D76447DC1F3A4F0700965F01 /* UserDefaultsManagement.swift in Sources */,
 				2799407C218484C900727B20 /* TitleBarView.swift in Sources */,
-				D140A67A28BB1ACA00637ED1 /* ConfigurationKey.swift in Sources */,
 				D730BD2A222BF32A00E69C93 /* KeychainPasswordItem.swift in Sources */,
 				D75EE7FD2078C5460055F159 /* SidebarCellView.swift in Sources */,
 				D797004C1F3DD10700BAD94D /* EditTextView.swift in Sources */,
 				D7EDEDFB219203C9000B8C1A /* NoteCellView+.swift in Sources */,
 				D7A65C5920F11C38003E5ADC /* LanguageType.swift in Sources */,
 				D730BD27222BF30700E69C93 /* KeychainConfiguration.swift in Sources */,
-				D140A67528BB1ACA00637ED1 /* TrailingCommaStrategy.swift in Sources */,
 				272CAC2628758C6A0026EF50 /* ContentViewController.swift in Sources */,
 				D7487FD821738A1900D09383 /* NSImage+.swift in Sources */,
 				272ABB5F285F305600CCD651 /* SidebarProjectView.swift in Sources */,
@@ -744,7 +670,6 @@
 				D7038E2620FB24E000A54E69 /* NoteAttachment.swift in Sources */,
 				D74112281FABA21B00AB619A /* MainWindow.swift in Sources */,
 				D7CDE9DC2161767A00DC5978 /* AppearanceType.swift in Sources */,
-				D140A67B28BB1ACA00637ED1 /* ProseWrapStrategy.swift in Sources */,
 				D7E025081F3B6DDB00EDDA32 /* Storage.swift in Sources */,
 				D74DFBAD21661BA400F67D64 /* Date+.swift in Sources */,
 				D7F5C0EF223ED0570038F172 /* PreferencesGeneralViewController.swift in Sources */,
@@ -761,8 +686,6 @@
 				D7B024A72019BCF3008544C3 /* NoteAttribute.swift in Sources */,
 				D7153DFD2285A93300A2C20F /* AboutWindowController.swift in Sources */,
 				D77CC041216A608500582B97 /* EditorScrollView.swift in Sources */,
-				D140A68228BB1ACA00637ED1 /* MarkdownPlugin.swift in Sources */,
-				D140A68528BB1ACA00637ED1 /* Plugin.swift in Sources */,
 				8F7136EE23490CBF004DFA6E /* Markdown.swift in Sources */,
 				D730BD3C222DB9FC00E69C93 /* NameHelper.swift in Sources */,
 				D7153E052285C09C00A2C20F /* AboutViewController.swift in Sources */,
@@ -779,12 +702,10 @@
 				D730BD2E222DABA100E69C93 /* NoteContainer.swift in Sources */,
 				275F9F602E6820F8006BC2AC /* ViewController+Layout.swift in Sources */,
 				D730BD35222DB11E00E69C93 /* TextBundleInfo.swift in Sources */,
-				D140A67728BB1ACA00637ED1 /* ArrowFunctionParenthesesStrategy.swift in Sources */,
 				D79FE8A21F77D04A00113CFD /* Note.swift in Sources */,
 				275F9F5C2E68150E006BC2AC /* EditorMenuManager.swift in Sources */,
 				275F9F5D2E68150E006BC2AC /* ClipboardManager.swift in Sources */,
 				275F9F5E2E68150E006BC2AC /* ImagePreviewManager.swift in Sources */,
-				D140A68428BB1ACA00637ED1 /* ParsingErrorDetails.swift in Sources */,
 				D7A41C9B2316A8BE00DAAFEB /* CodeBlock.swift in Sources */,
 				D7153E092285EC6100A2C20F /* TitleTextField.swift in Sources */,
 				D7D372F4207B5B0F00AFBD9F /* SidebarNotesView.swift in Sources */,
@@ -1002,6 +923,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1.18.5;
 				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = 5EH69Y5X38;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1045,6 +967,7 @@
 				CURRENT_PROJECT_VERSION = 1.18.5;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_LOCATION = NO;
+				DEVELOPMENT_TEAM = 5EH69Y5X38;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_ON_DEMAND_RESOURCES = NO;
@@ -1104,6 +1027,14 @@
 			requirement = {
 				branch = master;
 				kind = branch;
+			};
+		};
+		2732D2FD2E70450B00F00158 /* XCRemoteSwiftPackageReference "Prettier" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/simonbs/Prettier.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.1;
 			};
 		};
 		27B5AC5E2E45F23B00C83B3A /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
@@ -1182,6 +1113,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 273283292E465330004E1011 /* XCRemoteSwiftPackageReference "MASShortcut" */;
 			productName = MASShortcut;
+		};
+		2732D2FE2E70450B00F00158 /* Prettier */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2732D2FD2E70450B00F00158 /* XCRemoteSwiftPackageReference "Prettier" */;
+			productName = Prettier;
+		};
+		2732D3002E7047D400F00158 /* PrettierMarkdown */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2732D2FD2E70450B00F00158 /* XCRemoteSwiftPackageReference "Prettier" */;
+			productName = PrettierMarkdown;
+		};
+		2732D3022E70482E00F00158 /* PrettierMarkdown */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2732D2FD2E70450B00F00158 /* XCRemoteSwiftPackageReference "Prettier" */;
+			productName = PrettierMarkdown;
+		};
+		2732D3042E70487B00F00158 /* PrettierMarkdown */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2732D2FD2E70450B00F00158 /* XCRemoteSwiftPackageReference "Prettier" */;
+			productName = PrettierMarkdown;
 		};
 		27B5AC5F2E45F23B00C83B3A /* SwiftyJSON */ = {
 			isa = XCSwiftPackageProductDependency;
