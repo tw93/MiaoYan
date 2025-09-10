@@ -1,5 +1,8 @@
 import AppCenterAnalytics
 import Cocoa
+import Foundation
+import Prettier
+import PrettierMarkdown
 
 // MARK: - Editor Management
 extension ViewController {
@@ -12,15 +15,15 @@ extension ViewController {
         editArea.window?.makeFirstResponder(notesTableView)
         UserDefaultsManagement.preview = true
 
-        // WebView 保活：先隐藏，更新内容后再动画显示
+        // Keep WebView alive: hide first, then show with animation after content update
         if let webView = editArea.markdownView {
             webView.alphaValue = 0.0
             webView.isHidden = false
 
-            // 先更新内容，再显示动画
+            // Update content first, then show animation
             refillEditArea()
 
-            // 短暂延迟确保内容加载完成后再显示
+            // Brief delay to ensure content loads before showing
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                 NSAnimationContext.runAnimationGroup({ context in
                     context.duration = 0.2
@@ -46,7 +49,7 @@ extension ViewController {
         UserDefaultsManagement.magicPPT = false
         UserDefaultsManagement.presentation = false
 
-        // WebView 保活：隐藏并清空内容
+        // Keep WebView alive: hide and clear content
         if let webView = editArea.markdownView {
             NSAnimationContext.runAnimationGroup({ context in
                 context.duration = 0.15
@@ -55,7 +58,7 @@ extension ViewController {
             }) {
                 webView.isHidden = true
                 webView.alphaValue = 1.0
-                // 清空内容避免下次显示残留
+                // Clear content to avoid remnants on next display
                 webView.loadHTMLString("<html><body style='background:transparent;'></body></html>", baseURL: nil)
             }
         }
@@ -233,11 +236,11 @@ extension ViewController {
     func handlePPTAutoTransition() {
         guard let vc = ViewController.shared() else { return }
 
-        // 获取鼠标位置，自动跳转
+        // Get cursor position and auto-navigate
         let range = editArea.selectedRange
 
-        // 若 selectedIndex > editArea.string.count()，则使用 string.count() 的值。
-        // 若最终计算结果为负，则采 0 值。
+        // If selectedIndex > editArea.string.count(), use string.count() value
+        // If final calculation is negative, use 0
         let selectedIndex = max(min(range.location, editArea.string.count) - 1, 0)
 
         let beforeString = editArea.string[..<selectedIndex]
@@ -245,12 +248,12 @@ extension ViewController {
 
         if UserDefaultsManagement.previewLocation == "Editing", hrCount > 1 {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                // PPT场景下的自动跳转
+                // Auto-navigation in PPT mode
                 vc.editArea.markdownView?.slideTo(index: hrCount - 1)
             }
         }
 
-        // 兼容快捷键透传
+        // Compatible with keyboard shortcut passthrough
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
             NSApp.mainWindow?.makeFirstResponder(vc.editArea.markdownView)
         }
@@ -269,35 +272,92 @@ extension ViewController {
             )
             return
         }
+        
+        // 防止快速连续格式化
+        guard !isFormatting else {
+            return
+        }
+        
         if let note = notesTableView.getSelectedNote() {
-            // 先保存一下标题，防止首次的时候
+            // 设置格式化状态
+            isFormatting = true
+            // Save title first to prevent first-time issues
             titleLabel.saveTitle()
-            // 最牛逼格式化的方式
             let formatter = PrettierFormatter(plugins: [MarkdownPlugin()], parser: MarkdownParser())
+            formatter.htmlWhitespaceSensitivity = HTMLWhitespaceSensitivityStrategy.ignore
+            formatter.proseWrap = ProseWrapStrategy.preserve  // Change from .never to .preserve to keep line breaks
             formatter.prepare()
-            let content = note.content.string
+            
+            // 确保从编辑器获取最新内容，而不是从 note.content，避免状态不一致
+            let content = editArea.textStorage?.string ?? note.content.string
             let cursor = editArea.selectedRanges[0].rangeValue.location
             let top = editAreaScroll.contentView.bounds.origin.y
-            let result = formatter.format(content, withCursorAtLocation: cursor)
+            
+            let (protectedContent, htmlPlaceholders) = HtmlManager.protectHTMLTags(in: content)
+            let adjustedCursor = HtmlManager.adjustCursorForProtectedContent(cursor: cursor, original: content, protected: protectedContent)
+            
+            let result = formatter.format(protectedContent, withCursorAtLocation: adjustedCursor)
             switch result {
             case .success(let formatResult):
-                // 防止 Prettier 自动加空行
-                var newContent = formatResult.formattedString
-                if content.last != "\n" {
-                    newContent = formatResult.formattedString.removeLastNewLine()
+                let restoredContent = HtmlManager.restoreHTMLTags(in: formatResult.formattedString, with: htmlPlaceholders)
+                var newContent = restoredContent
+                
+                // Simple approach: if Prettier changed the line structure, 
+                // only update the HTML tags and preserve everything else
+                let originalLines = content.components(separatedBy: .newlines)
+                
+                if originalLines.count > 1 && !restoredContent.contains("\n") {
+                    // Prettier removed line breaks, restore original structure but update HTML
+                    newContent = content
+                    // Only replace HTML tags with formatted versions
+                    for (_, originalTag) in htmlPlaceholders {
+                        let updatedTag = originalTag // Keep original HTML tag as-is
+                        newContent = newContent.replacingOccurrences(of: originalTag, with: updatedTag)
+                    }
+                } else {
+                    // Normal case: use formatted content
+                    newContent = restoredContent
+                    if content.last != "\n" && restoredContent.last == "\n" {
+                        newContent = restoredContent.removeLastNewLine()
+                    }
                 }
-                editArea.insertText(newContent, replacementRange: NSRange(0..<note.content.length))
-                editArea.fill(note: note, highlight: true, saveTyping: true, force: false, needScrollToCursor: false)
-                editArea.setSelectedRange(NSRange(location: formatResult.cursorOffset, length: 0))
+                
+                // 同步 note.content 与当前编辑器内容，确保状态一致
+                if let currentStorage = editArea.textStorage {
+                    note.content = NSMutableAttributedString(attributedString: currentStorage)
+                }
+                
+                // 计算原始内容长度（在更新前）
+                let originalLength = note.content.length
+                
+                // 直接更新编辑器显示，这会同时更新 textStorage 和 note.content
+                editArea.insertText(newContent, replacementRange: NSRange(0..<originalLength))
+                
+                // 保存到文件
+                note.save()
+                
+                // 重新应用 Markdown 语法高亮
+                if let storage = editArea.textStorage {
+                    NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
+                    editArea.fillHighlightLinks()
+                }
+                
+                let adjustedCursorOffset = HtmlManager.adjustCursorAfterRestore(originalOffset: formatResult.cursorOffset, protected: protectedContent, restored: newContent)
+                
+                editArea.setSelectedRange(NSRange(location: adjustedCursorOffset, length: 0))
                 editAreaScroll.documentView?.scroll(NSPoint(x: 0, y: top))
                 formatContent = newContent
-                note.save()
                 toast(message: NSLocalizedString("🎉 Automatic typesetting succeeded~", comment: ""))
+                
             case .failure(let error):
-                print(error)
+                print("Format error: \(error)")
+                toast(message: NSLocalizedString("❌ Formatting failed, please try again", comment: ""))
             }
-
+            
             Analytics.trackEvent("MiaoYan Format")
+            
+            // 重置格式化状态（无论成功或失败）
+            isFormatting = false
         }
     }
 
@@ -314,12 +374,9 @@ extension ViewController {
         }
     }
 
-    // WebView 预加载，避免首次切换时的延迟
     func preloadWebView() {
-        // 仅在非预览模式时预加载，避免干扰已有预览
         guard editArea.markdownView == nil, !UserDefaultsManagement.preview else { return }
 
-        // 使用最简单的临时 Note
         let tempProject = getSidebarProject() ?? storage.noteList.first?.project
         guard let project = tempProject else { return }
 
@@ -452,10 +509,9 @@ extension ViewController {
 
         if titleLabel.isEditable == true {
             fileName(titleLabel)
-            // 恢复到之前保存的 first responder，而不是强制设置为 notesTableView
             if let restoreResponder = titleLabel.restoreResponder {
                 view.window?.makeFirstResponder(restoreResponder)
-                titleLabel.restoreResponder = nil  // 清除保存的状态
+                titleLabel.restoreResponder = nil
             } else {
                 view.window?.makeFirstResponder(notesTableView)
             }

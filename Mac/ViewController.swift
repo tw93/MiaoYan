@@ -29,6 +29,7 @@ class ViewController:
     let searchQueue = OperationQueue()
     var isFocusedTitle: Bool = false
     var formatContent: String = ""
+    var isFormatting: Bool = false
     var needRestorePreview: Bool = false
 
     private var disablePreviewWorkItem: DispatchWorkItem?
