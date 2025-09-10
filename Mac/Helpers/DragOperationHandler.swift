@@ -51,7 +51,7 @@ class DragOperationHandler {
         let mutable = NSMutableAttributedString(attributedString: text)
         textView.insertText(mutable, replacementRange: NSRange(location: caretLocation, length: 0))
         storage.sizeAttachmentImages()
-        
+
         if let note = EditTextView.note {
             textView.saveTextStorageContent(to: note)
             note.save()

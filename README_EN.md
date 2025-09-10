@@ -88,6 +88,7 @@
 
 - <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>: Project initialization code referenced from here, thanks to the author
 - <a href="https://github.com/stackotter/swift-cmark-gfm" target="_blank">stackotter/swift-cmark-gfm</a>: Fast and efficient Swift Markdown parser
+- <a href="https://github.com/simonbs/Prettier" target="_blank">simonbs/Prettier</a>: Swift Markdown formatting tool that makes MiaoYan formatting more elegant
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>: Syntax highlighting capabilities
 - <a href="https://tsanger.cn/product" target="_blank">TsangerType</a>: A beautiful open-source Chinese font TsangerType JinKai, which MiaoYan uses as the default font
 - <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>: MiaoYan's PPT underlying rendering depends on this framework

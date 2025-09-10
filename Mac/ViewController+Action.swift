@@ -1,6 +1,6 @@
-import AppCenterAnalytics
 import Carbon
 import Cocoa
+import TelemetryDeck
 
 // MARK: - User Actions and Operations
 extension ViewController {
@@ -436,7 +436,7 @@ extension ViewController {
                 self.disableMiaoYanPPT()
             }
         }
-        Analytics.trackEvent("MiaoYan Export", withProperties: ["Type": "MiaoYan PPT PDF"])
+        TelemetryDeck.signal("Action.Export", parameters: ["Type": "PPT PDF"])
     }
 
     @IBAction func textFinder(_ sender: NSMenuItem) {
@@ -606,7 +606,7 @@ extension ViewController {
             }
         }
 
-        Analytics.trackEvent("MiaoYan NewNote")
+        TelemetryDeck.signal("Action.NewNote")
     }
 
     private func removeForever() {
@@ -708,7 +708,7 @@ extension ViewController {
         notesTableView.selectRowIndexes(newIndexes, byExtendingSelection: false)
         notesTableView.endUpdates()
         filteredNoteList = resorted
-        Analytics.trackEvent("MiaoYan Pin")
+        TelemetryDeck.signal("Action.Pin")
     }
 
     @objc func switchTitleToEditMode() {
@@ -892,7 +892,7 @@ extension ViewController {
                 self.disablePreview()
             }
         }
-        Analytics.trackEvent("MiaoYan Export", withProperties: ["Type": type])
+        TelemetryDeck.signal("Action.Export", parameters: ["Type": type])
     }
 
     public func toastExport(status: Bool) {
@@ -1225,7 +1225,7 @@ extension ViewController {
             popover.performClose(nil)
         } else {
             showInfo("")
-            Analytics.trackEvent("MiaoYan ShowInfo")
+            TelemetryDeck.signal("Action.ShowInfo")
         }
     }
 

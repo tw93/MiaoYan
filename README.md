@@ -90,6 +90,7 @@
 
 - <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>：项目初始化代码参考于此，非常感谢作者
 - <a href="https://github.com/stackotter/swift-cmark-gfm" target="_blank">stackotter/swift-cmark-gfm</a>：快速高效的 Swift Markdown 解析器
+- <a href="https://github.com/simonbs/Prettier" target="_blank">simonbs/Prettier</a>：Swift Markdown 格式化工具，让妙言排版更加优雅
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>：语法高亮能力
 - <a href="https://tsanger.cn/product" target="_blank">仓耳字库</a>：一款漂亮的开源中文字体仓耳今楷，妙言将其作为默认字体
 - <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>：妙言 PPT 底层渲染依赖此框架

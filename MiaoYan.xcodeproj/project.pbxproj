@@ -16,13 +16,12 @@
 		272ABB5F285F305600CCD651 /* SidebarProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272ABB5E285F305500CCD651 /* SidebarProjectView.swift */; };
 		272CAC1E287577E70026EF50 /* ContentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 272CAC20287577E70026EF50 /* ContentViewController.xib */; };
 		272CAC2628758C6A0026EF50 /* ContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272CAC2528758C6A0026EF50 /* ContentViewController.swift */; };
-		273283282E465228004E1011 /* MASShortcut in Frameworks */ = {isa = PBXBuildFile; productRef = 273283272E465228004E1011 /* MASShortcut */; };
-		2732832B2E465330004E1011 /* MASShortcut in Frameworks */ = {isa = PBXBuildFile; productRef = 2732832A2E465330004E1011 /* MASShortcut */; };
 		2732832D2E4653BF004E1011 /* LXGWWenKaiScreen.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2732832C2E4653BF004E1011 /* LXGWWenKaiScreen.ttf */; };
 		2732D2FF2E70450B00F00158 /* Prettier in Frameworks */ = {isa = PBXBuildFile; productRef = 2732D2FE2E70450B00F00158 /* Prettier */; };
 		2732D3012E7047D400F00158 /* PrettierMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 2732D3002E7047D400F00158 /* PrettierMarkdown */; };
 		2732D3032E70482E00F00158 /* PrettierMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 2732D3022E70482E00F00158 /* PrettierMarkdown */; };
 		2732D3052E70487B00F00158 /* PrettierMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 2732D3042E70487B00F00158 /* PrettierMarkdown */; };
+		2732D3082E7123B300F00158 /* TelemetryDeck in Frameworks */ = {isa = PBXBuildFile; productRef = 2732D3072E7123B300F00158 /* TelemetryDeck */; };
 		274D62CF2E434B6D003C075F /* ImageLinkParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274D62CE2E434B6D003C075F /* ImageLinkParser.swift */; };
 		274D62D12E434B9C003C075F /* ImagePreviewWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274D62D02E434B9C003C075F /* ImagePreviewWindow.swift */; };
 		275592971F3AE9B5006B8988 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275592961F3AE9B5006B8988 /* MainWindowController.swift */; };
@@ -34,7 +33,18 @@
 		27727AFB2E1B9E7200275477 /* TsangerJinKai02-W04.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27727AFA2E1B9E7200275477 /* TsangerJinKai02-W04.ttf */; };
 		277A61D8244B538F000F0033 /* SidebarTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277A61D7244B538E000F0033 /* SidebarTableRowView.swift */; };
 		27838E68287521C0009E8012 /* DetachedWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27838E67287521C0009E8012 /* DetachedWindowController.swift */; };
+		27977FF42E7126C40016D57D /* CMarkGFM in Frameworks */ = {isa = PBXBuildFile; productRef = 27977FF32E7126C40016D57D /* CMarkGFM */; };
 		2799407C218484C900727B20 /* TitleBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799407B218484C900727B20 /* TitleBarView.swift */; };
+		27A077372E714A98008A5483 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 27A077362E714A98008A5483 /* Alamofire */; };
+		27A0773A2E714AB1008A5483 /* CMarkGFM in Frameworks */ = {isa = PBXBuildFile; productRef = 27A077392E714AB1008A5483 /* CMarkGFM */; };
+		27A0773D2E714ABF008A5483 /* TelemetryDeck in Frameworks */ = {isa = PBXBuildFile; productRef = 27A0773C2E714ABF008A5483 /* TelemetryDeck */; };
+		27A077402E714ACC008A5483 /* Prettier in Frameworks */ = {isa = PBXBuildFile; productRef = 27A0773F2E714ACC008A5483 /* Prettier */; };
+		27A077422E714ACC008A5483 /* PrettierMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 27A077412E714ACC008A5483 /* PrettierMarkdown */; };
+		27A077452E714AEE008A5483 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 27A077442E714AEE008A5483 /* SwiftyJSON */; };
+		27A077482E714AFE008A5483 /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = 27A077472E714AFE008A5483 /* Highlightr */; };
+		27A0774E2E714C43008A5483 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 27A0774D2E714C43008A5483 /* Sparkle */; };
+		27A077512E714C56008A5483 /* ZipArchive in Frameworks */ = {isa = PBXBuildFile; productRef = 27A077502E714C56008A5483 /* ZipArchive */; };
+		27A077542E7152C9008A5483 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 27A077532E7152C9008A5483 /* KeyboardShortcuts */; };
 		27B4A5AA2E6924CC00C89EFF /* ViewController+Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4A5A82E6924CC00C89EFF /* ViewController+Action.swift */; };
 		27B4A5AB2E6924CC00C89EFF /* ViewController+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4A5A92E6924CC00C89EFF /* ViewController+Data.swift */; };
 		27B5AC602E45F23B00C83B3A /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 27B5AC5F2E45F23B00C83B3A /* SwiftyJSON */; };
@@ -42,10 +52,6 @@
 		27B5AC682E45F25F00C83B3A /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = 27B5AC672E45F25F00C83B3A /* Highlightr */; };
 		27B5AC6B2E45F26A00C83B3A /* ZipArchive in Frameworks */ = {isa = PBXBuildFile; productRef = 27B5AC6A2E45F26A00C83B3A /* ZipArchive */; };
 		27B5AC6E2E45F27A00C83B3A /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 27B5AC6D2E45F27A00C83B3A /* Sparkle */; };
-		27B5AC712E45F2A100C83B3A /* AppCenterAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 27B5AC702E45F2A100C83B3A /* AppCenterAnalytics */; };
-		27B5AC732E45F2A100C83B3A /* AppCenterCrashes in Frameworks */ = {isa = PBXBuildFile; productRef = 27B5AC722E45F2A100C83B3A /* AppCenterCrashes */; };
-		27B5AC782E45F2B400C83B3A /* Parsley in Frameworks */ = {isa = PBXBuildFile; productRef = 27B5AC772E45F2B400C83B3A /* Parsley */; };
-		27B5AC7B2E45F3C400C83B3A /* MASShortcut in Frameworks */ = {isa = PBXBuildFile; productRef = 27B5AC7A2E45F3C400C83B3A /* MASShortcut */; };
 		27C34C0E28928D0B007369E5 /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C34C0D28928D0B007369E5 /* Emoji.swift */; };
 		27D280452A05480D007A4104 /* IndexSetWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D280442A05480D007A4104 /* IndexSetWrapper.swift */; };
 		27D95122285B5E4400F40306 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D95121285B5E4400F40306 /* Toast.swift */; };
@@ -287,21 +293,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				273283282E465228004E1011 /* MASShortcut in Frameworks */,
+				27A0773A2E714AB1008A5483 /* CMarkGFM in Frameworks */,
+				27A077482E714AFE008A5483 /* Highlightr in Frameworks */,
+				27A077372E714A98008A5483 /* Alamofire in Frameworks */,
+				27977FF42E7126C40016D57D /* CMarkGFM in Frameworks */,
 				27B5AC6B2E45F26A00C83B3A /* ZipArchive in Frameworks */,
-				27B5AC712E45F2A100C83B3A /* AppCenterAnalytics in Frameworks */,
 				2732D2FF2E70450B00F00158 /* Prettier in Frameworks */,
+				27A077542E7152C9008A5483 /* KeyboardShortcuts in Frameworks */,
+				27A0773D2E714ABF008A5483 /* TelemetryDeck in Frameworks */,
 				27B5AC682E45F25F00C83B3A /* Highlightr in Frameworks */,
-				27B5AC732E45F2A100C83B3A /* AppCenterCrashes in Frameworks */,
 				27B5AC602E45F23B00C83B3A /* SwiftyJSON in Frameworks */,
+				27A077402E714ACC008A5483 /* Prettier in Frameworks */,
+				2732D3082E7123B300F00158 /* TelemetryDeck in Frameworks */,
+				27A0774E2E714C43008A5483 /* Sparkle in Frameworks */,
 				27B5AC6E2E45F27A00C83B3A /* Sparkle in Frameworks */,
 				2732D3012E7047D400F00158 /* PrettierMarkdown in Frameworks */,
 				2732D3052E70487B00F00158 /* PrettierMarkdown in Frameworks */,
-				27B5AC782E45F2B400C83B3A /* Parsley in Frameworks */,
 				2732D3032E70482E00F00158 /* PrettierMarkdown in Frameworks */,
-				2732832B2E465330004E1011 /* MASShortcut in Frameworks */,
-				27B5AC7B2E45F3C400C83B3A /* MASShortcut in Frameworks */,
 				27B5AC632E45F25100C83B3A /* Alamofire in Frameworks */,
+				27A077452E714AEE008A5483 /* SwiftyJSON in Frameworks */,
+				27A077422E714ACC008A5483 /* PrettierMarkdown in Frameworks */,
+				27A077512E714C56008A5483 /* ZipArchive in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -568,15 +580,15 @@
 			);
 			mainGroup = D7793C661F211C6000CA39B7;
 			packageReferences = (
-				27B5AC5E2E45F23B00C83B3A /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
-				27B5AC612E45F25100C83B3A /* XCRemoteSwiftPackageReference "Alamofire" */,
-				27B5AC662E45F25F00C83B3A /* XCRemoteSwiftPackageReference "Highlightr" */,
-				27B5AC692E45F26A00C83B3A /* XCRemoteSwiftPackageReference "ZipArchive" */,
-				27B5AC6C2E45F27A00C83B3A /* XCRemoteSwiftPackageReference "Sparkle" */,
-				27B5AC6F2E45F2A100C83B3A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */,
-				27B5AC762E45F2B400C83B3A /* XCRemoteSwiftPackageReference "Parsley" */,
-				273283292E465330004E1011 /* XCRemoteSwiftPackageReference "MASShortcut" */,
-				2732D2FD2E70450B00F00158 /* XCRemoteSwiftPackageReference "Prettier" */,
+				27A077352E714A98008A5483 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				27A077382E714AB1008A5483 /* XCRemoteSwiftPackageReference "swift-cmark-gfm" */,
+				27A0773B2E714ABF008A5483 /* XCRemoteSwiftPackageReference "SwiftSDK" */,
+				27A0773E2E714ACC008A5483 /* XCRemoteSwiftPackageReference "Prettier" */,
+				27A077432E714AEE008A5483 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+				27A077462E714AFE008A5483 /* XCRemoteSwiftPackageReference "Highlightr" */,
+				27A0774C2E714C43008A5483 /* XCRemoteSwiftPackageReference "Sparkle" */,
+				27A0774F2E714C56008A5483 /* XCRemoteSwiftPackageReference "ZipArchive" */,
+				27A077522E7152C8008A5483 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 			);
 			productRefGroup = D7793C661F211C6000CA39B7;
 			projectDirPath = "";
@@ -1021,20 +1033,100 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		273283292E465330004E1011 /* XCRemoteSwiftPackageReference "MASShortcut" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/shpakovski/MASShortcut.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 		2732D2FD2E70450B00F00158 /* XCRemoteSwiftPackageReference "Prettier" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/simonbs/Prettier.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.2.1;
+			};
+		};
+		2732D3062E7123B300F00158 /* XCRemoteSwiftPackageReference "SwiftSDK" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/TelemetryDeck/SwiftSDK";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.9.4;
+			};
+		};
+		27977FF22E7126C40016D57D /* XCRemoteSwiftPackageReference "swift-cmark-gfm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stackotter/swift-cmark-gfm";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		27A077352E714A98008A5483 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
+		27A077382E714AB1008A5483 /* XCRemoteSwiftPackageReference "swift-cmark-gfm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stackotter/swift-cmark-gfm";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		27A0773B2E714ABF008A5483 /* XCRemoteSwiftPackageReference "SwiftSDK" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/TelemetryDeck/SwiftSDK";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.9.4;
+			};
+		};
+		27A0773E2E714ACC008A5483 /* XCRemoteSwiftPackageReference "Prettier" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/simonbs/Prettier.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.1;
+			};
+		};
+		27A077432E714AEE008A5483 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.2;
+			};
+		};
+		27A077462E714AFE008A5483 /* XCRemoteSwiftPackageReference "Highlightr" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/raspu/Highlightr.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.0;
+			};
+		};
+		27A0774C2E714C43008A5483 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.3;
+			};
+		};
+		27A0774F2E714C56008A5483 /* XCRemoteSwiftPackageReference "ZipArchive" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ZipArchive/ZipArchive.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.6.0;
+			};
+		};
+		27A077522E7152C8008A5483 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.0;
 			};
 		};
 		27B5AC5E2E45F23B00C83B3A /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
@@ -1050,7 +1142,7 @@
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 5.10.2;
+				minimumVersion = 5.8.0;
 			};
 		};
 		27B5AC662E45F25F00C83B3A /* XCRemoteSwiftPackageReference "Highlightr" */ = {
@@ -1077,43 +1169,9 @@
 				minimumVersion = 2.7.1;
 			};
 		};
-		27B5AC6F2E45F2A100C83B3A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/microsoft/appcenter-sdk-apple.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.6;
-			};
-		};
-		27B5AC762E45F2B400C83B3A /* XCRemoteSwiftPackageReference "Parsley" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/loopwerk/Parsley";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.6.0;
-			};
-		};
-		27B5AC792E45F3C400C83B3A /* XCRemoteSwiftPackageReference "MASShortcut" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/shpakovski/MASShortcut.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		273283272E465228004E1011 /* MASShortcut */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 27B5AC792E45F3C400C83B3A /* XCRemoteSwiftPackageReference "MASShortcut" */;
-			productName = MASShortcut;
-		};
-		2732832A2E465330004E1011 /* MASShortcut */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 273283292E465330004E1011 /* XCRemoteSwiftPackageReference "MASShortcut" */;
-			productName = MASShortcut;
-		};
 		2732D2FE2E70450B00F00158 /* Prettier */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2732D2FD2E70450B00F00158 /* XCRemoteSwiftPackageReference "Prettier" */;
@@ -1133,6 +1191,66 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2732D2FD2E70450B00F00158 /* XCRemoteSwiftPackageReference "Prettier" */;
 			productName = PrettierMarkdown;
+		};
+		2732D3072E7123B300F00158 /* TelemetryDeck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2732D3062E7123B300F00158 /* XCRemoteSwiftPackageReference "SwiftSDK" */;
+			productName = TelemetryDeck;
+		};
+		27977FF32E7126C40016D57D /* CMarkGFM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27977FF22E7126C40016D57D /* XCRemoteSwiftPackageReference "swift-cmark-gfm" */;
+			productName = CMarkGFM;
+		};
+		27A077362E714A98008A5483 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27A077352E714A98008A5483 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		27A077392E714AB1008A5483 /* CMarkGFM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27A077382E714AB1008A5483 /* XCRemoteSwiftPackageReference "swift-cmark-gfm" */;
+			productName = CMarkGFM;
+		};
+		27A0773C2E714ABF008A5483 /* TelemetryDeck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27A0773B2E714ABF008A5483 /* XCRemoteSwiftPackageReference "SwiftSDK" */;
+			productName = TelemetryDeck;
+		};
+		27A0773F2E714ACC008A5483 /* Prettier */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27A0773E2E714ACC008A5483 /* XCRemoteSwiftPackageReference "Prettier" */;
+			productName = Prettier;
+		};
+		27A077412E714ACC008A5483 /* PrettierMarkdown */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27A0773E2E714ACC008A5483 /* XCRemoteSwiftPackageReference "Prettier" */;
+			productName = PrettierMarkdown;
+		};
+		27A077442E714AEE008A5483 /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27A077432E714AEE008A5483 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
+		};
+		27A077472E714AFE008A5483 /* Highlightr */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27A077462E714AFE008A5483 /* XCRemoteSwiftPackageReference "Highlightr" */;
+			productName = Highlightr;
+		};
+		27A0774D2E714C43008A5483 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27A0774C2E714C43008A5483 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+		27A077502E714C56008A5483 /* ZipArchive */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27A0774F2E714C56008A5483 /* XCRemoteSwiftPackageReference "ZipArchive" */;
+			productName = ZipArchive;
+		};
+		27A077532E7152C9008A5483 /* KeyboardShortcuts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27A077522E7152C8008A5483 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
+			productName = KeyboardShortcuts;
 		};
 		27B5AC5F2E45F23B00C83B3A /* SwiftyJSON */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1158,26 +1276,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 27B5AC6C2E45F27A00C83B3A /* XCRemoteSwiftPackageReference "Sparkle" */;
 			productName = Sparkle;
-		};
-		27B5AC702E45F2A100C83B3A /* AppCenterAnalytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 27B5AC6F2E45F2A100C83B3A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */;
-			productName = AppCenterAnalytics;
-		};
-		27B5AC722E45F2A100C83B3A /* AppCenterCrashes */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 27B5AC6F2E45F2A100C83B3A /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */;
-			productName = AppCenterCrashes;
-		};
-		27B5AC772E45F2B400C83B3A /* Parsley */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 27B5AC762E45F2B400C83B3A /* XCRemoteSwiftPackageReference "Parsley" */;
-			productName = Parsley;
-		};
-		27B5AC7A2E45F3C400C83B3A /* MASShortcut */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 27B5AC792E45F3C400C83B3A /* XCRemoteSwiftPackageReference "MASShortcut" */;
-			productName = MASShortcut;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

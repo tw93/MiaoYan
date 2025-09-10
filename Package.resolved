@@ -10,15 +10,6 @@
       }
     },
     {
-      "identity" : "appcenter-sdk-apple",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/microsoft/appcenter-sdk-apple.git",
-      "state" : {
-        "revision" : "9308921a2f6ef828cf9fae898ea4f080a81cdf11",
-        "version" : "5.0.6"
-      }
-    },
-    {
       "identity" : "highlightr",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/raspu/Highlightr.git",
@@ -37,15 +28,6 @@
       }
     },
     {
-      "identity" : "plcrashreporter",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/microsoft/PLCrashReporter.git",
-      "state" : {
-        "revision" : "fec2ff791b27fd9b9ceab9072025dea56409cca1",
-        "version" : "1.11.3"
-      }
-    },
-    {
       "identity" : "prettier",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/simonbs/Prettier.git",
@@ -59,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sparkle-project/Sparkle.git",
       "state" : {
-        "revision" : "df074165274afaa39539c05d57b0832620775b11",
-        "version" : "2.7.1"
+        "revision" : "06beff60e3b609a485290e4d5d2d1e2eedb1e55d",
+        "version" : "2.7.3"
       }
     },
     {
@@ -70,6 +52,15 @@
       "state" : {
         "revision" : "7ec44e7384793e507cf046336aef68586719a24e",
         "version" : "1.0.2"
+      }
+    },
+    {
+      "identity" : "swiftsdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/TelemetryDeck/SwiftSDK",
+      "state" : {
+        "revision" : "a7fd1eb469589a3c8fd8cc3abe19b092b5d674dc",
+        "version" : "2.9.4"
       }
     },
     {

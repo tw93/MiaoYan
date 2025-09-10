@@ -1,8 +1,7 @@
-import AppCenter
-import AppCenterAnalytics
 import Carbon.HIToolbox
 import Cocoa
 import Foundation
+import TelemetryDeck
 
 class SidebarProjectView: NSOutlineView,
     NSOutlineViewDelegate,
@@ -524,7 +523,7 @@ class SidebarProjectView: NSOutlineView,
 
         NSWorkspace.shared.activateFileViewerSelecting([p.url])
 
-        Analytics.trackEvent("MiaoYan RevealInFinder")
+        TelemetryDeck.signal("Action.RevealInFinder")
     }
 
     @IBAction func renameMenu(_ sender: Any) {
@@ -625,7 +624,7 @@ class SidebarProjectView: NSOutlineView,
         }
 
         field.becomeFirstResponder()
-        Analytics.trackEvent("MiaoYan NewProject")
+        TelemetryDeck.signal("Action.NewProject")
     }
 
     @IBAction func openSettings(_ sender: NSMenuItem) {
@@ -634,7 +633,7 @@ class SidebarProjectView: NSOutlineView,
         }
 
         vc.openProjectViewSettings(sender)
-        Analytics.trackEvent("MiaoYan OpenSetting")
+        TelemetryDeck.signal("Action.OpenSetting")
     }
 
     private func removeProject(project: Project) {

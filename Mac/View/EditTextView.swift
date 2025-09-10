@@ -11,7 +11,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     public static var lastRemoved: String?
 
     public var viewDelegate: ViewController?
-    
+
     private var linkHighlightTimer: Timer?
 
     private weak var cachedViewController: ViewController?
@@ -55,7 +55,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         clipboardManager = ClipboardManager(textView: self)
         menuManager = EditorMenuManager(textView: self)
     }
-    
+
     deinit {
         linkHighlightTimer?.invalidate()
         linkHighlightTimer = nil
@@ -433,7 +433,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     public func clear() {
         textStorage?.setAttributedString(NSAttributedString())
-        
+
         markdownView?.isHidden = true
         imagePreviewManager?.hideImagePreview()
 
@@ -565,9 +565,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let data = Data(bytes: &length, count: MemoryLayout.size(ofValue: length))
         try? note.url.setExtendedAttribute(data: data, forName: "com.tw93.miaoyan.cursor")
     }
-    
+
     // MARK: - Link Highlighting Performance Optimization
-    
+
     private func shouldTriggerLinkHighlight(for event: NSEvent) -> Bool {
         switch Int(event.keyCode) {
         case kVK_Space, kVK_Return, kVK_Tab:
@@ -581,10 +581,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return false
         }
     }
-    
+
     private func scheduleLinkHighlight(range: NSRange? = nil, immediate: Bool = false) {
         linkHighlightTimer?.invalidate()
-        
+
         if immediate {
             if let targetRange = range {
                 fillHighlightLinks(range: targetRange)
@@ -943,10 +943,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     @objc public func unDeleteImages(_ urls: [URL: URL]) {
         guard let note = EditTextView.note else { return }
-        
+
         note.undoManager.beginUndoGrouping()
         note.undoManager.setActionName(NSLocalizedString("Restore Images", comment: "Undo action name"))
-        
+
         var restoredImages = [URL: URL]()
         for (src, dst) in urls {
             do {
@@ -956,20 +956,20 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 print(error)
             }
         }
-        
+
         if restoredImages.count > 0 {
             note.undoManager.registerUndo(withTarget: self, selector: #selector(deleteRestoredImages), object: restoredImages)
         }
-        
+
         note.undoManager.endUndoGrouping()
     }
-    
+
     @objc private func deleteRestoredImages(_ urls: [URL: URL]) {
         guard let note = EditTextView.note else { return }
-        
+
         note.undoManager.beginUndoGrouping()
         note.undoManager.setActionName(NSLocalizedString("Delete Images", comment: "Undo action name"))
-        
+
         var deletedImages = [URL: URL]()
         for (src, _) in urls {
             do {
@@ -980,11 +980,11 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 print(error)
             }
         }
-        
+
         if deletedImages.count > 0 {
             note.undoManager.registerUndo(withTarget: self, selector: #selector(unDeleteImages), object: deletedImages)
         }
-        
+
         note.undoManager.endUndoGrouping()
     }
 
