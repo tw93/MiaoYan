@@ -36,13 +36,39 @@ MiaoYan (妙言) is a lightweight macOS Markdown editor built with Swift 5 + App
 ## Project Structure
 
 ```
-Mac/
-├── View/           # UI Components (*View.swift, *Controller.swift)
-├── Business/       # Business Logic (Note.swift, Storage.swift)
-├── Helpers/        # Utilities (UserDefaultsManagement.swift)
-├── Extensions/     # Swift Extensions
-└── Images.xcassets/# Image and Color Resources
+Controllers/        # View Controllers & Window Controllers (incl. ViewController.swift)
+Views/             # UI Components (Custom Views, UI Elements)  
+Business/          # Business Logic (Models, Data Structures)
+Helpers/           # Utilities & Services (Managers, Processors)
+Extensions/        # Swift Extensions
+AppDelegate.swift  # Application entry point
+AppDelegate+URLRoutes.swift # Application extensions
+Info.plist         # Application configuration
+
+Resources/
+├── Images.xcassets/# Image and Color Resources
+├── Localization/   # All localization files (*.lproj)
+├── Fonts/          # Custom fonts
+├── DownView.bundle/# Web view resources
+└── Initial/        # Initial data files
 ```
+
+### Directory Guidelines
+
+**Code Organization (Root Level):**
+- **Controllers/**: All ViewControllers and WindowControllers (including ViewController.swift and extensions)
+- **Views/**: Pure UI components (NSView subclasses, custom controls)
+- **Business/**: Data models, enums, business logic structures  
+- **Helpers/**: Service classes, managers, processors, utilities
+- **Extensions/**: Swift language extensions
+- **AppDelegate files**: Application lifecycle and routing
+- **Info.plist**: Application configuration and metadata
+
+**Resource Organization (Resources/):**
+- **Images.xcassets/**: All images, colors, and visual assets
+- **Localization/**: Internationalization files organized by locale
+- **Fonts/**: Custom typography resources
+- **Static Resources**: Bundles, initial data, and other assets
 
 ## Swift macOS Development Best Practices
 

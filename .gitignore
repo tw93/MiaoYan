@@ -1,23 +1,96 @@
-Pods
+# ====================
+# Xcode & iOS Development
+# ====================
+
+# User-specific Xcode files
 *.xcuserstate
-xcuserdata
-Podfile.lock
-MiaoYan.xcworkspace/xcshareddata/*
+xcuserdata/
+*.xcworkspace/xcuserdata/
 MiaoYan.xcworkspace/xcuserdata/*
+MiaoYan.xcworkspace/xcshareddata/*
 MiaoYan.xcodeproj/xcuserdata/*
-.idea/
-Releases
-.DS_Store
-.vscode/
-node_modules
-fonts/
-Release
-appcast.xml
-Resources/DownView.bundle/demo.html
-docs/
-index.html
-IrEditor
-package-lock.json
-.husky/
+
+# Build artifacts and derivatives
+DerivedData/
 .build/
 build/
+*.dSYM
+*.dSYM.zip
+*.app.dSYM.zip
+
+# Swift Package Manager
+.swiftpm/
+Package.resolved.backup
+
+# Playgrounds
+*.playground
+
+# ====================
+# CocoaPods & Dependencies  
+# ====================
+Pods/
+Podfile.lock
+
+# ====================
+# macOS System Files
+# ====================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ====================
+# Development Tools & IDEs
+# ====================
+.vscode/
+.idea/
+*.swp
+*.swo
+~*
+
+# ====================
+# Node.js & Web Development
+# ====================
+node_modules/
+package-lock.json
+.husky/
+
+# ====================
+# Temporary & Backup Files
+# ====================
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+*~
+.#*
+\#*#
+
+# ====================
+# Logs & Debug Files
+# ====================
+*.log
+*.out
+*.err
+
+# ====================
+# Project Specific
+# ====================
+# Release & Distribution
+Releases/
+Release/
+*.ipa
+appcast.xml
+
+# Documentation & Demo files
+docs/
+index.html
+Resources/DownView.bundle/demo.html
+
+# Legacy & Deprecated
+IrEditor/
+fonts/
