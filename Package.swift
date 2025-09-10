@@ -40,22 +40,7 @@ let package = Package(
         .package(url: "https://github.com/simonbs/Prettier.git", from: "0.2.1"),
     ],
     targets: [
-        // This is a documentation target - the actual app is built with Xcode project
-        .target(
-            name: "MiaoYanCore",
-            dependencies: [
-                "Sparkle",
-                .product(name: "TelemetryDeck", package: "SwiftSDK"),
-                "Alamofire",
-                "SwiftyJSON",
-                "Highlightr",
-                "ZipArchive",
-                .product(name: "CMarkGFM", package: "swift-cmark-gfm"),
-                "KeyboardShortcuts",
-                .product(name: "Prettier", package: "Prettier"),
-                .product(name: "PrettierMarkdown", package: "Prettier"),
-            ],
-            path: "Sources"
-        )
+        // No targets defined - this package is used only for dependency management
+        // The actual app is built using the MiaoYan.xcodeproj Xcode project
     ]
 )

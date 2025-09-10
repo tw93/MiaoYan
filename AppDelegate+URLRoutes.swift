@@ -1,11 +1,3 @@
-//
-//  AppDelegate+URLRoutes.swift
-//  FSNotes
-//
-//  Created by Jeff Hanbury on 13/04/18.
-//  Copyright © 2018 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Cocoa
 import Foundation
 
