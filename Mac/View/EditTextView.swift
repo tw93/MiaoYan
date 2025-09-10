@@ -11,8 +11,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
     public static var lastRemoved: String?
 
     public var viewDelegate: ViewController?
+    
+    private var linkHighlightTimer: Timer?
 
-    // 性能优化：缓存常用引用
     private weak var cachedViewController: ViewController?
 
     var isHighlighted: Bool = false
@@ -24,7 +25,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
     public var markdownView: MPreviewView?
     public static var imagesLoaderQueue = OperationQueue()
 
-    // 管理类
     private var imagePreviewManager: ImagePreviewManager?
     private var clipboardManager: ClipboardManager?
     private var menuManager: EditorMenuManager?
@@ -51,10 +51,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
         EditTextView.imagesLoaderQueue.maxConcurrentOperationCount = 3
         EditTextView.imagesLoaderQueue.qualityOfService = .userInteractive
 
-        // 初始化管理类
         imagePreviewManager = ImagePreviewManager(textView: self)
         clipboardManager = ClipboardManager(textView: self)
         menuManager = EditorMenuManager(textView: self)
+    }
+    
+    deinit {
+        linkHighlightTimer?.invalidate()
+        linkHighlightTimer = nil
     }
 
     override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn flag: Bool) {
@@ -104,7 +108,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override var acceptableDragTypes: [NSPasteboard.PasteboardType] { [] }
 
     override func mouseDown(with event: NSEvent) {
-        // 智能处理图片预览隐藏（考虑容忍区域）
         imagePreviewManager?.handleMouseClick(at: event.locationInWindow)
 
         guard EditTextView.note != nil else { return }
@@ -162,10 +165,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return
         }
 
-        // 检测图片链接悬停（降低频率，避免过度处理）
         imagePreviewManager?.handleImageLinkHover(at: index, mousePoint: event.locationInWindow)
 
-        // 给链接在 command 的时候加上一个手
         if NSEvent.modifierFlags.contains(.command) {
             if #available(OSX 10.13, *) {
                 linkTextAttributes = [
@@ -238,7 +239,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         return false
     }
 
-    // 修复下在剪切地址的时候，链接高亮问题
     override func cut(_ sender: Any?) {
         super.cut(sender)
         fillHighlightLinks()
@@ -279,7 +279,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 return
             }
 
-            // 防止文件其实是一个文件夹的场景
             if let url = NSURL(from: NSPasteboard.general), let ext = url.pathExtension {
                 let excludedExtensions = ["app", "xcodeproj", "screenflow", "xcworkspace", "bundle", "lproj"]
                 if !url.isFileURL || excludedExtensions.contains(ext) {
@@ -336,7 +335,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         return getViewController()?.notesTableView.getSelectedNote()
     }
 
-    // 性能优化：缓存 ViewController 引用
     private func getViewController() -> ViewController? {
         if let cached = cachedViewController {
             return cached
@@ -366,10 +364,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         viewController.updateTitle(newTitle: note.getTitleWithoutLabel())
 
-        // 统一撤销管理器：清理当前目标的所有撤销动作，确保使用笔记的撤销管理器
         undoManager?.removeAllActions(withTarget: self)
 
-        // 同步更新主窗口控制器的撤销管理器引用
         if let appDelegate = NSApplication.shared.delegate as? AppDelegate,
             let md = appDelegate.mainWindowController
         {
@@ -404,7 +400,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return
         }
 
-        // WebView 保活：隐藏而不是销毁
         markdownView?.isHidden = true
 
         guard let storage = textStorage else { return }
@@ -439,7 +434,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
     public func clear() {
         textStorage?.setAttributedString(NSAttributedString())
         
-        // WebView 保活：隐藏而不是销毁
         markdownView?.isHidden = true
         imagePreviewManager?.hideImagePreview()
 
@@ -460,10 +454,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
     // MARK: - Removed Large Methods
-    // 大量复杂逻辑已移动到专门的管理类中：
-    // - ImagePreviewManager: 图片预览功能
-    // - ClipboardManager: 剪贴板操作
-    // - EditorMenuManager: 菜单操作
+    // Complex logic moved to dedicated manager classes:
+    // - ImagePreviewManager: Image preview functionality
+    // - ClipboardManager: Clipboard operations
+    // - EditorMenuManager: Menu operations
 
     func getParagraphRange() -> NSRange? {
         guard let vc = getViewController(),
@@ -524,7 +518,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         return newFont
     }
 
-    // 原有的 keyDown 方法已移动到图片预览功能中
 
     override func shouldChangeText(in affectedCharRange: NSRange, replacementString: String?) -> Bool {
         guard let note = EditTextView.note else {
@@ -572,6 +565,44 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let data = Data(bytes: &length, count: MemoryLayout.size(ofValue: length))
         try? note.url.setExtendedAttribute(data: data, forName: "com.tw93.miaoyan.cursor")
     }
+    
+    // MARK: - Link Highlighting Performance Optimization
+    
+    private func shouldTriggerLinkHighlight(for event: NSEvent) -> Bool {
+        switch Int(event.keyCode) {
+        case kVK_Space, kVK_Return, kVK_Tab:
+            return true
+        case kVK_Delete, kVK_ForwardDelete:
+            return true
+        default:
+            if let characters = event.characters {
+                return characters.contains(where: { "]).>:\"'".contains($0) })
+            }
+            return false
+        }
+    }
+    
+    private func scheduleLinkHighlight(range: NSRange? = nil, immediate: Bool = false) {
+        linkHighlightTimer?.invalidate()
+        
+        if immediate {
+            if let targetRange = range {
+                fillHighlightLinks(range: targetRange)
+            } else {
+                fillHighlightLinks()
+            }
+        } else {
+            linkHighlightTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { [weak self] _ in
+                DispatchQueue.main.async {
+                    if let targetRange = range {
+                        self?.fillHighlightLinks(range: targetRange)
+                    } else {
+                        self?.fillHighlightLinks()
+                    }
+                }
+            }
+        }
+    }
 
     func restoreCursorPosition(needScrollToCursor: Bool = true) {
         guard let storage = textStorage else { return }
@@ -614,10 +645,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         guard let note = EditTextView.note, let storage = textStorage else { return false }
 
-        // 性能优化：提前检查数据类型，避免不必要的处理
         let availableTypes = board.types ?? []
 
-        // 优先处理 RTFD
         if availableTypes.contains(.rtfd),
             let data = board.data(forType: .rtfd),
             let text = NSAttributedString(rtfd: data, documentAttributes: nil),
@@ -638,7 +667,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return true
         }
 
-        // 处理属性文本（图片）
         let attributedTextType = NSPasteboard.PasteboardType(rawValue: "attributedText")
         if availableTypes.contains(attributedTextType),
             let data = board.data(forType: attributedTextType),
@@ -648,7 +676,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return handleImageDrop(attributedText: attributedText, sender: sender, note: note, storage: storage)
         }
 
-        // 处理文件 URLs
         if let urls = board.readObjects(forClasses: [NSURL.self], options: nil) as? [URL], !urls.isEmpty {
             return handleFileURLsDrop(urls: urls, sender: sender, note: note, storage: storage)
         }
@@ -694,7 +721,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         unLoadImages(note: note)
 
-        // 性能优化：批量处理文件
         var successCount = 0
         for url in urls {
             guard let data = try? Data(contentsOf: url),
@@ -714,7 +740,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         guard successCount > 0 else { return false }
 
-        // 批量处理后统一更新
         NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
         saveTextStorageContent(to: note)
         note.save()
@@ -806,14 +831,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         let char = attributedSubstring(forProposedRange: range, actualRange: nil)
         if char?.attribute(.attachment, at: 0, effectiveRange: nil) == nil {
-            // 只有 command 加点击的时候才外跳
             if !NSEvent.modifierFlags.contains(.command) {
                 setSelectedRange(NSRange(location: charIndex, length: 0))
                 saveCursorPosition()
                 return
             }
 
-            // String 外跳
             if let link = link as? String, let url = URL(string: link) {
                 let config = NSWorkspace.OpenConfiguration()
                 config.activates = false
@@ -821,7 +844,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 return
             }
 
-            // URL 外跳
             if let link = link as? URL {
                 let config = NSWorkspace.OpenConfiguration()
                 config.activates = false
@@ -847,7 +869,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         NotesTextProcessor.hl = nil
         NotesTextProcessor.highlight(note: note)
 
-        // 用于自动模式下切换时候的效果
         if UserDefaultsManagement.preview {
             vc.disablePreview()
             vc.enablePreview()
@@ -912,7 +933,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             }
         }
 
-        // 为图片删除操作创建独立的撤销组，避免与文本编辑冲突
         if removedImages.count > 0 {
             note.undoManager.beginUndoGrouping()
             note.undoManager.setActionName(NSLocalizedString("Delete Images", comment: "Undo action name"))
@@ -924,7 +944,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
     @objc public func unDeleteImages(_ urls: [URL: URL]) {
         guard let note = EditTextView.note else { return }
         
-        // 为反向操作也创建撤销组
         note.undoManager.beginUndoGrouping()
         note.undoManager.setActionName(NSLocalizedString("Restore Images", comment: "Undo action name"))
         
@@ -938,7 +957,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             }
         }
         
-        // 注册反向撤销操作
         if restoredImages.count > 0 {
             note.undoManager.registerUndo(withTarget: self, selector: #selector(deleteRestoredImages), object: restoredImages)
         }
@@ -995,19 +1013,16 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
 
 
-    // 重写 mouseExited 确保离开时隐藏预览
     override func mouseExited(with event: NSEvent) {
         super.mouseExited(with: event)
         imagePreviewManager?.hideImagePreview()
     }
 
-    // 重写 mouseDragged 在拖拽时隐藏预览
     override func mouseDragged(with event: NSEvent) {
         imagePreviewManager?.hideImagePreview()
         super.mouseDragged(with: event)
     }
 
-    // 重写 keyDown 确保按键时隐藏预览
     override func keyDown(with event: NSEvent) {
         imagePreviewManager?.hideImagePreview()
 
@@ -1026,7 +1041,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         guard let note = EditTextView.note else { return }
 
-        // 优化tab切换逻辑的撤销组合
         if event.keyCode == kVK_Tab, !hasMarkedText() {
             breakUndoCoalescing()
             let formatter = TextFormatter(textView: self, note: note)
@@ -1039,11 +1053,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return
         }
 
-        // 优化回车逻辑的撤销组合
         if event.keyCode == kVK_Return, !hasMarkedText() {
             breakUndoCoalescing()
             let formatter = TextFormatter(textView: self, note: note, shouldScanMarkdown: false)
-            // 对于有shift的直接回车
             if event.modifierFlags.contains(.shift) {
                 insertNewline(nil)
             } else {
@@ -1061,11 +1073,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
         super.keyDown(with: event)
 
-        // 性能优化：只高亮当前段落的链接
-        if let paragraphRange = getParagraphRange() {
-            fillHighlightLinks(range: paragraphRange)
-        } else {
-            fillHighlightLinks()
+        if shouldTriggerLinkHighlight(for: event) {
+            if let paragraphRange = getParagraphRange() {
+                scheduleLinkHighlight(range: paragraphRange)
+            } else {
+                scheduleLinkHighlight()
+            }
         }
         saveCursorPosition()
     }

@@ -61,7 +61,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
             let rowRect = rect(ofRow: row)
             var scrollOrigin = rowRect.origin
 
-            // 滚动优化一下
             if clipView.frame.height - scrollOrigin.y < rowRect.height {
                 scrollOrigin.y = scrollOrigin.y - 8.0
                 if scrollView.responds(to: #selector(NSScrollView.flashScrollers)) {
@@ -84,7 +83,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     override func rightMouseDown(with event: NSEvent) {
         guard let vc = window?.contentViewController as? ViewController else { return }
 
-        // 初始化不能删除的问题
         if vc.titleLabel.hasFocus() || vc.editArea.hasFocus() || vc.search.hasFocus() {
             vc.notesTableView.window?.makeFirstResponder(vc.notesTableView)
         }
@@ -139,7 +137,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         }
 
         if UserDataService.instance.isNotesTableEscape {
-            // 重置状态，防止影响后续正常的选择操作
             UserDataService.instance.isNotesTableEscape = false
 
             if vc.storageOutlineView.selectedRow != -1 {
@@ -153,7 +150,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         if noteList.indices.contains(selectedRow) {
             let note = noteList[selectedRow]
 
-            // 在切换笔记前，先保存当前正在编辑的笔记内容
             if let currentNote = EditTextView.note, currentNote != note {
                 vc.editArea.saveTextStorageContent(to: currentNote)
                 currentNote.save()

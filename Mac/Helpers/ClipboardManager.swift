@@ -20,7 +20,6 @@ class ClipboardManager {
             return true
         }
 
-        // 复制整行当没有选择时
         if textView.selectedRange.length == 0,
             let paragraphRange = textView.getParagraphRange(),
             let paragraph = textView.attributedSubstring(forProposedRange: paragraphRange, actualRange: nil)
@@ -37,7 +36,6 @@ class ClipboardManager {
     func handlePaste(in note: Note) -> Bool {
         guard let textView = textView else { return false }
 
-        // 处理文本粘贴
         if let clipboard = NSPasteboard.general.string(forType: NSPasteboard.PasteboardType.string),
             NSPasteboard.general.string(forType: NSPasteboard.PasteboardType.fileURL) == nil
         {
@@ -46,20 +44,18 @@ class ClipboardManager {
             let currentRange = textView.selectedRange()
             textView.breakUndoCoalescing()
             textView.insertText(clipboard, replacementRange: currentRange)
-            textView.breakUndoCoalescing()
             textView.saveTextStorageContent(to: note)
+            note.save()  // 确保粘贴的内容持久化到磁盘
             textView.fillHighlightLinks()
             return true
         }
 
-        // 处理图片粘贴
         return pasteImageFromClipboard(in: note)
     }
 
     private func pasteImageFromClipboard(in note: Note) -> Bool {
         guard let textView = textView else { return false }
 
-        // 处理文件URL
         if let url = NSURL(from: NSPasteboard.general) {
             if !url.isFileURL {
                 return false
@@ -67,7 +63,6 @@ class ClipboardManager {
             return saveFile(url: url as URL, in: note)
         }
 
-        // 处理剪贴板图片
         if let clipboard = NSPasteboard.general.data(forType: .tiff),
             let image = NSImage(data: clipboard),
             let jpgData = image.jpgData
@@ -136,23 +131,18 @@ class ClipboardManager {
                     }
                     textView.breakUndoCoalescing()
                     textView.insertText(newLineImage, replacementRange: textView.selectedRange())
-                    textView.breakUndoCoalescing()
                 }
             } else {
                 if picType == "uPic" || picType == "Picsee" {
-                    // 插入上传中的占位符
                     let uploadingPlaceholder = NSAttributedString(string: "![](uploading...)")
                     textView.breakUndoCoalescing()
                     textView.insertText(uploadingPlaceholder, replacementRange: textView.selectedRange())
-                    textView.breakUndoCoalescing()
 
-                    // 异步上传到云端，不阻塞编辑器
                     uploadToCloudAsync(localPath: tempPath.path, originalPath: path, picType: picType, textView: textView, note: note, vc: vc)
-                    return  // 提前返回，避免重复插入文本
+                    return
                 }
                 textView.breakUndoCoalescing()
                 textView.insertText(newLineImage, replacementRange: textView.selectedRange())
-                textView.breakUndoCoalescing()
             }
         }
     }
@@ -207,7 +197,6 @@ class ClipboardManager {
             let runList = self.run(command)
             let imageDesc = runList?.components(separatedBy: "\n") ?? []
 
-            // 查找包含有效URL的行
             var uploadedURL: String?
             for line in imageDesc {
                 let trimmedLine = line.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -226,7 +215,6 @@ class ClipboardManager {
                         note: note
                     )
                     self.deleteImage(tempPath: URL(fileURLWithPath: localPath))
-                    // 轻量级成功提示
                     if let viewController = textView.window?.contentViewController {
                         viewController.toast(message: "图片上传成功")
                     }

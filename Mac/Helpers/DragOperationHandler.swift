@@ -51,6 +51,11 @@ class DragOperationHandler {
         let mutable = NSMutableAttributedString(attributedString: text)
         textView.insertText(mutable, replacementRange: NSRange(location: caretLocation, length: 0))
         storage.sizeAttachmentImages()
+        
+        if let note = EditTextView.note {
+            textView.saveTextStorageContent(to: note)
+            note.save()
+        }
 
         DispatchQueue.main.async {
             textView.setSelectedRange(NSRange(location: caretLocation, length: mutable.length))
@@ -91,6 +96,8 @@ class DragOperationHandler {
         textView.textStorage?.replaceCharacters(in: NSRange(location: locationDiff, length: 0), with: attachmentText)
 
         textView.unLoadImages(note: note)
+        textView.saveTextStorageContent(to: note)
+        note.save()
         textView.setSelectedRange(NSRange(location: caretLocation, length: 0))
 
         return true
