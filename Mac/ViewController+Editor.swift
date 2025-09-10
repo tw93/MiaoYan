@@ -1,8 +1,8 @@
-import AppCenterAnalytics
 import Cocoa
 import Foundation
 import Prettier
 import PrettierMarkdown
+import TelemetryDeck
 
 // MARK: - Editor Management
 extension ViewController {
@@ -78,7 +78,7 @@ extension ViewController {
             disablePreview()
         } else {
             enablePreview()
-            Analytics.trackEvent("MiaoYan Preview")
+            TelemetryDeck.signal("Editor.Preview")
         }
     }
 
@@ -180,7 +180,7 @@ extension ViewController {
             disablePresentation()
         } else {
             enablePresentation()
-            Analytics.trackEvent("MiaoYan Presentation")
+            TelemetryDeck.signal("Editor.Presentation")
         }
     }
 
@@ -230,7 +230,7 @@ extension ViewController {
             vc.handlePPTAutoTransition()
         }
 
-        Analytics.trackEvent("MiaoYan PPT")
+        TelemetryDeck.signal("Editor.PPT")
     }
 
     func handlePPTAutoTransition() {
@@ -272,12 +272,12 @@ extension ViewController {
             )
             return
         }
-        
+
         // 防止快速连续格式化
         guard !isFormatting else {
             return
         }
-        
+
         if let note = notesTableView.getSelectedNote() {
             // 设置格式化状态
             isFormatting = true
@@ -287,31 +287,31 @@ extension ViewController {
             formatter.htmlWhitespaceSensitivity = HTMLWhitespaceSensitivityStrategy.ignore
             formatter.proseWrap = ProseWrapStrategy.preserve  // Change from .never to .preserve to keep line breaks
             formatter.prepare()
-            
+
             // 确保从编辑器获取最新内容，而不是从 note.content，避免状态不一致
             let content = editArea.textStorage?.string ?? note.content.string
             let cursor = editArea.selectedRanges[0].rangeValue.location
             let top = editAreaScroll.contentView.bounds.origin.y
-            
+
             let (protectedContent, htmlPlaceholders) = HtmlManager.protectHTMLTags(in: content)
             let adjustedCursor = HtmlManager.adjustCursorForProtectedContent(cursor: cursor, original: content, protected: protectedContent)
-            
+
             let result = formatter.format(protectedContent, withCursorAtLocation: adjustedCursor)
             switch result {
             case .success(let formatResult):
                 let restoredContent = HtmlManager.restoreHTMLTags(in: formatResult.formattedString, with: htmlPlaceholders)
                 var newContent = restoredContent
-                
-                // Simple approach: if Prettier changed the line structure, 
+
+                // Simple approach: if Prettier changed the line structure,
                 // only update the HTML tags and preserve everything else
                 let originalLines = content.components(separatedBy: .newlines)
-                
+
                 if originalLines.count > 1 && !restoredContent.contains("\n") {
                     // Prettier removed line breaks, restore original structure but update HTML
                     newContent = content
                     // Only replace HTML tags with formatted versions
                     for (_, originalTag) in htmlPlaceholders {
-                        let updatedTag = originalTag // Keep original HTML tag as-is
+                        let updatedTag = originalTag  // Keep original HTML tag as-is
                         newContent = newContent.replacingOccurrences(of: originalTag, with: updatedTag)
                     }
                 } else {
@@ -321,41 +321,41 @@ extension ViewController {
                         newContent = restoredContent.removeLastNewLine()
                     }
                 }
-                
+
                 // 同步 note.content 与当前编辑器内容，确保状态一致
                 if let currentStorage = editArea.textStorage {
                     note.content = NSMutableAttributedString(attributedString: currentStorage)
                 }
-                
+
                 // 计算原始内容长度（在更新前）
                 let originalLength = note.content.length
-                
+
                 // 直接更新编辑器显示，这会同时更新 textStorage 和 note.content
                 editArea.insertText(newContent, replacementRange: NSRange(0..<originalLength))
-                
+
                 // 保存到文件
                 note.save()
-                
+
                 // 重新应用 Markdown 语法高亮
                 if let storage = editArea.textStorage {
                     NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
                     editArea.fillHighlightLinks()
                 }
-                
+
                 let adjustedCursorOffset = HtmlManager.adjustCursorAfterRestore(originalOffset: formatResult.cursorOffset, protected: protectedContent, restored: newContent)
-                
+
                 editArea.setSelectedRange(NSRange(location: adjustedCursorOffset, length: 0))
                 editAreaScroll.documentView?.scroll(NSPoint(x: 0, y: top))
                 formatContent = newContent
                 toast(message: NSLocalizedString("🎉 Automatic typesetting succeeded~", comment: ""))
-                
+
             case .failure(let error):
                 print("Format error: \(error)")
                 toast(message: NSLocalizedString("❌ Formatting failed, please try again", comment: ""))
             }
-            
-            Analytics.trackEvent("MiaoYan Format")
-            
+
+            TelemetryDeck.signal("Editor.Format")
+
             // 重置格式化状态（无论成功或失败）
             isFormatting = false
         }
@@ -486,7 +486,7 @@ extension ViewController {
     }
 
     // MARK: - Title Management Override (fix for title disappearing issue)
-    
+
     public func updateTitle(newTitle: String) {
         let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "MiaoYan"
 

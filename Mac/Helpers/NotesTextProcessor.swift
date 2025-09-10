@@ -10,7 +10,6 @@ import Highlightr
 
 #if os(OSX)
     import Cocoa
-    import MASShortcut
 #else
     import NightNight
     import UIKit

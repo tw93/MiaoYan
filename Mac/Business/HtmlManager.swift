@@ -225,27 +225,27 @@ class HtmlManager {
             return loadedCount === totalImages;
         })();
         """
-    
+
     // MARK: - HTML Tag Protection
-    
+
     static func protectHTMLTags(in content: String) -> (protectedContent: String, placeholders: [String: String]) {
         var protectedContent = content
         var placeholders: [String: String] = [:]
         let fullRange = NSRange(0..<content.count)
         var matchRanges: [NSRange] = []
-        
+
         do {
             let htmlPatterns = [
                 "<(?:img|br|hr|input|meta|link|area|base|col|embed|source|track|wbr)\\s*[^>]*/?\\s*>",
-                "<(\\w+)[^>]*>[^<]*</\\1>"
+                "<(\\w+)[^>]*>[^<]*</\\1>",
             ]
-            
+
             for pattern in htmlPatterns {
                 let regex = try NSRegularExpression(pattern: pattern, options: [.caseInsensitive])
                 let matches = regex.matches(in: content, range: fullRange)
                 matchRanges.append(contentsOf: matches.map { $0.range })
             }
-            
+
         } catch {
             NotesTextProcessor.htmlRegex.matches(content, range: fullRange) { result in
                 if let range = result?.range { matchRanges.append(range) }
@@ -254,60 +254,61 @@ class HtmlManager {
                 if let range = result?.range { matchRanges.append(range) }
             }
         }
-        
+
         matchRanges.sort { $0.location > $1.location }
-        
+
         for range in matchRanges {
             guard range.location + range.length <= content.count else { continue }
-            
+
             let htmlTag = String(content[Range(range, in: content)!])
             let placeholder = "HTML_PLACEHOLDER_\(UUID().uuidString.prefix(8))"
             placeholders[placeholder] = htmlTag
-            
+
             protectedContent = (protectedContent as NSString).replacingCharacters(in: range, with: placeholder)
         }
-        
+
         return (protectedContent, placeholders)
     }
-    
+
     static func restoreHTMLTags(in content: String, with placeholders: [String: String]) -> String {
         var restoredContent = content
-        
+
         let sortedPlaceholders = placeholders.sorted { (first, second) -> Bool in
             guard let firstRange = restoredContent.range(of: first.key),
-                  let secondRange = restoredContent.range(of: second.key) else {
+                let secondRange = restoredContent.range(of: second.key)
+            else {
                 return false
             }
             return firstRange.lowerBound < secondRange.lowerBound
         }
-        
+
         for (placeholder, htmlTag) in sortedPlaceholders {
             if let range = restoredContent.range(of: placeholder) {
                 restoredContent.replaceSubrange(range, with: htmlTag)
             }
         }
-        
+
         return restoredContent
     }
-    
+
     static func adjustCursorForProtectedContent(cursor: Int, original: String, protected: String) -> Int {
         let lengthDiff = protected.count - original.count
         return max(0, min(cursor + lengthDiff, protected.count))
     }
-    
+
     static func adjustCursorAfterRestore(originalOffset: Int, protected: String, restored: String) -> Int {
         let lengthDiff = restored.count - protected.count
         var adjustedOffset = originalOffset + lengthDiff
-        
+
         adjustedOffset = max(0, min(adjustedOffset, restored.count))
-        
+
         if adjustedOffset <= 26 && restored.hasPrefix("<img") {
             if let endIndex = restored.firstIndex(of: ">") {
                 let tagEndPosition = restored.distance(from: restored.startIndex, to: endIndex) + 1
                 adjustedOffset = max(adjustedOffset, tagEndPosition)
             }
         }
-        
+
         return adjustedOffset
     }
 }

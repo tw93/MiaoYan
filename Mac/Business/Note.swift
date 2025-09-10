@@ -166,6 +166,7 @@ public class Note: NSObject {
             return attr[FileAttributeKey.modificationDate] as? Date
         } catch {
             print("Note modification date load error: \(error.localizedDescription)")
+            AppDelegate.trackError(error, context: "Note.getModificationDate")
             return nil
         }
     }
@@ -593,6 +594,7 @@ public class Note: NSObject {
             modifiedLocalAt = Date()
         } catch {
             print("Write error \(error)")
+            AppDelegate.trackError(error, context: "Note.write")
             return
         }
 

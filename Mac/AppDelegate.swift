@@ -6,11 +6,9 @@
 //  Copyright © 2017 Oleksandr Glushchenko. All rights reserved.
 //
 
-import AppCenter
-import AppCenterAnalytics
-import AppCenterCrashes
 import Cocoa
 import Sparkle
+import TelemetryDeck
 import os.log
 
 @NSApplicationMain
@@ -77,17 +75,49 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         mainWC.window?.makeKeyAndOrderFront(nil)
         mainWindowController = mainWC
 
-        // Configure AppCenter
-        AppCenter.start(
-            withAppSecret: "e4d22300-3bd7-427f-8f3c-41f315c2bb76",
-            services: [
-                Analytics.self,
-                Crashes.self,
+        // Configure TelemetryDeck
+        let startTime = CFAbsoluteTimeGetCurrent()
+        let config = TelemetryDeck.Config(appID: "49D82975-F243-4FEF-BC97-4291E56E1103")
+
+        // Add default signal prefix for consistent naming
+        config.defaultSignalPrefix = "MiaoYan."
+
+        // Add global default parameters for all events
+        config.defaultParameters = {
+            [
+                "miaoyanVersion": Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown",
+                "miaoyanBuild": Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "unknown",
+                "hostPlatform": "macOS",
+                "macosVersion": ProcessInfo.processInfo.operatingSystemVersionString,
+                "displayLanguage": NSLocale.preferredLanguages.first ?? "unknown",
+            ]
+        }
+
+        #if DEBUG
+            config.testMode = true
+        #endif
+        TelemetryDeck.initialize(config: config)
+
+        #if DEBUG
+            // Monitor network requests for debugging
+            Self.setupNetworkDebugging()
+        #endif
+
+        // Track app launch performance
+        let launchTime = Int((CFAbsoluteTimeGetCurrent() - startTime) * 1000)
+        TelemetryDeck.signal(
+            "Performance.AppLaunch",
+            parameters: [
+                "launchTimeMs": "\(launchTime)"
             ])
 
-        Analytics.trackEvent(
-            "MiaoYan Attribute",
-            withProperties: [
+        // Track session start
+        TelemetryDeck.signal("App.SessionStart")
+        print("📊 Sent TelemetryDeck signal: App.SessionStart")
+
+        TelemetryDeck.signal(
+            "App.Attribute",
+            parameters: [
                 "Appearance": String(UserDataService.instance.isDark),
                 "SingleMode": String(UserDefaultsManagement.isSingleMode),
                 "Language": String(UserDefaultsManagement.defaultLanguage),
@@ -105,17 +135,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             ])
     }
 
-    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        if !flag {
-            mainWindowController?.makeNew()
-        } else {
-            mainWindowController?.refreshEditArea()
-        }
+    func applicationWillTerminate(_ aNotification: Notification) {
+        // Track session end
+        TelemetryDeck.signal("App.SessionEnd")
 
-        return true
-    }
-
-    func applicationWillTerminate(_ notification: Notification) {
         // Save current scroll position before terminating
         if let vc = ViewController.shared() {
             vc.notesTableView.saveScrollPosition()
@@ -128,6 +151,62 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         temporary.appendPathComponent("ThumbnailsBig")
         try? FileManager.default.removeItem(at: temporary)
     }
+
+    // MARK: - TelemetryDeck Helper Methods
+
+    /// Debug helper to track signal sending
+    static func debugSignal(_ signalName: String, parameters: [String: String] = [:]) {
+        #if DEBUG
+            print("📊 Sending TelemetryDeck signal: \(signalName)")
+            if !parameters.isEmpty {
+                print("   Parameters: \(parameters)")
+            }
+        #endif
+        TelemetryDeck.signal(signalName, parameters: parameters)
+    }
+
+    /// Track errors and exceptions throughout the app (privacy-safe)
+    static func trackError(_ error: Error, context: String) {
+        var parameters: [String: String] = [:]
+        parameters["context"] = context
+
+        if let nsError = error as NSError? {
+            parameters["errorDomain"] = nsError.domain
+            parameters["errorCode"] = "\(nsError.code)"
+        }
+
+        TelemetryDeck.signal("Error.Occurred", parameters: parameters)
+    }
+
+    /// Track performance metrics throughout the app
+    static func trackPerformance(_ metric: String, value: String, additionalParameters: [String: String] = [:]) {
+        var parameters = additionalParameters
+        parameters["value"] = value
+
+        TelemetryDeck.signal("Performance.\(metric)", parameters: parameters)
+    }
+
+    #if DEBUG
+        /// Setup network debugging to monitor TelemetryDeck requests
+        private static func setupNetworkDebugging() {
+            // Enable network logging via environment variable or custom URLProtocol
+            print("🌐 Network debugging enabled for TelemetryDeck")
+
+            // You can add URLProtocol monitoring here if needed
+            // This will help you see actual HTTP requests being made
+        }
+    #endif
+
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        if !flag {
+            mainWindowController?.makeNew()
+        } else {
+            mainWindowController?.refreshEditArea()
+        }
+
+        return true
+    }
+
 
     private func applyAppearance() {
         if #available(OSX 10.14, *) {

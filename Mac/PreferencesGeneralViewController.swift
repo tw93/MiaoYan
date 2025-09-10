@@ -1,6 +1,5 @@
 import Cocoa
 import CoreData
-import MASShortcut
 
 class PreferencesGeneralViewController: NSViewController {
     override func viewWillAppear() {

@@ -1,9 +1,12 @@
-import AppCenter
-import AppCenterAnalytics
 import Cocoa
+import KeyboardShortcuts
 import LocalAuthentication
-import MASShortcut
+import TelemetryDeck
 import WebKit
+
+extension KeyboardShortcuts.Name {
+    static let activateWindow = Self("activateWindow", default: .init(.m, modifiers: [.command, .option]))
+}
 
 class ViewController:
     NSViewController,
@@ -506,13 +509,10 @@ class ViewController:
     }
 
     private func configureShortcuts() {
-        let activeShortcut = MASShortcut(keyCode: kVK_ANSI_M, modifierFlags: [.command, .option])
+        KeyboardShortcuts.onKeyUp(for: .activateWindow) { [self] in
+            activeShortcut()
+        }
 
-        MASShortcutMonitor.shared().register(
-            activeShortcut,
-            withAction: {
-                self.activeShortcut()
-            })
 
         NSEvent.addLocalMonitorForEvents(matching: NSEvent.EventTypeMask.flagsChanged) {
             $0

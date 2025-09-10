@@ -1,5 +1,5 @@
 {
-  "originHash" : "03e0612ae8cdceba5a20187492955cf0f17288fc73a843e39d0477cb41839784",
+  "originHash" : "26c94342a9af644d19f3671774e1d4b07141d93e0982ab29239de2fdd9be56ba",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -8,15 +8,6 @@
       "state" : {
         "revision" : "513364f870f6bfc468f9d2ff0a95caccc10044c5",
         "version" : "5.10.2"
-      }
-    },
-    {
-      "identity" : "appcenter-sdk-apple",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/microsoft/appcenter-sdk-apple.git",
-      "state" : {
-        "revision" : "9308921a2f6ef828cf9fae898ea4f080a81cdf11",
-        "version" : "5.0.6"
       }
     },
     {
@@ -29,30 +20,12 @@
       }
     },
     {
-      "identity" : "masshortcut",
+      "identity" : "keyboardshortcuts",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/shpakovski/MASShortcut.git",
+      "location" : "https://github.com/sindresorhus/KeyboardShortcuts",
       "state" : {
-        "branch" : "master",
-        "revision" : "6f2603c6b6cc18f64a799e5d2c9d3bbc467c413a"
-      }
-    },
-    {
-      "identity" : "parsley",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/loopwerk/Parsley",
-      "state" : {
-        "revision" : "ad35091c7a790f04fc5a912c8bde8963eba753d2",
-        "version" : "0.9.1"
-      }
-    },
-    {
-      "identity" : "plcrashreporter",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/microsoft/PLCrashReporter.git",
-      "state" : {
-        "revision" : "fec2ff791b27fd9b9ceab9072025dea56409cca1",
-        "version" : "1.11.3"
+        "revision" : "045cf174010beb335fa1d2567d18c057b8787165",
+        "version" : "2.3.0"
       }
     },
     {
@@ -69,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sparkle-project/Sparkle.git",
       "state" : {
-        "revision" : "4f20e5d173205492ee1fddbdf43ded7f176c366b",
-        "version" : "2.7.2"
+        "revision" : "06beff60e3b609a485290e4d5d2d1e2eedb1e55d",
+        "version" : "2.7.3"
       }
     },
     {
@@ -80,6 +53,15 @@
       "state" : {
         "revision" : "7ec44e7384793e507cf046336aef68586719a24e",
         "version" : "1.0.2"
+      }
+    },
+    {
+      "identity" : "swiftsdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/TelemetryDeck/SwiftSDK",
+      "state" : {
+        "revision" : "a7fd1eb469589a3c8fd8cc3abe19b092b5d674dc",
+        "version" : "2.9.4"
       }
     },
     {

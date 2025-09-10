@@ -88,6 +88,7 @@
 
 - <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>：プロジェクトの初期化コードはこちらを参考にしました、作者に感謝
 - <a href="https://github.com/stackotter/swift-cmark-gfm" target="_blank">stackotter/swift-cmark-gfm</a>：高速で効率的なSwift Markdownパーサー
+- <a href="https://github.com/simonbs/Prettier" target="_blank">simonbs/Prettier</a>：Swift Markdownフォーマッティングツール、妙言の排版をより優雅に
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>：シンタックスハイライト機能
 - <a href="https://tsanger.cn/product" target="_blank">仓耳字库</a>：美しいオープンソース中国語フォント「仓耳今楷」、妙言ではデフォルトフォントとして使用
 - <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>：妙言のPPT基盤レンダリングはこのフレームワークに依存

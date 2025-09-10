@@ -1,60 +1,111 @@
-# MiaoYan - Claude AI Assistant Guide
+# MiaoYan - Claude AI Assistant Development Guide
 
-## 项目概述
+## Project Overview
 
-MiaoYan (妙言) 是一款轻量级的 macOS Markdown 编辑器，使用 Swift 5 + AppKit 原生开发。三列布局：文件夹 + 文件列表 + 编辑器。
+MiaoYan (妙言) is a lightweight macOS Markdown editor built with Swift 5 + AppKit. Features a three-panel layout: sidebar + file list + editor.
 
-## 🎯 Claude 开发原则
+## 🎯 Claude Development Principles
 
-### 核心理念
+### Core Philosophy
 
-- **渐进式改进** > 大幅重构
-- **先理解现有代码** > 立即实现
-- **务实主义** > 教条主义
-- **清晰意图** > 聪明代码
+- **Incremental Improvements** > Major Refactoring
+- **Understand First** > Implement Immediately  
+- **Pragmatism** > Dogmatism
+- **Clear Intent** > Clever Code
 
-### 开发工作流
+### Development Workflow
 
-1. **理解阶段**: 使用 Grep/Read 分析相关代码，理解现有模式
-2. **规划阶段**: 用 TodoWrite 分解任务为 3-5 个步骤
-3. **实现阶段**: 小步快跑，每次只改一个文件
-4. **验证阶段**: 确保代码编译通过，功能正常
+1. **Analysis Phase**: Use Grep/Read to analyze relevant code and understand existing patterns
+2. **Planning Phase**: Break down tasks into 3-5 steps using TodoWrite
+3. **Implementation Phase**: Small iterative changes, modify one file at a time
+4. **Verification Phase**: Ensure code compiles and functions work correctly
 
-### ⛔ 绝对禁止
+### ⛔ Absolute Prohibitions
 
-- 提交无法编译的代码
-- 做出未经验证的假设
-- 连续 3 次失败后不重新评估
+- **NEVER commit changes unless explicitly asked by user**
+- Never commit non-compiling code
+- Don't make unverified assumptions
+- **Stop after 3 consecutive failures** - reassess the approach
 
-### ✅ 必须遵守
+### ✅ Must Follow
 
-- 保持每个提交都是可工作状态
-- 从现有实现中学习模式
-- 保持代码风格一致性
+- Keep every commit in a working state
+- Learn patterns from existing implementations
+- Maintain consistent code style throughout
 
-## 项目结构
+## Project Structure
 
 ```
 Mac/
-├── View/           # UI组件 (*View.swift, *Controller.swift)
-├── Business/       # 业务逻辑 (Note.swift, Storage.swift)
-├── Helpers/        # 工具类 (UserDefaultsManagement.swift)
-└── Images.xcassets/ # 图片和颜色资源
+├── View/           # UI Components (*View.swift, *Controller.swift)
+├── Business/       # Business Logic (Note.swift, Storage.swift)
+├── Helpers/        # Utilities (UserDefaultsManagement.swift)
+├── Extensions/     # Swift Extensions
+└── Images.xcassets/# Image and Color Resources
 ```
 
-## 代码规范
+## Swift macOS Development Best Practices
 
-- 遵循现有项目风格，优先使用已有工具类
-- 变量函数用驼峰命名，类名用大驼峰
-- 代码自解释，避免大量注释
-- 颜色从 `Images.xcassets` 获取
-- 使用 `NSLocalizedString` 本地化
+### Code Standards
 
-## 重要提醒
+- Follow existing project conventions and use established utility classes
+- Use camelCase for variables/functions, PascalCase for classes
+- Prefer self-documenting code over extensive comments
+- Retrieve colors from `Images.xcassets`
+- Use `NSLocalizedString` for internationalization
 
-**务实主义 > 完美主义，可工作的简单解决方案 > 复杂设计**
+### AppKit Guidelines
 
-- 优先学习现有代码再实现
-- 每次修改后确保编译通过
-- 使用 TodoWrite 管理任务进度
-- 遇到问题立即恢复到工作状态
+- Use `NSViewController` lifecycle methods appropriately
+- Implement proper delegate patterns for UI components
+- Handle keyboard shortcuts with either NSEvent or KeyboardShortcuts framework
+- Use Auto Layout constraints for responsive UI
+- Follow MVC pattern with clear separation of concerns
+
+### Performance Considerations
+
+- Use `DispatchQueue.main.async` for UI updates
+- Implement lazy loading for expensive operations
+- Cache frequently accessed data appropriately
+- Use weak references to prevent retain cycles
+
+### Error Handling & Debugging
+
+- Use `guard` statements for early returns
+- Implement proper error handling with `do-catch` blocks
+- Add meaningful `print()` statements for debugging complex flows
+- Use `assert()` for development-time checks
+
+## Error Recovery
+
+**3-Strike Rule**: Stop after 3 consecutive failures and reassess approach.
+
+## Important Reminders
+
+**Pragmatism > Perfectionism**  
+**Working Simple Solutions > Complex Designs**
+
+- Always understand existing code before implementing
+- Ensure compilation success after each modification
+- Use TodoWrite to track task progress
+- Revert to working state immediately when encountering issues
+- When in doubt, choose the simpler, more maintainable approach
+
+## Development Commands
+
+```bash
+# Build project
+xcodebuild -scheme MiaoYan -configuration Debug build
+
+# Clean build
+xcodebuild clean
+
+# Run tests (if available)
+xcodebuild test -scheme MiaoYan
+
+# Update package dependencies
+xcodebuild -resolvePackageDependencies
+```
+
+---
+*This guide ensures consistent, reliable development practices for the MiaoYan project.*
