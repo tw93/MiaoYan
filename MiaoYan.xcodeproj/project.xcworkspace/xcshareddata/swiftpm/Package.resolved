@@ -1,5 +1,5 @@
 {
-  "originHash" : "1e6ff8efa01ef353d959232dd18023db3acdc486778b132726aeef570a9a333d",
+  "originHash" : "03e0612ae8cdceba5a20187492955cf0f17288fc73a843e39d0477cb41839784",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -56,12 +56,21 @@
       }
     },
     {
+      "identity" : "prettier",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/simonbs/Prettier.git",
+      "state" : {
+        "revision" : "266dac500bded844a56771bc1fb2abaa60f6e7b6",
+        "version" : "0.2.1"
+      }
+    },
+    {
       "identity" : "sparkle",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sparkle-project/Sparkle.git",
       "state" : {
-        "revision" : "df074165274afaa39539c05d57b0832620775b11",
-        "version" : "2.7.1"
+        "revision" : "4f20e5d173205492ee1fddbdf43ded7f176c366b",
+        "version" : "2.7.2"
       }
     },
     {

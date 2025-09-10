@@ -36,6 +36,9 @@ let package = Package(
 
         // Global keyboard shortcuts for macOS
         .package(url: "https://github.com/shpakovski/MASShortcut.git", branch: "master"),
+
+        // Swift wrapper for Prettier code formatter
+        .package(url: "https://github.com/simonbs/Prettier.git", from: "0.2.1"),
     ],
     targets: [
         // This is a documentation target - the actual app is built with Xcode project
@@ -51,6 +54,8 @@ let package = Package(
                 "ZipArchive",
                 .product(name: "CMarkGFM", package: "swift-cmark-gfm"),
                 "MASShortcut",
+                "Prettier",
+                "PrettierMarkdown",
             ],
             path: "Sources"
         )

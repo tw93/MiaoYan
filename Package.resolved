@@ -46,6 +46,15 @@
       }
     },
     {
+      "identity" : "prettier",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/simonbs/Prettier.git",
+      "state" : {
+        "revision" : "266dac500bded844a56771bc1fb2abaa60f6e7b6",
+        "version" : "0.2.1"
+      }
+    },
+    {
       "identity" : "sparkle",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sparkle-project/Sparkle.git",
