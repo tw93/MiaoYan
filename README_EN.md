@@ -22,7 +22,7 @@
 
 ## Features
 
-- 🏂 **Fantastic**: Local use, security, syntax highlighting, dark mode, source file saving, international, presentation mode, [PPT Mode](#miaoYan-ppt), single edit mode, export file, internal jump, document auto typesetting, picture upload, LaTeX, Mermaid, PlantUML、Markmap.
+- 🏂 **Fantastic**: Local use, security, syntax highlighting, dark mode, PPT presentation, LaTeX math formulas, Mermaid diagrams
 - 🎊 **Beauty**: Minimalist design style, folder + file list + editor 3 column mode.
 - 🚄‍ **Fast**: Using Swift5 native development, the performance experience is much better compared to the Web.
 - 🥛 **Simple**: Very light, pure editor input experience, many shortcut keys to help you fast.
@@ -59,19 +59,11 @@
 
 🏂 There are also many other shortcuts 👆🏻 👇🏻 👈🏻 👉🏻 waiting for you to find if you like to toss and turn~
 
-## MiaoYan PPT
+## User Guide
 
-<details>
-<summary>Click to view PPT mode demo</summary>
+- [**Markdown Syntax Guide**](Resources/Initial/MiaoYan%20Markdown%20Syntax%20Guide.md): Complete syntax demo with math formulas, Mermaid diagrams, PlantUML, Markmap mind maps and advanced features
+- [**PPT Presentation Mode**](Resources/Initial/MiaoYan%20PPT.md): Use `---` to separate slides, launch with `command + option + p`, supports custom themes and backgrounds
 
-<a href=https://gw.alipayobjects.com/zos/k/app3/ScreenFlow1.gif target="_blank"><img src="https://user-images.githubusercontent.com/8736212/180579489-a8ac6f0f-1d47-44fa-a8bb-0be998f7895f.gif" width="100%"></a>
-
-</details>
-
-1. The default initialization of new friends will generate templates. If you are an old friend, You need to upgrade to 1.0 then try copy [this file](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/MiaoYan%20PPT.md) to MiaoYan.
-2. Execute `command + option + p` to start MiaoYan PPT preview. At the same time, you can also select the document, right-click and select 'MiaoYan PPT' to open it.
-3. PPT mode can be enabled only in documents marked with `---` separator. During the presentation, You can preview the outline of the speech with `Enter` Key and exit ppt mode with `ESC` Key.
-4. You can use HTML to customize the effect. For more complex usage, Please refer to [reveal](https://revealjs.com/markdown/) Documentation.
 
 ## Why do this
 

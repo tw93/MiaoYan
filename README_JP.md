@@ -22,7 +22,7 @@
 
 ## 機能
 
-- 🏂 **素晴らしい**: ローカル利用、セキュリティ、シンタックスハイライト、ダークモード、ソースファイルの保存、国際化、プレゼンテーションモード、[スライド モード](#miaoYan-ppt)、単一編集モード、ファイルのエクスポート、内部ジャンプ、文書の自動タイプセット、画像のアップロード、LaTeX、Mermaid、PlantUML、Markmap。
+- 🏂 **素晴らしい**: ローカル利用、セキュリティ、シンタックスハイライト、ダークモード、PPTプレゼンテーション、LaTeX数学式、Mermaid図表
 - 🎊 **美しさ**: ミニマリストのデザインスタイル、フォルダ+ファイルリスト+エディタの 3 カラムモード。
 - 🚄‍ **高速**: Swift5 ネイティブ開発を使用しており、Web と比較してパフォーマンス体験がはるかに良い。
 - 🥛 **シンプル**: とても軽量で、純粋なエディタ入力体験、多くのショートカットキーで高速化が実現。
@@ -59,19 +59,11 @@
 
 🏂 他にも多くのショートカットがあります 👆🏻 👇🏻 👈🏻 👉🏻 隠れているショートカットを見つけることに楽しんでください~
 
-## MiaoYan スライド
+## 利用ガイド
 
-<details>
-<summary>スライドモードのデモを見る</summary>
+- [**Markdown 構文ガイド**](Resources/Initial/MiaoYan%20Markdown%20Syntax%20Guide.md)：数学式、Mermaid図表、PlantUML、Markmapマインドマップなど高度な機能の完全デモ
+- [**PPT プレゼンテーションモード**](Resources/Initial/MiaoYan%20PPT.md)：`---` でスライド分割、`command + option + p` で起動、カスタムテーマと背景をサポート
 
-<a href=https://gw.alipayobjects.com/zos/k/app3/ScreenFlow1.gif target="_blank"><img src="https://user-images.githubusercontent.com/8736212/180579489-a8ac6f0f-1d47-44fa-a8bb-0be998f7895f.gif" width="100%"></a>
-
-</details>
-
-1. 新しいユーザーさんのデフォルトの初期化はテンプレートを生成します。古いユーザーさんの場合は、1.0 にアップグレードしてから[このファイル](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/MiaoYan%20PPT.md)を MiaoYan にコピーしてみてください。
-2. `command + option + p`を実行して MiaoYan PPT プレビューを開始します。同時に、ドキュメントを選択し、右クリックして'MiaoYan PPT'を選択して開くこともできます。
-3. PPT モードは`---`セパレータでマークされたドキュメントでのみ有効にできます。プレゼンテーション中には、`Enter`キーでスピーチのアウトラインをプレビューし、`ESC`キーで スライド モードを終了できます。
-4. HTML を使用して効果をカスタマイズできます。より複雑な使用法については、[reveal](https://revealjs.com/markdown/)のドキュメンテーションを参照してください。
 
 ## なぜこれを作ったのか
 
