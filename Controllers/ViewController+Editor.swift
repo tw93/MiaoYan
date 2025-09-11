@@ -224,9 +224,11 @@ extension ViewController {
         // Enable presentation
         vc.enablePresentation()
 
-        // Adjust title bar
+        // Adjust title bar and hide title components for cleaner PPT experience
         DispatchQueue.main.async {
             vc.titiebarHeight.constant = 0.0
+            vc.titleLabel.isHidden = true
+            vc.titleBarView.isHidden = true
             vc.handlePPTAutoTransition()
         }
 
@@ -260,6 +262,12 @@ extension ViewController {
     }
 
     func disableMiaoYanPPT() {
+        // Restore title components that were hidden in PPT mode
+        DispatchQueue.main.async {
+            self.titleLabel.isHidden = false
+            self.titleBarView.isHidden = false
+        }
+
         disablePresentation()
     }
 
@@ -435,7 +443,10 @@ extension ViewController {
             DispatchQueue.main.async {
                 self.editArea.isEditable = true
                 self.emptyEditAreaView.isHidden = true
-                self.titleBarView.isHidden = false
+                // Only show title bar if not in PPT mode
+                if !UserDefaultsManagement.magicPPT {
+                    self.titleBarView.isHidden = false
+                }
                 self.editArea.window?.makeFirstResponder(resp)
                 self.editArea.restoreCursorPosition()
             }

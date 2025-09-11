@@ -150,7 +150,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         if noteList.indices.contains(selectedRow) {
             let note = noteList[selectedRow]
 
-            if let currentNote = EditTextView.note, currentNote != note {
+            if let currentNote = EditTextView.note, currentNote != note, !UserDefaultsManagement.preview {
                 vc.editArea.saveTextStorageContent(to: currentNote)
                 currentNote.save()
             }

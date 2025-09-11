@@ -356,8 +356,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
     func fill(note: Note, highlight: Bool = false, saveTyping: Bool = false, force: Bool = false, needScrollToCursor: Bool = true) {
         guard let viewController = window?.contentViewController as? ViewController else { return }
         viewController.emptyEditAreaView.isHidden = true
-        viewController.titleBarView.isHidden = false
-        viewController.titleLabel.isHidden = false
+
+        // Only show title components if not in PPT mode
+        if !UserDefaultsManagement.magicPPT {
+            viewController.titleBarView.isHidden = false
+            viewController.titleLabel.isHidden = false
+        }
 
         EditTextView.note = note
         UserDefaultsManagement.lastSelectedURL = note.url
@@ -380,8 +384,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
 
         if UserDefaultsManagement.preview {
-            EditTextView.note = nil
-            textStorage?.setAttributedString(NSAttributedString())
             EditTextView.note = note
 
             if markdownView == nil {
