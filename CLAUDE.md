@@ -80,6 +80,15 @@ Resources/
 - Retrieve colors from `Images.xcassets`
 - Use `NSLocalizedString` for internationalization
 
+### Comment Guidelines
+
+- **All comments must be written in English**
+- Only add comments for complex logic or non-obvious behavior
+- Avoid commenting obvious code that is self-explanatory
+- Use `// MARK:` for organizing code sections
+- Document public APIs and complex algorithms
+- Prefer clear variable/function names over explanatory comments
+
 ### AppKit Guidelines
 
 - Use `NSViewController` lifecycle methods appropriately
