@@ -158,12 +158,10 @@ check_poem_pattern(poem)
 $$\phi = \frac{1 + \sqrt{5}}{2} \approx 1.618$$
 
 婴宁的美貌可用数学公式表达：
-
-$美 = \lim_{时间 \to \infty} \frac{内在美}{外在美} = 恒定值$
+$Beauty = \lim_{time \to \infty} \frac{inner\_beauty}{outer\_beauty} = constant$
 
 古人云："数学之美，在于：
-
-$$\sum_{n=1}^{\infty} \frac{美的元素_n}{时间^n} = 永恒之美$$
+$$\sum_{n=1}^{\infty} \frac{element_n}{time^n} = eternal\_beauty$$
 
 ---
 

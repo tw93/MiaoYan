@@ -2,7 +2,7 @@
 
 ---
 
-## MiaoYan PPT Mode 🎉
+# MiaoYan PPT Mode 🎉
 
 *Beautiful presentations made simple*
 
@@ -27,7 +27,7 @@ You can customize slide backgrounds with colors, gradients, images, or even webs
 
 ---
 
-## Animation Control 🎭
+# Animation Control 🎭
 
 Watch these items appear in sequence:
 
@@ -55,9 +55,36 @@ struct MiaoYanApp: App {
 }
 ```
 
+Line-by-line highlighting:
+
+```python [1-2|3|4|5-6]
+def process_data(items):
+    """Process a list of items with validation"""
+    results = []
+    for item in items:
+        if validate_item(item):
+            results.append(transform(item))
+    return results
+```
+
+Fragment-based code reveal:
+
+```javascript [|1|2-3|4-6|7-8]
+// Modern JavaScript ES6+ features
+const fetchUserData = async (userId) => {
+  try {
+    const response = await fetch(`/api/users/${userId}`);
+    const userData = await response.json();
+    return { success: true, data: userData };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+};
+```
+
 ---
 
-## Mathematical Formulas 📊
+# Mathematical Formulas 📊
 
 MiaoYan supports LaTeX math in presentations:
 
@@ -67,6 +94,36 @@ Inline math works too: $\pi \approx 3.14159$
 
 Complex equations:
 $$\sum_{i=1}^{n} x_i = \frac{n(n+1)}{2}$$
+
+Quadratic formula:
+$$x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
+
+---
+
+# Advanced Layout 🎯
+
+## Two Column Layout
+
+<div style="display: flex; gap: 2rem;">
+<div style="flex: 1;">
+
+**Left Column**
+
+- Feature 1
+- Feature 2  
+- Feature 3
+
+</div>
+<div style="flex: 1;">
+
+**Right Column**
+
+- Benefit A
+- Benefit B
+- Benefit C
+
+</div>
+</div>
 
 ---
 
@@ -80,20 +137,9 @@ $$\sum_{i=1}^{n} x_i = \frac{n(n+1)}{2}$$
 <p class="fragment fade-up">⬆️ Slide up while fading in</p>
 <p class="fragment grow">📈 Grow effect</p>
 <p class="fragment shrink">📉 Shrink effect</p>
-
 ---
 
-<!-- .slide: data-background="linear-gradient(45deg, #12c2e9, #c471ed, #f64f59)" -->
-# Gradient Magic 🌈
-
-<div style="color: white; text-align: center;">
-<h2>Beautiful gradient backgrounds</h2>
-<p>Perfect for modern presentations</p>
-</div>
-
----
-
-## Table Support 📋
+# Table Support 📋
 
 | Feature | Status | Rating |
 |---------|--------|--------|
@@ -104,9 +150,21 @@ $$\sum_{i=1}^{n} x_i = \frac{n(n+1)}{2}$$
 
 ---
 
+# Lists and Nested Content 📝
+
+## Ordered Lists
+
+1. First important point
+   - Sub-point A
+   - Sub-point B
+2. Second important point
+3. Third important point
+
+---
+
 <!-- .slide: data-background-iframe="https://miaoyan.app/" -->
 <!-- .slide: data-background-interactive -->
-<div style="background: rgba(0,0,0,0.8); padding: 20px; border-radius: 10px; margin: 20px;">
-<h2 style="color: white;">Interactive Backgrounds</h2>
-<p style="color: white;">You can even embed websites!</p>
-</div>
+
+---
+
+# Thank You! 🙏
