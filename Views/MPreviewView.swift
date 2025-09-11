@@ -27,7 +27,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = userContentController
 
-        // macOS Sequoia beta: 简化配置避免沙盒冲突
+        // macOS Sequoia beta: Simplified configuration to avoid sandbox conflicts
         configuration.websiteDataStore = WKWebsiteDataStore.default()
         configuration.suppressesIncrementalRendering = false
 
@@ -124,7 +124,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     private func waitForImagesLoaded(completion: @escaping () -> Void) {
-        // 简化：只等待前3张图片，最多1秒
+        // Simplified: only wait for first 3 images, max 1 second
         var retryCount = 0
         func checkImages() {
             evaluateJavaScript("document.querySelectorAll('img[loading=\"eager\"]').length === 0 || Array.from(document.querySelectorAll('img[loading=\"eager\"]')).every(img => img.complete)") { result, _ in
@@ -345,8 +345,12 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     }
 
     public func load(note: Note, force: Bool = false) {
-        // 简单方案：直接隐藏，等内容加载完再显示
-        self.alphaValue = 0.0
+        let isFirstLoad = self.note == nil
+        let shouldHideForTransition = isFirstLoad || force
+
+        if shouldHideForTransition {
+            self.alphaValue = 0.0
+        }
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
@@ -359,12 +363,13 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 try? self.loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
                 self.note = note
 
-                // 等待导航完成再显示
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    NSAnimationContext.runAnimationGroup({ context in
-                        context.duration = 0.2
-                        self.animator().alphaValue = 1.0
-                    })
+                if shouldHideForTransition {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        NSAnimationContext.runAnimationGroup({ context in
+                            context.duration = 0.2
+                            self.animator().alphaValue = 1.0
+                        })
+                    }
                 }
             }
         }
@@ -563,7 +568,6 @@ class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
         } else {
             vc.sidebarSplitView.setValue(NSColor(css: message), forKey: "dividerColor")
             vc.splitView.setValue(NSColor(css: message), forKey: "dividerColor")
-            vc.titleLabel.backgroundColor = NSColor(css: message)
         }
     }
 }

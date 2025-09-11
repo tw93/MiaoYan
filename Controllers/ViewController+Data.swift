@@ -191,8 +191,10 @@ extension ViewController {
                 {
                     self.notesTableView.selectRowIndexes(IndexSet(integer: index), byExtendingSelection: false)
                     self.notesTableView.scrollRowToVisible(index)
-                    // Ensure title bar is visible when we have a selected note
-                    self.titleBarView.isHidden = false
+                    // Ensure title bar is visible when we have a selected note (unless in PPT mode)
+                    if !UserDefaultsManagement.magicPPT {
+                        self.titleBarView.isHidden = false
+                    }
                     self.emptyEditAreaView.isHidden = true
                 }
             }
