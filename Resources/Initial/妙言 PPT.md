@@ -55,9 +55,36 @@ struct MiaoYanApp: App {
 }
 ```
 
+逐行高亮展示：
+
+```python [1-2|3|4|5-6]
+def process_data(items):
+    """处理带验证的数据列表"""
+    results = []
+    for item in items:
+        if validate_item(item):
+            results.append(transform(item))
+    return results
+```
+
+分段代码演示：
+
+```javascript [|1|2-3|4-6|7-8]
+// 现代 JavaScript ES6+ 特性
+const fetchUserData = async (userId) => {
+  try {
+    const response = await fetch(`/api/users/${userId}`);
+    const userData = await response.json();
+    return { success: true, data: userData };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+};
+```
+
 ---
 
-## 数学公式 📊
+# 数学公式 📊
 
 妙言在演示文稿中完美支持 LaTeX 数学公式：
 
@@ -67,6 +94,36 @@ $$E = mc^2$$
 
 复杂方程式：
 $$\sum_{i=1}^{n} x_i = \frac{n(n+1)}{2}$$
+
+二次方程公式：
+$$x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
+
+---
+
+## 高级布局 🎯
+
+### 双栏布局
+
+<div style="display: flex; gap: 2rem;">
+<div style="flex: 1;">
+
+**左栏**
+
+- 功能 1
+- 功能 2  
+- 功能 3
+
+</div>
+<div style="flex: 1;">
+
+**右栏**
+
+- 优势 A
+- 优势 B
+- 优势 C
+
+</div>
+</div>
 
 ---
 
@@ -80,20 +137,9 @@ $$\sum_{i=1}^{n} x_i = \frac{n(n+1)}{2}$$
 <p class="fragment fade-up">⬆️ 向上滑动淡入</p>
 <p class="fragment grow">📈 放大效果</p>
 <p class="fragment shrink">📉 缩小效果</p>
-
 ---
 
-<!-- .slide: data-background="linear-gradient(45deg, #12c2e9, #c471ed, #f64f59)" -->
-# 渐变魔法 🌈
-
-<div style="color: white; text-align: center;">
-<h2>美丽的渐变背景</h2>
-<p>现代演示文稿的完美选择</p>
-</div>
-
----
-
-## 表格支持 📋
+# 表格支持 📋
 
 | 功能 | 状态 | 评分 |
 |------|------|------|
@@ -104,9 +150,21 @@ $$\sum_{i=1}^{n} x_i = \frac{n(n+1)}{2}$$
 
 ---
 
+# 列表和嵌套内容 📝
+
+## 有序列表
+
+1. 第一个重要要点
+   - 子要点 A
+   - 子要点 B
+2. 第二个重要要点
+3. 第三个重要要点
+
+---
+
 <!-- .slide: data-background-iframe="https://miaoyan.app/" -->
 <!-- .slide: data-background-interactive -->
-<div style="background: rgba(0,0,0,0.8); padding: 20px; border-radius: 10px; margin: 20px;">
-<h2 style="color: white;">交互式背景</h2>
-<p style="color: white;">甚至可以嵌入网页！</p>
-</div>
+
+---
+
+# 谢谢观看！ 🙏
