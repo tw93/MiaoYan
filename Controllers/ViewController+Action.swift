@@ -957,6 +957,7 @@ extension ViewController {
 
     // MARK: - Keyboard Event Handling
 
+    // swiftlint:disable:next cyclomatic_complexity
     public func keyDown(with event: NSEvent) -> Bool {
         guard let mw = MainWindowController.shared() else {
             return false
@@ -983,6 +984,10 @@ extension ViewController {
 
         if event.keyCode == kVK_Escape, UserDefaultsManagement.presentation {
             disablePresentation()
+        }
+
+        if event.keyCode == kVK_Escape, UserDefaultsManagement.magicPPT {
+            disableMiaoYanPPT()
         }
 
         if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), search.hasFocus() {

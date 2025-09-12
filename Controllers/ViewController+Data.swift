@@ -1,137 +1,231 @@
 import Cocoa
 
+// MARK: - Search Parameters
+private struct SearchParameters {
+    let filter: String
+    let originalFilter: String
+    let projects: [Project]?
+    let type: SidebarItemType?
+    let sidebarName: String?
+}
+
+private struct UpdateContext {
+    let isSearch: Bool
+    let searchParams: SearchParameters
+    let operation: BlockOperation
+    let completion: () -> Void
+}
+
 // MARK: - Data Management
 extension ViewController {
 
     // MARK: - Search and Filtering
 
     func updateTable(search: Bool = false, searchText: String? = nil, sidebarItem: SidebarItem? = nil, projects: [Project]? = nil, completion: @escaping () -> Void = {}) {
-        var sidebarItem: SidebarItem? = sidebarItem
-        var projects: [Project]? = projects
-        var sidebarName: String?
-
+        let searchParams = prepareSearchParameters(searchText: searchText, sidebarItem: sidebarItem, projects: projects)
         let timestamp = Date().toMillis()
 
         self.search.timestamp = timestamp
         searchQueue.cancelAllOperations()
 
+        let operation = createSearchOperation(
+            searchParams: searchParams,
+            isSearch: search,
+            completion: completion
+        )
+
+        searchQueue.addOperation(operation)
+    }
+
+    private func prepareSearchParameters(searchText: String?, sidebarItem: SidebarItem?, projects: [Project]?) -> SearchParameters {
+        var finalSidebarItem = sidebarItem
+        var finalProjects = projects
+        var sidebarName: String?
+
         if searchText == nil {
-            projects = storageOutlineView.getSidebarProjects()
-            sidebarItem = getSidebarItem()
+            finalProjects = storageOutlineView.getSidebarProjects()
+            finalSidebarItem = getSidebarItem()
             sidebarName = getSidebarItem()?.getName()
         }
 
-        var filter = searchText ?? self.search.stringValue
-        let originalFilter = searchText ?? self.search.stringValue
-        filter = originalFilter.lowercased()
+        let filter = searchText ?? self.search.stringValue
+        let originalFilter = filter
+        let lowercaseFilter = originalFilter.lowercased()
 
-        var type = sidebarItem?.type
+        var type = finalSidebarItem?.type
 
         // Global search if sidebar not checked
-        if type == nil, projects == nil || (projects!.count < 2 && projects!.first!.isRoot) {
+        if type == nil, finalProjects == nil || (finalProjects!.count < 2 && finalProjects!.first!.isRoot) {
             type = .All
         }
 
+        return SearchParameters(
+            filter: lowercaseFilter,
+            originalFilter: originalFilter,
+            projects: finalProjects,
+            type: type,
+            sidebarName: sidebarName
+        )
+    }
+
+    private func createSearchOperation(searchParams: SearchParameters, isSearch: Bool, completion: @escaping () -> Void) -> BlockOperation {
         let operation = BlockOperation()
         operation.addExecutionBlock { [weak self] in
             guard let self = self else {
-                return
-            }
-
-            if let projects = projects {
-                for project in projects {
-                    self.preLoadNoteTitles(in: project)
-                }
-            }
-
-            let terms = filter.split(separator: " ")
-            let source = self.storage.noteList
-            var notes = [Note]()
-            let maxResults = search ? 100 : Int.max  // Limit search results for performance
-
-            for note in source {
-                if operation.isCancelled {
-                    completion()
-                    return
-                }
-
-                if self.isFit(note: note, filter: filter, terms: terms, projects: projects, type: type, sidebarName: sidebarName) {
-                    notes.append(note)
-
-                    // Early exit for search to improve performance
-                    if search && notes.count >= maxResults {
-                        break
-                    }
-                }
-            }
-
-            let orderedNotesList = self.storage.sortNotes(noteList: notes, filter: filter, project: projects?.first, operation: operation)
-
-            // Check diff
-            if self.filteredNoteList == notes, orderedNotesList == self.notesTableView.noteList {
                 completion()
                 return
             }
 
-            self.filteredNoteList = notes
-            self.notesTableView.noteList = orderedNotesList
+            self.executeSearchOperation(
+                searchParams: searchParams,
+                isSearch: isSearch,
+                operation: operation,
+                completion: completion
+            )
+        }
+        return operation
+    }
 
-            if operation.isCancelled {
-                completion()
-                return
-            }
-
-            guard !self.notesTableView.noteList.isEmpty else {
-                DispatchQueue.main.async {
-                    // 在单独模式下不清除编辑器内容
-                    if !UserDefaultsManagement.isSingleMode {
-                        self.editArea.clear()
-                    }
-                    self.notesTableView.reloadData()
-                    self.refreshMiaoYanNum()
-                    completion()
-                }
-                return
-            }
-
-            _ = self.notesTableView.noteList[0]
-
-            DispatchQueue.main.async {
-                // 在单独模式下保存当前选择状态
-                let previousSelectedRow = UserDefaultsManagement.isSingleMode ? self.notesTableView.selectedRow : -1
-
-                self.notesTableView.reloadData()
-                if search {
-                    if !self.notesTableView.noteList.isEmpty {
-                        if !filter.isEmpty {
-                            self.selectNullTableRow(timer: true)
-                        } else {
-                            // 在单独模式下不清除编辑器内容
-                            if !UserDefaultsManagement.isSingleMode {
-                                self.editArea.clear()
-                            }
-                        }
-                    } else {
-                        // 在单独模式下不清除编辑器内容
-                        if !UserDefaultsManagement.isSingleMode {
-                            self.editArea.clear()
-                        }
-                    }
-
-                    // 确保搜索后标题栏状态正确
-                    self.refreshMiaoYanNum()
-                }
-
-                // 在单独模式下恢复选择状态
-                if UserDefaultsManagement.isSingleMode, previousSelectedRow != -1, self.notesTableView.noteList.indices.contains(previousSelectedRow) {
-                    self.notesTableView.selectRow(previousSelectedRow)
-                }
-
-                completion()
+    private func executeSearchOperation(searchParams: SearchParameters, isSearch: Bool, operation: BlockOperation, completion: @escaping () -> Void) {
+        if let projects = searchParams.projects {
+            for project in projects {
+                preLoadNoteTitles(in: project)
             }
         }
 
-        searchQueue.addOperation(operation)
+        let notes = filterNotes(
+            searchParams: searchParams,
+            isSearch: isSearch,
+            operation: operation,
+            completion: completion
+        )
+
+        guard !operation.isCancelled else {
+            completion()
+            return
+        }
+
+        let orderedNotesList = storage.sortNotes(
+            noteList: notes,
+            filter: searchParams.filter,
+            project: searchParams.projects?.first,
+            operation: operation
+        )
+
+        updateTableViewWithResults(
+            notes: notes,
+            orderedNotesList: orderedNotesList,
+            context: UpdateContext(
+                isSearch: isSearch,
+                searchParams: searchParams,
+                operation: operation,
+                completion: completion
+            )
+        )
+    }
+
+    private func filterNotes(searchParams: SearchParameters, isSearch: Bool, operation: BlockOperation, completion: @escaping () -> Void) -> [Note] {
+        let terms = searchParams.filter.split(separator: " ")
+        let source = storage.noteList
+        var notes = [Note]()
+        let maxResults = isSearch ? 100 : Int.max
+
+        for note in source {
+            if operation.isCancelled {
+                completion()
+                return []
+            }
+
+            if isFit(
+                note: note,
+                filter: searchParams.filter,
+                terms: terms,
+                projects: searchParams.projects,
+                type: searchParams.type,
+                sidebarName: searchParams.sidebarName
+            ) {
+                notes.append(note)
+
+                if isSearch && notes.count >= maxResults {
+                    break
+                }
+            }
+        }
+
+        return notes
+    }
+
+    private func updateTableViewWithResults(notes: [Note], orderedNotesList: [Note], context: UpdateContext) {
+        // Check if results have changed
+        if filteredNoteList == notes, orderedNotesList == notesTableView.noteList {
+            context.completion()
+            return
+        }
+
+        filteredNoteList = notes
+        notesTableView.noteList = orderedNotesList
+
+        guard !context.operation.isCancelled else {
+            context.completion()
+            return
+        }
+
+        if notesTableView.noteList.isEmpty {
+            handleEmptyResults(completion: context.completion)
+        } else {
+            handleNonEmptyResults(isSearch: context.isSearch, searchParams: context.searchParams, completion: context.completion)
+        }
+    }
+
+    private func handleEmptyResults(completion: @escaping () -> Void) {
+        DispatchQueue.main.async {
+            if !UserDefaultsManagement.isSingleMode {
+                self.editArea.clear()
+            }
+            self.notesTableView.reloadData()
+            self.refreshMiaoYanNum()
+            completion()
+        }
+    }
+
+    private func handleNonEmptyResults(isSearch: Bool, searchParams: SearchParameters, completion: @escaping () -> Void) {
+        _ = notesTableView.noteList[0]
+
+        DispatchQueue.main.async {
+            let previousSelectedRow = UserDefaultsManagement.isSingleMode ? self.notesTableView.selectedRow : -1
+
+            self.notesTableView.reloadData()
+
+            if isSearch {
+                self.handleSearchResults(searchParams: searchParams)
+            }
+
+            self.restoreSelectionIfNeeded(previousSelectedRow: previousSelectedRow)
+            completion()
+        }
+    }
+
+    private func handleSearchResults(searchParams: SearchParameters) {
+        if !notesTableView.noteList.isEmpty {
+            if !searchParams.filter.isEmpty {
+                selectNullTableRow(timer: true)
+            } else if !UserDefaultsManagement.isSingleMode {
+                editArea.clear()
+            }
+        } else if !UserDefaultsManagement.isSingleMode {
+            editArea.clear()
+        }
+
+        refreshMiaoYanNum()
+    }
+
+    private func restoreSelectionIfNeeded(previousSelectedRow: Int) {
+        if UserDefaultsManagement.isSingleMode,
+            previousSelectedRow != -1,
+            notesTableView.noteList.indices.contains(previousSelectedRow)
+        {
+            notesTableView.selectRow(previousSelectedRow)
+        }
     }
 
     private func preLoadNoteTitles(in project: Project) {
@@ -354,23 +448,21 @@ extension ViewController {
 
         @objc func ubiquitousKeyValueStoreDidChange(notification: NSNotification) {
             if let keys = notification.userInfo?[NSUbiquitousKeyValueStoreChangedKeysKey] as? [String] {
-                for key in keys {
-                    if key == "com.tw93.miaoyan.pins.shared" {
-                        let changedNotes = storage.restoreCloudPins()
+                for key in keys where key == "com.tw93.miaoyan.pins.shared" {
+                    let changedNotes = storage.restoreCloudPins()
 
-                        if let notes = changedNotes.added {
-                            for note in notes {
-                                if let i = notesTableView.getIndex(note) {
-                                    moveNoteToTop(note: i)
-                                }
+                    if let notes = changedNotes.added {
+                        for note in notes {
+                            if let i = notesTableView.getIndex(note) {
+                                moveNoteToTop(note: i)
                             }
                         }
+                    }
 
-                        if let notes = changedNotes.removed {
-                            for note in notes {
-                                if let i = notesTableView.getIndex(note) {
-                                    notesTableView.reloadData(forRowIndexes: [i], columnIndexes: [0])
-                                }
+                    if let notes = changedNotes.removed {
+                        for note in notes {
+                            if let i = notesTableView.getIndex(note) {
+                                notesTableView.reloadData(forRowIndexes: [i], columnIndexes: [0])
                             }
                         }
                     }

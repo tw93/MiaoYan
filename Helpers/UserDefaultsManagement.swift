@@ -527,10 +527,10 @@ public enum UserDefaultsManagement {
     // MARK: - Editor Mode Management
     /// Editor mode enumeration
     enum EditorMode: String, CaseIterable {
-        case normal = "normal"  // Normal editing mode
-        case preview = "preview"  // Preview mode
-        case presentation = "presentation"  // Presentation mode
-        case ppt = "ppt"  // PPT mode
+        case normal  // Normal editing mode
+        case preview  // Preview mode
+        case presentation  // Presentation mode
+        case ppt  // PPT mode
     }
     /// Editor state manager - internal implementation
     private class EditorStateManager {

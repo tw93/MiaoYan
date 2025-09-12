@@ -4,6 +4,9 @@ class EditorScrollView: NSScrollView {
     private var initialHeight: CGFloat?
 
     override var isFindBarVisible: Bool {
+        get {
+            super.isFindBarVisible
+        }
         set {
             if let clip = subviews.first as? NSClipView {
                 // 查找find bar的高度
@@ -30,9 +33,6 @@ class EditorScrollView: NSScrollView {
                     self.removeFocusRings()
                 }
             }
-        }
-        get {
-            super.isFindBarVisible
         }
     }
 

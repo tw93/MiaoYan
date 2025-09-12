@@ -121,126 +121,166 @@ class SidebarProjectView: NSOutlineView,
         if let stringData = board.string(forType: .string),
             stringData.hasPrefix("SIDEBAR_REORDER:")
         {
-            let components = stringData.components(separatedBy: ":")
-            if components.count >= 3, let sourceIndex = Int(components[1]),
-                let sidebarItems = sidebarItems
-            {
-
-                // Make sure we have valid indices
-                guard sourceIndex >= 0 && sourceIndex < sidebarItems.count && index >= 0 && index <= sidebarItems.count else {
-                    return false
-                }
-
-                // Don't allow moving before first item (MiaoYan)
-                guard index > 0 else {
-                    return false
-                }
-
-                // Don't allow moving after trash item (if it exists)
-                if index == sidebarItems.count,
-                    let lastItem = sidebarItems[sidebarItems.count - 1] as? SidebarItem,
-                    lastItem.isTrash()
-                {
-                    return false
-                }
-
-                // Create a mutable copy of the sidebar items
-                var mutableSidebarItems = sidebarItems
-
-                // Remove the item from its current position
-                let movedItem = mutableSidebarItems.remove(at: sourceIndex)
-
-                // Insert it at the new position (adjust index if we moved an item from before the target)
-                let insertIndex = sourceIndex < index ? index - 1 : index
-                mutableSidebarItems.insert(movedItem, at: insertIndex)
-
-                // Update the sidebar items
-                self.sidebarItems = mutableSidebarItems
-
-                // Save the new order to UserDefaults
-                saveSidebarOrder(mutableSidebarItems)
-
-                // Reload the outline view
-                reloadData()
-
-                // Maintain selection
-                selectRowIndexes([insertIndex], byExtendingSelection: false)
-
-                // Update UserDefaultsManagement.lastProject to reflect new position
-                UserDefaultsManagement.lastProject = insertIndex
-
-                return true
-            }
+            return handleProjectReordering(stringData: stringData, index: index)
         }
 
         guard let sidebarItem = item as? SidebarItem else {
             return false
         }
 
+        return handleItemDrop(sidebarItem: sidebarItem, board: board, vc: vc)
+    }
+
+    private func handleProjectReordering(stringData: String, index: Int) -> Bool {
+        let components = stringData.components(separatedBy: ":")
+        guard components.count >= 3,
+            let sourceIndex = Int(components[1]),
+            let sidebarItems = sidebarItems
+        else {
+            return false
+        }
+
+        guard isValidReorderOperation(sourceIndex: sourceIndex, targetIndex: index, sidebarItems: sidebarItems) else {
+            return false
+        }
+
+        return executeReorderOperation(sourceIndex: sourceIndex, targetIndex: index, sidebarItems: sidebarItems)
+    }
+
+    private func isValidReorderOperation(sourceIndex: Int, targetIndex: Int, sidebarItems: [Any]) -> Bool {
+        // Make sure we have valid indices
+        guard sourceIndex >= 0 && sourceIndex < sidebarItems.count && targetIndex >= 0 && targetIndex <= sidebarItems.count else {
+            return false
+        }
+
+        // Don't allow moving before first item (MiaoYan)
+        guard targetIndex > 0 else {
+            return false
+        }
+
+        // Don't allow moving after trash item (if it exists)
+        if targetIndex == sidebarItems.count,
+            let lastItem = sidebarItems[sidebarItems.count - 1] as? SidebarItem,
+            lastItem.isTrash()
+        {
+            return false
+        }
+
+        return true
+    }
+
+    private func executeReorderOperation(sourceIndex: Int, targetIndex: Int, sidebarItems: [Any]) -> Bool {
+        var mutableSidebarItems = sidebarItems
+
+        // Remove the item from its current position
+        let movedItem = mutableSidebarItems.remove(at: sourceIndex)
+
+        // Insert it at the new position (adjust index if we moved an item from before the target)
+        let insertIndex = sourceIndex < targetIndex ? targetIndex - 1 : targetIndex
+        mutableSidebarItems.insert(movedItem, at: insertIndex)
+
+        // Update the sidebar items
+        self.sidebarItems = mutableSidebarItems
+
+        // Save the new order to UserDefaults
+        saveSidebarOrder(mutableSidebarItems)
+
+        // Reload the outline view
+        reloadData()
+
+        // Maintain selection
+        selectRowIndexes([insertIndex], byExtendingSelection: false)
+
+        // Update UserDefaultsManagement.lastProject to reflect new position
+        UserDefaultsManagement.lastProject = insertIndex
+
+        return true
+    }
+
+    private func handleItemDrop(sidebarItem: SidebarItem, board: NSPasteboard, vc: ViewController) -> Bool {
         switch sidebarItem.type {
         case .Category, .Trash:
-            if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "notesTable")) {
-                do {
-                    guard let rows = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSSet.self, NSNumber.self, NSIndexSet.self], from: data) as? IndexSet else {
-                        print("Failed to unarchive IndexSet")
-                        return false
-                    }
-                    var notes = [Note]()
-                    for row in rows {
-                        let note = vc.notesTableView.noteList[row]
-                        notes.append(note)
-                    }
+            return handleCategoryOrTrashDrop(sidebarItem: sidebarItem, board: board, vc: vc)
+        default:
+            return false
+        }
+    }
 
-                    if let project = sidebarItem.project {
-                        vc.move(notes: notes, project: project)
-                    } else if sidebarItem.isTrash() {
-                        vc.editArea.clear()
-                        vc.storage.removeNotes(notes: notes) { _ in
-                            DispatchQueue.main.async {
-                                vc.storageOutlineView.reloadSidebar()
-                                vc.notesTableView.removeByNotes(notes: notes)
-                            }
-                        }
-                    }
+    private func handleCategoryOrTrashDrop(sidebarItem: SidebarItem, board: NSPasteboard, vc: ViewController) -> Bool {
+        // Handle notes table data
+        if let data = board.data(forType: NSPasteboard.PasteboardType(rawValue: "notesTable")) {
+            return handleNotesTableDrop(data: data, sidebarItem: sidebarItem, vc: vc)
+        }
 
-                    return true
-                } catch {
-                    print("Failed to unarchive IndexSet: \(error)")
-                    return false
-                }
-            }
+        // Handle file URLs
+        guard let urls = board.readObjects(forClasses: [NSURL.self], options: nil) as? [URL],
+            let project = sidebarItem.project
+        else {
+            return false
+        }
 
-            guard let urls = board.readObjects(forClasses: [NSURL.self], options: nil) as? [URL],
-                let project = sidebarItem.project
-            else {
+        return handleFileURLsDrop(urls: urls, project: project, vc: vc)
+    }
+
+    private func handleNotesTableDrop(data: Data, sidebarItem: SidebarItem, vc: ViewController) -> Bool {
+        do {
+            guard let rows = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSSet.self, NSNumber.self, NSIndexSet.self], from: data) as? IndexSet else {
+                print("Failed to unarchive IndexSet")
                 return false
             }
 
-            for url in urls {
-                var isDirectory = ObjCBool(true)
-                if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory), isDirectory.boolValue, !url.path.contains(".textbundle") {
-                    let newSub = project.url.appendingPathComponent(url.lastPathComponent, isDirectory: true)
-                    let newProject = Project(url: newSub, parent: project)
-                    newProject.create()
+            let notes = rows.map { vc.notesTableView.noteList[$0] }
 
-                    _ = storage.add(project: newProject)
-                    reloadSidebar()
-
-                    let validFiles = storage.readDirectory(url)
-                    for file in validFiles {
-                        _ = vc.copy(project: newProject, url: file.0)
-                    }
-                } else {
-                    _ = vc.copy(project: project, url: url)
-                }
+            if let project = sidebarItem.project {
+                vc.move(notes: notes, project: project)
+            } else if sidebarItem.isTrash() {
+                moveNotesToTrash(notes: notes, vc: vc)
             }
 
             return true
-        default:
-            break
+        } catch {
+            print("Failed to unarchive IndexSet: \(error)")
+            return false
         }
+    }
 
-        return false
+    private func moveNotesToTrash(notes: [Note], vc: ViewController) {
+        vc.editArea.clear()
+        vc.storage.removeNotes(notes: notes) { _ in
+            DispatchQueue.main.async {
+                vc.storageOutlineView.reloadSidebar()
+                vc.notesTableView.removeByNotes(notes: notes)
+            }
+        }
+    }
+
+    private func handleFileURLsDrop(urls: [URL], project: Project, vc: ViewController) -> Bool {
+        for url in urls {
+            var isDirectory = ObjCBool(true)
+            if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory),
+                isDirectory.boolValue,
+                !url.path.contains(".textbundle")
+            {
+                handleDirectoryDrop(url: url, project: project, vc: vc)
+            } else {
+                _ = vc.copy(project: project, url: url)
+            }
+        }
+        return true
+    }
+
+    private func handleDirectoryDrop(url: URL, project: Project, vc: ViewController) {
+        let newSub = project.url.appendingPathComponent(url.lastPathComponent, isDirectory: true)
+        let newProject = Project(url: newSub, parent: project)
+        newProject.create()
+
+        _ = storage.add(project: newProject)
+        reloadSidebar()
+
+        let validFiles = storage.readDirectory(url)
+        for file in validFiles {
+            _ = vc.copy(project: newProject, url: file.url)
+        }
     }
 
     func outlineView(_ outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: Any?, proposedChildIndex index: Int) -> NSDragOperation {

@@ -29,11 +29,12 @@ class NoteCellView: NSTableCellView {
 
     // these views' color when the cell is selected.
     override var backgroundStyle: NSView.BackgroundStyle {
-        set {
-            updateSelectionHighlight()
-        }
         get {
             super.backgroundStyle
+        }
+        set(newValue) {
+            super.backgroundStyle = newValue
+            updateSelectionHighlight()
         }
     }
 
