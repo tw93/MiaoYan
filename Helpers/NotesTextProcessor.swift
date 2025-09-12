@@ -204,7 +204,7 @@ public class NotesTextProcessor {
             pattern: NotesTextProcessor._codeQuoteBlockPattern,
             options: [
                 NSRegularExpression.Options.allowCommentsAndWhitespace,
-                NSRegularExpression.Options.anchorsMatchLines,
+                NSRegularExpression.Options.anchorsMatchLines
             ])
 
         var foundRange: NSRange?
@@ -300,10 +300,10 @@ public class NotesTextProcessor {
             }
 
             code.enumerateAttributes(
-                in: NSMakeRange(0, code.length),
+                in: NSRange(location: 0, length: code.length),
                 options: [],
                 using: { attrs, locRange, _ in
-                    var fixedRange = NSMakeRange(range.location + locRange.location, locRange.length)
+                    var fixedRange = NSRange(location: range.location + locRange.location, length: locRange.length)
                     fixedRange.length = (fixedRange.location + fixedRange.length < attributedString.length) ? fixedRange.length : attributedString.length - fixedRange.location
                     fixedRange.length = (fixedRange.length >= 0) ? fixedRange.length : 0
 
@@ -423,7 +423,7 @@ public class NotesTextProcessor {
             pattern: _codeQuoteBlockPattern,
             options: [
                 .allowCommentsAndWhitespace,
-                .anchorsMatchLines,
+                .anchorsMatchLines
             ])
 
         regexFencedCodeBlock.enumerateMatches(
@@ -487,7 +487,7 @@ public class NotesTextProcessor {
         let hiddenColor = Color.clear
         let hiddenAttributes: [NSAttributedString.Key: Any] = [
             .font: hiddenFont,
-            .foregroundColor: hiddenColor,
+            .foregroundColor: hiddenColor
         ]
 
         func hideSyntaxIfNecessary(range: @autoclosure () -> NSRange) {
@@ -558,7 +558,7 @@ public class NotesTextProcessor {
             NotesTextProcessor.headersSetextUnderlineRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
                 attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
-                hideSyntaxIfNecessary(range: NSMakeRange(innerRange.location, innerRange.length))
+                hideSyntaxIfNecessary(range: NSRange(location: innerRange.location, length: innerRange.length))
             }
         }
 
@@ -571,7 +571,7 @@ public class NotesTextProcessor {
             NotesTextProcessor.headersAtxOpeningRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
                 attributedString.addAttribute(.foregroundColor, value: titleColor, range: innerRange)
-                let syntaxRange = NSMakeRange(innerRange.location, innerRange.length + 1)
+                let syntaxRange = NSRange(location: innerRange.location, length: innerRange.length + 1)
                 hideSyntaxIfNecessary(range: syntaxRange)
             }
 
@@ -613,8 +613,8 @@ public class NotesTextProcessor {
             NotesTextProcessor.parenRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
                 attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
-                let initialSyntaxRange = NSMakeRange(innerRange.location, 1)
-                let finalSyntaxRange = NSMakeRange(innerRange.location + innerRange.length - 1, 1)
+                let initialSyntaxRange = NSRange(location: innerRange.location, length: 1)
+                let finalSyntaxRange = NSRange(location: innerRange.location + innerRange.length - 1, length: 1)
                 hideSyntaxIfNecessary(range: initialSyntaxRange)
                 hideSyntaxIfNecessary(range: finalSyntaxRange)
             }
@@ -636,7 +636,7 @@ public class NotesTextProcessor {
 
                     var substring = attributedString.mutableString.substring(with: linkRange)
 
-                    guard substring.count > 0 else { return }
+                    guard !substring.isEmpty else { return }
                     guard let note = EditTextView.note else { return }
 
                     if substring.starts(with: "/i/") || substring.starts(with: "/files/"), let path = note.project.url.appendingPathComponent(substring).path.removingPercentEncoding {
@@ -795,7 +795,7 @@ public class NotesTextProcessor {
         if monacoFont != nil {
             NotesTextProcessor.allTodoInlineRegex.matches(string, range: paragraphRange) { result in
                 guard let range = result?.range else { return }
-                let middleRange = NSMakeRange(range.location + 3, 1)
+                let middleRange = NSRange(location: range.location + 3, length: 1)
 
                 attributedString.addAttribute(.font, value: monacoFont!, range: middleRange)
             }
@@ -843,7 +843,7 @@ public class NotesTextProcessor {
             if monacoFont != nil {
                 NotesTextProcessor.allTodoInlineRegex.matches(styleApplier.string, range: range) { result in
                     guard let range = result?.range else { return }
-                    let middleRange = NSMakeRange(range.location + 3, 1)
+                    let middleRange = NSRange(location: range.location + 3, length: 1)
                     styleApplier.addAttribute(.font, value: monacoFont!, range: middleRange)
                 }
             }
@@ -878,14 +878,14 @@ public class NotesTextProcessor {
         "\\n",
         "(==+|--+)",  // $1 = string of ='s or -'s
         "\\p{Z}*",
-        "\\n|\\Z",
+        "\\n|\\Z"
     ].joined(separator: "\n")
 
     public static let headersSetextRegex = MarklightRegex(pattern: headerSetextPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
     fileprivate static let setextUnderlinePattern = [
         "(==+|--+)     # $1 = string of ='s or -'s",
-        "\\p{Z}*$",
+        "\\p{Z}*$"
     ].joined(separator: "\n")
 
     public static let headersSetextUnderlineRegex = MarklightRegex(pattern: setextUnderlinePattern, options: [.allowCommentsAndWhitespace])
@@ -902,7 +902,7 @@ public class NotesTextProcessor {
         "(.+?)        # $2 = Header text",
         "\\p{Z}*",
         "\\#*         # optional closing #'s (not counted)",
-        "(?:\\n|\\Z)",
+        "(?:\\n|\\Z)"
     ].joined(separator: "\n")
 
     public static let headersAtxRegex = MarklightRegex(pattern: headerAtxPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
@@ -941,7 +941,7 @@ public class NotesTextProcessor {
         "    [\")]",
         "    \\p{Z}*",
         ")?                       # title is optional",
-        "(?:\\n|\\Z)",
+        "(?:\\n|\\Z)"
     ].joined(separator: "")
 
     public static let referenceLinkRegex = MarklightRegex(pattern: referenceLinkPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
@@ -980,7 +980,7 @@ public class NotesTextProcessor {
         "    \\[",
         "        (.*?)                      # id = $3",
         "    \\]",
-        ")",
+        ")"
     ].joined(separator: "\n")
 
     public static let anchorRegex = MarklightRegex(pattern: anchorPattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
@@ -1022,7 +1022,7 @@ public class NotesTextProcessor {
         "      \\p{Z}*",
         "      )?              # title is optional",
         "  \\)",
-        ")",
+        ")"
     ].joined(separator: "\n")
 
     public static let parenRegex = MarklightRegex(pattern: parenPattern, options: [.allowCommentsAndWhitespace])
@@ -1043,7 +1043,7 @@ public class NotesTextProcessor {
         "        \\p{Z}*                # ignore any spaces between closing quote and )",
         "        )?                  # title is optional",
         "    \\)",
-        ")",
+        ")"
     ].joined(separator: "\n")
 
     public static let anchorInlineRegex = MarklightRegex(pattern: anchorInlinePattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
@@ -1067,7 +1067,7 @@ public class NotesTextProcessor {
         "    (.*?)       # id = $3",
         "\\]",
         "",
-        ")",
+        ")"
     ].joined(separator: "\n")
 
     public static let imageRegex = MarklightRegex(pattern: imagePattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
@@ -1101,7 +1101,7 @@ public class NotesTextProcessor {
         "      \\p{Z}*",
         "      )?              # title is optional",
         "  \\)",
-        ")",
+        ")"
     ].joined(separator: "\n")
 
     public static let imageInlineRegex = MarklightRegex(pattern: imageInlinePattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
@@ -1125,7 +1125,7 @@ public class NotesTextProcessor {
      */
     public static let _codeQuoteBlockPattern = [
         "(?<=\\n|\\A)",
-        "(^```[\\S\\ \\(\\)]*\\n[\\s\\S]*?\\n```(?:\\n|\\Z))",
+        "(^```[\\S\\ \\(\\)]*\\n[\\s\\S]*?\\n```(?:\\n|\\Z))"
     ].joined(separator: "\n")
 
     fileprivate static let codeSpanPattern = [
@@ -1135,21 +1135,21 @@ public class NotesTextProcessor {
         "(.+?)          # $2 = The code block",
         "(?<!`)",
         "\\1",
-        "(?!`)",
+        "(?!`)"
     ].joined(separator: "\n")
 
     public static let codeSpanRegex = MarklightRegex(pattern: codeSpanPattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
 
     fileprivate static let codeSpanOpeningPattern = [
         "(?<![\\\\`])   # Character before opening ` can't be a backslash or backtick",
-        "(`+)           # $1 = Opening run of `",
+        "(`+)           # $1 = Opening run of `"
     ].joined(separator: "\n")
 
     public static let codeSpanOpeningRegex = MarklightRegex(pattern: codeSpanOpeningPattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
 
     fileprivate static let codeSpanClosingPattern = [
         "(?<![\\\\`])   # Character before opening ` can't be a backslash or backtick",
-        "(`+)           # $1 = Opening run of `",
+        "(`+)           # $1 = Opening run of `"
     ].joined(separator: "\n")
 
     public static let codeSpanClosingRegex = MarklightRegex(pattern: codeSpanClosingPattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
@@ -1168,7 +1168,7 @@ public class NotesTextProcessor {
         "    (.+(?:\\n|\\Z))*                # subsequent consecutive lines",
         "    (?:\\n|\\Z)*                    # blanks",
         "    )+",
-        ")",
+        ")"
     ].joined(separator: "\n")
 
     public static let blockQuoteRegex = MarklightRegex(pattern: blockQuotePattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
@@ -1247,7 +1247,7 @@ public class NotesTextProcessor {
                         "(?>             # Atomic matching",
                         "[^\\[\\]]+      # Anything other than brackets",
                         "|",
-                        "\\[",
+                        "\\["
                     ].joined(separator: "\n"), _nestDepth) + repeatString(" \\])*", _nestDepth)
         }
         return _nestedBracketsPattern
@@ -1265,7 +1265,7 @@ public class NotesTextProcessor {
                         "(?>            # Atomic matching",
                         "[^()\\s]+      # Anything other than parens or whitespace",
                         "|",
-                        "\\(",
+                        "\\("
                     ].joined(separator: "\n"), _nestDepth) + repeatString(" \\))*", _nestDepth)
         }
         return _nestedParensPattern
@@ -1382,12 +1382,12 @@ public class NotesTextProcessor {
     }
 
     func highlightKeyword(search: String = "", remove: Bool = false) {
-        guard let storage = storage, search.count > 0 else { return }
+        guard let storage = storage, !search.isEmpty else { return }
 
         let searchTerm = NSRegularExpression.escapedPattern(for: search)
         let attributedString = NSMutableAttributedString(attributedString: storage)
         let pattern = "(\(searchTerm))"
-        let range: NSRange = NSMakeRange(0, storage.length)
+        let range: NSRange = NSRange(location: 0, length: storage.length)
 
         do {
             let regex = try NSRegularExpression(pattern: pattern, options: [NSRegularExpression.Options.caseInsensitive])

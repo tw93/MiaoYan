@@ -75,7 +75,7 @@ public class TextFormatter {
         if note.isMarkdown() {
             let string = "**" + attributedString.string + "**"
             let location = string.count == 4 ? range.location + 2 : range.upperBound + 4
-            insertText(string, selectRange: NSMakeRange(location, 0))
+            insertText(string, selectRange: NSRange(location: location, length: 0))
         }
     }
 
@@ -83,7 +83,7 @@ public class TextFormatter {
         if note.isMarkdown() {
             let string = "*" + attributedString.string + "*"
             let location = string.count == 2 ? range.location + 1 : range.upperBound + 2
-            insertText(string, selectRange: NSMakeRange(location, 0))
+            insertText(string, selectRange: NSRange(location: location, length: 0))
         }
     }
 
@@ -93,7 +93,7 @@ public class TextFormatter {
             let location = string.count == 7 ? range.location + 3 : range.upperBound + 7
 
             replaceWith(string: string)
-            setSelectedRange(NSMakeRange(location, 0))
+            setSelectedRange(NSRange(location: location, length: 0))
         }
     }
 
@@ -103,7 +103,7 @@ public class TextFormatter {
             let location = string.count == 4 ? range.location + 2 : range.upperBound + 4
 
             replaceWith(string: string)
-            setSelectedRange(NSMakeRange(location, 0))
+            setSelectedRange(NSRange(location: location, length: 0))
         }
     }
 
@@ -130,10 +130,10 @@ public class TextFormatter {
             #if os(OSX)
                 let location = textView.selectedRange().location
                 textView.insertText(padding + text, replacementRange: pRange)
-                setSelectedRange(NSMakeRange(location + padding.count, 0))
+                setSelectedRange(NSRange(location: location + padding.count, length: 0))
             #else
                 replaceWith(string: padding + text, range: pRange)
-                setSelectedRange(NSMakeRange(range.upperBound + padding.count, 0))
+                setSelectedRange(NSRange(location: range.upperBound + padding.count, length: 0))
             #endif
             return
         }
@@ -187,7 +187,7 @@ public class TextFormatter {
                 return
             }
 
-            guard text.count >= 0 else { return }
+            guard text.isEmpty else { return }
 
             #if os(OSX)
                 textView.insertText(text, replacementRange: pRange)
@@ -257,9 +257,9 @@ public class TextFormatter {
         replaceWith(string: text, range: range)
 
         if attributedString.length == 4 {
-            setSelectedRange(NSMakeRange(range.location + 1, 0))
+            setSelectedRange(NSRange(location: range.location + 1, length: 0))
         } else {
-            setSelectedRange(NSMakeRange(range.upperBound + 3, 0))
+            setSelectedRange(NSRange(location: range.upperBound + 3, length: 0))
         }
     }
 
@@ -268,9 +268,9 @@ public class TextFormatter {
         replaceWith(string: text)
 
         if attributedString.length == 5 {
-            setSelectedRange(NSMakeRange(range.location + 2, 0))
+            setSelectedRange(NSRange(location: range.location + 2, length: 0))
         } else {
-            setSelectedRange(NSMakeRange(range.upperBound + 4, 0))
+            setSelectedRange(NSRange(location: range.upperBound + 4, length: 0))
         }
     }
 
@@ -289,7 +289,7 @@ public class TextFormatter {
         }
 
         // First & Last
-        if sRange.location == 0 || sRange.location == storage.length, paragraph.count == 0, note.isMarkdown() {
+        if sRange.location == 0 || sRange.location == storage.length, paragraph.isEmpty, note.isMarkdown() {
             #if os(OSX)
                 if textView.textStorage?.length == 0 {
                     EditTextView.shouldForceRescan = true
