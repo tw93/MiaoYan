@@ -439,8 +439,8 @@ class Storage {
                 continue
             }
 
-            note.modifiedLocalAt = document.1
-            note.creationDate = document.2
+            note.modifiedLocalAt = document.modificationDate
+            note.creationDate = document.creationDate
             note.project = item
 
             #if CLOUDKIT
