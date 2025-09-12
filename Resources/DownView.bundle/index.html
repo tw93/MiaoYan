@@ -251,7 +251,22 @@
   </script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const markMapList = document.querySelectorAll('.language-markmap');
+      // Find standard .language-markmap elements and unprocessed markmap code blocks
+      let markMapList = document.querySelectorAll('.language-markmap');
+      
+      // Fallback: search for code blocks containing ```markmap
+      if (markMapList.length === 0) {
+        const codeBlocks = document.querySelectorAll('pre code');
+        const additionalMarkMaps = [];
+        codeBlocks.forEach(block => {
+          const text = block.textContent || '';
+          if (text.trim().startsWith('markmap') || text.includes('```markmap')) {
+            block.classList.add('language-markmap');
+            additionalMarkMaps.push(block);
+          }
+        });
+        markMapList = document.querySelectorAll('.language-markmap');
+      }
       markMapList && markMapList.length > 0 &&
         markMapList.forEach((item, i) => {
           const markMapName = 'markmap-' + i;
@@ -259,27 +274,48 @@
           let heightAttr = item.textContent.match(
             /\<\!\-\-markmap-height\=(\S*)\-\-\>/,
           );
-          let height = '300px';
+          // Calculate auto height based on content depth and lines
+          const content = item.textContent || '';
+          const lines = content.split('\n').filter(line => line.trim());
+          const maxDepth = Math.max(0, ...lines.map(line => {
+            const match = line.match(/^(\s*)([-*+]|\d+\.)/);
+            return match ? Math.floor(match[1].length / 2) : 0;
+          }));
+          
+          // Auto height calculation: 250px base + 30px per depth + 15px per line (max 500px)
+          let autoHeight = Math.min(500, Math.max(250, 250 + maxDepth * 30 + lines.length * 15));
+          let height = autoHeight + 'px';
+          
+          // Override with manual height if specified
           if (heightAttr && heightAttr.length > 0 && !isNaN(heightAttr[1])) {
             height = heightAttr[1] + 'px';
           }
+          
           item.classList.add('markmap');
           item.classList.add(markMapName);
+
           setTimeout(() => {
             const markMapItem = document.querySelector('.' + markMapName);
             markMapItem.style.maxHeight = height;
             markMapItem.style.height = height;
+            markMapItem.style.overflow = 'visible';
             setTimeout(() => {
               const markMapItemChild = document.querySelector(markMapChildClass);
-              markMapItemChild.style.height = height;
-            }, 10);
+              if (markMapItemChild) {
+                markMapItemChild.style.height = height;
+                
+                // Apply markmap fit if available
+                if (window.markmap && markMapItemChild.markmap) {
+                  markMapItemChild.markmap.fit();
+                }
+              }
+            }, 50);
           }, 10);
         });
 
-      // 简化图片加载：前3张立即加载，其他延迟
+      // Optimize image loading: first 3 images load immediately, others lazy load
       const allImages = document.querySelectorAll('img');
       allImages.forEach((img, index) => {
-        // 前3张图片立即加载，其他延迟加载
         img.setAttribute('loading', index < 3 ? 'eager' : 'lazy');
         img.style.maxWidth = '100%';
         img.style.height = 'auto';
