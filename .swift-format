@@ -14,6 +14,15 @@
   "lineBreakBeforeEachArgument": false,
   "indentSwitchCaseLabels": false,
   "blankLineBetweenMembers": {
+    "beforeEachMember": true,
     "ignoreSingleLineProperties": true
-  }
+  },
+  "insertBlankLines": {
+    "aroundTopLevelDeclarations": true,
+    "betweenMembers": true
+  },
+  "spaceAroundOperators": true,
+  "allmanBraces": false,
+  "trailingCommas": "always",
+  "redundantParens": "remove"
 }

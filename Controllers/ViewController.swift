@@ -7,7 +7,6 @@ import WebKit
 extension KeyboardShortcuts.Name {
     static let activateWindow = Self("activateWindow", default: .init(.m, modifiers: [.command, .option]))
 }
-
 class ViewController:
     NSViewController,
     NSTextViewDelegate,
@@ -21,7 +20,6 @@ class ViewController:
 {
     public var fsManager: FileSystemEventManager?
     var projectSettingsViewController: ProjectSettingsViewController?
-
     let storage = Storage.sharedInstance()
     var filteredNoteList: [Note]?
     var alert: NSAlert?
@@ -34,24 +32,18 @@ class ViewController:
     var formatContent: String = ""
     var isFormatting: Bool = false
     var needRestorePreview: Bool = false
-
     private var disablePreviewWorkItem: DispatchWorkItem?
     var isHandlingScrollEvent = false
     var swipeLeftExecuted = false
     var swipeRightExecuted = false
     var scrollDeltaX: CGFloat = 0
-
     var updateViews = [Note]()
     public var breakUndoTimer = Timer()
-
     // Presentation mode scroll position preservation
     var savedPresentationScrollPosition: CGPoint?
-
     override var representedObject: Any? {
         didSet {}
     }
-
-
     @IBOutlet var emptyEditTitle: NSTextField!
     @IBOutlet var emptyEditAreaImage: NSImageView!
     @IBOutlet var emptyEditAreaView: NSView!
@@ -59,7 +51,6 @@ class ViewController:
     @IBOutlet var editArea: EditTextView!
     @IBOutlet var editAreaScroll: EditorScrollView!
     @IBOutlet var search: SearchTextField!
-
     @IBOutlet var miaoYanText: NSTextField!
     @IBOutlet var notesTableView: NotesTableView!
     @IBOutlet var noteMenu: NSMenu!
@@ -67,12 +58,10 @@ class ViewController:
     @IBOutlet var sidebarSplitView: NSSplitView!
     @IBOutlet var notesListCustomView: NSView!
     @IBOutlet var outlineHeader: OutlineHeaderView!
-
     @IBOutlet var titiebarHeight: NSLayoutConstraint!
     @IBOutlet var searchTopConstraint: NSLayoutConstraint!
     @IBOutlet var titleLabel: TitleTextField!
     @IBOutlet var titleTopConstraint: NSLayoutConstraint!
-
     @IBOutlet var sortByOutlet: NSMenuItem!
     @IBOutlet var titleBarAdditionalView: NSVisualEffectView! {
         didSet {
@@ -88,7 +77,6 @@ class ViewController:
             }
         }
     }
-
     @IBOutlet var addProjectButton: NSButton! {
         didSet {
             let layer = CALayer()
@@ -103,36 +91,29 @@ class ViewController:
             }
         }
     }
-
     @IBOutlet var formatButton: NSButton!
-
     @IBOutlet var previewButton: NSButton! {
         didSet {
             previewButton.state = UserDefaultsManagement.preview ? .on : .off
         }
     }
-
     @IBOutlet var presentationButton: NSButton! {
         didSet {
             presentationButton.state = UserDefaultsManagement.presentation ? .on : .off
         }
     }
-
-
     @IBOutlet var descendingCheckItem: NSMenuItem! {
         didSet {
             ascendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .off : .on
             descendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .on : .off
         }
     }
-
     @IBOutlet var ascendingCheckItem: NSMenuItem! {
         didSet {
             ascendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .off : .on
             descendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .on : .off
         }
     }
-
     @IBOutlet var titleBarView: TitleBarView! {
         didSet {
             titleBarView.onMouseExitedClosure = { [weak self] in
@@ -161,7 +142,6 @@ class ViewController:
             }
         }
     }
-
     @IBOutlet var projectHeaderView: OutlineHeaderView! {
         didSet {
             projectHeaderView.onMouseExitedClosure = { [weak self] in
@@ -190,10 +170,8 @@ class ViewController:
             }
         }
     }
-
     @IBOutlet var sidebarScrollView: NSScrollView!
     @IBOutlet var notesScrollView: NSScrollView!
-
     lazy var popover: NSPopover = {
         let popover = NSPopover()
         popover.behavior = .semitransient
@@ -201,46 +179,33 @@ class ViewController:
         popover.delegate = self
         return popover
     }()
-
-
     @objc func detachedWindowWillClose(notification: NSNotification) {}
-
-
     override func viewDidLoad() {
         configureShortcuts()
         configureDelegates()
         configureLayout()
         configureNotesList()
         configureEditor()
-
         // 异步预加载，避免影响启动性能
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.preloadWebView()
         }
-
         fsManager = FileSystemEventManager(storage: storage, delegate: self)
-
         fsManager?.start()
-
         loadMoveMenu()
         loadSortBySetting()
         checkSidebarConstraint()
         checkTitlebarTopConstraint()
-
         #if CLOUDKIT
             registerKeyValueObserver()
         #endif
-
         searchQueue.maxConcurrentOperationCount = 1
         notesTableView.loadingQueue.maxConcurrentOperationCount = 1
         notesTableView.loadingQueue.qualityOfService = QualityOfService.userInteractive
     }
-
-
     // 解决长时间放置导致的 web 容器的性能影响
     override func viewDidDisappear() {
         super.viewWillDisappear()
-
         if UserDefaultsManagement.preview {
             disablePreviewWorkItem = DispatchWorkItem { [weak self] in
                 self?.needRestorePreview = true
@@ -252,10 +217,8 @@ class ViewController:
             needRestorePreview = false
         }
     }
-
     override func viewWillAppear() {
         super.viewWillAppear()
-
         if UserDefaultsManagement.preview {
             disablePreviewWorkItem?.cancel()
         }
@@ -264,37 +227,30 @@ class ViewController:
             enablePreview()
         }
     }
-
     override func viewDidAppear() {
         if UserDefaultsManagement.fullScreen {
             view.window?.toggleFullScreen(nil)
         }
-
         if let appDelegate = NSApplication.shared.delegate as? AppDelegate {
             if let urls = appDelegate.urls {
                 appDelegate.openNotes(urls: urls)
                 return
             }
-
             if let query = appDelegate.searchQuery {
                 appDelegate.search(query: query)
                 return
             }
-
             if appDelegate.newName != nil || appDelegate.newContent != nil {
                 let name = appDelegate.newName ?? ""
                 let content = appDelegate.newContent ?? ""
-
                 appDelegate.create(name: name, content: content)
             }
         }
         handleForAppMode()
     }
-
     func handleForAppMode() {
         updateDividers()
         refreshMiaoYanNum()
-
         if UserDefaultsManagement.isSingleMode {
             toastInSingleMode()
         } else if UserDefaultsManagement.isFirstLaunch {
@@ -306,16 +262,13 @@ class ViewController:
             ensureInitialProjectSelection()
         }
     }
-
     private func ensureInitialProjectSelection() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
             guard self.sidebarWidth > 0 && self.storageOutlineView.selectedRow == -1 else { return }
-
             // Try to find the project by URL first (more reliable after reordering)
             if let lastProjectURL = UserDataService.instance.lastProject,
                 let items = self.storageOutlineView.sidebarItems
             {
-
                 for (index, item) in items.enumerated() {
                     if let sidebarItem = item as? SidebarItem,
                         sidebarItem.project?.url == lastProjectURL
@@ -325,7 +278,6 @@ class ViewController:
                     }
                 }
             }
-
             // Fallback to index-based selection if URL matching fails
             let lastProjectIndex = UserDefaultsManagement.lastProject
             if let items = self.storageOutlineView.sidebarItems,
@@ -337,15 +289,11 @@ class ViewController:
             }
         }
     }
-
-
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         guard let vc = ViewController.shared() else {
             return false
         }
-
-        let canUseMenu = !(UserDefaultsManagement.magicPPT || UserDefaultsManagement.presentation)
-
+        let canUseMenu = UserDefaultsManagement.canUseMenu
         if let title = menuItem.menu?.identifier?.rawValue {
             switch title {
             case "miaoyanMenu":
@@ -357,20 +305,16 @@ class ViewController:
                 if menuItem.identifier?.rawValue == "fileMenu.delete" {
                     menuItem.keyEquivalentModifierMask = [.command]
                 }
-
                 if ["fileMenu.new", "fileMenu.searchAndCreate", "fileMenu.open", "fileMenu.import"].contains(menuItem.identifier?.rawValue) {
                     return canUseMenu
                 }
-
                 if vc.notesTableView.selectedRow == -1 {
                     return false
                 }
-
             case "folderMenu":
                 if ["folderMenu.newFolder", "folderMenu.showInFinder", "folderMenu.renameFolder"].contains(menuItem.identifier?.rawValue) {
                     return canUseMenu
                 }
-
                 guard let p = vc.getSidebarProject(), !p.isTrash else {
                     return false
                 }
@@ -378,69 +322,53 @@ class ViewController:
                 if ["findMenu.find", "findMenu.findAndReplace", "findMenu.next", "findMenu.prev"].contains(menuItem.identifier?.rawValue), vc.notesTableView.selectedRow > -1 {
                     return canUseMenu
                 }
-
                 return vc.editAreaScroll.isFindBarVisible || vc.editArea.hasFocus()
             default:
                 break
             }
         }
-
         return true
     }
-
     private func configureLayout() {
         emptyEditAreaView.isHidden = true
         titleLabel.isHidden = true
-
         updateTitle(newTitle: "")
-
         DispatchQueue.main.async {
             self.editArea.updateTextContainerInset()
         }
-
         editArea.textContainerInset.height = 10
         editArea.isEditable = false
-
         editArea.layoutManager?.defaultAttachmentScaling = .scaleProportionallyDown
         if UserDefaultsManagement.fontName != "LXGW WenKai Screen" {
             editArea.layoutManager?.typesetterBehavior = .behavior_10_2_WithCompatibility
         }
         search.font = UserDefaultsManagement.searchFont
-
         editArea.defaultParagraphStyle = NSTextStorage.getParagraphStyle()
         editArea.typingAttributes = [
             .font: UserDefaultsManagement.noteFont!,
             .paragraphStyle: NSTextStorage.getParagraphStyle(),
         ]
-
         titleLabel.font = UserDefaultsManagement.titleFont.titleBold()
         emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont
-
         setTableRowHeight()
         // Set up delegate and data source before loading data
         storageOutlineView.delegate = storageOutlineView
         storageOutlineView.dataSource = storageOutlineView
-
         storageOutlineView.sidebarItems = Sidebar().getList()
         storageOutlineView.reloadData()
         storageOutlineView.selectionHighlightStyle = .none
-
         // Ensure proper display after data is set
         storageOutlineView.needsDisplay = true
-
         sidebarSplitView.autosaveName = "SidebarSplitView"
         splitView.autosaveName = "EditorSplitView"
-
         // 设置sidebar outline view的autosave name来保存展开状态
         storageOutlineView.autosaveExpandedItems = true
         storageOutlineView.autosaveName = "SidebarOutlineView"
-
         notesScrollView.scrollerStyle = .overlay
         sidebarScrollView.scrollerStyle = .overlay
         sidebarScrollView.horizontalScroller = .none
         sidebarScrollView.hasHorizontalScroller = false
         sidebarScrollView.autohidesScrollers = true
-
         // 确保sidebar列宽随父视图调整
         if let column = storageOutlineView.tableColumns.first {
             column.resizingMask = .autoresizingMask
@@ -448,13 +376,11 @@ class ViewController:
             column.maxWidth = 1000
         }
     }
-
     func configureNotesList() {
         var lastSidebarItem = UserDefaultsManagement.lastProject
         if UserDefaultsManagement.isSingleMode {
             lastSidebarItem = 0
         }
-
         updateTable {
             // Set sidebar selection after table update to properly trigger selection change
             if let items = self.storageOutlineView.sidebarItems, items.indices.contains(lastSidebarItem) {
@@ -463,13 +389,10 @@ class ViewController:
                     self.storageOutlineView.selectRowIndexes([lastSidebarItem], byExtendingSelection: false)
                 }
             }
-
             if UserDefaultsManagement.isSingleMode {
                 let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
-
                 // 默认关闭 sidebar，但保持 notelist 显示
                 self.hideSidebar("")
-
                 // 单个文件模式
                 if !FileManager.default.directoryExists(atUrl: singleModeUrl), let lastNote = self.storage.getBy(url: singleModeUrl), let i = self.notesTableView.getIndex(lastNote) {
                     DispatchQueue.main.async {
@@ -485,12 +408,10 @@ class ViewController:
                         }
                     }
                 }
-
                 self.storageOutlineView.isLaunch = false
             }
         }
     }
-
     private func configureEditor() {
         editArea.usesFindBar = true
         editArea.isIncrementalSearchingEnabled = true
@@ -507,17 +428,13 @@ class ViewController:
         }
         editArea.viewDelegate = self
     }
-
     private func configureShortcuts() {
         KeyboardShortcuts.onKeyUp(for: .activateWindow) { [self] in
             activeShortcut()
         }
-
-
         NSEvent.addLocalMonitorForEvents(matching: NSEvent.EventTypeMask.flagsChanged) {
             $0
         }
-
         NSEvent.addLocalMonitorForEvents(matching: NSEvent.EventTypeMask.keyDown) {
             if self.keyDown(with: $0) {
                 return $0
@@ -525,7 +442,6 @@ class ViewController:
             return nil
         }
     }
-
     private func configureDelegates() {
         editArea.delegate = self
         search.vcDelegate = self
@@ -533,26 +449,26 @@ class ViewController:
         sidebarSplitView.delegate = self
         storageOutlineView.viewDelegate = self
     }
-
     // MARK: - Actions
-
-
     // MARK: - Sidebar Layout Manager
-
-
     var selectRowTimer = Timer()
-
-
     // MARK: Share Service
-
-
     public static func shared() -> ViewController? {
         guard let delegate = NSApplication.shared.delegate as? AppDelegate else {
             return nil
         }
-
         return delegate.mainWindowController?.window?.contentViewController as? ViewController
     }
-
-
+    // MARK: - NSTextViewDelegate
+    func textDidChange(_ notification: Notification) {
+        guard let textView = notification.object as? EditTextView,
+            let note = EditTextView.note,
+            textView == editArea
+        else { return }
+        editArea.saveTextStorageContent(to: note)
+        note.save()
+        if UserDefaultsManagement.preview || UserDefaultsManagement.magicPPT {
+            refillEditArea(previewOnly: true, force: true)
+        }
+    }
 }

@@ -5,14 +5,6 @@ class TitleTextField: NSTextField {
     public var vcDelegate: ViewController!
     public var restoreResponder: NSResponder?
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-
-    override func layout() {
-        super.layout()
-    }
-
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
         let pasteboard = NSPasteboard.general
 
@@ -46,11 +38,6 @@ class TitleTextField: NSTextField {
         return super.performKeyEquivalent(with: event)
     }
 
-    override func becomeFirstResponder() -> Bool {
-        // 保持当前显示的标题作为编辑的起始值，不需要重新设置
-        return super.becomeFirstResponder()
-    }
-
     override func textDidEndEditing(_ notification: Notification) {
         saveTitle()
     }
@@ -61,7 +48,7 @@ class TitleTextField: NSTextField {
         }
 
         // 允许空标题的情况（UUID文件名显示为空）
-        guard stringValue.count > 0 else {
+        guard !stringValue.isEmpty else {
             // 对于空标题，无需做任何操作，保持当前显示状态
             return
         }

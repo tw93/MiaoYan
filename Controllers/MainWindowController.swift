@@ -72,7 +72,6 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         UserDefaultsManagement.fullScreen = false
     }
 
-
     // MARK: - NSWindowRestoration
 
     static func restoreWindow(withIdentifier identifier: NSUserInterfaceItemIdentifier, state: NSCoder, completionHandler: @escaping (NSWindow?, Error?) -> Void) {

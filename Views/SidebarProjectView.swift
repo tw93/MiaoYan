@@ -24,7 +24,7 @@ class SidebarProjectView: NSOutlineView,
         registerForDraggedTypes([
             NSPasteboard.PasteboardType(rawValue: "public.data"),
             NSPasteboard.PasteboardType(rawValue: "notesTable"),
-            NSPasteboard.PasteboardType(rawValue: "SidebarProjectReorder"),
+            NSPasteboard.PasteboardType(rawValue: "SidebarProjectReorder")
         ])
     }
 
@@ -68,10 +68,6 @@ class SidebarProjectView: NSOutlineView,
         }
 
         return false
-    }
-
-    override func draw(_ dirtyRect: NSRect) {
-        super.draw(dirtyRect)
     }
 
     override func keyDown(with event: NSEvent) {
@@ -129,7 +125,6 @@ class SidebarProjectView: NSOutlineView,
             if components.count >= 3, let sourceIndex = Int(components[1]),
                 let sidebarItems = sidebarItems
             {
-
 
                 // Make sure we have valid indices
                 guard sourceIndex >= 0 && sourceIndex < sidebarItems.count && index >= 0 && index <= sidebarItems.count else {
@@ -279,7 +274,7 @@ class SidebarProjectView: NSOutlineView,
                 return .move
             }
 
-            if let urls = board.readObjects(forClasses: [NSURL.self], options: nil) as? [URL], urls.count > 0 {
+            if let urls = board.readObjects(forClasses: [NSURL.self], options: nil) as? [URL], !urls.isEmpty {
                 return .copy
             }
         default:
@@ -362,7 +357,7 @@ class SidebarProjectView: NSOutlineView,
     }
 
     func outlineView(_ outlineView: NSOutlineView, rowViewForItem item: Any) -> NSTableRowView? {
-        SidebarTableRowView(frame: NSZeroRect)
+        SidebarTableRowView(frame: NSRect.zero)
     }
 
     func outlineView(_ outlineView: NSOutlineView, pasteboardWriterForItem item: Any) -> NSPasteboardWriting? {
@@ -405,7 +400,7 @@ class SidebarProjectView: NSOutlineView,
 
     private func isChangedSelectedProjectsState() -> Bool {
         var qtyChanged = false
-        if selectedProjects.count == 0 {
+        if selectedProjects.isEmpty {
             for i in selectedRowIndexes {
                 if let si = item(atRow: i) as? SidebarItem, let project = si.project {
                     selectedProjects.append(project)
@@ -424,7 +419,7 @@ class SidebarProjectView: NSOutlineView,
             }
             selectedProjects = new
 
-            if new.count == 0 {
+            if new.isEmpty {
                 qtyChanged = true
             }
         }
@@ -490,7 +485,7 @@ class SidebarProjectView: NSOutlineView,
                         vd.notesTableView.selectRow(i)
                         // Restore scroll position instead of scrolling to visible row
                         vd.notesTableView.restoreScrollPosition()
-                    } else if vd.notesTableView.noteList.count > 0 {
+                    } else if !vd.notesTableView.noteList.isEmpty {
                         vd.focusTable()
                     }
                     self.isLaunch = false
@@ -648,7 +643,7 @@ class SidebarProjectView: NSOutlineView,
 
     private func addChild(field: NSTextField, project: Project) {
         let value = field.stringValue
-        guard value.count > 0 else {
+        guard !value.isEmpty else {
             return
         }
 
@@ -704,7 +699,7 @@ class SidebarProjectView: NSOutlineView,
             }
         }
 
-        if projects.count > 0 {
+        if !projects.isEmpty {
             return projects
         }
 

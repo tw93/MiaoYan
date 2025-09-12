@@ -470,7 +470,7 @@ public class Note: NSObject {
                 for header in headerList {
                     let nsHeader = header as NSString
                     let regex = try! NSRegularExpression(pattern: "title: (.*?)", options: [])
-                    let matches = regex.matches(in: String(nsHeader), options: [], range: NSMakeRange(0, (nsHeader as String).count))
+                    let matches = regex.matches(in: String(nsHeader), options: [], range: NSRange(location: 0, length: (nsHeader as String).count))
 
                     if matches.first != nil {
                         list.remove(at: 1)
@@ -497,7 +497,7 @@ public class Note: NSObject {
     }
 
     func parseURL(loadProject: Bool = true) {
-        if url.pathComponents.count > 0 {
+        if !url.pathComponents.isEmpty {
             container = .withExt(rawValue: url.pathExtension)
             name = url.pathComponents.last!
 
@@ -656,7 +656,7 @@ public class Note: NSObject {
             let ext = getExtensionForContainer()
             let textBundle = FileWrapper(directoryWithFileWrappers: [
                 "text.\(ext)": fileWrapper,
-                "info.json": infoWrapper,
+                "info.json": infoWrapper
             ])
 
             let assetsWrapper = imagesWrapper ?? getAssetsFileWrapper()
@@ -762,7 +762,7 @@ public class Note: NSObject {
 
         return [
             .documentType: NSAttributedString.DocumentType.plain,
-            .characterEncoding: NSNumber(value: encoding.rawValue),
+            .characterEncoding: NSNumber(value: encoding.rawValue)
         ]
     }
 
@@ -776,7 +776,7 @@ public class Note: NSObject {
         } else {
             options = [
                 .documentType: NSAttributedString.DocumentType.plain,
-                .characterEncoding: NSNumber(value: String.Encoding.utf8.rawValue),
+                .characterEncoding: NSNumber(value: String.Encoding.utf8.rawValue)
             ]
         }
 
@@ -1125,7 +1125,7 @@ public class Note: NSObject {
     }
 
     public func getTitle() -> String? {
-        if title.count > 0 {
+        if !title.isEmpty {
             if title.isValidUUID {
                 return getDefaultTitle()
             }

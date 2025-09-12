@@ -8,10 +8,6 @@ class EditorSplitView: NSSplitView, NSSplitViewDelegate {
         delegate = self
     }
 
-    override func draw(_ dirtyRect: NSRect) {
-        super.draw(dirtyRect)
-    }
-
     override func minPossiblePositionOfDivider(at dividerIndex: Int) -> CGFloat {
         return 0
     }

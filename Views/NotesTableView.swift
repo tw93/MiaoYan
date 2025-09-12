@@ -129,7 +129,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
 
         let vc = window?.contentViewController as! ViewController
 
-
         if vc.editAreaScroll.isFindBarVisible {
             let menu = NSMenuItem(title: "", action: nil, keyEquivalent: "")
             menu.tag = NSTextFinder.Action.hideFindInterface.rawValue
