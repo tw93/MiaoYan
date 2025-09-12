@@ -3,10 +3,10 @@ import Cocoa
 
 class NoteRowView: NSTableRowView {
     override var isEmphasized: Bool {
-        set {}
         get {
             false
         }
+        set {}
     }
 
     override var isSelected: Bool {

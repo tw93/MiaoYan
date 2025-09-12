@@ -7,6 +7,12 @@ import Foundation
     import UIKit
 #endif
 
+struct DirectoryItem {
+    let url: URL
+    let modificationDate: Date
+    let creationDate: Date
+}
+
 class Storage {
     static var instance: Storage?
 
@@ -229,7 +235,7 @@ class Storage {
         // 防止单文件模式太卡
         if project.isRoot, !UserDefaultsManagement.isSingleMode {
             let addedSubProjects = checkSub(url: project.url, parent: project)
-            added = added + addedSubProjects
+            added += addedSubProjects
         }
 
         return added
@@ -417,7 +423,7 @@ class Storage {
         let documents = readDirectory(item.url)
 
         for document in documents {
-            let url = document.0 as URL
+            let url = document.url
 
             #if os(OSX)
                 if let currentNoteURL = EditTextView.note?.url,
@@ -480,14 +486,12 @@ class Storage {
     public func reLoadTrash() {
         noteList.removeAll(where: { $0.isTrash() })
 
-        for project in projects {
-            if project.isTrash {
-                loadLabel(project, loadContent: true)
-            }
+        for project in projects where project.isTrash {
+            loadLabel(project, loadContent: true)
         }
     }
 
-    public func readDirectory(_ url: URL) -> [(URL, Date, Date)] {
+    public func readDirectory(_ url: URL) -> [DirectoryItem] {
         let url = url.resolvingSymlinksInPath()
 
         do {
@@ -499,12 +503,11 @@ class Storage {
                     allowedExtensions.contains($0.pathExtension)
                         && isValidUTI(url: $0)
                 }
-                .map {
-                    url in
-                    (
-                        url,
-                        (try? url.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate ?? Date.distantPast,
-                        (try? url.resourceValues(forKeys: [.creationDateKey]))?.creationDate ?? Date.distantPast
+                .map { url in
+                    DirectoryItem(
+                        url: url,
+                        modificationDate: (try? url.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate ?? Date.distantPast,
+                        creationDate: (try? url.resourceValues(forKeys: [.creationDateKey]))?.creationDate ?? Date.distantPast
                     )
                 }
         } catch {
@@ -673,7 +676,7 @@ class Storage {
         var i = 0
 
         for url in urls {
-            i = i + 1
+            i += 1
             do {
                 var isDirectoryResourceValue: AnyObject?
                 try url.getResourceValue(&isDirectoryResourceValue, forKey: URLResourceKey.isDirectoryKey)
@@ -728,8 +731,7 @@ class Storage {
                     !isDownloaded(url: $0)
                 }
 
-            let images = files.map {
-                url in
+            let images = files.map { url in
                 (
                     url,
                     (try? url.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate ?? Date.distantPast,
@@ -839,11 +841,9 @@ class Storage {
 
             if let names = keyStore.array(forKey: "com.tw93.miaoyan.pins.shared") as? [String] {
                 if let pinned = getPinned() {
-                    for note in pinned {
-                        if !names.contains(note.name) {
-                            note.removePin(cloudSave: false)
-                            removed.append(note)
-                        }
+                    for note in pinned where !names.contains(note.name) {
+                        note.removePin(cloudSave: false)
+                        removed.append(note)
                     }
                 }
 

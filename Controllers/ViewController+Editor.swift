@@ -48,15 +48,17 @@ extension ViewController {
         }
         // Keep WebView alive: hide and clear content
         if let webView = editArea.markdownView {
-            NSAnimationContext.runAnimationGroup({ context in
-                context.duration = 0.15
-                context.timingFunction = CAMediaTimingFunction(name: .easeIn)
-                webView.animator().alphaValue = 0.0
-            }) {
-                webView.isHidden = true
-                webView.alphaValue = 1.0
-                webView.loadHTMLString("<html><body style='background:transparent;'></body></html>", baseURL: nil)
-            }
+            NSAnimationContext.runAnimationGroup(
+                { context in
+                    context.duration = 0.15
+                    context.timingFunction = CAMediaTimingFunction(name: .easeIn)
+                    webView.animator().alphaValue = 0.0
+                },
+                completionHandler: {
+                    webView.isHidden = true
+                    webView.alphaValue = 1.0
+                    webView.loadHTMLString("<html><body style='background:transparent;'></body></html>", baseURL: nil)
+                })
         }
         refillEditArea()
         DispatchQueue.main.async {
@@ -77,9 +79,7 @@ extension ViewController {
     }
     // MARK: - Presentation Mode
     func enablePresentation() {
-        if !UserDefaultsManagement.magicPPT {
-            UserDefaultsManagement.presentation = true
-        }
+        UserDefaultsManagement.presentation = true
         let currentSidebarWidth = sidebarWidth
         let currentNotelistWidth = notelistWidth
         if currentSidebarWidth > 86 {
@@ -108,12 +108,7 @@ extension ViewController {
         }
     }
     func disablePresentation() {
-        if UserDefaultsManagement.magicPPT {
-            return
-        }
-        if UserDefaultsManagement.currentEditorMode == .presentation {
-            UserDefaultsManagement.magicPPT = false
-        }
+        UserDefaultsManagement.presentation = false
         presentationButton.state = .off
         if UserDefaultsManagement.fullScreen {
             UserDefaultsManagement.fullScreen = false
@@ -140,11 +135,27 @@ extension ViewController {
                 self.savedPresentationScrollPosition = nil
             }
         }
+
+        updateButtonStates()
     }
+
+    // MARK: - Helper Methods
+    private func updateButtonStates() {
+        DispatchQueue.main.async {
+            self.previewButton.state = UserDefaultsManagement.preview ? .on : .off
+            self.presentationButton.state = UserDefaultsManagement.presentation ? .on : .off
+        }
+    }
+
     func togglePresentation() {
         titleLabel.saveTitle()
-        if UserDefaultsManagement.presentation {
-            disablePresentation()
+        // Handle both presentation and PPT modes
+        if UserDefaultsManagement.presentation || UserDefaultsManagement.magicPPT {
+            if UserDefaultsManagement.magicPPT {
+                disableMiaoYanPPT()
+            } else {
+                disablePresentation()
+            }
         } else {
             enablePresentation()
             TelemetryDeck.signal("Editor.Presentation")
@@ -166,12 +177,12 @@ extension ViewController {
     }
     func toggleMagicPPT() {
         titleLabel.saveTitle()
-        if !isMiaoYanPPT() {
-            return
-        }
         if UserDefaultsManagement.magicPPT {
             disableMiaoYanPPT()
         } else {
+            if !isMiaoYanPPT() {
+                return
+            }
             enableMiaoYanPPT()
         }
     }
@@ -299,16 +310,20 @@ extension ViewController {
                 self.savedPresentationScrollPosition = nil
             }
         }
+
+        updateButtonStates()
         // Hide webview and return to text editor
         if let webView = editArea.markdownView {
-            NSAnimationContext.runAnimationGroup({ context in
-                context.duration = 0.15
-                context.timingFunction = CAMediaTimingFunction(name: .easeIn)
-                webView.animator().alphaValue = 0.0
-            }) {
-                webView.isHidden = true
-                webView.alphaValue = 1.0
-            }
+            NSAnimationContext.runAnimationGroup(
+                { context in
+                    context.duration = 0.15
+                    context.timingFunction = CAMediaTimingFunction(name: .easeIn)
+                    webView.animator().alphaValue = 0.0
+                },
+                completionHandler: {
+                    webView.isHidden = true
+                    webView.alphaValue = 1.0
+                })
         }
         // Restore editor content
         refillEditArea()

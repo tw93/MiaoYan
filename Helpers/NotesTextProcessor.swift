@@ -439,14 +439,13 @@ public class NotesTextProcessor {
     }
 
     public static func isIntersect(fencedRanges: [NSRange], indentRange: NSRange) -> Bool {
-        for fencedRange in fencedRanges {
-            if fencedRange.intersection(indentRange) != nil {
-                return true
-            }
+        for fencedRange in fencedRanges where fencedRange.intersection(indentRange) != nil {
+            return true
         }
         return false
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     public static func highlightMarkdown(attributedString: NSMutableAttributedString, paragraphRange: NSRange? = nil, note: Note) {
         let paragraphRange = paragraphRange ?? NSRange(0..<attributedString.length)
         let isFullScan = attributedString.length == paragraphRange.upperBound && paragraphRange.lowerBound == 0
@@ -668,8 +667,8 @@ public class NotesTextProcessor {
                 NotesTextProcessor.coupleSquareRegex.matches(string, range: range) { innerResult in
                     guard let innerRange = innerResult?.range else { return }
                     var _range = innerRange
-                    _range.location = _range.location + 1
-                    _range.length = _range.length - 2
+                    _range.location += 1
+                    _range.length -= 2
 
                     let substring = attributedString.mutableString.substring(with: _range)
                     guard substring.lengthOfBytes(using: .utf8) > 0 else { return }
@@ -702,8 +701,8 @@ public class NotesTextProcessor {
 
             guard let innerRange = result?.range else { return }
             var _range = innerRange
-            _range.location = _range.location + 2
-            _range.length = _range.length - 4
+            _range.location += 2
+            _range.length -= 4
 
             let appLink = attributedString.mutableString.substring(with: _range)
 
@@ -1396,8 +1395,7 @@ public class NotesTextProcessor {
                 in: storage.string,
                 options: NSRegularExpression.MatchingOptions(),
                 range: range,
-                using: {
-                    textCheckingResult, _, _ in
+                using: { textCheckingResult, _, _ in
                     guard let subRange = textCheckingResult?.range else {
                         return
                     }

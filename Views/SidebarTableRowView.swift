@@ -2,10 +2,10 @@ import Cocoa
 
 class SidebarTableRowView: NSTableRowView {
     override var isEmphasized: Bool {
-        set {}
         get {
             false
         }
+        set {}
     }
 
     override var isSelected: Bool {

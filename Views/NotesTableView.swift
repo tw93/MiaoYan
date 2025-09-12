@@ -62,7 +62,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
             var scrollOrigin = rowRect.origin
 
             if clipView.frame.height - scrollOrigin.y < rowRect.height {
-                scrollOrigin.y = scrollOrigin.y - 8.0
+                scrollOrigin.y -= 8.0
                 if scrollView.responds(to: #selector(NSScrollView.flashScrollers)) {
                     scrollView.flashScrollers()
                 }
@@ -217,10 +217,8 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     func getSelectedNotes() -> [Note]? {
         var notes = [Note]()
 
-        for row in selectedRowIndexes {
-            if noteList.indices.contains(row) {
-                notes.append(noteList[row])
-            }
+        for row in selectedRowIndexes where noteList.indices.contains(row) {
+            notes.append(noteList[row])
         }
 
         if notes.isEmpty {
@@ -352,10 +350,8 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
 
     public func countVisiblePinned() -> Int {
         var i = 0
-        for note in noteList {
-            if note.isPinned {
-                i += 1
-            }
+        for note in noteList where note.isPinned {
+            i += 1
         }
         return i
     }

@@ -2,6 +2,15 @@ import Alamofire
 import Cocoa
 import SwiftyJSON
 
+struct UploadParameters {
+    let localPath: String
+    let originalPath: String
+    let picType: String
+    let textView: EditTextView
+    let note: Note
+    let viewController: ViewController
+}
+
 class ClipboardManager {
     private weak var textView: EditTextView?
 
@@ -138,7 +147,15 @@ class ClipboardManager {
                     textView.breakUndoCoalescing()
                     textView.insertText(uploadingPlaceholder, replacementRange: textView.selectedRange())
 
-                    uploadToCloudAsync(localPath: tempPath.path, originalPath: path, picType: picType, textView: textView, note: note, vc: vc)
+                    let uploadParams = UploadParameters(
+                        localPath: tempPath.path,
+                        originalPath: path,
+                        picType: picType,
+                        textView: textView,
+                        note: note,
+                        viewController: vc
+                    )
+                    uploadToCloudAsync(parameters: uploadParams)
                     return
                 }
                 textView.breakUndoCoalescing()
@@ -191,9 +208,9 @@ class ClipboardManager {
         return String(data: fileHandle.readDataToEndOfFile(), encoding: .utf8)
     }
 
-    private func uploadToCloudAsync(localPath: String, originalPath: String, picType: String, textView: EditTextView, note: Note, vc: ViewController) {
+    private func uploadToCloudAsync(parameters: UploadParameters) {
         DispatchQueue.global(qos: .userInitiated).async {
-            let command = "/Applications/\(picType).app/Contents/MacOS/\(picType) -o url -u \"\(localPath)\""
+            let command = "/Applications/\(parameters.picType).app/Contents/MacOS/\(parameters.picType) -o url -u \"\(parameters.localPath)\""
             let runList = self.run(command)
             let imageDesc = runList?.components(separatedBy: "\n") ?? []
 
@@ -211,22 +228,22 @@ class ClipboardManager {
                     self.replacePlaceholderWithURL(
                         placeholder: "![](uploading...)",
                         cloudURL: validURL,
-                        textView: textView,
-                        note: note
+                        textView: parameters.textView,
+                        note: parameters.note
                     )
-                    self.deleteImage(tempPath: URL(fileURLWithPath: localPath))
-                    if let viewController = textView.window?.contentViewController {
+                    self.deleteImage(tempPath: URL(fileURLWithPath: parameters.localPath))
+                    if let viewController = parameters.textView.window?.contentViewController {
                         viewController.toast(message: "图片上传成功")
                     }
                 } else {
                     self.replacePlaceholderWithURL(
                         placeholder: "![](uploading...)",
-                        cloudURL: originalPath,
-                        textView: textView,
-                        note: note
+                        cloudURL: parameters.originalPath,
+                        textView: parameters.textView,
+                        note: parameters.note
                     )
                     // 轻量级失败提示
-                    if let viewController = textView.window?.contentViewController {
+                    if let viewController = parameters.textView.window?.contentViewController {
                         viewController.toast(message: "图片上传失败，已使用本地路径")
                     }
                 }

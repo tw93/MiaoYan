@@ -153,7 +153,7 @@ public class TextFormatter {
 
         var result = lines.joined(separator: "\n")
         if pRange.upperBound != storage.length {
-            result = result + "\n"
+            result += "\n"
         }
 
         #if os(OSX)
@@ -218,7 +218,7 @@ public class TextFormatter {
 
         var result = resultList.joined(separator: "\n")
         if pRange.upperBound != storage.length {
-            result = result + "\n"
+            result += "\n"
         }
 
         #if os(OSX)

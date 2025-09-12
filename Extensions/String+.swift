@@ -20,7 +20,7 @@ extension String {
 
     // Inspired by magic from https://stackoverflow.com/a/41902740/2778502
     public func localizedStandardContains<S: StringProtocol>(_ terms: [S]) -> Bool {
-        terms.first(where: { self.localizedStandardContains($0) }) != nil
+        terms.contains { self.localizedStandardContains($0) }
     }
 
     public func trim() -> String {
@@ -47,7 +47,7 @@ extension String {
 
     public func localizedCaseInsensitiveContainsTerms(_ terms: [Substring]) -> Bool {
         // Use magic from https://stackoverflow.com/a/41902740/2778502
-        terms.first(where: { !localizedLowercase.contains($0) }) == nil
+        terms.allSatisfy { localizedLowercase.contains($0) }
     }
 
     public func startsWith(string: String) -> Bool {
@@ -117,10 +117,7 @@ extension String {
 
         let whitespaceChars = NSCharacterSet.whitespacesAndNewlines
 
-        return
-            unicodeScalars
-            .filter { (unicodeScalar: UnicodeScalar) -> Bool in !whitespaceChars.contains(unicodeScalar) }
-            .isEmpty
+        return !unicodeScalars.contains { (unicodeScalar: UnicodeScalar) -> Bool in !whitespaceChars.contains(unicodeScalar) }
     }
 
     public var isNumber: Bool {

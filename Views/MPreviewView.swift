@@ -476,7 +476,7 @@ class HandlerCheckbox: NSObject, WKScriptMessageHandler {
                 }
                 note.save(content: content)
             }
-            i = i + 1
+            i += 1
         }
     }
 }

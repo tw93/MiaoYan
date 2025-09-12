@@ -46,9 +46,7 @@ class FileWatcher {
         streamRef = nil
     }
 
-    private let eventCallback: FSEventStreamCallback = {
-        _, clientCallBackInfo, numEvents, eventPaths, eventFlags, eventIds
-        in
+    private let eventCallback: FSEventStreamCallback = { _, clientCallBackInfo, numEvents, eventPaths, eventFlags, eventIds in
         let fileSystemWatcher = Unmanaged<FileWatcher>.fromOpaque(clientCallBackInfo!).takeUnretainedValue()
         let paths = Unmanaged<CFArray>.fromOpaque(eventPaths).takeUnretainedValue() as! [String]
 

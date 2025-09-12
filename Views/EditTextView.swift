@@ -60,8 +60,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
         {
             diff = 6.0
         }
-        newRect.size.height = newRect.size.height - diff
-        newRect.origin.y = newRect.origin.y + 4.0
+        newRect.size.height -= diff
+        newRect.origin.y += 4.0
         super.drawInsertionPoint(in: newRect, color: EditTextView.fontColor, turnedOn: flag)
     }
     override func becomeFirstResponder() -> Bool {
