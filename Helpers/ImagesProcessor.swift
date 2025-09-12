@@ -247,7 +247,7 @@ public class ImagesProcessor {
         let j = offset + newLineOffset - mdTitleLength
 
         if innerRange.lowerBound >= 5 + mdTitleLength {
-            return styleApplier.containsAttachments(in: NSMakeRange(innerRange.lowerBound - 5 + j, 1))
+            return styleApplier.containsAttachments(in: NSRange(location: innerRange.lowerBound - 5 + j, length: 1))
         }
 
         return false
@@ -257,7 +257,7 @@ public class ImagesProcessor {
         let j = offset + newLineOffset - mdTitleLength
 
         if innerRange.lowerBound >= 4 + mdTitleLength {
-            return (styleApplier.attributedSubstring(from: NSMakeRange(innerRange.lowerBound - 4 + j, 1)).string == "\n")
+            return (styleApplier.attributedSubstring(from: NSRange(location: innerRange.lowerBound - 4 + j, length: 1)).string == "\n")
         }
 
         return false
