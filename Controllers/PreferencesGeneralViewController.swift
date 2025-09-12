@@ -176,7 +176,7 @@ class PreferencesGeneralViewController: NSViewController {
             LanguageType(rawValue: 0x00),
             LanguageType(rawValue: 0x01),
             LanguageType(rawValue: 0x02),
-            LanguageType(rawValue: 0x03),
+            LanguageType(rawValue: 0x03)
         ]
 
         for language in languages {

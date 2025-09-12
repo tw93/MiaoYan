@@ -346,7 +346,7 @@ class ViewController:
         editArea.defaultParagraphStyle = NSTextStorage.getParagraphStyle()
         editArea.typingAttributes = [
             .font: UserDefaultsManagement.noteFont!,
-            .paragraphStyle: NSTextStorage.getParagraphStyle(),
+            .paragraphStyle: NSTextStorage.getParagraphStyle()
         ]
         titleLabel.font = UserDefaultsManagement.titleFont.titleBold()
         emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont
@@ -402,7 +402,7 @@ class ViewController:
                 } else if FileManager.default.directoryExists(atUrl: singleModeUrl) {
                     // 文件夹模式：选中第一个文件
                     DispatchQueue.main.async {
-                        if self.notesTableView.noteList.count > 0 {
+                        if !self.notesTableView.noteList.isEmpty {
                             self.notesTableView.selectRow(0)
                             self.notesTableView.scrollRowToVisible(row: 0, animated: false)
                         }

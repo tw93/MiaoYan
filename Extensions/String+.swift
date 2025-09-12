@@ -38,7 +38,7 @@ extension String {
             break
         }
 
-        if result.count > 0 {
+        if !result.isEmpty {
             return result
         }
 
@@ -120,7 +120,7 @@ extension String {
         return
             unicodeScalars
             .filter { (unicodeScalar: UnicodeScalar) -> Bool in !whitespaceChars.contains(unicodeScalar) }
-            .count == 0
+            .isEmpty
     }
 
     public var isNumber: Bool {

@@ -45,7 +45,7 @@ extension NSMutableAttributedString {
 
                 let newRange = NSRange(location: range.location + offset, length: range.length)
 
-                guard let unwrappedPath = path, unwrappedPath.count > 0 else { return }
+                guard let unwrappedPath = path, !unwrappedPath.isEmpty else { return }
 
                 let unrappedTitle = title ?? ""
 
