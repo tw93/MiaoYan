@@ -8,10 +8,6 @@ class SidebarSplitView: NSSplitView, NSSplitViewDelegate {
         delegate = self
     }
 
-    override func draw(_ dirtyRect: NSRect) {
-        super.draw(dirtyRect)
-    }
-
     func splitView(_ splitView: NSSplitView, constrainSplitPosition proposedPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
         if dividerIndex == 0 && isUserDragging {
             // Auto-hide sidebar when too narrow

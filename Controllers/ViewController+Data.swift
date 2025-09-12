@@ -76,7 +76,6 @@ extension ViewController {
             self.filteredNoteList = notes
             self.notesTableView.noteList = orderedNotesList
 
-
             if operation.isCancelled {
                 completion()
                 return

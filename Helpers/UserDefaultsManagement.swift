@@ -5,7 +5,9 @@ import Foundation
 #else
     import UIKit
 #endif
-
+extension Notification.Name {
+    static let editorModeChanged = Notification.Name("editorModeChanged")
+}
 public enum UserDefaultsManagement {
     #if os(OSX)
         typealias Color = NSColor
@@ -16,26 +18,20 @@ public enum UserDefaultsManagement {
         typealias Image = UIImage
         typealias Font = UIFont
     #endif
-
     static var DefaultFont = "TsangerJinKai02-W04"
-
     static var DefaultFontSize = 16
     static var DefaultPreviewFontSize = 16
     static var DefaultPresentationFontSize = 24
-
     static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
     static var DefaultBgColor = Color.white
-
     static var lineWidth = 1000
     static var linkColor = Color(red: 0.23, green: 0.23, blue: 0.23, alpha: 1.00)
     static var fullScreen = false
     static var isWillFullScreen = false
-
     static var editorLineSpacing = 3.0
     static var editorLineHeight = 1.3
     static var editorLetterSpacing = 0.6
     static var windowLetterSpacing = 0.6
-
     static var titleFontSize = 20
     static var emptyEditTitleFontSize = 36
     static var nameFontSize = 14
@@ -44,11 +40,9 @@ public enum UserDefaultsManagement {
     static var marginSize = 24
     static var realSidebarSize = 138
     static var sidebarSize = 280
-
     static var isOnExport = false
     static var isOnExportPPT = false
     static var isOnExportHtml = false
-
     private enum Constants {
         static let AppearanceTypeKey = "appearanceType"
         static let BgColorKey = "bgColorKeyed"
@@ -96,13 +90,11 @@ public enum UserDefaultsManagement {
         static let CodeBackground = "CodeBackground"
         static let NotesTableScrollPosition = "notesTableScrollPosition"
     }
-
     static var appearanceType: AppearanceType {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.AppearanceTypeKey) as? Int {
                 return AppearanceType(rawValue: result)!
             }
-
             if #available(OSX 10.14, *) {
                 return AppearanceType.System
             } else {
@@ -113,7 +105,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue.rawValue, forKey: Constants.AppearanceTypeKey)
         }
     }
-
     static var lastProject: Int {
         get {
             if let lastProject = UserDefaults.standard.object(forKey: Constants.LastProject) {
@@ -126,7 +117,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.LastProject)
         }
     }
-
     static var defaultLanguage: Int {
         get {
             if let dl = UserDefaults.standard.object(forKey: Constants.DefaultLanguageKey) as? Int {
@@ -138,7 +128,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.DefaultLanguageKey)
         }
     }
-
     static var defaultPicUpload: String {
         get {
             if let dl = UserDefaults.standard.object(forKey: Constants.DefaultPicUpload) as? String {
@@ -150,7 +139,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.DefaultPicUpload)
         }
     }
-
     static var editorLineBreak: String {
         get {
             if let dl = UserDefaults.standard.object(forKey: Constants.EditorLineBreak) as? String {
@@ -162,7 +150,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.EditorLineBreak)
         }
     }
-
     static var buttonShow: String {
         get {
             if let dl = UserDefaults.standard.object(forKey: Constants.ButtonShow) as? String {
@@ -174,7 +161,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.ButtonShow)
         }
     }
-
     static var codeBackground: String {
         get {
             if let dl = UserDefaults.standard.object(forKey: Constants.CodeBackground) as? String {
@@ -186,7 +172,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.CodeBackground)
         }
     }
-
     static var isFirstLaunch: Bool {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.IsFirstLaunch) as? Bool {
@@ -198,7 +183,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.IsFirstLaunch)
         }
     }
-
     static var isSingleMode: Bool {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.IsSingleMode) as? Bool {
@@ -210,7 +194,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.IsSingleMode)
         }
     }
-
     static var singleModePath: String {
         get {
             if let dl = UserDefaults.standard.object(forKey: Constants.SingleModePath) as? String {
@@ -222,7 +205,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.SingleModePath)
         }
     }
-
     static var sortDirection: Bool {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.SortDirection) as? Bool {
@@ -234,7 +216,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.SortDirection)
         }
     }
-
     static var fontSize: Int {
         get {
             if let returnFontSize = UserDefaults.standard.object(forKey: Constants.FontSizeKey) {
@@ -247,7 +228,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.FontSizeKey)
         }
     }
-
     static var previewWidth: String {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.PreviewWidth) as? String {
@@ -259,7 +239,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.PreviewWidth)
         }
     }
-
     static var previewLocation: String {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.PreviewLocation) as? String {
@@ -271,7 +250,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.PreviewLocation)
         }
     }
-
     static var previewFontSize: Int {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.PreviewFontSize) as? Int {
@@ -283,7 +261,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.PreviewFontSize)
         }
     }
-
     static var presentationFontSize: Int {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.PresentationFontSize) as? Int {
@@ -295,7 +272,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.PresentationFontSize)
         }
     }
-
     static var fontName: String {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.FontName) as? String {
@@ -310,7 +286,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.FontName)
         }
     }
-
     static var windowFontName: String {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.WindowFontName) as? String {
@@ -325,7 +300,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.WindowFontName)
         }
     }
-
     static var previewFontName: String {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.PreviewFontName) as? String {
@@ -340,7 +314,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.PreviewFontName)
         }
     }
-
     static var codeFontName: String {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.CodeFontNameKey) as? String {
@@ -355,43 +328,36 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.CodeFontNameKey)
         }
     }
-
     static var codeFont: Font! {
         get {
             if let font = Font(name: codeFontName, size: CGFloat(fontSize)) {
                 return font
             }
-
             return Font.systemFont(ofSize: CGFloat(fontSize))
         }
         set {
             guard let newValue = newValue else {
                 return
             }
-
             codeFontName = newValue.fontName
             fontSize = Int(newValue.pointSize)
         }
     }
-
     static var noteFont: Font! {
         get {
             if let font = Font(name: fontName, size: CGFloat(fontSize)) {
                 return font
             }
-
             return Font.systemFont(ofSize: CGFloat(fontSize))
         }
         set {
             guard let newValue = newValue else {
                 return
             }
-
             fontName = newValue.fontName
             fontSize = Int(newValue.pointSize)
         }
     }
-
     static var titleFont: Font! {
         get {
             if let font = Font(name: windowFontName, size: CGFloat(titleFontSize)) {
@@ -400,91 +366,76 @@ public enum UserDefaultsManagement {
                 }
                 return font
             }
-
             return Font.systemFont(ofSize: CGFloat(titleFontSize))
         }
         set {
             guard let newValue = newValue else {
                 return
             }
-
             fontName = newValue.fontName
             fontSize = Int(newValue.pointSize)
         }
     }
-
     static var emptyEditTitleFont: Font! {
         get {
             if let font = Font(name: windowFontName, size: CGFloat(emptyEditTitleFontSize)) {
                 return font
             }
-
             return Font.systemFont(ofSize: CGFloat(emptyEditTitleFontSize))
         }
         set {
             guard let newValue = newValue else {
                 return
             }
-
             fontName = newValue.fontName
             fontSize = Int(newValue.pointSize)
         }
     }
-
     static var nameFont: Font! {
         get {
             if let font = Font(name: windowFontName, size: CGFloat(nameFontSize)) {
                 return font
             }
-
             return Font.systemFont(ofSize: CGFloat(nameFontSize))
         }
         set {
             guard let newValue = newValue else {
                 return
             }
-
             fontName = newValue.fontName
             fontSize = Int(newValue.pointSize)
         }
     }
-
     static var searchFont: Font! {
         get {
             if let font = Font(name: windowFontName, size: CGFloat(searchFontSize)) {
                 return font
             }
-
             return Font.systemFont(ofSize: CGFloat(searchFontSize))
         }
         set {
             guard let newValue = newValue else {
                 return
             }
-
             fontName = newValue.fontName
             fontSize = Int(newValue.pointSize)
         }
     }
-
     static var dateFont: Font! {
         get {
             if let font = Font(name: windowFontName, size: CGFloat(dateFontSize)) {
                 return font
             }
-
             return Font.systemFont(ofSize: CGFloat(dateFontSize))
         }
         set {
             guard let newValue = newValue else {
                 return
             }
-
             fontName = newValue.fontName
             fontSize = Int(newValue.pointSize)
         }
     }
-
     static var fontColor: Color {
         get {
             if let returnFontColor = UserDefaults.standard.data(forKey: Constants.FontColorKey),
@@ -501,7 +452,6 @@ public enum UserDefaultsManagement {
             }
         }
     }
-
     static var bgColor: Color {
         get {
             if let returnBgColor = UserDefaults.standard.data(forKey: Constants.BgColorKey),
@@ -518,13 +468,11 @@ public enum UserDefaultsManagement {
             }
         }
     }
-
     static var iCloudDocumentsContainer: URL? {
         if let iCloudDocumentsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents").resolvingSymlinksInPath() {
             if !FileManager.default.fileExists(atPath: iCloudDocumentsURL.path, isDirectory: nil) {
                 do {
                     try FileManager.default.createDirectory(at: iCloudDocumentsURL, withIntermediateDirectories: true, attributes: nil)
-
                     return iCloudDocumentsURL.resolvingSymlinksInPath()
                 } catch {
                     print("Home directory creation: \(error)")
@@ -533,10 +481,8 @@ public enum UserDefaultsManagement {
                 return iCloudDocumentsURL.resolvingSymlinksInPath()
             }
         }
-
         return nil
     }
-
     static var localDocumentsContainer: URL? {
         if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
             let miaoyanPath: String = path + "/MiaoYan"
@@ -547,7 +493,6 @@ public enum UserDefaultsManagement {
         }
         return nil
     }
-
     static var storagePath: String? {
         get {
             if let storagePath = UserDefaults.standard.object(forKey: Constants.StoragePathKey) {
@@ -557,11 +502,9 @@ public enum UserDefaultsManagement {
                     print("Storage path not accessible, settings resettled to default")
                 }
             }
-
             if let iCloudDocumentsURL = iCloudDocumentsContainer {
                 return iCloudDocumentsURL.path
             }
-
             #if os(iOS)
                 return localDocumentsContainer?.path
             #elseif CLOUDKIT && os(macOS)
@@ -574,33 +517,104 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.StoragePathKey)
         }
     }
-
     static var storageUrl: URL? {
         if let path = storagePath {
             let expanded = NSString(string: path).expandingTildeInPath
-
             return URL(fileURLWithPath: expanded).resolvingSymlinksInPath()
         }
-
         return nil
     }
-
-    static var preview: Bool {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.Preview) as? Bool {
-                return result
-            }
-            return false
+    // MARK: - Editor Mode Management
+    /// Editor mode enumeration
+    enum EditorMode: String, CaseIterable {
+        case normal = "normal"  // Normal editing mode
+        case preview = "preview"  // Preview mode
+        case presentation = "presentation"  // Presentation mode
+        case ppt = "ppt"  // PPT mode
+    }
+    /// Editor state manager - internal implementation
+    private class EditorStateManager {
+        static let shared = EditorStateManager()
+        private var _currentMode: EditorMode = .normal
+        private init() {
+            // Reset to normal mode on each startup, don't read from UserDefaults
+            _currentMode = .normal
         }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.Preview)
+        var currentMode: EditorMode {
+            get { return _currentMode }
+            set {
+                let oldMode = _currentMode
+                _currentMode = newValue
+                // Send mode change notification
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(
+                        name: .editorModeChanged,
+                        object: newValue,
+                        userInfo: ["previousMode": oldMode]
+                    )
+                }
+            }
+        }
+        var isPreviewMode: Bool { return _currentMode == .preview || _currentMode == .ppt }
+        var isPresentationMode: Bool { return _currentMode == .presentation || _currentMode == .ppt }
+        var isPPTMode: Bool { return _currentMode == .ppt }
+        var isInSpecialMode: Bool { return _currentMode != .normal }
+        var canUseMenu: Bool { return _currentMode != .presentation && _currentMode != .ppt }
+        func setMode(_ mode: EditorMode) {
+            currentMode = mode
+        }
+        func reset() {
+            currentMode = .normal
         }
     }
-
-    static var presentation = false
-
-    static var magicPPT = false
-
+    // Public interface - non-persistent state, reset on each startup
+    static var preview: Bool {
+        get {
+            return EditorStateManager.shared.isPreviewMode
+        }
+        set {
+            if newValue && !EditorStateManager.shared.isPPTMode {
+                EditorStateManager.shared.setMode(.preview)
+            } else if !newValue && EditorStateManager.shared.currentMode == .preview {
+                EditorStateManager.shared.setMode(.normal)
+            }
+        }
+    }
+    static var presentation: Bool {
+        get {
+            return EditorStateManager.shared.isPresentationMode
+        }
+        set {
+            if newValue && !EditorStateManager.shared.isPPTMode {
+                EditorStateManager.shared.setMode(.presentation)
+            } else if !newValue && EditorStateManager.shared.currentMode == .presentation {
+                EditorStateManager.shared.setMode(.normal)
+            }
+        }
+    }
+    static var magicPPT: Bool {
+        get {
+            return EditorStateManager.shared.isPPTMode
+        }
+        set {
+            EditorStateManager.shared.setMode(newValue ? .ppt : .normal)
+        }
+    }
+    // Convenience properties
+    static var isInSpecialMode: Bool {
+        return EditorStateManager.shared.isInSpecialMode
+    }
+    static var canUseMenu: Bool {
+        return EditorStateManager.shared.canUseMenu
+    }
+    // Reset editor state
+    static func resetEditorState() {
+        EditorStateManager.shared.reset()
+    }
+    // Get current editor mode
+    static var currentEditorMode: EditorMode {
+        return EditorStateManager.shared.currentMode
+    }
     static var lastSync: Date? {
         get {
             if let sync = UserDefaults.standard.object(forKey: "lastSync") {
@@ -613,7 +627,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: "lastSync")
         }
     }
-
     static var cellViewFrameOriginY: CGFloat? {
         get {
             if let value = UserDefaults.standard.object(forKey: Constants.CellFrameOriginY) {
@@ -625,7 +638,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.CellFrameOriginY)
         }
     }
-
     static var sort: SortBy {
         get {
             if let result = UserDefaults.standard.object(forKey: "sortBy"), let sortBy = SortBy(rawValue: result as! String) {
@@ -638,7 +650,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue.rawValue, forKey: "sortBy")
         }
     }
-
     static var lastSelectedURL: URL? {
         get {
             if let path = UserDefaults.standard.object(forKey: Constants.LastSelectedPath) as? String, let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) {
@@ -654,9 +665,7 @@ public enum UserDefaultsManagement {
             }
         }
     }
-
     static var restoreCursorPosition = true
-
     static var imagesWidth: Float {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.ImagesWidthKey) {
@@ -668,7 +677,6 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.ImagesWidthKey)
         }
     }
-
     static var fileContainer: NoteContainer {
         get {
             #if SHARE_EXT
@@ -677,7 +685,6 @@ public enum UserDefaultsManagement {
                     return container
                 }
             #endif
-
             if let result = UserDefaults.standard.object(forKey: Constants.NoteContainer) as? Int, let container = NoteContainer(rawValue: result) {
                 return container
             }
@@ -687,58 +694,48 @@ public enum UserDefaultsManagement {
             #if os(iOS)
                 UserDefaults(suiteName: "group.miaoyan-manager")?.set(newValue.rawValue, forKey: Constants.SharedContainerKey)
             #endif
-
             UserDefaults.standard.set(newValue.rawValue, forKey: Constants.NoteContainer)
         }
     }
-
     static var projects: [URL] {
         get {
             guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else {
                 return []
             }
-
             if let result = defaults.object(forKey: Constants.ProjectsKey) as? Data, let urls = try? NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSArray.self, NSURL.self], from: result) as? [URL] {
                 return urls
             }
-
             return []
         }
         set {
             guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else {
                 return
             }
-
             let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false)
             defaults.set(data, forKey: Constants.ProjectsKey)
         }
     }
-
     static var importURLs: [URL] {
         get {
             guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else {
                 return []
             }
-
             if let result = defaults.object(forKey: Constants.ImportURLsKey) as? Data,
                 let urls = try? NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSArray.self, NSURL.self], from: result) as? [URL]
             {
                 return urls
             }
-
             return []
         }
         set {
             guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else {
                 return
             }
-
             if let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false) {
                 defaults.set(data, forKey: Constants.ImportURLsKey)
             }
         }
     }
-
     static var markdownPreviewCSS: URL? {
         get {
             if let path = UserDefaults.standard.object(forKey: Constants.MarkdownPreviewCSS) as? String,
@@ -748,7 +745,6 @@ public enum UserDefaultsManagement {
                     return URL(string: "file://" + encodedPath)
                 }
             }
-
             return nil
         }
         set {
@@ -759,7 +755,6 @@ public enum UserDefaultsManagement {
             }
         }
     }
-
     static var notesTableScrollPosition: CGFloat {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.NotesTableScrollPosition) as? CGFloat {

@@ -115,7 +115,7 @@ extension NSViewController {
     // Generate the message component of the toast
 
     fileprivate func createTextLabel(message: String) -> NSTextField {
-        let tf = NSTextField(frame: NSMakeRect(0, 0, 220, 18))
+        let tf = NSTextField(frame: NSRect(x: 0, y: 0, width: 220, height: 18))
         tf.stringValue = message
         let stf = styleTextLabel(tf: tf)
 

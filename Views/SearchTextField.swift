@@ -45,7 +45,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     }
 
     override var cancelButtonBounds: NSRect {
-        NSZeroRect
+        NSRect.zero
     }
 
     override func textDidEndEditing(_ notification: Notification) {
@@ -55,10 +55,6 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         }
     }
 
-    override func mouseDown(with event: NSEvent) {
-        super.mouseDown(with: event)
-    }
-
     override func keyUp(with event: NSEvent) {
         if event.keyCode == kVK_DownArrow {
             vcDelegate.focusTable()
@@ -66,7 +62,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
             return
         }
 
-        if event.keyCode == kVK_LeftArrow && stringValue.count == 0 {
+        if event.keyCode == kVK_LeftArrow && stringValue.isEmpty {
             vcDelegate.storageOutlineView.window?.makeFirstResponder(vcDelegate.storageOutlineView)
             vcDelegate.storageOutlineView.selectRowIndexes([1], byExtendingSelection: false)
             return
@@ -87,7 +83,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         case "moveDown:":
             if let editor = currentEditor() {
                 let query = editor.string.prefix(editor.selectedRange.location)
-                if query.count == 0 {
+                if query.isEmpty {
                     return false
                 }
                 stringValue = String(query)
@@ -102,7 +98,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
             textView.deleteBackward(self)
             return true
         case "insertNewline:", "insertNewlineIgnoringFieldEditor:":
-            if let note = vcDelegate.editArea.getSelectedNote(), stringValue.count > 0, note.title.lowercased().starts(with: searchQuery.lowercased()) {
+            if let note = vcDelegate.editArea.getSelectedNote(), !stringValue.isEmpty, note.title.lowercased().starts(with: searchQuery.lowercased()) {
                 vcDelegate.focusEditArea()
             }
 

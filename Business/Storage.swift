@@ -21,7 +21,7 @@ class Storage {
 
     var allowedExtensions = [
         "md", "markdown",
-        "txt",
+        "txt"
     ]
 
     var pinned: Int = 0
@@ -29,14 +29,14 @@ class Storage {
     #if os(iOS)
         let initialFiles = [
             "MiaoYan - Readme.md",
-            "MiaoYan - Code Highlighting.md",
+            "MiaoYan - Code Highlighting.md"
         ]
     #else
         let initialFiles = [
             "介绍妙言.md",
             "妙言 PPT.md",
             "Introduction to MiaoYan.md",
-            "MiaoYan PPT.md",
+            "MiaoYan PPT.md"
         ]
     #endif
 
@@ -368,7 +368,7 @@ class Storage {
 
     func sortNotes(noteList: [Note], filter: String, project: Project? = nil, operation: BlockOperation? = nil) -> [Note] {
         var searchQuery = ""
-        if filter.count > 0 {
+        if !filter.isEmpty {
             searchQuery = filter.lowercased()
         }
 
@@ -377,7 +377,7 @@ class Storage {
                 return false
             }
 
-            if filter.count > 0, $0.title.lowercased().starts(with: searchQuery) {
+            if !filter.isEmpty, $0.title.lowercased().starts(with: searchQuery) {
                 if $0.title.lowercased().starts(with: searchQuery), $1.title.lowercased().starts(with: searchQuery) {
                     return sortQuery(note: $0, next: $1, project: project)
                 }
@@ -429,7 +429,7 @@ class Storage {
 
             let note = Note(url: url.resolvingSymlinksInPath(), with: item)
 
-            if url.pathComponents.count == 0 {
+            if url.pathComponents.isEmpty {
                 continue
             }
 
@@ -628,7 +628,7 @@ class Storage {
     }
 
     func removeNotes(notes: [Note], fsRemove: Bool = true, completely: Bool = false, completion: @escaping ([URL: URL]?) -> Void) {
-        guard notes.count > 0 else {
+        guard !notes.isEmpty else {
             completion(nil)
             return
         }
@@ -647,7 +647,7 @@ class Storage {
             }
         }
 
-        if removed.count > 0 {
+        if !removed.isEmpty {
             completion(removed)
         } else {
             completion(nil)
@@ -891,7 +891,7 @@ class Storage {
                 Project(url: $0)
             }
 
-        guard projects.count > 0 else {
+        guard !projects.isEmpty else {
             return
         }
 

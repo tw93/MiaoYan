@@ -27,7 +27,6 @@ class NoteCellView: NSTableCellView {
         self.note = note
     }
 
-
     // these views' color when the cell is selected.
     override var backgroundStyle: NSView.BackgroundStyle {
         set {

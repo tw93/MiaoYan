@@ -144,7 +144,7 @@ class ImagePreviewWindow: NSWindow {
         request.timeoutInterval = 8.0  // 8秒超时
         request.cachePolicy = .returnCacheDataElseLoad  // 使用系统缓存
 
-        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, _, error in
             defer {
                 self?.currentLoadingTask = nil
             }
@@ -213,7 +213,6 @@ class ImagePreviewWindow: NSWindow {
             })
         }
     }
-
 
     // 计算图片尺寸的公共方法
     private func calculateImageSize(_ image: NSImage) -> CGSize {

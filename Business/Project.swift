@@ -44,7 +44,7 @@ public class Project: Equatable {
 
         var localizedName: AnyObject?
         try? (url as NSURL).getResourceValue(&localizedName, forKey: URLResourceKey.localizedNameKey)
-        if let name = localizedName as? String, name.count > 0 {
+        if let name = localizedName as? String, !name.isEmpty {
             self.label = name
         }
 
@@ -71,7 +71,7 @@ public class Project: Equatable {
 
         var localizedName: AnyObject?
         try? (url as NSURL).getResourceValue(&localizedName, forKey: URLResourceKey.localizedNameKey)
-        if let name = localizedName as? String, name.count > 0 {
+        if let name = localizedName as? String, !name.isEmpty {
             self.label = name
         }
     }
@@ -104,12 +104,12 @@ public class Project: Equatable {
                 "sortBy": sortBySettings.rawValue,
                 "sortDirection": sortDirectionSettings.rawValue,
                 "showInCommon": showInCommon,
-                "showInSidebar": showInSidebar,
+                "showInSidebar": showInSidebar
             ] as [String: Any]
 
         if let relativePath = getRelativePath() {
             let keyStore = NSUbiquitousKeyValueStore()
-            let key = relativePath.count == 0 ? "root-directory" : relativePath
+            let key = relativePath.isEmpty ? "root-directory" : relativePath
 
             keyStore.set(data, forKey: key)
             keyStore.synchronize()
@@ -122,7 +122,7 @@ public class Project: Equatable {
     public func loadSettings() {
         if let relativePath = getRelativePath() {
             let keyStore = NSUbiquitousKeyValueStore()
-            let key = relativePath.count == 0 ? "root-directory" : relativePath
+            let key = relativePath.isEmpty ? "root-directory" : relativePath
 
             if let settings = keyStore.dictionary(forKey: key) {
                 if let common = settings["showInCommon"] as? Bool {

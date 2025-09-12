@@ -14,7 +14,7 @@ class Sidebar {
         let notes = SidebarItem(name: NSLocalizedString("MiaoYan", comment: ""), type: .All, icon: getImage(named: "home\(night).png"))
         system.append(notes)
 
-        if system.count > 0 {
+        if !system.isEmpty {
             list = system
         }
 
@@ -42,7 +42,7 @@ class Sidebar {
 
         list.append(contentsOf: categoryItems)
 
-        if storage.getAllTrash().count > 0 {
+        if !storage.getAllTrash().isEmpty {
             let trashProject = Storage.sharedInstance().getDefaultTrash()
             let trash = SidebarItem(name: NSLocalizedString("Trash", comment: ""), project: trashProject, type: .Trash, icon: getImage(named: "trash\(night)"))
             list.append(trash)
