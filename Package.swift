@@ -28,7 +28,7 @@ let package = Package(
         // Global keyboard shortcuts for macOS
         .package(url: "https://github.com/sindresorhus/KeyboardShortcuts", from: "2.3.0"),
         // Swift wrapper for Prettier code formatter
-        .package(url: "https://github.com/simonbs/Prettier.git", from: "0.2.1")
+        .package(url: "https://github.com/simonbs/Prettier.git", from: "0.2.1"),
     ],
     targets: [
         // No targets defined - this package is used only for dependency management

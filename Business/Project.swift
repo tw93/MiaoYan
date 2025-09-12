@@ -104,7 +104,7 @@ public class Project: Equatable {
                 "sortBy": sortBySettings.rawValue,
                 "sortDirection": sortDirectionSettings.rawValue,
                 "showInCommon": showInCommon,
-                "showInSidebar": showInSidebar
+                "showInSidebar": showInSidebar,
             ] as [String: Any]
 
         if let relativePath = getRelativePath() {

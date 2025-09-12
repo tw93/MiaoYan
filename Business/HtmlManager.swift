@@ -237,7 +237,7 @@ class HtmlManager {
         do {
             let htmlPatterns = [
                 "<(?:img|br|hr|input|meta|link|area|base|col|embed|source|track|wbr)\\s*[^>]*/?\\s*>",
-                "<(\\w+)[^>]*>[^<]*</\\1>"
+                "<(\\w+)[^>]*>[^<]*</\\1>",
             ]
 
             for pattern in htmlPatterns {

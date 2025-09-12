@@ -68,7 +68,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 "miaoyanBuild": Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "unknown",
                 "hostPlatform": "macOS",
                 "macosVersion": ProcessInfo.processInfo.operatingSystemVersionString,
-                "displayLanguage": NSLocale.preferredLanguages.first ?? "unknown"
+                "displayLanguage": NSLocale.preferredLanguages.first ?? "unknown",
             ]
         }
         #if DEBUG
@@ -103,7 +103,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 "PreviewWidth": UserDefaultsManagement.previewWidth,
                 "PreviewLocation": UserDefaultsManagement.previewLocation,
                 "ButtonShow": UserDefaultsManagement.buttonShow,
-                "EditorLineBreak": UserDefaultsManagement.editorLineBreak
+                "EditorLineBreak": UserDefaultsManagement.editorLineBreak,
             ])
     }
     func applicationWillTerminate(_ aNotification: Notification) {

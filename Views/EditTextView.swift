@@ -133,7 +133,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             if #available(OSX 10.13, *) {
                 linkTextAttributes = [
                     .foregroundColor: NSColor(named: "highlight")!,
-                    .cursor: NSCursor.pointingHand
+                    .cursor: NSCursor.pointingHand,
                 ]
             }
         } else {
@@ -813,7 +813,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
                     kVK_UpArrow,
                     kVK_DownArrow,
                     kVK_LeftArrow,
-                    kVK_RightArrow
+                    kVK_RightArrow,
                 ].contains(Int(event.keyCode)))
         else {
             super.keyDown(with: event)
