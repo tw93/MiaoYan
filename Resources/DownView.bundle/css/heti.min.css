@@ -178,7 +178,7 @@ a,
   margin-block-end: 1.6em;
   padding-inline-start: 16px;
   padding-inline-end: 16px;
-  border-radius: 4px;
+  border-radius: 8px;
   color: #777;
   border-left: 4px solid #f1f3f4;
   line-height: 1;
@@ -222,7 +222,7 @@ blockquote blockquote {
   font-family: var(--text-font);
   white-space: pre;
   word-wrap: normal;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: rgba(0, 0, 0, 0.03);
 }
 
@@ -382,7 +382,7 @@ blockquote blockquote {
 .heti li > code {
   background-color: #eef1f2;
   padding: 2px;
-  border-radius: 4px;
+  border-radius: 8px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -1124,11 +1124,11 @@ code.language-mermaid .edgeLabel{
 .heti pre.plantuml-image-container {
   padding: 0;
   background: transparent;
-  border-radius: none;
+  border-radius: 0;
 }
 
 .heti pre.plantuml-image-container .plantuml-image {
-  border-radius: 4px;
+  border-radius: 8px;
 }
 
 .heti pre.mermaid-image-container {
@@ -1200,8 +1200,15 @@ img.emoji {
   visibility: visible;
   width: 100%;
   height: var(--markmap-height);
-  font-family: var(--text-font) !important;
-  font-size: 0.8em !important;
+  font-family: var(--text-font), -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif !important;
+}
+
+.markmap svg {
+  background: transparent !important;
+}
+
+.markmap .markmap-node text {
+  font-family: var(--text-font), -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif !important;
 }
 
 

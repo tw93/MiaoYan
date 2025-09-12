@@ -225,8 +225,6 @@ Alice --> MadHatter : joins tea party
 
 ```markmap
 # Alice in Wonderland
-
-## Characters
 - **Alice**
   - Curious
   - Brave
@@ -247,34 +245,6 @@ Alice --> MadHatter : joins tea party
   - "Off with their heads!"
   - Croquet
   - Playing cards
-
-## Locations
-- **Rabbit Hole**
-  - Deep fall
-  - Strange objects
-- **Hall of Doors**
-  - Golden key
-  - Size problems
-- **Garden**
-  - Beautiful flowers
-  - Playing card gardeners
-- **Mad Tea Party**
-  - Endless tea time
-  - Musical chairs
-- **Queen's Court**
-  - Croquet ground
-  - Trial scene
-
-## Themes
-- **Growing Up**
-  - Physical changes
-  - Mental development
-- **Logic vs Nonsense**
-  - Impossible situations
-  - Dream logic
-- **Social Criticism**
-  - Authority figures
-  - Victorian society
 ```
 
 ---
