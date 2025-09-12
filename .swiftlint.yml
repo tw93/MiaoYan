@@ -1,6 +1,9 @@
 included:
   - .   # 扫描整个项目excluded: # paths to ignore during linting. Takes precedence over `included`.
+
+excluded:
   - .build
+
 line_length:
   warning: 240
   ignores_function_declarations: true
@@ -18,6 +21,7 @@ disabled_rules:
   - type_name
   - identifier_name
   - opening_brace
+  - trailing_comma
 
 opt_in_rules:
   - empty_count

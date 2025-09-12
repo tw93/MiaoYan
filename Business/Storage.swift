@@ -21,7 +21,7 @@ class Storage {
 
     var allowedExtensions = [
         "md", "markdown",
-        "txt"
+        "txt",
     ]
 
     var pinned: Int = 0
@@ -29,14 +29,14 @@ class Storage {
     #if os(iOS)
         let initialFiles = [
             "MiaoYan - Readme.md",
-            "MiaoYan - Code Highlighting.md"
+            "MiaoYan - Code Highlighting.md",
         ]
     #else
         let initialFiles = [
             "介绍妙言.md",
             "妙言 PPT.md",
             "Introduction to MiaoYan.md",
-            "MiaoYan PPT.md"
+            "MiaoYan PPT.md",
         ]
     #endif
 

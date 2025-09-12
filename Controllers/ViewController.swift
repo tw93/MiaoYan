@@ -346,7 +346,7 @@ class ViewController:
         editArea.defaultParagraphStyle = NSTextStorage.getParagraphStyle()
         editArea.typingAttributes = [
             .font: UserDefaultsManagement.noteFont!,
-            .paragraphStyle: NSTextStorage.getParagraphStyle()
+            .paragraphStyle: NSTextStorage.getParagraphStyle(),
         ]
         titleLabel.font = UserDefaultsManagement.titleFont.titleBold()
         emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont

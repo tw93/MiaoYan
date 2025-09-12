@@ -24,7 +24,7 @@ class SidebarProjectView: NSOutlineView,
         registerForDraggedTypes([
             NSPasteboard.PasteboardType(rawValue: "public.data"),
             NSPasteboard.PasteboardType(rawValue: "notesTable"),
-            NSPasteboard.PasteboardType(rawValue: "SidebarProjectReorder")
+            NSPasteboard.PasteboardType(rawValue: "SidebarProjectReorder"),
         ])
     }
 

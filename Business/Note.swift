@@ -656,7 +656,7 @@ public class Note: NSObject {
             let ext = getExtensionForContainer()
             let textBundle = FileWrapper(directoryWithFileWrappers: [
                 "text.\(ext)": fileWrapper,
-                "info.json": infoWrapper
+                "info.json": infoWrapper,
             ])
 
             let assetsWrapper = imagesWrapper ?? getAssetsFileWrapper()
@@ -762,7 +762,7 @@ public class Note: NSObject {
 
         return [
             .documentType: NSAttributedString.DocumentType.plain,
-            .characterEncoding: NSNumber(value: encoding.rawValue)
+            .characterEncoding: NSNumber(value: encoding.rawValue),
         ]
     }
 
@@ -776,7 +776,7 @@ public class Note: NSObject {
         } else {
             options = [
                 .documentType: NSAttributedString.DocumentType.plain,
-                .characterEncoding: NSNumber(value: String.Encoding.utf8.rawValue)
+                .characterEncoding: NSNumber(value: String.Encoding.utf8.rawValue),
             ]
         }
 
