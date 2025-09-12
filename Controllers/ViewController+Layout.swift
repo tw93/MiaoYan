@@ -7,13 +7,13 @@ extension ViewController {
 
     var sidebarWidth: CGFloat {
         guard let splitView = sidebarSplitView,
-            splitView.subviews.count > 0
+            !splitView.subviews.isEmpty
         else { return 0 }
         return splitView.subviews[0].frame.width
     }
 
     var notelistWidth: CGFloat {
-        guard splitView.subviews.count > 0 else { return 0 }
+        guard !splitView.subviews.isEmpty else { return 0 }
         return splitView.subviews[0].frame.width
     }
 

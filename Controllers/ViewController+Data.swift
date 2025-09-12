@@ -81,7 +81,7 @@ extension ViewController {
                 return
             }
 
-            guard self.notesTableView.noteList.count > 0 else {
+            guard !self.notesTableView.noteList.isEmpty else {
                 DispatchQueue.main.async {
                     // 在单独模式下不清除编辑器内容
                     if !UserDefaultsManagement.isSingleMode {
@@ -94,7 +94,7 @@ extension ViewController {
                 return
             }
 
-            let _ = self.notesTableView.noteList[0]
+            _ = self.notesTableView.noteList[0]
 
             DispatchQueue.main.async {
                 // 在单独模式下保存当前选择状态
@@ -102,8 +102,8 @@ extension ViewController {
 
                 self.notesTableView.reloadData()
                 if search {
-                    if self.notesTableView.noteList.count > 0 {
-                        if filter.count > 0 {
+                    if !self.notesTableView.noteList.isEmpty {
+                        if !filter.isEmpty {
                             self.selectNullTableRow(timer: true)
                         } else {
                             // 在单独模式下不清除编辑器内容
@@ -267,7 +267,7 @@ extension ViewController {
         for note in updateViews {
             notesTableView.reloadRow(note: note)
 
-            if search.stringValue.count == 0 {
+            if search.stringValue.isEmpty {
                 if UserDefaultsManagement.sort == .modificationDate, UserDefaultsManagement.sortDirection == true {
                     if let index = notesTableView.noteList.firstIndex(of: note) {
                         moveNoteToTop(note: index)
@@ -299,7 +299,7 @@ extension ViewController {
         notesTableView.scrollRowToVisible(0)
 
         // 确保内容加载和标题栏显示
-        if notesTableView.noteList.count > 0 {
+        if !notesTableView.noteList.isEmpty {
             let note = notesTableView.noteList[0]
             editArea.fill(note: note, highlight: true)
         }

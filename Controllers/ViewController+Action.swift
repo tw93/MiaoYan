@@ -19,7 +19,7 @@ extension ViewController {
         guard let positioningView = selectedCell else {
             return
         }
-        let positioningRect = NSZeroRect
+        let positioningRect = NSRect.zero
 
         let preferredEdge = NSRectEdge(rectEdge: .maxXEdge)
 
@@ -101,7 +101,7 @@ extension ViewController {
 
         let value = sender.stringValue
 
-        if value.count > 0 {
+        if !value.isEmpty {
             search.stringValue = String()
             editArea.clear()
             createNote(name: value, content: "")
@@ -210,7 +210,7 @@ extension ViewController {
             return
         }
 
-        guard value.count > 0 else {
+        guard !value.isEmpty else {
             sender.stringValue = note.getTitleWithoutLabel()
             return
         }
@@ -484,7 +484,7 @@ extension ViewController {
                     move(note: note, from: imageMeta.url, imagePath: imageMeta.path, to: project)
                 }
 
-                if imagesMeta.count > 0 {
+                if !imagesMeta.isEmpty {
                     note.save()
                 }
             }
