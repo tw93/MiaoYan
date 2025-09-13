@@ -76,8 +76,6 @@
 /* No comment provided by engineer. */
 "Edit Link…" = "編輯連結…";
 
-/* Sidebar label */
-"MiaoYan" = "妙言";
 
 /* Menu */
 "Move" = "移動";
@@ -129,4 +127,10 @@
 
 /* Menu */
 "View" = "顯示方式";
+
+/* Font Names */
+"font.tsanger" = "倉耳今楷";
+"font.lxgw" = "霞鶩文楷";
+"font.system" = "系統字體";
+"font.times" = "新羅馬體";
 

@@ -109,7 +109,6 @@
 
 "Search" = "検索";
 
-"MiaoYan" = "妙言";
 
 "🎉 Automatic typesetting succeeded~" = "🎉 自動組版完了しました。";
 
@@ -149,3 +148,9 @@
 
 "Restart to MiaoYan to take effect" = "妙言を再起動して有効にします。";
 "Confirm" = "確認";
+
+/* Font Names */
+"font.tsanger" = "蒼耳今楷";
+"font.lxgw" = "霞鶩文楷";
+"font.system" = "システムフォント";
+"font.times" = "Times New Roman";

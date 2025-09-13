@@ -106,7 +106,6 @@
 
 "Search" = "搜索";
 
-"MiaoYan" = "妙言";
 
 "🎉 Automatic typesetting succeeded~" = "🎉 自动化排版完成~";
 
@@ -144,5 +143,11 @@
 "Edit Link…" = "编辑链接";
 "Remove Link" = "移除链接";
 
-"Restart to MiaoYan to take effect" = "重新启动妙言后生效";
-"Confirm" = "确定";
+"Restart to MiaoYan to take effect" = "Restart MiaoYan to take effect";
+"Confirm" = "Confirm";
+
+/* Font Names */
+"font.tsanger" = "Tsanger JinKai";
+"font.lxgw" = "LXGW WenKai";
+"font.system" = "System Font";
+"font.times" = "Times New Roman";

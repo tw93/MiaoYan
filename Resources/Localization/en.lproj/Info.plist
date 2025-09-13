@@ -251,7 +251,7 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Markdwon</string>
+			<string>Markdown</string>
 			<key>UTTypeIconFile</key>
 			<string>Markdown</string>
 			<key>UTTypeIdentifier</key>

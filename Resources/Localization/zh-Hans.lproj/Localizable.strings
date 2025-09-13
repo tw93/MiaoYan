@@ -108,7 +108,6 @@
 
 "Search" = "搜索";
 
-"MiaoYan" = "妙言";
 
 "🎉 Automatic typesetting succeeded~" = "🎉 自动化排版完成~";
 
@@ -148,3 +147,9 @@
 
 "Restart to MiaoYan to take effect" = "重新启动妙言后生效";
 "Confirm" = "确定";
+
+/* Font Names */
+"font.tsanger" = "仓耳今楷";
+"font.lxgw" = "霞鹜文楷";
+"font.system" = "系统字体";
+"font.times" = "新罗马体";

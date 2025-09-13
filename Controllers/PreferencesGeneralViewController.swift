@@ -2,9 +2,48 @@ import Cocoa
 import CoreData
 
 class PreferencesGeneralViewController: NSViewController {
+
+    // 字体配置枚举
+    private enum FontType: String, CaseIterable {
+        case tsanger = "TsangerJinKai02-W04"
+        case lxgw = "LXGW WenKai Screen"
+        case system = "SF Pro Text"
+        case times = "Times New Roman"
+
+        var editorFontName: String {
+            self == .system ? "SF Mono" : rawValue
+        }
+
+        var windowFontName: String {
+            self == .system ? "SF Pro Text" : rawValue
+        }
+
+        var previewFontName: String {
+            self == .system ? "SF Pro Text" : rawValue
+        }
+
+        static func from(actualFontName: String) -> FontType? {
+            return allCases.first {
+                $0.rawValue == actualFontName || $0.editorFontName == actualFontName || $0.windowFontName == actualFontName || $0.previewFontName == actualFontName
+            }
+        }
+
+        var isAvailable: Bool {
+            return Font(name: rawValue, size: 12) != nil || Font(name: editorFontName, size: 12) != nil
+        }
+    }
+
     override func viewWillAppear() {
         super.viewWillAppear()
-        preferredContentSize = NSSize(width: 476, height: 413)
+
+        // 设置窗口的首选尺寸和最小尺寸
+        preferredContentSize = NSSize(width: 520, height: 413)
+
+        // 设置窗口最小尺寸，防止在边缘时被挤压
+        if let window = view.window {
+            window.minSize = NSSize(width: 520, height: 413)
+            window.contentMinSize = NSSize(width: 520, height: 413)
+        }
     }
 
     @IBOutlet var windowFontName: NSPopUpButton!
@@ -33,17 +72,11 @@ class PreferencesGeneralViewController: NSViewController {
     @IBOutlet var buttonShow: NSPopUpButton!
     @IBOutlet var codeBackground: NSPopUpButton!
 
-    let storage = Storage.sharedInstance()
+    // 修复缺失的outlet
+    @IBOutlet var popUpWidthConstraint: NSLayoutConstraint!
+    @IBOutlet var previewWith: NSPopUpButton!
 
-    override func viewDidLoad() {
-        // 为了隐藏xcode警告的被迫操作
-        editorFontWidthConstraint.constant = 100.0
-        previewFontWidthConstraint.constant = 100.0
-        windowFontWidthConstraint.constant = 100.0
-        languageFontWidthConstraint.constant = 100.0
-        codeFontWidthConstraint.constant = 100.0
-        super.viewDidLoad()
-    }
+    let storage = Storage.sharedInstance()
 
     func refreshEditor() {
         guard let vc = ViewController.shared() else { return }
@@ -77,14 +110,18 @@ class PreferencesGeneralViewController: NSViewController {
     }
 
     @IBAction func editorFontNameClick(_ sender: NSPopUpButton) {
-        guard let item = sender.selectedItem else { return }
+        guard let item = sender.selectedItem,
+            let fontType = getFontType(from: item.title)
+        else { return }
+
+        let actualFontName = fontType.editorFontName
 
         // 处理好代码字体变化
         if UserDefaultsManagement.codeFontName == UserDefaultsManagement.fontName {
-            UserDefaultsManagement.codeFontName = item.title
+            UserDefaultsManagement.codeFontName = actualFontName
             NotesTextProcessor.codeFont = Font(name: UserDefaultsManagement.codeFontName, size: CGFloat(UserDefaultsManagement.fontSize))
         }
-        UserDefaultsManagement.fontName = item.title
+        UserDefaultsManagement.fontName = actualFontName
         refreshEditor()
     }
 
@@ -102,16 +139,24 @@ class PreferencesGeneralViewController: NSViewController {
     }
 
     @IBAction func windowFontNameClick(_ sender: NSPopUpButton) {
-        guard let item = sender.selectedItem else { return }
-        if UserDefaultsManagement.windowFontName == item.title { return }
-        UserDefaultsManagement.windowFontName = item.title
+        guard let item = sender.selectedItem,
+            let fontType = getFontType(from: item.title)
+        else { return }
+
+        let actualFontName = fontType.windowFontName
+
+        if UserDefaultsManagement.windowFontName == actualFontName { return }
+        UserDefaultsManagement.windowFontName = actualFontName
         restart()
     }
 
     @IBAction func codeFontNameClick(_ sender: NSPopUpButton) {
         guard let item = sender.selectedItem else { return }
+
         if item.title == "Editor Font" {
             UserDefaultsManagement.codeFontName = UserDefaultsManagement.fontName
+        } else if let fontType = getFontType(from: item.title) {
+            UserDefaultsManagement.codeFontName = fontType.editorFontName
         } else {
             UserDefaultsManagement.codeFontName = item.title
         }
@@ -133,8 +178,12 @@ class PreferencesGeneralViewController: NSViewController {
     }
 
     @IBAction func previewFontNameClick(_ sender: NSPopUpButton) {
-        guard let item = sender.selectedItem else { return }
-        UserDefaultsManagement.previewFontName = item.title
+        guard let item = sender.selectedItem,
+            let fontType = getFontType(from: item.title)
+        else { return }
+
+        let actualFontName = fontType.previewFontName
+        UserDefaultsManagement.previewFontName = actualFontName
         refreshPreview()
     }
 
@@ -172,6 +221,12 @@ class PreferencesGeneralViewController: NSViewController {
     override func viewDidAppear() {
         view.window!.title = NSLocalizedString("Preferences", comment: "")
 
+        // 设置本地化的字体名称
+        setupLocalizedFontNames()
+
+        // 清空现有语言选项并重新设置
+        languagePopUp.removeAllItems()
+
         let languages = [
             LanguageType(rawValue: 0x00),
             LanguageType(rawValue: 0x01),
@@ -203,9 +258,15 @@ class PreferencesGeneralViewController: NSViewController {
         editorFontSize.selectItem(withTitle: String(UserDefaultsManagement.fontSize))
         previewFontSize.selectItem(withTitle: String(UserDefaultsManagement.previewFontSize))
         presentationFontSize.selectItem(withTitle: String(UserDefaultsManagement.presentationFontSize))
-        editorFontName.selectItem(withTitle: String(UserDefaultsManagement.fontName))
-        windowFontName.selectItem(withTitle: String(UserDefaultsManagement.windowFontName))
-        previewFontName.selectItem(withTitle: String(UserDefaultsManagement.previewFontName))
+
+        // 使用FontType枚举将实际字体名称转换为显示名称
+        let editorDisplayName = FontType.from(actualFontName: UserDefaultsManagement.fontName).map { getLocalizedFontName(for: $0) } ?? UserDefaultsManagement.fontName
+        let windowDisplayName = FontType.from(actualFontName: UserDefaultsManagement.windowFontName).map { getLocalizedFontName(for: $0) } ?? UserDefaultsManagement.windowFontName
+        let previewDisplayName = FontType.from(actualFontName: UserDefaultsManagement.previewFontName).map { getLocalizedFontName(for: $0) } ?? UserDefaultsManagement.previewFontName
+
+        editorFontName.selectItem(withTitle: editorDisplayName)
+        windowFontName.selectItem(withTitle: windowDisplayName)
+        previewFontName.selectItem(withTitle: previewDisplayName)
         picPopUp.selectItem(withTitle: String(UserDefaultsManagement.defaultPicUpload))
         editorLineBreak.selectItem(withTitle: String(UserDefaultsManagement.editorLineBreak))
         buttonShow.selectItem(withTitle: String(UserDefaultsManagement.buttonShow))
@@ -213,6 +274,8 @@ class PreferencesGeneralViewController: NSViewController {
 
         if UserDefaultsManagement.codeFontName == UserDefaultsManagement.fontName {
             codeFontName.selectItem(withTitle: "Editor Font")
+        } else if let fontType = FontType.from(actualFontName: UserDefaultsManagement.codeFontName) {
+            codeFontName.selectItem(withTitle: getLocalizedFontName(for: fontType))
         } else {
             codeFontName.selectItem(withTitle: String(UserDefaultsManagement.codeFontName))
         }
@@ -266,6 +329,48 @@ class PreferencesGeneralViewController: NSViewController {
         UserDefaults.standard.set([type.code], forKey: "AppleLanguages")
         UserDefaults.standard.synchronize()
         restart()
+    }
+
+    private func getLocalizedFontName(for fontType: FontType) -> String {
+        let currentLanguage = UserDefaultsManagement.defaultLanguage
+
+        let fontNames: [FontType: [String]] = [
+            .tsanger: ["仓耳今楷", "Tsanger JinKai", "蒼耳今楷", "倉耳今楷"],
+            .lxgw: ["霞鹜文楷", "LXGW WenKai", "霞鶩文楷", "霞鶩文楷"],
+            .system: ["系统字体", "System Font", "システムフォント", "系統字體"],
+            .times: ["新罗马体", "Times New Roman", "Times New Roman", "新羅馬體"],
+        ]
+
+        let names = fontNames[fontType] ?? []
+        guard !names.isEmpty else { return fontType.rawValue }
+        
+        // Ensure language index is within bounds
+        let safeIndex = max(0, min(currentLanguage, names.count - 1))
+        return names[safeIndex]
+    }
+
+    private func getFontType(from displayName: String) -> FontType? {
+        for fontType in FontType.allCases where getLocalizedFontName(for: fontType) == displayName {
+            return fontType
+        }
+        return nil
+    }
+
+    private func setupLocalizedFontNames() {
+        // 按照期望的顺序设置字体列表：仓耳今楷，霞鹜文楷，新罗马体，系统字体
+        let fontOrder: [FontType] = [.tsanger, .lxgw, .times, .system]
+        let fontNames = fontOrder.map { getLocalizedFontName(for: $0) }
+
+        // 清空现有菜单项并添加新的本地化菜单项
+        editorFontName.removeAllItems()
+        previewFontName.removeAllItems()
+        windowFontName.removeAllItems()
+
+        for fontName in fontNames {
+            editorFontName.addItem(withTitle: fontName)
+            previewFontName.addItem(withTitle: fontName)
+            windowFontName.addItem(withTitle: fontName)
+        }
     }
 
     private func restart() {
