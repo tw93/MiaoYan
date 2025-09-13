@@ -15,6 +15,28 @@ import Foundation
 #endif
 
 extension NSMutableAttributedString {
+    // MARK: - Letter Spacing Support
+
+    /// Apply letter spacing to the entire attributed string
+    public func applyEditorLetterSpacing(_ spacing: CGFloat? = nil) {
+        let letterSpacing = spacing ?? UserDefaultsManagement.editorLetterSpacing
+        guard letterSpacing != 0 else { return }
+        let range = NSRange(location: 0, length: self.length)
+        addAttribute(.kern, value: letterSpacing as Any, range: range)
+    }
+
+    /// Apply letter spacing to a specific range, preserving other attributes
+    public func applyEditorLetterSpacing(in range: NSRange, spacing: CGFloat? = nil) {
+        let letterSpacing = spacing ?? UserDefaultsManagement.editorLetterSpacing
+        guard letterSpacing != 0, range.location < self.length, range.upperBound <= self.length else { return }
+        addAttribute(.kern, value: letterSpacing as Any, range: range)
+    }
+
+    /// Remove letter spacing from the entire string
+    public func removeEditorLetterSpacing() {
+        let range = NSRange(location: 0, length: self.length)
+        removeAttribute(.kern, range: range)
+    }
     public func unLoadImages(note: Note? = nil) -> NSMutableAttributedString {
         var offset = 0
         let content = mutableCopy() as? NSMutableAttributedString
