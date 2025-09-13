@@ -344,10 +344,15 @@ class ViewController:
         }
         search.font = UserDefaultsManagement.searchFont
         editArea.defaultParagraphStyle = NSTextStorage.getParagraphStyle()
-        editArea.typingAttributes = [
+        var typingAttrs: [NSAttributedString.Key: Any] = [
             .font: UserDefaultsManagement.noteFont!,
             .paragraphStyle: NSTextStorage.getParagraphStyle(),
         ]
+        // Add letter spacing if enabled
+        if UserDefaultsManagement.editorLetterSpacing != 0 {
+            typingAttrs[.kern] = UserDefaultsManagement.editorLetterSpacing
+        }
+        editArea.typingAttributes = typingAttrs
         titleLabel.font = UserDefaultsManagement.titleFont.titleBold()
         emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont
         setTableRowHeight()

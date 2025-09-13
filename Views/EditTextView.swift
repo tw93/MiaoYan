@@ -70,6 +70,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
             let paragraphStyle = NSTextStorage.getParagraphStyle()
             typingAttributes[.paragraphStyle] = paragraphStyle
             defaultParagraphStyle = paragraphStyle
+            // Ensure letter spacing is applied to typing attributes
+            if UserDefaultsManagement.editorLetterSpacing != 0 {
+                typingAttributes[.kern] = UserDefaultsManagement.editorLetterSpacing
+            }
         }
         return shouldBecomeFirstResponder
     }
@@ -300,6 +304,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
         if !saveTyping {
             typingAttributes.removeAll()
             typingAttributes[.font] = UserDefaultsManagement.noteFont
+            // Apply letter spacing to typing attributes
+            if UserDefaultsManagement.editorLetterSpacing != 0 {
+                typingAttributes[.kern] = UserDefaultsManagement.editorLetterSpacing
+            }
         }
         if UserDefaultsManagement.preview || UserDefaultsManagement.magicPPT {
             EditTextView.note = note
@@ -334,6 +342,10 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         fillHighlightLinks()
         textStorage?.updateParagraphStyle()
+        // Apply letter spacing after all formatting is complete
+        if let storage = textStorage {
+            storage.applyEditorLetterSpacing()
+        }
         restoreCursorPosition(needScrollToCursor: needScrollToCursor)
     }
     private func setTextColor() {

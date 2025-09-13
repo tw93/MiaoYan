@@ -42,9 +42,11 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         #endif
         Self.ensureBundlePreinitialized()
         load(note: note)
-        // Add background mask immediately when view hierarchy is ready
+        // Add background mask only if preview is visible when view hierarchy is ready
         DispatchQueue.main.async {
-            self.addBackgroundMaskWhenNeeded()
+            if !self.isHidden {
+                self.addBackgroundMaskWhenNeeded()
+            }
         }
     }
     @available(*, unavailable)

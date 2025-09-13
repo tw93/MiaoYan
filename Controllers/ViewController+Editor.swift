@@ -397,6 +397,8 @@ extension ViewController {
                 if let storage = editArea.textStorage {
                     NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
                     editArea.fillHighlightLinks()
+                    // Reapply letter spacing after formatting
+                    storage.applyEditorLetterSpacing()
                 }
                 let adjustedCursorOffset = HtmlManager.adjustCursorAfterRestore(originalOffset: formatResult.cursorOffset, protected: protectedContent, restored: newContent)
                 editArea.setSelectedRange(NSRange(location: adjustedCursorOffset, length: 0))
