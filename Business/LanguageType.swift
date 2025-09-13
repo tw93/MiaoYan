@@ -8,11 +8,11 @@ enum LanguageType: Int {
 
     var description: String {
         switch self.rawValue {
-        case 0x00: return "Chinese (Simplified)"
+        case 0x00: return "简体中文"
         case 0x01: return "English"
-        case 0x02: return "Japanese"
-        case 0x03: return "Chinese (Traditional)"
-        default: return "Chinese (Simplified)"
+        case 0x02: return "日本語"
+        case 0x03: return "繁體中文"
+        default: return "简体中文"
         }
     }
 
@@ -29,9 +29,9 @@ enum LanguageType: Int {
     static func withName(rawValue: String) -> LanguageType {
         switch rawValue {
         case "English": return LanguageType.English
-        case "Chinese (Simplified)": return LanguageType.Chinese
-        case "Japanese": return LanguageType.Japanese
-        case "Chinese (Traditional)": return LanguageType.ChineseTC
+        case "简体中文", "Chinese (Simplified)": return LanguageType.Chinese
+        case "日本語", "日语", "Japanese": return LanguageType.Japanese
+        case "繁體中文", "繁体中文", "Chinese (Traditional)": return LanguageType.ChineseTC
         default: return LanguageType.Chinese
         }
     }

@@ -53,6 +53,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             let size = NSSize(width: 1280, height: 700)
             mainWC.window?.setContentSize(size)
             mainWC.window?.center()
+        } else {
+            // Simple validation: only center if window is completely off-screen
+            if let window = mainWC.window {
+                let currentFrame = window.frame
+                let isOffScreen = NSScreen.screens.allSatisfy { screen in
+                    !screen.visibleFrame.intersects(currentFrame)
+                }
+                
+                if isOffScreen {
+                    window.center()
+                }
+            }
         }
         mainWC.window?.makeKeyAndOrderFront(nil)
         mainWindowController = mainWC

@@ -11,7 +11,8 @@ class Sidebar {
         let night = ""
         var system = [SidebarItem]()
 
-        let notes = SidebarItem(name: NSLocalizedString("MiaoYan", comment: ""), type: .All, icon: getImage(named: "home\(night).png"))
+        let appName = getLocalizedAppName()
+        let notes = SidebarItem(name: appName, type: .All, icon: getImage(named: "home\(night).png"))
         system.append(notes)
 
         if !system.isEmpty {
@@ -55,6 +56,16 @@ class Sidebar {
         list.filter { ($0 as? SidebarItem)?.type == .Category && ($0 as? SidebarItem)?.project != nil && ($0 as? SidebarItem)!.project!.showInSidebar } as! [SidebarItem]
     }
 
+    private func getLocalizedAppName() -> String {
+        let language = UserDefaultsManagement.defaultLanguage
+        switch language {
+        case 1: // English
+            return "MiaoYan"
+        default: // Chinese, Japanese, etc.
+            return "妙言"
+        }
+    }
+    
     private func getImage(named: String) -> Image? {
         if let image = NSImage(named: named) {
             return image

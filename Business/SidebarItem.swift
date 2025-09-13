@@ -24,11 +24,21 @@ class SidebarItem {
     public func isTrash() -> Bool { type == .Trash }
 
     public func isGroupItem() -> Bool {
-        let notesLabel = NSLocalizedString("MiaoYan", comment: "Sidebar label")
+        let notesLabel = getLocalizedAppName()
         let trashLabel = NSLocalizedString("Trash", comment: "Sidebar label")
         if project == nil, [notesLabel, trashLabel].contains(name) {
             return true
         }
         return false
+    }
+    
+    private func getLocalizedAppName() -> String {
+        let language = UserDefaultsManagement.defaultLanguage
+        switch language {
+        case 1: // English
+            return "MiaoYan"
+        default: // Chinese, Japanese, etc.
+            return "妙言"
+        }
     }
 }
