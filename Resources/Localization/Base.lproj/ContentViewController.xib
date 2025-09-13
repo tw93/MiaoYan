@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="22155" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="23727" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22155"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23727"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -22,7 +22,7 @@
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
                 <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="IT6-BT-LiE">
-                    <rect key="frame" x="26" y="70" width="80" height="16"/>
+                    <rect key="frame" x="20" y="70" width="86" height="16"/>
                     <textFieldCell key="cell" lineBreakMode="clipping" title="Word Count:" id="ITG-Xm-ygA">
                         <font key="font" usesAppearanceFont="YES"/>
                         <color key="textColor" name="mainText"/>
@@ -38,15 +38,15 @@
                     </textFieldCell>
                 </textField>
                 <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mVC-3t-vHG">
-                    <rect key="frame" x="24" y="18" width="82" height="16"/>
+                    <rect key="frame" x="20" y="18" width="86" height="16"/>
                     <textFieldCell key="cell" lineBreakMode="clipping" title="Create Time:" id="LDe-hw-GD1">
                         <font key="font" usesAppearanceFont="YES"/>
                         <color key="textColor" name="mainText"/>
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField focusRingType="none" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3M9-D9-aju">
-                    <rect key="frame" x="105" y="70" width="101" height="16"/>
+                <textField focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3M9-D9-aju">
+                    <rect key="frame" x="109" y="70" width="95" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" title="wordCount" id="Muy-lO-8hh" userLabel="count">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="underlineColor"/>
@@ -62,7 +62,7 @@
                     </textFieldCell>
                 </textField>
                 <textField focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ECQ-la-Fx6">
-                    <rect key="frame" x="109" y="18" width="71" height="16"/>
+                    <rect key="frame" x="109" y="18" width="95" height="16"/>
                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" title="createTime" id="E1l-5G-VcH" userLabel="count">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="underlineColor"/>
@@ -72,10 +72,14 @@
             </subviews>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="mVC-3t-vHG" secondAttribute="bottom" constant="18" id="0ZP-0a-7z3"/>
+                <constraint firstItem="IT6-BT-LiE" firstAttribute="leading" secondItem="JnG-cl-jqe" secondAttribute="leading" constant="22" id="Abc-De-Fgh"/>
+                <constraint firstItem="mVC-3t-vHG" firstAttribute="leading" secondItem="JnG-cl-jqe" secondAttribute="leading" constant="22" id="Hij-Kl-Mno"/>
                 <constraint firstItem="mVC-3t-vHG" firstAttribute="trailing" secondItem="IT6-BT-LiE" secondAttribute="trailing" id="MV2-pS-Pjv"/>
+                <constraint firstAttribute="trailing" secondItem="ECQ-la-Fx6" secondAttribute="trailing" constant="22" id="Pqr-St-Uvw"/>
                 <constraint firstItem="3M9-D9-aju" firstAttribute="centerY" secondItem="IT6-BT-LiE" secondAttribute="centerY" id="TfC-jq-mTm"/>
                 <constraint firstItem="3M9-D9-aju" firstAttribute="leading" secondItem="IT6-BT-LiE" secondAttribute="trailing" constant="7" id="UzA-x2-JZA"/>
                 <constraint firstItem="dmF-hl-yrS" firstAttribute="top" secondItem="IT6-BT-LiE" secondAttribute="bottom" constant="10" id="VTH-Ue-UbR"/>
+                <constraint firstAttribute="trailing" secondItem="3M9-D9-aju" secondAttribute="trailing" constant="22" id="Xk1-Yl-F3m"/>
                 <constraint firstItem="dmF-hl-yrS" firstAttribute="trailing" secondItem="IT6-BT-LiE" secondAttribute="trailing" id="Zrj-22-m4B"/>
                 <constraint firstItem="ECQ-la-Fx6" firstAttribute="centerY" secondItem="mVC-3t-vHG" secondAttribute="centerY" id="ePc-NF-Oui"/>
                 <constraint firstItem="dmF-hl-yrS" firstAttribute="leading" secondItem="JnG-cl-jqe" secondAttribute="leading" constant="22" id="kVu-Zh-lTo"/>
