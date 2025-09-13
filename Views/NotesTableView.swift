@@ -42,6 +42,33 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
             deselectNotes()
         }
 
+        if event.keyCode == kVK_RightArrow, !UserDefaultsManagement.magicPPT {
+            if let fr = window?.firstResponder, fr.isKind(of: NSTextView.self) {
+                super.keyUp(with: event)
+                return
+            }
+
+            // If no note is selected, select the first one
+            if selectedRow == -1 && !noteList.isEmpty {
+                selectRowIndexes([0], byExtendingSelection: false)
+            }
+
+            // Right arrow from notelist goes to editor
+            if EditTextView.note != nil {
+                vc.focusEditArea()
+                vc.editArea.updateTextContainerInset()
+            }
+        }
+
+        if event.keyCode == kVK_Escape {
+            if let fr = window?.firstResponder, fr === self {
+                vc.storageOutlineView.window?.makeFirstResponder(vc.storageOutlineView)
+                let index = vc.storageOutlineView.selectedRow
+                vc.storageOutlineView.selectRowIndexes([index], byExtendingSelection: false)
+                deselectNotes()
+            }
+        }
+
         super.keyUp(with: event)
     }
 
@@ -164,7 +191,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
                     guard !operation.isCancelled, self?.fillTimestamp == timestamp else {
                         return
                     }
-                    vc.editArea.fill(note: note, highlight: true)
+                    vc.editArea.fill(note: note, highlight: true, needScrollToCursor: false)
                 }
             }
             loadingQueue.addOperation(operation)
