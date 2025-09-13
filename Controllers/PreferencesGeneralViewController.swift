@@ -343,7 +343,7 @@ class PreferencesGeneralViewController: NSViewController {
 
         let names = fontNames[fontType] ?? []
         guard !names.isEmpty else { return fontType.rawValue }
-        
+
         // Ensure language index is within bounds
         let safeIndex = max(0, min(currentLanguage, names.count - 1))
         return names[safeIndex]

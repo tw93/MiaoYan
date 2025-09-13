@@ -859,6 +859,11 @@ class EditTextView: NSTextView, NSTextFinderClient {
             deleteWordBackward(nil)
             return
         }
+
+        if event.keyCode == kVK_Escape {
+            return
+        }
+
         super.keyDown(with: event)
         if shouldTriggerLinkHighlight(for: event) {
             if let paragraphRange = getParagraphRange() {
@@ -868,5 +873,23 @@ class EditTextView: NSTextView, NSTextFinderClient {
             }
         }
         saveCursorPosition()
+    }
+
+    override func keyUp(with event: NSEvent) {
+        if event.keyCode == kVK_Escape {
+            guard let vc = window?.contentViewController as? ViewController else {
+                super.keyUp(with: event)
+                return
+            }
+            vc.notesTableView.window?.makeFirstResponder(vc.notesTableView)
+            if let selectedNote = EditTextView.note,
+                let noteIndex = vc.notesTableView.getIndex(selectedNote)
+            {
+                vc.notesTableView.selectRowIndexes([noteIndex], byExtendingSelection: false)
+                vc.notesTableView.scrollRowToVisible(noteIndex)
+            }
+            return
+        }
+        super.keyUp(with: event)
     }
 }

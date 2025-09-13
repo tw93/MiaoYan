@@ -101,7 +101,7 @@ class SidebarProjectView: NSOutlineView,
             }
 
             vc.notesTableView.window?.makeFirstResponder(vc.notesTableView)
-            vc.notesTableView.selectRowIndexes([0], byExtendingSelection: false)
+            // Don't auto-select any note, let user explicitly choose with arrow keys or right arrow
         }
         // Tab to search
         if event.keyCode == 48 {

@@ -60,7 +60,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 let isOffScreen = NSScreen.screens.allSatisfy { screen in
                     !screen.visibleFrame.intersects(currentFrame)
                 }
-                
+
                 if isOffScreen {
                     window.center()
                 }
