@@ -44,17 +44,18 @@ final class TypographyPrefsViewController: BasePrefsViewController {
 
         setupFontSection(in: contentView)
 
+        // Setup scroll view constraints using contentView anchors for compatibility
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
 
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            contentView.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.contentView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.contentView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.contentView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.contentView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.contentView.widthAnchor),
         ])
     }
 
@@ -123,7 +124,7 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         let titleLabel = NSTextField(labelWithString: title)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.font = NSFont.boldSystemFont(ofSize: 13)
-        titleLabel.textColor = NSColor.labelColor
+        titleLabel.textColor = Theme.textColor
 
         containerView.addSubview(titleLabel)
         parentView.addSubview(containerView)
@@ -440,13 +441,7 @@ final class TypographyPrefsViewController: BasePrefsViewController {
             if response == .alertFirstButtonReturn {
                 UserDefaultsManagement.isFirstLaunch = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    let url = URL(fileURLWithPath: Bundle.main.resourcePath!)
-                    let path = url.deletingLastPathComponent().deletingLastPathComponent().absoluteString
-                    let task = Process()
-                    task.launchPath = "/usr/bin/open"
-                    task.arguments = [path]
-                    task.launch()
-                    exit(0)
+                    AppDelegate.relaunchApp()
                 }
             }
         }
