@@ -153,3 +153,59 @@
 "font.lxgw" = "霞鹜文楷";
 "font.system" = "系统字体";
 "font.times" = "新罗马体";
+
+/* Preferences Categories */
+"General" = "通用";
+"Editor" = "编辑器";
+
+/* Preferences Settings */
+"Fonts" = "字体";
+"Editor Behavior" = "编辑器行为";
+"Preview Settings" = "预览设置";
+"Preview" = "预览";
+"Editor Font:" = "编辑器字体:";
+"Interface Font:" = "界面字体:";
+"Preview Font:" = "预览字体:";
+"Code Font:" = "代码字体:";
+"Presentation Font Size:" = "演示字体大小:";
+"Line Break:" = "换行方式:";
+"Code Background:" = "代码背景:";
+"Preview Location:" = "预览位置:";
+"Preview Width:" = "预览宽度:";
+
+/* Interface Settings */
+"Interface" = "界面";
+"Button Display:" = "按钮显示:";
+"Always" = "始终显示";
+"On Hover" = "悬停显示";
+"Never" = "从不显示";
+
+/* Image Upload Settings */
+"Image Upload" = "图片上传";
+"Upload Service:" = "上传服务:";
+
+/* General Settings Labels */
+"Appearance:" = "外观:";
+"Language:" = "语言:";
+"Always On Top:" = "置顶显示:";
+"Activate Shortcut:" = "唤起快捷键:";
+"Yes" = "是";
+"No" = "否";
+"Appearance & Language" = "外观与语言";
+"Interface & Upload" = "界面与上传";
+"File Storage" = "文件存储";
+"Storage Location" = "存储位置";
+"Change" = "更改";
+"System" = "跟随系统";
+"Light" = "浅色";
+"Dark" = "深色";
+"None" = "无";
+"Begin" = "开头";
+"End" = "结尾";
+"Right" = "右侧";
+"Bottom" = "底部";
+"Editing" = "编辑";
+"Full Width" = "全宽";
+"MiaoYan" = "妙言";
+"Auto" = "自动";
+"Github" = "Github";

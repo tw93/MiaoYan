@@ -38,6 +38,58 @@
 /* Menu */
 "Export" = "輸出";
 
+/* 設定 - セクション */
+"Appearance & Language" = "外観と言語";
+"Interface & Upload" = "インターフェースとアップロード";
+"Storage Location" = "保存場所";
+"File Storage" = "ファイルストレージ";
+
+/* 設定 - ラベル */
+"Appearance" = "外観";
+"Language" = "言語";
+"Change" = "変更";
+"General" = "一般";
+"Editor" = "エディタ";
+"Fonts" = "フォント";
+"Editor Behavior" = "エディタの動作";
+"Preview" = "プレビュー";
+"Editor Font:" = "エディタフォント:";
+"Preview Font:" = "プレビューフォント:";
+"Interface Font:" = "インターフェースフォント:";
+"Code Font:" = "コードフォント:";
+"Presentation Font Size:" = "プレゼン用フォントサイズ:";
+"Preview Location:" = "プレビュー位置:";
+"Preview Width:" = "プレビュー幅:";
+"Appearance:" = "外観:";
+"Language:" = "言語:";
+"Button Display:" = "ボタン表示:";
+"Always On Top:" = "常に最前面:";
+"Activate Shortcut:" = "起動ショートカット:";
+"Yes" = "はい";
+"No" = "いいえ";
+
+/* 設定 - オプション */
+"System" = "システム";
+"Light" = "ライト";
+"Dark" = "ダーク";
+"Always" = "常に";
+"On Hover" = "ホバー時";
+"Never" = "しない";
+"Image Upload" = "画像アップロード";
+"Upload Service:" = "アップロードサービス:";
+"None" = "なし";
+
+/* エディタ設定 - オプション */
+"Begin" = "先頭";
+"End" = "末尾";
+"Right" = "右";
+"Bottom" = "下";
+"Editing" = "編集";
+"Full Width" = "全幅";
+"Line Break:" = "改行:";
+"MiaoYan" = "MiaoYan";
+"Auto" = "自動";
+
 /* No comment provided by engineer. */
 "New" = "新規作成";
 

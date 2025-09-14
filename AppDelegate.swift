@@ -1,4 +1,5 @@
 import Cocoa
+import KeyboardShortcuts
 import Sparkle
 import TelemetryDeck
 import os.log
@@ -36,7 +37,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                     do {
                         try FileManager.default.createDirectory(at: iCloudDocumentsURL, withIntermediateDirectories: true, attributes: nil)
                     } catch {
-                        print("Home directory creation: \(error)")
+                        AppDelegate.trackError(error, context: "AppDelegate.iCloudDocumentsSetup")
                     }
                 }
             }
@@ -47,7 +48,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
         let storyboard = NSStoryboard(name: "Main", bundle: nil)
         guard let mainWC = storyboard.instantiateController(withIdentifier: "MainWindowController") as? MainWindowController else {
-            fatalError("Error getting main window controller")
+            AppDelegate.trackError(NSError(domain: "AppError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to get main window controller"]), context: "AppDelegate.startup")
+
+            let alert = NSAlert()
+            alert.alertStyle = .critical
+            alert.messageText = I18n.str("Critical Error")
+            alert.informativeText = I18n.str("Failed to initialize main window. Please restart the application.")
+            alert.addButton(withTitle: I18n.str("Quit"))
+            alert.runModal()
+
+            NSApplication.shared.terminate(nil)
+            return
         }
         if UserDefaultsManagement.isFirstLaunch {
             let size = NSSize(width: 1280, height: 700)
@@ -68,6 +79,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
         mainWC.window?.makeKeyAndOrderFront(nil)
         mainWindowController = mainWC
+
+        // Apply window appearance immediately after setting up the main window
+        mainWC.applyMiaoYanAppearance()
         // Configure TelemetryDeck
         let startTime = CFAbsoluteTimeGetCurrent()
         let config = TelemetryDeck.Config(appID: "49D82975-F243-4FEF-BC97-4291E56E1103")
@@ -117,6 +131,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 "ButtonShow": UserDefaultsManagement.buttonShow,
                 "EditorLineBreak": UserDefaultsManagement.editorLineBreak,
             ])
+
+        // Ensure default activate shortcut is set if user has not chosen one
+        if KeyboardShortcuts.getShortcut(for: .activateWindow) == nil {
+            KeyboardShortcuts.setShortcut(.init(.m, modifiers: [.command, .option]), for: .activateWindow)
+        }
     }
     func applicationWillTerminate(_ aNotification: Notification) {
         // Track session end
@@ -163,23 +182,28 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
         return true
     }
-    private func applyAppearance() {
+    func applyAppearance() {
         if #available(OSX 10.14, *) {
+
             if UserDefaultsManagement.appearanceType != .Custom {
-                if UserDefaultsManagement.appearanceType == .Dark {
+                switch UserDefaultsManagement.appearanceType {
+                case .Dark:
                     NSApp.appearance = NSAppearance(named: NSAppearance.Name.darkAqua)
                     UserDataService.instance.isDark = true
-                }
-                if UserDefaultsManagement.appearanceType == .Light {
+                case .Light:
                     NSApp.appearance = NSAppearance(named: NSAppearance.Name.aqua)
                     UserDataService.instance.isDark = false
-                }
-                if UserDefaultsManagement.appearanceType == .System, NSAppearance.current.isDark {
-                    UserDataService.instance.isDark = true
+                case .System:
+                    NSApp.appearance = nil
+                    UserDataService.instance.isDark = NSAppearance.current.isDark
+                default:
+                    NSApp.appearance = nil
+                    UserDataService.instance.isDark = NSAppearance.current.isDark
                 }
             } else {
                 NSApp.appearance = NSAppearance(named: NSAppearance.Name.aqua)
             }
+
         }
     }
     private func restartApp() {
@@ -243,13 +267,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
     @IBAction func openPreferences(_ sender: Any?) {
         if prefsWindowController == nil {
-            let storyboard = NSStoryboard(name: "Main", bundle: nil)
-            prefsWindowController = storyboard.instantiateController(withIdentifier: "Preferences") as? PrefsWindowController
+            prefsWindowController = PrefsWindowController()
         }
-        guard let prefsWindowController = prefsWindowController else { return }
-        prefsWindowController.showWindow(nil)
-        prefsWindowController.window?.makeKeyAndOrderFront(prefsWindowController)
-        NSApp.activate(ignoringOtherApps: true)
+        prefsWindowController?.show()
     }
     @IBAction func new(_ sender: Any?) {
         mainWindowController?.makeNew()

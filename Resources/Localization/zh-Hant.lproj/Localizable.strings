@@ -92,6 +92,58 @@
 /* No comment provided by engineer. */
 "Preferences" = "偏好設定";
 
+/* 偏好設定 - 分組標題 */
+"Appearance & Language" = "外觀與語言";
+"Interface & Upload" = "介面與上傳";
+"Storage Location" = "儲存位置";
+"File Storage" = "檔案儲存";
+
+/* 偏好設定 - 通用標籤 */
+"Appearance" = "外觀";
+"Language" = "語言";
+"Change" = "更改";
+"General" = "通用";
+"Editor" = "編輯器";
+"Fonts" = "字體";
+"Editor Behavior" = "編輯器行為";
+"Preview" = "預覽";
+"Editor Font:" = "編輯器字體:";
+"Preview Font:" = "預覽字體:";
+"Interface Font:" = "介面字體:";
+"Code Font:" = "程式碼字體:";
+"Presentation Font Size:" = "簡報字體大小:";
+"Preview Location:" = "預覽位置:";
+"Preview Width:" = "預覽寬度:";
+"Appearance:" = "外觀:";
+"Language:" = "語言:";
+"Button Display:" = "按鈕顯示:";
+"Always On Top:" = "置頂顯示:";
+"Activate Shortcut:" = "喚起快捷鍵:";
+"Yes" = "是";
+"No" = "否";
+
+/* 偏好設定 - 選項 */
+"System" = "系統";
+"Light" = "淺色";
+"Dark" = "深色";
+"Always" = "總是";
+"On Hover" = "懸停時";
+"Never" = "從不";
+"Image Upload" = "圖片上傳";
+"Upload Service:" = "上傳服務:";
+"None" = "無";
+
+/* 編輯器設定 - 選項 */
+"Begin" = "開頭";
+"End" = "結尾";
+"Right" = "右側";
+"Bottom" = "底部";
+"Editing" = "編輯";
+"Full Width" = "全寬";
+"Line Break:" = "換行:";
+"MiaoYan" = "妙言";
+"Auto" = "自動";
+
 /* Delete menu */
 "Remove" = "移除";
 
@@ -133,4 +185,3 @@
 "font.lxgw" = "霞鶩文楷";
 "font.system" = "系統字體";
 "font.times" = "新羅馬體";
-

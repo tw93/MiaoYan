@@ -14,6 +14,15 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         window?.titlebarAppearsTransparent = true
         windowFrameAutosaveName = "myMainWindow"
         window?.restorationClass = MainWindowController.self
+
+        // Apply always-on-top preference based on user settings
+        if UserDefaultsManagement.alwaysOnTop {
+            window?.level = .floating
+        } else {
+            window?.level = .normal
+        }
+
+        applyMiaoYanAppearance()
     }
 
     func windowDidResize(_ notification: Notification) {
@@ -70,6 +79,59 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
 
     func windowDidExitFullScreen(_ notification: Notification) {
         UserDefaultsManagement.fullScreen = false
+        // Auto-exit presentation modes when exiting full screen to prevent UI inconsistencies
+        if let vc = ViewController.shared() {
+            if UserDefaultsManagement.presentation {
+                vc.disablePresentation()
+            } else if UserDefaultsManagement.magicPPT {
+                vc.disableMiaoYanPPT()
+            }
+        }
+    }
+
+    func applyMiaoYanAppearance() {
+        guard let window = window, #available(OSX 10.14, *) else { return }
+
+        // Apply MiaoYan's custom appearance settings, overriding system appearance when needed
+        let targetAppearance: NSAppearance?
+        let backgroundColor: NSColor
+
+        if UserDefaultsManagement.appearanceType != .Custom {
+            let isDarkTheme: Bool
+            switch UserDefaultsManagement.appearanceType {
+            case .Light:
+                isDarkTheme = false
+            case .Dark:
+                isDarkTheme = true
+            case .System:
+                isDarkTheme = UserDataService.instance.isDark
+            default:
+                isDarkTheme = UserDataService.instance.isDark
+            }
+
+            if isDarkTheme {
+                targetAppearance = NSAppearance(named: .darkAqua)
+                backgroundColor = NSColor(named: "mainBackground") ?? NSColor.windowBackgroundColor
+            } else {
+                targetAppearance = NSAppearance(named: .aqua)
+                backgroundColor = NSColor(named: "mainBackground") ?? NSColor.windowBackgroundColor
+            }
+        } else {
+            // For custom themes, preserve user's background color without forcing system appearance
+            targetAppearance = nil
+            backgroundColor = UserDefaultsManagement.bgColor
+        }
+
+        // Apply appearance and background color immediately
+        if let appearance = targetAppearance {
+            window.appearance = appearance
+        }
+        window.backgroundColor = backgroundColor
+
+        if let contentView = window.contentView {
+            contentView.wantsLayer = true
+            contentView.layer?.backgroundColor = backgroundColor.cgColor
+        }
     }
 
     // MARK: - NSWindowRestoration
