@@ -228,9 +228,6 @@ extension ViewController {
 
         do {
             try FileManager.default.moveItem(at: url, to: newUrl)
-            #if DEBUG
-                print("File moved from \"\(url.deletingPathExtension().lastPathComponent)\" to \"\(newUrl.deletingPathExtension().lastPathComponent)\"")
-            #endif
         } catch {
             note.overwrite(url: url)
         }
@@ -878,9 +875,7 @@ extension ViewController {
             case "PDF":
                 self.editArea.markdownView?.exportPdf()
             default:
-                #if DEBUG
-                    print("Export no Type")
-                #endif
+                break
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 UserDefaultsManagement.isOnExport = false

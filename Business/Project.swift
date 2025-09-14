@@ -184,7 +184,7 @@ public class Project: Equatable {
         do {
             try FileManager.default.createDirectory(at: url.appendingPathComponent("i"), withIntermediateDirectories: true, attributes: nil)
         } catch {
-            print(error)
+            AppDelegate.trackError(error, context: "Project.createDirectory")
         }
     }
 
@@ -192,7 +192,7 @@ public class Project: Equatable {
         do {
             try FileManager.default.removeItem(at: url)
         } catch {
-            print(error)
+            AppDelegate.trackError(error, context: "Project.remove")
         }
     }
 
@@ -200,7 +200,7 @@ public class Project: Equatable {
         do {
             try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
         } catch {
-            print(error)
+            AppDelegate.trackError(error, context: "Project.create")
         }
     }
 

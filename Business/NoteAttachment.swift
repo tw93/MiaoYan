@@ -89,7 +89,7 @@ class NoteAttachment {
 
             try data.write(to: url, options: .atomic)
         } catch {
-            print(error)
+            AppDelegate.trackError(error, context: "NoteAttachment.cache")
         }
     }
 

@@ -629,7 +629,7 @@ class SidebarProjectView: NSOutlineView,
                             }
                         }
                     } catch {
-                        print(error)
+                        AppDelegate.trackError(error, context: "SidebarProjectView.removeProject.moveItem")
                     }
                 }
             }
