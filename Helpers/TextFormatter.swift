@@ -555,12 +555,7 @@ public class TextFormatter {
         let string = NSMutableAttributedString(string: string)
         string.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: NSRange(0..<1))
 
-        var color = Color.black
-        #if os(OSX)
-            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-                color = NSColor(named: "mainText")!
-            }
-        #endif
+        let color: Color = Theme.textColor
 
         string.addAttribute(.foregroundColor, value: color, range: NSRange(1..<string.length))
         return string
@@ -702,11 +697,7 @@ public class TextFormatter {
 
     #if os(OSX)
         private func getDefaultColor() -> NSColor {
-            var color = Color.black
-            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-                color = NSColor(named: "mainText")!
-            }
-            return color
+            Theme.textColor
         }
     #endif
 

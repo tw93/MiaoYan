@@ -21,53 +21,17 @@ public class NotesTextProcessor {
         typealias Image = NSImage
         typealias Font = NSFont
 
-        public static var fontColor: NSColor {
-            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-                return NSColor(named: "mainText")!
-            } else {
-                return UserDefaultsManagement.fontColor
-            }
-        }
+        public static var fontColor: NSColor { Theme.textColor }
 
-        public static var highlightColor: NSColor {
-            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-                return NSColor(named: "highlight")!
-            } else {
-                return NSColor(red: 0.25, green: 0.61, blue: 1.00, alpha: 1.0)
-            }
-        }
+        public static var highlightColor: NSColor { Theme.linkColor }
 
-        public static var listColor: NSColor {
-            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-                return NSColor(named: "list")!
-            } else {
-                return NSColor(red: 0.79, green: 0.35, blue: 0.00, alpha: 1.0)
-            }
-        }
+        public static var listColor: NSColor { Theme.listColor }
 
-        public static var htmlColor: NSColor {
-            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-                return NSColor(named: "html")!
-            } else {
-                return NSColor(red: 0.79, green: 0.35, blue: 0.00, alpha: 1.0)
-            }
-        }
+        public static var htmlColor: NSColor { Theme.htmlColor }
 
-        public static var titleColor: NSColor {
-            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-                return NSColor(named: "title")!
-            } else {
-                return NSColor(red: 0.25, green: 0.61, blue: 1.00, alpha: 1.0)
-            }
-        }
+        public static var titleColor: NSColor { Theme.titleColor }
 
-        public static var linkColor: NSColor {
-            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-                return NSColor(named: "link")!
-            } else {
-                return NSColor(red: 1.000, green: 1.00, blue: 0.61, alpha: 0.25)
-            }
-        }
+        public static var linkColor: NSColor { Theme.linkColor }
 
     #else
         typealias Color = UIColor
@@ -88,45 +52,13 @@ public class NotesTextProcessor {
             UserDefaultsManagement.noteFont
         }
 
-        public static var codeBackground: NSColor {
-            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-                return NSColor(named: "code")!
-            } else {
-                return NSColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1.0)
-            }
-        }
+        open var highlightColor: NSColor { Theme.linkColor }
 
-        open var highlightColor: NSColor {
-            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-                return NSColor(named: "highlight")!
-            } else {
-                return NSColor(red: 1.00, green: 0.90, blue: 0.70, alpha: 1.0)
-            }
-        }
+        open var titleColor: NSColor { Theme.titleColor }
 
-        open var titleColor: NSColor {
-            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-                return NSColor(named: "title")!
-            } else {
-                return NSColor(red: 1.00, green: 0.90, blue: 0.70, alpha: 1.0)
-            }
-        }
+        open var linkColor: NSColor { Theme.linkColor }
 
-        open var linkColor: NSColor {
-            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-                return NSColor(named: "link")!
-            } else {
-                return NSColor(red: 1.00, green: 0.90, blue: 0.70, alpha: 1.0)
-            }
-        }
-
-        public static var underlineColor: NSColor {
-            if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-                return NSColor(named: "underlineColor")!
-            } else {
-                return NSColor.black
-            }
-        }
+        public static var underlineColor: NSColor { Theme.underlineColor }
 
     #else
         public static var font: UIFont {
@@ -138,14 +70,6 @@ public class NotesTextProcessor {
             }
 
             return font
-        }
-
-        public static var codeBackground: UIColor {
-            if NightNight.theme == .night {
-                return UIColor(red: 0.27, green: 0.27, blue: 0.27, alpha: 1.0)
-            } else {
-                return UIColor(red: 0.94, green: 0.95, blue: 0.95, alpha: 1.0)
-            }
         }
 
         public static var underlineColor: UIColor {
@@ -317,12 +241,6 @@ public class NotesTextProcessor {
                 }
             )
 
-            if UserDefaultsManagement.codeBackground == "Yes" {
-                attributedString.mutableString.enumerateSubstrings(in: range, options: .byParagraphs) { _, range, _, _ in
-                    let rangeNewline = range.upperBound == attributedString.length ? range : NSRange(range.location..<range.upperBound + 1)
-                    attributedString.addAttribute(.backgroundColor, value: NotesTextProcessor.codeBackground, range: rangeNewline)
-                }
-            }
         }
     }
 
@@ -1403,9 +1321,6 @@ public class NotesTextProcessor {
                     if remove {
                         if attributedString.attributes(at: subRange.location, effectiveRange: nil).keys.contains(NoteAttribute.highlight) {
                             storage.removeAttribute(NoteAttribute.highlight, range: subRange)
-                            if UserDefaultsManagement.codeBackground == "Yes" {
-                                storage.addAttribute(NSAttributedString.Key.backgroundColor, value: NotesTextProcessor.codeBackground, range: subRange)
-                            }
                             return
                         } else {
                             storage.removeAttribute(NSAttributedString.Key.backgroundColor, range: subRange)
@@ -1424,7 +1339,7 @@ public class NotesTextProcessor {
                 storage.setAttributedString(attributedString)
             }
         } catch {
-            print(error)
+            AppDelegate.trackError(error, context: "NotesTextProcessor.highlightKeyword")
         }
     }
 }
@@ -1450,7 +1365,7 @@ public struct MarklightRegex {
         // valid for .NET Regex is not valid for NSRegularExpression.
         if re == nil {
             if let error = error {
-                print("Regular expression error: \(error.userInfo)")
+                AppDelegate.trackError(error, context: "NotesTextProcessor.MarklightRegex")
             }
             assert(re != nil)
         }

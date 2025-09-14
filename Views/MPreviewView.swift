@@ -10,7 +10,6 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     private weak var note: Note?
     private var closure: MPreviewViewClosure?
     public static var template: String?
-    private var backgroundMask: NSView?
     private static var bundleInitialized = false
     private static let initQueue = DispatchQueue(label: "preview.init", qos: .userInitiated)
     init(frame: CGRect, note: Note, closure: MPreviewViewClosure?) {
@@ -22,8 +21,31 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         userContentController.add(HandlerRevealBackgroundColor(), name: "revealBackgroundColor")
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = userContentController
+        // Inject early background style to prevent white flash during HTML/CSS loading
+        #if os(OSX)
+            let isDarkTheme: Bool
+            if UserDefaultsManagement.appearanceType != .Custom {
+                switch UserDefaultsManagement.appearanceType {
+                case .Light: isDarkTheme = false
+                case .Dark: isDarkTheme = true
+                case .System: isDarkTheme = UserDataService.instance.isDark
+                default: isDarkTheme = UserDataService.instance.isDark
+                }
+            } else {
+                isDarkTheme = UserDataService.instance.isDark
+            }
+            let bgHex = isDarkTheme ? "#23282D" : "#FFFFFF"
+            // Ensure background only to prevent white flash; avoid forcing text color
+            let css = "html,body{background:\(bgHex) !important;}"
+            let js =
+                "(function(){var s=document.createElement('style');s.type='text/css';s.appendChild(document.createTextNode('" + css
+                + "'));(document.head||document.documentElement).appendChild(s);document.documentElement.style.background='\(bgHex)';document.body&&(document.body.style.background='\(bgHex)');}())"
+            let script = WKUserScript(source: js, injectionTime: .atDocumentStart, forMainFrameOnly: true)
+            configuration.userContentController.addUserScript(script)
+        #endif
         // macOS Sequoia beta: Simplified configuration to avoid sandbox conflicts
         configuration.websiteDataStore = WKWebsiteDataStore.default()
+        // Allow incremental rendering to avoid feeling "stuck" before load finishes
         configuration.suppressesIncrementalRendering = false
         // Basic WebKit configuration for quieter operation
         configuration.preferences.setValue(false, forKey: "developerExtrasEnabled")
@@ -34,7 +56,26 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         super.init(frame: frame, configuration: configuration)
         navigationDelegate = self
         #if os(OSX)
-            setValue(false, forKey: "drawsBackground")
+            // Keep WebKit drawing background so preview area is visible during load
+            setValue(true, forKey: "drawsBackground")
+            wantsLayer = true
+            let bgNSColor: NSColor
+            if UserDefaultsManagement.appearanceType != .Custom {
+                let darkColor = NSColor(srgbRed: 0x23 / 255.0, green: 0x28 / 255.0, blue: 0x2D / 255.0, alpha: 1.0)
+                switch UserDefaultsManagement.appearanceType {
+                case .Light: bgNSColor = NSColor.white
+                case .Dark: bgNSColor = darkColor
+                case .System: bgNSColor = UserDataService.instance.isDark ? darkColor : NSColor.white
+                default: bgNSColor = UserDataService.instance.isDark ? darkColor : NSColor.white
+                }
+            } else {
+                bgNSColor = UserDefaultsManagement.bgColor
+            }
+            layer?.backgroundColor = bgNSColor.cgColor
+            // Fill under-page area with the same color to cover rubber-banding gaps
+            setValue(bgNSColor, forKey: "underPageBackgroundColor")
+            // Set webview appearance to match current theme
+            self.appearance = UserDataService.instance.isDark ? NSAppearance(named: .darkAqua) : NSAppearance(named: .aqua)
         #else
             isOpaque = false
             backgroundColor = UIColor.clear
@@ -42,69 +83,38 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         #endif
         Self.ensureBundlePreinitialized()
         load(note: note)
-        // Add background mask only if preview is visible when view hierarchy is ready
-        DispatchQueue.main.async {
-            if !self.isHidden {
-                self.addBackgroundMaskWhenNeeded()
-            }
-        }
+        // No additional background mask needed
     }
     @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        AppDelegate.trackError(NSError(domain: "InitError", code: 1, userInfo: [NSLocalizedDescriptionKey: "MPreviewView does not support NSCoder initialization"]), context: "MPreviewView.init")
+        return nil
     }
-    private func addBackgroundMaskWhenNeeded() {
-        // Remove existing mask if any
-        backgroundMask?.removeFromSuperview()
-        backgroundMask = nil
-        guard let container = self.superview else { return }
-        // Create a large mask that covers the entire container
-        // This will be behind the WebView and show when elastic scrolling reveals areas
-        let maskView = NSView()
-        maskView.wantsLayer = true
-        maskView.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-        // Make the mask much larger than the container to cover all elastic scroll areas
-        let containerBounds = container.bounds
-        let expandedFrame = CGRect(
-            x: containerBounds.minX - 500,
-            y: containerBounds.minY - 500,
-            width: containerBounds.width + 1000,
-            height: containerBounds.height + 1000
-        )
-        maskView.frame = expandedFrame
-        maskView.autoresizingMask = [.width, .height]
-        // Add the mask behind the WebView - this is key!
-        container.addSubview(maskView, positioned: .below, relativeTo: self)
-        // Store reference for cleanup
-        self.backgroundMask = maskView
+
+    // MARK: - Appearance Update
+    // Appearance Update (kept for backward compatibility but not used)
+    public func updateAppearance() {
+        // This method is kept for compatibility but the new approach is to recreate the WebView
+        // instead of trying to update its appearance, which is more reliable
     }
-    override var isHidden: Bool {
-        didSet {
-            // Remove mask when preview is hidden (switching to edit mode)
-            // Add mask when preview is shown (switching to preview mode)
-            if isHidden {
-                backgroundMask?.removeFromSuperview()
-                backgroundMask = nil
-            } else {
-                // Re-add mask immediately when preview becomes visible
-                DispatchQueue.main.async {
-                    self.addBackgroundMaskWhenNeeded()
-                }
-            }
-        }
-    }
-    override func removeFromSuperview() {
-        // Clean up the background mask when preview view is removed
-        backgroundMask?.removeFromSuperview()
-        backgroundMask = nil
-        super.removeFromSuperview()
-    }
+
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
         if event.keyCode == kVK_ANSI_C, event.modifierFlags.contains(.command) {
             DispatchQueue.main.async {
                 self.evaluateJavaScript("document.execCommand('copy', false, null)", completionHandler: nil)
             }
             return false
+        }
+        // Handle ESC in presentation modes
+        // - PPT mode: exit PPT completely
+        // - Presentation (preview fullscreen) mode: exit presentation and restore layout
+        if event.keyCode == kVK_Escape, UserDefaultsManagement.presentation, !UserDefaultsManagement.magicPPT {
+            DispatchQueue.main.async {
+                if let vc = ViewController.shared() {
+                    vc.disablePresentation()
+                }
+            }
+            return true  // Consume the event to avoid only exiting fullscreen
         }
         // Handle ESC in PPT mode - exit PPT mode
         if event.keyCode == kVK_Escape, UserDefaultsManagement.magicPPT {
@@ -347,9 +357,17 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     public func load(note: Note, force: Bool = false) {
         let isFirstLoad = self.note == nil
         let shouldHideForTransition = isFirstLoad || force
-        if shouldHideForTransition {
-            self.alphaValue = 0.0
-        }
+
+        // For dark mode, maintain the dark background color during transition
+        #if os(OSX)
+            if shouldHideForTransition && UserDataService.instance.isDark {
+                // Keep the background visible but hide content smoothly
+                self.alphaValue = 0.9
+            } else if shouldHideForTransition {
+                self.alphaValue = 0.0
+            }
+        #endif
+
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
             let markdownString = note.getPrettifiedContent()
@@ -358,10 +376,13 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             DispatchQueue.main.async {
                 try? self.loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
                 self.note = note
+
                 if shouldHideForTransition {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    // Reduced delay for smoother transition
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                         NSAnimationContext.runAnimationGroup({ context in
-                            context.duration = 0.2
+                            context.duration = 0.15
+                            context.timingFunction = CAMediaTimingFunction(name: .easeOut)
                             self.animator().alphaValue = 1.0
                         })
                     }
@@ -446,7 +467,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                         try? FileManager.default.copyItem(atPath: bundleResourceURL.appendingPathComponent(file).path, toPath: tmpURL.path)
                     }
                 } catch {
-                    print("Bundle initialization error: \(error.localizedDescription)")
+                    AppDelegate.trackError(error, context: "MPreviewView.bundleInit")
                 }
             }
             Self.bundleInitialized = true
@@ -521,7 +542,7 @@ class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
         if message == "" {
             vc.setDividerColor(for: vc.splitView, hidden: true)
             vc.setDividerColor(for: vc.sidebarSplitView, hidden: true)
-            vc.titleLabel.backgroundColor = NSColor(named: "mainBackground")
+            vc.titleLabel.backgroundColor = Theme.backgroundColor
         } else {
             vc.sidebarSplitView.setValue(NSColor(css: message), forKey: "dividerColor")
             vc.splitView.setValue(NSColor(css: message), forKey: "dividerColor")

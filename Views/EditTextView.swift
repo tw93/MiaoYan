@@ -1,4 +1,3 @@
-import Alamofire
 import Carbon.HIToolbox
 import Cocoa
 import Highlightr
@@ -22,13 +21,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     private var imagePreviewManager: ImagePreviewManager?
     private var clipboardManager: ClipboardManager?
     private var menuManager: EditorMenuManager?
-    public static var fontColor: NSColor {
-        if UserDefaultsManagement.appearanceType != AppearanceType.Custom, #available(OSX 10.13, *) {
-            NSColor(named: "mainText")!
-        } else {
-            UserDefaultsManagement.fontColor
-        }
-    }
+    public static var fontColor: NSColor { Theme.textColor }
     override var textContainerOrigin: NSPoint {
         let origin = super.textContainerOrigin
         return NSPoint(x: origin.x, y: origin.y - 7)
@@ -309,7 +302,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 typingAttributes[.kern] = UserDefaultsManagement.editorLetterSpacing
             }
         }
-        if UserDefaultsManagement.preview || UserDefaultsManagement.magicPPT {
+        // Render preview content in preview, PPT, or presentation modes
+        if UserDefaultsManagement.preview || UserDefaultsManagement.magicPPT || UserDefaultsManagement.presentation {
             EditTextView.note = note
             if markdownView == nil {
                 let frame = viewController.editAreaScroll.bounds
@@ -323,6 +317,9 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 markdownView?.frame = frame
                 /// Load note if needed
                 markdownView?.load(note: note, force: force)
+                /// Ensure it is visible in case it was hidden by clear() during sidebar switch
+                markdownView?.isHidden = false
+                markdownView?.alphaValue = 1.0
             }
             return
         }
@@ -348,13 +345,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         restoreCursorPosition(needScrollToCursor: needScrollToCursor)
     }
-    private func setTextColor() {
-        if #available(OSX 10.13, *) {
-            textColor = NSColor(named: "mainText")
-        } else {
-            textColor = UserDefaultsManagement.fontColor
-        }
-    }
+    // setTextColor() was unused and removed in favor of Theme.textColor where needed
     public func clear() {
         textStorage?.setAttributedString(NSAttributedString())
         markdownView?.isHidden = true
@@ -695,7 +686,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override func viewDidChangeEffectiveAppearance() {
         guard let note = EditTextView.note else { return }
         guard let vc = getViewController() else { return }
-        UserDataService.instance.isDark = effectiveAppearance.isDark
+
+        // Only update system appearance state when in System mode
+        // Preserve user's explicit Light/Dark theme choice
+        if UserDefaultsManagement.appearanceType == .System {
+            UserDataService.instance.isDark = effectiveAppearance.isDark
+        }
+
+        // Refresh syntax highlighting with new appearance
         NotesTextProcessor.hl = nil
         NotesTextProcessor.highlight(note: note)
         if UserDefaultsManagement.preview {
@@ -740,7 +738,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
                             try FileManager.default.moveItem(at: imageURL, to: resultingItemUrl)
                             removedImages[resultingItemUrl] = imageURL
                         } catch {
-                            print(error)
+                            AppDelegate.trackError(error, context: "EditTextView.savePasteboard")
                         }
                     }
                 }
@@ -763,7 +761,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 try FileManager.default.moveItem(at: src, to: dst)
                 restoredImages[dst] = src
             } catch {
-                print(error)
+                AppDelegate.trackError(error, context: "EditTextView.insertMarkdown")
             }
         }
         if !restoredImages.isEmpty {
@@ -782,7 +780,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
                 try FileManager.default.moveItem(at: src, to: resultingItemUrl)
                 deletedImages[resultingItemUrl] = src
             } catch {
-                print(error)
+                AppDelegate.trackError(error, context: "EditTextView.handlePaste")
             }
         }
         if !deletedImages.isEmpty {
@@ -891,5 +889,29 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return
         }
         super.keyUp(with: event)
+    }
+
+    // MARK: - Preview Management
+    public func recreatePreviewView() {
+        guard let viewController = ViewController.shared() else { return }
+
+        // Remove existing preview view if it exists
+        if let existingView = markdownView {
+            existingView.removeFromSuperview()
+            markdownView = nil
+        }
+
+        // Recreate preview view if in preview mode
+        if UserDefaultsManagement.preview || UserDefaultsManagement.magicPPT || UserDefaultsManagement.presentation,
+            let currentNote = EditTextView.note
+        {
+            let frame = viewController.editAreaScroll.bounds
+            markdownView = MPreviewView(frame: frame, note: currentNote, closure: {})
+            if let newView = markdownView {
+                viewController.editAreaScroll.addSubview(newView)
+                newView.isHidden = false
+                newView.alphaValue = 1.0
+            }
+        }
     }
 }
