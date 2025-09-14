@@ -40,11 +40,7 @@ class NoteRowView: NSTableRowView {
 
             let path = NSBezierPath(roundedRect: selectionRect, xRadius: cornerRadius, yRadius: cornerRadius)
 
-            if NSApp.effectiveAppearance.isDark {
-                NSColor(calibratedWhite: 0.25, alpha: 1.0).setFill()
-            } else {
-                NSColor(calibratedWhite: 0.85, alpha: 1.0).setFill()
-            }
+            Theme.selectionBackgroundColor.setFill()
 
             path.fill()
         }

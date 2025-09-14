@@ -9,8 +9,7 @@ class NoteCellView: NSTableCellView {
     public var timestamp: Int64?
     public let cellSpacing: CGFloat = 34
 
-    private let labelColor = NSColor(deviceRed: 0.6, green: 0.6, blue: 0.6, alpha: 1)
-
+    // Use Theme.secondaryTextColor instead of a hard-coded gray
     public var tableView: NotesTableView? {
         guard let vc = ViewController.shared() else { return nil }
 
@@ -50,12 +49,8 @@ class NoteCellView: NSTableCellView {
             date.textColor = NSColor.white
             name.textColor = NSColor.white
         } else {
-            date.textColor = labelColor
-            if #available(OSX 10.13, *) {
-                name.textColor = NSColor(named: "mainText")
-            } else {
-                name.textColor = NSColor.black
-            }
+            date.textColor = Theme.secondaryTextColor
+            name.textColor = Theme.textColor
         }
     }
 

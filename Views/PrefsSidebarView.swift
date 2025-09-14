@@ -15,9 +15,7 @@ final class PrefsSidebarView: NSView {
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
-        print("[DEBUG] PrefsSidebarView.init(frame:) called")
         setupUI()
-        print("[DEBUG] PrefsSidebarView.init(frame:) completed")
     }
 
     required init?(coder: NSCoder) {
@@ -26,12 +24,10 @@ final class PrefsSidebarView: NSView {
     }
 
     private func setupUI() {
-        print("[DEBUG] PrefsSidebarView.setupUI called")
         setupScrollView()
         setupTableView()
         setupConstraints()
         setupAppearance()
-        print("[DEBUG] PrefsSidebarView.setupUI completed")
     }
 
     private func setupScrollView() {
@@ -80,7 +76,7 @@ final class PrefsSidebarView: NSView {
 
     private func setupAppearance() {
         wantsLayer = true
-        layer?.backgroundColor = (NSColor(named: "mainBackground") ?? NSColor.controlBackgroundColor).cgColor
+        layer?.backgroundColor = Theme.backgroundColor.cgColor
 
         // Add modern translucent sidebar appearance on supported macOS versions
         if #available(macOS 10.14, *) {
@@ -165,7 +161,7 @@ final class PrefsSidebarCellView: NSTableCellView {
         titleLabel.isBordered = false
         titleLabel.backgroundColor = NSColor.clear
         titleLabel.font = NSFont.systemFont(ofSize: 13)
-        titleLabel.textColor = NSColor.labelColor
+        titleLabel.textColor = Theme.textColor
         addSubview(titleLabel)
 
         setupConstraints()

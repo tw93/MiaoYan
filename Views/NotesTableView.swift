@@ -15,7 +15,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     override func draw(_ dirtyRect: NSRect) {
         dataSource = self
         delegate = self
-        backgroundColor = NSColor(named: "mainBackground") ?? NSColor.controlBackgroundColor
+        backgroundColor = Theme.backgroundColor
         super.draw(dirtyRect)
     }
 
@@ -370,7 +370,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
 
                 try FileManager.default.moveItem(at: src, to: dst)
             } catch {
-                print(error)
+                AppDelegate.trackError(error, context: "NotesTableView.reloadRow")
             }
         }
     }

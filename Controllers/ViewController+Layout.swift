@@ -26,11 +26,11 @@ extension ViewController {
     }
 
     func setDividerColor(for splitView: NSSplitView, hidden: Bool) {
-        DispatchQueue.main.async {
-            let color = hidden ? (NSColor(named: "mainBackground") ?? NSColor.windowBackgroundColor) : (NSColor(named: "divider") ?? NSColor.separatorColor)
-            splitView.setValue(color, forKey: "dividerColor")
-            splitView.needsDisplay = true
-        }
+        // Use dynamic mainBackground for base surface
+        let baseColor = Theme.backgroundColor
+        let color = hidden ? baseColor : (NSColor(named: "divider") ?? NSColor.separatorColor)
+        splitView.setValue(color, forKey: "dividerColor")
+        splitView.needsDisplay = true
     }
 
     func checkSidebarConstraint() {

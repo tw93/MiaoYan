@@ -314,7 +314,7 @@ class ImagePreviewWindow: NSWindow {
         if !hasLoadingLabel {
             let loadingLabel = NSTextField(labelWithString: "Loading...")
             loadingLabel.font = NSFont.systemFont(ofSize: 13, weight: .medium)
-            loadingLabel.textColor = .secondaryLabelColor
+            loadingLabel.textColor = Theme.secondaryTextColor
             loadingLabel.alignment = .left
             loadingLabel.isBordered = false
             loadingLabel.isBezeled = false
