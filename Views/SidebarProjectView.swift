@@ -225,7 +225,7 @@ class SidebarProjectView: NSOutlineView,
     private func handleNotesTableDrop(data: Data, sidebarItem: SidebarItem, vc: ViewController) -> Bool {
         do {
             guard let rows = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSSet.self, NSNumber.self, NSIndexSet.self], from: data) as? IndexSet else {
-                print("Failed to unarchive IndexSet")
+                AppDelegate.trackError(NSError(domain: "SidebarProjectView", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to unarchive IndexSet"]), context: "SidebarProjectView.handleNotesTableDrop")
                 return false
             }
 
@@ -239,7 +239,7 @@ class SidebarProjectView: NSOutlineView,
 
             return true
         } catch {
-            print("Failed to unarchive IndexSet: \(error)")
+            AppDelegate.trackError(error, context: "SidebarProjectView.handleNotesTableDrop")
             return false
         }
     }

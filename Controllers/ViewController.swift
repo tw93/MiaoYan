@@ -216,6 +216,9 @@ class ViewController:
         loadSortBySetting()
         checkSidebarConstraint()
         checkTitlebarTopConstraint()
+        // 提前设置分割线颜色，避免启动瞬间颜色过深的闪烁
+        // 在视图加载后立即应用，确保窗口展示前颜色已就位
+        updateDividers()
         #if CLOUDKIT
             registerKeyValueObserver()
         #endif

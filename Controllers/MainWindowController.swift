@@ -23,6 +23,11 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         }
 
         applyMiaoYanAppearance()
+
+        // 提前刷新分割线颜色，避免窗口首次显示时颜色闪烁
+        if let vc = ViewController.shared() {
+            vc.updateDividers()
+        }
     }
 
     func windowDidResize(_ notification: Notification) {
@@ -111,10 +116,10 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
 
             if isDarkTheme {
                 targetAppearance = NSAppearance(named: .darkAqua)
-                backgroundColor = NSColor(named: "mainBackground") ?? NSColor.windowBackgroundColor
+                backgroundColor = Theme.backgroundColor
             } else {
                 targetAppearance = NSAppearance(named: .aqua)
-                backgroundColor = NSColor(named: "mainBackground") ?? NSColor.windowBackgroundColor
+                backgroundColor = Theme.backgroundColor
             }
         } else {
             // For custom themes, preserve user's background color without forcing system appearance

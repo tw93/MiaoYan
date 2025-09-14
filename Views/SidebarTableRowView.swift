@@ -39,14 +39,8 @@ class SidebarTableRowView: NSTableRowView {
 
             let path = NSBezierPath(roundedRect: selectionRect, xRadius: cornerRadius, yRadius: cornerRadius)
 
-            // Use system-appropriate colors that work across all macOS versions
-            if NSApp.effectiveAppearance.isDark {
-                // Dark mode: subtle highlight with proper contrast
-                NSColor(calibratedWhite: 0.25, alpha: 1.0).setFill()
-            } else {
-                // Light mode: system-like selection with proper contrast
-                NSColor(calibratedWhite: 0.85, alpha: 1.0).setFill()
-            }
+            // Use app-defined selection background color (appearance-aware)
+            Theme.selectionBackgroundColor.setFill()
 
             path.fill()
         }
