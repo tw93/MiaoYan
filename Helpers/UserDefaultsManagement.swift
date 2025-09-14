@@ -7,6 +7,7 @@ import Foundation
 #endif
 extension Notification.Name {
     static let editorModeChanged = Notification.Name("editorModeChanged")
+    static let preferencesChanged = Notification.Name("PreferencesChanged")
 }
 public enum UserDefaultsManagement {
     #if os(OSX)
@@ -87,8 +88,8 @@ public enum UserDefaultsManagement {
         static let PreviewLocation = "previewLocation"
         static let EditorLineBreak = "editorLineBreak"
         static let ButtonShow = "buttonShow"
-        static let CodeBackground = "CodeBackground"
         static let NotesTableScrollPosition = "notesTableScrollPosition"
+        static let AlwaysOnTop = "alwaysOnTop"
     }
     static var appearanceType: AppearanceType {
         get {
@@ -161,15 +162,16 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.ButtonShow)
         }
     }
-    static var codeBackground: String {
+
+    static var alwaysOnTop: Bool {
         get {
-            if let dl = UserDefaults.standard.object(forKey: Constants.CodeBackground) as? String {
-                return dl
+            if let result = UserDefaults.standard.object(forKey: Constants.AlwaysOnTop) as? Bool {
+                return result
             }
-            return "No"
+            return false
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: Constants.CodeBackground)
+            UserDefaults.standard.set(newValue, forKey: Constants.AlwaysOnTop)
         }
     }
     static var isFirstLaunch: Bool {
@@ -475,7 +477,7 @@ public enum UserDefaultsManagement {
                     try FileManager.default.createDirectory(at: iCloudDocumentsURL, withIntermediateDirectories: true, attributes: nil)
                     return iCloudDocumentsURL.resolvingSymlinksInPath()
                 } catch {
-                    print("Home directory creation: \(error)")
+                    AppDelegate.trackError(error, context: "UserDefaultsManagement.iCloudDocumentsContainer creation failed")
                 }
             } else {
                 return iCloudDocumentsURL.resolvingSymlinksInPath()
@@ -499,7 +501,8 @@ public enum UserDefaultsManagement {
                 if FileManager.default.isWritableFile(atPath: storagePath as! String) {
                     return storagePath as? String
                 } else {
-                    print("Storage path not accessible, settings resettled to default")
+                    let error = NSError(domain: "StorageError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Storage path not accessible, resetting to default"])
+                    AppDelegate.trackError(error, context: "UserDefaultsManagement.storagePath")
                 }
             }
             if let iCloudDocumentsURL = iCloudDocumentsContainer {

@@ -179,6 +179,26 @@ class ViewController:
         popover.delegate = self
         return popover
     }()
+
+    // MARK: - Apply live UI preferences
+    public func applyInterfacePreferences() {
+        search.font = UserDefaultsManagement.searchFont
+        titleLabel.font = UserDefaultsManagement.titleFont.titleBold()
+        emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont
+
+        storageOutlineView.reloadData()
+        notesTableView.reloadData()
+
+        setTableRowHeight()
+        storageOutlineView.needsDisplay = true
+        notesTableView.needsDisplay = true
+    }
+
+    public func applyButtonVisibilityPreference() {
+        let showOnHover = (UserDefaultsManagement.buttonShow == "Hover")
+        titleBarAdditionalView?.alphaValue = showOnHover ? 0 : 1
+        addProjectButton?.alphaValue = showOnHover ? 0 : 1
+    }
     @objc func detachedWindowWillClose(notification: NSNotification) {}
     override func viewDidLoad() {
         configureShortcuts()
