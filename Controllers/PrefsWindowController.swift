@@ -98,18 +98,16 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
     }
 
     private func setupContent() {
-        print("[DEBUG] Setting up content view")
         prefsContentViewController = NSViewController()
         let contentView = NSView(frame: NSRect(x: 0, y: 0, width: 600, height: 400))
         contentView.wantsLayer = true
-        contentView.layer?.backgroundColor = (NSColor(named: "mainBackground") ?? NSColor.controlBackgroundColor).cgColor
+        contentView.layer?.backgroundColor = Theme.backgroundColor.cgColor
         prefsContentViewController.view = contentView
 
         let contentItem = NSSplitViewItem(viewController: prefsContentViewController)
         contentItem.canCollapse = false
 
         splitViewController.addSplitViewItem(contentItem)
-        print("[DEBUG] Content view setup completed")
     }
 
     private func showCategory(_ category: PreferencesCategory) {
@@ -137,9 +135,7 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
             newVC.view.bottomAnchor.constraint(equalTo: prefsContentViewController.view.bottomAnchor),
         ])
 
-
         window?.title = "\(I18n.str("Preferences")) - \(category.title)"
-
 
         sidebarView?.selectCategory(category)
 

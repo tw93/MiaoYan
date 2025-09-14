@@ -66,7 +66,7 @@ class HtmlManager {
                 htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: imPath)
             }
         } catch {
-            print("Image processing regex error: \(error.localizedDescription)")
+            AppDelegate.trackError(error, context: "HtmlManager.processImages.regex")
         }
 
         return htmlString
@@ -183,7 +183,7 @@ class HtmlManager {
                     try FileManager.default.copyItem(atPath: bundleResourceURL.appendingPathComponent(file).path, toPath: tmpURL.path)
                 }
             } catch {
-                print("Bundle resource copy error: \(error.localizedDescription)")
+                AppDelegate.trackError(error, context: "HtmlManager.createTemporaryBundle.copyBundleResource")
             }
         }
 
@@ -195,7 +195,7 @@ class HtmlManager {
                 try FileManager.default.createDirectory(at: cssDst, withIntermediateDirectories: false, attributes: nil)
                 _ = try FileManager.default.copyItem(at: customCSS, to: styleDst)
             } catch {
-                print("Custom CSS copy error: \(error.localizedDescription)")
+                AppDelegate.trackError(error, context: "HtmlManager.createTemporaryBundle.copyCustomCSS")
             }
         }
 

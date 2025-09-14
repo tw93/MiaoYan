@@ -14,16 +14,15 @@ class BasePrefsViewController: NSViewController {
     }
 
     private func setupBaseView() {
-        if #available(macOS 10.14, *) {
-            let effect = NSVisualEffectView()
-            effect.state = .active
-            effect.blendingMode = .withinWindow
-            effect.material = .contentBackground
-            view = effect
-        } else {
-            view = NSView()
-            view.wantsLayer = true
-            view.layer?.backgroundColor = (NSColor(named: "mainBackground") ?? NSColor.windowBackgroundColor).cgColor
-        }
+        let effect = NSVisualEffectView()
+        effect.state = .active
+        effect.blendingMode = .withinWindow
+        effect.material = .contentBackground
+        view = effect
     }
+
+    // MARK: - Hooks for subclasses
+    // Subclasses can override these to build UI and populate values.
+    @objc func setupUI() {}
+    @objc func setupValues() {}
 }
