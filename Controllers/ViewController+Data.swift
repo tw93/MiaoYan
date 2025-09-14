@@ -192,7 +192,8 @@ extension ViewController {
         _ = notesTableView.noteList[0]
 
         DispatchQueue.main.async {
-            let previousSelectedRow = UserDefaultsManagement.isSingleMode ? self.notesTableView.selectedRow : -1
+            // Save currently selected row for restoration after table reload
+            let previousSelectedRow = self.notesTableView.selectedRow
 
             self.notesTableView.reloadData()
 
@@ -201,6 +202,16 @@ extension ViewController {
             }
 
             self.restoreSelectionIfNeeded(previousSelectedRow: previousSelectedRow)
+            // First-run fallback: auto-select first note only during initial app launch
+            // Prevents unwanted auto-selection during normal sidebar/list navigation
+            if !isSearch,
+                !UserDefaultsManagement.isSingleMode,
+                self.storageOutlineView.isLaunch,
+                self.notesTableView.selectedRow == -1,
+                !self.notesTableView.noteList.isEmpty
+            {
+                self.selectNullTableRow(timer: true)
+            }
             completion()
         }
     }
@@ -220,8 +231,7 @@ extension ViewController {
     }
 
     private func restoreSelectionIfNeeded(previousSelectedRow: Int) {
-        if UserDefaultsManagement.isSingleMode,
-            previousSelectedRow != -1,
+        if previousSelectedRow != -1,
             notesTableView.noteList.indices.contains(previousSelectedRow)
         {
             notesTableView.selectRow(previousSelectedRow)
@@ -311,11 +321,14 @@ extension ViewController {
             vc.notesTableView.noteList = storage.noteList
         }
 
+        // Remember current selection to avoid unwanted auto-selection after sort
+        let currentSelectedRow = vc.notesTableView.selectedRow
+
         vc.updateTable()
-        // 修复排序后不选中问题
+        // Fix post-sort selection: only auto-select first row if nothing was previously selected
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.04) {
             let selectedRow = vc.notesTableView.selectedRowIndexes.min()
-            if selectedRow == nil {
+            if selectedRow == nil && currentSelectedRow == -1 {
                 vc.notesTableView.selectRowIndexes([0], byExtendingSelection: true)
             }
         }
@@ -389,6 +402,11 @@ extension ViewController {
     }
 
     @objc private func selectRowInstant() {
+        // Only auto-select first row when no row is currently selected
+        guard notesTableView.selectedRow == -1 else {
+            return
+        }
+
         notesTableView.selectRowIndexes([0], byExtendingSelection: false)
         notesTableView.scrollRowToVisible(0)
 

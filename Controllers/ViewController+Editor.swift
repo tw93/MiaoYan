@@ -94,38 +94,48 @@ extension ViewController {
         hideNoteList("")
         formatButton.isHidden = true
         previewButton.isHidden = true
-        if !UserDefaultsManagement.preview {
-            enablePreview()
+        // Show preview content without changing global preview mode
+        // Maintains presentation state to prevent mode conflicts
+        if editArea.markdownView == nil {
+            refillEditArea(previewOnly: true, force: true)
+        } else {
+            editArea.markdownView?.alphaValue = 0.0
+            editArea.markdownView?.isHidden = false
+            refillEditArea(previewOnly: true, force: true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                NSAnimationContext.runAnimationGroup({ context in
+                    context.duration = 0.2
+                    context.timingFunction = CAMediaTimingFunction(name: .easeOut)
+                    self.editArea.markdownView?.animator().alphaValue = 1.0
+                })
+            }
         }
         presentationButton.state = .on
         if !UserDefaultsManagement.fullScreen {
             view.window?.toggleFullScreen(nil)
         }
         if !UserDefaultsManagement.isOnExportPPT {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                 self.toast(message: NSLocalizedString("🙊 Press ESC key to exit~", comment: ""))
             }
         }
     }
     func disablePresentation() {
-        UserDefaultsManagement.presentation = false
+        // Defer presentation flag update until UI is fully restored to prevent state conflicts
         presentationButton.state = .off
         if UserDefaultsManagement.fullScreen {
             UserDefaultsManagement.fullScreen = false
             view.window?.toggleFullScreen(nil)
         }
-        // Restore UI elements after a short delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        // Restore UI elements after fullscreen transition completes
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
             // Restore UI elements
             self.formatButton.isHidden = false
             self.previewButton.isHidden = false
             // Restore layout
-            if UserDefaultsManagement.sidebarSize > 0 {
-                self.showNoteList("")
-            }
-            if UserDefaultsManagement.realSidebarSize > 0 && self.sidebarWidth == 0 {
-                self.showSidebar("")
-            }
+            // Always restore three-panel layout when exiting presentation mode
+            self.showNoteList("")
+            if self.sidebarWidth == 0 { self.showSidebar("") }
             self.checkTitlebarTopConstraint()
             // Restore scroll position
             if let savedPosition = self.savedPresentationScrollPosition,
@@ -134,9 +144,12 @@ extension ViewController {
                 clipView.setBoundsOrigin(savedPosition)
                 self.savedPresentationScrollPosition = nil
             }
+            // Force return to editing mode and update state flags
+            self.disablePreview()
+            // Safely update presentation state after UI restoration
+            UserDefaultsManagement.presentation = false
+            self.updateButtonStates()
         }
-
-        updateButtonStates()
     }
 
     // MARK: - Helper Methods
@@ -244,7 +257,7 @@ extension ViewController {
             vc.handlePPTAutoTransition()
         }
         if !UserDefaultsManagement.isOnExportPPT {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
                 vc.toast(message: NSLocalizedString("🙊 Press ESC key to exit~", comment: ""))
             }
         }
@@ -271,9 +284,7 @@ extension ViewController {
         }
     }
     func disableMiaoYanPPT() {
-        // Set back to normal mode
-        UserDefaultsManagement.magicPPT = false
-        // Update button states
+        // Defer magicPPT flag update until UI fully restored to prevent conflicts
         DispatchQueue.main.async {
             self.previewButton.state = .off
             self.presentationButton.state = .off
@@ -289,18 +300,14 @@ extension ViewController {
             UserDefaultsManagement.fullScreen = false
             view.window?.toggleFullScreen(nil)
         }
-        // Restore UI elements after a short delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            // Restore UI elements
+        // Restore UI elements after fullscreen transition completes
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            // Show hidden UI elements
             self.formatButton.isHidden = false
             self.previewButton.isHidden = false
-            // Restore layout
-            if UserDefaultsManagement.sidebarSize > 0 {
-                self.showNoteList("")
-            }
-            if UserDefaultsManagement.realSidebarSize > 0 && self.sidebarWidth == 0 {
-                self.showSidebar("")
-            }
+            // Always restore three-panel layout when exiting PPT mode
+            self.showNoteList("")
+            if self.sidebarWidth == 0 { self.showSidebar("") }
             self.checkTitlebarTopConstraint()
             // Restore scroll position
             if let savedPosition = self.savedPresentationScrollPosition,
@@ -309,9 +316,13 @@ extension ViewController {
                 clipView.setBoundsOrigin(savedPosition)
                 self.savedPresentationScrollPosition = nil
             }
+            // Force return to editing mode and update state flags
+            self.disablePreview()
+            // Safely update magicPPT state after UI restoration
+            UserDefaultsManagement.magicPPT = false
+            self.updateButtonStates()
         }
 
-        updateButtonStates()
         // Hide webview and return to text editor
         if let webView = editArea.markdownView {
             NSAnimationContext.runAnimationGroup(
@@ -325,9 +336,8 @@ extension ViewController {
                     webView.alphaValue = 1.0
                 })
         }
-        // Restore editor content
+        // Restore editor content and focus
         refillEditArea()
-        // Re-enable text editing
         DispatchQueue.main.async {
             self.titleLabel.isEditable = true
             self.focusEditArea()
@@ -406,7 +416,7 @@ extension ViewController {
                 formatContent = newContent
                 toast(message: NSLocalizedString("🎉 Automatic typesetting succeeded~", comment: ""))
             case .failure(let error):
-                print("Format error: \(error)")
+                AppDelegate.trackError(error, context: "ViewController+Editor.format")
                 toast(message: NSLocalizedString("❌ Formatting failed, please try again", comment: ""))
             }
             TelemetryDeck.signal("Editor.Format")
@@ -496,7 +506,11 @@ extension ViewController {
             self?.previewButton.state = UserDefaultsManagement.preview ? .on : .off
             self?.presentationButton.state = UserDefaultsManagement.presentation ? .on : .off
         }
-        guard !previewOnly || previewOnly && (UserDefaultsManagement.preview || UserDefaultsManagement.magicPPT) else {
+        // Allow content refill in these scenarios:
+        // - Normal refill (not preview-only), or
+        // - Preview-only refill when in any preview/presentation mode, or
+        // - Force refill regardless of conditions
+        guard force || !previewOnly || (previewOnly && (UserDefaultsManagement.preview || UserDefaultsManagement.magicPPT || UserDefaultsManagement.presentation)) else {
             return
         }
         DispatchQueue.main.async {
