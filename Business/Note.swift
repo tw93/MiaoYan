@@ -197,9 +197,7 @@ public class Note: NSObject {
                 }
             #endif
 
-            #if DEBUG
-                print("File moved from \"\(url.deletingPathExtension().lastPathComponent)\" to \"\(destination.deletingPathExtension().lastPathComponent)\"")
-            #endif
+            // File moved successfully
         } catch {
             AppDelegate.trackError(error, context: "Note.moveFile")
             return false

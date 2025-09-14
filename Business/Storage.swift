@@ -303,9 +303,7 @@ class Storage {
                 note.load()
                 i += 1
                 if i == count {
-                    #if DEBUG
-                        print("Loaded notes: \(count)")
-                    #endif
+                    // Loaded all notes
                     completion()
                 }
             }
@@ -739,9 +737,7 @@ class Storage {
                 )
             }
 
-            #if DEBUG
-                print("Start downloads: \(images.count)")
-            #endif
+            // Start downloads count available when debugging needed
 
             for image in images {
                 let url = image.0 as URL
@@ -751,9 +747,7 @@ class Storage {
                 }
             }
         } catch {
-            #if DEBUG
-                print("Project not found, url: \(url)")
-            #endif
+            // Silently ignore missing project in debug to avoid console spam
         }
     }
 
@@ -830,7 +824,7 @@ class Storage {
                 keyStore.set(names, forKey: "com.tw93.miaoyan.pins.shared")
                 keyStore.synchronize()
 
-                print("Pins successfully saved: \(names)")
+                // Pins successfully saved
             }
         #endif
     }
