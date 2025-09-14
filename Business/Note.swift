@@ -165,7 +165,7 @@ public class Note: NSObject {
 
             return attr[FileAttributeKey.modificationDate] as? Date
         } catch {
-            print("Note modification date load error: \(error.localizedDescription)")
+            AppDelegate.trackError(error, context: "Note.loadModificationDate")
             AppDelegate.trackError(error, context: "Note.getModificationDate")
             return nil
         }
@@ -197,9 +197,11 @@ public class Note: NSObject {
                 }
             #endif
 
-            print("File moved from \"\(url.deletingPathExtension().lastPathComponent)\" to \"\(destination.deletingPathExtension().lastPathComponent)\"")
+            #if DEBUG
+                print("File moved from \"\(url.deletingPathExtension().lastPathComponent)\" to \"\(destination.deletingPathExtension().lastPathComponent)\"")
+            #endif
         } catch {
-            Swift.print(error)
+            AppDelegate.trackError(error, context: "Note.moveFile")
             return false
         }
 
@@ -260,8 +262,6 @@ public class Note: NSObject {
                 }
 
                 guard let trashUrl = getDefaultTrashURL() else {
-                    print("Trash not found")
-
                     var resultingItemUrl: NSURL?
                     if #available(iOS 11.0, *) {
                         try? FileManager.default.trashItem(at: url, resultingItemURL: &resultingItemUrl)
@@ -281,7 +281,6 @@ public class Note: NSObject {
                     trashUrlTo = trashUrl.appendingPathComponent(reserveName)
                 }
 
-                print("Note moved in custom Trash folder")
                 try? FileManager.default.moveItem(at: url, to: trashUrlTo)
 
                 return [trashUrlTo, url]
@@ -319,7 +318,7 @@ public class Note: NSObject {
                 return [url, originalURL]
 
             } catch {
-                print("Trash error: \(error)")
+                AppDelegate.trackError(error, context: "Note.trashError")
             }
 
             return nil
@@ -593,7 +592,7 @@ public class Note: NSObject {
 
             modifiedLocalAt = Date()
         } catch {
-            print("Write error \(error)")
+            AppDelegate.trackError(error, context: "Note.writeError")
             AppDelegate.trackError(error, context: "Note.write")
             return
         }
@@ -709,7 +708,7 @@ public class Note: NSObject {
                 }
             }
         } catch {
-            print(error)
+            AppDelegate.trackError(error, context: "Note.saveAttributed")
         }
 
         return wrapper
@@ -1007,7 +1006,7 @@ public class Note: NSObject {
                 note.content.replaceCharacters(in: range, with: replace)
             }
         } catch {
-            print("Enc error: \(error)")
+            AppDelegate.trackError(error, context: "Note.encrypt")
         }
     }
 
@@ -1078,7 +1077,7 @@ public class Note: NSObject {
             container = .textBundleV2
             return true
         } catch {
-            print("Can not load TextBundle: \(error)")
+            AppDelegate.trackError(error, context: "Note.loadTextBundle")
         }
 
         return false

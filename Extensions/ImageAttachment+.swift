@@ -71,14 +71,14 @@ extension NoteAttachment {
                     do {
                         try FileManager.default.createDirectory(at: imageCacheUrl.deletingLastPathComponent(), withIntermediateDirectories: false, attributes: nil)
                     } catch {
-                        print(error)
+                        AppDelegate.trackError(error, context: "ImageAttachment+.loadFileWrapper")
                     }
                 }
 
                 do {
                     data = try Data(contentsOf: url)
                 } catch {
-                    print(error)
+                    AppDelegate.trackError(error, context: "ImageAttachment+.loadImage")
                 }
 
             } else {

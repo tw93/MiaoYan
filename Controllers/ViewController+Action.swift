@@ -228,7 +228,9 @@ extension ViewController {
 
         do {
             try FileManager.default.moveItem(at: url, to: newUrl)
-            print("File moved from \"\(url.deletingPathExtension().lastPathComponent)\" to \"\(newUrl.deletingPathExtension().lastPathComponent)\"")
+            #if DEBUG
+                print("File moved from \"\(url.deletingPathExtension().lastPathComponent)\" to \"\(newUrl.deletingPathExtension().lastPathComponent)\"")
+            #endif
         } catch {
             note.overwrite(url: url)
         }
@@ -753,13 +755,7 @@ extension ViewController {
     }
 
     func restart() {
-        let url = URL(fileURLWithPath: Bundle.main.resourcePath!)
-        let path = url.deletingLastPathComponent().deletingLastPathComponent().absoluteString
-        let task = Process()
-        task.launchPath = "/usr/bin/open"
-        task.arguments = [path]
-        task.launch()
-        exit(0)
+        AppDelegate.relaunchApp()
     }
 
     // MARK: - Menu Management
@@ -882,7 +878,9 @@ extension ViewController {
             case "PDF":
                 self.editArea.markdownView?.exportPdf()
             default:
-                print("Export no Type")
+                #if DEBUG
+                    print("Export no Type")
+                #endif
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 UserDefaultsManagement.isOnExport = false

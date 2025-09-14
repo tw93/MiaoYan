@@ -173,10 +173,8 @@ class Storage {
             if !FileManager.default.fileExists(atPath: trash.path, isDirectory: &isDir), !isDir.boolValue {
                 do {
                     try FileManager.default.createDirectory(at: trash, withIntermediateDirectories: false, attributes: nil)
-
-                    print("New trash created: \(trash)")
                 } catch {
-                    print("Trash dir error: \(error)")
+                    AppDelegate.trackError(error, context: "Storage.trashDir")
                 }
             }
 
@@ -305,7 +303,9 @@ class Storage {
                 note.load()
                 i += 1
                 if i == count {
-                    print("Loaded notes: \(count)")
+                    #if DEBUG
+                        print("Loaded notes: \(count)")
+                    #endif
                     completion()
                 }
             }
@@ -511,7 +511,7 @@ class Storage {
                     )
                 }
         } catch {
-            print("Storage not found, url: \(url) – \(error)")
+            AppDelegate.trackError(error, context: "Storage.notFound: \(url.path)")
         }
 
         return []
@@ -573,7 +573,7 @@ class Storage {
                 }
             }
         } catch {
-            print("Initial copy error: \(error)")
+            AppDelegate.trackError(error, context: "Storage.initialCopy")
         }
 
         return true
@@ -690,7 +690,7 @@ class Storage {
                     subDirs.append(url)
                 }
             } catch let error as NSError {
-                print("Error: ", error.localizedDescription)
+                AppDelegate.trackError(error, context: "Storage.saveImages")
             }
 
             if i > 50000 {
@@ -739,7 +739,9 @@ class Storage {
                 )
             }
 
-            print("Start downloads: \(images.count)")
+            #if DEBUG
+                print("Start downloads: \(images.count)")
+            #endif
 
             for image in images {
                 let url = image.0 as URL
@@ -749,7 +751,9 @@ class Storage {
                 }
             }
         } catch {
-            print("Project not found, url: \(url)")
+            #if DEBUG
+                print("Project not found, url: \(url)")
+            #endif
         }
     }
 
@@ -809,7 +813,7 @@ class Storage {
                     try FileManager.default.removeItem(at: fileURL)
                 }
             } catch {
-                print(error)
+                AppDelegate.trackError(error, context: "Storage.copyPins")
             }
         }
     }
@@ -882,7 +886,7 @@ class Storage {
                 _ = try FileManager.default.contentsOfDirectory(atPath: url.path)
                 result.append(url)
             } catch {
-                print(error)
+                AppDelegate.trackError(error, context: "Storage.enumerateNotes")
             }
         }
 

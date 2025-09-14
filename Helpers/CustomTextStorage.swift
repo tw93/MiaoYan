@@ -97,19 +97,6 @@ extension NSTextStorage: @retroactive NSTextStorageDelegate {
 
         NotesTextProcessor.highlightCode(attributedString: textStorage, range: parRange, language: language)
 
-        if delta == 1 {
-            let newChar = textStorage.mutableString.substring(with: editedRange)
-            let isNewLine = newChar == "\n"
-
-            let backgroundRange =
-                isNewLine && parRange.upperBound + 1 <= textStorage.length
-                ? NSRange(parRange.location..<parRange.upperBound + 1)
-                : parRange
-
-            if UserDefaultsManagement.codeBackground == "Yes" {
-                textStorage.addAttribute(.backgroundColor, value: NotesTextProcessor.codeBackground, range: backgroundRange)
-            }
-        }
     }
 
     private func highlight(textStorage: NSTextStorage, indentedRange: [NSRange], intersectedRange: NSRange, editedRange: NSRange) {
@@ -160,9 +147,6 @@ extension NSTextStorage: @retroactive NSTextStorageDelegate {
             let code = textStorage.mutableString.substring(with: fencedRange)
             let language = NotesTextProcessor.getLanguage(code)
             NotesTextProcessor.highlightCode(attributedString: textStorage, range: parRange, language: language)
-            if UserDefaultsManagement.codeBackground == "Yes" {
-                textStorage.addAttribute(.backgroundColor, value: NotesTextProcessor.codeBackground, range: parRange)
-            }
         } else {
             guard let note = EditTextView.note else { return }
             NotesTextProcessor.highlightMarkdown(attributedString: textStorage, paragraphRange: parRange, note: note)
