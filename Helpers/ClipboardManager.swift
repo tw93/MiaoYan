@@ -134,7 +134,7 @@ class ClipboardManager {
                         self.deleteImage(tempPath: tempPath)
                     } else if let error = error {
                         vc.toastUpload(status: false)
-                        print("error: \(error.localizedDescription)")
+                        AppDelegate.trackError(error, context: "ClipboardManager.uploadToCloudAsync")
                     } else {
                         vc.toastUpload(status: false)
                     }
@@ -189,7 +189,7 @@ class ClipboardManager {
             guard let resultingItemUrl = Storage.sharedInstance().trashItem(url: tempPath) else { return }
             try FileManager.default.moveItem(at: tempPath, to: resultingItemUrl)
         } catch {
-            print(error)
+            AppDelegate.trackError(error, context: "ClipboardManager.deleteImage")
         }
     }
 

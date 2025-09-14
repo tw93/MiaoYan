@@ -212,7 +212,6 @@ public class ImagesProcessor {
             do {
                 try data.write(to: to, options: .atomic)
             } catch {
-                print(error)
                 AppDelegate.trackError(error, context: "ImagesProcessor.writeImage")
             }
 
