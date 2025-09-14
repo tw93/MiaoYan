@@ -1,4 +1,3 @@
-import Alamofire
 import Cocoa
 
 class ImagePreviewWindow: NSWindow {

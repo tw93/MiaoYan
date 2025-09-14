@@ -131,19 +131,19 @@ extension StringProtocol where Index == String.Index {
     }
 }
 
+// MARK: - String Subscript Extensions
 extension String {
+    // Single character access by integer index
     public subscript(value: Int) -> Character {
         self[index(at: value)]
     }
-}
 
-extension String {
+    // Substring access by NSRange
     public subscript(value: NSRange) -> Substring {
         self[value.lowerBound..<value.upperBound]
     }
-}
 
-extension String {
+    // Substring access by closed range
     public subscript(value: CountableClosedRange<Int>) -> Substring {
         self[index(at: value.lowerBound)...index(at: value.upperBound)]
     }
@@ -163,9 +163,8 @@ extension String {
     public subscript(value: PartialRangeFrom<Int>) -> Substring {
         self[index(at: value.lowerBound)...]
     }
-}
 
-extension String {
+    // Helper method to convert integer offset to String.Index
     fileprivate func index(at offset: Int) -> String.Index {
         self.index(startIndex, offsetBy: offset)
     }

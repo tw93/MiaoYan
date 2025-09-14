@@ -117,7 +117,6 @@ class FileSystemEventManager {
         note.load()
         note.loadModifiedLocalAt()
 
-        print("FSWatcher import note: \"\(note.name)\"")
         self.storage.add(note)
 
         DispatchQueue.main.async {
@@ -160,8 +159,6 @@ class FileSystemEventManager {
     }
 
     private func removeNote(note: Note) {
-        print("FSWatcher remove note: \"\(note.name)\"")
-
         self.storage.removeNotes(notes: [note], fsRemove: false) { _ in
             DispatchQueue.main.async {
                 if self.delegate.notesTableView.numberOfRows > 0 {
