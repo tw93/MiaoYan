@@ -29,7 +29,6 @@
 		275F9F602E6820F8006BC2AC /* ViewController+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F5F2E6820F8006BC2AC /* ViewController+Layout.swift */; };
 		275F9F622E682239006BC2AC /* ViewController+Editor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F612E682239006BC2AC /* ViewController+Editor.swift */; };
 		276312612E7580B5007BB5E9 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276312602E7580B5007BB5E9 /* Localization.swift */; };
-		276312632E7580FA007BB5E9 /* DragOperationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276312622E7580FA007BB5E9 /* DragOperationHandler.swift */; };
 		276312822E75813D007BB5E9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 276312782E75813D007BB5E9 /* Localizable.strings */; };
 		276312832E75813D007BB5E9 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2763126E2E75813D007BB5E9 /* Info.plist */; };
 		276312842E75813D007BB5E9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 276312732E75813D007BB5E9 /* InfoPlist.strings */; };
@@ -181,7 +180,6 @@
 		275F9F5F2E6820F8006BC2AC /* ViewController+Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Layout.swift"; sourceTree = "<group>"; };
 		275F9F612E682239006BC2AC /* ViewController+Editor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Editor.swift"; sourceTree = "<group>"; };
 		276312602E7580B5007BB5E9 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
-		276312622E7580FA007BB5E9 /* DragOperationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragOperationHandler.swift; sourceTree = "<group>"; };
 		276312662E75813D007BB5E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ContentViewController.xib; sourceTree = "<group>"; };
 		276312682E75813D007BB5E9 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/ContentViewController.strings; sourceTree = "<group>"; };
 		276312692E75813D007BB5E9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/ContentViewController.strings"; sourceTree = "<group>"; };
@@ -504,7 +502,6 @@
 			isa = PBXGroup;
 			children = (
 				2763128C2E766CE3007BB5E9 /* Theme.swift */,
-				276312622E7580FA007BB5E9 /* DragOperationHandler.swift */,
 				276312602E7580B5007BB5E9 /* Localization.swift */,
 				275F9F592E68150E006BC2AC /* ClipboardManager.swift */,
 				275F9F5A2E68150E006BC2AC /* EditorMenuManager.swift */,
@@ -736,7 +733,6 @@
 				D78678CB2093AE10001A6620 /* UndoData.swift in Sources */,
 				274D62D12E434B9C003C075F /* ImagePreviewWindow.swift in Sources */,
 				D730BD2E222DABA100E69C93 /* NoteContainer.swift in Sources */,
-				276312632E7580FA007BB5E9 /* DragOperationHandler.swift in Sources */,
 				275F9F602E6820F8006BC2AC /* ViewController+Layout.swift in Sources */,
 				D730BD35222DB11E00E69C93 /* TextBundleInfo.swift in Sources */,
 				2781609A2E75553600F3D54B /* GeneralPrefsViewController.swift in Sources */,

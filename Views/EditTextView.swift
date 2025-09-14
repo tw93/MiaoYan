@@ -28,15 +28,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
     }
     override func awakeFromNib() {
         super.awakeFromNib()
-        registerForDraggedTypes([
-            NSPasteboard.PasteboardType(kUTTypeFileURL as String)
-        ])
+
         EditTextView.imagesLoaderQueue.maxConcurrentOperationCount = 3
         EditTextView.imagesLoaderQueue.qualityOfService = .userInteractive
         imagePreviewManager = ImagePreviewManager(textView: self)
         clipboardManager = ClipboardManager(textView: self)
         menuManager = EditorMenuManager(textView: self)
     }
+
     deinit {
         linkHighlightTimer?.invalidate()
         linkHighlightTimer = nil
@@ -83,7 +82,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
         newInvalidRect.size.width += caretWidth - 1
         super.setNeedsDisplay(newInvalidRect)
     }
-    override var acceptableDragTypes: [NSPasteboard.PasteboardType] { [] }
+
+
     override func mouseDown(with event: NSEvent) {
         imagePreviewManager?.handleMouseClick(at: event.locationInWindow)
         guard EditTextView.note != nil else { return }
@@ -514,88 +514,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             textColor = color
         }
     }
-    override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
-        let board = sender.draggingPasteboard
-        let range = selectedRange
-        guard let note = EditTextView.note, let storage = textStorage else { return false }
-        let availableTypes = board.types ?? []
-        if availableTypes.contains(.rtfd),
-            let data = board.data(forType: .rtfd),
-            let text = NSAttributedString(rtfd: data, documentAttributes: nil),
-            text.length > 0, range.length > 0
-        {
-            insertText("", replacementRange: range)
-            let dropPoint = convert(sender.draggingLocation, from: nil)
-            let caretLocation = characterIndexForInsertion(at: dropPoint)
-            let mutable = NSMutableAttributedString(attributedString: text)
-            insertText(mutable, replacementRange: NSRange(location: caretLocation, length: 0))
-            storage.sizeAttachmentImages()
-            DispatchQueue.main.async {
-                self.setSelectedRange(NSRange(location: caretLocation, length: mutable.length))
-            }
-            return true
-        }
-        let attributedTextType = NSPasteboard.PasteboardType(rawValue: "attributedText")
-        if availableTypes.contains(attributedTextType),
-            let data = board.data(forType: attributedTextType),
-            let attributedText = try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSMutableAttributedString.self, from: data)
-        {
-            return handleImageDrop(attributedText: attributedText, sender: sender, note: note, storage: storage)
-        }
-        if let urls = board.readObjects(forClasses: [NSURL.self], options: nil) as? [URL], !urls.isEmpty {
-            return handleFileURLsDrop(urls: urls, sender: sender, note: note, storage: storage)
-        }
-        return false
-    }
-    private func handleImageDrop(attributedText: NSMutableAttributedString, sender: NSDraggingInfo, note: Note, storage: NSTextStorage) -> Bool {
-        let dropPoint = convert(sender.draggingLocation, from: nil)
-        let caretLocation = characterIndexForInsertion(at: dropPoint)
-        let filePathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
-        let titleKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.title")
-        let positionKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.position")
-        guard
-            let path = attributedText.attribute(filePathKey, at: 0, effectiveRange: nil) as? String,
-            let title = attributedText.attribute(titleKey, at: 0, effectiveRange: nil) as? String,
-            let position = attributedText.attribute(positionKey, at: 0, effectiveRange: nil) as? Int,
-            let imageUrl = note.getImageUrl(imageName: path)
-        else { return false }
-        let cacheUrl = note.getImageCacheUrl()
-        let locationDiff = max(0, position > caretLocation ? caretLocation : caretLocation - 1)
-        guard locationDiff < storage.length else { return false }
-        let attachment = NoteAttachment(title: title, path: path, url: imageUrl, cache: cacheUrl, invalidateRange: NSRange(location: locationDiff, length: 1))
-        guard let attachmentText = attachment.getAttributedString() else { return false }
-        textStorage?.deleteCharacters(in: NSRange(location: position, length: 1))
-        textStorage?.replaceCharacters(in: NSRange(location: locationDiff, length: 0), with: attachmentText)
-        unLoadImages(note: note)
-        setSelectedRange(NSRange(location: caretLocation, length: 0))
-        return true
-    }
-    private func handleFileURLsDrop(urls: [URL], sender: NSDraggingInfo, note: Note, storage: NSTextStorage) -> Bool {
-        let dropPoint = convert(sender.draggingLocation, from: nil)
-        let caretLocation = characterIndexForInsertion(at: dropPoint)
-        unLoadImages(note: note)
-        var successCount = 0
-        for url in urls {
-            guard let data = try? Data(contentsOf: url),
-                let filePath = ImagesProcessor.writeFile(data: data, url: url, note: note)
-            else {
-                continue
-            }
-            let insertRange = NSRange(location: caretLocation + successCount * 2, length: 0)
-            insertText("![](\(filePath))", replacementRange: insertRange)
-            if url != urls.last {
-                insertNewline(nil)
-                insertNewline(nil)
-            }
-            successCount += 1
-        }
-        guard successCount > 0 else { return false }
-        NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
-        saveTextStorageContent(to: note)
-        note.save()
-        viewDelegate?.notesTableView.reloadRow(note: note)
-        return true
-    }
     public func unLoadImages(note: Note) {
         note.save(attributed: attributedString())
     }
@@ -643,18 +561,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
         guard let note = EditTextView.note else { return nil }
         return TextFormatter(textView: self, note: note)
     }
-    override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
-        guard let selected = attributedSubstring(forProposedRange: selectedRange(), actualRange: nil) else { return .generic }
-        let attributedString = NSMutableAttributedString(attributedString: selected)
-        let positionKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.position")
-        attributedString.addAttribute(positionKey, value: selectedRange().location, range: NSRange(0..<1))
-        if let data = try? NSKeyedArchiver.archivedData(withRootObject: attributedString, requiringSecureCoding: false) {
-            let type = NSPasteboard.PasteboardType(rawValue: "attributedText")
-            let board = sender.draggingPasteboard
-            board.setData(data, forType: type)
-        }
-        return .copy
-    }
+
+
     override func clicked(onLink link: Any, at charIndex: Int) {
         let range = NSRange(location: charIndex, length: 1)
         let char = attributedSubstring(forProposedRange: range, actualRange: nil)
