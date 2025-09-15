@@ -52,7 +52,6 @@ final class PrefsSidebarView: NSView {
         tableView.delegate = self
         tableView.dataSource = self
 
-        // Create a single column
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("CategoryColumn"))
         column.title = ""
         column.isEditable = false
@@ -78,23 +77,20 @@ final class PrefsSidebarView: NSView {
         wantsLayer = true
         layer?.backgroundColor = Theme.backgroundColor.cgColor
 
-        // Add modern translucent sidebar appearance on supported macOS versions
-        if #available(macOS 10.14, *) {
-            let visualEffect = NSVisualEffectView()
-            visualEffect.translatesAutoresizingMaskIntoConstraints = false
-            visualEffect.material = .sidebar
-            visualEffect.blendingMode = .behindWindow
-            visualEffect.state = .active
+        let visualEffect = NSVisualEffectView()
+        visualEffect.translatesAutoresizingMaskIntoConstraints = false
+        visualEffect.material = .sidebar
+        visualEffect.blendingMode = .behindWindow
+        visualEffect.state = .active
 
-            addSubview(visualEffect, positioned: .below, relativeTo: scrollView)
+        addSubview(visualEffect, positioned: .below, relativeTo: scrollView)
 
-            NSLayoutConstraint.activate([
-                visualEffect.leadingAnchor.constraint(equalTo: leadingAnchor),
-                visualEffect.trailingAnchor.constraint(equalTo: trailingAnchor),
-                visualEffect.topAnchor.constraint(equalTo: topAnchor),
-                visualEffect.bottomAnchor.constraint(equalTo: bottomAnchor),
-            ])
-        }
+        NSLayoutConstraint.activate([
+            visualEffect.leadingAnchor.constraint(equalTo: leadingAnchor),
+            visualEffect.trailingAnchor.constraint(equalTo: trailingAnchor),
+            visualEffect.topAnchor.constraint(equalTo: topAnchor),
+            visualEffect.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
     }
 
     func selectCategory(_ category: PreferencesCategory) {

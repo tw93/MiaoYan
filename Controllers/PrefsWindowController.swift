@@ -50,9 +50,7 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         showCategory(.general)
 
         window?.title = I18n.str("Preferences")
-        if #available(macOS 11.0, *) {
-            window?.toolbarStyle = .preference
-        }
+        window?.toolbarStyle = .preference
         window?.center()
     }
 
@@ -69,10 +67,8 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         splitViewController.splitView.dividerStyle = .thin
 
         // Configure split view behavior
-        if #available(macOS 11.0, *) {
-            splitViewController.splitViewItems.forEach { item in
-                item.canCollapse = false
-            }
+        splitViewController.splitViewItems.forEach { item in
+            item.canCollapse = false
         }
 
         window?.contentViewController = splitViewController
@@ -90,9 +86,7 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         sidebarItem.maximumThickness = 145
         sidebarItem.canCollapse = false
 
-        if #available(macOS 11.0, *) {
-            sidebarItem.titlebarSeparatorStyle = .none
-        }
+        sidebarItem.titlebarSeparatorStyle = .none
 
         splitViewController.addSplitViewItem(sidebarItem)
     }
@@ -113,14 +107,12 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
     private func showCategory(_ category: PreferencesCategory) {
         currentCategory = category
 
-        // Remove current content view controller
         if let currentVC = prefsContentViewController.children.first {
 
             currentVC.removeFromParent()
             currentVC.view.removeFromSuperview()
         }
 
-        // Add new content view controller
         let newVC = viewController(for: category)
 
         prefsContentViewController.addChild(newVC)

@@ -1,52 +1,34 @@
-//
-//  String+.swift
-//  FSNotes
-//
-//  Created by Jeff Hanbury on 29/08/17.
-//  Copyright © 2017 Oleksandr Glushchenko. All rights reserved.
-//
-
 import CommonCrypto
 import CryptoKit
 import Foundation
 
 extension String {
     public func condenseWhitespace() -> String {
-        let components = components(separatedBy: NSCharacterSet.whitespacesAndNewlines)
-        return components.filter { !$0.isEmpty }.joined(separator: " ")
+        components(separatedBy: .whitespacesAndNewlines)
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
     }
 
-    // Search the string for the existence of any of the terms in the provided array of terms.
-
-    // Inspired by magic from https://stackoverflow.com/a/41902740/2778502
     public func localizedStandardContains<S: StringProtocol>(_ terms: [S]) -> Bool {
-        terms.contains { self.localizedStandardContains($0) }
+        terms.contains { localizedStandardContains($0) }
     }
 
     public func trim() -> String {
-        trimmingCharacters(in: NSCharacterSet.whitespaces)
+        trimmingCharacters(in: .whitespaces)
     }
 
     public func getPrefixMatchSequentially(char: String) -> String? {
         var result = String()
 
         for current in self {
-            if current.description == char {
-                result += char
-                continue
-            }
-            break
+            guard current.description == char else { break }
+            result += char
         }
 
-        if !result.isEmpty {
-            return result
-        }
-
-        return nil
+        return result.isEmpty ? nil : result
     }
 
     public func localizedCaseInsensitiveContainsTerms(_ terms: [Substring]) -> Bool {
-        // Use magic from https://stackoverflow.com/a/41902740/2778502
         terms.allSatisfy { localizedLowercase.contains($0) }
     }
 
@@ -58,30 +40,25 @@ extension String {
     }
 
     public func removeLastNewLine() -> String {
-        if last == "\n" {
-            return String(self.dropLast())
-        }
-
-        return self
+        last == "\n" ? String(dropLast()) : self
     }
 
     public func isNumberList() -> Bool {
         let pattern = "^(( |\t)*[0-9]+\\. )"
-        if let regex = try? NSRegularExpression(pattern: pattern) {
-            return regex.firstMatch(in: self, options: [], range: NSRange(location: 0, length: count)) != nil
-        }
-
-        return false
+        guard let regex = try? NSRegularExpression(pattern: pattern) else { return false }
+        return regex.firstMatch(in: self, options: [], range: NSRange(location: 0, length: count)) != nil
     }
 
     public func regexReplace(regex: String, content: String) -> String {
-        do {
-            let regexExpression = try NSRegularExpression(pattern: regex, options: .caseInsensitive)
-            let modified = regexExpression.stringByReplacingMatches(in: self, options: .reportProgress, range: NSRange(location: 0, length: count), withTemplate: content)
-            return modified
-        } catch {
+        guard let regexExpression = try? NSRegularExpression(pattern: regex, options: .caseInsensitive) else {
             return self
         }
+        return regexExpression.stringByReplacingMatches(
+            in: self,
+            options: .reportProgress,
+            range: NSRange(location: 0, length: count),
+            withTemplate: content
+        )
     }
 
     public var isValidUUID: Bool {
@@ -89,7 +66,7 @@ extension String {
     }
 
     public func escapePlus() -> String {
-        self.replacingOccurrences(of: "+", with: "%20")
+        replacingOccurrences(of: "+", with: "%20")
     }
 
     public func matchingStrings(regex: String) -> [[String]] {
@@ -114,10 +91,7 @@ extension String {
 
     public var isWhitespace: Bool {
         guard !isEmpty else { return true }
-
-        let whitespaceChars = NSCharacterSet.whitespacesAndNewlines
-
-        return !unicodeScalars.contains { (unicodeScalar: UnicodeScalar) -> Bool in !whitespaceChars.contains(unicodeScalar) }
+        return !unicodeScalars.contains { !CharacterSet.whitespacesAndNewlines.contains($0) }
     }
 
     public var isNumber: Bool {

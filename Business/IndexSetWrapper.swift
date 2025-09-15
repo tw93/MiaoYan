@@ -1,11 +1,3 @@
-//
-//  IndexSetWrapper.swift
-//  MiaoYan
-//
-//  Created by Tw93 on 2023/5/5.
-//  Copyright © 2023 MiaoYan App. All rights reserved.
-//
-
 import Foundation
 
 class IndexSetWrapper: NSObject, NSSecureCoding {

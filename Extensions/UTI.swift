@@ -1,10 +1,5 @@
+import CoreServices
 import Foundation
-
-#if os(OSX)
-    import CoreServices
-#elseif os(iOS)
-    import MobileCoreServices
-#endif
 
 extension String {
     public func tag(withClass: CFString) -> String? {

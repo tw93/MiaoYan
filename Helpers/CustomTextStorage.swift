@@ -1,30 +1,15 @@
-#if os(OSX)
-    import AppKit
-#else
-    import UIKit
-#endif
+import AppKit
 
 extension NSTextStorage: @retroactive NSTextStorageDelegate {
-    #if os(iOS)
-        public func textStorage(
-            _ textStorage: NSTextStorage,
-            didProcessEditing editedMask: NSTextStorage.EditActions,
-            range editedRange: NSRange, changeInLength delta: Int
-        ) {
-            guard editedMask != .editedAttributes else { return }
-            process(textStorage: textStorage, range: editedRange, changeInLength: delta)
-        }
-    #else
-        public func textStorage(
-            _ textStorage: NSTextStorage,
-            didProcessEditing editedMask: NSTextStorageEditActions,
-            range editedRange: NSRange,
-            changeInLength delta: Int
-        ) {
-            guard editedMask != .editedAttributes else { return }
-            process(textStorage: textStorage, range: editedRange, changeInLength: delta)
-        }
-    #endif
+    public func textStorage(
+        _ textStorage: NSTextStorage,
+        didProcessEditing editedMask: NSTextStorageEditActions,
+        range editedRange: NSRange,
+        changeInLength delta: Int
+    ) {
+        guard editedMask != .editedAttributes else { return }
+        process(textStorage: textStorage, range: editedRange, changeInLength: delta)
+    }
 
     private func process(textStorage: NSTextStorage, range editedRange: NSRange, changeInLength delta: Int) {
         guard let note = EditTextView.note, note.isMarkdown() else { return }
