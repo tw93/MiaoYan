@@ -273,26 +273,24 @@ final class GeneralPrefsViewController: BasePrefsViewController {
 
     // MARK: - Actions
     @objc private func appearanceChanged(_ sender: NSPopUpButton) {
-        if #available(macOS 10.14, *) {
-            if let appearanceType = AppearanceType(rawValue: sender.indexOfSelectedItem) {
-                settings.appearanceType = appearanceType
+        if let appearanceType = AppearanceType(rawValue: sender.indexOfSelectedItem) {
+            settings.appearanceType = appearanceType
 
-                // Apply appearance immediately instead of requiring restart
-                if let appDelegate = NSApp.delegate as? AppDelegate {
-                    appDelegate.applyAppearance()
-                }
+            // Apply appearance immediately instead of requiring restart
+            if let appDelegate = NSApp.delegate as? AppDelegate {
+                appDelegate.applyAppearance()
+            }
 
-                // Update main window appearance immediately
-                if let appDelegate = NSApp.delegate as? AppDelegate,
-                    let mainWindowController = appDelegate.mainWindowController
-                {
-                    mainWindowController.applyMiaoYanAppearance()
-                }
+            // Update main window appearance immediately
+            if let appDelegate = NSApp.delegate as? AppDelegate,
+                let mainWindowController = appDelegate.mainWindowController
+            {
+                mainWindowController.applyMiaoYanAppearance()
+            }
 
-                // Recreate preview view with new appearance
-                if let vc = ViewController.shared() {
-                    vc.editArea.recreatePreviewView()
-                }
+            // Recreate preview view with new appearance
+            if let vc = ViewController.shared() {
+                vc.editArea.recreatePreviewView()
             }
         }
     }

@@ -1,11 +1,3 @@
-//
-//  FileManager+.swift
-//  MiaoYan
-//
-//  Created by Tw93 on 2022/7/5.
-//  Copyright © 2022 MiaoYan App. All rights reserved.
-//
-
 import Cocoa
 
 extension FileManager {

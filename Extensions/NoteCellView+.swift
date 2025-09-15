@@ -1,10 +1,6 @@
-#if os(iOS)
-    import UIKit
-    typealias ImageView = UIImageView
-#else
-    import Cocoa
-    typealias ImageView = NSImageView
-#endif
+import Cocoa
+
+typealias ImageView = NSImageView
 
 extension NoteCellView {
     func loadImagesPreview(position: Int? = nil, urls: [URL]? = nil) {

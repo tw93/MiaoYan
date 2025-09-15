@@ -83,7 +83,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         super.setNeedsDisplay(newInvalidRect)
     }
 
-
     override func mouseDown(with event: NSEvent) {
         imagePreviewManager?.handleMouseClick(at: event.locationInWindow)
         guard EditTextView.note != nil else { return }
@@ -561,7 +560,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         guard let note = EditTextView.note else { return nil }
         return TextFormatter(textView: self, note: note)
     }
-
 
     override func clicked(onLink link: Any, at charIndex: Int) {
         let range = NSRange(location: charIndex, length: 1)

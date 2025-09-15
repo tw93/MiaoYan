@@ -1,8 +1,3 @@
-//
-// Created by Tw93 on 2022/9/22.
-// Copyright (c) 2022 MiaoYan App. All rights reserved.
-//
-
 import Cocoa
 
 extension NSTextField {
