@@ -81,6 +81,7 @@ extension ViewController {
     }
 
     // MARK: - Presentation Mode
+
     func enablePresentation() {
         UserDefaultsManagement.presentation = true
         let currentSidebarWidth = sidebarWidth
@@ -179,6 +180,7 @@ extension ViewController {
         }
     }
     // MARK: - PPT Mode
+
     func isMiaoYanPPT(needToast: Bool = true) -> Bool {
         guard let note = notesTableView.getSelectedNote() else {
             return false
@@ -192,6 +194,7 @@ extension ViewController {
         }
         return false
     }
+
     func toggleMagicPPT() {
         titleLabel.saveTitle()
         if UserDefaultsManagement.magicPPT {
@@ -203,6 +206,7 @@ extension ViewController {
             enableMiaoYanPPT()
         }
     }
+
     func enableMiaoYanPPT() {
         guard let vc = ViewController.shared() else {
             return
