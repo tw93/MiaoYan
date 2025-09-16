@@ -39,6 +39,7 @@ extension ViewController {
             }
         }
     }
+
     func disablePreview() {
         if UserDefaultsManagement.magicPPT {
             return
@@ -68,6 +69,7 @@ extension ViewController {
             focusEditArea()
         }
     }
+
     func togglePreview() {
         titleLabel.saveTitle()
         if UserDefaultsManagement.preview {
@@ -77,7 +79,9 @@ extension ViewController {
             TelemetryDeck.signal("Editor.Preview")
         }
     }
+
     // MARK: - Presentation Mode
+
     func enablePresentation() {
         UserDefaultsManagement.presentation = true
         let currentSidebarWidth = sidebarWidth
@@ -120,6 +124,7 @@ extension ViewController {
             }
         }
     }
+
     func disablePresentation() {
         // Defer presentation flag update until UI is fully restored to prevent state conflicts
         presentationButton.state = .off
@@ -175,6 +180,7 @@ extension ViewController {
         }
     }
     // MARK: - PPT Mode
+
     func isMiaoYanPPT(needToast: Bool = true) -> Bool {
         guard let note = notesTableView.getSelectedNote() else {
             return false
@@ -188,6 +194,7 @@ extension ViewController {
         }
         return false
     }
+
     func toggleMagicPPT() {
         titleLabel.saveTitle()
         if UserDefaultsManagement.magicPPT {
@@ -199,6 +206,7 @@ extension ViewController {
             enableMiaoYanPPT()
         }
     }
+
     func enableMiaoYanPPT() {
         guard let vc = ViewController.shared() else {
             return
@@ -263,6 +271,7 @@ extension ViewController {
         }
         TelemetryDeck.signal("Editor.PPT")
     }
+
     func handlePPTAutoTransition() {
         guard let vc = ViewController.shared() else { return }
         // Get cursor position and auto-navigate
@@ -283,6 +292,7 @@ extension ViewController {
             NSApp.mainWindow?.makeFirstResponder(vc.editArea.markdownView)
         }
     }
+
     func disableMiaoYanPPT() {
         // Defer magicPPT flag update until UI fully restored to prevent conflicts
         DispatchQueue.main.async {
@@ -343,6 +353,7 @@ extension ViewController {
             self.focusEditArea()
         }
     }
+
     // MARK: - Text Formatting
     func formatText() {
         if UserDefaultsManagement.preview {
@@ -424,6 +435,7 @@ extension ViewController {
             isFormatting = false
         }
     }
+
     // MARK: - WebView Management
     func getScrollTop() -> CGFloat {
         let contentHeight = editAreaScroll.contentSize.height
@@ -435,6 +447,7 @@ extension ViewController {
             return 0.0
         }
     }
+
     func preloadWebView() {
         guard editArea.markdownView == nil, !UserDefaultsManagement.preview else { return }
         let tempProject = getSidebarProject() ?? storage.noteList.first?.project
@@ -448,7 +461,7 @@ extension ViewController {
             editAreaScroll.addSubview(view)
         }
     }
-    // MARK: - Text Search
+
     func cancelTextSearch() {
         let menu = NSMenuItem(title: "", action: nil, keyEquivalent: "")
         menu.tag = NSTextFinder.Action.hideFindInterface.rawValue
@@ -457,19 +470,24 @@ extension ViewController {
             NSApp.mainWindow?.makeFirstResponder(editArea)
         }
     }
-    // MARK: - IBActions
+
+
     @IBAction func togglePreview(_ sender: NSButton) {
         togglePreview()
     }
+
     @IBAction func togglePresentation(_ sender: NSButton) {
         togglePresentation()
     }
+
     @IBAction func toggleMagicPPT(_ sender: Any) {
         toggleMagicPPT()
     }
+
     @IBAction func formatText(_ sender: NSButton) {
         formatText()
     }
+
     // MARK: - Editor Focus Management
     func focusEditArea(firstResponder: NSResponder? = nil) {
         guard EditTextView.note != nil else { return }
@@ -492,6 +510,7 @@ extension ViewController {
         }
         editArea.window?.makeFirstResponder(resp)
     }
+
     func focusTable() {
         DispatchQueue.main.async {
             let index = self.notesTableView.selectedRow > -1 ? self.notesTableView.selectedRow : 0
@@ -500,6 +519,7 @@ extension ViewController {
             self.notesTableView.scrollRowToVisible(row: index, animated: true)
         }
     }
+
     // MARK: - Editor Content Management
     func refillEditArea(cursor: Int? = nil, previewOnly: Bool = false, saveTyping: Bool = false, force: Bool = false) {
         DispatchQueue.main.async { [weak self] in
@@ -529,6 +549,7 @@ extension ViewController {
             }
         }
     }
+
     // MARK: - Title Management Override (fix for title disappearing issue)
     public func updateTitle(newTitle: String) {
         let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "MiaoYan"
@@ -540,6 +561,7 @@ extension ViewController {
         titleLabel.currentEditor()?.selectedRange = NSRange(location: titleString.utf16.count, length: 0)
         MainWindowController.shared()?.title = appName
     }
+
     func controlTextDidEndEditing(_ obj: Notification) {
         guard let textField = obj.object as? NSTextField, textField == titleLabel else {
             return

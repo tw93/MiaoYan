@@ -216,13 +216,15 @@ extension ViewController {
     }
 
     private func handleSearchResults(searchParams: SearchParameters) {
+        let hasSelectedNote = notesTableView.getSelectedNote() != nil
+
         if !notesTableView.noteList.isEmpty {
             if !searchParams.filter.isEmpty {
                 selectNullTableRow(timer: true)
-            } else if !UserDefaultsManagement.isSingleMode {
+            } else if !UserDefaultsManagement.isSingleMode, !hasSelectedNote {
                 editArea.clear()
             }
-        } else if !UserDefaultsManagement.isSingleMode {
+        } else if !UserDefaultsManagement.isSingleMode, !hasSelectedNote {
             editArea.clear()
         }
 
