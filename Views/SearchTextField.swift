@@ -152,9 +152,15 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     }
 
     @objc private func search() {
+        let searchText = stringValue
+
+        guard !searchText.isEmpty else {
+            vcDelegate.cleanSearchAndRestoreSelection()
+            return
+        }
+
         UserDataService.instance.searchTrigger = true
 
-        let searchText = stringValue
         var sidebarItem: SidebarItem?
 
         lastQueryLength = searchText.count
