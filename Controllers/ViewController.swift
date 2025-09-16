@@ -487,6 +487,7 @@ class ViewController:
         }
         return delegate.mainWindowController?.window?.contentViewController as? ViewController
     }
+
     // MARK: - NSTextViewDelegate
     func textDidChange(_ notification: Notification) {
         guard let textView = notification.object as? EditTextView,

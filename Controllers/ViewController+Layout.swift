@@ -26,9 +26,26 @@ extension ViewController {
     }
 
     func setDividerColor(for splitView: NSSplitView, hidden: Bool) {
-        // Use dynamic mainBackground for base surface
         let baseColor = Theme.backgroundColor
-        let color = hidden ? baseColor : (NSColor(named: "divider") ?? NSColor.separatorColor)
+        var color: NSColor = baseColor
+        guard !hidden else {
+            splitView.setValue(color, forKey: "dividerColor")
+            splitView.needsDisplay = true
+            return
+        }
+
+        let named = NSColor(named: "divider") ?? NSColor.separatorColor
+        let appearance = view.effectiveAppearance
+        var cg: CGColor?
+        appearance.performAsCurrentDrawingAppearance {
+            cg = named.cgColor
+        }
+        if let cg, let fixed = NSColor(cgColor: cg) {
+            color = fixed
+        } else {
+            color = named
+        }
+
         splitView.setValue(color, forKey: "dividerColor")
         splitView.needsDisplay = true
     }
