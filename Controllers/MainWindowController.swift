@@ -137,6 +137,16 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
             contentView.wantsLayer = true
             contentView.layer?.backgroundColor = backgroundColor.cgColor
         }
+
+        DispatchQueue.main.async { [weak window] in
+            guard
+                let viewController = window?.contentViewController as? ViewController
+            else {
+                return
+            }
+
+            viewController.updateDividers()
+        }
     }
 
     // MARK: - NSWindowRestoration
