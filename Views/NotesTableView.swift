@@ -217,9 +217,23 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         return true
     }
 
+    private func selectedRowSafe() -> Int {
+        if Thread.isMainThread { return selectedRow }
+        var value = -1
+        DispatchQueue.main.sync { value = self.selectedRow }
+        return value
+    }
+
+    private func selectedRowIndexesSafe() -> IndexSet {
+        if Thread.isMainThread { return selectedRowIndexes }
+        var value = IndexSet()
+        DispatchQueue.main.sync { value = self.selectedRowIndexes }
+        return value
+    }
+
     func getNoteFromSelectedRow() -> Note? {
         var note: Note?
-        let selected = selectedRow
+        let selected = selectedRowSafe()
 
         if selected < 0 {
             return nil
@@ -234,7 +248,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
 
     func getSelectedNote() -> Note? {
         var note: Note?
-        let row = selectedRow
+        let row = selectedRowSafe()
         if noteList.indices.contains(row) {
             note = noteList[row]
         }
@@ -244,7 +258,8 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     func getSelectedNotes() -> [Note]? {
         var notes = [Note]()
 
-        for row in selectedRowIndexes where noteList.indices.contains(row) {
+        let rows = selectedRowIndexesSafe()
+        for row in rows where noteList.indices.contains(row) {
             notes.append(noteList[row])
         }
 
@@ -420,7 +435,14 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
             return
         }
 
-        super.keyDown(with: event)
+        // Forward keyDown events to ViewController for global shortcut handling
+        if let vc = window?.contentViewController as? ViewController {
+            if !vc.keyDown(with: event) {
+                super.keyDown(with: event)
+            }
+        } else {
+            super.keyDown(with: event)
+        }
     }
 
     public func reloadRow(note: Note) {

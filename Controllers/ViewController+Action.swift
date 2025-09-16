@@ -425,7 +425,7 @@ extension ViewController {
         if !isMiaoYanPPT() {
             return
         }
-        toast(message: NSLocalizedString("🙊 Starting export~", comment: ""))
+        toastPersistent(message: NSLocalizedString("🙊 Starting export~", comment: ""))
         enableMiaoYanPPT()
         UserDefaultsManagement.isOnExport = true
         UserDefaultsManagement.isOnExportPPT = true
@@ -845,8 +845,8 @@ extension ViewController {
         if let note = notesTableView.getSelectedNote() {
             if let render = renderMarkdownHTML(markdown: note.content.string) {
                 let pasteboard = NSPasteboard.general
-                pasteboard.declareTypes([NSPasteboard.PasteboardType.rtfd], owner: nil)
-                pasteboard.setString(render, forType: NSPasteboard.PasteboardType.rtfd)
+                pasteboard.declareTypes([NSPasteboard.PasteboardType.html], owner: nil)
+                pasteboard.setString(render, forType: NSPasteboard.PasteboardType.html)
             }
         }
     }
@@ -859,8 +859,21 @@ extension ViewController {
         if type == "Html" {
             UserDefaultsManagement.isOnExportHtml = true
         }
-        toast(message: NSLocalizedString("🙊 Starting export~", comment: ""))
 
+        toastPersistent(message: NSLocalizedString("🙊 Starting export~", comment: ""))
+
+        // HTML export can be done immediately without preview
+        if type == "Html" {
+            self.editArea.markdownView?.exportHtml()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                UserDefaultsManagement.isOnExport = false
+                UserDefaultsManagement.isOnExportHtml = false
+            }
+            TelemetryDeck.signal("Action.Export", parameters: ["Type": type])
+            return
+        }
+
+        // For PDF and Image exports, enable preview and wait for proper loading
         if UserDefaultsManagement.preview {
             disablePreview()
         }
@@ -870,8 +883,6 @@ extension ViewController {
             switch type {
             case "Image":
                 self.editArea.markdownView?.exportImage()
-            case "Html":
-                self.editArea.markdownView?.exportHtml()
             case "PDF":
                 self.editArea.markdownView?.exportPdf()
             default:
@@ -879,9 +890,6 @@ extension ViewController {
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 UserDefaultsManagement.isOnExport = false
-                if type == "Html" {
-                    UserDefaultsManagement.isOnExportHtml = false
-                }
                 self.disablePreview()
             }
         }
@@ -892,7 +900,7 @@ extension ViewController {
         if status {
             toast(message: NSLocalizedString("🎉 Saved to Downloads folder~", comment: ""))
         } else {
-            toast(message: NSLocalizedString("😶‍🌫 PDF export failed, please try again~", comment: ""))
+            toast(message: NSLocalizedString("😶‍🌫 Export failed, please try again~", comment: ""))
         }
         // After the export is completed, restore the original state.
         UserDefaultsManagement.isOnExport = false
@@ -952,6 +960,7 @@ extension ViewController {
 
     // swiftlint:disable:next cyclomatic_complexity
     public func keyDown(with event: NSEvent) -> Bool {
+
         guard let mw = MainWindowController.shared() else {
             return false
         }
@@ -1083,7 +1092,7 @@ extension ViewController {
                         return false
                     }
 
-                    if let note = EditTextView.note, fr.isKind(of: NotesTableView.self), !(UserDefaultsManagement.preview && !note.isRTF()) {
+                    if fr.isKind(of: NotesTableView.self), !(UserDefaultsManagement.preview) {
                         NSApp.mainWindow?.makeFirstResponder(editArea)
                         return false
                     }
@@ -1182,12 +1191,6 @@ extension ViewController {
                 NSApp.mainWindow?.makeFirstResponder(search)
                 return true
             }
-        }
-
-        // Pin note shortcut (cmd+shift+p)
-        if event.keyCode == kVK_ANSI_P, event.modifierFlags.contains(.shift), event.modifierFlags.contains(.command), !UserDefaultsManagement.presentation {
-            pin(notesTableView.selectedRowIndexes)
-            return true
         }
 
         // 展开 sidebar cmd+1
