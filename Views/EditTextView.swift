@@ -359,7 +359,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         restoreCursorPosition(needScrollToCursor: needScrollToCursor)
     }
-    // setTextColor() was unused and removed in favor of Theme.textColor where needed
     public func clear() {
         textStorage?.setAttributedString(NSAttributedString())
         markdownView?.isHidden = true
@@ -376,12 +375,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         EditTextView.note = nil
     }
-    // MARK: - Removed Large Methods
-    // Complex logic moved to dedicated manager classes:
-    // - ImagePreviewManager: Image preview functionality
-    // - ClipboardManager: Clipboard operations
-    // - EditorMenuManager: Menu operations
-
+  
+    // MARK: - Editor Utility Helpers
     func getParagraphRange() -> NSRange? {
         guard let vc = getViewController(),
             let editArea = vc.editArea,
@@ -472,8 +467,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let data = Data(bytes: &length, count: MemoryLayout.size(ofValue: length))
         try? note.url.setExtendedAttribute(data: data, forName: "com.tw93.miaoyan.cursor")
     }
+  
     // MARK: - Link Highlighting Performance Optimization
-
     private func shouldTriggerLinkHighlight(for event: NSEvent) -> Bool {
         switch Int(event.keyCode) {
         case kVK_Space, kVK_Return, kVK_Tab:
@@ -867,3 +862,4 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
     }
 }
+

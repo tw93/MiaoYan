@@ -19,7 +19,6 @@ public class NotesTextProcessor {
     public static var linkColor: NSColor { Theme.linkColor }
 
     // MARK: Syntax highlight customisation
-
     public static var syntaxColor = fontColor
 
     public static var font: NSFont {
@@ -628,7 +627,6 @@ public class NotesTextProcessor {
     public static let _tabWidth = 4
 
     // MARK: Headers
-
     /*
      Head
      ======
@@ -685,7 +683,6 @@ public class NotesTextProcessor {
     public static let headersAtxClosingRegex = MarklightRegex(pattern: headersAtxClosingPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
     // MARK: Reference links
-
     /*
      TODO: we don't know how reference links are formed
      */
@@ -712,7 +709,6 @@ public class NotesTextProcessor {
     public static let referenceLinkRegex = MarklightRegex(pattern: referenceLinkPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
     // MARK: Lists
-
     /*
      * First element
      * Second element
@@ -728,7 +724,6 @@ public class NotesTextProcessor {
     public static let listOpeningRegex = MarklightRegex(pattern: _listMarker, options: [.allowCommentsAndWhitespace])
 
     // MARK: Anchors
-
     /*
      [Title](http://example.com)
      */
@@ -814,7 +809,6 @@ public class NotesTextProcessor {
     public static let anchorInlineRegex = MarklightRegex(pattern: anchorInlinePattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
 
     // MARK: Images
-
     /*
      ![Title](http://example.com/image.png)
      */
@@ -880,7 +874,6 @@ public class NotesTextProcessor {
     public static let allTodoInlineRegex = MarklightRegex(pattern: allTodoInlinePattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
     // MARK: Code
-
     /*
      ```
      Code
@@ -920,7 +913,6 @@ public class NotesTextProcessor {
     public static let codeSpanClosingRegex = MarklightRegex(pattern: codeSpanClosingPattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
 
     // MARK: Block quotes
-
     /*
      > Quoted text
      */
@@ -945,12 +937,10 @@ public class NotesTextProcessor {
     public static let blockQuoteOpeningRegex = MarklightRegex(pattern: blockQuoteOpeningPattern, options: [.anchorsMatchLines])
 
     // MARK: App url
-
     fileprivate static let appUrlPattern = "(\\[\\[)(.+?[\\[\\]]*)\\]\\]"
     public static let appUrlRegex = MarklightRegex(pattern: appUrlPattern, options: [.anchorsMatchLines])
 
     // MARK: Bold
-
     fileprivate static let strictBoldPattern = "(^|[\\W_])(?:(?!\\1)|(?=^))(\\*|_)\\2(?=\\S)(.*?\\S)\\2\\2(?!\\2)(?=[\\W_]|$)"
     public static let strictBoldRegex = MarklightRegex(pattern: strictBoldPattern, options: [.anchorsMatchLines])
 
@@ -958,7 +948,6 @@ public class NotesTextProcessor {
     public static let boldRegex = MarklightRegex(pattern: boldPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
     // MARK: Strike
-
     fileprivate static let strikePattern = "(\\~\\~) (?=\\S) (.+?[~]*) (?<=\\S) \\1"
     public static let strikeRegex = MarklightRegex(pattern: strikePattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
@@ -966,7 +955,6 @@ public class NotesTextProcessor {
     public static let codeLineRegex = MarklightRegex(pattern: codeLinePattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
     // MARK: HTML
-
     fileprivate static let htmlPattern = "<(\\S*)[^>]*>[^<]*<\\/(\\1)>"
     public static let htmlRegex = MarklightRegex(pattern: htmlPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
@@ -981,7 +969,6 @@ public class NotesTextProcessor {
     public static let blankRegex = MarklightRegex(pattern: "\\s+", options: [.allowCommentsAndWhitespace])
 
     // MARK: Italic
-
     fileprivate static let strictItalicPattern = "(^|[\\s_])(?:(?!\\1)|(?=^))(\\*|_)(?=\\S)((?:(?!\\2).)*?\\S)\\2(?!\\2)(?=[\\s]|(?:[.,!?]\\s)|$)"
 
     public static let strictItalicRegex = MarklightRegex(pattern: strictItalicPattern, options: [.anchorsMatchLines])

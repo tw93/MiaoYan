@@ -28,11 +28,10 @@ protocol SettingsConfigurable {
 }
 
 // MARK: - General Settings Model
+/// Concrete configuration for the General preferences pane backed by `UserDefaultsManagement`.
 struct GeneralSettings: SettingsConfigurable {
     let category: PreferencesCategory = .general
     let title: String = I18n.str("General")
-
-    // Settings properties based on UserDefaultsManagement
     var appearanceType: AppearanceType {
         get { UserDefaultsManagement.appearanceType }
         set { UserDefaultsManagement.appearanceType = newValue }
@@ -65,11 +64,10 @@ struct GeneralSettings: SettingsConfigurable {
 }
 
 // MARK: - Editor Settings Model
+/// Configuration wrapper exposing editor related defaults for the preferences UI.
 struct EditorSettings: SettingsConfigurable {
     let category: PreferencesCategory = .editor
     let title: String = I18n.str("Editor")
-
-    // Font settings
     var editorFontName: String {
         get { UserDefaultsManagement.fontName }
         set { UserDefaultsManagement.fontName = newValue }
@@ -104,16 +102,10 @@ struct EditorSettings: SettingsConfigurable {
         get { UserDefaultsManagement.codeFontName }
         set { UserDefaultsManagement.codeFontName = newValue }
     }
-
-    // Editor behavior settings
     var editorLineBreak: String {
         get { UserDefaultsManagement.editorLineBreak }
         set { UserDefaultsManagement.editorLineBreak = newValue }
     }
-
-    // Removed codeBackground setting (deprecated)
-
-    // Preview settings
     var previewLocation: String {
         get { UserDefaultsManagement.previewLocation }
         set { UserDefaultsManagement.previewLocation = newValue }
@@ -143,3 +135,4 @@ struct EditorSettings: SettingsConfigurable {
         }
     }
 }
+
