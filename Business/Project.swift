@@ -30,12 +30,6 @@ public class Project: Equatable {
 
         showInCommon = isTrash ? false : true
 
-        #if os(iOS)
-            if isRoot, isDefault {
-                showInSidebar = false
-            }
-        #endif
-
         if let l = label {
             self.label = l
         } else {

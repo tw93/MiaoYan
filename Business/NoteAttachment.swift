@@ -1,11 +1,6 @@
 import AVKit
+import Cocoa
 import Foundation
-
-#if os(OSX)
-    import Cocoa
-#else
-    import UIKit
-#endif
 
 class NoteAttachment {
     public var title: String

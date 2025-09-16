@@ -1,5 +1,5 @@
-import Foundation
 import Cocoa
+import Foundation
 
 extension NSMutableAttributedString {
     // MARK: - Letter Spacing Support
@@ -99,15 +99,13 @@ extension NSMutableAttributedString {
         unLoadCheckboxes().unLoadImages()
     }
 
-    #if os(OSX)
-        func unLoadUnderlines() -> NSMutableAttributedString {
-            enumerateAttribute(.underlineStyle, in: NSRange(location: 0, length: length)) { value, range, _ in
-                guard value != nil else { return }
-                addAttribute(.underlineColor, value: NSColor.black, range: range)
-            }
-            return self
+    func unLoadUnderlines() -> NSMutableAttributedString {
+        enumerateAttribute(.underlineStyle, in: NSRange(location: 0, length: length)) { value, range, _ in
+            guard value != nil else { return }
+            addAttribute(.underlineColor, value: NSColor.black, range: range)
         }
-    #endif
+        return self
+    }
 
     public func loadUnderlines() {
         enumerateAttribute(.underlineStyle, in: NSRange(location: 0, length: length)) { value, range, _ in

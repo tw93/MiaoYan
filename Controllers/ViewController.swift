@@ -449,11 +449,9 @@ class ViewController:
         editArea.isAutomaticTextReplacementEnabled = false
         editArea.isAutomaticDashSubstitutionEnabled = false
         editArea.textStorage?.delegate = editArea.textStorage
-        if #available(OSX 10.13, *) {
-            editArea?.linkTextAttributes = [
-                .foregroundColor: NSColor(named: "highlight")!
-            ]
-        }
+        editArea?.linkTextAttributes = [
+            .foregroundColor: NSColor(named: "highlight")!
+        ]
         editArea.viewDelegate = self
     }
     private func configureShortcuts() {

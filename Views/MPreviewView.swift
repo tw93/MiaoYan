@@ -18,27 +18,25 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = userContentController
         // Inject early background style to prevent white flash during HTML/CSS loading
-        #if os(OSX)
-            let isDarkTheme: Bool
-            if UserDefaultsManagement.appearanceType != .Custom {
-                switch UserDefaultsManagement.appearanceType {
-                case .Light: isDarkTheme = false
-                case .Dark: isDarkTheme = true
-                case .System: isDarkTheme = UserDataService.instance.isDark
-                default: isDarkTheme = UserDataService.instance.isDark
-                }
-            } else {
-                isDarkTheme = UserDataService.instance.isDark
+        let isDarkTheme: Bool
+        if UserDefaultsManagement.appearanceType != .Custom {
+            switch UserDefaultsManagement.appearanceType {
+            case .Light: isDarkTheme = false
+            case .Dark: isDarkTheme = true
+            case .System: isDarkTheme = UserDataService.instance.isDark
+            default: isDarkTheme = UserDataService.instance.isDark
             }
-            let bgHex = isDarkTheme ? "#23282D" : "#FFFFFF"
-            // Ensure background only to prevent white flash; avoid forcing text color
-            let css = "html,body{background:\(bgHex) !important;}"
-            let js =
-                "(function(){var s=document.createElement('style');s.type='text/css';s.appendChild(document.createTextNode('" + css
-                + "'));(document.head||document.documentElement).appendChild(s);document.documentElement.style.background='\(bgHex)';document.body&&(document.body.style.background='\(bgHex)');}())"
-            let script = WKUserScript(source: js, injectionTime: .atDocumentStart, forMainFrameOnly: true)
-            configuration.userContentController.addUserScript(script)
-        #endif
+        } else {
+            isDarkTheme = UserDataService.instance.isDark
+        }
+        let bgHex = isDarkTheme ? "#23282D" : "#FFFFFF"
+        // Ensure background only to prevent white flash; avoid forcing text color
+        let css = "html,body{background:\(bgHex) !important;}"
+        let js =
+            "(function(){var s=document.createElement('style');s.type='text/css';s.appendChild(document.createTextNode('" + css
+            + "'));(document.head||document.documentElement).appendChild(s);document.documentElement.style.background='\(bgHex)';document.body&&(document.body.style.background='\(bgHex)');}())"
+        let script = WKUserScript(source: js, injectionTime: .atDocumentStart, forMainFrameOnly: true)
+        configuration.userContentController.addUserScript(script)
         // macOS Sequoia beta: Simplified configuration to avoid sandbox conflicts
         configuration.websiteDataStore = WKWebsiteDataStore.default()
         // Allow incremental rendering to avoid feeling "stuck" before load finishes
@@ -51,32 +49,27 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         configuration.defaultWebpagePreferences = preferences
         super.init(frame: frame, configuration: configuration)
         navigationDelegate = self
-        #if os(OSX)
-            // Keep WebKit drawing background so preview area is visible during load
-            setValue(true, forKey: "drawsBackground")
-            wantsLayer = true
-            let bgNSColor: NSColor
-            if UserDefaultsManagement.appearanceType != .Custom {
-                let darkColor = NSColor(srgbRed: 0x23 / 255.0, green: 0x28 / 255.0, blue: 0x2D / 255.0, alpha: 1.0)
-                switch UserDefaultsManagement.appearanceType {
-                case .Light: bgNSColor = NSColor.white
-                case .Dark: bgNSColor = darkColor
-                case .System: bgNSColor = UserDataService.instance.isDark ? darkColor : NSColor.white
-                default: bgNSColor = UserDataService.instance.isDark ? darkColor : NSColor.white
-                }
-            } else {
-                bgNSColor = UserDefaultsManagement.bgColor
+        // Keep WebKit drawing background so preview area is visible during load
+        setValue(true, forKey: "drawsBackground")
+        wantsLayer = true
+        let bgNSColor: NSColor
+        if UserDefaultsManagement.appearanceType != .Custom {
+            let darkColor = NSColor(srgbRed: 0x23 / 255.0, green: 0x28 / 255.0, blue: 0x2D / 255.0, alpha: 1.0)
+            switch UserDefaultsManagement.appearanceType {
+            case .Light: bgNSColor = NSColor.white
+            case .Dark: bgNSColor = darkColor
+            case .System: bgNSColor = UserDataService.instance.isDark ? darkColor : NSColor.white
+            default: bgNSColor = UserDataService.instance.isDark ? darkColor : NSColor.white
             }
-            layer?.backgroundColor = bgNSColor.cgColor
-            // Fill under-page area with the same color to cover rubber-banding gaps
-            setValue(bgNSColor, forKey: "underPageBackgroundColor")
-            // Set webview appearance to match current theme
-            self.appearance = UserDataService.instance.isDark ? NSAppearance(named: .darkAqua) : NSAppearance(named: .aqua)
-        #else
-            isOpaque = false
-            backgroundColor = UIColor.clear
-            scrollView.backgroundColor = UIColor.clear
-        #endif
+        } else {
+            bgNSColor = UserDefaultsManagement.bgColor
+        }
+        layer?.backgroundColor = bgNSColor.cgColor
+        // Fill under-page area with the same color to cover rubber-banding gaps
+        setValue(bgNSColor, forKey: "underPageBackgroundColor")
+        // Set webview appearance to match current theme
+        self.appearance = UserDataService.instance.isDark ? NSAppearance(named: .darkAqua) : NSAppearance(named: .aqua)
+
         Self.ensureBundlePreinitialized()
         load(note: note)
         // No additional background mask needed
@@ -204,14 +197,12 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         let shouldHideForTransition = isFirstLoad || force
 
         // For dark mode, maintain the dark background color during transition
-        #if os(OSX)
-            if shouldHideForTransition && UserDataService.instance.isDark {
-                // Keep the background visible but hide content smoothly
-                self.alphaValue = 0.9
-            } else if shouldHideForTransition {
-                self.alphaValue = 0.0
-            }
-        #endif
+        if shouldHideForTransition && UserDataService.instance.isDark {
+            // Keep the background visible but hide content smoothly
+            self.alphaValue = 0.9
+        } else if shouldHideForTransition {
+            self.alphaValue = 0.0
+        }
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }

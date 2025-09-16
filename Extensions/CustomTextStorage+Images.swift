@@ -18,11 +18,6 @@ extension NSTextStorage {
                 attachment.bounds = NSRect(x: 0, y: 0, width: size.width, height: size.height)
 
                 if let manager = ViewController.shared()?.editArea.layoutManager {
-                    if #unavailable(OSX 10.13) {
-                        if self.mutableString.length >= range.upperBound {
-                            manager.invalidateLayout(forCharacterRange: range, actualCharacterRange: nil)
-                        }
-                    }
                     manager.invalidateDisplay(forCharacterRange: range)
                 }
             }
