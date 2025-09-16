@@ -23,6 +23,7 @@ enum PreferencesCategory: String, CaseIterable {
 protocol SettingsConfigurable {
     var category: PreferencesCategory { get }
     var title: String { get }
+
     func applyChanges()
 }
 
