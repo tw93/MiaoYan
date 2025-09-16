@@ -73,7 +73,6 @@ class HtmlManager {
     }
 
     // MARK: - Bundle and Resource Management
-
     static func getDownViewBundle() -> Bundle? {
         guard let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle") else { return nil }
         return Bundle(url: URL(fileURLWithPath: path))
@@ -108,7 +107,6 @@ class HtmlManager {
     }
 
     // MARK: - Template Processing
-
     static func htmlFromTemplate(_ htmlString: String, css: String, currentName: String) throws -> String {
         guard let bundle = getDownViewBundle(),
             let baseURL = getBaseURL(bundle: bundle)
@@ -199,7 +197,6 @@ class HtmlManager {
     }
 
     // MARK: - JavaScript Utilities
-
     static let checkImagesScript = """
         (function() {
             var images = document.getElementsByTagName('img');
@@ -221,7 +218,6 @@ class HtmlManager {
         """
 
     // MARK: - HTML Tag Protection
-
     static func protectHTMLTags(in content: String) -> (protectedContent: String, placeholders: [String: String]) {
         var protectedContent = content
         var placeholders: [String: String] = [:]

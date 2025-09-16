@@ -3,7 +3,6 @@ import Foundation
 
 extension NSMutableAttributedString {
     // MARK: - Letter Spacing Support
-
     public func applyEditorLetterSpacing(_ spacing: CGFloat? = nil) {
         let letterSpacing = spacing ?? UserDefaultsManagement.editorLetterSpacing
         guard letterSpacing != 0 else { return }

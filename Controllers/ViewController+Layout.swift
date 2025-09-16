@@ -4,7 +4,6 @@ import Cocoa
 extension ViewController {
 
     // MARK: - Properties
-
     var sidebarWidth: CGFloat {
         guard let splitView = sidebarSplitView,
             !splitView.subviews.isEmpty
@@ -18,7 +17,6 @@ extension ViewController {
     }
 
     // MARK: - Layout Management Methods
-
     func updateDividers() {
         guard sidebarSplitView != nil && splitView != nil else { return }
         setDividerColor(for: sidebarSplitView, hidden: sidebarWidth == 0)
@@ -316,3 +314,4 @@ extension ViewController {
         notesTableView.reloadData()
     }
 }
+

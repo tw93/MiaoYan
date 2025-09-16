@@ -26,3 +26,4 @@ class BasePrefsViewController: NSViewController {
     @objc func setupUI() {}
     @objc func setupValues() {}
 }
+
