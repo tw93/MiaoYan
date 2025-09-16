@@ -143,12 +143,6 @@ public class ImagesProcessor {
             return notePath
         }
 
-        if note.isTextBundle() {
-            if let name = path.removingPercentEncoding {
-                return "\(note.getURL().path)/\(name)"
-            }
-        }
-
         let path = getFilePath(innerRange: innerRange)
         notePath = storagePath + "/" + path
 
@@ -198,29 +192,6 @@ public class ImagesProcessor {
     }
 
     public static func writeFile(data: Data, url: URL? = nil, note: Note, ext: String? = nil) -> String? {
-        if note.isTextBundle() {
-            let assetsUrl = note.getURL().appendingPathComponent("assets")
-
-            if !FileManager.default.fileExists(atPath: assetsUrl.path, isDirectory: nil) {
-                try? FileManager.default.createDirectory(at: assetsUrl, withIntermediateDirectories: true, attributes: nil)
-            }
-
-            let destination = URL(fileURLWithPath: assetsUrl.path)
-            guard var fileName = ImagesProcessor.getFileName(from: url, to: destination, ext: ext) else { return nil }
-
-            let to = destination.appendingPathComponent(fileName)
-            do {
-                try data.write(to: to, options: .atomic)
-            } catch {
-                AppDelegate.trackError(error, context: "ImagesProcessor.writeImage")
-            }
-
-            fileName =
-                fileName
-                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? fileName
-
-            return "assets/\(fileName)"
-        }
 
         var prefix = "/i/"
         if let url = url, !url.isImage {

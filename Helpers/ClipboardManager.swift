@@ -54,7 +54,7 @@ class ClipboardManager {
             textView.breakUndoCoalescing()
             textView.insertText(clipboard, replacementRange: currentRange)
             textView.saveTextStorageContent(to: note)
-            note.save()  // 确保粘贴的内容持久化到磁盘
+            note.save()
             textView.fillHighlightLinks()
             return true
         }
@@ -233,7 +233,7 @@ class ClipboardManager {
                     )
                     self.deleteImage(tempPath: URL(fileURLWithPath: parameters.localPath))
                     if let viewController = parameters.textView.window?.contentViewController {
-                        viewController.toast(message: "图片上传成功")
+                        viewController.toast(message: I18n.str("Image uploaded successfully"))
                     }
                 } else {
                     self.replacePlaceholderWithURL(
@@ -242,9 +242,8 @@ class ClipboardManager {
                         textView: parameters.textView,
                         note: parameters.note
                     )
-                    // 轻量级失败提示
                     if let viewController = parameters.textView.window?.contentViewController {
-                        viewController.toast(message: "图片上传失败，已使用本地路径")
+                        viewController.toast(message: I18n.str("Image upload failed, using local path"))
                     }
                 }
             }

@@ -258,8 +258,7 @@ class SidebarProjectView: NSOutlineView,
         for url in urls {
             var isDirectory = ObjCBool(true)
             if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory),
-                isDirectory.boolValue,
-                !url.path.contains(".textbundle")
+                isDirectory.boolValue
             {
                 handleDirectoryDrop(url: url, project: project, vc: vc)
             } else {

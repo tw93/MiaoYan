@@ -161,7 +161,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
     }
     override var writablePasteboardTypes: [NSPasteboard.PasteboardType] {
-        [NSPasteboard.PasteboardType.rtfd, NSPasteboard.PasteboardType.string]
+        [NSPasteboard.PasteboardType.string]
     }
     override func writeSelection(to pboard: NSPasteboard, type: NSPasteboard.PasteboardType) -> Bool {
         guard let storage = textStorage else { return false }
@@ -171,13 +171,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
             let plainText = attributedString.unLoadImages().unLoadCheckboxes().string
             pboard.setString(plainText, forType: .string)
             return true
-        }
-        if type == .rtfd {
-            let richString = attributedString.unLoadCheckboxes()
-            if let rtfd = try? richString.data(from: NSRange(location: 0, length: richString.length), documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.rtfd]) {
-                pboard.setData(rtfd, forType: NSPasteboard.PasteboardType.rtfd)
-                return true
-            }
         }
         if type.rawValue == "NSStringPboardType" {
             EditTextView.shouldForceRescan = true

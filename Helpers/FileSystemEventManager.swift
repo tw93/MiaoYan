@@ -1,169 +1,221 @@
-//
-//  FileSystemEventManager.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 7/13/18.
-//  Copyright © 2018 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Foundation
 
 class FileSystemEventManager {
-    private var storage: Storage
-    private var delegate: ViewController
+    private let storage: Storage
+    private weak var delegate: ViewController?
     private var watcher: FileWatcher?
-    private var observedFolders: [String]
+    private var observedFolders: [String] {
+        storage.getProjectPaths()
+    }
 
     init(storage: Storage, delegate: ViewController) {
         self.storage = storage
         self.delegate = delegate
-        self.observedFolders = self.storage.getProjectPaths()
     }
 
     public func start() {
-        self.watcher = FileWatcher(self.observedFolders)
-        self.watcher?.callback = { event in
-            if UserDataService.instance.fsUpdatesDisabled {
-                return
+        watcher = FileWatcher(observedFolders)
+        watcher?.callback = { [weak self] event in
+            self?.handleFileSystemEvent(event)
+        }
+        watcher?.start()
+    }
+
+    private func handleFileSystemEvent(_ event: FileWatcherEvent) {
+        do {
+            guard !UserDataService.instance.fsUpdatesDisabled else { return }
+
+            guard let url = createURL(from: event.path) else {
+                throw FileSystemError.invalidPath(event.path)
             }
 
-            guard let path = event.path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
-                return
+            guard isValidFileType(url) else { return }
+
+            let processedURL = url
+
+            switch (
+                event.fileRemoved || event.dirRemoved,
+                event.fileRenamed || event.dirRenamed,
+                event.fileCreated,
+                event.fileChange
+            ) {
+            case (true, _, _, _):
+                try handleFileRemoval(url: url)
+            case (_, true, _, _):
+                try handleFileMove(url: url)
+            case (_, _, true, _):
+                try handleFileCreation(url: processedURL)
+            case (_, _, _, true):
+                try handleFileChange(url: processedURL)
+            default:
+                break
             }
+        } catch {
+            AppDelegate.trackError(error, context: "FileSystemEventManager.handleEvent")
+        }
+    }
 
-            guard let url = URL(string: "file://" + path) else {
-                return
-            }
+    enum FileSystemError: Error, LocalizedError {
+        case invalidPath(String)
+        case noteNotFound(URL)
+        case importFailed(URL)
+        case updateFailed(URL)
 
-            if !self.storage.allowedExtensions.contains(url.pathExtension) || !self.storage.isValidUTI(url: url) {
-                return
-            }
-
-            if event.fileRemoved || event.dirRemoved {
-                guard let note = self.storage.getBy(url: url) else { return }
-
-                self.removeNote(note: note)
-            }
-
-            if event.fileRenamed || event.dirRenamed {
-                self.moveHandler(url: url, pathList: self.observedFolders)
-                return
-            }
-
-            guard self.checkFile(url: self.handleTextBundle(url: url), pathList: self.observedFolders) else {
-                return
-            }
-
-            // Order is important, invoke only before change
-            if event.fileCreated {
-                self.importNote(self.handleTextBundle(url: url))
-                return
-            }
-
-            if event.fileChange,
-                let note = self.storage.getBy(url: self.handleTextBundle(url: url))
-            {
-                self.reloadNote(note: note)
+        var errorDescription: String? {
+            switch self {
+            case .invalidPath(let path):
+                return "Invalid file path: \(path)"
+            case .noteNotFound(let url):
+                return "Note not found: \(url.lastPathComponent)"
+            case .importFailed(let url):
+                return "Failed to import note: \(url.lastPathComponent)"
+            case .updateFailed(let url):
+                return "Failed to update note: \(url.lastPathComponent)"
             }
         }
+    }
 
-        self.watcher?.start()
+    private func createURL(from path: String) -> URL? {
+        guard let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
+            return nil
+        }
+        return URL(string: "file://" + encodedPath)
+    }
+
+    private func isValidFileType(_ url: URL) -> Bool {
+        storage.allowedExtensions.contains(url.pathExtension) && storage.isValidUTI(url: url)
+    }
+
+    private func handleFileRemoval(url: URL) throws {
+        guard let note = storage.getBy(url: url) else {
+            throw FileSystemError.noteNotFound(url)
+        }
+        removeNote(note: note)
+    }
+
+    private func handleFileMove(url: URL) throws {
+        moveHandler(url: url, pathList: observedFolders)
+    }
+
+    private func handleFileCreation(url: URL) throws {
+        guard checkFile(url: url, pathList: observedFolders) else {
+            throw FileSystemError.importFailed(url)
+        }
+        importNote(url)
+    }
+
+    private func handleFileChange(url: URL) throws {
+        guard let note = storage.getBy(url: url) else {
+            throw FileSystemError.noteNotFound(url)
+        }
+        reloadNote(note: note)
     }
 
     private func moveHandler(url: URL, pathList: [String]) {
-        let fileExistInFS = self.checkFile(url: url, pathList: pathList)
+        let fileExistsInFS = checkFile(url: url, pathList: pathList)
 
-        guard let note = self.storage.getBy(url: url) else {
-            if fileExistInFS {
-                self.importNote(url)
+        guard let note = storage.getBy(url: url) else {
+            if fileExistsInFS {
+                importNote(url)
             }
             return
         }
 
-        if fileExistInFS {
-            self.renameNote(note: note)
-            return
+        if fileExistsInFS {
+            renameNote(note: note)
+        } else {
+            removeNote(note: note)
         }
-
-        self.removeNote(note: note)
     }
 
     private func checkFile(url: URL, pathList: [String]) -> Bool {
-        FileManager.default.fileExists(atPath: url.path)
-            && (self.storage.allowedExtensions.contains(url.pathExtension)
-                && self.storage.isValidUTI(url: url))
-            && pathList.contains(url.deletingLastPathComponent().path)
+        FileManager.default.fileExists(atPath: url.path) && storage.allowedExtensions.contains(url.pathExtension) && storage.isValidUTI(url: url) && pathList.contains(url.deletingLastPathComponent().path)
     }
 
     private func importNote(_ url: URL) {
-        let url = self.handleTextBundle(url: url)
+        let processedURL = url
 
-        let n = self.storage.getBy(url: url)
-        guard n == nil else {
-            if let nUnwrapped = n, nUnwrapped.url == UserDataService.instance.focusOnImport {
-                self.delegate.updateTable {
-                    self.delegate.notesTableView.setSelected(note: nUnwrapped)
-                    UserDataService.instance.focusOnImport = nil
-                }
-            }
+        // Check if note already exists
+        if let existingNote = storage.getBy(url: processedURL) {
+            handleExistingNote(existingNote)
             return
         }
 
-        guard self.storage.getProjectBy(url: url) != nil else {
-            return
-        }
+        // Validate project exists
+        guard storage.getProjectBy(url: processedURL) != nil else { return }
 
-        guard let note = storage.initNote(url: url) else { return }
+        // Create and setup new note
+        guard let note = storage.initNote(url: processedURL) else { return }
         note.load()
         note.loadModifiedLocalAt()
+        storage.add(note)
 
-        self.storage.add(note)
-
-        DispatchQueue.main.async {
-            if let url = UserDataService.instance.focusOnImport, let note = self.storage.getBy(url: url) {
-                self.delegate.updateTable {
-                    self.delegate.notesTableView.setSelected(note: note)
-                    UserDataService.instance.focusOnImport = nil
-                    self.delegate.reloadSideBar()
-                }
-            } else {
-                if !note.isTrash() {
-                    self.delegate.notesTableView.insertNew(note: note)
-                }
-
-                self.delegate.reloadSideBar()
-            }
+        // Update UI
+        DispatchQueue.main.async { [weak self] in
+            self?.updateUIForNewNote(note)
         }
 
+        // Handle special readme file
         if note.name == "MiaoYan - Readme.md" {
-            self.delegate.updateTable {
-                self.delegate.notesTableView.selectRow(0)
-                note.addPin()
+            handleReadmeFile(note)
+        }
+    }
 
-                self.delegate.reloadSideBar()
+    private func handleExistingNote(_ note: Note) {
+        guard note.url == UserDataService.instance.focusOnImport else { return }
+
+        delegate?.updateTable {
+            self.delegate?.notesTableView.setSelected(note: note)
+            UserDataService.instance.focusOnImport = nil
+        }
+    }
+
+    private func updateUIForNewNote(_ note: Note) {
+        if let focusURL = UserDataService.instance.focusOnImport,
+            let focusNote = storage.getBy(url: focusURL)
+        {
+            delegate?.updateTable {
+                self.delegate?.notesTableView.setSelected(note: focusNote)
+                UserDataService.instance.focusOnImport = nil
+                self.delegate?.reloadSideBar()
             }
+        } else {
+            if !note.isTrash() {
+                delegate?.notesTableView.insertNew(note: note)
+            }
+            delegate?.reloadSideBar()
+        }
+    }
+
+    private func handleReadmeFile(_ note: Note) {
+        delegate?.updateTable {
+            self.delegate?.notesTableView.selectRow(0)
+            note.addPin()
+            self.delegate?.reloadSideBar()
         }
     }
 
     private func renameNote(note: Note) {
         if note.url == UserDataService.instance.focusOnImport {
-            self.delegate.updateTable {
-                self.delegate.notesTableView.setSelected(note: note)
+            delegate?.updateTable {
+                self.delegate?.notesTableView.setSelected(note: note)
                 UserDataService.instance.focusOnImport = nil
             }
-
-            // On TextBundle import
         } else {
-            self.reloadNote(note: note)
+            reloadNote(note: note)
         }
     }
 
     private func removeNote(note: Note) {
-        self.storage.removeNotes(notes: [note], fsRemove: false) { _ in
+        storage.removeNotes(notes: [note], fsRemove: false) { [weak self] _ in
             DispatchQueue.main.async {
-                if self.delegate.notesTableView.numberOfRows > 0 {
-                    self.delegate.notesTableView.removeByNotes(notes: [note])
+                guard let self = self,
+                    let delegate = self.delegate,
+                    delegate.notesTableView.numberOfRows > 0
+                else {
+                    return
                 }
+                delegate.notesTableView.removeByNotes(notes: [note])
             }
         }
     }
@@ -172,32 +224,20 @@ class FileSystemEventManager {
         guard let fsContent = note.getContent() else { return }
 
         let memoryContent = note.content.attributedSubstring(from: NSRange(0..<note.content.length))
+        let contentChanged = fsContent.string != memoryContent.string
 
-        if (note.isRTF() && fsContent != memoryContent)
-            || (!note.isRTF() && fsContent.string != memoryContent.string)
-        {
-            note.content = NSMutableAttributedString(attributedString: fsContent)
+        guard contentChanged else { return }
 
-            self.delegate.notesTableView.reloadRow(note: note)
+        note.content = NSMutableAttributedString(attributedString: fsContent)
+        delegate?.notesTableView.reloadRow(note: note)
 
-            if EditTextView.note == note {
-                self.delegate.refillEditArea()
-            }
+        if EditTextView.note == note {
+            delegate?.refillEditArea()
         }
-    }
-
-    private func handleTextBundle(url: URL) -> URL {
-        if ["text.markdown", "text.md", "text.txt", "text.rtf"].contains(url.lastPathComponent), url.path.contains(".textbundle") {
-            let path = url.deletingLastPathComponent().path
-            return URL(fileURLWithPath: path)
-        }
-
-        return url
     }
 
     public func restart() {
-        self.watcher?.stop()
-        self.observedFolders = self.storage.getProjectPaths()
-        self.start()
+        watcher?.stop()
+        start()
     }
 }

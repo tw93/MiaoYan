@@ -1,24 +1,14 @@
+import Cocoa
 import Foundation
 
-#if os(OSX)
-    import Cocoa
-#else
-    import UIKit
-#endif
 extension Notification.Name {
     static let editorModeChanged = Notification.Name("editorModeChanged")
     static let preferencesChanged = Notification.Name("PreferencesChanged")
 }
 public enum UserDefaultsManagement {
-    #if os(OSX)
-        typealias Color = NSColor
-        typealias Image = NSImage
-        typealias Font = NSFont
-    #else
-        typealias Color = UIColor
-        typealias Image = UIImage
-        typealias Font = UIFont
-    #endif
+    typealias Color = NSColor
+    typealias Image = NSImage
+    typealias Font = NSFont
     static var DefaultFont = "TsangerJinKai02-W04"
     static var DefaultFontSize = 16
     static var DefaultPreviewFontSize = 16
@@ -96,11 +86,7 @@ public enum UserDefaultsManagement {
             if let result = UserDefaults.standard.object(forKey: Constants.AppearanceTypeKey) as? Int {
                 return AppearanceType(rawValue: result)!
             }
-            if #available(OSX 10.14, *) {
-                return AppearanceType.System
-            } else {
-                return AppearanceType.Custom
-            }
+            return AppearanceType.System
         }
         set {
             UserDefaults.standard.set(newValue.rawValue, forKey: Constants.AppearanceTypeKey)
@@ -508,13 +494,7 @@ public enum UserDefaultsManagement {
             if let iCloudDocumentsURL = iCloudDocumentsContainer {
                 return iCloudDocumentsURL.path
             }
-            #if os(iOS)
-                return localDocumentsContainer?.path
-            #elseif CLOUDKIT && os(macOS)
-                return nil
-            #else
-                return localDocumentsContainer?.path
-            #endif
+            return localDocumentsContainer?.path
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.StoragePathKey)
@@ -680,26 +660,7 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.ImagesWidthKey)
         }
     }
-    static var fileContainer: NoteContainer {
-        get {
-            #if SHARE_EXT
-                let defaults = UserDefaults(suiteName: "group.miaoyan-manager")
-                if let result = defaults?.object(forKey: Constants.SharedContainerKey) as? Int, let container = NoteContainer(rawValue: result) {
-                    return container
-                }
-            #endif
-            if let result = UserDefaults.standard.object(forKey: Constants.NoteContainer) as? Int, let container = NoteContainer(rawValue: result) {
-                return container
-            }
-            return .none
-        }
-        set {
-            #if os(iOS)
-                UserDefaults(suiteName: "group.miaoyan-manager")?.set(newValue.rawValue, forKey: Constants.SharedContainerKey)
-            #endif
-            UserDefaults.standard.set(newValue.rawValue, forKey: Constants.NoteContainer)
-        }
-    }
+
     static var projects: [URL] {
         get {
             guard let defaults = UserDefaults(suiteName: "group.miaoyan-manager") else {
