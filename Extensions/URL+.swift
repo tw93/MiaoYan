@@ -1,10 +1,5 @@
+import CoreServices
 import Foundation
-
-#if os(iOS)
-    import MobileCoreServices
-#else
-    import CoreServices
-#endif
 
 extension URL {
     public func extendedAttribute(forName name: String) throws -> Data {

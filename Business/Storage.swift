@@ -573,19 +573,11 @@ class Storage {
     }
 
     func getDemoSubdirURL() -> URL? {
-        #if os(OSX)
-            if let project = projects.first {
-                return project.url
-            }
+        if let project = projects.first {
+            return project.url
+        }
 
-            return nil
-        #else
-            if let icloud = UserDefaultsManagement.iCloudDocumentsContainer {
-                return icloud
-            }
-
-            return UserDefaultsManagement.storageUrl
-        #endif
+        return nil
     }
 
     func removeNotes(notes: [Note], fsRemove: Bool = true, completely: Bool = false, completion: @escaping ([URL: URL]?) -> Void) {

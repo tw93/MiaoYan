@@ -140,15 +140,9 @@ class HtmlManager {
             return template.replacingOccurrences(of: "DOWN_RAW", with: escapedContent)
         }
 
-        #if os(iOS)
-            if NightNight.theme == .night {
-                template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode")
-            }
-        #else
-            if UserDataService.instance.isDark {
-                template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode")
-            }
-        #endif
+        if UserDataService.instance.isDark {
+            template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode")
+        }
 
         let htmlContent = getHtmlContent(htmlString, currentName: currentName)
         return template.replacingOccurrences(of: "DOWN_HTML", with: htmlContent)

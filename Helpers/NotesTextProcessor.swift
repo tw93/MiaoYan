@@ -390,62 +390,60 @@ public class NotesTextProcessor {
             }
         }
 
-        #if NOT_EXTENSION || os(OSX)
-            // We detect and process inline anchors (links)
-            NotesTextProcessor.anchorInlineRegex.matches(string, range: paragraphRange) { result in
-                guard let range = result?.range else { return }
-                attributedString.fixAttributes(in: range)
+        // We detect and process inline anchors (links)
+        NotesTextProcessor.anchorInlineRegex.matches(string, range: paragraphRange) { result in
+            guard let range = result?.range else { return }
+            attributedString.fixAttributes(in: range)
 
-                var destinationLink: String?
+            var destinationLink: String?
 
-                NotesTextProcessor.coupleRoundRegex.matches(string, range: range) { innerResult in
-                    guard let innerRange = innerResult?.range else { return }
-                    attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+            NotesTextProcessor.coupleRoundRegex.matches(string, range: range) { innerResult in
+                guard let innerRange = innerResult?.range else { return }
+                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
 
-                    guard let linkRange = result?.range(at: 3), linkRange.length > 0 else { return }
+                guard let linkRange = result?.range(at: 3), linkRange.length > 0 else { return }
 
-                    var substring = attributedString.mutableString.substring(with: linkRange)
+                var substring = attributedString.mutableString.substring(with: linkRange)
 
-                    guard !substring.isEmpty else { return }
-                    guard let note = EditTextView.note else { return }
+                guard !substring.isEmpty else { return }
+                guard let note = EditTextView.note else { return }
 
-                    if substring.starts(with: "/i/") || substring.starts(with: "/files/"), let path = note.project.url.appendingPathComponent(substring).path.removingPercentEncoding {
-                        substring = "file://" + path
-                    }
-
-                    destinationLink = substring
-
-                    attributedString.addAttribute(.link, value: substring, range: linkRange)
-                    hideSyntaxIfNecessary(range: innerRange)
+                if substring.starts(with: "/i/") || substring.starts(with: "/files/"), let path = note.project.url.appendingPathComponent(substring).path.removingPercentEncoding {
+                    substring = "file://" + path
                 }
 
-                NotesTextProcessor.openingSquareRegex.matches(string, range: range) { innerResult in
-                    guard let innerRange = innerResult?.range else { return }
-                    attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
-                    hideSyntaxIfNecessary(range: innerRange)
-                }
+                destinationLink = substring
 
-                NotesTextProcessor.closingSquareRegex.matches(string, range: range) { innerResult in
-                    guard let innerRange = innerResult?.range else { return }
-                    attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
-                    hideSyntaxIfNecessary(range: innerRange)
-                }
-
-                guard destinationLink != nil else { return }
-
-                NotesTextProcessor.coupleSquareRegex.matches(string, range: range) { innerResult in
-                    guard let innerRange = innerResult?.range else { return }
-                    var _range = innerRange
-                    _range.location += 1
-                    _range.length -= 2
-
-                    let substring = attributedString.mutableString.substring(with: _range)
-                    guard substring.lengthOfBytes(using: .utf8) > 0 else { return }
-
-                    attributedString.addAttribute(.foregroundColor, value: linkColor, range: _range)
-                }
+                attributedString.addAttribute(.link, value: substring, range: linkRange)
+                hideSyntaxIfNecessary(range: innerRange)
             }
-        #endif
+
+            NotesTextProcessor.openingSquareRegex.matches(string, range: range) { innerResult in
+                guard let innerRange = innerResult?.range else { return }
+                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                hideSyntaxIfNecessary(range: innerRange)
+            }
+
+            NotesTextProcessor.closingSquareRegex.matches(string, range: range) { innerResult in
+                guard let innerRange = innerResult?.range else { return }
+                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                hideSyntaxIfNecessary(range: innerRange)
+            }
+
+            guard destinationLink != nil else { return }
+
+            NotesTextProcessor.coupleSquareRegex.matches(string, range: range) { innerResult in
+                guard let innerRange = innerResult?.range else { return }
+                var _range = innerRange
+                _range.location += 1
+                _range.length -= 2
+
+                let substring = attributedString.mutableString.substring(with: _range)
+                guard substring.lengthOfBytes(using: .utf8) > 0 else { return }
+
+                attributedString.addAttribute(.foregroundColor, value: linkColor, range: _range)
+            }
+        }
 
         NotesTextProcessor.imageRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range else { return }

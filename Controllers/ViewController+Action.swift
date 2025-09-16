@@ -362,7 +362,7 @@ extension ViewController {
                 noteDupe.content = NSMutableAttributedString(string: note.content.string)
 
                 // Clone images
-                if note.type == .Markdown, note.container == .none {
+                if note.type == .markdown, note.container == .none {
                     let images = note.getAllImages()
                     for image in images {
                         move(note: noteDupe, from: image.url, imagePath: image.path, to: note.project, copy: true)
@@ -477,7 +477,7 @@ extension ViewController {
 
             let destination = project.url.appendingPathComponent(note.name)
 
-            if note.type == .Markdown, note.container == .none {
+            if note.type == .markdown, note.container == .none {
                 let imagesMeta = note.getAllImages()
                 for imageMeta in imagesMeta {
                     move(note: note, from: imageMeta.url, imagePath: imageMeta.path, to: project)

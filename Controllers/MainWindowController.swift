@@ -95,7 +95,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
     }
 
     func applyMiaoYanAppearance() {
-        guard let window = window, #available(OSX 10.14, *) else { return }
+        guard let window = window else { return }
 
         // Apply MiaoYan's custom appearance settings, overriding system appearance when needed
         let targetAppearance: NSAppearance?

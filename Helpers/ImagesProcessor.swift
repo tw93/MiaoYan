@@ -1,22 +1,10 @@
+import Cocoa
 import Foundation
 
-#if os(OSX)
-    import Cocoa
-#else
-    import UIKit
-#endif
-
 public class ImagesProcessor {
-    #if os(OSX)
-        typealias Size = NSSize
-        typealias Image = NSImage
-        typealias TView = EditTextView
-    #else
-        typealias Size = CGSize
-        typealias Image = UIImage
-        typealias TView = UITextView
-    #endif
-
+    typealias Size = NSSize
+    typealias Image = NSImage
+    typealias TView = EditTextView
     var styleApplier: NSMutableAttributedString
     var range: NSRange?
     var note: Note
@@ -42,73 +30,64 @@ public class ImagesProcessor {
     public func load() {
         var offset = 0
 
-        #if NOT_EXTENSION || os(OSX)
-            NotesTextProcessor.imageInlineRegex.matches(styleApplier.string, range: paragraphRange) { result in
-                guard var range = result?.range else { return }
+        NotesTextProcessor.imageInlineRegex.matches(styleApplier.string, range: paragraphRange) { result in
+            guard var range = result?.range else { return }
 
-                range = NSRange(location: range.location - offset, length: range.length)
-                let mdLink = self.styleApplier.attributedSubstring(from: range).string
-                let title = self.getTitle(link: mdLink)
+            range = NSRange(location: range.location - offset, length: range.length)
+            let mdLink = self.styleApplier.attributedSubstring(from: range).string
+            let title = self.getTitle(link: mdLink)
 
-                if var font = UserDefaultsManagement.noteFont {
-                    #if os(iOS)
-                        if #available(iOS 11.0, *), UserDefaultsManagement.dynamicTypeFont {
-                            let fontMetrics = UIFontMetrics(forTextStyle: .body)
-                            font = fontMetrics.scaledFont(for: font)
-                        }
-                    #endif
+            if let font = UserDefaultsManagement.noteFont {
+                self.styleApplier.addAttribute(.font, value: font, range: range)
+            }
 
-                    self.styleApplier.addAttribute(.font, value: font, range: range)
+            NotesTextProcessor.imageOpeningSquareRegex.matches(self.styleApplier.string, range: range) { innerResult in
+                guard let innerRange = innerResult?.range else {
+                    return
                 }
 
-                NotesTextProcessor.imageOpeningSquareRegex.matches(self.styleApplier.string, range: range) { innerResult in
-                    guard let innerRange = innerResult?.range else {
-                        return
-                    }
+                self.styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+            }
 
-                    self.styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+            NotesTextProcessor.imageClosingSquareRegex.matches(self.styleApplier.string, range: range) { innerResult in
+                guard let innerRange = innerResult?.range else {
+                    return
+                }
+                self.styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+            }
+
+            NotesTextProcessor.parenRegex.matches(self.styleApplier.string, range: range) { innerResult in
+                guard let innerRange = innerResult?.range else {
+                    return
                 }
 
-                NotesTextProcessor.imageClosingSquareRegex.matches(self.styleApplier.string, range: range) { innerResult in
-                    guard let innerRange = innerResult?.range else {
-                        return
-                    }
-                    self.styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                var url: URL?
+
+                let filePath = self.getFilePath(innerRange: innerRange)
+
+                if let localNotePath = self.getLocalNotePath(path: filePath, innerRange: innerRange), FileManager.default.fileExists(atPath: localNotePath) {
+                    url = URL(fileURLWithPath: localNotePath)
+                } else if let fs = URL(string: filePath) {
+                    url = fs
                 }
 
-                NotesTextProcessor.parenRegex.matches(self.styleApplier.string, range: range) { innerResult in
-                    guard let innerRange = innerResult?.range else {
-                        return
-                    }
+                guard let imageUrl = url else { return }
 
-                    var url: URL?
+                let invalidateRange = NSRange(location: range.location, length: 1)
+                let cacheUrl = self.note.project.url.appendingPathComponent("/.cache/")
 
-                    let filePath = self.getFilePath(innerRange: innerRange)
+                if EditTextView.note?.url.absoluteString != self.note.url.absoluteString {
+                    return
+                }
 
-                    if let localNotePath = self.getLocalNotePath(path: filePath, innerRange: innerRange), FileManager.default.fileExists(atPath: localNotePath) {
-                        url = URL(fileURLWithPath: localNotePath)
-                    } else if let fs = URL(string: filePath) {
-                        url = fs
-                    }
+                let imageAttachment = NoteAttachment(title: title, path: filePath, url: imageUrl, cache: cacheUrl, invalidateRange: invalidateRange, note: self.note)
 
-                    guard let imageUrl = url else { return }
-
-                    let invalidateRange = NSRange(location: range.location, length: 1)
-                    let cacheUrl = self.note.project.url.appendingPathComponent("/.cache/")
-
-                    if EditTextView.note?.url.absoluteString != self.note.url.absoluteString {
-                        return
-                    }
-
-                    let imageAttachment = NoteAttachment(title: title, path: filePath, url: imageUrl, cache: cacheUrl, invalidateRange: invalidateRange, note: self.note)
-
-                    if let attributedStringWithImage = imageAttachment.getAttributedString() {
-                        offset += mdLink.count - 1
-                        self.styleApplier.replaceCharacters(in: range, with: attributedStringWithImage)
-                    }
+                if let attributedStringWithImage = imageAttachment.getAttributedString() {
+                    offset += mdLink.count - 1
+                    self.styleApplier.replaceCharacters(in: range, with: attributedStringWithImage)
                 }
             }
-        #endif
+        }
     }
 
     func computeMarkdownTitleLength(mdLink: String) -> Int {

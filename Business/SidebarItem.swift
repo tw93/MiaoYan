@@ -1,8 +1,4 @@
-#if os(OSX)
-    import Cocoa
-#else
-    import UIKit
-#endif
+import Cocoa
 
 class SidebarItem {
     var name: String

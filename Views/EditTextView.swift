@@ -126,18 +126,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         imagePreviewManager?.handleImageLinkHover(at: index, mousePoint: event.locationInWindow)
         if NSEvent.modifierFlags.contains(.command) {
-            if #available(OSX 10.13, *) {
-                linkTextAttributes = [
-                    .foregroundColor: NSColor(named: "highlight")!,
-                    .cursor: NSCursor.pointingHand,
-                ]
-            }
+            linkTextAttributes = [
+                .foregroundColor: NSColor(named: "highlight")!,
+                .cursor: NSCursor.pointingHand,
+            ]
         } else {
-            if #available(OSX 10.13, *) {
-                linkTextAttributes = [
-                    .foregroundColor: NSColor(named: "highlight")!
-                ]
-            }
+            linkTextAttributes = [
+                .foregroundColor: NSColor(named: "highlight")!
+            ]
         }
         super.mouseMoved(with: event)
     }
@@ -582,6 +578,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let url = URL(fileURLWithPath: linkString)
         NSWorkspace.shared.open(url)
     }
+
     override func viewDidChangeEffectiveAppearance() {
         guard let note = EditTextView.note else { return }
         guard let vc = getViewController() else { return }
@@ -601,12 +598,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         viewDelegate?.refillEditArea()
     }
+
     public func fillHighlightLinks(range: NSRange? = nil) {
         guard let storage = textStorage else { return }
         let targetRange = range ?? NSRange(0..<storage.length)
         let processor = NotesTextProcessor(storage: storage, range: targetRange)
         processor.highlightLinks()
     }
+
     public func updateTextContainerInset() {
         let lineWidth = UserDefaultsManagement.lineWidth
         let margin = UserDefaultsManagement.marginSize
@@ -622,6 +621,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let inset = (Int(Float(width)) - lineWidth) / 2
         textContainerInset.width = CGFloat(inset)
     }
+
     private func deleteUnusedImages(checkRange: NSRange) {
         guard let storage = textStorage else { return }
         guard let note = EditTextView.note else { return }
@@ -650,6 +650,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             note.undoManager.endUndoGrouping()
         }
     }
+
     @objc public func unDeleteImages(_ urls: [URL: URL]) {
         guard let note = EditTextView.note else { return }
         note.undoManager.beginUndoGrouping()
@@ -668,6 +669,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         note.undoManager.endUndoGrouping()
     }
+
     @objc private func deleteRestoredImages(_ urls: [URL: URL]) {
         guard let note = EditTextView.note else { return }
         note.undoManager.beginUndoGrouping()
@@ -687,13 +689,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         note.undoManager.endUndoGrouping()
     }
-    @available(OSX 10.12.2, *)
+
     override func makeTouchBar() -> NSTouchBar? {
         let touchBar = NSTouchBar()
         touchBar.delegate = self
         touchBar.defaultItemIdentifiers = []
         return touchBar
     }
+
     override func menu(for event: NSEvent) -> NSMenu? {
         let menu = super.menu(for: event)
         let editTitle = NSLocalizedString("Edit Link…", comment: "")

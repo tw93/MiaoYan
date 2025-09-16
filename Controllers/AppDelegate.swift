@@ -31,6 +31,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         NSFontManager.shared.fontPanel(false)?.orderOut(self)
         UserDefaultsManagement.resetEditorState()
         applyAppearance()
+
+        // Add global keyboard event monitor for debugging
+        addGlobalKeyboardMonitor()
         #if CLOUDKIT
             if let iCloudDocumentsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents").resolvingSymlinksInPath() {
                 if !FileManager.default.fileExists(atPath: iCloudDocumentsURL.path, isDirectory: nil) {
@@ -183,27 +186,21 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         return true
     }
     func applyAppearance() {
-        if #available(OSX 10.14, *) {
-
-            if UserDefaultsManagement.appearanceType != .Custom {
-                switch UserDefaultsManagement.appearanceType {
-                case .Dark:
-                    NSApp.appearance = NSAppearance(named: NSAppearance.Name.darkAqua)
-                    UserDataService.instance.isDark = true
-                case .Light:
-                    NSApp.appearance = NSAppearance(named: NSAppearance.Name.aqua)
-                    UserDataService.instance.isDark = false
-                case .System:
-                    NSApp.appearance = nil
-                    UserDataService.instance.isDark = NSAppearance.current.isDark
-                default:
-                    NSApp.appearance = nil
-                    UserDataService.instance.isDark = NSAppearance.current.isDark
-                }
-            } else {
+        if UserDefaultsManagement.appearanceType != .Custom {
+            switch UserDefaultsManagement.appearanceType {
+            case .Dark:
+                NSApp.appearance = NSAppearance(named: NSAppearance.Name.darkAqua)
+                UserDataService.instance.isDark = true
+            case .Light:
                 NSApp.appearance = NSAppearance(named: NSAppearance.Name.aqua)
+                UserDataService.instance.isDark = false
+            case .System:
+                NSApp.appearance = nil
+                UserDataService.instance.isDark = NSAppearance.current.isDark
+            default:
+                NSApp.appearance = nil
+                UserDataService.instance.isDark = NSAppearance.current.isDark
             }
-
         }
     }
     private func restartApp() {
@@ -303,5 +300,25 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // Reduce Metal debug output noise
         setenv("MTL_HUD_ENABLED", "0", 1)
         setenv("MTL_DEBUG_LAYER", "0", 1)
+    }
+
+    // MARK: - Global Keyboard Monitor
+    private func addGlobalKeyboardMonitor() {
+        NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
+            // Pin note shortcut (Command+Shift+T)
+            if event.keyCode == 17,  // kVK_ANSI_T
+                event.modifierFlags.contains(.command),
+                event.modifierFlags.contains(.shift),
+                !event.modifierFlags.contains(.option)
+            {
+
+                if let vc = ViewController.shared() {
+                    vc.pin(vc.notesTableView.selectedRowIndexes)
+                    return nil  // Consume the event
+                }
+            }
+
+            return event  // Let the event continue
+        }
     }
 }

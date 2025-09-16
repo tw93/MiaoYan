@@ -439,7 +439,7 @@ extension ViewController {
         guard editArea.markdownView == nil, !UserDefaultsManagement.preview else { return }
         let tempProject = getSidebarProject() ?? storage.noteList.first?.project
         guard let project = tempProject else { return }
-        let tempNote = Note(name: "", project: project, type: .Markdown)
+        let tempNote = Note(name: "", project: project, type: .markdown)
         tempNote.content = NSMutableAttributedString(string: "")
         let frame = editArea.bounds
         editArea.markdownView = MPreviewView(frame: frame, note: tempNote, closure: {})
