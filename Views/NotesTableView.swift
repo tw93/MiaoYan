@@ -461,7 +461,6 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     }
 
     // MARK: - Scroll Position Memory
-
     func saveScrollPosition() {
         guard let clipView = superview as? NSClipView else { return }
         let scrollPosition = clipView.bounds.origin.y

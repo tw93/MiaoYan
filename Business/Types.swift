@@ -1,7 +1,6 @@
 import Foundation
 
 // MARK: - Note Types
-
 public enum NoteType: String, CaseIterable {
     case markdown = "md"
 
@@ -20,7 +19,6 @@ public enum NoteContainer: Int, CaseIterable {
 }
 
 // MARK: - UI Types
-
 enum SidebarItemType: Int {
     case All = 0x01
     case Trash = 0x02
@@ -35,7 +33,6 @@ public enum AppearanceType: Int {
 }
 
 // MARK: - Sorting Types
-
 public enum SortDirection: String {
     case asc
     case desc
@@ -49,7 +46,6 @@ public enum SortBy: String {
 }
 
 // MARK: - Attribute Types
-
 enum NoteAttribute {
     static let highlight = NSAttributedString.Key(rawValue: "com.tw93.search.highlight")
 
@@ -65,7 +61,6 @@ extension NSAttributedString.Key {
 }
 
 // MARK: - Configuration Types
-
 struct KeychainConfiguration {
     static let serviceName = "MiaoYanApp"
     static let accessGroup: String? = nil
