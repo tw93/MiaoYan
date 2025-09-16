@@ -18,11 +18,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let name = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
         return name ?? Bundle.main.object(forInfoDictionaryKey: kCFBundleNameKey as String) as! String
     }
+
     func applicationWillFinishLaunching(_ notification: Notification) {
         let storage = Storage.sharedInstance()
         storage.loadProjects()
         storage.loadDocuments {}
     }
+
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Configure system logging to reduce harmless warning noise
         configureSystemLogging()
@@ -140,6 +142,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             KeyboardShortcuts.setShortcut(.init(.m, modifiers: [.command, .option]), for: .activateWindow)
         }
     }
+
     func applicationWillTerminate(_ aNotification: Notification) {
         // Track session end
         TelemetryDeck.signal("App.SessionEnd")
@@ -185,6 +188,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
         return true
     }
+
     func applyAppearance() {
         if UserDefaultsManagement.appearanceType != .Custom {
             switch UserDefaultsManagement.appearanceType {
@@ -203,9 +207,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             }
         }
     }
+
     private func restartApp() {
         AppDelegate.relaunchApp()
     }
+
     private func requestStorageDirectory() {
         var directoryURL: URL?
         if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
@@ -284,12 +290,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         aboutWindowController.window?.makeKeyAndOrderFront(aboutWindowController)
         NSApp.activate(ignoringOtherApps: true)
     }
+
     func menuWillOpen(_ menu: NSMenu) {
         guard let event = NSApp.currentEvent else { return }
         if event.type == NSEvent.EventType.leftMouseDown {
             mainWindowController?.makeNew()
         }
     }
+
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
         return true
     }
