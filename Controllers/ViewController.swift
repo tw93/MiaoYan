@@ -39,6 +39,7 @@ class ViewController:
     var scrollDeltaX: CGFloat = 0
     var updateViews = [Note]()
     public var breakUndoTimer = Timer()
+
     // Presentation mode scroll position preservation
     var savedPresentationScrollPosition: CGPoint?
     override var representedObject: Any? {
@@ -271,6 +272,7 @@ class ViewController:
         }
         handleForAppMode()
     }
+
     func handleForAppMode() {
         updateDividers()
         refreshMiaoYanNum()
@@ -285,6 +287,7 @@ class ViewController:
             ensureInitialProjectSelection()
         }
     }
+
     private func ensureInitialProjectSelection() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
             guard self.sidebarWidth > 0 && self.storageOutlineView.selectedRow == -1 else { return }
@@ -312,6 +315,7 @@ class ViewController:
             }
         }
     }
+
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         guard let vc = ViewController.shared() else {
             return false
@@ -352,6 +356,7 @@ class ViewController:
         }
         return true
     }
+
     private func configureLayout() {
         emptyEditAreaView.isHidden = true
         titleLabel.isHidden = true
@@ -404,6 +409,7 @@ class ViewController:
             column.maxWidth = 1000
         }
     }
+
     func configureNotesList() {
         var lastSidebarItem = UserDefaultsManagement.lastProject
         if UserDefaultsManagement.isSingleMode {
@@ -440,6 +446,7 @@ class ViewController:
             }
         }
     }
+
     private func configureEditor() {
         editArea.usesFindBar = true
         editArea.isIncrementalSearchingEnabled = true
@@ -454,6 +461,7 @@ class ViewController:
         ]
         editArea.viewDelegate = self
     }
+
     private func configureShortcuts() {
         KeyboardShortcuts.onKeyUp(for: .activateWindow) { [self] in
             activeShortcut()
@@ -468,6 +476,7 @@ class ViewController:
             return nil
         }
     }
+
     private func configureDelegates() {
         editArea.delegate = self
         search.vcDelegate = self
@@ -475,6 +484,7 @@ class ViewController:
         sidebarSplitView.delegate = self
         storageOutlineView.viewDelegate = self
     }
+
     // MARK: - Actions
     // MARK: - Sidebar Layout Manager
     var selectRowTimer = Timer()

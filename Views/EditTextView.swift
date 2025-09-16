@@ -26,6 +26,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let origin = super.textContainerOrigin
         return NSPoint(x: origin.x, y: origin.y - 7)
     }
+
     override func awakeFromNib() {
         super.awakeFromNib()
 
@@ -40,6 +41,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         linkHighlightTimer?.invalidate()
         linkHighlightTimer = nil
     }
+
     override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn flag: Bool) {
         var newRect = NSRect(origin: rect.origin, size: rect.size)
         newRect.size.width = caretWidth
@@ -56,6 +58,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         newRect.origin.y += 4.0
         super.drawInsertionPoint(in: newRect, color: EditTextView.fontColor, turnedOn: flag)
     }
+
     override func becomeFirstResponder() -> Bool {
         let shouldBecomeFirstResponder = super.becomeFirstResponder()
         if shouldBecomeFirstResponder, string.isEmpty {
@@ -69,6 +72,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         return shouldBecomeFirstResponder
     }
+
     override func updateInsertionPointStateAndRestartTimer(_ restartFlag: Bool) {
         super.updateInsertionPointStateAndRestartTimer(true)
         if let range = selectedRanges[0] as? NSRange, range.length > 0, range != initRange {
@@ -77,6 +81,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             }
         }
     }
+
     override func setNeedsDisplay(_ invalidRect: NSRect) {
         var newInvalidRect = NSRect(origin: invalidRect.origin, size: invalidRect.size)
         newInvalidRect.size.width += caretWidth - 1
@@ -102,6 +107,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             }
         }
     }
+
     override func mouseMoved(with event: NSEvent) {
         guard let viewController = window?.contentViewController as? ViewController else {
             imagePreviewManager?.hideImagePreview()
@@ -137,6 +143,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         super.mouseMoved(with: event)
     }
+
     override func completions(forPartialWordRange charRange: NSRange, indexOfSelectedItem index: UnsafeMutablePointer<Int>) -> [String]? {
         let nsString = string as NSString
         let chars = nsString.substring(with: charRange)
@@ -146,6 +153,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         return nil
     }
+
     override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {
         for menuItem in menu.items {
             if menuItem.identifier?.rawValue == "_searchWithGoogleFromMenu:" || menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierSpellingAndGrammar"
@@ -159,6 +167,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     override var writablePasteboardTypes: [NSPasteboard.PasteboardType] {
         [NSPasteboard.PasteboardType.string]
     }
+
     override func writeSelection(to pboard: NSPasteboard, type: NSPasteboard.PasteboardType) -> Bool {
         guard let storage = textStorage else { return false }
         let range = selectedRange()
@@ -174,10 +183,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         return false
     }
+
     override func cut(_ sender: Any?) {
         super.cut(sender)
         fillHighlightLinks()
     }
+
     override func copy(_ sender: Any?) {
         if let handled = clipboardManager?.handleCopy(), handled {
             return
@@ -185,6 +196,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         super.copy(sender)
         fillHighlightLinks()
     }
+
     override func paste(_ sender: Any?) {
         guard let note = EditTextView.note else { return }
         if let handled = clipboardManager?.handlePaste(in: note), handled {
@@ -192,6 +204,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         super.paste(sender)
     }
+
     public func saveImages() {
         guard let storage = textStorage else { return }
         storage.enumerateAttribute(.attachment, in: NSRange(location: 0, length: storage.length)) { value, range, _ in
@@ -218,36 +231,47 @@ class EditTextView: NSTextView, NSTextFinderClient {
             }
         }
     }
+
     @IBAction func boldMenu(_ sender: Any) {
         menuManager?.performFormattingAction(.bold)
     }
+
     @IBAction func italicMenu(_ sender: Any) {
         menuManager?.performFormattingAction(.italic)
     }
+
     @IBAction func linkMenu(_ sender: Any) {
         menuManager?.performFormattingAction(.link)
     }
+
     @IBAction func todoMenu(_ sender: Any) {
         menuManager?.performFormattingAction(.todo)
     }
+
     @IBAction func underlineMenu(_ sender: Any) {
         menuManager?.performFormattingAction(.underline)
     }
+
     @IBAction func deletelineMenu(_ sender: Any) {
         menuManager?.performFormattingAction(.deleteline)
     }
+
     @IBAction func togglePreview(_ sender: Any) {
         menuManager?.togglePreview()
     }
+
     @IBAction func formatText(_ sender: Any) {
         menuManager?.formatText()
     }
+
     @IBAction func togglePresentation(_ sender: Any) {
         menuManager?.togglePresentation()
     }
+
     func getSelectedNote() -> Note? {
         return getViewController()?.notesTableView.getSelectedNote()
     }
+
     private func getViewController() -> ViewController? {
         if let cached = cachedViewController {
             return cached
@@ -256,12 +280,14 @@ class EditTextView: NSTextView, NSTextFinderClient {
         cachedViewController = vc
         return vc
     }
+
     public func isEditable(note: Note) -> Bool {
         if UserDefaultsManagement.preview {
             return false
         }
         return true
     }
+
     func fill(note: Note, highlight: Bool = false, saveTyping: Bool = false, force: Bool = false, needScrollToCursor: Bool = true) {
         guard let viewController = window?.contentViewController as? ViewController else {
             return
@@ -349,12 +375,8 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         EditTextView.note = nil
     }
+  
     // MARK: - Editor Utility Helpers
-    // Complex logic moved to dedicated manager classes:
-    // - ImagePreviewManager: Image preview functionality
-    // - ClipboardManager: Clipboard operations
-    // - EditorMenuManager: Menu operations
-    /// Returns the paragraph range containing the current selection, if available.
     func getParagraphRange() -> NSRange? {
         guard let vc = getViewController(),
             let editArea = vc.editArea,
@@ -365,6 +387,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let range = editArea.selectedRange()
         return storage.mutableString.paragraphRange(for: range)
     }
+
     func toggleBoldFont(font: NSFont) -> NSFont {
         guard let family = UserDefaultsManagement.noteFont.familyName else {
             return UserDefaultsManagement.noteFont
@@ -383,6 +406,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         return NSFontManager().font(withFamily: family, traits: NSFontTraitMask(rawValue: NSFontTraitMask.RawValue(mask)), weight: 5, size: CGFloat(UserDefaultsManagement.fontSize))!
     }
+
     func toggleItalicFont(font: NSFont) -> NSFont? {
         guard let family = UserDefaultsManagement.noteFont.familyName else {
             return UserDefaultsManagement.noteFont
@@ -405,6 +429,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         return newFont
     }
+
     override func shouldChangeText(in affectedCharRange: NSRange, replacementString: String?) -> Bool {
         guard let note = EditTextView.note else {
             return super.shouldChangeText(in: affectedCharRange, replacementString: replacementString)
@@ -424,6 +449,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         return super.shouldChangeText(in: affectedCharRange, replacementString: replacementString)
     }
+
     override func insertCompletion(_ word: String, forPartialWordRange charRange: NSRange, movement: Int, isFinal flag: Bool) {
         var final = flag
         if let event = window?.currentEvent, event.type == .keyDown, ["_", "/"].contains(event.characters) {
@@ -431,6 +457,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         super.insertCompletion(word, forPartialWordRange: charRange, movement: movement, isFinal: final)
     }
+
     func saveCursorPosition() {
         guard let note = EditTextView.note, let range = selectedRanges[0] as? NSRange, UserDefaultsManagement.restoreCursorPosition else {
             return
@@ -440,6 +467,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let data = Data(bytes: &length, count: MemoryLayout.size(ofValue: length))
         try? note.url.setExtendedAttribute(data: data, forName: "com.tw93.miaoyan.cursor")
     }
+  
     // MARK: - Link Highlighting Performance Optimization
     private func shouldTriggerLinkHighlight(for event: NSEvent) -> Bool {
         switch Int(event.keyCode) {
@@ -454,6 +482,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             return false
         }
     }
+
     private func scheduleLinkHighlight(range: NSRange? = nil, immediate: Bool = false) {
         linkHighlightTimer?.invalidate()
         if immediate {
@@ -474,6 +503,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             }
         }
     }
+
     func restoreCursorPosition(needScrollToCursor: Bool = true) {
         guard let storage = textStorage else { return }
         guard UserDefaultsManagement.restoreCursorPosition else {
@@ -489,6 +519,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
             }
         }
     }
+
     func saveTextStorageContent(to note: Note) {
         guard let storage = textStorage else { return }
         let string = storage.attributedSubstring(from: NSRange(0..<storage.length))
@@ -497,14 +528,17 @@ class EditTextView: NSTextView, NSTextFinderClient {
             .unLoadImages()
             .unLoadCheckboxes()
     }
+
     func setEditorTextColor(_ color: NSColor) {
         if let note = EditTextView.note, !note.isMarkdown() {
             textColor = color
         }
     }
+
     public func unLoadImages(note: Note) {
         note.save(attributed: attributedString())
     }
+
     func getSearchText() -> String {
         guard let search = getViewController()?.search else { return "" }
         if let editor = search.currentEditor(), editor.selectedRange.length > 0 {
@@ -514,37 +548,45 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         return search.stringValue
     }
+
     public func scrollToCursor() {
         let cursorRange = NSRange(location: selectedRange().location, length: 0)
         scrollRangeToVisible(cursorRange)
     }
+
     public func hasFocus() -> Bool {
         if let fr = window?.firstResponder, fr.isKind(of: EditTextView.self) {
             return true
         }
         return false
     }
+
     @IBAction func shiftLeft(_ sender: Any) {
         guard let note = EditTextView.note else { return }
         let f = TextFormatter(textView: self, note: note, shouldScanMarkdown: true)
         EditTextView.shouldForceRescan = true
         f.unTab()
     }
+
     @IBAction func shiftRight(_ sender: Any) {
         guard let note = EditTextView.note else { return }
         let f = TextFormatter(textView: self, note: note, shouldScanMarkdown: true)
         EditTextView.shouldForceRescan = true
         f.tab()
     }
+
     @IBAction func insertFileOrImage(_ sender: Any) {
         menuManager?.insertFileOrImage()
     }
+
     @IBAction func insertCodeBlock(_ sender: NSButton) {
         menuManager?.insertCodeBlock()
     }
+
     @IBAction func insertCodeSpan(_ sender: NSMenuItem) {
         menuManager?.insertCodeSpan()
     }
+
     private func getTextFormatter() -> TextFormatter? {
         guard let note = EditTextView.note else { return nil }
         return TextFormatter(textView: self, note: note)
@@ -709,14 +751,17 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         return menu
     }
+
     override func mouseExited(with event: NSEvent) {
         super.mouseExited(with: event)
         imagePreviewManager?.hideImagePreview()
     }
+
     override func mouseDragged(with event: NSEvent) {
         imagePreviewManager?.hideImagePreview()
         super.mouseDragged(with: event)
     }
+
     override func keyDown(with event: NSEvent) {
         imagePreviewManager?.hideImagePreview()
         guard
