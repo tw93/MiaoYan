@@ -69,7 +69,6 @@ extension ViewController {
     }
 
     // MARK: - Sidebar Management
-
     func hideSidebar(_ sender: Any) {
         guard sidebarWidth > 0 else { return }
 
@@ -107,7 +106,6 @@ extension ViewController {
     }
 
     // MARK: - Note List Management
-
     func showNoteList(_ sender: Any) {
         if notelistWidth == 0 {
             if sidebarWidth == 0 {
@@ -140,7 +138,6 @@ extension ViewController {
     }
 
     // MARK: - Toggle Actions
-
     @IBAction func toggleNoteList(_ sender: Any) {
         guard splitView != nil else { return }
 
@@ -162,7 +159,6 @@ extension ViewController {
     }
 
     // MARK: - Gesture Handling
-
     override func wantsScrollEventsForSwipeTracking(on axis: NSEvent.GestureAxis) -> Bool {
         axis == .horizontal
     }
@@ -259,7 +255,6 @@ extension ViewController {
     }
 
     // MARK: - Split View Delegate
-
     func splitViewWillResizeSubviews(_ notification: Notification) {
         editArea.updateTextContainerInset()
     }
@@ -291,7 +286,6 @@ extension ViewController {
     }
 
     // MARK: - View Resize
-
     func viewDidResize() {
         checkSidebarConstraint()
         checkTitlebarTopConstraint()
@@ -307,7 +301,6 @@ extension ViewController {
     }
 
     // MARK: - Table and Sidebar Layout
-
     func reloadSideBar() {
         guard let outline = storageOutlineView else {
             return
