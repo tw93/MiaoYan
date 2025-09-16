@@ -333,7 +333,6 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         restoreCursorPosition(needScrollToCursor: needScrollToCursor)
     }
-    // setTextColor() was unused and removed in favor of Theme.textColor where needed
     public func clear() {
         textStorage?.setAttributedString(NSAttributedString())
         markdownView?.isHidden = true
@@ -350,11 +349,12 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         EditTextView.note = nil
     }
-    // MARK: - Removed Large Methods
+    // MARK: - Editor Utility Helpers
     // Complex logic moved to dedicated manager classes:
     // - ImagePreviewManager: Image preview functionality
     // - ClipboardManager: Clipboard operations
     // - EditorMenuManager: Menu operations
+    /// Returns the paragraph range containing the current selection, if available.
     func getParagraphRange() -> NSRange? {
         guard let vc = getViewController(),
             let editArea = vc.editArea,
@@ -817,3 +817,4 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
     }
 }
+

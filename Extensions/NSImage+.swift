@@ -138,7 +138,6 @@ extension NSImage {
     }
 
     // MARK: Cropping
-
     /// Resize the image, to nearly fit the supplied cropping size
     /// and return a cropped copy the image.
     ///

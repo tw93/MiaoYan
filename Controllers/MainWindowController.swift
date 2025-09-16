@@ -150,7 +150,6 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
     }
 
     // MARK: - NSWindowRestoration
-
     static func restoreWindow(withIdentifier identifier: NSUserInterfaceItemIdentifier, state: NSCoder, completionHandler: @escaping (NSWindow?, Error?) -> Void) {
         if identifier.rawValue == "myMainWindow" {
             let storyboard = NSStoryboard(name: "Main", bundle: nil)

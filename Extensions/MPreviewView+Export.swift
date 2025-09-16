@@ -75,7 +75,6 @@ class ExportCache {
 extension MPreviewView {
 
     // MARK: - Export Methods
-
     public func exportPdf() {
         guard let vc = ViewController.shared() else { return }
 
@@ -194,7 +193,6 @@ extension MPreviewView {
     }
 
     // MARK: - Export Helper Methods
-
     private func generateHtmlDirectly(note: Note, viewController: ViewController) {
         // Get the title on main thread first
         let currentName = viewController.titleLabel.stringValue
@@ -296,7 +294,6 @@ extension MPreviewView {
     }
 
     // MARK: - Export Result Handlers
-
     private func handlePDFExportResult(_ result: Result<Data, Error>, viewController: Any) {
         guard let vc = viewController as? ViewController else { return }
         switch result {
@@ -334,7 +331,6 @@ extension MPreviewView {
     }
 
     // MARK: - File Save Methods
-
     private func saveToDownloads(content: String, extension: String, viewController: Any) {
         let data = content.data(using: .utf8) ?? Data()
         saveToDownloads(data: data, extension: `extension`, viewController: viewController)
@@ -424,7 +420,6 @@ extension MPreviewView {
     }
 
     // MARK: - Content Size Helpers
-
     private func getContentHeight(completion: @escaping (CGFloat?) -> Void) {
         // Robust height calculation using several DOM properties
         let js = "(function(){var b=document.body,e=document.documentElement;return Math.max(b.scrollHeight,b.offsetHeight,e.clientHeight,e.scrollHeight,e.offsetHeight);})()"
@@ -468,3 +463,4 @@ extension MPreviewView {
         return pdfDocument.dataRepresentation()
     }
 }
+

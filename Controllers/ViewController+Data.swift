@@ -20,7 +20,6 @@ private struct UpdateContext {
 extension ViewController {
 
     // MARK: - Search and Filtering
-
     func updateTable(search: Bool = false, searchText: String? = nil, sidebarItem: SidebarItem? = nil, projects: [Project]? = nil, completion: @escaping () -> Void = {}) {
         let searchParams = prepareSearchParameters(searchText: searchText, sidebarItem: sidebarItem, projects: projects)
         let timestamp = Date().toMillis()
@@ -305,7 +304,6 @@ extension ViewController {
     }
 
     // MARK: - Data Sorting and Arrangement
-
     func reSortByDirection() {
         guard let vc = ViewController.shared() else { return }
         ascendingCheckItem.state = UserDefaultsManagement.sortDirection ? .off : .on
@@ -390,7 +388,6 @@ extension ViewController {
     }
 
     // MARK: - Selection Management
-
     @objc func selectNullTableRow(timer: Bool = false) {
         if timer {
             selectRowTimer.invalidate()
@@ -418,7 +415,6 @@ extension ViewController {
     }
 
     // MARK: - Data State Management
-
     func refreshMiaoYanNum() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
             let messageText = NSLocalizedString("%d MiaoYan", comment: "")
@@ -454,7 +450,6 @@ extension ViewController {
     }
 
     // MARK: - CloudKit Data Sync
-
     #if CLOUDKIT
         func registerKeyValueObserver() {
             let keyStore = NSUbiquitousKeyValueStore()
@@ -490,7 +485,6 @@ extension ViewController {
     #endif
 
     // MARK: - Utility Methods
-
     public func contains(tag name: String, in tags: [String]) -> Bool {
         var found = false
         for tag in tags {
@@ -503,7 +497,6 @@ extension ViewController {
     }
 
     // MARK: - Sidebar Accessors
-
     func getSidebarProject() -> Project? {
         if storageOutlineView.selectedRow < 0 {
             return nil
@@ -536,7 +529,6 @@ extension ViewController {
     }
 
     // MARK: - Search and Input Management
-
     func focusSearchInput(firstResponder: NSResponder? = nil) {
         DispatchQueue.main.async {
             let index = self.notesTableView.selectedRow > -1 ? self.notesTableView.selectedRow : 0
@@ -560,3 +552,4 @@ extension ViewController {
         }
     }
 }
+

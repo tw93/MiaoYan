@@ -3,7 +3,6 @@ import AppKit
 private var currentToast: NSView?
 
 // MARK: - Toast Manager
-
 // MARK: - Toast Configuration
 struct ToastConfiguration {
     let animationDuration: TimeInterval
@@ -88,7 +87,6 @@ class ToastManager {
 }
 
 // MARK: - Toast Factory
-
 class ToastFactory {
     static func makeToast(message: String, title: String? = nil, configuration: ToastConfiguration = .default) -> NSView {
         let container = NSView()
@@ -174,7 +172,6 @@ class ToastFactory {
 }
 
 // MARK: - NSViewController Extension
-
 extension NSViewController {
     public func toast(message: String, title: String) {
         let toast = ToastFactory.makeToast(message: message, title: title)
@@ -195,3 +192,4 @@ extension NSViewController {
         ToastManager.shared.dismissCurrentToast()
     }
 }
+

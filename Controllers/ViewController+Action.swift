@@ -6,7 +6,6 @@ import TelemetryDeck
 extension ViewController {
 
     // MARK: - IBAction Methods
-
     @IBAction func activeWindow(_ sender: Any) {
         activeShortcut()
     }
@@ -457,7 +456,6 @@ extension ViewController {
     }
 
     // MARK: - Note Operations
-
     @objc func moveNote(_ sender: NSMenuItem) {
         let project = sender.representedObject as! Project
 
@@ -725,7 +723,6 @@ extension ViewController {
     }
 
     // MARK: - File Operations
-
     public func copy(project: Project, url: URL) -> URL {
         let fileName = url.lastPathComponent
 
@@ -756,7 +753,6 @@ extension ViewController {
     }
 
     // MARK: - Menu Management
-
     func loadMoveMenu() {
         guard let vc = ViewController.shared(), let note = vc.notesTableView.getSelectedNote() else { return }
 
@@ -832,7 +828,6 @@ extension ViewController {
     }
 
     // MARK: - Clipboard Operations
-
     public func saveTextAtClipboard() {
         if let note = notesTableView.getSelectedNote() {
             let pasteboard = NSPasteboard.general
@@ -852,7 +847,6 @@ extension ViewController {
     }
 
     // MARK: - Export Operations
-
     func exportFile(type: String) {
         UserDefaultsManagement.isOnExport = true
 
@@ -928,7 +922,6 @@ extension ViewController {
     }
 
     // MARK: - Utility Methods
-
     func activeShortcut() {
         guard let mainWindow = MainWindowController.shared() else {
             return
@@ -957,7 +950,6 @@ extension ViewController {
     }
 
     // MARK: - Keyboard Event Handling
-
     // swiftlint:disable:next cyclomatic_complexity
     public func keyDown(with event: NSEvent) -> Bool {
 
@@ -1220,7 +1212,6 @@ extension ViewController {
     }
 
     // MARK: - Info Panel Management
-
     func toggleInfo() {
         if popoverVisible {
             popover.performClose(nil)
@@ -1238,3 +1229,4 @@ extension ViewController {
         toast(message: NSLocalizedString("🙊 In single open mode, Exit with Command+Shift+W ~", comment: ""))
     }
 }
+
