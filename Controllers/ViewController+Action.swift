@@ -5,8 +5,6 @@ import TelemetryDeck
 // MARK: - User Actions and Operations
 extension ViewController {
 
-    // MARK: - IBAction Methods
-
     @IBAction func activeWindow(_ sender: Any) {
         activeShortcut()
     }

@@ -39,6 +39,7 @@ class ViewController:
     var scrollDeltaX: CGFloat = 0
     var updateViews = [Note]()
     public var breakUndoTimer = Timer()
+
     // Presentation mode scroll position preservation
     var savedPresentationScrollPosition: CGPoint?
     override var representedObject: Any? {
@@ -475,6 +476,7 @@ class ViewController:
         sidebarSplitView.delegate = self
         storageOutlineView.viewDelegate = self
     }
+
     // MARK: - Actions
     // MARK: - Sidebar Layout Manager
     var selectRowTimer = Timer()
