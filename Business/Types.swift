@@ -47,3 +47,26 @@ public enum SortBy: String {
     case creationDate
     case title
 }
+
+// MARK: - Attribute Types
+
+enum NoteAttribute {
+    static let highlight = NSAttributedString.Key(rawValue: "com.tw93.search.highlight")
+
+    static let all = Set<NSAttributedString.Key>([
+        highlight
+    ])
+}
+
+extension NSAttributedString.Key {
+    public static var todo: NSAttributedString.Key {
+        NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.todo")
+    }
+}
+
+// MARK: - Configuration Types
+
+struct KeychainConfiguration {
+    static let serviceName = "MiaoYanApp"
+    static let accessGroup: String? = nil
+}

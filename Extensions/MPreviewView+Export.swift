@@ -78,10 +78,6 @@ extension MPreviewView {
 
     public func exportPdf() {
         guard let vc = ViewController.shared() else { return }
-        guard #available(macOS 11.0, *) else {
-            vc.toastExport(status: false)
-            return
-        }
 
         // Get the currently selected note from the ViewController
         guard let note = vc.notesTableView.getSelectedNote() else { return }
