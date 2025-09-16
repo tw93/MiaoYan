@@ -19,6 +19,7 @@ extension AppDelegate {
         case make
         case goto
     }
+
     func application(_ application: NSApplication, open urls: [URL]) {
         guard var url = urls.first,
             let scheme = url.scheme
@@ -43,12 +44,14 @@ extension AppDelegate {
             break
         }
     }
+
     func openNotes(urls: [URL]) {
         guard let vc = ViewController.shared() else { return }
         UserDefaultsManagement.singleModePath = urls[0].path
         UserDefaultsManagement.isSingleMode = true
         vc.restart()
     }
+
     func importNotes(urls: [URL]) {
         guard let vc = ViewController.shared() else { return }
         var importedNote: Note?
@@ -96,6 +99,7 @@ extension AppDelegate {
         }
         search(query: lastPath)
     }
+
     func RouteMiaoYanGoto(_ url: URL) {
         let query = url.lastPathComponent.removingPercentEncoding!
         guard let vc = ViewController.shared() else { return }
@@ -131,6 +135,7 @@ extension AppDelegate {
             vc.toastNoTitle()
         }
     }
+
     func search(query: String) {
         guard let controller = ViewController.shared() else { return }
         controller.search.stringValue = query
@@ -167,6 +172,7 @@ extension AppDelegate {
         }
         create(name: title, content: body)
     }
+
     func create(name: String, content: String) {
         guard let controller = ViewController.shared() else { return }
         controller.createNote(name: name, content: content)
@@ -192,6 +198,7 @@ extension AppDelegate {
     func RouteNvAltFind(_ url: URL) {
         RouteMiaoYanFind(url)
     }
+
     func RouteNvAltGoto(_ url: URL) {
         RouteMiaoYanGoto(url)
     }

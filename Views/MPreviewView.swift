@@ -233,6 +233,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             }
         }
     }
+
     private func getTemplate(css: String) -> String? {
         guard let bundle = HtmlManager.getDownViewBundle(),
             let baseURL = HtmlManager.getBaseURL(bundle: bundle)
@@ -254,6 +255,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         }
         return template
     }
+
     private func isFootNotes(url: URL) -> Bool {
         let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory())
             .appendingPathComponent("wkPreview")
@@ -345,6 +347,7 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             Self.bundleInitialized = true
         }
     }
+
     private func loadImages(imagesStorage: URL, html: String) -> String {
         return HtmlManager.processImages(in: html, imagesStorage: imagesStorage)
     }
@@ -375,6 +378,7 @@ class HandlerCheckbox: NSObject, WKScriptMessageHandler {
         }
     }
 }
+
 class HandlerCodeCopy: NSObject, WKScriptMessageHandler {
     public static var selectionString: String? {
         didSet {
@@ -385,6 +389,7 @@ class HandlerCodeCopy: NSObject, WKScriptMessageHandler {
             NSPasteboard.general.setString(copyBlock, forType: .string)
         }
     }
+
     func userContentController(
         _ userContentController: WKUserContentController,
         didReceive message: WKScriptMessage
@@ -393,6 +398,7 @@ class HandlerCodeCopy: NSObject, WKScriptMessageHandler {
         HandlerCodeCopy.selectionString = message
     }
 }
+
 class HandlerSelection: NSObject, WKScriptMessageHandler {
     public static var selectionString: String?
     func userContentController(
@@ -404,6 +410,7 @@ class HandlerSelection: NSObject, WKScriptMessageHandler {
     }
 }
 // Used to solve the adaptation of the left border/title color change with background color in PPT mode.
+
 class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
     func userContentController(
         _ userContentController: WKUserContentController,

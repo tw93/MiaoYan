@@ -39,6 +39,7 @@ extension ViewController {
             }
         }
     }
+
     func disablePreview() {
         if UserDefaultsManagement.magicPPT {
             return
@@ -68,6 +69,7 @@ extension ViewController {
             focusEditArea()
         }
     }
+
     func togglePreview() {
         titleLabel.saveTitle()
         if UserDefaultsManagement.preview {
@@ -78,6 +80,7 @@ extension ViewController {
         }
     }
     // MARK: - Presentation Mode
+
     func enablePresentation() {
         UserDefaultsManagement.presentation = true
         let currentSidebarWidth = sidebarWidth
@@ -120,6 +123,7 @@ extension ViewController {
             }
         }
     }
+
     func disablePresentation() {
         // Defer presentation flag update until UI is fully restored to prevent state conflicts
         presentationButton.state = .off
@@ -175,6 +179,7 @@ extension ViewController {
         }
     }
     // MARK: - PPT Mode
+
     func isMiaoYanPPT(needToast: Bool = true) -> Bool {
         guard let note = notesTableView.getSelectedNote() else {
             return false
@@ -188,6 +193,7 @@ extension ViewController {
         }
         return false
     }
+
     func toggleMagicPPT() {
         titleLabel.saveTitle()
         if UserDefaultsManagement.magicPPT {
@@ -199,6 +205,7 @@ extension ViewController {
             enableMiaoYanPPT()
         }
     }
+
     func enableMiaoYanPPT() {
         guard let vc = ViewController.shared() else {
             return
@@ -263,6 +270,7 @@ extension ViewController {
         }
         TelemetryDeck.signal("Editor.PPT")
     }
+
     func handlePPTAutoTransition() {
         guard let vc = ViewController.shared() else { return }
         // Get cursor position and auto-navigate
@@ -283,6 +291,7 @@ extension ViewController {
             NSApp.mainWindow?.makeFirstResponder(vc.editArea.markdownView)
         }
     }
+
     func disableMiaoYanPPT() {
         // Defer magicPPT flag update until UI fully restored to prevent conflicts
         DispatchQueue.main.async {
@@ -435,6 +444,7 @@ extension ViewController {
             return 0.0
         }
     }
+
     func preloadWebView() {
         guard editArea.markdownView == nil, !UserDefaultsManagement.preview else { return }
         let tempProject = getSidebarProject() ?? storage.noteList.first?.project
@@ -492,6 +502,7 @@ extension ViewController {
         }
         editArea.window?.makeFirstResponder(resp)
     }
+
     func focusTable() {
         DispatchQueue.main.async {
             let index = self.notesTableView.selectedRow > -1 ? self.notesTableView.selectedRow : 0
@@ -540,6 +551,7 @@ extension ViewController {
         titleLabel.currentEditor()?.selectedRange = NSRange(location: titleString.utf16.count, length: 0)
         MainWindowController.shared()?.title = appName
     }
+
     func controlTextDidEndEditing(_ obj: Notification) {
         guard let textField = obj.object as? NSTextField, textField == titleLabel else {
             return
