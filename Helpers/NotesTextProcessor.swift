@@ -1,115 +1,44 @@
-//
-//  NotesTextStorage.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 12/26/17.
-//  Copyright © 2017 Oleksandr Glushchenko. All rights reserved.
-//
-
+import Cocoa
 import Highlightr
 
-#if os(OSX)
-    import Cocoa
-#else
-    import NightNight
-    import UIKit
-#endif
-
 public class NotesTextProcessor {
-    #if os(OSX)
-        typealias Color = NSColor
-        typealias Image = NSImage
-        typealias Font = NSFont
+    typealias Color = NSColor
+    typealias Image = NSImage
+    typealias Font = NSFont
 
-        public static var fontColor: NSColor { Theme.textColor }
+    public static var fontColor: NSColor { Theme.textColor }
 
-        public static var highlightColor: NSColor { Theme.linkColor }
+    public static var highlightColor: NSColor { Theme.linkColor }
 
-        public static var listColor: NSColor { Theme.listColor }
+    public static var listColor: NSColor { Theme.listColor }
 
-        public static var htmlColor: NSColor { Theme.htmlColor }
+    public static var htmlColor: NSColor { Theme.htmlColor }
 
-        public static var titleColor: NSColor { Theme.titleColor }
+    public static var titleColor: NSColor { Theme.titleColor }
 
-        public static var linkColor: NSColor { Theme.linkColor }
-
-    #else
-        typealias Color = UIColor
-        typealias Image = UIImage
-        typealias Font = UIFont
-    #endif
+    public static var linkColor: NSColor { Theme.linkColor }
 
     // MARK: Syntax highlight customisation
 
-    /**
-     Color used to highlight markdown syntax. Default value is fontColor
-     */
-
     public static var syntaxColor = fontColor
 
-    #if os(OSX)
-        public static var font: NSFont {
-            UserDefaultsManagement.noteFont
-        }
+    public static var font: NSFont {
+        UserDefaultsManagement.noteFont
+    }
 
-        open var highlightColor: NSColor { Theme.linkColor }
+    open var highlightColor: NSColor { Theme.linkColor }
+    open var titleColor: NSColor { Theme.titleColor }
+    open var linkColor: NSColor { Theme.linkColor }
 
-        open var titleColor: NSColor { Theme.titleColor }
-
-        open var linkColor: NSColor { Theme.linkColor }
-
-        public static var underlineColor: NSColor { Theme.underlineColor }
-
-    #else
-        public static var font: UIFont {
-            let font = UserDefaultsManagement.noteFont!
-
-            if #available(iOS 11.0, *), UserDefaultsManagement.dynamicTypeFont {
-                let fontMetrics = UIFontMetrics(forTextStyle: .body)
-                return fontMetrics.scaledFont(for: font)
-            }
-
-            return font
-        }
-
-        public static var underlineColor: UIColor {
-            UIColor.black
-        }
-    #endif
-
-    /**
-     Quote indentation in points. Default 20.
-     */
+    public static var underlineColor: NSColor { Theme.underlineColor }
     open var quoteIndentation: CGFloat = 20
 
-    #if os(OSX)
-        public static var codeFont = NSFont(name: UserDefaultsManagement.codeFontName, size: CGFloat(UserDefaultsManagement.fontSize))
-    #else
-        static var codeFont: UIFont? {
-            if var font = UIFont(name: "Source Code Pro", size: CGFloat(UserDefaultsManagement.fontSize)) {
-                if #available(iOS 11.0, *), UserDefaultsManagement.dynamicTypeFont {
-                    let fontMetrics = UIFontMetrics(forTextStyle: .body)
-                    font = fontMetrics.scaledFont(for: font)
-                }
-
-                return font
-            }
-
-            return nil
-        }
-    #endif
-
+    public static var codeFont = NSFont(name: UserDefaultsManagement.codeFontName, size: CGFloat(UserDefaultsManagement.fontSize))
     public static var georgiaFont = NSFont(name: "Georgia", size: CGFloat(UserDefaultsManagement.fontSize))
-
     public static var publicFont = NSFont(name: "Helvetica Neue", size: CGFloat(UserDefaultsManagement.fontSize))
-
     public static var monacoFont = NSFont(name: "Monaco", size: CGFloat(UserDefaultsManagement.fontSize))
-
     public static var titleFont = NSFont(name: UserDefaultsManagement.windowFontName, size: CGFloat(UserDefaultsManagement.titleFontSize))
 
-    /**
-     If the markdown syntax should be hidden or visible
-     */
     public static var hideSyntax = false
 
     private var note: Note?
@@ -179,35 +108,15 @@ public class NotesTextProcessor {
             return instance
         }
 
-        guard let highlightr = Highlightr() else {
-            return nil
-        }
+        guard let highlightr = Highlightr() else { return nil }
 
-        var codeTheme = "atom-one-light"
-        if UserDataService.instance.isDark {
-            codeTheme = "tomorrow-night-blue"
-        }
-
+        let codeTheme = UserDataService.instance.isDark ? "tomorrow-night-blue" : "atom-one-light"
         highlightr.setTheme(to: codeTheme)
         highlightr.ignoreIllegals = true
 
         hl = highlightr
-
         return highlightr
     }
-
-    #if os(iOS)
-        public static func updateFont(note: Note) {
-            if var font = UserDefaultsManagement.noteFont {
-                if #available(iOS 11.0, *), UserDefaultsManagement.dynamicTypeFont {
-                    let fontMetrics = UIFontMetrics(forTextStyle: .body)
-                    font = fontMetrics.scaledFont(for: font)
-                }
-
-                note.content.addAttribute(.font, value: font, range: NSRange(0..<note.content.length))
-            }
-        }
-    #endif
 
     public static func highlightCode(attributedString: NSMutableAttributedString, range: NSRange, language: String? = nil) {
         guard let highlighter = NotesTextProcessor.getHighlighter() else { return }
@@ -247,80 +156,60 @@ public class NotesTextProcessor {
     public static var languages: [String]?
 
     public static func getLanguage(_ code: String) -> String? {
-        if code.starts(with: "```") {
-            let start = code.index(code.startIndex, offsetBy: 0)
-            let end = code.index(code.startIndex, offsetBy: 3)
-            let range = start..<end
+        guard code.starts(with: "```") else { return nil }
 
-            let paragraphRange = code.paragraphRange(for: range)
-            let detectedLang =
-                code[paragraphRange]
-                .replacingOccurrences(of: "```", with: "")
-                .trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
+        let range = code.startIndex..<code.index(code.startIndex, offsetBy: 3)
+        let paragraphRange = code.paragraphRange(for: range)
+        let detectedLang = code[paragraphRange]
+            .replacingOccurrences(of: "```", with: "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
 
-            languages = getHighlighter()?.supportedLanguages()
+        languages = getHighlighter()?.supportedLanguages()
 
-            if let lang = languages, lang.contains(detectedLang) {
-                // 兼容一下go
-                if detectedLang == "go" {
-                    return nil
-                }
-                return detectedLang
-            }
+        guard let supportedLanguages = languages,
+            supportedLanguages.contains(detectedLang),
+            detectedLang != "go"
+        else {
+            return nil
         }
 
-        return nil
+        return detectedLang
     }
-
-    /**
-     Coverts App links:`[[Link Title]]` to Markdown: `[Link](miaoyan://goto/link%20title)`
-    
-     - parameter content:      A string containing CommonMark Markdown
-    
-     - returns: Content string with converted links
-     */
 
     public static func convertAppLinks(in content: NSMutableAttributedString) -> NSMutableAttributedString {
         let attributedString = content.mutableCopy() as! NSMutableAttributedString
         let range = NSRange(0..<content.string.count)
         let tagQuery = "miaoyan://goto/"
 
-        NotesTextProcessor.appUrlRegex.matches(
-            content.string, range: range,
-            completion: { result in
-                guard let innerRange = result?.range else { return }
+        // Process app link patterns
+        appUrlRegex.matches(content.string, range: range) { result in
+            guard let innerRange = result?.range else { return }
 
-                var substring = attributedString.mutableString.substring(with: innerRange)
-                substring =
-                    substring
-                    .replacingOccurrences(of: "[[", with: "")
-                    .replacingOccurrences(of: "]]", with: "")
-                    .trim()
+            let substring = attributedString.mutableString.substring(with: innerRange)
+                .replacingOccurrences(of: "[[", with: "")
+                .replacingOccurrences(of: "]]", with: "")
+                .trim()
 
-                guard let tag = substring.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else { return }
+            guard let tag = substring.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else { return }
+            attributedString.addAttribute(.link, value: "\(tagQuery)\(tag)", range: innerRange)
+        }
 
-                attributedString.addAttribute(.link, value: "\(tagQuery)\(tag)", range: innerRange)
-            })
-
-        attributedString.enumerateAttribute(.link, in: range) { value, range, _ in
-            if let value = value as? String, value.starts(with: tagQuery) {
-                if let tag =
-                    value
-                    .replacingOccurrences(of: tagQuery, with: "")
-                    .removingPercentEncoding
-                {
-                    if NotesTextProcessor.getSpanCodeBlockRange(content: attributedString, range: range) != nil {
-                        return
-                    }
-
-                    if NotesTextProcessor.getFencedCodeBlockRange(paragraphRange: range, string: attributedString) != nil {
-                        return
-                    }
-
-                    let link = "[\(tag)](\(value))"
-                    attributedString.replaceCharacters(in: range, with: link)
-                }
+        // Convert links to markdown format
+        attributedString.enumerateAttribute(.link, in: range) { value, linkRange, _ in
+            guard let linkValue = value as? String,
+                linkValue.starts(with: tagQuery),
+                let tag = linkValue.replacingOccurrences(of: tagQuery, with: "").removingPercentEncoding
+            else {
+                return
             }
+
+            // Skip if inside code blocks
+            if getSpanCodeBlockRange(content: attributedString, range: linkRange) != nil || getFencedCodeBlockRange(paragraphRange: linkRange, string: attributedString) != nil {
+                return
+            }
+
+            let markdownLink = "[\(tag)](\(linkValue))"
+            attributedString.replaceCharacters(in: linkRange, with: markdownLink)
         }
 
         return attributedString
@@ -371,35 +260,7 @@ public class NotesTextProcessor {
 
         let quoteFont = NotesTextProcessor.quoteFont(CGFloat(UserDefaultsManagement.fontSize))
 
-        #if os(OSX)
-            let hiddenFont = NSFont.systemFont(ofSize: 0.1)
-        #else
-            var boldFont: UIFont {
-                var font = UserDefaultsManagement.noteFont.bold()
-                font.withSize(CGFloat(UserDefaultsManagement.fontSize))
-
-                if #available(iOS 11.0, *), UserDefaultsManagement.dynamicTypeFont {
-                    let fontMetrics = UIFontMetrics(forTextStyle: .body)
-                    font = fontMetrics.scaledFont(for: font)
-                }
-
-                return font
-            }
-
-            var italicFont: UIFont {
-                var font = UserDefaultsManagement.noteFont.italic()
-                font.withSize(CGFloat(UserDefaultsManagement.fontSize))
-
-                if #available(iOS 11.0, *), UserDefaultsManagement.dynamicTypeFont {
-                    let fontMetrics = UIFontMetrics(forTextStyle: .body)
-                    font = fontMetrics.scaledFont(for: font)
-                }
-
-                return font
-            }
-
-            let hiddenFont = UIFont.systemFont(ofSize: 0.1)
-        #endif
+        let hiddenFont = NSFont.systemFont(ofSize: 0.1)
 
         let hiddenColor = Color.clear
         let hiddenAttributes: [NSAttributedString.Key: Any] = [
@@ -427,21 +288,13 @@ public class NotesTextProcessor {
         attributedString.addAttribute(.font, value: font, range: paragraphRange)
         attributedString.fixAttributes(in: paragraphRange)
 
-        #if os(iOS)
-            if NightNight.theme == .night {
-                attributedString.addAttribute(.foregroundColor, value: UIColor.white, range: paragraphRange)
-            } else {
-                attributedString.addAttribute(.foregroundColor, value: UserDefaultsManagement.fontColor, range: paragraphRange)
-            }
-        #else
-            attributedString.addAttribute(.foregroundColor, value: fontColor, range: paragraphRange)
-            attributedString.enumerateAttribute(.foregroundColor, in: paragraphRange, options: []) { value, range, _ in
+        attributedString.addAttribute(.foregroundColor, value: fontColor, range: paragraphRange)
+        attributedString.enumerateAttribute(.foregroundColor, in: paragraphRange, options: []) { value, range, _ in
 
-                if (value as? NSColor) != nil {
-                    attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.fontColor, range: range)
-                }
+            if (value as? NSColor) != nil {
+                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.fontColor, range: range)
             }
-        #endif
+        }
 
         NotesTextProcessor.italicRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range else { return }
@@ -557,8 +410,6 @@ public class NotesTextProcessor {
                     guard let note = EditTextView.note else { return }
 
                     if substring.starts(with: "/i/") || substring.starts(with: "/files/"), let path = note.project.url.appendingPathComponent(substring).path.removingPercentEncoding {
-                        substring = "file://" + path
-                    } else if note.isTextBundle(), substring.starts(with: "assets/"), let path = note.getURL().appendingPathComponent(substring).path.removingPercentEncoding {
                         substring = "file://" + path
                     }
 
@@ -725,7 +576,6 @@ public class NotesTextProcessor {
             }
         }
 
-        // 兼容一下这里这个字体有些问题
         if isFullScan {
             checkBackTick(styleApplier: attributedString)
         }
@@ -1196,42 +1046,20 @@ public class NotesTextProcessor {
     // We transform the user provided `fontName` `String` to a `NSFont`
 
     fileprivate static func codeFont(_ size: CGFloat) -> Font {
-        if var font = UserDefaultsManagement.noteFont {
-            #if os(iOS)
-                if #available(iOS 11.0, *), UserDefaultsManagement.dynamicTypeFont {
-                    let fontMetrics = UIFontMetrics(forTextStyle: .body)
-                    font = fontMetrics.scaledFont(for: font)
-                }
-            #endif
-
+        if let font = UserDefaultsManagement.noteFont {
             return font
         } else {
-            #if os(OSX)
-                return NSFont.systemFont(ofSize: size)
-            #else
-                return UIFont.systemFont(ofSize: size)
-            #endif
+            return NSFont.systemFont(ofSize: size)
         }
     }
 
     // We transform the user provided `quoteFontName` `String` to a `NSFont`
 
     fileprivate static func quoteFont(_ size: CGFloat) -> Font {
-        if var font = UserDefaultsManagement.noteFont {
-            #if os(iOS)
-                if #available(iOS 11.0, *), UserDefaultsManagement.dynamicTypeFont {
-                    let fontMetrics = UIFontMetrics(forTextStyle: .body)
-                    font = fontMetrics.scaledFont(for: font)
-                }
-            #endif
-
+        if let font = UserDefaultsManagement.noteFont {
             return font
         } else {
-            #if os(OSX)
-                return NSFont.systemFont(ofSize: size)
-            #else
-                return UIFont.systemFont(ofSize: size)
-            #endif
+            return NSFont.systemFont(ofSize: size)
         }
     }
 

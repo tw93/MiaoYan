@@ -185,3 +185,7 @@
 "font.lxgw" = "霞鶩文楷";
 "font.system" = "系統字體";
 "font.times" = "新羅馬體";
+
+/* ClipboardManager Messages */
+"Image uploaded successfully" = "圖片上傳成功";
+"Image upload failed, using local path" = "圖片上傳失敗，使用本地路徑";

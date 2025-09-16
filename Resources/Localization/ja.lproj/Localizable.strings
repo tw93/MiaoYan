@@ -206,3 +206,7 @@
 "font.lxgw" = "霞鶩文楷";
 "font.system" = "システムフォント";
 "font.times" = "Times New Roman";
+
+/* ClipboardManager Messages */
+"Image uploaded successfully" = "画像のアップロードが成功しました";
+"Image upload failed, using local path" = "画像のアップロードに失敗しました、ローカルパスを使用します";

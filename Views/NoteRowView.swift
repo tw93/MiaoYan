@@ -21,9 +21,7 @@ class NoteRowView: NSTableRowView {
         get {
             return .clear
         }
-        set {
-            // Ignore attempts to set background color
-        }
+        set {}
     }
 
     override func drawSelection(in dirtyRect: NSRect) {
@@ -101,8 +99,16 @@ class NoteRowView: NSTableRowView {
             height: separatorHeight
         )
 
-        // Use divider color from Assets catalog
-        let dividerColor = NSColor(named: "divider") ?? NSColor.separatorColor
+        // Use divider color from Assets, resolved for current appearance
+        var dividerColor = NSColor(named: "divider") ?? NSColor.separatorColor
+        let app = self.effectiveAppearance
+        var cg: CGColor?
+        app.performAsCurrentDrawingAppearance {
+            cg = dividerColor.cgColor
+        }
+        if let cg, let fixed = NSColor(cgColor: cg) {
+            dividerColor = fixed
+        }
         dividerColor.setFill()
 
         separatorRect.fill()

@@ -6,6 +6,13 @@ class EditorSplitView: NSSplitView, NSSplitViewDelegate {
     override func awakeFromNib() {
         super.awakeFromNib()
         delegate = self
+        // Pre-apply divider color to avoid initial flash before controller updates
+        if let vc = ViewController.shared() {
+            let hidden = (subviews.first?.frame.width ?? 0) == 0
+            vc.setDividerColor(for: self, hidden: hidden)
+        } else {
+            self.setValue(Theme.backgroundColor, forKey: "dividerColor")
+        }
     }
 
     override func minPossiblePositionOfDivider(at dividerIndex: Int) -> CGFloat {

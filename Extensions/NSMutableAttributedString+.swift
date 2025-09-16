@@ -1,107 +1,98 @@
-//
-//  NSMutableAttributedString+.swift
-//  FSNotes
-//
-//  Created by Oleksandr Glushchenko on 7/21/18.
-//  Copyright © 2018 Oleksandr Glushchenko. All rights reserved.
-//
-
 import Foundation
-
-#if os(iOS)
-    import UIKit
-#else
-    import Cocoa
-#endif
+import Cocoa
 
 extension NSMutableAttributedString {
     // MARK: - Letter Spacing Support
 
-    /// Apply letter spacing to the entire attributed string
     public func applyEditorLetterSpacing(_ spacing: CGFloat? = nil) {
         let letterSpacing = spacing ?? UserDefaultsManagement.editorLetterSpacing
         guard letterSpacing != 0 else { return }
-        let range = NSRange(location: 0, length: self.length)
+        let range = NSRange(location: 0, length: length)
         addAttribute(.kern, value: letterSpacing as Any, range: range)
     }
 
-    /// Apply letter spacing to a specific range, preserving other attributes
     public func applyEditorLetterSpacing(in range: NSRange, spacing: CGFloat? = nil) {
         let letterSpacing = spacing ?? UserDefaultsManagement.editorLetterSpacing
-        guard letterSpacing != 0, range.location < self.length, range.upperBound <= self.length else { return }
+        guard letterSpacing != 0,
+            range.location < length,
+            range.upperBound <= length
+        else { return }
         addAttribute(.kern, value: letterSpacing as Any, range: range)
     }
 
-    /// Remove letter spacing from the entire string
     public func removeEditorLetterSpacing() {
-        let range = NSRange(location: 0, length: self.length)
+        let range = NSRange(location: 0, length: length)
         removeAttribute(.kern, range: range)
     }
     public func unLoadImages(note: Note? = nil) -> NSMutableAttributedString {
-        var offset = 0
-        let content = mutableCopy() as? NSMutableAttributedString
-
-        enumerateAttribute(.attachment, in: NSRange(location: 0, length: length)) { value, range, _ in
-
-            if let textAttachment = value as? NSTextAttachment,
-                self.attribute(.todo, at: range.location, effectiveRange: nil) == nil
-            {
-                var path: String?
-                var title: String?
-
-                let filePathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
-                let titleKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.title")
-
-                if let filePath = self.attribute(filePathKey, at: range.location, effectiveRange: nil) as? String {
-                    path = filePath.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-                    title = self.attribute(titleKey, at: range.location, effectiveRange: nil) as? String
-                } else if let note = note,
-                    let imageData = textAttachment.fileWrapper?.regularFileContents
-                {
-                    path = ImagesProcessor.writeFile(data: imageData, note: note)
-                } else if let note = note,
-                    let imageData = textAttachment.contents
-                {
-                    path = ImagesProcessor.writeFile(data: imageData, note: note)
-                }
-
-                let newRange = NSRange(location: range.location + offset, length: range.length)
-
-                guard let unwrappedPath = path, !unwrappedPath.isEmpty else { return }
-
-                let unrappedTitle = title ?? ""
-
-                content?.removeAttribute(.attachment, range: newRange)
-                content?.replaceCharacters(in: newRange, with: "![\(unrappedTitle)](\(unwrappedPath))")
-                offset += 4 + unwrappedPath.count + unrappedTitle.count
-            }
+        guard let content = mutableCopy() as? NSMutableAttributedString else {
+            return NSMutableAttributedString()
         }
 
-        return content!
+        var offset = 0
+        let filePathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
+        let titleKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.title")
+
+        enumerateAttribute(.attachment, in: NSRange(location: 0, length: length)) { value, range, _ in
+            guard let textAttachment = value as? NSTextAttachment,
+                attribute(.todo, at: range.location, effectiveRange: nil) == nil
+            else {
+                return
+            }
+
+            let path = extractImagePath(textAttachment: textAttachment, note: note, filePathKey: filePathKey)
+            let title = attribute(titleKey, at: range.location, effectiveRange: nil) as? String ?? ""
+
+            guard let imagePath = path, !imagePath.isEmpty else { return }
+
+            let newRange = NSRange(location: range.location + offset, length: range.length)
+            content.removeAttribute(.attachment, range: newRange)
+            content.replaceCharacters(in: newRange, with: "![\(title)](\(imagePath))")
+            offset += 4 + imagePath.count + title.count
+        }
+
+        return content
+    }
+
+    private func extractImagePath(textAttachment: NSTextAttachment, note: Note?, filePathKey: NSAttributedString.Key) -> String? {
+        if let filePath = attribute(filePathKey, at: 0, effectiveRange: nil) as? String {
+            return filePath.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        }
+
+        guard let note = note else { return nil }
+
+        if let imageData = textAttachment.fileWrapper?.regularFileContents {
+            return ImagesProcessor.writeFile(data: imageData, note: note)
+        }
+
+        if let imageData = textAttachment.contents {
+            return ImagesProcessor.writeFile(data: imageData, note: note)
+        }
+
+        return nil
     }
 
     public func unLoadCheckboxes() -> NSMutableAttributedString {
-        var offset = 0
-        let content = mutableCopy() as? NSMutableAttributedString
-
-        enumerateAttribute(.attachment, in: NSRange(location: 0, length: length)) { value, range, _ in
-            if value != nil {
-                let newRange = NSRange(location: range.location + offset, length: 1)
-
-                guard range.length == 1,
-                    let value = self.attribute(.todo, at: range.location, effectiveRange: nil) as? Int
-                else { return }
-
-                var gfm = "- [ ]"
-                if value == 1 {
-                    gfm = "- [x]"
-                }
-                content?.replaceCharacters(in: newRange, with: gfm)
-                offset += 4
-            }
+        guard let content = mutableCopy() as? NSMutableAttributedString else {
+            return NSMutableAttributedString()
         }
 
-        return content!
+        var offset = 0
+        enumerateAttribute(.attachment, in: NSRange(location: 0, length: length)) { value, range, _ in
+            guard value != nil,
+                range.length == 1,
+                let todoValue = attribute(.todo, at: range.location, effectiveRange: nil) as? Int
+            else {
+                return
+            }
+
+            let newRange = NSRange(location: range.location + offset, length: 1)
+            let gfm = todoValue == 1 ? "- [x]" : "- [ ]"
+            content.replaceCharacters(in: newRange, with: gfm)
+            offset += 4
+        }
+
+        return content
     }
 
     public func unLoad() -> NSMutableAttributedString {
@@ -111,20 +102,17 @@ extension NSMutableAttributedString {
     #if os(OSX)
         func unLoadUnderlines() -> NSMutableAttributedString {
             enumerateAttribute(.underlineStyle, in: NSRange(location: 0, length: length)) { value, range, _ in
-                if value != nil {
-                    addAttribute(.underlineColor, value: NSColor.black, range: range)
-                }
+                guard value != nil else { return }
+                addAttribute(.underlineColor, value: NSColor.black, range: range)
             }
-
             return self
         }
     #endif
 
     public func loadUnderlines() {
         enumerateAttribute(.underlineStyle, in: NSRange(location: 0, length: length)) { value, range, _ in
-            if value != nil {
-                addAttribute(.underlineColor, value: NotesTextProcessor.underlineColor, range: range)
-            }
+            guard value != nil else { return }
+            addAttribute(.underlineColor, value: NotesTextProcessor.underlineColor, range: range)
         }
     }
 }

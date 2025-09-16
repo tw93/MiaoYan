@@ -1,11 +1,6 @@
+import Cocoa
 import CoreServices
 import Foundation
-
-#if os(OSX)
-    import Cocoa
-#else
-    import UIKit
-#endif
 
 struct DirectoryItem {
     let url: URL
@@ -32,19 +27,14 @@ class Storage {
 
     var pinned: Int = 0
 
-    #if os(iOS)
-        let initialFiles = [
-            "MiaoYan - Readme.md",
-            "MiaoYan - Code Highlighting.md",
-        ]
-    #else
-        let initialFiles = [
-            "介绍妙言.md",
-            "妙言 PPT.md",
-            "Introduction to MiaoYan.md",
-            "MiaoYan PPT.md",
-        ]
-    #endif
+    let initialFiles = [
+        "介绍妙言.md",
+        "妙言 PPT.md",
+        "妙言 Markdown 语法指南.md",
+        "Introduction to MiaoYan.md",
+        "MiaoYan PPT.md",
+        "MiaoYan Markdown Syntax Guide.md",
+    ]
 
     private var bookmarks = [URL]()
 
@@ -137,7 +127,7 @@ class Storage {
                     !subUrl.path.contains("/."),
                     !subUrl.path.contains(parentPath),
                     !subUrl.path.contains(filesPath),
-                    !subUrl.path.contains(".textbundle")
+                    true
                 else {
                     continue
                 }
@@ -240,15 +230,7 @@ class Storage {
     }
 
     func getTrash(url: URL) -> URL? {
-        #if os(OSX)
-            return try? FileManager.default.url(for: .trashDirectory, in: .allDomainsMask, appropriateFor: url, create: false)
-        #else
-            if #available(iOS 11.0, *) {
-                return try? FileManager.default.url(for: .trashDirectory, in: .allDomainsMask, appropriateFor: url, create: false)
-            } else {
-                return nil
-            }
-        #endif
+        return try? FileManager.default.url(for: .trashDirectory, in: .allDomainsMask, appropriateFor: url, create: false)
     }
 
     public func getBookmarks() -> [URL] {
@@ -294,20 +276,6 @@ class Storage {
 
     func loadDocuments(tryCount: Int = 0, completion: @escaping () -> Void) {
         _ = restoreCloudPins()
-
-        let count = noteList.count
-        var i = 0
-
-        #if os(iOS)
-            for note in noteList {
-                note.load()
-                i += 1
-                if i == count {
-                    // Loaded all notes
-                    completion()
-                }
-            }
-        #endif
 
         noteList = sortNotes(noteList: noteList, filter: "")
 
@@ -423,13 +391,11 @@ class Storage {
         for document in documents {
             let url = document.url
 
-            #if os(OSX)
-                if let currentNoteURL = EditTextView.note?.url,
-                    currentNoteURL == url
-                {
-                    continue
-                }
-            #endif
+            if let currentNoteURL = EditTextView.note?.url,
+                currentNoteURL == url
+            {
+                continue
+            }
 
             let note = Note(url: url.resolvingSymlinksInPath(), with: item)
 
@@ -452,9 +418,7 @@ class Storage {
                 }
             #endif
 
-            #if os(OSX)
-                note.load()
-            #endif
+            note.load()
 
             if loadContent {
                 note.load()
@@ -462,10 +426,6 @@ class Storage {
 
             if note.isPinned {
                 pinned += 1
-            }
-
-            if note.isTextBundle(), !note.isFullLoadedTextBundle() {
-                continue
             }
 
             noteList.append(note)
@@ -765,25 +725,6 @@ class Storage {
         return false
     }
 
-    #if os(iOS)
-
-        public func createProject(name: String) -> Project {
-            let storageURL = UserDefaultsManagement.storageUrl!
-
-            var url = storageURL.appendingPathComponent(name)
-
-            if FileManager.default.fileExists(atPath: url.path, isDirectory: nil) {
-                url = storageURL.appendingPathComponent("\(name) \(String(Date().toMillis()))")
-            }
-
-            let project = Project(url: url)
-            project.createDirectory()
-
-            _ = add(project: project)
-            return project
-        }
-    #endif
-
     public func initNote(url: URL) -> Note? {
         guard let project = getProjectBy(url: url) else {
             return nil
@@ -795,66 +736,28 @@ class Storage {
     }
 
     private func cleanTrash() {
-        if #available(iOS 11.0, *) {
-            guard let trash = try? FileManager.default.url(for: .trashDirectory, in: .allDomainsMask, appropriateFor: UserDefaultsManagement.storageUrl, create: false) else {
-                return
-            }
+        guard let trash = try? FileManager.default.url(for: .trashDirectory, in: .allDomainsMask, appropriateFor: UserDefaultsManagement.storageUrl, create: false) else {
+            return
+        }
 
-            do {
-                let fileURLs = try FileManager.default.contentsOfDirectory(at: trash, includingPropertiesForKeys: nil, options: [])
+        do {
+            let fileURLs = try FileManager.default.contentsOfDirectory(at: trash, includingPropertiesForKeys: nil, options: [])
 
-                for fileURL in fileURLs {
-                    try FileManager.default.removeItem(at: fileURL)
-                }
-            } catch {
-                AppDelegate.trackError(error, context: "Storage.copyPins")
+            for fileURL in fileURLs {
+                try FileManager.default.removeItem(at: fileURL)
             }
+        } catch {
+            AppDelegate.trackError(error, context: "Storage.copyPins")
         }
     }
 
     public func saveCloudPins() {
-        #if CLOUDKIT || os(iOS)
-            if let pinned = getPinned() {
-                var names = [String]()
-                for note in pinned {
-                    names.append(note.name)
-                }
-
-                let keyStore = NSUbiquitousKeyValueStore()
-                keyStore.set(names, forKey: "com.tw93.miaoyan.pins.shared")
-                keyStore.synchronize()
-
-                // Pins successfully saved
-            }
-        #endif
+        // CloudKit functionality removed for macOS-only app
     }
 
     public func restoreCloudPins() -> (removed: [Note]?, added: [Note]?) {
-        var added = [Note]()
-        var removed = [Note]()
-
-        #if CLOUDKIT || os(iOS)
-            let keyStore = NSUbiquitousKeyValueStore()
-            keyStore.synchronize()
-
-            if let names = keyStore.array(forKey: "com.tw93.miaoyan.pins.shared") as? [String] {
-                if let pinned = getPinned() {
-                    for note in pinned where !names.contains(note.name) {
-                        note.removePin(cloudSave: false)
-                        removed.append(note)
-                    }
-                }
-
-                for name in names {
-                    if let note = getBy(name: name) {
-                        note.addPin(cloudSave: false)
-                        added.append(note)
-                    }
-                }
-            }
-        #endif
-
-        return (removed, added)
+        // CloudKit functionality removed for macOS-only app
+        return (nil, nil)
     }
 
     public func getPinned() -> [Note]? {

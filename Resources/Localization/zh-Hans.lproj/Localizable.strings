@@ -209,3 +209,7 @@
 "MiaoYan" = "妙言";
 "Auto" = "自动";
 "Github" = "Github";
+
+/* ClipboardManager Messages */
+"Image uploaded successfully" = "图片上传成功";
+"Image upload failed, using local path" = "图片上传失败，使用本地路径";

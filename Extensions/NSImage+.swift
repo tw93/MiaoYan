@@ -1,154 +1,93 @@
-//
-//  NSImage+.swift
-//  FSNotesCore macOS
-//
-//  Created by Oleksandr Glushchenko on 10/14/18.
-//  Copyright © 2018 Oleksandr Glushchenko. All rights reserved.
-//
-
 import AppKit
 
 extension NSImage {
-    public var height: CGFloat {
-        size.height
-    }
+    public var height: CGFloat { size.height }
+    public var width: CGFloat { size.width }
 
-    /// Returns the width of the current image.
-    public var width: CGFloat {
-        size.width
-    }
-
-    /// Returns a png representation of the current image.
     public var PNGRepresentation: Data? {
-        if let tiff = tiffRepresentation, let tiffData = NSBitmapImageRep(data: tiff) {
-            return tiffData.representation(using: .png, properties: [:])
+        guard let tiff = tiffRepresentation,
+            let tiffData = NSBitmapImageRep(data: tiff)
+        else {
+            return nil
         }
-
-        return nil
+        return tiffData.representation(using: .png, properties: [:])
     }
 
     public var JPEGRepresentation: Data? {
-        if let tiff = tiffRepresentation, let tiffData = NSBitmapImageRep(data: tiff) {
-            return tiffData.representation(using: .jpeg, properties: [:])
+        guard let tiff = tiffRepresentation,
+            let tiffData = NSBitmapImageRep(data: tiff)
+        else {
+            return nil
         }
-        return nil
+        return tiffData.representation(using: .jpeg, properties: [:])
     }
 
-    ///  Copies the current image and resizes it to the given size.
-    ///
-    ///  - parameter size: The size of the new image.
-    ///
-    ///  - returns: The resized copy of the given image.
     public func copy(size: NSSize) -> NSImage? {
-        // Create a new rect with given width and height
-        let frame = NSRect(x: 0, y: 0, width: size.width, height: size.height)
-
-        // Get the best representation for the given size.
+        let frame = NSRect(origin: .zero, size: size)
         guard let rep = bestRepresentation(for: frame, context: nil, hints: nil) else {
             return nil
         }
 
-        // Create an empty image with the given size.
         let img = NSImage(size: size)
-
-        // Set the drawing context and make sure to remove the focus before returning.
         img.lockFocus()
         defer { img.unlockFocus() }
 
-        // Draw the new image
-        if rep.draw(in: frame) {
-            return img
-        }
-
-        // Return nil in case something went wrong.
-        return nil
+        return rep.draw(in: frame) ? img : nil
     }
 
-    ///  Copies the current image and resizes it to the size of the given NSSize, while
-    ///  maintaining the aspect ratio of the original image.
-    ///
-    ///  - parameter size: The size of the new image.
-    ///
-    ///  - returns: The resized copy of the given image.
     public func resizeWhileMaintainingAspectRatioToSize(size: NSSize) -> NSImage? {
-        let newSize: NSSize
-
         let widthRatio = size.width / width
         let heightRatio = size.height / height
+        let ratio = max(widthRatio, heightRatio)
 
-        if widthRatio > heightRatio {
-            newSize = NSSize(width: floor(width * widthRatio), height: floor(height * widthRatio))
-        } else {
-            newSize = NSSize(width: floor(width * heightRatio), height: floor(height * heightRatio))
-        }
+        let newSize = NSSize(
+            width: floor(width * ratio),
+            height: floor(height * ratio)
+        )
 
         return copy(size: newSize)
     }
 
-    ///  Copies and crops an image to the supplied size.
-    ///
-    ///  - parameter size: The size of the new image.
-    ///
-    ///  - returns: The cropped copy of the given image.
     public func crop(size: NSSize) -> NSImage? {
-        // Resize the current image, while preserving the aspect ratio.
         guard let resized = resizeWhileMaintainingAspectRatioToSize(size: size) else {
             return nil
         }
-        // Get some points to center the cropping area.
+
         let xCoord = floor((resized.width - size.width) / 2)
         let yCoord = floor((resized.height - size.height) / 2)
-
-        // Create the cropping frame.
         let frame = NSRect(x: xCoord, y: yCoord, width: size.width, height: size.height)
 
-        // Get the best representation of the image for the given cropping frame.
         guard let rep = resized.bestRepresentation(for: frame, context: nil, hints: nil) else {
             return nil
         }
 
-        // Create a new image with the new size
         let img = NSImage(size: size)
-
         img.lockFocus()
         defer { img.unlockFocus() }
 
-        if rep.draw(
-            in: NSRect(x: 0, y: 0, width: size.width, height: size.height),
+        let outputFrame = NSRect(origin: .zero, size: size)
+        return rep.draw(
+            in: outputFrame,
             from: frame,
-            operation: NSCompositingOperation.copy,
+            operation: .copy,
             fraction: 1.0,
             respectFlipped: false,
             hints: [:]
-        ) {
-            // Return the cropped image.
-            return img
-        }
-
-        // Return nil in case anything fails.
-        return nil
+        ) ? img : nil
     }
 
-    ///  Saves the PNG representation of the current image to the HD.
-    ///
-    /// - parameter url: The location url to which to write the png file.
     public func savePNGRepresentationToURL(url: URL) throws {
-        guard let tiffData = self.tiffRepresentation,
-            // Create an NSBitmapImageRep object using TIFF data
-            let bitmapImage = NSBitmapImageRep(data: tiffData),
-            // Converts an NSBitmapImageRep object to PNG data
-            let pngData = bitmapImage.representation(using: .png, properties: [:])
-        else {
+        guard let pngData = PNGRepresentation else {
             throw NSError(domain: "Error creating PNG representation", code: 0, userInfo: nil)
         }
-        // Writes PNG data to the specified URL
         try pngData.write(to: url, options: .atomicWrite)
     }
 
     public func saveJPEGRepresentationToURL(url: URL) throws {
-        if let jpeg = JPEGRepresentation {
-            try jpeg.write(to: url, options: .atomicWrite)
+        guard let jpegData = JPEGRepresentation else {
+            throw NSError(domain: "Error creating JPEG representation", code: 0, userInfo: nil)
         }
+        try jpegData.write(to: url, options: .atomicWrite)
     }
 
     public func resize(to targetSize: CGSize) -> NSImage? {
