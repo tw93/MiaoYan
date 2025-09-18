@@ -49,10 +49,15 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     }
 
     override func textDidEndEditing(_ notification: Notification) {
-        if let editor = currentEditor(), editor.selectedRange.length > 0 {
-            editor.replaceCharacters(in: editor.selectedRange, with: "")
-            window?.makeFirstResponder(nil)
-        }
+        clearSelection()
+        super.textDidEndEditing(notification)
+    }
+
+    private func clearSelection() {
+        guard let editor = currentEditor(),
+            editor.selectedRange.length > 0
+        else { return }
+        editor.replaceCharacters(in: editor.selectedRange, with: "")
     }
 
     override func keyUp(with event: NSEvent) {
@@ -143,41 +148,58 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     }
 
     public func suggestAutocomplete(_ note: Note, filter: String) {
-        guard note.title != filter.lowercased(), let editor = currentEditor() else { return }
+        guard validateInput(note: note, filter: filter),
+            let editor = currentEditor() as? NSTextView
+        else { return }
 
         if note.title.lowercased().starts(with: filter.lowercased()) {
-            stringValue = filter + note.title.suffix(note.title.count - filter.count)
-            editor.selectedRange = NSRange(filter.utf16.count..<note.title.utf16.count)
+            applyAutocomplete(note: note, filter: filter, editor: editor)
         }
     }
 
-    @objc private func search() {
-        let searchText = stringValue
+    private func validateInput(note: Note, filter: String) -> Bool {
+        return note.title != filter.lowercased() && !filter.isEmpty
+    }
 
-        guard !searchText.isEmpty else {
+    private func applyAutocomplete(note: Note, filter: String, editor: NSTextView) {
+        let suffix = note.title.suffix(note.title.count - filter.count)
+        stringValue = filter + suffix
+        editor.selectedRange = NSRange(filter.utf16.count..<note.title.utf16.count)
+    }
+
+    @objc private func search() {
+        let text = stringValue
+
+        guard !text.isEmpty else {
             vcDelegate.cleanSearchAndRestoreSelection()
             return
         }
 
+        performSearch(with: text)
+        updatePasteboard(with: text)
+    }
+
+    private func performSearch(with text: String) {
         UserDataService.instance.searchTrigger = true
-
-        var sidebarItem: SidebarItem?
-
-        lastQueryLength = searchText.count
+        lastQueryLength = text.count
 
         let projects = vcDelegate.storageOutlineView.getSidebarProjects()
-
-        if projects == nil {
-            sidebarItem = vcDelegate.getSidebarItem()
-        }
+        let sidebarItem = projects == nil ? vcDelegate.getSidebarItem() : nil
 
         filterQueue.cancelAllOperations()
         filterQueue.addOperation {
-            self.vcDelegate.updateTable(search: true, searchText: searchText, sidebarItem: sidebarItem, projects: projects) {}
+            self.vcDelegate.updateTable(
+                search: true,
+                searchText: text,
+                sidebarItem: sidebarItem,
+                projects: projects
+            ) {}
         }
+    }
 
+    private func updatePasteboard(with text: String) {
         let pb = NSPasteboard(name: NSPasteboard.Name.find)
         pb.declareTypes([.textFinderOptions, .string], owner: nil)
-        pb.setString(searchText, forType: NSPasteboard.PasteboardType.string)
+        pb.setString(text, forType: NSPasteboard.PasteboardType.string)
     }
 }

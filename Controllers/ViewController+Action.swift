@@ -160,7 +160,7 @@ extension ViewController {
         if vc.notesTableView.selectedRow >= 0 {
             vc.loadMoveMenu()
 
-            let moveTitle = NSLocalizedString("Move", comment: "Menu")
+            let moveTitle = I18n.str("Move")
             let moveMenu = vc.noteMenu.item(withTitle: moveTitle)
             let view = vc.notesTableView.rect(ofRow: vc.notesTableView.selectedRow)
             let x = vc.splitView.subviews[0].frame.width + 5
@@ -173,7 +173,7 @@ extension ViewController {
     @IBAction func exportMenu(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
         if vc.notesTableView.selectedRow >= 0 {
-            let exportTitle = NSLocalizedString("Export", comment: "Menu")
+            let exportTitle = I18n.str("Export")
             let exportMenu = vc.noteMenu.item(withTitle: exportTitle)
             let view = vc.notesTableView.rect(ofRow: vc.notesTableView.selectedRow)
             let x = vc.splitView.subviews[0].frame.width + 5
@@ -295,7 +295,7 @@ extension ViewController {
 
                 if let ntv = vc.notesTableView {
                     undoManager.registerUndo(withTarget: ntv, selector: #selector(ntv.unDelete), object: urls)
-                    undoManager.setActionName(NSLocalizedString("Delete", comment: ""))
+                    undoManager.setActionName(I18n.str("Delete"))
                 }
 
                 if let i = selectedRow, i > -1 {
@@ -396,7 +396,7 @@ extension ViewController {
             let pasteboard = NSPasteboard.general
             pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
             pasteboard.setString(name, forType: NSPasteboard.PasteboardType.string)
-            toast(message: NSLocalizedString("🎉 URL is successfully copied, Use it anywhere~", comment: ""))
+            toast(message: I18n.str("🎉 URL is successfully copied, Use it anywhere~"))
         }
     }
 
@@ -424,7 +424,7 @@ extension ViewController {
         if !isMiaoYanPPT() {
             return
         }
-        toastPersistent(message: NSLocalizedString("🙊 Starting export~", comment: ""))
+        toastPersistent(message: I18n.str("🙊 Starting export~"))
         enableMiaoYanPPT()
         UserDefaultsManagement.isOnExport = true
         UserDefaultsManagement.isOnExportPPT = true
@@ -614,11 +614,11 @@ extension ViewController {
         vc.alert = NSAlert()
         guard let alert = vc.alert else { return }
 
-        alert.messageText = String(format: NSLocalizedString("Are you sure you want to irretrievably delete %d note(s)?", comment: ""), notes.count)
+        alert.messageText = String(format: I18n.str("Are you sure you want to irretrievably delete %d note(s)?"), notes.count)
 
-        alert.informativeText = NSLocalizedString("This action cannot be undone.", comment: "")
-        alert.addButton(withTitle: NSLocalizedString("Remove note(s)", comment: ""))
-        alert.addButton(withTitle: NSLocalizedString("Cancel", comment: ""))
+        alert.informativeText = I18n.str("This action cannot be undone.")
+        alert.addButton(withTitle: I18n.str("Remove note(s)"))
+        alert.addButton(withTitle: I18n.str("Cancel"))
         alert.beginSheetModal(for: window) { (returnCode: NSApplication.ModalResponse) in
             if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
                 let selectedRow = vc.notesTableView.selectedRowIndexes.min()
@@ -756,20 +756,20 @@ extension ViewController {
     func loadMoveMenu() {
         guard let vc = ViewController.shared(), let note = vc.notesTableView.getSelectedNote() else { return }
 
-        let moveTitle = NSLocalizedString("Move", comment: "Menu")
+        let moveTitle = I18n.str("Move")
         if let prevMenu = noteMenu.item(withTitle: moveTitle) {
             noteMenu.removeItem(prevMenu)
         }
 
         let moveMenuItem = NSMenuItem()
-        moveMenuItem.title = NSLocalizedString("Move", comment: "Menu")
+        moveMenuItem.title = I18n.str("Move")
 
         noteMenu.addItem(moveMenuItem)
         let moveMenu = NSMenu()
 
         if !note.isTrash() {
             let trashMenu = NSMenuItem()
-            trashMenu.title = NSLocalizedString("Trash", comment: "Sidebar label")
+            trashMenu.title = I18n.str("Trash")
             trashMenu.action = #selector(vc.deleteNote(_:))
             trashMenu.tag = 555
             moveMenu.addItem(trashMenu)
@@ -805,8 +805,8 @@ extension ViewController {
     }
 
     func loadSortBySetting() {
-        let viewLabel = NSLocalizedString("View", comment: "Menu")
-        let sortByLabel = NSLocalizedString("Sort by", comment: "View menu")
+        let viewLabel = I18n.str("View")
+        let sortByLabel = I18n.str("Sort by")
 
         guard
             let menu = NSApp.menu,
@@ -854,7 +854,7 @@ extension ViewController {
             UserDefaultsManagement.isOnExportHtml = true
         }
 
-        toastPersistent(message: NSLocalizedString("🙊 Starting export~", comment: ""))
+        toastPersistent(message: I18n.str("🙊 Starting export~"))
 
         // HTML export can be done immediately without preview
         if type == "Html" {
@@ -892,9 +892,9 @@ extension ViewController {
 
     public func toastExport(status: Bool) {
         if status {
-            toast(message: NSLocalizedString("🎉 Saved to Downloads folder~", comment: ""))
+            toast(message: I18n.str("🎉 Saved to Downloads folder~"))
         } else {
-            toast(message: NSLocalizedString("😶‍🌫 Export failed, please try again~", comment: ""))
+            toast(message: I18n.str("😶‍🌫 Export failed, please try again~"))
         }
         // After the export is completed, restore the original state.
         UserDefaultsManagement.isOnExport = false
@@ -902,22 +902,22 @@ extension ViewController {
     }
 
     public func toastNoTitle() {
-        toast(message: NSLocalizedString("😶‍🌫 Please make sure your title exists~", comment: ""))
+        toast(message: I18n.str("😶‍🌫 Please make sure your title exists~"))
     }
 
     public func toastMoreTitle() {
-        toast(message: NSLocalizedString("🍭 Found that there are multiple titles of this~", comment: ""))
+        toast(message: I18n.str("🍭 Found that there are multiple titles of this~"))
     }
 
     public func toastImageSet(name: String) {
-        toast(message: String(format: NSLocalizedString("🙊 Please make sure your Mac is installed %@ ~", comment: ""), name))
+        toast(message: String(format: I18n.str("🙊 Please make sure your Mac is installed %@ ~"), name))
     }
 
     public func toastUpload(status: Bool) {
         if status {
-            toast(message: NSLocalizedString("🍭 Image upload in progress~", comment: ""))
+            toast(message: I18n.str("🍭 Image upload in progress~"))
         } else {
-            toast(message: NSLocalizedString("😶‍🌫 Image upload failed, Use local~", comment: ""))
+            toast(message: I18n.str("😶‍🌫 Image upload failed, Use local~"))
         }
     }
 
@@ -1020,7 +1020,7 @@ extension ViewController {
 
         if event.keyCode == kVK_ANSI_Z, event.modifierFlags.contains(.command), titleLabel.hasFocus() {
             let currentNote = notesTableView.getSelectedNote()
-            updateTitle(newTitle: currentNote?.getTitleWithoutLabel() ?? NSLocalizedString("Untitled Note", comment: "Untitled Note"))
+            updateTitle(newTitle: currentNote?.getTitleWithoutLabel() ?? I18n.str("Untitled Note"))
             return false
         }
 
@@ -1178,7 +1178,9 @@ extension ViewController {
         if event.keyCode == kVK_ANSI_P, event.modifierFlags.contains(.command), !event.modifierFlags.contains(.shift), !event.modifierFlags.contains(.control) {
             if notesTableView.getSelectedNote() != nil {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    self.titleLabel.saveTitle()
+                    if self.titleLabel.isEditable {
+                        self.fileName(self.titleLabel)
+                    }
                 }
                 NSApp.mainWindow?.makeFirstResponder(search)
                 return true
@@ -1193,7 +1195,9 @@ extension ViewController {
 
         // 保存
         if event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_S {
-            titleLabel.saveTitle()
+            if titleLabel.isEditable {
+                fileName(titleLabel)
+            }
             return false
         }
 
@@ -1226,7 +1230,6 @@ extension ViewController {
     }
 
     func toastInSingleMode() {
-        toast(message: NSLocalizedString("🙊 In single open mode, Exit with Command+Shift+W ~", comment: ""))
+        toast(message: I18n.str("🙊 In single open mode, Exit with Command+Shift+W ~"))
     }
 }
-

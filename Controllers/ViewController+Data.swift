@@ -419,7 +419,7 @@ extension ViewController {
     // MARK: - Data State Management
     func refreshMiaoYanNum() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-            let messageText = NSLocalizedString("%d MiaoYan", comment: "")
+            let messageText = I18n.str("%d MiaoYan")
 
             // 根据当前选择显示不同的数量
             let count: Int
