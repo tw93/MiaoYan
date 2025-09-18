@@ -45,7 +45,7 @@ class Sidebar {
 
         if !storage.getAllTrash().isEmpty {
             let trashProject = Storage.sharedInstance().getDefaultTrash()
-            let trash = SidebarItem(name: NSLocalizedString("Trash", comment: ""), project: trashProject, type: .Trash, icon: getImage(named: "trash\(night)"))
+            let trash = SidebarItem(name: I18n.str("Trash"), project: trashProject, type: .Trash, icon: getImage(named: "trash\(night)"))
             list.append(trash)
         }
     }

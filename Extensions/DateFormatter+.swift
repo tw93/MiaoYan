@@ -13,8 +13,4 @@ extension DateFormatter {
         return string(from: date)
     }
 
-    public func formatForDuplicate(_ date: Date) -> String {
-        dateFormat = "HHmmssSS"
-        return string(from: date)
-    }
 }

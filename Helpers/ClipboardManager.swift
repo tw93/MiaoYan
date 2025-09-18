@@ -209,8 +209,15 @@ class ClipboardManager {
     }
 
     private func uploadToCloudAsync(parameters: UploadParameters) {
+        // Extract the data we need for the background task
+        let localPath = parameters.localPath
+        let originalPath = parameters.originalPath
+        let picType = parameters.picType
+        let textView = parameters.textView
+        let note = parameters.note
+
         DispatchQueue.global(qos: .userInitiated).async {
-            let command = "/Applications/\(parameters.picType).app/Contents/MacOS/\(parameters.picType) -o url -u \"\(parameters.localPath)\""
+            let command = "/Applications/\(picType).app/Contents/MacOS/\(picType) -o url -u \"\(localPath)\""
             let runList = self.run(command)
             let imageDesc = runList?.components(separatedBy: "\n") ?? []
 
@@ -223,26 +230,27 @@ class ClipboardManager {
                 }
             }
 
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
                 if let validURL = uploadedURL {
                     self.replacePlaceholderWithURL(
                         placeholder: "![](uploading...)",
                         cloudURL: validURL,
-                        textView: parameters.textView,
-                        note: parameters.note
+                        textView: textView,
+                        note: note
                     )
-                    self.deleteImage(tempPath: URL(fileURLWithPath: parameters.localPath))
-                    if let viewController = parameters.textView.window?.contentViewController {
+                    self.deleteImage(tempPath: URL(fileURLWithPath: localPath))
+                    if let viewController = textView.window?.contentViewController {
                         viewController.toast(message: I18n.str("Image uploaded successfully"))
                     }
                 } else {
                     self.replacePlaceholderWithURL(
                         placeholder: "![](uploading...)",
-                        cloudURL: parameters.originalPath,
-                        textView: parameters.textView,
-                        note: parameters.note
+                        cloudURL: originalPath,
+                        textView: textView,
+                        note: note
                     )
-                    if let viewController = parameters.textView.window?.contentViewController {
+                    if let viewController = textView.window?.contentViewController {
                         viewController.toast(message: I18n.str("Image upload failed, using local path"))
                     }
                 }

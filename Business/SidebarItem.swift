@@ -21,7 +21,7 @@ class SidebarItem {
 
     public func isGroupItem() -> Bool {
         let notesLabel = getLocalizedAppName()
-        let trashLabel = NSLocalizedString("Trash", comment: "Sidebar label")
+        let trashLabel = I18n.str("Trash")
         if project == nil, [notesLabel, trashLabel].contains(name) {
             return true
         }
