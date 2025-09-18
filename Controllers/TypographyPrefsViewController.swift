@@ -269,15 +269,9 @@ final class TypographyPrefsViewController: BasePrefsViewController {
     private func setupFontPopUp(_ popUp: NSPopUpButton, currentName: String?) {
         popUp.removeAllItems()
 
-        // Show current exact value first if provided
-        if let name = currentName, !name.isEmpty {
-            popUp.addItem(withTitle: name)
-        }
-
         // Known families (list by their actual face names for clarity)
         let candidates: [FontType] = FontType.allCases
         for font in candidates where font.isAvailable {
-            if popUp.itemTitles.contains(font.editorFontName) { continue }
             popUp.addItem(withTitle: font.editorFontName)
         }
 
@@ -287,6 +281,16 @@ final class TypographyPrefsViewController: BasePrefsViewController {
             if candidates.contains(where: { $0.editorFontName == family || $0.rawValue == family }) { continue }
             if popUp.itemTitles.contains(family) { continue }
             popUp.addItem(withTitle: family)
+        }
+
+        // Add current value if not in the list and select it
+        if let name = currentName, !name.isEmpty, !popUp.itemTitles.contains(name) {
+            popUp.addItem(withTitle: name)
+        }
+
+        // Select the current font after all items are added
+        if let name = currentName, !name.isEmpty {
+            popUp.selectItem(withTitle: name)
         }
     }
 
@@ -307,41 +311,22 @@ final class TypographyPrefsViewController: BasePrefsViewController {
     }
 
     override func setupValues() {
+        // Font selections are already handled in setupFontPopUp during createFontRow
+        // Only need to set size selections here to avoid double-setting font selections
         let rows = fontStackView.arrangedSubviews
-        // Editor font + size
+
+        // Editor font size
         if !rows.isEmpty {
-            if let editorType = FontType.from(actualFontName: settings.editorFontName) {
-                selectFontInPopUp(rows[0], fontType: editorType)
-            } else if let pop = rows[0].subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton {
-                pop.selectItem(withTitle: settings.editorFontName)
-            }
             selectSizeInPopUp(rows[0], size: settings.editorFontSize)
         }
-        // Preview font + size
+        // Preview font size
         if rows.count > 1 {
-            if let previewType = FontType.from(actualFontName: settings.previewFontName) {
-                selectFontInPopUp(rows[1], fontType: previewType)
-            } else if let pop = rows[1].subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton {
-                pop.selectItem(withTitle: settings.previewFontName)
-            }
             selectSizeInPopUp(rows[1], size: settings.previewFontSize)
         }
-        // Interface font
-        if rows.count > 2 {
-            if let windowType = FontType.from(actualFontName: settings.windowFontName) {
-                selectFontInPopUp(rows[2], fontType: windowType)
-            } else if let pop = rows[2].subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton {
-                pop.selectItem(withTitle: settings.windowFontName)
-            }
-        }
-        // Code font
+        // Code font - check if it should follow editor font
         if rows.count > 3 {
-            if let codeType = FontType.from(actualFontName: settings.codeFontName) {
-                selectFontInPopUp(rows[3], fontType: codeType)
-            } else if settings.codeFontName == settings.editorFontName {
+            if settings.codeFontName == settings.editorFontName {
                 selectCodeFontAsEditor(rows[3])
-            } else if let pop = rows[3].subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton {
-                pop.selectItem(withTitle: settings.codeFontName)
             }
         }
         // Presentation font size
