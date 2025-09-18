@@ -1,6 +1,5 @@
 import Foundation
 
-@MainActor
 class FileSystemEventManager {
     private let storage: Storage
     private weak var delegate: ViewController?
@@ -17,9 +16,7 @@ class FileSystemEventManager {
     public func start() {
         watcher = FileWatcher(observedFolders)
         watcher?.callback = { [weak self] event in
-            Task { @MainActor [weak self] in
-                self?.handleFileSystemEvent(event)
-            }
+            self?.handleFileSystemEvent(event)
         }
         watcher?.start()
     }
@@ -111,7 +108,10 @@ class FileSystemEventManager {
         guard let note = storage.getBy(url: url) else {
             throw FileSystemError.noteNotFound(url)
         }
-        reloadNote(note: note)
+
+        Task { @MainActor [weak self] in
+            self?.reloadNote(note: note)
+        }
     }
 
     private func moveHandler(url: URL, pathList: [String]) {
@@ -125,7 +125,9 @@ class FileSystemEventManager {
         }
 
         if fileExistsInFS {
-            renameNote(note: note)
+            Task { @MainActor [weak self] in
+                self?.renameNote(note: note)
+            }
         } else {
             removeNote(note: note)
         }
@@ -140,7 +142,9 @@ class FileSystemEventManager {
 
         // Check if note already exists
         if let existingNote = storage.getBy(url: processedURL) {
-            handleExistingNote(existingNote)
+            Task { @MainActor [weak self] in
+                self?.handleExistingNote(existingNote)
+            }
             return
         }
 
@@ -154,11 +158,15 @@ class FileSystemEventManager {
         storage.add(note)
 
         // Update UI
-        updateUIForNewNote(note)
+        Task { @MainActor [weak self] in
+            self?.updateUIForNewNote(note)
+        }
 
         // Handle special readme file
         if note.name == "MiaoYan - Readme.md" {
-            handleReadmeFile(note)
+            Task { @MainActor [weak self] in
+                self?.handleReadmeFile(note)
+            }
         }
     }
 
@@ -213,13 +221,15 @@ class FileSystemEventManager {
 
     private func removeNote(note: Note) {
         storage.removeNotes(notes: [note], fsRemove: false) { [weak self] _ in
-            guard let self = self,
-                let delegate = self.delegate,
-                delegate.notesTableView.numberOfRows > 0
-            else {
-                return
+            Task { @MainActor [weak self] in
+                guard let self = self,
+                    let delegate = self.delegate,
+                    delegate.notesTableView.numberOfRows > 0
+                else {
+                    return
+                }
+                delegate.notesTableView.removeByNotes(notes: [note])
             }
-            delegate.notesTableView.removeByNotes(notes: [note])
         }
     }
 

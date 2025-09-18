@@ -117,7 +117,7 @@ class ImagePreviewWindow: NSWindow {
     }
 
     private func loadRemoteImage(from url: String, completion: @escaping @Sendable (NSImage?) -> Void) {
-        // 使用URLSession替代Alamofire，添加超时控制
+        // Use URLSession with explicit timeout instead of Alamofire
         guard let imageURL = URL(string: url) else {
             completion(nil)
             return
@@ -255,7 +255,7 @@ class ImagePreviewWindow: NSWindow {
             windowPoint.x = screen.frame.maxX - windowSize.width - 5
         }
 
-        // 强制保持在上方，即使超出屏幕也只调整到最大可见区域
+        // Keep the window above the cursor while clamping to the visible area
         if windowPoint.y + windowSize.height > screen.frame.maxY {
             windowPoint.y = screen.frame.maxY - windowSize.height
         }

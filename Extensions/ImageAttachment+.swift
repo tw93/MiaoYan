@@ -7,7 +7,7 @@ extension NoteAttachment {
         let attachment = NSTextAttachment()
 
         if url.isImage {
-            // 这里的 getSize(url:) 若在别处定义且会读 UI 状态，也应是 @MainActor
+            // If getSize(url:) reads UI state elsewhere, mark it @MainActor as well
             let imageSize = getSize(url: url)
             let size = getSize(width: imageSize.width, height: imageSize.height)
             attachment.bounds = CGRect(origin: .zero, size: size)
@@ -30,7 +30,7 @@ extension NoteAttachment {
         ViewController.shared()?.editArea
     }
 
-    // 读取 UserDefaultsManagement.imagesWidth → 主线程
+    // Read UserDefaultsManagement.imagesWidth from the main actor
     @MainActor
     func getSize(width: CGFloat, height: CGFloat) -> NSSize {
         let configuredMax = UserDefaultsManagement.imagesWidth
@@ -44,7 +44,7 @@ extension NoteAttachment {
         }
     }
 
-    // 访问 note.project（主线程隔离）→ 主线程
+    // Access note.project on the main actor to honor isolation
     @MainActor
     static func getImageAndCacheData(url: URL, note: Note) -> Image? {
         let cacheDirectoryUrl = note.project.url.appendingPathComponent("/.cache/")
@@ -66,7 +66,7 @@ extension NoteAttachment {
         url.isRemote() || url.pathExtension.lowercased() == "png"
     }
 
-    // 非隔离函数里调用 trackError → hop 到主线程
+    // Non-isolated function calling trackError must hop to the main actor
     private static func getCachedOrFetchData(imageCacheUrl: URL, originalUrl: URL, cacheDirectoryUrl: URL) -> Data? {
         if FileManager.default.fileExists(atPath: imageCacheUrl.path) {
             return try? Data(contentsOf: imageCacheUrl)
@@ -84,7 +84,7 @@ extension NoteAttachment {
         }
     }
 
-    // 同上：错误打点放到主线程
+    // Same as above: ensure error tracking runs on the main actor
     private static func ensureCacheDirectoryExists(cacheDirectoryUrl: URL) {
         var isDirectory = ObjCBool(true)
         let fileExists = FileManager.default.fileExists(atPath: cacheDirectoryUrl.path, isDirectory: &isDirectory)
