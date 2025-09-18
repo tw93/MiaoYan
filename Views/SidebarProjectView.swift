@@ -33,13 +33,13 @@ class SidebarProjectView: NSOutlineView,
             return false
         }
 
-        if menuItem.title == NSLocalizedString("Show in Finder", comment: "") {
+        if menuItem.title == I18n.str("Show in Finder") {
             if let sidebarItem = getSidebarItem() {
                 return sidebarItem.project != nil || sidebarItem.isTrash()
             }
         }
 
-        if menuItem.title == NSLocalizedString("Rename Folder", comment: "") {
+        if menuItem.title == I18n.str("Rename Folder") {
             if sidebarItem.isTrash() {
                 return false
             }
@@ -53,13 +53,13 @@ class SidebarProjectView: NSOutlineView,
             }
         }
 
-        if menuItem.title == NSLocalizedString("Delete Folder", comment: "") {
+        if menuItem.title == I18n.str("Delete Folder") {
             if sidebarItem.isTrash() {
                 return false
             }
 
             if sidebarItem.project != nil {
-                menuItem.title = NSLocalizedString("Delete Folder", comment: "")
+                menuItem.title = I18n.str("Delete Folder")
             }
 
             if let project = sidebarItem.project, !project.isDefault {
@@ -605,12 +605,12 @@ class SidebarProjectView: NSOutlineView,
             }
 
             let alert = NSAlert()
-            let messageText = NSLocalizedString("Are you sure you want to remove project \"%@\" and all files inside?", comment: "")
+            let messageText = I18n.str("Are you sure you want to remove project \"%@\" and all files inside?")
 
             alert.messageText = String(format: messageText, project.label)
-            alert.informativeText = NSLocalizedString("This action cannot be undone.", comment: "Delete menu")
-            alert.addButton(withTitle: NSLocalizedString("Remove", comment: "Delete menu"))
-            alert.addButton(withTitle: NSLocalizedString("Cancel", comment: "Delete menu"))
+            alert.informativeText = I18n.str("This action cannot be undone.")
+            alert.addButton(withTitle: I18n.str("Remove"))
+            alert.addButton(withTitle: I18n.str("Cancel"))
             alert.beginSheetModal(for: w) { (returnCode: NSApplication.ModalResponse) in
                 if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
                     guard let resultingItemUrl = Storage.sharedInstance().trashItem(url: project.url) else {
@@ -646,11 +646,11 @@ class SidebarProjectView: NSOutlineView,
         let alert = NSAlert()
         let field = NSTextField(frame: NSRect(x: 0, y: 0, width: 280, height: 24))
         field.focusRingType = .none
-        alert.messageText = NSLocalizedString("New project", comment: "")
+        alert.messageText = I18n.str("New project")
         alert.accessoryView = field
         alert.alertStyle = .informational
-        alert.addButton(withTitle: NSLocalizedString("Add", comment: ""))
-        alert.addButton(withTitle: NSLocalizedString("Cancel", comment: ""))
+        alert.addButton(withTitle: I18n.str("Add"))
+        alert.addButton(withTitle: I18n.str("Cancel"))
         alert.beginSheetModal(for: window) { (returnCode: NSApplication.ModalResponse) in
             if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
                 self.addChild(field: field, project: project)

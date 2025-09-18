@@ -731,17 +731,19 @@ extension ViewController {
             try FileManager.default.copyItem(at: url, to: destination)
             return destination
         } catch {
-            var tempUrl = url
+            // If file already exists, create a copy with "Copy" suffix
+            let baseName = url.deletingPathExtension().lastPathComponent
+            let ext = url.pathExtension
 
-            let ext = tempUrl.pathExtension
-            tempUrl.deletePathExtension()
+            var copyName = baseName + " Copy"
+            var copyNumber = 2
 
-            let name = tempUrl.lastPathComponent
-            tempUrl.deleteLastPathComponent()
+            while FileManager.default.fileExists(atPath: project.url.appendingPathComponent(copyName).appendingPathExtension(ext).path) {
+                copyName = baseName + " Copy \(copyNumber)"
+                copyNumber += 1
+            }
 
-            let now = DateFormatter().formatForDuplicate(Date())
-            let baseUrl = project.url.appendingPathComponent(name + " " + now + "." + ext)
-
+            let baseUrl = project.url.appendingPathComponent(copyName).appendingPathExtension(ext)
             try? FileManager.default.copyItem(at: url, to: baseUrl)
 
             return baseUrl
@@ -1059,6 +1061,18 @@ extension ViewController {
                 }
             }
             return false
+        }
+
+        // Up/Down arrow navigation in notes list
+        if event.keyCode == kVK_UpArrow || event.keyCode == kVK_DownArrow {
+            if let fr = NSApp.mainWindow?.firstResponder, fr.isKind(of: NotesTableView.self), !event.modifierFlags.contains(.command) {
+                if event.keyCode == kVK_UpArrow {
+                    notesTableView.selectPrev()
+                } else {
+                    notesTableView.selectNext()
+                }
+                return false
+            }
         }
 
         // Return / Cmd + Return navigation

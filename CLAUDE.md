@@ -58,9 +58,9 @@ Resources/
 ## Key Conventions
 
 - Follow existing project conventions and use established utility classes
-- Use `NSLocalizedString` for internationalization
+- Use `I18n.str()` for internationalization (NOT `NSLocalizedString`)
 - Retrieve colors from `Images.xcassets`
-- All comments must be written in English
+- Minimal comments - only add English comments for complex logic that's hard to understand
 - Use `// MARK:` for organizing code sections
 
 ## Development Commands

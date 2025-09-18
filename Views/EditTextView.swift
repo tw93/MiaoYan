@@ -687,7 +687,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         if !removedImages.isEmpty {
             note.undoManager.beginUndoGrouping()
-            note.undoManager.setActionName(NSLocalizedString("Delete Images", comment: "Undo action name"))
+            note.undoManager.setActionName(I18n.str("Delete Images"))
             note.undoManager.registerUndo(withTarget: self, selector: #selector(unDeleteImages), object: removedImages)
             note.undoManager.endUndoGrouping()
         }
@@ -696,7 +696,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     @objc public func unDeleteImages(_ urls: [URL: URL]) {
         guard let note = EditTextView.note else { return }
         note.undoManager.beginUndoGrouping()
-        note.undoManager.setActionName(NSLocalizedString("Restore Images", comment: "Undo action name"))
+        note.undoManager.setActionName(I18n.str("Restore Images"))
         var restoredImages = [URL: URL]()
         for (src, dst) in urls {
             do {
@@ -715,7 +715,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
     @objc private func deleteRestoredImages(_ urls: [URL: URL]) {
         guard let note = EditTextView.note else { return }
         note.undoManager.beginUndoGrouping()
-        note.undoManager.setActionName(NSLocalizedString("Delete Images", comment: "Undo action name"))
+        note.undoManager.setActionName(I18n.str("Delete Images"))
         var deletedImages = [URL: URL]()
         for (src, _) in urls {
             do {
@@ -741,11 +741,11 @@ class EditTextView: NSTextView, NSTextFinderClient {
 
     override func menu(for event: NSEvent) -> NSMenu? {
         let menu = super.menu(for: event)
-        let editTitle = NSLocalizedString("Edit Link…", comment: "")
+        let editTitle = I18n.str("Edit Link…")
         if let editLink = menu?.item(withTitle: editTitle) {
             menu?.removeItem(editLink)
         }
-        let removeTitle = NSLocalizedString("Remove Link", comment: "")
+        let removeTitle = I18n.str("Remove Link")
         if let removeLink = menu?.item(withTitle: removeTitle) {
             menu?.removeItem(removeLink)
         }

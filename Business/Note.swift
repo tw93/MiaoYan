@@ -616,28 +616,38 @@ public class Note: NSObject {
     }
 
     public func duplicate() {
-        var url = url
-        let ext = url.pathExtension
-        url.deletePathExtension()
+        guard let duplicateName = getDupeName() else { return }
 
-        let name = url.lastPathComponent
-        url.deleteLastPathComponent()
+        let directory = url.deletingLastPathComponent()
+        let duplicateURL = directory.appendingPathComponent(duplicateName).appendingPathExtension(url.pathExtension)
 
-        let now = dateFormatter.formatForDuplicate(Date())
-        url.appendPathComponent(name + " " + now)
-        url.appendPathExtension(ext)
-        try? FileManager.default.copyItem(at: self.url, to: url)
+        try? FileManager.default.copyItem(at: self.url, to: duplicateURL)
     }
 
     public func getDupeName() -> String? {
-        var url = url
-        url.deletePathExtension()
+        let fileName = url.deletingPathExtension().lastPathComponent
+        let directory = url.deletingLastPathComponent()
 
-        let name = url.lastPathComponent
-        url.deleteLastPathComponent()
+        // Extract the original base name (remove existing Copy suffix if present)
+        let baseName: String
+        if fileName.hasSuffix(" Copy") {
+            baseName = String(fileName.dropLast(5)) // Remove " Copy"
+        } else if let range = fileName.range(of: " Copy ") {
+            baseName = String(fileName[..<range.lowerBound])
+        } else {
+            baseName = fileName
+        }
 
-        let now = dateFormatter.formatForDuplicate(Date())
-        return name + " " + now
+        // Try "Copy" first, then "Copy 2", "Copy 3", etc.
+        var copyName = baseName + " Copy"
+        var copyNumber = 2
+
+        while FileManager.default.fileExists(atPath: directory.appendingPathComponent(copyName).appendingPathExtension(url.pathExtension).path) {
+            copyName = baseName + " Copy \(copyNumber)"
+            copyNumber += 1
+        }
+
+        return copyName
     }
 
     public func dealContent() {

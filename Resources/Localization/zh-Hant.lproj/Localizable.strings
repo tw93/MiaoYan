@@ -189,3 +189,24 @@
 /* ClipboardManager Messages */
 "Image uploaded successfully" = "圖片上傳成功";
 "Image upload failed, using local path" = "圖片上傳失敗，使用本地路徑";
+
+/* Missing translations */
+"Link" = "連結";
+"MiaoYan [preview]" = "妙言 [預覽]";
+"New" = "新建";
+"New Folder" = "新建檔案夾";
+"Notes" = "妙言";
+"OK" = "好的";
+"Please enter image title:" = "請輸入圖片標題：";
+"Please enter project name:" = "請輸入名稱：";
+"Please try again" = "請再試一次";
+"Quit MiaoYan" = "退出妙言";
+"Search" = "搜尋";
+"Strikethrough" = "刪除線";
+"Toggle Preview" = "切換預覽";
+"Underline" = "底線";
+"URL has been copied to clipboard" = "URL已複製到剪貼簿";
+"Interface" = "介面";
+"Preview Settings" = "預覽設定";
+"Code Background:" = "程式碼背景:";
+"Github" = "Github";

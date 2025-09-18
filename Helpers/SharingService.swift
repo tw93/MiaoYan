@@ -7,7 +7,7 @@ extension ViewController: NSSharingServicePickerDelegate {
         }
 
         var share = proposedServices
-        let titlePlain = NSLocalizedString("Copy Plain Text", comment: "")
+        let titlePlain = I18n.str("Copy Plain Text")
         let plainText = NSSharingService(
             title: titlePlain, image: image, alternateImage: image,
             handler: {
@@ -15,7 +15,7 @@ extension ViewController: NSSharingServicePickerDelegate {
             })
         share.insert(plainText, at: 0)
 
-        let titleHTML = NSLocalizedString("Copy HTML", comment: "")
+        let titleHTML = I18n.str("Copy HTML")
         let html = NSSharingService(
             title: titleHTML, image: image, alternateImage: image,
             handler: {

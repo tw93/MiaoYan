@@ -157,7 +157,7 @@
 "URL has been copied to clipboard" = "URLがクリップボードにコピーされました。";
 
 /* Menu */
-"View" = "视图";
+"View" = "表示";
 
 "Search" = "検索";
 
@@ -210,3 +210,9 @@
 /* ClipboardManager Messages */
 "Image uploaded successfully" = "画像のアップロードが成功しました";
 "Image upload failed, using local path" = "画像のアップロードに失敗しました、ローカルパスを使用します";
+
+/* Missing translations */
+"Interface" = "インターフェース";
+"Preview Settings" = "プレビュー設定";
+"Code Background:" = "コード背景:";
+"Github" = "Github";
