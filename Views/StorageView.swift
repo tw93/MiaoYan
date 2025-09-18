@@ -10,10 +10,12 @@ class StorageView: NSView {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        var f = frame
-        f.size.width = 138
-        frame = f
-        setFrameSize(f.size)
-        setBoundsSize(f.size)
+        MainActor.assumeIsolated { [self] in
+            var f = frame
+            f.size.width = 138
+            frame = f
+            setFrameSize(f.size)
+            setBoundsSize(f.size)
+        }
     }
 }

@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 class FileSystemEventManager {
     private let storage: Storage
     private weak var delegate: ViewController?
@@ -16,7 +17,9 @@ class FileSystemEventManager {
     public func start() {
         watcher = FileWatcher(observedFolders)
         watcher?.callback = { [weak self] event in
-            self?.handleFileSystemEvent(event)
+            Task { @MainActor in
+                self?.handleFileSystemEvent(event)
+            }
         }
         watcher?.start()
     }

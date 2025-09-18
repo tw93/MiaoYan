@@ -15,27 +15,31 @@ class SidebarCellView: NSTableCellView {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        guard let label = label else { return }
+        MainActor.assumeIsolated { [self] in
+            guard let label = label else { return }
 
-        // Enhanced text truncation behavior for better narrow width display
-        label.lineBreakMode = .byTruncatingTail
-        label.cell?.truncatesLastVisibleLine = true
-        label.cell?.wraps = false
+            // Enhanced text truncation behavior for better narrow width display
+            label.lineBreakMode = .byTruncatingTail
+            label.cell?.truncatesLastVisibleLine = true
+            label.cell?.wraps = false
 
-        // Set maximum layout width to help with text measurement
-        label.preferredMaxLayoutWidth = 200
+            // Set maximum layout width to help with text measurement
+            label.preferredMaxLayoutWidth = 200
+        }
     }
 
     private var trackingArea: NSTrackingArea?
 
     override func updateTrackingAreas() {
-        if let trackingArea = self.trackingArea {
-            removeTrackingArea(trackingArea)
-        }
+        MainActor.assumeIsolated { [self] in
+            if let trackingArea = self.trackingArea {
+                removeTrackingArea(trackingArea)
+            }
 
-        let options: NSTrackingArea.Options = [.mouseEnteredAndExited, .activeAlways]
-        let trackingArea = NSTrackingArea(rect: bounds, options: options, owner: self, userInfo: nil)
-        addTrackingArea(trackingArea)
+            let options: NSTrackingArea.Options = [.mouseEnteredAndExited, .activeAlways]
+            let trackingArea = NSTrackingArea(rect: bounds, options: options, owner: self, userInfo: nil)
+            addTrackingArea(trackingArea)
+        }
     }
 
     @IBAction func projectName(_ sender: NSTextField) {
