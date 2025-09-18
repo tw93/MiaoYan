@@ -314,4 +314,3 @@ extension ViewController {
         notesTableView.reloadData()
     }
 }
-

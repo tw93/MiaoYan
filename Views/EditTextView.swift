@@ -375,7 +375,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
         EditTextView.note = nil
     }
-  
+
     // MARK: - Editor Utility Helpers
     func getParagraphRange() -> NSRange? {
         guard let vc = getViewController(),
@@ -467,7 +467,7 @@ class EditTextView: NSTextView, NSTextFinderClient {
         let data = Data(bytes: &length, count: MemoryLayout.size(ofValue: length))
         try? note.url.setExtendedAttribute(data: data, forName: "com.tw93.miaoyan.cursor")
     }
-  
+
     // MARK: - Link Highlighting Performance Optimization
     private func shouldTriggerLinkHighlight(for event: NSEvent) -> Bool {
         switch Int(event.keyCode) {
@@ -862,4 +862,3 @@ class EditTextView: NSTextView, NSTextFinderClient {
         }
     }
 }
-

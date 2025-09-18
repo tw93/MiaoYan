@@ -192,4 +192,3 @@ extension NSViewController {
         ToastManager.shared.dismissCurrentToast()
     }
 }
-
