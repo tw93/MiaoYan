@@ -4,7 +4,8 @@ import Sparkle
 import TelemetryDeck
 import os.log
 
-@NSApplicationMain
+@main
+@MainActor
 class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     var mainWindowController: MainWindowController?
     var prefsWindowController: PrefsWindowController?
@@ -14,12 +15,33 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     public var searchQuery: String?
     public var newName: String?
     public var newContent: String?
+    private static var isTelemetryInitialized = false
     var appTitle: String {
         let name = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
         return name ?? Bundle.main.object(forInfoDictionaryKey: kCFBundleNameKey as String) as! String
     }
 
     func applicationWillFinishLaunching(_ notification: Notification) {
+        // Configure TelemetryDeck early to prevent access errors from URL handling
+        let config = TelemetryDeck.Config(appID: "49D82975-F243-4FEF-BC97-4291E56E1103")
+        // Add default signal prefix for consistent naming
+        config.defaultSignalPrefix = "MiaoYan."
+        // Add global default parameters for all events
+        config.defaultParameters = {
+            [
+                "miaoyanVersion": Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown",
+                "miaoyanBuild": Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "unknown",
+                "hostPlatform": "macOS",
+                "macosVersion": ProcessInfo.processInfo.operatingSystemVersionString,
+                "displayLanguage": NSLocale.preferredLanguages.first ?? "unknown",
+            ]
+        }
+        #if DEBUG
+            config.testMode = true
+        #endif
+        TelemetryDeck.initialize(config: config)
+        Self.isTelemetryInitialized = true
+
         let storage = Storage.sharedInstance()
         storage.loadProjects()
         storage.loadDocuments {}
@@ -87,38 +109,21 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         // Apply window appearance immediately after setting up the main window
         mainWC.applyMiaoYanAppearance()
-        // Configure TelemetryDeck
+
+        // Track app launch performance (TelemetryDeck already initialized in applicationWillFinishLaunching)
         let startTime = CFAbsoluteTimeGetCurrent()
-        let config = TelemetryDeck.Config(appID: "49D82975-F243-4FEF-BC97-4291E56E1103")
-        // Add default signal prefix for consistent naming
-        config.defaultSignalPrefix = "MiaoYan."
-        // Add global default parameters for all events
-        config.defaultParameters = {
-            [
-                "miaoyanVersion": Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown",
-                "miaoyanBuild": Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "unknown",
-                "hostPlatform": "macOS",
-                "macosVersion": ProcessInfo.processInfo.operatingSystemVersionString,
-                "displayLanguage": NSLocale.preferredLanguages.first ?? "unknown",
-            ]
-        }
-        #if DEBUG
-            config.testMode = true
-        #endif
-        TelemetryDeck.initialize(config: config)
         #if DEBUG
             // Monitor network requests for debugging
             Self.setupNetworkDebugging()
         #endif
-        // Track app launch performance
-        let launchTime = Int((CFAbsoluteTimeGetCurrent() - startTime) * 1000)
-        TelemetryDeck.signal(
+        let launchTime = Int(startTime * 1000)
+        Self.signal(
             "Performance.AppLaunch",
             parameters: [
                 "launchTimeMs": "\(launchTime)"
             ])
-        TelemetryDeck.signal("App.SessionStart")
-        TelemetryDeck.signal(
+        Self.signal("App.SessionStart")
+        Self.signal(
             "App.Attribute",
             parameters: [
                 "Appearance": String(UserDataService.instance.isDark),
@@ -145,7 +150,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     func applicationWillTerminate(_ aNotification: Notification) {
         // Track session end
-        TelemetryDeck.signal("App.SessionEnd")
+        Self.signal("App.SessionEnd")
         // Save current scroll position before terminating
         if let vc = ViewController.shared() {
             vc.notesTableView.saveScrollPosition()
@@ -157,8 +162,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         try? FileManager.default.removeItem(at: temporary)
     }
     // MARK: - TelemetryDeck Helper Methods
-    static func debugSignal(_ signalName: String, parameters: [String: String] = [:]) {
+    /// Safe wrapper for TelemetryDeck signals that checks initialization status
+    static func signal(_ signalName: String, parameters: [String: String] = [:]) {
+        guard isTelemetryInitialized else { return }
         TelemetryDeck.signal(signalName, parameters: parameters)
+    }
+
+    static func debugSignal(_ signalName: String, parameters: [String: String] = [:]) {
+        signal(signalName, parameters: parameters)
     }
     /// Track errors and exceptions throughout the app (privacy-safe)
     static func trackError(_ error: Error, context: String) {
@@ -168,13 +179,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             parameters["errorDomain"] = nsError.domain
             parameters["errorCode"] = "\(nsError.code)"
         }
-        TelemetryDeck.signal("Error.Occurred", parameters: parameters)
+        signal("Error.Occurred", parameters: parameters)
     }
     /// Track performance metrics throughout the app
     static func trackPerformance(_ metric: String, value: String, additionalParameters: [String: String] = [:]) {
         var parameters = additionalParameters
         parameters["value"] = value
-        TelemetryDeck.signal("Performance.\(metric)", parameters: parameters)
+        signal("Performance.\(metric)", parameters: parameters)
     }
     #if DEBUG
         private static func setupNetworkDebugging() {

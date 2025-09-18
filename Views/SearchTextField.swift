@@ -1,6 +1,7 @@
 import Carbon.HIToolbox
 import Cocoa
 
+@MainActor
 class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     public var vcDelegate: ViewController!
 
@@ -183,17 +184,23 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         UserDataService.instance.searchTrigger = true
         lastQueryLength = text.count
 
-        let projects = vcDelegate.storageOutlineView.getSidebarProjects()
-        let sidebarItem = projects == nil ? vcDelegate.getSidebarItem() : nil
-
         filterQueue.cancelAllOperations()
-        filterQueue.addOperation {
-            self.vcDelegate.updateTable(
-                search: true,
-                searchText: text,
-                sidebarItem: sidebarItem,
-                projects: projects
-            ) {}
+        weak var delegate = vcDelegate
+        filterQueue.addOperation { [weak delegate] in
+            guard let delegate else { return }
+            Task { @MainActor [weak delegate] in
+                guard let delegate else { return }
+
+                let projects = delegate.storageOutlineView.getSidebarProjects()
+                let sidebarItem = projects == nil ? delegate.getSidebarItem() : nil
+
+                delegate.updateTable(
+                    search: true,
+                    searchText: text,
+                    sidebarItem: sidebarItem,
+                    projects: projects
+                ) {}
+            }
         }
     }
 

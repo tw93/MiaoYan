@@ -1,6 +1,7 @@
 import Carbon.HIToolbox
 import Cocoa
 
+@MainActor
 class TitleTextField: NSTextField {
     public var vcDelegate: ViewController!
     public var restoreResponder: NSResponder?
