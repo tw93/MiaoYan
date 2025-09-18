@@ -2,7 +2,7 @@ import Foundation
 
 @MainActor
 enum I18n {
-    // 根据用户偏好动态选择 bundle
+    // Resolve bundle based on the user's language preference
     private static var bundle: Bundle {
         let langIndex = UserDefaultsManagement.defaultLanguage
         if let lang = LanguageType(rawValue: langIndex),
@@ -13,7 +13,7 @@ enum I18n {
         return .main
     }
 
-    // 使用自定义 bundle 取文案，没有就回退到 key
+    // Fetch localized string from custom bundle with key fallback
     static func str(_ key: String) -> String {
         NSLocalizedString(key, tableName: "Localizable", bundle: bundle, value: key, comment: "")
     }
