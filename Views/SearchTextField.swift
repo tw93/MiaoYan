@@ -19,12 +19,14 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        sendsWholeSearchString = false
-        sendsSearchStringImmediately = true
+        MainActor.assumeIsolated { [self] in
+            sendsWholeSearchString = false
+            sendsSearchStringImmediately = true
 
-        // Remove cancel button
-        if let searchFieldCell = self.cell as? NSSearchFieldCell {
-            searchFieldCell.cancelButtonCell = nil
+            // Remove cancel button
+            if let searchFieldCell = self.cell as? NSSearchFieldCell {
+                searchFieldCell.cancelButtonCell = nil
+            }
         }
     }
 
@@ -36,13 +38,15 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     }
 
     override func updateTrackingAreas() {
-        if let trackingArea = trackingArea {
-            removeTrackingArea(trackingArea)
-        }
+        MainActor.assumeIsolated { [self] in
+            if let trackingArea = trackingArea {
+                removeTrackingArea(trackingArea)
+            }
 
-        let options: NSTrackingArea.Options = [.mouseEnteredAndExited, .activeAlways]
-        let trackingArea = NSTrackingArea(rect: bounds, options: options, owner: self, userInfo: nil)
-        addTrackingArea(trackingArea)
+            let options: NSTrackingArea.Options = [.mouseEnteredAndExited, .activeAlways]
+            let trackingArea = NSTrackingArea(rect: bounds, options: options, owner: self, userInfo: nil)
+            addTrackingArea(trackingArea)
+        }
     }
 
     override var cancelButtonBounds: NSRect {

@@ -14,13 +14,17 @@ class OutlineHeaderView: NSView {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        addTrackingArea(NSTrackingArea(rect: bounds, options: [.activeAlways, .mouseEnteredAndExited], owner: self, userInfo: nil))
+        MainActor.assumeIsolated { [self] in
+            addTrackingArea(NSTrackingArea(rect: bounds, options: [.activeAlways, .mouseEnteredAndExited], owner: self, userInfo: nil))
+        }
     }
 
     override func layout() {
         super.layout()
-        trackingAreas.forEach(removeTrackingArea)
-        addTrackingArea(NSTrackingArea(rect: bounds, options: [.activeAlways, .mouseEnteredAndExited], owner: self, userInfo: nil))
+        MainActor.assumeIsolated { [self] in
+            trackingAreas.forEach(removeTrackingArea)
+            addTrackingArea(NSTrackingArea(rect: bounds, options: [.activeAlways, .mouseEnteredAndExited], owner: self, userInfo: nil))
+        }
     }
 
     override func mouseEntered(with event: NSEvent) {

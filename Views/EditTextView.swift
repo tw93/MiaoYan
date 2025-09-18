@@ -31,11 +31,13 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        EditTextView.imagesLoaderQueue.maxConcurrentOperationCount = 3
-        EditTextView.imagesLoaderQueue.qualityOfService = .userInteractive
-        imagePreviewManager = ImagePreviewManager(textView: self)
-        clipboardManager = ClipboardManager(textView: self)
-        menuManager = EditorMenuManager(textView: self)
+        MainActor.assumeIsolated { [self] in
+            EditTextView.imagesLoaderQueue.maxConcurrentOperationCount = 3
+            EditTextView.imagesLoaderQueue.qualityOfService = .userInteractive
+            imagePreviewManager = ImagePreviewManager(textView: self)
+            clipboardManager = ClipboardManager(textView: self)
+            menuManager = EditorMenuManager(textView: self)
+        }
     }
 
     deinit {

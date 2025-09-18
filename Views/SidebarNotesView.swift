@@ -11,10 +11,12 @@ class SidebarNotesView: NSView {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        var f = frame
-        f.size.width = 280
-        frame = f
-        setFrameSize(f.size)
-        setBoundsSize(f.size)
+        MainActor.assumeIsolated { [self] in
+            var f = frame
+            f.size.width = 280
+            frame = f
+            setFrameSize(f.size)
+            setBoundsSize(f.size)
+        }
     }
 }

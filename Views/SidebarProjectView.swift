@@ -21,12 +21,14 @@ class SidebarProjectView: NSOutlineView,
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        setDraggingSourceOperationMask(.move, forLocal: true)
-        registerForDraggedTypes([
-            NSPasteboard.PasteboardType(rawValue: "public.data"),
-            NSPasteboard.PasteboardType(rawValue: "notesTable"),
-            NSPasteboard.PasteboardType(rawValue: "SidebarProjectReorder"),
-        ])
+        MainActor.assumeIsolated { [self] in
+            setDraggingSourceOperationMask(.move, forLocal: true)
+            registerForDraggedTypes([
+                NSPasteboard.PasteboardType(rawValue: "public.data"),
+                NSPasteboard.PasteboardType(rawValue: "notesTable"),
+                NSPasteboard.PasteboardType(rawValue: "SidebarProjectReorder"),
+            ])
+        }
     }
 
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {

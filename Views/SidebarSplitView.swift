@@ -6,12 +6,14 @@ class SidebarSplitView: NSSplitView, NSSplitViewDelegate {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        delegate = self
-        if let vc = ViewController.shared() {
-            let hidden = (subviews.first?.frame.width ?? 0) == 0
-            vc.setDividerColor(for: self, hidden: hidden)
-        } else {
-            self.setValue(Theme.backgroundColor, forKey: "dividerColor")
+        MainActor.assumeIsolated { [self] in
+            delegate = self
+            if let vc = ViewController.shared() {
+                let hidden = (subviews.first?.frame.width ?? 0) == 0
+                vc.setDividerColor(for: self, hidden: hidden)
+            } else {
+                self.setValue(Theme.backgroundColor, forKey: "dividerColor")
+            }
         }
     }
 
