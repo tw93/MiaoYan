@@ -247,7 +247,9 @@ class ViewController:
             disablePreviewWorkItem?.cancel()
         }
         if needRestorePreview {
-            titleLabel.saveTitle()
+            if titleLabel.isEditable {
+                fileName(titleLabel)
+            }
             enablePreview()
         }
     }
@@ -509,4 +511,3 @@ class ViewController:
         }
     }
 }
-

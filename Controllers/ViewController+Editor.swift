@@ -71,7 +71,7 @@ extension ViewController {
     }
 
     func togglePreview() {
-        titleLabel.saveTitle()
+        saveTitleSafely()
         if UserDefaultsManagement.preview {
             disablePreview()
         } else {
@@ -120,7 +120,7 @@ extension ViewController {
         }
         if !UserDefaultsManagement.isOnExportPPT {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                self.toast(message: NSLocalizedString("🙊 Press ESC key to exit~", comment: ""))
+                self.toast(message: I18n.str("🙊 Press ESC key to exit~"))
             }
         }
     }
@@ -166,7 +166,7 @@ extension ViewController {
     }
 
     func togglePresentation() {
-        titleLabel.saveTitle()
+        saveTitleSafely()
         // Handle both presentation and PPT modes
         if UserDefaultsManagement.presentation || UserDefaultsManagement.magicPPT {
             if UserDefaultsManagement.magicPPT {
@@ -190,13 +190,13 @@ extension ViewController {
             return true
         }
         if needToast {
-            toast(message: NSLocalizedString("😶‍🌫 No delimiter --- identification, Cannot use MiaoYan PPT~", comment: ""))
+            toast(message: I18n.str("😶‍🌫 No delimiter --- identification, Cannot use MiaoYan PPT~"))
         }
         return false
     }
 
     func toggleMagicPPT() {
-        titleLabel.saveTitle()
+        saveTitleSafely()
         if UserDefaultsManagement.magicPPT {
             disableMiaoYanPPT()
         } else {
@@ -266,7 +266,7 @@ extension ViewController {
         }
         if !UserDefaultsManagement.isOnExportPPT {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                vc.toast(message: NSLocalizedString("🙊 Press ESC key to exit~", comment: ""))
+                vc.toast(message: I18n.str("🙊 Press ESC key to exit~"))
             }
         }
         TelemetryDeck.signal("Editor.PPT")
@@ -358,7 +358,7 @@ extension ViewController {
     func formatText() {
         if UserDefaultsManagement.preview {
             toast(
-                message: NSLocalizedString("😶‍🌫 Format is only possible after exiting preview mode~", comment: "")
+                message: I18n.str("😶‍🌫 Format is only possible after exiting preview mode~")
             )
             return
         }
@@ -370,7 +370,7 @@ extension ViewController {
             // 设置格式化状态
             isFormatting = true
             // Save title first to prevent first-time issues
-            titleLabel.saveTitle()
+            saveTitleSafely()
             let formatter = PrettierFormatter(plugins: [MarkdownPlugin()], parser: MarkdownParser())
             formatter.htmlWhitespaceSensitivity = HTMLWhitespaceSensitivityStrategy.ignore
             formatter.proseWrap = ProseWrapStrategy.preserve  // Change from .never to .preserve to keep line breaks
@@ -425,10 +425,10 @@ extension ViewController {
                 editArea.setSelectedRange(NSRange(location: adjustedCursorOffset, length: 0))
                 editAreaScroll.documentView?.scroll(NSPoint(x: 0, y: top))
                 formatContent = newContent
-                toast(message: NSLocalizedString("🎉 Automatic typesetting succeeded~", comment: ""))
+                toast(message: I18n.str("🎉 Automatic typesetting succeeded~"))
             case .failure(let error):
                 AppDelegate.trackError(error, context: "ViewController+Editor.format")
-                toast(message: NSLocalizedString("❌ Formatting failed, please try again", comment: ""))
+                toast(message: I18n.str("❌ Formatting failed, please try again"))
             }
             TelemetryDeck.signal("Editor.Format")
             // 重置格式化状态（无论成功或失败）
@@ -470,7 +470,6 @@ extension ViewController {
             NSApp.mainWindow?.makeFirstResponder(editArea)
         }
     }
-
 
     @IBAction func togglePreview(_ sender: NSButton) {
         togglePreview()
@@ -550,15 +549,16 @@ extension ViewController {
         }
     }
 
-    // MARK: - Title Management Override (fix for title disappearing issue)
     public func updateTitle(newTitle: String) {
         let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "MiaoYan"
-        var titleString = newTitle
+        var title = newTitle
+
         if newTitle.isValidUUID {
-            titleString = String()
+            title = String()
         }
-        titleLabel.stringValue = titleString
-        titleLabel.currentEditor()?.selectedRange = NSRange(location: titleString.utf16.count, length: 0)
+
+        titleLabel.setStringValueSafely(title)
+        titleLabel.currentEditor()?.selectedRange = NSRange(location: title.utf16.count, length: 0)
         MainWindowController.shared()?.title = appName
     }
 
@@ -566,18 +566,94 @@ extension ViewController {
         guard let textField = obj.object as? NSTextField, textField == titleLabel else {
             return
         }
-        if titleLabel.isEditable == true {
-            fileName(titleLabel)
-            if let restoreResponder = titleLabel.restoreResponder {
-                view.window?.makeFirstResponder(restoreResponder)
-                titleLabel.restoreResponder = nil
-            } else {
-                view.window?.makeFirstResponder(notesTableView)
-            }
+
+        if shouldProcess() {
+            saveTitleSafely()
+            restoreFocus()
         } else {
-            let currentNote = notesTableView.getSelectedNote()
-            updateTitle(newTitle: currentNote?.getTitleWithoutLabel() ?? NSLocalizedString("Untitled Note", comment: "Untitled Note"))
+            refreshTitle()
         }
     }
-}
 
+    private func shouldProcess() -> Bool {
+        return titleLabel.isEditable && titleLabel.hasFocus()
+    }
+
+    private func restoreFocus() {
+        if let responder = titleLabel.restoreResponder {
+            view.window?.makeFirstResponder(responder)
+            titleLabel.restoreResponder = nil
+        } else {
+            view.window?.makeFirstResponder(notesTableView)
+        }
+    }
+
+    private func refreshTitle() {
+        guard let note = notesTableView.getSelectedNote() else { return }
+        let title = note.getTitleWithoutLabel()
+        updateTitle(newTitle: title)
+    }
+
+    private func saveTitleSafely() {
+        guard let note = notesTableView.getSelectedNote() else { return }
+
+        let newTitle = clean(titleLabel.stringValue)
+        guard !newTitle.isEmpty else { return }
+
+        let currentName = note.getFileName()
+        guard currentName != newTitle else { return }
+
+        let result = attemptSave(note: note, title: newTitle, current: currentName)
+        handleResult(result, title: newTitle)
+    }
+
+    private func clean(_ title: String) -> String {
+        return title.trimmingCharacters(in: NSCharacterSet.newlines)
+    }
+
+    private func attemptSave(note: Note, title: String, current: String) -> SaveResult {
+        let fileName = cleanFileName(title)
+        let dst = note.project.url.appendingPathComponent(fileName).appendingPathExtension(note.url.pathExtension)
+        let isCaseChange = current.lowercased() == title.lowercased() && current != title
+
+        if (!FileManager.default.fileExists(atPath: dst.path) || isCaseChange) && note.move(to: dst) {
+            note.title = title
+            return .success
+        } else {
+            return .exists
+        }
+    }
+
+    private func cleanFileName(_ name: String) -> String {
+        return
+            name
+            .trimmingCharacters(in: CharacterSet.whitespaces)
+            .replacingOccurrences(of: ":", with: "-")
+            .replacingOccurrences(of: "/", with: ":")
+    }
+
+    private func handleResult(_ result: SaveResult, title: String) {
+        switch result {
+        case .success:
+            updateTitle(newTitle: title)
+            titleLabel.updateNotesTableView()
+        case .exists:
+            updateTitle(newTitle: title)
+            titleLabel.resignFirstResponder()
+            showAlert(for: title)
+        }
+    }
+
+    private func showAlert(for title: String) {
+        let alert = NSAlert()
+        alert.alertStyle = .informational
+        alert.informativeText = String(format: I18n.str("This %@ under this folder already exists!"), title)
+        alert.messageText = I18n.str("Please change the title")
+        alert.runModal()
+    }
+
+    private enum SaveResult {
+        case success
+        case exists
+    }
+}

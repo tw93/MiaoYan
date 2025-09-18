@@ -6,101 +6,67 @@ class TitleTextField: NSTextField {
     public var restoreResponder: NSResponder?
 
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
-        let pasteboard = NSPasteboard.general
-
-        if event.modifierFlags.contains(.command),
-            event.keyCode == kVK_ANSI_C,
-            let selectedRange = currentEditor()?.selectedRange,
-            selectedRange.length > 0
-        {
-            // Processing copy commands
-            let selectedString = (stringValue as NSString).substring(with: selectedRange)
-            pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
-            pasteboard.setString(selectedString, forType: NSPasteboard.PasteboardType.string)
-        }
-
-        // Checks if Command + V was pressed and the current NSTextField is the first responder.
-        if event.modifierFlags.contains(.command),
-            event.keyCode == kVK_ANSI_V,
-            window?.firstResponder == currentEditor()
-        {
-            if let items = pasteboard.pasteboardItems {
-                for item in items {
-                    if let string = item.string(forType: .string) {
-                        let noNewlineString = string.replacingOccurrences(of: "\n", with: " ")
-                        pasteboard.clearContents()
-                        pasteboard.setString(noNewlineString, forType: .string)
-                    }
-                }
-            }
-        }
-
+        handleClipboard(with: event)
         return super.performKeyEquivalent(with: event)
     }
 
-    override func textDidEndEditing(_ notification: Notification) {
-        saveTitle()
+    private func handleClipboard(with event: NSEvent) {
+        let pb = NSPasteboard.general
+
+        if event.modifierFlags.contains(.command) && event.keyCode == kVK_ANSI_C {
+            handleCopy(pb: pb)
+        }
+
+        if event.modifierFlags.contains(.command) && event.keyCode == kVK_ANSI_V {
+            handlePaste(pb: pb)
+        }
     }
 
-    public func saveTitle() {
-        guard let vc = ViewController.shared(), let note = EditTextView.note else {
-            return
-        }
+    private func handleCopy(pb: NSPasteboard) {
+        guard let range = currentEditor()?.selectedRange,
+            range.length > 0
+        else { return }
 
-        // 允许空标题的情况（UUID文件名显示为空）
-        guard !stringValue.isEmpty else {
-            // 对于空标题，无需做任何操作，保持当前显示状态
-            return
-        }
+        let text = (stringValue as NSString).substring(with: range)
+        pb.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
+        pb.setString(text, forType: NSPasteboard.PasteboardType.string)
+    }
 
-        let currentTitle = stringValue.trimmingCharacters(in: NSCharacterSet.newlines)
-        let currentName = note.getFileName()
+    private func handlePaste(pb: NSPasteboard) {
+        guard window?.firstResponder == currentEditor(),
+            let items = pb.pasteboardItems
+        else { return }
 
-        if currentName != currentTitle {
-            let ext = note.url.pathExtension
-            let fileName =
-                currentTitle
-                .trimmingCharacters(in: CharacterSet.whitespaces)
-                .replacingOccurrences(of: ":", with: "-")
-                .replacingOccurrences(of: "/", with: ":")
-            let dst = note.project.url.appendingPathComponent(fileName).appendingPathExtension(ext)
-
-            // 允许仅大小写变化时重命名
-            let isCaseOnlyChange = currentName.lowercased() == currentTitle.lowercased() && currentName != currentTitle
-
-            if (!FileManager.default.fileExists(atPath: dst.path) || isCaseOnlyChange) && note.move(to: dst) {
-                note.title = currentTitle
-                vc.updateTitle(newTitle: currentTitle)
-                updateNotesTableView()
-            } else {
-                vc.updateTitle(newTitle: currentTitle)
-                resignFirstResponder()
-                let alert = NSAlert()
-                alert.alertStyle = .informational
-                alert.informativeText = String(format: NSLocalizedString("This %@ under this folder already exists!", comment: ""), currentTitle)
-                alert.messageText = NSLocalizedString("Please change the title", comment: "")
-                alert.runModal()
+        for item in items {
+            if let text = item.string(forType: .string) {
+                let cleanText = text.replacingOccurrences(of: "\n", with: " ")
+                pb.clearContents()
+                pb.setString(cleanText, forType: .string)
             }
         }
     }
 
     public func hasFocus() -> Bool {
-        var inFocus = false
-        inFocus = (window?.firstResponder is NSTextView) && window?.fieldEditor(false, for: nil) != nil && isEqual(to: (window?.firstResponder as? NSTextView)?.delegate)
-        return inFocus
+        return (window?.firstResponder is NSTextView) && window?.fieldEditor(false, for: nil) != nil && isEqual(to: (window?.firstResponder as? NSTextView)?.delegate)
     }
 
     public func editModeOn() {
         MainWindowController.shared()?.makeFirstResponder(self)
     }
 
-    public func updateNotesTableView() {
-        guard let vc = ViewController.shared(), let note = EditTextView.note else { return }
+    public func setStringValueSafely(_ value: String) {
+        stringValue = value
+    }
 
-        let currentTitle = note.title
+    public func updateNotesTableView() {
+        guard let vc = ViewController.shared(),
+            let note = EditTextView.note
+        else { return }
+
+        let title = note.title
         vc.notesTableView.reloadRow(note: note)
-        if !currentTitle.isEmpty {
-            note.title = currentTitle
+        if !title.isEmpty {
+            note.title = title
         }
     }
 }
