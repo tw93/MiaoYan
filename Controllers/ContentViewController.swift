@@ -1,5 +1,6 @@
 import AppKit
 
+@MainActor
 class ContentViewController: NSViewController, NSPopoverDelegate {
     @IBOutlet var wordCount: NSTextField!
     @IBOutlet var updateTime: NSTextField!

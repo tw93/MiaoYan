@@ -11,6 +11,7 @@ struct UploadParameters {
     let viewController: ViewController
 }
 
+@MainActor
 class ClipboardManager {
     private weak var textView: EditTextView?
 
@@ -121,25 +122,33 @@ class ClipboardManager {
         else { return }
 
         if let path = ImagesProcessor.writeFile(data: data, url: url, note: note, ext: ext) {
-            var newLineImage = NSAttributedString(string: "![](\(path))")
+            let defaultImage = NSAttributedString(string: "![](\(path))")
             let imagePath = "\(note.project.url.path)\(path)"
             let tempPath = URL(fileURLWithPath: imagePath)
             let picType = UserDefaultsManagement.defaultPicUpload
 
             if picType == "PicGo" {
                 vc.toastUpload(status: true)
-                postToPicGo(imagePath: imagePath) { result, error in
-                    if let result = result {
-                        newLineImage = NSAttributedString(string: "![](\(result))")
-                        self.deleteImage(tempPath: tempPath)
-                    } else if let error = error {
-                        vc.toastUpload(status: false)
-                        AppDelegate.trackError(error, context: "ClipboardManager.uploadToCloudAsync")
-                    } else {
-                        vc.toastUpload(status: false)
+                let defaultImageString = "![](\(path))"
+                postToPicGo(imagePath: imagePath) { [weak self, weak textView, weak vc] result, error in
+                    let resultString = result as? String
+                    Task { @MainActor in
+                        let finalImage: NSAttributedString
+                        if let resultString = resultString {
+                            finalImage = NSAttributedString(string: "![](\(resultString))")
+                            self?.deleteImage(tempPath: tempPath)
+                        } else {
+                            finalImage = NSAttributedString(string: defaultImageString)
+                            if let error = error {
+                                vc?.toastUpload(status: false)
+                                AppDelegate.trackError(error, context: "ClipboardManager.uploadToCloudAsync")
+                            } else {
+                                vc?.toastUpload(status: false)
+                            }
+                        }
+                        textView?.breakUndoCoalescing()
+                        textView?.insertText(finalImage, replacementRange: textView?.selectedRange() ?? NSRange(location: 0, length: 0))
                     }
-                    textView.breakUndoCoalescing()
-                    textView.insertText(newLineImage, replacementRange: textView.selectedRange())
                 }
             } else {
                 if picType == "uPic" || picType == "Picsee" {
@@ -159,12 +168,12 @@ class ClipboardManager {
                     return
                 }
                 textView.breakUndoCoalescing()
-                textView.insertText(newLineImage, replacementRange: textView.selectedRange())
+                textView.insertText(defaultImage, replacementRange: textView.selectedRange())
             }
         }
     }
 
-    private func postToPicGo(imagePath: String, completion: @escaping (Any?, Error?) -> Void) {
+    private func postToPicGo(imagePath: String, completion: @escaping @Sendable (Any?, Error?) -> Void) {
         let parameters: [String: [String]] = [
             "list": [imagePath]
         ]
@@ -184,7 +193,7 @@ class ClipboardManager {
         }
     }
 
-    private func deleteImage(tempPath: URL) {
+    @MainActor private func deleteImage(tempPath: URL) {
         do {
             guard let resultingItemUrl = Storage.sharedInstance().trashItem(url: tempPath) else { return }
             try FileManager.default.moveItem(at: tempPath, to: resultingItemUrl)
@@ -193,7 +202,7 @@ class ClipboardManager {
         }
     }
 
-    private func run(_ cmd: String) -> String? {
+    nonisolated private func run(_ cmd: String) -> String? {
         let pipe = Pipe()
         let process = Process()
         process.launchPath = "/bin/bash"
@@ -208,7 +217,7 @@ class ClipboardManager {
         return String(data: fileHandle.readDataToEndOfFile(), encoding: .utf8)
     }
 
-    private func uploadToCloudAsync(parameters: UploadParameters) {
+    nonisolated private func uploadToCloudAsync(parameters: UploadParameters) {
         // Extract the data we need for the background task
         let localPath = parameters.localPath
         let originalPath = parameters.originalPath

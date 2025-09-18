@@ -1,5 +1,6 @@
 import Cocoa
 
+@MainActor
 final class PrefsWindowController: NSWindowController, NSWindowDelegate {
     private var splitViewController: NSSplitViewController!
     private var sidebarViewController: NSViewController!

@@ -1,7 +1,7 @@
 import Cocoa
 
 // MARK: - Search Parameters
-private struct SearchParameters {
+private struct SearchParameters: Sendable {
     let filter: String
     let originalFilter: String
     let projects: [Project]?
@@ -20,7 +20,7 @@ private struct UpdateContext {
 extension ViewController {
 
     // MARK: - Search and Filtering
-    func updateTable(search: Bool = false, searchText: String? = nil, sidebarItem: SidebarItem? = nil, projects: [Project]? = nil, completion: @escaping () -> Void = {}) {
+    func updateTable(search: Bool = false, searchText: String? = nil, sidebarItem: SidebarItem? = nil, projects: [Project]? = nil, completion: @escaping @MainActor @Sendable () -> Void = {}) {
         let searchParams = prepareSearchParameters(searchText: searchText, sidebarItem: sidebarItem, projects: projects)
         let timestamp = Date().toMillis()
 
@@ -67,20 +67,34 @@ extension ViewController {
         )
     }
 
-    private func createSearchOperation(searchParams: SearchParameters, isSearch: Bool, completion: @escaping () -> Void) -> BlockOperation {
+    private func createSearchOperation(searchParams: SearchParameters, isSearch: Bool, completion: @escaping @MainActor @Sendable () -> Void) -> BlockOperation {
         let operation = BlockOperation()
         operation.addExecutionBlock { [weak self] in
             guard let self = self else {
-                completion()
+                Task { @MainActor in
+                    completion()
+                }
                 return
             }
 
-            self.executeSearchOperation(
-                searchParams: searchParams,
-                isSearch: isSearch,
-                operation: operation,
-                completion: completion
-            )
+            Task { @MainActor [weak self] in
+                guard let self else {
+                    completion()
+                    return
+                }
+
+                guard !operation.isCancelled else {
+                    completion()
+                    return
+                }
+
+                self.executeSearchOperation(
+                    searchParams: searchParams,
+                    isSearch: isSearch,
+                    operation: operation,
+                    completion: completion
+                )
+            }
         }
         return operation
     }
@@ -409,7 +423,6 @@ extension ViewController {
         notesTableView.selectRowIndexes([0], byExtendingSelection: false)
         notesTableView.scrollRowToVisible(0)
 
-        // 确保内容加载和标题栏显示
         if !notesTableView.noteList.isEmpty {
             let note = notesTableView.noteList[0]
             editArea.fill(note: note, highlight: true)
@@ -421,18 +434,14 @@ extension ViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
             let messageText = I18n.str("%d MiaoYan")
 
-            // 根据当前选择显示不同的数量
             let count: Int
             if let sidebarItem = self.getSidebarItem() {
                 if sidebarItem.type == .All {
-                    // 显示所有非垃圾箱笔记数量
                     count = self.storage.noteList.filter { !$0.isTrash() }.count
                 } else {
-                    // 显示当前过滤视图的数量
                     count = self.notesTableView.noteList.count
                 }
             } else {
-                // 默认显示当前视图数量
                 count = self.notesTableView.noteList.count
             }
 

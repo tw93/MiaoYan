@@ -1,25 +1,24 @@
 import Foundation
 
-// MARK: - Preferences Category Model
-enum PreferencesCategory: String, CaseIterable {
-    case general
-    case typography
-    case editor
+// 复用现有的 PrefsSection 作为 PreferencesCategory
+typealias PreferencesCategory = PrefsSection
 
+// MARK: - Preferences Category Model
+enum PrefsSection: CaseIterable, Sendable {
+    case general, editor, typography
+
+    @MainActor
     var title: String {
         switch self {
-        case .general:
-            return I18n.str("General")
-        case .editor:
-            return I18n.str("Editor")
-        case .typography:
-            // Reuse localized title for Fonts
-            return I18n.str("Fonts")
+        case .general:    return I18n.str("General")
+        case .editor:     return I18n.str("Editor")
+        case .typography: return I18n.str("Fonts")
         }
     }
 }
 
 // MARK: - Settings Configuration Protocol
+@MainActor
 protocol SettingsConfigurable {
     var category: PreferencesCategory { get }
     var title: String { get }
@@ -29,9 +28,11 @@ protocol SettingsConfigurable {
 
 // MARK: - General Settings Model
 /// Concrete configuration for the General preferences pane backed by `UserDefaultsManagement`.
+@MainActor
 struct GeneralSettings: SettingsConfigurable {
     let category: PreferencesCategory = .general
     let title: String = I18n.str("General")
+
     var appearanceType: AppearanceType {
         get { UserDefaultsManagement.appearanceType }
         set { UserDefaultsManagement.appearanceType = newValue }
@@ -58,16 +59,18 @@ struct GeneralSettings: SettingsConfigurable {
     }
 
     func applyChanges() {
-        // General settings typically require app restart
+        // General settings typically require app restart (let UI decide how to react)
         NotificationCenter.default.post(name: .preferencesChanged, object: self.category)
     }
 }
 
 // MARK: - Editor Settings Model
 /// Configuration wrapper exposing editor related defaults for the preferences UI.
+@MainActor
 struct EditorSettings: SettingsConfigurable {
     let category: PreferencesCategory = .editor
     let title: String = I18n.str("Editor")
+
     var editorFontName: String {
         get { UserDefaultsManagement.fontName }
         set { UserDefaultsManagement.fontName = newValue }
@@ -102,10 +105,12 @@ struct EditorSettings: SettingsConfigurable {
         get { UserDefaultsManagement.codeFontName }
         set { UserDefaultsManagement.codeFontName = newValue }
     }
+
     var editorLineBreak: String {
         get { UserDefaultsManagement.editorLineBreak }
         set { UserDefaultsManagement.editorLineBreak = newValue }
     }
+
     var previewLocation: String {
         get { UserDefaultsManagement.previewLocation }
         set { UserDefaultsManagement.previewLocation = newValue }
@@ -120,17 +125,17 @@ struct EditorSettings: SettingsConfigurable {
         // Editor settings need immediate refresh but should preserve preview state
         guard let vc = ViewController.shared() else { return }
         NotesTextProcessor.hl = nil
+
         let wasPreviewOn = UserDefaultsManagement.preview
         if wasPreviewOn {
             vc.disablePreview()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak vc] in
                 vc?.refillEditArea()
-                if let vc = vc, !vc.isMiaoYanPPT(needToast: false) {
+                if let vc, !vc.isMiaoYanPPT(needToast: false) {
                     vc.enablePreview()
                 }
             }
         } else {
-            // Do not turn preview on if user was editing
             vc.refillEditArea()
         }
     }

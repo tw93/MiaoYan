@@ -1,5 +1,6 @@
 import Cocoa
 
+@MainActor
 class SidebarCellView: NSTableCellView {
     @IBOutlet var icon: NSImageView!
     @IBOutlet var label: NSTextField!

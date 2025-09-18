@@ -1,5 +1,6 @@
 import AppKit
 
+@MainActor
 class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestoration {
     let notesListUndoManager = UndoManager()
     var editorUndoManager = UndoManager()

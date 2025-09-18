@@ -8,6 +8,7 @@ struct DirectoryItem {
     let creationDate: Date
 }
 
+@MainActor
 class Storage {
     static var instance: Storage?
 

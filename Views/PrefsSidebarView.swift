@@ -1,6 +1,7 @@
 import Cocoa
 
 // MARK: - Preferences Sidebar Delegate Protocol
+@MainActor
 protocol PrefsSidebarDelegate: AnyObject {
     func sidebarDidSelectCategory(_ category: PreferencesCategory)
 }

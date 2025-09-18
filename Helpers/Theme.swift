@@ -1,14 +1,15 @@
 import Cocoa
 import Foundation
 
-// Centralized theme helpers for macOS colors used across the app
+// All theme colors are read on main thread to avoid cross-actor access to UI state
+@MainActor
 enum Theme {
     typealias Color = NSColor
 
     // Primary text color (dynamic in System mode)
     static var textColor: Color {
         if UserDefaultsManagement.appearanceType != .Custom {
-            return NSColor.labelColor
+            return .labelColor
         } else {
             return UserDefaultsManagement.fontColor
         }
@@ -17,7 +18,7 @@ enum Theme {
     // Secondary text color for subtitles / timestamps
     static var secondaryTextColor: Color {
         if UserDefaultsManagement.appearanceType != .Custom {
-            return NSColor.secondaryLabelColor
+            return .secondaryLabelColor
         } else {
             return UserDefaultsManagement.fontColor.withAlphaComponent(0.6)
         }
@@ -25,12 +26,12 @@ enum Theme {
 
     // App background surface color
     static var backgroundColor: Color {
-        NSColor(named: "mainBackground") ?? NSColor.windowBackgroundColor
+        NSColor(named: "mainBackground") ?? .windowBackgroundColor
     }
 
     // Unified selection background color used in tables/lists
     static var selectionBackgroundColor: Color {
-        NSColor(named: "selectionBackground") ?? NSColor.selectedTextBackgroundColor
+        NSColor(named: "selectionBackground") ?? .selectedTextBackgroundColor
     }
 
     // Semantic colors used by syntax highlighting
@@ -48,5 +49,35 @@ enum Theme {
     }
     static var underlineColor: Color {
         NSColor(named: "underlineColor") ?? .black
+    }
+}
+
+// Optional: Use this to get a color "snapshot" from non-main threads
+// Usage: let snap = await ThemeSnapshot.make()
+struct ThemeSnapshot {
+    let textColor: NSColor
+    let secondaryTextColor: NSColor
+    let backgroundColor: NSColor
+    let selectionBackgroundColor: NSColor
+    let titleColor: NSColor
+    let linkColor: NSColor
+    let listColor: NSColor
+    let htmlColor: NSColor
+    let underlineColor: NSColor
+
+    static func make() async -> ThemeSnapshot {
+        await MainActor.run {
+            ThemeSnapshot(
+                textColor: Theme.textColor,
+                secondaryTextColor: Theme.secondaryTextColor,
+                backgroundColor: Theme.backgroundColor,
+                selectionBackgroundColor: Theme.selectionBackgroundColor,
+                titleColor: Theme.titleColor,
+                linkColor: Theme.linkColor,
+                listColor: Theme.listColor,
+                htmlColor: Theme.htmlColor,
+                underlineColor: Theme.underlineColor
+            )
+        }
     }
 }

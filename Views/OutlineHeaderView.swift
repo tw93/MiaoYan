@@ -1,5 +1,6 @@
 import Cocoa
 
+@MainActor
 class OutlineHeaderView: NSView {
     var onMouseEnteredClosure: (() -> Void)?
     var onMouseExitedClosure: (() -> Void)?
@@ -12,16 +13,13 @@ class OutlineHeaderView: NSView {
     }
 
     override func awakeFromNib() {
+        super.awakeFromNib()
         addTrackingArea(NSTrackingArea(rect: bounds, options: [.activeAlways, .mouseEnteredAndExited], owner: self, userInfo: nil))
     }
 
     override func layout() {
         super.layout()
-
-        trackingAreas.forEach { [weak self] area in
-            self?.removeTrackingArea(area)
-        }
-
+        trackingAreas.forEach(removeTrackingArea)
         addTrackingArea(NSTrackingArea(rect: bounds, options: [.activeAlways, .mouseEnteredAndExited], owner: self, userInfo: nil))
     }
 

@@ -3,14 +3,15 @@ import Cocoa
 import Highlightr
 import SwiftyJSON
 
-class EditTextView: NSTextView, NSTextFinderClient {
+@MainActor
+class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     public static var note: Note?
     public static var isBusyProcessing: Bool = false
     public static var shouldForceRescan: Bool = false
     public static var lastRemoved: String?
     public var viewDelegate: ViewController?
-    private var linkHighlightTimer: Timer?
-    private weak var cachedViewController: ViewController?
+    nonisolated(unsafe) private var linkHighlightTimer: Timer?
+    nonisolated(unsafe) private weak var cachedViewController: ViewController?
     var isHighlighted: Bool = false
     let storage = Storage.sharedInstance()
     let caretWidth: CGFloat = 1

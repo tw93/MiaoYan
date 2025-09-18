@@ -1,5 +1,6 @@
 import Cocoa
 
+@MainActor
 class SidebarSplitView: NSSplitView, NSSplitViewDelegate {
     private var isUserDragging = false
 
@@ -34,7 +35,6 @@ class SidebarSplitView: NSSplitView, NSSplitViewDelegate {
     }
 
     func splitViewDidResizeSubviews(_ notification: Notification) {
-        // 可以在这里添加其他resize逻辑
     }
 
     override func mouseUp(with event: NSEvent) {

@@ -5,6 +5,7 @@ public class ImagesProcessor {
     typealias Size = NSSize
     typealias Image = NSImage
     typealias TView = EditTextView
+
     var styleApplier: NSMutableAttributedString
     var range: NSRange?
     var note: Note
@@ -27,8 +28,14 @@ public class ImagesProcessor {
         }
     }
 
+    @MainActor
     public func load() {
         var offset = 0
+
+        // Create snapshots on MainActor to avoid cross-actor access in closures
+        let currentNoteURLString = note.url.absoluteString
+        let projectURL = note.project.url
+        let cacheBaseURL = projectURL.appendingPathComponent("/.cache/")
 
         NotesTextProcessor.imageInlineRegex.matches(styleApplier.string, range: paragraphRange) { result in
             guard var range = result?.range else { return }
@@ -42,30 +49,23 @@ public class ImagesProcessor {
             }
 
             NotesTextProcessor.imageOpeningSquareRegex.matches(self.styleApplier.string, range: range) { innerResult in
-                guard let innerRange = innerResult?.range else {
-                    return
-                }
-
+                guard let innerRange = innerResult?.range else { return }
                 self.styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
             }
 
             NotesTextProcessor.imageClosingSquareRegex.matches(self.styleApplier.string, range: range) { innerResult in
-                guard let innerRange = innerResult?.range else {
-                    return
-                }
+                guard let innerRange = innerResult?.range else { return }
                 self.styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
             }
 
             NotesTextProcessor.parenRegex.matches(self.styleApplier.string, range: range) { innerResult in
-                guard let innerRange = innerResult?.range else {
-                    return
-                }
+                guard let innerRange = innerResult?.range else { return }
 
                 var url: URL?
-
                 let filePath = self.getFilePath(innerRange: innerRange)
 
-                if let localNotePath = self.getLocalNotePath(path: filePath, innerRange: innerRange), FileManager.default.fileExists(atPath: localNotePath) {
+                if let localNotePath = self.getLocalNotePath(path: filePath, innerRange: innerRange),
+                   FileManager.default.fileExists(atPath: localNotePath) {
                     url = URL(fileURLWithPath: localNotePath)
                 } else if let fs = URL(string: filePath) {
                     url = fs
@@ -74,13 +74,23 @@ public class ImagesProcessor {
                 guard let imageUrl = url else { return }
 
                 let invalidateRange = NSRange(location: range.location, length: 1)
-                let cacheUrl = self.note.project.url.appendingPathComponent("/.cache/")
 
-                if EditTextView.note?.url.absoluteString != self.note.url.absoluteString {
+                // Use snapshot to avoid cross-actor access to note.project in closure
+                let cacheUrl = cacheBaseURL
+
+                // Use snapshot comparison to avoid accessing EditTextView.note in closure
+                if EditTextView.note?.url.absoluteString != currentNoteURLString {
                     return
                 }
 
-                let imageAttachment = NoteAttachment(title: title, path: filePath, url: imageUrl, cache: cacheUrl, invalidateRange: invalidateRange, note: self.note)
+                let imageAttachment = NoteAttachment(
+                    title: title,
+                    path: filePath,
+                    url: imageUrl,
+                    cache: cacheUrl,
+                    invalidateRange: invalidateRange,
+                    note: self.note
+                )
 
                 if let attributedStringWithImage = imageAttachment.getAttributedString() {
                     offset += mdLink.count - 1
@@ -95,7 +105,6 @@ public class ImagesProcessor {
         if let match = mdLink.range(of: "\\[(.+)\\]", options: .regularExpression) {
             mdTitleLength = mdLink[match].count - 2
         }
-
         return mdTitleLength
     }
 
@@ -107,6 +116,8 @@ public class ImagesProcessor {
         return ""
     }
 
+    // Access note.project (@MainActor)
+    @MainActor
     func getLocalNotePath(path: String, innerRange: NSRange) -> String? {
         let noteStorage = note.project
         var notePath: String
@@ -117,7 +128,8 @@ public class ImagesProcessor {
             return note.project.url.path + path
         }
 
-        if path.starts(with: "http://") || path.starts(with: "https://"), let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+        if path.starts(with: "http://") || path.starts(with: "https://"),
+           let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
             notePath = storagePath + "/i/" + encodedPath
             return notePath
         }
@@ -133,7 +145,6 @@ public class ImagesProcessor {
         if let path = styleApplier.attributedSubstring(from: link).string.removingPercentEncoding {
             return path
         }
-
         return ""
     }
 
@@ -141,7 +152,8 @@ public class ImagesProcessor {
         let path = from?.absoluteString ?? to.absoluteString
         var name: String?
 
-        if path.starts(with: "http://") || path.starts(with: "https://"), let webName = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+        if path.starts(with: "http://") || path.starts(with: "https://"),
+           let webName = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
             name = webName
         }
 
@@ -158,7 +170,8 @@ public class ImagesProcessor {
                 let destination = to.appendingPathComponent(pathComponent)
                 let icloud = destination.appendingPathExtension("icloud")
 
-                if FileManager.default.fileExists(atPath: destination.path) || FileManager.default.fileExists(atPath: icloud.path) {
+                if FileManager.default.fileExists(atPath: destination.path) ||
+                   FileManager.default.fileExists(atPath: icloud.path) {
                     pathComponent = NSUUID().uuidString.lowercased() + ".\(ext)"
                     continue
                 }
@@ -170,8 +183,9 @@ public class ImagesProcessor {
         return name
     }
 
+    // Access note.project (@MainActor)
+    @MainActor
     public static func writeFile(data: Data, url: URL? = nil, note: Note, ext: String? = nil) -> String? {
-
         var prefix = "/i/"
         if let url = url, !url.isImage {
             prefix = "/files/"
@@ -194,21 +208,17 @@ public class ImagesProcessor {
 
     func isContainAttachment(innerRange: NSRange, mdTitleLength: Int) -> Bool {
         let j = offset + newLineOffset - mdTitleLength
-
         if innerRange.lowerBound >= 5 + mdTitleLength {
             return styleApplier.containsAttachments(in: NSRange(location: innerRange.lowerBound - 5 + j, length: 1))
         }
-
         return false
     }
 
     func isContainNewLine(innerRange: NSRange, mdTitleLength: Int) -> Bool {
         let j = offset + newLineOffset - mdTitleLength
-
         if innerRange.lowerBound >= 4 + mdTitleLength {
             return (styleApplier.attributedSubstring(from: NSRange(location: innerRange.lowerBound - 4 + j, length: 1)).string == "\n")
         }
-
         return false
     }
 }

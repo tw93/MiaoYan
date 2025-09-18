@@ -5,6 +5,7 @@ import PDFKit
 import WebKit
 
 // MARK: - Export Cache Manager
+@MainActor
 class ExportCache {
     static let shared = ExportCache()
     private var cache: [String: ExportData] = [:]
@@ -40,15 +41,19 @@ class ExportCache {
     func setCachedData(_ data: ExportData, for note: Note) {
         let key = getCacheKey(for: note)
         cacheQueue.async { [weak self] in
-            self?.cache[key] = data
-            self?.cleanupCacheIfNeeded()
+            Task { @MainActor [weak self] in
+                self?.cache[key] = data
+                self?.cleanupCacheIfNeeded()
+            }
         }
     }
 
     func invalidateCache(for note: Note) {
         let key = getCacheKey(for: note)
         cacheQueue.async { [weak self] in
-            self?.cache.removeValue(forKey: key)
+            Task { @MainActor [weak self] in
+                self?.cache.removeValue(forKey: key)
+            }
         }
     }
 
@@ -197,17 +202,19 @@ extension MPreviewView {
         // Get the title on main thread first
         let currentName = viewController.titleLabel.stringValue
 
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+        Task { [weak self] in
             guard let self = self else { return }
 
             do {
                 // Use cached data if available
                 if let cachedData = ExportCache.shared.getCachedData(for: note) {
-                    let completeHtml = try self.generateCompleteHtml(
-                        content: cachedData.processedHTML,
-                        currentName: currentName
-                    )
-                    DispatchQueue.main.async {
+                    let completeHtml = try await MainActor.run {
+                        return try self.generateCompleteHtml(
+                            content: cachedData.processedHTML,
+                            currentName: currentName
+                        )
+                    }
+                    await MainActor.run {
                         self.saveToDownloadsWithFilename(content: completeHtml, extension: "html", filename: note.getExportTitle(), viewController: viewController)
                     }
                     return
@@ -220,10 +227,12 @@ extension MPreviewView {
                     throw NSError(domain: "HtmlExport", code: 2, userInfo: [NSLocalizedDescriptionKey: "Failed to convert markdown to HTML"])
                 }
 
-                let completeHtml = try self.generateCompleteHtml(
-                    content: htmlString,
-                    currentName: currentName
-                )
+                let completeHtml = try await MainActor.run {
+                    return try self.generateCompleteHtml(
+                        content: htmlString,
+                        currentName: currentName
+                    )
+                }
 
                 // Cache the result with the converted HTML
                 let exportData = ExportCache.ExportData(
@@ -236,7 +245,7 @@ extension MPreviewView {
                 )
                 ExportCache.shared.setCachedData(exportData, for: note)
 
-                DispatchQueue.main.async {
+                await MainActor.run {
                     self.saveToDownloadsWithFilename(content: completeHtml, extension: "html", filename: note.getExportTitle(), viewController: viewController)
                 }
 
@@ -344,6 +353,9 @@ extension MPreviewView {
     private func saveToDownloads(data: Data, extension: String, viewController: Any) {
         guard let vc = viewController as? ViewController else { return }
 
+        // Get the selected note on main thread first
+        let currentName = vc.notesTableView.getSelectedNote()?.getExportTitle() ?? "MiaoYan"
+
         // Perform file save on background queue
         DispatchQueue.global(qos: .utility).async { [weak self] in
             guard self != nil else { return }
@@ -354,9 +366,6 @@ extension MPreviewView {
                 }
                 return
             }
-
-            // Prefer current selected note's export title
-            let currentName = vc.notesTableView.getSelectedNote()?.getExportTitle() ?? "MiaoYan"
             var fileURL = downloadsURL.appendingPathComponent(currentName + "." + `extension`)
 
             // Check if file exists and create unique name if needed

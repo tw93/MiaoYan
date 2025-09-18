@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 // MiaoYan - A lightweight Markdown editor for macOS
 // This Package.swift file documents the dependencies used in the Xcode project
 // The actual build is handled by the Xcode project, not this Package.swift

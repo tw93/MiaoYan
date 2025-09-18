@@ -1,6 +1,7 @@
 import Cocoa
 import KeyboardShortcuts
 
+@MainActor
 final class GeneralPrefsViewController: BasePrefsViewController {
     private var settings = GeneralSettings()
 
@@ -317,6 +318,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
             if result == .OK, let url = openPanel.url {
                 self.settings.storagePath = url.path
                 self.storagePathControl.url = url
+                UserDefaults.standard.synchronize()
                 self.showRestartAlert()
             }
         }

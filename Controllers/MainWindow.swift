@@ -6,11 +6,13 @@ class MainWindow: NSWindow {
 
         guard UserDefaults.standard.object(forKey: "NSWindow Frame myMainWindow") == nil else { return }
 
-        if let screenHeight = NSScreen.main?.frame.height, let screenWidth = NSScreen.main?.frame.width {
-            let x = (screenWidth - frame.width) / 2
-            let y = (screenHeight - frame.height) / 2
-            let rect = NSRect(x: x, y: y, width: frame.width, height: 680)
-            setFrame(rect, display: true)
+        Task { @MainActor in
+            if let screenHeight = NSScreen.main?.frame.height, let screenWidth = NSScreen.main?.frame.width {
+                let x = (screenWidth - self.frame.width) / 2
+                let y = (screenHeight - self.frame.height) / 2
+                let rect = NSRect(x: x, y: y, width: self.frame.width, height: 680)
+                self.setFrame(rect, display: true)
+            }
         }
     }
 

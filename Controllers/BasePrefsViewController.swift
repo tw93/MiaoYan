@@ -1,6 +1,7 @@
 import Cocoa
 
 /// Base class for preferences view controllers to eliminate duplicate setup code
+@MainActor
 class BasePrefsViewController: NSViewController {
 
     override func loadView() {

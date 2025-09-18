@@ -1,5 +1,6 @@
 import Cocoa
 
+@MainActor
 class AboutWindowController: NSWindowController, NSWindowDelegate {
     override func windowDidLoad() {
         super.windowDidLoad()

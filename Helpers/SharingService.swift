@@ -1,6 +1,6 @@
 import Cocoa
 
-extension ViewController: NSSharingServicePickerDelegate {
+extension ViewController: @preconcurrency NSSharingServicePickerDelegate {
     func sharingServicePicker(_ sharingServicePicker: NSSharingServicePicker, sharingServicesForItems items: [Any], proposedSharingServices proposedServices: [NSSharingService]) -> [NSSharingService] {
         guard let image = NSImage(named: "copy.png") else {
             return proposedServices

@@ -3,6 +3,7 @@ import Cocoa
 import Foundation
 import TelemetryDeck
 
+@MainActor
 class SidebarProjectView: NSOutlineView,
     NSOutlineViewDelegate,
     NSOutlineViewDataSource,

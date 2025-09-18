@@ -1,5 +1,6 @@
 import Cocoa
 
+@MainActor
 final class EditorPrefsViewController: BasePrefsViewController {
     private var settings = EditorSettings()
     private var behaviorStackView: NSStackView!

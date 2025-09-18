@@ -1,6 +1,7 @@
 import Foundation
 
 extension NSMutableAttributedString {
+    @MainActor
     func loadImages(note: Note) {
         let paragraphRange = NSRange(0..<length)
         var offset = 0

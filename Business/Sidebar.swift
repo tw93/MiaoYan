@@ -2,6 +2,7 @@ import Cocoa
 
 typealias Image = NSImage
 
+@MainActor
 class Sidebar {
     var list = [Any]()
     let storage = Storage.sharedInstance()
