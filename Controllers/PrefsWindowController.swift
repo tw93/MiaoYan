@@ -12,10 +12,12 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
     private lazy var typographyPrefsVC = TypographyPrefsViewController()
 
     private var currentCategory: PreferencesCategory = .general
+    private var hasPreparedWindowForDisplay = false
+    private var hasRestoredAutosavedFrame = false
 
     convenience init() {
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 780, height: 1000),
+            contentRect: NSRect(x: 0, y: 0, width: 780, height: 520),
             styleMask: [.titled, .closable, .miniaturizable, .resizable],
             backing: .buffered,
             defer: false
@@ -24,23 +26,29 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         // Configure window properties
         window.minSize = NSSize(width: 700, height: 520)
         window.maxSize = NSSize(width: 1200, height: 1400)
-        window.setFrameAutosaveName("ModernPreferencesWindow")
+        let autosaveName: NSWindow.FrameAutosaveName = "ModernPreferencesWindow"
+        let restoredFrame = window.setFrameUsingName(autosaveName)
+        window.setFrameAutosaveName(autosaveName)
         window.isReleasedWhenClosed = false
 
         self.init(window: window)
+        hasRestoredAutosavedFrame = restoredFrame
 
-        // Manually trigger UI setup since windowDidLoad might not be called
-        DispatchQueue.main.async {
-            self.setupUIComponents()
-        }
+        // Setup UI components immediately to avoid window positioning issues
+        setupUIComponents()
     }
 
     override func windowDidLoad() {
         super.windowDidLoad()
-        setupUIComponents()
+        // Don't call setupUIComponents again if already called in init
+        if splitViewController == nil {
+            setupUIComponents()
+        }
     }
 
     private func setupUIComponents() {
+        guard window != nil else { return }
+
         window?.delegate = self
 
         // Initialize UI components in proper order
@@ -52,7 +60,6 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
 
         window?.title = I18n.str("Preferences")
         window?.toolbarStyle = .preference
-        window?.center()
     }
 
     private func setupWindow() {
@@ -151,6 +158,8 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
             _ = window
         }
 
+        prepareWindowForDisplayIfNeeded()
+
         showWindow(self)
         window?.makeKeyAndOrderFront(self)
         NSApp.activate(ignoringOtherApps: true)
@@ -172,5 +181,20 @@ extension PrefsWindowController {
     func windowShouldClose(_ sender: NSWindow) -> Bool {
         window?.orderOut(self)
         return false
+    }
+}
+
+private extension PrefsWindowController {
+    func prepareWindowForDisplayIfNeeded() {
+        guard let window else { return }
+
+        window.contentView?.layoutSubtreeIfNeeded()
+
+        if !hasPreparedWindowForDisplay {
+            if !hasRestoredAutosavedFrame {
+                window.center()
+            }
+            hasPreparedWindowForDisplay = true
+        }
     }
 }
