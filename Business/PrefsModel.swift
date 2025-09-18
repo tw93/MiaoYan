@@ -135,4 +135,3 @@ struct EditorSettings: SettingsConfigurable {
         }
     }
 }
-

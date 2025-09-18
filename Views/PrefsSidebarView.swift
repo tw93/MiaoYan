@@ -176,4 +176,3 @@ final class PrefsSidebarCellView: NSTableCellView {
         titleLabel.stringValue = category.title
     }
 }
-

@@ -428,4 +428,3 @@ class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
         }
     }
 }
-

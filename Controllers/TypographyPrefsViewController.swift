@@ -447,4 +447,3 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         }
     }
 }
-

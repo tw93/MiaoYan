@@ -373,4 +373,3 @@ final class EditorPrefsViewController: BasePrefsViewController {
         }
     }
 }
-
