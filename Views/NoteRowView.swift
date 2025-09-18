@@ -48,10 +48,9 @@ class NoteRowView: NSTableRowView {
         // Draw our custom selection if selected
         if isSelected {
             drawSelection(in: dirtyRect)
-            return  // 选中的时候不画分割线，直接返回
+            return
         }
 
-        // 检查是否需要隐藏分割线
         if shouldHideSeparator() {
             return
         }
@@ -71,12 +70,10 @@ class NoteRowView: NSTableRowView {
                 let selectedRow = tableView.selectedRowIndexes.first!
                 let currentRowIndex = tableView.row(for: self)
 
-                // 如果当前行是选中行的上一行，隐藏分割线
                 if currentRowIndex == selectedRow - 1 {
                     return true
                 }
 
-                // 如果当前行是选中行的下一行，也隐藏分割线
                 if currentRowIndex == selectedRow + 1 {
                     return true
                 }

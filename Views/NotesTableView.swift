@@ -1,9 +1,46 @@
 import Carbon
 import Cocoa
 
-class NotesTableView: NSTableView, NSTableViewDataSource,
-    NSTableViewDelegate
-{
+@MainActor
+class NotesTableView: NSTableView {
+    @MainActor
+    private final class Adapter: NSObject, @preconcurrency NSTableViewDataSource, NSTableViewDelegate {
+        unowned let owner: NotesTableView
+
+        init(owner: NotesTableView) {
+            self.owner = owner
+        }
+
+        func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+            owner.makeRowView(for: row)
+        }
+
+        func numberOfRows(in tableView: NSTableView) -> Int {
+            owner.noteList.count
+        }
+
+        func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
+            owner.heightForRow(row)
+        }
+
+        func tableViewSelectionDidChange(_ notification: Notification) {
+            owner.handleSelectionChange(notification)
+        }
+
+        func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
+            owner.objectValue(forRow: row)
+        }
+
+        func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
+            owner.writeRows(rowIndexes: rowIndexes, to: pboard)
+        }
+
+        func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+            owner.viewForRow(row)
+        }
+    }
+
+    private lazy var adapter = Adapter(owner: self)
     var noteList = [Note]()
     var defaultCell = NoteCellView()
     var pinnedCell = NoteCellView()
@@ -13,8 +50,8 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     public var fillTimestamp: Int64?
 
     override func draw(_ dirtyRect: NSRect) {
-        dataSource = self
-        delegate = self
+        dataSource = adapter
+        delegate = adapter
         backgroundColor = Theme.backgroundColor
         super.draw(dirtyRect)
     }
@@ -132,16 +169,11 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         }
     }
 
-    func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+    private func makeRowView(for row: Int) -> NSTableRowView? {
         NoteRowView()
     }
 
-    // Populate table data
-    func numberOfRows(in tableView: NSTableView) -> Int {
-        noteList.count
-    }
-
-    func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
+    private func heightForRow(_ row: Int) -> CGFloat {
         if row < noteList.count {
             let note = noteList[row]
             note.dealContent()
@@ -150,7 +182,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
     }
 
     // On selected row show notes in right panel
-    func tableViewSelectionDidChange(_ notification: Notification) {
+    private func handleSelectionChange(_ notification: Notification) {
         let timestamp = Date().toMillis()
         fillTimestamp = timestamp
 
@@ -200,14 +232,14 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         }
     }
 
-    func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
+    private func objectValue(forRow row: Int) -> Any? {
         if noteList.indices.contains(row) {
             return noteList[row]
         }
         return nil
     }
 
-    func tableView(_ tableView: NSTableView, writeRowsWith rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
+    private func writeRows(rowIndexes: IndexSet, to pboard: NSPasteboard) -> Bool {
         if let data = try? NSKeyedArchiver.archivedData(withRootObject: rowIndexes, requiringSecureCoding: false) {
             let type = NSPasteboard.PasteboardType(rawValue: "notesTable")
             pboard.declareTypes([type], owner: self)
@@ -290,7 +322,7 @@ class NotesTableView: NSTableView, NSTableViewDataSource,
         return super.performKeyEquivalent(with: event)
     }
 
-    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+    private func viewForRow(_ row: Int) -> NSView? {
         guard noteList.indices.contains(row) else {
             return nil
         }

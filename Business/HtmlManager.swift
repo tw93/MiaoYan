@@ -4,6 +4,8 @@ import WebKit
 /// HTML preview and processing utility class
 class HtmlManager {
 
+    // 读取 MainActor 隔离的 UserDefaultsManagement → 标注 @MainActor
+    @MainActor
     static func previewStyle() -> String {
         if UserDefaultsManagement.magicPPT {
             return ":root { --r-main-font: \(UserDefaultsManagement.previewFontName), sans-serif;}"
@@ -25,6 +27,7 @@ class HtmlManager {
         }
     }
 
+    // 文件处理保持非隔离；log 用 Task { @MainActor in ... } 回主线程
     static func processImages(in html: String, imagesStorage: URL) -> String {
         var htmlString = html
 
@@ -34,7 +37,7 @@ class HtmlManager {
 
             let images = results.compactMap { match -> (fullMatch: String, srcPath: String)? in
                 guard let fullRange = Range(match.range, in: html),
-                    let srcRange = Range(match.range(at: 1), in: html)
+                      let srcRange = Range(match.range(at: 1), in: html)
                 else { return nil }
                 return (String(html[fullRange]), String(html[srcRange]))
             }
@@ -66,23 +69,28 @@ class HtmlManager {
                 htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: imPath)
             }
         } catch {
-            AppDelegate.trackError(error, context: "HtmlManager.processImages.regex")
+            Task { @MainActor in
+                AppDelegate.trackError(error, context: "HtmlManager.processImages.regex")
+            }
         }
 
         return htmlString
     }
 
     // MARK: - Bundle and Resource Management
+
     static func getDownViewBundle() -> Bundle? {
         guard let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle") else { return nil }
         return Bundle(url: URL(fileURLWithPath: path))
     }
 
+    @MainActor
     static func getBaseURL(bundle: Bundle) -> URL? {
         let resourceName = UserDefaultsManagement.magicPPT ? "ppt" : "index"
         return bundle.url(forResource: resourceName, withExtension: "html")
     }
 
+    @MainActor
     static func getFontPathAndMeta() -> (String, String) {
         if UserDefaultsManagement.isOnExportHtml {
             return (
@@ -94,11 +102,13 @@ class HtmlManager {
         }
     }
 
+    @MainActor
     static func getPPTTheme() -> String {
         let themeFile = UserDataService.instance.isDark ? "night.css" : "white.css"
         return "<link rel=\"stylesheet\" href=\"ppt/dist/theme/\(themeFile)\" id=\"theme\" />"
     }
 
+    @MainActor
     static func getHtmlContent(_ htmlString: String, currentName: String) -> String {
         if UserDefaultsManagement.isOnExport, !htmlString.hasPrefix("<h1>") {
             return "<h1>\(currentName)</h1>" + htmlString
@@ -107,9 +117,11 @@ class HtmlManager {
     }
 
     // MARK: - Template Processing
+
+    @MainActor
     static func htmlFromTemplate(_ htmlString: String, css: String, currentName: String) throws -> String {
         guard let bundle = getDownViewBundle(),
-            let baseURL = getBaseURL(bundle: bundle)
+              let baseURL = getBaseURL(bundle: bundle)
         else {
             return ""
         }
@@ -146,9 +158,10 @@ class HtmlManager {
         return template.replacingOccurrences(of: "DOWN_HTML", with: htmlContent)
     }
 
+    @MainActor
     static func createTemporaryBundle(pageHTMLString: String) -> URL? {
         guard let bundle = getDownViewBundle(),
-            let bundleResourceURL = bundle.resourceURL
+              let bundleResourceURL = bundle.resourceURL
         else {
             return nil
         }
@@ -156,7 +169,6 @@ class HtmlManager {
         let customCSS = UserDefaultsManagement.markdownPreviewCSS
 
         let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
-
         try? FileManager.default.createDirectory(at: webkitPreview, withIntermediateDirectories: true, attributes: nil)
 
         let indexURL = webkitPreview.appendingPathComponent("index.html")
@@ -164,35 +176,32 @@ class HtmlManager {
         if !FileManager.default.fileExists(atPath: indexURL.path) {
             do {
                 let fileList = try FileManager.default.contentsOfDirectory(atPath: bundleResourceURL.path)
-
                 for file in fileList {
-                    if customCSS != nil, file == "css" {
-                        continue
-                    }
-
+                    if customCSS != nil, file == "css" { continue }
                     let tmpURL = webkitPreview.appendingPathComponent(file)
-
                     try FileManager.default.copyItem(atPath: bundleResourceURL.appendingPathComponent(file).path, toPath: tmpURL.path)
                 }
             } catch {
-                AppDelegate.trackError(error, context: "HtmlManager.createTemporaryBundle.copyBundleResource")
+                Task { @MainActor in
+                    AppDelegate.trackError(error, context: "HtmlManager.createTemporaryBundle.copyBundleResource")
+                }
             }
         }
 
         if let customCSS {
             let cssDst = webkitPreview.appendingPathComponent("css")
             let styleDst = cssDst.appendingPathComponent("markdown-preview.css", isDirectory: false)
-
             do {
                 try FileManager.default.createDirectory(at: cssDst, withIntermediateDirectories: false, attributes: nil)
                 _ = try FileManager.default.copyItem(at: customCSS, to: styleDst)
             } catch {
-                AppDelegate.trackError(error, context: "HtmlManager.createTemporaryBundle.copyCustomCSS")
+                Task { @MainActor in
+                    AppDelegate.trackError(error, context: "HtmlManager.createTemporaryBundle.copyCustomCSS")
+                }
             }
         }
 
         try? pageHTMLString.write(to: indexURL, atomically: true, encoding: .utf8)
-
         return indexURL
     }
 
@@ -221,10 +230,11 @@ class HtmlManager {
     static func protectHTMLTags(in content: String) -> (protectedContent: String, placeholders: [String: String]) {
         var protectedContent = content
         var placeholders: [String: String] = [:]
-        let fullRange = NSRange(0..<content.count)
+        let fullRange = NSRange(content.startIndex..., in: content)
         var matchRanges: [NSRange] = []
 
         do {
+            // 两类常见 HTML 片段：自闭合标签 + 成对标签
             let htmlPatterns = [
                 "<(?:img|br|hr|input|meta|link|area|base|col|embed|source|track|wbr)\\s*[^>]*/?\\s*>",
                 "<(\\w+)[^>]*>[^<]*</\\1>",
@@ -237,20 +247,21 @@ class HtmlManager {
             }
 
         } catch {
-            NotesTextProcessor.htmlRegex.matches(content, range: fullRange) { result in
-                if let range = result?.range { matchRanges.append(range) }
-            }
-            NotesTextProcessor.imageHtmlRegex.matches(content, range: fullRange) { result in
-                if let range = result?.range { matchRanges.append(range) }
+            // 失败时不再触达 MainActor 上的 NotesTextProcessor，直接记录并放弃额外匹配
+            Task { @MainActor in
+                AppDelegate.trackError(error, context: "HtmlManager.protectHTMLTags.regex")
             }
         }
 
+        // 从后往前替换，避免 range 失效
         matchRanges.sort { $0.location > $1.location }
 
         for range in matchRanges {
-            guard range.location + range.length <= content.count else { continue }
+            // 以 utf16 长度校验更安全
+            guard range.location + range.length <= content.utf16.count,
+                  let swiftRange = Range(range, in: content) else { continue }
 
-            let htmlTag = String(content[Range(range, in: content)!])
+            let htmlTag = String(content[swiftRange])
             let placeholder = "HTML_PLACEHOLDER_\(UUID().uuidString.prefix(8))"
             placeholders[placeholder] = htmlTag
 
@@ -265,7 +276,7 @@ class HtmlManager {
 
         let sortedPlaceholders = placeholders.sorted { (first, second) -> Bool in
             guard let firstRange = restoredContent.range(of: first.key),
-                let secondRange = restoredContent.range(of: second.key)
+                  let secondRange = restoredContent.range(of: second.key)
             else {
                 return false
             }

@@ -1,5 +1,6 @@
 import Cocoa
 
+@MainActor
 class EditorMenuManager {
     private weak var textView: EditTextView?
 

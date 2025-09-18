@@ -20,6 +20,7 @@ extension AppDelegate {
         case goto
     }
 
+    @MainActor
     func application(_ application: NSApplication, open urls: [URL]) {
         guard var url = urls.first,
             let scheme = url.scheme
@@ -45,6 +46,7 @@ extension AppDelegate {
         }
     }
 
+    @MainActor
     func openNotes(urls: [URL]) {
         guard let vc = ViewController.shared() else { return }
         UserDefaultsManagement.singleModePath = urls[0].path
@@ -52,6 +54,7 @@ extension AppDelegate {
         vc.restart()
     }
 
+    @MainActor
     func importNotes(urls: [URL]) {
         guard let vc = ViewController.shared() else { return }
         var importedNote: Note?
@@ -77,6 +80,7 @@ extension AppDelegate {
         }
     }
     // MARK: - MiaoYan routes
+    @MainActor
     func MiaoYanRouter(_ url: URL) {
         guard let directive = url.host else { return }
         switch directive {
@@ -91,6 +95,7 @@ extension AppDelegate {
         }
     }
     /// Handles URLs with the path /find/searchstring1%20searchstring2
+    @MainActor
     func RouteMiaoYanFind(_ url: URL) {
         let lastPath = url.lastPathComponent
         guard ViewController.shared() != nil else {
@@ -100,6 +105,7 @@ extension AppDelegate {
         search(query: lastPath)
     }
 
+    @MainActor
     func RouteMiaoYanGoto(_ url: URL) {
         let query = url.lastPathComponent.removingPercentEncoding!
         guard let vc = ViewController.shared() else { return }
@@ -136,6 +142,7 @@ extension AppDelegate {
         }
     }
 
+    @MainActor
     func search(query: String) {
         guard let controller = ViewController.shared() else { return }
         controller.search.stringValue = query
@@ -154,6 +161,7 @@ extension AppDelegate {
     ///
     /// The three possible parameters (title, txt, html) are all optional.
     ///
+    @MainActor
     func RouteMiaoYanNew(_ url: URL) {
         var title = ""
         var body = ""
@@ -173,11 +181,13 @@ extension AppDelegate {
         create(name: title, content: body)
     }
 
+    @MainActor
     func create(name: String, content: String) {
         guard let controller = ViewController.shared() else { return }
         controller.createNote(name: name, content: content)
     }
     // MARK: - nvALT routes, for compatibility
+    @MainActor
     func NvALTRouter(_ url: URL) {
         guard let directive = url.host else { return }
         switch directive {
@@ -195,10 +205,12 @@ extension AppDelegate {
     ///
     /// Note: this route is identical to the corresponding MiaoYan route.
     ///
+    @MainActor
     func RouteNvAltFind(_ url: URL) {
         RouteMiaoYanFind(url)
     }
 
+    @MainActor
     func RouteNvAltGoto(_ url: URL) {
         RouteMiaoYanGoto(url)
     }
@@ -206,6 +218,7 @@ extension AppDelegate {
     ///
     /// Note: this route is an alias to the /find route above.
     ///
+    @MainActor
     func RouteNvAltBlank(_ url: URL) {
         let pathWithFind = url.absoluteString.replacingOccurrences(of: "://", with: "://find/")
         guard let newURL = URL(string: pathWithFind) else { return }
@@ -219,6 +232,7 @@ extension AppDelegate {
     ///
     /// The four possible parameters (title, txt, html and tags) are all optional.
     ///
+    @MainActor
     func RouteNvAltMake(_ url: URL) {
         var title = ""
         var body = ""

@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 public class UserDataService {
     public static let instance = UserDataService()
 

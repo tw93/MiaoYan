@@ -55,10 +55,12 @@ extension ViewController {
                     context.timingFunction = CAMediaTimingFunction(name: .easeIn)
                     webView.animator().alphaValue = 0.0
                 },
-                completionHandler: {
-                    webView.isHidden = true
-                    webView.alphaValue = 1.0
-                    webView.loadHTMLString("<html><body style='background:transparent;'></body></html>", baseURL: nil)
+                completionHandler: { [weak webView] in
+                    Task { @MainActor in
+                        webView?.isHidden = true
+                        webView?.alphaValue = 1.0
+                        webView?.loadHTMLString("<html><body style='background:transparent;'></body></html>", baseURL: nil)
+                    }
                 })
         }
         refillEditArea()
@@ -341,9 +343,11 @@ extension ViewController {
                     context.timingFunction = CAMediaTimingFunction(name: .easeIn)
                     webView.animator().alphaValue = 0.0
                 },
-                completionHandler: {
-                    webView.isHidden = true
-                    webView.alphaValue = 1.0
+                completionHandler: { [weak webView] in
+                    Task { @MainActor in
+                        webView?.isHidden = true
+                        webView?.alphaValue = 1.0
+                    }
                 })
         }
         // Restore editor content and focus
@@ -367,7 +371,6 @@ extension ViewController {
             return
         }
         if let note = notesTableView.getSelectedNote() {
-            // 设置格式化状态
             isFormatting = true
             // Save title first to prevent first-time issues
             saveTitleSafely()
@@ -412,10 +415,8 @@ extension ViewController {
                 let originalLength = note.content.length
                 // 直接更新编辑器显示，这会同时更新 textStorage 和 note.content
                 editArea.insertText(newContent, replacementRange: NSRange(0..<originalLength))
-                // 保存到文件
-                note.save()
-                // 重新应用 Markdown 语法高亮
-                if let storage = editArea.textStorage {
+                    note.save()
+                    if let storage = editArea.textStorage {
                     NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
                     editArea.fillHighlightLinks()
                     // Reapply letter spacing after formatting
@@ -431,7 +432,6 @@ extension ViewController {
                 toast(message: I18n.str("❌ Formatting failed, please try again"))
             }
             TelemetryDeck.signal("Editor.Format")
-            // 重置格式化状态（无论成功或失败）
             isFormatting = false
         }
     }

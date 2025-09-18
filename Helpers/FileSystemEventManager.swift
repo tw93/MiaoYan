@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 class FileSystemEventManager {
     private let storage: Storage
     private weak var delegate: ViewController?
@@ -16,7 +17,9 @@ class FileSystemEventManager {
     public func start() {
         watcher = FileWatcher(observedFolders)
         watcher?.callback = { [weak self] event in
-            self?.handleFileSystemEvent(event)
+            Task { @MainActor [weak self] in
+                self?.handleFileSystemEvent(event)
+            }
         }
         watcher?.start()
     }
@@ -151,9 +154,7 @@ class FileSystemEventManager {
         storage.add(note)
 
         // Update UI
-        DispatchQueue.main.async { [weak self] in
-            self?.updateUIForNewNote(note)
-        }
+        updateUIForNewNote(note)
 
         // Handle special readme file
         if note.name == "MiaoYan - Readme.md" {
@@ -161,6 +162,7 @@ class FileSystemEventManager {
         }
     }
 
+    @MainActor
     private func handleExistingNote(_ note: Note) {
         guard note.url == UserDataService.instance.focusOnImport else { return }
 
@@ -170,6 +172,7 @@ class FileSystemEventManager {
         }
     }
 
+    @MainActor
     private func updateUIForNewNote(_ note: Note) {
         if let focusURL = UserDataService.instance.focusOnImport,
             let focusNote = storage.getBy(url: focusURL)
@@ -187,6 +190,7 @@ class FileSystemEventManager {
         }
     }
 
+    @MainActor
     private func handleReadmeFile(_ note: Note) {
         delegate?.updateTable {
             self.delegate?.notesTableView.selectRow(0)
@@ -195,6 +199,7 @@ class FileSystemEventManager {
         }
     }
 
+    @MainActor
     private func renameNote(note: Note) {
         if note.url == UserDataService.instance.focusOnImport {
             delegate?.updateTable {
@@ -208,18 +213,17 @@ class FileSystemEventManager {
 
     private func removeNote(note: Note) {
         storage.removeNotes(notes: [note], fsRemove: false) { [weak self] _ in
-            DispatchQueue.main.async {
-                guard let self = self,
-                    let delegate = self.delegate,
-                    delegate.notesTableView.numberOfRows > 0
-                else {
-                    return
-                }
-                delegate.notesTableView.removeByNotes(notes: [note])
+            guard let self = self,
+                let delegate = self.delegate,
+                delegate.notesTableView.numberOfRows > 0
+            else {
+                return
             }
+            delegate.notesTableView.removeByNotes(notes: [note])
         }
     }
 
+    @MainActor
     private func reloadNote(note: Note) {
         guard let fsContent = note.getContent() else { return }
 

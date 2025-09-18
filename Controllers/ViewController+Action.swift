@@ -571,7 +571,6 @@ extension ViewController {
             return
         }
 
-        // 防止预览情况下新建preview标没有修改过来
         UserDefaultsManagement.preview = false
         DispatchQueue.main.async { [weak self] in
             self?.previewButton.state = UserDefaultsManagement.preview ? .on : .off
@@ -714,8 +713,6 @@ extension ViewController {
         }
 
         vc.titleLabel.editModeOn()
-        // 不要直接设置 stringValue，让 editModeOn() 和现有的显示逻辑处理
-        // 这样可以保持当前显示的标题作为编辑的起始值
     }
 
     @objc func breakUndo() {
@@ -1015,7 +1012,6 @@ extension ViewController {
             return false
         }
 
-        // 聚焦的时候就不要新建了
         if event.keyCode == kVK_ANSI_D, event.modifierFlags.contains(.command), editArea.hasFocus() {
             return false
         }
@@ -1175,7 +1171,6 @@ extension ViewController {
             return true
         }
 
-        // 编辑器内搜索 - Command+F
         if event.keyCode == kVK_ANSI_F, event.modifierFlags.contains(.command), !event.modifierFlags.contains(.shift), !event.modifierFlags.contains(.control) {
             if notesTableView.getSelectedNote() != nil {
                 if UserDefaultsManagement.preview {
@@ -1188,7 +1183,6 @@ extension ViewController {
             }
         }
 
-        // 文件搜索 - Command+P
         if event.keyCode == kVK_ANSI_P, event.modifierFlags.contains(.command), !event.modifierFlags.contains(.shift), !event.modifierFlags.contains(.control) {
             if notesTableView.getSelectedNote() != nil {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -1201,13 +1195,11 @@ extension ViewController {
             }
         }
 
-        // 展开 sidebar cmd+1
         if event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_1, !UserDefaultsManagement.presentation {
             toggleSidebarPanel("")
             return false
         }
 
-        // 保存
         if event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_S {
             if titleLabel.isEditable {
                 fileName(titleLabel)

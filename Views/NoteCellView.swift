@@ -39,7 +39,6 @@ class NoteCellView: NSTableCellView {
 
     public func updateSelectionHighlight() {
 
-        // 字体和间距
         name.font = UserDefaultsManagement.nameFont
         date.font = UserDefaultsManagement.dateFont
         name.addCharacterSpacing()

@@ -19,6 +19,8 @@ class FileWatcherEvent {
     }
 }
 
+extension FileWatcherEvent: @unchecked Sendable {}
+
 /// The following code is to differentiate between the FSEvent flag types (aka file event types)
 /// NOTE: Be aware that .DS_STORE changes frequently when other files change
 extension FileWatcherEvent {

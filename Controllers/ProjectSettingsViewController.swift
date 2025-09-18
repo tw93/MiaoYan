@@ -1,6 +1,7 @@
 import Carbon.HIToolbox
 import Cocoa
 
+@MainActor
 class ProjectSettingsViewController: NSViewController {
     private var project: Project?
 

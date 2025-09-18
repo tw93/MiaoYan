@@ -7,6 +7,8 @@ import WebKit
 extension KeyboardShortcuts.Name {
     static let activateWindow = Self("activateWindow", default: .init(.m, modifiers: [.command, .option]))
 }
+
+@MainActor
 class ViewController:
     NSViewController,
     NSTextViewDelegate,
@@ -427,16 +429,13 @@ class ViewController:
             }
             if UserDefaultsManagement.isSingleMode {
                 let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
-                // 默认关闭 sidebar，但保持 notelist 显示
                 self.hideSidebar("")
-                // 单个文件模式
                 if !FileManager.default.directoryExists(atUrl: singleModeUrl), let lastNote = self.storage.getBy(url: singleModeUrl), let i = self.notesTableView.getIndex(lastNote) {
                     DispatchQueue.main.async {
                         self.notesTableView.selectRow(i)
                         self.notesTableView.scrollRowToVisible(row: i, animated: false)
                     }
                 } else if FileManager.default.directoryExists(atUrl: singleModeUrl) {
-                    // 文件夹模式：选中第一个文件
                     DispatchQueue.main.async {
                         if !self.notesTableView.noteList.isEmpty {
                             self.notesTableView.selectRow(0)

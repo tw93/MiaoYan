@@ -1,5 +1,6 @@
 import Cocoa
 
+@MainActor
 class SidebarNotesView: NSView {
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
@@ -9,6 +10,7 @@ class SidebarNotesView: NSView {
     }
 
     override func awakeFromNib() {
+        super.awakeFromNib()
         var f = frame
         f.size.width = 280
         frame = f

@@ -1,6 +1,7 @@
 import Cocoa
 import Foundation
 
+@MainActor
 class StorageView: NSView {
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
@@ -8,6 +9,7 @@ class StorageView: NSView {
     }
 
     override func awakeFromNib() {
+        super.awakeFromNib()
         var f = frame
         f.size.width = 138
         frame = f

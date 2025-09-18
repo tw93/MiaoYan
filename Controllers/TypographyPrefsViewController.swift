@@ -1,5 +1,6 @@
 import Cocoa
 
+@MainActor
 final class TypographyPrefsViewController: BasePrefsViewController {
     private var settings = EditorSettings()
     private var fontStackView: NSStackView!

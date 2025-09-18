@@ -35,6 +35,7 @@ class NoteAttachment {
 
     weak var weakTimer: Timer?
 
+    @MainActor
     public func getAttributedString(lazy: Bool = true) -> NSMutableAttributedString? {
         let imageKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.url")
         let pathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
@@ -70,7 +71,7 @@ class NoteAttachment {
         return mutableAttributedString
     }
 
-    public func cache(data: Data) {
+  @MainActor public func cache(data: Data) {
         guard shouldWriteCache, let url = imageCache else { return }
 
         do {

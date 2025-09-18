@@ -5,6 +5,7 @@ extension Notification.Name {
     static let editorModeChanged = Notification.Name("editorModeChanged")
     static let preferencesChanged = Notification.Name("PreferencesChanged")
 }
+@MainActor
 public enum UserDefaultsManagement {
     typealias Color = NSColor
     typealias Image = NSImage
@@ -517,7 +518,7 @@ public enum UserDefaultsManagement {
     }
     /// Editor state manager - internal implementation
     private class EditorStateManager {
-        static let shared = EditorStateManager()
+      @MainActor static let shared = EditorStateManager()
         private var _currentMode: EditorMode = .normal
         private init() {
             // Reset to normal mode on each startup, don't read from UserDefaults

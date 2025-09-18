@@ -1,5 +1,6 @@
 import Cocoa
 
+@MainActor
 class AboutViewController: NSViewController {
     override func viewDidLoad() {
         if let dictionary = Bundle.main.infoDictionary,

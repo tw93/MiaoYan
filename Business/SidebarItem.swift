@@ -19,7 +19,7 @@ class SidebarItem {
 
     public func isTrash() -> Bool { type == .Trash }
 
-    public func isGroupItem() -> Bool {
+  @MainActor public func isGroupItem() -> Bool {
         let notesLabel = getLocalizedAppName()
         let trashLabel = I18n.str("Trash")
         if project == nil, [notesLabel, trashLabel].contains(name) {
@@ -28,7 +28,7 @@ class SidebarItem {
         return false
     }
 
-    private func getLocalizedAppName() -> String {
+  @MainActor private func getLocalizedAppName() -> String {
         let language = UserDefaultsManagement.defaultLanguage
         switch language {
         case 1:  // English
@@ -38,3 +38,5 @@ class SidebarItem {
         }
     }
 }
+
+extension SidebarItem: @unchecked Sendable {}

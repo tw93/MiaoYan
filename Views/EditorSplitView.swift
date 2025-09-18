@@ -1,5 +1,6 @@
 import Cocoa
 
+@MainActor
 class EditorSplitView: NSSplitView, NSSplitViewDelegate {
     public var shouldHideDivider = false
 
@@ -21,17 +22,15 @@ class EditorSplitView: NSSplitView, NSSplitViewDelegate {
 
     override func maxPossiblePositionOfDivider(at dividerIndex: Int) -> CGFloat {
         if dividerIndex == 0 {
-            return 600  // 最大宽度600px
+            return 600
         }
         return super.maxPossiblePositionOfDivider(at: dividerIndex)
     }
 
     func splitView(_ splitView: NSSplitView, constrainSplitPosition proposedPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
         if dividerIndex == 0 {
-            // notelist小于180px时自动收起，并联动收起sidebar
             if proposedPosition < 180 && proposedPosition > 0 {
                 if let vc = ViewController.shared() {
-                    // 使用动画避免闪烁
                     NSAnimationContext.runAnimationGroup({ context in
                         context.duration = 0.2
                         context.timingFunction = CAMediaTimingFunction(name: .easeOut)

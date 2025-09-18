@@ -2,7 +2,25 @@ import Carbon.HIToolbox
 import WebKit
 
 public typealias MPreviewViewClosure = () -> Void
-class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
+@MainActor
+class MPreviewView: WKWebView, WKUIDelegate {
+    @objcMembers
+    private final class NavigationDelegateProxy: NSObject, WKNavigationDelegate {
+        weak var owner: MPreviewView?
+
+        init(owner: MPreviewView) {
+            self.owner = owner
+        }
+
+        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
+            guard let owner else {
+                return .allow
+            }
+            return await owner.handleNavigationAction(navigationAction)
+        }
+    }
+
+    private lazy var navigationProxy = NavigationDelegateProxy(owner: self)
     private weak var note: Note?
     private var closure: MPreviewViewClosure?
     public static var template: String?
@@ -19,15 +37,10 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         configuration.userContentController = userContentController
         // Inject early background style to prevent white flash during HTML/CSS loading
         let isDarkTheme: Bool
-        if UserDefaultsManagement.appearanceType != .Custom {
-            switch UserDefaultsManagement.appearanceType {
-            case .Light: isDarkTheme = false
-            case .Dark: isDarkTheme = true
-            case .System: isDarkTheme = UserDataService.instance.isDark
-            default: isDarkTheme = UserDataService.instance.isDark
-            }
-        } else {
-            isDarkTheme = UserDataService.instance.isDark
+        switch UserDefaultsManagement.appearanceType {
+        case .Light: isDarkTheme = false
+        case .Dark: isDarkTheme = true
+        case .System, .Custom: isDarkTheme = UserDataService.instance.isDark
         }
         let bgHex = isDarkTheme ? "#23282D" : "#FFFFFF"
         // Ensure background only to prevent white flash; avoid forcing text color
@@ -48,22 +61,11 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         preferences.allowsContentJavaScript = true
         configuration.defaultWebpagePreferences = preferences
         super.init(frame: frame, configuration: configuration)
-        navigationDelegate = self
+        navigationDelegate = navigationProxy
         // Keep WebKit drawing background so preview area is visible during load
         setValue(true, forKey: "drawsBackground")
         wantsLayer = true
-        let bgNSColor: NSColor
-        if UserDefaultsManagement.appearanceType != .Custom {
-            let darkColor = NSColor(srgbRed: 0x23 / 255.0, green: 0x28 / 255.0, blue: 0x2D / 255.0, alpha: 1.0)
-            switch UserDefaultsManagement.appearanceType {
-            case .Light: bgNSColor = NSColor.white
-            case .Dark: bgNSColor = darkColor
-            case .System: bgNSColor = UserDataService.instance.isDark ? darkColor : NSColor.white
-            default: bgNSColor = UserDataService.instance.isDark ? darkColor : NSColor.white
-            }
-        } else {
-            bgNSColor = UserDefaultsManagement.bgColor
-        }
+        let bgNSColor = determineBackgroundColor()
         layer?.backgroundColor = bgNSColor.cgColor
         // Fill under-page area with the same color to cover rubber-banding gaps
         setValue(bgNSColor, forKey: "underPageBackgroundColor")
@@ -78,6 +80,25 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
     required init?(coder: NSCoder) {
         AppDelegate.trackError(NSError(domain: "InitError", code: 1, userInfo: [NSLocalizedDescriptionKey: "MPreviewView does not support NSCoder initialization"]), context: "MPreviewView.init")
         return nil
+    }
+
+    // MARK: - Appearance Helpers
+
+    private func determineDarkTheme() -> Bool {
+        switch UserDefaultsManagement.appearanceType {
+        case .Light: return false
+        case .Dark: return true
+        case .System, .Custom: return UserDataService.instance.isDark
+        }
+    }
+
+    private func determineBackgroundColor() -> NSColor {
+        if UserDefaultsManagement.appearanceType == .Custom {
+            return UserDefaultsManagement.bgColor
+        }
+
+        let darkColor = NSColor(srgbRed: 0x23 / 255.0, green: 0x28 / 255.0, blue: 0x2D / 255.0, alpha: 1.0)
+        return determineDarkTheme() ? darkColor : NSColor.white
     }
 
     // MARK: - Appearance Update
@@ -177,19 +198,20 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
                 })
         }
     }
-    public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+    private func handleNavigationAction(_ navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
         guard let url = navigationAction.request.url else {
-            return
+            return .allow
         }
+
         switch navigationAction.navigationType {
         case .linkActivated:
-            decisionHandler(.cancel)
             if isFootNotes(url: url) {
-                return
+                return .cancel
             }
             NSWorkspace.shared.open(url)
+            return .cancel
         default:
-            decisionHandler(.allow)
+            return .allow
         }
     }
     public func load(note: Note, force: Bool = false) {
@@ -204,12 +226,12 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
             self.alphaValue = 0.0
         }
 
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let self = self else { return }
-            let markdownString = note.getPrettifiedContent()
-            let imagesStorage = note.project.url
-            let css = HtmlManager.previewStyle()
-            DispatchQueue.main.async {
+        Task.detached { [weak self, note] in
+            let markdownString = await note.getPrettifiedContent()
+            let imagesStorage = await note.project.url
+            let css = await HtmlManager.previewStyle()
+            await MainActor.run { [weak self] in
+                guard let self = self else { return }
                 do {
                     try self.loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
                     self.note = note
@@ -222,11 +244,12 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
 
                 if shouldHideForTransition {
                     // Reduced delay for smoother transition
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                        NSAnimationContext.runAnimationGroup({ context in
+                    Task { @MainActor [weak self] in
+                        try? await Task.sleep(nanoseconds: 50_000_000) // 0.05 seconds
+                        await NSAnimationContext.runAnimationGroup({ context in
                             context.duration = 0.15
                             context.timingFunction = CAMediaTimingFunction(name: .easeOut)
-                            self.animator().alphaValue = 1.0
+                            self?.animator().alphaValue = 1.0
                         })
                     }
                 }
@@ -325,26 +348,32 @@ class MPreviewView: WKWebView, WKUIDelegate, WKNavigationDelegate {
         loadFileURL(indexURL, allowingReadAccessTo: accessURL)
     }
     private static func ensureBundlePreinitialized() {
-        guard !bundleInitialized else { return }
-        initQueue.async {
-            guard !Self.bundleInitialized else { return }
-            let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
-            if !FileManager.default.fileExists(atPath: webkitPreview.path),
-                let bundle = HtmlManager.getDownViewBundle(),
-                let bundleResourceURL = bundle.resourceURL
-            {
-                try? FileManager.default.createDirectory(at: webkitPreview, withIntermediateDirectories: true, attributes: nil)
-                do {
-                    let fileList = try FileManager.default.contentsOfDirectory(atPath: bundleResourceURL.path)
-                    for file in fileList {
-                        let tmpURL = webkitPreview.appendingPathComponent(file)
-                        try? FileManager.default.copyItem(atPath: bundleResourceURL.appendingPathComponent(file).path, toPath: tmpURL.path)
+        Task { @MainActor in
+            guard !bundleInitialized else { return }
+            Task.detached {
+                await MainActor.run {
+                    guard !Self.bundleInitialized else { return }
+                }
+                let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
+                if !FileManager.default.fileExists(atPath: webkitPreview.path),
+                    let bundle = HtmlManager.getDownViewBundle(),
+                    let bundleResourceURL = bundle.resourceURL
+                {
+                    try? FileManager.default.createDirectory(at: webkitPreview, withIntermediateDirectories: true, attributes: nil)
+                    do {
+                        let fileList = try FileManager.default.contentsOfDirectory(atPath: bundleResourceURL.path)
+                        for file in fileList {
+                            let tmpURL = webkitPreview.appendingPathComponent(file)
+                            try? FileManager.default.copyItem(atPath: bundleResourceURL.appendingPathComponent(file).path, toPath: tmpURL.path)
+                        }
+                    } catch {
+                        await AppDelegate.trackError(error, context: "MPreviewView.bundleInit")
                     }
-                } catch {
-                    AppDelegate.trackError(error, context: "MPreviewView.bundleInit")
+                }
+                await MainActor.run {
+                    Self.bundleInitialized = true
                 }
             }
-            Self.bundleInitialized = true
         }
     }
 

@@ -1,21 +1,20 @@
 import Foundation
 
+@MainActor
 enum I18n {
-    // Dynamically resolve localization bundle based on user preference
+    // 根据用户偏好动态选择 bundle
     private static var bundle: Bundle {
         let langIndex = UserDefaultsManagement.defaultLanguage
-        if let lang = LanguageType(rawValue: langIndex) {
-            if let path = Bundle.main.path(forResource: lang.code, ofType: "lproj"),
-                let b = Bundle(path: path)
-            {
-                return b
-            }
+        if let lang = LanguageType(rawValue: langIndex),
+           let path = Bundle.main.path(forResource: lang.code, ofType: "lproj"),
+           let b = Bundle(path: path) {
+            return b
         }
-        return Bundle.main
+        return .main
     }
 
-    // Localize string using custom bundle, with key as fallback if translation missing
+    // 使用自定义 bundle 取文案，没有就回退到 key
     static func str(_ key: String) -> String {
-        return NSLocalizedString(key, tableName: "Localizable", bundle: bundle, value: key, comment: "")
+        NSLocalizedString(key, tableName: "Localizable", bundle: bundle, value: key, comment: "")
     }
 }

@@ -2,10 +2,12 @@ import AVKit
 import Cocoa
 
 extension NoteAttachment {
+    @MainActor
     func load(lazy: Bool = true) -> NSTextAttachment? {
         let attachment = NSTextAttachment()
 
         if url.isImage {
+            // 这里的 getSize(url:) 若在别处定义且会读 UI 状态，也应是 @MainActor
             let imageSize = getSize(url: url)
             let size = getSize(width: imageSize.width, height: imageSize.height)
             attachment.bounds = CGRect(origin: .zero, size: size)
@@ -23,24 +25,33 @@ extension NoteAttachment {
         return attachment
     }
 
+    @MainActor
     private func getEditorView() -> EditTextView? {
         ViewController.shared()?.editArea
     }
 
+    // 读取 UserDefaultsManagement.imagesWidth → 主线程
+    @MainActor
     func getSize(width: CGFloat, height: CGFloat) -> NSSize {
-        let maxWidth = UserDefaultsManagement.imagesWidth == Float(1000) ? Float(width) : UserDefaultsManagement.imagesWidth
+        let configuredMax = UserDefaultsManagement.imagesWidth
+        let maxWidth = configuredMax == Float(1000) ? Float(width) : configuredMax
 
         let ratio = maxWidth / Float(width)
-        return ratio < 1 ? NSSize(width: Int(maxWidth), height: Int(Float(height) * ratio)) : NSSize(width: Int(width), height: Int(height))
+        if ratio < 1 {
+            return NSSize(width: Int(maxWidth), height: Int(Float(height) * ratio))
+        } else {
+            return NSSize(width: Int(width), height: Int(height))
+        }
     }
 
+    // 访问 note.project（主线程隔离）→ 主线程
+    @MainActor
     static func getImageAndCacheData(url: URL, note: Note) -> Image? {
         let cacheDirectoryUrl = note.project.url.appendingPathComponent("/.cache/")
 
         let data: Data?
         if shouldUseCache(for: url),
-            let cacheName = url.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
-        {
+           let cacheName = url.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) {
             let imageCacheUrl = cacheDirectoryUrl.appendingPathComponent(cacheName)
             data = getCachedOrFetchData(imageCacheUrl: imageCacheUrl, originalUrl: url, cacheDirectoryUrl: cacheDirectoryUrl)
         } else {
@@ -55,6 +66,7 @@ extension NoteAttachment {
         url.isRemote() || url.pathExtension.lowercased() == "png"
     }
 
+    // 非隔离函数里调用 trackError → hop 到主线程
     private static func getCachedOrFetchData(imageCacheUrl: URL, originalUrl: URL, cacheDirectoryUrl: URL) -> Data? {
         if FileManager.default.fileExists(atPath: imageCacheUrl.path) {
             return try? Data(contentsOf: imageCacheUrl)
@@ -65,11 +77,14 @@ extension NoteAttachment {
         do {
             return try Data(contentsOf: originalUrl)
         } catch {
-            AppDelegate.trackError(error, context: "ImageAttachment+.loadImage")
+            Task { @MainActor in
+                AppDelegate.trackError(error, context: "ImageAttachment+.loadImage")
+            }
             return nil
         }
     }
 
+    // 同上：错误打点放到主线程
     private static func ensureCacheDirectoryExists(cacheDirectoryUrl: URL) {
         var isDirectory = ObjCBool(true)
         let fileExists = FileManager.default.fileExists(atPath: cacheDirectoryUrl.path, isDirectory: &isDirectory)
@@ -82,7 +97,9 @@ extension NoteAttachment {
                     attributes: nil
                 )
             } catch {
-                AppDelegate.trackError(error, context: "ImageAttachment+.loadFileWrapper")
+                Task { @MainActor in
+                    AppDelegate.trackError(error, context: "ImageAttachment+.loadFileWrapper")
+                }
             }
         }
     }
@@ -98,7 +115,8 @@ extension NoteAttachment {
 
         guard let image = finalImage else { return nil }
 
-        return getCachedThumbnail(for: url, size: size) ?? generateThumbnail(from: image, url: url, size: size)
+        return getCachedThumbnail(for: url, size: size)
+            ?? generateThumbnail(from: image, url: url, size: size)
     }
 
     private static func generateVideoThumbnail(url: URL, size: CGSize) -> NSImage? {
@@ -119,7 +137,7 @@ extension NoteAttachment {
 
     private static func getCachedThumbnail(for url: URL, size: CGSize) -> NSImage? {
         guard let cacheURL = getCacheUrl(from: url, prefix: "ThumbnailsBig"),
-            FileManager.default.fileExists(atPath: cacheURL.path)
+              FileManager.default.fileExists(atPath: cacheURL.path)
         else {
             return nil
         }

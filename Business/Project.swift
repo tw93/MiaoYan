@@ -11,8 +11,9 @@ public class Project: Equatable {
     public var label: String
     public var isExternal: Bool = false
 
-    public var sortBy: SortBy = UserDefaultsManagement.sort
-    public var sortDirection: SortDirection = UserDefaultsManagement.sortDirection ? .desc : .asc
+    // Use default values at declaration; loadSettings() will override if needed
+    public var sortBy: SortBy = .none
+    public var sortDirection: SortDirection = .asc
 
     public var sortBySettings: SortBy = .none
     public var sortDirectionSettings: SortDirection = .desc
@@ -20,7 +21,14 @@ public class Project: Equatable {
     public var showInCommon: Bool
     public var showInSidebar: Bool = true
 
-    init(url: URL, label: String? = nil, isTrash: Bool = false, isRoot: Bool = false, parent: Project? = nil, isDefault: Bool = false, isExternal: Bool = false) {
+    init(url: URL,
+         label: String? = nil,
+         isTrash: Bool = false,
+         isRoot: Bool = false,
+         parent: Project? = nil,
+         isDefault: Bool = false,
+         isExternal: Bool = false)
+    {
         self.url = url.resolvingSymlinksInPath()
         self.isTrash = isTrash
         self.isRoot = isRoot
@@ -28,14 +36,12 @@ public class Project: Equatable {
         self.isDefault = isDefault
         self.isExternal = isExternal
 
-        showInCommon = isTrash ? false : true
+        showInCommon = !isTrash
 
-        if let l = label {
-            self.label = l
-        } else {
-            self.label = url.lastPathComponent
-        }
+        // Initialize label first
+        self.label = label ?? url.lastPathComponent
 
+        // Load localized name if available
         var localizedName: AnyObject?
         try? (url as NSURL).getResourceValue(&localizedName, forKey: URLResourceKey.localizedNameKey)
         if let name = localizedName as? String, !name.isEmpty {
@@ -43,12 +49,11 @@ public class Project: Equatable {
         }
 
         isCloudDrive = isCloudDriveFolder(url: url)
-        loadSettings()
+        loadSettings() // Override defaults from cloud/local settings if available
     }
 
     func fileExist(fileName: String, ext: String) -> Bool {
         let fileURL = url.appendingPathComponent(fileName + "." + ext)
-
         return FileManager.default.fileExists(atPath: fileURL.path)
     }
 
@@ -57,12 +62,9 @@ public class Project: Equatable {
     }
 
     public func loadLabel(_ label: String? = nil) {
-        if let l = label {
-            self.label = l
-        } else {
-            self.label = url.lastPathComponent
-        }
+        self.label = label ?? url.lastPathComponent
 
+        // Override with localized name if available
         var localizedName: AnyObject?
         try? (url as NSURL).getResourceValue(&localizedName, forKey: URLResourceKey.localizedNameKey)
         if let name = localizedName as? String, !name.isEmpty {
@@ -71,40 +73,37 @@ public class Project: Equatable {
     }
 
     private func isCloudDriveFolder(url: URL) -> Bool {
-        if let iCloudDocumentsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents").resolvingSymlinksInPath() {
-            if FileManager.default.fileExists(atPath: iCloudDocumentsURL.path, isDirectory: nil), url.path.contains(iCloudDocumentsURL.path) {
+        if let iCloudDocumentsURL = FileManager.default
+            .url(forUbiquityContainerIdentifier: nil)?
+            .appendingPathComponent("Documents")
+            .resolvingSymlinksInPath()
+        {
+            if FileManager.default.fileExists(atPath: iCloudDocumentsURL.path, isDirectory: nil),
+               url.path.contains(iCloudDocumentsURL.path)
+            {
                 return true
             }
         }
-
         return false
     }
 
     public func getParent() -> Project {
-        if isRoot {
-            return self
-        }
-
-        if let parent = parent {
-            return parent.getParent()
-        }
-
+        if isRoot { return self }
+        if let parent = parent { return parent.getParent() }
         return self
     }
 
     public func saveSettings() {
-        let data =
-            [
-                "sortBy": sortBySettings.rawValue,
-                "sortDirection": sortDirectionSettings.rawValue,
-                "showInCommon": showInCommon,
-                "showInSidebar": showInSidebar,
-            ] as [String: Any]
+        let data: [String: Any] = [
+            "sortBy": sortBySettings.rawValue,
+            "sortDirection": sortDirectionSettings.rawValue,
+            "showInCommon": showInCommon,
+            "showInSidebar": showInSidebar,
+        ]
 
         if let relativePath = getRelativePath() {
             let keyStore = NSUbiquitousKeyValueStore()
             let key = relativePath.isEmpty ? "root-directory" : relativePath
-
             keyStore.set(data, forKey: key)
             keyStore.synchronize()
             return
@@ -127,12 +126,16 @@ public class Project: Equatable {
                     showInSidebar = sidebar
                 }
 
-                if let sortString = settings["sortBy"] as? String, let sort = SortBy(rawValue: sortString) {
+                if let sortString = settings["sortBy"] as? String,
+                   let sort = SortBy(rawValue: sortString)
+                {
                     if sort != .none {
                         sortBy = sort
                         sortBySettings = sort
 
-                        if let directionString = settings["sortDirection"] as? String, let direction = SortDirection(rawValue: directionString) {
+                        if let directionString = settings["sortDirection"] as? String,
+                           let direction = SortDirection(rawValue: directionString)
+                        {
                             sortDirection = direction
                             sortDirectionSettings = direction
                         }
@@ -151,12 +154,16 @@ public class Project: Equatable {
                 showInSidebar = sidebar
             }
 
-            if let sortString = settings.value(forKey: "sortBy") as? String, let sort = SortBy(rawValue: sortString) {
+            if let sortString = settings.value(forKey: "sortBy") as? String,
+               let sort = SortBy(rawValue: sortString)
+            {
                 if sort != .none {
                     sortBy = sort
                     sortBySettings = sort
 
-                    if let directionString = settings.value(forKey: "sortDirection") as? String, let direction = SortDirection(rawValue: directionString) {
+                    if let directionString = settings.value(forKey: "sortDirection") as? String,
+                       let direction = SortDirection(rawValue: directionString)
+                    {
                         sortDirection = direction
                         sortDirectionSettings = direction
                     }
@@ -167,18 +174,27 @@ public class Project: Equatable {
     }
 
     public func getRelativePath() -> String? {
-        if let iCloudRoot = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents").resolvingSymlinksInPath() {
+        if let iCloudRoot = FileManager.default
+            .url(forUbiquityContainerIdentifier: nil)?
+            .appendingPathComponent("Documents")
+            .resolvingSymlinksInPath()
+        {
             return url.path.replacingOccurrences(of: iCloudRoot.path, with: "")
         }
-
         return nil
     }
 
     public func createDirectory() {
         do {
-            try FileManager.default.createDirectory(at: url.appendingPathComponent("i"), withIntermediateDirectories: true, attributes: nil)
+            try FileManager.default.createDirectory(
+                at: url.appendingPathComponent("i"),
+                withIntermediateDirectories: true,
+                attributes: nil
+            )
         } catch {
-            AppDelegate.trackError(error, context: "Project.createDirectory")
+            Task { @MainActor in
+                AppDelegate.trackError(error, context: "Project.createDirectory")
+            }
         }
     }
 
@@ -186,7 +202,9 @@ public class Project: Equatable {
         do {
             try FileManager.default.removeItem(at: url)
         } catch {
-            AppDelegate.trackError(error, context: "Project.remove")
+            Task { @MainActor in
+                AppDelegate.trackError(error, context: "Project.remove")
+            }
         }
     }
 
@@ -194,7 +212,9 @@ public class Project: Equatable {
         do {
             try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
         } catch {
-            AppDelegate.trackError(error, context: "Project.create")
+            Task { @MainActor in
+                AppDelegate.trackError(error, context: "Project.create")
+            }
         }
     }
 
@@ -202,3 +222,5 @@ public class Project: Equatable {
         String(getParent().url.path.md5.prefix(4))
     }
 }
+
+extension Project: @unchecked Sendable {}

@@ -73,7 +73,10 @@ extension URL {
         do {
             return try FileManager.default.attributesOfItem(atPath: path)
         } catch let error as NSError {
-            AppDelegate.trackError(error, context: "URL+.fileAttributeError")
+            // hop 回主线程再打点，避免跨 actor 访问
+            Task { @MainActor in
+                AppDelegate.trackError(error, context: "URL+.fileAttributeError")
+            }
         }
         return nil
     }
@@ -101,7 +104,11 @@ extension URL {
     }
 
     public var fileUTType: CFString? {
-        let unmanagedFileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension as CFString, nil)
+        let unmanagedFileUTI = UTTypeCreatePreferredIdentifierForTag(
+            kUTTagClassFilenameExtension,
+            pathExtension as CFString,
+            nil
+        )
         return unmanagedFileUTI?.takeRetainedValue()
     }
 
@@ -121,7 +128,6 @@ extension URL {
 
     public var isImage: Bool {
         guard let fileUTI = fileUTType else { return false }
-
         return UTTypeConformsTo(fileUTI, kUTTypeImage)
     }
 }

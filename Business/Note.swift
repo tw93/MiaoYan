@@ -2,6 +2,7 @@ import Foundation
 import LocalAuthentication
 import ZipArchive
 
+@MainActor
 public class Note: NSObject {
     @objc var title: String = ""
     var project: Project
