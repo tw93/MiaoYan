@@ -209,7 +209,7 @@ class ViewController:
         configureLayout()
         configureNotesList()
         configureEditor()
-        // 异步预加载，避免影响启动性能
+        // Async preload to avoid impacting startup performance
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.preloadWebView()
         }
@@ -220,8 +220,7 @@ class ViewController:
         checkSidebarConstraint()
         checkTitlebarTopConstraint()
         configureMenuIcons()
-        // 提前设置分割线颜色，避免启动瞬间颜色过深的闪烁
-        // 在视图加载后立即应用，确保窗口展示前颜色已就位
+        // Set divider color early to prevent startup flash
         updateDividers()
         #if CLOUDKIT
             registerKeyValueObserver()
@@ -230,7 +229,7 @@ class ViewController:
         notesTableView.loadingQueue.maxConcurrentOperationCount = 1
         notesTableView.loadingQueue.qualityOfService = QualityOfService.userInteractive
     }
-    // 解决长时间放置导致的 web 容器的性能影响
+    // Handle webview performance impact from long-term inactivity
     override func viewDidDisappear() {
         super.viewWillDisappear()
         if UserDefaultsManagement.preview {
@@ -238,7 +237,7 @@ class ViewController:
                 self?.needRestorePreview = true
                 self?.disablePreview()
             }
-            // 创建延迟执行的工作项，延迟时间为 30 分钟
+            // Delay preview disable by 30 minutes
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1800), execute: disablePreviewWorkItem!)
         } else {
             needRestorePreview = false
@@ -514,135 +513,13 @@ class ViewController:
     private func configureMenuIcons() {
         guard #available(macOS 11.0, *) else { return }
         if let mainMenu = NSApp.mainMenu {
-            applyMenuIcons(in: mainMenu)
+            mainMenu.applyMenuIcons()
         }
 
-        applyMenuIcons(in: noteMenu)
+        noteMenu.applyMenuIcons()
 
         if let sidebarMenu = storageOutlineView.menu {
-            applyMenuIcons(in: sidebarMenu)
-        }
-    }
-
-    @available(macOS 11.0, *)
-    private func applyMenuIcons(in menu: NSMenu) {
-        for item in menu.items {
-            if let action = item.action {
-                if let symbolName = MenuIconRegistry.symbol(for: action),
-                    let image = NSImage(systemSymbolName: symbolName, accessibilityDescription: item.title)
-                {
-                    image.isTemplate = true
-                    item.image = image
-                }
-            }
-
-            if let submenu = item.submenu {
-                applyMenuIcons(in: submenu)
-            }
-        }
-    }
-}
-
-private extension ViewController {
-    @available(macOS 11.0, *)
-    enum MenuIconRegistry {
-        private static let symbolsBySelector: [Selector: String] = {
-            var map: [Selector: String] = [:]
-            func register(_ symbol: String, _ selectors: Selector...) {
-                selectors.forEach { map[$0] = symbol }
-            }
-
-            register("info.circle",
-                #selector(ViewController.showInfo(_:)),
-                #selector(AppDelegate.showAboutWindow(_:))
-            )
-            register("heart", #selector(AppDelegate.openCats(_:)))
-            register("gearshape", #selector(AppDelegate.openPreferences(_:)))
-            register("rectangle.stack",
-                #selector(ViewController.activeWindow(_:)),
-                #selector(AppDelegate.openMainWindow(_:)),
-                #selector(NSApplication.arrangeInFront(_:))
-            )
-            register("eye.slash",
-                #selector(NSApplication.hide(_:)),
-                #selector(NSApplication.hideOtherApplications(_:))
-            )
-            register("eye", #selector(NSApplication.unhideAllApplications(_:)), #selector(ViewController.togglePreview(_:)))
-            register("trash", #selector(ViewController.emptyTrash(_:)), #selector(ViewController.deleteNote(_:)))
-            register("power", #selector(ViewController.quiteApp(_:)))
-            register("square.and.pencil", #selector(ViewController.fileMenuNewNote(_:)))
-            register("externaldrive.badge.plus", #selector(ViewController.singleOpen(_:)))
-            register("square.and.arrow.down", #selector(ViewController.importNote(_:)))
-            register("magnifyingglass", #selector(ViewController.searchAndCreate(_:)))
-            register("plus.square.on.square", #selector(ViewController.duplicate(_:)))
-            register("pencil",
-                #selector(ViewController.renameMenu(_:)),
-                #selector(SidebarProjectView.renameMenu(_:))
-            )
-            register("folder",
-                #selector(ViewController.finderMenu(_:)),
-                #selector(SidebarProjectView.revealInFinder(_:))
-            )
-            register("square.and.arrow.up", #selector(ViewController.exportMenu(_:)))
-            register("arrowshape.turn.up.right", #selector(ViewController.moveMenu(_:)))
-            register("xmark.circle", #selector(NSWindow.performClose(_:)))
-            register("arrow.up.arrow.down", #selector(ViewController.sortBy(_:)))
-            register("arrow.up.and.down.circle", #selector(ViewController.sortDirectionBy(_:)))
-            register("sidebar.left", #selector(ViewController.toggleSidebarPanel(_:)))
-            register("list.bullet.rectangle", #selector(ViewController.toggleNoteList(_:)))
-            register("rectangle.on.rectangle", #selector(ViewController.togglePresentation(_:)))
-            register("arrow.up.left.and.arrow.down.right", #selector(NSWindow.toggleFullScreen(_:)))
-            register("bold", #selector(EditTextView.boldMenu(_:)))
-            register("italic", #selector(EditTextView.italicMenu(_:)))
-            register("underline", #selector(EditTextView.underlineMenu(_:)))
-            register("text.badge.minus", #selector(EditTextView.deletelineMenu(_:)))
-            register("link",
-                #selector(EditTextView.linkMenu(_:)),
-                #selector(ViewController.copyURL(_:))
-            )
-            register("checkmark.square", #selector(EditTextView.todoMenu(_:)))
-            register("arrow.left", #selector(EditTextView.shiftLeft(_:)))
-            register("arrow.right", #selector(EditTextView.shiftRight(_:)))
-            register("textformat", #selector(ViewController.formatText(_:)))
-            register("doc.on.doc", #selector(ViewController.noteCopy(_:)))
-            register("text.magnifyingglass", #selector(ViewController.textFinder(_:)))
-            register("arrow.down.right.and.arrow.up.left.rectangle", #selector(NSWindow.performMiniaturize(_:)))
-            register("plus.magnifyingglass", #selector(NSWindow.performZoom(_:)))
-            register("globe", #selector(AppDelegate.openMiaoYan(_:)))
-            register("chevron.left.slash.chevron.right", #selector(AppDelegate.openGithub(_:)))
-            register("paperplane", #selector(AppDelegate.openTelegram(_:)))
-            register("bird", #selector(AppDelegate.openTwitter(_:)))
-            register("doc.text.magnifyingglass", #selector(AppDelegate.openRelease(_:)))
-            register("exclamationmark.bubble", #selector(AppDelegate.openIssue(_:)))
-            register("sparkles", #selector(ViewController.toggleMagicPPT(_:)))
-            register("pin", #selector(ViewController.pinMenu(_:)))
-            register("chevron.left.forwardslash.chevron.right", #selector(ViewController.exportHtml(_:)))
-            register("photo", #selector(ViewController.exportImage(_:)))
-            register("doc.richtext", #selector(ViewController.exportPdf(_:)))
-            register("wand.and.stars", #selector(ViewController.exportMiaoYanPPT(_:)))
-            register("folder.badge.plus", #selector(SidebarProjectView.addProject(_:)))
-            register("trash.slash", #selector(SidebarProjectView.deleteMenu(_:)))
-
-            return map
-        }()
-
-        private static let symbolsByName: [String: String] = [
-            "checkForUpdates:": "arrow.triangle.2.circlepath",
-            "undo:": "arrow.uturn.backward",
-            "redo:": "arrow.uturn.forward",
-            "cut:": "scissors",
-            "copy:": "doc.on.doc",
-            "paste:": "clipboard",
-            "pasteAsPlainText:": "clipboard.fill",
-            "selectAll:": "square.grid.2x2",
-            "centerSelectionInVisibleArea:": "scope"
-        ]
-
-        static func symbol(for selector: Selector) -> String? {
-            if let symbol = symbolsBySelector[selector] {
-                return symbol
-            }
-            return symbolsByName[NSStringFromSelector(selector)]
+            sidebarMenu.applyMenuIcons()
         }
     }
 }

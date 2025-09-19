@@ -57,9 +57,10 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
             highlight(textStorage: textStorage, fencedRange: fencedRange, parRange: parRange, delta: delta, editedRange: editedRange)
 
             if delta == 1,
-               textStorage.mutableString.substring(with: editedRange) == "\n",
-               textStorage.length >= fencedRange.upperBound + 1,
-               textStorage.attribute(.backgroundColor, at: fencedRange.upperBound, effectiveRange: nil) != nil {
+                textStorage.mutableString.substring(with: editedRange) == "\n",
+                textStorage.length >= fencedRange.upperBound + 1,
+                textStorage.attribute(.backgroundColor, at: fencedRange.upperBound, effectiveRange: nil) != nil
+            {
                 textStorage.removeAttribute(.backgroundColor, range: NSRange(location: fencedRange.upperBound, length: 1))
             }
         } else {
@@ -85,7 +86,8 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
         let paragraph = textStorage.mutableString.substring(with: parRange)
 
         if paragraph.count == 2,
-           textStorage.attributedSubstring(from: parRange).attribute(.backgroundColor, at: 1, effectiveRange: nil) != nil {
+            textStorage.attributedSubstring(from: parRange).attribute(.backgroundColor, at: 1, effectiveRange: nil) != nil
+        {
             if let ranges = codeTextProcessor.getCodeBlockRanges(parRange: parRange) {
                 let invalidateBackgroundRange =
                     ranges.count == 2
@@ -144,7 +146,8 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
 
         textStorage.enumerateAttribute(.attachment, in: affectedRange, options: []) { value, range, _ in
             guard let attachment = value as? NSTextAttachment,
-                  textStorage.attribute(.todo, at: range.location, effectiveRange: nil) == nil else { return }
+                textStorage.attribute(.todo, at: range.location, effectiveRange: nil) == nil
+            else { return }
 
             // Paragraph style: Get and set directly on main thread
             let paragraph = NSTextStorage.getParagraphStyle()

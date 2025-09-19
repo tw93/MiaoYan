@@ -73,7 +73,7 @@ extension URL {
         do {
             return try FileManager.default.attributesOfItem(atPath: path)
         } catch let error as NSError {
-            // hop 回主线程再打点，避免跨 actor 访问
+            // Handle error tracking on main thread for actor isolation
             Task { @MainActor in
                 AppDelegate.trackError(error, context: "URL+.fileAttributeError")
             }

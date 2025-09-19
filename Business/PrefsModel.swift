@@ -1,6 +1,6 @@
 import Foundation
 
-// 复用现有的 PrefsSection 作为 PreferencesCategory
+// Reuse existing PrefsSection as PreferencesCategory
 typealias PreferencesCategory = PrefsSection
 
 // MARK: - Preferences Category Model
@@ -10,8 +10,8 @@ enum PrefsSection: CaseIterable, Sendable {
     @MainActor
     var title: String {
         switch self {
-        case .general:    return I18n.str("General")
-        case .editor:     return I18n.str("Editor")
+        case .general: return I18n.str("General")
+        case .editor: return I18n.str("Editor")
         case .typography: return I18n.str("Fonts")
         }
     }

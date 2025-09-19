@@ -202,12 +202,12 @@ public class NotesTextProcessor {
             let value = attributedString.attribute(.link, at: index, effectiveRange: &effectiveRange)
 
             if let linkValue = value as? String,
-               linkValue.starts(with: tagQuery),
-               let tag = linkValue.replacingOccurrences(of: tagQuery, with: "").removingPercentEncoding,
-               effectiveRange.length > 0
+                linkValue.starts(with: tagQuery),
+                let tag = linkValue.replacingOccurrences(of: tagQuery, with: "").removingPercentEncoding,
+                effectiveRange.length > 0
             {
                 if getSpanCodeBlockRange(content: attributedString, range: effectiveRange) == nil,
-                   getFencedCodeBlockRange(paragraphRange: effectiveRange, string: attributedString) == nil
+                    getFencedCodeBlockRange(paragraphRange: effectiveRange, string: attributedString) == nil
                 {
                     let markdownLink = "[\(tag)](\(linkValue))"
                     replacements.append((effectiveRange, markdownLink))
@@ -1187,14 +1187,14 @@ public struct MarklightRegex {
         // the pattern we gave it.  All regex patterns used by Markdown
         // should be valid, so this probably means that a pattern
         // valid for .NET Regex is not valid for NSRegularExpression.
-      if re == nil {
-          if let error = error {
-              Task { @MainActor in
-                  AppDelegate.trackError(error, context: "NotesTextProcessor.MarklightRegex")
-              }
-          }
-          assert(re != nil)
-      }
+        if re == nil {
+            if let error = error {
+                Task { @MainActor in
+                    AppDelegate.trackError(error, context: "NotesTextProcessor.MarklightRegex")
+                }
+            }
+            assert(re != nil)
+        }
         regularExpression = re
     }
 

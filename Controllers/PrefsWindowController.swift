@@ -23,9 +23,15 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
             defer: false
         )
 
-        // Configure window properties
+        // Configure window properties - completely disable vertical resizing
         window.minSize = NSSize(width: 700, height: 520)
-        window.maxSize = NSSize(width: 1200, height: 1400)
+        window.maxSize = NSSize(width: 1200, height: 520)
+
+        // Remove resize indicator and disable content-driven resizing
+        window.styleMask.remove(.resizable)
+        window.styleMask.insert(.titled)
+        window.styleMask.insert(.closable)
+        window.styleMask.insert(.miniaturizable)
         let autosaveName: NSWindow.FrameAutosaveName = "ModernPreferencesWindow"
         let restoredFrame = window.setFrameUsingName(autosaveName)
         window.setFrameAutosaveName(autosaveName)
@@ -74,6 +80,9 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         splitViewController.splitView.isVertical = true
         splitViewController.splitView.dividerStyle = .thin
 
+        // Completely disable automatic adjustments
+        splitViewController.splitView.autoresizesSubviews = false
+
         // Configure split view behavior
         splitViewController.splitViewItems.forEach { item in
             item.canCollapse = false
@@ -90,8 +99,9 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         sidebarViewController.view = sidebarView
 
         let sidebarItem = NSSplitViewItem(sidebarWithViewController: sidebarViewController)
-        sidebarItem.minimumThickness = 130
-        sidebarItem.maximumThickness = 145
+        // Fix sidebar width to prevent changes during tab switching
+        sidebarItem.minimumThickness = 140
+        sidebarItem.maximumThickness = 140
         sidebarItem.canCollapse = false
 
         sidebarItem.titlebarSeparatorStyle = .none
@@ -104,6 +114,14 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         let contentView = NSView(frame: NSRect(x: 0, y: 0, width: 600, height: 400))
         contentView.wantsLayer = true
         contentView.layer?.backgroundColor = Theme.backgroundColor.cgColor
+
+        // Set fixed size constraints on content view
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            contentView.widthAnchor.constraint(equalToConstant: 600),
+            contentView.heightAnchor.constraint(equalToConstant: 400),
+        ])
+
         prefsContentViewController.view = contentView
 
         let contentItem = NSSplitViewItem(viewController: prefsContentViewController)
@@ -116,7 +134,6 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         currentCategory = category
 
         if let currentVC = prefsContentViewController.children.first {
-
             currentVC.removeFromParent()
             currentVC.view.removeFromSuperview()
         }
@@ -138,7 +155,6 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         window?.title = "\(I18n.str("Preferences")) - \(category.title)"
 
         sidebarView?.selectCategory(category)
-
     }
 
     private func viewController(for category: PreferencesCategory) -> NSViewController {
@@ -184,8 +200,8 @@ extension PrefsWindowController {
     }
 }
 
-private extension PrefsWindowController {
-    func prepareWindowForDisplayIfNeeded() {
+extension PrefsWindowController {
+    fileprivate func prepareWindowForDisplayIfNeeded() {
         guard let window else { return }
 
         window.contentView?.layoutSubtreeIfNeeded()

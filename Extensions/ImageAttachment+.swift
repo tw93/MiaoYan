@@ -51,7 +51,8 @@ extension NoteAttachment {
 
         let data: Data?
         if shouldUseCache(for: url),
-           let cacheName = url.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) {
+            let cacheName = url.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        {
             let imageCacheUrl = cacheDirectoryUrl.appendingPathComponent(cacheName)
             data = getCachedOrFetchData(imageCacheUrl: imageCacheUrl, originalUrl: url, cacheDirectoryUrl: cacheDirectoryUrl)
         } else {
@@ -137,7 +138,7 @@ extension NoteAttachment {
 
     private static func getCachedThumbnail(for url: URL, size: CGSize) -> NSImage? {
         guard let cacheURL = getCacheUrl(from: url, prefix: "ThumbnailsBig"),
-              FileManager.default.fileExists(atPath: cacheURL.path)
+            FileManager.default.fileExists(atPath: cacheURL.path)
         else {
             return nil
         }

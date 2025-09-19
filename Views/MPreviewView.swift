@@ -245,7 +245,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 if shouldHideForTransition {
                     // Reduced delay for smoother transition
                     Task { @MainActor [weak self] in
-                        try? await Task.sleep(nanoseconds: 50_000_000) // 0.05 seconds
+                        try? await Task.sleep(nanoseconds: 50_000_000)  // 0.05 seconds
                         await NSAnimationContext.runAnimationGroup({ context in
                             context.duration = 0.15
                             context.timingFunction = CAMediaTimingFunction(name: .easeOut)

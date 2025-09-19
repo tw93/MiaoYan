@@ -40,6 +40,7 @@
 		276312912E7676D3007BB5E9 /* AppDelegate+Lifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276312902E7676D3007BB5E9 /* AppDelegate+Lifecycle.swift */; };
 		276312932E7677E9007BB5E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276312922E7677E9007BB5E9 /* AppDelegate.swift */; };
 		276312952E76784A007BB5E9 /* AppDelegate+URLRoutes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276312942E76784A007BB5E9 /* AppDelegate+URLRoutes.swift */; };
+		276607F22E7CFD8A0096D64A /* NSMenu+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276607F12E7CFD8A0096D64A /* NSMenu+.swift */; };
 		27727AFB2E1B9E7200275477 /* TsangerJinKai02-W04.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27727AFA2E1B9E7200275477 /* TsangerJinKai02-W04.ttf */; };
 		277A61D8244B538F000F0033 /* SidebarTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277A61D7244B538E000F0033 /* SidebarTableRowView.swift */; };
 		278160922E75551F00F3D54B /* PrefsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278160912E75551F00F3D54B /* PrefsModel.swift */; };
@@ -192,6 +193,7 @@
 		276312902E7676D3007BB5E9 /* AppDelegate+Lifecycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+Lifecycle.swift"; sourceTree = "<group>"; };
 		276312922E7677E9007BB5E9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		276312942E76784A007BB5E9 /* AppDelegate+URLRoutes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+URLRoutes.swift"; sourceTree = "<group>"; };
+		276607F12E7CFD8A0096D64A /* NSMenu+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSMenu+.swift"; sourceTree = "<group>"; };
 		27727AFA2E1B9E7200275477 /* TsangerJinKai02-W04.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TsangerJinKai02-W04.ttf"; sourceTree = "<group>"; };
 		277A61D7244B538E000F0033 /* SidebarTableRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarTableRowView.swift; sourceTree = "<group>"; };
 		278160912E75551F00F3D54B /* PrefsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefsModel.swift; sourceTree = "<group>"; };
@@ -381,6 +383,7 @@
 		D7CD5F6A1F51184A006AA35D /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				276607F12E7CFD8A0096D64A /* NSMenu+.swift */,
 				272D1B422E77E9AC00A95673 /* MPreviewView+Export.swift */,
 				D752D80723454750006842F9 /* NSTextAttachment+.swift */,
 				D7EDEDFA219203C9000B8C1A /* NoteCellView+.swift */,
@@ -621,6 +624,7 @@
 				271FD5A02A73DB9A001EA97B /* URL+.swift in Sources */,
 				275F9F622E682239006BC2AC /* ViewController+Editor.swift in Sources */,
 				D7DA9E1E21031901001CF0BE /* OutlineHeaderView.swift in Sources */,
+				276607F22E7CFD8A0096D64A /* NSMenu+.swift in Sources */,
 				D7B3FE7121027A6D00764C39 /* UserDataService.swift in Sources */,
 				27D95122285B5E4400F40306 /* Toast.swift in Sources */,
 				27D280452A05480D007A4104 /* IndexSetWrapper.swift in Sources */,
@@ -942,14 +946,14 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
+				MARKETING_VERSION = 1.18.5;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-weak_framework",
 					AppIntents,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 1.18.5;
-				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.MiaoYan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -993,14 +997,14 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
+				MARKETING_VERSION = 1.18.5;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-weak_framework",
 					AppIntents,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 1.18.5;
-				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.MiaoYan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

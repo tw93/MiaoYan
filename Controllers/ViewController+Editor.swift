@@ -366,19 +366,18 @@ extension ViewController {
             )
             return
         }
-        // 防止快速连续格式化
+        // Prevent rapid successive formatting
         guard !isFormatting else {
             return
         }
         if let note = notesTableView.getSelectedNote() {
             isFormatting = true
-            // Save title first to prevent first-time issues
             saveTitleSafely()
             let formatter = PrettierFormatter(plugins: [MarkdownPlugin()], parser: MarkdownParser())
             formatter.htmlWhitespaceSensitivity = HTMLWhitespaceSensitivityStrategy.ignore
             formatter.proseWrap = ProseWrapStrategy.preserve  // Change from .never to .preserve to keep line breaks
             formatter.prepare()
-            // 确保从编辑器获取最新内容，而不是从 note.content，避免状态不一致
+            // Get latest content from editor to ensure consistency
             let content = editArea.textStorage?.string ?? note.content.string
             let cursor = editArea.selectedRanges[0].rangeValue.location
             let top = editAreaScroll.contentView.bounds.origin.y
@@ -389,19 +388,15 @@ extension ViewController {
             case .success(let formatResult):
                 let restoredContent = HtmlManager.restoreHTMLTags(in: formatResult.formattedString, with: htmlPlaceholders)
                 var newContent = restoredContent
-                // Simple approach: if Prettier changed the line structure,
-                // only update the HTML tags and preserve everything else
+                // Preserve line structure if Prettier removes line breaks
                 let originalLines = content.components(separatedBy: .newlines)
                 if originalLines.count > 1 && !restoredContent.contains("\n") {
-                    // Prettier removed line breaks, restore original structure but update HTML
                     newContent = content
-                    // Only replace HTML tags with formatted versions
                     for (_, originalTag) in htmlPlaceholders {
-                        let updatedTag = originalTag  // Keep original HTML tag as-is
+                        let updatedTag = originalTag
                         newContent = newContent.replacingOccurrences(of: originalTag, with: updatedTag)
                     }
                 } else {
-                    // Normal case: use formatted content
                     newContent = restoredContent
                     if content.last != "\n" && restoredContent.last == "\n" {
                         newContent = restoredContent.removeLastNewLine()
@@ -415,8 +410,8 @@ extension ViewController {
                 let originalLength = note.content.length
                 // 直接更新编辑器显示，这会同时更新 textStorage 和 note.content
                 editArea.insertText(newContent, replacementRange: NSRange(0..<originalLength))
-                    note.save()
-                    if let storage = editArea.textStorage {
+                note.save()
+                if let storage = editArea.textStorage {
                     NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
                     editArea.fillHighlightLinks()
                     // Reapply letter spacing after formatting
