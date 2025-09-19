@@ -42,7 +42,10 @@
 "Appearance & Language" = "外観と言語";
 "Interface & Upload" = "インターフェースとアップロード";
 "Storage Location" = "保存場所";
-"File Storage" = "ファイルストレージ";
+"Note Location" = "ノート保存先";
+"Interface" = "インターフェース";
+"Experience" = "体験";
+"Typography" = "タイポグラフィ";
 
 /* 設定 - ラベル */
 "Appearance" = "外観";

@@ -3,9 +3,7 @@ import Cocoa
 @MainActor
 final class EditorPrefsViewController: BasePrefsViewController {
     private var settings = EditorSettings()
-    private var behaviorStackView: NSStackView!
-    private var previewStackView: NSStackView!
-    private var uploadStackView: NSStackView!
+    private var settingsStackView: NSStackView!
 
     override func setupUI() {
         let scrollView = NSScrollView()
@@ -23,16 +21,13 @@ final class EditorPrefsViewController: BasePrefsViewController {
         contentView.layer?.backgroundColor = NSColor.clear.cgColor
         scrollView.documentView = contentView
 
-        // Setup sections (fonts moved to Typography preferences)
-        setupEditorBehaviorSection(in: contentView)
-        setupImageUploadSection(in: contentView)
-        setupPreviewSection(in: contentView)
+        setupEditorSettingsSection(in: contentView)
 
         // Setup scroll view constraints using contentView anchors for compatibility
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
 
             contentView.topAnchor.constraint(equalTo: scrollView.contentView.topAnchor),
@@ -45,30 +40,23 @@ final class EditorPrefsViewController: BasePrefsViewController {
 
     // Fonts section removed: moved to Typography preferences
 
-    private func setupEditorBehaviorSection(in parentView: NSView) {
-        // Position at top if it's the first section
-        let anchor: NSLayoutAnchor<NSLayoutYAxisAnchor>
-        let topConstant: CGFloat
-        if let last = parentView.subviews.last {
-            anchor = last.bottomAnchor
-            topConstant = 20
-        } else {
-            anchor = parentView.topAnchor
-            topConstant = 0
-        }
-        let sectionView = createSectionView(
-            title: I18n.str("Editor Behavior"),
+    private func setupEditorSettingsSection(in parentView: NSView) {
+        let (sectionView, _) = createSectionView(
             in: parentView,
-            topAnchor: anchor,
-            topConstant: topConstant
+            topAnchor: parentView.topAnchor,
+            topConstant: 0
         )
 
-        behaviorStackView = NSStackView()
-        behaviorStackView.translatesAutoresizingMaskIntoConstraints = false
-        behaviorStackView.orientation = .vertical
-        behaviorStackView.spacing = 12
-        behaviorStackView.alignment = .leading
-        sectionView.addSubview(behaviorStackView)
+        let rowSpacing: CGFloat = 16
+        let topSpacing: CGFloat = rowSpacing
+        let horizontalInset: CGFloat = 24
+
+        settingsStackView = NSStackView()
+        settingsStackView.translatesAutoresizingMaskIntoConstraints = false
+        settingsStackView.orientation = .vertical
+        settingsStackView.spacing = rowSpacing
+        settingsStackView.alignment = .leading
+        sectionView.addSubview(settingsStackView)
 
         // Line break
         let lineBreakRow = createSettingRow(
@@ -76,34 +64,7 @@ final class EditorPrefsViewController: BasePrefsViewController {
             options: [localizedLineBreak("MiaoYan"), localizedLineBreak("Github")],
             action: #selector(lineBreakChanged(_:))
         )
-        behaviorStackView.addArrangedSubview(lineBreakRow)
-
-        // Code background setting removed: default is no background
-
-        NSLayoutConstraint.activate([
-            behaviorStackView.topAnchor.constraint(equalTo: sectionView.topAnchor, constant: 35),
-            behaviorStackView.leadingAnchor.constraint(equalTo: sectionView.leadingAnchor, constant: 20),
-            behaviorStackView.trailingAnchor.constraint(lessThanOrEqualTo: sectionView.trailingAnchor, constant: -20),
-            behaviorStackView.bottomAnchor.constraint(equalTo: sectionView.bottomAnchor, constant: -16),
-        ])
-    }
-
-    private func setupImageUploadSection(in parentView: NSView) {
-        let anchor: NSLayoutAnchor<NSLayoutYAxisAnchor> = parentView.subviews.last?.bottomAnchor ?? parentView.topAnchor
-        let top: CGFloat = parentView.subviews.isEmpty ? 0 : 20
-        let sectionView = createSectionView(
-            title: I18n.str("Image Upload"),
-            in: parentView,
-            topAnchor: anchor,
-            topConstant: top
-        )
-
-        uploadStackView = NSStackView()
-        uploadStackView.translatesAutoresizingMaskIntoConstraints = false
-        uploadStackView.orientation = .vertical
-        uploadStackView.spacing = 12
-        uploadStackView.alignment = .leading
-        sectionView.addSubview(uploadStackView)
+        settingsStackView.addArrangedSubview(lineBreakRow)
 
         // Upload service selection
         let uploadRow = createSettingRow(
@@ -111,32 +72,7 @@ final class EditorPrefsViewController: BasePrefsViewController {
             options: [I18n.str("None"), "PicGo", "uPic", "Picsee"],
             action: #selector(uploadServiceChanged(_:))
         )
-        uploadStackView.addArrangedSubview(uploadRow)
-
-        NSLayoutConstraint.activate([
-            uploadStackView.topAnchor.constraint(equalTo: sectionView.topAnchor, constant: 35),
-            uploadStackView.leadingAnchor.constraint(equalTo: sectionView.leadingAnchor, constant: 20),
-            uploadStackView.trailingAnchor.constraint(lessThanOrEqualTo: sectionView.trailingAnchor, constant: -20),
-            uploadStackView.bottomAnchor.constraint(equalTo: sectionView.bottomAnchor, constant: -16),
-        ])
-    }
-
-    private func setupPreviewSection(in parentView: NSView) {
-        let anchor: NSLayoutAnchor<NSLayoutYAxisAnchor> = parentView.subviews.last?.bottomAnchor ?? parentView.topAnchor
-        let top: CGFloat = parentView.subviews.isEmpty ? 0 : 20
-        let sectionView = createSectionView(
-            title: I18n.str("Preview"),
-            in: parentView,
-            topAnchor: anchor,
-            topConstant: top
-        )
-
-        previewStackView = NSStackView()
-        previewStackView.translatesAutoresizingMaskIntoConstraints = false
-        previewStackView.orientation = .vertical
-        previewStackView.spacing = 12
-        previewStackView.alignment = .leading
-        sectionView.addSubview(previewStackView)
+        settingsStackView.addArrangedSubview(uploadRow)
 
         // Preview location (legacy behavior: Begin / Editing)
         let locationRow = createSettingRow(
@@ -144,7 +80,7 @@ final class EditorPrefsViewController: BasePrefsViewController {
             options: [localizedPreviewLocation("Begin"), localizedPreviewLocation("Editing")],
             action: #selector(previewLocationChanged(_:))
         )
-        previewStackView.addArrangedSubview(locationRow)
+        settingsStackView.addArrangedSubview(locationRow)
 
         // Preview width
         let widthRow = createSettingRow(
@@ -152,44 +88,51 @@ final class EditorPrefsViewController: BasePrefsViewController {
             options: [localizedPreviewWidth("600px"), localizedPreviewWidth("800px"), localizedPreviewWidth("1000px"), localizedPreviewWidth("1200px"), localizedPreviewWidth("1400px"), localizedPreviewWidth("Full Width")],
             action: #selector(previewWidthChanged(_:))
         )
-        previewStackView.addArrangedSubview(widthRow)
+        settingsStackView.addArrangedSubview(widthRow)
 
         NSLayoutConstraint.activate([
-            previewStackView.topAnchor.constraint(equalTo: sectionView.topAnchor, constant: 35),
-            previewStackView.leadingAnchor.constraint(equalTo: sectionView.leadingAnchor, constant: 20),
-            previewStackView.trailingAnchor.constraint(lessThanOrEqualTo: sectionView.trailingAnchor, constant: -20),
-            previewStackView.bottomAnchor.constraint(equalTo: sectionView.bottomAnchor, constant: -16),
+            settingsStackView.topAnchor.constraint(equalTo: sectionView.topAnchor, constant: topSpacing),
+            settingsStackView.leadingAnchor.constraint(equalTo: sectionView.leadingAnchor, constant: horizontalInset),
+            settingsStackView.trailingAnchor.constraint(lessThanOrEqualTo: sectionView.trailingAnchor, constant: -horizontalInset),
+            settingsStackView.bottomAnchor.constraint(equalTo: sectionView.bottomAnchor, constant: -16),
             sectionView.bottomAnchor.constraint(equalTo: parentView.bottomAnchor, constant: -20),
         ])
     }
 
     // Helper methods for creating UI components
-    private func createSectionView(title: String, in parentView: NSView, topAnchor: NSLayoutAnchor<NSLayoutYAxisAnchor>, topConstant: CGFloat) -> NSView {
+    private func createSectionView(in parentView: NSView, topAnchor: NSLayoutAnchor<NSLayoutYAxisAnchor>, topConstant: CGFloat, title: String? = nil) -> (container: NSView, titleLabel: NSTextField?) {
         let containerView = NSView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
 
         // Keep background consistent with parent (no separate gray panel)
         containerView.wantsLayer = true
         containerView.layer?.backgroundColor = NSColor.clear.cgColor
+        var titleLabel: NSTextField?
+        if let title = title {
+            let label = NSTextField(labelWithString: title)
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.font = NSFont.boldSystemFont(ofSize: 13)
+            label.textColor = Theme.textColor
+            containerView.addSubview(label)
+            titleLabel = label
+        }
 
-        let titleLabel = NSTextField(labelWithString: title)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.font = NSFont.boldSystemFont(ofSize: 13)
-        titleLabel.textColor = Theme.textColor
-
-        containerView.addSubview(titleLabel)
         parentView.addSubview(containerView)
 
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: topAnchor, constant: topConstant),
             containerView.leadingAnchor.constraint(equalTo: parentView.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: parentView.trailingAnchor),
-
-            titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
-            titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
         ])
 
-        return containerView
+        if let titleLabel {
+            NSLayoutConstraint.activate([
+                titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
+                titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            ])
+        }
+
+        return (containerView, titleLabel)
     }
 
     // Font UI rows and helpers removed here (managed in TypographyPrefsViewController)
@@ -200,6 +143,7 @@ final class EditorPrefsViewController: BasePrefsViewController {
 
         let label = NSTextField(labelWithString: label)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.alignment = .left
 
         let popUp = NSPopUpButton()
         popUp.translatesAutoresizingMaskIntoConstraints = false
@@ -216,9 +160,9 @@ final class EditorPrefsViewController: BasePrefsViewController {
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: rowView.leadingAnchor),
             label.centerYAnchor.constraint(equalTo: rowView.centerYAnchor),
-            label.widthAnchor.constraint(equalToConstant: 180),
+            label.widthAnchor.constraint(equalToConstant: 140),
 
-            popUp.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 12),
+            popUp.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 16),
             popUp.centerYAnchor.constraint(equalTo: rowView.centerYAnchor),
             popUp.widthAnchor.constraint(greaterThanOrEqualToConstant: 120),
 
@@ -236,53 +180,47 @@ final class EditorPrefsViewController: BasePrefsViewController {
         selectLineBreakOption(settings.editorLineBreak)
 
         // Set preview settings
+        selectUploadServiceOption(UserDefaultsManagement.defaultPicUpload)
         selectPreviewLocationOption(settings.previewLocation)
         selectPreviewWidthOption(settings.previewWidth)
-
-        // Set upload service
-        selectUploadServiceOption(UserDefaultsManagement.defaultPicUpload)
     }
 
     // Font selection helpers removed
 
     private func selectLineBreakOption(_ value: String) {
-        // Find and set line break popup using behaviorStackView
-        if !behaviorStackView.arrangedSubviews.isEmpty,
-            let popUp = behaviorStackView.arrangedSubviews[0].subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton
-        {
-            popUp.selectItem(withTitle: localizedLineBreak(value))
-        }
+        // Find and set line break popup within the combined settings stack
+        guard settingsStackView.arrangedSubviews.count > 0,
+            let popUp = settingsStackView.arrangedSubviews[0].subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton
+        else { return }
+        popUp.selectItem(withTitle: localizedLineBreak(value))
     }
 
     // Code background selection removed
 
     private func selectPreviewLocationOption(_ value: String) {
-        // Find and set preview location popup using previewStackView
-        if !previewStackView.arrangedSubviews.isEmpty,
-            let popUp = previewStackView.arrangedSubviews[0].subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton
-        {
-            popUp.selectItem(withTitle: localizedPreviewLocation(value))
-        }
+        // Find and set preview location popup within the combined settings stack
+        guard settingsStackView.arrangedSubviews.count > 2,
+            let popUp = settingsStackView.arrangedSubviews[2].subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton
+        else { return }
+        popUp.selectItem(withTitle: localizedPreviewLocation(value))
     }
 
     private func selectPreviewWidthOption(_ value: String) {
-        // Find and set preview width popup using previewStackView
-        if previewStackView.arrangedSubviews.count > 1,
-            let popUp = previewStackView.arrangedSubviews[1].subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton
-        {
-            popUp.selectItem(withTitle: localizedPreviewWidth(value))
-        }
+        // Find and set preview width popup within the combined settings stack
+        guard settingsStackView.arrangedSubviews.count > 3,
+            let popUp = settingsStackView.arrangedSubviews[3].subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton
+        else { return }
+        popUp.selectItem(withTitle: localizedPreviewWidth(value))
     }
 
     private func selectUploadServiceOption(_ value: String) {
-        if let uploadRow = uploadStackView?.arrangedSubviews.first,
-            let popUp = uploadRow.subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton
-        {
-            if value == "None" {
-                popUp.selectItem(withTitle: I18n.str("None"))
-            } else {
-                popUp.selectItem(withTitle: value)
-            }
+        guard settingsStackView.arrangedSubviews.count > 1,
+            let popUp = settingsStackView.arrangedSubviews[1].subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton
+        else { return }
+        if value == "None" {
+            popUp.selectItem(withTitle: I18n.str("None"))
+        } else {
+            popUp.selectItem(withTitle: value)
         }
     }
 

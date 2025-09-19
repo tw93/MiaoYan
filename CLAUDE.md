@@ -63,6 +63,12 @@ Resources/
 - Minimal comments - only add English comments for complex logic that's hard to understand
 - Use `// MARK:` for organizing code sections
 
+## MCP Tools
+
+- **CONTEXT7**: Primary tool for code analysis and context gathering
+- **mcp__ide__getDiagnostics**: Check Swift compilation issues
+- Use MCP tools to supplement (not replace) manual code analysis
+
 ## Development Commands
 
 ```bash

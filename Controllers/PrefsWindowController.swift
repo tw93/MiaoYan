@@ -64,7 +64,9 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         setupContent()
         showCategory(.general)
 
-        window?.title = I18n.str("Preferences")
+        window?.titleVisibility = .hidden
+        window?.titlebarAppearsTransparent = true
+        window?.title = ""
         window?.toolbarStyle = .preference
     }
 
@@ -151,8 +153,6 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
             newVC.view.topAnchor.constraint(equalTo: prefsContentViewController.view.topAnchor),
             newVC.view.bottomAnchor.constraint(equalTo: prefsContentViewController.view.bottomAnchor),
         ])
-
-        window?.title = "\(I18n.str("Preferences")) - \(category.title)"
 
         sidebarView?.selectCategory(category)
     }

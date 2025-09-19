@@ -48,8 +48,8 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         // Setup scroll view constraints using contentView anchors for compatibility
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
 
             contentView.topAnchor.constraint(equalTo: scrollView.contentView.topAnchor),
@@ -61,17 +61,20 @@ final class TypographyPrefsViewController: BasePrefsViewController {
     }
 
     private func setupFontSection(in parentView: NSView) {
-        let sectionView = createSectionView(
-            title: I18n.str("Fonts"),
+        let (sectionView, _) = createSectionView(
             in: parentView,
             topAnchor: parentView.topAnchor,
             topConstant: 0
         )
 
+        let rowSpacing: CGFloat = 16
+        let topSpacing: CGFloat = rowSpacing
+        let horizontalInset: CGFloat = 24
+
         fontStackView = NSStackView()
         fontStackView.translatesAutoresizingMaskIntoConstraints = false
         fontStackView.orientation = .vertical
-        fontStackView.spacing = 12
+        fontStackView.spacing = rowSpacing
         fontStackView.alignment = .leading
         sectionView.addSubview(fontStackView)
 
@@ -109,37 +112,45 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         fontStackView.addArrangedSubview(presentationSizeRow)
 
         NSLayoutConstraint.activate([
-            fontStackView.topAnchor.constraint(equalTo: sectionView.topAnchor, constant: 35),
-            fontStackView.leadingAnchor.constraint(equalTo: sectionView.leadingAnchor, constant: 20),
-            fontStackView.trailingAnchor.constraint(lessThanOrEqualTo: sectionView.trailingAnchor, constant: -20),
+            fontStackView.topAnchor.constraint(equalTo: sectionView.topAnchor, constant: topSpacing),
+            fontStackView.leadingAnchor.constraint(equalTo: sectionView.leadingAnchor, constant: horizontalInset),
+            fontStackView.trailingAnchor.constraint(lessThanOrEqualTo: sectionView.trailingAnchor, constant: -horizontalInset),
             fontStackView.bottomAnchor.constraint(equalTo: sectionView.bottomAnchor, constant: -16),
         ])
     }
 
-    private func createSectionView(title: String, in parentView: NSView, topAnchor: NSLayoutAnchor<NSLayoutYAxisAnchor>, topConstant: CGFloat) -> NSView {
+    private func createSectionView(in parentView: NSView, topAnchor: NSLayoutAnchor<NSLayoutYAxisAnchor>, topConstant: CGFloat, title: String? = nil) -> (container: NSView, titleLabel: NSTextField?) {
         let containerView = NSView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
         containerView.wantsLayer = true
         containerView.layer?.backgroundColor = NSColor.clear.cgColor
 
-        let titleLabel = NSTextField(labelWithString: title)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.font = NSFont.boldSystemFont(ofSize: 13)
-        titleLabel.textColor = Theme.textColor
+        var titleLabel: NSTextField?
+        if let title = title {
+            let label = NSTextField(labelWithString: title)
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.font = NSFont.boldSystemFont(ofSize: 13)
+            label.textColor = Theme.textColor
+            containerView.addSubview(label)
+            titleLabel = label
+        }
 
-        containerView.addSubview(titleLabel)
         parentView.addSubview(containerView)
 
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: topAnchor, constant: topConstant),
             containerView.leadingAnchor.constraint(equalTo: parentView.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: parentView.trailingAnchor),
-
-            titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
-            titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
         ])
 
-        return containerView
+        if let titleLabel {
+            NSLayoutConstraint.activate([
+                titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
+                titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
+            ])
+        }
+
+        return (containerView, titleLabel)
     }
 
     private func createFontRow(label: String, fontAction: Selector, sizeAction: Selector) -> NSView {
@@ -148,6 +159,7 @@ final class TypographyPrefsViewController: BasePrefsViewController {
 
         let label = NSTextField(labelWithString: label)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.alignment = .left
 
         let fontPopUp = NSPopUpButton()
         fontPopUp.translatesAutoresizingMaskIntoConstraints = false
@@ -175,7 +187,7 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: rowView.leadingAnchor),
             label.centerYAnchor.constraint(equalTo: rowView.centerYAnchor),
-            label.widthAnchor.constraint(equalToConstant: 170),
+            label.widthAnchor.constraint(equalToConstant: 140),
 
             fontPopUp.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 16),
             fontPopUp.centerYAnchor.constraint(equalTo: rowView.centerYAnchor),
@@ -198,6 +210,7 @@ final class TypographyPrefsViewController: BasePrefsViewController {
 
         let label = NSTextField(labelWithString: label)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.alignment = .left
 
         let popUp = NSPopUpButton()
         popUp.translatesAutoresizingMaskIntoConstraints = false
@@ -221,7 +234,7 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: rowView.leadingAnchor),
             label.centerYAnchor.constraint(equalTo: rowView.centerYAnchor),
-            label.widthAnchor.constraint(equalToConstant: 170),
+            label.widthAnchor.constraint(equalToConstant: 140),
 
             popUp.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 16),
             popUp.centerYAnchor.constraint(equalTo: rowView.centerYAnchor),
@@ -240,6 +253,7 @@ final class TypographyPrefsViewController: BasePrefsViewController {
 
         let label = NSTextField(labelWithString: label)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.alignment = .left
 
         let popUp = NSPopUpButton()
         popUp.translatesAutoresizingMaskIntoConstraints = false
@@ -253,7 +267,7 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: rowView.leadingAnchor),
             label.centerYAnchor.constraint(equalTo: rowView.centerYAnchor),
-            label.widthAnchor.constraint(equalToConstant: 170),
+            label.widthAnchor.constraint(equalToConstant: 140),
 
             popUp.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 16),
             popUp.centerYAnchor.constraint(equalTo: rowView.centerYAnchor),
