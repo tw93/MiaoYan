@@ -96,7 +96,10 @@
 "Appearance & Language" = "外觀與語言";
 "Interface & Upload" = "介面與上傳";
 "Storage Location" = "儲存位置";
-"File Storage" = "檔案儲存";
+"Note Location" = "筆記位置";
+"Interface" = "介面";
+"Experience" = "體驗";
+"Typography" = "排版";
 
 /* 偏好設定 - 通用標籤 */
 "Appearance" = "外觀";

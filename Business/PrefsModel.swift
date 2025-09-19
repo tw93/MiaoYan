@@ -10,9 +10,9 @@ enum PrefsSection: CaseIterable, Sendable {
     @MainActor
     var title: String {
         switch self {
-        case .general: return I18n.str("General")
-        case .editor: return I18n.str("Editor")
-        case .typography: return I18n.str("Fonts")
+        case .general: return I18n.str("Interface")
+        case .editor: return I18n.str("Experience")
+        case .typography: return I18n.str("Typography")
         }
     }
 }
@@ -31,7 +31,7 @@ protocol SettingsConfigurable {
 @MainActor
 struct GeneralSettings: SettingsConfigurable {
     let category: PreferencesCategory = .general
-    let title: String = I18n.str("General")
+    let title: String = I18n.str("Interface")
 
     var appearanceType: AppearanceType {
         get { UserDefaultsManagement.appearanceType }
@@ -69,7 +69,7 @@ struct GeneralSettings: SettingsConfigurable {
 @MainActor
 struct EditorSettings: SettingsConfigurable {
     let category: PreferencesCategory = .editor
-    let title: String = I18n.str("Editor")
+    let title: String = I18n.str("Experience")
 
     var editorFontName: String {
         get { UserDefaultsManagement.fontName }

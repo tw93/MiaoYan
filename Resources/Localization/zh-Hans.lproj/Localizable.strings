@@ -193,7 +193,10 @@
 "No" = "否";
 "Appearance & Language" = "外观与语言";
 "Interface & Upload" = "界面与上传";
-"File Storage" = "文件存储";
+"Note Location" = "笔记位置";
+"Interface" = "界面";
+"Experience" = "体验";
+"Typography" = "排版";
 "Storage Location" = "存储位置";
 "Change" = "更改";
 "System" = "跟随系统";
