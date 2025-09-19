@@ -15,8 +15,8 @@ extension NSMutableAttributedString {
     public func applyEditorLetterSpacing(in range: NSRange, spacing: CGFloat? = nil) {
         let letterSpacing = spacing ?? UserDefaultsManagement.editorLetterSpacing
         guard letterSpacing != 0,
-              range.location < length,
-              range.upperBound <= length
+            range.location < length,
+            range.upperBound <= length
         else { return }
         addAttribute(.kern, value: letterSpacing as Any, range: range)
     }
@@ -36,16 +36,16 @@ extension NSMutableAttributedString {
 
         var offset = 0
         let filePathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
-        let titleKey    = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.title")
+        let titleKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.title")
 
         enumerateAttribute(.attachment, in: NSRange(location: 0, length: length)) { value, range, _ in
             guard let textAttachment = value as? NSTextAttachment,
-                  attribute(.todo, at: range.location, effectiveRange: nil) == nil
+                attribute(.todo, at: range.location, effectiveRange: nil) == nil
             else {
                 return
             }
 
-            let path  = self.extractImagePath(textAttachment: textAttachment, note: note, filePathKey: filePathKey)
+            let path = self.extractImagePath(textAttachment: textAttachment, note: note, filePathKey: filePathKey)
             let title = attribute(titleKey, at: range.location, effectiveRange: nil) as? String ?? ""
 
             guard let imagePath = path, !imagePath.isEmpty else { return }
@@ -88,8 +88,8 @@ extension NSMutableAttributedString {
         var offset = 0
         enumerateAttribute(.attachment, in: NSRange(location: 0, length: length)) { value, range, _ in
             guard value != nil,
-                  range.length == 1,
-                  let todoValue = attribute(.todo, at: range.location, effectiveRange: nil) as? Int
+                range.length == 1,
+                let todoValue = attribute(.todo, at: range.location, effectiveRange: nil) as? Int
             else {
                 return
             }

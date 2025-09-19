@@ -632,7 +632,7 @@ public class Note: NSObject {
         // Extract the original base name (remove existing Copy suffix if present)
         let baseName: String
         if fileName.hasSuffix(" Copy") {
-            baseName = String(fileName.dropLast(5)) // Remove " Copy"
+            baseName = String(fileName.dropLast(5))  // Remove " Copy"
         } else if let range = fileName.range(of: " Copy ") {
             baseName = String(fileName[..<range.lowerBound])
         } else {

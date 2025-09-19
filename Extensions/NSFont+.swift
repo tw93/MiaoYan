@@ -23,7 +23,7 @@ extension NSFont {
         CGFloat(ceilf(Float(ascender + abs(descender) + leading)))
     }
 
-    // MARK: - 这些方法会读取 UserDefaultsManagement → 标注 @MainActor
+    // MARK: - Methods accessing UserDefaultsManagement require @MainActor
 
     @MainActor
     static func italicFont() -> NSFont {

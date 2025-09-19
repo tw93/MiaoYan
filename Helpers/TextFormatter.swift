@@ -128,10 +128,18 @@ public class TextFormatter {
         guard range.length > 0 else {
             var diff = 0
             var text = storage.attributedSubstring(from: pRange).string
-            if text.starts(with: "   ") { diff = 3; text = String(text.dropFirst(3)) }
-            else if text.starts(with: "  ") { diff = 2; text = String(text.dropFirst(2)) }
-            else if text.starts(with: "\t") { diff = 1; text = String(text.dropFirst()) }
-            else { return }
+            if text.starts(with: "   ") {
+                diff = 3
+                text = String(text.dropFirst(3))
+            } else if text.starts(with: "  ") {
+                diff = 2
+                text = String(text.dropFirst(2))
+            } else if text.starts(with: "\t") {
+                diff = 1
+                text = String(text.dropFirst())
+            } else {
+                return
+            }
 
             guard text.isEmpty else { return }
             textView.insertText(text, replacementRange: pRange)
@@ -144,9 +152,7 @@ public class TextFormatter {
         string.enumerateLines { line, _ in
             var line = line
             if !line.isEmpty {
-                if line.first == "\t" { line = String(line.dropFirst()) }
-                else if line.starts(with: "   ") { line = String(line.dropFirst(3)) }
-                else if line.starts(with: "  ") { line = String(line.dropFirst(2)) }
+                if line.first == "\t" { line = String(line.dropFirst()) } else if line.starts(with: "   ") { line = String(line.dropFirst(3)) } else if line.starts(with: "  ") { line = String(line.dropFirst(2)) }
             }
             resultList.append(line)
         }
@@ -193,13 +199,15 @@ public class TextFormatter {
         let sRange = textView.selectedRange
 
         if sRange.location != 0 || sRange.location != storage.length,
-           paragraph.count == 1, note.isMarkdown() {
+            paragraph.count == 1, note.isMarkdown()
+        {
             insertText("\t", replacementRange: sRange)
             return
         }
 
         if sRange.location == 0 || sRange.location == storage.length,
-           paragraph.isEmpty, note.isMarkdown() {
+            paragraph.isEmpty, note.isMarkdown()
+        {
             if textView.textStorage?.length == 0 { EditTextView.shouldForceRescan = true }
             insertText("\t\n", replacementRange: sRange)
             setSelectedRange(NSRange(location: sRange.location + 1, length: 0))
@@ -220,7 +228,7 @@ public class TextFormatter {
 
     public static func getAutocompleteDigitsMatch(string: String) -> NSTextCheckingResult? {
         guard let regex = try? NSRegularExpression(pattern: "^(( |\\t)*[0-9]+\\. )"),
-              let result = regex.firstMatch(in: string, range: NSRange(0..<string.count))
+            let result = regex.firstMatch(in: string, range: NSRange(0..<string.count))
         else { return nil }
         return result
     }
@@ -276,8 +284,9 @@ public class TextFormatter {
         let selectedRange = textView.selectedRange
 
         if selectedRange.location != currentParagraphRange.location,
-           currentParagraphRange.upperBound - 2 < selectedRange.location,
-           currentParagraph.length >= 2 {
+            currentParagraphRange.upperBound - 2 < selectedRange.location,
+            currentParagraph.length >= 2
+        {
             if textView.selectedRange.upperBound > 2 {
                 let char = storage.attributedSubstring(from: NSRange(location: textView.selectedRange.upperBound - 2, length: 1))
                 if char.attribute(.todo, at: 0, effectiveRange: nil) != nil {
@@ -304,7 +313,8 @@ public class TextFormatter {
         }
 
         if selectedRange.location != currentParagraphRange.location,
-           currentParagraphRange.upperBound - 2 < selectedRange.location {
+            currentParagraphRange.upperBound - 2 < selectedRange.location
+        {
             if let charsMatch = TextFormatter.getAutocompleteCharsMatch(string: currentParagraph.string) {
                 matchChars(string: currentParagraph, match: charsMatch)
                 return
@@ -318,7 +328,8 @@ public class TextFormatter {
         var newLine = "\n"
 
         if currentParagraph.string.starts(with: "\t"),
-           let prefix = currentParagraph.string.getPrefixMatchSequentially(char: "\t") {
+            let prefix = currentParagraph.string.getPrefixMatchSequentially(char: "\t")
+        {
             if selectedRange.location != currentParagraphRange.location { newLine += prefix }
             let string = TextFormatter.getAttributedCode(string: newLine)
             insertText(string)
@@ -326,7 +337,8 @@ public class TextFormatter {
         }
 
         if currentParagraph.string.starts(with: "  "),
-           let prefix = currentParagraph.string.getPrefixMatchSequentially(char: " ") {
+            let prefix = currentParagraph.string.getPrefixMatchSequentially(char: " ")
+        {
             if selectedRange.location != currentParagraphRange.location { newLine += prefix }
             let string = TextFormatter.getAttributedCode(string: newLine)
             insertText(string)

@@ -142,7 +142,7 @@ class Storage {
     }
 
     private func checkTrashForVolume(url: URL) {
-        // 防止单独打开模式生成 Trash
+        // Skip trash creation in single file mode
         if UserDefaultsManagement.isSingleMode {
             return
         }
@@ -221,7 +221,7 @@ class Storage {
             added.append(project)
         }
 
-        // 防止单文件模式太卡
+        // Skip sub-project scanning in single file mode for performance
         if project.isRoot, !UserDefaultsManagement.isSingleMode {
             let addedSubProjects = checkSub(url: project.url, parent: project)
             added += addedSubProjects

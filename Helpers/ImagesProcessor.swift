@@ -65,7 +65,8 @@ public class ImagesProcessor {
                 let filePath = self.getFilePath(innerRange: innerRange)
 
                 if let localNotePath = self.getLocalNotePath(path: filePath, innerRange: innerRange),
-                   FileManager.default.fileExists(atPath: localNotePath) {
+                    FileManager.default.fileExists(atPath: localNotePath)
+                {
                     url = URL(fileURLWithPath: localNotePath)
                 } else if let fs = URL(string: filePath) {
                     url = fs
@@ -129,7 +130,8 @@ public class ImagesProcessor {
         }
 
         if path.starts(with: "http://") || path.starts(with: "https://"),
-           let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        {
             notePath = storagePath + "/i/" + encodedPath
             return notePath
         }
@@ -153,7 +155,8 @@ public class ImagesProcessor {
         var name: String?
 
         if path.starts(with: "http://") || path.starts(with: "https://"),
-           let webName = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            let webName = path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        {
             name = webName
         }
 
@@ -170,8 +173,7 @@ public class ImagesProcessor {
                 let destination = to.appendingPathComponent(pathComponent)
                 let icloud = destination.appendingPathExtension("icloud")
 
-                if FileManager.default.fileExists(atPath: destination.path) ||
-                   FileManager.default.fileExists(atPath: icloud.path) {
+                if FileManager.default.fileExists(atPath: destination.path) || FileManager.default.fileExists(atPath: icloud.path) {
                     pathComponent = NSUUID().uuidString.lowercased() + ".\(ext)"
                     continue
                 }

@@ -13,7 +13,7 @@ extension String {
     guard let parser = cmark_parser_new(CMARK_OPT_FOOTNOTES) else { return nil }
     defer { cmark_parser_free(parser) }
 
-    // 附加常见的 GFM 扩展
+    // Enable common GFM extensions
     let extensions = ["table", "emoji", "footnotes", "strikethrough", "tasklist"]
     for extName in extensions {
         if let ext = cmark_find_syntax_extension(extName) {
@@ -31,7 +31,7 @@ extension String {
         res = String(cString: cmark_render_html(node, CMARK_OPT_UNSAFE | CMARK_OPT_HARDBREAKS, nil))
     }
 
-    // 后处理：去除公式块内的 <br> 和 <br />
+    // Post-process: remove line breaks inside formula blocks
     let pattern = #"<p>(\$\$[\s\S]*?\$\$)<\/p>"#
     let regex = try? NSRegularExpression(pattern: pattern, options: [])
     let nsRes = res as NSString

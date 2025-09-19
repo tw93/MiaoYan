@@ -71,7 +71,7 @@ class NoteAttachment {
         return mutableAttributedString
     }
 
-  @MainActor public func cache(data: Data) {
+    @MainActor public func cache(data: Data) {
         guard shouldWriteCache, let url = imageCache else { return }
 
         do {

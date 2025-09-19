@@ -258,7 +258,6 @@ final class GeneralPrefsViewController: BasePrefsViewController {
     }
 
     override func setupValues() {
-        // Set current values
         appearancePopUp.selectItem(at: settings.appearanceType.rawValue)
 
         languagePopUp.selectItem(at: settings.defaultLanguage)
@@ -267,7 +266,6 @@ final class GeneralPrefsViewController: BasePrefsViewController {
             storagePathControl.url = URL(fileURLWithPath: storagePath)
         }
 
-        // Select localized display titles for current stored raw values
         buttonShowPopUp.selectItem(withTitle: localizedButtonShow(settings.buttonShow))
         alwaysOnTopPopUp.selectItem(withTitle: UserDefaultsManagement.alwaysOnTop ? I18n.str("Yes") : I18n.str("No"))
     }

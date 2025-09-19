@@ -7,12 +7,16 @@ class TitleBarView: NSView {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        refreshTrackingAreas()
+        Task { @MainActor in
+            refreshTrackingAreas()
+        }
     }
 
     override func layout() {
         super.layout()
-        refreshTrackingAreas()
+        Task { @MainActor in
+            refreshTrackingAreas()
+        }
     }
 
     override func mouseEntered(with event: NSEvent) {
@@ -25,7 +29,9 @@ class TitleBarView: NSView {
 
     override func updateTrackingAreas() {
         super.updateTrackingAreas()
-        refreshTrackingAreas()
+        Task { @MainActor in
+            refreshTrackingAreas()
+        }
     }
 
     private func refreshTrackingAreas() {

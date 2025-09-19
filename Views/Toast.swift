@@ -30,10 +30,12 @@ final class ToastManager {
         self.configuration = configuration
     }
 
-    func showToast(_ toast: NSView,
-                   in container: NSView,
-                   persistent: Bool = false,
-                   duration: TimeInterval? = nil) {
+    func showToast(
+        _ toast: NSView,
+        in container: NSView,
+        persistent: Bool = false,
+        duration: TimeInterval? = nil
+    ) {
 
         // Dismiss any existing toast
         dismissCurrentToast()
@@ -46,8 +48,9 @@ final class ToastManager {
         if persistent {
             toast.layer?.opacity = 0.92
         } else {
-            animateToastFade(toast,
-                             duration: duration ?? configuration.animationDuration)
+            animateToastFade(
+                toast,
+                duration: duration ?? configuration.animationDuration)
         }
     }
 
@@ -99,7 +102,7 @@ final class ToastManager {
             toast.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
             toast.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -32),
             toast.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor, constant: 32),
-            minW, maxW
+            minW, maxW,
         ])
     }
 
@@ -134,9 +137,11 @@ final class ToastManager {
 enum ToastFactory {
 
     @MainActor
-    static func makeToast(message: String,
-                          title: String? = nil,
-                          configuration: ToastConfiguration = .default) -> NSView {
+    static func makeToast(
+        message: String,
+        title: String? = nil,
+        configuration: ToastConfiguration = .default
+    ) -> NSView {
         let container = NSView()
         container.translatesAutoresizingMaskIntoConstraints = false
         container.wantsLayer = true
@@ -145,21 +150,25 @@ enum ToastFactory {
         container.layer?.masksToBounds = true
 
         if let title {
-            return makeTitleToast(container: container,
-                                  message: message,
-                                  title: title,
-                                  configuration: configuration)
+            return makeTitleToast(
+                container: container,
+                message: message,
+                title: title,
+                configuration: configuration)
         } else {
-            return makeSimpleToast(container: container,
-                                   message: message,
-                                   configuration: configuration)
+            return makeSimpleToast(
+                container: container,
+                message: message,
+                configuration: configuration)
         }
     }
 
     @MainActor
-    private static func makeSimpleToast(container: NSView,
-                                        message: String,
-                                        configuration: ToastConfiguration) -> NSView {
+    private static func makeSimpleToast(
+        container: NSView,
+        message: String,
+        configuration: ToastConfiguration
+    ) -> NSView {
         let label = makeLabel(message)
         container.addSubview(label)
 
@@ -169,16 +178,18 @@ enum ToastFactory {
             label.topAnchor.constraint(equalTo: container.topAnchor, constant: configuration.padding),
             label.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -configuration.padding),
 
-            label.heightAnchor.constraint(greaterThanOrEqualToConstant: configuration.minHeight)
+            label.heightAnchor.constraint(greaterThanOrEqualToConstant: configuration.minHeight),
         ])
         return container
     }
 
     @MainActor
-    private static func makeTitleToast(container: NSView,
-                                       message: String,
-                                       title: String,
-                                       configuration: ToastConfiguration) -> NSView {
+    private static func makeTitleToast(
+        container: NSView,
+        message: String,
+        title: String,
+        configuration: ToastConfiguration
+    ) -> NSView {
         let titleLabel = makeLabel(title, isTitle: true)
         let messageLabel = makeLabel(message)
 
@@ -196,7 +207,7 @@ enum ToastFactory {
             messageLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -configuration.padding),
 
             titleLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: configuration.minHeight),
-            messageLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: configuration.minHeight)
+            messageLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: configuration.minHeight),
         ])
 
         return container

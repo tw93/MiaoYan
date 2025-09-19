@@ -21,14 +21,15 @@ public class Project: Equatable {
     public var showInCommon: Bool
     public var showInSidebar: Bool = true
 
-    init(url: URL,
-         label: String? = nil,
-         isTrash: Bool = false,
-         isRoot: Bool = false,
-         parent: Project? = nil,
-         isDefault: Bool = false,
-         isExternal: Bool = false)
-    {
+    init(
+        url: URL,
+        label: String? = nil,
+        isTrash: Bool = false,
+        isRoot: Bool = false,
+        parent: Project? = nil,
+        isDefault: Bool = false,
+        isExternal: Bool = false
+    ) {
         self.url = url.resolvingSymlinksInPath()
         self.isTrash = isTrash
         self.isRoot = isRoot
@@ -49,7 +50,7 @@ public class Project: Equatable {
         }
 
         isCloudDrive = isCloudDriveFolder(url: url)
-        loadSettings() // Override defaults from cloud/local settings if available
+        loadSettings()  // Override defaults from cloud/local settings if available
     }
 
     func fileExist(fileName: String, ext: String) -> Bool {
@@ -79,7 +80,7 @@ public class Project: Equatable {
             .resolvingSymlinksInPath()
         {
             if FileManager.default.fileExists(atPath: iCloudDocumentsURL.path, isDirectory: nil),
-               url.path.contains(iCloudDocumentsURL.path)
+                url.path.contains(iCloudDocumentsURL.path)
             {
                 return true
             }
@@ -127,14 +128,14 @@ public class Project: Equatable {
                 }
 
                 if let sortString = settings["sortBy"] as? String,
-                   let sort = SortBy(rawValue: sortString)
+                    let sort = SortBy(rawValue: sortString)
                 {
                     if sort != .none {
                         sortBy = sort
                         sortBySettings = sort
 
                         if let directionString = settings["sortDirection"] as? String,
-                           let direction = SortDirection(rawValue: directionString)
+                            let direction = SortDirection(rawValue: directionString)
                         {
                             sortDirection = direction
                             sortDirectionSettings = direction
@@ -155,14 +156,14 @@ public class Project: Equatable {
             }
 
             if let sortString = settings.value(forKey: "sortBy") as? String,
-               let sort = SortBy(rawValue: sortString)
+                let sort = SortBy(rawValue: sortString)
             {
                 if sort != .none {
                     sortBy = sort
                     sortBySettings = sort
 
                     if let directionString = settings.value(forKey: "sortDirection") as? String,
-                       let direction = SortDirection(rawValue: directionString)
+                        let direction = SortDirection(rawValue: directionString)
                     {
                         sortDirection = direction
                         sortDirectionSettings = direction

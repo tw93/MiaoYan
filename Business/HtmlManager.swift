@@ -4,7 +4,6 @@ import WebKit
 /// HTML preview and processing utility class
 class HtmlManager {
 
-    // 读取 MainActor 隔离的 UserDefaultsManagement → 标注 @MainActor
     @MainActor
     static func previewStyle() -> String {
         if UserDefaultsManagement.magicPPT {
@@ -27,7 +26,6 @@ class HtmlManager {
         }
     }
 
-    // 文件处理保持非隔离；log 用 Task { @MainActor in ... } 回主线程
     static func processImages(in html: String, imagesStorage: URL) -> String {
         var htmlString = html
 
@@ -37,7 +35,7 @@ class HtmlManager {
 
             let images = results.compactMap { match -> (fullMatch: String, srcPath: String)? in
                 guard let fullRange = Range(match.range, in: html),
-                      let srcRange = Range(match.range(at: 1), in: html)
+                    let srcRange = Range(match.range(at: 1), in: html)
                 else { return nil }
                 return (String(html[fullRange]), String(html[srcRange]))
             }
@@ -121,7 +119,7 @@ class HtmlManager {
     @MainActor
     static func htmlFromTemplate(_ htmlString: String, css: String, currentName: String) throws -> String {
         guard let bundle = getDownViewBundle(),
-              let baseURL = getBaseURL(bundle: bundle)
+            let baseURL = getBaseURL(bundle: bundle)
         else {
             return ""
         }
@@ -161,7 +159,7 @@ class HtmlManager {
     @MainActor
     static func createTemporaryBundle(pageHTMLString: String) -> URL? {
         guard let bundle = getDownViewBundle(),
-              let bundleResourceURL = bundle.resourceURL
+            let bundleResourceURL = bundle.resourceURL
         else {
             return nil
         }
@@ -234,7 +232,7 @@ class HtmlManager {
         var matchRanges: [NSRange] = []
 
         do {
-            // 两类常见 HTML 片段：自闭合标签 + 成对标签
+            // Common HTML patterns: self-closing and paired tags
             let htmlPatterns = [
                 "<(?:img|br|hr|input|meta|link|area|base|col|embed|source|track|wbr)\\s*[^>]*/?\\s*>",
                 "<(\\w+)[^>]*>[^<]*</\\1>",
@@ -247,19 +245,19 @@ class HtmlManager {
             }
 
         } catch {
-            // 失败时不再触达 MainActor 上的 NotesTextProcessor，直接记录并放弃额外匹配
             Task { @MainActor in
                 AppDelegate.trackError(error, context: "HtmlManager.protectHTMLTags.regex")
             }
         }
 
-        // 从后往前替换，避免 range 失效
+        // Replace from back to front to avoid range invalidation
         matchRanges.sort { $0.location > $1.location }
 
         for range in matchRanges {
-            // 以 utf16 长度校验更安全
+            // UTF-16 length validation for safety
             guard range.location + range.length <= content.utf16.count,
-                  let swiftRange = Range(range, in: content) else { continue }
+                let swiftRange = Range(range, in: content)
+            else { continue }
 
             let htmlTag = String(content[swiftRange])
             let placeholder = "HTML_PLACEHOLDER_\(UUID().uuidString.prefix(8))"
@@ -276,7 +274,7 @@ class HtmlManager {
 
         let sortedPlaceholders = placeholders.sorted { (first, second) -> Bool in
             guard let firstRange = restoredContent.range(of: first.key),
-                  let secondRange = restoredContent.range(of: second.key)
+                let secondRange = restoredContent.range(of: second.key)
             else {
                 return false
             }
