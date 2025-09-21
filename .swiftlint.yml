@@ -1,14 +1,8 @@
-included: # paths to include during linting. `--path` is ignored if present.
-  - Common
-excluded: # paths to ignore during linting. Takes precedence over `included`.
-  - Pods
+included:
+  - .
 
-line_length:
-  warning: 240
-  ignores_function_declarations: true
-  ignores_comments: true
-  ignores_interpolated_strings: true
-  ignores_urls: true
+excluded:
+  - .build
 
 disabled_rules:
   - force_cast
@@ -20,3 +14,50 @@ disabled_rules:
   - type_name
   - identifier_name
   - opening_brace
+  - trailing_comma
+  - private_action
+  - private_outlet
+
+opt_in_rules:
+  - empty_count
+  - first_where
+  - shorthand_operator
+  - cyclomatic_complexity
+  - redundant_nil_coalescing
+  - contains_over_filter_count
+  - contains_over_filter_is_empty
+  - contains_over_first_not_nil
+  - empty_collection_literal
+  - sorted_first_last
+  - toggle_bool
+  - unavailable_function
+  - yoda_condition
+  - redundant_string_enum_value
+
+analyzer_rules:
+  - unused_import
+  - unused_declaration
+
+line_length:
+  warning: 240
+  error: 300
+  ignores_function_declarations: true
+  ignores_comments: true
+  ignores_interpolated_strings: true
+  ignores_urls: true
+
+cyclomatic_complexity:
+  warning: 15
+  error: 24
+
+file_length:
+  warning: 1500
+  error: 2500
+
+function_parameter_count:
+  warning: 5
+  error: 8
+
+large_tuple:
+  warning: 2
+  error: 3

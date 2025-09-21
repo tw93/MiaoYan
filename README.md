@@ -19,13 +19,13 @@
   <div align="center">轻灵的 Markdown 笔记本伴你写出妙言~</div>
 </p>
 
-<img src="https://raw.githubusercontent.com/tw93/static/master/pic/miaoyan.gif" width="900px" />
+<img src="https://raw.githubusercontent.com/tw93/static/master/miaoyan/newmiaoyan.gif" width="900px" />
 
 ## 特点
 
-- 🏂 **妙**：纯本地使用、安全、语法高亮、黑暗模式、源文件保存、国际化、演示模式、[PPT 模式](#妙言-ppt)、单独编辑模式、文档自动排版、文档导出、内部跳转、图床、LaTeX、Mermaid、PlantUML、Markmap 脑图
+- 🏂 **妙**：纯本地使用、语法高亮、PPT 演示、LaTeX、Mermaid 等
 - 🎊 **美**：极简的设计风格，文件夹 + 文件列表 + 编辑器方式 3 列模式
-- 🚄 **快**：使用 Swift5 原生开发，相比 Web 套壳方式性能体验好
+- 🚄 **快**：使用 Swift6 原生开发，相比 Web 套壳方式性能体验好
 - 🥛 **简**：很轻巧，纯编辑器输入体验，众多快捷键助你快人一步
 
 ## 首次使用
@@ -60,19 +60,10 @@
 
 🏂 此外还有很多快捷键 👆🏻 👇🏻 👈🏻 👉🏻 等着爱折腾的你去寻找~
 
-## 妙言 PPT
+## 使用指南
 
-<details>
-<summary>点击查看 PPT 模式效果演示</summary>
-
-<a href=https://gw.alipayobjects.com/zos/k/app2/123.gif target="_blank"><img src="https://user-images.githubusercontent.com/8736212/180579306-4f2504ee-8377-4d5c-b560-2d0d83ac12f6.gif" width="100%"></a>
-
-</details>
-
-1. 新朋友默认初始化会生成模版，如果是老朋友需升级到 1.0，可以 Copy [此文件](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/%E5%A6%99%E8%A8%80%20PPT.md) 到妙言玩一玩。
-2. 执行 `command + option + p` 可以启动妙言 PPT 预览，也可以选中文档点击右键，选择 `妙言 PPT` 打开。
-3. 只有在有 `---` 分隔符标志的文档中，才可启用 PPT 模式，演示过程中你可以 `回车键` 预览演讲大纲，`ESC` 键可退出 PPT 模式。
-4. 你可以使用 HTML 来自定义效果，更多复杂的用法可以参考 [Reveal](https://revealjs.com/markdown/) 文档。
+- [**Markdown 语法指南**](Resources/Initial/妙言%20Markdown%20语法指南.md)：完整语法演示，包含数学公式、Mermaid 图表、PlantUML、Markmap 脑图等高级功能
+- [**PPT 演示模式**](Resources/Initial/妙言%20PPT.md)：支持用 `---` 分隔幻灯片，`command + option + p` 启动演示，可自定义主题背景
 
 ## 为什么要做妙言
 
@@ -90,6 +81,7 @@
 
 - <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>：项目初始化代码参考于此，非常感谢作者
 - <a href="https://github.com/stackotter/swift-cmark-gfm" target="_blank">stackotter/swift-cmark-gfm</a>：快速高效的 Swift Markdown 解析器
+- <a href="https://github.com/simonbs/Prettier" target="_blank">simonbs/Prettier</a>：Swift Markdown 格式化工具，让妙言排版更加优雅
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>：语法高亮能力
 - <a href="https://tsanger.cn/product" target="_blank">仓耳字库</a>：一款漂亮的开源中文字体仓耳今楷，妙言将其作为默认字体
 - <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>：妙言 PPT 底层渲染依赖此框架
