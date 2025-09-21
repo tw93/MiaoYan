@@ -56,18 +56,18 @@
 "Fonts" = "フォント";
 "Editor Behavior" = "エディタの動作";
 "Preview" = "プレビュー";
-"Editor Font:" = "エディタフォント:";
+"Editor Font:" = "編集フォント:";
 "Preview Font:" = "プレビューフォント:";
 "Interface Font:" = "インターフェースフォント:";
 "Code Font:" = "コードフォント:";
-"Presentation Font Size:" = "プレゼン用フォントサイズ:";
+"Presentation Font Size:" = "プレゼンサイズ:";
 "Preview Location:" = "プレビュー位置:";
 "Preview Width:" = "プレビュー幅:";
-"Appearance:" = "外観:";
-"Language:" = "言語:";
+"Appearance:" = "外観色:";
+"Language:" = "インターフェース言語:";
 "Button Display:" = "ボタン表示:";
 "Always On Top:" = "常に最前面:";
-"Activate Shortcut:" = "起動ショートカット:";
+"Activate Shortcut:" = "ショートカット起動:";
 "Yes" = "はい";
 "No" = "いいえ";
 
@@ -205,10 +205,6 @@
 "Confirm" = "確認";
 
 /* Font Names */
-"font.tsanger" = "蒼耳今楷";
-"font.lxgw" = "霞鶩文楷";
-"font.system" = "システムフォント";
-"font.times" = "Times New Roman";
 
 /* ClipboardManager Messages */
 "Image uploaded successfully" = "画像のアップロードが成功しました";

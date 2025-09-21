@@ -149,10 +149,6 @@
 "Confirm" = "确定";
 
 /* Font Names */
-"font.tsanger" = "仓耳今楷";
-"font.lxgw" = "霞鹜文楷";
-"font.system" = "系统字体";
-"font.times" = "新罗马体";
 
 /* Preferences Categories */
 "General" = "通用";
@@ -163,11 +159,11 @@
 "Editor Behavior" = "编辑器行为";
 "Preview Settings" = "预览设置";
 "Preview" = "预览";
-"Editor Font:" = "编辑器字体:";
+"Editor Font:" = "编辑字体:";
 "Interface Font:" = "界面字体:";
 "Preview Font:" = "预览字体:";
 "Code Font:" = "代码字体:";
-"Presentation Font Size:" = "演示字体大小:";
+"Presentation Font Size:" = "演示大小:";
 "Line Break:" = "换行方式:";
 "Code Background:" = "代码背景:";
 "Preview Location:" = "预览位置:";
@@ -185,10 +181,10 @@
 "Upload Service:" = "上传服务:";
 
 /* General Settings Labels */
-"Appearance:" = "外观:";
-"Language:" = "语言:";
+"Appearance:" = "外观颜色:";
+"Language:" = "界面语言:";
 "Always On Top:" = "置顶显示:";
-"Activate Shortcut:" = "唤起快捷键:";
+"Activate Shortcut:" = "快捷唤起:";
 "Yes" = "是";
 "No" = "否";
 "Appearance & Language" = "外观与语言";
@@ -196,7 +192,7 @@
 "Note Location" = "笔记位置";
 "Interface" = "界面";
 "Experience" = "体验";
-"Typography" = "排版";
+"Typography" = "编辑";
 "Storage Location" = "存储位置";
 "Change" = "更改";
 "System" = "跟随系统";

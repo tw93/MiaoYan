@@ -99,7 +99,7 @@
 "Note Location" = "筆記位置";
 "Interface" = "介面";
 "Experience" = "體驗";
-"Typography" = "排版";
+"Typography" = "編輯";
 
 /* 偏好設定 - 通用標籤 */
 "Appearance" = "外觀";
@@ -110,18 +110,18 @@
 "Fonts" = "字體";
 "Editor Behavior" = "編輯器行為";
 "Preview" = "預覽";
-"Editor Font:" = "編輯器字體:";
+"Editor Font:" = "編輯字體:";
 "Preview Font:" = "預覽字體:";
 "Interface Font:" = "介面字體:";
 "Code Font:" = "程式碼字體:";
-"Presentation Font Size:" = "簡報字體大小:";
+"Presentation Font Size:" = "簡報大小:";
 "Preview Location:" = "預覽位置:";
 "Preview Width:" = "預覽寬度:";
-"Appearance:" = "外觀:";
-"Language:" = "語言:";
+"Appearance:" = "外觀顏色:";
+"Language:" = "介面語言:";
 "Button Display:" = "按鈕顯示:";
 "Always On Top:" = "置頂顯示:";
-"Activate Shortcut:" = "喚起快捷鍵:";
+"Activate Shortcut:" = "快捷喚起:";
 "Yes" = "是";
 "No" = "否";
 
@@ -184,10 +184,6 @@
 "View" = "顯示方式";
 
 /* Font Names */
-"font.tsanger" = "倉耳今楷";
-"font.lxgw" = "霞鶩文楷";
-"font.system" = "系統字體";
-"font.times" = "新羅馬體";
 
 /* ClipboardManager Messages */
 "Image uploaded successfully" = "圖片上傳成功";
