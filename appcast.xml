@@ -2,6 +2,35 @@
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
   <channel>
     <title>妙言 / MiaoYan</title>
+      <item>
+      <title>2.0.0</title>
+      <description><![CDATA[
+     <h3>新面孔 🎉:</h3>
+      <ol>
+        <li>🎨 全新图标设计更清晰美观，主题切换更流畅，分割线与背景色更统一</li>
+        <li>⚙️ 设置面板重构，支持顶部导航和快捷键操作，字体和语言设置体验优化，ESC/→ 键切换更便捷</li>
+        <li>🔍 修复标题和搜索框切换问题，搜索框标准化，搜索逻辑优化支持空输入</li>
+        <li>🖼️ 异步图片上传更丝滑，预览性能优化，编辑状态下体验更一致</li>
+        <li>📤 导出效果优化，生成内容更加稳定，排版显示更精致</li>
+        <li>🚀 项目全面升级到 Swift 6，优化代码实现和注释，适配新特性提升应用性能和稳定性</li>
+        <li>🔧 移除推荐字体依赖，代码结构重构，撤销重做功能优化并修复字体选择问题</li>
+      </ol>
+
+      <h3>New Face 🎉:</h3>
+      <ol>
+        <li>🎨 Brand-new icon design clearer and more beautiful, smoother theme switching with standardized divider colors and unified background</li>
+        <li>⚙️ Settings panel redesigned with top navigation and keyboard shortcuts, improved font & language experience, added ESC/→ key switching</li>
+        <li>🔍 Fixed title and search box switching issues, standardized search box, optimized search behavior to handle empty input</li>
+        <li>🖼️ Asynchronous image upload for smoother experience, optimized preview performance, improved consistency in editing state</li>
+        <li>📤 Optimized export effects with more stable output and refined layout display</li>
+        <li>🚀 Comprehensive upgrade to Swift 6 with optimized code implementation and annotations, adapted to new features for improved performance and stability</li>
+        <li>🔧 Removed recommended font dependencies, refactored code structure, optimized undo/redo functionality and fixed font selection issues</li>
+      </ol>
+          ]]>      </description>
+      <pubDate>周日, 21 09月 2025 23:00:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.0.0.zip" sparkle:shortVersionString="2.0.0" sparkle:version="2.0.0" sparkle:edSignature="kdVQJzb4kEHZmSJx2eOzfBT0lUvxjzjtTpgUOdJHUEmURcePKQ4ZQdCKmBFcRP+fVEa5cNbBx5mBooCpptBJBw==" length="21259873" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+    </item>
     <item>
       <title>1.18.3</title>
       <description><![CDATA[
@@ -121,32 +150,6 @@
           ]]>      </description>
       <pubDate>周日, 26 05月 2024 23:00:20 +0800</pubDate>
       <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.15.1.zip" sparkle:shortVersionString="1.15.1" sparkle:version="1.15.1" sparkle:edSignature="6wIdCZlZVZANiiQKe0C+a+Q8i9OVdC+k1Yd0YaT7oo1/gLnJT/wfIrgWUzUPnobfa2CDjtp42SiYdr2bs1n8Dw==" length="21905469" type="application/octet-stream" />
-      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
-    </item>
-    <item>
-      <title>1.14.1</title>
-      <description><![CDATA[
-      <h3>更精确 🍇：</h3>
-       <ol>
-        <li>妙言 PPT 模式下使用体验优化，无需首次触发，预发效果增强</li>
-        <li>修复下划线高亮识别、预览按钮状态、单独模式打开问题、项目列表栏拖动异常 Bug</li>
-        <li>多语言配置情况下的补全和查漏补缺以及大小写规范，花了点时间兼容 XCode15</li>
-       </ol>
-      <h3>More Accurate 🍇:</h3>
-       <ol>
-        <li>Enhanced user experience in MiaoYan PPT mode, activation not required initially, improved pre-launch effect.</li>
-        <li>Fixed bugs with underline recognition, preview button state, opening in single mode, and dragging issues in the project list column.</li>
-        <li>Completed and patched missing parts in multi-language configurations, and conformed to case standards, spent some time compatible with XCode15.</li>
-       </ol>
-      <h3>より正確に 🍇：</h3>
-      <ol>
-          <li>妙言 PPT モードでの使用体験を最適化し、初回トリガーが不要で、事前発行効果が強化されました。</li>
-          <li>下線のハイライト認識、プレビューボタンの状態、単独モードでの開き、プロジェクトリスト列のドラッグのバグを修正しました。</li>
-          <li>複数言語の設定における補完、漏れの確認と修正、およびケーススタンダードへの対応に時間をかけ、XCode15との互換性を持たせました。</li>
-      </ol>
-          ]]>      </description>
-      <pubDate>周二, 12 12月 2023 23:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.14.1.zip" sparkle:shortVersionString="1.14.1" sparkle:version="1.14.1" sparkle:edSignature="gOEMnoC1BwBwK2Kgwh50u5LCAoDggfbvVUshleEyFHQH5hKzmaVGcw1VZGh7ZEoDNEpMamMpbbGKE5A3ovYiAg==" length="20893148" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
     </item>
   </channel>
