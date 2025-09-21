@@ -2,6 +2,9 @@
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
   <channel>
     <title>妙言 / MiaoYan</title>
+      <item>
+      <title>2.0.0</title>
+      <description><![CDATA[
       <h3>新面孔 🎉:</h3>
       <ol>
         <li>全新图标设计更清晰美观，主题切换更流畅</li>
