@@ -9,7 +9,7 @@
 
 - 🏂 **Fantastic**: Pure local use, secure, syntax highlighting, dark mode, source file saving, internationalization, presentation mode, [PPT mode](#miaoyan-ppt), single edit mode, document auto-formatting, document export, internal jumps, image hosting, LaTeX, Mermaid, PlantUML, Markmap mind maps
 - 🎊 **Beautiful**: Minimalist design style, folder + file list + editor 3-column mode
-- 🚄 **Fast**: Native development using Swift5, better performance experience compared to web-based solutions
+- 🚄 **Fast**: Native development using Swift6, better performance experience compared to web-based solutions
 - 🥛 **Simple**: Very lightweight, pure editor input experience, many shortcuts to help you move faster
 
 ## First Use

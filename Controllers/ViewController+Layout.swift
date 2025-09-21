@@ -32,7 +32,8 @@ extension ViewController {
         }
 
         let named = NSColor(named: "divider") ?? NSColor.separatorColor
-        let appearance = view.effectiveAppearance
+        // Use the current app appearance instead of view's effectiveAppearance to avoid timing issues
+        let appearance = NSApp.effectiveAppearance
         var cg: CGColor?
         appearance.performAsCurrentDrawingAppearance {
             cg = named.cgColor

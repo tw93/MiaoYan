@@ -20,13 +20,13 @@
   <div align="center">轻灵的 Markdown 笔记本伴你写出妙言~</div>
 </p>
 
-<img src="https://raw.githubusercontent.com/tw93/static/master/pic/miaoyan.gif" width="900px" />
+<img src="https://raw.githubusercontent.com/tw93/static/master/miaoyan/newmiaoyan.gif" width="900px" />
 
 ## 特点
 
-- 🏂 **妙**：纯本地使用、安全、语法高亮、黑暗模式、PPT 演示、LaTeX 数学公式、Mermaid 图表
+- 🏂 **妙**：纯本地使用、语法高亮、PPT 演示、LaTeX、Mermaid 等
 - 🎊 **美**：极简的设计风格，文件夹 + 文件列表 + 编辑器方式 3 列模式
-- 🚄 **快**：使用 Swift5 原生开发，相比 Web 套壳方式性能体验好
+- 🚄 **快**：使用 Swift6 原生开发，相比 Web 套壳方式性能体验好
 - 🥛 **简**：很轻巧，纯编辑器输入体验，众多快捷键助你快人一步
 
 ## 首次使用

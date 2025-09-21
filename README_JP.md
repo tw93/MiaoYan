@@ -18,13 +18,13 @@
   <div align="center">軽量のMarkdownアプリで、素晴らしい文章を生み出せます</div>
 </p>
 
-<img src="https://raw.githubusercontent.com/tw93/static/master/pic/miaoyan.gif" width="900px" />
+<img src="https://raw.githubusercontent.com/tw93/static/master/miaoyan/newmiaoyan.gif" width="900px" />
 
 ## 機能
 
 - 🏂 **素晴らしい**: ローカル利用、セキュリティ、シンタックスハイライト、ダークモード、PPTプレゼンテーション、LaTeX数学式、Mermaid図表
 - 🎊 **美しさ**: ミニマリストのデザインスタイル、フォルダ+ファイルリスト+エディタの 3 カラムモード。
-- 🚄‍ **高速**: Swift5 ネイティブ開発を使用しており、Web と比較してパフォーマンス体験がはるかに良い。
+- 🚄‍ **高速**: Swift6 ネイティブ開発を使用しており、Web と比較してパフォーマンス体験がはるかに良い。
 - 🥛 **シンプル**: とても軽量で、純粋なエディタ入力体験、多くのショートカットキーで高速化が実現。
 
 ## 最初の使用
