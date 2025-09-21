@@ -220,6 +220,7 @@ extension ViewController {
         UserDataService.instance.focusOnImport = newUrl
 
         if note.url.path == newUrl.path {
+            updateTitleAndFinishImport(note: note, title: value)
             return
         }
 
@@ -227,9 +228,20 @@ extension ViewController {
 
         do {
             try FileManager.default.moveItem(at: url, to: newUrl)
+            updateTitleAndFinishImport(note: note, title: value)
         } catch {
             note.overwrite(url: url)
+            note.parseURL()
+            let originalTitle = note.getTitleWithoutLabel()
+            updateTitleAndFinishImport(note: note, title: originalTitle)
         }
+    }
+
+    private func updateTitleAndFinishImport(note: Note, title: String) {
+        note.title = title
+        titleLabel.setStringValueSafely(title)
+        titleLabel.updateNotesTableView()
+        UserDataService.instance.focusOnImport = nil
     }
 
     @IBAction func finderMenu(_ sender: NSMenuItem) {
@@ -762,6 +774,15 @@ extension ViewController {
 
         let moveMenuItem = NSMenuItem()
         moveMenuItem.title = I18n.str("Move")
+        moveMenuItem.identifier = NSUserInterfaceItemIdentifier("noteMenu.move")
+
+        if #available(macOS 11.0, *),
+            let symbolName = MenuIconRegistry.symbol(for: moveMenuItem),
+            let image = NSImage(systemSymbolName: symbolName, accessibilityDescription: moveMenuItem.title)
+        {
+            image.isTemplate = true
+            moveMenuItem.image = image
+        }
 
         noteMenu.addItem(moveMenuItem)
         let moveMenu = NSMenu()

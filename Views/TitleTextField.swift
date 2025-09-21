@@ -61,13 +61,10 @@ class TitleTextField: NSTextField {
 
     public func updateNotesTableView() {
         guard let vc = ViewController.shared(),
-            let note = EditTextView.note
+            let note = vc.notesTableView.getSelectedNote()
         else { return }
 
-        let title = note.title
         vc.notesTableView.reloadRow(note: note)
-        if !title.isEmpty {
-            note.title = title
-        }
+        vc.titleLabel.isEditable = true
     }
 }

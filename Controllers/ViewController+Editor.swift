@@ -552,9 +552,29 @@ extension ViewController {
             title = String()
         }
 
+        // Temporarily disable title change tracking to avoid overwriting pending changes
+        UserDataService.instance.isUpdatingTitle = true
         titleLabel.setStringValueSafely(title)
+        UserDataService.instance.isUpdatingTitle = false
         titleLabel.currentEditor()?.selectedRange = NSRange(location: title.utf16.count, length: 0)
         MainWindowController.shared()?.title = appName
+    }
+
+    func controlTextDidChange(_ obj: Notification) {
+        guard let textField = obj.object as? NSTextField, textField == titleLabel else {
+            return
+        }
+
+        // Don't track changes during programmatic updates
+        guard !UserDataService.instance.isUpdatingTitle else {
+            return
+        }
+
+        // Store the current edited title and the note it belongs to for later use
+        if let currentNote = EditTextView.note {
+            let currentTitle = titleLabel.stringValue.trimmingCharacters(in: NSCharacterSet.newlines)
+            UserDataService.instance.pendingTitleChange = (title: currentTitle, note: currentNote)
+        }
     }
 
     func controlTextDidEndEditing(_ obj: Notification) {
@@ -565,8 +585,11 @@ extension ViewController {
         if shouldProcess() {
             saveTitleSafely()
             restoreFocus()
+            // Clear pending change since we processed it
+            UserDataService.instance.pendingTitleChange = nil
         } else {
             refreshTitle()
+            // Keep pending change for handleSelectionChange to process
         }
     }
 
@@ -590,16 +613,51 @@ extension ViewController {
     }
 
     private func saveTitleSafely() {
-        guard let note = notesTableView.getSelectedNote() else { return }
+        let targetNote: Note?
+        let titleToSave: String
 
-        let newTitle = clean(titleLabel.stringValue)
+        if let pendingChange = UserDataService.instance.pendingTitleChange {
+            // Use tracked changes to save to the correct note
+            targetNote = pendingChange.note
+            titleToSave = pendingChange.title
+        } else {
+            // Fall back to selected note with safety check
+            targetNote = notesTableView.getSelectedNote()
+            titleToSave = clean(titleLabel.stringValue)
+
+            // Ensure title matches the selected note to prevent data corruption
+            if let note = targetNote {
+                let currentNoteTitle = note.getTitleWithoutLabel()
+                if titleToSave != currentNoteTitle {
+                    return  // Skip save if title doesn't match note
+                }
+            }
+        }
+
+        guard let note = targetNote else { return }
+
+        let newTitle = titleToSave.trimmingCharacters(in: NSCharacterSet.newlines)
         guard !newTitle.isEmpty else { return }
 
         let currentName = note.getFileName()
         guard currentName != newTitle else { return }
 
         let result = attemptSave(note: note, title: newTitle, current: currentName)
-        handleResult(result, title: newTitle)
+        handleResult(result, title: newTitle, note: note)
+    }
+
+    public func saveTitle(_ title: String, to note: Note) {
+        let newTitle = title.trimmingCharacters(in: NSCharacterSet.newlines)
+        guard !newTitle.isEmpty else { return }
+
+        let currentName = note.getFileName()
+        guard currentName != newTitle else { return }
+
+        let result = attemptSave(note: note, title: newTitle, current: currentName)
+        if case .success = result {
+            note.title = newTitle
+            notesTableView.reloadRow(note: note)
+        }
     }
 
     private func clean(_ title: String) -> String {
@@ -627,11 +685,12 @@ extension ViewController {
             .replacingOccurrences(of: "/", with: ":")
     }
 
-    private func handleResult(_ result: SaveResult, title: String) {
+    private func handleResult(_ result: SaveResult, title: String, note: Note) {
         switch result {
         case .success:
             updateTitle(newTitle: title)
-            titleLabel.updateNotesTableView()
+            notesTableView.reloadRow(note: note)
+            titleLabel.isEditable = true
         case .exists:
             updateTitle(newTitle: title)
             titleLabel.resignFirstResponder()
