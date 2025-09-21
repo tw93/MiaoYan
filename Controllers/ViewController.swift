@@ -224,8 +224,6 @@ class ViewController:
         checkSidebarConstraint()
         checkTitlebarTopConstraint()
         configureMenuIcons()
-        // Set divider color early to prevent startup flash
-        updateDividers()
         #if CLOUDKIT
             registerKeyValueObserver()
         #endif
@@ -282,7 +280,6 @@ class ViewController:
     }
 
     func handleForAppMode() {
-        updateDividers()
         refreshMiaoYanNum()
         if UserDefaultsManagement.isSingleMode {
             toastInSingleMode()

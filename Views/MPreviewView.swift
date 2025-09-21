@@ -98,7 +98,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         }
 
         let darkColor = NSColor(srgbRed: 0x23 / 255.0, green: 0x28 / 255.0, blue: 0x2D / 255.0, alpha: 1.0)
-        return determineDarkTheme() ? darkColor : NSColor.white
+        return determineDarkTheme() ? darkColor : Theme.backgroundColor
     }
 
     // MARK: - Appearance Update
@@ -448,8 +448,6 @@ class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
         guard let vc = ViewController.shared() else { return }
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
         if message == "" {
-            vc.setDividerColor(for: vc.splitView, hidden: true)
-            vc.setDividerColor(for: vc.sidebarSplitView, hidden: true)
             vc.titleLabel.backgroundColor = Theme.backgroundColor
         } else {
             vc.sidebarSplitView.setValue(NSColor(css: message), forKey: "dividerColor")

@@ -8,14 +8,15 @@ class EditorSplitView: NSSplitView, NSSplitViewDelegate {
         super.awakeFromNib()
         MainActor.assumeIsolated { [self] in
             delegate = self
-            // Pre-apply divider color to avoid initial flash before controller updates
-            if let vc = ViewController.shared() {
-                let hidden = (subviews.first?.frame.width ?? 0) == 0
-                vc.setDividerColor(for: self, hidden: hidden)
-            } else {
-                self.setValue(Theme.backgroundColor, forKey: "dividerColor")
-            }
+            setValue(NSColor(named: "divider"), forKey: "dividerColor")
         }
+    }
+
+    func updateDividerVisibility() {
+        let notelistWidth = subviews.first?.frame.width ?? 0
+        let shouldHide = notelistWidth == 0 || shouldHideDivider
+        let dividerColor = shouldHide ? Theme.backgroundColor : NSColor(named: "divider")
+        setValue(dividerColor, forKey: "dividerColor")
     }
 
     override func minPossiblePositionOfDivider(at dividerIndex: Int) -> CGFloat {
@@ -46,6 +47,7 @@ class EditorSplitView: NSSplitView, NSSplitViewDelegate {
     }
 
     func splitViewDidResizeSubviews(_ notification: Notification) {
+        updateDividerVisibility()
         ViewController.shared()?.viewDidResize()
     }
 
@@ -59,8 +61,6 @@ class EditorSplitView: NSSplitView, NSSplitViewDelegate {
         super.mouseUp(with: event)
 
         if let vc = ViewController.shared() {
-            vc.updateDividers()
-
             // Save notelist width when drag ends
             let notelistWidth = vc.splitView.subviews[0].frame.width
             if notelistWidth > 0 {

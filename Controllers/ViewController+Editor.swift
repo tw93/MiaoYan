@@ -14,13 +14,10 @@ extension ViewController {
         isFocusedTitle = titleLabel.hasFocus()
         cancelTextSearch()
         editArea.window?.makeFirstResponder(notesTableView)
-        // Keep WebView alive: hide first, then show with animation after content update
         if let webView = editArea.markdownView {
             webView.alphaValue = 0.0
             webView.isHidden = false
-            // Update content first, then show animation
             refillEditArea()
-            // Brief delay to ensure content loads before showing
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                 NSAnimationContext.runAnimationGroup({ context in
                     context.duration = 0.2
@@ -47,7 +44,6 @@ extension ViewController {
         if UserDefaultsManagement.currentEditorMode == .preview {
             UserDefaultsManagement.magicPPT = false
         }
-        // Keep WebView alive: hide and clear content
         if let webView = editArea.markdownView {
             NSAnimationContext.runAnimationGroup(
                 { context in
@@ -100,8 +96,6 @@ extension ViewController {
         hideNoteList("")
         formatButton.isHidden = true
         previewButton.isHidden = true
-        // Show preview content without changing global preview mode
-        // Maintains presentation state to prevent mode conflicts
         if editArea.markdownView == nil {
             refillEditArea(previewOnly: true, force: true)
         } else {
@@ -128,7 +122,6 @@ extension ViewController {
     }
 
     func disablePresentation() {
-        // Defer presentation flag update until UI is fully restored to prevent state conflicts
         presentationButton.state = .off
         if UserDefaultsManagement.fullScreen {
             UserDefaultsManagement.fullScreen = false
