@@ -4,6 +4,11 @@ import Foundation
 import TelemetryDeck
 
 @MainActor
+private enum UIConstants {
+    static let allItemRowHeight: CGFloat = 48
+    static let defaultRowHeight: CGFloat = 34
+}
+
 class SidebarProjectView: NSOutlineView,
     NSOutlineViewDelegate,
     NSOutlineViewDataSource,
@@ -337,9 +342,9 @@ class SidebarProjectView: NSOutlineView,
     func outlineView(_ outlineView: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
         if let sidebarItem = item as? SidebarItem {
             if sidebarItem.type == .All {
-                return 48
+                return UIConstants.allItemRowHeight
             }
-            return 34
+            return UIConstants.defaultRowHeight
         }
         return 24
     }
@@ -410,10 +415,11 @@ class SidebarProjectView: NSOutlineView,
                 ]
             ])
             let accentFontSize = baseFont.pointSize + 2
-            let accentFont = NSFont(
-                descriptor: accentFontDescriptor,
-                size: accentFontSize
-            ) ?? NSFont.systemFont(ofSize: accentFontSize, weight: .semibold)
+            let accentFont =
+                NSFont(
+                    descriptor: accentFontDescriptor,
+                    size: accentFontSize
+                ) ?? NSFont.systemFont(ofSize: accentFontSize, weight: .semibold)
 
             let defaultSpacing: CGFloat = 4
             let accentSpacing: CGFloat = 4
@@ -423,9 +429,9 @@ class SidebarProjectView: NSOutlineView,
             let updateIconLeading: (CGFloat) -> Void = { leading in
                 if let constraint = cell.constraints.first(where: {
                     guard ($0.firstItem as? NSView) === cell.icon,
-                          $0.firstAttribute == .leading,
-                          ($0.secondItem as? NSView) === cell,
-                          $0.secondAttribute == .leading
+                        $0.firstAttribute == .leading,
+                        ($0.secondItem as? NSView) === cell,
+                        $0.secondAttribute == .leading
                     else {
                         return false
                     }
@@ -454,9 +460,9 @@ class SidebarProjectView: NSOutlineView,
 
                 if let constraint = cell.constraints.first(where: {
                     guard ($0.firstItem as? NSView) === cell.label,
-                          $0.firstAttribute == .leading,
-                          ($0.secondItem as? NSView) === cell,
-                          $0.secondAttribute == .leading
+                        $0.firstAttribute == .leading,
+                        ($0.secondItem as? NSView) === cell,
+                        $0.secondAttribute == .leading
                     else {
                         return false
                     }
