@@ -15,6 +15,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         window?.titlebarAppearsTransparent = true
         windowFrameAutosaveName = "myMainWindow"
         window?.restorationClass = MainWindowController.self
+        window?.delegate = self
 
         // Apply always-on-top preference based on user settings
         if UserDefaultsManagement.alwaysOnTop {
@@ -25,15 +26,12 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
 
         applyMiaoYanAppearance()
 
-        // 提前刷新分割线颜色，避免窗口首次显示时颜色闪烁
-        if let vc = ViewController.shared() {
-            vc.updateDividers()
-        }
     }
 
     func windowDidResize(_ notification: Notification) {
         refreshEditArea()
     }
+
 
     func makeNew() {
         window?.makeKeyAndOrderFront(self)
@@ -139,15 +137,6 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
             contentView.layer?.backgroundColor = backgroundColor.cgColor
         }
 
-        DispatchQueue.main.async { [weak window] in
-            guard
-                let viewController = window?.contentViewController as? ViewController
-            else {
-                return
-            }
-
-            viewController.updateDividers()
-        }
     }
 
     // MARK: - NSWindowRestoration

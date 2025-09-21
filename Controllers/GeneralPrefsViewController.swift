@@ -20,7 +20,6 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         scrollView.hasVerticalScroller = true
         scrollView.hasHorizontalScroller = false
         scrollView.borderType = .noBorder
-        // Let the NSVisualEffectView provide adaptive background
         scrollView.drawsBackground = false
         scrollView.backgroundColor = .clear
         view.addSubview(scrollView)
@@ -31,10 +30,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         contentView.layer?.backgroundColor = NSColor.clear.cgColor
         scrollView.documentView = contentView
 
-        // Sections: General appearance & language (includes storage)
         setupAppearanceSection(in: contentView)
-
-        // Setup scroll view constraints using contentView anchors for compatibility
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -68,11 +64,9 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         stackView.alignment = .leading
         sectionView.addSubview(stackView)
 
-        // File storage (configure first)
         let storageRow = createStorageRow(controlWidth: controlWidth)
         let storageSeparator = createSeparatorView()
 
-        // Appearance theme
         appearancePopUp = NSPopUpButton()
         appearancePopUp.translatesAutoresizingMaskIntoConstraints = false
         appearancePopUp.target = self
@@ -82,7 +76,6 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         appearancePopUp.addItem(withTitle: I18n.str("Light"))
         appearancePopUp.addItem(withTitle: I18n.str("Dark"))
 
-        // Button display (moved into Appearance section)
         buttonShowPopUp = NSPopUpButton()
         buttonShowPopUp.translatesAutoresizingMaskIntoConstraints = false
         buttonShowPopUp.target = self
@@ -96,7 +89,6 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         languagePopUp.target = self
         languagePopUp.action = #selector(languageChanged(_:))
 
-        // Add language options
         let languages = [
             LanguageType(rawValue: 0x00),
             LanguageType(rawValue: 0x01),
@@ -116,8 +108,6 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         alwaysOnTopPopUp.addItem(withTitle: I18n.str("No"))
         alwaysOnTopPopUp.addItem(withTitle: I18n.str("Yes"))
 
-        // Recorder control provided by KeyboardShortcuts
-        // Use recorder without forcing a default on clear so user can set Command+Option+M again
         activateShortcutRecorder = KeyboardShortcuts.RecorderCocoa(for: .activateWindow)
         activateShortcutRecorder.translatesAutoresizingMaskIntoConstraints = false
         let appearanceRow = createPreferencesRow(labelText: I18n.str("Appearance:"), control: appearancePopUp, controlWidth: controlWidth)
@@ -288,34 +278,25 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         if let appearanceType = AppearanceType(rawValue: sender.indexOfSelectedItem) {
             settings.appearanceType = appearanceType
 
-            // Apply appearance immediately instead of requiring restart
             if let appDelegate = NSApp.delegate as? AppDelegate {
                 appDelegate.applyAppearance()
             }
 
-            // Update main window appearance immediately
             if let appDelegate = NSApp.delegate as? AppDelegate,
                 let mainWindowController = appDelegate.mainWindowController
             {
                 mainWindowController.applyMiaoYanAppearance()
             }
 
-            // Recreate preview view with new appearance
             if let vc = ViewController.shared() {
                 vc.editArea.recreatePreviewView()
 
-                // Save current selection states
                 let sidebarSelectedRow = vc.storageOutlineView.selectedRow
                 let notesSelectedRows = vc.notesTableView.selectedRowIndexes
 
-                // Update dividers immediately with current app appearance
-                vc.updateDividers()
-
-                // Refresh sidebar colors to reflect updated appearance immediately
                 vc.storageOutlineView.reloadData()
                 vc.notesTableView.reloadData()
 
-                // Restore selection states
                 if sidebarSelectedRow >= 0 {
                     vc.storageOutlineView.selectRowIndexes([sidebarSelectedRow], byExtendingSelection: false)
                 }
@@ -330,7 +311,6 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         let languageType = LanguageType.withName(rawValue: sender.title)
         if settings.defaultLanguage != languageType.rawValue {
             settings.defaultLanguage = languageType.rawValue
-            // Set primary language with English fallback to ensure proper resolution
             UserDefaults.standard.set([languageType.code, "en"], forKey: "AppleLanguages")
             UserDefaults.standard.synchronize()
             showRestartAlert()
@@ -357,7 +337,6 @@ final class GeneralPrefsViewController: BasePrefsViewController {
     @objc private func buttonShowChanged(_ sender: NSPopUpButton) {
         guard let title = sender.selectedItem?.title else { return }
         settings.buttonShow = rawButtonShow(from: title)
-        // Apply button visibility behavior immediately
         if let vc = ViewController.shared() {
             vc.applyButtonVisibilityPreference()
         }

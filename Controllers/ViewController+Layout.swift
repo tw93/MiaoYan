@@ -17,38 +17,6 @@ extension ViewController {
     }
 
     // MARK: - Layout Management Methods
-    func updateDividers() {
-        guard sidebarSplitView != nil && splitView != nil else { return }
-        setDividerColor(for: sidebarSplitView, hidden: sidebarWidth == 0)
-        setDividerColor(for: splitView, hidden: notelistWidth == 0)
-    }
-
-    func setDividerColor(for splitView: NSSplitView, hidden: Bool) {
-        let baseColor = Theme.backgroundColor
-        var color: NSColor = baseColor
-        guard !hidden else {
-            splitView.setValue(color, forKey: "dividerColor")
-            return
-        }
-
-        let named = NSColor(named: "divider") ?? NSColor.separatorColor
-        // Use the current app appearance instead of view's effectiveAppearance to avoid timing issues
-        let appearance = NSApp.effectiveAppearance
-        var cg: CGColor?
-        appearance.performAsCurrentDrawingAppearance {
-            cg = named.cgColor
-        }
-        if let cg, let fixed = NSColor(cgColor: cg) {
-            color = fixed
-        } else {
-            color = named
-        }
-
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-        splitView.setValue(color, forKey: "dividerColor")
-        CATransaction.commit()
-    }
 
     func checkSidebarConstraint() {
         if sidebarSplitView.subviews[0].frame.width < 50, !UserDefaultsManagement.isWillFullScreen {
@@ -72,25 +40,21 @@ extension ViewController {
     func hideSidebar(_ sender: Any) {
         guard sidebarWidth > 0 else { return }
 
-        // Only save the width if we're not in presentation mode transition
-        // (presentation mode should have already saved the correct width)
         if !UserDefaultsManagement.presentation {
             UserDefaultsManagement.realSidebarSize = Int(sidebarWidth)
         }
 
         sidebarSplitView.setPosition(0, ofDividerAt: 0)
-        updateDividers()
+        (sidebarSplitView as? SidebarSplitView)?.updateDividerVisibility()
         editArea.updateTextContainerInset()
     }
 
     func showSidebar(_ sender: Any) {
         guard sidebarWidth == 0 else { return }
 
-        // Ensure we have a reasonable minimum width for sidebar
         let savedWidth = UserDefaultsManagement.realSidebarSize
-        let targetWidth = max(savedWidth, 138)  // 138 is the default minimum
+        let targetWidth = max(savedWidth, 138)
 
-        // Update saved value if it was too small
         if savedWidth < 138 {
             UserDefaultsManagement.realSidebarSize = 138
         }
@@ -101,7 +65,7 @@ extension ViewController {
             expandNoteList()
         }
 
-        updateDividers()
+        (sidebarSplitView as? SidebarSplitView)?.updateDividerVisibility()
         editArea.updateTextContainerInset()
     }
 
@@ -123,9 +87,9 @@ extension ViewController {
             splitView.shouldHideDivider = true
             splitView.setPosition(0, ofDividerAt: 0)
 
-            hideSidebar("")
+            (splitView as? EditorSplitView)?.updateDividerVisibility()
 
-            updateDividers()
+            hideSidebar("")
         }
         editArea.updateTextContainerInset()
     }
@@ -134,7 +98,7 @@ extension ViewController {
         let size = UserDefaultsManagement.sidebarSize == 0 ? 280 : UserDefaultsManagement.sidebarSize
         splitView.shouldHideDivider = false
         splitView.setPosition(CGFloat(size), ofDividerAt: 0)
-        updateDividers()
+        (splitView as? EditorSplitView)?.updateDividerVisibility()
     }
 
     // MARK: - Toggle Actions
@@ -259,9 +223,7 @@ extension ViewController {
         editArea.updateTextContainerInset()
     }
 
-    func splitViewDidResizeSubviews(_ notification: Notification) {
-        updateDividers()
-    }
+    func splitViewDidResizeSubviews(_ notification: Notification) {}
 
     func splitView(_ splitView: NSSplitView, constrainMinCoordinate proposedMinimumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
         if splitView == sidebarSplitView && dividerIndex == 0 {
@@ -289,7 +251,6 @@ extension ViewController {
     func viewDidResize() {
         checkSidebarConstraint()
         checkTitlebarTopConstraint()
-        updateDividers()
 
         if !refilled {
             refilled = true

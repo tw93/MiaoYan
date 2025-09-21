@@ -628,16 +628,14 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         guard let note = EditTextView.note else { return }
         guard let vc = getViewController() else { return }
 
-        // Only update system appearance state when in System mode
-        // Preserve user's explicit Light/Dark theme choice
         if UserDefaultsManagement.appearanceType == .System {
             UserDataService.instance.isDark = effectiveAppearance.isDark
         }
 
-        // Refresh syntax highlighting with new appearance
         NotesTextProcessor.hl = nil
         NotesTextProcessor.highlight(note: note)
-        if UserDefaultsManagement.preview {
+
+        if UserDefaultsManagement.preview && UserDefaultsManagement.appearanceType == .System {
             vc.disablePreview()
             vc.enablePreview()
         }
