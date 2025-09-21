@@ -308,6 +308,9 @@ final class GeneralPrefsViewController: BasePrefsViewController {
                 let sidebarSelectedRow = vc.storageOutlineView.selectedRow
                 let notesSelectedRows = vc.notesTableView.selectedRowIndexes
 
+                // Update dividers immediately with current app appearance
+                vc.updateDividers()
+
                 // Refresh sidebar colors to reflect updated appearance immediately
                 vc.storageOutlineView.reloadData()
                 vc.notesTableView.reloadData()

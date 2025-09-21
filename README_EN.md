@@ -18,13 +18,13 @@
   <div align="center">Lightweight Markdown app to help you write great sentences.</div>
 </p>
 
-<img src="https://raw.githubusercontent.com/tw93/static/master/pic/miaoyan.gif" width="900px" />
+<img src="https://raw.githubusercontent.com/tw93/static/master/miaoyan/newmiaoyan.gif" width="900px" />
 
 ## Features
 
 - 🏂 **Fantastic**: Local use, security, syntax highlighting, dark mode, PPT presentation, LaTeX math formulas, Mermaid diagrams
 - 🎊 **Beauty**: Minimalist design style, folder + file list + editor 3 column mode.
-- 🚄‍ **Fast**: Using Swift5 native development, the performance experience is much better compared to the Web.
+- 🚄‍ **Fast**: Using Swift6 native development, the performance experience is much better compared to the Web.
 - 🥛 **Simple**: Very light, pure editor input experience, many shortcut keys to help you fast.
 
 ## First Use
