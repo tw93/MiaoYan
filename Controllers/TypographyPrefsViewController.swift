@@ -8,13 +8,10 @@ final class TypographyPrefsViewController: BasePrefsViewController {
     // Font types from original implementation
     private enum FontType: String, CaseIterable {
         case tsanger = "TsangerJinKai02-W04"
-        case lxgw = "LXGW WenKai Screen"
-        case system = "SF Pro Text"
-        case times = "Times New Roman"
 
-        var editorFontName: String { self == .system ? "SF Mono" : rawValue }
-        var windowFontName: String { self == .system ? "SF Pro Text" : rawValue }
-        var previewFontName: String { self == .system ? "SF Pro Text" : rawValue }
+        var editorFontName: String { rawValue }
+        var windowFontName: String { rawValue }
+        var previewFontName: String { rawValue }
 
         static func from(actualFontName: String) -> FontType? {
             return allCases.first { t in
