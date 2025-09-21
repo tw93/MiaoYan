@@ -2,29 +2,24 @@
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
   <channel>
     <title>妙言 / MiaoYan</title>
-      <item>
-      <title>2.0.0</title>
-      <description><![CDATA[
       <h3>新面孔 🎉:</h3>
       <ol>
-        <li>全新图标设计更清晰美观，主题切换更流畅，分割线与背景色更统一</li>
-        <li>设置面板重构，支持顶部导航和快捷键操作，字体和语言设置体验优化，ESC/→ 键切换更便捷</li>
-        <li>修复标题和搜索框切换问题，搜索框标准化，搜索逻辑优化支持空输入</li>
-        <li>异步图片上传更丝滑，预览性能优化，编辑状态下体验更一致</li>
+        <li>全新图标设计更清晰美观，主题切换更流畅</li>
+        <li>设置面板重构，字体和语言设置体验优化，终于支持自定义字体</li>
+        <li>支持顶部导航和快捷键操作，试试 ESC/→ 键切换内容更便捷</li>
         <li>导出效果优化，生成内容更加稳定，排版显示更精致</li>
-        <li>项目全面升级到 Swift 6，优化代码实现和注释，适配新特性提升应用性能和稳定性</li>
-        <li>移除推荐字体依赖，代码结构重构，撤销重做功能优化并修复字体选择问题</li>
+        <li>项目全面升级到 Swift 6，优化不少代码实现，适配些新特性</li>
+        <li>异步图片上传更丝滑，预览性能优化，编辑状态下体验更一致</li>
       </ol>
 
       <h3>New Face 🎉:</h3>
       <ol>
-        <li>Brand-new icon design clearer and more beautiful, smoother theme switching with standardized divider colors and unified background</li>
-        <li>Settings panel redesigned with top navigation and keyboard shortcuts, improved font & language experience, added ESC/→ key switching</li>
-        <li>Fixed title and search box switching issues, standardized search box, optimized search behavior to handle empty input</li>
-        <li>Asynchronous image upload for smoother experience, optimized preview performance, improved consistency in editing state</li>
-        <li>Optimized export effects with more stable output and refined layout display</li>
-        <li>Comprehensive upgrade to Swift 6 with optimized code implementation and annotations, adapted to new features for improved performance and stability</li>
-        <li>Removed recommended font dependencies, refactored code structure, optimized undo/redo functionality and fixed font selection issues</li>
+        <li>Brand-new icon design clearer and more beautiful, smoother theme switching</li>
+        <li>Redesigned settings panel with improved font & language experience, now supports custom fonts</li>
+        <li>Top navigation and keyboard shortcuts supported, try ESC/→ key for easier switching</li>
+        <li>Optimized export effects with more stable output and refined layout</li>
+        <li>Upgraded to Swift 6 with improved code implementation and new feature adaptation</li>
+        <li>Smoother asynchronous image uploads, optimized preview performance, and more consistent editing experience</li>
       </ol>
           ]]>      </description>
       <pubDate>周日, 21 09月 2025 23:00:20 +0800</pubDate>
