@@ -335,7 +335,10 @@ class SidebarProjectView: NSOutlineView,
     }
 
     func outlineView(_ outlineView: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
-        if item is SidebarItem {
+        if let sidebarItem = item as? SidebarItem {
+            if sidebarItem.type == .All {
+                return 48
+            }
             return 34
         }
         return 24
@@ -363,24 +366,168 @@ class SidebarProjectView: NSOutlineView,
         if let si = item as? SidebarItem {
             cell.textField?.stringValue = si.name
 
-            cell.label.font = UserDefaultsManagement.nameFont
-            cell.label.addCharacterSpacing()
+            let baseFont = UserDefaultsManagement.nameFont ?? NSFont.systemFont(ofSize: 14)
+            let defaultIconSize: CGFloat = 17
+            let accentIconSize: CGFloat = 24
+            let accentColorLight = NSColor(
+                calibratedRed: CGFloat(0x1C) / 255,
+                green: CGFloat(0x5D) / 255,
+                blue: CGFloat(0x33) / 255,
+                alpha: 1
+            )
+            let accentColorDark = NSColor(
+                calibratedRed: CGFloat(0x54) / 255,
+                green: CGFloat(0xC5) / 255,
+                blue: CGFloat(0x9F) / 255,
+                alpha: 1
+            )
+            let accentColor: NSColor
+            let appearancePreference = UserDefaultsManagement.appearanceType
+            let isDarkMode: Bool
+
+            switch appearancePreference {
+            case .Dark:
+                isDarkMode = true
+            case .Light:
+                isDarkMode = false
+            case .Custom:
+                isDarkMode = UserDataService.instance.isDark
+            default:
+                if #available(macOS 10.14, *) {
+                    let appearance = cell.effectiveAppearance
+                    let match = appearance.bestMatch(from: [.darkAqua, .vibrantDark, .aqua, .vibrantLight])
+                    isDarkMode = match == .darkAqua || match == .vibrantDark
+                } else {
+                    isDarkMode = false
+                }
+            }
+
+            accentColor = isDarkMode ? accentColorDark : accentColorLight
+
+            let accentFontDescriptor = baseFont.fontDescriptor.addingAttributes([
+                NSFontDescriptor.AttributeName.traits: [
+                    NSFontDescriptor.TraitKey.weight: NSNumber(value: Double(NSFont.Weight.semibold.rawValue))
+                ]
+            ])
+            let accentFontSize = baseFont.pointSize + 2
+            let accentFont = NSFont(
+                descriptor: accentFontDescriptor,
+                size: accentFontSize
+            ) ?? NSFont.systemFont(ofSize: accentFontSize, weight: .semibold)
+
+            let defaultSpacing: CGFloat = 4
+            let accentSpacing: CGFloat = 4
+            let defaultIconLeading: CGFloat = 1
+            let accentIconLeading: CGFloat = -2
+
+            let updateIconLeading: (CGFloat) -> Void = { leading in
+                if let constraint = cell.constraints.first(where: {
+                    guard ($0.firstItem as? NSView) === cell.icon,
+                          $0.firstAttribute == .leading,
+                          ($0.secondItem as? NSView) === cell,
+                          $0.secondAttribute == .leading
+                    else {
+                        return false
+                    }
+                    return true
+                }) {
+                    constraint.constant = leading
+                } else {
+                    cell.icon.frame.origin.x = leading
+                }
+
+                cell.layoutSubtreeIfNeeded()
+            }
+
+            let adjustIconSize: (CGFloat) -> Void = { size in
+                for constraint in cell.icon.constraints where constraint.firstAttribute == .width || constraint.firstAttribute == .height {
+                    constraint.constant = size
+                }
+                cell.icon.frame.size = NSSize(width: size, height: size)
+                cell.layoutSubtreeIfNeeded()
+            }
+
+            let updateLabelSpacing: (CGFloat) -> Void = { spacing in
+                cell.layoutSubtreeIfNeeded()
+                let iconFrame = cell.icon.frame
+                let desiredLeading = iconFrame.origin.x + iconFrame.size.width + spacing
+
+                if let constraint = cell.constraints.first(where: {
+                    guard ($0.firstItem as? NSView) === cell.label,
+                          $0.firstAttribute == .leading,
+                          ($0.secondItem as? NSView) === cell,
+                          $0.secondAttribute == .leading
+                    else {
+                        return false
+                    }
+                    return true
+                }) {
+                    constraint.constant = desiredLeading
+                } else {
+                    cell.label.frame.origin.x = desiredLeading
+                }
+
+                cell.layoutSubtreeIfNeeded()
+            }
+
+            cell.icon.isHidden = false
+            cell.icon.contentTintColor = nil
+            cell.icon.imageScaling = .scaleProportionallyDown
+            updateIconLeading(defaultIconLeading)
+            adjustIconSize(defaultIconSize)
+
+            cell.label.lineBreakMode = .byTruncatingTail
+            cell.label.cell?.truncatesLastVisibleLine = true
+            cell.label.cell?.wraps = false
+            if #available(macOS 10.14, *) {
+                cell.label.maximumNumberOfLines = 1
+            }
+
+            cell.label.font = baseFont
+            cell.label.textColor = Theme.textColor
+            updateLabelSpacing(defaultSpacing)
 
             switch si.type {
             case .All:
-                cell.icon.image = NSImage(imageLiteralResourceName: "home.png")
-                cell.icon.isHidden = false
-                cell.label.frame.origin.x = 24
+                cell.icon.image = NSImage(imageLiteralResourceName: "home")
+                cell.icon.image?.isTemplate = true
+                cell.icon.contentTintColor = accentColor
+                updateIconLeading(accentIconLeading)
+                adjustIconSize(accentIconSize)
+                cell.label.font = accentFont
+                cell.label.textColor = accentColor
+                updateLabelSpacing(accentSpacing)
+                cell.label.lineBreakMode = .byClipping
+                cell.label.cell?.truncatesLastVisibleLine = false
 
             case .Trash:
-                cell.icon.image = NSImage(imageLiteralResourceName: "trash.png")
-                cell.icon.isHidden = false
-                cell.label.frame.origin.x = 24
+                cell.icon.image = NSImage(imageLiteralResourceName: "deleteNote")
+                cell.icon.image?.isTemplate = false
+                updateLabelSpacing(defaultSpacing)
 
             case .Category:
-                cell.icon.image = NSImage(imageLiteralResourceName: "repository.png")
-                cell.icon.isHidden = false
-                cell.label.frame.origin.x = 24
+                cell.icon.image = NSImage(imageLiteralResourceName: "project")
+                cell.icon.image?.isTemplate = false
+                updateLabelSpacing(defaultSpacing)
+            }
+
+            cell.label.addCharacterSpacing()
+
+            let applyLabelColor: (NSColor) -> Void = { color in
+                let attributed = NSMutableAttributedString(attributedString: cell.label.attributedStringValue)
+                let range = NSRange(location: 0, length: attributed.length)
+                if range.length > 0 {
+                    attributed.addAttribute(.foregroundColor, value: color, range: range)
+                    cell.label.attributedStringValue = attributed
+                } else {
+                    cell.label.textColor = color
+                }
+            }
+
+            if si.type == .All {
+                applyLabelColor(accentColor)
+            } else {
+                applyLabelColor(Theme.textColor)
             }
         }
         return cell
