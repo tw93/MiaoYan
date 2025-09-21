@@ -28,7 +28,6 @@ extension ViewController {
         var color: NSColor = baseColor
         guard !hidden else {
             splitView.setValue(color, forKey: "dividerColor")
-            splitView.needsDisplay = true
             return
         }
 
@@ -44,8 +43,10 @@ extension ViewController {
             color = named
         }
 
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
         splitView.setValue(color, forKey: "dividerColor")
-        splitView.needsDisplay = true
+        CATransaction.commit()
     }
 
     func checkSidebarConstraint() {

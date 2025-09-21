@@ -65,7 +65,11 @@ class ViewController:
     @IBOutlet var searchTopConstraint: NSLayoutConstraint!
     @IBOutlet var titleLabel: TitleTextField!
     @IBOutlet var titleTopConstraint: NSLayoutConstraint!
-    @IBOutlet var sortByOutlet: NSMenuItem!
+    @IBOutlet var sortByOutlet: NSMenuItem! {
+        didSet {
+            sortByOutlet.identifier = NSUserInterfaceItemIdentifier("viewMenu.sortBy")
+        }
+    }
     @IBOutlet var titleBarAdditionalView: NSVisualEffectView! {
         didSet {
             let layer = CALayer()
@@ -371,9 +375,6 @@ class ViewController:
         editArea.textContainerInset.height = 10
         editArea.isEditable = false
         editArea.layoutManager?.defaultAttachmentScaling = .scaleProportionallyDown
-        if UserDefaultsManagement.fontName != "LXGW WenKai Screen" {
-            editArea.layoutManager?.typesetterBehavior = .behavior_10_2_WithCompatibility
-        }
         search.font = UserDefaultsManagement.searchFont
         editArea.defaultParagraphStyle = NSTextStorage.getParagraphStyle()
         var typingAttrs: [NSAttributedString.Key: Any] = [
