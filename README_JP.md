@@ -90,9 +90,6 @@
         src=https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg
         width="118px"/></a>
 
-
-> **📦 依存関係管理**: プロジェクトは Swift Package Manager を使用して依存関係を管理しています。詳細については、[`DEPENDENCIES.md`](DEPENDENCIES.md) をご覧ください
-
 # ライセンス
 
 - MIT ライセンスを遵守してください。
