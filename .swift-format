@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "lineLength": 240,
+  "indentation": {
+    "spaces": 4
+  },
+  "tabWidth": 4,
+  "maximumBlankLines": 2,
+  "respectsExistingLineBreaks": true,
+  "prioritizeKeepingFunctionOutputTogether": true,
+  "indentConditionalCompilationBlocks": true,
+  "spacesAroundRangeFormationOperators": false,
+  "lineBreakBeforeControlFlowKeywords": false,
+  "lineBreakBeforeEachArgument": false,
+  "indentSwitchCaseLabels": false,
+  "blankLineBetweenMembers": {
+    "beforeEachMember": true,
+    "ignoreSingleLineProperties": true
+  },
+  "insertBlankLines": {
+    "aroundTopLevelDeclarations": true,
+    "betweenMembers": true
+  },
+  "spaceAroundOperators": true,
+  "allmanBraces": false,
+  "trailingCommas": "always",
+  "redundantParens": "remove"
+}

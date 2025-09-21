@@ -5,8 +5,8 @@
  */
 
 :root {
-  --text-font: 'LXGW WenKai Screen', sans-serif;
-  --code-text-font: 'LXGW WenKai Screen', sans-serif;
+  --text-font: 'TsangerJinKai02-W04', sans-serif;
+  --code-text-font: 'TsangerJinKai02-W04', sans-serif;
   --markmap-height: 300px;
 }
 
@@ -151,7 +151,7 @@ a,
 
 @media (prefers-color-scheme: dark) {
   .heti hr {
-    background-color: #121212;
+    background-color: #343b43;
   }
 }
 
@@ -178,9 +178,9 @@ a,
   margin-block-end: 1.6em;
   padding-inline-start: 16px;
   padding-inline-end: 16px;
-  border-radius: 4px;
+  border-radius: 8px;
   color: #777;
-  border-left: 4px solid #f1f3f4;
+  border-left: 4px solid #e6e6e6;
   line-height: 1;
 }
 
@@ -205,7 +205,7 @@ blockquote blockquote {
 
 @media (prefers-color-scheme: dark) {
   .heti blockquote {
-    border-left: 4px solid #2f363d;
+    border-left: 4px solid #343b43;
   }
 }
 
@@ -222,7 +222,7 @@ blockquote blockquote {
   font-family: var(--text-font);
   white-space: pre;
   word-wrap: normal;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: rgba(0, 0, 0, 0.03);
 }
 
@@ -374,7 +374,7 @@ blockquote blockquote {
   border-collapse: collapse;
   border-width: 1px;
   border-style: solid;
-  border-color: #ccc;
+  border-color: #e6e6e6;
   word-break: break-word;
 }
 
@@ -382,12 +382,12 @@ blockquote blockquote {
 .heti li > code {
   background-color: #eef1f2;
   padding: 2px;
-  border-radius: 4px;
+  border-radius: 8px;
 }
 
 @media (prefers-color-scheme: dark) {
   .heti table {
-    border-color: #404040;
+    border-color: #343b43;
   }
 
   .heti p > code,
@@ -410,13 +410,13 @@ blockquote blockquote {
   padding-inline-end: 8px;
   border-width: 1px;
   border-style: solid;
-  border-color: #ccc;
+  border-color: #e6e6e6;
 }
 
 @media (prefers-color-scheme: dark) {
   .heti th,
   .heti td {
-    border-color: #404040;
+    border-color: #343b43;
   }
 }
 
@@ -939,7 +939,7 @@ blockquote blockquote {
 .heti .heti-fn {
   margin-block-start: 59px;
   border-block-start: 1px solid;
-  border-block-start-color: #ccc;
+  border-block-start-color: #e6e6e6;
   font-size: 14px;
   font-family: var(--text-font);
   line-height: 24px;
@@ -947,7 +947,7 @@ blockquote blockquote {
 
 @media (prefers-color-scheme: dark) {
   .heti .heti-fn {
-    border-block-start-color: #404040;
+    border-block-start-color: #343b43;
   }
 }
 
@@ -1124,11 +1124,11 @@ code.language-mermaid .edgeLabel{
 .heti pre.plantuml-image-container {
   padding: 0;
   background: transparent;
-  border-radius: none;
+  border-radius: 0;
 }
 
 .heti pre.plantuml-image-container .plantuml-image {
-  border-radius: 4px;
+  border-radius: 8px;
 }
 
 .heti pre.mermaid-image-container {
@@ -1200,8 +1200,15 @@ img.emoji {
   visibility: visible;
   width: 100%;
   height: var(--markmap-height);
-  font-family: var(--text-font) !important;
-  font-size: 0.8em !important;
+  font-family: var(--text-font), -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif !important;
+}
+
+.markmap svg {
+  background: transparent !important;
+}
+
+.markmap .markmap-node text {
+  font-family: var(--text-font), -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif !important;
 }
 
 
@@ -1236,4 +1243,3 @@ img.border {
 .markdown-body video {
   border-radius: 8px;
 }
-

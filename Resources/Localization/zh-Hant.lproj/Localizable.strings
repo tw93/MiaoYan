@@ -1,0 +1,211 @@
+/* No comment provided by engineer. */
+"%d MiaoYan" = "%d 篇妙言";
+
+/* No comment provided by engineer. */
+"🍭 Found that there are multiple titles of this~" = "🍭 這裡有好幾個標題，使用搜尋能力～";
+
+/* No comment provided by engineer. */
+"🍭 Image upload in progress~" = "🍭 正在上傳圖片～";
+
+/* No comment provided by engineer. */
+"🎉 Automatic typesetting succeeded~" = "🎉 自動排版完成～";
+
+/* No comment provided by engineer. */
+"🎉 Saved to Downloads folder~" = "🎉 已經輸出到下載目錄～";
+
+/* No comment provided by engineer. */
+"🎉 URL is successfully copied, Use it anywhere~" = "🎉 成功複製外部連結，可以在其他地方使用了～";
+
+/* No comment provided by engineer. */
+"😶‍🌫 Format is only possible after exiting preview mode~" = "😶‍🌫 文件排版得結束預覽模式才能使用～";
+
+/* No comment provided by engineer. */
+"😶‍🌫 Image upload failed, Use local~" = "😶‍🌫 圖片上傳失敗，改放在本機端，可手動上傳～";
+
+/* No comment provided by engineer. */
+"😶‍🌫 No delimiter --- identification, Cannot use MiaoYan PPT~" = "😶‍🌫 沒有分隔符號 --- 標示，無法使用妙言 PPT～";
+
+/* No comment provided by engineer. */
+"😶‍🌫 Please make sure your title exists~" = "😶‍🌫 請確定填寫的標題是否存在～";
+
+/* No comment provided by engineer. */
+"😶‍🌫 PDF export failed, please try again~" = "😶‍🌫 PDF 匯出失敗，請重新試試～";
+
+/* No comment provided by engineer. */
+"🙊 In single open mode, Exit with Command+Shift+W ~" = "🙊 在單獨編輯器模式中，可以敲下 Command+Shift+W 結束～";
+
+/* No comment provided by engineer. */
+"🙊 Please make sure your Mac is installed %@ ~" = "🙊 請確定你的 Mac 已經安裝並設定好 %@～";
+
+/* No comment provided by engineer. */
+"🙊 Press ESC key to exit~" = "🙊 按 ESC 鍵結束簡報模式～";
+
+/* No comment provided by engineer. */
+"🙊 Starting export~" = "🙊 開始匯出～";
+
+/* No comment provided by engineer. */
+"Add" = "加入";
+
+/* No comment provided by engineer. */
+"Are you sure you want to irretrievably delete %d note(s)?" = "您確定要永久刪除 %d 篇筆記嗎？";
+
+/* No comment provided by engineer. */
+"Are you sure you want to remove project \"%@\" and all files inside?" = "您確定要刪除「%@」專案及其所有檔案嗎？";
+
+/* Delete menu */
+"Cancel" = "取消";
+
+/* No comment provided by engineer. */
+"Confirm" = "確認";
+
+/* No comment provided by engineer. */
+"Copy HTML" = "拷貝 HTML";
+
+/* No comment provided by engineer. */
+"Copy Link" = "拷貝連結";
+
+/* No comment provided by engineer. */
+"Copy Plain Text" = "拷貝純文字";
+
+/* No comment provided by engineer. */
+"Delete" = "刪除";
+
+/* No comment provided by engineer. */
+"Delete Folder" = "刪除檔案夾";
+
+/* No comment provided by engineer. */
+"Edit Link…" = "編輯連結…";
+
+
+/* Menu */
+"Move" = "移動";
+
+/* Menu */
+"Export" = "導出";
+
+/* No comment provided by engineer. */
+"New project" = "建立專案";
+
+/* No comment provided by engineer. */
+"Please change the title" = "請更改標題";
+
+/* No comment provided by engineer. */
+"Preferences" = "偏好設定";
+
+/* 偏好設定 - 分組標題 */
+"Appearance & Language" = "外觀與語言";
+"Interface & Upload" = "介面與上傳";
+"Storage Location" = "儲存位置";
+"Note Location" = "筆記位置";
+"Interface" = "介面";
+"Experience" = "體驗";
+"Typography" = "編輯";
+
+/* 偏好設定 - 通用標籤 */
+"Appearance" = "外觀";
+"Language" = "語言";
+"Change" = "更改";
+"General" = "通用";
+"Editor" = "編輯器";
+"Fonts" = "字體";
+"Editor Behavior" = "編輯器行為";
+"Preview" = "預覽";
+"Editor Font:" = "編輯字體:";
+"Preview Font:" = "預覽字體:";
+"Interface Font:" = "介面字體:";
+"Code Font:" = "程式碼字體:";
+"Presentation Font Size:" = "簡報大小:";
+"Preview Location:" = "預覽位置:";
+"Preview Width:" = "預覽寬度:";
+"Appearance:" = "外觀顏色:";
+"Language:" = "介面語言:";
+"Button Display:" = "按鈕顯示:";
+"Always On Top:" = "置頂顯示:";
+"Activate Shortcut:" = "快捷喚起:";
+"Yes" = "是";
+"No" = "否";
+
+/* 偏好設定 - 選項 */
+"System" = "系統";
+"Light" = "淺色";
+"Dark" = "深色";
+"Always" = "總是";
+"On Hover" = "懸停時";
+"Never" = "從不";
+"Image Upload" = "圖片上傳";
+"Upload Service:" = "上傳服務:";
+"None" = "無";
+
+/* 編輯器設定 - 選項 */
+"Begin" = "開頭";
+"End" = "結尾";
+"Right" = "右側";
+"Bottom" = "底部";
+"Editing" = "編輯";
+"Full Width" = "全寬";
+"Line Break:" = "換行:";
+"MiaoYan" = "妙言";
+"Auto" = "自動";
+
+/* Delete menu */
+"Remove" = "移除";
+
+/* No comment provided by engineer. */
+"Remove Link" = "移除連結";
+
+/* No comment provided by engineer. */
+"Remove note(s)" = "移除筆記";
+
+/* No comment provided by engineer. */
+"Rename Folder" = "重新命名檔案夾";
+
+/* No comment provided by engineer. */
+"Restart to MiaoYan to take effect" = "重新啟動妙言即可生效";
+
+/* No comment provided by engineer. */
+"Show in Finder" = "在 Finder 中顯示";
+
+/* View menu */
+"Sort by" = "排序方式";
+
+/* No comment provided by engineer. */
+"This %@ under this folder already exists!" = "此檔案夾下的 $@ 已經存在！";
+
+/* Delete menu */
+"This action cannot be undone." = "本動作不可復原。";
+
+/* Sidebar label */
+"Trash" = "垃圾桶";
+
+/* Untitled Note */
+"Untitled Note" = "未命名筆記";
+
+/* Menu */
+"View" = "顯示方式";
+
+/* Font Names */
+
+/* ClipboardManager Messages */
+"Image uploaded successfully" = "圖片上傳成功";
+"Image upload failed, using local path" = "圖片上傳失敗，使用本地路徑";
+
+/* Missing translations */
+"Link" = "連結";
+"MiaoYan [preview]" = "妙言 [預覽]";
+"New" = "新建";
+"New Folder" = "新建檔案夾";
+"Notes" = "妙言";
+"OK" = "好的";
+"Please enter image title:" = "請輸入圖片標題：";
+"Please enter project name:" = "請輸入名稱：";
+"Please try again" = "請再試一次";
+"Quit MiaoYan" = "退出妙言";
+"Search" = "搜尋";
+"Strikethrough" = "刪除線";
+"Toggle Preview" = "切換預覽";
+"Underline" = "底線";
+"URL has been copied to clipboard" = "URL已複製到剪貼簿";
+"Interface" = "介面";
+"Preview Settings" = "預覽設定";
+"Code Background:" = "程式碼背景:";
+"Github" = "Github";

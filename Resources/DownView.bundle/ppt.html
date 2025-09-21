@@ -8,12 +8,7 @@
     <script src="js/markmap.min.js"></script>
     <title></title>
     <style>
-      @font-face {
-        font-family: 'LXGW WenKai Screen';
-        font-display: fallback;
-        src: url('DOWN_FONT_PATH/LXGWWenKaiScreen.ttf') format('truetype');
-      }
-        
+
       @font-face {
           font-family: 'TsangerJinKai02-W04';
           font-display: fallback;
@@ -114,11 +109,16 @@
         backgroundTransition: 'none',
         center: false,
         pdfSeparateFragments: false,
+        highlight: {
+          highlightOnLoad: true,
+          lineNumbers: true,
+        },
         plugins: [
           RevealMarkdown,
           RevealHighlight,
           RevealNotes,
-          RevealZoom,
+          // Disable zoom in PPT mode to avoid layout issues
+          // RevealZoom,
           RevealMath.KaTeX,
         ],
       });
@@ -151,31 +151,77 @@
           }
         });
 
-        const markMapList = document.querySelectorAll('.markmap');
-        markMapList &&
-          markMapList.length > 0 &&
+        // 查找标准的.language-markmap和未被正确解析的markmap代码块
+        let markMapList = document.querySelectorAll('.language-markmap');
+        
+        // 如果没找到标准格式，查找包含```markmap的代码块
+        if (markMapList.length === 0) {
+          const codeBlocks = document.querySelectorAll('pre code');
+          const additionalMarkMaps = [];
+          codeBlocks.forEach(block => {
+            const text = block.textContent || '';
+            if (text.trim().startsWith('markmap') || text.includes('```markmap')) {
+              block.classList.add('language-markmap');
+              additionalMarkMaps.push(block);
+            }
+          });
+          markMapList = document.querySelectorAll('.language-markmap');
+        }
+        markMapList && markMapList.length > 0 &&
           markMapList.forEach((item, i) => {
-            let markMapName = 'markmap-' + i;
-            const markMapChildName = '.' + markMapName + ' .markmap';
+            const markMapName = 'markmap-' + i;
+            const markMapChildClass = '.' + markMapName + ' .markmap';
             let heightAttr = item.textContent.match(
               /\<\!\-\-markmap-height\=(\S*)\-\-\>/,
             );
-            let height = '480px';
+            // Calculate auto height based on content depth and lines
+            const content = item.textContent || '';
+            const lines = content.split('\n').filter(line => line.trim());
+            const maxDepth = Math.max(0, ...lines.map(line => {
+              const match = line.match(/^(\s*)([-*+]|\d+\.)/);
+              return match ? Math.floor(match[1].length / 2) : 0;
+            }));
+            
+            // More reasonable auto height: base 300px + 40px per depth level + 20px per line (slightly larger for PPT)
+            // Cap at 500px maximum unless customized
+            let autoHeight = Math.min(500, Math.max(300, 300 + maxDepth * 40 + lines.length * 20));
+            let height = autoHeight + 'px';
+            
+            // Override with manual height if specified
             if (heightAttr && heightAttr.length > 0 && !isNaN(heightAttr[1])) {
               height = heightAttr[1] + 'px';
             }
+            
+            item.classList.add('markmap');
             item.classList.add(markMapName);
+            
+            // Apply subtle gray background for PPT mode
+            const isDark = document.body.classList.contains('dark') || 
+                          window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const backgroundColor = isDark ? '#1a1f2e' : '#f5f6f7';
+            
             setTimeout(() => {
               const markMapItem = document.querySelector('.' + markMapName);
               markMapItem.style.maxHeight = height;
               markMapItem.style.height = height;
+              markMapItem.style.backgroundColor = backgroundColor;
+              markMapItem.style.borderRadius = '12px';
+              markMapItem.style.overflow = 'hidden';
               setTimeout(() => {
-                const markMapItemChild =
-                  document.querySelector(markMapChildName);
-                markMapItemChild.style.height = height;
-              }, 10);
+                const markMapItemChild = document.querySelector(markMapChildClass);
+                if (markMapItemChild) {
+                  markMapItemChild.style.height = height;
+                  markMapItemChild.style.backgroundColor = backgroundColor;
+                  
+                  // Simple PPT markmap fit
+                  if (window.markmap && markMapItemChild.markmap) {
+                    markMapItemChild.markmap.fit();
+                  }
+                }
+              }, 50);
             }, 10);
           });
+      
       });
     </script>
     <script>

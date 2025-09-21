@@ -18,13 +18,13 @@
   <div align="center">軽量のMarkdownアプリで、素晴らしい文章を生み出せます</div>
 </p>
 
-<img src="https://raw.githubusercontent.com/tw93/static/master/pic/miaoyan.gif" width="900px" />
+<img src="https://raw.githubusercontent.com/tw93/static/master/miaoyan/newmiaoyan.gif" width="900px" />
 
 ## 機能
 
-- 🏂 **素晴らしい**: ローカル利用、セキュリティ、シンタックスハイライト、ダークモード、ソースファイルの保存、国際化、プレゼンテーションモード、[スライド モード](#miaoYan-ppt)、単一編集モード、ファイルのエクスポート、内部ジャンプ、文書の自動タイプセット、画像のアップロード、LaTeX、Mermaid、PlantUML、Markmap。
+- 🏂 **素晴らしい**: ローカル利用、セキュリティ、シンタックスハイライト、ダークモード、PPTプレゼンテーション、LaTeX数学式、Mermaid図表
 - 🎊 **美しさ**: ミニマリストのデザインスタイル、フォルダ+ファイルリスト+エディタの 3 カラムモード。
-- 🚄‍ **高速**: Swift5 ネイティブ開発を使用しており、Web と比較してパフォーマンス体験がはるかに良い。
+- 🚄‍ **高速**: Swift6 ネイティブ開発を使用しており、Web と比較してパフォーマンス体験がはるかに良い。
 - 🥛 **シンプル**: とても軽量で、純粋なエディタ入力体験、多くのショートカットキーで高速化が実現。
 
 ## 最初の使用
@@ -59,19 +59,11 @@
 
 🏂 他にも多くのショートカットがあります 👆🏻 👇🏻 👈🏻 👉🏻 隠れているショートカットを見つけることに楽しんでください~
 
-## MiaoYan スライド
+## 利用ガイド
 
-<details>
-<summary>スライドモードのデモを見る</summary>
+- [**Markdown 構文ガイド**](Resources/Initial/MiaoYan%20Markdown%20Syntax%20Guide.md)：数学式、Mermaid図表、PlantUML、Markmapマインドマップなど高度な機能の完全デモ
+- [**PPT プレゼンテーションモード**](Resources/Initial/MiaoYan%20PPT.md)：`---` でスライド分割、`command + option + p` で起動、カスタムテーマと背景をサポート
 
-<a href=https://gw.alipayobjects.com/zos/k/app3/ScreenFlow1.gif target="_blank"><img src="https://user-images.githubusercontent.com/8736212/180579489-a8ac6f0f-1d47-44fa-a8bb-0be998f7895f.gif" width="100%"></a>
-
-</details>
-
-1. 新しいユーザーさんのデフォルトの初期化はテンプレートを生成します。古いユーザーさんの場合は、1.0 にアップグレードしてから[このファイル](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/MiaoYan%20PPT.md)を MiaoYan にコピーしてみてください。
-2. `command + option + p`を実行して MiaoYan PPT プレビューを開始します。同時に、ドキュメントを選択し、右クリックして'MiaoYan PPT'を選択して開くこともできます。
-3. PPT モードは`---`セパレータでマークされたドキュメントでのみ有効にできます。プレゼンテーション中には、`Enter`キーでスピーチのアウトラインをプレビューし、`ESC`キーで スライド モードを終了できます。
-4. HTML を使用して効果をカスタマイズできます。より複雑な使用法については、[reveal](https://revealjs.com/markdown/)のドキュメンテーションを参照してください。
 
 ## なぜこれを作ったのか
 
@@ -88,6 +80,7 @@
 
 - <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>：プロジェクトの初期化コードはこちらを参考にしました、作者に感謝
 - <a href="https://github.com/stackotter/swift-cmark-gfm" target="_blank">stackotter/swift-cmark-gfm</a>：高速で効率的なSwift Markdownパーサー
+- <a href="https://github.com/simonbs/Prettier" target="_blank">simonbs/Prettier</a>：Swift Markdownフォーマッティングツール、妙言の排版をより優雅に
 - <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>：シンタックスハイライト機能
 - <a href="https://tsanger.cn/product" target="_blank">仓耳字库</a>：美しいオープンソース中国語フォント「仓耳今楷」、妙言ではデフォルトフォントとして使用
 - <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>：妙言のPPT基盤レンダリングはこのフレームワークに依存
