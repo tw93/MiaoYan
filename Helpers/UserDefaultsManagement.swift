@@ -82,6 +82,18 @@ public enum UserDefaultsManagement {
         static let NotesTableScrollPosition = "notesTableScrollPosition"
         static let AlwaysOnTop = "alwaysOnTop"
     }
+
+    private static func resolvedFontName(forKey key: String) -> String {
+        if let stored = UserDefaults.standard.string(forKey: key)?.trimmingCharacters(in: .whitespacesAndNewlines),
+            !stored.isEmpty,
+            NSFont(name: stored, size: 12) != nil
+        {
+            return stored
+        }
+
+        UserDefaults.standard.set(DefaultFont, forKey: key)
+        return DefaultFont
+    }
     static var appearanceType: AppearanceType {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.AppearanceTypeKey) as? Int {
@@ -262,60 +274,20 @@ public enum UserDefaultsManagement {
         }
     }
     static var fontName: String {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.FontName) as? String {
-                if result == "LXGW WenKai Lite" {
-                    return DefaultFont
-                }
-                return result
-            }
-            return DefaultFont
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.FontName)
-        }
+        get { resolvedFontName(forKey: Constants.FontName) }
+        set { UserDefaults.standard.set(newValue, forKey: Constants.FontName) }
     }
     static var windowFontName: String {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.WindowFontName) as? String {
-                if result == "LXGW WenKai Lite" {
-                    return DefaultFont
-                }
-                return result
-            }
-            return DefaultFont
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.WindowFontName)
-        }
+        get { resolvedFontName(forKey: Constants.WindowFontName) }
+        set { UserDefaults.standard.set(newValue, forKey: Constants.WindowFontName) }
     }
     static var previewFontName: String {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.PreviewFontName) as? String {
-                if result == "LXGW WenKai Lite" {
-                    return DefaultFont
-                }
-                return result
-            }
-            return DefaultFont
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.PreviewFontName)
-        }
+        get { resolvedFontName(forKey: Constants.PreviewFontName) }
+        set { UserDefaults.standard.set(newValue, forKey: Constants.PreviewFontName) }
     }
     static var codeFontName: String {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.CodeFontNameKey) as? String {
-                if result == "LXGW WenKai Lite" {
-                    return DefaultFont
-                }
-                return result
-            }
-            return DefaultFont
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.CodeFontNameKey)
-        }
+        get { resolvedFontName(forKey: Constants.CodeFontNameKey) }
+        set { UserDefaults.standard.set(newValue, forKey: Constants.CodeFontNameKey) }
     }
     static var codeFont: Font! {
         get {

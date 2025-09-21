@@ -2,6 +2,10 @@ import Carbon.HIToolbox
 import Cocoa
 
 @MainActor
+private enum UIConstants {
+    static let searchTextVerticalOffset: CGFloat = 5.0
+}
+
 class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     public var vcDelegate: ViewController!
 
@@ -20,6 +24,9 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     override func awakeFromNib() {
         super.awakeFromNib()
         MainActor.assumeIsolated { [self] in
+            wantsLayer = true
+            layer?.masksToBounds = false  // Don't clip subviews to allow border to show
+            focusRingType = .none
             sendsWholeSearchString = false
             sendsSearchStringImmediately = true
 
@@ -27,14 +34,29 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
             if let searchFieldCell = self.cell as? NSSearchFieldCell {
                 searchFieldCell.cancelButtonCell = nil
             }
+
+            updateAppearance()
         }
     }
 
     override func rectForSearchText(whenCentered isCentered: Bool) -> NSRect {
         var rect = super.rectForSearchText(whenCentered: isCentered)
-        rect.origin.y += 1.0
-        rect.size.height += 2.0
+        rect.origin.y += UIConstants.searchTextVerticalOffset
         return rect
+    }
+
+    override func layout() {
+        super.layout()
+        MainActor.assumeIsolated { [self] in
+            updateAppearance()
+        }
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        MainActor.assumeIsolated { [self] in
+            updateAppearance()
+        }
     }
 
     override func updateTrackingAreas() {
@@ -63,6 +85,65 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
             editor.selectedRange.length > 0
         else { return }
         editor.replaceCharacters(in: editor.selectedRange, with: "")
+    }
+
+    private func updateAppearance() {
+        guard let layer else { return }
+
+        configureLayerAppearance(layer)
+        configureColors()
+        configureCellAppearance()
+    }
+
+    private func configureLayerAppearance(_ layer: CALayer) {
+        layer.cornerRadius = bounds.height / 2
+        layer.borderWidth = 1.0
+    }
+
+    private func configureColors() {
+        guard let layer else { return }
+
+        let (backgroundColor, dividerColor) = resolveColors()
+
+        layer.backgroundColor = backgroundColor.cgColor
+        layer.borderColor = dividerColor.cgColor
+    }
+
+    private func resolveColors() -> (backgroundColor: NSColor, dividerColor: NSColor) {
+        var backgroundColor = Theme.backgroundColor
+        var dividerColor = NSColor(named: "divider") ?? .separatorColor
+
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            backgroundColor = Theme.backgroundColor
+            if let namedDivider = NSColor(named: "divider") {
+                dividerColor = namedDivider
+            } else {
+                dividerColor = .separatorColor
+            }
+        }
+
+        return (backgroundColor, dividerColor)
+    }
+
+    private func configureCellAppearance() {
+        guard let searchFieldCell = self.cell as? NSSearchFieldCell else { return }
+
+        let (backgroundColor, _) = resolveColors()
+
+        searchFieldCell.backgroundColor = backgroundColor
+        searchFieldCell.drawsBackground = true
+
+        // Attempt to set border colors for consistency
+        setBorderColorIfPossible(searchFieldCell, color: backgroundColor)
+    }
+
+    private func setBorderColorIfPossible(_ cell: NSSearchFieldCell, color: NSColor) {
+        if cell.responds(to: #selector(NSTextBlock.setBorderColor(_:))) {
+            cell.perform(#selector(NSTextBlock.setBorderColor(_:)), with: color)
+        }
+        if cell.responds(to: Selector(("setBezelColor:"))) {
+            cell.perform(Selector(("setBezelColor:")), with: color)
+        }
     }
 
     override func keyUp(with event: NSEvent) {
