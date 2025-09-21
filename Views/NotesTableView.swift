@@ -188,6 +188,16 @@ class NotesTableView: NSTableView {
 
         let vc = window?.contentViewController as! ViewController
 
+        // Save any pending title changes before switching notes
+        if let pendingChange = UserDataService.instance.pendingTitleChange {
+            let title = pendingChange.title
+            let note = pendingChange.note
+            if !title.isEmpty && note.getFileName() != title {
+                vc.saveTitle(title, to: note)
+            }
+            UserDataService.instance.pendingTitleChange = nil
+        }
+
         if vc.editAreaScroll.isFindBarVisible {
             let menu = NSMenuItem(title: "", action: nil, keyEquivalent: "")
             menu.tag = NSTextFinder.Action.hideFindInterface.rawValue
@@ -479,17 +489,18 @@ class NotesTableView: NSTableView {
 
     public func reloadRow(note: Note) {
         let storedTitle = note.title
-        let selectedRow = selectedRow
 
         note.invalidateCache()
         if note.title.isEmpty && !storedTitle.isEmpty {
             note.title = storedTitle
         }
 
-        reloadData()
-        if selectedRow >= 0 {
-            selectRowIndexes(IndexSet(integer: selectedRow), byExtendingSelection: false)
+        guard let row = noteList.firstIndex(where: { $0 === note }) else {
+            reloadData()
+            return
         }
+
+        reloadData(forRowIndexes: IndexSet(integer: row), columnIndexes: IndexSet(integer: 0))
     }
 
     // MARK: - Scroll Position Memory
