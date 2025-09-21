@@ -189,7 +189,7 @@ final class EditorPrefsViewController: BasePrefsViewController {
 
     private func selectLineBreakOption(_ value: String) {
         // Find and set line break popup within the combined settings stack
-        guard settingsStackView.arrangedSubviews.count > 0,
+        guard !settingsStackView.arrangedSubviews.isEmpty,
             let popUp = settingsStackView.arrangedSubviews[0].subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton
         else { return }
         popUp.selectItem(withTitle: localizedLineBreak(value))

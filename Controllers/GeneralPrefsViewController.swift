@@ -303,6 +303,22 @@ final class GeneralPrefsViewController: BasePrefsViewController {
             // Recreate preview view with new appearance
             if let vc = ViewController.shared() {
                 vc.editArea.recreatePreviewView()
+
+                // Save current selection states
+                let sidebarSelectedRow = vc.storageOutlineView.selectedRow
+                let notesSelectedRows = vc.notesTableView.selectedRowIndexes
+
+                // Refresh sidebar colors to reflect updated appearance immediately
+                vc.storageOutlineView.reloadData()
+                vc.notesTableView.reloadData()
+
+                // Restore selection states
+                if sidebarSelectedRow >= 0 {
+                    vc.storageOutlineView.selectRowIndexes([sidebarSelectedRow], byExtendingSelection: false)
+                }
+                if !notesSelectedRows.isEmpty {
+                    vc.notesTableView.selectRowIndexes(notesSelectedRows, byExtendingSelection: false)
+                }
             }
         }
     }
