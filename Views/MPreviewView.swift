@@ -97,8 +97,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
             return UserDefaultsManagement.bgColor
         }
 
-        let darkColor = NSColor(srgbRed: 0x23 / 255.0, green: 0x28 / 255.0, blue: 0x2D / 255.0, alpha: 1.0)
-        return determineDarkTheme() ? darkColor : Theme.backgroundColor
+        return determineDarkTheme() ? Theme.previewDarkBackgroundColor : Theme.backgroundColor
     }
 
     // MARK: - Appearance Update

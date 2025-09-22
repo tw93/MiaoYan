@@ -167,5 +167,15 @@
 	<true/>
 	<key>NSHighResolutionCapable</key>
 	<true/>
+	<key>NSRequiresAquaSystemAppearance</key>
+	<false/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+	<key>com.apple.developer.device-information.user-assigned-device-name</key>
+	<true/>
+	<key>com.apple.security.device.audio-input</key>
+	<false/>
+	<key>com.apple.security.device.camera</key>
+	<false/>
 </dict>
 </plist>

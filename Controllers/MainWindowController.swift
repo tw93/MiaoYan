@@ -32,8 +32,8 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         refreshEditArea()
     }
 
-
     func makeNew() {
+        applyMiaoYanAppearance()
         window?.makeKeyAndOrderFront(self)
         NSApp.activate(ignoringOtherApps: true)
         refreshEditArea(focusSearch: true)
@@ -93,6 +93,10 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         }
     }
 
+    func windowDidBecomeKey(_ notification: Notification) {
+        applyMiaoYanAppearance()
+    }
+
     func applyMiaoYanAppearance() {
         guard let window = window else { return }
 
@@ -129,14 +133,30 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         // Apply appearance and background color immediately
         if let appearance = targetAppearance {
             window.appearance = appearance
+            window.contentView?.appearance = appearance
         }
         window.backgroundColor = backgroundColor
 
         if let contentView = window.contentView {
             contentView.wantsLayer = true
-            contentView.layer?.backgroundColor = backgroundColor.cgColor
+            let effectiveAppearance = window.appearance ?? contentView.effectiveAppearance
+            let resolvedBackground = backgroundColor.resolvedColor(for: effectiveAppearance)
+            contentView.layer?.backgroundColor = resolvedBackground.cgColor
+            contentView.needsDisplay = true
         }
 
+        window.contentView?.subviews.forEach { $0.needsDisplay = true }
+
+        if let vc = ViewController.shared() {
+            if let sidebarSplit = vc.sidebarSplitView as? SidebarSplitView {
+                sidebarSplit.updateDividerVisibility()
+                sidebarSplit.displayIfNeeded()
+            }
+            if let editorSplit = vc.splitView {
+                editorSplit.updateDividerVisibility()
+                editorSplit.displayIfNeeded()
+            }
+        }
     }
 
     // MARK: - NSWindowRestoration

@@ -111,15 +111,11 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
 
     private func resolveColors() -> (backgroundColor: NSColor, dividerColor: NSColor) {
         var backgroundColor = Theme.backgroundColor
-        var dividerColor = NSColor(named: "divider") ?? .separatorColor
+        var dividerColor = Theme.dividerColor
 
         effectiveAppearance.performAsCurrentDrawingAppearance {
             backgroundColor = Theme.backgroundColor
-            if let namedDivider = NSColor(named: "divider") {
-                dividerColor = namedDivider
-            } else {
-                dividerColor = .separatorColor
-            }
+            dividerColor = Theme.dividerColor
         }
 
         return (backgroundColor, dividerColor)

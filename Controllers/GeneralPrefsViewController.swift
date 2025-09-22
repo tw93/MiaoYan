@@ -1,6 +1,40 @@
 import Cocoa
 import KeyboardShortcuts
 
+private final class AppearanceAwareSeparatorView: NSView {
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        commonInit()
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        updateColor()
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        updateColor()
+    }
+
+    private func commonInit() {
+        translatesAutoresizingMaskIntoConstraints = false
+        wantsLayer = true
+        layer?.cornerRadius = 0.5
+        updateColor()
+    }
+
+    private func updateColor() {
+        let appearance = window?.effectiveAppearance ?? effectiveAppearance
+        layer?.backgroundColor = Theme.dividerColor.resolvedColor(for: appearance).cgColor
+    }
+}
+
 @MainActor
 final class GeneralPrefsViewController: BasePrefsViewController {
     private var settings = GeneralSettings()
@@ -201,10 +235,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         container.translatesAutoresizingMaskIntoConstraints = false
         container.heightAnchor.constraint(equalToConstant: 1).isActive = true
 
-        let line = NSView()
-        line.translatesAutoresizingMaskIntoConstraints = false
-        line.wantsLayer = true
-        line.layer?.backgroundColor = NSColor.separatorColor.cgColor
+        let line = AppearanceAwareSeparatorView()
         container.addSubview(line)
 
         NSLayoutConstraint.activate([

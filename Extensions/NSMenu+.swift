@@ -61,7 +61,7 @@ enum MenuIconRegistry {
             #selector(NSApplication.hide(_:)),
             #selector(NSApplication.hideOtherApplications(_:))
         )
-        register("eye", #selector(NSApplication.unhideAllApplications(_:)), Selector(("togglePreview:")))
+        register("eye", #selector(NSApplication.unhideAllApplications(_:)))
         register("trash", Selector(("emptyTrash:")), Selector(("deleteNote:")))
         register("power", Selector(("quiteApp:")))
         register("square.and.pencil", Selector(("fileMenuNewNote:")))
@@ -86,7 +86,7 @@ enum MenuIconRegistry {
         register("arrow.up.and.down.circle", Selector(("sortDirectionBy:")))
         register("sidebar.left", Selector(("toggleSidebarPanel:")))
         register("list.bullet.rectangle", Selector(("toggleNoteList:")))
-        register("rectangle.on.rectangle", Selector(("togglePresentation:")))
+        register("rectangle.on.rectangle")
         register("arrow.up.left.and.arrow.down.right", #selector(NSWindow.toggleFullScreen(_:)))
         register("bold", Selector(("boldMenu:")))
         register("italic", Selector(("italicMenu:")))
@@ -100,7 +100,7 @@ enum MenuIconRegistry {
         register("checkmark.square", Selector(("todoMenu:")))
         register("arrow.left", Selector(("shiftLeft:")))
         register("arrow.right", Selector(("shiftRight:")))
-        register("textformat", Selector(("formatText:")))
+        register("textformat")
         register("doc.on.doc", Selector(("noteCopy:")))
         register("text.magnifyingglass", Selector(("textFinder:")))
         register("arrow.down.right.and.arrow.up.left.rectangle", #selector(NSWindow.performMiniaturize(_:)))
@@ -111,7 +111,7 @@ enum MenuIconRegistry {
         register("bird", Selector(("openTwitter:")))
         register("doc.text.magnifyingglass", Selector(("openRelease:")))
         register("exclamationmark.bubble", Selector(("openIssue:")))
-        register("sparkles", Selector(("toggleMagicPPT:")))
+        register("sparkles")
         register("pin", Selector(("pinMenu:")))
         register("chevron.left.forwardslash.chevron.right", Selector(("exportHtml:")))
         register("photo", Selector(("exportImage:")))
@@ -137,6 +137,10 @@ enum MenuIconRegistry {
         "pasteAsPlainText:": "clipboard.fill",
         "selectAll:": "square.grid.2x2",
         "centerSelectionInVisibleArea:": "scope",
+        "togglePreview:": "eye",
+        "togglePresentation:": "rectangle.on.rectangle",
+        "formatText:": "textformat",
+        "toggleMagicPPT:": "sparkles",
     ]
 
     private static let symbolsByIdentifier: [String: String] = [

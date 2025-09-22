@@ -50,6 +50,51 @@ enum Theme {
     static var underlineColor: Color {
         NSColor(named: "underlineColor") ?? .black
     }
+    static var highlightColor: Color {
+        NSColor(named: "highlight") ?? .systemBlue
+    }
+
+    // Primary accent color for highlights and active states
+    static var accentColor: Color {
+        NSColor(named: "accentColor") ?? .controlAccentColor
+    }
+
+    // Selection text color for highlighted/selected table cells
+    static var selectionTextColor: Color {
+        .selectedMenuItemTextColor
+    }
+
+    // Toast notification colors
+    static var toastBackgroundColor: Color {
+        NSColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 0.95)
+    }
+
+    static var toastTextColor: Color {
+        .white
+    }
+
+    // Divider/separator color for UI elements
+    static var dividerColor: Color {
+        NSColor(named: "divider") ?? .separatorColor
+    }
+
+    // Dark background color for preview
+    static var previewDarkBackgroundColor: Color {
+        NSColor(srgbRed: 0x23 / 255.0, green: 0x28 / 255.0, blue: 0x2D / 255.0, alpha: 1.0)
+    }
+}
+
+extension NSColor {
+    /// Resolve dynamic asset colors against a specific appearance. Falls back to self when resolution fails.
+    func resolvedColor(for appearance: NSAppearance?) -> NSColor {
+        guard let appearance else { return self }
+
+        var resolved = self
+        appearance.performAsCurrentDrawingAppearance {
+            resolved = self.usingColorSpace(.deviceRGB) ?? self
+        }
+        return resolved
+    }
 }
 
 // Optional: Use this to get a color "snapshot" from non-main threads
@@ -64,6 +109,13 @@ struct ThemeSnapshot {
     let listColor: NSColor
     let htmlColor: NSColor
     let underlineColor: NSColor
+    let highlightColor: NSColor
+    let accentColor: NSColor
+    let selectionTextColor: NSColor
+    let toastBackgroundColor: NSColor
+    let toastTextColor: NSColor
+    let dividerColor: NSColor
+    let previewDarkBackgroundColor: NSColor
 
     static func make() async -> ThemeSnapshot {
         await MainActor.run {
@@ -76,7 +128,14 @@ struct ThemeSnapshot {
                 linkColor: Theme.linkColor,
                 listColor: Theme.listColor,
                 htmlColor: Theme.htmlColor,
-                underlineColor: Theme.underlineColor
+                underlineColor: Theme.underlineColor,
+                highlightColor: Theme.highlightColor,
+                accentColor: Theme.accentColor,
+                selectionTextColor: Theme.selectionTextColor,
+                toastBackgroundColor: Theme.toastBackgroundColor,
+                toastTextColor: Theme.toastTextColor,
+                dividerColor: Theme.dividerColor,
+                previewDarkBackgroundColor: Theme.previewDarkBackgroundColor
             )
         }
     }

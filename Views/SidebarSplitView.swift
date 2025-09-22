@@ -8,14 +8,43 @@ class SidebarSplitView: NSSplitView, NSSplitViewDelegate {
         super.awakeFromNib()
         MainActor.assumeIsolated { [self] in
             delegate = self
-            setValue(NSColor(named: "divider"), forKey: "dividerColor")
+            updateDividerVisibility()
         }
     }
 
     func updateDividerVisibility() {
+        applyDividerColor()
+    }
+
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        updateDividerVisibility()
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        updateDividerVisibility()
+    }
+
+    override func drawDivider(in rect: NSRect) {
+        resolvedDividerColor().setFill()
+        NSBezierPath(rect: rect).fill()
+    }
+
+    private func currentDividerColor() -> NSColor {
         let sidebarWidth = subviews.first?.frame.width ?? 0
-        let dividerColor = sidebarWidth == 0 ? Theme.backgroundColor : NSColor(named: "divider")
-        setValue(dividerColor, forKey: "dividerColor")
+        return sidebarWidth == 0 ? Theme.backgroundColor : Theme.dividerColor
+    }
+
+    private func resolvedDividerColor() -> NSColor {
+        let appearance = window?.effectiveAppearance ?? effectiveAppearance
+        return currentDividerColor().resolvedColor(for: appearance)
+    }
+
+    private func applyDividerColor() {
+        setValue(resolvedDividerColor(), forKey: "dividerColor")
+        needsDisplay = true
+        displayIfNeeded()
     }
 
     func splitView(_ splitView: NSSplitView, constrainSplitPosition proposedPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {

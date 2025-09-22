@@ -192,6 +192,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
     #endif
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        applyAppearance()
         if !flag {
             mainWindowController?.makeNew()
         } else {
@@ -316,9 +317,21 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private func configureSystemLogging() {
         // Disable verbose system activity tracing
         setenv("OS_ACTIVITY_MODE", "disable", 1)
-        // Reduce Metal debug output noise
+        // Keep Metal diagnostic output quiet without touching runtime caches
         setenv("MTL_HUD_ENABLED", "0", 1)
         setenv("MTL_DEBUG_LAYER", "0", 1)
+        setenv("MTL_SHADER_VALIDATION", "0", 1)
+        setenv("MTL_CAPTURE_ENABLED", "0", 1)
+        setenv("METAL_PERFORMANCE_SHADERS_LOGGING", "0", 1)
+        // Configure URLCache to use memory only to prevent disk I/O errors
+        configureURLCache()
+    }
+
+    private func configureURLCache() {
+        let memoryCapacity = 50 * 1024 * 1024  // 50MB
+        let diskCapacity = 0  // Disable disk cache to prevent I/O errors
+        let cache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity, diskPath: nil)
+        URLCache.shared = cache
     }
 
     // MARK: - Global Keyboard Monitor

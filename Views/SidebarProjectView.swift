@@ -9,6 +9,29 @@ private enum UIConstants {
     static let defaultRowHeight: CGFloat = 34
 }
 
+@MainActor
+private enum MenuTitles {
+    static let showInFinder = I18n.str("Show in Finder")
+    static let renameFolder = I18n.str("Rename Folder")
+    static let deleteFolder = I18n.str("Delete Folder")
+}
+
+private enum DragDropTypes {
+    static let publicData = NSPasteboard.PasteboardType(rawValue: "public.data")
+    static let notesTable = NSPasteboard.PasteboardType(rawValue: "notesTable")
+    static let sidebarReorder = NSPasteboard.PasteboardType(rawValue: "SidebarProjectReorder")
+}
+
+private struct KeyboardShortcut {
+    let modifiers: NSEvent.ModifierFlags
+    let keyCode: UInt16
+    let action: () -> Void
+
+    func matches(_ event: NSEvent) -> Bool {
+        return event.modifierFlags.contains(modifiers) && event.keyCode == keyCode
+    }
+}
+
 class SidebarProjectView: NSOutlineView,
     NSOutlineViewDelegate,
     NSOutlineViewDataSource,
@@ -29,9 +52,9 @@ class SidebarProjectView: NSOutlineView,
         MainActor.assumeIsolated { [self] in
             setDraggingSourceOperationMask(.move, forLocal: true)
             registerForDraggedTypes([
-                NSPasteboard.PasteboardType(rawValue: "public.data"),
-                NSPasteboard.PasteboardType(rawValue: "notesTable"),
-                NSPasteboard.PasteboardType(rawValue: "SidebarProjectReorder"),
+                DragDropTypes.publicData,
+                DragDropTypes.notesTable,
+                DragDropTypes.sidebarReorder,
             ])
         }
     }
@@ -41,82 +64,89 @@ class SidebarProjectView: NSOutlineView,
             return false
         }
 
-        if menuItem.title == I18n.str("Show in Finder") {
-            if let sidebarItem = getSidebarItem() {
-                return sidebarItem.project != nil || sidebarItem.isTrash()
-            }
+        switch menuItem.title {
+        case MenuTitles.showInFinder:
+            return sidebarItem.project != nil || sidebarItem.isTrash()
+
+        case MenuTitles.renameFolder:
+            return validateRenameMenuItem(sidebarItem: sidebarItem, menuItem: menuItem)
+
+        case MenuTitles.deleteFolder:
+            return validateDeleteMenuItem(sidebarItem: sidebarItem, menuItem: menuItem)
+
+        default:
+            return false
         }
+    }
 
-        if menuItem.title == I18n.str("Rename Folder") {
-            if sidebarItem.isTrash() {
-                return false
-            }
+    private func validateRenameMenuItem(sidebarItem: SidebarItem, menuItem: NSMenuItem) -> Bool {
+        guard !sidebarItem.isTrash() else { return false }
 
-            if let project = sidebarItem.project {
-                menuItem.isHidden = project.isRoot
-            }
-
-            if let project = sidebarItem.project, !project.isDefault {
-                return true
-            }
+        if let project = sidebarItem.project {
+            menuItem.isHidden = project.isRoot
+            return !project.isDefault
         }
-
-        if menuItem.title == I18n.str("Delete Folder") {
-            if sidebarItem.isTrash() {
-                return false
-            }
-
-            if sidebarItem.project != nil {
-                menuItem.title = I18n.str("Delete Folder")
-            }
-
-            if let project = sidebarItem.project, !project.isDefault {
-                return true
-            }
-        }
-
         return false
+    }
+
+    private func validateDeleteMenuItem(sidebarItem: SidebarItem, menuItem: NSMenuItem) -> Bool {
+        guard !sidebarItem.isTrash() else { return false }
+
+        if sidebarItem.project != nil {
+            menuItem.title = MenuTitles.deleteFolder
+        }
+
+        return sidebarItem.project?.isDefault == false
     }
 
     override func keyDown(with event: NSEvent) {
         guard let vc = ViewController.shared() else {
             return
         }
-        if event.modifierFlags.contains(.command), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_N {
-            addProject("")
+
+        if handleKeyboardShortcuts(event) {
             return
         }
 
-        if event.modifierFlags.contains(.option), event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_R {
-            revealInFinder("")
+        if handleNavigationKeys(event, vc: vc) {
             return
         }
 
-        if event.modifierFlags.contains(.shift), event.keyCode == kVK_F6 {
-            renameMenu("")
-            return
-        }
+        super.keyDown(with: event)
+    }
 
-        if event.modifierFlags.contains(.command), event.modifierFlags.contains(.shift), event.keyCode == kVK_Delete {
-            deleteMenu("")
-            return
-        }
+    private func handleKeyboardShortcuts(_ event: NSEvent) -> Bool {
+        let shortcuts: [KeyboardShortcut] = [
+            KeyboardShortcut(modifiers: [.command, .shift], keyCode: UInt16(kVK_ANSI_N)) { self.addProject("") },
+            KeyboardShortcut(modifiers: [.option, .command], keyCode: UInt16(kVK_ANSI_R)) { self.revealInFinder("") },
+            KeyboardShortcut(modifiers: [.shift], keyCode: UInt16(kVK_F6)) { self.renameMenu("") },
+            KeyboardShortcut(modifiers: [.command, .shift], keyCode: UInt16(kVK_Delete)) { self.deleteMenu("") },
+        ]
 
-        if event.keyCode == kVK_RightArrow {
+        for shortcut in shortcuts where shortcut.matches(event) {
+            shortcut.action()
+            return true
+        }
+        return false
+    }
+
+    private func handleNavigationKeys(_ event: NSEvent, vc: ViewController) -> Bool {
+        switch Int(event.keyCode) {
+        case Int(kVK_RightArrow):
             if let fr = window?.firstResponder, fr.isKind(of: NSTextView.self) {
                 super.keyUp(with: event)
-                return
+                return true
             }
-
             vc.notesTableView.window?.makeFirstResponder(vc.notesTableView)
-            // Don't auto-select any note, let user explicitly choose with arrow keys or right arrow
-        }
-        // Tab to search
-        if event.keyCode == 48 {
+            return false
+
+        case 48:  // Tab key
             viewDelegate?.search.becomeFirstResponder()
-            return
+            return true
+
+        default:
+            return false
         }
-        super.keyDown(with: event)
     }
 
     func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
@@ -331,6 +361,145 @@ class SidebarProjectView: NSOutlineView,
         return NSDragOperation()
     }
 
+    // MARK: - Helper Methods
+
+    private func configureCellLayout(_ cell: SidebarCellView, baseFont: NSFont) {
+        let defaultIconSize: CGFloat = 17
+        let defaultSpacing: CGFloat = 4
+        let defaultIconLeading: CGFloat = 1
+
+        updateIconLeading(cell, leading: defaultIconLeading)
+        adjustIconSize(cell, size: defaultIconSize)
+        setupBasicCellAppearance(cell, baseFont: baseFont)
+        updateLabelSpacing(cell, spacing: defaultSpacing)
+    }
+
+    private func setupBasicCellAppearance(_ cell: SidebarCellView, baseFont: NSFont) {
+        cell.icon.isHidden = false
+        cell.icon.contentTintColor = nil
+        cell.icon.imageScaling = .scaleProportionallyDown
+
+        cell.label.lineBreakMode = .byTruncatingTail
+        cell.label.cell?.truncatesLastVisibleLine = true
+        cell.label.cell?.wraps = false
+        if #available(macOS 10.14, *) {
+            cell.label.maximumNumberOfLines = 1
+        }
+
+        cell.label.font = baseFont
+        cell.label.textColor = Theme.textColor
+    }
+
+    private func updateIconLeading(_ cell: SidebarCellView, leading: CGFloat) {
+        if let constraint = cell.constraints.first(where: {
+            guard ($0.firstItem as? NSView) === cell.icon,
+                $0.firstAttribute == .leading,
+                ($0.secondItem as? NSView) === cell,
+                $0.secondAttribute == .leading
+            else {
+                return false
+            }
+            return true
+        }) {
+            constraint.constant = leading
+        } else {
+            cell.icon.frame.origin.x = leading
+        }
+
+        cell.layoutSubtreeIfNeeded()
+    }
+
+    private func adjustIconSize(_ cell: SidebarCellView, size: CGFloat) {
+        for constraint in cell.icon.constraints where constraint.firstAttribute == .width || constraint.firstAttribute == .height {
+            constraint.constant = size
+        }
+        cell.icon.frame.size = NSSize(width: size, height: size)
+        cell.layoutSubtreeIfNeeded()
+    }
+
+    private func updateLabelSpacing(_ cell: SidebarCellView, spacing: CGFloat) {
+        cell.layoutSubtreeIfNeeded()
+        let iconFrame = cell.icon.frame
+        let desiredLeading = iconFrame.origin.x + iconFrame.size.width + spacing
+
+        if let constraint = cell.constraints.first(where: {
+            guard ($0.firstItem as? NSView) === cell.label,
+                $0.firstAttribute == .leading,
+                ($0.secondItem as? NSView) === cell,
+                $0.secondAttribute == .leading
+            else {
+                return false
+            }
+            return true
+        }) {
+            constraint.constant = desiredLeading
+        } else {
+            cell.label.frame.origin.x = desiredLeading
+        }
+
+        cell.layoutSubtreeIfNeeded()
+    }
+
+    private func configureForSidebarItemType(_ cell: SidebarCellView, sidebarItem: SidebarItem, baseFont: NSFont, accentColor: NSColor) {
+        let accentIconSize: CGFloat = 24
+        let accentSpacing: CGFloat = 4
+        let accentIconLeading: CGFloat = -2
+        let accentFont = createAccentFont(from: baseFont)
+
+        switch sidebarItem.type {
+        case .All:
+            cell.icon.image = NSImage(imageLiteralResourceName: "home")
+            cell.icon.image?.isTemplate = true
+            cell.icon.contentTintColor = accentColor
+            updateIconLeading(cell, leading: accentIconLeading)
+            adjustIconSize(cell, size: accentIconSize)
+            cell.label.font = accentFont
+            cell.label.textColor = accentColor
+            updateLabelSpacing(cell, spacing: accentSpacing)
+            cell.label.lineBreakMode = .byClipping
+            cell.label.cell?.truncatesLastVisibleLine = false
+
+        case .Trash:
+            cell.icon.image = NSImage(imageLiteralResourceName: "deleteNote")
+            cell.icon.image?.isTemplate = false
+
+        case .Category:
+            cell.icon.image = NSImage(imageLiteralResourceName: "project")
+            cell.icon.image?.isTemplate = false
+        }
+    }
+
+    private func createAccentFont(from baseFont: NSFont) -> NSFont {
+        let accentFontDescriptor = baseFont.fontDescriptor.addingAttributes([
+            NSFontDescriptor.AttributeName.traits: [
+                NSFontDescriptor.TraitKey.weight: NSNumber(value: Double(NSFont.Weight.semibold.rawValue))
+            ]
+        ])
+        let accentFontSize = baseFont.pointSize + 2
+        return NSFont(
+            descriptor: accentFontDescriptor,
+            size: accentFontSize
+        ) ?? NSFont.systemFont(ofSize: accentFontSize, weight: .semibold)
+    }
+
+    private func applyFinalStyling(_ cell: SidebarCellView, sidebarItem: SidebarItem, accentColor: NSColor) {
+        cell.label.addCharacterSpacing()
+
+        let color = sidebarItem.type == .All ? accentColor : Theme.textColor
+        applyLabelColor(cell, color: color)
+    }
+
+    private func applyLabelColor(_ cell: SidebarCellView, color: NSColor) {
+        let attributed = NSMutableAttributedString(attributedString: cell.label.attributedStringValue)
+        let range = NSRange(location: 0, length: attributed.length)
+        if range.length > 0 {
+            attributed.addAttribute(.foregroundColor, value: color, range: range)
+            cell.label.attributedStringValue = attributed
+        } else {
+            cell.label.textColor = color
+        }
+    }
+
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
         if let sidebar = sidebarItems, item == nil {
             return sidebar.count
@@ -368,174 +537,19 @@ class SidebarProjectView: NSOutlineView,
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         let cell = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "DataCell"), owner: self) as! SidebarCellView
 
-        if let si = item as? SidebarItem {
-            cell.textField?.stringValue = si.name
-
-            let baseFont = UserDefaultsManagement.nameFont ?? NSFont.systemFont(ofSize: 14)
-            let defaultIconSize: CGFloat = 17
-            let accentIconSize: CGFloat = 24
-            let accentColorLight = NSColor(
-                calibratedRed: CGFloat(0x1C) / 255,
-                green: CGFloat(0x5D) / 255,
-                blue: CGFloat(0x33) / 255,
-                alpha: 1
-            )
-            let accentColorDark = NSColor(
-                calibratedRed: CGFloat(0x54) / 255,
-                green: CGFloat(0xC5) / 255,
-                blue: CGFloat(0x9F) / 255,
-                alpha: 1
-            )
-            let accentColor: NSColor
-            let appearancePreference = UserDefaultsManagement.appearanceType
-            let isDarkMode: Bool
-
-            switch appearancePreference {
-            case .Dark:
-                isDarkMode = true
-            case .Light:
-                isDarkMode = false
-            case .Custom:
-                isDarkMode = UserDataService.instance.isDark
-            default:
-                if #available(macOS 10.14, *) {
-                    let appearance = cell.effectiveAppearance
-                    let match = appearance.bestMatch(from: [.darkAqua, .vibrantDark, .aqua, .vibrantLight])
-                    isDarkMode = match == .darkAqua || match == .vibrantDark
-                } else {
-                    isDarkMode = false
-                }
-            }
-
-            accentColor = isDarkMode ? accentColorDark : accentColorLight
-
-            let accentFontDescriptor = baseFont.fontDescriptor.addingAttributes([
-                NSFontDescriptor.AttributeName.traits: [
-                    NSFontDescriptor.TraitKey.weight: NSNumber(value: Double(NSFont.Weight.semibold.rawValue))
-                ]
-            ])
-            let accentFontSize = baseFont.pointSize + 2
-            let accentFont =
-                NSFont(
-                    descriptor: accentFontDescriptor,
-                    size: accentFontSize
-                ) ?? NSFont.systemFont(ofSize: accentFontSize, weight: .semibold)
-
-            let defaultSpacing: CGFloat = 4
-            let accentSpacing: CGFloat = 4
-            let defaultIconLeading: CGFloat = 1
-            let accentIconLeading: CGFloat = -2
-
-            let updateIconLeading: (CGFloat) -> Void = { leading in
-                if let constraint = cell.constraints.first(where: {
-                    guard ($0.firstItem as? NSView) === cell.icon,
-                        $0.firstAttribute == .leading,
-                        ($0.secondItem as? NSView) === cell,
-                        $0.secondAttribute == .leading
-                    else {
-                        return false
-                    }
-                    return true
-                }) {
-                    constraint.constant = leading
-                } else {
-                    cell.icon.frame.origin.x = leading
-                }
-
-                cell.layoutSubtreeIfNeeded()
-            }
-
-            let adjustIconSize: (CGFloat) -> Void = { size in
-                for constraint in cell.icon.constraints where constraint.firstAttribute == .width || constraint.firstAttribute == .height {
-                    constraint.constant = size
-                }
-                cell.icon.frame.size = NSSize(width: size, height: size)
-                cell.layoutSubtreeIfNeeded()
-            }
-
-            let updateLabelSpacing: (CGFloat) -> Void = { spacing in
-                cell.layoutSubtreeIfNeeded()
-                let iconFrame = cell.icon.frame
-                let desiredLeading = iconFrame.origin.x + iconFrame.size.width + spacing
-
-                if let constraint = cell.constraints.first(where: {
-                    guard ($0.firstItem as? NSView) === cell.label,
-                        $0.firstAttribute == .leading,
-                        ($0.secondItem as? NSView) === cell,
-                        $0.secondAttribute == .leading
-                    else {
-                        return false
-                    }
-                    return true
-                }) {
-                    constraint.constant = desiredLeading
-                } else {
-                    cell.label.frame.origin.x = desiredLeading
-                }
-
-                cell.layoutSubtreeIfNeeded()
-            }
-
-            cell.icon.isHidden = false
-            cell.icon.contentTintColor = nil
-            cell.icon.imageScaling = .scaleProportionallyDown
-            updateIconLeading(defaultIconLeading)
-            adjustIconSize(defaultIconSize)
-
-            cell.label.lineBreakMode = .byTruncatingTail
-            cell.label.cell?.truncatesLastVisibleLine = true
-            cell.label.cell?.wraps = false
-            if #available(macOS 10.14, *) {
-                cell.label.maximumNumberOfLines = 1
-            }
-
-            cell.label.font = baseFont
-            cell.label.textColor = Theme.textColor
-            updateLabelSpacing(defaultSpacing)
-
-            switch si.type {
-            case .All:
-                cell.icon.image = NSImage(imageLiteralResourceName: "home")
-                cell.icon.image?.isTemplate = true
-                cell.icon.contentTintColor = accentColor
-                updateIconLeading(accentIconLeading)
-                adjustIconSize(accentIconSize)
-                cell.label.font = accentFont
-                cell.label.textColor = accentColor
-                updateLabelSpacing(accentSpacing)
-                cell.label.lineBreakMode = .byClipping
-                cell.label.cell?.truncatesLastVisibleLine = false
-
-            case .Trash:
-                cell.icon.image = NSImage(imageLiteralResourceName: "deleteNote")
-                cell.icon.image?.isTemplate = false
-                updateLabelSpacing(defaultSpacing)
-
-            case .Category:
-                cell.icon.image = NSImage(imageLiteralResourceName: "project")
-                cell.icon.image?.isTemplate = false
-                updateLabelSpacing(defaultSpacing)
-            }
-
-            cell.label.addCharacterSpacing()
-
-            let applyLabelColor: (NSColor) -> Void = { color in
-                let attributed = NSMutableAttributedString(attributedString: cell.label.attributedStringValue)
-                let range = NSRange(location: 0, length: attributed.length)
-                if range.length > 0 {
-                    attributed.addAttribute(.foregroundColor, value: color, range: range)
-                    cell.label.attributedStringValue = attributed
-                } else {
-                    cell.label.textColor = color
-                }
-            }
-
-            if si.type == .All {
-                applyLabelColor(accentColor)
-            } else {
-                applyLabelColor(Theme.textColor)
-            }
+        guard let sidebarItem = item as? SidebarItem else {
+            return cell
         }
+
+        cell.textField?.stringValue = sidebarItem.name
+
+        let baseFont = UserDefaultsManagement.nameFont ?? NSFont.systemFont(ofSize: 14)
+        let accentColor = Theme.accentColor
+
+        configureCellLayout(cell, baseFont: baseFont)
+        configureForSidebarItemType(cell, sidebarItem: sidebarItem, baseFont: baseFont, accentColor: accentColor)
+        applyFinalStyling(cell, sidebarItem: sidebarItem, accentColor: accentColor)
+
         return cell
     }
 

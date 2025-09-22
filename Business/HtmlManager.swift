@@ -78,8 +78,8 @@ class HtmlManager {
     // MARK: - Bundle and Resource Management
 
     static func getDownViewBundle() -> Bundle? {
-        guard let path = Bundle.main.path(forResource: "DownView", ofType: ".bundle") else { return nil }
-        return Bundle(url: URL(fileURLWithPath: path))
+        guard let path = Bundle.main.path(forResource: "DownView", ofType: "bundle") else { return nil }
+        return Bundle(path: path)
     }
 
     @MainActor

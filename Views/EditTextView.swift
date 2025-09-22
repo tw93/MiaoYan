@@ -136,12 +136,12 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         imagePreviewManager?.handleImageLinkHover(at: index, mousePoint: event.locationInWindow)
         if NSEvent.modifierFlags.contains(.command) {
             linkTextAttributes = [
-                .foregroundColor: NSColor(named: "highlight")!,
+                .foregroundColor: Theme.highlightColor,
                 .cursor: NSCursor.pointingHand,
             ]
         } else {
             linkTextAttributes = [
-                .foregroundColor: NSColor(named: "highlight")!
+                .foregroundColor: Theme.highlightColor
             ]
         }
         super.mouseMoved(with: event)
@@ -447,7 +447,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             deleteUnusedImages(checkRange: affectedCharRange)
             typingAttributes.removeValue(forKey: .todo)
             if textStorage?.length == 0 {
-                typingAttributes[.foregroundColor] = UserDataService.instance.isDark ? NSColor.white : NSColor.black
+                typingAttributes[.foregroundColor] = Theme.textColor
             }
         }
         return super.shouldChangeText(in: affectedCharRange, replacementString: replacementString)
