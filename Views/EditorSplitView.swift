@@ -8,15 +8,44 @@ class EditorSplitView: NSSplitView, NSSplitViewDelegate {
         super.awakeFromNib()
         MainActor.assumeIsolated { [self] in
             delegate = self
-            setValue(NSColor(named: "divider"), forKey: "dividerColor")
+            updateDividerVisibility()
         }
     }
 
     func updateDividerVisibility() {
+        applyDividerColor()
+    }
+
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        updateDividerVisibility()
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        updateDividerVisibility()
+    }
+
+    override func drawDivider(in rect: NSRect) {
+        resolvedDividerColor().setFill()
+        NSBezierPath(rect: rect).fill()
+    }
+
+    private func currentDividerColor() -> NSColor {
         let notelistWidth = subviews.first?.frame.width ?? 0
-        let shouldHide = notelistWidth == 0 || shouldHideDivider
-        let dividerColor = shouldHide ? Theme.backgroundColor : NSColor(named: "divider")
-        setValue(dividerColor, forKey: "dividerColor")
+        let hideDivider = notelistWidth == 0 || shouldHideDivider
+        return hideDivider ? Theme.backgroundColor : Theme.dividerColor
+    }
+
+    private func resolvedDividerColor() -> NSColor {
+        let appearance = window?.effectiveAppearance ?? effectiveAppearance
+        return currentDividerColor().resolvedColor(for: appearance)
+    }
+
+    private func applyDividerColor() {
+        setValue(resolvedDividerColor(), forKey: "dividerColor")
+        needsDisplay = true
+        displayIfNeeded()
     }
 
     override func minPossiblePositionOfDivider(at dividerIndex: Int) -> CGFloat {

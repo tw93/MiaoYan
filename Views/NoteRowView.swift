@@ -97,7 +97,7 @@ class NoteRowView: NSTableRowView {
         )
 
         // Use divider color from Assets, resolved for current appearance
-        var dividerColor = NSColor(named: "divider") ?? NSColor.separatorColor
+        var dividerColor = Theme.dividerColor
         let app = self.effectiveAppearance
         var cg: CGColor?
         app.performAsCurrentDrawingAppearance {

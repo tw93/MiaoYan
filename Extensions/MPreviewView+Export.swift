@@ -61,7 +61,8 @@ class ExportCache {
         let content = note.getPrettifiedContent()
         let appearanceKey = UserDataService.instance.isDark ? "dark" : "light"
         let settingsKey = "\(UserDefaultsManagement.previewFontSize)_\(UserDefaultsManagement.previewFontName)"
-        let combinedData = "\(content)_\(appearanceKey)_\(settingsKey)".data(using: .utf8) ?? Data()
+        let combinedString = "\(content)_\(appearanceKey)_\(settingsKey)"
+        let combinedData = Data(combinedString.utf8)
         return SHA256.hash(data: combinedData).compactMap { String(format: "%02x", $0) }.joined()
     }
 

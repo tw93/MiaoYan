@@ -56,7 +56,11 @@ class ViewController:
     @IBOutlet var search: SearchTextField!
     @IBOutlet var miaoYanText: NSTextField!
     @IBOutlet var notesTableView: NotesTableView!
-    @IBOutlet var noteMenu: NSMenu!
+    @IBOutlet var noteMenu: NSMenu! {
+        didSet {
+            noteMenu.item(withTitle: I18n.str("Export"))?.identifier = NSUserInterfaceItemIdentifier("noteMenu.export")
+        }
+    }
     @IBOutlet var storageOutlineView: SidebarProjectView!
     @IBOutlet var sidebarSplitView: NSSplitView!
     @IBOutlet var notesListCustomView: NSView!
@@ -456,7 +460,7 @@ class ViewController:
         editArea.isAutomaticDashSubstitutionEnabled = false
         editArea.textStorage?.delegate = editArea.textStorage
         editArea?.linkTextAttributes = [
-            .foregroundColor: NSColor(named: "highlight")!
+            .foregroundColor: Theme.highlightColor
         ]
         editArea.viewDelegate = self
     }

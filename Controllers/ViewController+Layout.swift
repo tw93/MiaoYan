@@ -87,7 +87,7 @@ extension ViewController {
             splitView.shouldHideDivider = true
             splitView.setPosition(0, ofDividerAt: 0)
 
-            (splitView as? EditorSplitView)?.updateDividerVisibility()
+            splitView.updateDividerVisibility()
 
             hideSidebar("")
         }
@@ -98,7 +98,7 @@ extension ViewController {
         let size = UserDefaultsManagement.sidebarSize == 0 ? 280 : UserDefaultsManagement.sidebarSize
         splitView.shouldHideDivider = false
         splitView.setPosition(CGFloat(size), ofDividerAt: 0)
-        (splitView as? EditorSplitView)?.updateDividerVisibility()
+        splitView.updateDividerVisibility()
     }
 
     // MARK: - Toggle Actions

@@ -74,12 +74,12 @@ final class ToastManager {
         toast.layer?.masksToBounds = true
         toast.layer?.opacity = 0
 
-        if toast.subviews.first(where: { $0.wantsLayer && $0.layer?.backgroundColor != nil }) == nil {
+        if !toast.subviews.contains(where: { $0.wantsLayer && $0.layer?.backgroundColor != nil }) {
             let backgroundView = NSView()
             backgroundView.translatesAutoresizingMaskIntoConstraints = false
             backgroundView.wantsLayer = true
             backgroundView.layer = CALayer()
-            backgroundView.layer?.backgroundColor = NSColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 0.95).cgColor
+            backgroundView.layer?.backgroundColor = Theme.toastBackgroundColor.cgColor
             backgroundView.layer?.cornerRadius = configuration.cornerRadius
 
             toast.addSubview(backgroundView, positioned: .below, relativeTo: nil)
@@ -217,7 +217,7 @@ enum ToastFactory {
     private static func makeLabel(_ text: String, isTitle: Bool = false) -> NSTextField {
         let tf = NSTextField(labelWithString: text)
         tf.translatesAutoresizingMaskIntoConstraints = false
-        tf.textColor = .white
+        tf.textColor = Theme.toastTextColor
         tf.lineBreakMode = .byWordWrapping
         tf.maximumNumberOfLines = 0
         tf.alignment = .left

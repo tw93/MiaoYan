@@ -1154,7 +1154,7 @@ public class NotesTextProcessor {
                             attributedString.addAttribute(NoteAttribute.highlight, value: true, range: subRange)
                         }
                         attributedString.addAttribute(NSAttributedString.Key.backgroundColor, value: titleColor, range: subRange)
-                        attributedString.addAttribute(.foregroundColor, value: NSColor.white, range: subRange)
+                        attributedString.addAttribute(.foregroundColor, value: Theme.selectionTextColor, range: subRange)
                     }
                 }
             )
