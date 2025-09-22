@@ -127,7 +127,7 @@ class ClipboardManager {
             let tempPath = URL(fileURLWithPath: imagePath)
             let picType = UserDefaultsManagement.defaultPicUpload
 
-            if picType == "PicGo" {
+            if picType == "PicGo" || picType == "PicList" {
                 vc.toastUpload(status: true)
                 let defaultImageString = "![](\(path))"
                 postToPicGo(imagePath: imagePath) { [weak self, weak textView, weak vc] result, error in
@@ -173,11 +173,11 @@ class ClipboardManager {
         }
     }
 
-    private func postToPicGo(imagePath: String, completion: @escaping @Sendable (Any?, Error?) -> Void) {
+    private func postToPicGo(imagePath: String, serverURL: String = "http://127.0.0.1:36677/upload", completion: @escaping @Sendable (Any?, Error?) -> Void) {
         let parameters: [String: [String]] = [
             "list": [imagePath]
         ]
-        AF.request("http://127.0.0.1:36677/upload", method: .post, parameters: parameters, encoder: JSONParameterEncoder.default).response { response in
+        AF.request(serverURL, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default).response { response in
             switch response.result {
             case .success:
                 let json = JSON(response.value as Any)
