@@ -283,6 +283,67 @@ CA
                                                 <action selector="todoMenu:" target="N0L-g4-qwj" id="az6-KC-Ymg"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Tab Quick Input" image="wand.and.sparkles" catalog="system" id="xgO-jF-1ab">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <menu key="submenu" title="Tab Quick Input" id="1bu-5n-fpO">
+                                                <items>
+                                                    <menuItem title="/time - Current Time" id="fWx-6p-Qn4">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="insertTimeShortcut:" target="Ady-hI-5gd" id="time-action"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="/table - Table Template" id="DgV-s3-FTw">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="insertTableShortcut:" target="Ady-hI-5gd" id="table-action"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="/img - Image Tag" id="Mjr-9Q-R9p">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="insertImgShortcut:" target="Ady-hI-5gd" id="img-action"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="/video - Video Tag" id="l86-r1-q1S">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="insertVideoShortcut:" target="Ady-hI-5gd" id="video-action"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="/markmap - Mind Map" id="nCA-V8-jEl">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="insertMarkmapShortcut:" target="Ady-hI-5gd" id="markmap-action"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="/mermaid - Flow Chart" id="H7F-cn-DrH">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="insertMermaidShortcut:" target="Ady-hI-5gd" id="mermaid-action"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="/plantuml - UML Diagram" id="raS-V6-70A">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="insertPlantumlShortcut:" target="Ady-hI-5gd" id="plantuml-action"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="/fold - Collapsible Section" id="YFF-9q-sOk">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="insertFoldShortcut:" target="Ady-hI-5gd" id="fold-action"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                    <menuItem title="/task - Task List" id="i2U-Vk-5TZ">
+                                                        <modifierMask key="keyEquivalentModifierMask"/>
+                                                        <connections>
+                                                            <action selector="insertTaskShortcut:" target="Ady-hI-5gd" id="task-action"/>
+                                                        </connections>
+                                                    </menuItem>
+                                                </items>
+                                            </menu>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="3qd-xT-Shm"/>
                                         <menuItem title="Shift Left" keyEquivalent="[" id="Iba-Po-ajH">
                                             <connections>
@@ -542,7 +603,7 @@ CA
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <clipView key="contentView" drawsBackground="NO" id="ceg-yR-Ncf">
                                                     <rect key="frame" x="0.0" y="0.0" width="202" height="600"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <outlineView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="none" autosaveColumns="NO" rowHeight="50" rowSizeStyle="automatic" viewBased="YES" indentationPerLevel="14" outlineTableColumn="Gwp-vX-YaR" id="urA-eK-bWB" customClass="SidebarProjectView" customModule="MiaoYan" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="202" height="600"/>
@@ -675,7 +736,7 @@ CA
                                                         <rect key="frame" x="0.0" y="0.0" width="237" height="595"/>
                                                         <clipView key="contentView" focusRingType="none" drawsBackground="NO" copiesOnScroll="NO" id="MtJ-BC-rZB">
                                                             <rect key="frame" x="0.0" y="0.0" width="237" height="595"/>
-                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
                                                                 <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" selectionHighlightStyle="sourceList" columnResizing="NO" autosaveColumns="NO" rowHeight="48" viewBased="YES" id="8X8-yh-5EA" customClass="NotesTableView" customModule="MiaoYan" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="0.0" width="237" height="595"/>
@@ -790,7 +851,7 @@ CA
                                                         <rect key="frame" x="0.0" y="0.0" width="565" height="588"/>
                                                         <clipView key="contentView" focusRingType="none" drawsBackground="NO" copiesOnScroll="NO" id="FJ2-Yo-v0A">
                                                             <rect key="frame" x="0.0" y="0.0" width="565" height="588"/>
-                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                            <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
                                                                 <textView focusRingType="none" verticallyResizable="YES" usesFontPanel="YES" findStyle="bar" allowsCharacterPickerTouchBarItem="NO" allowsDocumentBackgroundColorChange="YES" allowsUndo="YES" usesRuler="YES" textCompletion="NO" smartInsertDelete="YES" id="cmZ-KL-T9k" customClass="EditTextView" customModule="MiaoYan" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="0.0" width="565" height="588"/>
@@ -1213,6 +1274,7 @@ CA
         <image name="pinNote" width="24" height="24"/>
         <image name="project" width="24" height="24"/>
         <image name="wand.and.rays" catalog="system" width="16" height="16"/>
+        <image name="wand.and.sparkles" catalog="system" width="17" height="15"/>
         <namedColor name="divider">
             <color red="0.89999997615814209" green="0.89999997615814209" blue="0.89999997615814209" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

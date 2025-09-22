@@ -19,6 +19,39 @@
 /* Class = "NSMenuItem"; title = "New"; ObjectID = "2Ci-Yj-aWK"; */
 "2Ci-Yj-aWK.title" = "新增";
 
+/* Class = "NSMenuItem"; title = "Quick Input"; ObjectID = "xgO-jF-1ab"; */
+"xgO-jF-1ab.title" = "Tab快捷輸入";
+
+/* Class = "NSMenu"; title = "Quick Input"; ObjectID = "1bu-5n-fpO"; */
+"1bu-5n-fpO.title" = "Tab快捷輸入";
+
+/* Class = "NSMenuItem"; title = "/time - Current Time"; ObjectID = "fWx-6p-Qn4"; */
+"fWx-6p-Qn4.title" = "/time - 當前時間";
+
+/* Class = "NSMenuItem"; title = "/table - Table Template"; ObjectID = "DgV-s3-FTw"; */
+"DgV-s3-FTw.title" = "/table - 表格模板";
+
+/* Class = "NSMenuItem"; title = "/img - Image Tag"; ObjectID = "Mjr-9Q-R9p"; */
+"Mjr-9Q-R9p.title" = "/img - 圖片標籤";
+
+/* Class = "NSMenuItem"; title = "/video - Video Tag"; ObjectID = "l86-r1-q1S"; */
+"l86-r1-q1S.title" = "/video - 影片標籤";
+
+/* Class = "NSMenuItem"; title = "/markmap - Mind Map"; ObjectID = "nCA-V8-jEl"; */
+"nCA-V8-jEl.title" = "/markmap - 心智圖";
+
+/* Class = "NSMenuItem"; title = "/mermaid - Flow Chart"; ObjectID = "H7F-cn-DrH"; */
+"H7F-cn-DrH.title" = "/mermaid - 流程圖";
+
+/* Class = "NSMenuItem"; title = "/plantuml - UML Diagram"; ObjectID = "raS-V6-70A"; */
+"raS-V6-70A.title" = "/plantuml - UML圖";
+
+/* Class = "NSMenuItem"; title = "/fold - Collapsible Section"; ObjectID = "YFF-9q-sOk"; */
+"YFF-9q-sOk.title" = "/fold - 摺疊區域";
+
+/* Class = "NSMenuItem"; title = "/task - Task List"; ObjectID = "i2U-Vk-5TZ"; */
+"i2U-Vk-5TZ.title" = "/task - 任務列表";
+
 /* Class = "NSMenuItem"; title = "13"; ObjectID = "2Uz-7H-8jH"; */
 "2Uz-7H-8jH.title" = "13";
 
@@ -219,6 +252,39 @@
 
 /* Class = "NSMenuItem"; title = "Todo"; ObjectID = "FxB-UV-FA4"; */
 "FxB-UV-FA4.title" = "待辦事項";
+
+/* Class = "NSMenuItem"; title = "Quick Input"; ObjectID = "xgO-jF-1ab"; */
+"xgO-jF-1ab.title" = "Tab快捷輸入";
+
+/* Class = "NSMenu"; title = "Quick Input"; ObjectID = "1bu-5n-fpO"; */
+"1bu-5n-fpO.title" = "Tab快捷輸入";
+
+/* Class = "NSMenuItem"; title = "/time -> Insert current time"; ObjectID = "fWx-6p-Qn4"; */
+"fWx-6p-Qn4.title" = "/time -> 插入當前時間";
+
+/* Class = "NSMenuItem"; title = "/table -> Markdown table template"; ObjectID = "DgV-s3-FTw"; */
+"DgV-s3-FTw.title" = "/table -> Markdown 表格模板";
+
+/* Class = "NSMenuItem"; title = "/img -> Image tag template"; ObjectID = "Mjr-9Q-R9p"; */
+"Mjr-9Q-R9p.title" = "/img -> 圖片標籤模板";
+
+/* Class = "NSMenuItem"; title = "/video -> Video block template"; ObjectID = "l86-r1-q1S"; */
+"l86-r1-q1S.title" = "/video -> 影片區塊模板";
+
+/* Class = "NSMenuItem"; title = "/markmap -> Markmap block template"; ObjectID = "nCA-V8-jEl"; */
+"nCA-V8-jEl.title" = "/markmap -> Markmap 區塊模板";
+
+/* Class = "NSMenuItem"; title = "/mermaid -> Mermaid block template"; ObjectID = "H7F-cn-DrH"; */
+"H7F-cn-DrH.title" = "/mermaid -> Mermaid 區塊模板";
+
+/* Class = "NSMenuItem"; title = "/plantuml -> PlantUML block template"; ObjectID = "raS-V6-70A"; */
+"raS-V6-70A.title" = "/plantuml -> PlantUML 區塊模板";
+
+/* Class = "NSMenuItem"; title = "/fold -> Foldable details block"; ObjectID = "YFF-9q-sOk"; */
+"YFF-9q-sOk.title" = "/fold -> 可摺疊詳細區塊";
+
+/* Class = "NSMenuItem"; title = "/task -> Task list template"; ObjectID = "i2U-Vk-5TZ"; */
+"i2U-Vk-5TZ.title" = "/task -> 任務列表模板";
 
 /* Class = "NSMenuItem"; title = "Rename Folder"; ObjectID = "fzU-ZR-Ubv"; */
 "fzU-ZR-Ubv.title" = "重新命名檔案夾";
@@ -597,4 +663,3 @@
 
 /* Class = "NSMenuItem"; title = "Github"; ObjectID = "zxQ-hH-3Oh"; */
 "zxQ-hH-3Oh.title" = "Github";
-

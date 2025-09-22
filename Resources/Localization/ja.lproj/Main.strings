@@ -23,6 +23,39 @@
 /* Class = "NSMenuItem"; title = "New"; ObjectID = "2Ci-Yj-aWK"; */
 "2Ci-Yj-aWK.title" = "新規作成";
 
+/* Class = "NSMenuItem"; title = "Quick Input"; ObjectID = "xgO-jF-1ab"; */
+"xgO-jF-1ab.title" = "Tabクイック入力";
+
+/* Class = "NSMenu"; title = "Quick Input"; ObjectID = "1bu-5n-fpO"; */
+"1bu-5n-fpO.title" = "Tabクイック入力";
+
+/* Class = "NSMenuItem"; title = "/time - Current Time"; ObjectID = "fWx-6p-Qn4"; */
+"fWx-6p-Qn4.title" = "/time - 現在時刻";
+
+/* Class = "NSMenuItem"; title = "/table - Table Template"; ObjectID = "DgV-s3-FTw"; */
+"DgV-s3-FTw.title" = "/table - テーブルテンプレート";
+
+/* Class = "NSMenuItem"; title = "/img - Image Tag"; ObjectID = "Mjr-9Q-R9p"; */
+"Mjr-9Q-R9p.title" = "/img - 画像タグ";
+
+/* Class = "NSMenuItem"; title = "/video - Video Tag"; ObjectID = "l86-r1-q1S"; */
+"l86-r1-q1S.title" = "/video - 動画タグ";
+
+/* Class = "NSMenuItem"; title = "/markmap - Mind Map"; ObjectID = "nCA-V8-jEl"; */
+"nCA-V8-jEl.title" = "/markmap - マインドマップ";
+
+/* Class = "NSMenuItem"; title = "/mermaid - Flow Chart"; ObjectID = "H7F-cn-DrH"; */
+"H7F-cn-DrH.title" = "/mermaid - フローチャート";
+
+/* Class = "NSMenuItem"; title = "/plantuml - UML Diagram"; ObjectID = "raS-V6-70A"; */
+"raS-V6-70A.title" = "/plantuml - UML図";
+
+/* Class = "NSMenuItem"; title = "/fold - Collapsible Section"; ObjectID = "YFF-9q-sOk"; */
+"YFF-9q-sOk.title" = "/fold - 折りたたみ領域";
+
+/* Class = "NSMenuItem"; title = "/task - Task List"; ObjectID = "i2U-Vk-5TZ"; */
+"i2U-Vk-5TZ.title" = "/task - タスクリスト";
+
 /* Class = "NSMenuItem"; title = "13"; ObjectID = "2Uz-7H-8jH"; */
 "2Uz-7H-8jH.title" = "13";
 
@@ -166,6 +199,39 @@
 
 /* Class = "NSMenuItem"; title = "Todo"; ObjectID = "FxB-UV-FA4"; */
 "FxB-UV-FA4.title" = "ToDoリスト";
+
+/* Class = "NSMenuItem"; title = "Quick Input"; ObjectID = "xgO-jF-1ab"; */
+"xgO-jF-1ab.title" = "Tabクイック入力";
+
+/* Class = "NSMenu"; title = "Quick Input"; ObjectID = "1bu-5n-fpO"; */
+"1bu-5n-fpO.title" = "Tabクイック入力";
+
+/* Class = "NSMenuItem"; title = "/time -> Insert current time"; ObjectID = "fWx-6p-Qn4"; */
+"fWx-6p-Qn4.title" = "/time -> 現在時刻を挿入";
+
+/* Class = "NSMenuItem"; title = "/table -> Markdown table template"; ObjectID = "DgV-s3-FTw"; */
+"DgV-s3-FTw.title" = "/table -> Markdown テーブルテンプレート";
+
+/* Class = "NSMenuItem"; title = "/img -> Image tag template"; ObjectID = "Mjr-9Q-R9p"; */
+"Mjr-9Q-R9p.title" = "/img -> 画像タグテンプレート";
+
+/* Class = "NSMenuItem"; title = "/video -> Video block template"; ObjectID = "l86-r1-q1S"; */
+"l86-r1-q1S.title" = "/video -> ビデオブロックテンプレート";
+
+/* Class = "NSMenuItem"; title = "/markmap -> Markmap block template"; ObjectID = "nCA-V8-jEl"; */
+"nCA-V8-jEl.title" = "/markmap -> Markmap ブロックテンプレート";
+
+/* Class = "NSMenuItem"; title = "/mermaid -> Mermaid block template"; ObjectID = "H7F-cn-DrH"; */
+"H7F-cn-DrH.title" = "/mermaid -> Mermaid ブロックテンプレート";
+
+/* Class = "NSMenuItem"; title = "/plantuml -> PlantUML block template"; ObjectID = "raS-V6-70A"; */
+"raS-V6-70A.title" = "/plantuml -> PlantUML ブロックテンプレート";
+
+/* Class = "NSMenuItem"; title = "/fold -> Foldable details block"; ObjectID = "YFF-9q-sOk"; */
+"YFF-9q-sOk.title" = "/fold -> 折りたたみ詳細ブロック";
+
+/* Class = "NSMenuItem"; title = "/task -> Task list template"; ObjectID = "i2U-Vk-5TZ"; */
+"i2U-Vk-5TZ.title" = "/task -> タスクリストテンプレート";
 
 /* Class = "NSMenuItem"; title = "Empty Trash"; ObjectID = "G9H-Lg-TXE"; */
 "G9H-Lg-TXE.title" = "ゴミ箱を空にする";

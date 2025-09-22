@@ -271,6 +271,65 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         menuManager?.togglePresentation()
     }
 
+    // MARK: - Quick Input Menu Actions
+    @IBAction func insertTimeShortcut(_ sender: Any) {
+        insertShortcutText("time")
+    }
+
+    @IBAction func insertTableShortcut(_ sender: Any) {
+        insertShortcutText("table")
+    }
+
+    @IBAction func insertImgShortcut(_ sender: Any) {
+        insertShortcutText("img")
+    }
+
+    @IBAction func insertVideoShortcut(_ sender: Any) {
+        insertShortcutText("video")
+    }
+
+    @IBAction func insertMarkmapShortcut(_ sender: Any) {
+        insertShortcutText("markmap")
+    }
+
+    @IBAction func insertMermaidShortcut(_ sender: Any) {
+        insertShortcutText("mermaid")
+    }
+
+    @IBAction func insertPlantumlShortcut(_ sender: Any) {
+        insertShortcutText("plantuml")
+    }
+
+    @IBAction func insertFoldShortcut(_ sender: Any) {
+        insertShortcutText("fold")
+    }
+
+    @IBAction func insertTaskShortcut(_ sender: Any) {
+        insertShortcutText("task")
+    }
+
+    private func insertShortcutText(_ shortcut: String) {
+        guard EditTextView.note != nil else { return }
+        window?.makeFirstResponder(self)
+
+        let range = selectedRange()
+        let text = "/\(shortcut)"
+
+        // Use the standard text replacement method that preserves formatting
+        if shouldChangeText(in: range, replacementString: text) {
+            // Get current typing attributes to maintain formatting
+            let attributes = typingAttributes
+            let attributedText = NSAttributedString(string: text, attributes: attributes)
+
+            textStorage?.replaceCharacters(in: range, with: attributedText)
+            didChangeText()
+
+            // Update cursor position
+            let newPosition = range.location + text.count
+            setSelectedRange(NSRange(location: newPosition, length: 0))
+        }
+    }
+
     func getSelectedNote() -> Note? {
         return getViewController()?.notesTableView.getSelectedNote()
     }
@@ -780,6 +839,13 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         guard let note = EditTextView.note else { return }
         if event.keyCode == kVK_Tab, !hasMarkedText() {
             breakUndoCoalescing()
+
+            // Check for shortcut expansion first
+            if !event.modifierFlags.contains(.shift), handleShortcutExpansion() {
+                saveCursorPosition()
+                return
+            }
+
             let formatter = TextFormatter(textView: self, note: note)
             if event.modifierFlags.contains(.shift) {
                 formatter.unTab()
@@ -861,5 +927,87 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 newView.alphaValue = 1.0
             }
         }
+    }
+
+    // MARK: - Shortcut Expansion
+    private func handleShortcutExpansion() -> Bool {
+        guard let storage = textStorage else { return false }
+
+        let range = selectedRange()
+        let text = storage.string as NSString
+
+        // Get the current line
+        let lineRange = text.lineRange(for: range)
+        let beforeCursor = text.substring(with: NSRange(location: lineRange.location, length: range.location - lineRange.location))
+
+        // Extract shortcut if present
+        guard let shortcut = extractShortcut(from: beforeCursor) else { return false }
+
+        return expandShortcut(shortcut, at: range)
+    }
+
+    private func extractShortcut(from text: String) -> String? {
+        // Simple suffix matching - more efficient than regex for this case
+        guard text.hasSuffix("/") == false else { return nil }
+
+        let components = text.components(separatedBy: "/")
+        guard let lastComponent = components.last,
+              !lastComponent.isEmpty,
+              lastComponent.allSatisfy({ $0.isLetter || $0.isNumber }) else {
+            return nil
+        }
+
+        return lastComponent
+    }
+
+    private func expandShortcut(_ shortcut: String, at range: NSRange) -> Bool {
+        guard let template = ShortcutTemplateManager.shared.getTemplate(for: shortcut),
+              let textStorage = textStorage else {
+            return false
+        }
+
+        // Calculate the range to replace (including the "/" + shortcut)
+        let replaceStart = range.location - shortcut.count - 1  // -1 for "/"
+        let replaceLength = shortcut.count + 1
+
+        // Bounds checking
+        guard replaceStart >= 0,
+              replaceStart + replaceLength <= textStorage.length else {
+            return false
+        }
+
+        let replaceRange = NSRange(location: replaceStart, length: replaceLength)
+
+        // Perform text replacement
+        replaceText(template.content, in: replaceRange)
+
+        // Set cursor position based on template with bounds checking
+        let newCursorPosition = replaceRange.location + template.cursorOffset
+        let finalLength = textStorage.length
+        let safeCursorPosition = min(newCursorPosition, finalLength)
+        let safeCursorLength = min(template.cursorLength, max(0, finalLength - safeCursorPosition))
+
+        let newRange = NSRange(location: safeCursorPosition, length: safeCursorLength)
+        setSelectedRange(newRange)
+
+        // Trigger syntax highlighting for the new content
+        fillHighlightLinks()
+
+        return true
+    }
+
+    // MARK: - Text Replacement Helper
+    private func replaceText(_ text: String, in range: NSRange) {
+        guard let textStorage = textStorage else { return }
+
+        // Preserve text attributes when replacing
+        let attributes = typingAttributes
+        let attributedText = NSAttributedString(string: text, attributes: attributes)
+
+        textStorage.replaceCharacters(in: range, with: attributedText)
+
+        // Trigger layout update and change notification
+        layoutManager?.ensureLayout(for: textContainer!)
+        didChangeText()
     }
 }
