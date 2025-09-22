@@ -8,22 +8,18 @@ class EditorSplitView: NSSplitView, NSSplitViewDelegate {
         super.awakeFromNib()
         MainActor.assumeIsolated { [self] in
             delegate = self
-            updateDividerVisibility()
+            applyDividerColor()
         }
-    }
-
-    func updateDividerVisibility() {
-        applyDividerColor()
     }
 
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
-        updateDividerVisibility()
+        applyDividerColor()
     }
 
     override func viewDidChangeEffectiveAppearance() {
         super.viewDidChangeEffectiveAppearance()
-        updateDividerVisibility()
+        applyDividerColor()
     }
 
     override func drawDivider(in rect: NSRect) {
@@ -76,7 +72,7 @@ class EditorSplitView: NSSplitView, NSSplitViewDelegate {
     }
 
     func splitViewDidResizeSubviews(_ notification: Notification) {
-        updateDividerVisibility()
+        applyDividerColor()
         ViewController.shared()?.viewDidResize()
     }
 

@@ -17,7 +17,6 @@ extension ViewController {
     }
 
     // MARK: - Layout Management Methods
-
     func checkSidebarConstraint() {
         if sidebarSplitView.subviews[0].frame.width < 50, !UserDefaultsManagement.isWillFullScreen {
             searchTopConstraint.constant = 25.0
@@ -45,7 +44,6 @@ extension ViewController {
         }
 
         sidebarSplitView.setPosition(0, ofDividerAt: 0)
-        (sidebarSplitView as? SidebarSplitView)?.updateDividerVisibility()
         editArea.updateTextContainerInset()
     }
 
@@ -65,7 +63,6 @@ extension ViewController {
             expandNoteList()
         }
 
-        (sidebarSplitView as? SidebarSplitView)?.updateDividerVisibility()
         editArea.updateTextContainerInset()
     }
 
@@ -87,8 +84,6 @@ extension ViewController {
             splitView.shouldHideDivider = true
             splitView.setPosition(0, ofDividerAt: 0)
 
-            splitView.updateDividerVisibility()
-
             hideSidebar("")
         }
         editArea.updateTextContainerInset()
@@ -98,7 +93,6 @@ extension ViewController {
         let size = UserDefaultsManagement.sidebarSize == 0 ? 280 : UserDefaultsManagement.sidebarSize
         splitView.shouldHideDivider = false
         splitView.setPosition(CGFloat(size), ofDividerAt: 0)
-        splitView.updateDividerVisibility()
     }
 
     // MARK: - Toggle Actions

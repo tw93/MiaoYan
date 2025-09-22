@@ -17,7 +17,6 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         window?.restorationClass = MainWindowController.self
         window?.delegate = self
 
-        // Apply always-on-top preference based on user settings
         if UserDefaultsManagement.alwaysOnTop {
             window?.level = .floating
         } else {
@@ -100,7 +99,6 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
     func applyMiaoYanAppearance() {
         guard let window = window else { return }
 
-        // Apply MiaoYan's custom appearance settings, overriding system appearance when needed
         let targetAppearance: NSAppearance?
         let backgroundColor: NSColor
 
@@ -125,12 +123,10 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
                 backgroundColor = Theme.backgroundColor
             }
         } else {
-            // For custom themes, preserve user's background color without forcing system appearance
             targetAppearance = nil
             backgroundColor = UserDefaultsManagement.bgColor
         }
 
-        // Apply appearance and background color immediately
         if let appearance = targetAppearance {
             window.appearance = appearance
             window.contentView?.appearance = appearance
@@ -149,11 +145,9 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
 
         if let vc = ViewController.shared() {
             if let sidebarSplit = vc.sidebarSplitView as? SidebarSplitView {
-                sidebarSplit.updateDividerVisibility()
                 sidebarSplit.displayIfNeeded()
             }
             if let editorSplit = vc.splitView {
-                editorSplit.updateDividerVisibility()
                 editorSplit.displayIfNeeded()
             }
         }

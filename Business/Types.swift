@@ -4,7 +4,6 @@ import Foundation
 public enum NoteType: String, CaseIterable {
     case markdown = "md"
 
-    // Convenience computed properties
     public var tag: Int { 1 }
     public var uti: String { "net.daringfireball.markdown" }
     public var fileExtension: String { rawValue }
@@ -13,7 +12,6 @@ public enum NoteType: String, CaseIterable {
 public enum NoteContainer: Int, CaseIterable {
     case none = 0x01
 
-    // Convenience computed properties
     public var uti: String { "" }
     public var tag: Int { rawValue }
 }

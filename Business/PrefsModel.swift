@@ -1,6 +1,5 @@
 import Foundation
 
-// Reuse existing PrefsSection as PreferencesCategory
 typealias PreferencesCategory = PrefsSection
 
 // MARK: - Preferences Category Model
@@ -27,7 +26,6 @@ protocol SettingsConfigurable {
 }
 
 // MARK: - General Settings Model
-/// Concrete configuration for the General preferences pane backed by `UserDefaultsManagement`.
 @MainActor
 struct GeneralSettings: SettingsConfigurable {
     let category: PreferencesCategory = .general
@@ -59,13 +57,11 @@ struct GeneralSettings: SettingsConfigurable {
     }
 
     func applyChanges() {
-        // General settings typically require app restart (let UI decide how to react)
         NotificationCenter.default.post(name: .preferencesChanged, object: self.category)
     }
 }
 
 // MARK: - Editor Settings Model
-/// Configuration wrapper exposing editor related defaults for the preferences UI.
 @MainActor
 struct EditorSettings: SettingsConfigurable {
     let category: PreferencesCategory = .editor
@@ -122,7 +118,6 @@ struct EditorSettings: SettingsConfigurable {
     }
 
     func applyChanges() {
-        // Editor settings need immediate refresh but should preserve preview state
         guard let vc = ViewController.shared() else { return }
         NotesTextProcessor.hl = nil
 

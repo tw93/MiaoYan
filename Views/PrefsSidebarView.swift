@@ -61,7 +61,6 @@ final class PrefsSidebarView: NSView {
 
         scrollView.documentView = tableView
 
-        // Select first category by default
         tableView.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)
     }
 
@@ -150,7 +149,6 @@ final class PrefsSidebarCellView: NSTableCellView {
     }
 
     private func setupViews() {
-        // Title
         titleLabel = NSTextField()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.isEditable = false
@@ -166,7 +164,6 @@ final class PrefsSidebarCellView: NSTableCellView {
 
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            // Title constraints - centered without icon
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),

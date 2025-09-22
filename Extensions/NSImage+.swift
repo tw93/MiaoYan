@@ -124,11 +124,6 @@ extension NSImage {
         return nil
     }
 
-    /// Copy the image and resize it to the supplied size, while maintaining it's
-    /// original aspect ratio.
-    ///
-    /// - Parameter targetSize:
-    /// - Returns: The resized image.
     public func resizeMaintainingAspectRatio(to targetSize: CGSize) -> NSImage? {
         let widthRatio = targetSize.width / size.width
         let heightRatio = targetSize.height / size.height
@@ -138,30 +133,19 @@ extension NSImage {
     }
 
     // MARK: Cropping
-    /// Resize the image, to nearly fit the supplied cropping size
-    /// and return a cropped copy the image.
-    ///
-    /// - Parameter targetSize:
-    /// - Parameter targetSize:
-    /// - Returns: The cropped image.
     public func crop(to targetSize: CGSize) -> NSImage? {
-        // Resize the current image, while preserving the aspect ratio.
         guard let resized = resizeMaintainingAspectRatio(to: targetSize) else {
             return nil
         }
 
-        // Get some points to center the cropping area.
         let yCoord = floor(resized.size.height - targetSize.height)
 
-        // Create the cropping frame.
         let frame = CGRect(origin: CGPoint(x: 0, y: yCoord), size: targetSize)
 
-        // Get the best representation of the image for the given cropping frame.
         guard let representation = resized.bestRepresentation(for: frame, context: nil, hints: nil) else {
             return nil
         }
 
-        // Create a new image with the new size
         let cropped = NSImage(size: targetSize)
         cropped.lockFocus()
         defer { cropped.unlockFocus() }

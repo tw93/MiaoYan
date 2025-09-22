@@ -23,11 +23,9 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
             defer: false
         )
 
-        // Configure window properties - completely disable vertical resizing
         window.minSize = NSSize(width: 700, height: 520)
         window.maxSize = NSSize(width: 1200, height: 520)
 
-        // Remove resize indicator and disable content-driven resizing
         window.styleMask.remove(.resizable)
         window.styleMask.insert(.titled)
         window.styleMask.insert(.closable)
@@ -40,13 +38,11 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         self.init(window: window)
         hasRestoredAutosavedFrame = restoredFrame
 
-        // Setup UI components immediately to avoid window positioning issues
         setupUIComponents()
     }
 
     override func windowDidLoad() {
         super.windowDidLoad()
-        // Don't call setupUIComponents again if already called in init
         if splitViewController == nil {
             setupUIComponents()
         }
@@ -57,7 +53,6 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
 
         window?.delegate = self
 
-        // Initialize UI components in proper order
         setupWindow()
         setupSplitView()
         setupSidebar()
@@ -71,7 +66,6 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
     }
 
     private func setupWindow() {
-        // Window is already configured in init, just verify it exists
         guard window != nil else {
             fatalError("PrefsWindowController window should be initialized during init")
         }
@@ -82,10 +76,8 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         splitViewController.splitView.isVertical = true
         splitViewController.splitView.dividerStyle = .thin
 
-        // Completely disable automatic adjustments
         splitViewController.splitView.autoresizesSubviews = false
 
-        // Configure split view behavior
         splitViewController.splitViewItems.forEach { item in
             item.canCollapse = false
         }
@@ -101,7 +93,6 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         sidebarViewController.view = sidebarView
 
         let sidebarItem = NSSplitViewItem(sidebarWithViewController: sidebarViewController)
-        // Fix sidebar width to prevent changes during tab switching
         sidebarItem.minimumThickness = 140
         sidebarItem.maximumThickness = 140
         sidebarItem.canCollapse = false
@@ -117,7 +108,6 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         contentView.wantsLayer = true
         contentView.layer?.backgroundColor = Theme.backgroundColor.cgColor
 
-        // Set fixed size constraints on content view
         contentView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             contentView.widthAnchor.constraint(equalToConstant: 600),
@@ -169,7 +159,6 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
     }
 
     func show() {
-        // Force load the window if it hasn't been loaded yet
         if !isWindowLoaded {
             _ = window
         }

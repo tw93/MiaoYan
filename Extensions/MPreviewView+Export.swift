@@ -84,7 +84,6 @@ extension MPreviewView {
     public func exportPdf() {
         guard let vc = ViewController.shared() else { return }
 
-        // Get the currently selected note from the ViewController
         guard let note = vc.notesTableView.getSelectedNote() else { return }
 
         // Check if we have valid cached data AND the WebView content matches
@@ -137,7 +136,6 @@ extension MPreviewView {
     public func exportImage() {
         guard let vc = ViewController.shared() else { return }
 
-        // Get the currently selected note from the ViewController
         guard let note = vc.notesTableView.getSelectedNote() else { return }
 
         // Check if we have valid cached data AND the WebView content matches
@@ -191,7 +189,6 @@ extension MPreviewView {
     public func exportHtml() {
         guard let vc = ViewController.shared() else { return }
 
-        // Get the currently selected note from the ViewController
         guard let note = vc.notesTableView.getSelectedNote() else { return }
 
         // Generate HTML directly without WebView - completely bypassing preview system
@@ -200,7 +197,6 @@ extension MPreviewView {
 
     // MARK: - Export Helper Methods
     private func generateHtmlDirectly(note: Note, viewController: ViewController) {
-        // Get the title on main thread first
         let currentName = viewController.titleLabel.stringValue
 
         Task { [weak self] in

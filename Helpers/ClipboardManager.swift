@@ -218,7 +218,6 @@ class ClipboardManager {
     }
 
     nonisolated private func uploadToCloudAsync(parameters: UploadParameters) {
-        // Extract the data we need for the background task
         let localPath = parameters.localPath
         let originalPath = parameters.originalPath
         let picType = parameters.picType

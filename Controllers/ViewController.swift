@@ -58,7 +58,7 @@ class ViewController:
     @IBOutlet var notesTableView: NotesTableView!
     @IBOutlet var noteMenu: NSMenu! {
         didSet {
-            noteMenu.item(withTitle: I18n.str("Export"))?.identifier = NSUserInterfaceItemIdentifier("noteMenu.export")
+            noteMenu.setMenuItemIdentifier("noteMenu.export", forTitle: I18n.str("Export"))
         }
     }
     @IBOutlet var storageOutlineView: SidebarProjectView!
@@ -71,9 +71,10 @@ class ViewController:
     @IBOutlet var titleTopConstraint: NSLayoutConstraint!
     @IBOutlet var sortByOutlet: NSMenuItem! {
         didSet {
-            sortByOutlet.identifier = NSUserInterfaceItemIdentifier("viewMenu.sortBy")
+            sortByOutlet.setIdentifier("viewMenu.sortBy")
         }
     }
+
     @IBOutlet var titleBarAdditionalView: NSVisualEffectView! {
         didSet {
             let layer = CALayer()
@@ -88,6 +89,7 @@ class ViewController:
             }
         }
     }
+
     @IBOutlet var addProjectButton: NSButton! {
         didSet {
             let layer = CALayer()
@@ -102,29 +104,34 @@ class ViewController:
             }
         }
     }
+
     @IBOutlet var formatButton: NSButton!
     @IBOutlet var previewButton: NSButton! {
         didSet {
             previewButton.state = UserDefaultsManagement.preview ? .on : .off
         }
     }
+
     @IBOutlet var presentationButton: NSButton! {
         didSet {
             presentationButton.state = UserDefaultsManagement.presentation ? .on : .off
         }
     }
+
     @IBOutlet var descendingCheckItem: NSMenuItem! {
         didSet {
             ascendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .off : .on
             descendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .on : .off
         }
     }
+
     @IBOutlet var ascendingCheckItem: NSMenuItem! {
         didSet {
             ascendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .off : .on
             descendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .on : .off
         }
     }
+
     @IBOutlet var titleBarView: TitleBarView! {
         didSet {
             titleBarView.onMouseExitedClosure = { [weak self] in
@@ -153,6 +160,7 @@ class ViewController:
             }
         }
     }
+
     @IBOutlet var projectHeaderView: OutlineHeaderView! {
         didSet {
             projectHeaderView.onMouseExitedClosure = { [weak self] in
@@ -181,6 +189,7 @@ class ViewController:
             }
         }
     }
+
     @IBOutlet var sidebarScrollView: NSScrollView!
     @IBOutlet var notesScrollView: NSScrollView!
     lazy var popover: NSPopover = {
@@ -210,7 +219,9 @@ class ViewController:
         titleBarAdditionalView?.alphaValue = showOnHover ? 0 : 1
         addProjectButton?.alphaValue = showOnHover ? 0 : 1
     }
+
     @objc func detachedWindowWillClose(notification: NSNotification) {}
+
     override func viewDidLoad() {
         configureShortcuts()
         configureDelegates()
@@ -235,6 +246,7 @@ class ViewController:
         notesTableView.loadingQueue.maxConcurrentOperationCount = 1
         notesTableView.loadingQueue.qualityOfService = QualityOfService.userInteractive
     }
+
     // Handle webview performance impact from long-term inactivity
     override func viewDidDisappear() {
         super.viewWillDisappear()
@@ -249,6 +261,7 @@ class ViewController:
             needRestorePreview = false
         }
     }
+
     override func viewWillAppear() {
         super.viewWillAppear()
         if UserDefaultsManagement.preview {
@@ -261,6 +274,7 @@ class ViewController:
             enablePreview()
         }
     }
+
     override func viewDidAppear() {
         if UserDefaultsManagement.fullScreen {
             view.window?.toggleFullScreen(nil)

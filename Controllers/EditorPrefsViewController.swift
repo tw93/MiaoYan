@@ -23,7 +23,6 @@ final class EditorPrefsViewController: BasePrefsViewController {
 
         setupEditorSettingsSection(in: contentView)
 
-        // Setup scroll view constraints using contentView anchors for compatibility
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -37,8 +36,6 @@ final class EditorPrefsViewController: BasePrefsViewController {
             contentView.widthAnchor.constraint(equalTo: scrollView.contentView.widthAnchor),
         ])
     }
-
-    // Fonts section removed: moved to Typography preferences
 
     private func setupEditorSettingsSection(in parentView: NSView) {
         let (sectionView, _) = createSectionView(
@@ -58,7 +55,6 @@ final class EditorPrefsViewController: BasePrefsViewController {
         settingsStackView.alignment = .leading
         sectionView.addSubview(settingsStackView)
 
-        // Line break
         let lineBreakRow = createSettingRow(
             label: I18n.str("Line Break:"),
             options: [localizedLineBreak("MiaoYan"), localizedLineBreak("Github")],
@@ -66,7 +62,6 @@ final class EditorPrefsViewController: BasePrefsViewController {
         )
         settingsStackView.addArrangedSubview(lineBreakRow)
 
-        // Upload service selection
         let uploadRow = createSettingRow(
             label: I18n.str("Upload Service:"),
             options: [I18n.str("None"), "PicGo", "uPic", "Picsee"],
@@ -74,7 +69,6 @@ final class EditorPrefsViewController: BasePrefsViewController {
         )
         settingsStackView.addArrangedSubview(uploadRow)
 
-        // Preview location (legacy behavior: Begin / Editing)
         let locationRow = createSettingRow(
             label: I18n.str("Preview Location:"),
             options: [localizedPreviewLocation("Begin"), localizedPreviewLocation("Editing")],
@@ -82,7 +76,6 @@ final class EditorPrefsViewController: BasePrefsViewController {
         )
         settingsStackView.addArrangedSubview(locationRow)
 
-        // Preview width
         let widthRow = createSettingRow(
             label: I18n.str("Preview Width:"),
             options: [localizedPreviewWidth("600px"), localizedPreviewWidth("800px"), localizedPreviewWidth("1000px"), localizedPreviewWidth("1200px"), localizedPreviewWidth("1400px"), localizedPreviewWidth("Full Width")],
@@ -99,12 +92,10 @@ final class EditorPrefsViewController: BasePrefsViewController {
         ])
     }
 
-    // Helper methods for creating UI components
     private func createSectionView(in parentView: NSView, topAnchor: NSLayoutAnchor<NSLayoutYAxisAnchor>, topConstant: CGFloat, title: String? = nil) -> (container: NSView, titleLabel: NSTextField?) {
         let containerView = NSView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
 
-        // Keep background consistent with parent (no separate gray panel)
         containerView.wantsLayer = true
         containerView.layer?.backgroundColor = NSColor.clear.cgColor
         var titleLabel: NSTextField?
@@ -134,8 +125,6 @@ final class EditorPrefsViewController: BasePrefsViewController {
 
         return (containerView, titleLabel)
     }
-
-    // Font UI rows and helpers removed here (managed in TypographyPrefsViewController)
 
     private func createSettingRow(label: String, options: [String], action: Selector) -> NSView {
         let rowView = NSView()
@@ -173,32 +162,22 @@ final class EditorPrefsViewController: BasePrefsViewController {
         return rowView
     }
 
-    // Font helpers removed
-
     override func setupValues() {
-        // Set editor behavior values
         selectLineBreakOption(settings.editorLineBreak)
 
-        // Set preview settings
         selectUploadServiceOption(UserDefaultsManagement.defaultPicUpload)
         selectPreviewLocationOption(settings.previewLocation)
         selectPreviewWidthOption(settings.previewWidth)
     }
 
-    // Font selection helpers removed
-
     private func selectLineBreakOption(_ value: String) {
-        // Find and set line break popup within the combined settings stack
         guard !settingsStackView.arrangedSubviews.isEmpty,
             let popUp = settingsStackView.arrangedSubviews[0].subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton
         else { return }
         popUp.selectItem(withTitle: localizedLineBreak(value))
     }
 
-    // Code background selection removed
-
     private func selectPreviewLocationOption(_ value: String) {
-        // Find and set preview location popup within the combined settings stack
         guard settingsStackView.arrangedSubviews.count > 2,
             let popUp = settingsStackView.arrangedSubviews[2].subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton
         else { return }
@@ -206,7 +185,6 @@ final class EditorPrefsViewController: BasePrefsViewController {
     }
 
     private func selectPreviewWidthOption(_ value: String) {
-        // Find and set preview width popup within the combined settings stack
         guard settingsStackView.arrangedSubviews.count > 3,
             let popUp = settingsStackView.arrangedSubviews[3].subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton
         else { return }
@@ -225,16 +203,12 @@ final class EditorPrefsViewController: BasePrefsViewController {
     }
 
     // MARK: - Actions
-    // Font-related actions removed from Editor preferences
 
     @objc private func lineBreakChanged(_ sender: NSPopUpButton) {
         guard let item = sender.selectedItem else { return }
-        // Map localized display to raw value
         settings.editorLineBreak = rawLineBreak(from: item.title)
         settings.applyChanges()
     }
-
-    // Code background change handler removed
 
     @objc private func previewLocationChanged(_ sender: NSPopUpButton) {
         guard let item = sender.selectedItem else { return }

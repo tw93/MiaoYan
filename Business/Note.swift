@@ -31,8 +31,6 @@ public class Note: NSObject {
 
     private var lastSelectedRange: NSRange?
 
-    // Load exist
-
     init(url: URL, with project: Project) {
         ciphertextWriter.maxConcurrentOperationCount = 1
         ciphertextWriter.qualityOfService = .userInteractive
@@ -86,7 +84,6 @@ public class Note: NSObject {
         true
     }
 
-    /// Important for decrypted temporary containers
     public func getURL() -> URL {
         if let url = decryptedTemporarySrc {
             return url
@@ -183,7 +180,6 @@ public class Note: NSObject {
                 addPin()
             }
 
-            // File moved successfully
         } catch {
             AppDelegate.trackError(error, context: "Note.moveFile")
             return false
@@ -629,7 +625,6 @@ public class Note: NSObject {
         let fileName = url.deletingPathExtension().lastPathComponent
         let directory = url.deletingLastPathComponent()
 
-        // Extract the original base name (remove existing Copy suffix if present)
         let baseName: String
         if fileName.hasSuffix(" Copy") {
             baseName = String(fileName.dropLast(5))  // Remove " Copy"
@@ -639,7 +634,6 @@ public class Note: NSObject {
             baseName = fileName
         }
 
-        // Try "Copy" first, then "Copy 2", "Copy 3", etc.
         var copyName = baseName + " Copy"
         var copyNumber = 2
 

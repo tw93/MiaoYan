@@ -37,7 +37,6 @@ class Sidebar {
             }
         }
 
-        // Apply saved ordering if available
         if let savedOrder = loadSidebarOrder() {
             categoryItems = applySavedOrder(to: categoryItems, savedOrder: savedOrder)
         }
@@ -83,14 +82,12 @@ class Sidebar {
         var orderedItems: [SidebarItem] = []
         var remainingItems = items
 
-        // First, add items in the saved order
         for projectPath in savedOrder {
             if let index = remainingItems.firstIndex(where: { $0.project?.url.path == projectPath }) {
                 orderedItems.append(remainingItems.remove(at: index))
             }
         }
 
-        // Add any remaining items that weren't in the saved order (new projects)
         orderedItems.append(contentsOf: remainingItems)
 
         return orderedItems

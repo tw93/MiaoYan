@@ -774,7 +774,7 @@ extension ViewController {
 
         let moveMenuItem = NSMenuItem()
         moveMenuItem.title = I18n.str("Move")
-        moveMenuItem.identifier = NSUserInterfaceItemIdentifier("noteMenu.move")
+        moveMenuItem.setIdentifier("noteMenu.move")
 
         if #available(macOS 11.0, *),
             let symbolName = MenuIconRegistry.symbol(for: moveMenuItem),

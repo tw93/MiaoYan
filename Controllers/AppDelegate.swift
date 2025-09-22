@@ -22,11 +22,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     func applicationWillFinishLaunching(_ notification: Notification) {
-        // Configure TelemetryDeck early to prevent access errors from URL handling
         let config = TelemetryDeck.Config(appID: "49D82975-F243-4FEF-BC97-4291E56E1103")
-        // Add default signal prefix for consistent naming
         config.defaultSignalPrefix = "MiaoYan."
-        // Add global default parameters for all events
         config.defaultParameters = {
             [
                 "miaoyanVersion": Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown",
@@ -48,15 +45,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Configure system logging to reduce harmless warning noise
         configureSystemLogging()
-        // Ensure the font panel is closed when the app starts, in case it was
-        // left open when the app quit.
         NSFontManager.shared.fontPanel(false)?.orderOut(self)
         UserDefaultsManagement.resetEditorState()
         applyAppearance()
 
-        // Add global keyboard event monitor for debugging
         addGlobalKeyboardMonitor()
         #if CLOUDKIT
             if let iCloudDocumentsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents").resolvingSymlinksInPath() {
@@ -92,7 +85,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             mainWC.window?.setContentSize(size)
             mainWC.window?.center()
         } else {
-            // Simple validation: only center if window is completely off-screen
             if let window = mainWC.window {
                 let currentFrame = window.frame
                 let isOffScreen = NSScreen.screens.allSatisfy { screen in
@@ -107,13 +99,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         mainWC.window?.makeKeyAndOrderFront(nil)
         mainWindowController = mainWC
 
-        // Apply window appearance immediately after setting up the main window
         mainWC.applyMiaoYanAppearance()
 
-        // Track app launch performance (TelemetryDeck already initialized in applicationWillFinishLaunching)
         let startTime = CFAbsoluteTimeGetCurrent()
         #if DEBUG
-            // Monitor network requests for debugging
             Self.setupNetworkDebugging()
         #endif
         let launchTime = Int(startTime * 1000)
@@ -142,16 +131,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 "EditorLineBreak": UserDefaultsManagement.editorLineBreak,
             ])
 
-        // Ensure default activate shortcut is set if user has not chosen one
         if KeyboardShortcuts.getShortcut(for: .activateWindow) == nil {
             KeyboardShortcuts.setShortcut(.init(.m, modifiers: [.command, .option]), for: .activateWindow)
         }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
-        // Track session end
         Self.signal("App.SessionEnd")
-        // Save current scroll position before terminating
         if let vc = ViewController.shared() {
             vc.notesTableView.saveScrollPosition()
         }
@@ -162,7 +148,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         try? FileManager.default.removeItem(at: temporary)
     }
     // MARK: - TelemetryDeck Helper Methods
-    /// Safe wrapper for TelemetryDeck signals that checks initialization status
     static func signal(_ signalName: String, parameters: [String: String] = [:]) {
         guard isTelemetryInitialized else { return }
         TelemetryDeck.signal(signalName, parameters: parameters)
@@ -171,7 +156,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     static func debugSignal(_ signalName: String, parameters: [String: String] = [:]) {
         signal(signalName, parameters: parameters)
     }
-    /// Track errors and exceptions throughout the app (privacy-safe)
     static func trackError(_ error: Error, context: String) {
         var parameters: [String: String] = [:]
         parameters["context"] = context
@@ -181,7 +165,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
         signal("Error.Occurred", parameters: parameters)
     }
-    /// Track performance metrics throughout the app
     static func trackPerformance(_ metric: String, value: String, additionalParameters: [String: String] = [:]) {
         var parameters = additionalParameters
         parameters["value"] = value
@@ -315,15 +298,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
     // MARK: - Logging Configuration
     private func configureSystemLogging() {
-        // Disable verbose system activity tracing
         setenv("OS_ACTIVITY_MODE", "disable", 1)
-        // Keep Metal diagnostic output quiet without touching runtime caches
         setenv("MTL_HUD_ENABLED", "0", 1)
         setenv("MTL_DEBUG_LAYER", "0", 1)
         setenv("MTL_SHADER_VALIDATION", "0", 1)
         setenv("MTL_CAPTURE_ENABLED", "0", 1)
         setenv("METAL_PERFORMANCE_SHADERS_LOGGING", "0", 1)
-        // Configure URLCache to use memory only to prevent disk I/O errors
         configureURLCache()
     }
 
@@ -337,7 +317,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     // MARK: - Global Keyboard Monitor
     private func addGlobalKeyboardMonitor() {
         NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
-            // Pin note shortcut (Command+Shift+T)
             if event.keyCode == 17,  // kVK_ANSI_T
                 event.modifierFlags.contains(.command),
                 event.modifierFlags.contains(.shift),

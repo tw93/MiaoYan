@@ -37,10 +37,8 @@ final class ToastManager {
         duration: TimeInterval? = nil
     ) {
 
-        // Dismiss any existing toast
         dismissCurrentToast()
 
-        // Prepare new toast view
         prepareToastViewHierarchy(toast, in: container)
         currentToast = toast
         currentAnimationLayer = toast.layer

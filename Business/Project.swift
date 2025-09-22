@@ -11,7 +11,6 @@ public class Project: Equatable {
     public var label: String
     public var isExternal: Bool = false
 
-    // Use default values at declaration; loadSettings() will override if needed
     public var sortBy: SortBy = .none
     public var sortDirection: SortDirection = .asc
 
@@ -39,10 +38,8 @@ public class Project: Equatable {
 
         showInCommon = !isTrash
 
-        // Initialize label first
         self.label = label ?? url.lastPathComponent
 
-        // Load localized name if available
         var localizedName: AnyObject?
         try? (url as NSURL).getResourceValue(&localizedName, forKey: URLResourceKey.localizedNameKey)
         if let name = localizedName as? String, !name.isEmpty {
@@ -65,7 +62,6 @@ public class Project: Equatable {
     public func loadLabel(_ label: String? = nil) {
         self.label = label ?? url.lastPathComponent
 
-        // Override with localized name if available
         var localizedName: AnyObject?
         try? (url as NSURL).getResourceValue(&localizedName, forKey: URLResourceKey.localizedNameKey)
         if let name = localizedName as? String, !name.isEmpty {

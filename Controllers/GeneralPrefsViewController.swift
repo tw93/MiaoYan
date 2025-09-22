@@ -39,7 +39,6 @@ private final class AppearanceAwareSeparatorView: NSView {
 final class GeneralPrefsViewController: BasePrefsViewController {
     private var settings = GeneralSettings()
 
-    // UI Controls
     private var appearancePopUp: NSPopUpButton!
     private var languagePopUp: NSPopUpButton!
     private var storagePathControl: NSPathControl!
@@ -164,7 +163,6 @@ final class GeneralPrefsViewController: BasePrefsViewController {
     private func createSectionView(in parentView: NSView, topAnchor: NSLayoutAnchor<NSLayoutYAxisAnchor>, topConstant: CGFloat, title: String? = nil) -> (container: NSView, titleLabel: NSTextField?) {
         let containerView = NSView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        // Keep the same background as parent
         containerView.wantsLayer = true
         containerView.layer?.backgroundColor = NSColor.clear.cgColor
 

@@ -1,6 +1,5 @@
 import Cocoa
 
-/// Base class for preferences view controllers to eliminate duplicate setup code
 @MainActor
 class BasePrefsViewController: NSViewController {
 
@@ -23,7 +22,6 @@ class BasePrefsViewController: NSViewController {
     }
 
     // MARK: - Hooks for subclasses
-    // Subclasses can override these to build UI and populate values.
     @objc func setupUI() {}
     @objc func setupValues() {}
 }
