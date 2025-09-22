@@ -64,7 +64,7 @@ final class EditorPrefsViewController: BasePrefsViewController {
 
         let uploadRow = createSettingRow(
             label: I18n.str("Upload Service:"),
-            options: [I18n.str("None"), "PicGo", "uPic", "Picsee"],
+            options: [I18n.str("None"), "uPic", "PicGo", "Picsee", "PicList"],
             action: #selector(uploadServiceChanged(_:))
         )
         settingsStackView.addArrangedSubview(uploadRow)
