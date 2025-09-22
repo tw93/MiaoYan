@@ -16,11 +16,8 @@ public class UserDataService {
 
     private var _importProgress = false
 
-    // Store pending title changes to ensure they're saved to the correct note
-    // when user switches notes without explicitly ending title editing
     public var pendingTitleChange: (title: String, note: Note)?
 
-    // Flag to prevent tracking title changes during programmatic title updates
     public var isUpdatingTitle: Bool = false
 
     public var searchTrigger: Bool {

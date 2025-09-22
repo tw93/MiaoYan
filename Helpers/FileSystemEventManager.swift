@@ -143,7 +143,6 @@ class FileSystemEventManager {
     private func importNote(_ url: URL) {
         let processedURL = url
 
-        // Check if note already exists
         if let existingNote = storage.getBy(url: processedURL) {
             Task { @MainActor [weak self] in
                 self?.handleExistingNote(existingNote)
@@ -151,21 +150,17 @@ class FileSystemEventManager {
             return
         }
 
-        // Validate project exists
         guard storage.getProjectBy(url: processedURL) != nil else { return }
 
-        // Create and setup new note
         guard let note = storage.initNote(url: processedURL) else { return }
         note.load()
         note.loadModifiedLocalAt()
         storage.add(note)
 
-        // Update UI
         Task { @MainActor [weak self] in
             self?.updateUIForNewNote(note)
         }
 
-        // Handle special readme file
         if note.name == "MiaoYan - Readme.md" {
             Task { @MainActor [weak self] in
                 self?.handleReadmeFile(note)

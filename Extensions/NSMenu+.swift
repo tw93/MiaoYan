@@ -4,7 +4,6 @@ import Cocoa
 
 @available(macOS 11.0, *)
 extension NSMenu {
-    /// Applies SF Symbol icons to menu items based on their action selectors
     @MainActor
     func applyMenuIcons() {
         for item in items {
@@ -26,14 +25,22 @@ extension NSMenu {
             }
         }
     }
+
+    func setMenuItemIdentifier(_ identifier: String, forTitle title: String) {
+        item(withTitle: title)?.identifier = NSUserInterfaceItemIdentifier(identifier)
+    }
+}
+
+extension NSMenuItem {
+    func setIdentifier(_ identifier: String) {
+        self.identifier = NSUserInterfaceItemIdentifier(identifier)
+    }
 }
 
 // MARK: - Icon Registry
 
-/// Manages SF Symbol icon mappings for menu actions
 @available(macOS 11.0, *)
 enum MenuIconRegistry {
-    /// Unified cache for symbol lookup results to improve performance
     @MainActor
     private static var symbolCache: [String: String?] = [:]
 
@@ -149,7 +156,6 @@ enum MenuIconRegistry {
         "noteMenu.move": "arrow.up.right.circle",
     ]
 
-    /// Selectors that should not show warnings when no icon is found
     private static let suppressedSelectors: Set<String> = [
         "submenuAction:",  // Generic submenu actions don't need icons
         "_handleInsertFromContactsCommand:",  // System insertion commands
@@ -157,7 +163,6 @@ enum MenuIconRegistry {
         "_handleInsertFromCreditCardsCommand:",
     ]
 
-    /// Returns the SF Symbol name for a given selector, with caching for performance
     @MainActor
     static func symbol(for selector: Selector) -> String? {
         let selectorString = NSStringFromSelector(selector)
@@ -172,10 +177,8 @@ enum MenuIconRegistry {
         return symbol
     }
 
-    /// Returns the SF Symbol name for a menu item, with unified caching
     @MainActor
     static func symbol(for item: NSMenuItem) -> String? {
-        // First try identifier-based lookup
         if let identifier = item.identifier {
             let identifierKey = "id:\(identifier.rawValue)"
             if let cached = symbolCache[identifierKey] {
@@ -189,7 +192,6 @@ enum MenuIconRegistry {
             symbolCache[identifierKey] = nil
         }
 
-        // Then try selector-based lookup
         if let action = item.action {
             let selectorKey = "sel:\(NSStringFromSelector(action))"
             if let cached = symbolCache[selectorKey] {
@@ -204,7 +206,6 @@ enum MenuIconRegistry {
         return nil
     }
 
-    /// Checks if warnings should be suppressed for a given selector
     @MainActor
     static func shouldSuppressWarning(for selector: Selector) -> Bool {
         let selectorString = NSStringFromSelector(selector)

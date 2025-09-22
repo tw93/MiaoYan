@@ -215,9 +215,6 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         popUp.action = action
 
         if action == #selector(codeFontChanged(_:)) {
-            // Special option to follow editor font
-            popUp.addItem(withTitle: "Editor Font")
-            // Populate with current code font (if any)
             setupFontPopUp(popUp, currentName: settings.codeFontName)
         } else if action == #selector(windowFontChanged(_:)) {
             setupFontPopUp(popUp, currentName: settings.windowFontName)
@@ -334,12 +331,6 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         if rows.count > 1 {
             selectSizeInPopUp(rows[1], size: settings.previewFontSize)
         }
-        // Code font - check if it should follow editor font
-        if rows.count > 3 {
-            if settings.codeFontName == settings.editorFontName {
-                selectCodeFontAsEditor(rows[3])
-            }
-        }
         // Presentation font size
         if rows.count > 4 {
             selectSizeInPopUp(rows[4], size: settings.presentationFontSize)
@@ -359,20 +350,10 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         }
     }
 
-    private func selectCodeFontAsEditor(_ rowView: NSView) {
-        if let popUp = rowView.subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton {
-            popUp.selectItem(withTitle: "Editor Font")
-        }
-    }
-
     // MARK: - Actions
     @objc private func editorFontChanged(_ sender: NSPopUpButton) {
         guard let item = sender.selectedItem else { return }
         let actualFontName = getFontType(from: item.title)?.editorFontName ?? item.title
-        if settings.codeFontName == settings.editorFontName {
-            settings.codeFontName = actualFontName
-            NotesTextProcessor.codeFont = NSFont(name: settings.codeFontName, size: CGFloat(settings.editorFontSize))
-        }
         settings.editorFontName = actualFontName
         settings.applyChanges()
     }
@@ -409,11 +390,8 @@ final class TypographyPrefsViewController: BasePrefsViewController {
 
     @objc private func codeFontChanged(_ sender: NSPopUpButton) {
         guard let item = sender.selectedItem else { return }
-        if item.title == "Editor Font" {
-            settings.codeFontName = settings.editorFontName
-        } else {
-            settings.codeFontName = getFontType(from: item.title)?.editorFontName ?? item.title
-        }
+        let actualFontName = getFontType(from: item.title)?.editorFontName ?? item.title
+        settings.codeFontName = actualFontName
         NotesTextProcessor.codeFont = NSFont(name: settings.codeFontName, size: CGFloat(settings.editorFontSize))
         settings.applyChanges()
     }

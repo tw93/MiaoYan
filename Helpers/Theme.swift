@@ -6,7 +6,6 @@ import Foundation
 enum Theme {
     typealias Color = NSColor
 
-    // Primary text color (dynamic in System mode)
     static var textColor: Color {
         if UserDefaultsManagement.appearanceType != .Custom {
             return .labelColor
@@ -15,7 +14,6 @@ enum Theme {
         }
     }
 
-    // Secondary text color for subtitles / timestamps
     static var secondaryTextColor: Color {
         if UserDefaultsManagement.appearanceType != .Custom {
             return .secondaryLabelColor
@@ -24,17 +22,14 @@ enum Theme {
         }
     }
 
-    // App background surface color
     static var backgroundColor: Color {
         NSColor(named: "mainBackground") ?? .windowBackgroundColor
     }
 
-    // Unified selection background color used in tables/lists
     static var selectionBackgroundColor: Color {
         NSColor(named: "selectionBackground") ?? .selectedTextBackgroundColor
     }
 
-    // Semantic colors used by syntax highlighting
     static var titleColor: Color {
         NSColor(named: "title") ?? textColor
     }
@@ -54,17 +49,14 @@ enum Theme {
         NSColor(named: "highlight") ?? .systemBlue
     }
 
-    // Primary accent color for highlights and active states
     static var accentColor: Color {
         NSColor(named: "accentColor") ?? .controlAccentColor
     }
 
-    // Selection text color for highlighted/selected table cells
     static var selectionTextColor: Color {
         .selectedMenuItemTextColor
     }
 
-    // Toast notification colors
     static var toastBackgroundColor: Color {
         NSColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 0.95)
     }
@@ -73,19 +65,16 @@ enum Theme {
         .white
     }
 
-    // Divider/separator color for UI elements
     static var dividerColor: Color {
         NSColor(named: "divider") ?? .separatorColor
     }
 
-    // Dark background color for preview
     static var previewDarkBackgroundColor: Color {
         NSColor(srgbRed: 0x23 / 255.0, green: 0x28 / 255.0, blue: 0x2D / 255.0, alpha: 1.0)
     }
 }
 
 extension NSColor {
-    /// Resolve dynamic asset colors against a specific appearance. Falls back to self when resolution fails.
     func resolvedColor(for appearance: NSAppearance?) -> NSColor {
         guard let appearance else { return self }
 
@@ -97,8 +86,6 @@ extension NSColor {
     }
 }
 
-// Optional: Use this to get a color "snapshot" from non-main threads
-// Usage: let snap = await ThemeSnapshot.make()
 struct ThemeSnapshot {
     let textColor: NSColor
     let secondaryTextColor: NSColor

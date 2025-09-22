@@ -142,7 +142,6 @@ class Storage {
     }
 
     private func checkTrashForVolume(url: URL) {
-        // Skip trash creation in single file mode
         if UserDefaultsManagement.isSingleMode {
             return
         }
@@ -221,7 +220,6 @@ class Storage {
             added.append(project)
         }
 
-        // Skip sub-project scanning in single file mode for performance
         if project.isRoot, !UserDefaultsManagement.isSingleMode {
             let addedSubProjects = checkSub(url: project.url, parent: project)
             added += addedSubProjects
@@ -690,8 +688,6 @@ class Storage {
                 )
             }
 
-            // Start downloads count available when debugging needed
-
             for image in images {
                 let url = image.0 as URL
 
@@ -700,7 +696,6 @@ class Storage {
                 }
             }
         } catch {
-            // Silently ignore missing project in debug to avoid console spam
         }
     }
 
@@ -745,11 +740,9 @@ class Storage {
     }
 
     public func saveCloudPins() {
-        // CloudKit functionality removed for macOS-only app
     }
 
     public func restoreCloudPins() -> (removed: [Note]?, added: [Note]?) {
-        // CloudKit functionality removed for macOS-only app
         return (nil, nil)
     }
 

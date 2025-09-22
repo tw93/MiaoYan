@@ -32,17 +32,14 @@ struct KeychainPasswordItem {
         query[kSecReturnAttributes as String] = kCFBooleanTrue
         query[kSecReturnData as String] = kCFBooleanTrue
 
-        // Try to fetch the existing keychain item that matches the query.
         var queryResult: AnyObject?
         let status = withUnsafeMutablePointer(to: &queryResult) {
             SecItemCopyMatching(query as CFDictionary, UnsafeMutablePointer($0))
         }
 
-        // Check the return status and throw an error if appropriate.
         guard status != errSecItemNotFound else { throw KeychainError.noPassword }
         guard status == noErr else { throw KeychainError.unhandledError(status: status) }
 
-        // Parse the password string from the query result.
         guard let existingItem = queryResult as? [String: AnyObject],
             let passwordData = existingItem[kSecValueData as String] as? Data,
             let password = String(data: passwordData, encoding: String.Encoding.utf8)
@@ -54,7 +51,6 @@ struct KeychainPasswordItem {
     }
 
     func savePassword(_ password: String) throws {
-        // Encode the password into an Data object.
         let encodedPassword = password.data(using: String.Encoding.utf8)!
 
         do {

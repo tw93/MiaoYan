@@ -85,12 +85,10 @@ class NotesTableView: NSTableView {
                 return
             }
 
-            // If no note is selected, select the first one
             if selectedRow == -1 && !noteList.isEmpty {
                 selectRowIndexes([0], byExtendingSelection: false)
             }
 
-            // Right arrow from notelist goes to editor
             if EditTextView.note != nil {
                 vc.focusEditArea()
                 vc.editArea.updateTextContainerInset()
@@ -181,14 +179,12 @@ class NotesTableView: NSTableView {
         return CGFloat(52)
     }
 
-    // On selected row show notes in right panel
     private func handleSelectionChange(_ notification: Notification) {
         let timestamp = Date().toMillis()
         fillTimestamp = timestamp
 
         let vc = window?.contentViewController as! ViewController
 
-        // Save any pending title changes before switching notes
         if let pendingChange = UserDataService.instance.pendingTitleChange {
             let title = pendingChange.title
             let note = pendingChange.note
@@ -223,7 +219,6 @@ class NotesTableView: NSTableView {
                 currentNote.save()
             }
 
-            // Save scroll position when user selects a note
             saveScrollPosition()
 
             loadingQueue.cancelAllOperations()
@@ -477,7 +472,6 @@ class NotesTableView: NSTableView {
             return
         }
 
-        // Forward keyDown events to ViewController for global shortcut handling
         if let vc = window?.contentViewController as? ViewController {
             if !vc.keyDown(with: event) {
                 super.keyDown(with: event)

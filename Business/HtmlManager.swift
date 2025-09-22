@@ -1,7 +1,6 @@
 import Foundation
 import WebKit
 
-/// HTML preview and processing utility class
 class HtmlManager {
 
     @MainActor
@@ -232,7 +231,6 @@ class HtmlManager {
         var matchRanges: [NSRange] = []
 
         do {
-            // Common HTML patterns: self-closing and paired tags
             let htmlPatterns = [
                 "<(?:img|br|hr|input|meta|link|area|base|col|embed|source|track|wbr)\\s*[^>]*/?\\s*>",
                 "<(\\w+)[^>]*>[^<]*</\\1>",
@@ -250,11 +248,9 @@ class HtmlManager {
             }
         }
 
-        // Replace from back to front to avoid range invalidation
         matchRanges.sort { $0.location > $1.location }
 
         for range in matchRanges {
-            // UTF-16 length validation for safety
             guard range.location + range.length <= content.utf16.count,
                 let swiftRange = Range(range, in: content)
             else { continue }

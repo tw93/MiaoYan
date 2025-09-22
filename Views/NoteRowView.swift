@@ -26,7 +26,6 @@ class NoteRowView: NSTableRowView {
 
     override func drawSelection(in dirtyRect: NSRect) {
         if isSelected {
-            // Make selection slightly narrower to avoid system border overlap
             let margin: CGFloat = 11
             let cornerRadius: CGFloat = 8
             let selectionRect = NSRect(
@@ -45,7 +44,6 @@ class NoteRowView: NSTableRowView {
     }
 
     override func draw(_ dirtyRect: NSRect) {
-        // Draw our custom selection if selected
         if isSelected {
             drawSelection(in: dirtyRect)
             return
@@ -59,7 +57,6 @@ class NoteRowView: NSTableRowView {
     }
 
     private func shouldHideSeparator() -> Bool {
-        // Find the table view by walking up the view hierarchy
         var parentView: NSView? = superview
         while parentView != nil {
             if let tableView = parentView as? NotesTableView {
@@ -87,7 +84,6 @@ class NoteRowView: NSTableRowView {
     }
 
     override func drawSeparator(in dirtyRect: NSRect) {
-        // Draw a subtle separator line at the bottom
         let separatorHeight: CGFloat = 1.0
         let separatorRect = NSRect(
             x: 20,
@@ -96,7 +92,6 @@ class NoteRowView: NSTableRowView {
             height: separatorHeight
         )
 
-        // Use divider color from Assets, resolved for current appearance
         var dividerColor = Theme.dividerColor
         let app = self.effectiveAppearance
         var cg: CGColor?
@@ -112,6 +107,5 @@ class NoteRowView: NSTableRowView {
     }
 
     override func drawBackground(in dirtyRect: NSRect) {
-        // Override to prevent any background drawing
     }
 }
