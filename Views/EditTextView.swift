@@ -3,6 +3,19 @@ import Cocoa
 import Highlightr
 import SwiftyJSON
 
+// Configuration options for EditTextView fill operations
+struct FillOptions {
+    let highlight: Bool
+    let saveTyping: Bool
+    let force: Bool
+    let needScrollToCursor: Bool
+
+    // Common presets
+    static let `default` = FillOptions(highlight: false, saveTyping: false, force: false, needScrollToCursor: true)
+    static let forced = FillOptions(highlight: true, saveTyping: false, force: true, needScrollToCursor: true)
+    static let silent = FillOptions(highlight: true, saveTyping: false, force: true, needScrollToCursor: false)
+}
+
 @MainActor
 class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     public static var note: Note?
@@ -350,10 +363,23 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         return true
     }
 
-    func fill(note: Note, highlight: Bool = false, saveTyping: Bool = false, force: Bool = false, needScrollToCursor: Bool = true) {
+    // New fill method using configuration object
+    func fill(note: Note, options: FillOptions = .default) {
         guard let viewController = window?.contentViewController as? ViewController else {
             return
         }
+
+        // Prevent filling during note creation to avoid content flashing
+        if UserDataService.instance.shouldBlockEditAreaUpdate(forceUpdate: options.force) {
+            return
+        }
+
+        // 调用内部实现
+        _performFill(note: note, options: options, viewController: viewController)
+    }
+
+    // Internal implementation method
+    private func _performFill(note: Note, options: FillOptions, viewController: ViewController) {
         viewController.emptyEditAreaView.isHidden = true
         // Only show title components if not in PPT mode
         if !UserDefaultsManagement.magicPPT {
@@ -370,7 +396,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             md.editorUndoManager = note.undoManager
         }
         isEditable = isEditable(note: note)
-        if !saveTyping {
+        if !options.saveTyping {
             typingAttributes.removeAll()
             typingAttributes[.font] = UserDefaultsManagement.noteFont
             // Apply letter spacing to typing attributes
@@ -392,7 +418,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 let frame = viewController.editAreaScroll.bounds
                 markdownView?.frame = frame
                 /// Load note if needed
-                markdownView?.load(note: note, force: force)
+                markdownView?.load(note: note, force: options.force)
                 /// Ensure it is visible in case it was hidden by clear() during sidebar switch
                 markdownView?.isHidden = false
                 markdownView?.alphaValue = 1.0
@@ -407,7 +433,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         } else {
             storage.setAttributedString(note.content)
         }
-        if highlight {
+        if options.highlight {
             let search = getSearchText()
             let processor = NotesTextProcessor(storage: storage)
             processor.highlightKeyword(search: search)
@@ -419,7 +445,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         if let storage = textStorage {
             storage.applyEditorLetterSpacing()
         }
-        restoreCursorPosition(needScrollToCursor: needScrollToCursor)
+        restoreCursorPosition(needScrollToCursor: options.needScrollToCursor)
     }
     public func clear() {
         textStorage?.setAttributedString(NSAttributedString())
@@ -952,8 +978,9 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
         let components = text.components(separatedBy: "/")
         guard let lastComponent = components.last,
-              !lastComponent.isEmpty,
-              lastComponent.allSatisfy({ $0.isLetter || $0.isNumber }) else {
+            !lastComponent.isEmpty,
+            lastComponent.allSatisfy({ $0.isLetter || $0.isNumber })
+        else {
             return nil
         }
 
@@ -962,7 +989,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     private func expandShortcut(_ shortcut: String, at range: NSRange) -> Bool {
         guard let template = ShortcutTemplateManager.shared.getTemplate(for: shortcut),
-              let textStorage = textStorage else {
+            let textStorage = textStorage
+        else {
             return false
         }
 
@@ -972,7 +1000,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
         // Bounds checking
         guard replaceStart >= 0,
-              replaceStart + replaceLength <= textStorage.length else {
+            replaceStart + replaceLength <= textStorage.length
+        else {
             return false
         }
 

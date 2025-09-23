@@ -595,26 +595,50 @@ extension ViewController {
             return
         }
         editor.subviews.removeAll(where: { $0.isKind(of: MPreviewView.self) })
-        notesTableView.deselectNotes()
+
+        // Set flag to prevent edit area updates during note creation
+        UserDataService.instance.isCreatingNote = true
+
+        // Prepare for new note creation - ensure clean state
+        prepareForNoteCreation()
+
+        // Set new note content
         editArea.string = text
         EditTextView.note = note
-        search.stringValue.removeAll()
-        titleLabel.isEditable = true
-        emptyEditAreaView.isHidden = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-            vc.titleLabel.editModeOn()
-        }
 
+        // Update table and handle completion
         updateTable {
             DispatchQueue.main.async {
-                if let index = self.notesTableView.getIndex(note) {
-                    self.notesTableView.selectRowIndexes([index], byExtendingSelection: false)
-                    self.notesTableView.scrollRowToVisible(index)
-                }
+                // Clear the flag before final setup
+                UserDataService.instance.isCreatingNote = false
+                self.completeNoteCreation(for: note, with: vc)
             }
         }
 
         TelemetryDeck.signal("Action.NewNote")
+    }
+
+    // Prepare UI state for new note creation
+    private func prepareForNoteCreation() {
+        notesTableView.deselectNotes()
+        search.stringValue.removeAll()
+        titleLabel.isEditable = true
+        emptyEditAreaView.isHidden = true
+    }
+
+    // Complete final setup for newly created note
+    private func completeNoteCreation(for note: Note, with viewController: ViewController) {
+        guard let index = notesTableView.getIndex(note) else {
+            return
+        }
+
+        notesTableView.selectRowIndexes([index], byExtendingSelection: false)
+        notesTableView.scrollRowToVisible(index)
+
+        // Focus on title after UI stabilizes
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            viewController.titleLabel.editModeOn()
+        }
     }
 
     private func removeForever() {

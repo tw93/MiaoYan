@@ -228,7 +228,11 @@ class NotesTableView: NSTableView {
                     guard !operation.isCancelled, self?.fillTimestamp == timestamp else {
                         return
                     }
-                    vc.editArea.fill(note: note, highlight: true, needScrollToCursor: false)
+                    // Avoid filling during note creation to prevent content flashing
+                    if UserDataService.instance.shouldBlockEditAreaUpdate() {
+                        return
+                    }
+                    vc.editArea.fill(note: note, options: .silent)
                 }
             }
             loadingQueue.addOperation(operation)

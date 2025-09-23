@@ -530,7 +530,13 @@ extension ViewController {
             let selected = self.notesTableView.selectedRow
             if selected > -1, self.notesTableView.noteList.indices.contains(selected) {
                 if let note = self.notesTableView.getSelectedNote() {
-                    self.editArea.fill(note: note, highlight: true, saveTyping: saveTyping, force: force)
+                    let options = FillOptions(
+                        highlight: true,
+                        saveTyping: saveTyping,
+                        force: force,
+                        needScrollToCursor: true
+                    )
+                    self.editArea.fill(note: note, options: options)
                     self.editArea.setSelectedRange(NSRange(location: location, length: 0))
                 }
             }

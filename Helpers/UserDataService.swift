@@ -15,6 +15,7 @@ public class UserDataService {
     private var _lastName: String?
 
     private var _importProgress = false
+    private var _creatingNote = false
 
     public var pendingTitleChange: (title: String, note: Note)?
 
@@ -106,4 +107,20 @@ public class UserDataService {
             _importProgress = newValue
         }
     }
+
+    // Flag to prevent edit area content flashing during note creation
+    public var isCreatingNote: Bool {
+        get {
+            _creatingNote
+        }
+        set {
+            _creatingNote = newValue
+        }
+    }
+
+    // Check if edit area updates should be blocked
+    public func shouldBlockEditAreaUpdate(forceUpdate: Bool = false) -> Bool {
+        return isCreatingNote && !forceUpdate
+    }
+
 }

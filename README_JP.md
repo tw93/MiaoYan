@@ -29,7 +29,7 @@
 
 ## 最初の使用
 
-1. 最新の dmg インストールパッケージを<a href="https://github.com/tw93/MiaoYan/releases/latest" target="_blank">GitHub Releases</a>から**ダウンロード**し、ダブルクリックしてインストールします。macOS Big Sur 以上でより良い体験が得られます。
+1. 最新の dmg インストールパッケージを<a href="https://github.com/tw93/MiaoYan/releases/latest" target="_blank">GitHub Releases</a>から**ダウンロード**し、ダブルクリックしてインストールします。
 2. iCloud またはルートディレクトリに`MiaoYan`フォルダを作成し、MiaoYan の設定を開き、デフォルトの保存先をこれに変更します。
 3. MiaoYan の左上隅にある新しいフォルダのアイコンをクリックして、独自のドキュメントカテゴリフォルダを作成し、使用を開始できます。
 4. 同様に、デフォルトのフォントに慣れていない場合は、設定で他の通常のフォントに変更できます。
