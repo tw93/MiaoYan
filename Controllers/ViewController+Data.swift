@@ -425,7 +425,10 @@ extension ViewController {
 
         if !notesTableView.noteList.isEmpty {
             let note = notesTableView.noteList[0]
-            editArea.fill(note: note, highlight: true)
+            // Avoid filling during note creation to prevent content flashing
+            if !UserDataService.instance.shouldBlockEditAreaUpdate() {
+                editArea.fill(note: note, options: .forced)
+            }
         }
     }
 
