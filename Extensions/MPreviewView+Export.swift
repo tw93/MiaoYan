@@ -4,6 +4,7 @@ import CryptoKit
 import PDFKit
 import WebKit
 
+
 // MARK: - Export Cache Manager
 @MainActor
 class ExportCache {
@@ -80,201 +81,198 @@ class ExportCache {
 // MARK: - Export Extensions
 extension MPreviewView {
 
-    // MARK: - Export Methods
-    public func exportPdf() {
-        guard let vc = ViewController.shared() else { return }
+    private static var isExporting = false
 
-        guard let note = vc.notesTableView.getSelectedNote() else { return }
+    // MARK: - Export Data Creation Helper
+    private func createExportData(note: Note, height: CGFloat = 0, width: CGFloat = 0, processedHTML: String? = nil) -> ExportCache.ExportData {
+        return ExportCache.ExportData(
+            contentHash: "",
+            contentHeight: height,
+            contentWidth: width == 0 ? self.bounds.width : width,
+            processedHTML: processedHTML ?? note.getPrettifiedContent(),
+            timestamp: Date(),
+            isImageLoaded: true
+        )
+    }
 
-        // Check if we have valid cached data AND the WebView content matches
+    // MARK: - Unified Export Base Method
+    private func performExport(
+        note: Note,
+        viewController: ViewController,
+        needsDimensions: Bool,
+        exportAction: @escaping (ExportCache.ExportData) -> Void
+    ) {
+        guard !Self.isExporting else {
+            viewController.toastExport(status: false)
+            return
+        }
+
+        Self.isExporting = true
+
+        // Check cache first
         if let cachedData = ExportCache.shared.getCachedData(for: note),
-            cachedData.isImageLoaded,
-            self.isCurrentContentMatchingCache(cachedData, for: note)
-        {
-            // Use cached dimensions for immediate export without triggering preview refresh
+           cachedData.isImageLoaded,
+           self.isCurrentContentMatchingCache(cachedData, for: note) {
             DispatchQueue.main.async {
-                let pdfConfiguration = WKPDFConfiguration()
-                pdfConfiguration.rect = CGRect(x: 0, y: 0, width: self.bounds.width, height: cachedData.contentHeight)
-                self.createPDF(configuration: pdfConfiguration) { result in
-                    self.handlePDFExportResult(result, viewController: vc)
-                }
+                exportAction(cachedData)
             }
             return
         }
 
-        // No valid cache or content changed, need to ensure images are loaded first
-        waitForImagesLoaded { [weak self] in
-            guard let self else { return }
-            self.getContentHeight { contentHeight in
-                guard let height = contentHeight else {
-                    vc.toastExport(status: false)
+        // Need fresh export
+        waitForWebViewReady { [weak self] in
+            guard let self else {
+                Self.isExporting = false
+                viewController.toastExport(status: false)
+                return
+            }
+
+            self.waitForImagesLoaded { [weak self] in
+                guard let self else {
+                    Self.isExporting = false
+                    viewController.toastExport(status: false)
                     return
                 }
 
-                // Cache the content dimensions and mark images as loaded
-                let exportData = ExportCache.ExportData(
-                    contentHash: "",
-                    contentHeight: height,
-                    contentWidth: self.bounds.width,
-                    processedHTML: note.getPrettifiedContent(),
-                    timestamp: Date(),
-                    isImageLoaded: true
-                )
-                ExportCache.shared.setCachedData(exportData, for: note)
+                // Get the actual rendered HTML from WebView
+                self.evaluateJavaScript("document.documentElement.outerHTML.toString()") { htmlResult, _ in
+                    let renderedHTML = htmlResult as? String ?? note.getPrettifiedContent()
 
-                DispatchQueue.main.async {
-                    let pdfConfiguration = WKPDFConfiguration()
-                    pdfConfiguration.rect = CGRect(x: 0, y: 0, width: self.bounds.width, height: height)
-                    self.createPDF(configuration: pdfConfiguration) { result in
-                        self.handlePDFExportResult(result, viewController: vc)
+                    if !needsDimensions {
+                        let exportData = self.createExportData(note: note, processedHTML: renderedHTML)
+                        ExportCache.shared.setCachedData(exportData, for: note)
+                        exportAction(exportData)
+                    } else {
+                        self.getContentDimensions { height, width in
+                            let exportData = self.createExportData(note: note, height: height, width: width, processedHTML: renderedHTML)
+                            ExportCache.shared.setCachedData(exportData, for: note)
+                            exportAction(exportData)
+                        }
                     }
+                }
+            }
+        }
+    }
+
+    
+    // MARK: - Export Methods
+    public func exportPdf() {
+        guard let vc = ViewController.shared(),
+              let note = vc.notesTableView.getSelectedNote() else { return }
+
+        performExport(note: note, viewController: vc, needsDimensions: true) { [weak self] exportData in
+            guard let self else {
+                Self.isExporting = false
+                vc.toastExport(status: false)
+                return
+            }
+
+            let pdfConfiguration = WKPDFConfiguration()
+            pdfConfiguration.rect = CGRect(x: 0, y: 0, width: self.bounds.width, height: exportData.contentHeight)
+
+            self.createPDF(configuration: pdfConfiguration) { result in
+                Self.isExporting = false
+                switch result {
+                case .success(let pdfData):
+                    self.saveToDownloads(data: pdfData, extension: "pdf", viewController: vc)
+                case .failure:
+                    vc.toastExport(status: false)
                 }
             }
         }
     }
 
     public func exportImage() {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared(),
+              let note = vc.notesTableView.getSelectedNote() else { return }
 
-        guard let note = vc.notesTableView.getSelectedNote() else { return }
-
-        // Check if we have valid cached data AND the WebView content matches
-        if let cachedData = ExportCache.shared.getCachedData(for: note),
-            cachedData.isImageLoaded,
-            self.isCurrentContentMatchingCache(cachedData, for: note)
-        {
-            // Use cached dimensions for immediate export without triggering preview refresh
-            DispatchQueue.main.async {
-                let config = WKSnapshotConfiguration()
-                config.rect = CGRect(x: 0, y: 0, width: cachedData.contentWidth, height: cachedData.contentHeight)
-                config.afterScreenUpdates = true
-                config.snapshotWidth = NSNumber(value: Double(cachedData.contentWidth) * 2.0)
-                self.frame.size.height = cachedData.contentHeight
-                self.takeSnapshot(with: config) { image, error in
-                    self.handleImageExportResult(image: image, error: error, viewController: vc)
-                }
+        performExport(note: note, viewController: vc, needsDimensions: true) { [weak self] exportData in
+            guard let self else {
+                Self.isExporting = false
+                vc.toastExport(status: false)
+                return
             }
-            return
-        }
 
-        // No valid cache or content changed, need to ensure images are loaded first
-        waitForImagesLoaded { [weak self] in
-            guard let self else { return }
-            self.getContentDimensions { contentHeight, contentWidth in
-                // Cache the content dimensions and mark images as loaded
-                let exportData = ExportCache.ExportData(
-                    contentHash: "",
-                    contentHeight: contentHeight,
-                    contentWidth: contentWidth,
-                    processedHTML: note.getPrettifiedContent(),
-                    timestamp: Date(),
-                    isImageLoaded: true
-                )
-                ExportCache.shared.setCachedData(exportData, for: note)
+            let config = WKSnapshotConfiguration()
+            config.rect = CGRect(x: 0, y: 0, width: exportData.contentWidth, height: exportData.contentHeight)
+            config.afterScreenUpdates = true
+            config.snapshotWidth = NSNumber(value: Double(exportData.contentWidth) * 2.0)
+            self.frame.size.height = exportData.contentHeight
 
-                DispatchQueue.main.async {
-                    let config = WKSnapshotConfiguration()
-                    config.rect = CGRect(x: 0, y: 0, width: contentWidth, height: contentHeight)
-                    config.afterScreenUpdates = true
-                    config.snapshotWidth = NSNumber(value: Double(contentWidth) * 2.0)
-                    self.frame.size.height = contentHeight
-                    self.takeSnapshot(with: config) { image, error in
-                        self.handleImageExportResult(image: image, error: error, viewController: vc)
-                    }
+            self.takeSnapshot(with: config) { image, error in
+                Self.isExporting = false
+                if let image = image {
+                    self.handleImageExportSuccess(image: image, note: note, viewController: vc)
+                } else {
+                    vc.toastExport(status: false)
                 }
             }
         }
     }
 
     public func exportHtml() {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared(),
+              let note = vc.notesTableView.getSelectedNote() else { return }
 
-        guard let note = vc.notesTableView.getSelectedNote() else { return }
-
-        // Generate HTML directly without WebView - completely bypassing preview system
-        self.generateHtmlDirectly(note: note, viewController: vc)
+        // HTML export does not depend on WebView layout; generate directly
+        guard !Self.isExporting else {
+            vc.toastExport(status: false)
+            return
+        }
+        Self.isExporting = true
+        let exportData = self.createExportData(note: note)
+        self.generateHtmlDirectly(note: note, viewController: vc, exportData: exportData)
     }
 
     // MARK: - Export Helper Methods
-    private func generateHtmlDirectly(note: Note, viewController: ViewController) {
+    private func generateHtmlDirectly(note: Note, viewController: ViewController, exportData: ExportCache.ExportData) {
         let currentName = viewController.titleLabel.stringValue
 
         Task { [weak self] in
-            guard let self = self else { return }
+            guard let self = self else {
+                Self.isExporting = false
+                viewController.toastExport(status: false)
+                return
+            }
 
-            do {
-                // Use cached data if available
-                if let cachedData = ExportCache.shared.getCachedData(for: note) {
-                    let completeHtml = try await MainActor.run {
-                        return try self.generateCompleteHtml(
-                            content: cachedData.processedHTML,
-                            currentName: currentName
-                        )
+            let completeHtml = await MainActor.run {
+                    // For HTML export, render Markdown to HTML first, then wrap with template
+                    let markdown = note.getPrettifiedContent()
+                    let css = HtmlManager.previewStyle()
+
+                    // Set export flag to apply proper styling (fonts, width, CDN base)
+                    UserDefaultsManagement.isOnExportHtml = true
+                    defer { UserDefaultsManagement.isOnExportHtml = false }
+
+                    let htmlBody = renderMarkdownHTML(markdown: markdown) ?? markdown
+
+                    do {
+                        return try HtmlManager.htmlFromTemplate(htmlBody, css: css, currentName: currentName)
+                    } catch {
+                        // Fallback to simple HTML body if template fails
+                        return htmlBody
                     }
-                    await MainActor.run {
-                        self.saveToDownloadsWithFilename(content: completeHtml, extension: "html", filename: note.getExportTitle(), viewController: viewController)
-                    }
-                    return
                 }
 
-                // Generate fresh HTML - First convert markdown to HTML
-                let markdownString = note.getPrettifiedContent()
-
-                guard let htmlString = renderMarkdownHTML(markdown: markdownString) else {
-                    throw NSError(domain: "HtmlExport", code: 2, userInfo: [NSLocalizedDescriptionKey: "Failed to convert markdown to HTML"])
-                }
-
-                let completeHtml = try await MainActor.run {
-                    return try self.generateCompleteHtml(
-                        content: htmlString,
-                        currentName: currentName
-                    )
-                }
-
-                // Cache the result with the converted HTML
-                let exportData = ExportCache.ExportData(
-                    contentHash: "",
-                    contentHeight: 0,
-                    contentWidth: 0,
-                    processedHTML: htmlString,
-                    timestamp: Date(),
-                    isImageLoaded: false
-                )
-                ExportCache.shared.setCachedData(exportData, for: note)
-
-                await MainActor.run {
-                    self.saveToDownloadsWithFilename(content: completeHtml, extension: "html", filename: note.getExportTitle(), viewController: viewController)
-                }
-
-            } catch {
-                // Only fall back to WebView if absolutely necessary
-                DispatchQueue.main.async {
-                    self.exportHtmlFallback(vc: viewController)
-                }
+            await MainActor.run {
+                Self.isExporting = false
+                self.saveToDownloadsWithFilename(content: completeHtml, extension: "html", filename: note.getExportTitle(), viewController: viewController)
             }
         }
     }
 
-    private func generateCompleteHtml(content: String, currentName: String) throws -> String {
-        let css = HtmlManager.previewStyle()
-        return try HtmlManager.htmlFromTemplate(content, css: css, currentName: currentName)
+    private func handleImageExportSuccess(image: NSImage, note: Note, viewController: ViewController) {
+        guard let tiffData = image.tiffRepresentation,
+              let bitmapImage = NSBitmapImageRep(data: tiffData),
+              let imageData = bitmapImage.representation(using: .png, properties: [:]) else {
+            viewController.toastExport(status: false)
+            return
+        }
+
+        saveToDownloadsWithFilename(data: imageData, extension: "png", filename: note.getExportTitle(), viewController: viewController)
     }
 
-    private func exportHtmlFallback(vc: ViewController) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.executeJavaScriptWhenReady(
-                "",
-                completion: {
-                    self.evaluateJavaScript("document.documentElement.outerHTML.toString()") { html, error in
-                        guard let contentHtml = html as? String, error == nil else {
-                            vc.toastExport(status: false)
-                            return
-                        }
-                        self.saveToDownloads(content: contentHtml, extension: "html", viewController: vc)
-                    }
-                })
-        }
-    }
+    // (obsolete) previously used helper methods removed after direct HTML export refactor
 
     private func waitForImagesLoaded(completion: @escaping () -> Void) {
         let checkImagesScript = HtmlManager.checkImagesScript
@@ -282,7 +280,10 @@ extension MPreviewView {
         func checkImages() {
             evaluateJavaScript(checkImagesScript) { result, _ in
                 if let allImagesLoaded = result as? Bool, allImagesLoaded {
-                    completion()
+                    // Add additional delay to ensure layout and rendering are complete
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        completion()
+                    }
                 } else {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         checkImages()
@@ -295,46 +296,41 @@ extension MPreviewView {
     }
 
     private func isCurrentContentMatchingCache(_ cachedData: ExportCache.ExportData, for note: Note) -> Bool {
-        let currentContent = note.getPrettifiedContent()
-        return currentContent == cachedData.processedHTML
+        // Cache validity is already ensured by keying on content + appearance in ExportCache.
+        // Comparing markdown to rendered HTML was causing unnecessary cache misses.
+        return true
     }
 
-    // MARK: - Export Result Handlers
-    private func handlePDFExportResult(_ result: Result<Data, Error>, viewController: Any) {
-        guard let vc = viewController as? ViewController else { return }
-        switch result {
-        case .success(let pdfData):
-            saveToDownloads(data: pdfData, extension: "pdf", viewController: vc)
-        case .failure:
-            vc.toastExport(status: false)
-        }
-    }
+    private func waitForWebViewReady(completion: @escaping () -> Void) {
+        // Check if WebView has finished loading and rendering
+        let readyScript = """
+            (function() {
+                if (document.readyState !== 'complete') return false;
+                if (document.body.offsetHeight === 0) return false;
+                return true;
+            })()
+        """
 
-    private func handleImageExportResult(image: NSImage?, error: Error?, viewController: Any) {
-        guard let vc = viewController as? ViewController else { return }
-
-        if let image = image {
-            // Get the currently selected note to get the correct filename
-            guard let note = vc.notesTableView.getSelectedNote() else {
-                vc.toastExport(status: false)
-                return
+        func checkReady() {
+            evaluateJavaScript(readyScript) { result, _ in
+                if let isReady = result as? Bool, isReady {
+                    // Additional small delay for final layout stabilization
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        completion()
+                    }
+                } else {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        checkReady()
+                    }
+                }
             }
-
-            // Convert image to PNG data
-            guard let tiffData = image.tiffRepresentation,
-                let bitmapImage = NSBitmapImageRep(data: tiffData),
-                let imageData = bitmapImage.representation(using: .png, properties: [:])
-            else {
-                vc.toastExport(status: false)
-                return
-            }
-
-            // Use the unified save method with correct filename
-            saveToDownloadsWithFilename(data: imageData, extension: "png", filename: note.getExportTitle(), viewController: vc)
-        } else {
-            vc.toastExport(status: false)
         }
+
+        checkReady()
     }
+
+    // MARK: - Legacy Support
+    // Removed old export result handlers - now integrated into unified export system
 
     // MARK: - File Save Methods
     private func saveToDownloads(content: String, extension: String, viewController: Any) {

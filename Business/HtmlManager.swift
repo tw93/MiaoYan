@@ -15,13 +15,14 @@ class HtmlManager {
         }
 
         if UserDefaultsManagement.presentation {
-            return "html {font-size: \(UserDefaultsManagement.presentationFontSize)px} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif; --code-text-font: \(codeFontName),sans-serif; } #write { max-width: 100%;}"
+            return "html {font-size: \(UserDefaultsManagement.presentationFontSize)px} :root { --text-font: \(UserDefaultsManagement.previewFontName), -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Helvetica, Arial, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif; --code-text-font: \(codeFontName), SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace; } #write { max-width: 100%;}"
         } else {
             let paddingStyle = UserDefaultsManagement.isOnExport ? " padding-top: 24px" : ""
-            let writeCSS = UserDefaultsManagement.isOnExportHtml ? " max-width: 800px; margin: 0 auto" : "max-width: \(UserDefaultsManagement.previewWidth);"
+            // Use the same preview width for export to avoid layout discrepancies
+            let writeCSS = "max-width: \(UserDefaultsManagement.previewWidth); margin: 0 auto"
 
             return
-                "html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} :root { --text-font: \(UserDefaultsManagement.previewFontName), sans-serif; --code-text-font: \(codeFontName),sans-serif; } #write { \(writeCSS)}"
+                "html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} :root { --text-font: \(UserDefaultsManagement.previewFontName), -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Helvetica, Arial, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif; --code-text-font: \(codeFontName), SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace; } #write { \(writeCSS)}"
         }
     }
 
@@ -91,8 +92,8 @@ class HtmlManager {
     static func getFontPathAndMeta() -> (String, String) {
         if UserDefaultsManagement.isOnExportHtml {
             return (
-                "https://gw.alipayobjects.com/os/k/html2/Fonts",
-                "<base href=\"https://gw.alipayobjects.com/os/k/html2/\">"
+                "https://cdn.tw93.fun/pic",
+                "<base href=\"https://cdn.tw93.fun/pic/\">"
             )
         } else {
             return (Bundle.main.resourceURL?.path ?? "", "")
