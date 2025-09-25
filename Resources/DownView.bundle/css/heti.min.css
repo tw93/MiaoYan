@@ -10,28 +10,6 @@
   --markmap-height: 300px;
 }
 
-@font-face {
-  font-family: 'Times New Roman';
-  src: local('Georgia'), local('Times New Roman'), local('Times'), local('Songti SC Regular'), local('Songti TC Regular');
-}
-
-@font-face {
-  font-family: 'Times New Roman';
-  src: local('Times New Roman'), local('Songti SC Regular'), local('Songti TC Regular');
-  unicode-range: U+0600-06FF, U+0030-0039;
-}
-
-@font-face {
-  font-family: 'SF Pro Text';
-  src: local('SF Pro Text'), local('Helvetica Neue'), local('PingFang SC'),
-  local('Hiragino Sans GB'), local('WenQuanYi Micro Hei'), local('Microsoft Yahei');
-}
-
-@font-face {
-  font-family: 'TsangerJinKai02-W04';
-  src: local('TsangerJinKai02-W04'), local('WenQuanYi Micro Hei'), local('Microsoft Yahei');
-}
-
 html {
   font-size: 15px;
   font-display: block;
@@ -149,11 +127,6 @@ a,
   background-color: #e6e6e6;
 }
 
-@media (prefers-color-scheme: dark) {
-  .heti hr {
-    background-color: #343b43;
-  }
-}
 
 .heti p {
   margin-block-start: 1.6em;
@@ -174,14 +147,18 @@ a,
 }
 
 .heti blockquote {
+  margin: 0;
   margin-block-start: 0.8em;
   margin-block-end: 1.6em;
-  padding-inline-start: 16px;
-  padding-inline-end: 16px;
+  padding: 0 15px;
   border-radius: 8px;
   color: #777;
   border-left: 4px solid #e6e6e6;
   line-height: 1;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: fit-content;
+  max-width: 100%;
 }
 
 .heti blockquote p {
@@ -194,20 +171,6 @@ blockquote blockquote {
   padding-right: 0;
 }
 
-.heti blockquote {
-  margin: 0;
-  overflow: hidden;
-  box-sizing: border-box;
-  padding: 0 15px;
-  width: fit-content;
-  max-width: 100%;
-}
-
-@media (prefers-color-scheme: dark) {
-  .heti blockquote {
-    border-left: 4px solid #343b43;
-  }
-}
 
 .heti pre {
   margin-block-start: 0.8em;
@@ -226,11 +189,6 @@ blockquote blockquote {
   background-color: rgba(0, 0, 0, 0.03);
 }
 
-@media (prefers-color-scheme: dark) {
-  .heti pre {
-    background-color: rgba(255, 255, 255, 0.03);
-  }
-}
 
 .heti pre code {
   margin: 0;
@@ -272,26 +230,20 @@ blockquote blockquote {
 
 .heti h3 {
   font-size: 1.25em;
+}
+
+.heti h3,
+.heti h4,
+.heti h5,
+.heti h6 {
   margin-block-start: 0.6em;
   margin-block-end: 0.6em;
 }
 
-.heti h4 {
-  font-size: 1em;
-  margin-block-start: 0.6em;
-  margin-block-end: 0.6em;
-}
-
-.heti h5 {
-  font-size: 1em;
-  margin-block-start: 0.6em;
-  margin-block-end: 0.6em;
-}
-
+.heti h4,
+.heti h5,
 .heti h6 {
   font-size: 1em;
-  margin-block-start: 0.6em;
-  margin-block-end: 0.6em;
 }
 
 .heti h1,
@@ -385,17 +337,6 @@ blockquote blockquote {
   border-radius: 8px;
 }
 
-@media (prefers-color-scheme: dark) {
-  .heti table {
-    border-color: #343b43;
-  }
-
-  .heti p > code,
-  .heti li > code {
-    background-color: #343941;
-    color: #e8e8eb;
-  }
-}
 
 .heti table {
   margin-right: auto;
@@ -413,12 +354,6 @@ blockquote blockquote {
   border-color: #e6e6e6;
 }
 
-@media (prefers-color-scheme: dark) {
-  .heti th,
-  .heti td {
-    border-color: #343b43;
-  }
-}
 
 .heti caption {
   caption-side: bottom;
@@ -511,11 +446,6 @@ blockquote blockquote {
   color: inherit;
 }
 
-@media (prefers-color-scheme: dark) {
-  .heti mark {
-    background-color: rgba(77, 74, 0, 0.88);
-  }
-}
 
 .heti q {
   quotes: '「' '」' '『' '』';
@@ -566,12 +496,6 @@ blockquote blockquote {
   background-color: #dbedff;
 }
 
-@media (prefers-color-scheme: dark) {
-  .heti sup:target,
-  .heti sup a:target {
-    background-color: #3a6188;
-  }
-}
 
 .heti summary {
   padding-inline-start: 1em;
@@ -591,11 +515,6 @@ blockquote blockquote {
   border-block-end-color: rgba(0, 0, 0, 0.54);
 }
 
-@media (prefers-color-scheme: dark) {
-  .heti u[title] {
-    border-block-end-color: rgba(255, 255, 255, 0.54);
-  }
-}
 
 .heti address,
 .heti cite,
@@ -627,16 +546,15 @@ blockquote blockquote {
   margin-inline-end: 1px;
 }
 
+/* Unified font family declarations */
 .heti,
-.heti--sans {
-  font-family: var(--text-font);
-}
-
-.heti--serif {
-  font-family: var(--text-font);
-}
-
-.heti--classic {
+.heti--sans,
+.heti--serif,
+.heti--classic,
+.heti--hei,
+.heti--song,
+.heti--ancient,
+.heti--poetry {
   font-family: var(--text-font);
 }
 
@@ -646,29 +564,9 @@ blockquote blockquote {
 .heti--classic h4,
 .heti--classic h5,
 .heti--classic h6 {
-  font-family: var(--text-font);
   font-weight: 800;
 }
 
-.heti--classic blockquote,
-.heti--classic cite,
-.heti--classic q {
-  font-family: var(--text-font);
-}
-
-.heti--classic figcaption,
-.heti--classic caption,
-.heti--classic th {
-  font-family: var(--text-font);
-}
-
-.heti--hei {
-  font-family: var(--text-font);
-}
-
-.heti--song {
-  font-family: var(--text-font);
-}
 
 .heti--columns-1,
 .heti--columns-2,
@@ -783,11 +681,6 @@ blockquote blockquote {
   quotes: '「' '」' '『' '』';
 }
 
-.heti--ancient,
-.heti--poetry {
-  font-family: var(--text-font);
-}
-
 .heti--ancient h1,
 .heti--ancient h2,
 .heti--ancient h3,
@@ -800,7 +693,6 @@ blockquote blockquote {
 .heti--poetry h4,
 .heti--poetry h5,
 .heti--poetry h6 {
-  font-family: var(--text-font);
   font-weight: 800;
   text-align: center;
 }
@@ -945,11 +837,6 @@ blockquote blockquote {
   line-height: 24px;
 }
 
-@media (prefers-color-scheme: dark) {
-  .heti .heti-fn {
-    border-block-start-color: #343b43;
-  }
-}
 
 .heti .heti-fn ol {
   margin-block-start: 0.8em;
@@ -960,11 +847,6 @@ blockquote blockquote {
   background-color: #dbedff;
 }
 
-@media (prefers-color-scheme: dark) {
-  .heti .heti-fn li:target {
-    background-color: #3a6188;
-  }
-}
 
 .heti .heti-hang {
   position: absolute;
@@ -1133,7 +1015,7 @@ code.language-mermaid .edgeLabel{
 
 .heti pre.mermaid-image-container {
   padding: 0;
-  background: #fff;
+  background: #f7f7f7;
 }
 
 .heti pre.markmap-image-container {
@@ -1200,15 +1082,10 @@ img.emoji {
   visibility: visible;
   width: 100%;
   height: var(--markmap-height);
-  font-family: var(--text-font), -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif !important;
 }
 
 .markmap svg {
-  background: transparent !important;
-}
-
-.markmap .markmap-node text {
-  font-family: var(--text-font), -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif !important;
+  background: transparent;
 }
 
 
@@ -1217,12 +1094,6 @@ img[loading="lazy"] {
   outline-color: #eef1f2;
 }
 
-@media (prefers-color-scheme: dark) {
-  img[loading="lazy"] {
-    background-color: #343941;
-    outline-color: #343941;
-  }
-}
 
 #write>img, #write>p>img, #write>table>img {
   cursor: zoom-in;
@@ -1242,4 +1113,113 @@ img.border {
 .markdown-body img,
 .markdown-body video {
   border-radius: 8px;
+}
+
+/* Simple chart container styles - match code background */
+.mermaid-image-container,
+.markmap-image-container,
+.plantuml-image-container,
+pre:has(.language-mermaid) {
+  background: #f7f7f7;
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  margin: 8px 0;
+  box-shadow: none;
+}
+
+/* Consolidated dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .html {
+    color: #ede6f5;
+  }
+
+  .heti hr {
+    background-color: #343b43;
+  }
+
+  .heti blockquote {
+    border-left: 4px solid #343b43;
+  }
+
+  .heti pre {
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+
+  .heti table,
+  .heti th,
+  .heti td {
+    border-color: #343b43;
+  }
+
+  .heti p > code,
+  .heti li > code {
+    background-color: #343941;
+    color: #e8e8eb;
+  }
+
+  .heti mark {
+    background-color: rgba(77, 74, 0, 0.88);
+  }
+
+  .heti sup:target,
+  .heti sup a:target,
+  .heti .heti-fn li:target {
+    background-color: #3a6188;
+  }
+
+  .heti u[title] {
+    border-block-end-color: rgba(255, 255, 255, 0.54);
+  }
+
+  .heti .heti-fn {
+    border-block-start-color: #343b43;
+  }
+
+  img[loading="lazy"] {
+    background-color: #343941;
+    outline-color: #343941;
+  }
+
+  .mermaid-image-container,
+  .markmap-image-container,
+  .plantuml-image-container,
+  pre:has(.language-mermaid) {
+    background: #282e33;
+  }
+}
+
+/* Chart elements with rounded corners and left alignment */
+.language-mermaid,
+.language-markmap,
+.language-plantuml {
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.language-mermaid svg,
+.markmap svg,
+.plantuml-image {
+  border-radius: 6px;
+}
+
+/* Unified font for all diagram types */
+.mermaid,
+.mermaid *,
+.markmap,
+.markmap *,
+.markmap .markmap-node text,
+.language-mermaid,
+.language-mermaid *,
+.language-markmap,
+.language-markmap *,
+.plantuml-image,
+.language-plantuml,
+.mermaid text,
+.mermaid tspan,
+.mermaid foreignObject div,
+.mermaid .nodeLabel,
+.mermaid .edgeLabel,
+.mermaid .label {
+  font-family: var(--text-font), -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
 }
