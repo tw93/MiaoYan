@@ -97,11 +97,6 @@ CA
                                                 <action selector="singleOpen:" target="L4m-js-agn" id="48w-4H-ICT"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Import" keyEquivalent="I" identifier="fileMenu.import" id="7wA-Gr-Kyz">
-                                            <connections>
-                                                <action selector="importNote:" target="Ady-hI-5gd" id="A9V-Gq-CDr"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="NDw-wG-Jov"/>
                                         <menuItem title="Search" keyEquivalent="p" identifier="fileMenu.searchAndCreate" id="hPY-aY-QOE">
                                             <connections>

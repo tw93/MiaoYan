@@ -97,9 +97,6 @@
 /* Class = "NSTextFieldCell"; title = "Preview Location"; ObjectID = "7FA-ez-4mb"; */
 "7FA-ez-4mb.title" = "預覽位置";
 
-/* Class = "NSMenuItem"; title = "Import"; ObjectID = "7wA-Gr-Kyz"; */
-"7wA-Gr-Kyz.title" = "匯入";
-
 /* Class = "NSMenuItem"; title = "Begin"; ObjectID = "7Zn-jP-4ko"; */
 "7Zn-jP-4ko.title" = "Begin";
 

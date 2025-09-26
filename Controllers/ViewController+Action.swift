@@ -137,24 +137,6 @@ extension ViewController {
         }
     }
 
-    @IBAction func importNote(_ sender: NSMenuItem) {
-        let panel = NSOpenPanel()
-        panel.allowsMultipleSelection = true
-        panel.canChooseDirectories = false
-        panel.canChooseFiles = true
-        panel.canCreateDirectories = false
-        panel.begin { result in
-            if result == NSApplication.ModalResponse.OK {
-                let urls = panel.urls
-                let project = self.getSidebarProject() ?? self.storage.getMainProject()
-
-                for url in urls {
-                    _ = self.copy(project: project, url: url)
-                }
-            }
-        }
-    }
-
     @IBAction func moveMenu(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
         if vc.notesTableView.selectedRow >= 0 {
