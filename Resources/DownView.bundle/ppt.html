@@ -16,6 +16,22 @@
       }
 
       DOWN_CSS
+
+      .reveal .slide-number {
+        left: 24px;
+        right: auto;
+        bottom: 24px;
+        font-size: 1.3rem;
+        background: rgba(0, 0, 0, 0.08);
+        color: #000;
+        padding: 4px 12px;
+        border-radius: 999px;
+        backdrop-filter: blur(12px);
+      }
+
+      .reveal .slide-number span {
+        font-size: inherit;
+      }
     </style>
   </head>
 
@@ -99,7 +115,144 @@
         });
       }
 
-      Reveal.initialize({
+      function loadInlineRevealOptions() {
+        const templateNode = document.querySelector(
+          'section[data-markdown] script[type="text/template"]',
+        );
+
+        if (!templateNode) {
+          return {};
+        }
+
+        const rawMarkdown = templateNode.textContent;
+        const leadingWhitespaceMatch = rawMarkdown.match(/^\s*/);
+        const leadingWhitespace = leadingWhitespaceMatch ? leadingWhitespaceMatch[0] : '';
+        const firstNonWhitespaceIndex = leadingWhitespace.length;
+
+        if (!rawMarkdown.startsWith('<!--', firstNonWhitespaceIndex)) {
+          return {};
+        }
+
+        const commentStart = rawMarkdown.indexOf('<!--', firstNonWhitespaceIndex);
+        const commentEnd = rawMarkdown.indexOf('-->', commentStart + 4);
+
+        if (commentEnd === -1) {
+          return {};
+        }
+
+        const headComment = rawMarkdown.slice(commentStart + 4, commentEnd);
+        const inlineConfig = {};
+        const lines = headComment
+          .split('\n')
+          .map((line) => line.trim())
+          .filter(Boolean)
+          .filter((line) => line.includes(':'));
+
+        function assignNestedOption(path, value) {
+          const segments = path.split('.');
+          let current = inlineConfig;
+
+          segments.forEach((segment, index) => {
+            if (index === segments.length - 1) {
+              current[segment] = value;
+              return;
+            }
+
+            if (!current[segment] || typeof current[segment] !== 'object') {
+              current[segment] = {};
+            }
+
+            current = current[segment];
+          });
+        }
+
+        lines.forEach((line) => {
+          const colonIndex = line.indexOf(':');
+          const key = line.slice(0, colonIndex).trim();
+          let value = line.slice(colonIndex + 1).trim();
+
+          if (!key) {
+            return;
+          }
+
+          if (value.startsWith('[') && value.endsWith(']')) {
+            const listBody = value.slice(1, -1);
+            assignNestedOption(
+              key,
+              listBody
+                .split(',')
+                .map((item) => item.trim())
+                .filter((item) => item.length > 0),
+            );
+            return;
+          }
+
+          if (
+            (value.startsWith('"') && value.endsWith('"')) ||
+            (value.startsWith("'") && value.endsWith("'"))
+          ) {
+            value = value.slice(1, -1);
+          }
+
+          if (/^null$/i.test(value)) {
+            assignNestedOption(key, null);
+            return;
+          }
+
+          if (/^undefined$/i.test(value)) {
+            assignNestedOption(key, undefined);
+            return;
+          }
+
+          if (/^(true|false)$/i.test(value)) {
+            assignNestedOption(key, /^true$/i.test(value));
+            return;
+          }
+
+          const numericValue = Number(value);
+
+          if (!Number.isNaN(numericValue)) {
+            assignNestedOption(key, numericValue);
+            return;
+          }
+
+          assignNestedOption(key, value);
+        });
+
+        const withoutComment =
+          rawMarkdown.slice(0, commentStart) + rawMarkdown.slice(commentEnd + 3);
+        templateNode.textContent = withoutComment.trimStart();
+
+        return inlineConfig;
+      }
+
+      function deepMerge(target, source) {
+        Object.keys(source).forEach((key) => {
+          const srcValue = source[key];
+
+          if (Array.isArray(srcValue)) {
+            target[key] = srcValue.slice();
+            return;
+          }
+
+          if (srcValue && typeof srcValue === 'object') {
+            if (
+              !target[key] ||
+              typeof target[key] !== 'object' ||
+              Array.isArray(target[key])
+            ) {
+              target[key] = {};
+            }
+            deepMerge(target[key], srcValue);
+            return;
+          }
+
+          target[key] = srcValue;
+        });
+        return target;
+      }
+
+      const defaultRevealOptions = {
         width: '100%',
         height: '100%',
         controls: true,
@@ -113,6 +266,9 @@
           highlightOnLoad: true,
           lineNumbers: true,
         },
+        slideNumber: false,
+        showSlideNumber: 'all',
+        hash: true,
         plugins: [
           RevealMarkdown,
           RevealHighlight,
@@ -121,7 +277,15 @@
           // RevealZoom,
           RevealMath.KaTeX,
         ],
-      });
+      };
+
+      const inlineRevealOptions = loadInlineRevealOptions();
+      const mergedRevealOptions = deepMerge(
+        deepMerge({}, defaultRevealOptions),
+        inlineRevealOptions,
+      );
+
+      Reveal.initialize(mergedRevealOptions);
 
       document.addEventListener('DOMContentLoaded', function () {
         const sections = document.getElementsByTagName('section');
@@ -153,7 +317,7 @@
 
         // 查找标准的.language-markmap和未被正确解析的markmap代码块
         let markMapList = document.querySelectorAll('.language-markmap');
-        
+
         // 如果没找到标准格式，查找包含```markmap的代码块
         if (markMapList.length === 0) {
           const codeBlocks = document.querySelectorAll('pre code');
@@ -181,25 +345,25 @@
               const match = line.match(/^(\s*)([-*+]|\d+\.)/);
               return match ? Math.floor(match[1].length / 2) : 0;
             }));
-            
+
             // More reasonable auto height: base 300px + 40px per depth level + 20px per line (slightly larger for PPT)
             // Cap at 500px maximum unless customized
             let autoHeight = Math.min(500, Math.max(300, 300 + maxDepth * 40 + lines.length * 20));
             let height = autoHeight + 'px';
-            
+
             // Override with manual height if specified
             if (heightAttr && heightAttr.length > 0 && !isNaN(heightAttr[1])) {
               height = heightAttr[1] + 'px';
             }
-            
+
             item.classList.add('markmap');
             item.classList.add(markMapName);
-            
+
             // Apply subtle gray background for PPT mode
-            const isDark = document.body.classList.contains('dark') || 
+            const isDark = document.body.classList.contains('dark') ||
                           window.matchMedia('(prefers-color-scheme: dark)').matches;
             const backgroundColor = isDark ? '#1a1f2e' : '#f5f6f7';
-            
+
             setTimeout(() => {
               const markMapItem = document.querySelector('.' + markMapName);
               markMapItem.style.maxHeight = height;
@@ -212,7 +376,7 @@
                 if (markMapItemChild) {
                   markMapItemChild.style.height = height;
                   markMapItemChild.style.backgroundColor = backgroundColor;
-                  
+
                   // Simple PPT markmap fit
                   if (window.markmap && markMapItemChild.markmap) {
                     markMapItemChild.markmap.fit();
@@ -221,7 +385,7 @@
               }, 50);
             }, 10);
           });
-      
+
       });
     </script>
     <script>

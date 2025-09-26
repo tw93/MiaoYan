@@ -8,6 +8,28 @@
 
 ---
 
+## 内联配置提示 🛠️
+
+想快速改动画或分页展示？在文档开头加一段注释，每行写 `键: 值`：
+
+```txt
+<!--
+transition: none
+backgroundTransition: none
+transitionSpeed: fast
+controls: false
+progress: false
+slideNumber: c/t
+-->
+```
+
+- 配置键与 [Reveal.js 官方文档](https://revealjs.com/config/) 完全一致
+- 嵌套字段用点号表示，例如 `highlight.lineNumbers`
+- 自动识别布尔、数字、`null`、用中括号包裹的列表（如 `[a, b]`）以及带引号的字符串
+- 注释在渲染前会被移除，因此不会影响幻灯片内容
+
+---
+
 # 快速开始 🚀
 
 - **方法一：** 在任意文档中按 `Command + Option + P`
