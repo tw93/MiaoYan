@@ -1,3 +1,12 @@
+<!--
+transition: slide
+backgroundTransition: none
+slideNumber: c/t
+hash: true
+controls: true
+progress: true
+-->
+
 # Try command + option + p 🎬
 
 ---
@@ -5,6 +14,28 @@
 # MiaoYan PPT Mode 🎉
 
 *Beautiful presentations made simple*
+
+---
+
+## Inline Configuration 🛠️
+
+Need to adjust animations or pagination? Add a leading HTML comment with `key: value` pairs:
+
+```
+<!--
+transition: none
+backgroundTransition: none
+transitionSpeed: fast
+controls: false
+progress: false
+slideNumber: c/t
+-->
+```
+- Keys map directly to the [Reveal.js config](https://revealjs.com/config/) options
+- Use dot notation for nested properties (for example `highlight.lineNumbers`)
+- Values auto-detect booleans, numbers, `null`, comma-separated lists, or quoted strings
+- Values auto-detect booleans, numbers, `null`, bracketed lists (e.g. `[a, b]`), or quoted strings
+- The comment is stripped before rendering, so slides stay clean
 
 ---
 
