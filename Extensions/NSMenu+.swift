@@ -51,7 +51,6 @@ enum MenuIconRegistry {
         ("power", ["quiteApp:"], []),
         ("square.and.pencil", ["fileMenuNewNote:"], []),
         ("externaldrive.badge.plus", ["singleOpen:"], []),
-        ("square.and.arrow.down", ["importNote:"], []),
         ("magnifyingglass", ["searchAndCreate:"], []),
         ("plus.square.on.square", ["duplicate:"], []),
         ("pencil", ["renameMenu:"], []),

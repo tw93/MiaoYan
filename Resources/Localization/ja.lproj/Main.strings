@@ -107,9 +107,6 @@
 /* Class = "NSMenuItem"; title = "Begin"; ObjectID = "7Zn-jP-4ko"; */
 "7Zn-jP-4ko.title" = "Begin";
 
-/* Class = "NSMenuItem"; title = "Import"; ObjectID = "7wA-Gr-Kyz"; */
-"7wA-Gr-Kyz.title" = "インポート";
-
 /* Class = "NSMenuItem"; title = "Export"; ObjectID = "8LY-2s-GJ7"; */
 "8LY-2s-GJ7.title" = "出力";
 
