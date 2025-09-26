@@ -328,8 +328,8 @@
 /* Class = "NSButtonCell"; title = "Change"; ObjectID = "nBn-aV-7mt"; */
 "nBn-aV-7mt.title" = "更改";
 
-/* Class = "NSMenuItem"; title = "Single Open"; ObjectID = "O8Z-cg-XnH"; */
-"O8Z-cg-XnH.title" = "单独打开";
+/* Class = "NSMenuItem"; title = "Single mode"; ObjectID = "O8Z-cg-XnH"; */
+"O8Z-cg-XnH.title" = "单独模式";
 
 /* Class = "NSTextFieldCell"; title = "Title"; ObjectID = "O9K-a1-3eu"; */
 "O9K-a1-3eu.title" = "标题";

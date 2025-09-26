@@ -2,7 +2,6 @@ import Foundation
 
 // MARK: - Shortcut Template Structure
 struct ShortcutTemplate {
-    // Place {{cursor}} or {{select}}...{{/select}} markers in templates
     private static let cursorMarker = "{{cursor}}"
     private static let selectionStartMarker = "{{select}}"
     private static let selectionEndMarker = "{{/select}}"
@@ -24,7 +23,13 @@ struct ShortcutTemplate {
         self.cursorLength = parsed.cursorLength
     }
 
-    private static func parse(template: String) -> (content: String, cursorOffset: Int, cursorLength: Int) {
+    private struct ParseResult {
+        let content: String
+        let cursorOffset: Int
+        let cursorLength: Int
+    }
+
+    private static func parse(template: String) -> ParseResult {
         let mutable = NSMutableString(string: template)
         let nsTemplate = template as NSString
 
@@ -66,7 +71,7 @@ struct ShortcutTemplate {
             cursorLength = min(cursorLength, max(0, finalNSString.length - cursorOffset))
         }
 
-        return (result, cursorOffset, cursorLength)
+        return ParseResult(content: result, cursorOffset: cursorOffset, cursorLength: cursorLength)
     }
 }
 

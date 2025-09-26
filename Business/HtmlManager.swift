@@ -2,6 +2,8 @@ import Foundation
 import WebKit
 
 class HtmlManager {
+    private static let fontStack = "-apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Helvetica, Arial, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif"
+    private static let codeFontStack = "SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace"
 
     @MainActor
     static func previewStyle() -> String {
@@ -15,14 +17,15 @@ class HtmlManager {
         }
 
         if UserDefaultsManagement.presentation {
-            return "html {font-size: \(UserDefaultsManagement.presentationFontSize)px} :root { --text-font: \(UserDefaultsManagement.previewFontName), -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Helvetica, Arial, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif; --code-text-font: \(codeFontName), SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace; } #write { max-width: 100%;}"
+            return
+                "html {font-size: \(UserDefaultsManagement.presentationFontSize)px} :root { --text-font: \(UserDefaultsManagement.previewFontName), \(fontStack); --code-text-font: \(codeFontName), \(codeFontStack); } #write { max-width: 100%;}"
         } else {
             let paddingStyle = UserDefaultsManagement.isOnExport ? " padding-top: 24px" : ""
             // Use the same preview width for export to avoid layout discrepancies
             let writeCSS = "max-width: \(UserDefaultsManagement.previewWidth); margin: 0 auto"
 
             return
-                "html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} :root { --text-font: \(UserDefaultsManagement.previewFontName), -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Helvetica, Arial, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif; --code-text-font: \(codeFontName), SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace; } #write { \(writeCSS)}"
+                "html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} :root { --text-font: \(UserDefaultsManagement.previewFontName), \(fontStack); --code-text-font: \(codeFontName), \(codeFontStack); } #write { \(writeCSS)}"
         }
     }
 
@@ -92,8 +95,8 @@ class HtmlManager {
     static func getFontPathAndMeta() -> (String, String) {
         if UserDefaultsManagement.isOnExportHtml {
             return (
-                "https://cdn.tw93.fun/pic",
-                "<base href=\"https://cdn.tw93.fun/pic/\">"
+                "https://cdn.miaoyan.app/Resources/Fonts",
+                "<base href=\"https://cdn.miaoyan.app/Resources/DownView.bundle/\">"
             )
         } else {
             return (Bundle.main.resourceURL?.path ?? "", "")

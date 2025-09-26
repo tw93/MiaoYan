@@ -108,7 +108,6 @@ public class UserDataService {
         }
     }
 
-    // Flag to prevent edit area content flashing during note creation
     public var isCreatingNote: Bool {
         get {
             _creatingNote
@@ -118,7 +117,6 @@ public class UserDataService {
         }
     }
 
-    // Check if edit area updates should be blocked
     public func shouldBlockEditAreaUpdate(forceUpdate: Bool = false) -> Bool {
         return isCreatingNote && !forceUpdate
     }

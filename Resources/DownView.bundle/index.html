@@ -77,6 +77,93 @@
       document.getElementsByTagName('head')[0].appendChild(node);
     }
 
+    // Check if dark mode is active
+    function isDarkMode() {
+      return 'CUSTOM_CSS' === 'darkmode' || document.getElementById('darkModeStyles') !== null;
+    }
+
+    // Enhanced Mermaid theme configuration with unified color scheme
+    function getMermaidConfig() {
+      const darkTheme = {
+        background: '#282e33',
+        primaryColor: '#3a4045',
+        primaryBorderColor: '#6b7280',
+        primaryTextColor: '#E7E9EA',
+        secondaryColor: '#454545',
+        tertiaryColor: '#3a4045',
+        lineColor: '#6b7280',
+        textColor: '#E7E9EA',
+        mainBkg: '#3a4045',
+        secondBkg: '#454545',
+        tertiaryTextColor: '#E7E9EA',
+        nodeBorder: '#6b7280',
+        clusterBkg: '#3a4045',
+        clusterBorder: '#6b7280',
+        edgeLabelBackground: '#282e33',
+        actorBkg: '#3a4045',
+        actorBorder: '#6b7280',
+        actorTextColor: '#E7E9EA',
+        actorLineColor: '#6b7280',
+        signalColor: '#E7E9EA',
+        signalTextColor: '#E7E9EA',
+        labelBoxBkgColor: '#3a4045',
+        labelBoxBorderColor: '#6b7280',
+        labelTextColor: '#E7E9EA',
+        loopTextColor: '#E7E9EA',
+        noteTextColor: '#E7E9EA',
+        noteBkgColor: '#3a4045',
+        noteBorderColor: '#6b7280',
+        // 添加更多线条相关的颜色配置
+        arrowheadColor: '#6b7280',
+        edgeColor: '#6b7280',
+        relationColor: '#6b7280'
+      };
+
+      const lightTheme = {
+        background: '#f7f7f7',
+        primaryColor: '#ffffff',
+        primaryBorderColor: '#d0d0d0',
+        primaryTextColor: '#333333',
+        secondaryColor: '#efefef',
+        tertiaryColor: '#f0f0f0',
+        lineColor: '#d0d0d0',
+        textColor: '#333333',
+        mainBkg: '#ffffff',
+        secondBkg: '#efefef',
+        tertiaryTextColor: '#333333',
+        nodeBorder: '#d0d0d0',
+        clusterBkg: '#ffffff',
+        clusterBorder: '#d0d0d0',
+        edgeLabelBackground: '#f7f7f7',
+        actorBkg: '#ffffff',
+        actorBorder: '#d0d0d0',
+        actorTextColor: '#333333',
+        actorLineColor: '#d0d0d0',
+        signalColor: '#333333',
+        signalTextColor: '#333333',
+        labelBoxBkgColor: '#ffffff',
+        labelBoxBorderColor: '#d0d0d0',
+        labelTextColor: '#333333',
+        loopTextColor: '#333333',
+        noteTextColor: '#333333',
+        noteBkgColor: '#ffffff',
+        noteBorderColor: '#d0d0d0'
+      };
+
+      const baseConfig = {
+        startOnLoad: true,
+        theme: isDarkMode() ? 'dark' : 'base',
+        fontFamily: 'Helvetica, Arial, sans-serif',
+        flowchart: {
+          useMaxWidth: false,
+          htmlLabels: true,
+        },
+        themeVariables: isDarkMode() ? darkTheme : lightTheme
+      };
+
+      return baseConfig;
+    }
+
     function switchToDarkMode () {
       const darkModeStyleElement =
         document.getElementById(darkModeStylesNodeID);
@@ -274,92 +361,6 @@
   </script>
 
   <script>
-    // Check if dark mode is active
-    function isDarkMode() {
-      return 'CUSTOM_CSS' === 'darkmode' || document.getElementById('darkModeStyles') !== null;
-    }
-
-    // Enhanced Mermaid theme configuration with unified color scheme
-    function getMermaidConfig() {
-      const darkTheme = {
-        background: '#282e33',
-        primaryColor: '#3a4045',
-        primaryBorderColor: '#6b7280',
-        primaryTextColor: '#E7E9EA',
-        secondaryColor: '#454545',
-        tertiaryColor: '#3a4045',
-        lineColor: '#6b7280',
-        textColor: '#E7E9EA',
-        mainBkg: '#3a4045',
-        secondBkg: '#454545',
-        tertiaryTextColor: '#E7E9EA',
-        nodeBorder: '#6b7280',
-        clusterBkg: '#3a4045',
-        clusterBorder: '#6b7280',
-        edgeLabelBackground: '#282e33',
-        actorBkg: '#3a4045',
-        actorBorder: '#6b7280',
-        actorTextColor: '#E7E9EA',
-        actorLineColor: '#6b7280',
-        signalColor: '#E7E9EA',
-        signalTextColor: '#E7E9EA',
-        labelBoxBkgColor: '#3a4045',
-        labelBoxBorderColor: '#6b7280',
-        labelTextColor: '#E7E9EA',
-        loopTextColor: '#E7E9EA',
-        noteTextColor: '#E7E9EA',
-        noteBkgColor: '#3a4045',
-        noteBorderColor: '#6b7280',
-        // 添加更多线条相关的颜色配置
-        arrowheadColor: '#6b7280',
-        edgeColor: '#6b7280',
-        relationColor: '#6b7280'
-      };
-
-      const lightTheme = {
-        background: '#f7f7f7',
-        primaryColor: '#ffffff',
-        primaryBorderColor: '#d0d0d0',
-        primaryTextColor: '#333333',
-        secondaryColor: '#efefef',
-        tertiaryColor: '#f0f0f0',
-        lineColor: '#d0d0d0',
-        textColor: '#333333',
-        mainBkg: '#ffffff',
-        secondBkg: '#efefef',
-        tertiaryTextColor: '#333333',
-        nodeBorder: '#d0d0d0',
-        clusterBkg: '#ffffff',
-        clusterBorder: '#d0d0d0',
-        edgeLabelBackground: '#f7f7f7',
-        actorBkg: '#ffffff',
-        actorBorder: '#d0d0d0',
-        actorTextColor: '#333333',
-        actorLineColor: '#d0d0d0',
-        signalColor: '#333333',
-        signalTextColor: '#333333',
-        labelBoxBkgColor: '#ffffff',
-        labelBoxBorderColor: '#d0d0d0',
-        labelTextColor: '#333333',
-        loopTextColor: '#333333',
-        noteTextColor: '#333333',
-        noteBkgColor: '#ffffff',
-        noteBorderColor: '#d0d0d0'
-      };
-
-      const baseConfig = {
-        startOnLoad: true,
-        theme: isDarkMode() ? 'dark' : 'base',
-        fontFamily: 'Helvetica, Arial, sans-serif',
-        flowchart: {
-          useMaxWidth: false,
-          htmlLabels: true,
-        },
-        themeVariables: isDarkMode() ? darkTheme : lightTheme
-      };
-
-      return baseConfig;
-    }
 
     const config = getMermaidConfig();
     mermaid.initialize(config);

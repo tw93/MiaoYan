@@ -92,7 +92,7 @@ CA
                                                 <action selector="fileMenuNewNote:" target="L4m-js-agn" id="N33-Jf-oOg"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Single Open" keyEquivalent="o" identifier="fileMenu.open" id="O8Z-cg-XnH">
+                                        <menuItem title="Single Mode" keyEquivalent="o" identifier="fileMenu.open" id="O8Z-cg-XnH">
                                             <connections>
                                                 <action selector="singleOpen:" target="L4m-js-agn" id="48w-4H-ICT"/>
                                             </connections>
