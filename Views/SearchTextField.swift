@@ -118,19 +118,23 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
             dividerColor = Theme.dividerColor
         }
 
+        if #unavailable(macOS 11.0) {
+            dividerColor = backgroundColor
+        }
+
         return (backgroundColor, dividerColor)
     }
 
     private func configureCellAppearance() {
         guard let searchFieldCell = self.cell as? NSSearchFieldCell else { return }
 
-        let (backgroundColor, _) = resolveColors()
+        let (backgroundColor, dividerColor) = resolveColors()
 
         searchFieldCell.backgroundColor = backgroundColor
         searchFieldCell.drawsBackground = true
 
         // Attempt to set border colors for consistency
-        setBorderColorIfPossible(searchFieldCell, color: backgroundColor)
+        setBorderColorIfPossible(searchFieldCell, color: dividerColor)
     }
 
     private func setBorderColorIfPossible(_ cell: NSSearchFieldCell, color: NSColor) {
