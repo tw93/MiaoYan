@@ -1,7 +1,6 @@
 import Cocoa
 import Foundation
 
-// All theme colors are read on main thread to avoid cross-actor access to UI state
 @MainActor
 enum Theme {
     typealias Color = NSColor

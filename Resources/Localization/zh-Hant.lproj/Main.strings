@@ -443,7 +443,7 @@
 /* Class = "NSMenuItem"; title = "Italic"; ObjectID = "O3Z-9P-RfY"; */
 "O3Z-9P-RfY.title" = "斜體";
 
-/* Class = "NSMenuItem"; title = "Single Open"; ObjectID = "O8Z-cg-XnH"; */
+/* Class = "NSMenuItem"; title = "Single mode"; ObjectID = "O8Z-cg-XnH"; */
 "O8Z-cg-XnH.title" = "單獨打開";
 
 /* Class = "NSTextFieldCell"; placeholderString = "输入标题"; ObjectID = "O9K-a1-3eu"; */

@@ -2,6 +2,8 @@ import Alamofire
 import Cocoa
 import SwiftyJSON
 
+private let uploadServerURL = "http://127.0.0.1:36677/upload"
+
 struct UploadParameters {
     let localPath: String
     let originalPath: String
@@ -130,7 +132,8 @@ class ClipboardManager {
             if picType == "PicGo" || picType == "PicList" {
                 vc.toastUpload(status: true)
                 let defaultImageString = "![](\(path))"
-                postToPicGo(imagePath: imagePath) { [weak self, weak textView, weak vc] result, error in
+                let serverURL = uploadServerURL
+                postToPicGo(imagePath: imagePath, serverURL: serverURL) { [weak self, weak textView, weak vc] result, error in
                     let resultString = result as? String
                     Task { @MainActor in
                         let finalImage: NSAttributedString
@@ -173,7 +176,7 @@ class ClipboardManager {
         }
     }
 
-    private func postToPicGo(imagePath: String, serverURL: String = "http://127.0.0.1:36677/upload", completion: @escaping @Sendable (Any?, Error?) -> Void) {
+    private func postToPicGo(imagePath: String, serverURL: String, completion: @escaping @Sendable (Any?, Error?) -> Void) {
         let parameters: [String: [String]] = [
             "list": [imagePath]
         ]

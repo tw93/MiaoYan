@@ -4,7 +4,6 @@ import CryptoKit
 import PDFKit
 import WebKit
 
-
 // MARK: - Export Cache Manager
 @MainActor
 class ExportCache {
@@ -111,8 +110,9 @@ extension MPreviewView {
 
         // Check cache first
         if let cachedData = ExportCache.shared.getCachedData(for: note),
-           cachedData.isImageLoaded,
-           self.isCurrentContentMatchingCache(cachedData, for: note) {
+            cachedData.isImageLoaded,
+            self.isCurrentContentMatchingCache(cachedData, for: note)
+        {
             DispatchQueue.main.async {
                 exportAction(cachedData)
             }
@@ -154,11 +154,11 @@ extension MPreviewView {
         }
     }
 
-    
     // MARK: - Export Methods
     public func exportPdf() {
         guard let vc = ViewController.shared(),
-              let note = vc.notesTableView.getSelectedNote() else { return }
+            let note = vc.notesTableView.getSelectedNote()
+        else { return }
 
         performExport(note: note, viewController: vc, needsDimensions: true) { [weak self] exportData in
             guard let self else {
@@ -184,7 +184,8 @@ extension MPreviewView {
 
     public func exportImage() {
         guard let vc = ViewController.shared(),
-              let note = vc.notesTableView.getSelectedNote() else { return }
+            let note = vc.notesTableView.getSelectedNote()
+        else { return }
 
         performExport(note: note, viewController: vc, needsDimensions: true) { [weak self] exportData in
             guard let self else {
@@ -199,7 +200,7 @@ extension MPreviewView {
             config.snapshotWidth = NSNumber(value: Double(exportData.contentWidth) * 2.0)
             self.frame.size.height = exportData.contentHeight
 
-            self.takeSnapshot(with: config) { image, error in
+            self.takeSnapshot(with: config) { image, _ in
                 Self.isExporting = false
                 if let image = image {
                     self.handleImageExportSuccess(image: image, note: note, viewController: vc)
@@ -212,7 +213,8 @@ extension MPreviewView {
 
     public func exportHtml() {
         guard let vc = ViewController.shared(),
-              let note = vc.notesTableView.getSelectedNote() else { return }
+            let note = vc.notesTableView.getSelectedNote()
+        else { return }
 
         // HTML export does not depend on WebView layout; generate directly
         guard !Self.isExporting else {
@@ -236,23 +238,23 @@ extension MPreviewView {
             }
 
             let completeHtml = await MainActor.run {
-                    // For HTML export, render Markdown to HTML first, then wrap with template
-                    let markdown = note.getPrettifiedContent()
-                    let css = HtmlManager.previewStyle()
+                // For HTML export, render Markdown to HTML first, then wrap with template
+                let markdown = note.getPrettifiedContent()
+                let css = HtmlManager.previewStyle()
 
-                    // Set export flag to apply proper styling (fonts, width, CDN base)
-                    UserDefaultsManagement.isOnExportHtml = true
-                    defer { UserDefaultsManagement.isOnExportHtml = false }
+                // Set export flag to apply proper styling (fonts, width, CDN base)
+                UserDefaultsManagement.isOnExportHtml = true
+                defer { UserDefaultsManagement.isOnExportHtml = false }
 
-                    let htmlBody = renderMarkdownHTML(markdown: markdown) ?? markdown
+                let htmlBody = renderMarkdownHTML(markdown: markdown) ?? markdown
 
-                    do {
-                        return try HtmlManager.htmlFromTemplate(htmlBody, css: css, currentName: currentName)
-                    } catch {
-                        // Fallback to simple HTML body if template fails
-                        return htmlBody
-                    }
+                do {
+                    return try HtmlManager.htmlFromTemplate(htmlBody, css: css, currentName: currentName)
+                } catch {
+                    // Fallback to simple HTML body if template fails
+                    return htmlBody
                 }
+            }
 
             await MainActor.run {
                 Self.isExporting = false
@@ -263,8 +265,9 @@ extension MPreviewView {
 
     private func handleImageExportSuccess(image: NSImage, note: Note, viewController: ViewController) {
         guard let tiffData = image.tiffRepresentation,
-              let bitmapImage = NSBitmapImageRep(data: tiffData),
-              let imageData = bitmapImage.representation(using: .png, properties: [:]) else {
+            let bitmapImage = NSBitmapImageRep(data: tiffData),
+            let imageData = bitmapImage.representation(using: .png, properties: [:])
+        else {
             viewController.toastExport(status: false)
             return
         }
@@ -304,12 +307,12 @@ extension MPreviewView {
     private func waitForWebViewReady(completion: @escaping () -> Void) {
         // Check if WebView has finished loading and rendering
         let readyScript = """
-            (function() {
-                if (document.readyState !== 'complete') return false;
-                if (document.body.offsetHeight === 0) return false;
-                return true;
-            })()
-        """
+                (function() {
+                    if (document.readyState !== 'complete') return false;
+                    if (document.body.offsetHeight === 0) return false;
+                    return true;
+                })()
+            """
 
         func checkReady() {
             evaluateJavaScript(readyScript) { result, _ in
