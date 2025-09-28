@@ -23,6 +23,12 @@ body {
   background: #FFFFFF;
 }
 
+html.darkmode,
+body.darkmode,
+.markdown-body.darkmode {
+  background: #21262B;
+}
+
 @media (prefers-color-scheme: dark) {
   .html {
     color: #ede6f5;
@@ -1020,6 +1026,7 @@ code.language-mermaid .edgeLabel{
 
 .heti pre.markmap-image-container {
   padding: 0;
+  overflow: hidden;
 }
 
 mjx-container[display='block'] {

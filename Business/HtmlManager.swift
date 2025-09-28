@@ -7,27 +7,29 @@ class HtmlManager {
 
     @MainActor
     static func previewStyle() -> String {
-        if UserDefaultsManagement.magicPPT {
-            return ":root { --r-main-font: \(UserDefaultsManagement.previewFontName), sans-serif;}"
-        }
-
+        // Add font configuration
         var codeFontName = UserDefaultsManagement.previewFontName
         if UserDefaultsManagement.codeFontName != UserDefaultsManagement.previewFontName {
             codeFontName = UserDefaultsManagement.codeFontName
         }
 
+        let fontConfig = ":root { --text-font: \(UserDefaultsManagement.previewFontName), \(fontStack); --code-text-font: \(codeFontName), \(codeFontStack); }"
+
+        if UserDefaultsManagement.magicPPT {
+            return fontConfig + ":root { --r-main-font: \(UserDefaultsManagement.previewFontName), sans-serif;}"
+        }
+
         if UserDefaultsManagement.presentation {
-            return
-                "html {font-size: \(UserDefaultsManagement.presentationFontSize)px} :root { --text-font: \(UserDefaultsManagement.previewFontName), \(fontStack); --code-text-font: \(codeFontName), \(codeFontStack); } #write { max-width: 100%;}"
+            return "html {font-size: \(UserDefaultsManagement.presentationFontSize)px} " + fontConfig + " #write { max-width: 100%;}"
         } else {
             let paddingStyle = UserDefaultsManagement.isOnExport ? " padding-top: 24px" : ""
-            // Use the same preview width for export to avoid layout discrepancies
             let writeCSS = "max-width: \(UserDefaultsManagement.previewWidth); margin: 0 auto"
 
-            return
-                "html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} :root { --text-font: \(UserDefaultsManagement.previewFontName), \(fontStack); --code-text-font: \(codeFontName), \(codeFontStack); } #write { \(writeCSS)}"
+            return "html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} " + fontConfig + " #write { \(writeCSS)}"
         }
     }
+
+    // Theme CSS handling moved to HTML templates
 
     static func processImages(in html: String, imagesStorage: URL) -> String {
         var htmlString = html
@@ -135,6 +137,8 @@ class HtmlManager {
         template = template.replacingOccurrences(of: "DOWN_FONT_PATH", with: fontPath)
         template = template.replacingOccurrences(of: "DOWN_META", with: downMeta)
 
+        // Theme CSS is now handled directly by HTML
+
         if UserDefaultsManagement.isOnExport {
             template = template.replacingOccurrences(of: "DOWN_EXPORT_TYPE", with: "ppt")
         }
@@ -151,8 +155,11 @@ class HtmlManager {
             return template.replacingOccurrences(of: "DOWN_RAW", with: escapedContent)
         }
 
+        // Inject theme information for JavaScript
         if UserDataService.instance.isDark {
             template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode")
+        } else {
+            template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "lightmode")
         }
 
         let htmlContent = getHtmlContent(htmlString, currentName: currentName)
