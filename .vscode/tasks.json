@@ -1,0 +1,22 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "xcodebuild Debug",
+      "type": "shell",
+      "command": "xcodebuild",
+      "args": [
+        "-scheme", "MiaoYan",
+        "-configuration", "Debug",
+        "-destination", "platform=macOS",
+        "-derivedDataPath", "${workspaceFolder}/.vscode/DerivedData",
+        "build"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": { "kind": "build", "isDefault": true },
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true }
+    }
+  ]
+}

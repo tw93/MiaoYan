@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug MiaoYan (LLDB DAP)",
+      "type": "lldb-dap",
+      "request": "launch",
+      "program": "${workspaceFolder}/.vscode/DerivedData/Build/Products/Debug/MiaoYan.app/Contents/MacOS/MiaoYan",
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "xcodebuild Debug",
+      "env": { "NSUnbufferedIO": "YES" },
+      "stopOnEntry": false
+    }
+  ]
+}
