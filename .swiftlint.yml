@@ -3,6 +3,7 @@ included:
 
 excluded:
   - .build
+  - .vscode
 
 disabled_rules:
   - force_cast
