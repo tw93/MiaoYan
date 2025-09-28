@@ -1,45 +1,19 @@
+/* Critical CSS Variables - Must be defined before any usage */
+:root {
+  --blockquote-border-color: #DDD;
+  --code-text-font: 'TsangerJinKai02-W04', -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
+}
+
+/* Dark mode overrides for critical variables */
+.darkmode {
+  --blockquote-border-color: #454545;
+}
+
 /*!
  * Project: Heti
  * URL: https://github.com/sivan/heti
  * Author: Sivan [sun.sivan@gmail.com]
  */
-
-:root {
-  --text-font: 'TsangerJinKai02-W04', sans-serif;
-  --code-text-font: 'TsangerJinKai02-W04', sans-serif;
-  --markmap-height: 300px;
-}
-
-html {
-  font-size: 15px;
-  font-display: block;
-  color: #262626;
-  -webkit-font-smoothing: subpixel-antialiased;
-}
-
-body {
-  padding: 0;
-  margin: 0;
-  background: #FFFFFF;
-}
-
-html.darkmode,
-body.darkmode,
-.markdown-body.darkmode {
-  background: #21262B;
-}
-
-@media (prefers-color-scheme: dark) {
-  .html {
-    color: #ede6f5;
-  }
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-  object-fit: cover;
-}
 
 .heti p > img {
   margin-top: 8px;
@@ -159,7 +133,7 @@ a,
   padding: 0 15px;
   border-radius: 8px;
   color: #777;
-  border-left: 4px solid #e6e6e6;
+  border-left: 4px solid var(--blockquote-border-color);
   line-height: 1;
   overflow: hidden;
   box-sizing: border-box;
@@ -188,11 +162,9 @@ blockquote blockquote {
   padding-inline-start: 16px;
   padding-inline-end: 16px;
   overflow: auto;
-  font-family: var(--text-font);
   white-space: pre;
   word-wrap: normal;
   border-radius: 8px;
-  background-color: rgba(0, 0, 0, 0.03);
 }
 
 
@@ -201,7 +173,6 @@ blockquote blockquote {
   padding: 0;
   border: 0;
   border-radius: 0;
-  background-color: transparent;
   color: inherit;
   white-space: pre-wrap;
 }
@@ -396,7 +367,6 @@ blockquote blockquote {
   margin-inline-start: 0.25em;
   margin-inline-end: 0.25em;
   font-size: 1em;
-  font-family: var(--text-font);
 }
 
 .heti pre code {
@@ -483,7 +453,6 @@ blockquote blockquote {
   margin-inline-start: 0.25em;
   margin-inline-end: 0.25em;
   font-size: 0.75em;
-  font-family: var(--text-font);
   font-style: normal;
   line-height: 1;
   vertical-align: baseline;
@@ -552,17 +521,6 @@ blockquote blockquote {
   margin-inline-end: 1px;
 }
 
-/* Unified font family declarations */
-.heti,
-.heti--sans,
-.heti--serif,
-.heti--classic,
-.heti--hei,
-.heti--song,
-.heti--ancient,
-.heti--poetry {
-  font-family: var(--text-font);
-}
 
 .heti--classic h1,
 .heti--classic h2,
@@ -839,7 +797,6 @@ blockquote blockquote {
   border-block-start: 1px solid;
   border-block-start-color: #e6e6e6;
   font-size: 14px;
-  font-family: var(--text-font);
   line-height: 24px;
 }
 
@@ -1032,201 +989,4 @@ code.language-mermaid .edgeLabel{
 mjx-container[display='block'] {
   display: block;
   margin: 1em 0;
-}
-
-span.emoji {
-  display: -moz-inline-box;
-  -moz-box-orient: vertical;
-  display: inline-block;
-  vertical-align: baseline;
-  *vertical-align: auto;
-  *zoom: 1;
-  *display: inline;
-  width: 1em;
-  height: 1em;
-  background-size: 1em;
-  background-repeat: no-repeat;
-  text-indent: -9999px;
-  background-position: 50%, 50%;
-  background-size: contain;
-}
-
-span.emoji-sizer {
-  line-height: 0.81em;
-  font-size: 1em;
-  margin: -2px 0;
-}
-
-span.emoji-outer {
-  display: -moz-inline-box;
-  display: inline-block;
-  *display: inline;
-  height: 1em;
-  width: 1em;
-}
-
-span.emoji-inner {
-  display: -moz-inline-box;
-  display: inline-block;
-  text-indent: -9999px;
-  width: 100%;
-  height: 100%;
-  vertical-align: baseline;
-  *vertical-align: auto;
-  *zoom: 1;
-}
-
-img.emoji {
-  width: 1em;
-  height: 1em;
-}
-
-.language-markmap {
-  visibility: hidden;
-}
-
-.markmap {
-  visibility: visible;
-  width: 100%;
-  height: var(--markmap-height);
-}
-
-.markmap svg {
-  background: transparent;
-}
-
-
-img[loading="lazy"] {
-  background-color: #eef1f2;
-  outline-color: #eef1f2;
-}
-
-
-#write>img, #write>p>img, #write>table>img {
-  cursor: zoom-in;
-}
-
-img.border {
-  border-width: 36px;
-  border-style: solid;
-  border-image-source: url(https://gw.alipayobjects.com/zos/k/y1/lpOIMY.png);
-  border-image-slice: 30;
-  border-image-repeat: stretch;
-  border-radius: 8px;
-  clip-path: inset(0 round 6px);
-}
-
-
-.markdown-body img,
-.markdown-body video {
-  border-radius: 8px;
-}
-
-/* Simple chart container styles - match code background */
-.mermaid-image-container,
-.markmap-image-container,
-.plantuml-image-container,
-pre:has(.language-mermaid) {
-  background: #f7f7f7;
-  border: none;
-  border-radius: 6px;
-  padding: 12px;
-  margin: 8px 0;
-  box-shadow: none;
-}
-
-/* Consolidated dark mode styles */
-@media (prefers-color-scheme: dark) {
-  .html {
-    color: #ede6f5;
-  }
-
-  .heti hr {
-    background-color: #343b43;
-  }
-
-  .heti blockquote {
-    border-left: 4px solid #343b43;
-  }
-
-  .heti pre {
-    background-color: rgba(255, 255, 255, 0.03);
-  }
-
-  .heti table,
-  .heti th,
-  .heti td {
-    border-color: #343b43;
-  }
-
-  .heti p > code,
-  .heti li > code {
-    background-color: #343941;
-    color: #e8e8eb;
-  }
-
-  .heti mark {
-    background-color: rgba(77, 74, 0, 0.88);
-  }
-
-  .heti sup:target,
-  .heti sup a:target,
-  .heti .heti-fn li:target {
-    background-color: #3a6188;
-  }
-
-  .heti u[title] {
-    border-block-end-color: rgba(255, 255, 255, 0.54);
-  }
-
-  .heti .heti-fn {
-    border-block-start-color: #343b43;
-  }
-
-  img[loading="lazy"] {
-    background-color: #343941;
-    outline-color: #343941;
-  }
-
-  .mermaid-image-container,
-  .markmap-image-container,
-  .plantuml-image-container,
-  pre:has(.language-mermaid) {
-    background: #282e33;
-  }
-}
-
-/* Chart elements with rounded corners and left alignment */
-.language-mermaid,
-.language-markmap,
-.language-plantuml {
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.language-mermaid svg,
-.markmap svg,
-.plantuml-image {
-  border-radius: 6px;
-}
-
-/* Unified font for all diagram types */
-.mermaid,
-.mermaid *,
-.markmap,
-.markmap *,
-.markmap .markmap-node text,
-.language-mermaid,
-.language-mermaid *,
-.language-markmap,
-.language-markmap *,
-.plantuml-image,
-.language-plantuml,
-.mermaid text,
-.mermaid tspan,
-.mermaid foreignObject div,
-.mermaid .nodeLabel,
-.mermaid .edgeLabel,
-.mermaid .label {
-  font-family: var(--text-font), -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
 }

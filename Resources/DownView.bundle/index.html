@@ -18,24 +18,27 @@
 
   DOWN_META
 
-  <!-- Base CSS -->
+  <!-- CSS -->
   <link rel="stylesheet" href="css/heti.min.css" />
   <link rel="stylesheet" href="css/katex.min.css" />
-
-  <!-- Theme CSS will be loaded by JavaScript -->
+  <link rel="stylesheet" href="css/index.css" />
 
   <!-- Vendor libraries -->
-  <script src="js/vendors/heti-addon.min.js"></script>
-  <script src="js/vendors/highlight.min.js"></script>
-  <script src="js/vendors/mermaid.min.js"></script>
-  <script src="js/vendors/plantuml-encoder.min.js"></script>
-  <script src="js/vendors/katex.min.js"></script>
-  <script src="js/vendors/auto-render.min.js"></script>
-  <script src="js/vendors/emoji.min.js"></script>
-  <script src="js/vendors/d3.min.js"></script>
-  <script src="js/vendors/markmap.min.js"></script>
-  <script src="js/vendors/markmap-view.min.js"></script>
-  <script src="js/vendors/lightense.min.js"></script>
+  <script src="js/heti-addon.min.js"></script>
+  <script src="js/highlight.min.js"></script>
+  <script src="js/mermaid.min.js"></script>
+  <script src="js/plantuml-encoder.min.js"></script>
+  <script src="js/katex.min.js"></script>
+  <script src="js/auto-render.min.js"></script>
+  <script src="js/emoji.min.js"></script>
+  <script src="js/d3.min.js"></script>
+  <script src="js/markmap.min.js"></script>
+  <script src="js/markmap-view.min.js"></script>
+
+  <script src="js/lightense.min.js"></script>
+
+  <!-- MiaoYan modules -->
+  <script src="js/index.js"></script>
 
   <script>
     if ('CUSTOM_CSS' === 'darkmode') {
@@ -71,436 +74,18 @@
 
   <!-- Initialize core libraries first -->
   <script>
-    // Initialize Heti
-    const heti = new Heti('.heti');
-    heti.autoSpacing();
-
-    // Initialize syntax highlighting
-    hljs.configure({ cssSelector: 'pre code' });
-    hljs.highlightAll();
-
-    // Initialize emoji processing
-    const html = document.getElementById('write').innerHTML;
-    const emoji = new EmojiConvertor();
-    if (/:[^:\s]*(?:::[^:\s]*)*:/.test(html)) {
-      document.getElementById('write').innerHTML = emoji.replace_colons(html);
-    }
-
-    // Selection handling for Swift
-    function getSelectionAndSendMessage() {
-      const txt = document.getSelection().toString();
-      window.webkit && window.webkit.messageHandlers.newSelectionDetected.postMessage(txt);
-    }
-
-    document.onmouseup = getSelectionAndSendMessage;
-    document.onkeyup = getSelectionAndSendMessage;
-    document.oncontextmenu = getSelectionAndSendMessage;
-
-    // Check if dark mode is active
-    function isDarkMode() {
-      return 'CUSTOM_CSS' === 'darkmode';
-    }
-
-    // Initialize diagrams immediately
-    function initializeDiagrams() {
-      // Initialize Mermaid
-      if (window.mermaid) {
-        const config = getMermaidConfig();
-        mermaid.initialize(config);
-        window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
-      }
-
-      // Initialize PlantUML
-      if (typeof plantumlEncoder !== 'undefined') {
-        processPlantuml();
-      }
-
-      // Initialize Markmap
-      if (window.markmap) {
-        initMarkmap();
-      }
-
-      // Update container styles
-      updateContainerStyles();
-    }
-
-    // Enhanced Mermaid theme configuration
-    function getMermaidConfig() {
-      const darkTheme = {
-        background: '#282e33',
-        primaryColor: '#3a4045',
-        primaryBorderColor: '#6b7280',
-        primaryTextColor: '#E7E9EA',
-        secondaryColor: '#454545',
-        tertiaryColor: '#3a4045',
-        lineColor: '#6b7280',
-        textColor: '#E7E9EA',
-        mainBkg: '#3a4045',
-        secondBkg: '#454545',
-        tertiaryTextColor: '#E7E9EA',
-        nodeBorder: '#6b7280',
-        clusterBkg: '#3a4045',
-        clusterBorder: '#6b7280',
-        edgeLabelBackground: '#282e33',
-        actorBkg: '#3a4045',
-        actorBorder: '#6b7280',
-        actorTextColor: '#E7E9EA',
-        actorLineColor: '#6b7280',
-        signalColor: '#E7E9EA',
-        signalTextColor: '#E7E9EA',
-        labelBoxBkgColor: '#3a4045',
-        labelBoxBorderColor: '#6b7280',
-        labelTextColor: '#E7E9EA',
-        loopTextColor: '#E7E9EA',
-        noteTextColor: '#E7E9EA',
-        noteBkgColor: '#3a4045',
-        noteBorderColor: '#6b7280',
-        arrowheadColor: '#6b7280',
-        edgeColor: '#6b7280',
-        relationColor: '#6b7280'
-      };
-
-      const lightTheme = {
-        background: '#f7f7f7',
-        primaryColor: '#ffffff',
-        primaryBorderColor: '#d0d0d0',
-        primaryTextColor: '#333333',
-        secondaryColor: '#efefef',
-        tertiaryColor: '#f0f0f0',
-        lineColor: '#d0d0d0',
-        textColor: '#333333',
-        mainBkg: '#ffffff',
-        secondBkg: '#efefef',
-        tertiaryTextColor: '#333333',
-        nodeBorder: '#d0d0d0',
-        clusterBkg: '#ffffff',
-        clusterBorder: '#d0d0d0',
-        edgeLabelBackground: '#f7f7f7',
-        actorBkg: '#ffffff',
-        actorBorder: '#d0d0d0',
-        actorTextColor: '#333333',
-        actorLineColor: '#d0d0d0',
-        signalColor: '#333333',
-        signalTextColor: '#333333',
-        labelBoxBkgColor: '#ffffff',
-        labelBoxBorderColor: '#d0d0d0',
-        labelTextColor: '#333333',
-        loopTextColor: '#333333',
-        noteTextColor: '#333333',
-        noteBkgColor: '#ffffff',
-        noteBorderColor: '#d0d0d0'
-      };
-
-      return {
-        startOnLoad: true,
-        theme: isDarkMode() ? 'dark' : 'base',
-        fontFamily: 'Helvetica, Arial, sans-serif',
-        flowchart: {
-          useMaxWidth: false,
-          htmlLabels: true,
-        },
-        themeVariables: isDarkMode() ? darkTheme : lightTheme
-      };
-    }
-
-    // PlantUML processing
-    function getPlantUMLSkinparams() {
-      if (isDarkMode()) {
-        return `skinparam backgroundColor #282e33
-skinparam defaultTextColor #E7E9EA
-skinparam defaultFontColor #E7E9EA
-skinparam defaultFontName "Helvetica"
-skinparam defaultFontSize 12
-skinparam actorBorderColor #6b7280
-skinparam actorBackgroundColor #3a4045
-skinparam actorFontColor #E7E9EA
-skinparam participantBorderColor #6b7280
-skinparam participantBackgroundColor #3a4045
-skinparam participantFontColor #E7E9EA
-skinparam classBorderColor #6b7280
-skinparam classBackgroundColor #3a4045
-skinparam classFontColor #E7E9EA
-skinparam classAttributeFontColor #E7E9EA
-skinparam sequenceLifeLineBorderColor #6b7280
-skinparam sequenceActorBorderColor #6b7280
-skinparam sequenceActorBackgroundColor #3a4045
-skinparam sequenceActorFontColor #E7E9EA
-skinparam sequenceGroupBorderColor #6b7280
-skinparam sequenceGroupBackgroundColor #3a4045
-skinparam sequenceGroupHeaderFontColor #E7E9EA
-skinparam sequenceMessageTextAlignment center
-skinparam arrowColor #6b7280
-skinparam sequenceArrowColor #6b7280
-skinparam usecaseArrowColor #6b7280
-skinparam classArrowColor #6b7280
-skinparam componentArrowColor #6b7280
-skinparam stateArrowColor #6b7280
-skinparam activityArrowColor #6b7280
-skinparam note {
-  BackgroundColor #3a4045
-  BorderColor #6b7280
-  FontColor #E7E9EA
-}
-skinparam activity {
-  BackgroundColor #3a4045
-  BorderColor #6b7280
-  FontColor #E7E9EA
-  ArrowColor #6b7280
-}
-skinparam state {
-  BackgroundColor #3a4045
-  BorderColor #6b7280
-  FontColor #E7E9EA
-  ArrowColor #6b7280
-}
-skinparam usecase {
-  BackgroundColor #3a4045
-  BorderColor #6b7280
-  FontColor #E7E9EA
-  ArrowColor #6b7280
-}
-skinparam component {
-  BackgroundColor #3a4045
-  BorderColor #6b7280
-  FontColor #E7E9EA
-  ArrowColor #6b7280
-}`;
-      } else {
-        return `skinparam backgroundColor #f7f7f7
-skinparam defaultTextColor #333333
-skinparam defaultFontColor #333333
-skinparam defaultFontName "Helvetica"
-skinparam defaultFontSize 12
-skinparam actorBorderColor #d0d0d0
-skinparam actorBackgroundColor #ffffff
-skinparam actorFontColor #333333
-skinparam participantBorderColor #d0d0d0
-skinparam participantBackgroundColor #ffffff
-skinparam participantFontColor #333333
-skinparam classBorderColor #d0d0d0
-skinparam classBackgroundColor #ffffff
-skinparam classFontColor #333333
-skinparam classAttributeFontColor #333333
-skinparam sequenceLifeLineBorderColor #d0d0d0
-skinparam sequenceActorBorderColor #d0d0d0
-skinparam sequenceActorBackgroundColor #ffffff
-skinparam sequenceActorFontColor #333333
-skinparam sequenceGroupBorderColor #d0d0d0
-skinparam sequenceGroupBackgroundColor #ffffff
-skinparam sequenceGroupHeaderFontColor #333333
-skinparam sequenceMessageTextAlignment center
-skinparam note {
-  BackgroundColor #ffffff
-  BorderColor #d0d0d0
-  FontColor #333333
-}
-skinparam activity {
-  BackgroundColor #ffffff
-  BorderColor #d0d0d0
-  FontColor #333333
-}
-skinparam state {
-  BackgroundColor #ffffff
-  BorderColor #d0d0d0
-  FontColor #333333
-}`;
-      }
-    }
-
-    function processPlantuml() {
-      if (typeof plantumlEncoder === 'undefined') {
-        console.warn('PlantUML encoder not loaded, retrying...');
-        setTimeout(processPlantuml, 500);
-        return;
-      }
-
-      const plantumlElements = document.querySelectorAll('.language-plantuml');
-
-      plantumlElements.forEach(code => {
-        if (code.dataset.processed === 'true') return;
-
-        const existingImage = code.parentNode.querySelector('.plantuml-image');
-        if (existingImage) existingImage.remove();
-
-        const image = document.createElement('img');
-        image.className = 'plantuml-image';
-        image.loading = 'lazy';
-
-        let plantumlContent = code.innerText;
-        const skinparams = getPlantUMLSkinparams();
-
-        plantumlContent = plantumlContent.replace(/skinparam\s+[^\n]*/g, '');
-        plantumlContent = skinparams + '\n' + plantumlContent;
-
-        image.src = 'http://www.plantuml.com/plantuml/svg/~1' + plantumlEncoder.encode(plantumlContent);
-
-        image.onload = function() {
-          code.style.display = 'none';
-          image.style.display = 'block';
-          image.style.backgroundColor = isDarkMode() ? '#282e33' : '#f7f7f7';
-          image.style.maxWidth = '100%';
-          image.style.width = 'auto';
-          image.style.height = 'auto';
-          image.style.margin = '0 auto';
-          image.style.display = 'block';
-          image.style.borderRadius = '6px';
-
-          if (image.parentNode) {
-            image.parentNode.style.backgroundColor = isDarkMode() ? '#282e33' : '#f7f7f7';
-            image.parentNode.style.padding = '12px';
-            image.parentNode.style.borderRadius = '6px';
-            image.parentNode.style.border = 'none';
-            image.parentNode.style.boxShadow = 'none';
-            image.parentNode.style.textAlign = 'center';
-            image.parentNode.classList.add('plantuml-container');
-          }
-        };
-
-        image.onerror = function() {
-          console.warn('PlantUML image failed to load, showing code block instead');
-          code.style.display = 'block';
-          image.style.display = 'none';
-        };
-
-        code.parentNode.insertBefore(image, code);
-        code.style.display = 'none';
-
-        if (!code.dataset.originalContent) {
-          code.dataset.originalContent = code.innerText;
-        }
-
-        code.dataset.processed = 'true';
-      });
-    }
-
-    // Markmap initialization
-    function initMarkmap() {
-      const markMapElements = document.querySelectorAll('.language-markmap');
-
-      if (!markMapElements || markMapElements.length === 0) {
-        return;
-      }
-
-      markMapElements.forEach((element) => {
-        element.classList.add('markmap');
-
-        const colorOptions = isDarkMode() ? {
-          colorFreezeLevel: 6,
-          color: ['#E7E9EA', '#99E0FC', '#F7CC8F', '#8FFCCD', '#ED716C', '#9B79F7', '#56b6c2'],
-          backgroundColor: '#282e33',
-          nodeBackgroundColor: '#3a4045',
-          nodeBorderColor: '#454545',
-          linkColor: '#454545'
-        } : {
-          colorFreezeLevel: 6,
-          color: ['#333333', '#0066cc', '#cc6600', '#00aa00', '#cc0000', '#6600cc', '#006666'],
-          backgroundColor: '#f7f7f7',
-          nodeBackgroundColor: '#ffffff',
-          nodeBorderColor: '#d0d0d0',
-          linkColor: '#d0d0d0'
-        };
-
-        element.style.backgroundColor = colorOptions.backgroundColor;
-        element.style.borderRadius = '6px';
-        element.style.padding = '12px';
-        element.style.overflow = 'hidden';
-        element.style.minHeight = '300px';
-        element.style.pointerEvents = 'none';
-        element.style.textAlign = 'center';
-
-        element.dataset.markmapColors = JSON.stringify(colorOptions);
-      });
-
-      const autoLoader = window.markmap && window.markmap.autoLoader;
-      if (!autoLoader || typeof autoLoader.render !== 'function') {
-        return;
-      }
-
-      requestAnimationFrame(() => {
-        markMapElements.forEach((element) => {
-          if (element.dataset.markmapRendered === 'true') {
-            return;
-          }
-
-          // Skip elements that already have an SVG rendered
-          if (element.querySelector('svg')) {
-            element.dataset.markmapRendered = 'true';
-            return;
-          }
-
-          try {
-            autoLoader.render(element);
-            element.dataset.markmapRendered = 'true';
-          } catch (error) {
-            console.error('Failed to render markmap block', error);
-          }
-        });
-      });
-    }
-
-    function updateContainerStyles() {
-      const preList = document.getElementsByTagName('pre');
-
-      for (let i = 0; i < preList.length; i++) {
-        if (preList[i].querySelector('.plantuml-image')) {
-          preList[i].classList.add('plantuml-image-container');
-        }
-        if (preList[i].querySelector('.language-mermaid')) {
-          preList[i].classList.add('mermaid-image-container');
-        }
-        if (preList[i].querySelector('.language-markmap')) {
-          preList[i].classList.add('markmap-image-container');
-        }
-      }
-    }
+    // Initialize core functionality using common module
+    MiaoYanCommon.initializeCore();
+    MiaoYanCommon.setupTextSelection();
 
     // Apply dark mode theme if needed
-    if (isDarkMode()) {
-      const darkModeStyles = "* { color: #E7E9EA; } body { background: #21262B; } .heti p > code, .heti li > code, code { background: #454545; } a, .heti a heti-spacing { color: #1D9BF0 } table td, table th { color: #E7E9EA; } input[type='checkbox'] { border: 1px solid white; } .mermaid-image-container, .markmap-image-container, .plantuml-image-container, .plantuml-container { background-color: #282e33; } .plantuml-image { background-color: #282e33; }";
-
-      const node = document.createElement('style');
-      node.id = 'darkModeStyles';
-      node.innerHTML = darkModeStyles;
-      document.getElementsByTagName('head')[0].appendChild(node);
-
-      const markdownRoot = document.querySelector('.markdown-body');
-      if (markdownRoot) {
-        markdownRoot.classList.add('darkmode');
-      }
-
-      // Update chart container backgrounds in dark mode
-      setTimeout(() => {
-        document.querySelectorAll('.mermaid-image-container, .markmap-image-container, .plantuml-image-container').forEach(container => {
-          container.style.backgroundColor = '#282e33';
-        });
-
-        // Apply Mermaid dark mode background
-        document.querySelectorAll('.mermaid, .mermaid svg').forEach(element => {
-          element.style.backgroundColor = '#282e33';
-        });
-        document.querySelectorAll('.mermaid svg rect').forEach(element => {
-          if (element.getAttribute('fill') === '#ffffff' || element.getAttribute('fill') === 'white') {
-            element.setAttribute('fill', '#282e33');
-          }
-        });
-
-        // Apply markmap dark mode background
-        const markmapElements = document.querySelectorAll('.markmap');
-        markmapElements.forEach(element => {
-          element.style.backgroundColor = '#282e33';
-          const svgElement = element.querySelector('svg');
-          if (svgElement) {
-            svgElement.style.backgroundColor = '#282e33';
-          }
-        });
-      }, 100);
+    if ('CUSTOM_CSS' === 'darkmode') {
+      ThemeConfig.applyDarkModeStyles();
     }
 
-    // Initialize everything
-    initializeDiagrams();
-
-    // Initialize KaTeX
-    document.addEventListener("DOMContentLoaded", function() {
+    // Initialize KaTeX and additional features when DOM is ready
+    MiaoYanCommon.onDOMReady(function() {
+      // Initialize KaTeX first
       renderMathInElement(document.body, {
         delimiters: [
           {left: "$$", right: "$$", display: true},
@@ -510,31 +95,15 @@ skinparam state {
         ]
       });
 
-      // Header anchors
-      document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((h) => (h.id = h.innerText));
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener('click', function (e) {
-          e.preventDefault();
-          document.querySelector(decodeURIComponent(this.getAttribute('href')))?.scrollIntoView({
-            behavior: 'smooth',
-          });
-        });
-      });
+      // Setup header anchors, image optimization and zoom
+      MiaoYanCommon.setupHeaderAnchors();
+      MiaoYanCommon.optimizeImages();
+      MiaoYanCommon.setupImageZoom();
 
-      // Image optimization and zoom
-      const allImages = document.querySelectorAll('img');
-      allImages.forEach((img, index) => {
-        img.setAttribute('loading', index < 3 ? 'eager' : 'lazy');
-        img.style.maxWidth = '100%';
-        img.style.height = 'auto';
-      });
-
-      const zoomImgs = document.querySelectorAll('#write>img, #write>p>img, #write>table img');
-      if (zoomImgs.length > 0 && window.Lightense) {
-        window.Lightense(zoomImgs, {
-          background: isDarkMode() ? 'rgba(33, 38, 43, .8)' : 'rgba(255, 255, 255, .8)',
-        });
-      }
+      // Initialize diagrams after DOM is ready
+      setTimeout(() => {
+        DiagramHandler.initializeAll();
+      }, 100);
     });
   </script>
 

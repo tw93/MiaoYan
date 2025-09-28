@@ -40,13 +40,16 @@ class MPreviewView: WKWebView, WKUIDelegate {
         // Allow incremental rendering to avoid feeling "stuck" before load finishes
         configuration.suppressesIncrementalRendering = false
         // Basic WebKit configuration for quieter operation
-        configuration.preferences.setValue(false, forKey: "developerExtrasEnabled")
+        #if DEBUG
+        configuration.preferences.setValue(true, forKey: "developerExtrasEnabled")
+        #endif
         configuration.preferences.setValue(false, forKey: "javaScriptCanOpenWindowsAutomatically")
         let preferences = WKWebpagePreferences()
         preferences.allowsContentJavaScript = true
         configuration.defaultWebpagePreferences = preferences
         super.init(frame: frame, configuration: configuration)
         navigationDelegate = navigationProxy
+
         // Keep the same background color between native and web layers
         setValue(false, forKey: "drawsBackground")
         wantsLayer = true
