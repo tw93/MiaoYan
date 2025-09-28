@@ -5,7 +5,9 @@
     <meta name="viewport" content="initial-scale=1.0" />
     <link rel="stylesheet" href="ppt/dist/reveal.css" />
     DOWN_THEME
-    <script src="js/vendors/markmap.min.js"></script>
+    <link rel="stylesheet" href="themes/mermaid.css" />
+    <script src="js/markmap.min.js"></script>
+    <script src="js/index.js"></script>
     <title></title>
     <style>
 
@@ -47,38 +49,13 @@
     </div>
 
     <script>
-      function getSelectionAndSendMessage() {
-        const txt = document.getSelection().toString();
-        window.webkit.messageHandlers.newSelectionDetected.postMessage(txt);
-      }
-
-      document.onmouseup = getSelectionAndSendMessage;
-      document.onkeyup = getSelectionAndSendMessage;
-      document.oncontextmenu = getSelectionAndSendMessage;
+      // Setup text selection using common module
+      MiaoYanCommon.setupTextSelection();
     </script>
 
     <script>
-      let preList = document.getElementsByTagName('input'),
-        length = preList.length,
-        i = 0;
-
-      for (i; i < length; i++) {
-        preList[i].disabled = true;
-
-        if (
-          preList[i].parentNode.tagName === 'P' &&
-          preList[i].parentNode.parentNode.tagName === 'LI'
-        ) {
-          preList[i].parentNode.parentNode.parentNode.classList.add('cb');
-          continue;
-        }
-
-        if (preList[i].parentNode.tagName !== 'LI') {
-          continue;
-        }
-
-        preList[i].parentNode.parentNode.classList.add('cb');
-      }
+      // Setup checkboxes using common module
+      MiaoYanCommon.setupCheckboxes();
     </script>
     <script src="ppt/dist/reveal.js"></script>
     <script src="ppt/plugin/markdown/markdown.js"></script>
@@ -307,85 +284,11 @@
     </script>
     <script>
       document.addEventListener('DOMContentLoaded', function () {
-        // Add lazy loading to all images
-        const allImages = document.querySelectorAll('img');
-        allImages.forEach((img) => {
-          if (!img.hasAttribute('loading')) {
-            img.setAttribute('loading', 'lazy');
-          }
-        });
+        // Optimize images using common module
+        MiaoYanCommon.optimizeImages();
 
-        // 查找标准的.language-markmap和未被正确解析的markmap代码块
-        let markMapList = document.querySelectorAll('.language-markmap');
-
-        // 如果没找到标准格式，查找包含```markmap的代码块
-        if (markMapList.length === 0) {
-          const codeBlocks = document.querySelectorAll('pre code');
-          const additionalMarkMaps = [];
-          codeBlocks.forEach(block => {
-            const text = block.textContent || '';
-            if (text.trim().startsWith('markmap') || text.includes('```markmap')) {
-              block.classList.add('language-markmap');
-              additionalMarkMaps.push(block);
-            }
-          });
-          markMapList = document.querySelectorAll('.language-markmap');
-        }
-        markMapList && markMapList.length > 0 &&
-          markMapList.forEach((item, i) => {
-            const markMapName = 'markmap-' + i;
-            const markMapChildClass = '.' + markMapName + ' .markmap';
-            let heightAttr = item.textContent.match(
-              /\<\!\-\-markmap-height\=(\S*)\-\-\>/,
-            );
-            // Calculate auto height based on content depth and lines
-            const content = item.textContent || '';
-            const lines = content.split('\n').filter(line => line.trim());
-            const maxDepth = Math.max(0, ...lines.map(line => {
-              const match = line.match(/^(\s*)([-*+]|\d+\.)/);
-              return match ? Math.floor(match[1].length / 2) : 0;
-            }));
-
-            // More reasonable auto height: base 300px + 40px per depth level + 20px per line (slightly larger for PPT)
-            // Cap at 500px maximum unless customized
-            let autoHeight = Math.min(500, Math.max(300, 300 + maxDepth * 40 + lines.length * 20));
-            let height = autoHeight + 'px';
-
-            // Override with manual height if specified
-            if (heightAttr && heightAttr.length > 0 && !isNaN(heightAttr[1])) {
-              height = heightAttr[1] + 'px';
-            }
-
-            item.classList.add('markmap');
-            item.classList.add(markMapName);
-
-            // Apply subtle gray background for PPT mode
-            const isDark = document.body.classList.contains('dark') ||
-                          window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const backgroundColor = isDark ? '#1a1f2e' : '#f5f6f7';
-
-            setTimeout(() => {
-              const markMapItem = document.querySelector('.' + markMapName);
-              markMapItem.style.maxHeight = height;
-              markMapItem.style.height = height;
-              markMapItem.style.backgroundColor = backgroundColor;
-              markMapItem.style.borderRadius = '12px';
-              markMapItem.style.overflow = 'hidden';
-              setTimeout(() => {
-                const markMapItemChild = document.querySelector(markMapChildClass);
-                if (markMapItemChild) {
-                  markMapItemChild.style.height = height;
-                  markMapItemChild.style.backgroundColor = backgroundColor;
-
-                  // Simple PPT markmap fit
-                  if (window.markmap && markMapItemChild.markmap) {
-                    markMapItemChild.markmap.fit();
-                  }
-                }
-              }, 50);
-            }, 10);
-          });
-
+        // Initialize Markmap for PPT mode using diagram handler
+        DiagramHandler.initializeMarkmapForPPT();
       });
     </script>
     <script>
