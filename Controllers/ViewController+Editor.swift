@@ -395,13 +395,13 @@ extension ViewController {
                         newContent = restoredContent.removeLastNewLine()
                     }
                 }
-                // 同步 note.content 与当前编辑器内容，确保状态一致
+                // Sync note.content with the current editor so state remains consistent
                 if let currentStorage = editArea.textStorage {
                     note.content = NSMutableAttributedString(attributedString: currentStorage)
                 }
-                // 计算原始内容长度（在更新前）
+                // Capture the original length before applying the update
                 let originalLength = note.content.length
-                // 直接更新编辑器显示，这会同时更新 textStorage 和 note.content
+                // Replace the editor content so textStorage and note.content stay aligned
                 editArea.insertText(newContent, replacementRange: NSRange(0..<originalLength))
                 note.save()
                 if let storage = editArea.textStorage {

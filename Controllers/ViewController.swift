@@ -414,7 +414,7 @@ class ViewController:
         storageOutlineView.needsDisplay = true
         sidebarSplitView.autosaveName = "SidebarSplitView"
         splitView.autosaveName = "EditorSplitView"
-        // 设置sidebar outline view的autosave name来保存展开状态
+        // Assign an autosave name so the sidebar outline view keeps its expansion state
         storageOutlineView.autosaveExpandedItems = true
         storageOutlineView.autosaveName = "SidebarOutlineView"
         notesScrollView.scrollerStyle = .overlay
@@ -422,7 +422,7 @@ class ViewController:
         sidebarScrollView.horizontalScroller = .none
         sidebarScrollView.hasHorizontalScroller = false
         sidebarScrollView.autohidesScrollers = true
-        // 确保sidebar列宽随父视图调整
+        // Keep the sidebar column width in sync with its parent view
         if let column = storageOutlineView.tableColumns.first {
             column.resizingMask = .autoresizingMask
             column.minWidth = 50

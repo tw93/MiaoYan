@@ -120,7 +120,7 @@ extension AppDelegate {
             }
         } else if notes.count == 1 {
             if let items = vc.storageOutlineView.sidebarItems {
-                // 修复在根目录的场景
+                // Handle the scenario where the note sits in the root project
                 var sidebarIndex = 0
                 if let sidebarItem = items.first(where: { ($0 as? SidebarItem)?.project == notes[0].project }) {
                     sidebarIndex = vc.storageOutlineView.row(forItem: sidebarItem)
