@@ -5,7 +5,6 @@
   <meta name="viewport" content="initial-scale=1.0" />
   <meta name="color-scheme" content="light dark" />
 
-  <!-- Basic styles -->
   <style>
     img {
       image-rendering: auto;
@@ -18,12 +17,10 @@
 
   DOWN_META
 
-  <!-- CSS -->
   <link rel="stylesheet" href="css/heti.min.css" />
   <link rel="stylesheet" href="css/katex.min.css" />
   <link rel="stylesheet" href="css/index.css" />
 
-  <!-- Vendor libraries -->
   <script src="js/heti-addon.min.js"></script>
   <script src="js/highlight.min.js"></script>
   <script src="js/mermaid.min.js"></script>
@@ -37,7 +34,6 @@
 
   <script src="js/lightense.min.js"></script>
 
-  <!-- MiaoYan modules -->
   <script src="js/index.js"></script>
 
   <script>
@@ -72,20 +68,15 @@
     }
   </script>
 
-  <!-- Initialize core libraries first -->
   <script>
-    // Initialize core functionality using common module
     MiaoYanCommon.initializeCore();
     MiaoYanCommon.setupTextSelection();
 
-    // Apply dark mode theme if needed
     if ('CUSTOM_CSS' === 'darkmode') {
       ThemeConfig.applyDarkModeStyles();
     }
 
-    // Initialize KaTeX and additional features when DOM is ready
     MiaoYanCommon.onDOMReady(function() {
-      // Initialize KaTeX first
       renderMathInElement(document.body, {
         delimiters: [
           {left: "$$", right: "$$", display: true},
@@ -95,19 +86,16 @@
         ]
       });
 
-      // Setup header anchors, image optimization and zoom
       MiaoYanCommon.setupHeaderAnchors();
       MiaoYanCommon.optimizeImages();
       MiaoYanCommon.setupImageZoom();
 
-      // Initialize diagrams after DOM is ready
       setTimeout(() => {
         DiagramHandler.initializeAll();
       }, 100);
     });
   </script>
 
-  <!-- Main app for additional functionality -->
   <script src="js/app.js"></script>
 </body>
 </html>

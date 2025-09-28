@@ -1,17 +1,13 @@
-/* Theme CSS - Combined variables, light and dark themes */
-
-/* ===== CSS Variables ===== */
+/* Theme CSS */
 :root {
-  /* Light theme colors (default) */
   --bg-color: #FFFFFF;
   --text-color: #262626;
   --link-color: #0C6ADA;
   --border-color: #e6e6e6;
   --diagram-bg: #f7f7f7;
   --code-bg: #f7f7f7;
-  --blockquote-border-color: #DDD;
+  --blockquote-border-color: #777;
 
-  /* Fonts and dimensions */
   --text-font: 'TsangerJinKai02-W04', -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
   --code-text-font: 'TsangerJinKai02-W04', -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
   --markmap-height: 450px;
@@ -23,6 +19,7 @@ html {
   color: #262626;
   font-family: var(--text-font);
   -webkit-font-smoothing: subpixel-antialiased;
+  overscroll-behavior: none;
 }
 
 body {
@@ -30,12 +27,15 @@ body {
   margin: 0;
   background: #FFFFFF;
   font-family: var(--text-font);
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 html.darkmode,
 body.darkmode,
 .markdown-body.darkmode {
   background: #21262B;
+  overscroll-behavior: none;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -50,9 +50,6 @@ img {
   object-fit: cover;
 }
 
-/* ===== Light Theme ===== */
-
-/* Override base colors */
 html {
   color: var(--text-color);
 }
@@ -61,7 +58,6 @@ body {
   background: var(--bg-color);
 }
 
-/* Ensure heti uses the correct font */
 .heti {
   font-family: var(--text-font);
 }
@@ -107,12 +103,10 @@ pre code {
   background-color: var(--border-color);
 }
 
-/* Checkbox styles */
 input[type='checkbox'] {
   border: 1px solid var(--border-color);
 }
 
-/* Diagram containers */
 .mermaid-image-container,
 .markmap-image-container,
 .plantuml-image-container,
@@ -125,11 +119,7 @@ pre:has(.language-mermaid) {
   background-color: var(--diagram-bg);
 }
 
-/* ===== Dark Theme ===== */
-
-/* Dark theme variable overrides */
 .darkmode {
-  /* Dark theme colors */
   --bg-color: #21262B;
   --text-color: #E7E9EA;
   --link-color: #1D9BF0;
@@ -138,7 +128,6 @@ pre:has(.language-mermaid) {
   --diagram-bg: #282e33;
   --blockquote-border-color: #454545;
 
-  /* Dark mode mermaid colors */
   --mermaid-node-bg: #3c434b;
   --mermaid-text-color: #E7E9EA;
   --mermaid-border-color: #545d68;
@@ -146,7 +135,6 @@ pre:has(.language-mermaid) {
   --mermaid-edge-label-bg: #282e33;
 }
 
-/* Dark mode styles - using CSS variable overrides for consistency */
 .darkmode html,
 .darkmode body {
   color: var(--text-color);
@@ -158,12 +146,10 @@ pre:has(.language-mermaid) {
   color: var(--link-color);
 }
 
-/* Override all text colors for dark mode */
 .darkmode * {
   color: var(--text-color);
 }
 
-/* Code and table styling */
 .darkmode .heti p > code,
 .darkmode .heti li > code,
 .darkmode code,
@@ -186,7 +172,6 @@ pre:has(.language-mermaid) {
   border: 1px solid white;
 }
 
-/* Diagram containers */
 .darkmode .mermaid-image-container,
 .darkmode .markmap-image-container,
 .darkmode .plantuml-image-container,
@@ -195,7 +180,6 @@ pre:has(.language-mermaid) {
 .darkmode pre:has(.language-mermaid) {
   background-color: var(--diagram-bg);
 }
-/* ===== App CSS - Additional component styles ===== */
 
 pre code,
 .heti pre code {
@@ -255,9 +239,6 @@ pre table.hljs-ln,
   background: transparent;
 }
 
-/* ===== Syntax Highlighting ===== */
-
-/* Light theme syntax highlighting */
 .hljs {
   color: #24292e;
   background: transparent;
@@ -294,7 +275,6 @@ pre table.hljs-ln,
   color: #6f42c1;
 }
 
-/* Dark theme syntax highlighting */
 .darkmode .hljs {
   color: #ABB2BF;
   background: var(--code-bg) !important;
@@ -370,16 +350,12 @@ pre table.hljs-ln,
   text-decoration: underline;
 }
 
-/* ===== Mermaid Styles ===== */
-
-/* Mermaid Theme Overrides */
 
 .mermaid {
   background-color: var(--mermaid-diagram-bg, var(--diagram-bg, #f7f7f7)) !important;
   color: var(--mermaid-text-color, var(--text-color, #333333)) !important;
 }
 
-/* Dark mode mermaid styles */
 .darkmode .mermaid {
   background-color: var(--diagram-bg) !important;
   color: var(--text-color) !important;
@@ -445,9 +421,6 @@ span.emoji {
   -moz-box-orient: vertical;
   display: inline-block;
   vertical-align: baseline;
-  *vertical-align: auto;
-  *zoom: 1;
-  *display: inline;
   width: 1em;
   height: 1em;
   background-size: 1em;
@@ -466,7 +439,6 @@ span.emoji-sizer {
 span.emoji-outer {
   display: -moz-inline-box;
   display: inline-block;
-  *display: inline;
   height: 1em;
   width: 1em;
 }
@@ -478,8 +450,6 @@ span.emoji-inner {
   width: 100%;
   height: 100%;
   vertical-align: baseline;
-  *vertical-align: auto;
-  *zoom: 1;
 }
 
 img.emoji {
@@ -528,7 +498,6 @@ img.border {
   border-radius: 8px;
 }
 
-/* Simple chart container styles - match code background */
 .mermaid-image-container,
 .markmap-image-container,
 .plantuml-image-container,
@@ -541,7 +510,6 @@ pre:has(.language-mermaid) {
   box-shadow: none;
 }
 
-/* Auto dark mode for system preference */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg-color: #21262B;
@@ -550,7 +518,7 @@ pre:has(.language-mermaid) {
     --border-color: #454545;
     --code-bg: #282e33;
     --diagram-bg: #282e33;
-    --blockquote-border-color: #454545;
+    --blockquote-border-color: #777;
   }
 
   html {
@@ -594,7 +562,6 @@ pre:has(.language-mermaid) {
     outline-color: var(--code-bg);
   }
 
-  /* Special dark mode elements */
   .heti mark {
     background-color: rgba(77, 74, 0, 0.88);
   }
@@ -614,7 +581,6 @@ pre:has(.language-mermaid) {
   }
 }
 
-/* Chart elements with rounded corners and left alignment */
 .language-mermaid,
 .language-markmap,
 .language-plantuml {
@@ -628,7 +594,6 @@ pre:has(.language-mermaid) {
   border-radius: 6px;
 }
 
-/* Unified font for all diagram types */
 .mermaid,
 .mermaid *,
 .markmap,

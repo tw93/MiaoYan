@@ -1,19 +1,9 @@
-/**
- * MiaoYan Common Utilities
- * Shared helpers to avoid duplicating logic across scripts.
- */
 
 const MiaoYanCommon = {
-  /**
-   * Check whether dark mode is enabled.
-   */
   isDarkMode() {
     return 'CUSTOM_CSS' === 'darkmode';
   },
 
-  /**
-   * Wire up text selection handling.
-   */
   setupTextSelection() {
     function getSelectionAndSendMessage() {
       const txt = document.getSelection().toString();
@@ -25,9 +15,6 @@ const MiaoYanCommon = {
     document.oncontextmenu = getSelectionAndSendMessage;
   },
 
-  /**
-   * Apply baseline checkbox behaviour.
-   */
   setupCheckboxes() {
     const inputList = document.getElementsByTagName('input');
 
@@ -50,9 +37,6 @@ const MiaoYanCommon = {
     }
   },
 
-  /**
-   * Enhance checkboxes with click interactions.
-   */
   setupInteractiveCheckboxes() {
     this.setupCheckboxes();
 
@@ -71,9 +55,6 @@ const MiaoYanCommon = {
     });
   },
 
-  /**
-   * Handle checkbox click events.
-   */
   handleCheckboxClick(element) {
     if (element.parentNode.nodeName === 'LI') {
       element.parentNode.classList.remove('strike');
@@ -101,9 +82,6 @@ const MiaoYanCommon = {
     });
   },
 
-  /**
-   * Optimise image loading attributes.
-   */
   optimizeImages() {
     const allImages = document.querySelectorAll('img');
     allImages.forEach((img, index) => {
@@ -113,9 +91,6 @@ const MiaoYanCommon = {
     });
   },
 
-  /**
-   * Enable image zoom-on-click support.
-   */
   setupImageZoom() {
     const zoomImgs = document.querySelectorAll('#write>img, #write>p>img, #write>table img');
     if (zoomImgs.length > 0 && window.Lightense) {
@@ -125,9 +100,6 @@ const MiaoYanCommon = {
     }
   },
 
-  /**
-   * Attach anchors to headings for in-page navigation.
-   */
   setupHeaderAnchors() {
     document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((h) => (h.id = h.innerText));
     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
@@ -140,23 +112,17 @@ const MiaoYanCommon = {
     });
   },
 
-  /**
-   * Initialise core behaviours needed on load.
-   */
   initializeCore() {
-    // Initialise Heti for typography adjustments
     if (window.Heti) {
       const heti = new window.Heti('.heti');
       heti.autoSpacing();
     }
 
-    // Initialise syntax highlighting
     if (window.hljs) {
       hljs.configure({ cssSelector: 'pre code' });
       hljs.highlightAll();
     }
 
-    // Initialise emoji conversion
     if (window.EmojiConvertor) {
       const html = document.getElementById('write').innerHTML;
       const emoji = new EmojiConvertor();
@@ -166,9 +132,6 @@ const MiaoYanCommon = {
     }
   },
 
-  /**
-   * Execute when the DOM is ready.
-   */
   onDOMReady(callback) {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', callback);
@@ -178,20 +141,10 @@ const MiaoYanCommon = {
   }
 };
 
-// Export for external usage
 window.MiaoYanCommon = MiaoYanCommon;
 
-/* ============================================================================
- * THEME CONFIG MODULE
- * ============================================================================ */
-
-/**
- * MiaoYan Theme Configuration
- * Centralises color and style settings for light and dark themes.
- */
 
 const ThemeConfig = {
-  // Base theme palettes
   colors: {
     dark: {
       background: '#21262B',
@@ -202,7 +155,7 @@ const ThemeConfig = {
       secondaryColor: '#252b31',
       tertiaryColor: '#30363d',
       lineColor: '#54C59F',
-      codeBg: '#454545',
+      codeBg: '#282e33',
       textColor: '#E7E9EA',
       mainBkg: '#2c3238',
       secondBkg: '#252b31',
@@ -234,9 +187,6 @@ const ThemeConfig = {
     }
   },
 
-  /**
-   * Resolve the theme colors for the current appearance.
-   */
   getThemeColors(isDark = false) {
     const base = isDark ? this.colors.dark : this.colors.light;
     const palette = { ...base };
@@ -247,16 +197,10 @@ const ThemeConfig = {
     return palette;
   },
 
-  /**
-   * Determine whether dark mode is active.
-   */
   isDarkMode() {
     return document.documentElement.classList.contains('darkmode') || 'CUSTOM_CSS' === 'darkmode';
   },
 
-  /**
-   * Build the Mermaid configuration with theme-aware colors.
-   */
   getMermaidConfig(isDark = false) {
     const themeColors = this.getThemeColors(isDark);
 
@@ -357,9 +301,6 @@ const ThemeConfig = {
     setVar('--mermaid-edge-label-bg', edgeLabelBackground);
   },
 
-  /**
-   * Build the PlantUML skin parameters for the active theme.
-   */
   getPlantUMLSkinparams(isDark = false) {
     const colors = this.getThemeColors(isDark);
     const backgroundColor = colors.diagramBg || colors.background;
@@ -424,9 +365,6 @@ skinparam component {
     return baseParams + arrowParams + componentParams + additionalParams;
   },
 
-  /**
-   * Provide Markmap colors adjusted for the active theme.
-   */
   getMarkmapColors(isDark = false) {
     const palette = this.getThemeColors(isDark);
     const accentColors = isDark
@@ -443,9 +381,6 @@ skinparam component {
     };
   },
 
-  /**
-   * Apply themed styles to rendered diagram containers.
-   */
   applyDiagramStyles(isDark = false) {
     const themeColors = this.getThemeColors(isDark);
     this.applyCSSVariables(isDark);
@@ -530,9 +465,6 @@ skinparam component {
     setTimeout(updateStyles, 120);
   },
 
-  /**
-   * Apply runtime dark-mode styles.
-   */
   applyDarkModeStyles() {
     // Ensure the root elements receive the dark-mode class
     document.documentElement.classList.add('darkmode');
@@ -603,22 +535,10 @@ html.darkmode, body.darkmode {
   }
 };
 
-// Export for use by other scripts
 window.ThemeConfig = ThemeConfig;
 
-/* ============================================================================
- * DIAGRAM HANDLER MODULE
- * ============================================================================ */
-
-/**
- * MiaoYan Diagram Handler
- * Provides unified rendering helpers for Mermaid, PlantUML, and Markmap diagrams.
- */
 
 const DiagramHandler = {
-  /**
-   * Initialise every supported diagram type.
-   */
   initializeAll() {
     const isDark = this.isDarkMode();
 
@@ -632,9 +552,6 @@ const DiagramHandler = {
     window.ThemeConfig?.applyDiagramStyles?.(isDark);
   },
 
-  /**
-   * Initialise Mermaid diagrams.
-   */
   initializeMermaid() {
     if (!window.mermaid) return;
 
@@ -646,9 +563,6 @@ const DiagramHandler = {
     window.ThemeConfig?.applyDiagramStyles?.(isDark);
   },
 
-  /**
-   * Initialise PlantUML diagrams.
-   */
   initializePlantUML() {
     if (typeof window.plantumlEncoder === 'undefined') {
       console.warn('PlantUML encoder not loaded, retrying...');
@@ -663,9 +577,6 @@ const DiagramHandler = {
     });
   },
 
-  /**
-   * Process a single PlantUML code block.
-   */
   processPlantumlElement(code) {
     const existingImage = code.parentNode.querySelector('.plantuml-image');
     if (existingImage) existingImage.remove();
@@ -704,9 +615,6 @@ const DiagramHandler = {
     code.dataset.processed = 'true';
   },
 
-  /**
-   * Style the rendered PlantUML image element.
-   */
   stylePlantumlImage(image, code, isDark) {
     const themeColors = window.ThemeConfig?.getThemeColors?.(isDark);
     const bgColor = themeColors?.diagramBg || themeColors?.background || (isDark ? '#282e33' : '#f7f7f7');
@@ -733,9 +641,6 @@ const DiagramHandler = {
     window.ThemeConfig?.applyDiagramStyles?.(isDark);
   },
 
-  /**
-   * Initialise Markmap diagrams.
-   */
   initializeMarkmap() {
     const markMapElements = document.querySelectorAll('.language-markmap');
     if (!markMapElements || markMapElements.length === 0) return;
@@ -750,9 +655,6 @@ const DiagramHandler = {
     }, 100);
   },
 
-  /**
-   * Prepare a Markmap code block for rendering.
-   */
   processMarkmapElement(element) {
     element.classList.add('markmap');
 
@@ -778,9 +680,6 @@ const DiagramHandler = {
     element.dataset.markmapColors = JSON.stringify(colorOptions);
   },
 
-  /**
-   * Render Markmap diagrams using the auto loader.
-   */
   renderMarkmap() {
     if (!window.markmap?.autoLoader || typeof window.markmap.autoLoader.render !== 'function') {
       setTimeout(() => this.renderMarkmap(), 100);
@@ -825,9 +724,6 @@ const DiagramHandler = {
     });
   },
 
-  /**
-   * Update container classes after diagrams render.
-   */
   updateContainerStyles() {
     const preList = document.getElementsByTagName('pre');
 
@@ -844,9 +740,6 @@ const DiagramHandler = {
     }
   },
 
-  /**
-   * Prepare Markmap diagrams for PPT mode.
-   */
   initializeMarkmapForPPT() {
     let markMapList = document.querySelectorAll('.language-markmap');
 
@@ -867,16 +760,12 @@ const DiagramHandler = {
     });
   },
 
-  /**
-   * Configure a single Markmap block inside PPT mode.
-   */
   processMarkmapForPPT(item, index) {
     const markMapName = 'markmap-' + index;
     const markMapChildClass = '.' + markMapName + ' .markmap';
 
     let heightAttr = item.textContent.match(/\<\!\-\-markmap-height\=(\S*)\-\-\>/);
 
-    // Estimate an automatic height based on content depth
     const content = item.textContent || '';
     const lines = content.split('\n').filter(line => line.trim());
     const maxDepth = Math.max(0, ...lines.map(line => {
@@ -898,11 +787,9 @@ const DiagramHandler = {
     const themeColors = window.ThemeConfig?.getThemeColors?.(isDark);
     const backgroundColor = themeColors?.diagramBg || themeColors?.background || (isDark ? '#282e33' : '#f7f7f7');
 
-    console.log('🔧 [Markmap Debug] PPT Mode - Processing markmap', markMapName, 'with estimated height:', height, 'autoHeight:', autoHeight, 'content lines:', lines.length, 'maxDepth:', maxDepth);
     setTimeout(() => {
       const markMapItem = document.querySelector('.' + markMapName);
       if (markMapItem) {
-        console.log('🔧 [Markmap Debug] PPT Mode - Setting markMapItem styles for', markMapName);
         markMapItem.style.maxHeight = height;
         markMapItem.style.height = height;
         markMapItem.style.backgroundColor = backgroundColor;
@@ -910,35 +797,25 @@ const DiagramHandler = {
         markMapItem.style.overflow = 'hidden';
         markMapItem.style.padding = '8px';
         markMapItem.style.boxSizing = 'border-box';
-        console.log('🔧 [Markmap Debug] PPT Mode - markMapItem final height:', markMapItem.style.height);
 
         setTimeout(() => {
           const markMapItemChild = document.querySelector(markMapChildClass);
           if (markMapItemChild) {
-            console.log('🔧 [Markmap Debug] PPT Mode - Setting markMapItemChild styles');
             markMapItemChild.style.height = height;
             markMapItemChild.style.backgroundColor = backgroundColor;
-            console.log('🔧 [Markmap Debug] PPT Mode - markMapItemChild final height:', markMapItemChild.style.height);
 
             if (window.markmap && markMapItemChild.markmap) {
-              console.log('🔧 [Markmap Debug] PPT Mode - Calling markMapItemChild.markmap.fit()');
               markMapItemChild.markmap.fit();
             } else {
-              console.log('🔧 [Markmap Debug] PPT Mode - markMapItemChild.markmap not available:', markMapItemChild.markmap);
             }
           } else {
-            console.log('🔧 [Markmap Debug] PPT Mode - markMapItemChild not found for selector:', markMapChildClass);
           }
         }, 50);
       } else {
-        console.log('🔧 [Markmap Debug] PPT Mode - markMapItem not found for selector:', '.' + markMapName);
       }
     }, 10);
   },
 
-  /**
-   * Determine whether dark mode should be applied.
-   */
   isDarkMode() {
     if (typeof window.ThemeConfig?.isDarkMode === 'function') {
       return window.ThemeConfig.isDarkMode();
@@ -947,16 +824,8 @@ const DiagramHandler = {
   }
 };
 
-// Export for external usage
 window.DiagramHandler = DiagramHandler;
 
-/* ============================================================================
- * PREVIEW APP MODULE
- * ============================================================================ */
-
-/**
- * MiaoYan Preview App - Simplified version using common modules
- */
 
 class MiaoYanApp {
   constructor() {
@@ -971,10 +840,8 @@ class MiaoYanApp {
   }
 }
 
-// Initialize app when DOM is ready
 MiaoYanCommon.onDOMReady(() => {
   new MiaoYanApp();
 });
 
-// Export for external use
 window.MiaoYanApp = MiaoYanApp;
