@@ -559,7 +559,7 @@ extension ViewController {
         search.stringValue = ""
         search.becomeFirstResponder()
 
-        // 在单独模式下不清除选择状态
+        // Keep the current selection when single mode is enabled
         if !UserDefaultsManagement.isSingleMode {
             notesTableView.selectRowIndexes(IndexSet(), byExtendingSelection: false)
             editArea.clear()

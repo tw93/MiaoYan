@@ -1101,7 +1101,7 @@ extension ViewController {
         // Return / Cmd + Return navigation
         if event.keyCode == kVK_Return {
             if let fr = NSApp.mainWindow?.firstResponder, alert == nil {
-                // 兼容一下ppt模式的选中
+                // Ensure selection handling works correctly in PPT mode
                 if UserDefaultsManagement.magicPPT {
                     DispatchQueue.main.async {
                         self.editArea.markdownView!.evaluateJavaScript("Reveal.toggleOverview();", completionHandler: nil)
@@ -1126,7 +1126,7 @@ extension ViewController {
                         return false
                     }
 
-                    // 日语环境的输入方式和国内不太一样，兼容一下
+                    // Handle the different input behavior used in Japanese locales
                     if titleLabel.hasFocus() {
                         if UserDefaultsManagement.defaultLanguage != 0x02 {
                             focusEditArea()

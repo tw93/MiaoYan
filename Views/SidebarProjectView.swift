@@ -670,7 +670,7 @@ class SidebarProjectView: NSOutlineView,
 
             // Don't clear edit area during launch to prevent flashing
             if !isLaunch {
-                // 在单独模式下不清除编辑器内容
+                // Keep editor content intact when single mode is active
                 if !UserDefaultsManagement.isSingleMode {
                     vd.editArea.clear()
                 }
@@ -700,7 +700,7 @@ class SidebarProjectView: NSOutlineView,
                     self.isLaunch = false
                 } else {
                     DispatchQueue.main.async {
-                        // 在单独模式下不清除笔记选择
+                        // Keep note selection intact when single mode is active
                         if !UserDefaultsManagement.isSingleMode {
                             vd.notesTableView.deselectNotes()
                         }

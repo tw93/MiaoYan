@@ -374,7 +374,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             return
         }
 
-        // 调用内部实现
+        // Call the internal implementation
         _performFill(note: note, options: options, viewController: viewController)
     }
 
