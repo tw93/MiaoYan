@@ -35,21 +35,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
         userContentController.add(HandlerRevealBackgroundColor(), name: "revealBackgroundColor")
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = userContentController
-        // Inject early background style to prevent white flash during HTML/CSS loading
-        let isDarkTheme: Bool
-        switch UserDefaultsManagement.appearanceType {
-        case .Light: isDarkTheme = false
-        case .Dark: isDarkTheme = true
-        case .System, .Custom: isDarkTheme = UserDataService.instance.isDark
-        }
-        let bgHex = isDarkTheme ? "#23282D" : "#FFFFFF"
-        // Ensure background only to prevent white flash; avoid forcing text color
-        let css = "html,body{background:\(bgHex) !important;}"
-        let js =
-            "(function(){var s=document.createElement('style');s.type='text/css';s.appendChild(document.createTextNode('" + css
-            + "'));(document.head||document.documentElement).appendChild(s);document.documentElement.style.background='\(bgHex)';document.body&&(document.body.style.background='\(bgHex)');}())"
-        let script = WKUserScript(source: js, injectionTime: .atDocumentStart, forMainFrameOnly: true)
-        configuration.userContentController.addUserScript(script)
         // macOS Sequoia beta: Simplified configuration to avoid sandbox conflicts
         configuration.websiteDataStore = WKWebsiteDataStore.default()
         // Allow incremental rendering to avoid feeling "stuck" before load finishes
@@ -62,13 +47,25 @@ class MPreviewView: WKWebView, WKUIDelegate {
         configuration.defaultWebpagePreferences = preferences
         super.init(frame: frame, configuration: configuration)
         navigationDelegate = navigationProxy
-        // Keep WebKit drawing background so preview area is visible during load
-        setValue(true, forKey: "drawsBackground")
+        // Keep the same background color between native and web layers
+        setValue(false, forKey: "drawsBackground")
         wantsLayer = true
         let bgNSColor = determineBackgroundColor()
         layer?.backgroundColor = bgNSColor.cgColor
+        layer?.isOpaque = false
         // Fill under-page area with the same color to cover rubber-banding gaps
         setValue(bgNSColor, forKey: "underPageBackgroundColor")
+        if let hostingScrollView = subviews.compactMap({ $0 as? NSScrollView }).first {
+            hostingScrollView.drawsBackground = false
+            hostingScrollView.backgroundColor = bgNSColor
+            if let clipView = hostingScrollView.contentView as? NSClipView {
+                clipView.drawsBackground = false
+                clipView.backgroundColor = bgNSColor
+            }
+        } else if let clipView = subviews.compactMap({ $0 as? NSClipView }).first {
+            clipView.drawsBackground = false
+            clipView.backgroundColor = bgNSColor
+        }
         // Set webview appearance to match current theme
         self.appearance = UserDataService.instance.isDark ? NSAppearance(named: .darkAqua) : NSAppearance(named: .aqua)
 
@@ -272,9 +269,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
             template = template.replacingOccurrences(of: "DOWN_THEME", with: pptTheme)
         }
 
-        if UserDataService.instance.isDark {
-            template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode")
-        }
+        // Theme handling is now done via CSS imports in HtmlManager.previewStyle()
         return template
     }
 
