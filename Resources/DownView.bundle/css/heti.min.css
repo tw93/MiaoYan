@@ -1,6 +1,6 @@
 /* Critical CSS Variables - Must be defined before any usage */
 :root {
-  --blockquote-border-color: #DDD;
+  --blockquote-border-color: #777;
   --code-text-font: 'TsangerJinKai02-W04', -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
 }
 
