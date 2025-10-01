@@ -14,6 +14,7 @@ public enum UserDefaultsManagement {
     static var DefaultFontSize = 16
     static var DefaultPreviewFontSize = 16
     static var DefaultPresentationFontSize = 24
+    static let FullWidthValue = "Full Width"
     static var DefaultFontColor = Color(red: 0.38, green: 0.38, blue: 0.38, alpha: 1.00)
     static var DefaultBgColor = Color.white
     static var lineWidth = 1000

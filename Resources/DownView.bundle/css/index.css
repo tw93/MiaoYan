@@ -69,18 +69,21 @@ a, .heti a heti-spacing {
 .heti p > code,
 .heti li > code,
 code {
+  font-family: var(--code-text-font);
   background-color: var(--code-bg);
   padding: 2px 6px;
   border-radius: 4px;
 }
 
 pre {
+  font-family: var(--code-text-font);
   background-color: var(--code-bg);
   padding: 16px;
   border-radius: 6px;
 }
 
 pre code {
+  font-family: var(--code-text-font);
   background-color: var(--code-bg);
 }
 
@@ -97,6 +100,17 @@ pre code {
 
 .heti blockquote {
   border-left-color: var(--blockquote-border-color);
+}
+
+.heti blockquote ol,
+.heti blockquote ul,
+.heti blockquote li {
+  line-height: 1.74 !important;
+}
+
+.heti blockquote ol,
+.heti blockquote ul {
+  margin-block-end: 0.4em !important;
 }
 
 .heti hr {

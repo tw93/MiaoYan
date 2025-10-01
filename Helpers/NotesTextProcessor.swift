@@ -53,10 +53,12 @@ public class NotesTextProcessor {
     }
 
     public static func getFencedCodeBlockRange(paragraphRange: NSRange, string: NSMutableAttributedString) -> NSRange? {
-        guard let regex = try? NSRegularExpression(
-            pattern: NotesTextProcessor._codeQuoteBlockPattern,
-            options: [.allowCommentsAndWhitespace, .anchorsMatchLines]
-        ) else {
+        guard
+            let regex = try? NSRegularExpression(
+                pattern: NotesTextProcessor._codeQuoteBlockPattern,
+                options: [.allowCommentsAndWhitespace, .anchorsMatchLines]
+            )
+        else {
             return nil
         }
 
@@ -120,7 +122,8 @@ public class NotesTextProcessor {
 
     public static func highlightCode(attributedString: NSMutableAttributedString, range: NSRange, language: String? = nil) {
         guard let highlighter = NotesTextProcessor.getHighlighter(),
-              range.upperBound <= attributedString.length else {
+            range.upperBound <= attributedString.length
+        else {
             return
         }
 
@@ -128,7 +131,8 @@ public class NotesTextProcessor {
         let preDefinedLanguage = language ?? getLanguage(codeString)
 
         guard let code = highlighter.highlight(codeString, as: preDefinedLanguage),
-              code.string == attributedString.mutableString.substring(with: range) else {
+            code.string == attributedString.mutableString.substring(with: range)
+        else {
             return
         }
 
@@ -234,16 +238,19 @@ public class NotesTextProcessor {
         let range = NSRange(0..<attributedString.length)
         guard range.length > 0 else { return }
 
-        guard let regex = try? NSRegularExpression(
-            pattern: _codeQuoteBlockPattern,
-            options: [.allowCommentsAndWhitespace, .anchorsMatchLines]
-        ) else {
+        guard
+            let regex = try? NSRegularExpression(
+                pattern: _codeQuoteBlockPattern,
+                options: [.allowCommentsAndWhitespace, .anchorsMatchLines]
+            )
+        else {
             return
         }
 
         regex.enumerateMatches(in: attributedString.string, range: range) { result, _, _ in
             guard let codeRange = result?.range,
-                  codeRange.upperBound <= attributedString.length else {
+                codeRange.upperBound <= attributedString.length
+            else {
                 return
             }
             NotesTextProcessor.highlightCode(attributedString: attributedString, range: codeRange)
@@ -280,8 +287,9 @@ public class NotesTextProcessor {
 
         attributedString.enumerateAttribute(.link, in: paragraphRange) { value, range, _ in
             guard value != nil,
-                  range.upperBound <= attributedString.length,
-                  attributedString.attribute(.attachment, at: range.location, effectiveRange: nil) == nil else {
+                range.upperBound <= attributedString.length,
+                attributedString.attribute(.attachment, at: range.location, effectiveRange: nil) == nil
+            else {
                 return
             }
             attributedString.removeAttribute(.link, range: range)
@@ -299,8 +307,9 @@ public class NotesTextProcessor {
 
         attributedString.addAttribute(.foregroundColor, value: fontColor, range: paragraphRange)
         attributedString.enumerateAttribute(.foregroundColor, in: paragraphRange) { value, range, _ in
-            guard value as? NSColor != nil,
-                  range.upperBound <= attributedString.length else {
+            guard value is NSColor,
+                range.upperBound <= attributedString.length
+            else {
                 return
             }
             attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.fontColor, range: range)
@@ -308,7 +317,8 @@ public class NotesTextProcessor {
 
         NotesTextProcessor.italicRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range,
-                  range.upperBound <= attributedString.length else {
+                range.upperBound <= attributedString.length
+            else {
                 return
             }
             attributedString.fixAttributes(in: range)
@@ -317,7 +327,8 @@ public class NotesTextProcessor {
 
         NotesTextProcessor.boldRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range,
-                  range.upperBound <= attributedString.length else {
+                range.upperBound <= attributedString.length
+            else {
                 return
             }
             attributedString.fixAttributes(in: range)
@@ -326,7 +337,8 @@ public class NotesTextProcessor {
 
         NotesTextProcessor.strikeRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range,
-                  range.upperBound <= attributedString.length else {
+                range.upperBound <= attributedString.length
+            else {
                 return
             }
             attributedString.fixAttributes(in: range)
@@ -335,7 +347,8 @@ public class NotesTextProcessor {
 
         NotesTextProcessor.codeLineRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range,
-                  range.upperBound <= attributedString.length else {
+                range.upperBound <= attributedString.length
+            else {
                 return
             }
             attributedString.fixAttributes(in: range)
@@ -345,14 +358,16 @@ public class NotesTextProcessor {
         // We detect and process underlined headers
         NotesTextProcessor.headersSetextRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range,
-                  range.upperBound <= attributedString.length else {
+                range.upperBound <= attributedString.length
+            else {
                 return
             }
             attributedString.fixAttributes(in: range)
 
             NotesTextProcessor.headersSetextUnderlineRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range,
-                      innerRange.upperBound <= attributedString.length else {
+                    innerRange.upperBound <= attributedString.length
+                else {
                     return
                 }
                 attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
@@ -363,7 +378,8 @@ public class NotesTextProcessor {
         // We detect and process dashed headers
         NotesTextProcessor.headersAtxRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range,
-                  range.upperBound <= attributedString.length else {
+                range.upperBound <= attributedString.length
+            else {
                 return
             }
             attributedString.addAttribute(.foregroundColor, value: titleColor, range: range)
@@ -371,7 +387,8 @@ public class NotesTextProcessor {
 
             NotesTextProcessor.headersAtxOpeningRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range,
-                      innerRange.upperBound <= attributedString.length else {
+                    innerRange.upperBound <= attributedString.length
+                else {
                     return
                 }
                 attributedString.addAttribute(.foregroundColor, value: titleColor, range: innerRange)
@@ -382,7 +399,8 @@ public class NotesTextProcessor {
 
             NotesTextProcessor.headersAtxClosingRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range,
-                      innerRange.upperBound <= attributedString.length else {
+                    innerRange.upperBound <= attributedString.length
+                else {
                     return
                 }
                 attributedString.addAttribute(.foregroundColor, value: titleColor, range: innerRange)
@@ -393,7 +411,8 @@ public class NotesTextProcessor {
         // We detect and process reference links
         NotesTextProcessor.referenceLinkRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range,
-                  range.upperBound <= attributedString.length else {
+                range.upperBound <= attributedString.length
+            else {
                 return
             }
             attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: range)
@@ -402,13 +421,15 @@ public class NotesTextProcessor {
         // We detect and process lists
         NotesTextProcessor.listRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range,
-                  range.upperBound <= attributedString.length else {
+                range.upperBound <= attributedString.length
+            else {
                 return
             }
 
             NotesTextProcessor.listOpeningRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range,
-                      innerRange.upperBound <= attributedString.length else {
+                    innerRange.upperBound <= attributedString.length
+                else {
                     return
                 }
                 attributedString.addAttribute(.foregroundColor, value: listColor, range: innerRange)
@@ -616,8 +637,9 @@ public class NotesTextProcessor {
 
         attributedString.enumerateAttribute(.attachment, in: paragraphRange) { value, range, _ in
             guard value != nil,
-                  range.upperBound <= attributedString.length,
-                  let todo = attributedString.attribute(.todo, at: range.location, effectiveRange: nil) else {
+                range.upperBound <= attributedString.length,
+                let todo = attributedString.attribute(.todo, at: range.location, effectiveRange: nil)
+            else {
                 return
             }
             let strikeRange = attributedString.mutableString.paragraphRange(for: range)
@@ -636,8 +658,9 @@ public class NotesTextProcessor {
 
         styleApplier.enumerateAttribute(.backgroundColor, in: range) { value, innerRange, _ in
             guard value != nil,
-                  innerRange.upperBound <= styleApplier.length,
-                  let font = UserDefaultsManagement.noteFont else {
+                innerRange.upperBound <= styleApplier.length,
+                let font = UserDefaultsManagement.noteFont
+            else {
                 return
             }
             styleApplier.removeAttribute(.backgroundColor, range: innerRange)
@@ -647,7 +670,8 @@ public class NotesTextProcessor {
 
         NotesTextProcessor.codeSpanRegex.matches(styleApplier.string, range: range) { result in
             guard let matchRange = result?.range,
-                  matchRange.upperBound <= styleApplier.length else {
+                matchRange.upperBound <= styleApplier.length
+            else {
                 return
             }
             styleApplier.addAttribute(.foregroundColor, value: NotesTextProcessor.htmlColor, range: matchRange)
@@ -656,7 +680,8 @@ public class NotesTextProcessor {
         if UserDefaultsManagement.fontName == "Times New Roman" {
             NotesTextProcessor.englishAndSymbolRegex.matches(styleApplier.string, range: range) { result in
                 guard let matchRange = result?.range,
-                      matchRange.upperBound <= styleApplier.length else {
+                    matchRange.upperBound <= styleApplier.length
+                else {
                     return
                 }
                 styleApplier.addAttribute(.font, value: georgiaFont!, range: matchRange)
@@ -665,7 +690,8 @@ public class NotesTextProcessor {
             if monacoFont != nil {
                 NotesTextProcessor.allTodoInlineRegex.matches(styleApplier.string, range: range) { result in
                     guard let matchRange = result?.range,
-                          matchRange.upperBound <= styleApplier.length else {
+                        matchRange.upperBound <= styleApplier.length
+                    else {
                         return
                     }
                     let middleRange = NSRange(location: matchRange.location + 3, length: 1)
@@ -1117,8 +1143,9 @@ public class NotesTextProcessor {
 
         // Safe range validation
         guard range.location >= 0,
-              range.location <= storage.length,
-              range.upperBound <= storage.length else {
+            range.location <= storage.length,
+            range.upperBound <= storage.length
+        else {
             return
         }
 
@@ -1137,7 +1164,8 @@ public class NotesTextProcessor {
             range: range,
             using: { result, _, _ in
                 guard let matchRange = result?.range,
-                      matchRange.upperBound <= storage.length else {
+                    matchRange.upperBound <= storage.length
+                else {
                     return
                 }
 
@@ -1157,7 +1185,8 @@ public class NotesTextProcessor {
                 guard let note = EditTextView.note else { return }
 
                 if str.starts(with: "/i/") || str.starts(with: "/files/"),
-                   let path = note.project.url.appendingPathComponent(str).path.removingPercentEncoding {
+                    let path = note.project.url.appendingPathComponent(str).path.removingPercentEncoding
+                {
                     str = "file://" + path
                     storage.addAttribute(.link, value: str, range: linkRange)
                     return
@@ -1171,8 +1200,9 @@ public class NotesTextProcessor {
         // Process app urls [[link]] with safe range checking
         NotesTextProcessor.appUrlRegex.matches(storage.string, range: range) { result in
             guard let innerRange = result?.range,
-                  innerRange.upperBound <= storage.length,
-                  innerRange.length >= 4 else {
+                innerRange.upperBound <= storage.length,
+                innerRange.length >= 4
+            else {
                 return
             }
 
@@ -1209,7 +1239,8 @@ public class NotesTextProcessor {
         if remove {
             regex.enumerateMatches(in: storage.string, options: [], range: range) { result, _, _ in
                 guard let subRange = result?.range,
-                      subRange.upperBound <= storage.length else {
+                    subRange.upperBound <= storage.length
+                else {
                     return
                 }
 
@@ -1221,8 +1252,9 @@ public class NotesTextProcessor {
 
             regex.enumerateMatches(in: storage.string, options: [], range: range) { result, _, _ in
                 guard let subRange = result?.range,
-                      subRange.upperBound <= storage.length,
-                      subRange.location < attributedString.length else {
+                    subRange.upperBound <= storage.length,
+                    subRange.location < attributedString.length
+                else {
                     return
                 }
 

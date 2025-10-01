@@ -134,13 +134,14 @@ extension ViewController {
         }
 
         let notes = sortedNotes.map { $0.note }
-        let orderedNotesList = searchParams.filter.isEmpty
+        let orderedNotesList =
+            searchParams.filter.isEmpty
             ? storage.sortNotes(
                 noteList: notes,
                 filter: searchParams.filter,
                 project: searchParams.projects?.first,
                 operation: operation
-              )
+            )
             : notes
 
         updateTableViewWithResults(

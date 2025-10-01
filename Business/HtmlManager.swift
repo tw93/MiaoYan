@@ -23,7 +23,8 @@ class HtmlManager {
             return "html {font-size: \(UserDefaultsManagement.presentationFontSize)px} " + fontConfig + " #write { max-width: 100%;}"
         } else {
             let paddingStyle = UserDefaultsManagement.isOnExport ? " padding-top: 24px" : ""
-            let writeCSS = "max-width: \(UserDefaultsManagement.previewWidth); margin: 0 auto"
+            let maxWidth = UserDefaultsManagement.previewWidth == UserDefaultsManagement.FullWidthValue ? "100%" : UserDefaultsManagement.previewWidth
+            let writeCSS = "max-width: \(maxWidth); margin: 0"
 
             return "html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} " + fontConfig + " #write { \(writeCSS)}"
         }

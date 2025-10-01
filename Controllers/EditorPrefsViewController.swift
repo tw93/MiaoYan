@@ -78,7 +78,9 @@ final class EditorPrefsViewController: BasePrefsViewController {
 
         let widthRow = createSettingRow(
             label: I18n.str("Preview Width:"),
-            options: [localizedPreviewWidth("600px"), localizedPreviewWidth("800px"), localizedPreviewWidth("1000px"), localizedPreviewWidth("1200px"), localizedPreviewWidth("1400px"), localizedPreviewWidth("Full Width")],
+            options: [
+                localizedPreviewWidth("600px"), localizedPreviewWidth("800px"), localizedPreviewWidth("1000px"), localizedPreviewWidth("1200px"), localizedPreviewWidth("1400px"), localizedPreviewWidth(UserDefaultsManagement.FullWidthValue),
+            ],
             action: #selector(previewWidthChanged(_:))
         )
         settingsStackView.addArrangedSubview(widthRow)
@@ -261,12 +263,12 @@ final class EditorPrefsViewController: BasePrefsViewController {
     }
 
     private func localizedPreviewWidth(_ raw: String) -> String {
-        if raw == "Full Width" { return I18n.str("Full Width") }
+        if raw == UserDefaultsManagement.FullWidthValue { return I18n.str("Full Width") }
         return raw
     }
 
     private func rawPreviewWidth(from display: String) -> String {
-        if display == I18n.str("Full Width") { return "Full Width" }
+        if display == I18n.str("Full Width") { return UserDefaultsManagement.FullWidthValue }
         return display
     }
 
