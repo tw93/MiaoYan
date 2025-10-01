@@ -6,7 +6,7 @@
   --border-color: #e6e6e6;
   --diagram-bg: #f7f7f7;
   --code-bg: #f7f7f7;
-  --blockquote-border-color: #777;
+  --blockquote-border-color: #d0d0d0;
 
   --text-font: 'TsangerJinKai02-W04', -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
   --code-text-font: 'TsangerJinKai02-W04', -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
@@ -126,7 +126,7 @@ pre:has(.language-mermaid) {
   --border-color: #454545;
   --code-bg: #282e33;
   --diagram-bg: #282e33;
-  --blockquote-border-color: #454545;
+  --blockquote-border-color: #545454;
 
   --mermaid-node-bg: #3c434b;
   --mermaid-text-color: #E7E9EA;
@@ -458,11 +458,11 @@ img.emoji {
 }
 
 .language-markmap {
-  visibility: hidden;
+  visibility: hidden !important;
 }
 
 .markmap {
-  visibility: visible;
+  display: block;
   width: 100%;
   height: var(--markmap-height);
   overflow: visible;
@@ -518,7 +518,7 @@ pre:has(.language-mermaid) {
     --border-color: #454545;
     --code-bg: #282e33;
     --diagram-bg: #282e33;
-    --blockquote-border-color: #777;
+    --blockquote-border-color: #545454;
   }
 
   html {
