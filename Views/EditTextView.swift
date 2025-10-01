@@ -92,9 +92,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     override func updateInsertionPointStateAndRestartTimer(_ restartFlag: Bool) {
         super.updateInsertionPointStateAndRestartTimer(true)
         if let range = selectedRanges[0] as? NSRange, range.length > 0, range != initRange {
-            DispatchQueue.main.async {
-                self.initRange = range
-            }
+            self.initRange = range
         }
     }
 
@@ -118,9 +116,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             isEditable = true
         }
         if initRange.length > 0 {
-            DispatchQueue.main.async {
-                self.initRange = NSRange(location: 0, length: 0)
-            }
+            self.initRange = NSRange(location: 0, length: 0)
         }
     }
 
@@ -573,21 +569,17 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     private func scheduleLinkHighlight(range: NSRange? = nil, immediate: Bool = false) {
         linkHighlightTimer?.invalidate()
-        if immediate {
-            if let targetRange = range {
-                fillHighlightLinks(range: targetRange)
-            } else {
-                fillHighlightLinks()
-            }
-        } else {
-            linkHighlightTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { [weak self] _ in
-                DispatchQueue.main.async {
-                    if let targetRange = range {
-                        self?.fillHighlightLinks(range: targetRange)
-                    } else {
-                        self?.fillHighlightLinks()
-                    }
-                }
+
+        let delay: TimeInterval = immediate ? 0 : 0.05
+
+        linkHighlightTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                guard let self = self, let storage = self.textStorage else { return }
+
+                // Always use full range for safety - recalculate at execution time
+                let safeRange = NSRange(0..<storage.length)
+                let processor = NotesTextProcessor(storage: storage, range: safeRange)
+                processor.highlightLinks()
             }
         }
     }
@@ -728,10 +720,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     public func fillHighlightLinks(range: NSRange? = nil) {
-        guard let storage = textStorage else { return }
-        let targetRange = range ?? NSRange(0..<storage.length)
-        let processor = NotesTextProcessor(storage: storage, range: targetRange)
-        processor.highlightLinks()
+        scheduleLinkHighlight(immediate: true)
     }
 
     public func updateTextContainerInset() {
