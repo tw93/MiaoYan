@@ -106,7 +106,7 @@ extension ViewController {
             }
         }
 
-        let notes = filterNotes(
+        let notesWithPriority = filterNotes(
             searchParams: searchParams,
             isSearch: isSearch,
             operation: operation,
@@ -118,12 +118,30 @@ extension ViewController {
             return
         }
 
-        let orderedNotesList = storage.sortNotes(
-            noteList: notes,
-            filter: searchParams.filter,
-            project: searchParams.projects?.first,
-            operation: operation
-        )
+        // Sort by priority first, then by modification date
+        let sortedNotes: [(note: Note, priority: Int, modifiedAt: Date)]
+        if !searchParams.filter.isEmpty {
+            sortedNotes = notesWithPriority.sorted { first, second in
+                // Higher priority first
+                if first.priority != second.priority {
+                    return first.priority > second.priority
+                }
+                // Within same priority, sort by modification date
+                return first.modifiedAt > second.modifiedAt
+            }
+        } else {
+            sortedNotes = notesWithPriority
+        }
+
+        let notes = sortedNotes.map { $0.note }
+        let orderedNotesList = searchParams.filter.isEmpty
+            ? storage.sortNotes(
+                noteList: notes,
+                filter: searchParams.filter,
+                project: searchParams.projects?.first,
+                operation: operation
+              )
+            : notes
 
         updateTableViewWithResults(
             notes: notes,
@@ -137,10 +155,10 @@ extension ViewController {
         )
     }
 
-    private func filterNotes(searchParams: SearchParameters, isSearch: Bool, operation: BlockOperation, completion: @escaping () -> Void) -> [Note] {
+    private func filterNotes(searchParams: SearchParameters, isSearch: Bool, operation: BlockOperation, completion: @escaping () -> Void) -> [(note: Note, priority: Int, modifiedAt: Date)] {
         let terms = searchParams.filter.split(separator: " ")
         let source = storage.noteList
-        var notes = [Note]()
+        var notes = [(note: Note, priority: Int, modifiedAt: Date)]()
         let maxResults = isSearch ? 100 : Int.max
 
         for note in source {
@@ -157,10 +175,13 @@ extension ViewController {
                 type: searchParams.type,
                 sidebarName: searchParams.sidebarName
             ) {
-                notes.append(note)
+                let matchResult = isMatched(note: note, terms: terms)
+                if matchResult.matched {
+                    notes.append((note, matchResult.priority, note.modifiedLocalAt))
 
-                if isSearch && notes.count >= maxResults {
-                    break
+                    if isSearch && notes.count >= maxResults {
+                        break
+                    }
                 }
             }
         }
@@ -261,20 +282,57 @@ extension ViewController {
         }
     }
 
-    private func isMatched(note: Note, terms: [Substring]) -> Bool {
-        for term in terms {
-            if note.name.range(of: term, options: .caseInsensitive, range: nil, locale: nil) != nil {
-                continue
-            }
-
-            if note.content.string.range(of: term, options: .caseInsensitive, range: nil, locale: nil) != nil {
-                continue
-            }
-
-            return false
+    private func isMatched(note: Note, terms: [Substring]) -> (matched: Bool, priority: Int) {
+        guard !terms.isEmpty else {
+            return (true, 0)
         }
 
-        return true
+        var titleMatchCount = 0
+        var contentMatchCount = 0
+        let lowercaseTitle = note.name.lowercased()
+
+        // First pass: check title only (fast path)
+        for term in terms {
+            let lowercaseTerm = term.lowercased()
+            if lowercaseTitle.contains(lowercaseTerm) {
+                titleMatchCount += 1
+            }
+        }
+
+        // If all terms match in title, highest priority - skip content search
+        if titleMatchCount == terms.count {
+            return (true, 4)
+        }
+
+        // Second pass: check content for unmatched terms
+        let lowercaseContent = note.content.string.lowercased()
+        for term in terms {
+            let lowercaseTerm = term.lowercased()
+            // Skip if already matched in title
+            if lowercaseTitle.contains(lowercaseTerm) {
+                continue
+            }
+            // Check content
+            if lowercaseContent.contains(lowercaseTerm) {
+                contentMatchCount += 1
+            } else {
+                // Term not found in either title or content
+                return (false, 0)
+            }
+        }
+
+        // Calculate priority based on match distribution
+        // Priority: 4=all in title, 3=mostly title, 2=mixed, 1=mostly content
+        let priority: Int
+        if titleMatchCount > contentMatchCount {
+            priority = 3
+        } else if titleMatchCount > 0 {
+            priority = 2
+        } else {
+            priority = 1
+        }
+
+        return (true, priority)
     }
 
     public func isFit(note: Note, filter: String = "", terms: [Substring]? = nil, shouldLoadMain: Bool = false, projects: [Project]? = nil, type: SidebarItemType? = nil, sidebarName: String? = nil) -> Bool {
@@ -290,7 +348,7 @@ extension ViewController {
         }
 
         return !note.name.isEmpty
-            && (filter.isEmpty || isMatched(note: note, terms: terms!))
+            && (filter.isEmpty || isMatched(note: note, terms: terms!).matched)
             && (type == .All && note.project.showInCommon
                 || (type != .All && projects!.contains(note.project)
                     || (note.project.parent != nil && projects!.contains(note.project.parent!)))
