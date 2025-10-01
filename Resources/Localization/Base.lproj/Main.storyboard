@@ -721,7 +721,7 @@ CA
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="Ptr-z2-0T0"/>
                                                         </constraints>
-                                                        <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="border" focusRingType="none" alignment="left" placeholderString="Search" drawsBackground="YES" sendsWholeSearchString="YES" recentsAutosaveName="" id="B7t-9v-bSk">
+                                                        <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" focusRingType="none" alignment="left" placeholderString="Search" drawsBackground="YES" sendsWholeSearchString="YES" recentsAutosaveName="" id="B7t-9v-bSk">
                                                             <font key="font" metaFont="system"/>
                                                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="mainBackground"/>

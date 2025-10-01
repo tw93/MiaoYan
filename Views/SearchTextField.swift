@@ -3,7 +3,9 @@ import Cocoa
 
 @MainActor
 private enum UIConstants {
-    static let searchTextVerticalOffset: CGFloat = 5.0
+    static let searchIconWidth: CGFloat = 16.0
+    static let searchIconLeftPadding: CGFloat = 10.0
+    static let textHeight: CGFloat = 17.0
 }
 
 class SearchTextField: NSSearchField, NSSearchFieldDelegate {
@@ -41,7 +43,28 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
 
     override func rectForSearchText(whenCentered isCentered: Bool) -> NSRect {
         var rect = super.rectForSearchText(whenCentered: isCentered)
-        rect.origin.y += UIConstants.searchTextVerticalOffset
+
+        let fieldHeight = bounds.height
+        let verticalOffset = (fieldHeight - UIConstants.textHeight) / 2.0 + 1.0
+
+        rect.origin.y = verticalOffset
+        rect.size.height = UIConstants.textHeight
+
+        return rect
+    }
+
+    override func rectForSearchButton(whenCentered isCentered: Bool) -> NSRect {
+        var rect = super.rectForSearchButton(whenCentered: isCentered)
+
+        // Center search icon vertically and adjust horizontal position
+        let fieldHeight = bounds.height
+        let iconHeight = UIConstants.searchIconWidth
+        let verticalOffset = (fieldHeight - iconHeight) / 2.0
+
+        rect.origin.x = UIConstants.searchIconLeftPadding
+        rect.origin.y = verticalOffset
+        rect.size = NSSize(width: UIConstants.searchIconWidth, height: UIConstants.searchIconWidth)
+
         return rect
     }
 
