@@ -41,7 +41,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         configuration.suppressesIncrementalRendering = false
         // Basic WebKit configuration for quieter operation
         #if DEBUG
-        configuration.preferences.setValue(true, forKey: "developerExtrasEnabled")
+            configuration.preferences.setValue(true, forKey: "developerExtrasEnabled")
         #endif
         configuration.preferences.setValue(false, forKey: "javaScriptCanOpenWindowsAutomatically")
         let preferences = WKWebpagePreferences()
@@ -49,6 +49,9 @@ class MPreviewView: WKWebView, WKUIDelegate {
         configuration.defaultWebpagePreferences = preferences
         super.init(frame: frame, configuration: configuration)
         navigationDelegate = navigationProxy
+
+        // Auto-resize with parent view
+        autoresizingMask = [.width, .height]
 
         // Keep the same background color between native and web layers
         setValue(false, forKey: "drawsBackground")
@@ -66,6 +69,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
             hostingScrollView.hasHorizontalRuler = false
             hostingScrollView.rulersVisible = false
             hostingScrollView.scrollerStyle = .overlay
+            hostingScrollView.horizontalScrollElasticity = .none
+            hostingScrollView.verticalScrollElasticity = .none
             if let clipView = hostingScrollView.contentView as? NSClipView {
                 clipView.drawsBackground = false
                 clipView.backgroundColor = bgNSColor
