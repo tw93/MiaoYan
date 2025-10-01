@@ -19,10 +19,10 @@ extension ViewController {
     // MARK: - Layout Management Methods
     func checkSidebarConstraint() {
         if sidebarSplitView.subviews[0].frame.width < 50, !UserDefaultsManagement.isWillFullScreen {
-            searchTopConstraint.constant = 25.0
+            searchTopConstraint.constant = 34.0
             return
         }
-        searchTopConstraint.constant = 11.0
+        searchTopConstraint.constant = 13.0
     }
 
     func checkTitlebarTopConstraint() {
