@@ -193,7 +193,7 @@ const ThemeConfig = {
     palette.diagramBg = palette.diagramBg || palette.background;
     palette.codeBg = palette.codeBg || palette.diagramBg;
     palette.lineColor = palette.lineColor || (isDark ? '#54C59F' : '#1C5D33');
-    palette.blockquoteBorderColor = palette.codeBg;
+    palette.blockquoteBorderColor = isDark ? '#545454' : '#d0d0d0';
     return palette;
   },
 
@@ -656,14 +656,11 @@ const DiagramHandler = {
   },
 
   processMarkmapElement(element) {
-    element.classList.add('markmap');
-
     const isDark = this.isDarkMode();
     const colorOptions = window.ThemeConfig?.getMarkmapColors(isDark) || {};
-    const themeColors = window.ThemeConfig?.getThemeColors?.(isDark);
-    const bgColor = themeColors?.diagramBg || themeColors?.background || (isDark ? '#282e33' : '#f7f7f7');
 
-    element.style.backgroundColor = bgColor;
+    element.style.visibility = 'hidden';
+    element.style.backgroundColor = 'var(--bg-color)';
     element.style.borderRadius = '6px';
     element.style.padding = '8px';
     element.style.overflow = 'visible';
@@ -672,9 +669,7 @@ const DiagramHandler = {
     element.style.maxHeight = 'none';
     element.style.pointerEvents = 'none';
     element.style.textAlign = 'center';
-    element.style.display = 'block';
     element.style.lineHeight = '1';
-    element.style.color = themeColors?.textColor || '';
     element.style.boxSizing = 'border-box';
 
     element.dataset.markmapColors = JSON.stringify(colorOptions);
@@ -712,6 +707,10 @@ const DiagramHandler = {
                 if (element.markmap && typeof element.markmap.fit === 'function') {
                   element.markmap.fit();
                 }
+
+                element.classList.add('markmap');
+                element.style.backgroundColor = 'var(--diagram-bg)';
+                element.style.visibility = 'visible';
               }
             }, 150);
 
