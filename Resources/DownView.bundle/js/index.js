@@ -124,11 +124,25 @@ const MiaoYanCommon = {
     }
 
     if (window.EmojiConvertor) {
-      const html = document.getElementById('write').innerHTML;
+      const writeElement = document.getElementById('write');
       const emoji = new EmojiConvertor();
-      if (/:[^:\s]*(?:::[^:\s]*)*:/.test(html)) {
-        document.getElementById('write').innerHTML = emoji.replace_colons(html);
+
+      // Save code blocks content
+      const codeBlocks = [];
+      writeElement.querySelectorAll('code, pre').forEach((el, i) => {
+        codeBlocks.push(el.innerHTML);
+        el.innerHTML = `__CODE_BLOCK_${i}__`;
+      });
+
+      // Replace emoji in non-code content
+      if (/:[^:\s]*(?:::[^:\s]*)*:/.test(writeElement.innerHTML)) {
+        writeElement.innerHTML = emoji.replace_colons(writeElement.innerHTML);
       }
+
+      // Restore code blocks
+      writeElement.querySelectorAll('code, pre').forEach((el, i) => {
+        el.innerHTML = codeBlocks[i];
+      });
     }
   },
 
@@ -147,7 +161,7 @@ window.MiaoYanCommon = MiaoYanCommon;
 const ThemeConfig = {
   colors: {
     dark: {
-      background: '#21262B',
+      background: '#23282D',
       diagramBg: '#282e33',
       primaryColor: '#2f353d',
       primaryBorderColor: '#49515a',

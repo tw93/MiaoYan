@@ -13,7 +13,7 @@ extension String {
     guard let parser = cmark_parser_new(CMARK_OPT_FOOTNOTES) else { return nil }
     defer { cmark_parser_free(parser) }
 
-    let extensions = ["table", "emoji", "footnotes", "strikethrough", "tasklist"]
+    let extensions = ["table", "footnotes", "strikethrough", "tasklist"]
     for extName in extensions {
         if let ext = cmark_find_syntax_extension(extName) {
             cmark_parser_attach_syntax_extension(parser, ext)
