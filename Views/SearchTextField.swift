@@ -31,6 +31,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
             focusRingType = .none
             sendsWholeSearchString = false
             sendsSearchStringImmediately = true
+            drawsBackground = false
 
             // Remove cancel button
             if let searchFieldCell = self.cell as? NSSearchFieldCell {
@@ -103,6 +104,35 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         super.textDidEndEditing(notification)
     }
 
+    override func textDidBeginEditing(_ notification: Notification) {
+        super.textDidBeginEditing(notification)
+        updateFieldEditorAppearance()
+
+        // Schedule repeated updates to fight against system overrides
+        Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false) { [weak self] _ in
+            self?.updateFieldEditorAppearance()
+        }
+    }
+
+    override func becomeFirstResponder() -> Bool {
+        let result = super.becomeFirstResponder()
+        if result {
+            updateFieldEditorAppearance()
+        }
+        return result
+    }
+
+    private func updateFieldEditorAppearance() {
+        // Make field editor transparent so it shows the layer background
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self,
+                  let fieldEditor = self.window?.fieldEditor(false, for: self) as? NSTextView else { return }
+
+            fieldEditor.backgroundColor = .clear
+            fieldEditor.drawsBackground = false
+        }
+    }
+
     private func clearSelection() {
         guard let editor = currentEditor(),
             editor.selectedRange.length > 0
@@ -147,22 +177,9 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     private func configureCellAppearance() {
         guard let searchFieldCell = self.cell as? NSSearchFieldCell else { return }
 
-        let (backgroundColor, _) = resolveColors()
-
-        searchFieldCell.backgroundColor = backgroundColor
-        searchFieldCell.drawsBackground = true
-
-        // Attempt to set border colors for consistency
-        setBorderColorIfPossible(searchFieldCell, color: backgroundColor)
-    }
-
-    private func setBorderColorIfPossible(_ cell: NSSearchFieldCell, color: NSColor) {
-        if cell.responds(to: #selector(NSTextBlock.setBorderColor(_:))) {
-            cell.perform(#selector(NSTextBlock.setBorderColor(_:)), with: color)
-        }
-        if cell.responds(to: Selector(("setBezelColor:"))) {
-            cell.perform(Selector(("setBezelColor:")), with: color)
-        }
+        // Make cell transparent so layer background shows through
+        searchFieldCell.backgroundColor = .clear
+        searchFieldCell.drawsBackground = false
     }
 
     override func keyUp(with event: NSEvent) {
@@ -242,6 +259,9 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         if UserDefaultsManagement.magicPPT {
             return
         }
+
+        // Update field editor appearance during text changes
+        updateFieldEditorAppearance()
 
         searchTimer.invalidate()
 
