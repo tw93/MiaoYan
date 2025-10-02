@@ -4,6 +4,22 @@ const MiaoYanCommon = {
     return 'CUSTOM_CSS' === 'darkmode';
   },
 
+  // Utility: Apply styles to multiple elements
+  applyStylesToElements(selector, styles) {
+    document.querySelectorAll(selector).forEach(el => {
+      Object.assign(el.style, styles);
+    });
+  },
+
+  // Utility: Set attributes to multiple elements
+  setAttributesToElements(selector, attributes) {
+    document.querySelectorAll(selector).forEach(el => {
+      Object.entries(attributes).forEach(([key, value]) => {
+        el.setAttribute(key, value);
+      });
+    });
+  },
+
   setupTextSelection() {
     function getSelectionAndSendMessage() {
       const txt = document.getSelection().toString();
@@ -16,25 +32,18 @@ const MiaoYanCommon = {
   },
 
   setupCheckboxes() {
-    const inputList = document.getElementsByTagName('input');
+    document.querySelectorAll('input').forEach(input => {
+      input.disabled = true;
 
-    for (let i = 0; i < inputList.length; i++) {
-      inputList[i].disabled = true;
+      const parent = input.parentNode;
+      const grandParent = parent?.parentNode;
 
-      if (
-        inputList[i].parentNode.tagName === 'P' &&
-        inputList[i].parentNode.parentNode.tagName === 'LI'
-      ) {
-        inputList[i].parentNode.parentNode.parentNode.classList.add('cb');
-        continue;
+      if (parent?.tagName === 'P' && grandParent?.tagName === 'LI') {
+        grandParent.parentNode?.classList.add('cb');
+      } else if (parent?.tagName === 'LI') {
+        grandParent?.classList.add('cb');
       }
-
-      if (inputList[i].parentNode.tagName !== 'LI') {
-        continue;
-      }
-
-      inputList[i].parentNode.parentNode.classList.add('cb');
-    }
+    });
   },
 
   setupInteractiveCheckboxes() {
@@ -127,21 +136,41 @@ const MiaoYanCommon = {
       const writeElement = document.getElementById('write');
       const emoji = new EmojiConvertor();
 
-      // Save code blocks content
-      const codeBlocks = [];
-      writeElement.querySelectorAll('code, pre').forEach((el, i) => {
-        codeBlocks.push(el.innerHTML);
-        el.innerHTML = `__CODE_BLOCK_${i}__`;
-      });
+      // Use TreeWalker to replace emoji only in text nodes, avoiding code blocks
+      const walker = document.createTreeWalker(
+        writeElement,
+        NodeFilter.SHOW_TEXT,
+        {
+          acceptNode: function(node) {
+            // Skip text nodes inside code or pre elements
+            let parent = node.parentElement;
+            while (parent && parent !== writeElement) {
+              if (parent.tagName === 'CODE' || parent.tagName === 'PRE') {
+                return NodeFilter.FILTER_REJECT;
+              }
+              parent = parent.parentElement;
+            }
+            return NodeFilter.FILTER_ACCEPT;
+          }
+        }
+      );
 
-      // Replace emoji in non-code content
-      if (/:[^:\s]*(?:::[^:\s]*)*:/.test(writeElement.innerHTML)) {
-        writeElement.innerHTML = emoji.replace_colons(writeElement.innerHTML);
+      const nodesToReplace = [];
+      let node;
+      while (node = walker.nextNode()) {
+        if (/:[^:\s]*(?:::[^:\s]*)*:/.test(node.textContent)) {
+          nodesToReplace.push(node);
+        }
       }
 
-      // Restore code blocks
-      writeElement.querySelectorAll('code, pre').forEach((el, i) => {
-        el.innerHTML = codeBlocks[i];
+      // Replace emoji in collected text nodes
+      nodesToReplace.forEach(textNode => {
+        const replacedHTML = emoji.replace_colons(textNode.textContent);
+        if (replacedHTML !== textNode.textContent) {
+          const span = document.createElement('span');
+          span.innerHTML = replacedHTML;
+          textNode.parentNode.replaceChild(span, textNode);
+        }
       });
     }
   },
@@ -407,72 +436,60 @@ skinparam component {
     const borderColor = isDark ? '#E7E9EA' : '#262626';
 
     const updateStyles = () => {
-      document.querySelectorAll('.mermaid-image-container, .markmap-image-container, .plantuml-image-container, .plantuml-container').forEach(container => {
-        container.style.backgroundColor = backgroundColor;
+      // Apply background colors
+      MiaoYanCommon.applyStylesToElements(
+        '.mermaid-image-container, .markmap-image-container, .plantuml-image-container, .plantuml-container',
+        { backgroundColor }
+      );
+
+      MiaoYanCommon.applyStylesToElements('.mermaid, .mermaid svg', { backgroundColor });
+      MiaoYanCommon.applyStylesToElements('.plantuml-image', { backgroundColor });
+
+      // Apply node styles
+      MiaoYanCommon.setAttributesToElements('.mermaid .node rect, .mermaid .node circle, .mermaid .node polygon', {
+        fill: nodeBackground,
+        stroke: borderColor
       });
 
-      document.querySelectorAll('.mermaid, .mermaid svg').forEach(element => {
-        element.style.backgroundColor = backgroundColor;
+      MiaoYanCommon.setAttributesToElements('.mermaid .cluster rect', {
+        fill: clusterBackground,
+        stroke: borderColor
       });
 
-      document.querySelectorAll('.mermaid .node rect, .mermaid .node circle, .mermaid .node polygon').forEach(element => {
-        element.setAttribute('fill', nodeBackground);
-        element.setAttribute('stroke', borderColor);
+      // Apply text styles
+      MiaoYanCommon.applyStylesToElements('.mermaid svg text', { fill: textColor, color: textColor });
+
+      // Apply line and arrow colors
+      document.querySelectorAll('.mermaid svg path, .mermaid svg line, .mermaid svg polyline').forEach(el => {
+        if (el.getAttribute('stroke')) el.setAttribute('stroke', lineColor);
       });
 
-      document.querySelectorAll('.mermaid .cluster rect').forEach(element => {
-        element.setAttribute('fill', clusterBackground);
-        element.setAttribute('stroke', borderColor);
+      MiaoYanCommon.setAttributesToElements('.mermaid svg .arrowheadPath', { fill: lineColor });
+
+      // Apply edge label styles
+      MiaoYanCommon.applyStylesToElements('.mermaid .edgeLabel', {
+        backgroundColor: nodeBackground,
+        color: textColor,
+        borderRadius: '4px',
+        padding: '2px 6px'
       });
 
-      document.querySelectorAll('.mermaid svg text').forEach(element => {
-        element.style.fill = textColor;
-        element.style.color = textColor;
+      MiaoYanCommon.setAttributesToElements('.mermaid .edgeLabel rect', {
+        fill: nodeBackground,
+        stroke: borderColor
       });
 
-      document.querySelectorAll('.mermaid svg path, .mermaid svg line, .mermaid svg polyline').forEach(element => {
-        if (element.getAttribute('stroke')) {
-          element.setAttribute('stroke', lineColor);
-        }
-      });
-
-      document.querySelectorAll('.mermaid svg .arrowheadPath').forEach(element => {
-        element.setAttribute('fill', lineColor);
-      });
-
-      document.querySelectorAll('.mermaid .edgeLabel').forEach(element => {
-        element.style.backgroundColor = nodeBackground;
-        element.style.color = textColor;
-        element.style.borderRadius = '4px';
-        element.style.padding = '2px 6px';
-      });
-
-      document.querySelectorAll('.mermaid .edgeLabel rect').forEach(element => {
-        element.setAttribute('fill', nodeBackground);
-        element.setAttribute('stroke', borderColor);
-      });
-
+      // Apply markmap styles
       document.querySelectorAll('.markmap').forEach(element => {
         element.style.backgroundColor = backgroundColor;
         element.style.color = textColor;
         const svgElement = element.querySelector('svg');
-        if (svgElement) {
-          svgElement.style.backgroundColor = backgroundColor;
-        }
+        if (svgElement) svgElement.style.backgroundColor = backgroundColor;
       });
 
-      document.querySelectorAll('.plantuml-container').forEach(container => {
-        container.style.backgroundColor = backgroundColor;
-        container.style.color = textColor;
-      });
-
-      document.querySelectorAll('.plantuml-image').forEach(element => {
-        element.style.backgroundColor = backgroundColor;
-      });
-
-      document.querySelectorAll('.heti blockquote').forEach(element => {
-        element.style.borderLeftColor = blockquoteColor;
-      });
+      // Apply PlantUML and blockquote styles
+      MiaoYanCommon.applyStylesToElements('.plantuml-container', { backgroundColor, color: textColor });
+      MiaoYanCommon.applyStylesToElements('.heti blockquote', { borderLeftColor: blockquoteColor });
     };
 
     requestAnimationFrame(updateStyles);
@@ -738,19 +755,11 @@ const DiagramHandler = {
   },
 
   updateContainerStyles() {
-    const preList = document.getElementsByTagName('pre');
-
-    for (let i = 0; i < preList.length; i++) {
-      if (preList[i].querySelector('.plantuml-image')) {
-        preList[i].classList.add('plantuml-image-container');
-      }
-      if (preList[i].querySelector('.language-mermaid')) {
-        preList[i].classList.add('mermaid-image-container');
-      }
-      if (preList[i].querySelector('.language-markmap')) {
-        preList[i].classList.add('markmap-image-container');
-      }
-    }
+    document.querySelectorAll('pre').forEach(pre => {
+      if (pre.querySelector('.plantuml-image')) pre.classList.add('plantuml-image-container');
+      if (pre.querySelector('.language-mermaid')) pre.classList.add('mermaid-image-container');
+      if (pre.querySelector('.language-markmap')) pre.classList.add('markmap-image-container');
+    });
   },
 
   initializeMarkmapForPPT() {
@@ -819,12 +828,9 @@ const DiagramHandler = {
 
             if (window.markmap && markMapItemChild.markmap) {
               markMapItemChild.markmap.fit();
-            } else {
             }
-          } else {
           }
         }, 50);
-      } else {
       }
     }, 10);
   },

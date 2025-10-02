@@ -351,7 +351,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
             throw PreviewError.temporaryBundleCreationFailed
         }
 
-        let accessURL = indexURL.deletingLastPathComponent()
+        // Allow access to root directory to support absolute path images
+        let accessURL = URL(fileURLWithPath: "/")
         loadFileURL(indexURL, allowingReadAccessTo: accessURL)
     }
     private static func ensureBundlePreinitialized() {
