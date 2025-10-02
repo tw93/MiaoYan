@@ -5,6 +5,28 @@ class HtmlManager {
     private static let fontStack = "-apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Helvetica, Arial, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif"
     private static let codeFontStack = "SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace"
 
+    // Cached regex patterns
+    private static let imageRegex = try! NSRegularExpression(pattern: "<img[^>]*?src=\"([^\"]*)\"[^>]*?/?>")
+    private static let htmlTagPatterns = [
+        try! NSRegularExpression(pattern: "<(?:img|br|hr|input|meta|link|area|base|col|embed|source|track|wbr)\\s*[^>]*/?\\s*>", options: [.caseInsensitive]),
+        try! NSRegularExpression(pattern: "<(\\w+)[^>]*>[^<]*</\\1>", options: [.caseInsensitive]),
+    ]
+
+    // Paths
+    private static let webkitPreviewURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
+
+    // Constants
+    private static let cdnBaseURL = "https://cdn.miaoyan.app/Resources"
+    private static let imgTagMinLength = 26
+    private static let imageNotFoundPlaceholder =
+        "<img src=\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='80'%3E%3Crect width='120' height='80' fill='%23f5f5f5' stroke='%23ddd' stroke-width='1'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999' font-size='12' font-family='sans-serif'%3EImage Not Found%3C/text%3E%3C/svg%3E\" alt=\"Image not found\" style=\"max-width: 120px; opacity: 0.6;\" />"
+
+    // Cached instances
+    private static let downViewBundle: Bundle? = {
+        guard let path = Bundle.main.path(forResource: "DownView", ofType: "bundle") else { return nil }
+        return Bundle(path: path)
+    }()
+
     @MainActor
     static func previewStyle() -> String {
         // Add font configuration
@@ -16,66 +38,108 @@ class HtmlManager {
         let fontConfig = ":root { --text-font: \(UserDefaultsManagement.previewFontName), \(fontStack); --code-text-font: \(codeFontName), \(codeFontStack); }"
 
         if UserDefaultsManagement.magicPPT {
-            return fontConfig + ":root { --r-main-font: \(UserDefaultsManagement.previewFontName), sans-serif;}"
+            return "\(fontConfig) :root { --r-main-font: \(UserDefaultsManagement.previewFontName), sans-serif;}"
         }
 
         if UserDefaultsManagement.presentation {
-            return "html {font-size: \(UserDefaultsManagement.presentationFontSize)px} " + fontConfig + " #write { max-width: 100%;}"
+            return "html {font-size: \(UserDefaultsManagement.presentationFontSize)px} \(fontConfig) #write { max-width: 100%;}"
         } else {
             let paddingStyle = UserDefaultsManagement.isOnExport ? " padding-top: 24px" : ""
             let maxWidth = UserDefaultsManagement.previewWidth == UserDefaultsManagement.FullWidthValue ? "100%" : UserDefaultsManagement.previewWidth
             let writeCSS = "max-width: \(maxWidth); margin: 0"
 
-            return "html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} " + fontConfig + " #write { \(writeCSS)}"
+            return "html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} \(fontConfig) #write { \(writeCSS)}"
         }
     }
 
     // Theme CSS handling moved to HTML templates
 
+    private static func cleanImagePath(_ path: String) -> String {
+        var cleaned = path.removingPercentEncoding ?? path
+        if cleaned.starts(with: "file://") {
+            cleaned = String(cleaned.dropFirst(7))
+        }
+        return cleaned
+    }
+
+    private static func isAbsolutePath(_ path: String) -> Bool {
+        return path.starts(with: "/") && !path.starts(with: "/i/")
+    }
+
+    private static func resolveImageLocation(_ cleanPath: String, imagesStorage: URL) -> (source: URL, dest: URL, displayPath: String) {
+        // Absolute system path (not relative to project)
+        if isAbsolutePath(cleanPath) {
+            let imageURL = URL(fileURLWithPath: cleanPath)
+            let filename = imageURL.lastPathComponent
+            return (
+                imageURL,
+                webkitPreviewURL.appendingPathComponent(filename),
+                filename
+            )
+        }
+
+        // Relative path: maintain directory structure
+        return (
+            imagesStorage.appendingPathComponent(cleanPath),
+            webkitPreviewURL.appendingPathComponent(cleanPath),
+            cleanPath
+        )
+    }
+
+    private static func copyImageIfNeeded(from source: URL, to destination: URL) {
+        guard !FileManager.default.fileExists(atPath: destination.path) else { return }
+
+        let directory = destination.deletingLastPathComponent()
+        try? FileManager.default.createDirectory(atPath: directory.path, withIntermediateDirectories: true, attributes: nil)
+        try? FileManager.default.copyItem(at: source, to: destination)
+    }
+
+    private static func updateImageSrc(in html: String, fullMatch: String, oldSrc: String, newSrc: String) -> String {
+        let updatedTag = fullMatch.replacingOccurrences(of: "src=\"\(oldSrc)\"", with: "src=\"\(newSrc)\"")
+        return html.replacingOccurrences(of: fullMatch, with: updatedTag)
+    }
+
     static func processImages(in html: String, imagesStorage: URL) -> String {
         var htmlString = html
 
-        do {
-            let regex = try NSRegularExpression(pattern: "<img[^>]*?src=\"([^\"]*)\"[^>]*?>")
-            let results = regex.matches(in: html, range: NSRange(html.startIndex..., in: html))
+        let results = imageRegex.matches(in: html, range: NSRange(html.startIndex..., in: html))
 
-            let images = results.compactMap { match -> (fullMatch: String, srcPath: String)? in
-                guard let fullRange = Range(match.range, in: html),
-                    let srcRange = Range(match.range(at: 1), in: html)
-                else { return nil }
-                return (String(html[fullRange]), String(html[srcRange]))
+        let images = results.compactMap { match -> (fullMatch: String, srcPath: String)? in
+            guard let fullRange = Range(match.range, in: html),
+                let srcRange = Range(match.range(at: 1), in: html)
+            else { return nil }
+            return (String(html[fullRange]), String(html[srcRange]))
+        }
+
+        for imageInfo in images {
+            guard !imageInfo.srcPath.starts(with: "http://"),
+                !imageInfo.srcPath.starts(with: "https://")
+            else {
+                continue
             }
 
-            let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
+            let cleanPath = cleanImagePath(imageInfo.srcPath)
 
-            for imageInfo in images {
-                var localPath = imageInfo.srcPath
-
-                guard !localPath.starts(with: "http://"), !localPath.starts(with: "https://") else {
-                    continue
+            // Check if it's an absolute system path
+            if isAbsolutePath(cleanPath) {
+                if FileManager.default.fileExists(atPath: cleanPath) {
+                    htmlString = updateImageSrc(in: htmlString, fullMatch: imageInfo.fullMatch, oldSrc: imageInfo.srcPath, newSrc: "file://\(cleanPath)")
+                } else {
+                    htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: imageNotFoundPlaceholder)
                 }
-
-                let localPathClean = localPath.removingPercentEncoding ?? String(localPath)
-                let imageURL = imagesStorage.appendingPathComponent(localPathClean)
-                let destination = webkitPreview.appendingPathComponent(localPathClean)
-
-                if !FileManager.default.fileExists(atPath: destination.path) {
-                    let create = destination.deletingLastPathComponent()
-                    try? FileManager.default.createDirectory(atPath: create.path, withIntermediateDirectories: true, attributes: nil)
-                    try? FileManager.default.copyItem(at: imageURL, to: destination)
-                }
-
-                if localPath.first == "/" {
-                    localPath.remove(at: localPath.startIndex)
-                }
-
-                let imPath = "<img src=\"" + localPath + "\""
-                htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: imPath)
+                continue
             }
-        } catch {
-            Task { @MainActor in
-                AppDelegate.trackError(error, context: "HtmlManager.processImages.regex")
+
+            // Process relative paths
+            let (source, destination, displayPath) = resolveImageLocation(cleanPath, imagesStorage: imagesStorage)
+            copyImageIfNeeded(from: source, to: destination)
+
+            var finalPath = displayPath
+            if finalPath.first == "/" {
+                finalPath.remove(at: finalPath.startIndex)
             }
+
+            htmlString = updateImageSrc(in: htmlString, fullMatch: imageInfo.fullMatch, oldSrc: imageInfo.srcPath, newSrc: finalPath)
         }
 
         return htmlString
@@ -84,8 +148,16 @@ class HtmlManager {
     // MARK: - Bundle and Resource Management
 
     static func getDownViewBundle() -> Bundle? {
-        guard let path = Bundle.main.path(forResource: "DownView", ofType: "bundle") else { return nil }
-        return Bundle(path: path)
+        return downViewBundle
+    }
+
+    private static func escapeForPPT(_ content: String) -> String {
+        return
+            content
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "`", with: "\\`")
+            .replacingOccurrences(of: "$", with: "\\$")
+            .replacingOccurrences(of: "](/i/", with: "](./i/")
     }
 
     @MainActor
@@ -98,8 +170,8 @@ class HtmlManager {
     static func getFontPathAndMeta() -> (String, String) {
         if UserDefaultsManagement.isOnExportHtml {
             return (
-                "https://cdn.miaoyan.app/Resources/Fonts",
-                "<base href=\"https://cdn.miaoyan.app/Resources/DownView.bundle/\">"
+                "\(cdnBaseURL)/Fonts",
+                "<base href=\"\(cdnBaseURL)/DownView.bundle/\">"
             )
         } else {
             return (Bundle.main.resourceURL?.path ?? "", "")
@@ -115,12 +187,20 @@ class HtmlManager {
     @MainActor
     static func getHtmlContent(_ htmlString: String, currentName: String) -> String {
         if UserDefaultsManagement.isOnExport, !htmlString.hasPrefix("<h1>") {
-            return "<h1>\(currentName)</h1>" + htmlString
+            return "<h1>\(currentName)</h1>\(htmlString)"
         }
         return htmlString
     }
 
     // MARK: - Template Processing
+
+    private static func applyTemplateReplacements(_ template: String, replacements: [String: String]) -> String {
+        var result = template
+        for (placeholder, value) in replacements {
+            result = result.replacingOccurrences(of: placeholder, with: value)
+        }
+        return result
+    }
 
     @MainActor
     static func htmlFromTemplate(_ htmlString: String, css: String, currentName: String) throws -> String {
@@ -132,39 +212,28 @@ class HtmlManager {
 
         var template = try String(contentsOf: baseURL, encoding: .utf8)
 
-        template = template.replacingOccurrences(of: "DOWN_CSS", with: css)
-
         let (fontPath, downMeta) = getFontPathAndMeta()
-        template = template.replacingOccurrences(of: "DOWN_FONT_PATH", with: fontPath)
-        template = template.replacingOccurrences(of: "DOWN_META", with: downMeta)
+        let customCSS = UserDataService.instance.isDark ? "darkmode" : "lightmode"
 
-        // Theme CSS is now handled directly by HTML
+        var replacements: [String: String] = [
+            "DOWN_CSS": css,
+            "DOWN_FONT_PATH": fontPath,
+            "DOWN_META": downMeta,
+            "CUSTOM_CSS": customCSS,
+        ]
 
         if UserDefaultsManagement.isOnExport {
-            template = template.replacingOccurrences(of: "DOWN_EXPORT_TYPE", with: "ppt")
+            replacements["DOWN_EXPORT_TYPE"] = "ppt"
         }
 
         if UserDefaultsManagement.magicPPT {
-            let downTheme = getPPTTheme()
-            template = template.replacingOccurrences(of: "DOWN_THEME", with: downTheme)
-
-            var escapedContent = htmlString.replacingOccurrences(of: "\\", with: "\\\\")
-            escapedContent = escapedContent.replacingOccurrences(of: "`", with: "\\`")
-            escapedContent = escapedContent.replacingOccurrences(of: "$", with: "\\$")
-            escapedContent = escapedContent.replacingOccurrences(of: "](/i/", with: "](./i/")
-
-            return template.replacingOccurrences(of: "DOWN_RAW", with: escapedContent)
+            replacements["DOWN_THEME"] = getPPTTheme()
+            replacements["DOWN_RAW"] = escapeForPPT(htmlString)
+            return applyTemplateReplacements(template, replacements: replacements)
         }
 
-        // Inject theme information for JavaScript
-        if UserDataService.instance.isDark {
-            template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "darkmode")
-        } else {
-            template = template.replacingOccurrences(of: "CUSTOM_CSS", with: "lightmode")
-        }
-
-        let htmlContent = getHtmlContent(htmlString, currentName: currentName)
-        return template.replacingOccurrences(of: "DOWN_HTML", with: htmlContent)
+        replacements["DOWN_HTML"] = getHtmlContent(htmlString, currentName: currentName)
+        return applyTemplateReplacements(template, replacements: replacements)
     }
 
     @MainActor
@@ -177,17 +246,16 @@ class HtmlManager {
 
         let customCSS = UserDefaultsManagement.markdownPreviewCSS
 
-        let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
-        try? FileManager.default.createDirectory(at: webkitPreview, withIntermediateDirectories: true, attributes: nil)
+        try? FileManager.default.createDirectory(at: webkitPreviewURL, withIntermediateDirectories: true, attributes: nil)
 
-        let indexURL = webkitPreview.appendingPathComponent("index.html")
+        let indexURL = webkitPreviewURL.appendingPathComponent("index.html")
 
         if !FileManager.default.fileExists(atPath: indexURL.path) {
             do {
                 let fileList = try FileManager.default.contentsOfDirectory(atPath: bundleResourceURL.path)
                 for file in fileList {
                     if customCSS != nil, file == "css" { continue }
-                    let tmpURL = webkitPreview.appendingPathComponent(file)
+                    let tmpURL = webkitPreviewURL.appendingPathComponent(file)
                     try FileManager.default.copyItem(atPath: bundleResourceURL.appendingPathComponent(file).path, toPath: tmpURL.path)
                 }
             } catch {
@@ -198,7 +266,7 @@ class HtmlManager {
         }
 
         if let customCSS {
-            let cssDst = webkitPreview.appendingPathComponent("css")
+            let cssDst = webkitPreviewURL.appendingPathComponent("css")
             let styleDst = cssDst.appendingPathComponent("markdown-preview.css", isDirectory: false)
             do {
                 try FileManager.default.createDirectory(at: cssDst, withIntermediateDirectories: false, attributes: nil)
@@ -242,22 +310,9 @@ class HtmlManager {
         let fullRange = NSRange(content.startIndex..., in: content)
         var matchRanges: [NSRange] = []
 
-        do {
-            let htmlPatterns = [
-                "<(?:img|br|hr|input|meta|link|area|base|col|embed|source|track|wbr)\\s*[^>]*/?\\s*>",
-                "<(\\w+)[^>]*>[^<]*</\\1>",
-            ]
-
-            for pattern in htmlPatterns {
-                let regex = try NSRegularExpression(pattern: pattern, options: [.caseInsensitive])
-                let matches = regex.matches(in: content, range: fullRange)
-                matchRanges.append(contentsOf: matches.map { $0.range })
-            }
-
-        } catch {
-            Task { @MainActor in
-                AppDelegate.trackError(error, context: "HtmlManager.protectHTMLTags.regex")
-            }
+        for regex in htmlTagPatterns {
+            let matches = regex.matches(in: content, range: fullRange)
+            matchRanges.append(contentsOf: matches.map { $0.range })
         }
 
         matchRanges.sort { $0.location > $1.location }
@@ -309,7 +364,7 @@ class HtmlManager {
 
         adjustedOffset = max(0, min(adjustedOffset, restored.count))
 
-        if adjustedOffset <= 26 && restored.hasPrefix("<img") {
+        if adjustedOffset <= imgTagMinLength && restored.hasPrefix("<img") {
             if let endIndex = restored.firstIndex(of: ">") {
                 let tagEndPosition = restored.distance(from: restored.startIndex, to: endIndex) + 1
                 adjustedOffset = max(adjustedOffset, tagEndPosition)

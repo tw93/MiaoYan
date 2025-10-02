@@ -126,7 +126,8 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         // Make field editor transparent so it shows the layer background
         DispatchQueue.main.async { [weak self] in
             guard let self = self,
-                  let fieldEditor = self.window?.fieldEditor(false, for: self) as? NSTextView else { return }
+                let fieldEditor = self.window?.fieldEditor(false, for: self) as? NSTextView
+            else { return }
 
             fieldEditor.backgroundColor = .clear
             fieldEditor.drawsBackground = false
