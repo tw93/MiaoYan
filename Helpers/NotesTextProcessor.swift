@@ -604,7 +604,10 @@ public class NotesTextProcessor {
         }
 
         NotesTextProcessor.emojiRegex.matches(string, range: paragraphRange) { result in
-            guard let range = result?.range else { return }
+            guard let range = result?.range,
+                  getSpanCodeBlockRange(content: attributedString, range: range) == nil,
+                  getFencedCodeBlockRange(paragraphRange: range, string: attributedString) == nil else { return }
+
             let substring = attributedString.mutableString.substring(with: range)
             if !substring.isNumber {
                 attributedString.addAttribute(.font, value: NSFont.systemFont(ofSize: CGFloat(UserDefaultsManagement.fontSize - 2)), range: range)

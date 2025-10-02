@@ -34,7 +34,7 @@ body {
 html.darkmode,
 body.darkmode,
 .markdown-body.darkmode {
-  background: #21262B;
+  background: #23282D;
   overscroll-behavior: none;
 }
 
@@ -134,7 +134,7 @@ pre:has(.language-mermaid) {
 }
 
 .darkmode {
-  --bg-color: #21262B;
+  --bg-color: #23282D;
   --text-color: #E7E9EA;
   --link-color: #1D9BF0;
   --border-color: #454545;
@@ -526,7 +526,7 @@ pre:has(.language-mermaid) {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-color: #21262B;
+    --bg-color: #23282D;
     --text-color: #E7E9EA;
     --link-color: #1D9BF0;
     --border-color: #454545;
