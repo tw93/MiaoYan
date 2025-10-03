@@ -86,33 +86,6 @@ struct MiaoYanApp: App {
 }
 ```
 
-Line-by-line highlighting:
-
-```python [1-2|3|4|5-6]
-def process_data(items):
-    """Process a list of items with validation"""
-    results = []
-    for item in items:
-        if validate_item(item):
-            results.append(transform(item))
-    return results
-```
-
-Fragment-based code reveal:
-
-```javascript [|1|2-3|4-6|7-8]
-// Modern JavaScript ES6+ features
-const fetchUserData = async (userId) => {
-  try {
-    const response = await fetch(`/api/users/${userId}`);
-    const userData = await response.json();
-    return { success: true, data: userData };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-};
-```
-
 ---
 
 # Mathematical Formulas 📊
@@ -125,9 +98,6 @@ Inline math works too: $\pi \approx 3.14159$
 
 Complex equations:
 $$\sum_{i=1}^{n} x_i = \frac{n(n+1)}{2}$$
-
-Quadratic formula:
-$$x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
 
 ---
 
