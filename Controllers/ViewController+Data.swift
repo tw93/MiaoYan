@@ -9,6 +9,12 @@ private struct SearchParameters: Sendable {
     let sidebarName: String?
 }
 
+private struct NoteSearchResult {
+    let note: Note
+    let priority: Int
+    let modifiedAt: Date
+}
+
 private struct UpdateContext {
     let isSearch: Bool
     let searchParams: SearchParameters
@@ -119,7 +125,7 @@ extension ViewController {
         }
 
         // Sort by priority first, then by modification date
-        let sortedNotes: [(note: Note, priority: Int, modifiedAt: Date)]
+        let sortedNotes: [NoteSearchResult]
         if !searchParams.filter.isEmpty {
             sortedNotes = notesWithPriority.sorted { first, second in
                 // Higher priority first
@@ -156,10 +162,10 @@ extension ViewController {
         )
     }
 
-    private func filterNotes(searchParams: SearchParameters, isSearch: Bool, operation: BlockOperation, completion: @escaping () -> Void) -> [(note: Note, priority: Int, modifiedAt: Date)] {
+    private func filterNotes(searchParams: SearchParameters, isSearch: Bool, operation: BlockOperation, completion: @escaping () -> Void) -> [NoteSearchResult] {
         let terms = searchParams.filter.split(separator: " ")
         let source = storage.noteList
-        var notes = [(note: Note, priority: Int, modifiedAt: Date)]()
+        var notes: [NoteSearchResult] = []
         let maxResults = isSearch ? 100 : Int.max
 
         for note in source {
@@ -178,7 +184,7 @@ extension ViewController {
             ) {
                 let matchResult = isMatched(note: note, terms: terms)
                 if matchResult.matched {
-                    notes.append((note, matchResult.priority, note.modifiedLocalAt))
+                    notes.append(NoteSearchResult(note: note, priority: matchResult.priority, modifiedAt: note.modifiedLocalAt))
 
                     if isSearch && notes.count >= maxResults {
                         break
