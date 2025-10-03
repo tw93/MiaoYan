@@ -71,10 +71,9 @@ class MPreviewView: WKWebView, WKUIDelegate {
             hostingScrollView.scrollerStyle = .overlay
             hostingScrollView.horizontalScrollElasticity = .none
             hostingScrollView.verticalScrollElasticity = .none
-            if let clipView = hostingScrollView.contentView as? NSClipView {
-                clipView.drawsBackground = false
-                clipView.backgroundColor = bgNSColor
-            }
+            let clipView = hostingScrollView.contentView
+            clipView.drawsBackground = false
+            clipView.backgroundColor = bgNSColor
         } else if let clipView = subviews.compactMap({ $0 as? NSClipView }).first {
             clipView.drawsBackground = false
             clipView.backgroundColor = bgNSColor

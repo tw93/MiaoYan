@@ -616,13 +616,13 @@ extension ViewController {
             self.notesTableView.scrollRowToVisible(index)
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-            self.search.becomeFirstResponder()
+            _ = self.search.becomeFirstResponder()
         }
     }
 
     func cleanSearchAndEditArea() {
         search.stringValue = ""
-        search.becomeFirstResponder()
+        _ = search.becomeFirstResponder()
 
         // Keep the current selection when single mode is enabled
         if !UserDefaultsManagement.isSingleMode {

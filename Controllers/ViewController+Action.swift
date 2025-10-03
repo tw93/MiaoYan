@@ -1240,7 +1240,7 @@ extension ViewController {
             if let char = event.characters {
                 let newSet = CharacterSet(charactersIn: char)
                 if newSet.isSubset(of: CharacterSet.alphanumerics) {
-                    search.becomeFirstResponder()
+                    _ = search.becomeFirstResponder()
                 }
             }
         }

@@ -110,7 +110,9 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
 
         // Schedule repeated updates to fight against system overrides
         Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false) { [weak self] _ in
-            self?.updateFieldEditorAppearance()
+            Task { @MainActor in
+                self?.updateFieldEditorAppearance()
+            }
         }
     }
 
