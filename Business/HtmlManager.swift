@@ -1,6 +1,12 @@
 import Foundation
 import WebKit
 
+private struct ImageLocation {
+    let source: URL
+    let dest: URL
+    let displayPath: String
+}
+
 class HtmlManager {
     private static let fontStack = "-apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Helvetica, Arial, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif"
     private static let codeFontStack = "SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace"
@@ -66,23 +72,23 @@ class HtmlManager {
         return path.starts(with: "/") && !path.starts(with: "/i/")
     }
 
-    private static func resolveImageLocation(_ cleanPath: String, imagesStorage: URL) -> (source: URL, dest: URL, displayPath: String) {
+    private static func resolveImageLocation(_ cleanPath: String, imagesStorage: URL) -> ImageLocation {
         // Absolute system path (not relative to project)
         if isAbsolutePath(cleanPath) {
             let imageURL = URL(fileURLWithPath: cleanPath)
             let filename = imageURL.lastPathComponent
-            return (
-                imageURL,
-                webkitPreviewURL.appendingPathComponent(filename),
-                filename
+            return ImageLocation(
+                source: imageURL,
+                dest: webkitPreviewURL.appendingPathComponent(filename),
+                displayPath: filename
             )
         }
 
         // Relative path: maintain directory structure
-        return (
-            imagesStorage.appendingPathComponent(cleanPath),
-            webkitPreviewURL.appendingPathComponent(cleanPath),
-            cleanPath
+        return ImageLocation(
+            source: imagesStorage.appendingPathComponent(cleanPath),
+            dest: webkitPreviewURL.appendingPathComponent(cleanPath),
+            displayPath: cleanPath
         )
     }
 
