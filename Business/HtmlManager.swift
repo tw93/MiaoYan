@@ -137,10 +137,10 @@ class HtmlManager {
             }
 
             // Process relative paths
-            let (source, destination, displayPath) = resolveImageLocation(cleanPath, imagesStorage: imagesStorage)
-            copyImageIfNeeded(from: source, to: destination)
+            let imageLocation = resolveImageLocation(cleanPath, imagesStorage: imagesStorage)
+            copyImageIfNeeded(from: imageLocation.source, to: imageLocation.dest)
 
-            var finalPath = displayPath
+            var finalPath = imageLocation.displayPath
             if finalPath.first == "/" {
                 finalPath.remove(at: finalPath.startIndex)
             }
@@ -158,10 +158,11 @@ class HtmlManager {
     }
 
     private static func escapeForPPT(_ content: String) -> String {
+        // Don't escape backticks as they're needed for code blocks in Markdown
+        // Reveal.js markdown plugin handles them correctly
         return
             content
             .replacingOccurrences(of: "\\", with: "\\\\")
-            .replacingOccurrences(of: "`", with: "\\`")
             .replacingOccurrences(of: "$", with: "\\$")
             .replacingOccurrences(of: "](/i/", with: "](./i/")
     }
@@ -216,7 +217,7 @@ class HtmlManager {
             return ""
         }
 
-        var template = try String(contentsOf: baseURL, encoding: .utf8)
+        let template = try String(contentsOf: baseURL, encoding: .utf8)
 
         let (fontPath, downMeta) = getFontPathAndMeta()
         let customCSS = UserDataService.instance.isDark ? "darkmode" : "lightmode"

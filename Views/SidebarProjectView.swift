@@ -141,7 +141,7 @@ class SidebarProjectView: NSOutlineView,
             return false
 
         case 48:  // Tab key
-            viewDelegate?.search.becomeFirstResponder()
+            _ = viewDelegate?.search.becomeFirstResponder()
             return true
 
         default:
