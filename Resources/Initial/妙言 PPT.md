@@ -77,33 +77,6 @@ struct MiaoYanApp: App {
 }
 ```
 
-逐行高亮展示：
-
-```python [1-2|3|4|5-6]
-def process_data(items):
-    """处理带验证的数据列表"""
-    results = []
-    for item in items:
-        if validate_item(item):
-            results.append(transform(item))
-    return results
-```
-
-分段代码演示：
-
-```javascript [|1|2-3|4-6|7-8]
-// 现代 JavaScript ES6+ 特性
-const fetchUserData = async (userId) => {
-  try {
-    const response = await fetch(`/api/users/${userId}`);
-    const userData = await response.json();
-    return { success: true, data: userData };
-  } catch (error) {
-    return { success: false, error: error.message };
-  }
-};
-```
-
 ---
 
 # 数学公式 📊
@@ -116,9 +89,6 @@ $$E = mc^2$$
 
 复杂方程式：
 $$\sum_{i=1}^{n} x_i = \frac{n(n+1)}{2}$$
-
-二次方程公式：
-$$x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
 
 ---
 
