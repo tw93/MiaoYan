@@ -26,7 +26,7 @@ Package.resolved.backup
 *.playground
 
 # ====================
-# CocoaPods & Dependencies  
+# CocoaPods & Dependencies
 # ====================
 Pods/
 Podfile.lock
@@ -96,3 +96,6 @@ Resources/DownView.bundle/demo.html
 # Legacy & Deprecated
 IrEditor/
 fonts/
+
+.claude/
+

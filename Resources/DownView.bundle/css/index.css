@@ -482,6 +482,13 @@ img.emoji {
   overflow: visible;
 }
 
+.markmap svg,
+.markmap g,
+.markmap circle,
+.markmap text {
+  cursor: pointer;
+}
+
 .markmap svg {
   background: transparent;
 }
@@ -626,5 +633,9 @@ pre:has(.language-mermaid) {
 .mermaid .edgeLabel,
 .mermaid .label {
   font-family: var(--text-font), -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
+}
+
+.darkmode .lightense-backdrop {
+  background-color: rgba(35, 40, 45, .95) !important;
 }
 
