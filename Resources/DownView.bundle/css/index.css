@@ -1,22 +1,52 @@
-/* Theme CSS */
+/* ==================== CSS Variables ==================== */
 :root {
+  /* Brand Colors */
+  --primary-color: #1C5D33;
+  --primary-light: rgba(28, 93, 51, 0.12);
+
+  /* Base Colors */
   --bg-color: #FFFFFF;
   --text-color: #262626;
+  --text-secondary: #777;
   --link-color: #0C6ADA;
   --border-color: #e6e6e6;
-  --diagram-bg: #f7f7f7;
   --code-bg: #f7f7f7;
+  --diagram-bg: #f7f7f7;
   --blockquote-border-color: #d0d0d0;
 
+  /* Syntax Highlight - Light */
+  --hljs-base: #24292e;
+  --hljs-comment: #6a737d;
+  --hljs-keyword: #d73a49;
+  --hljs-string: #032f62;
+  --hljs-number: #005cc5;
+  --hljs-attribute: #e36209;
+  --hljs-title: #6f42c1;
+
+  /* Mermaid Diagram */
+  --mermaid-node-bg: #ffffff;
+  --mermaid-text-color: #333333;
+  --mermaid-border-color: var(--border-color);
+  --mermaid-line-color: var(--primary-color);
+  --mermaid-edge-label-bg: #ffffff;
+
+  /* Fonts */
   --text-font: 'TsangerJinKai02-W04', -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
-  --code-text-font: 'TsangerJinKai02-W04', -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
+
+  /* Spacing */
+  --border-radius: 6px;
+  --border-radius-sm: 4px;
+  --border-radius-lg: 8px;
+
+  /* Diagram */
   --markmap-height: 450px;
 }
 
+/* ==================== Base Styles ==================== */
 html {
   font-size: 15px;
   font-display: block;
-  color: #262626;
+  color: var(--text-color);
   font-family: var(--text-font);
   -webkit-font-smoothing: subpixel-antialiased;
   overscroll-behavior: none;
@@ -25,23 +55,10 @@ html {
 body {
   padding: 0;
   margin: 0;
-  background: #FFFFFF;
+  background: var(--bg-color);
   font-family: var(--text-font);
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
-}
-
-html.darkmode,
-body.darkmode,
-.markdown-body.darkmode {
-  background: #23282D;
-  overscroll-behavior: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  .html {
-    color: #ede6f5;
-  }
 }
 
 img {
@@ -50,56 +67,54 @@ img {
   object-fit: cover;
 }
 
-html {
-  color: var(--text-color);
-}
-
-body {
-  background: var(--bg-color);
-}
-
+/* ==================== Typography ==================== */
 .heti {
   font-family: var(--text-font);
 }
 
-a, .heti a heti-spacing {
+a,
+.heti a heti-spacing {
   color: var(--link-color);
 }
 
+/* ==================== Code Styles ==================== */
 .heti p > code,
 .heti li > code,
 code {
-  font-family: var(--code-text-font);
+  font-family: var(--text-font);
   background-color: var(--code-bg);
   padding: 2px 6px;
-  border-radius: 4px;
+  border-radius: var(--border-radius-sm);
 }
 
 pre {
-  font-family: var(--code-text-font);
+  font-family: var(--text-font);
   background-color: var(--code-bg);
   padding: 16px;
-  border-radius: 6px;
+  border-radius: var(--border-radius);
 }
 
 pre code {
-  font-family: var(--code-text-font);
+  font-family: var(--text-font);
   background-color: var(--code-bg);
 }
 
+/* ==================== Tables ==================== */
 .heti table,
 .heti th,
 .heti td {
   border-color: var(--border-color);
-}
-
-.heti th,
-.heti td {
   color: var(--text-color);
 }
 
+/* ==================== Blockquote ==================== */
 .heti blockquote {
   border-left-color: var(--blockquote-border-color);
+}
+
+.heti blockquote ol,
+.heti blockquote ul {
+  margin-block-end: 0.4em !important;
 }
 
 .heti blockquote ol,
@@ -108,34 +123,31 @@ pre code {
   line-height: 1.74 !important;
 }
 
-.heti blockquote ol,
-.heti blockquote ul {
-  margin-block-end: 0.4em !important;
-}
-
+/* ==================== HR ==================== */
 .heti hr {
   background-color: var(--border-color);
 }
 
+/* ==================== Form Elements ==================== */
 input[type='checkbox'] {
   border: 1px solid var(--border-color);
 }
 
+/* ==================== Diagram Containers ==================== */
 .mermaid-image-container,
 .markmap-image-container,
 .plantuml-image-container,
 .plantuml-container,
+.plantuml-image,
 pre:has(.language-mermaid) {
   background-color: var(--diagram-bg);
 }
 
-.plantuml-image {
-  background-color: var(--diagram-bg);
-}
-
+/* ==================== Dark Mode ==================== */
 .darkmode {
   --bg-color: #23282D;
   --text-color: #E7E9EA;
+  --text-secondary: #ABB2BF;
   --link-color: #1D9BF0;
   --border-color: #454545;
   --code-bg: #282e33;
@@ -147,10 +159,19 @@ pre:has(.language-mermaid) {
   --mermaid-border-color: #545d68;
   --mermaid-line-color: #1D9BF0;
   --mermaid-edge-label-bg: #282e33;
+
+  --hljs-base: #ABB2BF;
+  --hljs-comment: #ABB2BF;
+  --hljs-keyword: #9B79F7;
+  --hljs-string: #8FFCCD;
+  --hljs-number: #F7CC8F;
+  --hljs-attribute: #F7CC8F;
+  --hljs-title: #99E0FC;
 }
 
 .darkmode html,
-.darkmode body {
+.darkmode body,
+.darkmode * {
   color: var(--text-color);
   background: var(--bg-color);
 }
@@ -158,10 +179,6 @@ pre:has(.language-mermaid) {
 .darkmode a,
 .darkmode .heti a heti-spacing {
   color: var(--link-color);
-}
-
-.darkmode * {
-  color: var(--text-color);
 }
 
 .darkmode .heti p > code,
@@ -195,6 +212,7 @@ pre:has(.language-mermaid) {
   background-color: var(--diagram-bg);
 }
 
+/* ==================== Code Line Numbers ==================== */
 pre code,
 .heti pre code {
   background-color: transparent;
@@ -214,7 +232,9 @@ pre .hljs-ln td,
 }
 
 pre .hljs-ln tr,
-.heti pre .hljs-ln tr {
+.heti pre .hljs-ln tr,
+pre .hljs-ln-line,
+.heti pre .hljs-ln-line {
   background: transparent !important;
 }
 
@@ -230,11 +250,6 @@ pre .hljs-ln-numbers,
 pre .hljs-ln-code,
 .heti pre .hljs-ln-code {
   padding-left: 12px;
-}
-
-pre .hljs-ln-line,
-.heti pre .hljs-ln-line {
-  background: transparent !important;
 }
 
 pre code,
@@ -253,64 +268,68 @@ pre table.hljs-ln,
   background: transparent;
 }
 
+/* ==================== Syntax Highlighting - Light ==================== */
 .hljs {
-  color: #24292e;
+  color: var(--hljs-base);
   background: transparent;
 }
 
 .hljs-comment,
 .hljs-quote {
-  color: #6a737d;
+  color: var(--hljs-comment);
 }
 
 .hljs-keyword,
 .hljs-selector-tag,
 .hljs-deletion {
-  color: #d73a49;
+  color: var(--hljs-keyword);
 }
 
 .hljs-string,
 .hljs-addition {
-  color: #032f62;
+  color: var(--hljs-string);
 }
 
 .hljs-number,
 .hljs-literal {
-  color: #005cc5;
+  color: var(--hljs-number);
 }
 
 .hljs-attribute,
 .hljs-variable {
-  color: #e36209;
+  color: var(--hljs-attribute);
 }
 
 .hljs-title,
 .hljs-section {
-  color: #6f42c1;
+  color: var(--hljs-title);
 }
 
+/* ==================== Syntax Highlighting - Dark ==================== */
 .darkmode .hljs {
-  color: #ABB2BF;
+  color: var(--hljs-base);
   background: var(--code-bg) !important;
 }
 
-
 .darkmode .hljs-comment,
 .darkmode .hljs-quote {
-  color: #ABB2BF;
+  color: var(--hljs-comment);
 }
 
 .darkmode .hljs-doctag,
 .darkmode .hljs-formula,
 .darkmode .hljs-keyword {
-  color: #9B79F7;
+  color: var(--hljs-keyword);
 }
 
 .darkmode .hljs-deletion,
 .darkmode .hljs-name,
 .darkmode .hljs-section,
 .darkmode .hljs-selector-tag,
-.darkmode .hljs-subst {
+.darkmode .hljs-subst,
+.darkmode .hljs-built_in,
+.darkmode .hljs-class .hljs-title,
+.darkmode .hljs-title.class_ {
   color: #ED716C;
 }
 
@@ -323,7 +342,7 @@ pre table.hljs-ln,
 .darkmode .hljs-meta .hljs-string,
 .darkmode .hljs-regexp,
 .darkmode .hljs-string {
-  color: #8FFCCD;
+  color: var(--hljs-string);
 }
 
 .darkmode .hljs-attr,
@@ -334,7 +353,7 @@ pre table.hljs-ln,
 .darkmode .hljs-template-variable,
 .darkmode .hljs-type,
 .darkmode .hljs-variable {
-  color: #F7CC8F;
+  color: var(--hljs-number);
 }
 
 .darkmode .hljs-bullet,
@@ -343,13 +362,7 @@ pre table.hljs-ln,
 .darkmode .hljs-selector-id,
 .darkmode .hljs-symbol,
 .darkmode .hljs-title {
-  color: #99E0FC;
-}
-
-.darkmode .hljs-built_in,
-.darkmode .hljs-class .hljs-title,
-.darkmode .hljs-title.class_ {
-  color: #ED716C;
+  color: var(--hljs-title);
 }
 
 .darkmode .hljs-emphasis {
@@ -364,21 +377,21 @@ pre table.hljs-ln,
   text-decoration: underline;
 }
 
-
+/* ==================== Mermaid Diagrams ==================== */
 .mermaid {
-  background-color: var(--mermaid-diagram-bg, var(--diagram-bg, #f7f7f7)) !important;
-  color: var(--mermaid-text-color, var(--text-color, #333333)) !important;
+  background-color: var(--diagram-bg) !important;
+  color: var(--mermaid-text-color) !important;
+}
+
+.mermaid svg {
+  background-color: var(--diagram-bg) !important;
 }
 
 .darkmode .mermaid {
   background-color: var(--diagram-bg) !important;
   color: var(--text-color) !important;
   padding: 16px;
-  border-radius: 6px;
-}
-
-.mermaid svg {
-  background-color: var(--mermaid-diagram-bg, var(--diagram-bg, #f7f7f7)) !important;
+  border-radius: var(--border-radius);
 }
 
 .darkmode .mermaid svg {
@@ -388,48 +401,49 @@ pre table.hljs-ln,
 .mermaid .label,
 .mermaid text,
 .mermaid span {
-  fill: var(--mermaid-text-color, var(--text-color, #333333)) !important;
-  color: var(--mermaid-text-color, var(--text-color, #333333)) !important;
+  fill: var(--mermaid-text-color) !important;
+  color: var(--mermaid-text-color) !important;
 }
 
 .mermaid .node rect,
 .mermaid .node circle,
 .mermaid .node polygon {
-  fill: var(--mermaid-node-bg, var(--mermaid-edge-label-bg, #ffffff)) !important;
-  stroke: var(--mermaid-border-color, var(--border-color, #262626)) !important;
+  fill: var(--mermaid-node-bg) !important;
+  stroke: var(--mermaid-border-color) !important;
 }
 
 .mermaid .cluster rect {
-  fill: var(--mermaid-cluster-bg, var(--mermaid-node-bg, #f0f3f6)) !important;
-  stroke: var(--mermaid-border-color, var(--border-color, #262626)) !important;
+  fill: var(--mermaid-node-bg) !important;
+  stroke: var(--mermaid-border-color) !important;
 }
 
 .mermaid .cluster text {
-  fill: var(--mermaid-text-color, var(--text-color, #333333)) !important;
+  fill: var(--mermaid-text-color) !important;
 }
 
 .mermaid .edgePath path,
 .mermaid line,
 .mermaid polyline {
-  stroke: var(--mermaid-line-color, var(--link-color, #1C5D33)) !important;
+  stroke: var(--mermaid-line-color) !important;
 }
 
 .mermaid .arrowheadPath {
-  fill: var(--mermaid-line-color, var(--link-color, #1C5D33)) !important;
+  fill: var(--mermaid-line-color) !important;
 }
 
 .mermaid .edgeLabel {
-  background-color: var(--mermaid-edge-label-bg, var(--mermaid-node-bg, #ffffff)) !important;
-  color: var(--mermaid-text-color, var(--text-color, #333333)) !important;
-  border-radius: 4px;
+  background-color: var(--mermaid-edge-label-bg) !important;
+  color: var(--mermaid-text-color) !important;
+  border-radius: var(--border-radius-sm);
   padding: 2px 6px;
 }
 
 .mermaid .edgeLabel rect {
-  fill: var(--mermaid-edge-label-bg, var(--mermaid-node-bg, #ffffff)) !important;
-  stroke: var(--mermaid-border-color, var(--border-color, #262626)) !important;
+  fill: var(--mermaid-edge-label-bg) !important;
+  stroke: var(--mermaid-border-color) !important;
 }
 
+/* ==================== Emoji Support ==================== */
 span.emoji {
   display: -moz-inline-box;
   -moz-box-orient: vertical;
@@ -437,11 +451,10 @@ span.emoji {
   vertical-align: baseline;
   width: 1em;
   height: 1em;
-  background-size: 1em;
+  background-size: contain;
   background-repeat: no-repeat;
   text-indent: -9999px;
-  background-position: 50%, 50%;
-  background-size: contain;
+  background-position: 50% 50%;
 }
 
 span.emoji-sizer {
@@ -471,6 +484,7 @@ img.emoji {
   height: 1em;
 }
 
+/* ==================== Markmap ==================== */
 .language-markmap {
   visibility: hidden !important;
 }
@@ -493,13 +507,15 @@ img.emoji {
   background: transparent;
 }
 
-
+/* ==================== Images ==================== */
 img[loading="lazy"] {
   background-color: #eef1f2;
   outline-color: #eef1f2;
 }
 
-#write>img, #write>p>img, #write>table>img {
+#write>img,
+#write>p>img,
+#write>table>img {
   cursor: zoom-in;
 }
 
@@ -509,28 +525,29 @@ img.border {
   border-image-source: url(https://gw.alipayobjects.com/zos/k/y1/lpOIMY.png);
   border-image-slice: 30;
   border-image-repeat: stretch;
-  border-radius: 8px;
+  border-radius: var(--border-radius-lg);
   clip-path: inset(0 round 6px);
 }
 
-
 .markdown-body img,
 .markdown-body video {
-  border-radius: 8px;
+  border-radius: var(--border-radius-lg);
 }
 
+/* ==================== Diagram Containers ==================== */
 .mermaid-image-container,
 .markmap-image-container,
 .plantuml-image-container,
 pre:has(.language-mermaid) {
   background: var(--diagram-bg);
   border: none;
-  border-radius: 6px;
+  border-radius: var(--border-radius);
   padding: 12px;
   margin: 8px 0;
   box-shadow: none;
 }
 
+/* ==================== Media Queries - Dark Mode ==================== */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg-color: #23282D;
@@ -602,17 +619,18 @@ pre:has(.language-mermaid) {
   }
 }
 
+/* ==================== Diagram Language Styles ==================== */
 .language-mermaid,
 .language-markmap,
 .language-plantuml {
-  border-radius: 6px;
+  border-radius: var(--border-radius);
   overflow: hidden;
 }
 
 .language-mermaid svg,
 .markmap svg,
 .plantuml-image {
-  border-radius: 6px;
+  border-radius: var(--border-radius);
 }
 
 .mermaid,
@@ -635,6 +653,7 @@ pre:has(.language-mermaid) {
   font-family: var(--text-font), -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
 }
 
+/* ==================== Lightense (Image Lightbox) ==================== */
 .darkmode .lightense-backdrop {
   background-color: rgba(35, 40, 45, .95) !important;
 }
