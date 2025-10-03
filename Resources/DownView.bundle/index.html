@@ -19,6 +19,7 @@
 
   <link rel="stylesheet" href="css/heti.min.css" />
   <link rel="stylesheet" href="css/katex.min.css" />
+  <link rel="stylesheet" href="css/tocbot.css" />
   <link rel="stylesheet" href="css/index.css" />
 
   <script src="js/heti-addon.min.js"></script>
@@ -33,6 +34,7 @@
   <script src="js/markmap-view.min.js"></script>
 
   <script src="js/lightense.min.js"></script>
+  <script src="js/tocbot.min.js"></script>
 
   <script src="js/index.js"></script>
 
@@ -61,6 +63,10 @@
       document.body.classList.add('darkmode');
     }
   </script>
+
+  <div class="toc-hover-trigger"></div>
+  <nav class="toc-nav"></nav>
+
   <div class="markdown-body heti" id="write">DOWN_HTML</div>
   <script>
     if ('CUSTOM_CSS' === 'darkmode') {

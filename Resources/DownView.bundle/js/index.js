@@ -110,7 +110,22 @@ const MiaoYanCommon = {
   },
 
   setupHeaderAnchors() {
-    document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((h) => (h.id = h.innerText));
+    // Generate unique IDs for headings, handling duplicates
+    const usedIds = new Set();
+    document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((h) => {
+      let baseId = h.innerText.trim();
+      let id = baseId;
+      let counter = 1;
+
+      while (usedIds.has(id)) {
+        id = `${baseId}-${counter}`;
+        counter++;
+      }
+
+      h.id = id;
+      usedIds.add(id);
+    });
+
     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -183,6 +198,135 @@ const MiaoYanCommon = {
     }
   }
 };
+
+// TOC configuration constants
+const TOC_CONFIG = {
+  MIN_HEADINGS: 2,
+  MIN_SCREEN_WIDTH: 600,
+  AUTO_HIDE_DELAY: 3000,
+  INIT_DELAY: 200,
+  SCROLL_OFFSET_TOP: 60,
+  SCROLL_OFFSET_BOTTOM: 80,
+  SCROLL_DEBOUNCE: 100
+};
+
+(function() {
+  function initTOC() {
+    const nav = document.querySelector('.toc-nav');
+    const trigger = document.querySelector('.toc-hover-trigger');
+    if (!nav || !trigger) return;
+
+    // Check if we have enough headings (only count h1-h3 for TOC)
+    const headings = document.querySelectorAll('#write h1, #write h2, #write h3');
+    if (headings.length < TOC_CONFIG.MIN_HEADINGS) {
+      trigger.style.display = 'none';
+      return;
+    }
+
+    // Initialize tocbot (only show 3 levels: h1, h2, h3)
+    if (window.tocbot) {
+      tocbot.init({
+        tocSelector: '.toc-nav',
+        contentSelector: '#write',
+        headingSelector: 'h1, h2, h3',
+        hasInnerContainers: true,
+        collapseDepth: 3,
+        scrollSmooth: true,
+        scrollSmoothDuration: 200,
+        headingsOffset: 80,
+        ignoreHiddenElements: true
+      });
+    }
+
+    let fadeTimer = null;
+    let scrollTimeout = null;
+
+    const startAutoHideTimer = () => {
+      clearTimeout(fadeTimer);
+      fadeTimer = setTimeout(() => {
+        trigger.style.opacity = '0';
+      }, TOC_CONFIG.AUTO_HIDE_DELAY);
+    };
+
+    const cancelAutoHideTimer = () => {
+      clearTimeout(fadeTimer);
+      trigger.style.opacity = '';
+    };
+
+    const show = () => {
+      nav.classList.add('active');
+      trigger.classList.add('hidden');
+      cancelAutoHideTimer();
+    };
+
+    const hide = () => {
+      nav.classList.remove('active');
+      trigger.classList.remove('hidden');
+    };
+
+    // Auto-scroll active link into view within TOC panel
+    const scrollToActive = () => {
+      const activeLink = nav.querySelector('.is-active-link');
+      if (!activeLink || !nav.classList.contains('active')) return;
+
+      const linkTop = activeLink.offsetTop;
+      const navScroll = nav.scrollTop;
+      const navHeight = nav.clientHeight;
+
+      if (linkTop < navScroll + TOC_CONFIG.SCROLL_OFFSET_TOP ||
+          linkTop > navScroll + navHeight - TOC_CONFIG.SCROLL_OFFSET_BOTTOM) {
+        nav.scrollTo({ top: linkTop - TOC_CONFIG.SCROLL_OFFSET_TOP, behavior: 'smooth' });
+      }
+    };
+
+    const observer = new MutationObserver(() => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(scrollToActive, TOC_CONFIG.SCROLL_DEBOUNCE);
+    });
+
+    observer.observe(nav, { subtree: true, attributeFilter: ['class'] });
+
+    trigger.addEventListener('mouseenter', show);
+    nav.addEventListener('mouseenter', show);
+
+    trigger.addEventListener('mouseover', () => {
+      cancelAutoHideTimer();
+      trigger.style.opacity = '0.2';
+    });
+
+    document.addEventListener('mousedown', (e) => {
+      if (nav.classList.contains('active') &&
+          !nav.contains(e.target) &&
+          !trigger.contains(e.target)) {
+        hide();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && nav.classList.contains('active')) {
+        hide();
+      }
+    });
+
+    const handleResize = () => {
+      trigger.style.display = window.innerWidth < TOC_CONFIG.MIN_SCREEN_WIDTH ? 'none' : '';
+      if (window.innerWidth < TOC_CONFIG.MIN_SCREEN_WIDTH) hide();
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    startAutoHideTimer();
+  }
+
+  // Wait for tocbot to be available and render TOC
+  MiaoYanCommon.onDOMReady(() => {
+    setTimeout(() => {
+      if (window.tocbot && document.querySelector('.toc-nav')) {
+        initTOC();
+      }
+    }, TOC_CONFIG.INIT_DELAY);
+  });
+})();
 
 window.MiaoYanCommon = MiaoYanCommon;
 
@@ -296,11 +440,18 @@ const ThemeConfig = {
       theme: isDark ? 'dark' : 'neutral',
       fontFamily: 'Helvetica, Arial, sans-serif',
       flowchart: {
-        useMaxWidth: false,
+        useMaxWidth: true,
         htmlLabels: true,
+        curve: 'basis',
       },
       sequence: {
-        useMaxWidth: false,
+        useMaxWidth: true,
+      },
+      gantt: {
+        useMaxWidth: true,
+      },
+      journey: {
+        useMaxWidth: true,
       },
       themeVariables: extendedColors,
       // Force dark-mode aware color overrides
