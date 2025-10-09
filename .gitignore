@@ -53,6 +53,9 @@ Thumbs.db
 *.swo
 ~*
 
+# Claude AI development guide (local only)
+CLAUDE.md
+
 # ====================
 # Node.js & Web Development
 # ====================

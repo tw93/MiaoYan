@@ -7,17 +7,17 @@ controls: true
 progress: true
 -->
 
-# Try command + option + p 🎬
+# Try command + option + p
 
 ---
 
-# MiaoYan PPT Mode 🎉
+## MiaoYan PPT Mode
 
-*Beautiful presentations made simple*
+Beautiful presentations made simple
 
 ---
 
-## Inline Configuration 🛠️
+## Inline Configuration
 
 Need to adjust animations or pagination? Add a leading HTML comment with `key: value` pairs:
 
@@ -32,45 +32,44 @@ slideNumber: c/t
 -->
 ```
 - Keys map directly to the [Reveal.js config](https://revealjs.com/config/) options
-- Use dot notation for nested properties (for example `highlight.lineNumbers`)
-- Values auto-detect booleans, numbers, `null`, comma-separated lists, or quoted strings
-- Values auto-detect booleans, numbers, `null`, bracketed lists (e.g. `[a, b]`), or quoted strings
-- The comment is stripped before rendering, so slides stay clean
+- Use dot notation for nested properties (e.g. `highlight.lineNumbers`)
+- Values auto-detect booleans, numbers, `null`, bracketed lists `[a, b]`, or strings
+- The comment is stripped before rendering, keeping slides clean
 
 ---
 
-# Getting Started 🚀
+## Getting Started
 
-- **Method 1:** Press `Command + Option + P` in any document
-- **Method 2:** Right-click document → "MiaoYan PPT"
-- **Method 3:** Select presentation mode from menu bar
+- Method 1: Press `Command + Option + P` in any document
+- Method 2: Right-click document and select "MiaoYan PPT"
+- Method 3: Select presentation mode from menu bar
 - Documents with `---` separators are automatically recognized
-- Press "Enter" to preview slide outline
+- Press Enter to preview slide outline
 
 Built with [Reveal.js](https://revealjs.com/markdown/) for advanced features
 
 ---
 
 <!-- .slide: data-background="#F8CB9E" -->
-# Custom Backgrounds ✨
+## Custom Backgrounds
 
-You can customize slide backgrounds with colors, gradients, images, or even websites!
+You can customize slide backgrounds with colors, gradients, images, or even websites
 
 ---
 
-# Animation Control 🎭
+## Animation Control
 
 Watch these items appear in sequence:
 
 - Item 3: First to appear <!-- .element: class="fragment" data-fragment-index="1" -->
-- Item 2: Second to appear <!-- .element: class="fragment" data-fragment-index="2" -->  
+- Item 2: Second to appear <!-- .element: class="fragment" data-fragment-index="2" -->
 - Item 1: Last to appear <!-- .element: class="fragment" data-fragment-index="3" -->
 
-Perfect for step-by-step explanations!
+Perfect for step-by-step explanations
 
 ---
 
-# Code Highlighting 💻
+## Code Highlighting
 
 Progressive code revelation:
 
@@ -88,7 +87,7 @@ struct MiaoYanApp: App {
 
 ---
 
-# Mathematical Formulas 📊
+## Mathematical Formulas
 
 MiaoYan supports LaTeX math in presentations:
 
@@ -101,9 +100,9 @@ $$\sum_{i=1}^{n} x_i = \frac{n(n+1)}{2}$$
 
 ---
 
-# Advanced Layout 🎯
+## Advanced Layout
 
-## Two Column Layout
+### Two Column Layout
 
 <div style="display: flex; gap: 2rem;">
 <div style="flex: 1;">
@@ -111,7 +110,7 @@ $$\sum_{i=1}^{n} x_i = \frac{n(n+1)}{2}$$
 **Left Column**
 
 - Feature 1
-- Feature 2  
+- Feature 2
 - Feature 3
 
 </div>
@@ -128,32 +127,33 @@ $$\sum_{i=1}^{n} x_i = \frac{n(n+1)}{2}$$
 
 ---
 
-# Visual Effects Gallery 🎨
+## Visual Effects
 
-<p class="fragment">✨ Fade in</p>
-<p class="fragment fade-out">👻 Fade out</p>
-<p class="fragment highlight-red">🔴 Highlight red</p>
-<p class="fragment highlight-green">🟢 Highlight green</p>
-<p class="fragment fade-in-then-out">💫 Fade in, then out</p>
-<p class="fragment fade-up">⬆️ Slide up while fading in</p>
-<p class="fragment grow">📈 Grow effect</p>
-<p class="fragment shrink">📉 Shrink effect</p>
+<p class="fragment">Fade in</p>
+<p class="fragment fade-out">Fade out</p>
+<p class="fragment highlight-red">Highlight red</p>
+<p class="fragment highlight-green">Highlight green</p>
+<p class="fragment fade-in-then-out">Fade in, then out</p>
+<p class="fragment fade-up">Slide up while fading in</p>
+<p class="fragment grow">Grow effect</p>
+<p class="fragment shrink">Shrink effect</p>
+
 ---
 
-# Table Support 📋
+## Table Support
 
 | Feature | Status | Rating |
 |---------|--------|--------|
-| **Markdown** | ✅ Complete | ⭐⭐⭐⭐⭐ |
-| **LaTeX Math** | ✅ Complete | ⭐⭐⭐⭐⭐ |
-| **Code Syntax** | ✅ Complete | ⭐⭐⭐⭐⭐ |
-| **Diagrams** | ✅ Complete | ⭐⭐⭐⭐⭐ |
+| Markdown | Complete | 5/5 |
+| LaTeX Math | Complete | 5/5 |
+| Code Syntax | Complete | 5/5 |
+| Diagrams | Complete | 5/5 |
 
 ---
 
-# Lists and Nested Content 📝
+## Lists and Nested Content
 
-## Ordered Lists
+### Ordered Lists
 
 1. First important point
    - Sub-point A
@@ -168,4 +168,4 @@ $$\sum_{i=1}^{n} x_i = \frac{n(n+1)}{2}$$
 
 ---
 
-# Thank You! 🙏
+## Thank You

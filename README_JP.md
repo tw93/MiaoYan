@@ -1,96 +1,65 @@
-<h4 align="right"><strong><a href="https://github.com/tw93/MiaoYan/blob/master/README_EN.md">English</a></strong> | <strong><a href="https://github.com/tw93/MiaoYan">中文</a></strong> | 日本語</h4>
+<h4 align="right"><strong><a href="https://github.com/tw93/MiaoYan">English</a></strong> | <strong><a href="https://github.com/tw93/MiaoYan/blob/main/README_CN.md">简体中文</a></strong> | 日本語</h4>
+
 <p align="center">
-  <a href="https://miaoyan.app/" target="_blank"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 /></a>
+  <a href="https://miaoyan.app/" target="_blank"><img src="https://gw.alipayobjects.com/zos/k/t0/43.png" width="138" /></a>
   <h1 align="center">MiaoYan</h1>
   <div align="center">
     <a href="https://twitter.com/HiTw93" target="_blank">
-       <img alt="twitter" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=Twitter"></a>
+      <img alt="Twitter フォロー" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=Twitter"></a>
     <a href="https://t.me/+GclQS9ZnxyI2ODQ1" target="_blank">
-      <img alt="Telegram" src="https://img.shields.io/badge/chat-Telegram-blueviolet?style=flat-square&logo=Telegram"></a>
-     <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">
-      <img alt="GitHub downloads" src="https://img.shields.io/github/downloads/tw93/MiaoYan/total.svg?style=flat-square"></a>
+      <img alt="Telegram グループ" src="https://img.shields.io/badge/chat-Telegram-blueviolet?style=flat-square&logo=Telegram"></a>
+    <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">
+      <img alt="GitHub ダウンロード数" src="https://img.shields.io/github/downloads/tw93/MiaoYan/total.svg?style=flat-square"></a>
     <a href="https://github.com/tw93/MiaoYan/commits" target="_blank">
-      <img alt="GitHub commit" src="https://img.shields.io/github/commit-activity/m/tw93/MiaoYan?style=flat-square"></a>
+      <img alt="GitHub コミット活動" src="https://img.shields.io/github/commit-activity/m/tw93/MiaoYan?style=flat-square"></a>
     <a href="https://github.com/tw93/MiaoYan/issues?q=is%3Aissue+is%3Aclosed" target="_blank">
-      <img alt="GitHub closed issues" src="https://img.shields.io/github/issues-closed/tw93/MiaoYan.svg?style=flat-square"></a>
-    <img alt="Minimum supported version" src="https://img.shields.io/badge/macOS-10.15%2B-orange?style=flat-square">
+      <img alt="GitHub クローズ済み Issue" src="https://img.shields.io/github/issues-closed/tw93/MiaoYan.svg?style=flat-square"></a>
+    <img alt="macOS 11.5+" src="https://img.shields.io/badge/macOS-11.5%2B-orange?style=flat-square">
   </div>
-  <div align="center">軽量のMarkdownアプリで、素晴らしい文章を生み出せます</div>
+  <div align="center">軽量な macOS 向け Markdown ノートアプリ</div>
 </p>
 
 <img src="https://raw.githubusercontent.com/tw93/static/master/miaoyan/newmiaoyan.gif" width="900px" />
 
-## 機能
+## 特徴
 
-- 🏂 **素晴らしい**: ローカル利用、セキュリティ、シンタックスハイライト、ダークモード、PPTプレゼンテーション、LaTeX数学式、Mermaid図表
-- 🎊 **美しさ**: ミニマリストのデザインスタイル、フォルダ+ファイルリスト+エディタの 3 カラムモード。
-- 🚄‍ **高速**: Swift6 ネイティブ開発を使用しており、Web と比較してパフォーマンス体験がはるかに良い。
-- 🥛 **シンプル**: とても軽量で、純粋なエディタ入力体験、多くのショートカットキーで高速化が実現。
+- **素晴らしい**: ローカルファースト、プライバシー重視、シンタックスハイライト、PPT モード、LaTeX、Mermaid 図表
+- **美しい**: ミニマルデザイン、3カラムレイアウト、ダークモード、集中できる環境
+- **高速**: Swift 6 ネイティブ、Electron アプリより高パフォーマンス
+- **シンプル**: 軽量、キーボードショートカット、自動フォーマット
 
-## 最初の使用
+## インストール & セットアップ
 
-1. 最新の dmg インストールパッケージを<a href="https://github.com/tw93/MiaoYan/releases/latest" target="_blank">GitHub Releases</a>から**ダウンロード**し、ダブルクリックしてインストールします。
-2. iCloud またはルートディレクトリに`MiaoYan`フォルダを作成し、MiaoYan の設定を開き、デフォルトの保存先をこれに変更します。
-3. MiaoYan の左上隅にある新しいフォルダのアイコンをクリックして、独自のドキュメントカテゴリフォルダを作成し、使用を開始できます。
-4. 同様に、デフォルトのフォントに慣れていない場合は、設定で他の通常のフォントに変更できます。
+1. [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) から最新の DMG パッケージをダウンロード(macOS 11.5+ 必要)
+2. ダブルクリックして MiaoYan.app をアプリケーションフォルダにインストール
+3. iCloud Drive またはお好みの場所に `MiaoYan` フォルダを作成
+4. MiaoYan の環境設定を開き、保存場所をこのフォルダに設定
+5. 左上の「新規フォルダ」アイコンをクリックして文書カテゴリを作成し、執筆を開始
 
-## ショートカットキー
+## ドキュメント
 
-#### ウィンドウ操作
-
-- `command + 1`: フォルダリストの折りたたみを隠す
-- `command + 2`: ドキュメントのリストを隠す
-- `command + 3`: 編集状態とプレビュー状態の切り替え
-- `command + 4`: 編集状態とプレゼンテーション状態の切り替え
-- `command + option + m`: MiaoYanを表示/非表示
-
-#### ファイル操作
-
-- `command + n`：新規ドキュメント
-- `command + r`：ドキュメントの名前変更
-- `command + d`：ドキュメントのコピー
-- `command + o`：ドキュメントを単体で開く
-- `command + delete`：ドキュメントの削除
-- `command + shift + n`：新規フォルダ
-- `command + shift + l`：自動タイプセット
-- `command + option + r`：Finder でドキュメントを表示
-- `command + option + i`：単語数などのドキュメント属性を表示
-- `command + option + p`：MiaoYan スライド プレビューを起動。
-
-🏂 他にも多くのショートカットがあります 👆🏻 👇🏻 👈🏻 👉🏻 隠れているショートカットを見つけることに楽しんでください~
-
-## 利用ガイド
-
-- [**Markdown 構文ガイド**](Resources/Initial/MiaoYan%20Markdown%20Syntax%20Guide.md)：数学式、Mermaid図表、PlantUML、Markmapマインドマップなど高度な機能の完全デモ
-- [**PPT プレゼンテーションモード**](Resources/Initial/MiaoYan%20PPT.md)：`---` でスライド分割、`command + option + p` で起動、カスタムテーマと背景をサポート
-
-
-## なぜこれを作ったのか
-
-- 私は以前に多くのノートアプリを試しました、例えば WizNote、Ulysses、Quiver、MWeb、Bear、Typora、様々な理由で、私は従来の Markdown アプリを見つけられませんでした、そこで MiaoYan を作るアイデアが生まれました。
-- 私の仕事はフロントエンド開発ですが、iOS App も開発でき、新しいものをいじることも好きなので、MiaoYan を楽しみながら開発しました。
+- [Markdown 構文ガイド](Resources/Initial/MiaoYan%20Markdown%20Syntax%20Guide.md) - 高度な機能を含む完全な構文リファレンス
+- [PPT プレゼンテーションモード](Resources/Initial/MiaoYan%20PPT.md) - `---` スライド区切りでプレゼンテーションを作成するガイド
 
 ## サポート
 
-- 私は2匹の猫を飼っています。一つは TangYuan という名前で、もう一つは Coke という名前です。もし MiaoYan があなたの生活をより良くできたと思ったら、私の猫に<a href="https://miaoyan.app/cats.html" target="_blank">缶詰のエサを 🥩🍤</a>あげてください。
-- もしあなたが MiaoYan を気に入っていたら、Github でそれをスターしてくれたら嬉しいで。我々はあなたが同じ趣味の友人に[MiaoYan を推薦する](https://twitter.com/intent/tweet?text=%23%E5%A6%99%E8%A8%80%20MiaoYan%20-%20a%20simple%20and%20good-looking%20open-source%20mac%20markdown%20editor,%20without%20any%20redundant%20functions,%20is%20developed%20using%20swift,%20pure%20local%20use,%20has%20functions%20such%20as%20syntax%20highlighting,%20automatic%20formatting,%20presentation%20mode%20etc.&url=https://github.com/tw93/MiaoYan)ことをより歓迎します。
-- あなたは私の[Twitter](https://twitter.com/HiTw93)をフォローして MiaoYan の最新ニュースを得るか、または[Telegram](https://t.me/+GclQS9ZnxyI2ODQ1)のチャットグループに参加することができます。
+- MiaoYan がワークフローを改善した場合は、[プロジェクトのサポート](https://miaoyan.app/cats.html)をご検討ください
+- GitHub でこのリポジトリにスターを付ける
+- 他の人と [MiaoYan をシェア](https://twitter.com/intent/tweet?text=%23MiaoYan%20-%20macOS%20向けの軽量%20Markdown%20エディタ、ネイティブ%20Swift%20で構築、シンタックスハイライト、ダークモード、プレゼンテーションモードを搭載。&url=https://github.com/tw93/MiaoYan)
+- [@HiTw93](https://twitter.com/HiTw93) をフォローして更新情報を入手、または [Telegram グループ](https://t.me/+GclQS9ZnxyI2ODQ1)に参加
 
-## 感謝
+## 謝辞
 
-- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a>：プロジェクトの初期化コードはこちらを参考にしました、作者に感謝
-- <a href="https://github.com/stackotter/swift-cmark-gfm" target="_blank">stackotter/swift-cmark-gfm</a>：高速で効率的なSwift Markdownパーサー
-- <a href="https://github.com/simonbs/Prettier" target="_blank">simonbs/Prettier</a>：Swift Markdownフォーマッティングツール、妙言の排版をより優雅に
-- <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a>：シンタックスハイライト機能
-- <a href="https://tsanger.cn/product" target="_blank">仓耳字库</a>：美しいオープンソース中国語フォント「仓耳今楷」、妙言ではデフォルトフォントとして使用
-- <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a>：妙言のPPT基盤レンダリングはこのフレームワークに依存
-- 妙言の[公式サイト](https://miaoyan.app/)に静的レンダリング機能を提供してくれたVercelに感謝
-  
-    <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img
-        src=https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg
-        width="118px"/></a>
+- [glushchenko/fsnotes](https://github.com/glushchenko/fsnotes) - プロジェクト初期構造の参考
+- [stackotter/swift-cmark-gfm](https://github.com/stackotter/swift-cmark-gfm) - Swift Markdown パーサー
+- [simonbs/Prettier](https://github.com/simonbs/Prettier) - Markdown フォーマットユーティリティ
+- [raspu/Highlightr](https://github.com/raspu/Highlightr) - シンタックスハイライト
+- [仓耳字库](https://tsanger.cn/product) - TsangerJinKai フォント(デフォルトフォント)
+- [hakimel/reveal.js](https://github.com/hakimel/reveal.js) - PPT プレゼンテーションフレームワーク
+- [Vercel](https://vercel.com?utm_source=tw93&utm_campaign=oss) - [miaoyan.app](https://miaoyan.app/) のホスティング
 
-# ライセンス
+    <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img src="https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg" width="118px"/></a>
 
-- MIT ライセンスを遵守してください。
-- オープンソースを楽しみ、参加することをお気軽にどうぞ。
+## ライセンス
+
+MIT License - 自由に使用・貢献してください
