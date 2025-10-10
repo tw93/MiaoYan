@@ -81,6 +81,8 @@ class ExportCache {
 extension MPreviewView {
 
     private static var isExporting = false
+    private static var exportStartTime: Date?
+    private static let exportTimeout: TimeInterval = 30.0
 
     // MARK: - Export Data Creation Helper
     private func createExportData(note: Note, height: CGFloat = 0, width: CGFloat = 0, processedHTML: String? = nil) -> ExportCache.ExportData {
@@ -101,20 +103,47 @@ extension MPreviewView {
         needsDimensions: Bool,
         exportAction: @escaping (ExportCache.ExportData) -> Void
     ) {
-        guard !Self.isExporting else {
-            viewController.toastExport(status: false)
-            return
+        // Check if already exporting
+        if Self.isExporting {
+            // Check if previous export is stuck (timeout exceeded)
+            if let startTime = Self.exportStartTime,
+               Date().timeIntervalSince(startTime) > Self.exportTimeout
+            {
+                Self.isExporting = false
+                Self.exportStartTime = nil
+                // Continue to perform export after reset
+            } else {
+                viewController.toastExport(status: false)
+                return
+            }
         }
 
         Self.isExporting = true
+        Self.exportStartTime = Date()
+
+        // Setup timeout protection
+        let timeoutWorkItem = DispatchWorkItem { [weak viewController] in
+            if Self.isExporting {
+                Self.isExporting = false
+                Self.exportStartTime = nil
+                viewController?.toastExport(status: false)
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + Self.exportTimeout, execute: timeoutWorkItem)
+
+        let resetExportFlag = {
+            Self.isExporting = false
+            Self.exportStartTime = nil
+            timeoutWorkItem.cancel()
+        }
 
         // Check cache first
         if let cachedData = ExportCache.shared.getCachedData(for: note),
-            cachedData.isImageLoaded,
-            self.isCurrentContentMatchingCache(cachedData, for: note)
+            cachedData.isImageLoaded
         {
             DispatchQueue.main.async {
                 exportAction(cachedData)
+                resetExportFlag()
             }
             return
         }
@@ -122,14 +151,14 @@ extension MPreviewView {
         // Need fresh export
         waitForWebViewReady { [weak self] in
             guard let self else {
-                Self.isExporting = false
+                resetExportFlag()
                 viewController.toastExport(status: false)
                 return
             }
 
             self.waitForImagesLoaded { [weak self] in
                 guard let self else {
-                    Self.isExporting = false
+                    resetExportFlag()
                     viewController.toastExport(status: false)
                     return
                 }
@@ -142,11 +171,13 @@ extension MPreviewView {
                         let exportData = self.createExportData(note: note, processedHTML: renderedHTML)
                         ExportCache.shared.setCachedData(exportData, for: note)
                         exportAction(exportData)
+                        resetExportFlag()
                     } else {
                         self.getContentDimensions { height, width in
                             let exportData = self.createExportData(note: note, height: height, width: width, processedHTML: renderedHTML)
                             ExportCache.shared.setCachedData(exportData, for: note)
                             exportAction(exportData)
+                            resetExportFlag()
                         }
                     }
                 }
@@ -217,11 +248,22 @@ extension MPreviewView {
         else { return }
 
         // HTML export does not depend on WebView layout; generate directly
-        guard !Self.isExporting else {
-            vc.toastExport(status: false)
-            return
+        if Self.isExporting {
+            // Check if previous export is stuck
+            if let startTime = Self.exportStartTime,
+               Date().timeIntervalSince(startTime) > Self.exportTimeout
+            {
+                Self.isExporting = false
+                Self.exportStartTime = nil
+                // Continue to perform export after reset
+            } else {
+                vc.toastExport(status: false)
+                return
+            }
         }
         Self.isExporting = true
+        Self.exportStartTime = Date()
+
         let exportData = self.createExportData(note: note)
         self.generateHtmlDirectly(note: note, viewController: vc, exportData: exportData)
     }
@@ -233,6 +275,7 @@ extension MPreviewView {
         Task { [weak self] in
             guard let self = self else {
                 Self.isExporting = false
+                Self.exportStartTime = nil
                 viewController.toastExport(status: false)
                 return
             }
@@ -258,6 +301,7 @@ extension MPreviewView {
 
             await MainActor.run {
                 Self.isExporting = false
+                Self.exportStartTime = nil
                 self.saveToDownloadsWithFilename(content: completeHtml, extension: "html", filename: note.getExportTitle(), viewController: viewController)
             }
         }
@@ -298,11 +342,6 @@ extension MPreviewView {
         checkImages()
     }
 
-    private func isCurrentContentMatchingCache(_ cachedData: ExportCache.ExportData, for note: Note) -> Bool {
-        // Cache validity is already ensured by keying on content + appearance in ExportCache.
-        // Comparing markdown to rendered HTML was causing unnecessary cache misses.
-        return true
-    }
 
     private func waitForWebViewReady(completion: @escaping () -> Void) {
         // Check if WebView has finished loading and rendering
