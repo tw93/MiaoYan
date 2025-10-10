@@ -276,22 +276,23 @@ class HtmlManager {
 
         let customCSS = UserDefaultsManagement.markdownPreviewCSS
 
+        if FileManager.default.fileExists(atPath: webkitPreviewURL.path) {
+            try? FileManager.default.removeItem(at: webkitPreviewURL)
+        }
+
         try? FileManager.default.createDirectory(at: webkitPreviewURL, withIntermediateDirectories: true, attributes: nil)
 
         let indexURL = webkitPreviewURL.appendingPathComponent("index.html")
 
-        if !FileManager.default.fileExists(atPath: indexURL.path) {
-            do {
-                let fileList = try FileManager.default.contentsOfDirectory(atPath: bundleResourceURL.path)
-                for file in fileList {
-                    if customCSS != nil, file == "css" { continue }
-                    let tmpURL = webkitPreviewURL.appendingPathComponent(file)
-                    try FileManager.default.copyItem(atPath: bundleResourceURL.appendingPathComponent(file).path, toPath: tmpURL.path)
-                }
-            } catch {
-                Task { @MainActor in
-                    AppDelegate.trackError(error, context: "HtmlManager.createTemporaryBundle.copyBundleResource")
-                }
+        do {
+            let fileList = try FileManager.default.contentsOfDirectory(atPath: bundleResourceURL.path)
+            for file in fileList {
+                let tmpURL = webkitPreviewURL.appendingPathComponent(file)
+                try FileManager.default.copyItem(atPath: bundleResourceURL.appendingPathComponent(file).path, toPath: tmpURL.path)
+            }
+        } catch {
+            Task { @MainActor in
+                AppDelegate.trackError(error, context: "HtmlManager.createTemporaryBundle.copyBundleResource")
             }
         }
 
@@ -299,7 +300,10 @@ class HtmlManager {
             let cssDst = webkitPreviewURL.appendingPathComponent("css")
             let styleDst = cssDst.appendingPathComponent("markdown-preview.css", isDirectory: false)
             do {
-                try FileManager.default.createDirectory(at: cssDst, withIntermediateDirectories: false, attributes: nil)
+                try FileManager.default.createDirectory(at: cssDst, withIntermediateDirectories: true, attributes: nil)
+                if FileManager.default.fileExists(atPath: styleDst.path) {
+                    try FileManager.default.removeItem(at: styleDst)
+                }
                 _ = try FileManager.default.copyItem(at: customCSS, to: styleDst)
             } catch {
                 Task { @MainActor in
