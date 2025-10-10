@@ -57,7 +57,6 @@
 - [TsangerType](https://tsanger.cn/product) - TsangerJinKai font (default font)
 - [hakimel/reveal.js](https://github.com/hakimel/reveal.js) - PPT presentation framework
 - [Vercel](https://vercel.com?utm_source=tw93&utm_campaign=oss) - Hosting for [miaoyan.app](https://miaoyan.app/)
-
     <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img src="https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg" width="118px"/></a>
 
 ## License
