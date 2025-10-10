@@ -58,6 +58,7 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         setupSidebar()
         setupContent()
         showCategory(.general)
+        updateWindowBackgroundColors()
 
         window?.titleVisibility = .hidden
         window?.titlebarAppearsTransparent = true
@@ -104,9 +105,7 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
 
     private func setupContent() {
         prefsContentViewController = NSViewController()
-        let contentView = NSView(frame: NSRect(x: 0, y: 0, width: 600, height: 400))
-        contentView.wantsLayer = true
-        contentView.layer?.backgroundColor = Theme.backgroundColor.cgColor
+        let contentView = PrefsContentBackgroundView(frame: NSRect(x: 0, y: 0, width: 600, height: 400))
 
         contentView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -180,12 +179,76 @@ extension PrefsWindowController: PrefsSidebarDelegate {
         guard category != currentCategory else { return }
         showCategory(category)
     }
+
+    func refreshThemeAppearance() {
+        updateWindowBackgroundColors()
+        sidebarView?.refreshAppearance()
+    }
 }
 
 extension PrefsWindowController {
     func windowShouldClose(_ sender: NSWindow) -> Bool {
         window?.orderOut(self)
         return false
+    }
+
+    func windowDidChangeEffectiveAppearance(_ notification: Notification) {
+        updateWindowBackgroundColors()
+    }
+}
+
+private extension PrefsWindowController {
+    func updateWindowBackgroundColors() {
+        guard let window, let splitViewController else { return }
+        let resolvedColor = Theme.backgroundColor.resolvedColor(for: window.effectiveAppearance)
+
+        window.backgroundColor = resolvedColor
+
+        if let contentView = window.contentView {
+            contentView.wantsLayer = true
+            contentView.layer?.backgroundColor = resolvedColor.cgColor
+        }
+
+        let controllerView = splitViewController.view
+        controllerView.wantsLayer = true
+        controllerView.layer?.backgroundColor = resolvedColor.cgColor
+
+        let splitView = splitViewController.splitView
+        splitView.wantsLayer = true
+        splitView.layer?.backgroundColor = resolvedColor.cgColor
+    }
+}
+
+private final class PrefsContentBackgroundView: NSView {
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        commonInit()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        commonInit()
+    }
+
+    private func commonInit() {
+        wantsLayer = true
+        updateColors()
+    }
+
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        updateColors()
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        updateColors()
+    }
+
+    private func updateColors() {
+        let appearance = window?.effectiveAppearance ?? effectiveAppearance
+        let resolvedColor = Theme.backgroundColor.resolvedColor(for: appearance)
+        layer?.backgroundColor = resolvedColor.cgColor
     }
 }
 

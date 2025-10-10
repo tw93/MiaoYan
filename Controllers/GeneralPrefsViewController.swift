@@ -45,7 +45,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
     private var storageChangeButton: NSButton!
     private var buttonShowPopUp: NSPopUpButton!
     private var alwaysOnTopPopUp: NSPopUpButton!
-    private var activateShortcutRecorder: KeyboardShortcuts.RecorderCocoa!
+    private var activateShortcutRecorder: ThemeAwareShortcutRecorderView!
 
     override func setupUI() {
         let scrollView = NSScrollView()
@@ -141,7 +141,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         alwaysOnTopPopUp.addItem(withTitle: I18n.str("No"))
         alwaysOnTopPopUp.addItem(withTitle: I18n.str("Yes"))
 
-        activateShortcutRecorder = KeyboardShortcuts.RecorderCocoa(for: .activateWindow)
+        activateShortcutRecorder = ThemeAwareShortcutRecorderView(for: .activateWindow)
         activateShortcutRecorder.translatesAutoresizingMaskIntoConstraints = false
         let appearanceRow = createPreferencesRow(labelText: I18n.str("Appearance:"), control: appearancePopUp, controlWidth: controlWidth)
         let languageRow = createPreferencesRow(labelText: I18n.str("Language:"), control: languagePopUp, controlWidth: controlWidth)
@@ -317,6 +317,11 @@ final class GeneralPrefsViewController: BasePrefsViewController {
                 mainWindowController.applyMiaoYanAppearance()
             }
 
+            if let prefsWindow = view.window?.windowController as? PrefsWindowController {
+                prefsWindow.refreshThemeAppearance()
+            }
+            activateShortcutRecorder.refreshAppearance()
+
             if let vc = ViewController.shared() {
                 vc.editArea.recreatePreviewView()
 
@@ -412,4 +417,142 @@ final class GeneralPrefsViewController: BasePrefsViewController {
             }
         }
     }
+}
+
+private final class ThemeAwareShortcutRecorderView: NSView {
+    private let recorder: KeyboardShortcuts.RecorderCocoa
+    private var isRecording = false
+    private let contentInsets = NSEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
+
+    init(for name: KeyboardShortcuts.Name, onChange: ((KeyboardShortcuts.Shortcut?) -> Void)? = nil) {
+        recorder = KeyboardShortcuts.RecorderCocoa(for: name, onChange: onChange)
+        super.init(frame: .zero)
+        commonInit()
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        updateAppearance()
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        updateAppearance()
+    }
+
+    override var intrinsicContentSize: NSSize {
+        let baseSize = recorder.intrinsicContentSize
+        return NSSize(
+            width: baseSize.width + contentInsets.left + contentInsets.right,
+            height: baseSize.height + contentInsets.top + contentInsets.bottom
+        )
+    }
+
+    override func hitTest(_ point: NSPoint) -> NSView? {
+        let pointInRecorder = convert(point, to: recorder)
+        if recorder.bounds.contains(pointInRecorder) {
+            return recorder.hitTest(pointInRecorder)
+        }
+        return super.hitTest(point)
+    }
+
+    var recorderView: KeyboardShortcuts.RecorderCocoa {
+        recorder
+    }
+
+    func refreshAppearance() {
+        updateAppearance()
+    }
+
+    @objc private func handleRecorderActiveStatusChange(_ notification: Notification) {
+        guard let isActive = notification.userInfo?["isActive"] as? Bool else { return }
+        isRecording = isActive
+        updateAppearance()
+    }
+
+    private func commonInit() {
+        translatesAutoresizingMaskIntoConstraints = false
+        wantsLayer = true
+        layer?.cornerRadius = 6
+        layer?.borderWidth = 1
+        layer?.masksToBounds = true
+        setContentHuggingPriority(.defaultLow, for: .horizontal)
+        setContentHuggingPriority(.defaultLow, for: .vertical)
+        setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+
+        addSubview(recorder)
+        recorder.translatesAutoresizingMaskIntoConstraints = false
+        configureRecorder()
+
+        NotificationCenter.default.addObserver(self, selector: #selector(handleRecorderActiveStatusChange(_:)), name: .keyboardShortcutsRecorderActiveStatusDidChange, object: nil)
+
+        updateAppearance()
+    }
+
+    private func configureRecorder() {
+        recorder.focusRingType = .none
+        recorder.isBordered = false
+        recorder.isBezeled = false
+        recorder.drawsBackground = false
+        recorder.wantsLayer = false
+        recorder.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        recorder.setContentHuggingPriority(.defaultLow, for: .vertical)
+        recorder.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        recorder.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+
+        if let searchCell = recorder.cell as? NSSearchFieldCell {
+            searchCell.drawsBackground = false
+            searchCell.backgroundColor = .clear
+            searchCell.focusRingType = .none
+        }
+
+        NSLayoutConstraint.activate([
+            recorder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: contentInsets.left),
+            recorder.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -contentInsets.right),
+            recorder.topAnchor.constraint(equalTo: topAnchor, constant: contentInsets.top),
+            recorder.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -contentInsets.bottom),
+        ])
+    }
+
+    private func updateAppearance() {
+        guard let layer else { return }
+        let appearance = window?.effectiveAppearance ?? effectiveAppearance
+        let backgroundColor = Theme.backgroundColor.resolvedColor(for: appearance)
+        let borderColor: NSColor
+
+        if isRecording {
+            borderColor = Theme.accentColor.resolvedColor(for: appearance)
+        } else {
+            borderColor = Theme.dividerColor.resolvedColor(for: appearance)
+        }
+
+        layer.backgroundColor = backgroundColor.cgColor
+        layer.borderColor = borderColor.cgColor
+
+        let resolvedTextColor = Theme.textColor.resolvedColor(for: appearance)
+        recorder.textColor = resolvedTextColor
+        if let searchCell = recorder.cell as? NSSearchFieldCell {
+            searchCell.textColor = resolvedTextColor
+            if let placeholder = searchCell.placeholderString {
+                let attributes: [NSAttributedString.Key: Any] = [
+                    .foregroundColor: resolvedTextColor.withAlphaComponent(0.6)
+                ]
+                searchCell.placeholderAttributedString = NSAttributedString(string: placeholder, attributes: attributes)
+            }
+        }
+    }
+}
+
+private extension Notification.Name {
+    static let keyboardShortcutsRecorderActiveStatusDidChange = Notification.Name("KeyboardShortcuts_recorderActiveStatusDidChange")
 }

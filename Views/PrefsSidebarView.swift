@@ -37,6 +37,7 @@ final class PrefsSidebarView: NSView {
         scrollView.hasVerticalScroller = false
         scrollView.hasHorizontalScroller = false
         scrollView.borderType = .noBorder
+        scrollView.drawsBackground = false
         scrollView.backgroundColor = NSColor.clear
         addSubview(scrollView)
     }
@@ -75,9 +76,29 @@ final class PrefsSidebarView: NSView {
 
     private func setupAppearance() {
         wantsLayer = true
-        layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+        updateColors()
+    }
 
-        tableView.backgroundColor = NSColor.controlBackgroundColor
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        updateColors()
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        updateColors()
+    }
+
+    private func updateColors() {
+        guard let tableView else { return }
+        let appearance = window?.effectiveAppearance ?? effectiveAppearance
+        let backgroundColor = Theme.backgroundColor.resolvedColor(for: appearance)
+        layer?.backgroundColor = backgroundColor.cgColor
+        tableView.backgroundColor = backgroundColor
+    }
+
+    func refreshAppearance() {
+        updateColors()
     }
 
     func selectCategory(_ category: PreferencesCategory) {
