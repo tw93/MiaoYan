@@ -1,13 +1,6 @@
 import Carbon.HIToolbox
 import Cocoa
 
-@MainActor
-private enum UIConstants {
-    static let searchIconWidth: CGFloat = 16.0
-    static let searchIconLeftPadding: CGFloat = 10.0
-    static let textHeight: CGFloat = 17.0
-}
-
 class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     public var vcDelegate: ViewController!
 
@@ -21,151 +14,49 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     public var timestamp: Int64?
     private var lastQueryLength: Int = 0
 
-    private var trackingArea: NSTrackingArea?
-
     override func awakeFromNib() {
         super.awakeFromNib()
-        MainActor.assumeIsolated { [self] in
-            wantsLayer = true
-            layer?.masksToBounds = false  // Don't clip subviews to allow border to show
-            focusRingType = .none
-            sendsWholeSearchString = false
-            sendsSearchStringImmediately = true
-            drawsBackground = false
+        wantsLayer = true
+        focusRingType = .none
+        sendsWholeSearchString = false
+        sendsSearchStringImmediately = true
 
-            // Remove cancel button
-            if let searchFieldCell = self.cell as? NSSearchFieldCell {
-                searchFieldCell.cancelButtonCell = nil
-            }
-
-            updateAppearance()
+        if let cell = self.cell as? NSSearchFieldCell {
+            cell.cancelButtonCell = nil
+            cell.drawsBackground = false
         }
-    }
 
-    override func rectForSearchText(whenCentered isCentered: Bool) -> NSRect {
-        var rect = super.rectForSearchText(whenCentered: isCentered)
-
-        let fieldHeight = bounds.height
-        let verticalOffset = (fieldHeight - UIConstants.textHeight) / 2.0 + 1.0
-
-        rect.origin.y = verticalOffset
-        rect.size.height = UIConstants.textHeight
-
-        return rect
-    }
-
-    override func rectForSearchButton(whenCentered isCentered: Bool) -> NSRect {
-        var rect = super.rectForSearchButton(whenCentered: isCentered)
-
-        // Center search icon vertically and adjust horizontal position
-        let fieldHeight = bounds.height
-        let iconHeight = UIConstants.searchIconWidth
-        let verticalOffset = (fieldHeight - iconHeight) / 2.0
-
-        rect.origin.x = UIConstants.searchIconLeftPadding
-        rect.origin.y = verticalOffset
-        rect.size = NSSize(width: UIConstants.searchIconWidth, height: UIConstants.searchIconWidth)
-
-        return rect
-    }
-
-    override func layout() {
-        super.layout()
-        MainActor.assumeIsolated { [self] in
-            updateAppearance()
-        }
-    }
-
-    override func viewDidChangeEffectiveAppearance() {
-        super.viewDidChangeEffectiveAppearance()
-        MainActor.assumeIsolated { [self] in
-            updateAppearance()
-        }
-    }
-
-    override func updateTrackingAreas() {
-        MainActor.assumeIsolated { [self] in
-            if let trackingArea = trackingArea {
-                removeTrackingArea(trackingArea)
-            }
-
-            let options: NSTrackingArea.Options = [.mouseEnteredAndExited, .activeAlways]
-            let trackingArea = NSTrackingArea(rect: bounds, options: options, owner: self, userInfo: nil)
-            addTrackingArea(trackingArea)
-        }
+        updateAppearance()
     }
 
     override var cancelButtonBounds: NSRect {
         NSRect.zero
     }
 
-    override func textDidEndEditing(_ notification: Notification) {
-        clearSelection()
-        super.textDidEndEditing(notification)
+    override func rectForSearchText(whenCentered isCentered: Bool) -> NSRect {
+        var rect = super.rectForSearchText(whenCentered: isCentered)
+        let verticalOffset = (bounds.height - 17.0) / 2.0 + 1.0
+        rect.origin.y = verticalOffset
+        rect.size.height = 17.0
+        return rect
     }
 
-    override func textDidBeginEditing(_ notification: Notification) {
-        super.textDidBeginEditing(notification)
-        updateFieldEditorAppearance()
-
-        // Schedule repeated updates to fight against system overrides
-        Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false) { [weak self] _ in
-            Task { @MainActor in
-                self?.updateFieldEditorAppearance()
-            }
-        }
+    override func layout() {
+        super.layout()
+        updateAppearance()
     }
 
-    override func becomeFirstResponder() -> Bool {
-        let result = super.becomeFirstResponder()
-        if result {
-            updateFieldEditorAppearance()
-        }
-        return result
-    }
-
-    private func updateFieldEditorAppearance() {
-        // Make field editor transparent so it shows the layer background
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self,
-                let fieldEditor = self.window?.fieldEditor(false, for: self) as? NSTextView
-            else { return }
-
-            fieldEditor.backgroundColor = .clear
-            fieldEditor.drawsBackground = false
-        }
-    }
-
-    private func clearSelection() {
-        guard let editor = currentEditor(),
-            editor.selectedRange.length > 0
-        else { return }
-        editor.replaceCharacters(in: editor.selectedRange, with: "")
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        updateAppearance()
     }
 
     private func updateAppearance() {
         guard let layer else { return }
 
-        configureLayerAppearance(layer)
-        configureColors()
-        configureCellAppearance()
-    }
-
-    private func configureLayerAppearance(_ layer: CALayer) {
         layer.cornerRadius = bounds.height / 2
         layer.borderWidth = 1.0
-    }
 
-    private func configureColors() {
-        guard let layer else { return }
-
-        let (backgroundColor, dividerColor) = resolveColors()
-
-        layer.backgroundColor = backgroundColor.cgColor
-        layer.borderColor = dividerColor.cgColor
-    }
-
-    private func resolveColors() -> (backgroundColor: NSColor, dividerColor: NSColor) {
         var backgroundColor = Theme.backgroundColor
         var dividerColor = Theme.dividerColor
 
@@ -174,15 +65,8 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
             dividerColor = Theme.dividerColor
         }
 
-        return (backgroundColor, dividerColor)
-    }
-
-    private func configureCellAppearance() {
-        guard let searchFieldCell = self.cell as? NSSearchFieldCell else { return }
-
-        // Make cell transparent so layer background shows through
-        searchFieldCell.backgroundColor = .clear
-        searchFieldCell.drawsBackground = false
+        layer.backgroundColor = backgroundColor.cgColor
+        layer.borderColor = dividerColor.cgColor
     }
 
     override func keyUp(with event: NSEvent) {
@@ -262,9 +146,6 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         if UserDefaultsManagement.magicPPT {
             return
         }
-
-        // Update field editor appearance during text changes
-        updateFieldEditorAppearance()
 
         searchTimer.invalidate()
 

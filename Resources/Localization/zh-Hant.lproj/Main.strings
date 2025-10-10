@@ -146,7 +146,7 @@
 "b5S-Qt-NKY.title" = "Consolas";
 
 /* Class = "NSSearchFieldCell"; placeholderString = "Search"; ObjectID = "B7t-9v-bSk"; */
-"B7t-9v-bSk.placeholderString" = "搜尋";
+"B7t-9v-bSk.placeholderString" = "";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Preview"; ObjectID = "Bn7-FD-jzc"; */
 "Bn7-FD-jzc.ibShadowedToolTip" = "預覽";

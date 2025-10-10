@@ -28,7 +28,7 @@ public enum UserDefaultsManagement {
     static var titleFontSize = 20
     static var emptyEditTitleFontSize = 36
     static var nameFontSize = 14
-    static var searchFontSize = 13
+    static var searchFontSize = 14
     static var dateFontSize = 11
     static var marginSize = 24
     static var realSidebarSize = 138
