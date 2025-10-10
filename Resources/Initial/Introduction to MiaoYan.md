@@ -44,6 +44,34 @@
 
 Explore more shortcuts in the app.
 
+## Helpful Tools
+
+### Preview Table of Contents
+
+- Switch to preview mode (`command + 3`) and hover over the slim handle near the top-right edge to reveal the table of contents panel.
+- Notes with at least two headings generate the outline automatically—click any heading to jump to that section in the preview.
+- Press `esc` or click outside the panel to close it; the handle fades out again when you stop using it.
+
+### Tab Quick Input Templates
+
+- Type a slash shortcut followed by `Tab` (for example `/table` + `Tab`) while editing to expand rich snippets instantly.
+- The menu bar path `Format > Tab Quick Input` shows every template and can insert them for you.
+- Built-in shortcuts: `/time`, `/table`, `/img`, `/video`, `/markmap`, `/mermaid`, `/plantuml`, `/fold`, `/task`.
+
+## Markdown Workflow Tips
+
+- Use `command + shift + l` after pasting plain text to clean up headings, lists, and spacing automatically.
+- Press `return` inside a list or todo item to continue it; press `return` twice to break out and keep writing normally.
+- Toggle todos from the keyboard via `Format > Todo` or click the checkbox directly in preview mode.
+- For ready-made Markdown patterns, open **MiaoYan Markdown Syntax Guide** from the sidebar templates.
+
+## Rich Content Templates
+
+- Drop in a collapsible section with `/fold` + `Tab` to keep long notes tidy, or use `/task` for a ready-made project checklist.
+- Diagram lovers can expand `/mermaid` or `/plantuml` to insert fenced code blocks that render automatically in preview.
+- `/markmap` generates an interactive mind map—perfect for brainstorming before switching back to prose.
+- Detailed syntax samples, including collapsible sections and diagram templates, live in **MiaoYan Markdown Syntax Guide**.
+
 ## MiaoYan PPT
 
 1. New users get templates by default. Existing users can copy [this file](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/%E5%A6%99%E8%A8%80%20PPT.md) to try it out
@@ -56,26 +84,3 @@ Explore more shortcuts in the app.
 After trying many note apps (WizNote, Evernote, Ulysses, Quiver, MWeb, Bear, Typora), I couldn't find a Markdown tool that felt right, so I built MiaoYan.
 
 As a front-end developer with some iOS experience, I wanted to explore Swift and macOS development while creating a tool I'd actually use.
-
-## Support
-
-- If MiaoYan improves your workflow, consider [supporting the project](https://miaoyan.app/cats.html)
-- Star this repository on GitHub
-- Recommend to like-minded friends
-
-## Acknowledgments
-
-- <a href="https://github.com/glushchenko/fsnotes" target="_blank">glushchenko/fsnotes</a> - Initial project structure reference
-- <a href="https://github.com/stackotter/swift-cmark-gfm" target="_blank">stackotter/swift-cmark-gfm</a> - Swift Markdown parser
-- <a href="https://github.com/simonbs/Prettier" target="_blank">simonbs/Prettier</a> - Markdown formatting tool
-- <a href="https://github.com/raspu/Highlightr" target="_blank">raspu/Highlightr</a> - Syntax highlighting
-- <a href="https://tsanger.cn/product" target="_blank">Tsanger Font Library</a> - TsangerJinKai font (default font)
-- <a href="https://github.com/hakimel/reveal.js" target="_blank">hakimel/reveal.js</a> - PPT presentation framework
-- Thanks to Vercel for hosting [miaoyan.app](https://miaoyan.app/)
-    <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img
-        src=https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg
-        width="118px"/></a>
-
-## License
-
-MIT License - Free to use and contribute
