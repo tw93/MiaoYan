@@ -294,14 +294,15 @@ extension ViewController {
             return (true, 0)
         }
 
-        var titleMatchCount = 0
-        var contentMatchCount = 0
+        // Pre-lowercase all search terms once to avoid repeated conversions
+        let lowercaseTerms = terms.map { $0.lowercased() }
         let lowercaseTitle = note.name.lowercased()
 
+        var titleMatchCount = 0
+
         // First pass: check title only (fast path)
-        for term in terms {
-            let lowercaseTerm = term.lowercased()
-            if lowercaseTitle.contains(lowercaseTerm) {
+        for term in lowercaseTerms {
+            if lowercaseTitle.contains(term) {
                 titleMatchCount += 1
             }
         }
@@ -313,14 +314,15 @@ extension ViewController {
 
         // Second pass: check content for unmatched terms
         let lowercaseContent = note.content.string.lowercased()
-        for term in terms {
-            let lowercaseTerm = term.lowercased()
+        var contentMatchCount = 0
+
+        for term in lowercaseTerms {
             // Skip if already matched in title
-            if lowercaseTitle.contains(lowercaseTerm) {
+            if lowercaseTitle.contains(term) {
                 continue
             }
             // Check content
-            if lowercaseContent.contains(lowercaseTerm) {
+            if lowercaseContent.contains(term) {
                 contentMatchCount += 1
             } else {
                 // Term not found in either title or content

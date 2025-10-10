@@ -12,11 +12,17 @@ class HtmlManager {
     private static let codeFontStack = "SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace"
 
     // Cached regex patterns
-    private static let imageRegex = try! NSRegularExpression(pattern: "<img[^>]*?src=\"([^\"]*)\"[^>]*?/?>")
-    private static let htmlTagPatterns = [
-        try! NSRegularExpression(pattern: "<(?:img|br|hr|input|meta|link|area|base|col|embed|source|track|wbr)\\s*[^>]*/?\\s*>", options: [.caseInsensitive]),
-        try! NSRegularExpression(pattern: "<(\\w+)[^>]*>[^<]*</\\1>", options: [.caseInsensitive]),
-    ]
+    private static let imageRegex: NSRegularExpression? = {
+        try? NSRegularExpression(pattern: "<img[^>]*?src=\"([^\"]*)\"[^>]*?/?>")
+    }()
+
+    private static let htmlTagPatterns: [NSRegularExpression] = {
+        let patterns = [
+            try? NSRegularExpression(pattern: "<(?:img|br|hr|input|meta|link|area|base|col|embed|source|track|wbr)\\s*[^>]*/?\\s*>", options: [.caseInsensitive]),
+            try? NSRegularExpression(pattern: "<(\\w+)[^>]*>[^<]*</\\1>", options: [.caseInsensitive]),
+        ]
+        return patterns.compactMap { $0 }
+    }()
 
     // Paths
     private static let webkitPreviewURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
@@ -96,8 +102,14 @@ class HtmlManager {
         guard !FileManager.default.fileExists(atPath: destination.path) else { return }
 
         let directory = destination.deletingLastPathComponent()
-        try? FileManager.default.createDirectory(atPath: directory.path, withIntermediateDirectories: true, attributes: nil)
-        try? FileManager.default.copyItem(at: source, to: destination)
+        do {
+            try FileManager.default.createDirectory(atPath: directory.path, withIntermediateDirectories: true, attributes: nil)
+            try FileManager.default.copyItem(at: source, to: destination)
+        } catch {
+            Task { @MainActor in
+                AppDelegate.trackError(error, context: "HtmlManager.copyImageIfNeeded")
+            }
+        }
     }
 
     private static func updateImageSrc(in html: String, fullMatch: String, oldSrc: String, newSrc: String) -> String {
@@ -106,9 +118,20 @@ class HtmlManager {
     }
 
     static func processImages(in html: String, imagesStorage: URL) -> String {
+        guard let regex = imageRegex else {
+            Task { @MainActor in
+                AppDelegate.trackError(
+                    NSError(domain: "HtmlManager", code: 1,
+                           userInfo: [NSLocalizedDescriptionKey: "Invalid image regex pattern"]),
+                    context: "HtmlManager.processImages.regex"
+                )
+            }
+            return html
+        }
+
         var htmlString = html
 
-        let results = imageRegex.matches(in: html, range: NSRange(html.startIndex..., in: html))
+        let results = regex.matches(in: html, range: NSRange(html.startIndex..., in: html))
 
         let images = results.compactMap { match -> (fullMatch: String, srcPath: String)? in
             guard let fullRange = Range(match.range, in: html),

@@ -76,8 +76,9 @@ struct ShortcutTemplate {
 }
 
 // MARK: - Shortcut Template Manager
+@MainActor
 class ShortcutTemplateManager {
-    nonisolated(unsafe) static let shared = ShortcutTemplateManager()
+    static let shared = ShortcutTemplateManager()
 
     private init() {}
 
