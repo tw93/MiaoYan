@@ -56,8 +56,7 @@
 - [raspu/Highlightr](https://github.com/raspu/Highlightr) - シンタックスハイライト
 - [仓耳字库](https://tsanger.cn/product) - TsangerJinKai フォント(デフォルトフォント)
 - [hakimel/reveal.js](https://github.com/hakimel/reveal.js) - PPT プレゼンテーションフレームワーク
-- [Vercel](https://vercel.com?utm_source=tw93&utm_campaign=oss) - [miaoyan.app](https://miaoyan.app/) のホスティング
-    <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss"><img src="https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg" width="118px"/></a>
+- [Vercel](https://vercel.com?utm_source=tw93&utm_campaign=oss) - [miaoyan.app](https://miaoyan.app/) の静的ホスティング
 
 ## ライセンス
 
