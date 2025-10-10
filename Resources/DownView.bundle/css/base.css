@@ -1,48 +1,8 @@
-/* ==================== CSS Variables ==================== */
-:root {
-  /* Brand Colors */
-  --primary-color: #1C5D33;
-  --primary-light: rgba(28, 93, 51, 0.12);
+/**
+ * Base Styles (Theme-independent)
+ */
 
-  /* Base Colors */
-  --bg-color: #FFFFFF;
-  --text-color: #262626;
-  --text-secondary: #777;
-  --link-color: #0C6ADA;
-  --border-color: #e6e6e6;
-  --code-bg: #f7f7f7;
-  --diagram-bg: #f7f7f7;
-  --blockquote-border-color: #d0d0d0;
-
-  /* Syntax Highlight - Light */
-  --hljs-base: #24292e;
-  --hljs-comment: #6a737d;
-  --hljs-keyword: #d73a49;
-  --hljs-string: #032f62;
-  --hljs-number: #005cc5;
-  --hljs-attribute: #e36209;
-  --hljs-title: #6f42c1;
-
-  /* Mermaid Diagram */
-  --mermaid-node-bg: #ffffff;
-  --mermaid-text-color: #333333;
-  --mermaid-border-color: var(--border-color);
-  --mermaid-line-color: var(--primary-color);
-  --mermaid-edge-label-bg: #ffffff;
-
-  /* Fonts */
-  --text-font: 'TsangerJinKai02-W04', -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
-
-  /* Spacing */
-  --border-radius: 6px;
-  --border-radius-sm: 4px;
-  --border-radius-lg: 8px;
-
-  /* Diagram */
-  --markmap-height: 450px;
-}
-
-/* ==================== Base Styles ==================== */
+/* ==================== Base Layout ==================== */
 html {
   font-size: 15px;
   font-display: block;
@@ -50,6 +10,8 @@ html {
   font-family: var(--text-font);
   -webkit-font-smoothing: subpixel-antialiased;
   overscroll-behavior: none;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -59,6 +21,10 @@ body {
   font-family: var(--text-font);
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 img {
@@ -70,6 +36,15 @@ img {
 /* ==================== Typography ==================== */
 .heti {
   font-family: var(--text-font);
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.markdown-body {
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 a,
@@ -92,6 +67,9 @@ pre {
   background-color: var(--code-bg);
   padding: 16px;
   border-radius: var(--border-radius);
+  max-width: 100%;
+  overflow-x: auto;
+  box-sizing: border-box;
 }
 
 pre code {
@@ -100,7 +78,14 @@ pre code {
 }
 
 /* ==================== Tables ==================== */
-.heti table,
+.heti table {
+  border-color: var(--border-color);
+  color: var(--text-color);
+  max-width: 100%;
+  table-layout: auto;
+  box-sizing: border-box;
+}
+
 .heti th,
 .heti td {
   border-color: var(--border-color);
@@ -131,85 +116,6 @@ pre code {
 /* ==================== Form Elements ==================== */
 input[type='checkbox'] {
   border: 1px solid var(--border-color);
-}
-
-/* ==================== Diagram Containers ==================== */
-.mermaid-image-container,
-.markmap-image-container,
-.plantuml-image-container,
-.plantuml-container,
-.plantuml-image,
-pre:has(.language-mermaid) {
-  background-color: var(--diagram-bg);
-}
-
-/* ==================== Dark Mode ==================== */
-.darkmode {
-  --bg-color: #23282D;
-  --text-color: #E7E9EA;
-  --text-secondary: #ABB2BF;
-  --link-color: #1D9BF0;
-  --border-color: #454545;
-  --code-bg: #282e33;
-  --diagram-bg: #282e33;
-  --blockquote-border-color: #545454;
-
-  --mermaid-node-bg: #3c434b;
-  --mermaid-text-color: #E7E9EA;
-  --mermaid-border-color: #545d68;
-  --mermaid-line-color: #1D9BF0;
-  --mermaid-edge-label-bg: #282e33;
-
-  --hljs-base: #ABB2BF;
-  --hljs-comment: #ABB2BF;
-  --hljs-keyword: #9B79F7;
-  --hljs-string: #8FFCCD;
-  --hljs-number: #F7CC8F;
-  --hljs-attribute: #F7CC8F;
-  --hljs-title: #99E0FC;
-}
-
-.darkmode html,
-.darkmode body,
-.darkmode * {
-  color: var(--text-color);
-  background: var(--bg-color);
-}
-
-.darkmode a,
-.darkmode .heti a heti-spacing {
-  color: var(--link-color);
-}
-
-.darkmode .heti p > code,
-.darkmode .heti li > code,
-.darkmode code,
-.darkmode .heti table,
-.darkmode .heti th,
-.darkmode .heti td {
-  background-color: var(--code-bg);
-  border-color: var(--border-color);
-}
-
-.darkmode .heti blockquote {
-  border-left-color: var(--blockquote-border-color);
-}
-
-.darkmode .heti hr {
-  background-color: var(--border-color);
-}
-
-.darkmode input[type='checkbox'] {
-  border: 1px solid white;
-}
-
-.darkmode .mermaid-image-container,
-.darkmode .markmap-image-container,
-.darkmode .plantuml-image-container,
-.darkmode .plantuml-container,
-.darkmode .plantuml-image,
-.darkmode pre:has(.language-mermaid) {
-  background-color: var(--diagram-bg);
 }
 
 /* ==================== Code Line Numbers ==================== */
@@ -268,7 +174,7 @@ pre table.hljs-ln,
   background: transparent;
 }
 
-/* ==================== Syntax Highlighting - Light ==================== */
+/* ==================== Syntax Highlighting ==================== */
 .hljs {
   color: var(--hljs-base);
   background: transparent;
@@ -305,7 +211,7 @@ pre table.hljs-ln,
   color: var(--hljs-title);
 }
 
-/* ==================== Syntax Highlighting - Dark ==================== */
+/* Dark mode syntax highlighting */
 .darkmode .hljs {
   color: var(--hljs-base);
   background: var(--code-bg) !important;
@@ -377,72 +283,6 @@ pre table.hljs-ln,
   text-decoration: underline;
 }
 
-/* ==================== Mermaid Diagrams ==================== */
-.mermaid {
-  background-color: var(--diagram-bg) !important;
-  color: var(--mermaid-text-color) !important;
-}
-
-.mermaid svg {
-  background-color: var(--diagram-bg) !important;
-}
-
-.darkmode .mermaid {
-  background-color: var(--diagram-bg) !important;
-  color: var(--text-color) !important;
-  padding: 16px;
-  border-radius: var(--border-radius);
-}
-
-.darkmode .mermaid svg {
-  background-color: var(--diagram-bg) !important;
-}
-
-.mermaid .label,
-.mermaid text,
-.mermaid span {
-  fill: var(--mermaid-text-color) !important;
-  color: var(--mermaid-text-color) !important;
-}
-
-.mermaid .node rect,
-.mermaid .node circle,
-.mermaid .node polygon {
-  fill: var(--mermaid-node-bg) !important;
-  stroke: var(--mermaid-border-color) !important;
-}
-
-.mermaid .cluster rect {
-  fill: var(--mermaid-node-bg) !important;
-  stroke: var(--mermaid-border-color) !important;
-}
-
-.mermaid .cluster text {
-  fill: var(--mermaid-text-color) !important;
-}
-
-.mermaid .edgePath path,
-.mermaid line,
-.mermaid polyline {
-  stroke: var(--mermaid-line-color) !important;
-}
-
-.mermaid .arrowheadPath {
-  fill: var(--mermaid-line-color) !important;
-}
-
-.mermaid .edgeLabel {
-  background-color: var(--mermaid-edge-label-bg) !important;
-  color: var(--mermaid-text-color) !important;
-  border-radius: var(--border-radius-sm);
-  padding: 2px 6px;
-}
-
-.mermaid .edgeLabel rect {
-  fill: var(--mermaid-edge-label-bg) !important;
-  stroke: var(--mermaid-border-color) !important;
-}
-
 /* ==================== Emoji Support ==================== */
 span.emoji {
   display: -moz-inline-box;
@@ -484,29 +324,6 @@ img.emoji {
   height: 1em;
 }
 
-/* ==================== Markmap ==================== */
-.language-markmap {
-  visibility: hidden !important;
-}
-
-.markmap {
-  display: block;
-  width: 100%;
-  height: var(--markmap-height);
-  overflow: visible;
-}
-
-.markmap svg,
-.markmap g,
-.markmap circle,
-.markmap text {
-  cursor: pointer;
-}
-
-.markmap svg {
-  background: transparent;
-}
-
 /* ==================== Images ==================== */
 img[loading="lazy"] {
   background-color: #eef1f2;
@@ -534,20 +351,7 @@ img.border {
   border-radius: var(--border-radius-lg);
 }
 
-/* ==================== Diagram Containers ==================== */
-.mermaid-image-container,
-.markmap-image-container,
-.plantuml-image-container,
-pre:has(.language-mermaid) {
-  background: var(--diagram-bg);
-  border: none;
-  border-radius: var(--border-radius);
-  padding: 12px;
-  margin: 8px 0;
-  box-shadow: none;
-}
-
-/* ==================== Media Queries - Dark Mode ==================== */
+/* ==================== Media Queries ==================== */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg-color: #23282D;
@@ -618,43 +422,3 @@ pre:has(.language-mermaid) {
     border-block-start-color: var(--border-color);
   }
 }
-
-/* ==================== Diagram Language Styles ==================== */
-.language-mermaid,
-.language-markmap,
-.language-plantuml {
-  border-radius: var(--border-radius);
-  overflow: hidden;
-}
-
-.language-mermaid svg,
-.markmap svg,
-.plantuml-image {
-  border-radius: var(--border-radius);
-}
-
-.mermaid,
-.mermaid *,
-.markmap,
-.markmap *,
-.markmap .markmap-node text,
-.language-mermaid,
-.language-mermaid *,
-.language-markmap,
-.language-markmap *,
-.plantuml-image,
-.language-plantuml,
-.mermaid text,
-.mermaid tspan,
-.mermaid foreignObject div,
-.mermaid .nodeLabel,
-.mermaid .edgeLabel,
-.mermaid .label {
-  font-family: var(--text-font), -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
-}
-
-/* ==================== Lightense (Image Lightbox) ==================== */
-.darkmode .lightense-backdrop {
-  background-color: rgba(35, 40, 45, .95) !important;
-}
-

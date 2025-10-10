@@ -6,6 +6,37 @@
   <meta name="color-scheme" content="light dark" />
 
   <style>
+    /* Critical styles to prevent flash */
+    :root {
+      --bg-color: #FFFFFF;
+      --text-color: #262626;
+      --code-bg: #f7f7f7;
+      --diagram-bg: #f7f7f7;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-color: #23282D;
+        --text-color: #E7E9EA;
+        --code-bg: #282e33;
+        --diagram-bg: #282e33;
+      }
+    }
+
+    .darkmode {
+      --bg-color: #23282D;
+      --text-color: #E7E9EA;
+      --code-bg: #282e33;
+      --diagram-bg: #282e33;
+    }
+
+    html, body {
+      background: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+    }
+
     img {
       image-rendering: auto;
       color-scheme: only light;
@@ -20,7 +51,10 @@
   <link rel="stylesheet" href="css/typography.css" />
   <link rel="stylesheet" href="css/katex.min.css" />
   <link rel="stylesheet" href="css/tocbot.css" />
-  <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="css/theme-light.css" />
+  <link rel="stylesheet" href="css/theme-dark.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/diagrams.css" />
 
   <script src="js/heti-addon.min.js"></script>
   <script src="js/highlight.min.js"></script>
@@ -36,7 +70,12 @@
   <script src="js/lightense.min.js"></script>
   <script src="js/tocbot.min.js"></script>
 
-  <script src="js/index.js"></script>
+  <!-- MiaoYan Modular Scripts -->
+  <script src="js/theme-config.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/theme-manager.js"></script>
+  <script src="js/diagram-handler.js"></script>
+  <script src="js/app.js"></script>
 
   <script>
     if ('CUSTOM_CSS' === 'darkmode') {

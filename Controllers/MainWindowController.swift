@@ -41,6 +41,14 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
     func refreshEditArea(focusSearch: Bool = false) {
         guard let vc = ViewController.shared() else { return }
         vc.editArea.updateTextContainerInset()
+
+        // Update WebView frame if in preview mode
+        if let markdownView = vc.editArea.markdownView, !markdownView.isHidden {
+            let newFrame = vc.editAreaScroll.bounds
+            if markdownView.frame.size != newFrame.size {
+                markdownView.frame = newFrame
+            }
+        }
     }
 
     func windowWillReturnUndoManager(_ window: NSWindow) -> UndoManager? {

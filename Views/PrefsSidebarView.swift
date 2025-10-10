@@ -75,22 +75,9 @@ final class PrefsSidebarView: NSView {
 
     private func setupAppearance() {
         wantsLayer = true
-        layer?.backgroundColor = Theme.backgroundColor.cgColor
+        layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
 
-        let visualEffect = NSVisualEffectView()
-        visualEffect.translatesAutoresizingMaskIntoConstraints = false
-        visualEffect.material = .sidebar
-        visualEffect.blendingMode = .behindWindow
-        visualEffect.state = .active
-
-        addSubview(visualEffect, positioned: .below, relativeTo: scrollView)
-
-        NSLayoutConstraint.activate([
-            visualEffect.leadingAnchor.constraint(equalTo: leadingAnchor),
-            visualEffect.trailingAnchor.constraint(equalTo: trailingAnchor),
-            visualEffect.topAnchor.constraint(equalTo: topAnchor),
-            visualEffect.bottomAnchor.constraint(equalTo: bottomAnchor),
-        ])
+        tableView.backgroundColor = NSColor.controlBackgroundColor
     }
 
     func selectCategory(_ category: PreferencesCategory) {

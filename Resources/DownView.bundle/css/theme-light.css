@@ -1,0 +1,46 @@
+/**
+ * Light Theme Variables
+ */
+
+:root {
+  /* Brand Colors */
+  --primary-color: #1C5D33;
+  --primary-light: rgba(28, 93, 51, 0.12);
+
+  /* Base Colors */
+  --bg-color: #FFFFFF;
+  --text-color: #262626;
+  --text-secondary: #777;
+  --link-color: #0C6ADA;
+  --border-color: #e6e6e6;
+  --code-bg: #f7f7f7;
+  --diagram-bg: #f7f7f7;
+  --blockquote-border-color: #d0d0d0;
+
+  /* Syntax Highlight - Light */
+  --hljs-base: #24292e;
+  --hljs-comment: #6a737d;
+  --hljs-keyword: #d73a49;
+  --hljs-string: #032f62;
+  --hljs-number: #005cc5;
+  --hljs-attribute: #e36209;
+  --hljs-title: #6f42c1;
+
+  /* Mermaid Diagram */
+  --mermaid-node-bg: #ffffff;
+  --mermaid-text-color: #333333;
+  --mermaid-border-color: var(--border-color);
+  --mermaid-line-color: var(--primary-color);
+  --mermaid-edge-label-bg: transparent;
+
+  /* Fonts */
+  --text-font: 'TsangerJinKai02-W04', -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
+
+  /* Spacing */
+  --border-radius: 6px;
+  --border-radius-sm: 4px;
+  --border-radius-lg: 8px;
+
+  /* Diagram */
+  --markmap-height: 450px;
+}
