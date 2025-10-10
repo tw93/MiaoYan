@@ -141,7 +141,7 @@
 "Adc-zl-sqX.ibShadowedToolTip" = "フォーマット";
 
 /* Class = "NSSearchFieldCell"; placeholderString = "Search"; ObjectID = "B7t-9v-bSk"; */
-"B7t-9v-bSk.placeholderString" = "検索";
+"B7t-9v-bSk.placeholderString" = "";
 
 /* Class = "NSMenuItem"; title = "Preferences…"; ObjectID = "BOF-NM-1cW"; */
 "BOF-NM-1cW.title" = "設定…";
