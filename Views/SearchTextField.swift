@@ -16,6 +16,12 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        MainActor.assumeIsolated {
+            commonInit()
+        }
+    }
+    
+    @MainActor private func commonInit() {
         wantsLayer = true
         focusRingType = .none
         sendsWholeSearchString = false
