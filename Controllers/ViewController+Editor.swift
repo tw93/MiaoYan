@@ -6,6 +6,20 @@ import TelemetryDeck
 
 // MARK: - Editor Management
 extension ViewController {
+    // MARK: - WebView Helper
+
+    /// Show WebView - centralized method to avoid duplication
+    private func showWebView() {
+        editArea.markdownView?.alphaValue = 1.0
+        editArea.markdownView?.isHidden = false
+    }
+
+    /// Hide WebView - centralized method to avoid duplication
+    private func hideWebView() {
+        editArea.markdownView?.isHidden = true
+        editArea.markdownView?.alphaValue = 1.0
+    }
+
     // MARK: - Preview Management
     func enablePreview() {
         if !UserDefaultsManagement.magicPPT {
@@ -14,20 +28,10 @@ extension ViewController {
         isFocusedTitle = titleLabel.hasFocus()
         cancelTextSearch()
         editArea.window?.makeFirstResponder(notesTableView)
-        if let webView = editArea.markdownView {
-            webView.alphaValue = 0.0
-            webView.isHidden = false
-            refillEditArea()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                NSAnimationContext.runAnimationGroup({ context in
-                    context.duration = 0.2
-                    context.timingFunction = CAMediaTimingFunction(name: .easeOut)
-                    webView.animator().alphaValue = 1.0
-                })
-            }
-        } else {
-            refillEditArea()
+        if editArea.markdownView != nil {
+            showWebView()
         }
+        refillEditArea()
         titleLabel.isEditable = false
         if UserDefaultsManagement.previewLocation == "Editing", !UserDefaultsManagement.isOnExport {
             let scrollPre = getScrollTop()
@@ -45,19 +49,8 @@ extension ViewController {
             UserDefaultsManagement.magicPPT = false
         }
         if let webView = editArea.markdownView {
-            NSAnimationContext.runAnimationGroup(
-                { context in
-                    context.duration = 0.15
-                    context.timingFunction = CAMediaTimingFunction(name: .easeIn)
-                    webView.animator().alphaValue = 0.0
-                },
-                completionHandler: { [weak webView] in
-                    Task { @MainActor in
-                        webView?.isHidden = true
-                        webView?.alphaValue = 1.0
-                        webView?.loadHTMLString("<html><body style='background:transparent;'></body></html>", baseURL: nil)
-                    }
-                })
+            hideWebView()
+            webView.loadHTMLString("<html><body style='background:transparent;'></body></html>", baseURL: nil)
         }
         refillEditArea()
         DispatchQueue.main.async {
@@ -96,20 +89,10 @@ extension ViewController {
         hideNoteList("")
         formatButton.isHidden = true
         previewButton.isHidden = true
-        if editArea.markdownView == nil {
-            refillEditArea(previewOnly: true, force: true)
-        } else {
-            editArea.markdownView?.alphaValue = 0.0
-            editArea.markdownView?.isHidden = false
-            refillEditArea(previewOnly: true, force: true)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                NSAnimationContext.runAnimationGroup({ context in
-                    context.duration = 0.2
-                    context.timingFunction = CAMediaTimingFunction(name: .easeOut)
-                    self.editArea.markdownView?.animator().alphaValue = 1.0
-                })
-            }
+        if editArea.markdownView != nil {
+            showWebView()
         }
+        refillEditArea(previewOnly: true, force: true)
         presentationButton.state = .on
         if !UserDefaultsManagement.fullScreen {
             view.window?.toggleFullScreen(nil)
@@ -237,21 +220,10 @@ extension ViewController {
             view.window?.toggleFullScreen(nil)
         }
         // Ensure we have preview content
-        if editArea.markdownView == nil {
-            refillEditArea()
-        } else {
-            // Show existing webview with animation
-            editArea.markdownView?.alphaValue = 0.0
-            editArea.markdownView?.isHidden = false
-            refillEditArea()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                NSAnimationContext.runAnimationGroup({ context in
-                    context.duration = 0.2
-                    context.timingFunction = CAMediaTimingFunction(name: .easeOut)
-                    vc.editArea.markdownView?.animator().alphaValue = 1.0
-                })
-            }
+        if editArea.markdownView != nil {
+            showWebView()
         }
+        refillEditArea()
         // Adjust title bar for cleaner PPT experience
         DispatchQueue.main.async {
             vc.titiebarHeight.constant = 0.0
@@ -329,19 +301,8 @@ extension ViewController {
         }
 
         // Hide webview and return to text editor
-        if let webView = editArea.markdownView {
-            NSAnimationContext.runAnimationGroup(
-                { context in
-                    context.duration = 0.15
-                    context.timingFunction = CAMediaTimingFunction(name: .easeIn)
-                    webView.animator().alphaValue = 0.0
-                },
-                completionHandler: { [weak webView] in
-                    Task { @MainActor in
-                        webView?.isHidden = true
-                        webView?.alphaValue = 1.0
-                    }
-                })
+        if editArea.markdownView != nil {
+            hideWebView()
         }
         // Restore editor content and focus
         refillEditArea()

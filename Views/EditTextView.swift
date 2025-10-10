@@ -410,9 +410,11 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                     viewController.editAreaScroll.addSubview(view)
                 }
             } else {
-                /// Resize markdownView
-                let frame = viewController.editAreaScroll.bounds
-                markdownView?.frame = frame
+                /// Update frame only if size changed to avoid unnecessary layout
+                let newFrame = viewController.editAreaScroll.bounds
+                if markdownView?.frame.size != newFrame.size {
+                    markdownView?.frame = newFrame
+                }
                 /// Load note if needed
                 markdownView?.load(note: note, force: options.force)
                 /// Ensure it is visible in case it was hidden by clear() during sidebar switch

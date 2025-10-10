@@ -50,8 +50,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
         super.init(frame: frame, configuration: configuration)
         navigationDelegate = navigationProxy
 
-        // Auto-resize with parent view
-        autoresizingMask = [.width, .height]
+        // Note: Frame is manually managed by EditTextView to avoid resize flicker
+        // autoresizingMask is intentionally not set
 
         // Keep the same background color between native and web layers
         setValue(false, forKey: "drawsBackground")
@@ -59,6 +59,9 @@ class MPreviewView: WKWebView, WKUIDelegate {
         let bgNSColor = determineBackgroundColor()
         layer?.backgroundColor = bgNSColor.cgColor
         layer?.isOpaque = false
+        // Optimize layer rendering during resize
+        layerContentsRedrawPolicy = .onSetNeedsDisplay
+        layer?.drawsAsynchronously = false
         // Fill under-page area with the same color to cover rubber-banding gaps
         setValue(bgNSColor, forKey: "underPageBackgroundColor")
         if let hostingScrollView = subviews.compactMap({ $0 as? NSScrollView }).first {
@@ -223,17 +226,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
         }
     }
     public func load(note: Note, force: Bool = false) {
-        let isFirstLoad = self.note == nil
-        let shouldHideForTransition = isFirstLoad || force
-
-        // For dark mode, maintain the dark background color during transition
-        if shouldHideForTransition && UserDataService.instance.isDark {
-            // Keep the background visible but hide content smoothly
-            self.alphaValue = 0.9
-        } else if shouldHideForTransition {
-            self.alphaValue = 0.0
-        }
-
+        // No alpha animation here - parent view controller handles transitions
+        // This avoids double-animation when toggling preview mode
         Task.detached { [weak self, note] in
             let markdownString = await note.getPrettifiedContent()
             let imagesStorage = await note.project.url
@@ -248,18 +242,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
                     // Fallback: try to load minimal content
                     let basicHTML = "<html><body><p>Failed to load preview</p></body></html>"
                     self.loadHTMLString(basicHTML, baseURL: nil)
-                }
-
-                if shouldHideForTransition {
-                    // Reduced delay for smoother transition
-                    Task { @MainActor [weak self] in
-                        try? await Task.sleep(nanoseconds: 50_000_000)  // 0.05 seconds
-                        await NSAnimationContext.runAnimationGroup({ context in
-                            context.duration = 0.15
-                            context.timingFunction = CAMediaTimingFunction(name: .easeOut)
-                            self?.animator().alphaValue = 1.0
-                        })
-                    }
                 }
             }
         }

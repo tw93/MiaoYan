@@ -1,0 +1,192 @@
+/**
+ * Diagram Styles (Mermaid, Markmap, PlantUML)
+ */
+
+/* ==================== Diagram Containers ==================== */
+.mermaid-image-container,
+.markmap-image-container,
+.plantuml-image-container,
+pre:has(.language-mermaid) {
+  background: var(--diagram-bg);
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 12px;
+  margin: 8px 0;
+  box-shadow: none;
+}
+
+.darkmode .mermaid-image-container,
+.darkmode .markmap-image-container,
+.darkmode .plantuml-image-container,
+.darkmode .plantuml-container,
+.darkmode .plantuml-image,
+.darkmode pre:has(.language-mermaid),
+.darkmode .mermaid,
+.darkmode .mermaid svg,
+.darkmode .markmap,
+.darkmode .markmap svg {
+  background-color: var(--diagram-bg) !important;
+}
+
+/* ==================== Mermaid Diagrams ==================== */
+.mermaid {
+  background-color: var(--diagram-bg) !important;
+  color: var(--mermaid-text-color) !important;
+}
+
+.mermaid svg {
+  background-color: var(--diagram-bg) !important;
+}
+
+.darkmode .mermaid {
+  background-color: var(--diagram-bg) !important;
+  color: var(--text-color) !important;
+  padding: 16px;
+  border-radius: var(--border-radius);
+}
+
+.darkmode .mermaid svg {
+  background-color: var(--diagram-bg) !important;
+}
+
+.mermaid .label,
+.mermaid text,
+.mermaid span {
+  fill: var(--mermaid-text-color) !important;
+  color: var(--mermaid-text-color) !important;
+}
+
+.mermaid .node rect,
+.mermaid .node circle,
+.mermaid .node polygon {
+  fill: var(--mermaid-node-bg) !important;
+  stroke: var(--mermaid-border-color) !important;
+}
+
+.mermaid .cluster rect {
+  fill: var(--mermaid-node-bg) !important;
+  stroke: var(--mermaid-border-color) !important;
+}
+
+.mermaid .cluster text {
+  fill: var(--mermaid-text-color) !important;
+}
+
+.mermaid .edgePath path,
+.mermaid line,
+.mermaid polyline {
+  stroke: var(--mermaid-line-color) !important;
+}
+
+.mermaid .arrowheadPath {
+  fill: var(--mermaid-line-color) !important;
+}
+
+.mermaid .edgeLabel {
+  background-color: transparent !important;
+  color: var(--mermaid-text-color) !important;
+}
+
+.mermaid .edgeLabel rect {
+  fill: transparent !important;
+  stroke: none !important;
+}
+
+/* Dark mode specific mermaid overrides */
+.darkmode .mermaid .node rect,
+.darkmode .mermaid .node circle,
+.darkmode .mermaid .node polygon {
+  fill: var(--mermaid-node-bg) !important;
+  stroke: var(--mermaid-border-color) !important;
+}
+
+.darkmode .mermaid .cluster rect {
+  fill: var(--mermaid-node-bg) !important;
+  stroke: var(--mermaid-border-color) !important;
+}
+
+.darkmode .mermaid .edgeLabel,
+.darkmode .mermaid .edgeLabel rect {
+  background-color: transparent !important;
+  fill: transparent !important;
+}
+
+.darkmode .markmap text,
+.darkmode .markmap g text {
+  fill: var(--text-color) !important;
+}
+
+/* ==================== Markmap ==================== */
+.language-markmap {
+  visibility: hidden !important;
+  background-color: var(--diagram-bg);
+  border-radius: var(--border-radius);
+  padding: 8px;
+}
+
+.markmap {
+  display: block;
+  width: 100%;
+  height: var(--markmap-height);
+  max-height: var(--markmap-height);
+  overflow: visible;
+  background-color: var(--diagram-bg);
+  border-radius: 12px;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.markmap svg,
+.markmap g,
+.markmap circle,
+.markmap text {
+  cursor: pointer;
+}
+
+.markmap svg {
+  background: transparent;
+}
+
+/* ==================== PlantUML ==================== */
+.plantuml-image-container,
+.plantuml-container {
+  background-color: var(--diagram-bg);
+}
+
+.plantuml-image {
+  background-color: var(--diagram-bg);
+}
+
+/* ==================== Diagram Language Styles ==================== */
+.language-mermaid,
+.language-markmap,
+.language-plantuml {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.language-mermaid svg,
+.markmap svg,
+.plantuml-image {
+  border-radius: var(--border-radius);
+}
+
+.mermaid,
+.mermaid *,
+.markmap,
+.markmap *,
+.markmap .markmap-node text,
+.language-mermaid,
+.language-mermaid *,
+.language-markmap,
+.language-markmap *,
+.plantuml-image,
+.language-plantuml,
+.mermaid text,
+.mermaid tspan,
+.mermaid foreignObject div,
+.mermaid .nodeLabel,
+.mermaid .edgeLabel,
+.mermaid .label {
+  font-family: var(--text-font), -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
+}
