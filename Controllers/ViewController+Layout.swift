@@ -39,7 +39,7 @@ extension ViewController {
     func hideSidebar(_ sender: Any) {
         guard sidebarWidth > 0 else { return }
 
-        if !UserDefaultsManagement.presentation {
+        if !UserDefaultsManagement.presentation && !UserDefaultsManagement.magicPPT {
             UserDefaultsManagement.realSidebarSize = Int(sidebarWidth)
         }
 
@@ -83,7 +83,9 @@ extension ViewController {
             UserDefaultsManagement.sidebarSize = Int(notelistWidth)
             splitView.shouldHideDivider = true
             splitView.setPosition(0, ofDividerAt: 0)
+        }
 
+        if sidebarWidth > 0 {
             hideSidebar("")
         }
         editArea.updateTextContainerInset()

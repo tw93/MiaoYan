@@ -45,9 +45,8 @@ extension ViewController {
         if UserDefaultsManagement.magicPPT {
             return
         }
-        if UserDefaultsManagement.currentEditorMode == .preview {
-            UserDefaultsManagement.magicPPT = false
-        }
+        // Clear preview flag
+        UserDefaultsManagement.preview = false
         if let webView = editArea.markdownView {
             hideWebView()
             webView.loadHTMLString("<html><body style='background:transparent;'></body></html>", baseURL: nil)
@@ -189,42 +188,32 @@ extension ViewController {
         guard let vc = ViewController.shared() else {
             return
         }
-        // Set PPT mode directly - this handles all state properly
         UserDefaultsManagement.magicPPT = true
-        // Save current layout state before entering PPT mode
         let currentSidebarWidth = sidebarWidth
         let currentNotelistWidth = notelistWidth
-        // Force save current sidebar width
         if currentSidebarWidth > 86 {
             UserDefaultsManagement.realSidebarSize = Int(currentSidebarWidth)
         }
-        // Force save current notelist width
         if currentNotelistWidth > 0 {
             UserDefaultsManagement.sidebarSize = Int(currentNotelistWidth)
         }
-        // Save current notelist scroll position
         if let clipView = notesTableView.superview as? NSClipView {
             savedPresentationScrollPosition = clipView.bounds.origin
         }
-        // Hide UI elements for PPT mode
         hideNoteList("")
         formatButton.isHidden = true
         previewButton.isHidden = true
-        // Update button states to reflect PPT mode
         DispatchQueue.main.async {
             vc.previewButton.state = .on
             vc.presentationButton.state = .on
         }
-        // Enable fullscreen for PPT
         if !UserDefaultsManagement.fullScreen {
             view.window?.toggleFullScreen(nil)
         }
-        // Ensure we have preview content
         if editArea.markdownView != nil {
             showWebView()
         }
         refillEditArea()
-        // Adjust title bar for cleaner PPT experience
         DispatchQueue.main.async {
             vc.titiebarHeight.constant = 0.0
             vc.titleLabel.isHidden = true
@@ -261,7 +250,10 @@ extension ViewController {
     }
 
     func disableMiaoYanPPT() {
-        // Defer magicPPT flag update until UI fully restored to prevent conflicts
+        // Clear magicPPT flag FIRST to allow disablePreview to work properly
+        UserDefaultsManagement.magicPPT = false
+
+        // Update button states
         DispatchQueue.main.async {
             self.previewButton.state = .off
             self.presentationButton.state = .off
@@ -293,10 +285,8 @@ extension ViewController {
                 clipView.setBoundsOrigin(savedPosition)
                 self.savedPresentationScrollPosition = nil
             }
-            // Force return to editing mode and update state flags
+            // Force return to editing mode - magicPPT already cleared so this will work
             self.disablePreview()
-            // Safely update magicPPT state after UI restoration
-            UserDefaultsManagement.magicPPT = false
             self.updateButtonStates()
         }
 

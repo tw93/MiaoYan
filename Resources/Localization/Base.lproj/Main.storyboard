@@ -830,7 +830,7 @@ CA
                                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="400" id="Gef-q9-zCe"/>
                                                     <constraint firstItem="gaB-Rc-PMR" firstAttribute="leading" secondItem="bd7-O3-GQF" secondAttribute="trailing" constant="7" id="LVf-TD-MV7"/>
                                                     <constraint firstAttribute="trailing" secondItem="bd7-O3-GQF" secondAttribute="trailing" constant="32" id="ZGc-Ja-Aih"/>
-                                                    <constraint firstItem="bd7-O3-GQF" firstAttribute="leading" secondItem="8ej-mX-KM6" secondAttribute="leading" constant="13" id="fJK-am-Cfu"/>
+                                                    <constraint firstItem="bd7-O3-GQF" firstAttribute="leading" secondItem="8ej-mX-KM6" secondAttribute="leading" priority="2" constant="13" id="fJK-am-Cfu"/>
                                                     <constraint firstItem="Kzf-Jh-YEb" firstAttribute="leading" secondItem="8ej-mX-KM6" secondAttribute="leading" id="lGx-ze-4gU"/>
                                                     <constraint firstItem="bd7-O3-GQF" firstAttribute="top" secondItem="8ej-mX-KM6" secondAttribute="top" constant="15" id="nXO-Fh-8nv"/>
                                                     <constraint firstAttribute="bottom" secondItem="Kzf-Jh-YEb" secondAttribute="bottom" id="oxv-Hv-dH1"/>
