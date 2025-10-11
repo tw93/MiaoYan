@@ -3,6 +3,20 @@ import Cocoa
 // MARK: - Layout Management
 extension ViewController {
 
+    // MARK: - Layout Constants
+    private enum LayoutConstants {
+        static let minSidebarWidth: CGFloat = 138
+        static let maxSidebarWidth: CGFloat = 280
+        static let defaultNotelistWidth: CGFloat = 280
+        static let narrowThreshold: CGFloat = 50
+        static let searchTopNarrow: CGFloat = 34.0
+        static let searchTopNormal: CGFloat = 13.0
+        static let titlebarHeightNarrow: CGFloat = 64.0
+        static let titlebarHeightNormal: CGFloat = 52.0
+        static let titleTopNarrow: CGFloat = 30.0
+        static let titleTopNormal: CGFloat = 16.0
+    }
+
     // MARK: - Properties
     var sidebarWidth: CGFloat {
         guard let splitView = sidebarSplitView,
@@ -18,104 +32,104 @@ extension ViewController {
 
     // MARK: - Layout Management Methods
     func checkSidebarConstraint() {
-        if sidebarSplitView.subviews[0].frame.width < 50, !UserDefaultsManagement.isWillFullScreen {
-            searchTopConstraint.constant = 34.0
-            return
-        }
-        searchTopConstraint.constant = 13.0
+        let isNarrow = sidebarWidth < LayoutConstants.narrowThreshold && !UserDefaultsManagement.isWillFullScreen
+        searchTopConstraint.constant = isNarrow ? LayoutConstants.searchTopNarrow : LayoutConstants.searchTopNormal
     }
 
     func checkTitlebarTopConstraint() {
-        if splitView.subviews[0].frame.width < 50, !UserDefaultsManagement.isWillFullScreen {
-            titiebarHeight.constant = 64.0
-            titleTopConstraint.constant = 30.0
-            return
+        let isNarrow = notelistWidth < LayoutConstants.narrowThreshold && !UserDefaultsManagement.isWillFullScreen
+        titiebarHeight.constant = isNarrow ? LayoutConstants.titlebarHeightNarrow : LayoutConstants.titlebarHeightNormal
+        titleTopConstraint.constant = isNarrow ? LayoutConstants.titleTopNarrow : LayoutConstants.titleTopNormal
+    }
+
+    // MARK: - Core Panel Operations
+
+    private var isPresentationMode: Bool {
+        UserDefaultsManagement.presentation || UserDefaultsManagement.magicPPT
+    }
+
+    private func setSidebarVisible(_ visible: Bool, saveState: Bool = true) {
+        if visible {
+            let savedWidth = UserDefaultsManagement.realSidebarSize
+            let targetWidth = max(savedWidth, Int(LayoutConstants.minSidebarWidth))
+
+            if savedWidth < Int(LayoutConstants.minSidebarWidth) {
+                UserDefaultsManagement.realSidebarSize = Int(LayoutConstants.minSidebarWidth)
+            }
+
+            sidebarSplitView.setPosition(CGFloat(targetWidth), ofDividerAt: 0)
+        } else {
+            if saveState && !isPresentationMode {
+                UserDefaultsManagement.realSidebarSize = Int(sidebarWidth)
+            }
+            sidebarSplitView.setPosition(0, ofDividerAt: 0)
         }
-        titiebarHeight.constant = 52.0
-        titleTopConstraint.constant = 16.0
+        editArea.updateTextContainerInset()
+    }
+
+    private func setNotelistVisible(_ visible: Bool, saveState: Bool = true) {
+        if visible {
+            let savedWidth = UserDefaultsManagement.sidebarSize
+            let targetWidth = savedWidth > 0 ? savedWidth : Int(LayoutConstants.defaultNotelistWidth)
+            splitView.shouldHideDivider = false
+            splitView.setPosition(CGFloat(targetWidth), ofDividerAt: 0)
+        } else {
+            if saveState && !isPresentationMode {
+                UserDefaultsManagement.sidebarSize = Int(notelistWidth)
+            }
+            splitView.shouldHideDivider = true
+            splitView.setPosition(0, ofDividerAt: 0)
+        }
+        editArea.updateTextContainerInset()
     }
 
     // MARK: - Sidebar Management
+
     func hideSidebar(_ sender: Any) {
         guard sidebarWidth > 0 else { return }
 
-        if !UserDefaultsManagement.presentation && !UserDefaultsManagement.magicPPT {
-            UserDefaultsManagement.realSidebarSize = Int(sidebarWidth)
-        }
-
-        sidebarSplitView.setPosition(0, ofDividerAt: 0)
-        editArea.updateTextContainerInset()
+        // 隐藏 sidebar → 不影响 notelist（允许两栏模式）
+        setSidebarVisible(false)
     }
 
     func showSidebar(_ sender: Any) {
         guard sidebarWidth == 0 else { return }
 
-        let savedWidth = UserDefaultsManagement.realSidebarSize
-        let targetWidth = max(savedWidth, 138)
-
-        if savedWidth < 138 {
-            UserDefaultsManagement.realSidebarSize = 138
-        }
-
-        sidebarSplitView.setPosition(CGFloat(targetWidth), ofDividerAt: 0)
-
+        // 显示 sidebar → 自动显示 notelist
         if notelistWidth == 0 {
-            expandNoteList()
+            setNotelistVisible(true)
         }
-
-        editArea.updateTextContainerInset()
+        setSidebarVisible(true)
     }
 
     // MARK: - Note List Management
+
     func showNoteList(_ sender: Any) {
-        if notelistWidth == 0 {
-            if sidebarWidth == 0 {
-                showSidebar(sender)
-            } else {
-                expandNoteList()
-            }
-        }
-        editArea.updateTextContainerInset()
+        guard notelistWidth == 0 else { return }
+
+        // 显示 notelist → 不强制显示 sidebar（允许两栏模式）
+        setNotelistVisible(true)
     }
 
     func hideNoteList(_ sender: Any) {
-        if notelistWidth > 0 {
-            UserDefaultsManagement.sidebarSize = Int(notelistWidth)
-            splitView.shouldHideDivider = true
-            splitView.setPosition(0, ofDividerAt: 0)
-        }
+        guard notelistWidth > 0 else { return }
 
+        // 隐藏 notelist → 自动隐藏 sidebar
+        setNotelistVisible(false)
         if sidebarWidth > 0 {
-            hideSidebar("")
+            setSidebarVisible(false)
         }
-        editArea.updateTextContainerInset()
-    }
-
-    private func expandNoteList() {
-        let size = UserDefaultsManagement.sidebarSize == 0 ? 280 : UserDefaultsManagement.sidebarSize
-        splitView.shouldHideDivider = false
-        splitView.setPosition(CGFloat(size), ofDividerAt: 0)
     }
 
     // MARK: - Toggle Actions
     @IBAction func toggleNoteList(_ sender: Any) {
         guard splitView != nil else { return }
-
-        if notelistWidth == 0 {
-            showNoteList(sender)
-        } else {
-            hideNoteList(sender)
-        }
+        notelistWidth == 0 ? showNoteList(sender) : hideNoteList(sender)
     }
 
     @IBAction func toggleSidebarPanel(_ sender: Any) {
         guard sidebarSplitView != nil else { return }
-
-        if sidebarWidth == 0 {
-            showSidebar(sender)
-        } else {
-            hideSidebar(sender)
-        }
+        sidebarWidth == 0 ? showSidebar(sender) : hideSidebar(sender)
     }
 
     // MARK: - Gesture Handling
@@ -188,28 +202,21 @@ extension ViewController {
     func swipe(deltaX: CGFloat) {
         guard deltaX != 0 else { return }
 
-        guard let vc = ViewController.shared() else { return }
-        let siderbarSize = Int(vc.sidebarSplitView.subviews[0].frame.width)
-        let notelistSize = Int(vc.splitView.subviews[0].frame.width)
-
         let swipedLeft = deltaX > 0
 
         if swipedLeft {
-            if siderbarSize > 0 {
+            // 向左滑：优先隐藏 sidebar，然后隐藏 notelist
+            if sidebarWidth > 0 {
                 hideSidebar("")
-            } else {
-                if notelistSize > 0 {
-                    hideNoteList("")
-                }
+            } else if notelistWidth > 0 {
+                hideNoteList("")
             }
-
         } else {
-            if notelistSize == 0 {
+            // 向右滑：优先显示 notelist，然后显示 sidebar
+            if notelistWidth == 0 {
                 showNoteList("")
-            } else {
-                if siderbarSize == 0 {
-                    showSidebar("")
-                }
+            } else if sidebarWidth == 0 {
+                showSidebar("")
             }
         }
     }
@@ -234,7 +241,7 @@ extension ViewController {
 
     func splitView(_ splitView: NSSplitView, constrainMaxCoordinate proposedMaximumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
         if splitView == sidebarSplitView && dividerIndex == 0 {
-            return 280
+            return LayoutConstants.maxSidebarWidth
         }
 
         if dividerIndex == 0 && UserDefaultsManagement.isSingleMode {
