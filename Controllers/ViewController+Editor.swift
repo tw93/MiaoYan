@@ -72,10 +72,10 @@ extension ViewController {
 
     // MARK: - Presentation Mode
 
-    func enablePresentation() {
-        UserDefaultsManagement.presentation = true
+    private func savePresentationLayout() {
         let currentSidebarWidth = sidebarWidth
         let currentNotelistWidth = notelistWidth
+
         if currentSidebarWidth > 86 {
             UserDefaultsManagement.realSidebarSize = Int(currentSidebarWidth)
         }
@@ -85,6 +85,26 @@ extension ViewController {
         if let clipView = notesTableView.superview as? NSClipView {
             savedPresentationScrollPosition = clipView.bounds.origin
         }
+    }
+
+    private func restorePresentationLayout() {
+        formatButton.isHidden = false
+        previewButton.isHidden = false
+
+        if sidebarWidth == 0 { showSidebar("") }
+        if notelistWidth == 0 { showNoteList("") }
+        checkTitlebarTopConstraint()
+
+        if let savedPosition = savedPresentationScrollPosition,
+           let clipView = notesTableView.superview as? NSClipView {
+            clipView.setBoundsOrigin(savedPosition)
+            savedPresentationScrollPosition = nil
+        }
+    }
+
+    func enablePresentation() {
+        UserDefaultsManagement.presentation = true
+        savePresentationLayout()
         hideNoteList("")
         formatButton.isHidden = true
         previewButton.isHidden = true
@@ -111,24 +131,8 @@ extension ViewController {
         }
         // Restore UI elements after fullscreen transition completes
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-            // Restore UI elements
-            self.formatButton.isHidden = false
-            self.previewButton.isHidden = false
-            // Restore layout
-            // Always restore three-panel layout when exiting presentation mode
-            self.showNoteList("")
-            if self.sidebarWidth == 0 { self.showSidebar("") }
-            self.checkTitlebarTopConstraint()
-            // Restore scroll position
-            if let savedPosition = self.savedPresentationScrollPosition,
-                let clipView = self.notesTableView.superview as? NSClipView
-            {
-                clipView.setBoundsOrigin(savedPosition)
-                self.savedPresentationScrollPosition = nil
-            }
-            // Force return to editing mode and update state flags
+            self.restorePresentationLayout()
             self.disablePreview()
-            // Safely update presentation state after UI restoration
             UserDefaultsManagement.presentation = false
             self.updateButtonStates()
         }
@@ -189,17 +193,7 @@ extension ViewController {
             return
         }
         UserDefaultsManagement.magicPPT = true
-        let currentSidebarWidth = sidebarWidth
-        let currentNotelistWidth = notelistWidth
-        if currentSidebarWidth > 86 {
-            UserDefaultsManagement.realSidebarSize = Int(currentSidebarWidth)
-        }
-        if currentNotelistWidth > 0 {
-            UserDefaultsManagement.sidebarSize = Int(currentNotelistWidth)
-        }
-        if let clipView = notesTableView.superview as? NSClipView {
-            savedPresentationScrollPosition = clipView.bounds.origin
-        }
+        savePresentationLayout()
         hideNoteList("")
         formatButton.isHidden = true
         previewButton.isHidden = true
@@ -262,7 +256,7 @@ extension ViewController {
         DispatchQueue.main.async {
             self.titleLabel.isHidden = false
             self.titleBarView.isHidden = false
-            self.titiebarHeight.constant = 40.0  // Restore title bar height
+            self.titiebarHeight.constant = 40.0
         }
         // Exit fullscreen if in fullscreen
         if UserDefaultsManagement.fullScreen {
@@ -271,21 +265,7 @@ extension ViewController {
         }
         // Restore UI elements after fullscreen transition completes
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-            // Show hidden UI elements
-            self.formatButton.isHidden = false
-            self.previewButton.isHidden = false
-            // Always restore three-panel layout when exiting PPT mode
-            self.showNoteList("")
-            if self.sidebarWidth == 0 { self.showSidebar("") }
-            self.checkTitlebarTopConstraint()
-            // Restore scroll position
-            if let savedPosition = self.savedPresentationScrollPosition,
-                let clipView = self.notesTableView.superview as? NSClipView
-            {
-                clipView.setBoundsOrigin(savedPosition)
-                self.savedPresentationScrollPosition = nil
-            }
-            // Force return to editing mode - magicPPT already cleared so this will work
+            self.restorePresentationLayout()
             self.disablePreview()
             self.updateButtonStates()
         }
