@@ -1,6 +1,35 @@
 <?xml version="1.0" standalone="yes"?>
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
   <channel>
+  <title>妙言 / MiaoYan</title>
+      <item>
+      <title>2.1.2</title>
+      <description><![CDATA[
+      <h3>新发现🥜</h3>
+      <ol>
+        <li>目录导航和图片功能增强 - 新增 TOC 目录模式自动生成文章导航，支持 PicList 图床上传，支持引用任意位置的本地图片</li>
+        <li>编辑效率提升 - 支持 Tab 快捷键模板一键输入，文件自动检测刷新，编辑器底部留白优化</li>
+        <li>PPT 演示模式增强 - 支持更多自定义配置参数，样式大幅优化，演示效果更专业</li>
+        <li>预览渲染大幅升级 - 整体预览效果和交互体验提升，优化 Mermaid、Markmap、PlantUML 等图表样式，改进代码块和内联代码显示</li>
+        <li>关键 Bug 修复 - 修复长时间使用后预览样式失效，修复编辑时可能崩溃问题，修复笔记列表展开折叠逻辑异常</li>
+        <li>性能和体验改进 - 大幅提升内容搜索速度，优化导出功能解决超时问题，禁用弹性滚动使操作更精准</li>
+        <li>代码架构重构 - DownView 预览组件和侧边栏逻辑重构，样式文件模块化便于维护，甚至支持 VSCode 开发了</li>
+      </ol>
+      <h3>New Discoveries🥜</h3>
+      <ol>
+        <li>Enhanced Navigation & Image Support – Added automatic TOC (Table of Contents) generation for article navigation, PicList image-hosting uploads, and support for referencing local images from any location.</li>
+        <li>Improved Editing Efficiency – Quick template insertion via the Tab key, automatic file change detection and refresh, and optimized bottom spacing in the editor.</li>
+        <li>Upgraded PPT Presentation Mode – More customizable configuration parameters, substantially refined styles, and a more professional presentation experience.</li>
+        <li>Major Preview Rendering Upgrade – Overall improvements to preview visuals and interactions; optimized styles for Mermaid, Markmap, and PlantUML; and better code block and inline code display.</li>
+        <li>Key Bug Fixes – Fixed preview styles failing after long sessions, resolved potential editor crashes, and corrected abnormal expand/collapse logic in the notes list.</li>
+        <li>Performance & UX Improvements – Significantly faster content search, optimized export to avoid timeouts, and disabled elastic scrolling for more precise operations.</li>
+        <li>Code Architecture Refactor – Rebuilt the DownView preview component and sidebar logic, modularized style files for easier maintenance, and even enabled development in VS Code.</li>
+      </ol>
+          ]]>      </description>
+      <pubDate>周六, 11 10月 2025 20:20:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.1.2.zip" sparkle:shortVersionString="2.1.2" sparkle:version="2.1.2" sparkle:edSignature="F0rEMAooiCHqqNxMIx91sEliHNomsUZz3H6ykJ7T2f+A6x1MYSCVzckpVRsYYQ4gAEBmfNBzMxYe4VRbsO83AA==" length="21402991" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+    </item>
     <title>妙言 / MiaoYan</title>
       <item>
       <title>2.0.1</title>
@@ -32,127 +61,6 @@
       <pubDate>周日, 21 09月 2025 23:20:20 +0800</pubDate>
       <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.0.1.zip" sparkle:shortVersionString="2.0.1" sparkle:version="2.0.1" sparkle:edSignature="6zjI9HxyWwTMbyS+7MEqb31/jUuMjsBSdWk6a0mf49bW1GOvUgwofYAzKuFGSZlSJB6z6ParyXq3Gu++psqMCQ==" length="21272593" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
-    </item>
-    <item>
-      <title>1.18.3</title>
-      <description><![CDATA[
-      <h3>大更新 🎉:</h3>
-      <ol>
-        <li>1.18.3修复单独模式显示问题、名称修改没有立即生效、点击视图菜单会闪退问题</li>
-        </li>搜索内容快捷键修改成 Command+F，搜索文件改成 Command+P</li>
-        <li>支持Markdown中的图片预览功能，更好用</li>
-        <li>文件夹支持拖拽修改原有的顺序，更巧妙</li>
-        <li>三栏布局拖拽收起展开的效果重构，更舒服</li>
-        <li>记住上次打开的文档位置，更迅速</li>
-        <li>从原有的 Pod 包管理升级到 Swift 包管理，好维护</li>
-      </ol>
-      <h3>Big Updates 🎉:</h3>
-      <ol>
-        <li>1.18.3 Fixed the single mode display problem, the name change did not take effect immediately, and the problem of clicking the view menu would cause a crash</li>
-        <li>The shortcut keys for searching for content are changed to Command+F, and for searching for files are changed to Command+P</li>
-        <li>Support for image preview in Markdown, more user-friendly</li>
-        <li>Folder drag-and-drop to reorder, more intuitive</li>
-        <li>Refactored three-column layout drag-to-collapse/expand effects, more comfortable</li>
-        <li>Remember last opened document position, faster access</li>
-        <li>Upgraded from CocoaPods to Swift Package Manager, better maintainability</li>
-      </ol>
-
-      <h3>大型アップデート 🎉:</h3>
-      <ol>
-        <li>1.18.2 名前の変更がすぐに反映されず、表示メニューをクリックするとクラッシュする問題を修正しました。コンテンツ検索のショートカットキーをCommand+Fに変更しました。く</li>
-        <li>Markdownでの画像プレビュー機能をサポート、より使いやすく</li>
-        <li>フォルダのドラッグ&ドロップで順序変更が可能、より直感的</li>
-        <li>3カラムレイアウトのドラッグ折りたたみ・展開効果を再構築、より快適</li>
-        <li>最後に開いたドキュメントの位置を記憶、より迅速</li>
-        <li>CocoaPodsからSwift Package Managerにアップグレード、保守性向上</li>
-      </ol>
-          ]]>      </description>
-      <pubDate>周二, 12 08月 2025 23:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.18.3.zip" sparkle:shortVersionString="1.18.3" sparkle:version="1.18.3" sparkle:edSignature="ApcCe/7zA7IrQ2E+d4gQqmMhuu9Abq/xrOnXG5BBY1lX7z7s4Pk2dX8LtrtJqAipJNOVFq3yolWWjK8QVrIEBg==" length="34973190" type="application/octet-stream" />
-      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
-    </item>
-    <item>
-      <title>1.17.0</title>
-      <description><![CDATA[
-      <h3>新变化 🎉:</h3>
-      <ol>
-        <li>适配最新 macOS 26 Tahoe,需要更新不然打不开</li>
-        <li>导出长PDF终于不切割了,此外图片/PPT导出也优化了</li>
-        <li>默认使用仓耳今楷字体,图片/视频渲染效果优化,可点击放大</li>
-      </ol>
-
-      <h3>New Changes 🎉:</h3>
-      <ol>
-        <li>Compatible with the latest macOS Tahoe - update required or the app won't open</li>
-        <li>Long PDF exports are finally no longer split, plus optimized image/PPT export functionality</li>
-        <li>TsangerJinKai font now set as default, improved image/video rendering with click-to-zoom capability</li>
-      </ol>
-
-      <h3>新しい変更点 🎉:</h3>
-      <ol>
-        <li>最新のmacOS Tahoeに対応 - アップデートしないとアプリが開きません</li>
-        <li>長いPDFエクスポートがついに分割されなくなりました。さらに画像/PPTエクスポート機能も最適化</li>
-        <li>仓耳今楷フォントをデフォルトに設定、画像/動画レンダリングを改善しクリック拡大機能を追加</li>
-      </ol>
-          ]]>      </description>
-      <pubDate>周一, 04 08月 2025 23:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.17.0.zip" sparkle:shortVersionString="1.17.0" sparkle:version="1.17.0" sparkle:edSignature="8muxuGcf6MeF84MPsgkunePb2LCoPOUhjY1+2E4PPMAaWwkCopeN1wBC1j9NJtp0tvHz7Rtk68xFmPwpQhZxAg==" length="33616595" type="application/octet-stream" />
-      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
-    </item>
-    <item>
-      <title>1.16.0</title>
-      <description><![CDATA[
-      <h3>小惊喜 🎉：</h3>
-      <ol>
-        <li>新增了个很好看的字体，快去设置中更新 TsangerJinKai</li>
-        <li>最低 Mac 版本支持 11.5，修复输入某些特殊格式奔溃的问题</li>
-        <li>公式 Latex 支持块渲染、修复标题大小写重复提示、邮箱不高亮展示不点击</li>
-      </ol>
-      <h3>Little Surprise 🎉:</h3>
-      <ol>
-        <li>Added a beautiful new font - update to TsangerJinKai in settings</li>
-        <li>Minimum Mac version support raised to 11.5, fixed crashes when inputting certain special formats</li>
-        <li>LaTeX formulas now support block rendering, fixed duplicate capitalization hints in titles, emails now show without highlighting/clickability</li>
-      </ol>
-      <h3>ささやかなサプライズ 🎉：</h3>
-      <ol>
-        <li>美しい新しいフォント「TsangerJinKai」を追加しました。設定からアップデートしてください</li>
-        <li>Macの最低対応バージョンを11.5に引き上げ、特定の特殊形式入力時のクラッシュを修正</li>
-        <li>数式LaTeXのブロックレンダリング対応、タイトルの大文字小文字重複警告の修正、メールアドレスのハイライト非表示（クリック不可）</li>
-      </ol>
-          ]]>      </description>
-      <pubDate>周五, 17 07月 2025 23:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.16.0.zip" sparkle:shortVersionString="1.16.0" sparkle:version="1.16.0" sparkle:edSignature="qP3kBRjvE9TmhBO0lZb7VErwehv2PujoX2J22vjG9AZ9lRX4GttafrBsQRoQQjn21zbfK4htoa1eNTsvf8AnAA==" length="33649918" type="application/octet-stream" />
-      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
-    </item>
-    <item>
-      <title>1.15.1</title>
-      <description><![CDATA[
-      <h3>好久不见 🥂：</h3>
-      <ol>
-        <li>妙言字体显示效果升级，更黑稍粗更便于阅读。</li>
-        <li>预览的时候支持懒加载内容，让你可以最快速度看到效果。</li>
-        <li>Markdown 效果高亮持续优化，链接、粗体、斜体兼容性优化。</li>
-        <li>修复 PPT 预览下窗口适配背景、窗口文字字间距统一、更新版本日期。</li>
-      </ol>
-      <h3>Long time no see 🥂：</h3>
-      <ol>
-        <li>The display effect of the MiaoYan font has been upgraded. It is now blacker and slightly bolder, making it easier to read.</li>
-        <li>Supports lazy loading content in preview mode, allowing you to see the effect as quickly as possible.</li>
-        <li>Continuous optimization of Markdown rendering effect. Improvements in link, bold, and italic text compatibility.</li>
-        <li>Fixed window adaptation background color in PPT preview, unified text letter spacing in windows, and updated version date to 2024.</li>
-      </ol>
-      <h3>久しぶり 🥂：</h3>
-      <ol>
-        <li>妙言フォントの表示効果をアップグレードしました。より黒く、少し太くなり、読みやすくなりました。</li>
-        <li>プレビュー時に遅延読み込みをサポートし、最速で効果を見ることができます。</li>
-        <li>Markdownのレンダリング効果を継続的に最適化しました。リンク、太字、斜体の互換性の改善。</li>
-        <li>PPTプレビューでのウィンドウ適応背景色を修正、ウィンドウの文字間隔を統一し、バージョンの日付を2024年に更新しました。</li>
-      </ol>
-          ]]>      </description>
-      <pubDate>周日, 26 05月 2024 23:00:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V1.15.1.zip" sparkle:shortVersionString="1.15.1" sparkle:version="1.15.1" sparkle:edSignature="6wIdCZlZVZANiiQKe0C+a+Q8i9OVdC+k1Yd0YaT7oo1/gLnJT/wfIrgWUzUPnobfa2CDjtp42SiYdr2bs1n8Dw==" length="21905469" type="application/octet-stream" />
-      <sparkle:minimumSystemVersion>10.15</sparkle:minimumSystemVersion>
     </item>
   </channel>
 </rss>
