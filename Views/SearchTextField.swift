@@ -20,7 +20,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
             commonInit()
         }
     }
-    
+
     @MainActor private func commonInit() {
         wantsLayer = true
         focusRingType = .none

@@ -96,7 +96,8 @@ extension ViewController {
         checkTitlebarTopConstraint()
 
         if let savedPosition = savedPresentationScrollPosition,
-           let clipView = notesTableView.superview as? NSClipView {
+            let clipView = notesTableView.superview as? NSClipView
+        {
             clipView.setBoundsOrigin(savedPosition)
             savedPresentationScrollPosition = nil
         }

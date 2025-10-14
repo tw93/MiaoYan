@@ -197,8 +197,8 @@ extension PrefsWindowController {
     }
 }
 
-private extension PrefsWindowController {
-    func updateWindowBackgroundColors() {
+extension PrefsWindowController {
+    fileprivate func updateWindowBackgroundColors() {
         guard let window, let splitViewController else { return }
         let resolvedColor = Theme.backgroundColor.resolvedColor(for: window.effectiveAppearance)
 

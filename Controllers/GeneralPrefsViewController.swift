@@ -553,6 +553,6 @@ private final class ThemeAwareShortcutRecorderView: NSView {
     }
 }
 
-private extension Notification.Name {
-    static let keyboardShortcutsRecorderActiveStatusDidChange = Notification.Name("KeyboardShortcuts_recorderActiveStatusDidChange")
+extension Notification.Name {
+    fileprivate static let keyboardShortcutsRecorderActiveStatusDidChange = Notification.Name("KeyboardShortcuts_recorderActiveStatusDidChange")
 }

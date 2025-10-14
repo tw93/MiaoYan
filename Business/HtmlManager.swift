@@ -121,8 +121,9 @@ class HtmlManager {
         guard let regex = imageRegex else {
             Task { @MainActor in
                 AppDelegate.trackError(
-                    NSError(domain: "HtmlManager", code: 1,
-                           userInfo: [NSLocalizedDescriptionKey: "Invalid image regex pattern"]),
+                    NSError(
+                        domain: "HtmlManager", code: 1,
+                        userInfo: [NSLocalizedDescriptionKey: "Invalid image regex pattern"]),
                     context: "HtmlManager.processImages.regex"
                 )
             }
