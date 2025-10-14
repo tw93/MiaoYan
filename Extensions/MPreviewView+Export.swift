@@ -107,7 +107,7 @@ extension MPreviewView {
         if Self.isExporting {
             // Check if previous export is stuck (timeout exceeded)
             if let startTime = Self.exportStartTime,
-               Date().timeIntervalSince(startTime) > Self.exportTimeout
+                Date().timeIntervalSince(startTime) > Self.exportTimeout
             {
                 Self.isExporting = false
                 Self.exportStartTime = nil
@@ -251,7 +251,7 @@ extension MPreviewView {
         if Self.isExporting {
             // Check if previous export is stuck
             if let startTime = Self.exportStartTime,
-               Date().timeIntervalSince(startTime) > Self.exportTimeout
+                Date().timeIntervalSince(startTime) > Self.exportTimeout
             {
                 Self.isExporting = false
                 Self.exportStartTime = nil
@@ -341,7 +341,6 @@ extension MPreviewView {
 
         checkImages()
     }
-
 
     private func waitForWebViewReady(completion: @escaping () -> Void) {
         // Check if WebView has finished loading and rendering

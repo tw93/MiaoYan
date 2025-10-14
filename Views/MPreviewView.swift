@@ -62,8 +62,10 @@ class MPreviewView: WKWebView, WKUIDelegate {
         // Optimize layer rendering during resize
         layerContentsRedrawPolicy = .onSetNeedsDisplay
         layer?.drawsAsynchronously = false
-        // Fill under-page area with the same color to cover rubber-banding gaps
-        setValue(bgNSColor, forKey: "underPageBackgroundColor")
+        // Fill under-page area with the same color to cover rubber-banding gaps (macOS 12+)
+        if #available(macOS 12.0, *) {
+            setValue(bgNSColor, forKey: "underPageBackgroundColor")
+        }
         if let hostingScrollView = subviews.compactMap({ $0 as? NSScrollView }).first {
             hostingScrollView.drawsBackground = false
             hostingScrollView.backgroundColor = bgNSColor
