@@ -159,16 +159,13 @@ class HtmlManager {
                 continue
             }
 
-            // Process relative paths
-            let imageLocation = resolveImageLocation(cleanPath, imagesStorage: imagesStorage)
-            copyImageIfNeeded(from: imageLocation.source, to: imageLocation.dest)
-
-            var finalPath = imageLocation.displayPath
-            if finalPath.first == "/" {
-                finalPath.remove(at: finalPath.startIndex)
+            // Process relative paths - convert to absolute file:// URLs
+            let absolutePath = imagesStorage.appendingPathComponent(cleanPath).path
+            if FileManager.default.fileExists(atPath: absolutePath) {
+                htmlString = updateImageSrc(in: htmlString, fullMatch: imageInfo.fullMatch, oldSrc: imageInfo.srcPath, newSrc: "file://\(absolutePath)")
+            } else {
+                htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: imageNotFoundPlaceholder)
             }
-
-            htmlString = updateImageSrc(in: htmlString, fullMatch: imageInfo.fullMatch, oldSrc: imageInfo.srcPath, newSrc: finalPath)
         }
 
         return htmlString
