@@ -32,6 +32,12 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         scrollView.borderType = .noBorder
         scrollView.drawsBackground = false
         scrollView.backgroundColor = .clear
+
+        // Ensure the clip view (contentView) is also transparent
+        scrollView.contentView.drawsBackground = false
+        scrollView.contentView.wantsLayer = true
+        scrollView.contentView.layer?.backgroundColor = NSColor.clear.cgColor
+
         view.addSubview(scrollView)
 
         let contentView = NSView()

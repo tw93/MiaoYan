@@ -39,6 +39,12 @@ final class PrefsSidebarView: NSView {
         scrollView.borderType = .noBorder
         scrollView.drawsBackground = false
         scrollView.backgroundColor = NSColor.clear
+
+        // Ensure the clip view is also transparent
+        scrollView.contentView.drawsBackground = false
+        scrollView.contentView.wantsLayer = true
+        scrollView.contentView.layer?.backgroundColor = NSColor.clear.cgColor
+
         addSubview(scrollView)
     }
 
@@ -47,12 +53,13 @@ final class PrefsSidebarView: NSView {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.headerView = nil
         tableView.focusRingType = .none
-        tableView.selectionHighlightStyle = .sourceList
+        tableView.selectionHighlightStyle = .none  // Disable system selection drawing
         tableView.floatsGroupRows = false
         tableView.rowSizeStyle = .medium
         tableView.intercellSpacing = NSSize(width: 0, height: 2)
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.backgroundColor = .clear  // Ensure table itself is transparent
 
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("CategoryColumn"))
         column.title = ""
@@ -92,9 +99,26 @@ final class PrefsSidebarView: NSView {
     private func updateColors() {
         guard let tableView else { return }
         let appearance = window?.effectiveAppearance ?? effectiveAppearance
-        let backgroundColor = Theme.backgroundColor.resolvedColor(for: appearance)
+
+        // Resolve the background color in the correct appearance context
+        var backgroundColor: NSColor = .windowBackgroundColor
+        appearance.performAsCurrentDrawingAppearance {
+            backgroundColor = NSColor(named: "mainBackground") ?? .windowBackgroundColor
+        }
+
         layer?.backgroundColor = backgroundColor.cgColor
         tableView.backgroundColor = backgroundColor
+
+        // Save current selection before reloading
+        let selectedRow = tableView.selectedRow
+
+        // Force tableView to redraw to update selection colors
+        tableView.reloadData()
+
+        // Restore selection after reload
+        if selectedRow >= 0 && selectedRow < categories.count {
+            tableView.selectRowIndexes(IndexSet(integer: selectedRow), byExtendingSelection: false)
+        }
     }
 
     func refreshAppearance() {
@@ -126,6 +150,10 @@ extension PrefsSidebarView: NSTableViewDelegate {
         let cellView = PrefsSidebarCellView()
         cellView.configure(with: category)
         return cellView
+    }
+
+    func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+        return PrefsSidebarRowView()
     }
 
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
@@ -163,8 +191,8 @@ final class PrefsSidebarCellView: NSTableCellView {
         titleLabel.isSelectable = false
         titleLabel.isBordered = false
         titleLabel.backgroundColor = NSColor.clear
-        titleLabel.font = NSFont.systemFont(ofSize: 13)
-        titleLabel.textColor = Theme.textColor
+        titleLabel.font = NSFont.systemFont(ofSize: 13, weight: .medium)
+        updateTextColor()
         addSubview(titleLabel)
 
         setupConstraints()
@@ -180,5 +208,49 @@ final class PrefsSidebarCellView: NSTableCellView {
 
     func configure(with category: PreferencesCategory) {
         titleLabel.stringValue = category.title
+    }
+
+    override var backgroundStyle: NSView.BackgroundStyle {
+        didSet {
+            updateTextColor()
+        }
+    }
+
+    private func updateTextColor() {
+        // Settings panel is always light mode
+        if backgroundStyle == .emphasized {
+            // Selected: dark text on white background
+            titleLabel.textColor = NSColor.labelColor
+        } else {
+            // Unselected: lighter text to blend with background
+            titleLabel.textColor = NSColor.secondaryLabelColor
+        }
+    }
+}
+
+// MARK: - Preferences Sidebar Row View
+final class PrefsSidebarRowView: NSTableRowView {
+    override var isEmphasized: Bool {
+        get { return true }
+        set {}
+    }
+
+    override func drawBackground(in dirtyRect: NSRect) {
+        if isSelected {
+            // Settings panel is always light mode, use white for selection
+            NSColor.white.setFill()
+            let selectionRect = bounds.insetBy(dx: 8, dy: 2)
+            let path = NSBezierPath(roundedRect: selectionRect, xRadius: 6, yRadius: 6)
+            path.fill()
+        } else {
+            // Unselected: transparent background
+            NSColor.clear.setFill()
+            dirtyRect.fill()
+        }
+    }
+
+    override var backgroundColor: NSColor {
+        get { return .clear }
+        set {}
     }
 }

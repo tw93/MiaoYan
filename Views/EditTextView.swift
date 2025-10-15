@@ -704,6 +704,10 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     override func viewDidChangeEffectiveAppearance() {
+        applySystemAppearance()
+    }
+
+    public func applySystemAppearance() {
         guard let note = EditTextView.note else { return }
         guard let vc = getViewController() else { return }
 

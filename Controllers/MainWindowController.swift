@@ -24,7 +24,48 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         }
 
         applyMiaoYanAppearance()
+        observeAppearanceChanges()
+    }
 
+    private func observeAppearanceChanges() {
+        if let contentView = window?.contentView {
+            contentView.addObserver(
+                self,
+                forKeyPath: "effectiveAppearance",
+                options: [.new],
+                context: nil
+            )
+        }
+    }
+
+    nonisolated override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "effectiveAppearance" {
+            Task { @MainActor in
+                handleAppearanceChange()
+            }
+        }
+    }
+
+    private func handleAppearanceChange() {
+        guard UserDefaultsManagement.appearanceType == .System else { return }
+
+        if let effectiveAppearance = window?.effectiveAppearance {
+            UserDataService.instance.isDark = effectiveAppearance.isDark
+        }
+
+        applyMiaoYanAppearance()
+
+        if let vc = ViewController.shared() {
+            vc.editArea.applySystemAppearance()
+            vc.notesTableView.reloadData()
+            vc.storageOutlineView.reloadData()
+        }
+    }
+
+    nonisolated deinit {
+        MainActor.assumeIsolated {
+            window?.contentView?.removeObserver(self, forKeyPath: "effectiveAppearance")
+        }
     }
 
     func windowDidResize(_ notification: Notification) {
@@ -111,23 +152,19 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         let backgroundColor: NSColor
 
         if UserDefaultsManagement.appearanceType != .Custom {
-            let isDarkTheme: Bool
             switch UserDefaultsManagement.appearanceType {
             case .Light:
-                isDarkTheme = false
+                targetAppearance = NSAppearance(named: .aqua)
+                backgroundColor = Theme.backgroundColor
             case .Dark:
-                isDarkTheme = true
-            case .System:
-                isDarkTheme = UserDataService.instance.isDark
-            default:
-                isDarkTheme = UserDataService.instance.isDark
-            }
-
-            if isDarkTheme {
                 targetAppearance = NSAppearance(named: .darkAqua)
                 backgroundColor = Theme.backgroundColor
-            } else {
-                targetAppearance = NSAppearance(named: .aqua)
+            case .System:
+                // In System mode, set appearance to nil to follow system
+                targetAppearance = nil
+                backgroundColor = Theme.backgroundColor
+            default:
+                targetAppearance = nil
                 backgroundColor = Theme.backgroundColor
             }
         } else {
@@ -135,15 +172,14 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
             backgroundColor = UserDefaultsManagement.bgColor
         }
 
-        if let appearance = targetAppearance {
-            window.appearance = appearance
-            window.contentView?.appearance = appearance
-        }
+        // Set window appearance
+        window.appearance = targetAppearance
+        window.contentView?.appearance = targetAppearance
         window.backgroundColor = backgroundColor
 
         if let contentView = window.contentView {
             contentView.wantsLayer = true
-            let effectiveAppearance = window.appearance ?? contentView.effectiveAppearance
+            let effectiveAppearance = contentView.effectiveAppearance
             let resolvedBackground = backgroundColor.resolvedColor(for: effectiveAppearance)
             contentView.layer?.backgroundColor = resolvedBackground.cgColor
             contentView.needsDisplay = true

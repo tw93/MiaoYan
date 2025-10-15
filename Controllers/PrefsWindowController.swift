@@ -35,6 +35,9 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         window.setFrameAutosaveName(autosaveName)
         window.isReleasedWhenClosed = false
 
+        // Always use light appearance for settings panel
+        window.appearance = NSAppearance(named: .aqua)
+
         self.init(window: window)
         hasRestoredAutosavedFrame = restoredFrame
 
@@ -58,7 +61,7 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         setupSidebar()
         setupContent()
         showCategory(.general)
-        updateWindowBackgroundColors()
+        applyWindowAppearance()
 
         window?.titleVisibility = .hidden
         window?.titlebarAppearsTransparent = true
@@ -74,10 +77,14 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
 
     private func setupSplitView() {
         splitViewController = NSSplitViewController()
-        splitViewController.splitView.isVertical = true
-        splitViewController.splitView.dividerStyle = .thin
 
-        splitViewController.splitView.autoresizesSubviews = false
+        // Replace default splitView with custom one
+        let customSplitView = PrefsSplitView()
+        customSplitView.isVertical = true
+        customSplitView.dividerStyle = .thin
+        customSplitView.autoresizesSubviews = false
+
+        splitViewController.splitView = customSplitView
 
         splitViewController.splitViewItems.forEach { item in
             item.canCollapse = false
@@ -193,29 +200,59 @@ extension PrefsWindowController {
     }
 
     func windowDidChangeEffectiveAppearance(_ notification: Notification) {
-        updateWindowBackgroundColors()
+        applyWindowAppearance()
     }
 }
 
 extension PrefsWindowController {
+    fileprivate func applyWindowAppearance() {
+        guard let window else { return }
+
+        // Always use light appearance for settings panel
+        window.appearance = NSAppearance(named: .aqua)
+        window.contentView?.appearance = NSAppearance(named: .aqua)
+
+        updateWindowBackgroundColors()
+    }
+
     fileprivate func updateWindowBackgroundColors() {
         guard let window, let splitViewController else { return }
-        let resolvedColor = Theme.backgroundColor.resolvedColor(for: window.effectiveAppearance)
 
-        window.backgroundColor = resolvedColor
+        // Get the effective appearance to ensure correct color resolution
+        let effectiveAppearance = window.effectiveAppearance
+
+        // Resolve the background color in the context of the window's appearance
+        var backgroundColor: NSColor = .windowBackgroundColor
+        effectiveAppearance.performAsCurrentDrawingAppearance {
+            backgroundColor = NSColor(named: "mainBackground") ?? .windowBackgroundColor
+        }
+
+        window.backgroundColor = backgroundColor
 
         if let contentView = window.contentView {
             contentView.wantsLayer = true
-            contentView.layer?.backgroundColor = resolvedColor.cgColor
+            contentView.layer?.backgroundColor = backgroundColor.cgColor
         }
 
         let controllerView = splitViewController.view
         controllerView.wantsLayer = true
-        controllerView.layer?.backgroundColor = resolvedColor.cgColor
+        controllerView.layer?.backgroundColor = backgroundColor.cgColor
 
         let splitView = splitViewController.splitView
         splitView.wantsLayer = true
-        splitView.layer?.backgroundColor = resolvedColor.cgColor
+        splitView.layer?.backgroundColor = backgroundColor.cgColor
+
+        // Update prefsContentViewController view
+        if let prefsView = prefsContentViewController?.view {
+            prefsView.wantsLayer = true
+            prefsView.layer?.backgroundColor = backgroundColor.cgColor
+        }
+
+        // Update sidebar view
+        if let sidebarView = sidebarViewController?.view {
+            sidebarView.wantsLayer = true
+            sidebarView.layer?.backgroundColor = backgroundColor.cgColor
+        }
     }
 }
 
@@ -249,6 +286,27 @@ private final class PrefsContentBackgroundView: NSView {
         let appearance = window?.effectiveAppearance ?? effectiveAppearance
         let resolvedColor = Theme.backgroundColor.resolvedColor(for: appearance)
         layer?.backgroundColor = resolvedColor.cgColor
+    }
+}
+
+// MARK: - Custom SplitView for Preferences
+final class PrefsSplitView: NSSplitView {
+    override func drawDivider(in rect: NSRect) {
+        let appearance = window?.effectiveAppearance ?? effectiveAppearance
+
+        // Get divider color in the correct appearance context
+        var dividerColor: NSColor = .separatorColor
+        appearance.performAsCurrentDrawingAppearance {
+            dividerColor = NSColor(named: "divider") ?? .separatorColor
+        }
+
+        dividerColor.setFill()
+        rect.fill()
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        needsDisplay = true
     }
 }
 
