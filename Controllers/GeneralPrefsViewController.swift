@@ -55,6 +55,12 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         scrollView.borderType = .noBorder
         scrollView.drawsBackground = false
         scrollView.backgroundColor = .clear
+
+        // Ensure the clip view (contentView) is also transparent
+        scrollView.contentView.drawsBackground = false
+        scrollView.contentView.wantsLayer = true
+        scrollView.contentView.layer?.backgroundColor = NSColor.clear.cgColor
+
         view.addSubview(scrollView)
 
         let contentView = NSView()
@@ -325,14 +331,14 @@ final class GeneralPrefsViewController: BasePrefsViewController {
             if let vc = ViewController.shared() {
                 vc.editArea.recreatePreviewView()
 
-                let sidebarSelectedRow = vc.storageOutlineView.selectedRow
+                let sidebarSelectedRows = vc.storageOutlineView.selectedRowIndexes
                 let notesSelectedRows = vc.notesTableView.selectedRowIndexes
 
                 vc.storageOutlineView.reloadData()
                 vc.notesTableView.reloadData()
 
-                if sidebarSelectedRow >= 0 {
-                    vc.storageOutlineView.selectRowIndexes([sidebarSelectedRow], byExtendingSelection: false)
+                if !sidebarSelectedRows.isEmpty {
+                    vc.storageOutlineView.selectRowIndexes(sidebarSelectedRows, byExtendingSelection: false)
                 }
                 if !notesSelectedRows.isEmpty {
                     vc.notesTableView.selectRowIndexes(notesSelectedRows, byExtendingSelection: false)

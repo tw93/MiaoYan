@@ -313,7 +313,7 @@ class ViewController:
 
     private func ensureInitialProjectSelection() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-            guard self.sidebarWidth > 0 && self.storageOutlineView.selectedRow == -1 else { return }
+            guard self.storageOutlineView.selectedRow == -1 else { return }
             // Try to find the project by URL first (more reliable after reordering)
             if let lastProjectURL = UserDataService.instance.lastProject,
                 let items = self.storageOutlineView.sidebarItems
