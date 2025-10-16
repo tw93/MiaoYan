@@ -695,7 +695,8 @@ class SidebarProjectView: NSOutlineView,
                         // Restore scroll position instead of scrolling to visible row
                         vd.notesTableView.restoreScrollPosition()
                     } else if !vd.notesTableView.noteList.isEmpty {
-                        vd.focusTable()
+                        vd.notesTableView.selectRow(0)
+                        vd.notesTableView.scrollRowToVisible(row: 0, animated: false)
                     }
                     self.isLaunch = false
                 } else {

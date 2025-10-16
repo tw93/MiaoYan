@@ -1,6 +1,7 @@
 import Cocoa
 import CoreServices
 import Foundation
+import UniformTypeIdentifiers
 
 struct DirectoryItem {
     let url: URL
@@ -483,12 +484,18 @@ class Storage {
             return false
         }
 
-        let type = typeIdentifier as CFString
-        if type == kUTTypeFolder {
+        guard let utType = UTType(typeIdentifier) else {
             return false
         }
 
-        return UTTypeConformsTo(type, kUTTypeText)
+        if utType.conforms(to: .directory) {
+            return false
+        }
+
+        return utType.conforms(to: .text)
+            || utType.conforms(to: .plainText)
+            || typeIdentifier == "net.daringfireball.markdown"
+            || typeIdentifier == "public.markdown"
     }
 
     func add(_ note: Note) {
