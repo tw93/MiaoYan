@@ -410,7 +410,7 @@ extension ViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.04) {
             let selectedRow = vc.notesTableView.selectedRowIndexes.min()
             if selectedRow == nil && currentSelectedRow == -1 {
-                vc.notesTableView.selectRowIndexes([0], byExtendingSelection: true)
+                vc.notesTableView.selectRowIndexes([0], byExtendingSelection: false)
             }
         }
     }
@@ -614,7 +614,7 @@ extension ViewController {
         DispatchQueue.main.async {
             let index = self.notesTableView.selectedRow > -1 ? self.notesTableView.selectedRow : 0
             self.notesTableView.window?.makeFirstResponder(self.notesTableView)
-            self.notesTableView.selectRowIndexes([index], byExtendingSelection: true)
+            self.notesTableView.selectRowIndexes([index], byExtendingSelection: false)
             self.notesTableView.scrollRowToVisible(index)
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {

@@ -4,6 +4,7 @@ import AppKit
 class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestoration {
     let notesListUndoManager = UndoManager()
     var editorUndoManager = UndoManager()
+    private var isObservingAppearance = false
 
     override func windowDidLoad() {
         let appDelegate = NSApplication.shared.delegate as! AppDelegate
@@ -28,14 +29,17 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
     }
 
     private func observeAppearanceChanges() {
-        if let contentView = window?.contentView {
-            contentView.addObserver(
-                self,
-                forKeyPath: "effectiveAppearance",
-                options: [.new],
-                context: nil
-            )
+        guard !isObservingAppearance, let contentView = window?.contentView else {
+            return
         }
+
+        contentView.addObserver(
+            self,
+            forKeyPath: "effectiveAppearance",
+            options: [.new],
+            context: nil
+        )
+        isObservingAppearance = true
     }
 
     nonisolated override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -64,7 +68,10 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
 
     nonisolated deinit {
         MainActor.assumeIsolated {
-            window?.contentView?.removeObserver(self, forKeyPath: "effectiveAppearance")
+            if isObservingAppearance, let contentView = window?.contentView {
+                contentView.removeObserver(self, forKeyPath: "effectiveAppearance")
+                isObservingAppearance = false
+            }
         }
     }
 
