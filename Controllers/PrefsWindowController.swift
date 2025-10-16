@@ -35,9 +35,6 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         window.setFrameAutosaveName(autosaveName)
         window.isReleasedWhenClosed = false
 
-        // Always use light appearance for settings panel
-        window.appearance = NSAppearance(named: .aqua)
-
         self.init(window: window)
         hasRestoredAutosavedFrame = restoredFrame
 
@@ -208,51 +205,31 @@ extension PrefsWindowController {
     fileprivate func applyWindowAppearance() {
         guard let window else { return }
 
-        // Always use light appearance for settings panel
-        window.appearance = NSAppearance(named: .aqua)
-        window.contentView?.appearance = NSAppearance(named: .aqua)
+        let targetAppearance: NSAppearance? = switch UserDefaultsManagement.appearanceType {
+        case .Light: NSAppearance(named: .aqua)
+        case .Dark: NSAppearance(named: .darkAqua)
+        case .System, .Custom: nil
+        }
+
+        window.appearance = targetAppearance
+        window.contentView?.appearance = targetAppearance
 
         updateWindowBackgroundColors()
+
+        // Ensure subviews refresh their appearance
+        sidebarView?.refreshAppearance()
     }
 
     fileprivate func updateWindowBackgroundColors() {
-        guard let window, let splitViewController else { return }
+        guard let window else { return }
 
-        // Get the effective appearance to ensure correct color resolution
         let effectiveAppearance = window.effectiveAppearance
-
-        // Resolve the background color in the context of the window's appearance
         var backgroundColor: NSColor = .windowBackgroundColor
         effectiveAppearance.performAsCurrentDrawingAppearance {
             backgroundColor = NSColor(named: "mainBackground") ?? .windowBackgroundColor
         }
 
         window.backgroundColor = backgroundColor
-
-        if let contentView = window.contentView {
-            contentView.wantsLayer = true
-            contentView.layer?.backgroundColor = backgroundColor.cgColor
-        }
-
-        let controllerView = splitViewController.view
-        controllerView.wantsLayer = true
-        controllerView.layer?.backgroundColor = backgroundColor.cgColor
-
-        let splitView = splitViewController.splitView
-        splitView.wantsLayer = true
-        splitView.layer?.backgroundColor = backgroundColor.cgColor
-
-        // Update prefsContentViewController view
-        if let prefsView = prefsContentViewController?.view {
-            prefsView.wantsLayer = true
-            prefsView.layer?.backgroundColor = backgroundColor.cgColor
-        }
-
-        // Update sidebar view
-        if let sidebarView = sidebarViewController?.view {
-            sidebarView.wantsLayer = true
-            sidebarView.layer?.backgroundColor = backgroundColor.cgColor
-        }
     }
 }
 

@@ -68,8 +68,6 @@ final class PrefsSidebarView: NSView {
         tableView.addTableColumn(column)
 
         scrollView.documentView = tableView
-
-        tableView.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)
     }
 
     private func setupConstraints() {
@@ -109,15 +107,13 @@ final class PrefsSidebarView: NSView {
         layer?.backgroundColor = backgroundColor.cgColor
         tableView.backgroundColor = backgroundColor
 
-        // Save current selection before reloading
-        let selectedRow = tableView.selectedRow
-
-        // Force tableView to redraw to update selection colors
-        tableView.reloadData()
-
-        // Restore selection after reload
-        if selectedRow >= 0 && selectedRow < categories.count {
-            tableView.selectRowIndexes(IndexSet(integer: selectedRow), byExtendingSelection: false)
+        // Refresh all rows to update appearance
+        tableView.enumerateAvailableRowViews { rowView, row in
+            rowView.needsDisplay = true
+            // Force cell views to update their text colors immediately
+            for case let cellView as PrefsSidebarCellView in rowView.subviews {
+                cellView.refreshTextColor()
+            }
         }
     }
 
@@ -131,8 +127,15 @@ final class PrefsSidebarView: NSView {
             return
         }
         selectedCategory = category
+
+        // Ensure selection is properly set and visible
         tableView.selectRowIndexes(IndexSet(integer: index), byExtendingSelection: false)
         tableView.scrollRowToVisible(index)
+
+        // Force immediate display update
+        if let rowView = tableView.rowView(atRow: index, makeIfNecessary: true) {
+            rowView.needsDisplay = true
+        }
     }
 }
 
@@ -210,6 +213,11 @@ final class PrefsSidebarCellView: NSTableCellView {
         titleLabel.stringValue = category.title
     }
 
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        updateTextColor()
+    }
+
     override var backgroundStyle: NSView.BackgroundStyle {
         didSet {
             updateTextColor()
@@ -217,40 +225,76 @@ final class PrefsSidebarCellView: NSTableCellView {
     }
 
     private func updateTextColor() {
-        // Settings panel is always light mode
         if backgroundStyle == .emphasized {
-            // Selected: dark text on white background
-            titleLabel.textColor = NSColor.labelColor
+            // Selected: use contrasting text color based on selection background
+            let appearance = window?.effectiveAppearance ?? effectiveAppearance
+            titleLabel.textColor = appearance.isDark ? .white : .black
         } else {
-            // Unselected: lighter text to blend with background
-            titleLabel.textColor = NSColor.secondaryLabelColor
+            // Unselected: use secondary label color for subtle appearance
+            titleLabel.textColor = .secondaryLabelColor
         }
+    }
+
+    func refreshTextColor() {
+        updateTextColor()
     }
 }
 
 // MARK: - Preferences Sidebar Row View
 final class PrefsSidebarRowView: NSTableRowView {
     override var isEmphasized: Bool {
-        get { return true }
+        get { return isSelected }
         set {}
     }
 
-    override func drawBackground(in dirtyRect: NSRect) {
-        if isSelected {
-            // Settings panel is always light mode, use white for selection
-            NSColor.white.setFill()
-            let selectionRect = bounds.insetBy(dx: 8, dy: 2)
-            let path = NSBezierPath(roundedRect: selectionRect, xRadius: 6, yRadius: 6)
-            path.fill()
-        } else {
-            // Unselected: transparent background
-            NSColor.clear.setFill()
-            dirtyRect.fill()
+    override var isSelected: Bool {
+        didSet {
+            if oldValue != isSelected {
+                needsDisplay = true
+                // Notify cell views to update text colors
+                updateCellTextColors()
+            }
         }
+    }
+
+    override func drawBackground(in dirtyRect: NSRect) {
+        // Don't draw anything - we override drawSelection instead
+    }
+
+    override func drawSelection(in dirtyRect: NSRect) {
+        guard isSelected else { return }
+
+        // Resolve color in current appearance context
+        let appearance = window?.effectiveAppearance ?? effectiveAppearance
+        let selectionColor = Theme.selectionBackgroundColor.resolvedColor(for: appearance)
+
+        selectionColor.setFill()
+        let selectionRect = bounds.insetBy(dx: 8, dy: 2)
+        let path = NSBezierPath(roundedRect: selectionRect, xRadius: 6, yRadius: 6)
+        path.fill()
+    }
+
+    override func draw(_ dirtyRect: NSRect) {
+        if isSelected {
+            drawSelection(in: dirtyRect)
+        }
+    }
+
+    override func viewDidChangeEffectiveAppearance() {
+        super.viewDidChangeEffectiveAppearance()
+        needsDisplay = true
+        updateCellTextColors()
     }
 
     override var backgroundColor: NSColor {
         get { return .clear }
         set {}
+    }
+
+    private func updateCellTextColors() {
+        // Force cell views to update their text colors immediately
+        for case let cellView as PrefsSidebarCellView in subviews {
+            cellView.refreshTextColor()
+        }
     }
 }

@@ -61,8 +61,28 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
 
         if let vc = ViewController.shared() {
             vc.editArea.applySystemAppearance()
-            vc.notesTableView.reloadData()
-            vc.storageOutlineView.reloadData()
+
+            // Save current selection before refreshing rows
+            let selectedNotesRow = vc.notesTableView.selectedRow
+            let selectedSidebarRow = vc.storageOutlineView.selectedRow
+
+            // Refresh existing rows instead of reloading to preserve selection
+            vc.notesTableView.enumerateAvailableRowViews { rowView, row in
+                rowView.needsDisplay = true
+            }
+
+            vc.storageOutlineView.enumerateAvailableRowViews { rowView, row in
+                rowView.needsDisplay = true
+            }
+
+            // Restore selection after refreshing
+            if selectedNotesRow >= 0 && selectedNotesRow < vc.notesTableView.numberOfRows {
+                vc.notesTableView.selectRowIndexes([selectedNotesRow], byExtendingSelection: false)
+            }
+
+            if selectedSidebarRow >= 0 && selectedSidebarRow < vc.storageOutlineView.numberOfRows {
+                vc.storageOutlineView.selectRowIndexes([selectedSidebarRow], byExtendingSelection: false)
+            }
         }
     }
 
