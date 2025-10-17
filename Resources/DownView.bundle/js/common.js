@@ -141,11 +141,6 @@ const MiaoYanCommon = {
   },
 
   initializeCore() {
-    if (window.Heti) {
-      const heti = new window.Heti('.heti');
-      heti.autoSpacing();
-    }
-
     if (window.hljs) {
       hljs.configure({ cssSelector: 'pre code' });
       hljs.highlightAll();

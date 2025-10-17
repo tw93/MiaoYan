@@ -47,8 +47,7 @@ img {
   word-wrap: break-word;
 }
 
-a,
-.heti a heti-spacing {
+a {
   color: var(--link-color);
 }
 

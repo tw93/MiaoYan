@@ -11,8 +11,7 @@ pre, video, iframe {
   max-width: 100%;
 }
 
-a,
-.heti a heti-spacing {
+a {
   color: #0C6ADA;
   cursor: pointer;
 }
@@ -25,6 +24,7 @@ a,
   overflow-wrap: break-word;
   word-wrap: break-word;
   hyphens: auto;
+  text-autospace: normal;
 }
 
 .heti::before,
@@ -693,35 +693,6 @@ mjx-container[display='block'] {
   margin-bottom: -0.25em;
   line-height: 1;
   text-align: center;
-}
-
-.heti heti-spacing {
-  display: inline;
-}
-
-.heti heti-spacing + sup,
-.heti heti-spacing + sub {
-  margin-inline-start: 0;
-}
-
-.heti .heti-spacing-start {
-  margin-inline-end: 0.25em;
-}
-
-.heti .heti-spacing-end {
-  margin-inline-start: 0.25em;
-}
-
-.heti heti-adjacent {
-  display: inline;
-}
-
-.heti .heti-adjacent-half {
-  margin-inline-end: -0.5em;
-}
-
-.heti .heti-adjacent-quarter {
-  margin-inline-end: -0.25em;
 }
 
 .heti .heti-list-latin {
