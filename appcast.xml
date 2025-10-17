@@ -28,8 +28,8 @@
         <li>Code Architecture Refactor – Rebuilt the DownView preview component and sidebar logic, modularized style files for easier maintenance, and even enabled development in VS Code.</li>
       </ol>
           ]]>      </description>
-      <pubDate>周四, 16 10月 2025 20:20:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.1.3.zip" sparkle:shortVersionString="2.1.3" sparkle:version="2.1.3" sparkle:edSignature="kaEzG/GUHIy3Mx4wJawmEB7Cgh3cQdKMdQ/CN+5Yt5AFV1bPvgLXSUyp7vPa9xspSL1qcucfhfWMcpd9xfB6AQ==" length="21406169" type="application/octet-stream" />
+      <pubDate>周五, 16 10月 2025 20:20:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.1.4.zip" sparkle:shortVersionString="2.1.4" sparkle:version="2.1.4" sparkle:edSignature="yLmGwGh/PlsRJJKsv+M455wMHgD8RKjbGO2xYiP3ExsEi1i9IoES9T09fgtXnT0/lw3IRkyssQKMr5989VgABQ==" length="21406372" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
     </item>
     <title>妙言 / MiaoYan</title>
