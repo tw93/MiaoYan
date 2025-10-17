@@ -41,8 +41,7 @@
   color: var(--text-color);
 }
 
-.darkmode a,
-.darkmode .heti a heti-spacing {
+.darkmode a {
   color: var(--link-color);
 }
 
