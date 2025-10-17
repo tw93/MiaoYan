@@ -1,6 +1,52 @@
 import Carbon.HIToolbox
 import Cocoa
 
+class SearchFieldCell: NSSearchFieldCell {
+    static let height: CGFloat = 30
+    private static let padding: CGFloat = 12
+    private static let lineHeight: CGFloat = 17.0
+
+    override var cellSize: NSSize {
+        var size = super.cellSize
+        size.height = Self.height
+        return size
+    }
+
+    override func draw(withFrame cellFrame: NSRect, in controlView: NSView) {
+        let insetFrame = cellFrame.insetBy(dx: 0.5, dy: 0.5)
+        drawBackground(in: insetFrame)
+        drawBorder(in: insetFrame)
+        drawInterior(withFrame: cellFrame, in: controlView)
+    }
+
+    private func drawBackground(in frame: NSRect) {
+        let path = NSBezierPath(roundedRect: frame, xRadius: Self.height / 2, yRadius: Self.height / 2)
+        (NSColor(named: "mainBackground") ?? NSColor.controlBackgroundColor).setFill()
+        path.fill()
+    }
+
+    private func drawBorder(in frame: NSRect) {
+        let path = NSBezierPath(roundedRect: frame, xRadius: Self.height / 2, yRadius: Self.height / 2)
+        NSColor.separatorColor.setStroke()
+        path.lineWidth = 1.0
+        path.stroke()
+    }
+
+    override func searchTextRect(forBounds rect: NSRect) -> NSRect {
+        return NSRect(
+            x: rect.origin.x + Self.padding,
+            y: rect.origin.y + (rect.height - Self.lineHeight) / 2,
+            width: rect.width - Self.padding * 2,
+            height: Self.lineHeight
+        )
+    }
+
+    override func drawingRect(forBounds rect: NSRect) -> NSRect {
+        // Same as searchTextRect for placeholder
+        return searchTextRect(forBounds: rect)
+    }
+}
+
 class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     public var vcDelegate: ViewController!
 
@@ -14,65 +60,35 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     public var timestamp: Int64?
     private var lastQueryLength: Int = 0
 
+    override var intrinsicContentSize: NSSize {
+        var size = super.intrinsicContentSize
+        size.height = SearchFieldCell.height
+        return size
+    }
+
+    override func setFrameSize(_ newSize: NSSize) {
+        var adjustedSize = newSize
+        adjustedSize.height = SearchFieldCell.height
+        super.setFrameSize(adjustedSize)
+    }
+
     override func awakeFromNib() {
         super.awakeFromNib()
         MainActor.assumeIsolated {
-            commonInit()
+            configureSearchField()
         }
     }
 
-    @MainActor private func commonInit() {
-        wantsLayer = true
-        focusRingType = .none
+    @MainActor private func configureSearchField() {
+        if let searchFieldCell = self.cell as? NSSearchFieldCell {
+            searchFieldCell.searchButtonCell = nil
+            searchFieldCell.cancelButtonCell = nil
+            searchFieldCell.placeholderString = I18n.str("Search")
+        }
+
         sendsWholeSearchString = false
         sendsSearchStringImmediately = true
-
-        if let cell = self.cell as? NSSearchFieldCell {
-            cell.cancelButtonCell = nil
-            cell.drawsBackground = false
-        }
-
-        updateAppearance()
-    }
-
-    override var cancelButtonBounds: NSRect {
-        NSRect.zero
-    }
-
-    override func rectForSearchText(whenCentered isCentered: Bool) -> NSRect {
-        var rect = super.rectForSearchText(whenCentered: isCentered)
-        let verticalOffset = (bounds.height - 17.0) / 2.0 + 1.0
-        rect.origin.y = verticalOffset
-        rect.size.height = 17.0
-        return rect
-    }
-
-    override func layout() {
-        super.layout()
-        updateAppearance()
-    }
-
-    override func viewDidChangeEffectiveAppearance() {
-        super.viewDidChangeEffectiveAppearance()
-        updateAppearance()
-    }
-
-    private func updateAppearance() {
-        guard let layer else { return }
-
-        layer.cornerRadius = bounds.height / 2
-        layer.borderWidth = 1.0
-
-        var backgroundColor = Theme.backgroundColor
-        var dividerColor = Theme.dividerColor
-
-        effectiveAppearance.performAsCurrentDrawingAppearance {
-            backgroundColor = Theme.backgroundColor
-            dividerColor = Theme.dividerColor
-        }
-
-        layer.backgroundColor = backgroundColor.cgColor
-        layer.borderColor = dividerColor.cgColor
+        invalidateIntrinsicContentSize()
     }
 
     override func keyUp(with event: NSEvent) {
@@ -101,13 +117,14 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
         switch commandSelector.description {
         case "moveDown:":
-            if let editor = currentEditor() {
-                let query = editor.string.prefix(editor.selectedRange.location)
-                if query.isEmpty {
-                    return false
-                }
-                stringValue = String(query)
+            guard let editor = currentEditor() else {
+                return false
             }
+            let query = editor.string.prefix(editor.selectedRange.location)
+            guard !query.isEmpty else {
+                return false
+            }
+            stringValue = String(query)
             return true
         case "cancelOperation:":
             stringValue = ""
@@ -118,10 +135,11 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
             textView.deleteBackward(self)
             return true
         case "insertNewline:", "insertNewlineIgnoringFieldEditor:":
-            if let note = vcDelegate.editArea.getSelectedNote(), !stringValue.isEmpty, note.title.lowercased().starts(with: searchQuery.lowercased()) {
+            if let note = vcDelegate.editArea.getSelectedNote(),
+               !stringValue.isEmpty,
+               note.title.lowercased().starts(with: searchQuery.lowercased()) {
                 vcDelegate.focusEditArea()
             }
-
             searchTimer.invalidate()
             return true
         case "insertTab:":
@@ -132,7 +150,9 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
             textView.deleteWordBackward(self)
             return true
         case "noop:":
-            if let event = NSApp.currentEvent, event.modifierFlags.contains(.command), event.keyCode == kVK_Return {
+            if let event = NSApp.currentEvent,
+               event.modifierFlags.contains(.command),
+               event.keyCode == kVK_Return {
                 vcDelegate.makeNote(self)
                 return true
             }
@@ -143,9 +163,13 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     }
 
     public func hasFocus() -> Bool {
-        var inFocus = false
-        inFocus = (window?.firstResponder is NSTextView) && window?.fieldEditor(false, for: nil) != nil && isEqual(to: (window?.firstResponder as? NSTextView)?.delegate)
-        return inFocus
+        guard let window = window,
+              let firstResponder = window.firstResponder as? NSTextView,
+              window.fieldEditor(false, for: nil) != nil,
+              isEqual(to: firstResponder.delegate) else {
+            return false
+        }
+        return true
     }
 
     func controlTextDidChange(_ obj: Notification) {
@@ -163,20 +187,11 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     }
 
     public func suggestAutocomplete(_ note: Note, filter: String) {
-        guard validateInput(note: note, filter: filter),
-            let editor = currentEditor() as? NSTextView
-        else { return }
+        guard note.title != filter.lowercased(),
+              !filter.isEmpty,
+              let editor = currentEditor() as? NSTextView,
+              note.title.lowercased().starts(with: filter.lowercased()) else { return }
 
-        if note.title.lowercased().starts(with: filter.lowercased()) {
-            applyAutocomplete(note: note, filter: filter, editor: editor)
-        }
-    }
-
-    private func validateInput(note: Note, filter: String) -> Bool {
-        return note.title != filter.lowercased() && !filter.isEmpty
-    }
-
-    private func applyAutocomplete(note: Note, filter: String, editor: NSTextView) {
         let suffix = note.title.suffix(note.title.count - filter.count)
         stringValue = filter + suffix
         editor.selectedRange = NSRange(filter.utf16.count..<note.title.utf16.count)

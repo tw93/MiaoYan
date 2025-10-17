@@ -112,7 +112,7 @@
 "AYu-sK-qS6.title" = "主菜单";
 
 /* Class = "NSSearchFieldCell"; placeholderString = "Search or create"; ObjectID = "B7t-9v-bSk"; */
-"B7t-9v-bSk.placeholderString" = "";
+"B7t-9v-bSk.placeholderString" = "搜索";
 
 /* Class = "NSTextFieldCell"; title = "Note Font:"; ObjectID = "bJC-he-nDV"; */
 "bJC-he-nDV.title" = "笔记字体：";
