@@ -15,7 +15,7 @@ class SearchFieldCell: NSSearchFieldCell {
     override func draw(withFrame cellFrame: NSRect, in controlView: NSView) {
         let insetFrame = cellFrame.insetBy(dx: 0.5, dy: 0.5)
         drawBackground(in: insetFrame)
-        drawBorder(in: insetFrame)
+        drawBorder(in: insetFrame, appearance: controlView.effectiveAppearance)
         drawInterior(withFrame: cellFrame, in: controlView)
     }
 
@@ -25,9 +25,9 @@ class SearchFieldCell: NSSearchFieldCell {
         path.fill()
     }
 
-    private func drawBorder(in frame: NSRect) {
+    private func drawBorder(in frame: NSRect, appearance: NSAppearance?) {
         let path = NSBezierPath(roundedRect: frame, xRadius: Self.height / 2, yRadius: Self.height / 2)
-        NSColor.separatorColor.setStroke()
+        Theme.dividerColor.resolvedColor(for: appearance).setStroke()
         path.lineWidth = 1.0
         path.stroke()
     }
