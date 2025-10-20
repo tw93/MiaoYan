@@ -3,11 +3,11 @@
   <channel>
   <title>妙言 / MiaoYan</title>
       <item>
-      <title>2.1.4</title>
+      <title>2.1.5</title>
       <description><![CDATA[
       <h3>新发现🥜</h3>
       <ol>
-        <li>完善主题切换功能，支持自适应系统主题，修复列表选择行为，提升文件类型检测准确性</li>
+        <li>完善主题切换功能 - 支持自适应系统主题，修复列表选择行为，提升文件类型检测准确性</li>
         <li>目录导航和图片功能增强 - 新增 TOC 目录模式自动生成文章导航，支持 PicList 图床上传，支持引用任意位置的本地图片</li>
         <li>编辑效率提升 - 支持 Tab 快捷键模板一键输入，文件自动检测刷新，编辑器底部留白优化</li>
         <li>PPT 演示模式增强 - 支持更多自定义配置参数，样式大幅优化，演示效果更专业</li>
@@ -18,7 +18,7 @@
       </ol>
       <h3>New Discoveries🥜</h3>
       <ol>
-        <li>Improve the theme switching function, support adaptive system themes, fix list selection behavior, and improve the accuracy of file type detection.</li>
+        <li>Improve the theme switching function - support adaptive system themes, fix list selection behavior, and improve the accuracy of file type detection.</li>
         <li>Enhanced Navigation & Image Support – Added automatic TOC (Table of Contents) generation for article navigation, PicList image-hosting uploads, and support for referencing local images from any location.</li>
         <li>Improved Editing Efficiency – Quick template insertion via the Tab key, automatic file change detection and refresh, and optimized bottom spacing in the editor.</li>
         <li>Upgraded PPT Presentation Mode – More customizable configuration parameters, substantially refined styles, and a more professional presentation experience.</li>
@@ -28,8 +28,8 @@
         <li>Code Architecture Refactor – Rebuilt the DownView preview component and sidebar logic, modularized style files for easier maintenance, and even enabled development in VS Code.</li>
       </ol>
           ]]>      </description>
-      <pubDate>周五, 16 10月 2025 20:20:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.1.4.zip" sparkle:shortVersionString="2.1.4" sparkle:version="2.1.4" sparkle:edSignature="yLmGwGh/PlsRJJKsv+M455wMHgD8RKjbGO2xYiP3ExsEi1i9IoES9T09fgtXnT0/lw3IRkyssQKMr5989VgABQ==" length="21406372" type="application/octet-stream" />
+      <pubDate>周一, 20 10月 2025 20:20:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.1.5.zip" sparkle:shortVersionString="2.1.5" sparkle:version="2.1.5" sparkle:edSignature="K1n4xmV36olWsMHlhLIKfNKdvylQ/hD/bhmTUmWsb4RSVF4YaefQO940oqiIFpJyU3bIuW9UvshMI+uIElWqCQ==" length="21408633" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
     </item>
     <title>妙言 / MiaoYan</title>
