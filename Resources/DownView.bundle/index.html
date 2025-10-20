@@ -127,7 +127,9 @@
           {left: "$", right: "$", display: false},
           {left: "\\(", right: "\\)", display: false},
           {left: "\\[", right: "\\]", display: true}
-        ]
+        ],
+        processEscapes: true,
+        ignoredClasses: ['katex-display', 'katex', 'skip-math-dollar']
       });
 
       MiaoYanCommon.setupHeaderAnchors();

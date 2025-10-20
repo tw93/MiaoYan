@@ -146,6 +146,8 @@ const MiaoYanCommon = {
       hljs.highlightAll();
     }
 
+    this.escapeCurrencyLikeMath();
+
     if (window.EmojiConvertor) {
       const writeElement = document.getElementById('write');
       const emoji = new EmojiConvertor();
@@ -187,6 +189,102 @@ const MiaoYanCommon = {
         }
       });
     }
+  },
+
+  escapeCurrencyLikeMath() {
+    const writeElement = document.getElementById('write');
+    if (!writeElement) {
+      return;
+    }
+
+    const walker = document.createTreeWalker(
+      writeElement,
+      NodeFilter.SHOW_TEXT,
+      {
+        acceptNode(node) {
+          if (!node.textContent.includes('$')) {
+            return NodeFilter.FILTER_REJECT;
+          }
+
+          let parent = node.parentElement;
+          while (parent && parent !== writeElement) {
+            const tagName = parent.tagName;
+            if (
+              tagName === 'CODE' ||
+              tagName === 'PRE' ||
+              tagName === 'SCRIPT' ||
+              tagName === 'STYLE' ||
+              parent.classList.contains('katex') ||
+              parent.classList.contains('skip-math-dollar')
+            ) {
+              return NodeFilter.FILTER_REJECT;
+            }
+            parent = parent.parentElement;
+          }
+
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      }
+    );
+
+    const nodesToUpdate = [];
+    let currentNode;
+    while ((currentNode = walker.nextNode())) {
+      nodesToUpdate.push(currentNode);
+    }
+
+    const currencyRegex = /^\$([0-9]+(?:[.,][0-9]+)?)(?=$|[^0-9A-Za-z+\-*/=<>^_\\])/;
+
+    nodesToUpdate.forEach(node => {
+      const text = node.textContent;
+      if (!text.includes('$')) {
+        return;
+      }
+
+      const fragment = document.createDocumentFragment();
+      let index = 0;
+      let lastIndex = 0;
+      let replaced = false;
+
+      while (index < text.length) {
+        const char = text[index];
+
+        if (char === '\\' && index + 1 < text.length && text[index + 1] === '$') {
+          index += 2;
+          continue;
+        }
+
+        if (char === '$') {
+          const remaining = text.slice(index);
+          const match = remaining.match(currencyRegex);
+          if (match) {
+            if (index > lastIndex) {
+              fragment.appendChild(document.createTextNode(text.slice(lastIndex, index)));
+            }
+            const span = document.createElement('span');
+            span.className = 'skip-math-dollar';
+            span.textContent = match[0];
+            fragment.appendChild(span);
+            index += match[0].length;
+            lastIndex = index;
+            replaced = true;
+            continue;
+          }
+        }
+
+        index += 1;
+      }
+
+      if (!replaced) {
+        return;
+      }
+
+      if (lastIndex < text.length) {
+        fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
+      }
+
+      node.parentNode?.replaceChild(fragment, node);
+    });
   },
 
   onDOMReady(callback) {
