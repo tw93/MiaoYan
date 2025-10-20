@@ -57,11 +57,10 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             imagePreviewManager = ImagePreviewManager(textView: self)
             clipboardManager = ClipboardManager(textView: self)
             menuManager = EditorMenuManager(textView: self)
+            defaultVerticalInset = textContainerInset.height
+            hasCapturedDefaultVerticalInset = true
+            bottomPadding = 0
         }
-
-        defaultVerticalInset = textContainerInset.height
-        hasCapturedDefaultVerticalInset = true
-        bottomPadding = 0
     }
 
     deinit {
