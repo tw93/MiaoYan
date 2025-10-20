@@ -6,15 +6,6 @@ class EditorScrollView: NSScrollView {
 
     override func layout() {
         super.layout()
-        updateBottomPadding()
-    }
-
-    private func updateBottomPadding() {
-        // Keep 4 lines of space at bottom for comfortable editing
-        let lineHeight: CGFloat = 24
-        let bottomPadding = lineHeight * 4
-
-        contentView.contentInsets.bottom = bottomPadding
     }
 
     override var isFindBarVisible: Bool {
