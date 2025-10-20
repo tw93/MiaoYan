@@ -35,9 +35,16 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     private var imagePreviewManager: ImagePreviewManager?
     private var clipboardManager: ClipboardManager?
     private var menuManager: EditorMenuManager?
+    private var defaultVerticalInset: CGFloat = 0
+    private var hasCapturedDefaultVerticalInset = false
+    private var bottomPadding: CGFloat = 0
+    private let extraTopPadding: CGFloat = 8
     public static var fontColor: NSColor { Theme.textColor }
     override var textContainerOrigin: NSPoint {
-        let origin = super.textContainerOrigin
+        var origin = super.textContainerOrigin
+        if bottomPadding > 0 {
+            origin.y -= bottomPadding
+        }
         return NSPoint(x: origin.x, y: origin.y - 7)
     }
 
@@ -51,6 +58,10 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             clipboardManager = ClipboardManager(textView: self)
             menuManager = EditorMenuManager(textView: self)
         }
+
+        defaultVerticalInset = textContainerInset.height
+        hasCapturedDefaultVerticalInset = true
+        bottomPadding = 0
     }
 
     deinit {
@@ -107,7 +118,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         guard EditTextView.note != nil else { return }
         guard let container = textContainer, let manager = layoutManager else { return }
         let point = convert(event.locationInWindow, from: nil)
-        let properPoint = NSPoint(x: point.x - textContainerInset.width, y: point.y)
+        let origin = textContainerOrigin
+        let properPoint = NSPoint(x: point.x - origin.x, y: point.y - origin.y)
         let index = manager.characterIndex(for: properPoint, in: container, fractionOfDistanceBetweenInsertionPoints: nil)
         _ = manager.boundingRect(forGlyphRange: NSRange(location: index, length: 1), in: container)
         super.mouseDown(with: event)
@@ -131,7 +143,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             return
         }
         let point = convert(event.locationInWindow, from: nil)
-        let properPoint = NSPoint(x: point.x - textContainerInset.width, y: point.y)
+        let origin = textContainerOrigin
+        let properPoint = NSPoint(x: point.x - origin.x, y: point.y - origin.y)
         guard let container = textContainer, let manager = layoutManager else {
             imagePreviewManager?.hideImagePreview()
             return
@@ -734,10 +747,21 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         let margin = UserDefaultsManagement.marginSize
         let width = frame.width
 
+        // Restore the original vertical inset baseline before applying bottom padding
+        if !hasCapturedDefaultVerticalInset {
+            defaultVerticalInset = max(0, textContainerInset.height - bottomPadding - extraTopPadding)
+            hasCapturedDefaultVerticalInset = true
+        }
+        textContainerInset.height = defaultVerticalInset
+        if let clipView = enclosingScrollView?.contentView, clipView.contentInsets.bottom != 0 {
+            clipView.contentInsets.bottom = 0
+        }
+
         // Set bottom padding for comfortable editing (4 lines of space)
         let lineHeight: CGFloat = 24
         let bottomPadding = lineHeight * 4
-        textContainerInset.height = bottomPadding
+        self.bottomPadding = bottomPadding
+        textContainerInset.height += extraTopPadding + bottomPadding
 
         if lineWidth == 1000 {
             textContainerInset.width = CGFloat(margin)
