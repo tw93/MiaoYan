@@ -387,7 +387,6 @@ class ViewController:
         DispatchQueue.main.async {
             self.editArea.updateTextContainerInset()
         }
-        editArea.textContainerInset.height = 10
         editArea.isEditable = false
         editArea.layoutManager?.defaultAttachmentScaling = .scaleProportionallyDown
         search.font = UserDefaultsManagement.searchFont

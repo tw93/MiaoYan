@@ -733,6 +733,12 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         let lineWidth = UserDefaultsManagement.lineWidth
         let margin = UserDefaultsManagement.marginSize
         let width = frame.width
+
+        // Set bottom padding for comfortable editing (4 lines of space)
+        let lineHeight: CGFloat = 24
+        let bottomPadding = lineHeight * 4
+        textContainerInset.height = bottomPadding
+
         if lineWidth == 1000 {
             textContainerInset.width = CGFloat(margin)
             return
