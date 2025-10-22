@@ -2,7 +2,7 @@ import Carbon.HIToolbox
 import Cocoa
 
 @MainActor
-class TitleTextField: NSTextField {
+class TitleTextField: NSTextField, NSTextFieldDelegate {
     public var vcDelegate: ViewController!
     public var restoreResponder: NSResponder?
 
@@ -66,5 +66,20 @@ class TitleTextField: NSTextField {
 
         vc.notesTableView.reloadRow(note: note)
         vc.titleLabel.isEditable = true
+    }
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        self.delegate = self
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        self.delegate = self
+    }
+
+    func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+        // TAB handling is done in ViewController's keyDown method
+        return false
     }
 }

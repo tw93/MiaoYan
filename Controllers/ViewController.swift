@@ -537,4 +537,5 @@ class ViewController:
             sidebarMenu.applyMenuIcons()
         }
     }
+
 }

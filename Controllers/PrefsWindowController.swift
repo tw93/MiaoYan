@@ -205,11 +205,12 @@ extension PrefsWindowController {
     fileprivate func applyWindowAppearance() {
         guard let window else { return }
 
-        let targetAppearance: NSAppearance? = switch UserDefaultsManagement.appearanceType {
-        case .Light: NSAppearance(named: .aqua)
-        case .Dark: NSAppearance(named: .darkAqua)
-        case .System, .Custom: nil
-        }
+        let targetAppearance: NSAppearance? =
+            switch UserDefaultsManagement.appearanceType {
+            case .Light: NSAppearance(named: .aqua)
+            case .Dark: NSAppearance(named: .darkAqua)
+            case .System, .Custom: nil
+            }
 
         window.appearance = targetAppearance
         window.contentView?.appearance = targetAppearance

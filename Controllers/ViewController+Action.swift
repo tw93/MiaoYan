@@ -1150,6 +1150,15 @@ extension ViewController {
                 NSApp.mainWindow?.makeFirstResponder(notesTableView)
                 return false
             }
+
+            // Handle TAB in title field - save and switch to editor
+            if let fr = NSApp.mainWindow?.firstResponder, fr.isKind(of: NSTextView.self),
+                titleLabel.hasFocus()
+            {
+                saveTitleSafely()
+                focusEditArea()
+                return true
+            }
         }
 
         // Focus search bar on ESC
