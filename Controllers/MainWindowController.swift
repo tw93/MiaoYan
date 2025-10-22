@@ -42,7 +42,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         isObservingAppearance = true
     }
 
-    nonisolated override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    nonisolated override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "effectiveAppearance" {
             Task { @MainActor in
                 handleAppearanceChange()
@@ -67,11 +67,11 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
             let selectedSidebarRow = vc.storageOutlineView.selectedRow
 
             // Refresh existing rows instead of reloading to preserve selection
-            vc.notesTableView.enumerateAvailableRowViews { rowView, row in
+            vc.notesTableView.enumerateAvailableRowViews { rowView, _ in
                 rowView.needsDisplay = true
             }
 
-            vc.storageOutlineView.enumerateAvailableRowViews { rowView, row in
+            vc.storageOutlineView.enumerateAvailableRowViews { rowView, _ in
                 rowView.needsDisplay = true
             }
 

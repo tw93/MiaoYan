@@ -136,8 +136,9 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
             return true
         case "insertNewline:", "insertNewlineIgnoringFieldEditor:":
             if let note = vcDelegate.editArea.getSelectedNote(),
-               !stringValue.isEmpty,
-               note.title.lowercased().starts(with: searchQuery.lowercased()) {
+                !stringValue.isEmpty,
+                note.title.lowercased().starts(with: searchQuery.lowercased())
+            {
                 vcDelegate.focusEditArea()
             }
             searchTimer.invalidate()
@@ -151,8 +152,9 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
             return true
         case "noop:":
             if let event = NSApp.currentEvent,
-               event.modifierFlags.contains(.command),
-               event.keyCode == kVK_Return {
+                event.modifierFlags.contains(.command),
+                event.keyCode == kVK_Return
+            {
                 vcDelegate.makeNote(self)
                 return true
             }
@@ -164,9 +166,10 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
 
     public func hasFocus() -> Bool {
         guard let window = window,
-              let firstResponder = window.firstResponder as? NSTextView,
-              window.fieldEditor(false, for: nil) != nil,
-              isEqual(to: firstResponder.delegate) else {
+            let firstResponder = window.firstResponder as? NSTextView,
+            window.fieldEditor(false, for: nil) != nil,
+            isEqual(to: firstResponder.delegate)
+        else {
             return false
         }
         return true
@@ -188,9 +191,10 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
 
     public func suggestAutocomplete(_ note: Note, filter: String) {
         guard note.title != filter.lowercased(),
-              !filter.isEmpty,
-              let editor = currentEditor() as? NSTextView,
-              note.title.lowercased().starts(with: filter.lowercased()) else { return }
+            !filter.isEmpty,
+            let editor = currentEditor() as? NSTextView,
+            note.title.lowercased().starts(with: filter.lowercased())
+        else { return }
 
         let suffix = note.title.suffix(note.title.count - filter.count)
         stringValue = filter + suffix

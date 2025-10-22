@@ -108,7 +108,7 @@ final class PrefsSidebarView: NSView {
         tableView.backgroundColor = backgroundColor
 
         // Refresh all rows to update appearance
-        tableView.enumerateAvailableRowViews { rowView, row in
+        tableView.enumerateAvailableRowViews { rowView, _ in
             rowView.needsDisplay = true
             // Force cell views to update their text colors immediately
             for case let cellView as PrefsSidebarCellView in rowView.subviews {

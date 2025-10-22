@@ -4,10 +4,6 @@ import Cocoa
 class EditorScrollView: NSScrollView {
     private var initialHeight: CGFloat?
 
-    override func layout() {
-        super.layout()
-    }
-
     override var isFindBarVisible: Bool {
         get {
             super.isFindBarVisible

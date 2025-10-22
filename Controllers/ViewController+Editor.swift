@@ -543,7 +543,7 @@ extension ViewController {
         updateTitle(newTitle: title)
     }
 
-    private func saveTitleSafely() {
+    func saveTitleSafely() {
         let targetNote: Note?
         let titleToSave: String
 
