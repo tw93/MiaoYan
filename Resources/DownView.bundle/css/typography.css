@@ -592,12 +592,6 @@ code.language-mermaid .edgeLabel{
   display: inline-block;
 }
 
-.heti pre.plantuml-image-container {
-  padding: 0;
-  background: transparent;
-  border-radius: 0;
-}
-
 .heti pre.plantuml-image-container .plantuml-image {
   border-radius: 8px;
 }
