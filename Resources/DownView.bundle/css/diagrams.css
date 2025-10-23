@@ -147,6 +147,20 @@ pre:has(.language-mermaid) {
   background: transparent;
 }
 
+.markmap foreignObject {
+  width: auto !important;
+  min-width: 80px;
+  overflow: visible !important;
+}
+
+.markmap foreignObject div {
+  white-space: nowrap;
+  padding: 0 12px 0 4px;
+  font-size: inherit;
+  font-family: inherit;
+  color: inherit;
+}
+
 /* ==================== PlantUML ==================== */
 .plantuml-image-container,
 .plantuml-container {
