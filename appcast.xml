@@ -7,7 +7,7 @@
       <description><![CDATA[
       <h3>新发现🥜</h3>
       <ol>
-        <li>2.1.6 支持 Mac26 下各种模式效果的图标，修复 Markmap 渲染截断，修复底部缓存挡住编辑问题<li>
+        <li>2.1.6 支持 Mac26 下各种模式效果的图标，修复 Markmap 渲染截断，修复底部缓存挡住编辑问题</li>
         <li>完善主题切换功能 - 支持自适应系统主题，修复列表选择行为，提升文件类型检测准确性</li>
         <li>目录导航和图片功能增强 - 新增 TOC 目录模式自动生成文章导航，支持 PicList 图床上传，支持引用任意位置的本地图片</li>
         <li>编辑效率提升 - 支持 Tab 快捷键模板一键输入，文件自动检测刷新，编辑器底部留白优化</li>
@@ -19,7 +19,7 @@
       </ol>
       <h3>New Discoveries🥜</h3>
       <ol>
-        <li>2.1.6 Support icons of various modes under Mac26, fix Markmap rendering truncation, fix the bottom cache blocking editing problem<li>
+        <li>2.1.6 Support icons of various modes under Mac26, fix Markmap rendering truncation, fix the bottom cache blocking editing problem</li>
         <li>Improve the theme switching function - support adaptive system themes, fix list selection behavior, and improve the accuracy of file type detection.</li>
         <li>Enhanced Navigation & Image Support – Added automatic TOC (Table of Contents) generation for article navigation, PicList image-hosting uploads, and support for referencing local images from any location.</li>
         <li>Improved Editing Efficiency – Quick template insertion via the Tab key, automatic file change detection and refresh, and optimized bottom spacing in the editor.</li>
