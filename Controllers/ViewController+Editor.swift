@@ -33,6 +33,9 @@ extension ViewController {
         }
         refillEditArea()
         titleLabel.isEditable = false
+        // Hide editor scrollbar to prevent overlap with preview scrollbar
+        editAreaScroll.hasVerticalScroller = false
+        editAreaScroll.hasHorizontalScroller = false
         if UserDefaultsManagement.previewLocation == "Editing", !UserDefaultsManagement.isOnExport {
             let scrollPre = getScrollTop()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
@@ -54,6 +57,9 @@ extension ViewController {
                 self.hideWebView()
                 webView.loadHTMLString("<html><body style='background:transparent;'></body></html>", baseURL: nil)
                 self.refillEditArea()
+                // Restore editor scrollbar
+                self.editAreaScroll.hasVerticalScroller = true
+                self.editAreaScroll.hasHorizontalScroller = true
 
                 let normalizedRatio = ratio.map { min(max($0, 0), 1) }
 
@@ -109,6 +115,9 @@ extension ViewController {
         // Fallback if no webView (shouldn't happen but for safety)
         UserDefaultsManagement.preview = false
         refillEditArea()
+        // Restore editor scrollbar
+        editAreaScroll.hasVerticalScroller = true
+        editAreaScroll.hasHorizontalScroller = true
         DispatchQueue.main.async {
             self.titleLabel.isEditable = true
         }
@@ -171,6 +180,9 @@ extension ViewController {
         }
         refillEditArea(previewOnly: true, force: true)
         presentationButton.state = .on
+        // Hide editor scrollbar to prevent overlap with preview scrollbar
+        editAreaScroll.hasVerticalScroller = false
+        editAreaScroll.hasHorizontalScroller = false
         if !UserDefaultsManagement.fullScreen {
             view.window?.toggleFullScreen(nil)
         }
@@ -266,6 +278,9 @@ extension ViewController {
             showWebView()
         }
         refillEditArea()
+        // Hide editor scrollbar to prevent overlap with preview scrollbar
+        editAreaScroll.hasVerticalScroller = false
+        editAreaScroll.hasHorizontalScroller = false
         DispatchQueue.main.async {
             vc.titiebarHeight.constant = 0.0
             vc.titleLabel.isHidden = true
