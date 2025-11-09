@@ -45,12 +45,69 @@ extension ViewController {
         if UserDefaultsManagement.magicPPT {
             return
         }
-        // Clear preview flag
-        UserDefaultsManagement.preview = false
+        // Save preview scroll position before disabling
         if let webView = editArea.markdownView {
-            hideWebView()
-            webView.loadHTMLString("<html><body style='background:transparent;'></body></html>", baseURL: nil)
+            let applyPreviewDisable: (_ ratio: CGFloat?) -> Void = { [weak self, weak webView] ratio in
+                guard let self = self, let webView = webView else { return }
+
+                UserDefaultsManagement.preview = false
+                self.hideWebView()
+                webView.loadHTMLString("<html><body style='background:transparent;'></body></html>", baseURL: nil)
+                self.refillEditArea()
+
+                let normalizedRatio = ratio.map { min(max($0, 0), 1) }
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                    guard let self = self else { return }
+
+                    if let ratio = normalizedRatio,
+                        ratio > 0,
+                        let documentView = self.editAreaScroll.documentView
+                    {
+                        let contentHeight = self.editAreaScroll.contentSize.height
+                        let scrollHeight = documentView.bounds.height
+                        let offset = max(scrollHeight - contentHeight, 0)
+                        if offset > 0 {
+                            let scrollTop = offset * ratio
+                            documentView.scroll(NSPoint(x: 0, y: scrollTop))
+                        }
+                    }
+
+                    self.titleLabel.isEditable = true
+                    if !self.isFocusedTitle {
+                        self.focusEditArea()
+                    }
+                }
+            }
+
+            webView.evaluateJavaScript("window.pageYOffset") { [weak self] scrollTop, _ in
+                guard let self = self else { return }
+                guard let scrollTopNumber = scrollTop as? NSNumber else {
+                    applyPreviewDisable(nil)
+                    return
+                }
+                let scrollTopValue = CGFloat(truncating: scrollTopNumber)
+
+                webView.evaluateJavaScript("Math.max(document.body.scrollHeight - window.innerHeight, 0)") { maxScroll, _ in
+                    guard let maxScrollNumber = maxScroll as? NSNumber else {
+                        applyPreviewDisable(nil)
+                        return
+                    }
+                    let maxScrollValue = CGFloat(truncating: maxScrollNumber)
+                    guard maxScrollValue > 0 else {
+                        applyPreviewDisable(nil)
+                        return
+                    }
+
+                    let scrollRatio = scrollTopValue / maxScrollValue
+                    applyPreviewDisable(scrollRatio)
+                }
+            }
+            return
         }
+
+        // Fallback if no webView (shouldn't happen but for safety)
+        UserDefaultsManagement.preview = false
         refillEditArea()
         DispatchQueue.main.async {
             self.titleLabel.isEditable = true
