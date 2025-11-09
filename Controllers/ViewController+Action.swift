@@ -434,19 +434,30 @@ extension ViewController {
     @IBAction func textFinder(_ sender: NSMenuItem) {
         guard let vc = ViewController.shared() else { return }
 
-        if !vc.editAreaScroll.isFindBarVisible, [NSFindPanelAction.next.rawValue, NSFindPanelAction.previous.rawValue].contains(UInt(sender.tag)) {
-            if UserDefaultsManagement.preview, vc.notesTableView.selectedRow > -1 {
-                vc.disablePreview()
+        let performFinderActions: () -> Void = {
+            if !vc.editAreaScroll.isFindBarVisible,
+                [NSFindPanelAction.next.rawValue, NSFindPanelAction.previous.rawValue].contains(UInt(sender.tag))
+            {
+                let menu = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+                menu.tag = NSTextFinder.Action.showFindInterface.rawValue
+                vc.editArea.performTextFinderAction(menu)
             }
 
-            let menu = NSMenuItem(title: "", action: nil, keyEquivalent: "")
-            menu.tag = NSTextFinder.Action.showFindInterface.rawValue
-            vc.editArea.performTextFinderAction(menu)
+            DispatchQueue.main.async {
+                vc.editArea.performTextFinderAction(sender)
+            }
         }
 
-        DispatchQueue.main.async {
-            vc.editArea.performTextFinderAction(sender)
+        if UserDefaultsManagement.preview {
+            guard vc.notesTableView.selectedRow > -1 else { return }
+            vc.disablePreview()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                performFinderActions()
+            }
+            return
         }
+
+        performFinderActions()
     }
 
     // MARK: - Note Operations
