@@ -82,6 +82,7 @@ public enum UserDefaultsManagement {
         static let ButtonShow = "buttonShow"
         static let NotesTableScrollPosition = "notesTableScrollPosition"
         static let AlwaysOnTop = "alwaysOnTop"
+        static let HasShownImagePreviewTip = "hasShownImagePreviewTip"
     }
 
     private static func resolvedFontName(forKey key: String) -> String {
@@ -174,6 +175,19 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.AlwaysOnTop)
         }
     }
+
+    static var imagePreviewTipShowCount: Int {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.HasShownImagePreviewTip) as? Int {
+                return result
+            }
+            return 0
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.HasShownImagePreviewTip)
+        }
+    }
+
     static var isFirstLaunch: Bool {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.IsFirstLaunch) as? Bool {

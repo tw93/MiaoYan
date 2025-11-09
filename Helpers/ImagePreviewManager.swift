@@ -7,12 +7,13 @@ class ImagePreviewManager {
     private var hoverTimer: Timer?
     private var lastHoveredImageInfo: ImageLinkInfo?
     private var lastShowPoint: NSPoint?
+    private var lastHoverAllowedPreview: Bool = false
 
     init(textView: EditTextView) {
         self.textView = textView
     }
 
-    func handleImageLinkHover(at index: Int, mousePoint: NSPoint) {
+    func handleImageLinkHover(at index: Int, mousePoint: NSPoint, allowPreview: Bool = true) {
         guard let textView = textView,
             let storage = textView.textStorage,
             let window = textView.window
@@ -37,13 +38,27 @@ class ImagePreviewManager {
         let text = storage.string
 
         if let imageInfo = ImageLinkParser.detectImageLink(in: text, at: index) {
-            if let lastInfo = lastHoveredImageInfo,
-                lastInfo.src == imageInfo.src && lastInfo.range.location == imageInfo.range.location && lastInfo.range.length == imageInfo.range.length
-            {
+            let isSameImage = lastHoveredImageInfo?.src == imageInfo.src &&
+                lastHoveredImageInfo?.range.location == imageInfo.range.location &&
+                lastHoveredImageInfo?.range.length == imageInfo.range.length
+
+            if !isSameImage {
+                lastHoveredImageInfo = imageInfo
+            }
+
+            showImagePreviewTipIfNeeded()
+
+            if !allowPreview {
+                lastHoverAllowedPreview = false
+                hoverTimer?.invalidate()
                 return
             }
 
-            lastHoveredImageInfo = imageInfo
+            if isSameImage && lastHoverAllowedPreview {
+                return
+            }
+
+            lastHoverAllowedPreview = true
             hoverTimer?.invalidate()
 
             hoverTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
@@ -70,6 +85,7 @@ class ImagePreviewManager {
 
         let screenPoint = window.convertPoint(toScreen: mousePoint)
         lastShowPoint = screenPoint
+        showImagePreviewTipIfNeeded()
         imagePreviewWindow?.showPreview(for: imageInfo.src, at: screenPoint, isFixed: true)
     }
 
@@ -78,6 +94,7 @@ class ImagePreviewManager {
         hoverTimer = nil
         lastHoveredImageInfo = nil
         lastShowPoint = nil
+        lastHoverAllowedPreview = false
         imagePreviewWindow?.hidePreview()
     }
 
@@ -114,5 +131,14 @@ class ImagePreviewManager {
         }
 
         return false
+    }
+
+    private func showImagePreviewTipIfNeeded() {
+        guard UserDefaultsManagement.imagePreviewTipShowCount < 2,
+            let viewController = textView?.viewDelegate
+        else { return }
+
+        UserDefaultsManagement.imagePreviewTipShowCount += 1
+        viewController.toast(message: I18n.str("Hold ⌘ Command key to preview images"))
     }
 }

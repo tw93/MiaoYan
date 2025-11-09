@@ -212,3 +212,6 @@
 /* ClipboardManager Messages */
 "Image uploaded successfully" = "图片上传成功";
 "Image upload failed, using local path" = "图片上传失败，使用本地路径";
+
+/* Image Preview Tip */
+"Hold ⌘ Command key to preview images" = "按住 ⌘ Command 键可预览图片";
