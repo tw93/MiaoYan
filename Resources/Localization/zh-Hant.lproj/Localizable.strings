@@ -189,6 +189,9 @@
 "Image uploaded successfully" = "圖片上傳成功";
 "Image upload failed, using local path" = "圖片上傳失敗，使用本地路徑";
 
+/* Image Preview Tip */
+"Hold ⌘ Command key to preview images" = "按住 ⌘ Command 鍵可預覽圖片";
+
 /* Missing translations */
 "Link" = "連結";
 "MiaoYan [preview]" = "妙言 [預覽]";

@@ -154,8 +154,14 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             imagePreviewManager?.hideImagePreview()
             return
         }
-        imagePreviewManager?.handleImageLinkHover(at: index, mousePoint: event.locationInWindow)
-        if NSEvent.modifierFlags.contains(.command) {
+
+        let holdingCommand = event.modifierFlags.contains(.command)
+        imagePreviewManager?.handleImageLinkHover(at: index, mousePoint: event.locationInWindow, allowPreview: holdingCommand)
+        if !holdingCommand {
+            imagePreviewManager?.hideImagePreview()
+        }
+
+        if holdingCommand {
             linkTextAttributes = [
                 .foregroundColor: Theme.highlightColor,
                 .cursor: NSCursor.pointingHand,
@@ -166,6 +172,13 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             ]
         }
         super.mouseMoved(with: event)
+    }
+
+    override func flagsChanged(with event: NSEvent) {
+        super.flagsChanged(with: event)
+        if !event.modifierFlags.contains(.command) {
+            imagePreviewManager?.hideImagePreview()
+        }
     }
 
     override func completions(forPartialWordRange charRange: NSRange, indexOfSelectedItem index: UnsafeMutablePointer<Int>) -> [String]? {
@@ -643,9 +656,18 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         return search.stringValue
     }
 
-    public func scrollToCursor() {
+    public func scrollToCursor(animated: Bool = false) {
         let cursorRange = NSRange(location: selectedRange().location, length: 0)
+        guard !animated else {
+            scrollRangeToVisible(cursorRange)
+            return
+        }
+
+        NSAnimationContext.beginGrouping()
+        NSAnimationContext.current.duration = 0
+        NSAnimationContext.current.allowsImplicitAnimation = false
         scrollRangeToVisible(cursorRange)
+        NSAnimationContext.endGrouping()
     }
 
     public func hasFocus() -> Bool {

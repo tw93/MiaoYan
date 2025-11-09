@@ -210,6 +210,9 @@
 "Image uploaded successfully" = "画像のアップロードが成功しました";
 "Image upload failed, using local path" = "画像のアップロードに失敗しました、ローカルパスを使用します";
 
+/* Image Preview Tip */
+"Hold ⌘ Command key to preview images" = "⌘ Command キーを押しながら画像をプレビュー";
+
 /* Missing translations */
 "Interface" = "インターフェース";
 "Preview Settings" = "プレビュー設定";
