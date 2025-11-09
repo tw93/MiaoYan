@@ -68,7 +68,7 @@ body.darkmode .toc-hover-trigger {
   background: var(--bg-color, #FFFFFF);
   border: 1px solid var(--border-color, #e6e6e6);
   border-radius: 10px;
-  padding: 12px 8px 14px 14px;
+  padding: 36px 8px 14px 14px;
   font-size: 13px;
   line-height: 1.55;
   z-index: 100;
@@ -161,3 +161,52 @@ body.darkmode .toc-nav .is-active-link {
   margin-top: 0;
 }
 
+/* TOC Pin Button */
+.toc-pin-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-color, #262626);
+  opacity: 0.5;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.toc-pin-btn:hover {
+  opacity: 0.8;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.toc-nav.pinned .toc-pin-btn {
+  opacity: 1;
+  color: var(--primary-color, #1C5D33);
+}
+
+body.darkmode .toc-pin-btn {
+  color: var(--text-color, #E7E9EA);
+}
+
+body.darkmode .toc-pin-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+body.darkmode .toc-nav.pinned .toc-pin-btn {
+  color: #54C59F;
+}
+
+.toc-nav.pinned .toc-pin-btn .pin-icon {
+  transform: rotate(45deg);
+}
+
+.pin-icon {
+  transition: transform 0.2s ease;
+}

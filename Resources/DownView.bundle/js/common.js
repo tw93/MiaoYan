@@ -311,7 +311,9 @@ const TOC_CONFIG = {
   function initTOC() {
     const nav = document.querySelector('.toc-nav');
     const trigger = document.querySelector('.toc-hover-trigger');
-    if (!nav || !trigger) return;
+    const tocContainer = document.querySelector('.toc-content');
+    const pinBtn = document.querySelector('.toc-pin-btn');
+    if (!nav || !trigger || !tocContainer) return;
 
     // Check if we have enough headings (only count h1-h3 for TOC)
     const headings = document.querySelectorAll('#write h1, #write h2, #write h3');
@@ -323,7 +325,7 @@ const TOC_CONFIG = {
     // Initialize tocbot (only show 3 levels: h1, h2, h3)
     if (window.tocbot) {
       tocbot.init({
-        tocSelector: '.toc-nav',
+        tocSelector: '.toc-content',
         contentSelector: '#write',
         headingSelector: 'h1, h2, h3',
         hasInnerContainers: true,
@@ -337,8 +339,10 @@ const TOC_CONFIG = {
 
     let fadeTimer = null;
     let scrollTimeout = null;
+    let isPinned = localStorage.getItem('toc-pinned') === 'true';
 
     const startAutoHideTimer = () => {
+      if (isPinned) return;
       clearTimeout(fadeTimer);
       fadeTimer = setTimeout(() => {
         trigger.style.opacity = '0';
@@ -357,13 +361,14 @@ const TOC_CONFIG = {
     };
 
     const hide = () => {
+      if (isPinned) return;
       nav.classList.remove('active');
       trigger.classList.remove('hidden');
     };
 
     // Auto-scroll active link into view within TOC panel
     const scrollToActive = () => {
-      const activeLink = nav.querySelector('.is-active-link');
+      const activeLink = tocContainer.querySelector('.is-active-link');
       if (!activeLink || !nav.classList.contains('active')) return;
 
       const linkTop = activeLink.offsetTop;
@@ -381,7 +386,31 @@ const TOC_CONFIG = {
       scrollTimeout = setTimeout(scrollToActive, TOC_CONFIG.SCROLL_DEBOUNCE);
     });
 
-    observer.observe(nav, { subtree: true, attributeFilter: ['class'] });
+    observer.observe(tocContainer, { subtree: true, attributeFilter: ['class'] });
+
+    // Pin button handler
+    if (pinBtn) {
+      pinBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        isPinned = !isPinned;
+        localStorage.setItem('toc-pinned', isPinned);
+
+        if (isPinned) {
+          nav.classList.add('pinned');
+          show();
+        } else {
+          nav.classList.remove('pinned');
+          hide();
+          startAutoHideTimer();
+        }
+      });
+    }
+
+    // Initialize pinned state
+    if (isPinned) {
+      nav.classList.add('pinned');
+      show();
+    }
 
     trigger.addEventListener('mouseenter', show);
     nav.addEventListener('mouseenter', show);
@@ -412,7 +441,9 @@ const TOC_CONFIG = {
     window.addEventListener('resize', handleResize);
     handleResize();
 
-    startAutoHideTimer();
+    if (!isPinned) {
+      startAutoHideTimer();
+    }
   }
 
   // Wait for tocbot to be available and render TOC
