@@ -5,7 +5,7 @@
       <item>
       <title>2.2.0</title>
       <description><![CDATA[
-      <h3>完善化</h3>
+      <h3>更完善</h3>
       <ol>
         <li>重写内容搜索组件，支持编辑和预览模式下的搜索，体验相比之前好很多了</li>
         <li>TOC 支持 pin 控制，方便需要经常打开的小伙伴</li>
@@ -13,7 +13,7 @@
         <li>修复预览模式下某些机型可能出现的双滚动条的问题</li>
       </ol>
 
-      <h3>New Face 🎉</h3>
+      <h3>More perfect</h3>
       <ol>
         <li>Rewrite content search components, support search in editing and preview mode, and the experience is much better than before.</li>
         <li>TOC supports pin control, which is convenient for friends who need to open it frequently.</li>
