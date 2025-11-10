@@ -31,6 +31,9 @@ img {
   max-width: 100%;
   height: auto;
   object-fit: cover;
+  color-rendering: optimizeQuality;
+  image-rendering: -webkit-optimize-contrast;
+  -webkit-color-correction: default;
 }
 
 /* ==================== Typography ==================== */

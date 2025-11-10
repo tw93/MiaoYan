@@ -372,7 +372,8 @@ class ViewController:
                 if ["findMenu.find", "findMenu.findAndReplace", "findMenu.next", "findMenu.prev"].contains(menuItem.identifier?.rawValue), vc.notesTableView.selectedRow > -1 {
                     return canUseMenu
                 }
-                return vc.editAreaScroll.isFindBarVisible || vc.editArea.hasFocus()
+                let isPreviewSearchVisible = vc.editArea.markdownView?.isSearchBarVisible ?? false
+                return vc.editArea.isSearchBarVisible || isPreviewSearchVisible || vc.editArea.hasFocus()
             default:
                 break
             }

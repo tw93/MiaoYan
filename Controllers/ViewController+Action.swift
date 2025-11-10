@@ -261,7 +261,8 @@ extension ViewController {
             return
         }
 
-        if vc.titleLabel.hasFocus() || vc.editArea.hasFocus() || vc.search.hasFocus() || UserDefaultsManagement.magicPPT || UserDefaultsManagement.presentation || vc.editAreaScroll.isFindBarVisible {
+        let isPreviewSearchVisible = vc.editArea.markdownView?.isSearchBarVisible ?? false
+        if vc.titleLabel.hasFocus() || vc.editArea.hasFocus() || vc.search.hasFocus() || UserDefaultsManagement.magicPPT || UserDefaultsManagement.presentation || vc.editArea.isSearchBarVisible || isPreviewSearchVisible {
             return
         }
 
@@ -434,30 +435,68 @@ extension ViewController {
     @IBAction func textFinder(_ sender: NSMenuItem) {
         guard let vc = ViewController.shared() else { return }
 
-        let performFinderActions: () -> Void = {
-            if !vc.editAreaScroll.isFindBarVisible,
-                [NSFindPanelAction.next.rawValue, NSFindPanelAction.previous.rawValue].contains(UInt(sender.tag))
-            {
-                let menu = NSMenuItem(title: "", action: nil, keyEquivalent: "")
-                menu.tag = NSTextFinder.Action.showFindInterface.rawValue
-                vc.editArea.performTextFinderAction(menu)
-            }
-
-            DispatchQueue.main.async {
-                vc.editArea.performTextFinderAction(sender)
-            }
-        }
-
-        if UserDefaultsManagement.preview {
-            guard vc.notesTableView.selectedRow > -1 else { return }
-            vc.disablePreview()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                performFinderActions()
+        // If in preview mode, use WebView search
+        if UserDefaultsManagement.preview || UserDefaultsManagement.presentation || UserDefaultsManagement.magicPPT {
+            if let webView = vc.editArea.markdownView {
+                // Hide editor search bar when switching to preview search
+                if vc.editArea.isSearchBarVisible {
+                    vc.editArea.hideSearchBar()
+                }
+                // Find next
+                if sender.tag == NSFindPanelAction.next.rawValue {
+                    webView.findNext()
+                    return
+                }
+                // Find previous
+                if sender.tag == NSFindPanelAction.previous.rawValue {
+                    webView.findPrevious()
+                    return
+                }
+                // Default: show search bar (for Cmd+F and other find commands)
+                webView.showSearchBar()
+                return
             }
             return
         }
 
-        performFinderActions()
+        if let action = NSFindPanelAction(rawValue: UInt(sender.tag)) {
+            switch action {
+            case .next:
+                if !vc.editArea.isSearchBarVisible {
+                    vc.editArea.showSearchBar(prefilledText: vc.editArea.currentSearchQuery)
+                }
+                vc.editArea.findNext()
+                return
+            case .previous:
+                if !vc.editArea.isSearchBarVisible {
+                    vc.editArea.showSearchBar(prefilledText: vc.editArea.currentSearchQuery)
+                }
+                vc.editArea.findPrevious()
+                return
+            case .setFindString:
+                vc.editArea.useSelectionForFind()
+                return
+            default:
+                break
+            }
+        }
+
+        if let textFinderAction = NSTextFinder.Action(rawValue: sender.tag) {
+            switch textFinderAction {
+            case .showFindInterface:
+                vc.editArea.showSearchBar(prefilledText: nil)
+                return
+            case .hideFindInterface:
+                vc.editArea.hideSearchBar()
+                return
+            default:
+                break
+            }
+        }
+
+        DispatchQueue.main.async {
+            vc.editArea.performTextFinderAction(sender)
+        }
     }
 
     // MARK: - Note Operations
@@ -1185,7 +1224,7 @@ extension ViewController {
                 return false
             }
 
-            if editAreaScroll.isFindBarVisible {
+            if editArea.isSearchBarVisible || (editArea.markdownView?.isSearchBarVisible ?? false) {
                 cancelTextSearch()
                 return false
             }
@@ -1220,12 +1259,15 @@ extension ViewController {
 
         if event.keyCode == kVK_ANSI_F, event.modifierFlags.contains(.command), !event.modifierFlags.contains(.shift), !event.modifierFlags.contains(.control) {
             if notesTableView.getSelectedNote() != nil {
-                if UserDefaultsManagement.preview {
-                    disablePreview()
+                // If in preview mode, use WebView search instead of exiting preview
+                if UserDefaultsManagement.preview || UserDefaultsManagement.presentation || UserDefaultsManagement.magicPPT {
+                    if let webView = editArea.markdownView {
+                        webView.showSearchBar()
+                        return true
+                    }
                 }
-                let menu = NSMenuItem(title: "", action: nil, keyEquivalent: "")
-                menu.tag = NSTextFinder.Action.showFindInterface.rawValue
-                editArea.performTextFinderAction(menu)
+                // Otherwise use editor search
+                editArea.showSearchBar(prefilledText: nil)
                 return true
             }
         }

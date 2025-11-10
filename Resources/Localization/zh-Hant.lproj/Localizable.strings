@@ -212,3 +212,8 @@
 "Preview Settings" = "預覽設定";
 "Code Background:" = "程式碼背景:";
 "Github" = "Github";
+
+/* Preview Search Bar */
+"Previous" = "上一個";
+"Next" = "下一個";
+"Done" = "完成";
