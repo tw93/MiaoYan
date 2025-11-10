@@ -194,11 +194,10 @@ class NotesTableView: NSTableView {
             UserDataService.instance.pendingTitleChange = nil
         }
 
-        if vc.editAreaScroll.isFindBarVisible {
-            let menu = NSMenuItem(title: "", action: nil, keyEquivalent: "")
-            menu.tag = NSTextFinder.Action.hideFindInterface.rawValue
-            vc.editArea.performTextFinderAction(menu)
+        if vc.editArea.isSearchBarVisible {
+            vc.editArea.hideSearchBar(restoreFocus: false)
         }
+        vc.editArea.markdownView?.hideSearchBar()
 
         if UserDataService.instance.isNotesTableEscape {
             UserDataService.instance.isNotesTableEscape = false

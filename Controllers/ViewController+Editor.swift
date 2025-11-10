@@ -27,15 +27,20 @@ extension ViewController {
         }
         isFocusedTitle = titleLabel.hasFocus()
         cancelTextSearch()
-        editArea.window?.makeFirstResponder(notesTableView)
         if editArea.markdownView != nil {
             showWebView()
         }
         refillEditArea()
         titleLabel.isEditable = false
+        // Disable editor's find bar to prevent Cmd+F from being intercepted by NSTextView
+        editArea.usesFindBar = false
         // Hide editor scrollbar to prevent overlap with preview scrollbar
         editAreaScroll.hasVerticalScroller = false
         editAreaScroll.hasHorizontalScroller = false
+        // Make WebView the first responder to handle Cmd+F properly
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.editArea.window?.makeFirstResponder(self.editArea.markdownView)
+        }
         if UserDefaultsManagement.previewLocation == "Editing", !UserDefaultsManagement.isOnExport {
             let scrollPre = getScrollTop()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
@@ -45,18 +50,21 @@ extension ViewController {
     }
 
     func disablePreview() {
-        if UserDefaultsManagement.magicPPT {
-            return
-        }
+        guard !UserDefaultsManagement.magicPPT else { return }
         // Save preview scroll position before disabling
         if let webView = editArea.markdownView {
             let applyPreviewDisable: (_ ratio: CGFloat?) -> Void = { [weak self, weak webView] ratio in
-                guard let self = self, let webView = webView else { return }
+                guard let self else { return }
+                guard let webView else { return }
 
                 UserDefaultsManagement.preview = false
+                // Close search bar if open
+                webView.hideSearchBar()
                 self.hideWebView()
                 webView.loadHTMLString("<html><body style='background:transparent;'></body></html>", baseURL: nil)
                 self.refillEditArea()
+                // Restore editor's find bar
+                self.editArea.usesFindBar = true
                 // Restore editor scrollbar
                 self.editAreaScroll.hasVerticalScroller = true
                 self.editAreaScroll.hasHorizontalScroller = true
@@ -86,8 +94,7 @@ extension ViewController {
                 }
             }
 
-            webView.evaluateJavaScript("window.pageYOffset") { [weak self] scrollTop, _ in
-                guard let self = self else { return }
+            webView.evaluateJavaScript("window.pageYOffset") { scrollTop, _ in
                 guard let scrollTopNumber = scrollTop as? NSNumber else {
                     applyPreviewDisable(nil)
                     return
@@ -114,7 +121,11 @@ extension ViewController {
 
         // Fallback if no webView (shouldn't happen but for safety)
         UserDefaultsManagement.preview = false
+        // Close search bar if somehow exists
+        editArea.markdownView?.hideSearchBar()
         refillEditArea()
+        // Restore editor's find bar
+        editArea.usesFindBar = true
         // Restore editor scrollbar
         editAreaScroll.hasVerticalScroller = true
         editAreaScroll.hasHorizontalScroller = true
@@ -180,6 +191,8 @@ extension ViewController {
         }
         refillEditArea(previewOnly: true, force: true)
         presentationButton.state = .on
+        // Disable editor's find bar to prevent Cmd+F from being intercepted by NSTextView
+        editArea.usesFindBar = false
         // Hide editor scrollbar to prevent overlap with preview scrollbar
         editAreaScroll.hasVerticalScroller = false
         editAreaScroll.hasHorizontalScroller = false
@@ -278,6 +291,8 @@ extension ViewController {
             showWebView()
         }
         refillEditArea()
+        // Disable editor's find bar to prevent Cmd+F from being intercepted by NSTextView
+        editArea.usesFindBar = false
         // Hide editor scrollbar to prevent overlap with preview scrollbar
         editAreaScroll.hasVerticalScroller = false
         editAreaScroll.hasHorizontalScroller = false
@@ -455,12 +470,12 @@ extension ViewController {
     }
 
     func cancelTextSearch() {
-        let menu = NSMenuItem(title: "", action: nil, keyEquivalent: "")
-        menu.tag = NSTextFinder.Action.hideFindInterface.rawValue
-        editArea.performTextFinderAction(menu)
-        if !UserDefaultsManagement.preview {
-            NSApp.mainWindow?.makeFirstResponder(editArea)
+        if UserDefaultsManagement.preview || UserDefaultsManagement.presentation || UserDefaultsManagement.magicPPT {
+            editArea.markdownView?.hideSearchBar()
+        } else {
+            editArea.hideSearchBar()
         }
+        NSApp.mainWindow?.makeFirstResponder(editArea)
     }
 
     @IBAction func togglePreview(_ sender: NSButton) {

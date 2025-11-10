@@ -215,3 +215,8 @@
 
 /* Image Preview Tip */
 "Hold ⌘ Command key to preview images" = "按住 ⌘ Command 键可预览图片";
+
+/* Preview Search Bar */
+"Previous" = "上一个";
+"Next" = "下一个";
+"Done" = "完成";

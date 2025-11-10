@@ -40,6 +40,15 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     private var bottomPadding: CGFloat = 0
     private let extraTopPadding: CGFloat = 8
     public static var fontColor: NSColor { Theme.textColor }
+    private var editorSearchBar: PreviewSearchBar?
+    private var editorSearchBarConstraints: [NSLayoutConstraint] = []
+    private var editorSearchRanges: [NSRange] = []
+    private var editorCurrentMatchIndex: Int = 0
+    private var editorLastSearchText: String = ""
+    public var isSearchBarVisible: Bool { editorSearchBar != nil }
+    public var currentSearchQuery: String? {
+        editorLastSearchText.isEmpty ? nil : editorLastSearchText
+    }
     override var textContainerOrigin: NSPoint {
         var origin = super.textContainerOrigin
         if bottomPadding > 0 {
@@ -471,6 +480,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         restoreCursorPosition(needScrollToCursor: options.needScrollToCursor)
     }
     public func clear() {
+        hideSearchBar()
         textStorage?.setAttributedString(NSAttributedString())
         markdownView?.isHidden = true
         imagePreviewManager?.hideImagePreview()
@@ -559,6 +569,13 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             }
         }
         return super.shouldChangeText(in: affectedCharRange, replacementString: replacementString)
+    }
+
+    override func didChangeText() {
+        super.didChangeText()
+        if editorSearchBar != nil, !editorLastSearchText.isEmpty {
+            handleSearchInput(editorLastSearchText, jumpToFirstMatch: false)
+        }
     }
 
     override func insertCompletion(_ word: String, forPartialWordRange charRange: NSRange, movement: Int, isFinal flag: Bool) {
@@ -908,6 +925,18 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             super.keyDown(with: event)
             return
         }
+
+        if event.keyCode == kVK_Escape {
+            if isSearchBarVisible {
+                hideSearchBar()
+                return
+            }
+            if markdownView?.isSearchBarVisible == true {
+                markdownView?.hideSearchBar()
+                return
+            }
+        }
+
         guard let note = EditTextView.note else { return }
         if event.keyCode == kVK_Tab, !hasMarkedText() {
             breakUndoCoalescing()
@@ -944,10 +973,6 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             return
         }
 
-        if event.keyCode == kVK_Escape {
-            return
-        }
-
         super.keyDown(with: event)
         if shouldTriggerLinkHighlight(for: event) {
             if let paragraphRange = getParagraphRange() {
@@ -957,6 +982,83 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             }
         }
         saveCursorPosition()
+    }
+
+    override func performKeyEquivalent(with event: NSEvent) -> Bool {
+        guard let characters = event.charactersIgnoringModifiers else {
+            return super.performKeyEquivalent(with: event)
+        }
+
+        let baseFlags = event.modifierFlags.intersection([.command, .option, .control, .shift, .capsLock])
+        let normalizedFlags = baseFlags.subtracting(.capsLock)
+        let commandPressed = normalizedFlags.contains(.command)
+        let optionPressed = normalizedFlags.contains(.option)
+        let controlPressed = normalizedFlags.contains(.control)
+
+        if commandPressed, !optionPressed, !controlPressed {
+            if shouldRouteFindToPreview(), let web = markdownView {
+                switch characters.lowercased() {
+                case "f":
+                    web.showSearchBar()
+                    return true
+                case "g":
+                    if event.modifierFlags.contains(.shift) {
+                        web.findPrevious()
+                    } else {
+                        web.findNext()
+                    }
+                    return true
+                default:
+                    break
+                }
+            } else {
+                switch characters.lowercased() {
+                case "f":
+                    showSearchBar()
+                    return true
+                case "g":
+                    if editorSearchBar == nil {
+                        showSearchBar(prefilledText: editorLastSearchText.isEmpty ? nil : editorLastSearchText)
+                    }
+                    if event.modifierFlags.contains(.shift) {
+                        findPrevious()
+                    } else {
+                        findNext()
+                    }
+                    return true
+                default:
+                    break
+                }
+            }
+        }
+
+        if characters == "\u{1f}\u{a}" { // Cmd+Enter etc fallback
+            return super.performKeyEquivalent(with: event)
+        }
+
+        if characters == "\u{0}" && commandPressed {
+            return super.performKeyEquivalent(with: event)
+        }
+
+        let handled = super.performKeyEquivalent(with: event)
+
+        if handled && commandPressed && !optionPressed && !controlPressed {
+            switch characters.lowercased() {
+            case "f":
+                // If AppKit consumed Cmd+F but our bar isn't visible yet, ensure it is shown.
+                if !isSearchBarVisible {
+                    showSearchBar()
+                }
+            case "g":
+                if !isSearchBarVisible {
+                    showSearchBar(prefilledText: editorLastSearchText.isEmpty ? nil : editorLastSearchText)
+                }
+            default:
+                break
+            }
+        }
+
+        return handled
     }
 
     override func keyUp(with event: NSEvent) {
@@ -975,6 +1077,307 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             return
         }
         super.keyUp(with: event)
+    }
+
+    // MARK: - Editor Search
+
+    func showSearchBar(prefilledText: String? = nil) {
+        guard
+            let scrollView = enclosingScrollView ?? getViewController()?.editAreaScroll,
+            let containerView = scrollView.superview
+        else {
+            return
+        }
+        let barAlreadyVisible = editorSearchBar != nil
+
+        if editorSearchBar == nil {
+            let bar = PreviewSearchBar(frame: .zero)
+            bar.translatesAutoresizingMaskIntoConstraints = false
+            bar.configureAppearance(baseColor: editorSearchBaseColor())
+            bar.onSearch = { [weak self] text in
+                self?.handleSearchInput(text, jumpToFirstMatch: true)
+            }
+            bar.onNext = { [weak self] in
+                self?.findNext()
+            }
+            bar.onPrevious = { [weak self] in
+                self?.findPrevious()
+            }
+            bar.onClose = { [weak self] in
+                self?.hideSearchBar()
+            }
+            if containerView.subviews.contains(where: { $0 === bar }) == false {
+                containerView.addSubview(bar, positioned: .above, relativeTo: scrollView)
+            }
+            editorSearchBarConstraints = [
+                bar.topAnchor.constraint(equalTo: scrollView.topAnchor),
+                bar.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -24),
+                bar.widthAnchor.constraint(equalToConstant: 360),
+                bar.heightAnchor.constraint(equalToConstant: 36),
+            ]
+            NSLayoutConstraint.activate(editorSearchBarConstraints)
+            editorSearchBar = bar
+        }
+
+        if prefilledText != nil || !barAlreadyVisible {
+            let seed = prefilledText ?? selectionSearchSeed()
+            if let seed, !seed.isEmpty {
+                editorSearchBar?.setSearchText(seed)
+                handleSearchInput(seed, jumpToFirstMatch: true)
+            } else {
+                editorSearchBar?.setSearchText("")
+                handleSearchInput("", jumpToFirstMatch: true)
+            }
+        }
+
+        containerView.layoutSubtreeIfNeeded()
+        editorSearchBar?.focusSearchField()
+    }
+
+    func hideSearchBar(restoreFocus: Bool = true) {
+        let hadBar = editorSearchBar != nil || !editorSearchRanges.isEmpty
+        clearEditorSearchHighlights()
+        editorSearchRanges.removeAll()
+        editorCurrentMatchIndex = 0
+        editorLastSearchText = ""
+        if let bar = editorSearchBar {
+            bar.removeFromSuperview()
+            editorSearchBar = nil
+        }
+        if !editorSearchBarConstraints.isEmpty {
+            NSLayoutConstraint.deactivate(editorSearchBarConstraints)
+            editorSearchBarConstraints.removeAll()
+        }
+        if hadBar, restoreFocus {
+            window?.makeFirstResponder(self)
+        }
+    }
+
+    func findNext() {
+        guard !editorSearchRanges.isEmpty else { return }
+        editorCurrentMatchIndex = (editorCurrentMatchIndex + 1) % editorSearchRanges.count
+        focusSearchResult(at: editorCurrentMatchIndex)
+        editorSearchBar?.updateMatchInfo(current: editorCurrentMatchIndex + 1, total: editorSearchRanges.count)
+    }
+
+    func findPrevious() {
+        guard !editorSearchRanges.isEmpty else { return }
+        editorCurrentMatchIndex = (editorCurrentMatchIndex - 1 + editorSearchRanges.count) % editorSearchRanges.count
+        focusSearchResult(at: editorCurrentMatchIndex)
+        editorSearchBar?.updateMatchInfo(current: editorCurrentMatchIndex + 1, total: editorSearchRanges.count)
+    }
+
+    private func handleSearchInput(_ text: String, jumpToFirstMatch: Bool) {
+        editorLastSearchText = text
+        clearEditorSearchHighlights()
+        guard let storage = textStorage, !text.isEmpty else {
+            editorSearchRanges.removeAll()
+            editorCurrentMatchIndex = 0
+            editorSearchBar?.updateMatchInfo(current: 0, total: 0)
+            return
+        }
+
+        let nsString = storage.string as NSString
+        var ranges: [NSRange] = []
+        var searchRange = NSRange(location: 0, length: nsString.length)
+
+        while searchRange.length > 0 {
+            let found = nsString.range(of: text, options: [.caseInsensitive, .diacriticInsensitive], range: searchRange)
+            if found.location == NSNotFound {
+                break
+            }
+            ranges.append(found)
+            let nextLocation = found.location + max(found.length, 1)
+            if nextLocation >= nsString.length {
+                break
+            }
+            searchRange = NSRange(location: nextLocation, length: nsString.length - nextLocation)
+        }
+
+        editorSearchRanges = ranges
+
+        guard !ranges.isEmpty else {
+            editorCurrentMatchIndex = 0
+            editorSearchBar?.updateMatchInfo(current: 0, total: 0)
+            return
+        }
+
+        applyEditorSearchHighlights(for: ranges)
+
+        if jumpToFirstMatch || !editorSearchRanges.indices.contains(editorCurrentMatchIndex) {
+            editorCurrentMatchIndex = 0
+        }
+
+        if jumpToFirstMatch {
+            focusSearchResult(at: editorCurrentMatchIndex)
+        }
+
+        editorSearchBar?.updateMatchInfo(current: editorCurrentMatchIndex + 1, total: editorSearchRanges.count)
+    }
+
+    private func applyEditorSearchHighlights(for ranges: [NSRange]) {
+        guard let layoutManager = layoutManager else { return }
+        let highlightColor = Theme.selectionBackgroundColor.withAlphaComponent(0.35)
+        for range in ranges {
+            layoutManager.addTemporaryAttribute(.backgroundColor, value: highlightColor, forCharacterRange: range)
+        }
+    }
+
+    private func clearEditorSearchHighlights() {
+        guard let layoutManager = layoutManager else { return }
+        for range in editorSearchRanges {
+            layoutManager.removeTemporaryAttribute(.backgroundColor, forCharacterRange: range)
+        }
+    }
+
+    private func focusSearchResult(at index: Int) {
+        guard editorSearchRanges.indices.contains(index) else { return }
+        let range = editorSearchRanges[index]
+        setSelectedRange(range)
+        scrollRangeToVisible(range)
+    }
+
+    private func selectionSearchSeed() -> String? {
+        let range = selectedRange()
+        guard range.length > 0, let storage = textStorage else { return nil }
+        let nsString = storage.string as NSString
+        return nsString.substring(with: range)
+    }
+
+    func useSelectionForFind() {
+        guard let seed = selectionSearchSeed(), !seed.isEmpty else {
+            showSearchBar()
+            return
+        }
+        if editorSearchBar == nil {
+            showSearchBar(prefilledText: seed)
+        } else {
+            editorSearchBar?.setSearchText(seed)
+            handleSearchInput(seed, jumpToFirstMatch: true)
+        }
+    }
+
+    private func shouldRouteFindToPreview() -> Bool {
+        guard let web = markdownView else { return false }
+        if web.isHidden {
+            return false
+        }
+        return UserDefaultsManagement.preview || UserDefaultsManagement.presentation || UserDefaultsManagement.magicPPT
+    }
+
+    private func editorSearchBaseColor() -> NSColor {
+        if UserDefaultsManagement.appearanceType == .Custom {
+            return UserDefaultsManagement.bgColor
+        }
+        return editorUsesDarkTheme() ? Theme.previewDarkBackgroundColor : Theme.backgroundColor
+    }
+
+    private func editorUsesDarkTheme() -> Bool {
+        switch UserDefaultsManagement.appearanceType {
+        case .Light:
+            return false
+        case .Dark:
+            return true
+        case .System, .Custom:
+            return UserDataService.instance.isDark
+        }
+    }
+
+    override func performTextFinderAction(_ sender: Any?) {
+        guard let menuItem = sender as? NSMenuItem else {
+            super.performTextFinderAction(sender)
+            return
+        }
+
+        let tag = menuItem.tag
+
+        if let finderAction = NSTextFinder.Action(rawValue: tag) {
+            switch finderAction {
+            case .showFindInterface:
+                showSearchBar()
+                return
+            case .hideFindInterface:
+                hideSearchBar()
+                return
+            case .nextMatch:
+                if !isSearchBarVisible {
+                    showSearchBar(prefilledText: nil)
+                }
+                findNext()
+                return
+            case .previousMatch:
+                if !isSearchBarVisible {
+                    showSearchBar(prefilledText: nil)
+                }
+                findPrevious()
+                return
+            default:
+                break
+            }
+        }
+
+        if let panelAction = NSFindPanelAction(rawValue: UInt(tag)) {
+            switch panelAction {
+            case .next:
+                if !isSearchBarVisible {
+                    showSearchBar(prefilledText: nil)
+                }
+                findNext()
+                return
+            case .previous:
+                if !isSearchBarVisible {
+                    showSearchBar(prefilledText: nil)
+                }
+                findPrevious()
+                return
+            default:
+                break
+            }
+        }
+
+        super.performTextFinderAction(sender)
+
+        // If AppKit showed its default find UI, ensure ours is visible too.
+        if !isSearchBarVisible {
+            showSearchBar()
+        }
+    }
+
+    override func performFindPanelAction(_ sender: Any?) {
+        var resolvedAction: NSFindPanelAction?
+
+        if let menuItem = sender as? NSMenuItem {
+            resolvedAction = NSFindPanelAction(rawValue: UInt(menuItem.tag))
+        } else if let number = sender as? NSNumber {
+            resolvedAction = NSFindPanelAction(rawValue: number.uintValue)
+        }
+
+        guard let action = resolvedAction else {
+            showSearchBar()
+            return
+        }
+
+        switch action {
+        case .showFindPanel:
+            showSearchBar()
+        case .next:
+            if !isSearchBarVisible {
+                showSearchBar(prefilledText: editorLastSearchText.isEmpty ? nil : editorLastSearchText)
+            }
+            findNext()
+        case .previous:
+            if !isSearchBarVisible {
+                showSearchBar(prefilledText: editorLastSearchText.isEmpty ? nil : editorLastSearchText)
+            }
+            findPrevious()
+        case .setFindString:
+            useSelectionForFind()
+        default:
+            super.performFindPanelAction(sender)
+            if !isSearchBarVisible {
+                showSearchBar()
+            }
+        }
     }
 
     // MARK: - Preview Management

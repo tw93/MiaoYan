@@ -134,6 +134,12 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
             skipAutocomplete = true
             textView.deleteBackward(self)
             return true
+        case "deleteToBeginningOfLine:", "deleteToBeginningOfParagraph:":
+            textView.selectAll(nil)
+            textView.delete(nil)
+            stringValue = ""
+            vcDelegate.cleanSearchAndRestoreSelection()
+            return true
         case "insertNewline:", "insertNewlineIgnoringFieldEditor:":
             if let note = vcDelegate.editArea.getSelectedNote(),
                 !stringValue.isEmpty,

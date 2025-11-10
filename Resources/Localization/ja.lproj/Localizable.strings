@@ -218,3 +218,8 @@
 "Preview Settings" = "プレビュー設定";
 "Code Background:" = "コード背景:";
 "Github" = "Github";
+
+/* Preview Search Bar */
+"Previous" = "前へ";
+"Next" = "次へ";
+"Done" = "完了";

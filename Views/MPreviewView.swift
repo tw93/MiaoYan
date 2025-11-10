@@ -1,4 +1,5 @@
 import Carbon.HIToolbox
+import QuartzCore
 import WebKit
 
 public typealias MPreviewViewClosure = () -> Void
@@ -59,6 +60,10 @@ class MPreviewView: WKWebView, WKUIDelegate {
         let bgNSColor = determineBackgroundColor()
         layer?.backgroundColor = bgNSColor.cgColor
         layer?.isOpaque = false
+        // Use sRGB color space to avoid HDR tone mapping
+        if #available(macOS 10.12, *) {
+            layer?.contentsFormat = .RGBA8Uint
+        }
         // Optimize layer rendering during resize
         layerContentsRedrawPolicy = .onSetNeedsDisplay
         layer?.drawsAsynchronously = false
@@ -443,6 +448,721 @@ class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
         } else {
             vc.sidebarSplitView.setValue(NSColor(css: message), forKey: "dividerColor")
             vc.splitView.setValue(NSColor(css: message), forKey: "dividerColor")
+        }
+    }
+}
+
+// MARK: - Preview Search Bar
+@MainActor
+class PreviewSearchBar: NSView {
+    private let searchField = NSSearchField()
+    private let matchLabel = NSTextField()
+    private let previousButton = NSButton()
+    private let nextButton = NSButton()
+    private let doneButton = NSButton()
+    private var panelBaseColor: NSColor = Theme.backgroundColor
+
+    private var currentMatchIndex: Int = 0
+    private var totalMatches: Int = 0
+
+    var onSearch: ((String) -> Void)?
+    var onNext: (() -> Void)?
+    var onPrevious: (() -> Void)?
+    var onClose: (() -> Void)?
+
+    override init(frame: NSRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+
+    private func setupUI() {
+        wantsLayer = true
+        applyCornerMask()
+        layer?.borderWidth = 0
+        layer?.borderColor = nil
+        updatePanelBackground()
+
+        searchField.placeholderString = I18n.str("Search")
+        searchField.font = NSFont.systemFont(ofSize: 13)
+        searchField.target = self
+        searchField.action = #selector(searchFieldChanged)
+        searchField.translatesAutoresizingMaskIntoConstraints = false
+        searchField.sendsSearchStringImmediately = true
+        searchField.focusRingType = .none
+        searchField.delegate = self
+        if let cell = searchField.cell as? NSSearchFieldCell {
+            cell.focusRingType = .none
+        }
+        addSubview(searchField)
+
+        matchLabel.isEditable = false
+        matchLabel.isBordered = false
+        matchLabel.drawsBackground = false
+        matchLabel.font = NSFont.systemFont(ofSize: 11)
+        matchLabel.textColor = .secondaryLabelColor
+        matchLabel.alignment = .center
+        matchLabel.stringValue = ""
+        matchLabel.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(matchLabel)
+
+        previousButton.image = NSImage(systemSymbolName: "chevron.up", accessibilityDescription: I18n.str("Previous"))
+        previousButton.bezelStyle = .texturedRounded
+        previousButton.isBordered = true
+        previousButton.target = self
+        previousButton.action = #selector(previousClicked)
+        previousButton.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(previousButton)
+
+        nextButton.image = NSImage(systemSymbolName: "chevron.down", accessibilityDescription: I18n.str("Next"))
+        nextButton.bezelStyle = .texturedRounded
+        nextButton.isBordered = true
+        nextButton.target = self
+        nextButton.action = #selector(nextClicked)
+        nextButton.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(nextButton)
+
+        doneButton.title = I18n.str("Done")
+        doneButton.bezelStyle = .rounded
+        doneButton.target = self
+        doneButton.action = #selector(doneClicked)
+        doneButton.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(doneButton)
+
+        setupConstraints()
+    }
+
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            searchField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            searchField.centerYAnchor.constraint(equalTo: centerYAnchor),
+            searchField.widthAnchor.constraint(equalToConstant: 160),
+
+            matchLabel.leadingAnchor.constraint(equalTo: searchField.trailingAnchor, constant: 8),
+            matchLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            matchLabel.widthAnchor.constraint(equalToConstant: 50),
+
+            previousButton.leadingAnchor.constraint(equalTo: matchLabel.trailingAnchor, constant: 8),
+            previousButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            previousButton.widthAnchor.constraint(equalToConstant: 28),
+            previousButton.heightAnchor.constraint(equalToConstant: 22),
+
+            nextButton.leadingAnchor.constraint(equalTo: previousButton.trailingAnchor, constant: 4),
+            nextButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            nextButton.widthAnchor.constraint(equalToConstant: 28),
+            nextButton.heightAnchor.constraint(equalToConstant: 22),
+
+            doneButton.leadingAnchor.constraint(equalTo: nextButton.trailingAnchor, constant: 8),
+            doneButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            doneButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+        ])
+    }
+
+    @objc private func searchFieldChanged() {
+        let searchText = searchField.stringValue
+        onSearch?(searchText)
+    }
+
+    @objc private func previousClicked() {
+        onPrevious?()
+    }
+
+    @objc private func nextClicked() {
+        onNext?()
+    }
+
+    @objc private func doneClicked() {
+        onClose?()
+    }
+
+    func updateMatchInfo(current: Int, total: Int) {
+        currentMatchIndex = current
+        totalMatches = total
+
+        if total > 0 {
+            matchLabel.stringValue = "\(current)/\(total)"
+            matchLabel.textColor = .labelColor
+        } else if !searchField.stringValue.isEmpty {
+            matchLabel.stringValue = "0/0"
+            matchLabel.textColor = .systemRed
+        } else {
+            matchLabel.stringValue = ""
+        }
+
+        previousButton.isEnabled = total > 0
+        nextButton.isEnabled = total > 0
+    }
+
+    private func clearSearchField() {
+        if let editor = searchField.currentEditor() {
+            editor.selectAll(nil)
+            editor.delete(nil)
+        }
+        searchField.stringValue = ""
+        onSearch?("")
+    }
+
+    func focusSearchField(selectAll: Bool = false) {
+        window?.makeFirstResponder(searchField)
+        if selectAll, let editor = searchField.currentEditor() {
+            DispatchQueue.main.async {
+                editor.selectAll(nil)
+            }
+        }
+    }
+
+    func setSearchText(_ text: String, selectAll: Bool = true) {
+        searchField.stringValue = text
+        if selectAll {
+            window?.makeFirstResponder(searchField)
+            if let editor = searchField.currentEditor() {
+                editor.selectAll(nil)
+            }
+        }
+    }
+
+    func configureAppearance(baseColor: NSColor) {
+        panelBaseColor = baseColor
+        updatePanelBackground()
+    }
+
+    var searchText: String {
+        searchField.stringValue
+    }
+
+    override func performKeyEquivalent(with event: NSEvent) -> Bool {
+        let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+        if event.keyCode == kVK_Delete,
+            flags.contains(.command),
+            !flags.contains(.option),
+            !flags.contains(.control)
+        {
+            clearSearchField()
+            return true
+        }
+        return super.performKeyEquivalent(with: event)
+    }
+
+    override func keyDown(with event: NSEvent) {
+        if event.keyCode == 53 {
+            onClose?()
+        } else if event.keyCode == 36 {
+            if event.modifierFlags.contains(.shift) {
+                onPrevious?()
+            } else {
+                onNext?()
+            }
+        } else {
+            super.keyDown(with: event)
+        }
+    }
+}
+
+extension PreviewSearchBar: NSSearchFieldDelegate {
+    func controlTextDidChange(_ obj: Notification) {
+        let searchText = searchField.stringValue
+        onSearch?(searchText)
+    }
+
+    func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+        switch commandSelector {
+        case #selector(NSResponder.cancelOperation(_:)):
+            onClose?()
+            return true
+        case #selector(NSText.deleteToBeginningOfLine(_:)),
+             #selector(NSText.deleteToBeginningOfParagraph(_:)):
+            clearSearchField()
+            return true
+        case #selector(NSResponder.insertNewline(_:)),
+             #selector(NSResponder.insertNewlineIgnoringFieldEditor(_:)):
+            if NSApp.currentEvent?.modifierFlags.contains(.shift) == true {
+                onPrevious?()
+            } else {
+                onNext?()
+            }
+            return true
+        default:
+            return false
+        }
+    }
+}
+
+private extension PreviewSearchBar {
+    static func panelBackgroundColor(base: NSColor) -> NSColor {
+        guard let rgb = base.usingColorSpace(.sRGB) else {
+            return base
+        }
+        let luminance = 0.2126 * rgb.redComponent + 0.7152 * rgb.greenComponent + 0.0722 * rgb.blueComponent
+        if luminance < 0.5 {
+            // Dark mode: deepen the tone slightly for clearer separation
+            return (rgb.shadow(withLevel: 0.18) ?? rgb)
+        } else {
+            // Light mode: add subtle depth so the bar stays visible
+            return (rgb.shadow(withLevel: 0.08) ?? rgb)
+        }
+    }
+
+    func updatePanelBackground() {
+        guard wantsLayer else { return }
+        let panelColor = PreviewSearchBar.panelBackgroundColor(base: panelBaseColor)
+        layer?.backgroundColor = panelColor.cgColor
+        updateShadowAppearance(for: panelColor)
+        applyCornerMask()
+    }
+
+    func updateShadowAppearance(for color: NSColor) {
+        guard wantsLayer, let rgb = color.usingColorSpace(.sRGB) else { return }
+        let luminance = 0.2126 * rgb.redComponent + 0.7152 * rgb.greenComponent + 0.0722 * rgb.blueComponent
+        if luminance < 0.5 {
+            layer?.shadowColor = NSColor.black.cgColor
+            layer?.shadowOpacity = 0.45
+            layer?.shadowRadius = 12
+            layer?.shadowOffset = NSSize(width: 0, height: -4)
+        } else {
+            layer?.shadowColor = NSColor.black.withAlphaComponent(0.35).cgColor
+            layer?.shadowOpacity = 0.35
+            layer?.shadowRadius = 9
+            layer?.shadowOffset = NSSize(width: 0, height: -2.5)
+        }
+    }
+
+    func applyCornerMask() {
+        guard wantsLayer else { return }
+        if #available(macOS 10.13, *) {
+            layer?.cornerRadius = 8
+            layer?.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+            layer?.masksToBounds = true
+            layer?.mask = nil
+        } else {
+            let maskLayer = CAShapeLayer()
+            maskLayer.frame = bounds
+            maskLayer.path = leftRoundedCornerPath(radius: 8).cgPath
+            layer?.mask = maskLayer
+        }
+    }
+
+    func leftRoundedCornerPath(radius: CGFloat) -> NSBezierPath {
+        let rect = bounds
+        let minX = rect.minX
+        let maxX = rect.maxX
+        let minY = rect.minY
+        let maxY = rect.maxY
+
+        let path = NSBezierPath()
+        path.move(to: NSPoint(x: maxX, y: maxY))
+        path.line(to: NSPoint(x: minX + radius, y: maxY))
+        path.appendArc(withCenter: NSPoint(x: minX + radius, y: maxY - radius), radius: radius, startAngle: 90, endAngle: 180, clockwise: true)
+        path.line(to: NSPoint(x: minX, y: minY + radius))
+        path.appendArc(withCenter: NSPoint(x: minX + radius, y: minY + radius), radius: radius, startAngle: 180, endAngle: 270, clockwise: true)
+        path.line(to: NSPoint(x: maxX, y: minY))
+        path.close()
+        return path
+    }
+}
+
+private extension NSBezierPath {
+    var cgPath: CGPath {
+        let path = CGMutablePath()
+        let points = UnsafeMutablePointer<NSPoint>.allocate(capacity: 3)
+        defer { points.deallocate() }
+        for index in 0 ..< elementCount {
+            let type = element(at: index, associatedPoints: points)
+            switch type {
+            case .moveTo:
+                path.move(to: points[0])
+            case .lineTo:
+                path.addLine(to: points[0])
+            case .curveTo:
+                path.addCurve(to: points[2], control1: points[0], control2: points[1])
+            case .closePath:
+                path.closeSubpath()
+            default:
+                break
+            }
+        }
+        return path
+    }
+}
+
+extension PreviewSearchBar {
+    override func layout() {
+        super.layout()
+        applyCornerMask()
+    }
+}
+
+// MARK: - MPreviewView Search Extension
+extension MPreviewView {
+    private static var searchBarKey: UInt8 = 0
+    private static var lastSearchTextKey: UInt8 = 0
+    private static var searchMatchCountKey: UInt8 = 0
+    private static var searchCurrentIndexKey: UInt8 = 0
+    private static var searchTimerKey: UInt8 = 0
+    private static var searchSequenceKey: UInt8 = 0
+
+    private var searchBar: PreviewSearchBar? {
+        get {
+            objc_getAssociatedObject(self, &MPreviewView.searchBarKey) as? PreviewSearchBar
+        }
+        set {
+            objc_setAssociatedObject(self, &MPreviewView.searchBarKey, newValue, .OBJC_ASSOCIATION_RETAIN)
+        }
+    }
+
+    private var lastSearchText: String {
+        get {
+            objc_getAssociatedObject(self, &MPreviewView.lastSearchTextKey) as? String ?? ""
+        }
+        set {
+            objc_setAssociatedObject(self, &MPreviewView.lastSearchTextKey, newValue, .OBJC_ASSOCIATION_RETAIN)
+        }
+    }
+
+    private var searchMatchCount: Int {
+        get {
+            objc_getAssociatedObject(self, &MPreviewView.searchMatchCountKey) as? Int ?? 0
+        }
+        set {
+            objc_setAssociatedObject(self, &MPreviewView.searchMatchCountKey, newValue, .OBJC_ASSOCIATION_RETAIN)
+        }
+    }
+
+    private var searchCurrentMatchIndex: Int {
+        get {
+            objc_getAssociatedObject(self, &MPreviewView.searchCurrentIndexKey) as? Int ?? 0
+        }
+        set {
+            objc_setAssociatedObject(self, &MPreviewView.searchCurrentIndexKey, newValue, .OBJC_ASSOCIATION_RETAIN)
+        }
+    }
+
+    private var searchTimer: Timer? {
+        get {
+            objc_getAssociatedObject(self, &MPreviewView.searchTimerKey) as? Timer
+        }
+        set {
+            objc_setAssociatedObject(self, &MPreviewView.searchTimerKey, newValue, .OBJC_ASSOCIATION_RETAIN)
+        }
+    }
+
+    private var searchSequence: Int {
+        get {
+            objc_getAssociatedObject(self, &MPreviewView.searchSequenceKey) as? Int ?? 0
+        }
+        set {
+            objc_setAssociatedObject(self, &MPreviewView.searchSequenceKey, newValue, .OBJC_ASSOCIATION_RETAIN)
+        }
+    }
+
+    var isSearchBarVisible: Bool {
+        searchBar != nil
+    }
+
+    func showSearchBar() {
+        if let existingBar = searchBar {
+            // If bar already exists, select all text and trigger search
+            existingBar.focusSearchField(selectAll: true)
+            if !lastSearchText.isEmpty {
+                performSearch(lastSearchText)
+            }
+            return
+        }
+
+        let barHeight: CGFloat = 36
+        let barWidth: CGFloat = 360
+        let marginRight: CGFloat = 26
+        let marginTop: CGFloat = 0
+
+        let bar = PreviewSearchBar(frame: .zero)
+        bar.translatesAutoresizingMaskIntoConstraints = false
+        bar.configureAppearance(baseColor: determineBackgroundColor())
+
+        bar.onSearch = { [weak self] text in
+            self?.scheduleSearch(text)
+        }
+
+        bar.onNext = { [weak self] in
+            self?.findNext()
+        }
+
+        bar.onPrevious = { [weak self] in
+            self?.findPrevious()
+        }
+
+        bar.onClose = { [weak self] in
+            self?.hideSearchBar()
+        }
+
+        addSubview(bar)
+        NSLayoutConstraint.activate([
+            bar.topAnchor.constraint(equalTo: topAnchor, constant: marginTop),
+            bar.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -marginRight),
+            bar.widthAnchor.constraint(equalToConstant: barWidth),
+            bar.heightAnchor.constraint(equalToConstant: barHeight)
+        ])
+        searchBar = bar
+
+        // Focus and select all text in search field, then trigger search if content exists
+        DispatchQueue.main.async {
+            bar.focusSearchField(selectAll: true)
+            // If there was a previous search, trigger it immediately
+            if !self.lastSearchText.isEmpty {
+                self.performSearch(self.lastSearchText)
+            }
+        }
+    }
+
+    func hideSearchBar() {
+        searchTimer?.invalidate()
+        searchTimer = nil
+        clearSearchHighlights()
+        searchBar?.removeFromSuperview()
+        searchBar = nil
+        lastSearchText = ""
+        searchMatchCount = 0
+        searchCurrentMatchIndex = 0
+    }
+
+    private func scheduleSearch(_ text: String) {
+        // Cancel previous timer
+        searchTimer?.invalidate()
+
+        // If text is empty, clear immediately
+        guard !text.isEmpty else {
+            performSearch(text)
+            return
+        }
+
+        // Schedule search with delay (0.15s for quick response)
+        searchTimer = Timer.scheduledTimer(withTimeInterval: 0.15, repeats: false) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                self?.performSearch(text)
+            }
+        }
+    }
+
+    private func performSearch(_ text: String) {
+        searchSequence += 1
+        let currentSequence = searchSequence
+        let shouldResetSelection = text != lastSearchText
+
+        guard !text.isEmpty else {
+            clearSearchHighlights()
+            searchBar?.updateMatchInfo(current: 0, total: 0)
+            lastSearchText = ""
+            searchMatchCount = 0
+            searchCurrentMatchIndex = 0
+            return
+        }
+
+        let executeSearch: () -> Void = { [weak self] in
+            guard
+                let self,
+                self.searchSequence == currentSequence
+            else { return }
+
+            self.lastSearchText = text
+            if shouldResetSelection {
+                self.searchCurrentMatchIndex = 0
+            } else {
+                self.searchCurrentMatchIndex = min(self.searchCurrentMatchIndex, max(self.searchMatchCount - 1, 0))
+            }
+            if #available(macOS 13.0, *) {
+                self.performModernSearch(text, sequence: currentSequence, resetIndex: shouldResetSelection)
+            } else {
+                self.performJavaScriptSearch(text, sequence: currentSequence, resetIndex: shouldResetSelection)
+            }
+        }
+
+        if shouldResetSelection {
+            resetSearchSelection { [weak self] in
+                guard
+                    let self,
+                    self.searchSequence == currentSequence
+                else { return }
+                executeSearch()
+            }
+        } else {
+            executeSearch()
+        }
+    }
+
+    @available(macOS 13.0, *)
+    private func performModernSearch(_ text: String, sequence: Int, resetIndex: Bool) {
+        let config = WKFindConfiguration()
+        config.caseSensitive = false
+        config.backwards = false
+        config.wraps = true
+
+        find(text, configuration: config) { [weak self] result in
+            guard let self = self, self.searchSequence == sequence else { return }
+            DispatchQueue.main.async {
+                if result.matchFound {
+                    self.countMatches(text, sequence: sequence, resetIndex: resetIndex)
+                } else {
+                    self.searchBar?.updateMatchInfo(current: 0, total: 0)
+                }
+            }
+        }
+    }
+
+    private func performJavaScriptSearch(_ text: String, sequence: Int, resetIndex: Bool) {
+        let escapedText = text.replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "'", with: "\\'")
+
+        let script = """
+        window.find('\(escapedText)', false, false, true, false, false, false);
+        """
+
+        evaluateJavaScript(script) { [weak self] _, _ in
+            guard let self = self, self.searchSequence == sequence else { return }
+            self.countMatches(text, sequence: sequence, resetIndex: resetIndex)
+        }
+    }
+
+    private func countMatches(_ text: String, sequence: Int, resetIndex: Bool) {
+        let escapedText = text.replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "'", with: "\\'")
+
+        let script = """
+        (function() {
+            const text = '\(escapedText)';
+            const regex = new RegExp(text, 'gi');
+            const bodyText = document.body.innerText || document.body.textContent;
+            const matches = bodyText.match(regex);
+            return matches ? matches.length : 0;
+        })();
+        """
+
+        evaluateJavaScript(script) { [weak self] result, _ in
+            guard let self = self, self.searchSequence == sequence else { return }
+            DispatchQueue.main.async {
+                if let count = result as? Int {
+                    self.searchMatchCount = count
+                    if count == 0 {
+                        self.searchCurrentMatchIndex = 0
+                        self.searchBar?.updateMatchInfo(current: 0, total: 0)
+                        return
+                    }
+
+                    if resetIndex {
+                        self.searchCurrentMatchIndex = 0
+                        self.focusFirstPreviewMatch(with: text)
+                    } else if self.searchCurrentMatchIndex >= count {
+                        self.searchCurrentMatchIndex = max(count - 1, 0)
+                    }
+
+                    self.searchBar?.updateMatchInfo(current: self.searchCurrentMatchIndex + 1, total: count)
+                }
+            }
+        }
+    }
+
+    func findNext() {
+        guard !lastSearchText.isEmpty, searchMatchCount > 0 else { return }
+
+        searchCurrentMatchIndex = (searchCurrentMatchIndex + 1) % searchMatchCount
+        searchBar?.updateMatchInfo(current: searchCurrentMatchIndex + 1, total: searchMatchCount)
+
+        performWebFind(backwards: false)
+    }
+
+    func findPrevious() {
+        guard !lastSearchText.isEmpty, searchMatchCount > 0 else { return }
+
+        searchCurrentMatchIndex = (searchCurrentMatchIndex - 1 + searchMatchCount) % searchMatchCount
+        searchBar?.updateMatchInfo(current: searchCurrentMatchIndex + 1, total: searchMatchCount)
+
+        performWebFind(backwards: true)
+    }
+
+    private func performWebFind(backwards: Bool) {
+        guard !lastSearchText.isEmpty else { return }
+
+        if #available(macOS 13.0, *) {
+            let config = WKFindConfiguration()
+            config.caseSensitive = false
+            config.backwards = backwards
+            config.wraps = true
+
+            find(lastSearchText, configuration: config) { _ in }
+        } else {
+            let escapedText = lastSearchText.replacingOccurrences(of: "\\", with: "\\\\")
+                .replacingOccurrences(of: "'", with: "\\'")
+            let script = "window.find('\(escapedText)', false, \(backwards ? "true" : "false"), true, false, false, false);"
+            evaluateJavaScript(script, completionHandler: nil)
+        }
+    }
+
+    private func focusFirstPreviewMatch(with text: String) {
+        guard !text.isEmpty else { return }
+
+        let escapedText = text
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "'", with: "\\'")
+            .replacingOccurrences(of: "\n", with: "\\n")
+            .replacingOccurrences(of: "\r", with: "")
+
+        let script = """
+        (function() {
+            const query = '\(escapedText)';
+            if (!query) { return false; }
+            const lowerQuery = query.toLowerCase();
+            const walker = document.createTreeWalker(document.body || document.documentElement, NodeFilter.SHOW_TEXT, null);
+            if (!walker) { return false; }
+            const selection = window.getSelection();
+            if (!selection) { return false; }
+            while (walker.nextNode()) {
+                const node = walker.currentNode;
+                if (!node || !node.textContent) { continue; }
+                const textContent = node.textContent;
+                const index = textContent.toLowerCase().indexOf(lowerQuery);
+                if (index !== -1) {
+                    const range = document.createRange();
+                    range.setStart(node, index);
+                    range.setEnd(node, index + query.length);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                    const element = node.parentElement || node.parentNode;
+                    if (element && element.scrollIntoView) {
+                        element.scrollIntoView({ block: 'center', behavior: 'auto' });
+                    }
+                    return true;
+                }
+            }
+            return false;
+        })();
+        """
+
+        evaluateJavaScript(script, completionHandler: nil)
+    }
+
+    private func clearSearchHighlights() {
+        let script = "window.getSelection().removeAllRanges();"
+        evaluateJavaScript(script, completionHandler: nil)
+    }
+
+    private func resetSearchSelection(completion: @escaping () -> Void) {
+        let script = """
+        (function() {
+            const selection = window.getSelection();
+            if (!selection) { return false; }
+            const root = document.body || document.documentElement;
+            if (!root) { return false; }
+            const range = document.createRange();
+            range.selectNodeContents(root);
+            range.collapse(true);
+            selection.removeAllRanges();
+            selection.addRange(range);
+            return true;
+        })();
+        """
+        evaluateJavaScript(script) { _, _ in
+            completion()
         }
     }
 }
