@@ -75,6 +75,10 @@ class MPreviewView: WKWebView, WKUIDelegate {
             hostingScrollView.drawsBackground = false
             hostingScrollView.backgroundColor = bgNSColor
             // 禁用弹性滚动
+            hostingScrollView.hasVerticalScroller = false
+            hostingScrollView.hasHorizontalScroller = false
+            hostingScrollView.verticalScroller = nil
+            hostingScrollView.horizontalScroller = nil
             hostingScrollView.hasVerticalRuler = false
             hostingScrollView.hasHorizontalRuler = false
             hostingScrollView.rulersVisible = false
@@ -197,23 +201,17 @@ class MPreviewView: WKWebView, WKUIDelegate {
         }
     }
     public func scrollToPosition(pre: CGFloat) {
-        guard pre != 0.0 else { return }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.executeJavaScriptWhenReady(
-                "",
-                completion: {
-                    self.evaluateJavaScript("document.body.scrollHeight") { height, _ in
-                        guard let contentHeight = height as? CGFloat else { return }
-                        self.evaluateJavaScript("window.innerHeight") { windowHeight, _ in
-                            guard let windowHeight = windowHeight as? CGFloat else { return }
-                            let offset = contentHeight - windowHeight
-                            if offset > 0 {
-                                let scrollerTop = offset * pre
-                                self.evaluateJavaScript("window.scrollTo({ top: \(scrollerTop), behavior: 'instant' })", completionHandler: nil)
-                            }
-                        }
-                    }
-                })
+        let clamped = Double(max(min(pre, 1), 0))
+        let script = """
+            (function() {
+                const doc = document.scrollingElement || document.documentElement || document.body;
+                const maxScroll = Math.max(0, (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
+                const target = maxScroll * \(clamped);
+                window.scrollTo(0, target);
+            })();
+        """
+        DispatchQueue.main.async {
+            self.executeJavaScriptWhenReady(script)
         }
     }
     private func handleNavigationAction(_ navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {

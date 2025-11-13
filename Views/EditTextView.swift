@@ -9,6 +9,21 @@ struct FillOptions {
     let saveTyping: Bool
     let force: Bool
     let needScrollToCursor: Bool
+    let previewOnly: Bool
+
+    init(
+        highlight: Bool,
+        saveTyping: Bool,
+        force: Bool,
+        needScrollToCursor: Bool,
+        previewOnly: Bool = false
+    ) {
+        self.highlight = highlight
+        self.saveTyping = saveTyping
+        self.force = force
+        self.needScrollToCursor = needScrollToCursor
+        self.previewOnly = previewOnly
+    }
 
     // Common presets
     static let `default` = FillOptions(highlight: false, saveTyping: false, force: false, needScrollToCursor: true)
@@ -434,30 +449,55 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 typingAttributes[.kern] = UserDefaultsManagement.editorLetterSpacing
             }
         }
-        // Render preview content in preview, PPT, or presentation modes
-        if UserDefaultsManagement.preview || UserDefaultsManagement.magicPPT || UserDefaultsManagement.presentation {
+        // Render preview content in preview, PPT, presentation, or split modes
+        let shouldRenderPreview = UserDefaultsManagement.preview
+            || UserDefaultsManagement.magicPPT
+            || UserDefaultsManagement.presentation
+            || UserDefaultsManagement.splitViewMode
+
+        if shouldRenderPreview {
             EditTextView.note = note
+            let frame = viewController.previewScrollView?.bounds ?? viewController.editAreaScroll.bounds
+
             if markdownView == nil {
-                let frame = viewController.editAreaScroll.bounds
-                markdownView = MPreviewView(frame: frame, note: note, closure: {})
-                if let view = markdownView, EditTextView.note == note {
-                    viewController.editAreaScroll.addSubview(view)
-                }
-            } else {
-                /// Update frame only if size changed to avoid unnecessary layout
-                let newFrame = viewController.editAreaScroll.bounds
-                if markdownView?.frame.size != newFrame.size {
-                    markdownView?.frame = newFrame
-                }
-                /// Load note if needed
-                markdownView?.load(note: note, force: options.force)
-                /// Ensure it is visible in case it was hidden by clear() during sidebar switch
-                markdownView?.isHidden = false
-                markdownView?.alphaValue = 1.0
+                let previewView = MPreviewView(frame: frame, note: note, closure: {})
+                previewView.autoresizingMask = [.width, .height]
+                markdownView = previewView
             }
+            if let previewScroll = viewController.previewScrollView,
+                let previewView = markdownView
+            {
+                viewController.preparePreviewContainer(hidden: false)
+                let newFrame = previewScroll.bounds
+                if previewView.frame.size != newFrame.size {
+                    previewView.frame = newFrame
+                }
+                previewView.autoresizingMask = [.width, .height]
+                previewView.load(note: note, force: options.force)
+                previewView.isHidden = false
+                previewView.alphaValue = 1.0
+            } else if let previewView = markdownView,
+                let fallbackContainer = viewController.editAreaScroll
+            {
+                if previewView.superview !== fallbackContainer {
+                    previewView.removeFromSuperview()
+                    fallbackContainer.addSubview(previewView)
+                }
+                let newFrame = fallbackContainer.bounds
+                if previewView.frame.size != newFrame.size {
+                    previewView.frame = newFrame
+                }
+                previewView.load(note: note, force: options.force)
+                previewView.isHidden = false
+                previewView.alphaValue = 1.0
+            }
+        } else {
+            markdownView?.isHidden = true
+        }
+
+        if options.previewOnly || (shouldRenderPreview && !UserDefaultsManagement.splitViewMode) {
             return
         }
-        markdownView?.isHidden = true
         guard let storage = textStorage else { return }
         if note.isMarkdown(), let content = note.content.mutableCopy() as? NSMutableAttributedString {
             EditTextView.shouldForceRescan = true

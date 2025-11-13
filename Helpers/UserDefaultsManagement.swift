@@ -83,6 +83,8 @@ public enum UserDefaultsManagement {
         static let NotesTableScrollPosition = "notesTableScrollPosition"
         static let AlwaysOnTop = "alwaysOnTop"
         static let HasShownImagePreviewTip = "hasShownImagePreviewTip"
+        static let SplitViewMode = "splitViewMode"
+        static let EditorContentSplitPosition = "editorContentSplitPosition"
     }
 
     private static func resolvedFontName(forKey key: String) -> String {
@@ -569,6 +571,35 @@ public enum UserDefaultsManagement {
         }
         set {
             EditorStateManager.shared.setMode(newValue ? .ppt : .normal)
+        }
+    }
+    static var splitViewMode: Bool {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.SplitViewMode) as? Bool {
+                return result
+            }
+            return false
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.SplitViewMode)
+        }
+    }
+    static var editorContentSplitPosition: Double {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.EditorContentSplitPosition) {
+                if let ratio = result as? Double {
+                    return ratio
+                }
+                if let legacyWidth = result as? Int, legacyWidth > 0 {
+                    // Old absolute width value - reset to default 50/50
+                    UserDefaults.standard.removeObject(forKey: Constants.EditorContentSplitPosition)
+                    return 0
+                }
+            }
+            return 0
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.EditorContentSplitPosition)
         }
     }
     // Convenience properties
