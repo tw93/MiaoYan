@@ -621,6 +621,7 @@ extension ViewController {
         }
 
         editArea.markdownView?.removeFromSuperview()
+        previewScrollView?.documentView = nil
         editArea.markdownView = nil
 
         guard let editor = editArea else {

@@ -25,12 +25,23 @@ extension ViewController {
         if !UserDefaultsManagement.magicPPT {
             UserDefaultsManagement.preview = true
         }
+
         isFocusedTitle = titleLabel.hasFocus()
         cancelTextSearch()
+
+        // Use animated: false to ensure immediate layout update
+        editorContentSplitView?.setDisplayMode(.previewOnly, animated: false)
+
+        preparePreviewContainer(hidden: false)
+
+        previewScrollView?.hasVerticalScroller = true
+
+        // Full preview mode: original behavior
         if editArea.markdownView != nil {
             showWebView()
         }
         refillEditArea()
+
         titleLabel.isEditable = false
         // Disable editor's find bar to prevent Cmd+F from being intercepted by NSTextView
         editArea.usesFindBar = false
@@ -49,8 +60,52 @@ extension ViewController {
         }
     }
 
+    private func enableSplitViewMode() {
+        guard let contentSplitView = editorContentSplitView,
+              previewScrollView != nil else {
+            return
+        }
+
+        // Force layout update BEFORE setting display mode to ensure correct bounds
+        contentSplitView.layoutSubtreeIfNeeded()
+
+        // Reset saved position for first-time use to ensure 50/50 split
+        if UserDefaultsManagement.editorContentSplitPosition == 0 {
+            // Will use bounds.width / 2 in setDisplayMode
+        }
+
+        // Set split view to side-by-side mode
+        contentSplitView.setDisplayMode(.sideBySide, animated: false)
+
+        // Force layout update to ensure correct bounds
+        contentSplitView.layoutSubtreeIfNeeded()
+
+        preparePreviewContainer(hidden: false)
+
+        // Ensure editor content reflects the selected note alongside preview
+        refillEditArea(force: true)
+
+        // Editor remains editable in split mode and title bar stays visible
+        titleBarView.isHidden = false
+        titleLabel.isHidden = false
+        titleLabel.isEditable = true
+        editArea.usesFindBar = true
+        editAreaScroll.hasVerticalScroller = false
+        editAreaScroll.hasHorizontalScroller = true
+        previewScrollView?.hasVerticalScroller = true
+        previewScrollView?.hasHorizontalScroller = false
+
+        startSplitScrollSync()
+
+        // Keep editor focused
+        if !isFocusedTitle {
+            focusEditArea()
+        }
+    }
+
     func disablePreview() {
         guard !UserDefaultsManagement.magicPPT else { return }
+
         // Save preview scroll position before disabling
         if let webView = editArea.markdownView {
             let applyPreviewDisable: (_ ratio: CGFloat?) -> Void = { [weak self, weak webView] ratio in
@@ -90,6 +145,22 @@ extension ViewController {
                     self.titleLabel.isEditable = true
                     if !self.isFocusedTitle {
                         self.focusEditArea()
+                    }
+
+                    // Restore editor mode based on user preference
+                    if self.needsEditorModeUpdateAfterPreview {
+                        self.needsEditorModeUpdateAfterPreview = false
+                        self.applyEditorModePreferenceChange()
+                    } else if UserDefaultsManagement.splitViewMode {
+                        self.enableSplitViewMode()
+                    } else {
+                        self.editorContentSplitView?.setDisplayMode(.editorOnly, animated: false)
+
+                        // Clear preview views AFTER setDisplayMode
+                        self.previewScrollView?.documentView = nil
+                        self.previewScrollView?.isHidden = true
+                        self.previewScrollView?.hasVerticalScroller = false
+                        self.editAreaScroll.hasVerticalScroller = true
                     }
                 }
             }
@@ -135,15 +206,97 @@ extension ViewController {
         if !isFocusedTitle {
             focusEditArea()
         }
+
+        // Restore editor mode based on user preference
+        if needsEditorModeUpdateAfterPreview {
+            needsEditorModeUpdateAfterPreview = false
+            applyEditorModePreferenceChange()
+        } else if UserDefaultsManagement.splitViewMode {
+            enableSplitViewMode()
+        } else {
+            editorContentSplitView?.setDisplayMode(.editorOnly, animated: false)
+
+            // Clear preview views AFTER setDisplayMode
+            previewScrollView?.documentView = nil
+            previewScrollView?.isHidden = true
+            previewScrollView?.hasVerticalScroller = false
+            editAreaScroll.hasVerticalScroller = true
+        }
+    }
+
+    private func disableSplitViewMode() {
+        guard let contentSplitView = editorContentSplitView else { return }
+
+        // Set display mode back to editor only (no animation for immediate effect)
+        contentSplitView.setDisplayMode(.editorOnly, animated: false)
+        stopSplitScrollSync()
+
+        // Clear preview container
+        previewScrollView?.documentView = nil
+        previewScrollView?.isHidden = true
+        editArea.markdownView?.isHidden = true
+        previewScrollView?.hasVerticalScroller = false
+        editAreaScroll.hasVerticalScroller = true
+
+        // Split mode doesn't affect preview state - don't set preview=false here
+        titleLabel.isEditable = true
+
+        if !isFocusedTitle {
+            focusEditArea()
+        }
     }
 
     func togglePreview() {
         saveTitleSafely()
+
         if UserDefaultsManagement.preview {
             disablePreview()
         } else {
             enablePreview()
             TelemetryDeck.signal("Editor.Preview")
+        }
+    }
+
+    @IBAction func toggleSplitView(_ sender: Any) {
+        saveTitleSafely()
+        UserDefaultsManagement.splitViewMode.toggle()
+
+        if UserDefaultsManagement.splitViewMode {
+            // Reset split position to ensure 50/50 split on first use
+            UserDefaultsManagement.editorContentSplitPosition = 0
+            applyEditorModePreferenceChange()
+            TelemetryDeck.signal("Editor.SplitView")
+        } else {
+            applyEditorModePreferenceChange()
+        }
+    }
+
+    // Debug helper - can call this from console or add a menu item
+    @objc func resetSplitViewPosition() {
+        UserDefaultsManagement.editorContentSplitPosition = 0
+        if UserDefaultsManagement.splitViewMode {
+            editorContentSplitView?.setDisplayMode(.sideBySide, animated: false)
+        }
+    }
+
+    func applyEditorModePreferenceChange() {
+        // Defer mode changes if in special modes (preview, presentation, PPT)
+        guard !UserDefaultsManagement.isInSpecialMode else {
+            needsEditorModeUpdateAfterPreview = true
+            return
+        }
+
+        // Ensure split view is initialized
+        guard editorContentSplitView != nil else {
+            return
+        }
+
+        needsEditorModeUpdateAfterPreview = false
+
+        if UserDefaultsManagement.splitViewMode {
+            enableSplitViewMode()
+        } else {
+            disableSplitViewMode()
         }
     }
 
@@ -186,6 +339,9 @@ extension ViewController {
         hideNoteList("")
         formatButton.isHidden = true
         previewButton.isHidden = true
+        editorContentSplitView?.setDisplayMode(.previewOnly, animated: true)
+        preparePreviewContainer(hidden: false)
+        previewScrollView?.hasVerticalScroller = true
         if editArea.markdownView != nil {
             showWebView()
         }
@@ -287,6 +443,9 @@ extension ViewController {
         if !UserDefaultsManagement.fullScreen {
             view.window?.toggleFullScreen(nil)
         }
+        editorContentSplitView?.setDisplayMode(.previewOnly, animated: true)
+        preparePreviewContainer(hidden: false)
+        previewScrollView?.hasVerticalScroller = true
         if editArea.markdownView != nil {
             showWebView()
         }
@@ -461,12 +620,157 @@ extension ViewController {
         guard let project = tempProject else { return }
         let tempNote = Note(name: "", project: project, type: .markdown)
         tempNote.content = NSMutableAttributedString(string: "")
-        let frame = editArea.bounds
-        editArea.markdownView = MPreviewView(frame: frame, note: tempNote, closure: {})
-        editArea.markdownView?.isHidden = true
-        if let view = editArea.markdownView {
-            editAreaScroll.addSubview(view)
+        let frame = previewScrollView?.bounds ?? editArea.bounds
+        let previewView = MPreviewView(frame: frame, note: tempNote, closure: {})
+        previewView.autoresizingMask = [.width, .height]
+        previewView.isHidden = true
+        editArea.markdownView = previewView
+        preparePreviewContainer(hidden: true)
+    }
+
+    @MainActor
+    func preparePreviewContainer(hidden: Bool = false) {
+        guard let previewScroll = previewScrollView else {
+            return
         }
+
+        if editArea.markdownView == nil {
+            let frame = previewScroll.bounds
+            let fallbackNote = notesTableView.getSelectedNote() ?? {
+                let tempProject = getSidebarProject() ?? storage.noteList.first?.project
+                guard let project = tempProject else { return nil }
+                let tempNote = Note(name: "", project: project, type: .markdown)
+                tempNote.content = NSMutableAttributedString(string: "")
+                return tempNote
+            }()
+            guard let note = fallbackNote else {
+                return
+            }
+            let markdownView = MPreviewView(frame: frame, note: note, closure: {})
+            markdownView.autoresizingMask = [.width, .height]
+            editArea.markdownView = markdownView
+        }
+        guard let markdownView = editArea.markdownView else {
+            return
+        }
+        markdownView.removeFromSuperview()
+        markdownView.frame = previewScroll.bounds
+        markdownView.autoresizingMask = [.width, .height]
+        markdownView.isHidden = hidden
+        if !hidden {
+            markdownView.alphaValue = 1.0
+        }
+        previewScroll.documentView = markdownView
+        previewScroll.isHidden = hidden
+    }
+
+    private enum SplitScrollSource {
+        case editor
+        case preview
+    }
+
+    private func startSplitScrollSync() {
+        guard UserDefaultsManagement.splitViewMode,
+              splitScrollObserver == nil,
+              let editorClip = editAreaScroll?.contentView as? NSClipView,
+              let previewClip = previewScrollView?.contentView as? NSClipView else { return }
+
+        editorClip.postsBoundsChangedNotifications = true
+        previewClip.postsBoundsChangedNotifications = true
+
+        splitScrollObserver = NotificationCenter.default.addObserver(
+            forName: NSView.boundsDidChangeNotification,
+            object: editorClip,
+            queue: .main
+        ) { [weak self] _ in
+            self?.handleSplitScrollEvent(.editor)
+        }
+
+        splitPreviewScrollObserver = NotificationCenter.default.addObserver(
+            forName: NSView.boundsDidChangeNotification,
+            object: previewClip,
+            queue: .main
+        ) { [weak self] _ in
+            self?.handleSplitScrollEvent(.preview)
+        }
+
+        scheduleSplitScrollSync(from: .editor)
+    }
+
+    private func stopSplitScrollSync() {
+        if let observer = splitScrollObserver {
+            NotificationCenter.default.removeObserver(observer)
+            splitScrollObserver = nil
+        }
+        if let observer = splitPreviewScrollObserver {
+            NotificationCenter.default.removeObserver(observer)
+            splitPreviewScrollObserver = nil
+        }
+        splitScrollSyncWorkItem?.cancel()
+        splitScrollSyncWorkItem = nil
+        isProgrammaticSplitScroll = false
+    }
+
+    private func handleSplitScrollEvent(_ source: SplitScrollSource) {
+        guard !isProgrammaticSplitScroll else { return }
+        scheduleSplitScrollSync(from: source)
+    }
+
+    private func scheduleSplitScrollSync(from source: SplitScrollSource) {
+        guard UserDefaultsManagement.splitViewMode else { return }
+        splitScrollSyncWorkItem?.cancel()
+        let ratio: CGFloat
+        switch source {
+        case .editor:
+            ratio = editorScrollRatio()
+        case .preview:
+            ratio = previewScrollRatio()
+        }
+
+        let clampedRatio = max(0, min(ratio, 1))
+        let task = DispatchWorkItem { [weak self] in
+            self?.applySplitScrollSync(ratio: clampedRatio, from: source)
+        }
+        splitScrollSyncWorkItem = task
+        DispatchQueue.main.async(execute: task)
+    }
+
+    private func applySplitScrollSync(ratio: CGFloat, from source: SplitScrollSource) {
+        guard UserDefaultsManagement.splitViewMode else { return }
+        isProgrammaticSplitScroll = true
+        switch source {
+        case .editor:
+            editArea.markdownView?.scrollToPosition(pre: ratio)
+        case .preview:
+            scrollEditor(to: ratio)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak self] in
+            self?.isProgrammaticSplitScroll = false
+        }
+    }
+
+    private func editorScrollRatio() -> CGFloat {
+        getScrollTop()
+    }
+
+    private func previewScrollRatio() -> CGFloat {
+        guard let previewScroll = previewScrollView,
+              let documentView = previewScroll.documentView else { return 0 }
+        let offset = documentView.bounds.height - previewScroll.contentSize.height
+        guard offset > 0 else { return 0 }
+        let current = previewScroll.contentView.bounds.origin.y
+        return current / offset
+    }
+
+    private func scrollEditor(to ratio: CGFloat) {
+        guard let documentView = editAreaScroll.documentView else { return }
+        let contentHeight = editAreaScroll.contentSize.height
+        let scrollHeight = documentView.bounds.height
+        let offset = max(scrollHeight - contentHeight, 0)
+        guard offset > 0 else { return }
+        let targetY = offset * ratio
+        editAreaScroll.contentView.animator().setBoundsOrigin(NSPoint(x: 0, y: targetY))
+        editAreaScroll.reflectScrolledClipView(editAreaScroll.contentView)
     }
 
     func cancelTextSearch() {
@@ -553,7 +857,8 @@ extension ViewController {
                         highlight: true,
                         saveTyping: saveTyping,
                         force: force,
-                        needScrollToCursor: true
+                        needScrollToCursor: true,
+                        previewOnly: previewOnly
                     )
                     self.editArea.fill(note: note, options: options)
                     self.editArea.setSelectedRange(NSRange(location: location, length: 0))

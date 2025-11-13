@@ -53,6 +53,14 @@ class ViewController:
     @IBOutlet var splitView: EditorSplitView!
     @IBOutlet var editArea: EditTextView!
     @IBOutlet var editAreaScroll: EditorScrollView!
+
+    var editorContentSplitView: EditorContentSplitView?
+    var previewScrollView: EditorScrollView?
+    var splitScrollObserver: NSObjectProtocol?
+    var splitPreviewScrollObserver: NSObjectProtocol?
+    var splitScrollSyncWorkItem: DispatchWorkItem?
+    var isProgrammaticSplitScroll = false
+    var needsEditorModeUpdateAfterPreview = false
     @IBOutlet var search: SearchTextField!
     @IBOutlet var miaoYanText: NSTextField!
     @IBOutlet var notesTableView: NotesTableView!
@@ -295,6 +303,7 @@ class ViewController:
             }
         }
         handleForAppMode()
+        applyEditorModePreferenceChange()
     }
 
     func handleForAppMode() {
@@ -428,6 +437,63 @@ class ViewController:
             column.minWidth = 50
             column.maxWidth = 1000
         }
+        // Configure split view for editor content
+        configureEditorContentSplitView()
+    }
+
+    private func configureEditorContentSplitView() {
+        guard let editAreaScrollParent = editAreaScroll.superview else { return }
+
+        // Create EditorContentSplitView with proper frame
+        let splitViewFrame = editAreaScroll.frame
+        let contentSplitView = EditorContentSplitView(frame: splitViewFrame)
+        contentSplitView.delegate = contentSplitView
+        contentSplitView.autoresizingMask = [.width, .height]
+
+        // Create preview scroll view with same frame as editor
+        let previewScroll = EditorScrollView(frame: splitViewFrame)
+        previewScroll.autoresizingMask = [.width, .height]
+        previewScroll.hasVerticalScroller = true
+        previewScroll.hasHorizontalScroller = false
+        previewScroll.autohidesScrollers = true
+        previewScroll.drawsBackground = false
+        previewScroll.scrollerStyle = .overlay
+
+        // Remove storyboard min-width constraint so split panes can evenly share space
+        let minWidthConstraints = editAreaScroll.constraints.filter {
+            $0.identifier == "1Ss-OK-0sm" || ($0.firstAttribute == .width && $0.relation == .greaterThanOrEqual && $0.secondItem == nil)
+        }
+        NSLayoutConstraint.deactivate(minWidthConstraints)
+
+        // Replace editAreaScroll in hierarchy
+        editAreaScroll.removeFromSuperview()
+        editAreaScrollParent.addSubview(contentSplitView)
+
+        // Pin split view to fill the editor container so both panes get real frames
+        contentSplitView.translatesAutoresizingMaskIntoConstraints = false
+        let topAnchor = titleBarView?.bottomAnchor ?? editAreaScrollParent.topAnchor
+        NSLayoutConstraint.activate([
+            contentSplitView.leadingAnchor.constraint(equalTo: editAreaScrollParent.leadingAnchor),
+            contentSplitView.trailingAnchor.constraint(equalTo: editAreaScrollParent.trailingAnchor),
+            contentSplitView.topAnchor.constraint(equalTo: topAnchor),
+            contentSplitView.bottomAnchor.constraint(equalTo: editAreaScrollParent.bottomAnchor),
+        ])
+
+        // Reset editAreaScroll frame and autoresizing
+        editAreaScroll.frame = splitViewFrame
+        editAreaScroll.autoresizingMask = [.width, .height]
+
+        // Add both scroll views to split view using addArrangedSubview (required for NSSplitView)
+        contentSplitView.addArrangedSubview(editAreaScroll)
+        contentSplitView.addArrangedSubview(previewScroll)
+        previewScroll.isHidden = true
+
+        // Store references
+        self.editorContentSplitView = contentSplitView
+        self.previewScrollView = previewScroll
+
+        // Set initial mode to editor only
+        contentSplitView.setDisplayMode(.editorOnly, animated: false)
     }
 
     func configureNotesList() {

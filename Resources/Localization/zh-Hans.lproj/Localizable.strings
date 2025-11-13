@@ -168,6 +168,9 @@
 "Code Background:" = "代码背景:";
 "Preview Location:" = "预览位置:";
 "Preview Width:" = "预览宽度:";
+"Editor Mode:" = "编辑模式:";
+"Split Mode" = "分栏模式";
+"Pure Editing" = "纯编辑";
 
 /* Interface Settings */
 "Interface" = "界面";

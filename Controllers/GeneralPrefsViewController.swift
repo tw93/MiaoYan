@@ -47,6 +47,9 @@ final class GeneralPrefsViewController: BasePrefsViewController {
     private var alwaysOnTopPopUp: NSPopUpButton!
     private var activateShortcutRecorder: ThemeAwareShortcutRecorderView!
 
+    // Editor settings controls
+    private var editorModePopUp: NSPopUpButton!
+
     override func setupUI() {
         let scrollView = NSScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -155,7 +158,26 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         let alwaysRow = createPreferencesRow(labelText: I18n.str("Always On Top:"), control: alwaysOnTopPopUp, controlWidth: controlWidth)
         let shortcutRow = createPreferencesRow(labelText: I18n.str("Activate Shortcut:"), control: activateShortcutRecorder, controlWidth: controlWidth)
 
-        [storageRow, storageSeparator, appearanceRow, languageRow, buttonRow, alwaysRow, shortcutRow].forEach { stackView.addArrangedSubview($0) }
+        // Editor settings
+        editorModePopUp = NSPopUpButton()
+        editorModePopUp.translatesAutoresizingMaskIntoConstraints = false
+        editorModePopUp.target = self
+        editorModePopUp.action = #selector(editorModeChanged(_:))
+        editorModePopUp.addItem(withTitle: localizedEditorMode(false))
+        editorModePopUp.addItem(withTitle: localizedEditorMode(true))
+
+        let editorModeRow = createPreferencesRow(labelText: I18n.str("Editor Mode:"), control: editorModePopUp, controlWidth: controlWidth)
+
+        [
+            storageRow,
+            storageSeparator,
+            editorModeRow,
+            appearanceRow,
+            languageRow,
+            buttonRow,
+            alwaysRow,
+            shortcutRow,
+        ].forEach { stackView.addArrangedSubview($0) }
         stackView.setCustomSpacing(rowSpacing * 1.5, after: storageSeparator)
 
         NSLayoutConstraint.activate([
@@ -306,6 +328,10 @@ final class GeneralPrefsViewController: BasePrefsViewController {
 
         buttonShowPopUp.selectItem(withTitle: localizedButtonShow(settings.buttonShow))
         alwaysOnTopPopUp.selectItem(withTitle: UserDefaultsManagement.alwaysOnTop ? I18n.str("Yes") : I18n.str("No"))
+
+        // Editor settings values
+        editorModePopUp.selectItem(withTitle: localizedEditorMode(UserDefaultsManagement.splitViewMode))
+
     }
 
     // MARK: - Actions
@@ -422,6 +448,41 @@ final class GeneralPrefsViewController: BasePrefsViewController {
                 }
             }
         }
+    }
+
+    // MARK: - Editor Settings Actions
+
+    @objc private func editorModeChanged(_ sender: NSPopUpButton) {
+        guard let item = sender.selectedItem,
+            let isSplit = rawEditorMode(from: item.title)
+        else {
+            return
+        }
+        if isSplit {
+            UserDefaultsManagement.editorContentSplitPosition = 0
+        }
+        UserDefaultsManagement.splitViewMode = isSplit
+        if let vc = ViewController.shared() {
+            vc.applyEditorModePreferenceChange()
+        }
+    }
+
+    private func localizedEditorMode(_ isSplit: Bool) -> String {
+        if isSplit {
+            return I18n.str("Split Mode")
+        } else {
+            return I18n.str("Pure Editing")
+        }
+    }
+
+    private func rawEditorMode(from display: String) -> Bool? {
+        if display == localizedEditorMode(false) {
+            return false
+        }
+        if display == localizedEditorMode(true) {
+            return true
+        }
+        return nil
     }
 }
 
