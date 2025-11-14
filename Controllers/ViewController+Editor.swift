@@ -66,6 +66,9 @@ extension ViewController {
             return
         }
 
+        // UX: Ensure a note is selected when entering split mode (prefer last selected note)
+        ensureNoteSelection(preferLastSelected: true)
+
         // Force layout update BEFORE setting display mode to ensure correct bounds
         contentSplitView.layoutSubtreeIfNeeded()
 
@@ -334,17 +337,27 @@ extension ViewController {
     }
 
     func enablePresentation() {
+        // Ensure a note is selected before entering presentation mode
+        ensureNoteSelection(preferLastSelected: true)
+
         UserDefaultsManagement.presentation = true
         savePresentationLayout()
         hideNoteList("")
         formatButton.isHidden = true
         previewButton.isHidden = true
-        editorContentSplitView?.setDisplayMode(.previewOnly, animated: true)
+
+        // Set up split view and preview container synchronously
+        editorContentSplitView?.setDisplayMode(.previewOnly, animated: false)
         preparePreviewContainer(hidden: false)
         previewScrollView?.hasVerticalScroller = true
+        previewScrollView?.isHidden = false
+
+        // Force immediate content load
         if editArea.markdownView != nil {
             showWebView()
         }
+
+        // Load content in presentation mode
         refillEditArea(previewOnly: true, force: true)
         presentationButton.state = .on
         // Disable editor's find bar to prevent Cmd+F from being intercepted by NSTextView
@@ -431,6 +444,9 @@ extension ViewController {
         guard let vc = ViewController.shared() else {
             return
         }
+        // Ensure a note is selected before entering PPT mode
+        ensureNoteSelection(preferLastSelected: true)
+
         UserDefaultsManagement.magicPPT = true
         savePresentationLayout()
         hideNoteList("")
@@ -443,12 +459,19 @@ extension ViewController {
         if !UserDefaultsManagement.fullScreen {
             view.window?.toggleFullScreen(nil)
         }
-        editorContentSplitView?.setDisplayMode(.previewOnly, animated: true)
+
+        // Set up split view and preview container synchronously
+        editorContentSplitView?.setDisplayMode(.previewOnly, animated: false)
         preparePreviewContainer(hidden: false)
         previewScrollView?.hasVerticalScroller = true
+        previewScrollView?.isHidden = false
+
+        // Force immediate content load
         if editArea.markdownView != nil {
             showWebView()
         }
+
+        // Load content in PPT mode
         refillEditArea()
         // Disable editor's find bar to prevent Cmd+F from being intercepted by NSTextView
         editArea.usesFindBar = false
@@ -678,12 +701,15 @@ extension ViewController {
         editorClip.postsBoundsChangedNotifications = true
         previewClip.postsBoundsChangedNotifications = true
 
+        // Callbacks run on main queue (queue: .main), use assumeIsolated for MainActor methods
         splitScrollObserver = NotificationCenter.default.addObserver(
             forName: NSView.boundsDidChangeNotification,
             object: editorClip,
             queue: .main
         ) { [weak self] _ in
-            self?.handleSplitScrollEvent(.editor)
+            MainActor.assumeIsolated {
+                self?.handleSplitScrollEvent(.editor)
+            }
         }
 
         splitPreviewScrollObserver = NotificationCenter.default.addObserver(
@@ -691,7 +717,9 @@ extension ViewController {
             object: previewClip,
             queue: .main
         ) { [weak self] _ in
-            self?.handleSplitScrollEvent(.preview)
+            MainActor.assumeIsolated {
+                self?.handleSplitScrollEvent(.preview)
+            }
         }
 
         scheduleSplitScrollSync(from: .editor)
@@ -706,8 +734,6 @@ extension ViewController {
             NotificationCenter.default.removeObserver(observer)
             splitPreviewScrollObserver = nil
         }
-        splitScrollSyncWorkItem?.cancel()
-        splitScrollSyncWorkItem = nil
         isProgrammaticSplitScroll = false
     }
 
@@ -718,7 +744,6 @@ extension ViewController {
 
     private func scheduleSplitScrollSync(from source: SplitScrollSource) {
         guard UserDefaultsManagement.splitViewMode else { return }
-        splitScrollSyncWorkItem?.cancel()
         let ratio: CGFloat
         switch source {
         case .editor:
@@ -728,11 +753,8 @@ extension ViewController {
         }
 
         let clampedRatio = max(0, min(ratio, 1))
-        let task = DispatchWorkItem { [weak self] in
-            self?.applySplitScrollSync(ratio: clampedRatio, from: source)
-        }
-        splitScrollSyncWorkItem = task
-        DispatchQueue.main.async(execute: task)
+        // Performance: Execute immediately without async dispatch to reduce scroll lag
+        applySplitScrollSync(ratio: clampedRatio, from: source)
     }
 
     private func applySplitScrollSync(ratio: CGFloat, from source: SplitScrollSource) {
@@ -744,7 +766,8 @@ extension ViewController {
         case .preview:
             scrollEditor(to: ratio)
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak self] in
+        // Performance: Use ~60fps frame time (0.016s) instead of 0.05s for smoother sync
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.016) { [weak self] in
             self?.isProgrammaticSplitScroll = false
         }
     }
@@ -769,7 +792,8 @@ extension ViewController {
         let offset = max(scrollHeight - contentHeight, 0)
         guard offset > 0 else { return }
         let targetY = offset * ratio
-        editAreaScroll.contentView.animator().setBoundsOrigin(NSPoint(x: 0, y: targetY))
+        // Performance: Direct setBoundsOrigin (no animator) for immediate, jank-free scrolling
+        editAreaScroll.contentView.setBoundsOrigin(NSPoint(x: 0, y: targetY))
         editAreaScroll.reflectScrolledClipView(editAreaScroll.contentView)
     }
 
@@ -808,7 +832,6 @@ extension ViewController {
         if notesTableView.selectedRow > -1 {
             DispatchQueue.main.async {
                 self.editArea.isEditable = true
-                self.emptyEditAreaView.isHidden = true
                 // Only show title bar if not in PPT mode
                 if !UserDefaultsManagement.magicPPT {
                     self.titleBarView.isHidden = false

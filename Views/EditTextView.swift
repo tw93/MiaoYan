@@ -156,15 +156,18 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     override func mouseMoved(with event: NSEvent) {
-        guard let viewController = window?.contentViewController as? ViewController else {
+        guard window?.contentViewController as? ViewController != nil else {
             imagePreviewManager?.hideImagePreview()
             return
         }
-        if !viewController.emptyEditAreaView.isHidden {
+
+        // Safety: Skip hover logic when no note is loaded
+        guard EditTextView.note != nil else {
             NSCursor.arrow.set()
             imagePreviewManager?.hideImagePreview()
             return
         }
+
         let point = convert(event.locationInWindow, from: nil)
         let origin = textContainerOrigin
         let properPoint = NSPoint(x: point.x - origin.x, y: point.y - origin.y)
@@ -425,7 +428,6 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     // Internal implementation method
     private func _performFill(note: Note, options: FillOptions, viewController: ViewController) {
-        viewController.emptyEditAreaView.isHidden = true
         // Only show title components if not in PPT mode
         if !UserDefaultsManagement.magicPPT {
             viewController.titleBarView.isHidden = false
@@ -528,9 +530,6 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         let appDelegate = NSApplication.shared.delegate as! AppDelegate
         window?.title = appDelegate.appTitle
         if let viewController = window?.contentViewController as? ViewController {
-            viewController.emptyEditAreaImage.image = NSImage(imageLiteralResourceName: "makeNoteAsset")
-            viewController.emptyEditAreaView.isHidden = false
-            viewController.refreshMiaoYanNum()
             viewController.titleBarView.isHidden = true
             viewController.updateTitle(newTitle: "")
         }
@@ -615,6 +614,11 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         super.didChangeText()
         if editorSearchBar != nil, !editorLastSearchText.isEmpty {
             handleSearchInput(editorLastSearchText, jumpToFirstMatch: false)
+        }
+
+        // Update preview in split mode
+        if UserDefaultsManagement.splitViewMode, let note = EditTextView.note {
+            markdownView?.load(note: note, force: false)
         }
     }
 

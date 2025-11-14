@@ -47,6 +47,7 @@ class ViewController:
     override var representedObject: Any? {
         didSet {}
     }
+    // Empty state UI (kept for Storyboard compatibility, hidden at runtime)
     @IBOutlet var emptyEditTitle: NSTextField!
     @IBOutlet var emptyEditAreaImage: NSImageView!
     @IBOutlet var emptyEditAreaView: NSView!
@@ -58,11 +59,9 @@ class ViewController:
     var previewScrollView: EditorScrollView?
     var splitScrollObserver: NSObjectProtocol?
     var splitPreviewScrollObserver: NSObjectProtocol?
-    var splitScrollSyncWorkItem: DispatchWorkItem?
     var isProgrammaticSplitScroll = false
     var needsEditorModeUpdateAfterPreview = false
     @IBOutlet var search: SearchTextField!
-    @IBOutlet var miaoYanText: NSTextField!
     @IBOutlet var notesTableView: NotesTableView!
     @IBOutlet var noteMenu: NSMenu! {
         didSet {
@@ -231,6 +230,8 @@ class ViewController:
     @objc func detachedWindowWillClose(notification: NSNotification) {}
 
     override func viewDidLoad() {
+        // Hide empty state UI (no longer used)
+        emptyEditAreaView.isHidden = true
         configureShortcuts()
         configureDelegates()
         configureLayout()
@@ -307,7 +308,6 @@ class ViewController:
     }
 
     func handleForAppMode() {
-        refreshMiaoYanNum()
         if UserDefaultsManagement.isSingleMode {
             toastInSingleMode()
         } else if UserDefaultsManagement.isFirstLaunch {
@@ -318,6 +318,30 @@ class ViewController:
         } else {
             ensureInitialProjectSelection()
         }
+    }
+
+    // MARK: - Selection Management
+
+    /// Ensures a note is selected when none is currently selected (unified auto-select logic)
+    /// - Parameter preferLastSelected: If true, tries to restore last selected note before falling back to first note
+    func ensureNoteSelection(preferLastSelected: Bool = false) {
+        guard notesTableView.selectedRow == -1,
+              !notesTableView.noteList.isEmpty,
+              !UserDefaultsManagement.isSingleMode else {
+            return
+        }
+
+        var targetIndex = 0
+
+        if preferLastSelected,
+           let lastURL = UserDefaultsManagement.lastSelectedURL,
+           let lastNote = storage.getBy(url: lastURL),
+           let index = notesTableView.getIndex(lastNote) {
+            targetIndex = index
+        }
+
+        notesTableView.selectRow(targetIndex)
+        notesTableView.scrollRowToVisible(row: targetIndex, animated: false)
     }
 
     private func ensureInitialProjectSelection() {
@@ -391,7 +415,6 @@ class ViewController:
     }
 
     private func configureLayout() {
-        emptyEditAreaView.isHidden = true
         titleLabel.isHidden = true
         updateTitle(newTitle: "")
         DispatchQueue.main.async {
@@ -411,7 +434,6 @@ class ViewController:
         }
         editArea.typingAttributes = typingAttrs
         titleLabel.font = UserDefaultsManagement.titleFont.titleBold()
-        emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont
         setTableRowHeight()
         // Set up delegate and data source before loading data
         storageOutlineView.delegate = storageOutlineView
