@@ -224,7 +224,6 @@ extension ViewController {
                 self.editArea.clear()
             }
             self.notesTableView.reloadData()
-            self.refreshMiaoYanNum()
             completion()
         }
     }
@@ -243,15 +242,9 @@ extension ViewController {
             }
 
             self.restoreSelectionIfNeeded(previousSelectedRow: previousSelectedRow)
-            // First-run fallback: auto-select first note only during initial app launch
-            // Prevents unwanted auto-selection during normal sidebar/list navigation
-            if !isSearch,
-                !UserDefaultsManagement.isSingleMode,
-                self.storageOutlineView.isLaunch,
-                self.notesTableView.selectedRow == -1,
-                !self.notesTableView.noteList.isEmpty
-            {
-                self.selectNullTableRow(timer: true)
+            // UX: Auto-select first note to avoid empty editor (unified behavior for all navigation)
+            if !isSearch {
+                self.ensureNoteSelection()
             }
             completion()
         }
@@ -269,8 +262,6 @@ extension ViewController {
         } else if !UserDefaultsManagement.isSingleMode, !hasSelectedNote {
             editArea.clear()
         }
-
-        refreshMiaoYanNum()
     }
 
     private func restoreSelectionIfNeeded(previousSelectedRow: Int) {
@@ -380,7 +371,6 @@ extension ViewController {
                     if !UserDefaultsManagement.magicPPT {
                         self.titleBarView.isHidden = false
                     }
-                    self.emptyEditAreaView.isHidden = true
                 }
             }
         }
@@ -500,24 +490,6 @@ extension ViewController {
     }
 
     // MARK: - Data State Management
-    func refreshMiaoYanNum() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-            let messageText = I18n.str("%d MiaoYan")
-
-            let count: Int
-            if let sidebarItem = self.getSidebarItem() {
-                if sidebarItem.type == .All {
-                    count = self.storage.noteList.filter { !$0.isTrash() }.count
-                } else {
-                    count = self.notesTableView.noteList.count
-                }
-            } else {
-                count = self.notesTableView.noteList.count
-            }
-
-            self.miaoYanText.stringValue = String(format: messageText, count)
-        }
-    }
 
     public func blockFSUpdates() {
         timer.invalidate()

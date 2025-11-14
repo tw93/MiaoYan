@@ -236,7 +236,12 @@ class NotesTableView: NSTableView {
             }
             loadingQueue.addOperation(operation)
         } else {
-            vc.editArea.clear()
+            // UX: Auto-select first note to avoid empty editor (unified behavior)
+            if noteList.count > 0 {
+                vc.ensureNoteSelection()
+            } else {
+                vc.editArea.clear()
+            }
         }
     }
 

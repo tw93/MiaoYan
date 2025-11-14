@@ -305,7 +305,6 @@ extension ViewController {
             }
 
             vc.editArea.clear()
-            vc.emptyEditAreaView.isHidden = true
         }
 
         NSApp.mainWindow?.makeFirstResponder(vc.notesTableView)
@@ -656,7 +655,6 @@ extension ViewController {
         notesTableView.deselectNotes()
         search.stringValue.removeAll()
         titleLabel.isEditable = true
-        emptyEditAreaView.isHidden = true
     }
 
     // Complete final setup for newly created note
@@ -1064,14 +1062,12 @@ extension ViewController {
         if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), search.hasFocus() {
             search.stringValue.removeAll()
             configureNotesList()
-            refreshMiaoYanNum()
             return false
         }
 
         if event.keyCode == kVK_Escape, search.hasFocus() {
             search.stringValue.removeAll()
             configureNotesList()
-            refreshMiaoYanNum()
             return false
         }
 
