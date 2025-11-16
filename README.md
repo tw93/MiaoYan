@@ -36,9 +36,11 @@
 4. Open MiaoYan Preferences and set the storage location to this folder
 5. Click the "New Folder" icon in the top-left corner to create document categories and start writing
 
+After installation, we recommend exploring Preferences (⌘,) to discover MiaoYan's rich customization options, including edit modes, themes, fonts, and more to create your perfect writing environment.
+
 ## Split Editor & Preview Mode
 
-Edit and preview side by side with real-time preview and bidirectional scroll sync. Enable it in Preferences (⌘,) → Editor tab.
+Edit and preview side by side with real-time preview and bidirectional scroll sync. Enable it in Preferences → Interface → Edit Mode → Split Mode.
 
 Why not WYSIWYG like Typora? We prioritize pure Markdown editing experience, and implementing WYSIWYG in native Swift is overly complex with reliability concerns. Split mode maintains clean editing while providing instant visual feedback.
 
