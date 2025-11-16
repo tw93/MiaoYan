@@ -45,7 +45,7 @@
 
 <a href="https://miaoyan.app/cats.html"><img src="https://miaoyan.app/assets/sponsors.svg" width="1000px" /></a>
 
-1. I have two cats named Tangyuan and Cola. If MiaoYan brightens your day, feel free to <a href="https://miaoyan.app/cats.html?name=Pake" target="_blank">treat them to some canned food 🥩</a>.
+1. I have two cats named Tangyuan and Cola. If MiaoYan brightens your day, feel free to <a href="https://miaoyan.app/cats.html" target="_blank">treat them to some canned food 🥩</a>.
 2. If you enjoy MiaoYan, please star the project on GitHub and share it with friends who might love it too.
 3. Follow me on [Twitter](https://twitter.com/HiTw93) for the latest updates or join the [Telegram group](https://t.me/+GclQS9ZnxyI2ODQ1) to chat with the community.
 

@@ -46,7 +46,7 @@
 
 <a href="https://miaoyan.app/cats.html"><img src="https://miaoyan.app/assets/sponsors.svg" width="1000px" /></a>
 
-1. 我有两只猫，一只叫汤圆，一只可乐，假如妙言让你生活更美好，可以给她们 <a href="https://miaoyan.app/cats.html?name=Pake" target="_blank">喂罐头 🥩</a>。
+1. 我有两只猫，一只叫汤圆，一只可乐，假如妙言让你生活更美好，可以给她们 <a href="https://miaoyan.app/cats.html" target="_blank">喂罐头 🥩</a>。
 2. 如果你喜欢妙言，可以在 Github Star，更欢迎推荐给你志同道合的朋友使用。
 3. 可以关注我的 [Twitter](https://twitter.com/HiTw93) 获取最新的更新消息，也欢迎加入 [Telegram](https://t.me/+GclQS9ZnxyI2ODQ1) 聊天群。
 

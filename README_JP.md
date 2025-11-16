@@ -45,7 +45,7 @@
 
 <a href="https://miaoyan.app/cats.html"><img src="https://miaoyan.app/assets/sponsors.svg" width="1000px" /></a>
 
-1. 湯円とコーラという 2 匹の猫と暮らしています。MiaoYan が少しでもあなたの暮らしを良くしてくれたなら、ぜひ彼女たちに <a href="https://miaoyan.app/cats.html?name=Pake" target="_blank">缶詰をごちそうしてください 🥩</a>。
+1. 湯円とコーラという 2 匹の猫と暮らしています。MiaoYan が少しでもあなたの暮らしを良くしてくれたなら、ぜひ彼女たちに <a href="https://miaoyan.app/cats.html" target="_blank">缶詰をごちそうしてください 🥩</a>。
 2. MiaoYan を気に入っていただけたら、GitHub でスターを付けていただき、気の合う友人にもご紹介ください。
 3. 最新情報は [Twitter](https://twitter.com/HiTw93) でフォローするか、[Telegram グループ](https://t.me/+GclQS9ZnxyI2ODQ1) に参加してコミュニティで交流しましょう。
 
