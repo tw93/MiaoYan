@@ -23,7 +23,7 @@
 
 ## Features
 
-- **Fantastic**: Local-first, privacy-focused, syntax highlighting, PPT mode, LaTeX, Mermaid diagrams
+- **Fantastic**: Local-first, privacy-focused, syntax highlighting, split editor & preview, PPT mode, LaTeX, Mermaid diagrams
 - **Beautiful**: Minimalist design, three-column layout, dark mode, distraction-free
 - **Fast**: Swift 6 native, better performance than Electron-based apps
 - **Simple**: Lightweight, keyboard shortcuts, auto-formatting
@@ -35,6 +35,14 @@
 3. Create a `MiaoYan` folder in iCloud Drive or your preferred location
 4. Open MiaoYan Preferences and set the storage location to this folder
 5. Click the "New Folder" icon in the top-left corner to create document categories and start writing
+
+## Split Editor & Preview Mode
+
+Edit and preview side by side with real-time preview and bidirectional scroll sync. Enable it in Preferences (⌘,) → Editor tab.
+
+Why not WYSIWYG like Typora? We prioritize pure Markdown editing experience, and implementing WYSIWYG in native Swift is overly complex with reliability concerns. Split mode maintains clean editing while providing instant visual feedback.
+
+<img src="https://cdn.tw93.fun/pic/1jZnC4.png" width="100%" alt="Split Editor & Preview Mode" />
 
 ## Documentation
 
