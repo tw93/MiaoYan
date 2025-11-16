@@ -270,7 +270,7 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
   const offsetX = Math.max(0, (width - gridWidth) / 2);
   let markup = `
     <g transform="translate(${x}, ${y})">
-      <text x="${centerX}" y="0" text-anchor="middle" font-size="30" font-weight="600" fill="#111111">${sponsors.length} GitHub Sponsors</text>
+      <text x="${centerX}" y="0" text-anchor="middle" font-size="30" font-weight="600" fill="#777777">${sponsors.length} GitHub Sponsors</text>
   `;
   const clipDefs = [];
 
@@ -278,9 +278,9 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
     markup += `
       <g transform="translate(0, 48)">
         <rect width="${width}" height="140" rx="24" fill="rgba(0,0,0,0.02)" stroke="rgba(0,0,0,0.1)" />
-        <text x="${width / 2}" y="60" text-anchor="middle" font-size="22" font-weight="600" fill="#111111">Become the first GitHub Sponsor</text>
+        <text x="${width / 2}" y="60" text-anchor="middle" font-size="22" font-weight="600" fill="#777777">Become the first GitHub Sponsor</text>
         <a xlink:href="${SPONSORS_URL}" target="_blank">
-          <text x="${width / 2}" y="100" text-anchor="middle" font-size="16" fill="#111111">Click to support tw93</text>
+          <text x="${width / 2}" y="100" text-anchor="middle" font-size="16" fill="#777777">Click to support tw93</text>
         </a>
       </g>
     </g>`;
@@ -305,7 +305,7 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
             ? `<image href="${sponsor.avatar}" x="0" y="0" width="${avatarSize}" height="${avatarSize}" clip-path="url(#${clipId})" preserveAspectRatio="xMidYMid slice" />`
             : `<circle cx="${avatarSize / 2}" cy="${avatarSize / 2}" r="${avatarSize / 2}" fill="rgba(0,0,0,0.05)" />`
         }
-        <text x="${avatarSize / 2}" y="${avatarSize + 18}" text-anchor="middle" font-size="14" fill="#111111">${escapeText(sponsor.name).slice(0, 18)}</text>
+        <text x="${avatarSize / 2}" y="${avatarSize + 18}" text-anchor="middle" font-size="14" fill="#777777">${escapeText(sponsor.name).slice(0, 18)}</text>
       </g>
     `;
   });
@@ -330,7 +330,7 @@ function renderFriendTable({ friends, x, y, width }) {
   const centerX = width / 2;
   let markup = `
     <g transform="translate(${x}, ${y})">
-      <text x="${centerX}" y="${titleY}" text-anchor="middle" font-size="30" font-weight="600" fill="#111111">${friends.length} Tipping Friends</text>
+      <text x="${centerX}" y="${titleY}" text-anchor="middle" font-size="30" font-weight="600" fill="#777777">${friends.length} Tipping Friends</text>
       <g transform="translate(0, ${tableTop})">
   `;
 
@@ -340,7 +340,7 @@ function renderFriendTable({ friends, x, y, width }) {
     const col = index % columns;
     const textX = col * colWidth;
     const textY = row * rowHeight + rowHeight / 2 + 6;
-    markup += `<text x="${textX}" y="${textY}" font-size="16" fill="#111111">${escapeText(name)}</text>`;
+    markup += `<text x="${textX}" y="${textY}" font-size="16" fill="#777777">${escapeText(name)}</text>`;
   });
 
   markup += '</g></g>';
