@@ -112,33 +112,37 @@ class MPreviewView: WKWebView, WKUIDelegate {
     }
 
     private func setupScrollObserver() {
-        // Use JavaScript to monitor scroll events inside the WebView
+        // Use JavaScript with requestAnimationFrame for smoother scroll sync
         let script = """
             (function() {
-                let scrollTimeout;
+                let rafId = null;
+                let lastReportedRatio = -1;
 
                 function reportScroll() {
                     const doc = document.scrollingElement || document.documentElement || document.body;
                     const currentScroll = window.pageYOffset || doc.scrollTop || 0;
                     const maxScroll = Math.max(0, (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
 
-                    if (maxScroll === 0) {
-                        window.webkit.messageHandlers.previewScroll.postMessage(0);
-                    } else {
-                        const ratio = currentScroll / maxScroll;
+                    const ratio = maxScroll === 0 ? 0 : currentScroll / maxScroll;
+
+                    // Only report if ratio changed significantly (> 0.1% difference)
+                    if (Math.abs(ratio - lastReportedRatio) > 0.001) {
                         window.webkit.messageHandlers.previewScroll.postMessage(ratio);
+                        lastReportedRatio = ratio;
                     }
                 }
 
                 window.addEventListener('scroll', function() {
-                    // Immediately report scroll for instant feedback
-                    reportScroll();
+                    // Cancel previous animation frame to avoid duplicate work
+                    if (rafId !== null) {
+                        cancelAnimationFrame(rafId);
+                    }
 
-                    // Also debounce for final position
-                    clearTimeout(scrollTimeout);
-                    scrollTimeout = setTimeout(function() {
+                    // Use requestAnimationFrame for 60fps smooth sync
+                    rafId = requestAnimationFrame(function() {
                         reportScroll();
-                    }, 16);
+                        rafId = null;
+                    });
                 }, { passive: true });
             })();
         """
@@ -226,6 +230,48 @@ class MPreviewView: WKWebView, WKUIDelegate {
     }
 
     // MARK: - Helper Methods
+
+    private func buildUpdateScript(html: String, initializeMath: Bool, initializeDiagrams: Bool) -> String {
+        var initScripts: [String] = []
+
+        if initializeMath {
+            initScripts.append("""
+                if (typeof renderMathInElement === 'function') {
+                    renderMathInElement(document.body, {
+                        delimiters: [
+                            {left: "$$", right: "$$", display: true},
+                            {left: "$", right: "$", display: false},
+                            {left: "\\\\(", right: "\\\\)", display: false},
+                            {left: "\\\\[", right: "\\\\]", display: true}
+                        ],
+                        processEscapes: true,
+                        ignoredClasses: ['katex-display', 'katex', 'skip-math-dollar']
+                    });
+                }
+            """)
+        }
+
+        if initializeDiagrams {
+            initScripts.append("""
+                if (window.DiagramHandler && typeof window.DiagramHandler.initializeAll === 'function') {
+                    setTimeout(() => window.DiagramHandler.initializeAll(), 100);
+                }
+            """)
+        }
+
+        let initialization = initScripts.joined(separator: "\n")
+
+        return """
+            (function() {
+                const container = document.querySelector('.markdown-body') || document.body;
+                if (container) {
+                    container.innerHTML = `\(html)`;
+                    \(initialization)
+                }
+            })();
+        """
+    }
+
     // Internal so it can be used by extensions in other files
     func executeJavaScriptWhenReady(_ script: String, completion: (() -> Void)? = nil) {
         guard !script.isEmpty || completion != nil else { return }
@@ -315,14 +361,17 @@ class MPreviewView: WKWebView, WKUIDelegate {
                     .replacingOccurrences(of: "`", with: "\\`")
                     .replacingOccurrences(of: "$", with: "\\$")
 
-                let script = """
-                    (function() {
-                        const container = document.querySelector('.markdown-body') || document.body;
-                        if (container) {
-                            container.innerHTML = `\(escapedHTML)`;
-                        }
-                    })();
-                """
+                // Detect special content requiring renderer initialization
+                let needsMath = escapedHTML.contains("$$") || escapedHTML.contains("$")
+                let needsDiagrams = escapedHTML.contains("language-mermaid")
+                    || escapedHTML.contains("language-plantuml")
+                    || escapedHTML.contains("language-markmap")
+
+                let script = self.buildUpdateScript(
+                    html: escapedHTML,
+                    initializeMath: needsMath,
+                    initializeDiagrams: needsDiagrams
+                )
 
                 self.evaluateJavaScript(script) { [weak self] _, _ in
                     // Re-setup scroll observer after content update

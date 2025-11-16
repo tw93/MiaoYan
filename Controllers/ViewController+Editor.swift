@@ -612,9 +612,20 @@ extension ViewController {
                 }
                 let adjustedCursorOffset = HtmlManager.adjustCursorAfterRestore(originalOffset: formatResult.cursorOffset, protected: protectedContent, restored: newContent)
                 editArea.setSelectedRange(NSRange(location: adjustedCursorOffset, length: 0))
-                editAreaScroll.documentView?.scroll(NSPoint(x: 0, y: top))
                 formatContent = newContent
+
+                // Restore scroll position after cursor is set to prevent auto-scroll
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.editAreaScroll.contentView.setBoundsOrigin(NSPoint(x: 0, y: top))
+                    self.editAreaScroll.reflectScrolledClipView(self.editAreaScroll.contentView)
+                }
                 toast(message: I18n.str("🎉 Automatic typesetting succeeded~"))
+
+                // Trigger preview update if in Split View mode to re-render formulas and diagrams
+                if UserDefaultsManagement.splitViewMode, let previewView = editArea.markdownView {
+                    previewView.updateContent(note: note)
+                }
             case .failure(let error):
                 AppDelegate.trackError(error, context: "ViewController+Editor.format")
                 toast(message: I18n.str("❌ Formatting failed, please try again"))
