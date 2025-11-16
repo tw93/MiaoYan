@@ -189,7 +189,7 @@ async function fetchSponsors(token) {
 async function buildSvg({ sponsors, friends }) {
   const width = 1200;
   const outerPadding = 32;
-  const innerPadding = 48;
+  const innerPadding = 24;
   const contentWidth = width - outerPadding * 2 - innerPadding * 2;
   await embedAvatarData(sponsors);
 
@@ -214,7 +214,7 @@ async function buildSvg({ sponsors, friends }) {
   cursorY += friendTable.height + innerPadding;
 
   const boardHeight = cursorY;
-  const height = boardHeight + outerPadding * 2;
+  const height = boardHeight + outerPadding * 2 - 24;
 
   const svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img">
     <title>Tw93 Sponsors</title>
@@ -254,12 +254,20 @@ async function embedAvatarData(sponsors) {
 
 function renderSponsorGrid({ sponsors, x, y, width }) {
   const avatarSize = 82;
-  const gapX = 28;
+  const baseGap = 28;
   const gapY = 36;
-  const cols = Math.max(1, Math.floor((width - 40) / (avatarSize + gapX)));
+  let cols = Math.max(1, Math.floor((width - 40) / (avatarSize + baseGap)));
   const rows = Math.max(1, Math.ceil(sponsors.length / cols));
+  let spacing = baseGap;
+  if (cols > 1) {
+    spacing = (width - cols * avatarSize) / (cols - 1);
+    if (spacing < baseGap) {
+      spacing = baseGap;
+      cols = Math.max(1, Math.floor((width + baseGap) / (avatarSize + baseGap)));
+    }
+  }
   const gridWidth = sponsors.length
-    ? cols * avatarSize + Math.max(0, cols - 1) * gapX
+    ? cols * avatarSize + Math.max(0, cols - 1) * spacing
     : width;
   const gridHeight = sponsors.length
     ? rows * avatarSize + Math.max(0, rows - 1) * gapY
@@ -270,7 +278,7 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
   const offsetX = Math.max(0, (width - gridWidth) / 2);
   let markup = `
     <g transform="translate(${x}, ${y})">
-      <text x="${centerX}" y="0" text-anchor="middle" font-size="30" font-weight="600" fill="#777777">${sponsors.length} GitHub Sponsors</text>
+      <text x="${centerX}" y="0" text-anchor="middle" font-size="30" font-weight="600" fill="#666666">${sponsors.length} GitHub Sponsors</text>
   `;
   const clipDefs = [];
 
@@ -278,9 +286,9 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
     markup += `
       <g transform="translate(0, 48)">
         <rect width="${width}" height="140" rx="24" fill="rgba(0,0,0,0.02)" stroke="rgba(0,0,0,0.1)" />
-        <text x="${width / 2}" y="60" text-anchor="middle" font-size="22" font-weight="600" fill="#777777">Become the first GitHub Sponsor</text>
+        <text x="${width / 2}" y="60" text-anchor="middle" font-size="22" font-weight="600" fill="#666666">Become the first GitHub Sponsor</text>
         <a xlink:href="${SPONSORS_URL}" target="_blank">
-          <text x="${width / 2}" y="100" text-anchor="middle" font-size="16" fill="#777777">Click to support tw93</text>
+          <text x="${width / 2}" y="100" text-anchor="middle" font-size="16" fill="#666666">Click to support tw93</text>
         </a>
       </g>
     </g>`;
@@ -290,7 +298,7 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
   sponsors.forEach((sponsor, index) => {
     const col = index % cols;
     const row = Math.floor(index / cols);
-    const avatarX = offsetX + col * (avatarSize + gapX);
+    const avatarX = offsetX + col * (avatarSize + spacing);
     const avatarY = titleHeight + 24 + row * (avatarSize + gapY);
     const clipId = `clip-grid-${index}`;
     clipDefs.push(
@@ -305,7 +313,7 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
             ? `<image href="${sponsor.avatar}" x="0" y="0" width="${avatarSize}" height="${avatarSize}" clip-path="url(#${clipId})" preserveAspectRatio="xMidYMid slice" />`
             : `<circle cx="${avatarSize / 2}" cy="${avatarSize / 2}" r="${avatarSize / 2}" fill="rgba(0,0,0,0.05)" />`
         }
-        <text x="${avatarSize / 2}" y="${avatarSize + 18}" text-anchor="middle" font-size="14" fill="#777777">${escapeText(sponsor.name).slice(0, 18)}</text>
+        <text x="${avatarSize / 2}" y="${avatarSize + 18}" text-anchor="middle" font-size="14" fill="#666666">${escapeText(sponsor.name).slice(0, 18)}</text>
       </g>
     `;
   });
@@ -324,13 +332,13 @@ function renderFriendTable({ friends, x, y, width }) {
   const tableTop = 44;
   const columns = 8;
   const colWidth = width / columns;
-  const rowHeight = 36;
+  const rowHeight = 32;
   const rows = Math.max(1, Math.ceil(friends.length / columns));
   const tableHeight = rows * rowHeight;
   const centerX = width / 2;
   let markup = `
     <g transform="translate(${x}, ${y})">
-      <text x="${centerX}" y="${titleY}" text-anchor="middle" font-size="30" font-weight="600" fill="#777777">${friends.length} Tipping Friends</text>
+      <text x="${centerX}" y="${titleY}" text-anchor="middle" font-size="30" font-weight="600" fill="#666666">${friends.length} Tipping Friends</text>
       <g transform="translate(0, ${tableTop})">
   `;
 
@@ -340,7 +348,7 @@ function renderFriendTable({ friends, x, y, width }) {
     const col = index % columns;
     const textX = col * colWidth;
     const textY = row * rowHeight + rowHeight / 2 + 6;
-    markup += `<text x="${textX}" y="${textY}" font-size="16" fill="#777777">${escapeText(name)}</text>`;
+    markup += `<text x="${textX}" y="${textY}" font-size="16" fill="#666666">${escapeText(name)}</text>`;
   });
 
   markup += '</g></g>';
