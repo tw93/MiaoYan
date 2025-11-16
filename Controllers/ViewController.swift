@@ -58,7 +58,6 @@ class ViewController:
     var editorContentSplitView: EditorContentSplitView?
     var previewScrollView: EditorScrollView?
     var splitScrollObserver: NSObjectProtocol?
-    var splitPreviewScrollObserver: NSObjectProtocol?
     var isProgrammaticSplitScroll = false
     var needsEditorModeUpdateAfterPreview = false
     @IBOutlet var search: SearchTextField!

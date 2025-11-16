@@ -48,6 +48,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     public var markdownView: MPreviewView?
     public static var imagesLoaderQueue = OperationQueue()
     private var imagePreviewManager: ImagePreviewManager?
+    nonisolated(unsafe) private var splitViewUpdateTimer: Timer?
     private var clipboardManager: ClipboardManager?
     private var menuManager: EditorMenuManager?
     private var defaultVerticalInset: CGFloat = 0
@@ -90,6 +91,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     deinit {
         linkHighlightTimer?.invalidate()
         linkHighlightTimer = nil
+        splitViewUpdateTimer?.invalidate()
+        splitViewUpdateTimer = nil
     }
 
     override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn flag: Bool) {
@@ -523,6 +526,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
     public func clear() {
         hideSearchBar()
+        splitViewUpdateTimer?.invalidate()
+        splitViewUpdateTimer = nil
         textStorage?.setAttributedString(NSAttributedString())
         markdownView?.isHidden = true
         imagePreviewManager?.hideImagePreview()
@@ -616,9 +621,17 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             handleSearchInput(editorLastSearchText, jumpToFirstMatch: false)
         }
 
-        // Update preview in split mode
-        if UserDefaultsManagement.splitViewMode, let note = EditTextView.note {
-            markdownView?.load(note: note, force: false)
+        // Update preview in split mode with debounce (300ms)
+        if UserDefaultsManagement.splitViewMode, EditTextView.note != nil {
+            splitViewUpdateTimer?.invalidate()
+            splitViewUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
+                Task { @MainActor [weak self] in
+                    guard let self = self else { return }
+                    if let note = EditTextView.note {
+                        self.markdownView?.updateContent(note: note)
+                    }
+                }
+            }
         }
     }
 

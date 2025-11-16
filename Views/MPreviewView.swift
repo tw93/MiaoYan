@@ -19,6 +19,10 @@ class MPreviewView: WKWebView, WKUIDelegate {
             }
             return await owner.handleNavigationAction(navigationAction)
         }
+
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            owner?.webView(webView, didFinish: navigation)
+        }
     }
 
     private lazy var navigationProxy = NavigationDelegateProxy(owner: self)
@@ -27,6 +31,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     public static var template: String?
     private static var bundleInitialized = false
     private static let initQueue = DispatchQueue(label: "preview.init", qos: .userInitiated)
+    public var onScrollChange: ((CGFloat) -> Void)?
     init(frame: CGRect, note: Note, closure: MPreviewViewClosure?) {
         self.closure = closure
         let userContentController = WKUserContentController()
@@ -34,6 +39,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         userContentController.add(HandlerSelection(), name: "newSelectionDetected")
         userContentController.add(HandlerCodeCopy(), name: "notification")
         userContentController.add(HandlerRevealBackgroundColor(), name: "revealBackgroundColor")
+        userContentController.add(HandlerPreviewScroll(), name: "previewScroll")
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = userContentController
         // macOS Sequoia beta: Simplified configuration to avoid sandbox conflicts
@@ -103,6 +109,41 @@ class MPreviewView: WKWebView, WKUIDelegate {
     required init?(coder: NSCoder) {
         AppDelegate.trackError(NSError(domain: "InitError", code: 1, userInfo: [NSLocalizedDescriptionKey: "MPreviewView does not support NSCoder initialization"]), context: "MPreviewView.init")
         return nil
+    }
+
+    private func setupScrollObserver() {
+        // Use JavaScript to monitor scroll events inside the WebView
+        let script = """
+            (function() {
+                let scrollTimeout;
+
+                function reportScroll() {
+                    const doc = document.scrollingElement || document.documentElement || document.body;
+                    const currentScroll = window.pageYOffset || doc.scrollTop || 0;
+                    const maxScroll = Math.max(0, (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
+
+                    if (maxScroll === 0) {
+                        window.webkit.messageHandlers.previewScroll.postMessage(0);
+                    } else {
+                        const ratio = currentScroll / maxScroll;
+                        window.webkit.messageHandlers.previewScroll.postMessage(ratio);
+                    }
+                }
+
+                window.addEventListener('scroll', function() {
+                    // Immediately report scroll for instant feedback
+                    reportScroll();
+
+                    // Also debounce for final position
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(function() {
+                        reportScroll();
+                    }, 16);
+                }, { passive: true });
+            })();
+        """
+
+        evaluateJavaScript(script, completionHandler: nil)
     }
 
     // MARK: - Appearance Helpers
@@ -180,6 +221,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         closure?()
 
+        // Set up scroll observation after WebView is fully loaded
+        setupScrollObserver()
     }
 
     // MARK: - Helper Methods
@@ -210,9 +253,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 window.scrollTo(0, target);
             })();
         """
-        DispatchQueue.main.async {
-            self.executeJavaScriptWhenReady(script)
-        }
+        // Direct execution without async wrapper for smoother scrolling
+        self.evaluateJavaScript(script, completionHandler: nil)
     }
     private func handleNavigationAction(_ navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
         guard let url = navigationAction.request.url else {
@@ -248,6 +290,45 @@ class MPreviewView: WKWebView, WKUIDelegate {
                     let basicHTML = "<html><body><p>Failed to load preview</p></body></html>"
                     self.loadHTMLString(basicHTML, baseURL: nil)
                 }
+            }
+        }
+    }
+
+    // Lightweight content update for split view (preserves scroll position)
+    public func updateContent(note: Note) {
+        Task.detached { [weak self, note] in
+            let markdownString = await note.getPrettifiedContent()
+            let imagesStorage = await note.project.url
+
+            await MainActor.run { [weak self] in
+                guard let self = self else { return }
+
+                guard let htmlString = renderMarkdownHTML(markdown: markdownString) else {
+                    return
+                }
+
+                let processedHtmlString = self.loadImages(imagesStorage: imagesStorage, html: htmlString)
+
+                // Escape HTML for JavaScript injection
+                let escapedHTML = processedHtmlString
+                    .replacingOccurrences(of: "\\", with: "\\\\")
+                    .replacingOccurrences(of: "`", with: "\\`")
+                    .replacingOccurrences(of: "$", with: "\\$")
+
+                let script = """
+                    (function() {
+                        const container = document.querySelector('.markdown-body') || document.body;
+                        if (container) {
+                            container.innerHTML = `\(escapedHTML)`;
+                        }
+                    })();
+                """
+
+                self.evaluateJavaScript(script) { [weak self] _, _ in
+                    // Re-setup scroll observer after content update
+                    self?.setupScrollObserver()
+                }
+                self.note = note
             }
         }
     }
@@ -446,6 +527,31 @@ class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
         } else {
             vc.sidebarSplitView.setValue(NSColor(css: message), forKey: "dividerColor")
             vc.splitView.setValue(NSColor(css: message), forKey: "dividerColor")
+        }
+    }
+}
+
+class HandlerPreviewScroll: NSObject, WKScriptMessageHandler {
+    func userContentController(
+        _ userContentController: WKUserContentController,
+        didReceive message: WKScriptMessage
+    ) {
+        guard let previewView = message.webView as? MPreviewView else {
+            return
+        }
+
+        if let ratio = message.body as? Double {
+            Task { @MainActor in
+                previewView.onScrollChange?(CGFloat(ratio))
+            }
+        } else if let ratio = message.body as? CGFloat {
+            Task { @MainActor in
+                previewView.onScrollChange?(ratio)
+            }
+        } else if let ratio = message.body as? Int {
+            Task { @MainActor in
+                previewView.onScrollChange?(CGFloat(ratio))
+            }
         }
     }
 }
