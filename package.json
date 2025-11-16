@@ -9,6 +9,7 @@
     "anywhere": "anywhere",
     "dev": "npm-run-all --parallel anywhere watch",
     "start": "npm run dev",
+    "sponsors": "node scripts/generate-sponsors.js",
     "prepare": "husky"
   },
   "husky": {

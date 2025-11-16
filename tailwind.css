@@ -7,10 +7,10 @@
 }
 
 .i18n-miao-people-desc:before {
-  content: '数据手工更新，当前 212 位朋友喜欢汤圆可乐';
+  content: '数据每日自动更新，当前 211 位朋友喜欢汤圆可乐';
 }
 [lang='en'] .i18n-miao-people-desc:before {
-  content: 'Weekly manual update, 212 friends like TangYuan and Coke';
+  content: 'Daily sync · 211 friends like TangYuan & Coke';
 }
 
 body {
@@ -56,13 +56,6 @@ body {
 }
 [lang='en'] .i18n-share-twitter:before {
   content: 'Share To Twitter';
-}
-
-.i18n-miao-people-nums:before {
-  content: var(--data-friend);
-}
-[lang='en'] .i18n-miao-people-nums:before {
-  content: var(--data-friend);
 }
 
 .i18n-home-href:before {
