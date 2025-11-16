@@ -43,10 +43,11 @@
 
 ## サポート
 
-- MiaoYan がワークフローを改善した場合は、[プロジェクトのサポート](https://miaoyan.app/cats.html)をご検討ください
-- GitHub でこのリポジトリにスターを付ける
-- 他の人と [MiaoYan をシェア](https://twitter.com/intent/tweet?text=%23MiaoYan%20-%20macOS%20向けの軽量%20Markdown%20エディタ、ネイティブ%20Swift%20で構築、シンタックスハイライト、ダークモード、プレゼンテーションモードを搭載。&url=https://github.com/tw93/MiaoYan)
-- [@HiTw93](https://twitter.com/HiTw93) をフォローして更新情報を入手、または [Telegram グループ](https://t.me/+GclQS9ZnxyI2ODQ1)に参加
+<a href="https://miaoyan.app/cats.html"><img src="https://miaoyan.app/assets/sponsors.svg" width="1000px" /></a>
+
+1. 湯円とコーラという 2 匹の猫と暮らしています。MiaoYan が少しでもあなたの暮らしを良くしてくれたなら、ぜひ彼女たちに <a href="https://miaoyan.app/cats.html?name=Pake" target="_blank">缶詰をごちそうしてください 🥩</a>。
+2. MiaoYan を気に入っていただけたら、GitHub でスターを付けていただき、気の合う友人にもご紹介ください。
+3. 最新情報は [Twitter](https://twitter.com/HiTw93) でフォローするか、[Telegram グループ](https://t.me/+GclQS9ZnxyI2ODQ1) に参加してコミュニティで交流しましょう。
 
 ## 謝辞
 

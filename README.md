@@ -43,10 +43,11 @@
 
 ## Support
 
-- If MiaoYan improves your workflow, consider [supporting the project](https://miaoyan.app/cats.html)
-- Star this repository on GitHub
-- [Share MiaoYan](https://twitter.com/intent/tweet?text=%23MiaoYan%20-%20a%20lightweight%20Markdown%20editor%20for%20macOS,%20built%20with%20native%20Swift,%20featuring%20syntax%20highlighting,%20dark%20mode,%20and%20presentation%20mode.&url=https://github.com/tw93/MiaoYan) with others
-- Follow [@HiTw93](https://twitter.com/HiTw93) for updates or join our [Telegram group](https://t.me/+GclQS9ZnxyI2ODQ1)
+<a href="https://miaoyan.app/cats.html"><img src="https://miaoyan.app/assets/sponsors.svg" width="1000px" /></a>
+
+1. I have two cats named Tangyuan and Cola. If MiaoYan brightens your day, feel free to <a href="https://miaoyan.app/cats.html?name=Pake" target="_blank">treat them to some canned food 🥩</a>.
+2. If you enjoy MiaoYan, please star the project on GitHub and share it with friends who might love it too.
+3. Follow me on [Twitter](https://twitter.com/HiTw93) for the latest updates or join the [Telegram group](https://t.me/+GclQS9ZnxyI2ODQ1) to chat with the community.
 
 ## Acknowledgments
 
