@@ -65,7 +65,6 @@ extension ViewController {
               previewScrollView != nil else {
             return
         }
-
         // UX: Ensure a note is selected when entering split mode (prefer last selected note)
         ensureNoteSelection(preferLastSelected: true)
 
@@ -673,6 +672,7 @@ extension ViewController {
             markdownView.autoresizingMask = [.width, .height]
             editArea.markdownView = markdownView
         }
+
         guard let markdownView = editArea.markdownView else {
             return
         }
@@ -687,42 +687,36 @@ extension ViewController {
         previewScroll.isHidden = hidden
     }
 
-    private enum SplitScrollSource {
-        case editor
-        case preview
-    }
-
     private func startSplitScrollSync() {
         guard UserDefaultsManagement.splitViewMode,
               splitScrollObserver == nil,
-              let editorClip = editAreaScroll?.contentView as? NSClipView,
-              let previewClip = previewScrollView?.contentView as? NSClipView else { return }
+              let editorClip = editAreaScroll?.contentView as? NSClipView else {
+            return
+        }
 
         editorClip.postsBoundsChangedNotifications = true
-        previewClip.postsBoundsChangedNotifications = true
 
-        // Callbacks run on main queue (queue: .main), use assumeIsolated for MainActor methods
+        // Monitor editor scrolling
         splitScrollObserver = NotificationCenter.default.addObserver(
             forName: NSView.boundsDidChangeNotification,
             object: editorClip,
             queue: .main
         ) { [weak self] _ in
             MainActor.assumeIsolated {
-                self?.handleSplitScrollEvent(.editor)
+                self?.handleSplitScrollEvent()
             }
         }
 
-        splitPreviewScrollObserver = NotificationCenter.default.addObserver(
-            forName: NSView.boundsDidChangeNotification,
-            object: previewClip,
-            queue: .main
-        ) { [weak self] _ in
-            MainActor.assumeIsolated {
-                self?.handleSplitScrollEvent(.preview)
+        // Monitor preview (WebView) scrolling via callback
+        if let markdownView = editArea.markdownView {
+            markdownView.onScrollChange = { [weak self] ratio in
+                Task { @MainActor [weak self] in
+                    self?.handlePreviewScroll(ratio: ratio)
+                }
             }
         }
 
-        scheduleSplitScrollSync(from: .editor)
+        scheduleSplitScrollSync()
     }
 
     private func stopSplitScrollSync() {
@@ -730,42 +724,43 @@ extension ViewController {
             NotificationCenter.default.removeObserver(observer)
             splitScrollObserver = nil
         }
-        if let observer = splitPreviewScrollObserver {
-            NotificationCenter.default.removeObserver(observer)
-            splitPreviewScrollObserver = nil
-        }
+        // Clear preview scroll callback
+        editArea.markdownView?.onScrollChange = nil
         isProgrammaticSplitScroll = false
     }
 
-    private func handleSplitScrollEvent(_ source: SplitScrollSource) {
+    private func handleSplitScrollEvent() {
         guard !isProgrammaticSplitScroll else { return }
-        scheduleSplitScrollSync(from: source)
+        scheduleSplitScrollSync()
     }
 
-    private func scheduleSplitScrollSync(from source: SplitScrollSource) {
-        guard UserDefaultsManagement.splitViewMode else { return }
-        let ratio: CGFloat
-        switch source {
-        case .editor:
-            ratio = editorScrollRatio()
-        case .preview:
-            ratio = previewScrollRatio()
+    private func handlePreviewScroll(ratio: CGFloat) {
+        guard !isProgrammaticSplitScroll, UserDefaultsManagement.splitViewMode else {
+            return
         }
 
+        isProgrammaticSplitScroll = true
+        scrollEditor(to: ratio)
+
+        // Immediate reset for faster response (scroll events are already debounced in JS)
+        DispatchQueue.main.async { [weak self] in
+            self?.isProgrammaticSplitScroll = false
+        }
+    }
+
+    private func scheduleSplitScrollSync() {
+        guard UserDefaultsManagement.splitViewMode else { return }
+        let ratio = editorScrollRatio()
         let clampedRatio = max(0, min(ratio, 1))
         // Performance: Execute immediately without async dispatch to reduce scroll lag
-        applySplitScrollSync(ratio: clampedRatio, from: source)
+        applySplitScrollSync(ratio: clampedRatio)
     }
 
-    private func applySplitScrollSync(ratio: CGFloat, from source: SplitScrollSource) {
+    private func applySplitScrollSync(ratio: CGFloat) {
         guard UserDefaultsManagement.splitViewMode else { return }
         isProgrammaticSplitScroll = true
-        switch source {
-        case .editor:
-            editArea.markdownView?.scrollToPosition(pre: ratio)
-        case .preview:
-            scrollEditor(to: ratio)
-        }
+        // Editor scrolled -> sync to preview
+        editArea.markdownView?.scrollToPosition(pre: ratio)
         // Performance: Use ~60fps frame time (0.016s) instead of 0.05s for smoother sync
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.016) { [weak self] in
             self?.isProgrammaticSplitScroll = false
@@ -776,24 +771,29 @@ extension ViewController {
         getScrollTop()
     }
 
-    private func previewScrollRatio() -> CGFloat {
-        guard let previewScroll = previewScrollView,
-              let documentView = previewScroll.documentView else { return 0 }
-        let offset = documentView.bounds.height - previewScroll.contentSize.height
-        guard offset > 0 else { return 0 }
-        let current = previewScroll.contentView.bounds.origin.y
-        return current / offset
-    }
-
     private func scrollEditor(to ratio: CGFloat) {
-        guard let documentView = editAreaScroll.documentView else { return }
+        guard let documentView = editAreaScroll.documentView else {
+            return
+        }
         let contentHeight = editAreaScroll.contentSize.height
         let scrollHeight = documentView.bounds.height
         let offset = max(scrollHeight - contentHeight, 0)
-        guard offset > 0 else { return }
+
+        guard offset > 0 else {
+            return
+        }
+
         let targetY = offset * ratio
-        // Performance: Direct setBoundsOrigin (no animator) for immediate, jank-free scrolling
-        editAreaScroll.contentView.setBoundsOrigin(NSPoint(x: 0, y: targetY))
+        let currentY = editAreaScroll.contentView.bounds.origin.y
+
+        // Only scroll if there's a meaningful difference (> 0.5 pixels)
+        guard abs(targetY - currentY) > 0.5 else {
+            return
+        }
+
+        // Direct scroll for instant response
+        let newOrigin = NSPoint(x: 0, y: targetY)
+        editAreaScroll.contentView.setBoundsOrigin(newOrigin)
         editAreaScroll.reflectScrolledClipView(editAreaScroll.contentView)
     }
 
