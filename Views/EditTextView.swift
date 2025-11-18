@@ -65,6 +65,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     public var currentSearchQuery: String? {
         editorLastSearchText.isEmpty ? nil : editorLastSearchText
     }
+    // Tracks whether the last ESC key press was consumed by the IME
+    private var shouldIgnoreEscapeNavigation = false
     override var textContainerOrigin: NSPoint {
         var origin = super.textContainerOrigin
         if bottomPadding > 0 {
@@ -985,6 +987,13 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
 
         if event.keyCode == kVK_Escape {
+            if hasMarkedText() {
+                shouldIgnoreEscapeNavigation = true
+                super.keyDown(with: event)
+                return
+            }
+            shouldIgnoreEscapeNavigation = false
+
             if isSearchBarVisible {
                 hideSearchBar()
                 return
@@ -1121,10 +1130,17 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     override func keyUp(with event: NSEvent) {
         if event.keyCode == kVK_Escape {
+            if shouldIgnoreEscapeNavigation {
+                shouldIgnoreEscapeNavigation = false
+                super.keyUp(with: event)
+                return
+            }
+
             guard let vc = window?.contentViewController as? ViewController else {
                 super.keyUp(with: event)
                 return
             }
+            // Skip navigation when the user is cancelling an active IME composition.
             vc.notesTableView.window?.makeFirstResponder(vc.notesTableView)
             if let selectedNote = EditTextView.note,
                 let noteIndex = vc.notesTableView.getIndex(selectedNote)
