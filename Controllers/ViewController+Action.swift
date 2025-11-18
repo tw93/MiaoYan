@@ -373,19 +373,19 @@ extension ViewController {
     @IBAction func noteCopy(_ sender: Any) {
         guard let responder = view.window?.firstResponder else { return }
 
-        if responder(responder, belongsTo: editArea) {
+        if self.responder(responder, belongsTo: editArea) {
             editArea.copy(sender)
             return
         }
 
         if let preview = editArea.markdownView,
-           responder(responder, belongsTo: preview)
+           self.responder(responder, belongsTo: preview)
         {
             preview.copySelectionToPasteboard()
             return
         }
 
-        if responder(responder, belongsTo: notesTableView) {
+        if self.responder(responder, belongsTo: notesTableView) {
             saveTextAtClipboard()
         }
     }
