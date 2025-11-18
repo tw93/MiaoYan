@@ -159,7 +159,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     override func mouseMoved(with event: NSEvent) {
-        guard window?.contentViewController as? ViewController != nil else {
+        guard window?.contentViewController is ViewController else {
             imagePreviewManager?.hideImagePreview()
             return
         }
@@ -455,7 +455,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             }
         }
         // Render preview content in preview, PPT, presentation, or split modes
-        let shouldRenderPreview = UserDefaultsManagement.preview
+        let shouldRenderPreview =
+            UserDefaultsManagement.preview
             || UserDefaultsManagement.magicPPT
             || UserDefaultsManagement.presentation
             || UserDefaultsManagement.splitViewMode
@@ -1089,7 +1090,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             }
         }
 
-        if characters == "\u{1f}\u{a}" { // Cmd+Enter etc fallback
+        if characters == "\u{1f}\u{a}" {  // Cmd+Enter etc fallback
             return super.performKeyEquivalent(with: event)
         }
 

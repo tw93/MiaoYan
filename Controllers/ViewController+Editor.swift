@@ -62,7 +62,8 @@ extension ViewController {
 
     private func enableSplitViewMode() {
         guard let contentSplitView = editorContentSplitView,
-              previewScrollView != nil else {
+            previewScrollView != nil
+        else {
             return
         }
         // UX: Ensure a note is selected when entering split mode (prefer last selected note)
@@ -669,13 +670,15 @@ extension ViewController {
 
         if editArea.markdownView == nil {
             let frame = previewScroll.bounds
-            let fallbackNote = notesTableView.getSelectedNote() ?? {
-                let tempProject = getSidebarProject() ?? storage.noteList.first?.project
-                guard let project = tempProject else { return nil }
-                let tempNote = Note(name: "", project: project, type: .markdown)
-                tempNote.content = NSMutableAttributedString(string: "")
-                return tempNote
-            }()
+            let fallbackNote =
+                notesTableView.getSelectedNote()
+                ?? {
+                    let tempProject = getSidebarProject() ?? storage.noteList.first?.project
+                    guard let project = tempProject else { return nil }
+                    let tempNote = Note(name: "", project: project, type: .markdown)
+                    tempNote.content = NSMutableAttributedString(string: "")
+                    return tempNote
+                }()
             guard let note = fallbackNote else {
                 return
             }
@@ -700,8 +703,9 @@ extension ViewController {
 
     private func startSplitScrollSync() {
         guard UserDefaultsManagement.splitViewMode,
-              splitScrollObserver == nil,
-              let editorClip = editAreaScroll?.contentView as? NSClipView else {
+            splitScrollObserver == nil,
+            let editorClip = editAreaScroll?.contentView as? NSClipView
+        else {
             return
         }
 

@@ -66,13 +66,13 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="mP6-CN-t7D"/>
-                                        <menuItem title="Empty Trash" identifier="emptyTrashMenu" id="G9H-Lg-TXE">
+                                        <menuItem title="Clean Unused Attachments" identifier="cleanAttachmentsMenu" id="G9H-Lg-TXE">
                                             <string key="keyEquivalent" base64-UTF8="YES">
 CA
 </string>
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" option="YES" command="YES"/>
                                             <connections>
-                                                <action selector="emptyTrash:" target="L4m-js-agn" id="d27-Z5-1ap"/>
+                                                <action selector="cleanUnusedAttachments:" target="L4m-js-agn" id="d27-Z5-1ap"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Quit MiaoYan" keyEquivalent="q" id="4sb-4s-VLi">

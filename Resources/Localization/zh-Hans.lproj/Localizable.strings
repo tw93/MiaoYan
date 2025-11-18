@@ -119,6 +119,14 @@
 
 "🎉 Saved to Downloads folder~" = "🎉 已导出到下载目录~";
 
+/* Clean attachments */
+"Clean Orphan Attachments" = "清理孤立附件";
+"Detected %d unused attachment(s). Move them to Trash?" = "检测到%d个未被引用的附件，是否移动到垃圾桶？";
+"No orphan attachments found" = "没有检测到孤立附件";
+"Removed %d unused attachment(s)" = "已清理%d个无引用附件";
+"Some attachments could not be removed" = "部分附件无法清理";
+"Clean" = "清理";
+
 "🙊 Starting export~" = "🙊 开始导出中~";
 
 "🍭 Image upload in progress~" = "🍭 图片上传中~";

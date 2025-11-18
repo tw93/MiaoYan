@@ -327,8 +327,9 @@ class ViewController:
     ///   - preserveScrollPosition: If true, skips forcing the note list to scroll the selected row into view
     func ensureNoteSelection(preferLastSelected: Bool = false, preserveScrollPosition: Bool = false) {
         guard notesTableView.selectedRow == -1,
-              !notesTableView.noteList.isEmpty,
-              !UserDefaultsManagement.isSingleMode else {
+            !notesTableView.noteList.isEmpty,
+            !UserDefaultsManagement.isSingleMode
+        else {
             return
         }
 
@@ -336,9 +337,9 @@ class ViewController:
         var restoredLastSelection = false
 
         if preferLastSelected,
-           let lastURL = UserDefaultsManagement.lastSelectedURL,
-           let lastNote = storage.getBy(url: lastURL),
-           let index = notesTableView.getIndex(lastNote)
+            let lastURL = UserDefaultsManagement.lastSelectedURL,
+            let lastNote = storage.getBy(url: lastURL),
+            let index = notesTableView.getIndex(lastNote)
         {
             targetIndex = index
             restoredLastSelection = true
@@ -412,7 +413,7 @@ class ViewController:
         if let title = menuItem.menu?.identifier?.rawValue {
             switch title {
             case "miaoyanMenu":
-                if menuItem.identifier?.rawValue == "emptyTrashMenu" {
+                if menuItem.identifier?.rawValue == "cleanAttachmentsMenu" {
                     menuItem.keyEquivalentModifierMask = [.command, .option, .shift]
                     return canUseMenu
                 }

@@ -114,38 +114,38 @@ class MPreviewView: WKWebView, WKUIDelegate {
     private func setupScrollObserver() {
         // Use JavaScript with requestAnimationFrame for smoother scroll sync
         let script = """
-            (function() {
-                let rafId = null;
-                let lastReportedRatio = -1;
+                (function() {
+                    let rafId = null;
+                    let lastReportedRatio = -1;
 
-                function reportScroll() {
-                    const doc = document.scrollingElement || document.documentElement || document.body;
-                    const currentScroll = window.pageYOffset || doc.scrollTop || 0;
-                    const maxScroll = Math.max(0, (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
+                    function reportScroll() {
+                        const doc = document.scrollingElement || document.documentElement || document.body;
+                        const currentScroll = window.pageYOffset || doc.scrollTop || 0;
+                        const maxScroll = Math.max(0, (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
 
-                    const ratio = maxScroll === 0 ? 0 : currentScroll / maxScroll;
+                        const ratio = maxScroll === 0 ? 0 : currentScroll / maxScroll;
 
-                    // Only report if ratio changed significantly (> 0.1% difference)
-                    if (Math.abs(ratio - lastReportedRatio) > 0.001) {
-                        window.webkit.messageHandlers.previewScroll.postMessage(ratio);
-                        lastReportedRatio = ratio;
-                    }
-                }
-
-                window.addEventListener('scroll', function() {
-                    // Cancel previous animation frame to avoid duplicate work
-                    if (rafId !== null) {
-                        cancelAnimationFrame(rafId);
+                        // Only report if ratio changed significantly (> 0.1% difference)
+                        if (Math.abs(ratio - lastReportedRatio) > 0.001) {
+                            window.webkit.messageHandlers.previewScroll.postMessage(ratio);
+                            lastReportedRatio = ratio;
+                        }
                     }
 
-                    // Use requestAnimationFrame for 60fps smooth sync
-                    rafId = requestAnimationFrame(function() {
-                        reportScroll();
-                        rafId = null;
-                    });
-                }, { passive: true });
-            })();
-        """
+                    window.addEventListener('scroll', function() {
+                        // Cancel previous animation frame to avoid duplicate work
+                        if (rafId !== null) {
+                            cancelAnimationFrame(rafId);
+                        }
+
+                        // Use requestAnimationFrame for 60fps smooth sync
+                        rafId = requestAnimationFrame(function() {
+                            reportScroll();
+                            rafId = null;
+                        });
+                    }, { passive: true });
+                })();
+            """
 
         evaluateJavaScript(script, completionHandler: nil)
     }
@@ -216,21 +216,21 @@ class MPreviewView: WKWebView, WKUIDelegate {
 
     func copySelectionToPasteboard() {
         let script = """
-            (function() {
-                const selection = window.getSelection();
-                if (!selection || selection.rangeCount === 0) {
-                    return { text: "", html: "" };
-                }
-                const text = selection.toString() || "";
-                const range = selection.getRangeAt(0).cloneContents();
-                const container = document.createElement('div');
-                container.appendChild(range);
-                return {
-                    text: text,
-                    html: container.innerHTML || ""
-                };
-            })();
-        """
+                (function() {
+                    const selection = window.getSelection();
+                    if (!selection || selection.rangeCount === 0) {
+                        return { text: "", html: "" };
+                    }
+                    const text = selection.toString() || "";
+                    const range = selection.getRangeAt(0).cloneContents();
+                    const container = document.createElement('div');
+                    container.appendChild(range);
+                    return {
+                        text: text,
+                        html: container.innerHTML || ""
+                    };
+                })();
+            """
 
         evaluateJavaScript(script) { result, _ in
             guard let payload = result as? [String: Any] else { return }
@@ -272,41 +272,43 @@ class MPreviewView: WKWebView, WKUIDelegate {
         var initScripts: [String] = []
 
         if initializeMath {
-            initScripts.append("""
-                if (typeof renderMathInElement === 'function') {
-                    renderMathInElement(document.body, {
-                        delimiters: [
-                            {left: "$$", right: "$$", display: true},
-                            {left: "$", right: "$", display: false},
-                            {left: "\\\\(", right: "\\\\)", display: false},
-                            {left: "\\\\[", right: "\\\\]", display: true}
-                        ],
-                        processEscapes: true,
-                        ignoredClasses: ['katex-display', 'katex', 'skip-math-dollar']
-                    });
-                }
-            """)
+            initScripts.append(
+                """
+                    if (typeof renderMathInElement === 'function') {
+                        renderMathInElement(document.body, {
+                            delimiters: [
+                                {left: "$$", right: "$$", display: true},
+                                {left: "$", right: "$", display: false},
+                                {left: "\\\\(", right: "\\\\)", display: false},
+                                {left: "\\\\[", right: "\\\\]", display: true}
+                            ],
+                            processEscapes: true,
+                            ignoredClasses: ['katex-display', 'katex', 'skip-math-dollar']
+                        });
+                    }
+                """)
         }
 
         if initializeDiagrams {
-            initScripts.append("""
-                if (window.DiagramHandler && typeof window.DiagramHandler.initializeAll === 'function') {
-                    setTimeout(() => window.DiagramHandler.initializeAll(), 100);
-                }
-            """)
+            initScripts.append(
+                """
+                    if (window.DiagramHandler && typeof window.DiagramHandler.initializeAll === 'function') {
+                        setTimeout(() => window.DiagramHandler.initializeAll(), 100);
+                    }
+                """)
         }
 
         let initialization = initScripts.joined(separator: "\n")
 
         return """
-            (function() {
-                const container = document.querySelector('.markdown-body') || document.body;
-                if (container) {
-                    container.innerHTML = `\(html)`;
-                    \(initialization)
-                }
-            })();
-        """
+                (function() {
+                    const container = document.querySelector('.markdown-body') || document.body;
+                    if (container) {
+                        container.innerHTML = `\(html)`;
+                        \(initialization)
+                    }
+                })();
+            """
     }
 
     // Internal so it can be used by extensions in other files
@@ -329,13 +331,13 @@ class MPreviewView: WKWebView, WKUIDelegate {
     public func scrollToPosition(pre: CGFloat) {
         let clamped = Double(max(min(pre, 1), 0))
         let script = """
-            (function() {
-                const doc = document.scrollingElement || document.documentElement || document.body;
-                const maxScroll = Math.max(0, (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
-                const target = maxScroll * \(clamped);
-                window.scrollTo(0, target);
-            })();
-        """
+                (function() {
+                    const doc = document.scrollingElement || document.documentElement || document.body;
+                    const maxScroll = Math.max(0, (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
+                    const target = maxScroll * \(clamped);
+                    window.scrollTo(0, target);
+                })();
+            """
         // Direct execution without async wrapper for smoother scrolling
         self.evaluateJavaScript(script, completionHandler: nil)
     }
@@ -393,14 +395,16 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 let processedHtmlString = self.loadImages(imagesStorage: imagesStorage, html: htmlString)
 
                 // Escape HTML for JavaScript injection
-                let escapedHTML = processedHtmlString
+                let escapedHTML =
+                    processedHtmlString
                     .replacingOccurrences(of: "\\", with: "\\\\")
                     .replacingOccurrences(of: "`", with: "\\`")
                     .replacingOccurrences(of: "$", with: "\\$")
 
                 // Detect special content requiring renderer initialization
                 let needsMath = escapedHTML.contains("$$") || escapedHTML.contains("$")
-                let needsDiagrams = escapedHTML.contains("language-mermaid")
+                let needsDiagrams =
+                    escapedHTML.contains("language-mermaid")
                     || escapedHTML.contains("language-plantuml")
                     || escapedHTML.contains("language-markmap")
 
@@ -864,11 +868,11 @@ extension PreviewSearchBar: NSSearchFieldDelegate {
             onClose?()
             return true
         case #selector(NSText.deleteToBeginningOfLine(_:)),
-             #selector(NSText.deleteToBeginningOfParagraph(_:)):
+            #selector(NSText.deleteToBeginningOfParagraph(_:)):
             clearSearchField()
             return true
         case #selector(NSResponder.insertNewline(_:)),
-             #selector(NSResponder.insertNewlineIgnoringFieldEditor(_:)):
+            #selector(NSResponder.insertNewlineIgnoringFieldEditor(_:)):
             if NSApp.currentEvent?.modifierFlags.contains(.shift) == true {
                 onPrevious?()
             } else {
@@ -881,8 +885,8 @@ extension PreviewSearchBar: NSSearchFieldDelegate {
     }
 }
 
-private extension PreviewSearchBar {
-    static func panelBackgroundColor(base: NSColor) -> NSColor {
+extension PreviewSearchBar {
+    fileprivate static func panelBackgroundColor(base: NSColor) -> NSColor {
         guard let rgb = base.usingColorSpace(.sRGB) else {
             return base
         }
@@ -896,7 +900,7 @@ private extension PreviewSearchBar {
         }
     }
 
-    func updatePanelBackground() {
+    fileprivate func updatePanelBackground() {
         guard wantsLayer else { return }
         let panelColor = PreviewSearchBar.panelBackgroundColor(base: panelBaseColor)
         layer?.backgroundColor = panelColor.cgColor
@@ -904,7 +908,7 @@ private extension PreviewSearchBar {
         applyCornerMask()
     }
 
-    func updateShadowAppearance(for color: NSColor) {
+    fileprivate func updateShadowAppearance(for color: NSColor) {
         guard wantsLayer, let rgb = color.usingColorSpace(.sRGB) else { return }
         let luminance = 0.2126 * rgb.redComponent + 0.7152 * rgb.greenComponent + 0.0722 * rgb.blueComponent
         if luminance < 0.5 {
@@ -920,7 +924,7 @@ private extension PreviewSearchBar {
         }
     }
 
-    func applyCornerMask() {
+    fileprivate func applyCornerMask() {
         guard wantsLayer else { return }
         if #available(macOS 10.13, *) {
             layer?.cornerRadius = 8
@@ -935,7 +939,7 @@ private extension PreviewSearchBar {
         }
     }
 
-    func leftRoundedCornerPath(radius: CGFloat) -> NSBezierPath {
+    fileprivate func leftRoundedCornerPath(radius: CGFloat) -> NSBezierPath {
         let rect = bounds
         let minX = rect.minX
         let maxX = rect.maxX
@@ -954,12 +958,12 @@ private extension PreviewSearchBar {
     }
 }
 
-private extension NSBezierPath {
-    var cgPath: CGPath {
+extension NSBezierPath {
+    fileprivate var cgPath: CGPath {
         let path = CGMutablePath()
         let points = UnsafeMutablePointer<NSPoint>.allocate(capacity: 3)
         defer { points.deallocate() }
-        for index in 0 ..< elementCount {
+        for index in 0..<elementCount {
             let type = element(at: index, associatedPoints: points)
             switch type {
             case .moveTo:
@@ -1092,7 +1096,7 @@ extension MPreviewView {
             bar.topAnchor.constraint(equalTo: topAnchor, constant: marginTop),
             bar.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -marginRight),
             bar.widthAnchor.constraint(equalToConstant: barWidth),
-            bar.heightAnchor.constraint(equalToConstant: barHeight)
+            bar.heightAnchor.constraint(equalToConstant: barHeight),
         ])
         searchBar = bar
 
@@ -1205,8 +1209,8 @@ extension MPreviewView {
             .replacingOccurrences(of: "'", with: "\\'")
 
         let script = """
-        window.find('\(escapedText)', false, false, true, false, false, false);
-        """
+            window.find('\(escapedText)', false, false, true, false, false, false);
+            """
 
         evaluateJavaScript(script) { [weak self] _, _ in
             guard let self = self, self.searchSequence == sequence else { return }
@@ -1219,14 +1223,14 @@ extension MPreviewView {
             .replacingOccurrences(of: "'", with: "\\'")
 
         let script = """
-        (function() {
-            const text = '\(escapedText)';
-            const regex = new RegExp(text, 'gi');
-            const bodyText = document.body.innerText || document.body.textContent;
-            const matches = bodyText.match(regex);
-            return matches ? matches.length : 0;
-        })();
-        """
+            (function() {
+                const text = '\(escapedText)';
+                const regex = new RegExp(text, 'gi');
+                const bodyText = document.body.innerText || document.body.textContent;
+                const matches = bodyText.match(regex);
+                return matches ? matches.length : 0;
+            })();
+            """
 
         evaluateJavaScript(script) { [weak self] result, _ in
             guard let self = self, self.searchSequence == sequence else { return }
@@ -1291,42 +1295,43 @@ extension MPreviewView {
     private func focusFirstPreviewMatch(with text: String) {
         guard !text.isEmpty else { return }
 
-        let escapedText = text
+        let escapedText =
+            text
             .replacingOccurrences(of: "\\", with: "\\\\")
             .replacingOccurrences(of: "'", with: "\\'")
             .replacingOccurrences(of: "\n", with: "\\n")
             .replacingOccurrences(of: "\r", with: "")
 
         let script = """
-        (function() {
-            const query = '\(escapedText)';
-            if (!query) { return false; }
-            const lowerQuery = query.toLowerCase();
-            const walker = document.createTreeWalker(document.body || document.documentElement, NodeFilter.SHOW_TEXT, null);
-            if (!walker) { return false; }
-            const selection = window.getSelection();
-            if (!selection) { return false; }
-            while (walker.nextNode()) {
-                const node = walker.currentNode;
-                if (!node || !node.textContent) { continue; }
-                const textContent = node.textContent;
-                const index = textContent.toLowerCase().indexOf(lowerQuery);
-                if (index !== -1) {
-                    const range = document.createRange();
-                    range.setStart(node, index);
-                    range.setEnd(node, index + query.length);
-                    selection.removeAllRanges();
-                    selection.addRange(range);
-                    const element = node.parentElement || node.parentNode;
-                    if (element && element.scrollIntoView) {
-                        element.scrollIntoView({ block: 'center', behavior: 'auto' });
+            (function() {
+                const query = '\(escapedText)';
+                if (!query) { return false; }
+                const lowerQuery = query.toLowerCase();
+                const walker = document.createTreeWalker(document.body || document.documentElement, NodeFilter.SHOW_TEXT, null);
+                if (!walker) { return false; }
+                const selection = window.getSelection();
+                if (!selection) { return false; }
+                while (walker.nextNode()) {
+                    const node = walker.currentNode;
+                    if (!node || !node.textContent) { continue; }
+                    const textContent = node.textContent;
+                    const index = textContent.toLowerCase().indexOf(lowerQuery);
+                    if (index !== -1) {
+                        const range = document.createRange();
+                        range.setStart(node, index);
+                        range.setEnd(node, index + query.length);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                        const element = node.parentElement || node.parentNode;
+                        if (element && element.scrollIntoView) {
+                            element.scrollIntoView({ block: 'center', behavior: 'auto' });
+                        }
+                        return true;
                     }
-                    return true;
                 }
-            }
-            return false;
-        })();
-        """
+                return false;
+            })();
+            """
 
         evaluateJavaScript(script, completionHandler: nil)
     }
@@ -1338,19 +1343,19 @@ extension MPreviewView {
 
     private func resetSearchSelection(completion: @escaping () -> Void) {
         let script = """
-        (function() {
-            const selection = window.getSelection();
-            if (!selection) { return false; }
-            const root = document.body || document.documentElement;
-            if (!root) { return false; }
-            const range = document.createRange();
-            range.selectNodeContents(root);
-            range.collapse(true);
-            selection.removeAllRanges();
-            selection.addRange(range);
-            return true;
-        })();
-        """
+            (function() {
+                const selection = window.getSelection();
+                if (!selection) { return false; }
+                const root = document.body || document.documentElement;
+                if (!root) { return false; }
+                const range = document.createRange();
+                range.selectNodeContents(root);
+                range.collapse(true);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                return true;
+            })();
+            """
         evaluateJavaScript(script) { _, _ in
             completion()
         }
