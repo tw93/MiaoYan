@@ -67,6 +67,16 @@ extension ViewController {
         editArea.updateTextContainerInset()
     }
 
+    func ensurePanelsVisibleAtStartup() {
+        guard !UserDefaultsManagement.isSingleMode else { return }
+        let shouldShowSidebar = sidebarWidth > 0
+        let shouldShowNotelist = notelistWidth > 0
+
+        if shouldShowSidebar && !shouldShowNotelist {
+            showNoteList("")
+        }
+    }
+
     private func setNotelistVisible(_ visible: Bool, saveState: Bool = true) {
         if visible {
             let savedWidth = UserDefaultsManagement.sidebarSize
