@@ -178,7 +178,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
         if event.keyCode == kVK_ANSI_C, event.modifierFlags.contains(.command) {
             DispatchQueue.main.async {
-                self.evaluateJavaScript("document.execCommand('copy', false, null)", completionHandler: nil)
+                self.copySelectionToPasteboard()
             }
             return false
         }
@@ -212,6 +212,43 @@ class MPreviewView: WKWebView, WKUIDelegate {
             return false
         }
         return super.performKeyEquivalent(with: event)
+    }
+
+    func copySelectionToPasteboard() {
+        let script = """
+            (function() {
+                const selection = window.getSelection();
+                if (!selection || selection.rangeCount === 0) {
+                    return { text: "", html: "" };
+                }
+                const text = selection.toString() || "";
+                const range = selection.getRangeAt(0).cloneContents();
+                const container = document.createElement('div');
+                container.appendChild(range);
+                return {
+                    text: text,
+                    html: container.innerHTML || ""
+                };
+            })();
+        """
+
+        evaluateJavaScript(script) { result, _ in
+            guard let payload = result as? [String: Any] else { return }
+            let text = payload["text"] as? String ?? ""
+            let html = payload["html"] as? String ?? ""
+            guard !text.isEmpty else { return }
+
+            let pasteboard = NSPasteboard.general
+            var types: [NSPasteboard.PasteboardType] = [.string]
+            if !html.isEmpty {
+                types.append(.html)
+            }
+            pasteboard.declareTypes(types, owner: nil)
+            pasteboard.setString(text, forType: .string)
+            if !html.isEmpty {
+                pasteboard.setString(html, forType: .html)
+            }
+        }
     }
     override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {
         for menuItem in menu.items {

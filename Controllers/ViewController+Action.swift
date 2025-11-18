@@ -371,15 +371,21 @@ extension ViewController {
     }
 
     @IBAction func noteCopy(_ sender: Any) {
-        guard let fr = view.window?.firstResponder else {
+        guard let responder = view.window?.firstResponder else { return }
+
+        if responder(responder, belongsTo: editArea) {
+            editArea.copy(sender)
             return
         }
 
-        if fr.isKind(of: EditTextView.self) {
-            editArea.copy(sender)
+        if let preview = editArea.markdownView,
+           responder(responder, belongsTo: preview)
+        {
+            preview.copySelectionToPasteboard()
+            return
         }
 
-        if fr.isKind(of: NotesTableView.self) {
+        if responder(responder, belongsTo: notesTableView) {
             saveTextAtClipboard()
         }
     }
@@ -392,6 +398,16 @@ extension ViewController {
             pasteboard.setString(name, forType: NSPasteboard.PasteboardType.string)
             toast(message: I18n.str("🎉 URL is successfully copied, Use it anywhere~"))
         }
+    }
+
+    private func responder(_ responder: NSResponder, belongsTo view: NSView?) -> Bool {
+        guard let view else { return false }
+
+        if let responderView = responder as? NSView {
+            return responderView === view || responderView.isDescendant(of: view)
+        }
+
+        return responder === view
     }
 
     @IBAction func copyTitle(_ sender: Any) {
