@@ -167,17 +167,12 @@ enum ToastFactory {
         message: String,
         configuration: ToastConfiguration
     ) -> NSView {
+        let stack = makeContentStack(configuration: configuration)
         let label = makeLabel(message)
-        container.addSubview(label)
 
-        NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: configuration.padding),
-            label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -configuration.padding),
-            label.topAnchor.constraint(equalTo: container.topAnchor, constant: configuration.padding),
-            label.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -configuration.padding),
-
-            label.heightAnchor.constraint(greaterThanOrEqualToConstant: configuration.minHeight),
-        ])
+        stack.addArrangedSubview(label)
+        container.addSubview(stack)
+        applyContentConstraints(stack: stack, in: container, configuration: configuration)
         return container
     }
 
@@ -188,25 +183,14 @@ enum ToastFactory {
         title: String,
         configuration: ToastConfiguration
     ) -> NSView {
+        let stack = makeContentStack(configuration: configuration)
         let titleLabel = makeLabel(title, isTitle: true)
         let messageLabel = makeLabel(message)
 
-        container.addSubview(titleLabel)
-        container.addSubview(messageLabel)
-
-        NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: configuration.padding),
-            titleLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -configuration.padding),
-            titleLabel.topAnchor.constraint(equalTo: container.topAnchor, constant: configuration.padding),
-
-            messageLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            messageLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
-            messageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 2),
-            messageLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -configuration.padding),
-
-            titleLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: configuration.minHeight),
-            messageLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: configuration.minHeight),
-        ])
+        stack.addArrangedSubview(titleLabel)
+        stack.addArrangedSubview(messageLabel)
+        container.addSubview(stack)
+        applyContentConstraints(stack: stack, in: container, configuration: configuration)
 
         return container
     }
@@ -223,6 +207,34 @@ enum ToastFactory {
         tf.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         tf.font = isTitle ? .boldSystemFont(ofSize: 14) : .systemFont(ofSize: 13)
         return tf
+    }
+
+    @MainActor
+    private static func makeContentStack(configuration: ToastConfiguration) -> NSStackView {
+        let stack = NSStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.orientation = .vertical
+        stack.alignment = .leading
+        stack.spacing = 2
+        stack.edgeInsets = NSEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        stack.setHuggingPriority(.required, for: .vertical)
+        stack.setHuggingPriority(.required, for: .horizontal)
+        stack.setContentCompressionResistancePriority(.required, for: .horizontal)
+        return stack
+    }
+
+    @MainActor
+    private static func applyContentConstraints(stack: NSStackView, in container: NSView, configuration: ToastConfiguration) {
+        let minHeight = configuration.minHeight + configuration.padding * 2
+
+        NSLayoutConstraint.activate([
+            stack.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: configuration.padding),
+            stack.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -configuration.padding),
+            stack.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+            stack.topAnchor.constraint(greaterThanOrEqualTo: container.topAnchor, constant: configuration.padding),
+            stack.bottomAnchor.constraint(lessThanOrEqualTo: container.bottomAnchor, constant: -configuration.padding),
+            container.heightAnchor.constraint(greaterThanOrEqualToConstant: minHeight),
+        ])
     }
 }
 

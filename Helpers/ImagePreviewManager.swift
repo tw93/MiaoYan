@@ -38,9 +38,7 @@ class ImagePreviewManager {
         let text = storage.string
 
         if let imageInfo = ImageLinkParser.detectImageLink(in: text, at: index) {
-            let isSameImage = lastHoveredImageInfo?.src == imageInfo.src &&
-                lastHoveredImageInfo?.range.location == imageInfo.range.location &&
-                lastHoveredImageInfo?.range.length == imageInfo.range.length
+            let isSameImage = lastHoveredImageInfo?.src == imageInfo.src && lastHoveredImageInfo?.range.location == imageInfo.range.location && lastHoveredImageInfo?.range.length == imageInfo.range.length
 
             if !isSameImage {
                 lastHoveredImageInfo = imageInfo

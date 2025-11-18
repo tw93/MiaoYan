@@ -26,6 +26,7 @@ class Storage {
         "md", "markdown",
         "txt",
     ]
+    private static let attachmentDirectoryNames = ["i", "files"]
 
     var pinned: Int = 0
 
@@ -704,6 +705,108 @@ class Storage {
             }
         } catch {
         }
+    }
+
+    public func findOrphanAttachments(completion: @escaping ([URL]) -> Void) {
+        let referenced = collectReferencedAttachmentPaths()
+        let attachmentFolders = collectAttachmentFolders()
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            let orphaned = Storage.scanOrphanAttachments(folders: attachmentFolders, referenced: referenced)
+
+            DispatchQueue.main.async {
+                completion(orphaned)
+            }
+        }
+    }
+
+    private func collectAttachmentFolders() -> [URL] {
+        var folders = [URL]()
+        let manager = FileManager.default
+
+        for project in projects where !project.isTrash {
+            for folderName in Storage.attachmentDirectoryNames {
+                let folderURL = project.url.appendingPathComponent(folderName)
+                var isDir = ObjCBool(false)
+
+                if manager.fileExists(atPath: folderURL.path, isDirectory: &isDir), isDir.boolValue {
+                    folders.append(folderURL)
+                }
+            }
+        }
+
+        return folders
+    }
+
+    private static func scanOrphanAttachments(folders: [URL], referenced: Set<String>) -> [URL] {
+        var orphaned = [URL]()
+        let manager = FileManager.default
+
+        for folderURL in folders {
+            guard let enumerator = manager.enumerator(at: folderURL, includingPropertiesForKeys: [.isDirectoryKey], options: [.skipsHiddenFiles]) else {
+                continue
+            }
+
+            for case let fileURL as URL in enumerator {
+                if shouldSkipAttachmentCandidate(fileURL) {
+                    continue
+                }
+
+                if !referenced.contains(fileURL.path) {
+                    orphaned.append(fileURL)
+                }
+            }
+        }
+
+        return orphaned
+    }
+
+    public func removeAttachments(urls: [URL]) -> (removed: [URL], failed: [URL]) {
+        var removed = [URL]()
+        var failed = [URL]()
+        let manager = FileManager.default
+
+        for url in urls {
+            do {
+                var resultingItemUrl: NSURL?
+                try manager.trashItem(at: url, resultingItemURL: &resultingItemUrl)
+                removed.append(url)
+            } catch {
+                do {
+                    try manager.removeItem(at: url)
+                    removed.append(url)
+                } catch {
+                    failed.append(url)
+                    AppDelegate.trackError(error, context: "Storage.cleanOrphanAttachments")
+                }
+            }
+        }
+
+        return (removed, failed)
+    }
+
+    private func collectReferencedAttachmentPaths() -> Set<String> {
+        var referenced = Set<String>()
+
+        for note in noteList {
+            referenced.formUnion(note.getReferencedAttachmentPaths())
+        }
+
+        return referenced
+    }
+
+    private static func shouldSkipAttachmentCandidate(_ url: URL) -> Bool {
+        var isDirectory = ObjCBool(false)
+        if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory), isDirectory.boolValue {
+            return true
+        }
+
+        let name = url.lastPathComponent
+        if name.hasPrefix(".") || name.hasSuffix(".icloud") {
+            return true
+        }
+
+        return false
     }
 
     public func isDownloaded(url: URL) -> Bool {

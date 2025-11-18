@@ -289,8 +289,8 @@
 /* Class = "NSMenuItem"; title = "19"; ObjectID = "g4e-PC-JbI"; */
 "g4e-PC-JbI.title" = "19";
 
-/* Class = "NSMenuItem"; title = "Empty Trash"; ObjectID = "G9H-Lg-TXE"; */
-"G9H-Lg-TXE.title" = "清空垃圾桶";
+/* Class = "NSMenuItem"; title = "Clean Unused Attachments"; ObjectID = "G9H-Lg-TXE"; */
+"G9H-Lg-TXE.title" = "清理孤立附件";
 
 /* Class = "NSMenuItem"; title = "Active Window"; ObjectID = "Gaz-Td-mWB"; */
 "Gaz-Td-mWB.title" = "使用中視窗";

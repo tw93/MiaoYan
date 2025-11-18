@@ -220,3 +220,11 @@
 "Previous" = "上一個";
 "Next" = "下一個";
 "Done" = "完成";
+
+/* Clean attachments */
+"Clean Orphan Attachments" = "清理孤立附件";
+"Detected %d unused attachment(s). Move them to Trash?" = "檢測到%d個未被引用的附件，是否移至垃圾桶？";
+"No orphan attachments found" = "沒有檢測到孤立附件";
+"Removed %d unused attachment(s)" = "已清理%d個無引用附件";
+"Some attachments could not be removed" = "部分附件無法清理";
+"Clean" = "清理";

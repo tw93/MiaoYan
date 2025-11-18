@@ -226,3 +226,11 @@
 "Previous" = "前へ";
 "Next" = "次へ";
 "Done" = "完了";
+
+/* Clean attachments */
+"Clean Orphan Attachments" = "未使用の添付ファイルを整理";
+"Detected %d unused attachment(s). Move them to Trash?" = "%d件の未使用の添付ファイルが見つかりました。ゴミ箱に移動しますか？";
+"No orphan attachments found" = "未使用の添付ファイルは見つかりませんでした";
+"Removed %d unused attachment(s)" = "%d件の未使用の添付ファイルを削除しました";
+"Some attachments could not be removed" = "一部の添付ファイルを削除できませんでした";
+"Clean" = "整理";

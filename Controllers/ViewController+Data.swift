@@ -296,7 +296,7 @@ extension ViewController {
     @discardableResult
     private func restoreSelectionIfNeeded(previouslySelectedNote: Note?, fallbackRow: Int, preserveScrollPosition: Bool) -> Bool {
         if let note = previouslySelectedNote,
-           notesTableView.noteList.contains(where: { $0 === note })
+            notesTableView.noteList.contains(where: { $0 === note })
         {
             notesTableView.setSelected(
                 note: note,
@@ -307,7 +307,7 @@ extension ViewController {
         }
 
         if fallbackRow != -1,
-           notesTableView.noteList.indices.contains(fallbackRow)
+            notesTableView.noteList.indices.contains(fallbackRow)
         {
             notesTableView.selectRow(
                 fallbackRow,

@@ -310,22 +310,47 @@ extension ViewController {
         NSApp.mainWindow?.makeFirstResponder(vc.notesTableView)
     }
 
-    @IBAction func emptyTrash(_ sender: NSMenuItem) {
+    @IBAction func cleanUnusedAttachments(_ sender: NSMenuItem) {
         guard let vc = ViewController.shared() else {
             return
         }
 
-        if let sidebarItem = vc.getSidebarItem(), sidebarItem.isTrash() {
-            let indexSet = IndexSet(integersIn: 0..<vc.notesTableView.noteList.count)
-            vc.notesTableView.removeRows(at: indexSet, withAnimation: .effectFade)
-        }
+        storage.findOrphanAttachments { [weak self, weak vc] orphanAttachments in
+            guard let self = self, let vc = vc else { return }
 
-        let notes = storage.getAllTrash()
-        for note in notes {
-            _ = note.removeFile()
-        }
+            if orphanAttachments.isEmpty {
+                vc.toast(message: I18n.str("No orphan attachments found"))
+                return
+            }
 
-        NSSound(named: "Pop")?.play()
+            let confirmAlert = NSAlert()
+            confirmAlert.messageText = I18n.str("Clean Orphan Attachments")
+            confirmAlert.informativeText = String(format: I18n.str("Detected %d unused attachment(s). Move them to Trash?"), orphanAttachments.count)
+            confirmAlert.addButton(withTitle: I18n.str("Clean"))
+            confirmAlert.addButton(withTitle: I18n.str("Cancel"))
+            confirmAlert.alertStyle = .warning
+
+            let response = confirmAlert.runModal()
+            guard response == .alertFirstButtonReturn else {
+                return
+            }
+
+            let result = self.storage.removeAttachments(urls: orphanAttachments)
+
+            if !result.removed.isEmpty {
+                NSSound(named: "Pop")?.play()
+                vc.toast(message: String(format: I18n.str("Removed %d unused attachment(s)"), result.removed.count))
+            }
+
+            if !result.failed.isEmpty {
+                let failureAlert = NSAlert()
+                failureAlert.messageText = I18n.str("Some attachments could not be removed")
+                failureAlert.informativeText = I18n.str("Please try again")
+                failureAlert.addButton(withTitle: I18n.str("OK"))
+                failureAlert.alertStyle = .warning
+                failureAlert.runModal()
+            }
+        }
     }
 
     @IBAction func openProjectViewSettings(_ sender: NSMenuItem) {
@@ -379,7 +404,7 @@ extension ViewController {
         }
 
         if let preview = editArea.markdownView,
-           self.responder(responder, belongsTo: preview)
+            self.responder(responder, belongsTo: preview)
         {
             preview.copySelectionToPasteboard()
             return

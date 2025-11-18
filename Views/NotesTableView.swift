@@ -265,7 +265,7 @@ class NotesTableView: NSTableView {
             loadingQueue.addOperation(operation)
         } else {
             // UX: Auto-select first note to avoid empty editor (unified behavior)
-            if noteList.count > 0 {
+            if !noteList.isEmpty {
                 vc.ensureNoteSelection()
             } else {
                 vc.editArea.clear()
@@ -572,11 +572,11 @@ class NotesTableView: NSTableView {
 
     private func currentScrollContextURL() -> URL? {
         if let vc = window?.contentViewController as? ViewController,
-           let sidebar = vc.storageOutlineView
+            let sidebar = vc.storageOutlineView
         {
             let selectedRow = sidebar.selectedRow
             if selectedRow >= 0,
-               let item = sidebar.item(atRow: selectedRow) as? SidebarItem
+                let item = sidebar.item(atRow: selectedRow) as? SidebarItem
             {
                 if let project = item.project {
                     return project.url

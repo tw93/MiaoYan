@@ -612,6 +612,85 @@ public class Note: NSObject {
         return res
     }
 
+    public func getReferencedAttachmentPaths() -> Set<String> {
+        var referenced = Set<String>()
+
+        for image in getAllImages() {
+            referenced.insert(image.url.path)
+        }
+
+        let noteString = content.string
+        guard !noteString.isEmpty else { return referenced }
+
+        let nsString = noteString as NSString
+        let noteRange = NSRange(location: 0, length: nsString.length)
+
+        Note.attachmentPathRegex.enumerateMatches(in: noteString, options: [], range: noteRange) { result, _, _ in
+            guard let range = result?.range else { return }
+
+            let rawPath = nsString.substring(with: range)
+            for absolutePath in resolveAttachmentAbsolutePaths(for: rawPath) {
+                referenced.insert(absolutePath)
+            }
+        }
+
+        return referenced
+    }
+
+    private func resolveAttachmentAbsolutePaths(for rawPath: String) -> [String] {
+        var variants = Set<String>()
+        variants.insert(rawPath)
+
+        if let decoded = rawPath.removingPercentEncoding {
+            variants.insert(decoded)
+        }
+
+        var results = [String]()
+
+        for variant in variants {
+            if let absolute = resolveAttachmentAbsolutePath(forNormalizedPath: variant) {
+                results.append(absolute)
+            }
+        }
+
+        return results
+    }
+
+    private func resolveAttachmentAbsolutePath(forNormalizedPath path: String) -> String? {
+        guard !path.isEmpty else { return nil }
+
+        let projectPath = project.url.path
+
+        if path.hasPrefix("/") {
+            let resolved = NSString(string: projectPath + path).standardizingPath
+            guard resolved.hasPrefix(projectPath) else { return nil }
+            return resolved
+        }
+
+        var normalizedPath = path
+        if normalizedPath.hasPrefix("./") {
+            normalizedPath = String(normalizedPath.dropFirst(2))
+        }
+
+        if normalizedPath.hasPrefix("i/") || normalizedPath.hasPrefix("files/") {
+            let resolved = NSString(string: projectPath + "/" + normalizedPath).standardizingPath
+            guard resolved.hasPrefix(projectPath) else { return nil }
+            return resolved
+        }
+
+        let noteDirectory = url.deletingLastPathComponent().path
+        let resolvedRelative = NSString(string: noteDirectory).appendingPathComponent(normalizedPath)
+        let standardized = NSString(string: resolvedRelative).standardizingPath
+        guard standardized.hasPrefix(projectPath) else { return nil }
+
+        return standardized
+    }
+
+    private static let attachmentPathRegex = try! NSRegularExpression(
+        pattern: #"(?:(?:\.\./|\./|/)*)(?:i|files)/[^)\s'"]+"#,
+        options: []
+    )
+
     public func duplicate() {
         guard let duplicateName = getDupeName() else { return }
 
