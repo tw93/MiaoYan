@@ -6,6 +6,17 @@ import TelemetryDeck
 
 // MARK: - Editor Management
 extension ViewController {
+    // MARK: - Timing Constants
+
+    private enum EditorTiming {
+        static let previewFocusDelay: TimeInterval = 0.1
+        static let scrollRestoreDelay: TimeInterval = 0.3
+        static let scrollSyncResetDelay: TimeInterval = 0.016  // ~60fps (1/60 second)
+        static let presentationLayoutDelay: TimeInterval = 0.15
+        static let pptSlideTransitionDelay: TimeInterval = 0.3
+        static let pptFocusDelay: TimeInterval = 0.6
+    }
+
     // MARK: - WebView Helper
 
     /// Show WebView - centralized method to avoid duplication
@@ -49,12 +60,12 @@ extension ViewController {
         editAreaScroll.hasVerticalScroller = false
         editAreaScroll.hasHorizontalScroller = false
         // Make WebView the first responder to handle Cmd+F properly
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.previewFocusDelay) {
             self.editArea.window?.makeFirstResponder(self.editArea.markdownView)
         }
         if UserDefaultsManagement.previewLocation == "Editing", !UserDefaultsManagement.isOnExport {
             let scrollPre = getScrollTop()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.scrollRestoreDelay) {
                 self.editArea.markdownView?.scrollToPosition(pre: scrollPre)
             }
         }
@@ -72,11 +83,7 @@ extension ViewController {
         // Force layout update BEFORE setting display mode to ensure correct bounds
         contentSplitView.layoutSubtreeIfNeeded()
 
-        // Reset saved position for first-time use to ensure 50/50 split
-        if UserDefaultsManagement.editorContentSplitPosition == 0 {
-            // Will use bounds.width / 2 in setDisplayMode
-        }
-
+        // First-time use: setDisplayMode will default to 50/50 split when position is 0
         // Set split view to side-by-side mode
         contentSplitView.setDisplayMode(.sideBySide, animated: false)
 
@@ -129,7 +136,7 @@ extension ViewController {
 
                 let normalizedRatio = ratio.map { min(max($0, 0), 1) }
 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.previewFocusDelay) { [weak self] in
                     guard let self = self else { return }
 
                     if let ratio = normalizedRatio,
@@ -369,7 +376,7 @@ extension ViewController {
             view.window?.toggleFullScreen(nil)
         }
         if !UserDefaultsManagement.isOnExportPPT {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.presentationLayoutDelay) {
                 self.toast(message: I18n.str("🙊 Press ESC key to exit~"))
             }
         }
@@ -382,7 +389,7 @@ extension ViewController {
             view.window?.toggleFullScreen(nil)
         }
         // Restore UI elements after fullscreen transition completes
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.presentationLayoutDelay) {
             self.restorePresentationLayout()
             self.disablePreview()
             UserDefaultsManagement.presentation = false
@@ -485,7 +492,7 @@ extension ViewController {
             vc.handlePPTAutoTransition()
         }
         if !UserDefaultsManagement.isOnExportPPT {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.presentationLayoutDelay) {
                 vc.toast(message: I18n.str("🙊 Press ESC key to exit~"))
             }
         }
@@ -502,13 +509,13 @@ extension ViewController {
         let beforeString = editArea.string[..<selectedIndex]
         let hrCount = beforeString.components(separatedBy: "---").count
         if UserDefaultsManagement.previewLocation == "Editing", hrCount > 1 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.pptSlideTransitionDelay) {
                 // Auto-navigation in PPT mode
                 vc.editArea.markdownView?.slideTo(index: hrCount - 1)
             }
         }
         // Compatible with keyboard shortcut passthrough
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.pptFocusDelay) {
             NSApp.mainWindow?.makeFirstResponder(vc.editArea.markdownView)
         }
     }
@@ -776,8 +783,8 @@ extension ViewController {
         isProgrammaticSplitScroll = true
         // Editor scrolled -> sync to preview
         editArea.markdownView?.scrollToPosition(pre: ratio)
-        // Performance: Use ~60fps frame time (0.016s) instead of 0.05s for smoother sync
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.016) { [weak self] in
+        // Performance: Use ~60fps frame time for smoother sync
+        DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.scrollSyncResetDelay) { [weak self] in
             self?.isProgrammaticSplitScroll = false
         }
     }

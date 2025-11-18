@@ -5,6 +5,12 @@ import WebKit
 public typealias MPreviewViewClosure = () -> Void
 @MainActor
 class MPreviewView: WKWebView, WKUIDelegate {
+    // MARK: - JavaScript Timing Constants
+
+    private enum JavaScriptTiming {
+        static let diagramInitDelay = 100  // milliseconds
+    }
+
     @objcMembers
     private final class NavigationDelegateProxy: NSObject, WKNavigationDelegate {
         weak var owner: MPreviewView?
@@ -293,7 +299,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
             initScripts.append(
                 """
                     if (window.DiagramHandler && typeof window.DiagramHandler.initializeAll === 'function') {
-                        setTimeout(() => window.DiagramHandler.initializeAll(), 100);
+                        setTimeout(() => window.DiagramHandler.initializeAll(), \(JavaScriptTiming.diagramInitDelay));
                     }
                 """)
         }
