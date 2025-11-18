@@ -172,6 +172,10 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         applyMiaoYanAppearance()
     }
 
+    func windowWillClose(_ notification: Notification) {
+        ViewController.shared()?.persistCurrentViewState()
+    }
+
     func applyMiaoYanAppearance() {
         guard let window = window else { return }
 

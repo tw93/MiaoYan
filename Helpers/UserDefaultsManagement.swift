@@ -654,10 +654,13 @@ public enum UserDefaultsManagement {
     }
     static var lastSelectedURL: URL? {
         get {
-            if let path = UserDefaults.standard.object(forKey: Constants.LastSelectedPath) as? String, let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) {
-                return URL(string: "file://" + encodedPath)
+            guard let path = UserDefaults.standard.object(forKey: Constants.LastSelectedPath) as? String else {
+                return nil
             }
-            return nil
+            if path.hasPrefix("file://") {
+                return URL(string: path)
+            }
+            return URL(fileURLWithPath: path)
         }
         set {
             if let url = newValue {
@@ -738,15 +741,29 @@ public enum UserDefaultsManagement {
             }
         }
     }
-    static var notesTableScrollPosition: CGFloat {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.NotesTableScrollPosition) as? CGFloat {
-                return result
-            }
+    private static func scrollPositionKey(for projectURL: URL?) -> String {
+        projectURL?.path ?? "__all__"
+    }
+
+    static func notesTableScrollPosition(for projectURL: URL?) -> CGFloat {
+        guard let stored = UserDefaults.standard.dictionary(forKey: Constants.NotesTableScrollPosition) as? [String: Double] else {
             return 0.0
         }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.NotesTableScrollPosition)
+        let key = scrollPositionKey(for: projectURL)
+        if let value = stored[key] {
+            return CGFloat(value)
         }
+        return 0.0
+    }
+
+    static func setNotesTableScrollPosition(_ value: CGFloat, for projectURL: URL?) {
+        var stored = UserDefaults.standard.dictionary(forKey: Constants.NotesTableScrollPosition) as? [String: Double] ?? [:]
+        let key = scrollPositionKey(for: projectURL)
+        if value == 0 {
+            stored.removeValue(forKey: key)
+        } else {
+            stored[key] = Double(value)
+        }
+        UserDefaults.standard.set(stored, forKey: Constants.NotesTableScrollPosition)
     }
 }

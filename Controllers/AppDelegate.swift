@@ -139,7 +139,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func applicationWillTerminate(_ aNotification: Notification) {
         Self.signal("App.SessionEnd")
         if let vc = ViewController.shared() {
-            vc.notesTableView.saveScrollPosition()
+            vc.persistCurrentViewState()
         }
         let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
         try? FileManager.default.removeItem(at: webkitPreview)

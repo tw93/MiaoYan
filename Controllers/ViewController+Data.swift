@@ -203,6 +203,10 @@ extension ViewController {
             return
         }
 
+        let previouslySelectedNote = notesTableView.getSelectedNote()
+        let previousSelectedRow = notesTableView.selectedRow
+        let previousScrollOrigin = notesTableView.currentScrollOrigin()
+
         filteredNoteList = notes
         notesTableView.noteList = orderedNotesList
 
@@ -214,7 +218,14 @@ extension ViewController {
         if notesTableView.noteList.isEmpty {
             handleEmptyResults(completion: context.completion)
         } else {
-            handleNonEmptyResults(isSearch: context.isSearch, searchParams: context.searchParams, completion: context.completion)
+            handleNonEmptyResults(
+                isSearch: context.isSearch,
+                searchParams: context.searchParams,
+                previousSelection: previouslySelectedNote,
+                previousSelectedRow: previousSelectedRow,
+                previousScrollOrigin: previousScrollOrigin,
+                completion: context.completion
+            )
         }
     }
 
@@ -228,23 +239,41 @@ extension ViewController {
         }
     }
 
-    private func handleNonEmptyResults(isSearch: Bool, searchParams: SearchParameters, completion: @escaping () -> Void) {
-        _ = notesTableView.noteList[0]
-
+    private func handleNonEmptyResults(
+        isSearch: Bool,
+        searchParams: SearchParameters,
+        previousSelection: Note?,
+        previousSelectedRow: Int,
+        previousScrollOrigin: NSPoint?,
+        completion: @escaping () -> Void
+    ) {
         DispatchQueue.main.async {
-            // Save currently selected row for restoration after table reload
-            let previousSelectedRow = self.notesTableView.selectedRow
-
             self.notesTableView.reloadData()
 
             if isSearch {
                 self.handleSearchResults(searchParams: searchParams)
             }
 
-            self.restoreSelectionIfNeeded(previousSelectedRow: previousSelectedRow)
-            // UX: Auto-select first note to avoid empty editor (unified behavior for all navigation)
+            let didRestoreScroll: Bool
+            if let origin = previousScrollOrigin {
+                self.notesTableView.restoreScrollOrigin(origin)
+                didRestoreScroll = true
+            } else {
+                didRestoreScroll = self.notesTableView.restoreScrollPosition(ensureSelectionVisible: false)
+            }
+
+            let selectionRestored = self.restoreSelectionIfNeeded(
+                previouslySelectedNote: previousSelection,
+                fallbackRow: previousSelectedRow,
+                preserveScrollPosition: didRestoreScroll
+            )
             if !isSearch {
-                self.ensureNoteSelection()
+                let shouldPreferLastSelection = self.storageOutlineView?.isLaunch ?? false
+                let shouldPreserveScroll = didRestoreScroll && !selectionRestored
+                self.ensureNoteSelection(
+                    preferLastSelected: shouldPreferLastSelection,
+                    preserveScrollPosition: shouldPreserveScroll
+                )
             }
             completion()
         }
@@ -264,12 +293,30 @@ extension ViewController {
         }
     }
 
-    private func restoreSelectionIfNeeded(previousSelectedRow: Int) {
-        if previousSelectedRow != -1,
-            notesTableView.noteList.indices.contains(previousSelectedRow)
+    @discardableResult
+    private func restoreSelectionIfNeeded(previouslySelectedNote: Note?, fallbackRow: Int, preserveScrollPosition: Bool) -> Bool {
+        if let note = previouslySelectedNote,
+           notesTableView.noteList.contains(where: { $0 === note })
         {
-            notesTableView.selectRow(previousSelectedRow)
+            notesTableView.setSelected(
+                note: note,
+                ensureVisible: !preserveScrollPosition,
+                suppressSideEffects: true
+            )
+            return true
         }
+
+        if fallbackRow != -1,
+           notesTableView.noteList.indices.contains(fallbackRow)
+        {
+            notesTableView.selectRow(
+                fallbackRow,
+                suppressSideEffects: preserveScrollPosition
+            )
+            return true
+        }
+
+        return false
     }
 
     private func preLoadNoteTitles(in project: Project) {

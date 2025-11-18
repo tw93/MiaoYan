@@ -691,12 +691,11 @@ class SidebarProjectView: NSOutlineView,
                         let lastNote = vd.storage.getBy(url: url),
                         let i = vd.notesTableView.getIndex(lastNote)
                     {
-                        vd.notesTableView.selectRow(i)
-                        // Restore scroll position instead of scrolling to visible row
-                        vd.notesTableView.restoreScrollPosition()
+                        vd.notesTableView.selectRow(i, ensureVisible: false, suppressSideEffects: true)
+                        vd.notesTableView.restoreScrollPosition(ensureSelectionVisible: false)
                     } else if !vd.notesTableView.noteList.isEmpty {
-                        vd.notesTableView.selectRow(0)
-                        vd.notesTableView.scrollRowToVisible(row: 0, animated: false)
+                        vd.notesTableView.restoreScrollPosition(ensureSelectionVisible: false)
+                        vd.notesTableView.selectRow(0, ensureVisible: false)
                     }
                     self.isLaunch = false
                 } else {

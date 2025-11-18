@@ -322,8 +322,10 @@ class ViewController:
     // MARK: - Selection Management
 
     /// Ensures a note is selected when none is currently selected (unified auto-select logic)
-    /// - Parameter preferLastSelected: If true, tries to restore last selected note before falling back to first note
-    func ensureNoteSelection(preferLastSelected: Bool = false) {
+    /// - Parameters:
+    ///   - preferLastSelected: If true, tries to restore last selected note before falling back to first note
+    ///   - preserveScrollPosition: If true, skips forcing the note list to scroll the selected row into view
+    func ensureNoteSelection(preferLastSelected: Bool = false, preserveScrollPosition: Bool = false) {
         guard notesTableView.selectedRow == -1,
               !notesTableView.noteList.isEmpty,
               !UserDefaultsManagement.isSingleMode else {
@@ -331,16 +333,47 @@ class ViewController:
         }
 
         var targetIndex = 0
+        var restoredLastSelection = false
 
         if preferLastSelected,
            let lastURL = UserDefaultsManagement.lastSelectedURL,
            let lastNote = storage.getBy(url: lastURL),
-           let index = notesTableView.getIndex(lastNote) {
+           let index = notesTableView.getIndex(lastNote)
+        {
             targetIndex = index
+            restoredLastSelection = true
         }
 
-        notesTableView.selectRow(targetIndex)
-        notesTableView.scrollRowToVisible(row: targetIndex, animated: false)
+        let shouldEnsureVisibility = !restoredLastSelection && !preserveScrollPosition
+        notesTableView.selectRow(
+            targetIndex,
+            ensureVisible: shouldEnsureVisibility,
+            suppressSideEffects: restoredLastSelection
+        )
+        if restoredLastSelection {
+            notesTableView.restoreScrollPosition(ensureSelectionVisible: false)
+        }
+    }
+
+    func persistCurrentViewState() {
+        if let sidebar = storageOutlineView {
+            let selectedRow = sidebar.selectedRow
+            if selectedRow >= 0 {
+                UserDefaultsManagement.lastProject = selectedRow
+
+                if let item = sidebar.item(atRow: selectedRow) as? SidebarItem {
+                    UserDataService.instance.lastType = item.type.rawValue
+                    UserDataService.instance.lastProject = item.project?.url
+                    UserDataService.instance.lastName = item.name
+                }
+            }
+        }
+
+        if let selectedNote = notesTableView.getSelectedNote() {
+            UserDefaultsManagement.lastSelectedURL = selectedNote.url
+        }
+
+        notesTableView.saveScrollPosition()
     }
 
     private func ensureInitialProjectSelection() {
@@ -460,6 +493,7 @@ class ViewController:
         }
         // Configure split view for editor content
         configureEditorContentSplitView()
+        ensurePanelsVisibleAtStartup()
     }
 
     private func configureEditorContentSplitView() {
