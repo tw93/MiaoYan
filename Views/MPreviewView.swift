@@ -5,6 +5,7 @@ import WebKit
 public typealias MPreviewViewClosure = () -> Void
 @MainActor
 class MPreviewView: WKWebView, WKUIDelegate {
+    private var scrollObserverInjected = false
     // MARK: - JavaScript Timing Constants
 
     private enum JavaScriptTiming {
@@ -118,6 +119,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     }
 
     private func setupScrollObserver() {
+        guard !scrollObserverInjected else { return }
         // Use JavaScript with requestAnimationFrame for smoother scroll sync
         let script = """
                 (function() {
@@ -154,6 +156,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
             """
 
         evaluateJavaScript(script, completionHandler: nil)
+        scrollObserverInjected = true
     }
 
     // MARK: - Appearance Helpers
@@ -266,6 +269,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         }
     }
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        scrollObserverInjected = false
         closure?()
 
         // Set up scroll observation after WebView is fully loaded
@@ -366,66 +370,64 @@ class MPreviewView: WKWebView, WKUIDelegate {
     public func load(note: Note, force: Bool = false) {
         // No alpha animation here - parent view controller handles transitions
         // This avoids double-animation when toggling preview mode
-        Task.detached { [weak self, note] in
-            let markdownString = await note.getPrettifiedContent()
-            let imagesStorage = await note.project.url
-            let css = await HtmlManager.previewStyle()
-            await MainActor.run { [weak self] in
-                guard let self = self else { return }
-                do {
-                    try self.loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
-                    self.note = note
-                } catch {
-                    AppDelegate.trackError(error, context: "MPreviewView.load")
-                    // Fallback: try to load minimal content
-                    let basicHTML = "<html><body><p>Failed to load preview</p></body></html>"
-                    self.loadHTMLString(basicHTML, baseURL: nil)
-                }
+        Task { @MainActor [weak self, note] in
+            guard let self else { return }
+            let markdownString = note.getPrettifiedContent()
+            let imagesStorage = note.project.url
+            let css = HtmlManager.previewStyle()
+            do {
+                try self.loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
+                self.note = note
+            } catch {
+                AppDelegate.trackError(error, context: "MPreviewView.load")
+                // Fallback: try to load minimal content
+                let basicHTML = "<html><body><p>Failed to load preview</p></body></html>"
+                self.loadHTMLString(basicHTML, baseURL: nil)
             }
         }
     }
 
     // Lightweight content update for split view (preserves scroll position)
     public func updateContent(note: Note) {
-        Task.detached { [weak self, note] in
-            let markdownString = await note.getPrettifiedContent()
-            let imagesStorage = await note.project.url
+        Task { @MainActor [weak self, note] in
+            guard let self else { return }
 
-            await MainActor.run { [weak self] in
-                guard let self = self else { return }
+            let markdownString = note.getPrettifiedContent()
+            let imagesStorage = note.project.url
 
-                guard let htmlString = renderMarkdownHTML(markdown: markdownString) else {
-                    return
-                }
-
-                let processedHtmlString = self.loadImages(imagesStorage: imagesStorage, html: htmlString)
-
-                // Escape HTML for JavaScript injection
-                let escapedHTML =
-                    processedHtmlString
-                    .replacingOccurrences(of: "\\", with: "\\\\")
-                    .replacingOccurrences(of: "`", with: "\\`")
-                    .replacingOccurrences(of: "$", with: "\\$")
-
-                // Detect special content requiring renderer initialization
-                let needsMath = escapedHTML.contains("$$") || escapedHTML.contains("$")
-                let needsDiagrams =
-                    escapedHTML.contains("language-mermaid")
-                    || escapedHTML.contains("language-plantuml")
-                    || escapedHTML.contains("language-markmap")
-
-                let script = self.buildUpdateScript(
-                    html: escapedHTML,
-                    initializeMath: needsMath,
-                    initializeDiagrams: needsDiagrams
-                )
-
-                self.evaluateJavaScript(script) { [weak self] _, _ in
-                    // Re-setup scroll observer after content update
-                    self?.setupScrollObserver()
-                }
-                self.note = note
+            guard let htmlString = renderMarkdownHTML(markdown: markdownString) else {
+                return
             }
+
+            let processedHtmlString = self.loadImages(imagesStorage: imagesStorage, html: htmlString)
+
+            // Escape HTML for JavaScript injection
+            let escapedHTML =
+                processedHtmlString
+                .replacingOccurrences(of: "\\", with: "\\\\")
+                .replacingOccurrences(of: "`", with: "\\`")
+                .replacingOccurrences(of: "$", with: "\\$")
+
+            // Detect special content requiring renderer initialization
+            let needsMath = escapedHTML.contains("$$") || escapedHTML.contains("$")
+            let needsDiagrams =
+                escapedHTML.contains("language-mermaid")
+                || escapedHTML.contains("language-plantuml")
+                || escapedHTML.contains("language-markmap")
+
+            let script = self.buildUpdateScript(
+                html: escapedHTML,
+                initializeMath: needsMath,
+                initializeDiagrams: needsDiagrams
+            )
+
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                _ = try? await self.evaluateJavaScript(script)
+                // Re-setup scroll observer after content update
+                self.setupScrollObserver()
+            }
+            self.note = note
         }
     }
 
