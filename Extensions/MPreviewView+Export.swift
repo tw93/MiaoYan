@@ -3,6 +3,7 @@ import Carbon.HIToolbox
 import CryptoKit
 import PDFKit
 import WebKit
+import ObjectiveC.runtime
 
 // MARK: - Export Cache Manager
 @MainActor
@@ -78,6 +79,7 @@ class ExportCache {
 }
 
 // MARK: - Export Extensions
+@MainActor
 extension MPreviewView {
 
     private static var isExporting = false
@@ -190,6 +192,9 @@ extension MPreviewView {
         guard let vc = ViewController.shared(),
             let note = vc.notesTableView.getSelectedNote()
         else { return }
+
+        preparePPTExportIfNeeded()
+        hideTOCTriggersForExport()
 
         performExport(note: note, viewController: vc, needsDimensions: true) { [weak self] exportData in
             guard let self else {
@@ -348,6 +353,16 @@ extension MPreviewView {
                 (function() {
                     if (document.readyState !== 'complete') return false;
                     if (document.body.offsetHeight === 0) return false;
+                    if (window.Reveal) {
+                        // Force print-friendly layout when exporting PPT
+                        if (!document.documentElement.classList.contains('print-pdf')) {
+                            document.documentElement.classList.add('print-pdf');
+                            document.body.classList.add('print-pdf');
+                        }
+                        if (typeof Reveal.layout === 'function') {
+                            Reveal.layout();
+                        }
+                    }
                     return true;
                 })()
             """
@@ -480,6 +495,82 @@ extension MPreviewView {
     }
 
     private func getContentDimensions(completion: @escaping (_ height: CGFloat, _ width: CGFloat) -> Void) {
+        // Special handling for PPT/reveal exports to avoid only capturing the first slide
+        if UserDefaultsManagement.magicPPT || UserDefaultsManagement.isOnExportPPT {
+            let js = """
+                    (function() {
+                        var slidesRoot = document.querySelector('.reveal .slides');
+                        var revealHeight = window.Reveal && typeof Reveal.getConfig === 'function'
+                            ? (Reveal.getConfig().height || window.innerHeight)
+                            : window.innerHeight;
+                        var totalSlides = window.Reveal && typeof Reveal.getTotalSlides === 'function'
+                            ? Reveal.getTotalSlides()
+                            : 0;
+                        var estimatedHeight = totalSlides > 0 ? totalSlides * revealHeight : 0;
+                        var contentHeight = slidesRoot ? Math.max(slidesRoot.scrollHeight, slidesRoot.offsetHeight, estimatedHeight) : Math.max(document.body.scrollHeight, estimatedHeight);
+                        var contentWidth = slidesRoot ? Math.max(slidesRoot.scrollWidth, slidesRoot.offsetWidth, document.documentElement.clientWidth) : Math.max(document.body.scrollWidth, document.documentElement.clientWidth);
+                        return { h: contentHeight, w: contentWidth };
+                    })();
+                """
+            evaluateJavaScript(js) { result, _ in
+                if let dict = result as? [String: Any],
+                    let hVal = dict["h"] as? Double,
+                    let wVal = dict["w"] as? Double
+                {
+                    completion(CGFloat(hVal), CGFloat(wVal))
+                    return
+                }
+                // Fallback if bridging fails
+                self.getContentDimensionsFallback(completion: completion)
+            }
+            return
+        }
+
+        getContentDimensionsFallback(completion: completion)
+    }
+
+    private func hideTOCTriggersForExport() {
+        let script = """
+                (function() {
+                    var selectors = ['.toc-hover-trigger', '.toc-pin-btn', '.toc-nav'];
+                    selectors.forEach(function(sel) {
+                        document.querySelectorAll(sel).forEach(function(el) {
+                            el.dataset.exportOriginalDisplay = el.style.display || '';
+                            el.style.display = 'none';
+                            el.style.pointerEvents = 'none';
+                        });
+                    });
+                })();
+            """
+        evaluateJavaScript(script, completionHandler: nil)
+    }
+
+    // Prepare Reveal.js layout for accurate PDF capture
+    private func preparePPTExportIfNeeded() {
+        guard UserDefaultsManagement.magicPPT || UserDefaultsManagement.isOnExportPPT else {
+            return
+        }
+        guard !hasPreparedPPTExport else { return }
+        hasPreparedPPTExport = true
+
+        let script = """
+                (function() {
+                    document.documentElement.classList.add('print-pdf');
+                    document.body.classList.add('print-pdf');
+                    if (window.Reveal) {
+                        if (typeof Reveal.configure === 'function') {
+                            Reveal.configure({ pdfMaxPagesPerSlide: 1 });
+                        }
+                        if (typeof Reveal.layout === 'function') {
+                            Reveal.layout();
+                        }
+                    }
+                })();
+            """
+        evaluateJavaScript(script, completionHandler: nil)
+    }
+
+    private func getContentDimensionsFallback(completion: @escaping (_ height: CGFloat, _ width: CGFloat) -> Void) {
         // Compute height first, then width to keep bridging simple and reliable
         getContentHeight { height in
             let h = height ?? self.bounds.height
@@ -504,5 +595,20 @@ extension MPreviewView {
             }
         }
         return pdfDocument.dataRepresentation()
+    }
+
+    // Stored property emulation for extensions
+    private var hasPreparedPPTExport: Bool {
+        get {
+            (objc_getAssociatedObject(self, &AssociatedKeys.preparedPPTExport) as? Bool) ?? false
+        }
+        set {
+            objc_setAssociatedObject(self, &AssociatedKeys.preparedPPTExport, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+
+    @MainActor
+    private enum AssociatedKeys {
+        static var preparedPPTExport: UInt8 = 0
     }
 }

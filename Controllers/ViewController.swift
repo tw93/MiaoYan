@@ -409,6 +409,11 @@ class ViewController:
         guard let vc = ViewController.shared() else {
             return false
         }
+
+        if menuItem.action == #selector(exportMiaoYanPPT(_:)) {
+            return vc.isMiaoYanPPT(needToast: false)
+        }
+
         let canUseMenu = UserDefaultsManagement.canUseMenu
         if let title = menuItem.menu?.identifier?.rawValue {
             switch title {
