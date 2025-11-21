@@ -272,8 +272,6 @@ extension ViewController {
         UserDefaultsManagement.splitViewMode.toggle()
 
         if UserDefaultsManagement.splitViewMode {
-            // Reset split position to ensure 50/50 split on first use
-            UserDefaultsManagement.editorContentSplitPosition = 0
             applyEditorModePreferenceChange()
             TelemetryDeck.signal("Editor.SplitView")
         } else {
