@@ -458,9 +458,6 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         else {
             return
         }
-        if isSplit {
-            UserDefaultsManagement.editorContentSplitPosition = 0
-        }
         UserDefaultsManagement.splitViewMode = isSplit
         if let vc = ViewController.shared() {
             vc.applyEditorModePreferenceChange()
