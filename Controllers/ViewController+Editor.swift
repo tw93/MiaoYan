@@ -746,16 +746,26 @@ extension ViewController {
         }
         // Clear preview scroll callback
         editArea.markdownView?.onScrollChange = nil
+        // Cancel any pending sync
+        splitScrollDebounceTimer?.invalidate()
+        splitScrollDebounceTimer = nil
         isProgrammaticSplitScroll = false
     }
 
     private func handleSplitScrollEvent() {
-        guard !isProgrammaticSplitScroll else { return }
+        // Skip scroll sync if preview is updating content
+        guard editArea.markdownView?.isUpdatingContent != true else {
+            return
+        }
+        // Use debounce instead of blocking to ensure all user scrolls (including typing) are synced
         scheduleSplitScrollSync()
     }
 
     private func handlePreviewScroll(ratio: CGFloat) {
-        guard !isProgrammaticSplitScroll, UserDefaultsManagement.splitViewMode else {
+        // Skip scroll sync if preview is updating content
+        guard !isProgrammaticSplitScroll,
+              UserDefaultsManagement.splitViewMode,
+              editArea.markdownView?.isUpdatingContent != true else {
             return
         }
 
@@ -770,9 +780,11 @@ extension ViewController {
 
     private func scheduleSplitScrollSync() {
         guard UserDefaultsManagement.splitViewMode else { return }
+
         let ratio = editorScrollRatio()
         let clampedRatio = max(0, min(ratio, 1))
-        // Performance: Execute immediately without async dispatch to reduce scroll lag
+
+        // Direct sync for responsive scrolling - rely on isProgrammaticSplitScroll flag to prevent loops
         applySplitScrollSync(ratio: clampedRatio)
     }
 
@@ -781,8 +793,8 @@ extension ViewController {
         isProgrammaticSplitScroll = true
         // Editor scrolled -> sync to preview
         editArea.markdownView?.scrollToPosition(pre: ratio)
-        // Performance: Use ~60fps frame time for smoother sync
-        DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.scrollSyncResetDelay) { [weak self] in
+        // Reset after JS requestAnimationFrame completes (~50ms allows for rendering + callback)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak self] in
             self?.isProgrammaticSplitScroll = false
         }
     }

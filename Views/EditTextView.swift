@@ -481,9 +481,27 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                     previewView.frame = newFrame
                 }
                 previewView.autoresizingMask = [.width, .height]
-                previewView.load(note: note, force: options.force)
-                previewView.isHidden = false
-                previewView.alphaValue = 1.0
+
+                // Smooth transition: fade out -> load -> fade in
+                let needsTransition = !previewView.isHidden && previewView.alphaValue > 0
+                if needsTransition {
+                    NSAnimationContext.runAnimationGroup({ context in
+                        context.duration = 0.08
+                        previewView.animator().alphaValue = 0
+                    }, completionHandler: {
+                        Task { @MainActor in
+                            previewView.load(note: note, force: options.force)
+                            NSAnimationContext.runAnimationGroup({ context in
+                                context.duration = 0.12
+                                previewView.animator().alphaValue = 1.0
+                            })
+                        }
+                    })
+                } else {
+                    previewView.load(note: note, force: options.force)
+                    previewView.isHidden = false
+                    previewView.alphaValue = 1.0
+                }
             } else if let previewView = markdownView,
                 let fallbackContainer = viewController.editAreaScroll
             {
@@ -495,12 +513,36 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 if previewView.frame.size != newFrame.size {
                     previewView.frame = newFrame
                 }
-                previewView.load(note: note, force: options.force)
-                previewView.isHidden = false
-                previewView.alphaValue = 1.0
+                previewView.autoresizingMask = [.width, .height]
+
+                // Smooth transition: fade out -> load -> fade in
+                let needsTransition = !previewView.isHidden && previewView.alphaValue > 0
+                if needsTransition {
+                    NSAnimationContext.runAnimationGroup({ context in
+                        context.duration = 0.08
+                        previewView.animator().alphaValue = 0
+                    }, completionHandler: {
+                        Task { @MainActor in
+                            previewView.load(note: note, force: options.force)
+                            NSAnimationContext.runAnimationGroup({ context in
+                                context.duration = 0.12
+                                previewView.animator().alphaValue = 1.0
+                            })
+                        }
+                    })
+                } else {
+                    previewView.load(note: note, force: options.force)
+                    previewView.isHidden = false
+                    previewView.alphaValue = 1.0
+                }
             }
         } else {
+            // Ensure preview is completely hidden and doesn't block editor
             markdownView?.isHidden = true
+            markdownView?.alphaValue = 0
+            if markdownView?.superview != nil {
+                markdownView?.removeFromSuperview()
+            }
         }
 
         if options.previewOnly || (shouldRenderPreview && !UserDefaultsManagement.splitViewMode) {

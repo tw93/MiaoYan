@@ -6,6 +6,7 @@ public typealias MPreviewViewClosure = () -> Void
 @MainActor
 class MPreviewView: WKWebView, WKUIDelegate {
     private var scrollObserverInjected = false
+    internal var isUpdatingContent = false
     // MARK: - JavaScript Timing Constants
 
     private enum JavaScriptTiming {
@@ -313,9 +314,71 @@ class MPreviewView: WKWebView, WKUIDelegate {
         return """
                 (function() {
                     const container = document.querySelector('.markdown-body') || document.body;
-                    if (container) {
-                        container.innerHTML = `\(html)`;
-                        \(initialization)
+                    if (!container) return;
+
+                    // Save scroll ratio (not absolute position) for better stability
+                    const doc = document.scrollingElement || document.documentElement || document.body;
+                    const maxScroll = Math.max(0, (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
+                    const savedRatio = maxScroll > 0 ? (window.pageYOffset || doc.scrollTop || 0) / maxScroll : 0;
+
+                    // Check if we're near the bottom (within 10 pixels)
+                    const isNearBottom = maxScroll > 0 && (maxScroll - (window.pageYOffset || doc.scrollTop || 0)) < 10;
+
+                    container.innerHTML = `\(html)`;
+                    \(initialization)
+
+                    // Wait for images to load before restoring scroll to prevent jitter
+                    const images = container.querySelectorAll('img');
+                    if (images.length > 0) {
+                        let loadedCount = 0;
+                        const totalImages = images.length;
+                        const imageLoadTimeout = setTimeout(() => {
+                            restoreScroll();
+                        }, 300); // Reduced timeout for faster response
+
+                        function restoreScroll() {
+                            clearTimeout(imageLoadTimeout);
+                            requestAnimationFrame(() => {
+                                const newDoc = document.scrollingElement || document.documentElement || document.body;
+                                const newMaxScroll = Math.max(0, (newDoc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
+
+                                // If was at bottom, stay at bottom; otherwise restore ratio
+                                const targetScroll = isNearBottom ? newMaxScroll : newMaxScroll * savedRatio;
+                                window.scrollTo(0, targetScroll);
+                            });
+                        }
+
+                        images.forEach(img => {
+                            if (img.complete) {
+                                loadedCount++;
+                                if (loadedCount === totalImages) {
+                                    restoreScroll();
+                                }
+                            } else {
+                                img.addEventListener('load', () => {
+                                    loadedCount++;
+                                    if (loadedCount === totalImages) {
+                                        restoreScroll();
+                                    }
+                                }, { once: true });
+                                img.addEventListener('error', () => {
+                                    loadedCount++;
+                                    if (loadedCount === totalImages) {
+                                        restoreScroll();
+                                    }
+                                }, { once: true });
+                            }
+                        });
+                    } else {
+                        // No images, restore scroll immediately
+                        requestAnimationFrame(() => {
+                            const newDoc = document.scrollingElement || document.documentElement || document.body;
+                            const newMaxScroll = Math.max(0, (newDoc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
+
+                            // If was at bottom, stay at bottom; otherwise restore ratio
+                            const targetScroll = isNearBottom ? newMaxScroll : newMaxScroll * savedRatio;
+                            window.scrollTo(0, targetScroll);
+                        });
                     }
                 })();
             """
@@ -392,10 +455,21 @@ class MPreviewView: WKWebView, WKUIDelegate {
         Task { @MainActor [weak self, note] in
             guard let self else { return }
 
+            // Disable scroll sync during content update
+            self.isUpdatingContent = true
+
             let markdownString = note.getPrettifiedContent()
             let imagesStorage = note.project.url
 
             guard let htmlString = renderMarkdownHTML(markdown: markdownString) else {
+                AppDelegate.trackError(
+                    NSError(domain: "MarkdownRenderError", code: 1,
+                           userInfo: [NSLocalizedDescriptionKey: "Failed to render markdown in updateContent"]),
+                    context: "MPreviewView.updateContent"
+                )
+                // Fallback: reload the full view instead of silent failure
+                self.isUpdatingContent = false
+                self.load(note: note, force: true)
                 return
             }
 
@@ -426,6 +500,11 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 _ = try? await self.evaluateJavaScript(script)
                 // Re-setup scroll observer after content update
                 self.setupScrollObserver()
+
+                // Re-enable scroll sync after images have loaded (350ms covers image load timeout)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) { [weak self] in
+                    self?.isUpdatingContent = false
+                }
             }
             self.note = note
         }

@@ -59,6 +59,7 @@ class ViewController:
     var previewScrollView: EditorScrollView?
     var splitScrollObserver: NSObjectProtocol?
     var isProgrammaticSplitScroll = false
+    var splitScrollDebounceTimer: Timer?
     var needsEditorModeUpdateAfterPreview = false
     @IBOutlet var search: SearchTextField!
     @IBOutlet var notesTableView: NotesTableView!

@@ -3,8 +3,9 @@
 /* Base Container */
 #write {
   margin: 0;
-  max-width: 900px;
+  max-width: 100%;
   padding: 0 28px 80px;
+  box-sizing: border-box;
 }
 
 pre, video, iframe {
