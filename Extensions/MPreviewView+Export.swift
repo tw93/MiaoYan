@@ -1,9 +1,9 @@
 import AppKit
 import Carbon.HIToolbox
 import CryptoKit
+import ObjectiveC.runtime
 import PDFKit
 import WebKit
-import ObjectiveC.runtime
 
 // MARK: - Export Cache Manager
 @MainActor
@@ -234,9 +234,11 @@ extension MPreviewView {
             config.rect = CGRect(x: 0, y: 0, width: exportData.contentWidth, height: exportData.contentHeight)
             config.afterScreenUpdates = true
             config.snapshotWidth = NSNumber(value: Double(exportData.contentWidth) * 2.0)
+            let originalFrame = self.frame
             self.frame.size.height = exportData.contentHeight
 
             self.takeSnapshot(with: config) { image, _ in
+                self.frame = originalFrame
                 Self.isExporting = false
                 if let image = image {
                     self.handleImageExportSuccess(image: image, note: note, viewController: vc)
@@ -500,15 +502,17 @@ extension MPreviewView {
             let js = """
                     (function() {
                         var slidesRoot = document.querySelector('.reveal .slides');
-                        var revealHeight = window.Reveal && typeof Reveal.getConfig === 'function'
-                            ? (Reveal.getConfig().height || window.innerHeight)
-                            : window.innerHeight;
+                        var config = window.Reveal && typeof Reveal.getConfig === 'function'
+                            ? Reveal.getConfig()
+                            : { height: 700, width: 960 };
+                        var revealHeight = config.height || 700;
+                        var revealWidth = config.width || 960;
                         var totalSlides = window.Reveal && typeof Reveal.getTotalSlides === 'function'
                             ? Reveal.getTotalSlides()
                             : 0;
-                        var estimatedHeight = totalSlides > 0 ? totalSlides * revealHeight : 0;
+                        var estimatedHeight = totalSlides > 0 ? totalSlides * revealHeight * 1.2 : 0;
                         var contentHeight = slidesRoot ? Math.max(slidesRoot.scrollHeight, slidesRoot.offsetHeight, estimatedHeight) : Math.max(document.body.scrollHeight, estimatedHeight);
-                        var contentWidth = slidesRoot ? Math.max(slidesRoot.scrollWidth, slidesRoot.offsetWidth, document.documentElement.clientWidth) : Math.max(document.body.scrollWidth, document.documentElement.clientWidth);
+                        var contentWidth = slidesRoot ? Math.max(slidesRoot.scrollWidth, slidesRoot.offsetWidth, revealWidth) : Math.max(document.body.scrollWidth, revealWidth);
                         return { h: contentHeight, w: contentWidth };
                     })();
                 """

@@ -753,6 +753,7 @@ extension ViewController {
     }
 
     private func handleSplitScrollEvent() {
+        guard !isProgrammaticSplitScroll else { return }
         // Skip scroll sync if preview is updating content
         guard editArea.markdownView?.isUpdatingContent != true else {
             return
@@ -764,8 +765,9 @@ extension ViewController {
     private func handlePreviewScroll(ratio: CGFloat) {
         // Skip scroll sync if preview is updating content
         guard !isProgrammaticSplitScroll,
-              UserDefaultsManagement.splitViewMode,
-              editArea.markdownView?.isUpdatingContent != true else {
+            UserDefaultsManagement.splitViewMode,
+            editArea.markdownView?.isUpdatingContent != true
+        else {
             return
         }
 

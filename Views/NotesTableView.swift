@@ -48,6 +48,7 @@ class NotesTableView: NSTableView {
 
     public var loadingQueue = OperationQueue()
     public var fillTimestamp: Int64?
+    private var scrollSaveWorkItem: DispatchWorkItem?
 
     override func draw(_ dirtyRect: NSRect) {
         dataSource = adapter
@@ -546,9 +547,20 @@ class NotesTableView: NSTableView {
     // MARK: - Scroll Position Memory
     func saveScrollPosition() {
         guard let clipView = superview as? NSClipView else { return }
+
+        // Cancel previous pending save
+        scrollSaveWorkItem?.cancel()
+
         let scrollPosition = clipView.bounds.origin.y
         let contextURL = currentScrollContextURL()
-        UserDefaultsManagement.setNotesTableScrollPosition(scrollPosition, for: contextURL)
+
+        let workItem = DispatchWorkItem {
+            UserDefaultsManagement.setNotesTableScrollPosition(scrollPosition, for: contextURL)
+        }
+
+        scrollSaveWorkItem = workItem
+        // Debounce for 0.8 seconds to avoid frequent writes during rapid scrolling
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8, execute: workItem)
     }
 
     @discardableResult
