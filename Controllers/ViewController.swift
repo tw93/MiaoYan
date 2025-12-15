@@ -60,6 +60,7 @@ class ViewController:
     var isProgrammaticSplitScroll = false
     var splitScrollDebounceTimer: Timer?
     var needsEditorModeUpdateAfterPreview = false
+    var isUnfoldingLayout = false
     @IBOutlet var search: SearchTextField!
     @IBOutlet var notesTableView: NotesTableView!
     @IBOutlet var noteMenu: NSMenu! {
@@ -111,6 +112,7 @@ class ViewController:
         }
     }
 
+    @IBOutlet var toggleListButton: NSButton!
     @IBOutlet var formatButton: NSButton!
     @IBOutlet var previewButton: NSButton! {
         didSet {
@@ -504,6 +506,33 @@ class ViewController:
     }
 
     private func configureLayout() {
+        if toggleListButton == nil {
+            let button = NSButton()
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.bezelStyle = .texturedRounded
+            if #available(macOS 11.0, *) {
+                button.image = NSImage(systemSymbolName: "sidebar.left", accessibilityDescription: "Toggle Note List")
+            } else {
+                button.image = NSImage(named: NSImage.touchBarSidebarTemplateName)
+            }
+            button.target = self
+            button.action = #selector(toggleLayoutCycle(_:))
+            button.isBordered = false
+            button.contentTintColor = .secondaryLabelColor
+            button.toolTip = I18n.str("Toggle Note List")
+
+            if let parent = formatButton?.superview {
+                parent.addSubview(button)
+                NSLayoutConstraint.activate([
+                    button.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
+                    button.trailingAnchor.constraint(equalTo: formatButton.leadingAnchor, constant: -8),
+                    button.widthAnchor.constraint(equalToConstant: 20),
+                    button.heightAnchor.constraint(equalToConstant: 20),
+                ])
+                toggleListButton = button
+            }
+        }
+
         titleLabel.isHidden = true
         updateTitle(newTitle: "")
         DispatchQueue.main.async {
