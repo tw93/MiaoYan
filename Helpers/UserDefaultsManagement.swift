@@ -4,6 +4,7 @@ import Foundation
 extension Notification.Name {
     static let editorModeChanged = Notification.Name("editorModeChanged")
     static let preferencesChanged = Notification.Name("PreferencesChanged")
+    static let splitViewModeChanged = Notification.Name("SplitViewModeChanged")
 }
 @MainActor
 public enum UserDefaultsManagement {
@@ -602,7 +603,12 @@ public enum UserDefaultsManagement {
             return false
         }
         set {
+            let oldValue = splitViewMode
+            guard oldValue != newValue else { return }
             UserDefaults.standard.set(newValue, forKey: Constants.SplitViewMode)
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .splitViewModeChanged, object: nil)
+            }
         }
     }
     static var editorContentSplitPosition: Double {

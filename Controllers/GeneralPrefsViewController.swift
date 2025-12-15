@@ -48,7 +48,22 @@ final class GeneralPrefsViewController: BasePrefsViewController {
     private var activateShortcutRecorder: ThemeAwareShortcutRecorderView!
 
     // Editor settings controls
+    // Editor settings controls
     private var editorModePopUp: NSPopUpButton!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(handleSplitViewModeChanged), name: .splitViewModeChanged, object: nil)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    @objc private func handleSplitViewModeChanged() {
+        guard let editorModePopUp = editorModePopUp else { return }
+        editorModePopUp.selectItem(withTitle: localizedEditorMode(UserDefaultsManagement.splitViewMode))
+    }
 
     override func setupUI() {
         let scrollView = NSScrollView()
