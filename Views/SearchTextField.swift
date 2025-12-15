@@ -224,8 +224,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         lastQueryLength = text.count
 
         filterQueue.cancelAllOperations()
-        weak var delegate = vcDelegate
-        filterQueue.addOperation { [weak delegate] in
+        filterQueue.addOperation { [weak delegate = vcDelegate] in
             guard let delegate else { return }
             Task { @MainActor [weak delegate] in
                 guard let delegate else { return }

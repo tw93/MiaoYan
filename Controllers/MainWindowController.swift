@@ -101,9 +101,25 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
 
     func makeNew() {
         applyMiaoYanAppearance()
+
+        // Check if window needs to be shown (and wasn't just minimized)
+        // We use a fade-in effect to mask any potential white flashes during initial render
+        let needsFadeIn = !(window?.isVisible ?? false) && !(window?.isMiniaturized ?? false)
+
+        if needsFadeIn {
+            window?.alphaValue = 0
+        }
+
         window?.makeKeyAndOrderFront(self)
         NSApp.activate(ignoringOtherApps: true)
+
         refreshEditArea(focusSearch: true)
+
+        if needsFadeIn {
+            // Delay the fade-in just enough to ensure the view hierarchy and transparent backgrounds
+            // have completely repainted. This ensures "start with nothing, then fade in after loaded".
+            revealWindowWhenReady()
+        }
     }
 
     func refreshEditArea(focusSearch: Bool = false) {
@@ -134,6 +150,19 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         }
 
         return notesListUndoManager
+    }
+
+    // MARK: - Window Reveal Animation
+    func revealWindowWhenReady() {
+        guard let window = window, window.alphaValue < 1 else { return }
+
+        // Wait slightly to ensure WebView layout is finalized (run loop cycle)
+        DispatchQueue.main.async {
+            NSAnimationContext.runAnimationGroup { context in
+                context.duration = 0.25
+                window.animator().alphaValue = 1
+            }
+        }
     }
 
     public static func shared() -> NSWindow? {
@@ -170,6 +199,14 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
 
     func windowDidBecomeKey(_ notification: Notification) {
         applyMiaoYanAppearance()
+
+        // Ensure WebView background is transparent to avoid white flashes on reactivation
+        if let vc = ViewController.shared(),
+            let markdownView = vc.editArea.markdownView,
+            !markdownView.isHidden
+        {
+            markdownView.setValue(false, forKey: "drawsBackground")
+        }
     }
 
     func windowWillClose(_ notification: Notification) {
@@ -203,20 +240,30 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
             backgroundColor = UserDefaultsManagement.bgColor
         }
 
-        // Set window appearance
-        window.appearance = targetAppearance
-        window.contentView?.appearance = targetAppearance
-        window.backgroundColor = backgroundColor
+        // Only update if appearance actually changed
+        let currentAppearance = window.appearance
+        let needsAppearanceUpdate = (targetAppearance?.name != currentAppearance?.name) || (targetAppearance == nil && currentAppearance != nil) || (targetAppearance != nil && currentAppearance == nil)
 
-        if let contentView = window.contentView {
-            contentView.wantsLayer = true
-            let effectiveAppearance = contentView.effectiveAppearance
-            let resolvedBackground = backgroundColor.resolvedColor(for: effectiveAppearance)
-            contentView.layer?.backgroundColor = resolvedBackground.cgColor
-            contentView.needsDisplay = true
+        if needsAppearanceUpdate {
+            // Set window appearance
+            window.appearance = targetAppearance
+            window.contentView?.appearance = targetAppearance
         }
 
-        window.contentView?.subviews.forEach { $0.needsDisplay = true }
+        // Only update background if it changed
+        if window.backgroundColor != backgroundColor {
+            window.backgroundColor = backgroundColor
+
+            if let contentView = window.contentView {
+                contentView.wantsLayer = true
+                let effectiveAppearance = contentView.effectiveAppearance
+                let resolvedBackground = backgroundColor.resolvedColor(for: effectiveAppearance)
+                contentView.layer?.backgroundColor = resolvedBackground.cgColor
+                contentView.needsDisplay = true
+            }
+
+            window.contentView?.subviews.forEach { $0.needsDisplay = true }
+        }
 
         if let vc = ViewController.shared() {
             if let sidebarSplit = vc.sidebarSplitView as? SidebarSplitView {

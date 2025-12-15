@@ -702,7 +702,7 @@ class Storage {
         }
     }
 
-    public func findOrphanAttachments(completion: @escaping ([URL]) -> Void) {
+    public func findOrphanAttachments(completion: @escaping @MainActor ([URL]) -> Void) {
         let referenced = collectReferencedAttachmentPaths()
         let attachmentFolders = collectAttachmentFolders()
 
@@ -733,7 +733,7 @@ class Storage {
         return folders
     }
 
-    private static func scanOrphanAttachments(folders: [URL], referenced: Set<String>) -> [URL] {
+    nonisolated private static func scanOrphanAttachments(folders: [URL], referenced: Set<String>) -> [URL] {
         var orphaned = [URL]()
         let manager = FileManager.default
 
@@ -790,7 +790,7 @@ class Storage {
         return referenced
     }
 
-    private static func shouldSkipAttachmentCandidate(_ url: URL) -> Bool {
+    nonisolated private static func shouldSkipAttachmentCandidate(_ url: URL) -> Bool {
         var isDirectory = ObjCBool(false)
         if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory), isDirectory.boolValue {
             return true

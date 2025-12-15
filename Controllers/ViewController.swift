@@ -39,6 +39,7 @@ class ViewController:
     var scrollDeltaX: CGFloat = 0
     var updateViews = [Note]()
     public var breakUndoTimer = Timer()
+    var lastEnablePreviewTime: TimeInterval = 0
 
     // Presentation mode scroll position preservation
     var savedPresentationScrollPosition: CGPoint?
@@ -235,6 +236,13 @@ class ViewController:
         configureLayout()
         configureNotesList()
         configureEditor()
+
+        // Pre-hide editor if starting in preview mode to avoid white flash
+        if UserDefaultsManagement.preview {
+            NSLog("[DEBUG] viewDidLoad - pre-hiding editor for preview mode")
+            editAreaScroll.alphaValue = 0
+        }
+
         // Async preload to avoid impacting startup performance
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.preloadWebView()
@@ -273,6 +281,20 @@ class ViewController:
         super.viewWillAppear()
         if UserDefaultsManagement.preview {
             disablePreviewWorkItem?.cancel()
+
+            // Only pre-configure if not already configured (first appearance or after being hidden)
+            let needsConfiguration = editorContentSplitView?.displayMode != .previewOnly || editArea.markdownView == nil || editArea.markdownView?.isHidden == true
+
+            if needsConfiguration {
+                // Pre-configure preview UI state before view appears to avoid white flash
+                NSLog("[DEBUG] viewWillAppear - pre-configuring preview UI")
+                editorContentSplitView?.setDisplayMode(.previewOnly, animated: false)
+                preparePreviewContainer(hidden: false)
+                editAreaScroll.hasVerticalScroller = false
+                editAreaScroll.hasHorizontalScroller = false
+            } else {
+                NSLog("[DEBUG] viewWillAppear - skipping configuration (already in preview mode)")
+            }
         }
         if needRestorePreview {
             if titleLabel.isEditable {
@@ -283,6 +305,16 @@ class ViewController:
     }
 
     override func viewDidAppear() {
+        NSLog("[DEBUG] ViewController viewDidAppear")
+
+        // Safety check: If data loaded very quickly (before window was attached), the reveal call might have been missed.
+        // If window is still invisible but we have data, reveal it now.
+        if let window = view.window, window.alphaValue == 0, !notesTableView.noteList.isEmpty {
+            if let wc = window.windowController as? MainWindowController {
+                wc.revealWindowWhenReady()
+            }
+        }
+
         if UserDefaultsManagement.fullScreen {
             view.window?.toggleFullScreen(nil)
         }
@@ -303,6 +335,26 @@ class ViewController:
         }
         handleForAppMode()
         applyEditorModePreferenceChange()
+
+        // Restore Preview Mode if needed
+        if UserDefaultsManagement.preview {
+            // If a note is already selected, enable preview immediately
+            if notesTableView.selectedRow >= 0 {
+                NSLog("[DEBUG] Enabling preview immediately (note already selected)")
+                enablePreview()
+            } else {
+                // Otherwise, wait briefly for note selection to complete
+                NSLog("[DEBUG] Scheduling delayed preview restore (waiting for note selection)")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    if UserDefaultsManagement.preview {
+                        NSLog("[DEBUG] Executing delayed preview restore")
+                        self.enablePreview()
+                    } else {
+                        NSLog("[DEBUG] Delayed restore skipped: preview is false")
+                    }
+                }
+            }
+        }
     }
 
     func handleForAppMode() {
@@ -586,6 +638,11 @@ class ViewController:
                     }
                 }
                 self.storageOutlineView.isLaunch = false
+            }
+
+            // Trigger window fade-in now that data is loaded and initial Note is selected
+            if let windowController = self.view.window?.windowController as? MainWindowController {
+                windowController.revealWindowWhenReady()
             }
         }
     }
