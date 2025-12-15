@@ -170,6 +170,30 @@ extension ViewController {
         sidebarWidth == 0 ? showSidebar(sender) : hideSidebar(sender)
     }
 
+    @IBAction func toggleSplitMode(_ sender: Any) {
+        let newMode = !UserDefaultsManagement.splitViewMode
+        UserDefaultsManagement.splitViewMode = newMode
+
+        // Trigger UI update
+        // If currently in Preview Mode, exit it.
+        // The disablePreview() logic will check splitViewMode and automatically transition to Split Mode.
+        if UserDefaultsManagement.preview {
+            UserDefaultsManagement.preview = false
+        } else {
+            applyEditorModePreferenceChange()
+        }
+
+        // Update Button Icon
+        if let button = toggleSplitButton {
+            // Use custom icons for two states (single/split)
+            let iconName = newMode ? "icon_editor_split" : "icon_editor_single"
+            if let image = NSImage(named: iconName) {
+                image.isTemplate = true
+                button.image = image
+            }
+        }
+    }
+
     // MARK: - Gesture Handling
     override func wantsScrollEventsForSwipeTracking(on axis: NSEvent.GestureAxis) -> Bool {
         axis == .horizontal

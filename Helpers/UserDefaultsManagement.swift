@@ -202,6 +202,16 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.IsFirstLaunch)
         }
     }
+
+    static var hasShownTOCTip: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "hasShownTOCTip")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "hasShownTOCTip")
+        }
+    }
+
     static var isSingleMode: Bool {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.IsSingleMode) as? Bool {
@@ -524,7 +534,6 @@ public enum UserDefaultsManagement {
             get { return _currentMode }
             set {
                 let oldMode = _currentMode
-                NSLog("[DEBUG] EditorStateManager setMode: \(newValue) (old: \(oldMode))")
                 _currentMode = newValue
 
                 // Save to UserDefaults
@@ -558,12 +567,9 @@ public enum UserDefaultsManagement {
             return EditorStateManager.shared.isPreviewMode
         }
         set {
-            NSLog("[PREVIEW DEBUG] UserDefaultsManagement.preview setter called: \(newValue), current: \(EditorStateManager.shared.isPreviewMode)")
-            NSLog("[PREVIEW DEBUG] UserDefaultsManagement.preview call stack: \(Thread.callStackSymbols.prefix(10).joined(separator: "\n"))")
             if newValue && !EditorStateManager.shared.isPPTMode {
                 EditorStateManager.shared.setMode(.preview)
             } else if !newValue && EditorStateManager.shared.currentMode == .preview {
-                NSLog("[PREVIEW DEBUG] UserDefaultsManagement.preview - setting mode to normal")
                 EditorStateManager.shared.setMode(.normal)
             }
         }
