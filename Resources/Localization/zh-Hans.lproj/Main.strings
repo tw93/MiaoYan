@@ -564,3 +564,6 @@
 
 /* Class = "NSMenuItem"; title = "MiaoYan PPT PDF"; ObjectID = "DhD-mk-T1u"; */
 "DhD-mk-T1u.title" = "妙言 PPT PDF";
+
+/* Class = "NSMenuItem"; title = "Toggle Split View"; ObjectID = "Tgl-Spl-View"; */
+"Tgl-Spl-View.title" = "切换分栏";

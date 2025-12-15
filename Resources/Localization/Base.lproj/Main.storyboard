@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="24128" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24128"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24506"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -233,6 +233,11 @@ CA
                                         <menuItem title="Toggle Presentation" keyEquivalent="4" id="9ib-os-JZv">
                                             <connections>
                                                 <action selector="togglePresentation:" target="N0L-g4-qwj" id="Dr0-AZ-Kga"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Toggle Split View" image="square.split.2x1" catalog="system" keyEquivalent="\" id="Tgl-Spl-View">
+                                            <connections>
+                                                <action selector="toggleSplitMode:" target="Ady-hI-5gd" id="Act-Tgl-Spl"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem title="Enter Full Screen" keyEquivalent="f" id="4J7-dP-txa">
@@ -1267,6 +1272,7 @@ CA
         <image name="newNote" width="24" height="24"/>
         <image name="pinNote" width="24" height="24"/>
         <image name="project" width="24" height="24"/>
+        <image name="square.split.2x1" catalog="system" width="15" height="14"/>
         <image name="wand.and.rays" catalog="system" width="16" height="16"/>
         <image name="wand.and.sparkles" catalog="system" width="17" height="15"/>
         <namedColor name="divider">
