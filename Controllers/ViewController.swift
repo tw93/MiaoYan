@@ -15,8 +15,6 @@ class ViewController:
     NSPopoverDelegate,
     NSTextFieldDelegate,
     NSSplitViewDelegate,
-    NSOutlineViewDelegate,
-    NSOutlineViewDataSource,
     NSMenuItemValidation,
     NSUserNotificationCenterDelegate
 {

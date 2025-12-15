@@ -26,6 +26,9 @@ public class Note: NSObject {
     public var imageUrl: [URL]?
     public var isParsed = false
 
+    // Debounce for save operations
+    private var saveWorkItem: DispatchWorkItem?
+
     private var decryptedTemporarySrc: URL?
     public var ciphertextWriter = OperationQueue()
 
@@ -382,6 +385,8 @@ public class Note: NSObject {
         }
     }
 
+    private static let metaTitleRegex = try! NSRegularExpression(pattern: "title: (.*?)", options: [])
+
     func cleanMetaData(content: String) -> String {
         if content.hasPrefix("---\n") {
             var list = content.components(separatedBy: "---")
@@ -390,8 +395,7 @@ public class Note: NSObject {
                 let headerList = list[1].components(separatedBy: "\n")
                 for header in headerList {
                     let nsHeader = header as NSString
-                    let regex = try! NSRegularExpression(pattern: "title: (.*?)", options: [])
-                    let matches = regex.matches(in: String(nsHeader), options: [], range: NSRange(location: 0, length: (nsHeader as String).count))
+                    let matches = Note.metaTitleRegex.matches(in: String(nsHeader), options: [], range: NSRange(location: 0, length: (nsHeader as String).count))
 
                     if matches.first != nil {
                         list.remove(at: 1)
@@ -452,7 +456,7 @@ public class Note: NSObject {
     public func save(content: NSMutableAttributedString) {
         self.content = content.unLoad()
 
-        save(attributedString: self.content)
+        debounceSave(attributedString: self.content)
     }
 
     public func save(globalStorage: Bool = true) {
@@ -460,10 +464,26 @@ public class Note: NSObject {
             content = content.unLoadCheckboxes()
         }
 
-        save(attributedString: content, globalStorage: globalStorage)
+        // Immediate save for manual requests or structure changes
+        executeSave(attributedString: content, globalStorage: globalStorage)
     }
 
-    private func save(attributedString: NSAttributedString, globalStorage: Bool = true) {
+    private func debounceSave(attributedString: NSAttributedString, globalStorage: Bool = true) {
+        saveWorkItem?.cancel()
+
+        let workItem = DispatchWorkItem { [weak self] in
+            self?.executeSave(attributedString: attributedString, globalStorage: globalStorage)
+        }
+
+        saveWorkItem = workItem
+        // Debounce for 1.5 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: workItem)
+    }
+
+    private func executeSave(attributedString: NSAttributedString, globalStorage: Bool = true) {
+        // Cancel pending debounce if we are saving immediately
+        saveWorkItem?.cancel()
+
         let attributes = getFileAttributes()
 
         do {
