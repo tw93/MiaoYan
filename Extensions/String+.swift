@@ -3,6 +3,22 @@ import CryptoKit
 import Foundation
 
 extension String {
+    // Shared regex cache to avoid recompilation overhead
+    nonisolated(unsafe) private static let regexCache = NSCache<NSString, NSRegularExpression>()
+
+    private func getCachedRegex(pattern: String, options: NSRegularExpression.Options = []) -> NSRegularExpression? {
+        let key = "\(pattern)-\(options.rawValue)" as NSString
+        if let cached = String.regexCache.object(forKey: key) {
+            return cached
+        }
+
+        if let regex = try? NSRegularExpression(pattern: pattern, options: options) {
+            String.regexCache.setObject(regex, forKey: key)
+            return regex
+        }
+        return nil
+    }
+
     public func condenseWhitespace() -> String {
         components(separatedBy: .whitespacesAndNewlines)
             .filter { !$0.isEmpty }
@@ -45,12 +61,12 @@ extension String {
 
     public func isNumberList() -> Bool {
         let pattern = "^(( |\t)*[0-9]+\\. )"
-        guard let regex = try? NSRegularExpression(pattern: pattern) else { return false }
+        guard let regex = getCachedRegex(pattern: pattern) else { return false }
         return regex.firstMatch(in: self, options: [], range: NSRange(location: 0, length: count)) != nil
     }
 
     public func regexReplace(regex: String, content: String) -> String {
-        guard let regexExpression = try? NSRegularExpression(pattern: regex, options: .caseInsensitive) else {
+        guard let regexExpression = getCachedRegex(pattern: regex, options: .caseInsensitive) else {
             return self
         }
         return regexExpression.stringByReplacingMatches(
@@ -70,7 +86,7 @@ extension String {
     }
 
     public func matchingStrings(regex: String) -> [[String]] {
-        guard let regex = try? NSRegularExpression(pattern: regex, options: [.dotMatchesLineSeparators]) else { return [] }
+        guard let regex = getCachedRegex(pattern: regex, options: [.dotMatchesLineSeparators]) else { return [] }
 
         let nsString = self as NSString
         let results = regex.matches(in: self, options: [], range: NSRange(0..<nsString.length))
@@ -108,6 +124,7 @@ extension StringProtocol where Index == String.Index {
 // MARK: - String Subscript Extensions
 extension String {
     // Single character access by integer index
+    // PERF: O(n) complexity. Use valid String.Index for performance critical code.
     public subscript(value: Int) -> Character {
         self[index(at: value)]
     }
@@ -118,6 +135,7 @@ extension String {
     }
 
     // Substring access by closed range
+    // PERF: O(n) complexity for index calculation.
     public subscript(value: CountableClosedRange<Int>) -> Substring {
         self[index(at: value.lowerBound)...index(at: value.upperBound)]
     }
