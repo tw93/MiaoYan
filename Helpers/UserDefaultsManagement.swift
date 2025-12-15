@@ -85,6 +85,7 @@ public enum UserDefaultsManagement {
         static let HasShownImagePreviewTip = "hasShownImagePreviewTip"
         static let SplitViewMode = "splitViewMode"
         static let EditorContentSplitPosition = "editorContentSplitPosition"
+        static let EditorModeKey = "editorMode"
     }
 
     private static func resolvedFontName(forKey key: String) -> String {
@@ -510,14 +511,25 @@ public enum UserDefaultsManagement {
         @MainActor static let shared = EditorStateManager()
         private var _currentMode: EditorMode = .normal
         private init() {
-            // Reset to normal mode on each startup, don't read from UserDefaults
-            _currentMode = .normal
+            // Read from UserDefaults
+            if let storedMode = UserDefaults.standard.string(forKey: Constants.EditorModeKey),
+                let mode = EditorMode(rawValue: storedMode)
+            {
+                _currentMode = mode
+            } else {
+                _currentMode = .normal
+            }
         }
         var currentMode: EditorMode {
             get { return _currentMode }
             set {
                 let oldMode = _currentMode
+                NSLog("[DEBUG] EditorStateManager setMode: \(newValue) (old: \(oldMode))")
                 _currentMode = newValue
+
+                // Save to UserDefaults
+                UserDefaults.standard.set(newValue.rawValue, forKey: Constants.EditorModeKey)
+
                 // Send mode change notification
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(
@@ -546,9 +558,12 @@ public enum UserDefaultsManagement {
             return EditorStateManager.shared.isPreviewMode
         }
         set {
+            NSLog("[PREVIEW DEBUG] UserDefaultsManagement.preview setter called: \(newValue), current: \(EditorStateManager.shared.isPreviewMode)")
+            NSLog("[PREVIEW DEBUG] UserDefaultsManagement.preview call stack: \(Thread.callStackSymbols.prefix(10).joined(separator: "\n"))")
             if newValue && !EditorStateManager.shared.isPPTMode {
                 EditorStateManager.shared.setMode(.preview)
             } else if !newValue && EditorStateManager.shared.currentMode == .preview {
+                NSLog("[PREVIEW DEBUG] UserDefaultsManagement.preview - setting mode to normal")
                 EditorStateManager.shared.setMode(.normal)
             }
         }

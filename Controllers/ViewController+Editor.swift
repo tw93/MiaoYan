@@ -33,6 +33,17 @@ extension ViewController {
 
     // MARK: - Preview Management
     func enablePreview() {
+        NSLog("[DEBUG] enablePreview called")
+
+        // Debounce rapid repeated calls (within 0.15 seconds)
+        let now = Date().timeIntervalSince1970
+        let timeSinceLastCall = now - lastEnablePreviewTime
+        if timeSinceLastCall < 0.15 && UserDefaultsManagement.preview {
+            NSLog("[DEBUG] enablePreview skipped - debounced (time since last: \(timeSinceLastCall))")
+            return
+        }
+        lastEnablePreviewTime = now
+
         if !UserDefaultsManagement.magicPPT {
             UserDefaultsManagement.preview = true
         }
@@ -59,6 +70,12 @@ extension ViewController {
         // Hide editor scrollbar to prevent overlap with preview scrollbar
         editAreaScroll.hasVerticalScroller = false
         editAreaScroll.hasHorizontalScroller = false
+
+        // Restore editor scroll alpha if it was hidden during startup
+        if editAreaScroll.alphaValue < 1 {
+            editAreaScroll.alphaValue = 1
+        }
+
         // Make WebView the first responder to handle Cmd+F properly
         DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.previewFocusDelay) {
             self.editArea.window?.makeFirstResponder(self.editArea.markdownView)
@@ -114,6 +131,8 @@ extension ViewController {
     }
 
     func disablePreview() {
+        NSLog("[PREVIEW DEBUG] disablePreview called - current preview mode: \(UserDefaultsManagement.preview)")
+        NSLog("[PREVIEW DEBUG] disablePreview call stack: \(Thread.callStackSymbols.prefix(10).joined(separator: "\n"))")
         guard !UserDefaultsManagement.magicPPT else { return }
 
         // Save preview scroll position before disabling
@@ -133,6 +152,8 @@ extension ViewController {
                 // Restore editor scrollbar
                 self.editAreaScroll.hasVerticalScroller = true
                 self.editAreaScroll.hasHorizontalScroller = true
+                // Restore editor scroll alpha
+                self.editAreaScroll.alphaValue = 1
 
                 let normalizedRatio = ratio.map { min(max($0, 0), 1) }
 
@@ -210,6 +231,8 @@ extension ViewController {
         // Restore editor scrollbar
         editAreaScroll.hasVerticalScroller = true
         editAreaScroll.hasHorizontalScroller = true
+        // Restore editor scroll alpha
+        editAreaScroll.alphaValue = 1
         DispatchQueue.main.async {
             self.titleLabel.isEditable = true
         }

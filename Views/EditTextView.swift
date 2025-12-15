@@ -67,6 +67,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
     // Tracks whether the last ESC key press was consumed by the IME
     private var shouldIgnoreEscapeNavigation = false
+    // Debounce appearance changes to avoid flashing
+    private var lastAppearanceChangeTime: TimeInterval = 0
     override var textContainerOrigin: NSPoint {
         var origin = super.textContainerOrigin
         if bottomPadding > 0 {
@@ -418,21 +420,25 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     // New fill method using configuration object
     func fill(note: Note, options: FillOptions = .default) {
+        NSLog("[PREVIEW DEBUG] fill START - preview mode: \(UserDefaultsManagement.preview), options: \(options)")
         guard let viewController = window?.contentViewController as? ViewController else {
             return
         }
 
         // Prevent filling during note creation to avoid content flashing
         if UserDataService.instance.shouldBlockEditAreaUpdate(forceUpdate: options.force) {
+            NSLog("[PREVIEW DEBUG] fill BLOCKED by shouldBlockEditAreaUpdate")
             return
         }
 
         // Call the internal implementation
         _performFill(note: note, options: options, viewController: viewController)
+        NSLog("[PREVIEW DEBUG] fill END - preview mode: \(UserDefaultsManagement.preview)")
     }
 
     // Internal implementation method
     private func _performFill(note: Note, options: FillOptions, viewController: ViewController) {
+        NSLog("[PREVIEW DEBUG] _performFill START - preview mode: \(UserDefaultsManagement.preview)")
         // Only show title components if not in PPT mode
         if !UserDefaultsManagement.magicPPT {
             viewController.titleBarView.isHidden = false
@@ -485,18 +491,20 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 // Smooth transition: fade out -> load -> fade in
                 let needsTransition = !previewView.isHidden && previewView.alphaValue > 0
                 if needsTransition {
-                    NSAnimationContext.runAnimationGroup({ context in
-                        context.duration = 0.08
-                        previewView.animator().alphaValue = 0
-                    }, completionHandler: {
-                        Task { @MainActor in
-                            previewView.load(note: note, force: options.force)
-                            NSAnimationContext.runAnimationGroup({ context in
-                                context.duration = 0.12
-                                previewView.animator().alphaValue = 1.0
-                            })
-                        }
-                    })
+                    NSAnimationContext.runAnimationGroup(
+                        { context in
+                            context.duration = 0.08
+                            previewView.animator().alphaValue = 0
+                        },
+                        completionHandler: {
+                            Task { @MainActor in
+                                previewView.load(note: note, force: options.force)
+                                NSAnimationContext.runAnimationGroup({ context in
+                                    context.duration = 0.12
+                                    previewView.animator().alphaValue = 1.0
+                                })
+                            }
+                        })
                 } else {
                     previewView.load(note: note, force: options.force)
                     previewView.isHidden = false
@@ -518,18 +526,20 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 // Smooth transition: fade out -> load -> fade in
                 let needsTransition = !previewView.isHidden && previewView.alphaValue > 0
                 if needsTransition {
-                    NSAnimationContext.runAnimationGroup({ context in
-                        context.duration = 0.08
-                        previewView.animator().alphaValue = 0
-                    }, completionHandler: {
-                        Task { @MainActor in
-                            previewView.load(note: note, force: options.force)
-                            NSAnimationContext.runAnimationGroup({ context in
-                                context.duration = 0.12
-                                previewView.animator().alphaValue = 1.0
-                            })
-                        }
-                    })
+                    NSAnimationContext.runAnimationGroup(
+                        { context in
+                            context.duration = 0.08
+                            previewView.animator().alphaValue = 0
+                        },
+                        completionHandler: {
+                            Task { @MainActor in
+                                previewView.load(note: note, force: options.force)
+                                NSAnimationContext.runAnimationGroup({ context in
+                                    context.duration = 0.12
+                                    previewView.animator().alphaValue = 1.0
+                                })
+                            }
+                        })
                 } else {
                     previewView.load(note: note, force: options.force)
                     previewView.isHidden = false
@@ -862,7 +872,16 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     public func applySystemAppearance() {
         guard let note = EditTextView.note else { return }
-        guard let vc = getViewController() else { return }
+        guard getViewController() != nil else { return }
+
+        // Debounce appearance changes to prevent flashing (allow only once per 0.3 seconds)
+        let now = Date().timeIntervalSince1970
+        let timeSinceLastChange = now - lastAppearanceChangeTime
+        if timeSinceLastChange < 0.3 {
+            NSLog("[PREVIEW DEBUG] applySystemAppearance - skipped (debounced, time since last: \(timeSinceLastChange))")
+            return
+        }
+        lastAppearanceChangeTime = now
 
         if UserDefaultsManagement.appearanceType == .System {
             UserDataService.instance.isDark = effectiveAppearance.isDark
@@ -871,11 +890,13 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         NotesTextProcessor.hl = nil
         NotesTextProcessor.highlight(note: note)
 
+        // Don't toggle preview mode on theme change - just refresh the preview content
         if UserDefaultsManagement.preview && UserDefaultsManagement.appearanceType == .System {
-            vc.disablePreview()
-            vc.enablePreview()
+            NSLog("[PREVIEW DEBUG] applySystemAppearance - refreshing preview without toggling mode")
+            viewDelegate?.refillEditArea(previewOnly: true, force: true)
+        } else {
+            viewDelegate?.refillEditArea()
         }
-        viewDelegate?.refillEditArea()
     }
 
     public func fillHighlightLinks(range: NSRange? = nil) {

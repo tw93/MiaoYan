@@ -300,10 +300,8 @@ extension ViewController {
                 UserDataService.instance.searchTrigger = false
             }
 
-            if UserDefaultsManagement.preview {
-                vc.disablePreview()
-            }
-
+            // Don't disable preview mode when deleting notes
+            // Let the selection change handler update the preview with the next note
             vc.editArea.clear()
         }
 
@@ -633,6 +631,7 @@ extension ViewController {
     }
 
     func createNote(name: String = "", content: String = "", type: NoteType? = nil, project: Project? = nil, load: Bool = false) {
+        NSLog("[PREVIEW DEBUG] createNote START - preview mode: \(UserDefaultsManagement.preview)")
         guard let vc = ViewController.shared() else { return }
         let selectedProjects = vc.storageOutlineView.getSidebarProjects()
         var sidebarProject = project ?? selectedProjects?.first
@@ -655,19 +654,20 @@ extension ViewController {
             return
         }
 
-        UserDefaultsManagement.preview = false
-        DispatchQueue.main.async { [weak self] in
-            self?.previewButton.state = UserDefaultsManagement.preview ? .on : .off
-        }
+        // Don't force disable preview mode - let user maintain their preferred mode
+        // Only clean up the webview if we're NOT in preview mode
+        NSLog("[PREVIEW DEBUG] createNote - before cleanup check, preview mode: \(UserDefaultsManagement.preview)")
+        if !UserDefaultsManagement.preview {
+            NSLog("[PREVIEW DEBUG] createNote - cleaning up webview (not in preview mode)")
+            editArea.markdownView?.removeFromSuperview()
+            previewScrollView?.documentView = nil
+            editArea.markdownView = nil
 
-        editArea.markdownView?.removeFromSuperview()
-        previewScrollView?.documentView = nil
-        editArea.markdownView = nil
-
-        guard let editor = editArea else {
-            return
+            guard let editor = editArea else {
+                return
+            }
+            editor.subviews.removeAll(where: { $0.isKind(of: MPreviewView.self) })
         }
-        editor.subviews.removeAll(where: { $0.isKind(of: MPreviewView.self) })
 
         // Set flag to prevent edit area updates during note creation
         UserDataService.instance.isCreatingNote = true
@@ -684,11 +684,14 @@ extension ViewController {
             DispatchQueue.main.async {
                 // Clear the flag before final setup
                 UserDataService.instance.isCreatingNote = false
+                NSLog("[PREVIEW DEBUG] createNote - before completeNoteCreation, preview mode: \(UserDefaultsManagement.preview)")
                 self.completeNoteCreation(for: note, with: vc)
+                NSLog("[PREVIEW DEBUG] createNote - after completeNoteCreation, preview mode: \(UserDefaultsManagement.preview)")
             }
         }
 
         TelemetryDeck.signal("Action.NewNote")
+        NSLog("[PREVIEW DEBUG] createNote END - preview mode: \(UserDefaultsManagement.preview)")
     }
 
     // Prepare UI state for new note creation
