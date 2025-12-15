@@ -420,25 +420,21 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     // New fill method using configuration object
     func fill(note: Note, options: FillOptions = .default) {
-        NSLog("[PREVIEW DEBUG] fill START - preview mode: \(UserDefaultsManagement.preview), options: \(options)")
         guard let viewController = window?.contentViewController as? ViewController else {
             return
         }
 
         // Prevent filling during note creation to avoid content flashing
         if UserDataService.instance.shouldBlockEditAreaUpdate(forceUpdate: options.force) {
-            NSLog("[PREVIEW DEBUG] fill BLOCKED by shouldBlockEditAreaUpdate")
             return
         }
 
         // Call the internal implementation
         _performFill(note: note, options: options, viewController: viewController)
-        NSLog("[PREVIEW DEBUG] fill END - preview mode: \(UserDefaultsManagement.preview)")
     }
 
     // Internal implementation method
     private func _performFill(note: Note, options: FillOptions, viewController: ViewController) {
-        NSLog("[PREVIEW DEBUG] _performFill START - preview mode: \(UserDefaultsManagement.preview)")
         // Only show title components if not in PPT mode
         if !UserDefaultsManagement.magicPPT {
             viewController.titleBarView.isHidden = false
@@ -878,7 +874,6 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         let now = Date().timeIntervalSince1970
         let timeSinceLastChange = now - lastAppearanceChangeTime
         if timeSinceLastChange < 0.3 {
-            NSLog("[PREVIEW DEBUG] applySystemAppearance - skipped (debounced, time since last: \(timeSinceLastChange))")
             return
         }
         lastAppearanceChangeTime = now
@@ -892,7 +887,6 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
         // Don't toggle preview mode on theme change - just refresh the preview content
         if UserDefaultsManagement.preview && UserDefaultsManagement.appearanceType == .System {
-            NSLog("[PREVIEW DEBUG] applySystemAppearance - refreshing preview without toggling mode")
             viewDelegate?.refillEditArea(previewOnly: true, force: true)
         } else {
             viewDelegate?.refillEditArea()

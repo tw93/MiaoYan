@@ -113,6 +113,7 @@ class ViewController:
     }
 
     @IBOutlet var toggleListButton: NSButton!
+    @IBOutlet var toggleSplitButton: NSButton!
     @IBOutlet var formatButton: NSButton!
     @IBOutlet var previewButton: NSButton! {
         didSet {
@@ -241,7 +242,6 @@ class ViewController:
 
         // Pre-hide editor if starting in preview mode to avoid white flash
         if UserDefaultsManagement.preview {
-            NSLog("[DEBUG] viewDidLoad - pre-hiding editor for preview mode")
             editAreaScroll.alphaValue = 0
         }
 
@@ -289,13 +289,10 @@ class ViewController:
 
             if needsConfiguration {
                 // Pre-configure preview UI state before view appears to avoid white flash
-                NSLog("[DEBUG] viewWillAppear - pre-configuring preview UI")
                 editorContentSplitView?.setDisplayMode(.previewOnly, animated: false)
                 preparePreviewContainer(hidden: false)
                 editAreaScroll.hasVerticalScroller = false
                 editAreaScroll.hasHorizontalScroller = false
-            } else {
-                NSLog("[DEBUG] viewWillAppear - skipping configuration (already in preview mode)")
             }
         }
         if needRestorePreview {
@@ -307,8 +304,6 @@ class ViewController:
     }
 
     override func viewDidAppear() {
-        NSLog("[DEBUG] ViewController viewDidAppear")
-
         // Safety check: If data loaded very quickly (before window was attached), the reveal call might have been missed.
         // If window is still invisible but we have data, reveal it now.
         if let window = view.window, window.alphaValue == 0, !notesTableView.noteList.isEmpty {
@@ -342,17 +337,12 @@ class ViewController:
         if UserDefaultsManagement.preview {
             // If a note is already selected, enable preview immediately
             if notesTableView.selectedRow >= 0 {
-                NSLog("[DEBUG] Enabling preview immediately (note already selected)")
                 enablePreview()
             } else {
                 // Otherwise, wait briefly for note selection to complete
-                NSLog("[DEBUG] Scheduling delayed preview restore (waiting for note selection)")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                     if UserDefaultsManagement.preview {
-                        NSLog("[DEBUG] Executing delayed preview restore")
                         self.enablePreview()
-                    } else {
-                        NSLog("[DEBUG] Delayed restore skipped: preview is false")
                     }
                 }
             }
@@ -506,31 +496,155 @@ class ViewController:
     }
 
     private func configureLayout() {
-        if toggleListButton == nil {
+        guard let parent = formatButton?.superview else { return }
+
+        // Adjust parent width to accommodate new buttons
+        for constraint in parent.constraints {
+            if constraint.firstAttribute == .width && constraint.constant == 140 {
+                constraint.constant = 180
+                break
+            }
+        }
+
+        // Set custom icons for formatButton, previewButton, presentationButton
+        if let image = NSImage(named: "icon_format") {
+            image.isTemplate = true
+            formatButton.image = image
+        }
+        if let image = NSImage(named: "icon_preview") {
+            image.isTemplate = true
+            previewButton.image = image
+        }
+        if let image = NSImage(named: "icon_presentation") {
+            image.isTemplate = true
+            presentationButton.image = image
+        }
+
+        formatButton.toolTip = I18n.str("Format")
+        previewButton.toolTip = I18n.str("Toggle Preview")
+        presentationButton.toolTip = I18n.str("Presentation")
+
+        // Unify button sizes: set all to 18x18 and remove borders/backgrounds for consistency
+        for button in [formatButton, previewButton, presentationButton] {
+            guard let btn = button else { continue }
+
+            // Unify style to match programmatically created buttons
+            btn.isBordered = false
+            btn.bezelStyle = .texturedRounded
+            btn.contentTintColor = .secondaryLabelColor
+            btn.imagePosition = .imageOnly
+
+            for constraint in btn.constraints {
+                if constraint.firstAttribute == .width {
+                    constraint.constant = 18
+                } else if constraint.firstAttribute == .height {
+                    constraint.constant = 18
+                }
+            }
+        }
+
+        // Create toggleSplitButton first (relative to formatButton to avoid overlap)
+        if toggleSplitButton == nil {
             let button = NSButton()
             button.translatesAutoresizingMaskIntoConstraints = false
             button.bezelStyle = .texturedRounded
-            if #available(macOS 11.0, *) {
-                button.image = NSImage(systemSymbolName: "sidebar.left", accessibilityDescription: "Toggle Note List")
-            } else {
-                button.image = NSImage(named: NSImage.touchBarSidebarTemplateName)
+
+            // Use custom icons for two states (single/split)
+            let iconName = UserDefaultsManagement.splitViewMode ? "icon_editor_split" : "icon_editor_single"
+            if let image = NSImage(named: iconName) {
+                image.isTemplate = true
+                button.image = image
             }
+
             button.target = self
-            button.action = #selector(toggleLayoutCycle(_:))
+            button.action = #selector(toggleSplitMode(_:))
             button.isBordered = false
             button.contentTintColor = .secondaryLabelColor
-            button.toolTip = I18n.str("Toggle Note List")
+            button.toolTip = I18n.str("Toggle Split Mode")
 
-            if let parent = formatButton?.superview {
-                parent.addSubview(button)
-                NSLayoutConstraint.activate([
-                    button.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
-                    button.trailingAnchor.constraint(equalTo: formatButton.leadingAnchor, constant: -8),
-                    button.widthAnchor.constraint(equalToConstant: 20),
-                    button.heightAnchor.constraint(equalToConstant: 20),
-                ])
-                toggleListButton = button
+            toggleSplitButton = button
+        }
+
+        // Create toggleListButton first (leftmost position)
+        if toggleListButton == nil {
+            let listButton = NSButton()
+            listButton.translatesAutoresizingMaskIntoConstraints = false
+            listButton.bezelStyle = .texturedRounded
+            listButton.imagePosition = .imageOnly
+
+            // Use custom icon
+            if let image = NSImage(named: "icon_sidebar_left") {
+                image.isTemplate = true
+                listButton.image = image
             }
+
+            listButton.target = self
+            listButton.action = #selector(toggleLayoutCycle(_:))
+            listButton.isBordered = false
+            listButton.contentTintColor = .secondaryLabelColor
+            listButton.toolTip = I18n.str("Toggle Note List")
+
+            parent.addSubview(listButton)
+            listButton.wantsLayer = true
+            listButton.layer?.zPosition = 100
+
+            // Position: align to parent leading edge with proper spacing
+            NSLayoutConstraint.activate([
+                listButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
+                listButton.leadingAnchor.constraint(equalTo: parent.leadingAnchor, constant: 8),
+                listButton.widthAnchor.constraint(equalToConstant: 18),
+                listButton.heightAnchor.constraint(equalToConstant: 18),
+            ])
+            toggleListButton = listButton
+        }
+
+        // Setup constraints for toggleSplitButton after both buttons are created
+        if let splitButton = toggleSplitButton, let listButton = toggleListButton {
+            parent.addSubview(splitButton)
+
+            // Recommended Order: List -> Format -> Split -> Preview -> Presentation
+            // 1. List (Sidebar) - Navigation Context
+            // 2. Format (Action) - Content Modification
+            // 3. Split (Layout) - View Experience
+            // 4. Preview (Mode) - View Experience
+            // 5. Presentation (Mode) - Immersive Experience
+
+            // Reset constraints for all movable buttons to ensure clean slate
+            for btn in [formatButton, previewButton, presentationButton] {
+                guard let btn = btn else { continue }
+                for constraint in parent.constraints {
+                    if constraint.firstItem as? NSButton == btn && constraint.firstAttribute == .leading {
+                        constraint.isActive = false
+                    }
+                }
+            }
+
+            // 1. List is anchored to parent leading (set in creation block above)
+
+            // 2. Format follows List (Uniform gap: 10)
+            NSLayoutConstraint.activate([
+                formatButton.leadingAnchor.constraint(equalTo: listButton.trailingAnchor, constant: 10)
+            ])
+
+            // 3. Split follows Format (Uniform gap: 10)
+            NSLayoutConstraint.activate([
+                splitButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
+                splitButton.leadingAnchor.constraint(equalTo: formatButton.trailingAnchor, constant: 10),
+                splitButton.widthAnchor.constraint(equalToConstant: 18),
+                splitButton.heightAnchor.constraint(equalToConstant: 18),
+            ])
+
+            // 4. Preview follows Split (Uniform gap: 10)
+            NSLayoutConstraint.activate([
+                previewButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
+                previewButton.leadingAnchor.constraint(equalTo: splitButton.trailingAnchor, constant: 10),
+            ])
+
+            // 5. Presentation follows Preview (Uniform gap: 10)
+            NSLayoutConstraint.activate([
+                presentationButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
+                presentationButton.leadingAnchor.constraint(equalTo: previewButton.trailingAnchor, constant: 10),
+            ])
         }
 
         titleLabel.isHidden = true

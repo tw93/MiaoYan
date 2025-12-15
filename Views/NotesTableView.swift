@@ -211,7 +211,6 @@ class NotesTableView: NSTableView {
         fillTimestamp = timestamp
 
         let vc = window?.contentViewController as! ViewController
-        NSLog("[PREVIEW DEBUG] handleSelectionChange - preview mode: \(UserDefaultsManagement.preview)")
 
         if let pendingChange = UserDataService.instance.pendingTitleChange {
             let title = pendingChange.title
@@ -261,9 +260,7 @@ class NotesTableView: NSTableView {
                     if UserDataService.instance.shouldBlockEditAreaUpdate() {
                         return
                     }
-                    NSLog("[PREVIEW DEBUG] handleSelectionChange - about to fill note, preview mode: \(UserDefaultsManagement.preview)")
                     vc.editArea.fill(note: note, options: .silent)
-                    NSLog("[PREVIEW DEBUG] handleSelectionChange - after fill note, preview mode: \(UserDefaultsManagement.preview)")
                 }
             }
             loadingQueue.addOperation(operation)

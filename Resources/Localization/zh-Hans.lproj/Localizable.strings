@@ -231,3 +231,9 @@
 "Previous" = "上一个";
 "Next" = "下一个";
 "Done" = "完成";
+
+/* Toolbar Tooltips */
+"Format" = "排版";
+"Presentation" = "演示";
+"Toggle Note List" = "列表";
+"Toggle Split Mode" = "分栏";

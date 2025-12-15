@@ -33,13 +33,10 @@ extension ViewController {
 
     // MARK: - Preview Management
     func enablePreview() {
-        NSLog("[DEBUG] enablePreview called")
-
         // Debounce rapid repeated calls (within 0.15 seconds)
         let now = Date().timeIntervalSince1970
         let timeSinceLastCall = now - lastEnablePreviewTime
         if timeSinceLastCall < 0.15 && UserDefaultsManagement.preview {
-            NSLog("[DEBUG] enablePreview skipped - debounced (time since last: \(timeSinceLastCall))")
             return
         }
         lastEnablePreviewTime = now
@@ -131,8 +128,6 @@ extension ViewController {
     }
 
     func disablePreview() {
-        NSLog("[PREVIEW DEBUG] disablePreview called - current preview mode: \(UserDefaultsManagement.preview)")
-        NSLog("[PREVIEW DEBUG] disablePreview call stack: \(Thread.callStackSymbols.prefix(10).joined(separator: "\n"))")
         guard !UserDefaultsManagement.magicPPT else { return }
 
         // Save preview scroll position before disabling
@@ -351,6 +346,8 @@ extension ViewController {
     private func restorePresentationLayout() {
         formatButton.isHidden = false
         previewButton.isHidden = false
+        toggleListButton?.isHidden = false
+        toggleSplitButton?.isHidden = false
 
         if sidebarWidth == 0 { showSidebar("") }
         if notelistWidth == 0 { showNoteList("") }
@@ -371,8 +368,11 @@ extension ViewController {
         UserDefaultsManagement.presentation = true
         savePresentationLayout()
         hideNoteList("")
+        hideNoteList("")
         formatButton.isHidden = true
         previewButton.isHidden = true
+        toggleListButton?.isHidden = true
+        toggleSplitButton?.isHidden = true
 
         // Set up split view and preview container synchronously
         editorContentSplitView?.setDisplayMode(.previewOnly, animated: false)
@@ -478,8 +478,11 @@ extension ViewController {
         UserDefaultsManagement.magicPPT = true
         savePresentationLayout()
         hideNoteList("")
+        hideNoteList("")
         formatButton.isHidden = true
         previewButton.isHidden = true
+        toggleListButton?.isHidden = true
+        toggleSplitButton?.isHidden = true
         DispatchQueue.main.async {
             vc.previewButton.state = .on
             vc.presentationButton.state = .on

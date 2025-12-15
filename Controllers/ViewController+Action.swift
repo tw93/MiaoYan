@@ -631,7 +631,6 @@ extension ViewController {
     }
 
     func createNote(name: String = "", content: String = "", type: NoteType? = nil, project: Project? = nil, load: Bool = false) {
-        NSLog("[PREVIEW DEBUG] createNote START - preview mode: \(UserDefaultsManagement.preview)")
         guard let vc = ViewController.shared() else { return }
         let selectedProjects = vc.storageOutlineView.getSidebarProjects()
         var sidebarProject = project ?? selectedProjects?.first
@@ -656,9 +655,7 @@ extension ViewController {
 
         // Don't force disable preview mode - let user maintain their preferred mode
         // Only clean up the webview if we're NOT in preview mode
-        NSLog("[PREVIEW DEBUG] createNote - before cleanup check, preview mode: \(UserDefaultsManagement.preview)")
         if !UserDefaultsManagement.preview {
-            NSLog("[PREVIEW DEBUG] createNote - cleaning up webview (not in preview mode)")
             editArea.markdownView?.removeFromSuperview()
             previewScrollView?.documentView = nil
             editArea.markdownView = nil
@@ -684,14 +681,11 @@ extension ViewController {
             DispatchQueue.main.async {
                 // Clear the flag before final setup
                 UserDataService.instance.isCreatingNote = false
-                NSLog("[PREVIEW DEBUG] createNote - before completeNoteCreation, preview mode: \(UserDefaultsManagement.preview)")
                 self.completeNoteCreation(for: note, with: vc)
-                NSLog("[PREVIEW DEBUG] createNote - after completeNoteCreation, preview mode: \(UserDefaultsManagement.preview)")
             }
         }
 
         TelemetryDeck.signal("Action.NewNote")
-        NSLog("[PREVIEW DEBUG] createNote END - preview mode: \(UserDefaultsManagement.preview)")
     }
 
     // Prepare UI state for new note creation
