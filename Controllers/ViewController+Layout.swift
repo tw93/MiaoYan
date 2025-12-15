@@ -137,6 +137,34 @@ extension ViewController {
         notelistWidth == 0 ? showNoteList(sender) : hideNoteList(sender)
     }
 
+    @IBAction func toggleLayoutCycle(_ sender: Any) {
+        guard splitView != nil, sidebarSplitView != nil else { return }
+
+        // 1. If Sidebar is visible -> Hide Sidebar (Enter Double Column)
+        if sidebarWidth > 0 {
+            setSidebarVisible(false)
+            isUnfoldingLayout = false
+            return
+        }
+
+        // 2. If Note List is visible -> Check unfolding direction
+        if notelistWidth > 0 {
+            if isUnfoldingLayout {
+                // Direction: Unfolding -> Show Sidebar (Return to Full)
+                setSidebarVisible(true)
+                isUnfoldingLayout = false
+            } else {
+                // Direction: Folding -> Hide Note List (Enter Focus Mode)
+                setNotelistVisible(false)
+            }
+            return
+        }
+
+        // 3. If Note List is hidden -> Show Note List (Start Unfolding)
+        setNotelistVisible(true)
+        isUnfoldingLayout = true
+    }
+
     @IBAction func toggleSidebarPanel(_ sender: Any) {
         guard sidebarSplitView != nil else { return }
         sidebarWidth == 0 ? showSidebar(sender) : hideSidebar(sender)
