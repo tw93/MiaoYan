@@ -324,6 +324,13 @@ extension ViewController {
         } else {
             disableSplitViewMode()
         }
+
+        // Update toolbar button state
+        let iconName = UserDefaultsManagement.splitViewMode ? "icon_editor_split" : "icon_editor_single"
+        if let image = NSImage(named: iconName) {
+            image.isTemplate = true
+            toggleSplitButton?.image = image
+        }
     }
 
     // MARK: - Presentation Mode
