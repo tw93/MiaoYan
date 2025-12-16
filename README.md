@@ -40,7 +40,9 @@ After installation, we recommend exploring Preferences (⌘,) to discover MiaoYa
 
 ## Split Editor & Preview Mode
 
-Edit and preview side by side with real-time preview and bidirectional scroll sync. Enable it in Preferences → Interface → Edit Mode → Split Mode.
+Edit and preview side by side with real-time preview and 60fps bidirectional scroll sync.
+
+**Quick Toggle**: Press `⌘\` to instantly toggle split view mode, or enable it in Preferences → Interface → Edit Mode → Split Mode.
 
 Why not WYSIWYG like Typora? We prioritize pure Markdown editing experience, and implementing WYSIWYG in native Swift is overly complex with reliability concerns. Split mode maintains clean editing while providing instant visual feedback.
 
