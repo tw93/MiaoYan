@@ -67,7 +67,7 @@ extension ViewController {
 
             UserDefaultsManagement.sort = sortBy
 
-            if let submenu = sortByOutlet.submenu {
+            if let submenu = sortByOutlet?.submenu {
                 for item in submenu.items {
                     item.state = NSControl.StateValue.off
                 }

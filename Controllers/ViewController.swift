@@ -76,13 +76,14 @@ class ViewController:
     @IBOutlet var outlineHeader: OutlineHeaderView!
     @IBOutlet var titiebarHeight: NSLayoutConstraint!
     @IBOutlet var searchTopConstraint: NSLayoutConstraint!
+
     @IBOutlet var titleLabel: TitleTextField!
     @IBOutlet var titleTopConstraint: NSLayoutConstraint!
-    @IBOutlet var sortByOutlet: NSMenuItem! {
-        didSet {
-            sortByOutlet.setIdentifier("viewMenu.sortBy")
-        }
-    }
+
+    // Cached menu item references to avoid repeated lookups (internal access for extensions)
+    var sortByOutlet: NSMenuItem?
+    var descendingCheckItem: NSMenuItem?
+    var ascendingCheckItem: NSMenuItem?
 
     @IBOutlet var titleBarAdditionalView: NSVisualEffectView! {
         didSet {
@@ -129,18 +130,30 @@ class ViewController:
         }
     }
 
-    @IBOutlet var descendingCheckItem: NSMenuItem! {
-        didSet {
-            ascendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .off : .on
-            descendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .on : .off
+    // Cache menu item references to avoid repeated menu tree traversals
+    private func cacheMenuItems() {
+        // Use identifier-based lookup to be locale-independent
+        if let viewMenu = NSApp.mainMenu?.items.first(where: { $0.submenu?.identifier == NSUserInterfaceItemIdentifier("viewMenu") })?.submenu {
+            sortByOutlet = viewMenu.items.first(where: { $0.identifier == NSUserInterfaceItemIdentifier("viewMenu.sortBy") })
+
+            if let sortByMenu = sortByOutlet?.submenu {
+                descendingCheckItem = sortByMenu.items.first(where: { $0.identifier == NSUserInterfaceItemIdentifier("Descending") })
+                ascendingCheckItem = sortByMenu.items.first(where: { $0.identifier == NSUserInterfaceItemIdentifier("Ascending") })
+            }
         }
     }
 
-    @IBOutlet var ascendingCheckItem: NSMenuItem! {
-        didSet {
-            ascendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .off : .on
-            descendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .on : .off
+    func updateSortMenuState() {
+        // Ensure menu items are cached before updating state
+        guard let ascending = ascendingCheckItem, let descending = descendingCheckItem else {
+            cacheMenuItems()
+            guard let ascending = ascendingCheckItem, let descending = descendingCheckItem else { return }
+            ascending.state = UserDefaultsManagement.sortDirection ? .off : .on
+            descending.state = UserDefaultsManagement.sortDirection ? .on : .off
+            return
         }
+        ascending.state = UserDefaultsManagement.sortDirection ? .off : .on
+        descending.state = UserDefaultsManagement.sortDirection ? .on : .off
     }
 
     @IBOutlet var titleBarView: TitleBarView! {
@@ -262,10 +275,10 @@ class ViewController:
         fsManager = FileSystemEventManager(storage: storage, delegate: self)
         fsManager?.start()
         loadMoveMenu()
-        loadSortBySetting()
+        cacheMenuItems()
+        updateSortMenuState()
         checkSidebarConstraint()
         checkTitlebarTopConstraint()
-        configureMenuIcons()
         #if CLOUDKIT
             registerKeyValueObserver()
         #endif
@@ -432,6 +445,7 @@ class ViewController:
 
     private func ensureInitialProjectSelection() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            // Skip if a project is already selected
             guard self.storageOutlineView.selectedRow == -1 else { return }
 
             var targetIndex: Int?
@@ -872,19 +886,6 @@ class ViewController:
         note.save()
         if UserDefaultsManagement.preview || UserDefaultsManagement.magicPPT {
             refillEditArea(previewOnly: true, force: true)
-        }
-    }
-
-    private func configureMenuIcons() {
-        guard #available(macOS 11.0, *) else { return }
-        if let mainMenu = NSApp.mainMenu {
-            mainMenu.applyMenuIcons()
-        }
-
-        noteMenu.applyMenuIcons()
-
-        if let sidebarMenu = storageOutlineView.menu {
-            sidebarMenu.applyMenuIcons()
         }
     }
 
