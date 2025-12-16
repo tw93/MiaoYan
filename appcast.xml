@@ -1,6 +1,33 @@
 <?xml version="1.0" standalone="yes"?>
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
   <channel>
+    <title>妙言 / MiaoYan</title>
+      <item>
+      <title>2.3.0</title>
+      <description><![CDATA[
+      <h3>大变化🎄</h3>
+      <ol>
+        <li>新增「分栏预览」模式，支持左右分栏同时编辑与预览，双向滚动自动同步</li>
+        <li>新增「布局循环」按钮，支持在侧边栏、笔记列表、专注模式间快速切换</li>
+        <li>新增「清理孤立附件」功能，一键扫描并移除未被引用的图片和文件</li>
+        <li>优化启动体验，消除白屏闪烁，窗口淡入更优雅</li>
+        <li>全面性能优化：笔记保存防抖、正则缓存、滚动位置记忆，大幅提升流畅度</li>
+        <li>修复滚动同步抖动、预览渲染失效、菜单查找等多个已知问题</li>
+      </ol>
+      <h3>Big change🎄</h3>
+      <ol>
+        <li>Added "Split View" mode with side-by-side editing and preview, featuring bidirectional scroll sync</li>
+        <li>Added "Layout Cycle" button for quick switching between sidebar, note list, and focus modes</li>
+        <li>Added "Clean Orphan Attachments" feature to scan and remove unreferenced images and files</li>
+        <li>Optimized startup experience: eliminated white flash with elegant window fade-in animation</li>
+        <li>Comprehensive performance optimizations: debounced saving, regex caching, scroll position memory for smoother experience</li>
+        <li>Fixed scroll sync jitter, preview rendering failures, menu lookup issues, and other known bugs</li>
+      </ol>
+          ]]>      </description>
+      <pubDate>周一, 16 12月 2025 20:20:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.3.0.zip" sparkle:shortVersionString="2.3.0" sparkle:version="2.3.0" sparkle:edSignature="Q4Uzj5qEMhumKVx448fGtVR23oRabuizswHTGEaevQT6B+8owNstvA3uTHlyNJX0GNdYie3yzYRKw9j8Dr8RCA==" length="1377104" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+    </item>
       <title>妙言 / MiaoYan</title>
       <item>
       <title>2.2.0</title>
@@ -23,39 +50,6 @@
           ]]>      </description>
       <pubDate>周一, 10 11月 2025 22:20:20 +0800</pubDate>
       <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.2.0.zip" sparkle:shortVersionString="2.2.0" sparkle:version="2.2.0" sparkle:edSignature="uF7p62xgJohmY2rFsZYN4Iipgy5Zw8CrOh64e12bXQ1L6G1l54J6ptSbhLT6SFEYd3TzZ2KXuzujxxwgaavKCw==" length="22878549" type="application/octet-stream" />
-      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
-    </item>
-  <title>妙言 / MiaoYan</title>
-      <item>
-      <title>2.1.6</title>
-      <description><![CDATA[
-      <h3>新发现🥜</h3>
-      <ol>
-        <li>2.1.6 支持 Mac26 下各种模式效果的图标，修复 Markmap 渲染截断，修复底部缓存挡住编辑问题</li>
-        <li>完善主题切换功能 - 支持自适应系统主题，修复列表选择行为，提升文件类型检测准确性</li>
-        <li>目录导航和图片功能增强 - 新增 TOC 目录模式自动生成文章导航，支持 PicList 图床上传，支持引用任意位置的本地图片</li>
-        <li>编辑效率提升 - 支持 Tab 快捷键模板一键输入，文件自动检测刷新，编辑器底部留白优化</li>
-        <li>PPT 演示模式增强 - 支持更多自定义配置参数，样式大幅优化，演示效果更专业</li>
-        <li>预览渲染大幅升级 - 整体预览效果和交互体验提升，优化 Mermaid、Markmap、PlantUML 等图表样式，改进代码块和内联代码显示</li>
-        <li>关键 Bug 修复 - 修复长时间使用后预览样式失效，修复编辑时可能崩溃问题，修复笔记列表展开折叠逻辑异常</li>
-        <li>性能和体验改进 - 大幅提升内容搜索速度，优化导出功能解决超时问题，禁用弹性滚动使操作更精准</li>
-        <li>代码架构重构 - DownView 预览组件和侧边栏逻辑重构，样式文件模块化便于维护，甚至支持 VSCode 开发了</li>
-      </ol>
-      <h3>New Discoveries🥜</h3>
-      <ol>
-        <li>2.1.6 Support icons of various modes under Mac26, fix Markmap rendering truncation, fix the bottom cache blocking editing problem</li>
-        <li>Improve the theme switching function - support adaptive system themes, fix list selection behavior, and improve the accuracy of file type detection.</li>
-        <li>Enhanced Navigation & Image Support – Added automatic TOC (Table of Contents) generation for article navigation, PicList image-hosting uploads, and support for referencing local images from any location.</li>
-        <li>Improved Editing Efficiency – Quick template insertion via the Tab key, automatic file change detection and refresh, and optimized bottom spacing in the editor.</li>
-        <li>Upgraded PPT Presentation Mode – More customizable configuration parameters, substantially refined styles, and a more professional presentation experience.</li>
-        <li>Major Preview Rendering Upgrade – Overall improvements to preview visuals and interactions; optimized styles for Mermaid, Markmap, and PlantUML; and better code block and inline code display.</li>
-        <li>Key Bug Fixes – Fixed preview styles failing after long sessions, resolved potential editor crashes, and corrected abnormal expand/collapse logic in the notes list.</li>
-        <li>Performance & UX Improvements – Significantly faster content search, optimized export to avoid timeouts, and disabled elastic scrolling for more precise operations.</li>
-        <li>Code Architecture Refactor – Rebuilt the DownView preview component and sidebar logic, modularized style files for easier maintenance, and even enabled development in VS Code.</li>
-      </ol>
-          ]]>      </description>
-      <pubDate>周五, 24 10月 2025 20:20:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.1.6.zip" sparkle:shortVersionString="2.1.6" sparkle:version="2.1.6" sparkle:edSignature="MuIUptpKMdCUXU7D7U6YU2NC9s/nmFH6BjSRLE0sq3oqchgZMERB42JaEddtemQHJ0tTg1ETZptOYxTr+s+3BA==" length="22344406" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
     </item>
   </channel>
