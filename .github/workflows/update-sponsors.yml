@@ -2,8 +2,11 @@ name: Update sponsors board
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - vercel
   schedule:
-    - cron: "0 2 * * *"
+    - cron: "0 2 */2 * *"
 
 permissions:
   contents: write
