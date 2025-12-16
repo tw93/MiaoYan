@@ -83,6 +83,13 @@ extension ViewController {
             let targetWidth = savedWidth > 0 ? savedWidth : Int(LayoutConstants.defaultNotelistWidth)
             splitView.shouldHideDivider = false
             splitView.setPosition(CGFloat(targetWidth), ofDividerAt: 0)
+
+            // Sync selection: If editor has a note, select it in the list (suppressing side effects like reloading)
+            if let currentNote = EditTextView.note {
+                if let index = notesTableView.getIndex(currentNote) {
+                    notesTableView.selectRow(index, ensureVisible: true, suppressSideEffects: true)
+                }
+            }
         } else {
             if saveState && !isPresentationMode {
                 UserDefaultsManagement.sidebarSize = Int(notelistWidth)

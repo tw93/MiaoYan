@@ -251,9 +251,9 @@ class ViewController:
         configureEditor()
 
         // Pre-hide editor if starting in preview mode to avoid white flash
-        if UserDefaultsManagement.preview {
-            editAreaScroll.alphaValue = 0
-        }
+        // Pre-hide editor to avoid white flash/empty state during initial load
+        editAreaScroll.alphaValue = 0
+        titleLabel.alphaValue = 0
 
         // Async preload to avoid impacting startup performance
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -433,27 +433,40 @@ class ViewController:
     private func ensureInitialProjectSelection() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
             guard self.storageOutlineView.selectedRow == -1 else { return }
+
+            var targetIndex: Int?
+
             // Try to find the project by URL first (more reliable after reordering)
             if let lastProjectURL = UserDataService.instance.lastProject,
                 let items = self.storageOutlineView.sidebarItems
             {
-                for (index, item) in items.enumerated() {
-                    if let sidebarItem = item as? SidebarItem,
-                        sidebarItem.project?.url == lastProjectURL
-                    {
-                        self.storageOutlineView.selectRowIndexes([index], byExtendingSelection: false)
-                        return
-                    }
+                if let index = items.firstIndex(where: { ($0 as? SidebarItem)?.project?.url == lastProjectURL }) {
+                    targetIndex = index
                 }
             }
+
             // Fallback to index-based selection if URL matching fails
-            let lastProjectIndex = UserDefaultsManagement.lastProject
-            if let items = self.storageOutlineView.sidebarItems,
-                items.indices.contains(lastProjectIndex)
-            {
-                self.storageOutlineView.selectRowIndexes([lastProjectIndex], byExtendingSelection: false)
-            } else if let items = self.storageOutlineView.sidebarItems, !items.isEmpty {
-                self.storageOutlineView.selectRowIndexes([0], byExtendingSelection: false)
+            if targetIndex == nil {
+                let lastProjectIndex = UserDefaultsManagement.lastProject
+                if let items = self.storageOutlineView.sidebarItems,
+                    items.indices.contains(lastProjectIndex)
+                {
+                    targetIndex = lastProjectIndex
+                } else if let items = self.storageOutlineView.sidebarItems, !items.isEmpty {
+                    targetIndex = 0
+                }
+            }
+
+            if let index = targetIndex {
+                self.storageOutlineView.selectRowIndexes([index], byExtendingSelection: false)
+
+                // Fix: Manually trigger delegate if view is hidden (suppressed notifications)
+                // This ensures updateTable is called to populate the note list even in Focus Mode
+                if self.storageOutlineView.isHidden || self.storageOutlineView.frame.width == 0 {
+                    self.storageOutlineView.outlineViewSelectionDidChange(
+                        Notification(name: NSOutlineView.selectionDidChangeNotification, object: self.storageOutlineView)
+                    )
+                }
             }
         }
     }
@@ -875,4 +888,12 @@ class ViewController:
         }
     }
 
+    func revealEditor() {
+        guard editAreaScroll.alphaValue == 0 else { return }
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = 0.3
+            self.editAreaScroll.animator().alphaValue = 1
+            self.titleLabel.animator().alphaValue = 1
+        }
+    }
 }
