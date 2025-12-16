@@ -485,9 +485,9 @@ public enum UserDefaultsManagement {
     }
     static var storagePath: String? {
         get {
-            if let storagePath = UserDefaults.standard.object(forKey: Constants.StoragePathKey) {
-                if FileManager.default.isWritableFile(atPath: storagePath as! String) {
-                    return storagePath as? String
+            if let storagePath = UserDefaults.standard.object(forKey: Constants.StoragePathKey) as? String {
+                if FileManager.default.isWritableFile(atPath: storagePath) {
+                    return storagePath
                 } else {
                     let error = NSError(domain: "StorageError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Storage path not accessible, resetting to default"])
                     AppDelegate.trackError(error, context: "UserDefaultsManagement.storagePath")

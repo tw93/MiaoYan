@@ -655,17 +655,24 @@ class SidebarProjectView: NSOutlineView,
             let i = view.selectedRow
 
             if sidebar.indices.contains(i), let item = sidebar[i] as? SidebarItem {
-                if UserDataService.instance.lastType == item.type.rawValue, UserDataService.instance.lastProject == item.project?.url,
-                    UserDataService.instance.lastName == item.name
-                {
-                    return
+                // During app launch, skip saving selection to avoid overwriting persisted state
+                // with programmatically restored selection. This ensures the correct last selection
+                // is preserved across app restarts.
+                if !isLaunch {
+                    // Skip redundant updates if already on the same item
+                    if UserDataService.instance.lastType == item.type.rawValue, UserDataService.instance.lastProject == item.project?.url,
+                        UserDataService.instance.lastName == item.name
+                    {
+                        return
+                    }
+
+                    // Save user's manual selection for restoration on next launch
+                    UserDefaultsManagement.lastProject = i
+
+                    UserDataService.instance.lastType = item.type.rawValue
+                    UserDataService.instance.lastProject = item.project?.url
+                    UserDataService.instance.lastName = item.name
                 }
-
-                UserDefaultsManagement.lastProject = i
-
-                UserDataService.instance.lastType = item.type.rawValue
-                UserDataService.instance.lastProject = item.project?.url
-                UserDataService.instance.lastName = item.name
             }
 
             // Don't clear edit area during launch to prevent flashing

@@ -457,8 +457,8 @@ extension ViewController {
     // MARK: - Data Sorting and Arrangement
     func reSortByDirection() {
         guard let vc = ViewController.shared() else { return }
-        ascendingCheckItem.state = UserDefaultsManagement.sortDirection ? .off : .on
-        descendingCheckItem.state = UserDefaultsManagement.sortDirection ? .on : .off
+        ascendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .off : .on
+        descendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .on : .off
 
         // Sort all notes
         storage.noteList = storage.sortNotes(noteList: storage.noteList, filter: vc.search.stringValue)
