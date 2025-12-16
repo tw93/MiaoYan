@@ -341,6 +341,20 @@ extension ViewController {
             image.isTemplate = true
             toggleSplitButton?.image = image
         }
+
+    }
+
+    private struct SplitScrollConfig {
+        static let syncThreshold: CGFloat = 0.005
+        static let scrollDifferenceThreshold: CGFloat = 0.5
+    }
+
+    private func makeTempNote() -> Note? {
+        let tempProject = getSidebarProject() ?? storage.noteList.first?.project
+        guard let project = tempProject else { return nil }
+        let tempNote = Note(name: "", project: project, type: .markdown)
+        tempNote.content = NSMutableAttributedString(string: "")
+        return tempNote
     }
 
     // MARK: - Presentation Mode
@@ -697,10 +711,7 @@ extension ViewController {
 
     func preloadWebView() {
         guard editArea.markdownView == nil, !UserDefaultsManagement.preview else { return }
-        let tempProject = getSidebarProject() ?? storage.noteList.first?.project
-        guard let project = tempProject else { return }
-        let tempNote = Note(name: "", project: project, type: .markdown)
-        tempNote.content = NSMutableAttributedString(string: "")
+        guard let tempNote = makeTempNote() else { return }
         let frame = previewScrollView?.bounds ?? editArea.bounds
         let previewView = MPreviewView(frame: frame, note: tempNote, closure: {})
         previewView.autoresizingMask = [.width, .height]
@@ -717,15 +728,7 @@ extension ViewController {
 
         if editArea.markdownView == nil {
             let frame = previewScroll.bounds
-            let fallbackNote =
-                notesTableView.getSelectedNote()
-                ?? {
-                    let tempProject = getSidebarProject() ?? storage.noteList.first?.project
-                    guard let project = tempProject else { return nil }
-                    let tempNote = Note(name: "", project: project, type: .markdown)
-                    tempNote.content = NSMutableAttributedString(string: "")
-                    return tempNote
-                }()
+            let fallbackNote = notesTableView.getSelectedNote() ?? makeTempNote()
             guard let note = fallbackNote else {
                 return
             }
@@ -833,7 +836,7 @@ extension ViewController {
 
         // Performance optimization: Only sync if ratio changed significantly (> 0.5% difference)
         // This reduces JavaScript execution by 70-80% during scrolling
-        if abs(clampedRatio - lastSyncedScrollRatio) > 0.005 {
+        if abs(clampedRatio - lastSyncedScrollRatio) > SplitScrollConfig.syncThreshold {
             lastSyncedScrollRatio = clampedRatio
             applySplitScrollSync(ratio: clampedRatio)
         }
@@ -870,7 +873,7 @@ extension ViewController {
         let currentY = editAreaScroll.contentView.bounds.origin.y
 
         // Only scroll if there's a meaningful difference (> 0.5 pixels)
-        guard abs(targetY - currentY) > 0.5 else {
+        guard abs(targetY - currentY) > SplitScrollConfig.scrollDifferenceThreshold else {
             return
         }
 
