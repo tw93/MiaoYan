@@ -62,6 +62,14 @@ class EditorScrollView: NSScrollView {
 @MainActor
 class EditorContentSplitView: NSSplitView {
 
+    // MARK: - Split View Constraints
+
+    private enum SplitViewConstraints {
+        static let minPaneWidth: CGFloat = 200      // Minimum width for each pane
+        static let maxPaneWidth: CGFloat = 1200     // Maximum width for editor pane (for very wide displays)
+        static let preferredDefaultWidth: CGFloat = 600  // Preferred default width for first use
+    }
+
     enum DisplayMode {
         case editorOnly
         case previewOnly
@@ -114,11 +122,29 @@ class EditorContentSplitView: NSSplitView {
                 self.shouldHideDivider = false
                 self.setHoldingPriority(.defaultHigh, forSubviewAt: 0)
                 self.setHoldingPriority(.defaultHigh, forSubviewAt: 1)
+
                 let savedRatio = UserDefaultsManagement.editorContentSplitPosition
                 let totalWidth = max(self.bounds.width, 1)
-                let defaultWidth = totalWidth / 2
                 let clampedRatio = max(0, min(savedRatio, 1))
-                let targetWidth = savedRatio > 0 ? totalWidth * CGFloat(clampedRatio) : defaultWidth
+
+                var targetWidth: CGFloat
+
+                if savedRatio > 0 {
+                    // Restore saved position
+                    targetWidth = totalWidth * CGFloat(clampedRatio)
+                } else {
+                    // First use: intelligent default
+                    // Use 50% or preferredDefaultWidth, whichever is smaller
+                    targetWidth = min(totalWidth * 0.5, SplitViewConstraints.preferredDefaultWidth)
+                }
+
+                // Apply constraints to ensure reasonable widths on all screen sizes
+                let minWidth = SplitViewConstraints.minPaneWidth
+                let maxWidth = min(totalWidth - minWidth, SplitViewConstraints.maxPaneWidth)
+
+                // Clamp to valid range
+                targetWidth = max(minWidth, min(targetWidth, maxWidth))
+
                 self.setPosition(targetWidth, ofDividerAt: 0)
             }
             self.adjustSubviews()

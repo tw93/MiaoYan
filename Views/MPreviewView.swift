@@ -3,14 +3,24 @@ import QuartzCore
 import WebKit
 
 public typealias MPreviewViewClosure = () -> Void
+
+// MARK: - Protocol Definition
+@MainActor
+protocol MPreviewScrollDelegate: AnyObject {
+    func previewDidScroll(ratio: CGFloat)
+}
+
 @MainActor
 class MPreviewView: WKWebView, WKUIDelegate {
     private var scrollObserverInjected = false
     internal var isUpdatingContent = false
+    nonisolated(unsafe) private var contentUpdateWorkItem: DispatchWorkItem?
+
     // MARK: - JavaScript Timing Constants
 
     private enum JavaScriptTiming {
         static let diagramInitDelay = 100  // milliseconds
+        static let imageLoadTimeout: TimeInterval = 0.35  // WebView image load timeout for content updates
     }
 
     @objcMembers
@@ -39,7 +49,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     public static var template: String?
     private static var bundleInitialized = false
     private static let initQueue = DispatchQueue(label: "preview.init", qos: .userInitiated)
-    public var onScrollChange: ((CGFloat) -> Void)?
+    weak var scrollDelegate: MPreviewScrollDelegate?
     init(frame: CGRect, note: Note, closure: MPreviewViewClosure?) {
         self.closure = closure
         let userContentController = WKUserContentController()
@@ -118,6 +128,11 @@ class MPreviewView: WKWebView, WKUIDelegate {
     required init?(coder: NSCoder) {
         AppDelegate.trackError(NSError(domain: "InitError", code: 1, userInfo: [NSLocalizedDescriptionKey: "MPreviewView does not support NSCoder initialization"]), context: "MPreviewView.init")
         return nil
+    }
+
+    deinit {
+        // Cancel pending content update work items to prevent crashes
+        contentUpdateWorkItem?.cancel()
     }
 
     private func setupScrollObserver() {
@@ -414,7 +429,15 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 })();
             """
         // Direct execution without async wrapper for smoother scrolling
-        self.evaluateJavaScript(script, completionHandler: nil)
+        // Note: Errors are silently ignored here for performance (called frequently during scroll sync)
+        self.evaluateJavaScript(script) { _, error in
+            if let error = error {
+                // Only log errors in debug builds to avoid log spam
+                #if DEBUG
+                print("[ScrollSync] JavaScript execution error: \(error.localizedDescription)")
+                #endif
+            }
+        }
     }
     private func handleNavigationAction(_ navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
         guard let url = navigationAction.request.url else {
@@ -457,6 +480,9 @@ class MPreviewView: WKWebView, WKUIDelegate {
         Task { @MainActor [weak self, note] in
             guard let self else { return }
 
+            // Cancel previous content update reset task to avoid premature re-enable
+            self.contentUpdateWorkItem?.cancel()
+
             // Disable scroll sync during content update
             self.isUpdatingContent = true
 
@@ -472,6 +498,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 )
                 // Fallback: reload the full view instead of silent failure
                 self.isUpdatingContent = false
+                self.contentUpdateWorkItem = nil
                 self.load(note: note, force: true)
                 return
             }
@@ -500,14 +527,30 @@ class MPreviewView: WKWebView, WKUIDelegate {
 
             Task { @MainActor [weak self] in
                 guard let self else { return }
-                _ = try? await self.evaluateJavaScript(script)
+
+                // Execute JavaScript with proper error handling
+                do {
+                    _ = try await self.evaluateJavaScript(script)
+                } catch {
+                    AppDelegate.trackError(error, context: "MPreviewView.updateContent.jsExec")
+                    // Fallback: reload the full view on JavaScript failure
+                    self.isUpdatingContent = false
+                    self.contentUpdateWorkItem = nil
+                    self.load(note: note, force: true)
+                    return
+                }
+
                 // Re-setup scroll observer after content update
                 self.setupScrollObserver()
 
-                // Re-enable scroll sync after images have loaded (350ms covers image load timeout)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) { [weak self] in
+                // Re-enable scroll sync after images have loaded
+                // Use DispatchWorkItem to ensure proper cancellation on rapid updates
+                let resetWorkItem = DispatchWorkItem { [weak self] in
                     self?.isUpdatingContent = false
+                    self?.contentUpdateWorkItem = nil
                 }
+                self.contentUpdateWorkItem = resetWorkItem
+                DispatchQueue.main.asyncAfter(deadline: .now() + JavaScriptTiming.imageLoadTimeout, execute: resetWorkItem)
             }
             self.note = note
         }
@@ -784,15 +827,15 @@ class HandlerPreviewScroll: NSObject, WKScriptMessageHandler {
 
         if let ratio = message.body as? Double {
             Task { @MainActor in
-                previewView.onScrollChange?(CGFloat(ratio))
+                previewView.scrollDelegate?.previewDidScroll(ratio: CGFloat(ratio))
             }
         } else if let ratio = message.body as? CGFloat {
             Task { @MainActor in
-                previewView.onScrollChange?(ratio)
+                previewView.scrollDelegate?.previewDidScroll(ratio: ratio)
             }
         } else if let ratio = message.body as? Int {
             Task { @MainActor in
-                previewView.onScrollChange?(CGFloat(ratio))
+                previewView.scrollDelegate?.previewDidScroll(ratio: CGFloat(ratio))
             }
         }
     }
