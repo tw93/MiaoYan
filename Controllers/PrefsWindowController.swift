@@ -17,14 +17,14 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
 
     convenience init() {
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 780, height: 520),
+            contentRect: NSRect(x: 0, y: 0, width: 780, height: 600),
             styleMask: [.titled, .closable, .miniaturizable, .resizable],
             backing: .buffered,
             defer: false
         )
 
-        window.minSize = NSSize(width: 700, height: 520)
-        window.maxSize = NSSize(width: 1200, height: 520)
+        window.minSize = NSSize(width: 700, height: 600)
+        window.maxSize = NSSize(width: 1200, height: 600)
 
         window.styleMask.remove(.resizable)
         window.styleMask.insert(.titled)
@@ -91,15 +91,15 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
     }
 
     private func setupSidebar() {
-        sidebarView = PrefsSidebarView(frame: NSRect(x: 0, y: 0, width: 140, height: 400))
+        sidebarView = PrefsSidebarView(frame: NSRect(x: 0, y: 0, width: 160, height: 480))
         sidebarView.delegate = self
 
         sidebarViewController = NSViewController()
         sidebarViewController.view = sidebarView
 
         let sidebarItem = NSSplitViewItem(sidebarWithViewController: sidebarViewController)
-        sidebarItem.minimumThickness = 140
-        sidebarItem.maximumThickness = 140
+        sidebarItem.minimumThickness = 160
+        sidebarItem.maximumThickness = 160
         sidebarItem.canCollapse = false
 
         sidebarItem.titlebarSeparatorStyle = .none
@@ -109,12 +109,12 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
 
     private func setupContent() {
         prefsContentViewController = NSViewController()
-        let contentView = PrefsContentBackgroundView(frame: NSRect(x: 0, y: 0, width: 600, height: 400))
+        let contentView = PrefsContentBackgroundView(frame: NSRect(x: 0, y: 0, width: 600, height: 480))
 
         contentView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             contentView.widthAnchor.constraint(equalToConstant: 600),
-            contentView.heightAnchor.constraint(equalToConstant: 400),
+            contentView.heightAnchor.constraint(equalToConstant: 480),
         ])
 
         prefsContentViewController.view = contentView

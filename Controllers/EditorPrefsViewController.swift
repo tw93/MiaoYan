@@ -172,7 +172,6 @@ final class EditorPrefsViewController: BasePrefsViewController {
 
     override func setupValues() {
         selectLineBreakOption(settings.editorLineBreak)
-
         selectUploadServiceOption(UserDefaultsManagement.defaultPicUpload)
         selectPreviewLocationOption(settings.previewLocation)
         selectPreviewWidthOption(settings.previewWidth)

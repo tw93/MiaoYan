@@ -82,5 +82,58 @@ xcodebuild clean
 xcodebuild test -scheme MiaoYan
 ```
 
+## Split View (分栏预览) Architecture
+
+### Key Components
+
+- **EditorContentSplitView** (`Views/EditorScrollView.swift`): Main split container with three modes
+  - `editorOnly`: Full editor view
+  - `previewOnly`: Full preview view
+  - `sideBySide`: Split view with draggable divider
+
+- **MPreviewView** (`Views/MPreviewView.swift`): WKWebView-based markdown preview
+  - `load(note:)`: Full reload with new HTML template
+  - `updateContent(note:)`: Lightweight update via JavaScript (preserves scroll)
+
+- **ViewController+Editor** (`Controllers/ViewController+Editor.swift`): Mode management
+  - `enableSplitViewMode()`: Activate split view
+  - `startSplitScrollSync()`: Bidirectional scroll synchronization
+
+### JavaScript Renderers
+
+All renderers in `Resources/DownView.bundle/` require re-initialization after HTML content updates:
+
+- **KaTeX**: `renderMathInElement()` for formulas (`$$...$$`, `$...$`)
+- **Mermaid**: `mermaid.init()` for diagrams
+- **PlantUML**: `DiagramHandler.initializePlantUML()` for UML diagrams
+- **Markmap**: `DiagramHandler.initializeMarkmap()` for mind maps
+
+### Critical Pattern: Content Update Workflow
+
+When updating preview content without full page reload:
+
+1. Update HTML via JavaScript: `container.innerHTML = newHTML`
+2. Re-initialize renderers: `renderMathInElement()` + `DiagramHandler.initializeAll()`
+3. Re-setup observers: `setupScrollObserver()`
+
+**Example** (from `MPreviewView.swift:318-346`):
+
+```swift
+container.innerHTML = `\(escapedHTML)`;
+if (typeof renderMathInElement === 'function') {
+    renderMathInElement(document.body, {...});
+}
+if (window.DiagramHandler) {
+    DiagramHandler.initializeAll();
+}
+```
+
+### Scroll Synchronization
+
+- **Editor → Preview**: NSNotification observer on `NSView.boundsDidChangeNotification`
+- **Preview → WebView**: JavaScript scroll event with debouncing (100ms)
+- **Anti-loop**: `isProgrammaticSplitScroll` flag prevents feedback loops
+- **Performance**: 60fps sync (~16ms reset delay)
+
 ---
 *Pragmatism > Perfectionism • Working Simple Solutions > Complex Designs*

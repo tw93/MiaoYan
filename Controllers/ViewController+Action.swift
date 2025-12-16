@@ -67,7 +67,7 @@ extension ViewController {
 
             UserDefaultsManagement.sort = sortBy
 
-            if let submenu = sortByOutlet.submenu {
+            if let submenu = sortByOutlet?.submenu {
                 for item in submenu.items {
                     item.state = NSControl.StateValue.off
                 }
@@ -300,33 +300,55 @@ extension ViewController {
                 UserDataService.instance.searchTrigger = false
             }
 
-            if UserDefaultsManagement.preview {
-                vc.disablePreview()
-            }
-
+            // Don't disable preview mode when deleting notes
+            // Let the selection change handler update the preview with the next note
             vc.editArea.clear()
-            vc.emptyEditAreaView.isHidden = true
         }
 
         NSApp.mainWindow?.makeFirstResponder(vc.notesTableView)
     }
 
-    @IBAction func emptyTrash(_ sender: NSMenuItem) {
+    @IBAction func cleanUnusedAttachments(_ sender: NSMenuItem) {
         guard let vc = ViewController.shared() else {
             return
         }
 
-        if let sidebarItem = vc.getSidebarItem(), sidebarItem.isTrash() {
-            let indexSet = IndexSet(integersIn: 0..<vc.notesTableView.noteList.count)
-            vc.notesTableView.removeRows(at: indexSet, withAnimation: .effectFade)
-        }
+        storage.findOrphanAttachments { [weak self, weak vc] orphanAttachments in
+            guard let self = self, let vc = vc else { return }
 
-        let notes = storage.getAllTrash()
-        for note in notes {
-            _ = note.removeFile()
-        }
+            if orphanAttachments.isEmpty {
+                vc.toast(message: I18n.str("No orphan attachments found"))
+                return
+            }
 
-        NSSound(named: "Pop")?.play()
+            let confirmAlert = NSAlert()
+            confirmAlert.messageText = I18n.str("Clean Orphan Attachments")
+            confirmAlert.informativeText = String(format: I18n.str("Detected %d unused attachment(s). Move them to Trash?"), orphanAttachments.count)
+            confirmAlert.addButton(withTitle: I18n.str("Clean"))
+            confirmAlert.addButton(withTitle: I18n.str("Cancel"))
+            confirmAlert.alertStyle = .warning
+
+            let response = confirmAlert.runModal()
+            guard response == .alertFirstButtonReturn else {
+                return
+            }
+
+            let result = self.storage.removeAttachments(urls: orphanAttachments)
+
+            if !result.removed.isEmpty {
+                NSSound(named: "Pop")?.play()
+                vc.toast(message: String(format: I18n.str("Removed %d unused attachment(s)"), result.removed.count))
+            }
+
+            if !result.failed.isEmpty {
+                let failureAlert = NSAlert()
+                failureAlert.messageText = I18n.str("Some attachments could not be removed")
+                failureAlert.informativeText = I18n.str("Please try again")
+                failureAlert.addButton(withTitle: I18n.str("OK"))
+                failureAlert.alertStyle = .warning
+                failureAlert.runModal()
+            }
+        }
     }
 
     @IBAction func openProjectViewSettings(_ sender: NSMenuItem) {
@@ -372,15 +394,21 @@ extension ViewController {
     }
 
     @IBAction func noteCopy(_ sender: Any) {
-        guard let fr = view.window?.firstResponder else {
+        guard let responder = view.window?.firstResponder else { return }
+
+        if self.responder(responder, belongsTo: editArea) {
+            editArea.copy(sender)
             return
         }
 
-        if fr.isKind(of: EditTextView.self) {
-            editArea.copy(sender)
+        if let preview = editArea.markdownView,
+            self.responder(responder, belongsTo: preview)
+        {
+            preview.copySelectionToPasteboard()
+            return
         }
 
-        if fr.isKind(of: NotesTableView.self) {
+        if self.responder(responder, belongsTo: notesTableView) {
             saveTextAtClipboard()
         }
     }
@@ -393,6 +421,16 @@ extension ViewController {
             pasteboard.setString(name, forType: NSPasteboard.PasteboardType.string)
             toast(message: I18n.str("🎉 URL is successfully copied, Use it anywhere~"))
         }
+    }
+
+    private func responder(_ responder: NSResponder, belongsTo view: NSView?) -> Bool {
+        guard let view else { return false }
+
+        if let responderView = responder as? NSView {
+            return responderView === view || responderView.isDescendant(of: view)
+        }
+
+        return responder === view
     }
 
     @IBAction func copyTitle(_ sender: Any) {
@@ -615,18 +653,18 @@ extension ViewController {
             return
         }
 
-        UserDefaultsManagement.preview = false
-        DispatchQueue.main.async { [weak self] in
-            self?.previewButton.state = UserDefaultsManagement.preview ? .on : .off
-        }
+        // Don't force disable preview mode - let user maintain their preferred mode
+        // Only clean up the webview if we're NOT in preview mode
+        if !UserDefaultsManagement.preview {
+            editArea.markdownView?.removeFromSuperview()
+            previewScrollView?.documentView = nil
+            editArea.markdownView = nil
 
-        editArea.markdownView?.removeFromSuperview()
-        editArea.markdownView = nil
-
-        guard let editor = editArea else {
-            return
+            guard let editor = editArea else {
+                return
+            }
+            editor.subviews.removeAll(where: { $0.isKind(of: MPreviewView.self) })
         }
-        editor.subviews.removeAll(where: { $0.isKind(of: MPreviewView.self) })
 
         // Set flag to prevent edit area updates during note creation
         UserDataService.instance.isCreatingNote = true
@@ -655,7 +693,6 @@ extension ViewController {
         notesTableView.deselectNotes()
         search.stringValue.removeAll()
         titleLabel.isEditable = true
-        emptyEditAreaView.isHidden = true
     }
 
     // Complete final setup for newly created note
@@ -1063,14 +1100,12 @@ extension ViewController {
         if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), search.hasFocus() {
             search.stringValue.removeAll()
             configureNotesList()
-            refreshMiaoYanNum()
             return false
         }
 
         if event.keyCode == kVK_Escape, search.hasFocus() {
             search.stringValue.removeAll()
             configureNotesList()
-            refreshMiaoYanNum()
             return false
         }
 

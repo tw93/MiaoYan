@@ -1,56 +1,56 @@
 {
-  "images": [
+  "images" : [
     {
-      "idiom": "universal",
-      "filename": "project.svg",
-      "scale": "1x"
+      "filename" : "project.svg",
+      "idiom" : "universal",
+      "scale" : "1x"
     },
     {
-      "idiom": "universal",
-      "filename": "project-dark.svg",
-      "appearances": [
+      "appearances" : [
         {
-          "appearance": "luminosity",
-          "value": "dark"
+          "appearance" : "luminosity",
+          "value" : "dark"
         }
       ],
-      "scale": "1x"
+      "filename" : "project-dark.svg",
+      "idiom" : "universal",
+      "scale" : "1x"
     },
     {
-      "idiom": "universal",
-      "filename": "project.svg",
-      "scale": "2x"
+      "filename" : "project.svg",
+      "idiom" : "universal",
+      "scale" : "2x"
     },
     {
-      "idiom": "universal",
-      "filename": "project-dark.svg",
-      "appearances": [
+      "appearances" : [
         {
-          "appearance": "luminosity",
-          "value": "dark"
+          "appearance" : "luminosity",
+          "value" : "dark"
         }
       ],
-      "scale": "2x"
+      "filename" : "project-dark.svg",
+      "idiom" : "universal",
+      "scale" : "2x"
     },
     {
-      "idiom": "universal",
-      "filename": "project.svg",
-      "scale": "3x"
+      "filename" : "project.svg",
+      "idiom" : "universal",
+      "scale" : "3x"
     },
     {
-      "idiom": "universal",
-      "scale": "3x",
-      "filename": "project-dark.svg",
-      "appearances": [
+      "appearances" : [
         {
-          "appearance": "luminosity",
-          "value": "dark"
+          "appearance" : "luminosity",
+          "value" : "dark"
         }
-      ]
+      ],
+      "filename" : "project-dark.svg",
+      "idiom" : "universal",
+      "scale" : "3x"
     }
   ],
-  "info": {
-    "version": 1,
-    "author": "xcode"
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
   }
 }

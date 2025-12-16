@@ -217,8 +217,8 @@
 /* Class = "NSMenuItem"; title = "Rename Folder"; ObjectID = "fzU-ZR-Ubv"; */
 "fzU-ZR-Ubv.title" = "重命名文件夹";
 
-/* Class = "NSMenuItem"; title = "Empty Trash"; ObjectID = "G9H-Lg-TXE"; */
-"G9H-Lg-TXE.title" = "清空删除";
+/* Class = "NSMenuItem"; title = "Clean Unused Attachments"; ObjectID = "G9H-Lg-TXE"; */
+"G9H-Lg-TXE.title" = "清理孤立附件";
 
 /* Class = "NSButtonCell"; title = "Modification date"; ObjectID = "GCG-C6-9cg"; */
 "GCG-C6-9cg.title" = "修改日期";
@@ -564,3 +564,6 @@
 
 /* Class = "NSMenuItem"; title = "MiaoYan PPT PDF"; ObjectID = "DhD-mk-T1u"; */
 "DhD-mk-T1u.title" = "妙言 PPT PDF";
+
+/* Class = "NSMenuItem"; title = "Toggle Split View"; ObjectID = "Tgl-Spl-View"; */
+"Tgl-Spl-View.title" = "切换分栏";

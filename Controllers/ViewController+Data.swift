@@ -203,6 +203,10 @@ extension ViewController {
             return
         }
 
+        let previouslySelectedNote = notesTableView.getSelectedNote()
+        let previousSelectedRow = notesTableView.selectedRow
+        let previousScrollOrigin = notesTableView.currentScrollOrigin()
+
         filteredNoteList = notes
         notesTableView.noteList = orderedNotesList
 
@@ -214,7 +218,14 @@ extension ViewController {
         if notesTableView.noteList.isEmpty {
             handleEmptyResults(completion: context.completion)
         } else {
-            handleNonEmptyResults(isSearch: context.isSearch, searchParams: context.searchParams, completion: context.completion)
+            handleNonEmptyResults(
+                isSearch: context.isSearch,
+                searchParams: context.searchParams,
+                previousSelection: previouslySelectedNote,
+                previousSelectedRow: previousSelectedRow,
+                previousScrollOrigin: previousScrollOrigin,
+                completion: context.completion
+            )
         }
     }
 
@@ -224,35 +235,77 @@ extension ViewController {
                 self.editArea.clear()
             }
             self.notesTableView.reloadData()
-            self.refreshMiaoYanNum()
             completion()
         }
     }
 
-    private func handleNonEmptyResults(isSearch: Bool, searchParams: SearchParameters, completion: @escaping () -> Void) {
-        _ = notesTableView.noteList[0]
-
+    private func handleNonEmptyResults(
+        isSearch: Bool,
+        searchParams: SearchParameters,
+        previousSelection: Note?,
+        previousSelectedRow: Int,
+        previousScrollOrigin: NSPoint?,
+        completion: @escaping () -> Void
+    ) {
         DispatchQueue.main.async {
-            // Save currently selected row for restoration after table reload
-            let previousSelectedRow = self.notesTableView.selectedRow
-
             self.notesTableView.reloadData()
 
             if isSearch {
                 self.handleSearchResults(searchParams: searchParams)
             }
 
-            self.restoreSelectionIfNeeded(previousSelectedRow: previousSelectedRow)
-            // First-run fallback: auto-select first note only during initial app launch
-            // Prevents unwanted auto-selection during normal sidebar/list navigation
-            if !isSearch,
-                !UserDefaultsManagement.isSingleMode,
-                self.storageOutlineView.isLaunch,
-                self.notesTableView.selectedRow == -1,
-                !self.notesTableView.noteList.isEmpty
-            {
-                self.selectNullTableRow(timer: true)
+            let didRestoreScroll: Bool
+            if let origin = previousScrollOrigin {
+                self.notesTableView.restoreScrollOrigin(origin)
+                didRestoreScroll = true
+            } else {
+                didRestoreScroll = self.notesTableView.restoreScrollPosition(ensureSelectionVisible: false)
             }
+
+            let selectionRestored = self.restoreSelectionIfNeeded(
+                previouslySelectedNote: previousSelection,
+                fallbackRow: previousSelectedRow,
+                preserveScrollPosition: didRestoreScroll
+            )
+            if !isSearch {
+                let shouldPreferLastSelection = self.storageOutlineView?.isLaunch ?? false
+                let shouldPreserveScroll = didRestoreScroll && !selectionRestored
+                self.ensureNoteSelection(
+                    preferLastSelected: shouldPreferLastSelection,
+                    preserveScrollPosition: shouldPreserveScroll
+                )
+            }
+
+            // Fix: Deep Safeguard against missed selection updates
+            // We delay the check slightly to allow for view layout and notification propagation.
+            // This handles cases where the view is hidden on launch and suppresses selection notifications.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                if self.notesTableView.loadingQueue.operationCount == 0, EditTextView.note == nil {
+                    // Case 1: Standard Selection Success
+                    if let selectedNote = self.notesTableView.getSelectedNote() {
+                        self.editArea.fill(note: selectedNote, options: .silent)
+                        self.revealEditor()
+                    }
+                    // Case 2: Selection missed/racing but data exists
+                    else if !self.notesTableView.noteList.isEmpty {
+                        let firstNote = self.notesTableView.noteList[0]
+
+                        // Force selection execution for UI consistency
+                        self.notesTableView.selectRowIndexes([0], byExtendingSelection: false)
+                        self.notesTableView.scrollRowToVisible(0)
+
+                        self.editArea.fill(note: firstNote, options: .silent)
+                        self.revealEditor()
+                    } else {
+                        // Reveal anyway if we have no notes (empty state)
+                        self.revealEditor()
+                    }
+                } else {
+                    // Ensure visible if already filled (e.g. by normal flow)
+                    self.revealEditor()
+                }
+            }
+
             completion()
         }
     }
@@ -269,16 +322,32 @@ extension ViewController {
         } else if !UserDefaultsManagement.isSingleMode, !hasSelectedNote {
             editArea.clear()
         }
-
-        refreshMiaoYanNum()
     }
 
-    private func restoreSelectionIfNeeded(previousSelectedRow: Int) {
-        if previousSelectedRow != -1,
-            notesTableView.noteList.indices.contains(previousSelectedRow)
+    @discardableResult
+    private func restoreSelectionIfNeeded(previouslySelectedNote: Note?, fallbackRow: Int, preserveScrollPosition: Bool) -> Bool {
+        if let note = previouslySelectedNote,
+            notesTableView.noteList.contains(where: { $0 === note })
         {
-            notesTableView.selectRow(previousSelectedRow)
+            notesTableView.setSelected(
+                note: note,
+                ensureVisible: !preserveScrollPosition,
+                suppressSideEffects: true
+            )
+            return true
         }
+
+        if fallbackRow != -1,
+            notesTableView.noteList.indices.contains(fallbackRow)
+        {
+            notesTableView.selectRow(
+                fallbackRow,
+                suppressSideEffects: preserveScrollPosition
+            )
+            return true
+        }
+
+        return false
     }
 
     private func preLoadNoteTitles(in project: Project) {
@@ -380,7 +449,6 @@ extension ViewController {
                     if !UserDefaultsManagement.magicPPT {
                         self.titleBarView.isHidden = false
                     }
-                    self.emptyEditAreaView.isHidden = true
                 }
             }
         }
@@ -389,8 +457,8 @@ extension ViewController {
     // MARK: - Data Sorting and Arrangement
     func reSortByDirection() {
         guard let vc = ViewController.shared() else { return }
-        ascendingCheckItem.state = UserDefaultsManagement.sortDirection ? .off : .on
-        descendingCheckItem.state = UserDefaultsManagement.sortDirection ? .on : .off
+        ascendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .off : .on
+        descendingCheckItem?.state = UserDefaultsManagement.sortDirection ? .on : .off
 
         // Sort all notes
         storage.noteList = storage.sortNotes(noteList: storage.noteList, filter: vc.search.stringValue)
@@ -500,24 +568,6 @@ extension ViewController {
     }
 
     // MARK: - Data State Management
-    func refreshMiaoYanNum() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-            let messageText = I18n.str("%d MiaoYan")
-
-            let count: Int
-            if let sidebarItem = self.getSidebarItem() {
-                if sidebarItem.type == .All {
-                    count = self.storage.noteList.filter { !$0.isTrash() }.count
-                } else {
-                    count = self.notesTableView.noteList.count
-                }
-            } else {
-                count = self.notesTableView.noteList.count
-            }
-
-            self.miaoYanText.stringValue = String(format: messageText, count)
-        }
-    }
 
     public func blockFSUpdates() {
         timer.invalidate()
