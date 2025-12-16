@@ -180,14 +180,14 @@ extension EditorContentSplitView: NSSplitViewDelegate {
 
     func splitView(_ splitView: NSSplitView, constrainMinCoordinate proposedMinimumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
         if dividerIndex == 0 && displayMode == .sideBySide {
-            return 200
+            return SplitViewConstraints.minPaneWidth
         }
         return proposedMinimumPosition
     }
 
     func splitView(_ splitView: NSSplitView, constrainMaxCoordinate proposedMaximumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
         if dividerIndex == 0 && displayMode == .sideBySide {
-            return splitView.bounds.width - 200
+            return splitView.bounds.width - SplitViewConstraints.minPaneWidth
         }
         return proposedMaximumPosition
     }

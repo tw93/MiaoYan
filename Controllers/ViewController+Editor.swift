@@ -36,6 +36,13 @@ extension ViewController {
         editArea.markdownView?.alphaValue = 1.0
     }
 
+    /// Restore editor scroll view alpha if it was hidden during startup
+    private func revealEditorIfNeeded() {
+        if editAreaScroll.alphaValue < 1 {
+            editAreaScroll.alphaValue = 1
+        }
+    }
+
     // MARK: - Preview Management
     func enablePreview() {
         // Debounce rapid repeated calls (within 0.15 seconds)
@@ -74,9 +81,7 @@ extension ViewController {
         editAreaScroll.hasHorizontalScroller = false
 
         // Restore editor scroll alpha if it was hidden during startup
-        if editAreaScroll.alphaValue < 1 {
-            editAreaScroll.alphaValue = 1
-        }
+        revealEditorIfNeeded()
 
         // Make WebView the first responder to handle Cmd+F properly
         DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.previewFocusDelay) {
@@ -153,7 +158,7 @@ extension ViewController {
                 self.editAreaScroll.hasVerticalScroller = true
                 self.editAreaScroll.hasHorizontalScroller = true
                 // Restore editor scroll alpha
-                self.editAreaScroll.alphaValue = 1
+                self.revealEditorIfNeeded()
 
                 let normalizedRatio = ratio.map { min(max($0, 0), 1) }
 
@@ -232,7 +237,7 @@ extension ViewController {
         editAreaScroll.hasVerticalScroller = true
         editAreaScroll.hasHorizontalScroller = true
         // Restore editor scroll alpha
-        editAreaScroll.alphaValue = 1
+        revealEditorIfNeeded()
         DispatchQueue.main.async {
             self.titleLabel.isEditable = true
         }
@@ -379,7 +384,6 @@ extension ViewController {
 
         UserDefaultsManagement.presentation = true
         savePresentationLayout()
-        hideNoteList("")
         hideNoteList("")
         formatButton.isHidden = true
         previewButton.isHidden = true
