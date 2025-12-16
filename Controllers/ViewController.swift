@@ -16,7 +16,8 @@ class ViewController:
     NSTextFieldDelegate,
     NSSplitViewDelegate,
     NSMenuItemValidation,
-    NSUserNotificationCenterDelegate
+    NSUserNotificationCenterDelegate,
+    MPreviewScrollDelegate
 {
     public var fsManager: FileSystemEventManager?
     var projectSettingsViewController: ProjectSettingsViewController?
@@ -56,9 +57,10 @@ class ViewController:
 
     var editorContentSplitView: EditorContentSplitView?
     var previewScrollView: EditorScrollView?
-    var splitScrollObserver: NSObjectProtocol?
+    nonisolated(unsafe) var splitScrollObserver: NSObjectProtocol?
     var isProgrammaticSplitScroll = false
-    var splitScrollDebounceTimer: Timer?
+    nonisolated(unsafe) var splitScrollDebounceTimer: Timer?
+    var lastSyncedScrollRatio: CGFloat = -1  // Track last synced ratio to avoid redundant JS execution
     var needsEditorModeUpdateAfterPreview = false
     var isUnfoldingLayout = false
     @IBOutlet var search: SearchTextField!
@@ -230,6 +232,14 @@ class ViewController:
     }
 
     @objc func detachedWindowWillClose(notification: NSNotification) {}
+
+    deinit {
+        // Clean up scroll sync resources
+        if let observer = splitScrollObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+        splitScrollDebounceTimer?.invalidate()
+    }
 
     override func viewDidLoad() {
         // Hide empty state UI (no longer used)
@@ -536,9 +546,9 @@ class ViewController:
 
             for constraint in btn.constraints {
                 if constraint.firstAttribute == .width {
-                    constraint.constant = 18
+                    constraint.constant = 24
                 } else if constraint.firstAttribute == .height {
-                    constraint.constant = 18
+                    constraint.constant = 24
                 }
             }
         }
@@ -592,8 +602,8 @@ class ViewController:
             NSLayoutConstraint.activate([
                 listButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
                 listButton.leadingAnchor.constraint(equalTo: parent.leadingAnchor, constant: 8),
-                listButton.widthAnchor.constraint(equalToConstant: 18),
-                listButton.heightAnchor.constraint(equalToConstant: 18),
+                listButton.widthAnchor.constraint(equalToConstant: 24),
+                listButton.heightAnchor.constraint(equalToConstant: 24),
             ])
             toggleListButton = listButton
         }
@@ -621,29 +631,29 @@ class ViewController:
 
             // 1. List is anchored to parent leading (set in creation block above)
 
-            // 2. Format follows List (Uniform gap: 10)
+            // 2. Format follows List (Uniform gap: 8)
             NSLayoutConstraint.activate([
-                formatButton.leadingAnchor.constraint(equalTo: listButton.trailingAnchor, constant: 10)
+                formatButton.leadingAnchor.constraint(equalTo: listButton.trailingAnchor, constant: 8)
             ])
 
-            // 3. Split follows Format (Uniform gap: 10)
+            // 3. Split follows Format (Uniform gap: 8)
             NSLayoutConstraint.activate([
                 splitButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
-                splitButton.leadingAnchor.constraint(equalTo: formatButton.trailingAnchor, constant: 10),
-                splitButton.widthAnchor.constraint(equalToConstant: 18),
-                splitButton.heightAnchor.constraint(equalToConstant: 18),
+                splitButton.leadingAnchor.constraint(equalTo: formatButton.trailingAnchor, constant: 8),
+                splitButton.widthAnchor.constraint(equalToConstant: 24),
+                splitButton.heightAnchor.constraint(equalToConstant: 24),
             ])
 
-            // 4. Preview follows Split (Uniform gap: 10)
+            // 4. Preview follows Split (Uniform gap: 8)
             NSLayoutConstraint.activate([
                 previewButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
-                previewButton.leadingAnchor.constraint(equalTo: splitButton.trailingAnchor, constant: 10),
+                previewButton.leadingAnchor.constraint(equalTo: splitButton.trailingAnchor, constant: 8),
             ])
 
-            // 5. Presentation follows Preview (Uniform gap: 10)
+            // 5. Presentation follows Preview (Uniform gap: 8)
             NSLayoutConstraint.activate([
                 presentationButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
-                presentationButton.leadingAnchor.constraint(equalTo: previewButton.trailingAnchor, constant: 10),
+                presentationButton.leadingAnchor.constraint(equalTo: previewButton.trailingAnchor, constant: 8),
             ])
         }
 
