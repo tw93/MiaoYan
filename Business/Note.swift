@@ -26,6 +26,9 @@ public class Note: NSObject {
     public var imageUrl: [URL]?
     public var isParsed = false
 
+    // Debounce for save operations
+    private var saveWorkItem: DispatchWorkItem?
+
     private var decryptedTemporarySrc: URL?
     public var ciphertextWriter = OperationQueue()
 
@@ -382,6 +385,8 @@ public class Note: NSObject {
         }
     }
 
+    private static let metaTitleRegex = try! NSRegularExpression(pattern: "title: (.*?)", options: [])
+
     func cleanMetaData(content: String) -> String {
         if content.hasPrefix("---\n") {
             var list = content.components(separatedBy: "---")
@@ -390,8 +395,7 @@ public class Note: NSObject {
                 let headerList = list[1].components(separatedBy: "\n")
                 for header in headerList {
                     let nsHeader = header as NSString
-                    let regex = try! NSRegularExpression(pattern: "title: (.*?)", options: [])
-                    let matches = regex.matches(in: String(nsHeader), options: [], range: NSRange(location: 0, length: (nsHeader as String).count))
+                    let matches = Note.metaTitleRegex.matches(in: String(nsHeader), options: [], range: NSRange(location: 0, length: (nsHeader as String).count))
 
                     if matches.first != nil {
                         list.remove(at: 1)
@@ -452,7 +456,7 @@ public class Note: NSObject {
     public func save(content: NSMutableAttributedString) {
         self.content = content.unLoad()
 
-        save(attributedString: self.content)
+        debounceSave(attributedString: self.content)
     }
 
     public func save(globalStorage: Bool = true) {
@@ -460,10 +464,26 @@ public class Note: NSObject {
             content = content.unLoadCheckboxes()
         }
 
-        save(attributedString: content, globalStorage: globalStorage)
+        // Immediate save for manual requests or structure changes
+        executeSave(attributedString: content, globalStorage: globalStorage)
     }
 
-    private func save(attributedString: NSAttributedString, globalStorage: Bool = true) {
+    private func debounceSave(attributedString: NSAttributedString, globalStorage: Bool = true) {
+        saveWorkItem?.cancel()
+
+        let workItem = DispatchWorkItem { [weak self] in
+            self?.executeSave(attributedString: attributedString, globalStorage: globalStorage)
+        }
+
+        saveWorkItem = workItem
+        // Debounce for 1.5 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: workItem)
+    }
+
+    private func executeSave(attributedString: NSAttributedString, globalStorage: Bool = true) {
+        // Cancel pending debounce if we are saving immediately
+        saveWorkItem?.cancel()
+
         let attributes = getFileAttributes()
 
         do {
@@ -611,6 +631,85 @@ public class Note: NSObject {
 
         return res
     }
+
+    public func getReferencedAttachmentPaths() -> Set<String> {
+        var referenced = Set<String>()
+
+        for image in getAllImages() {
+            referenced.insert(image.url.path)
+        }
+
+        let noteString = content.string
+        guard !noteString.isEmpty else { return referenced }
+
+        let nsString = noteString as NSString
+        let noteRange = NSRange(location: 0, length: nsString.length)
+
+        Note.attachmentPathRegex.enumerateMatches(in: noteString, options: [], range: noteRange) { result, _, _ in
+            guard let range = result?.range else { return }
+
+            let rawPath = nsString.substring(with: range)
+            for absolutePath in resolveAttachmentAbsolutePaths(for: rawPath) {
+                referenced.insert(absolutePath)
+            }
+        }
+
+        return referenced
+    }
+
+    private func resolveAttachmentAbsolutePaths(for rawPath: String) -> [String] {
+        var variants = Set<String>()
+        variants.insert(rawPath)
+
+        if let decoded = rawPath.removingPercentEncoding {
+            variants.insert(decoded)
+        }
+
+        var results = [String]()
+
+        for variant in variants {
+            if let absolute = resolveAttachmentAbsolutePath(forNormalizedPath: variant) {
+                results.append(absolute)
+            }
+        }
+
+        return results
+    }
+
+    private func resolveAttachmentAbsolutePath(forNormalizedPath path: String) -> String? {
+        guard !path.isEmpty else { return nil }
+
+        let projectPath = project.url.path
+
+        if path.hasPrefix("/") {
+            let resolved = NSString(string: projectPath + path).standardizingPath
+            guard resolved.hasPrefix(projectPath) else { return nil }
+            return resolved
+        }
+
+        var normalizedPath = path
+        if normalizedPath.hasPrefix("./") {
+            normalizedPath = String(normalizedPath.dropFirst(2))
+        }
+
+        if normalizedPath.hasPrefix("i/") || normalizedPath.hasPrefix("files/") {
+            let resolved = NSString(string: projectPath + "/" + normalizedPath).standardizingPath
+            guard resolved.hasPrefix(projectPath) else { return nil }
+            return resolved
+        }
+
+        let noteDirectory = url.deletingLastPathComponent().path
+        let resolvedRelative = NSString(string: noteDirectory).appendingPathComponent(normalizedPath)
+        let standardized = NSString(string: resolvedRelative).standardizingPath
+        guard standardized.hasPrefix(projectPath) else { return nil }
+
+        return standardized
+    }
+
+    private static let attachmentPathRegex = try! NSRegularExpression(
+        pattern: #"(?:(?:\.\./|\./|/)*)(?:i|files)/[^)\s'"]+"#,
+        options: []
+    )
 
     public func duplicate() {
         guard let duplicateName = getDupeName() else { return }

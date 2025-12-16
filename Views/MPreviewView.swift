@@ -3,8 +3,26 @@ import QuartzCore
 import WebKit
 
 public typealias MPreviewViewClosure = () -> Void
+
+// MARK: - Protocol Definition
+@MainActor
+protocol MPreviewScrollDelegate: AnyObject {
+    func previewDidScroll(ratio: CGFloat)
+}
+
 @MainActor
 class MPreviewView: WKWebView, WKUIDelegate {
+    private var scrollObserverInjected = false
+    internal var isUpdatingContent = false
+    nonisolated(unsafe) private var contentUpdateWorkItem: DispatchWorkItem?
+
+    // MARK: - JavaScript Timing Constants
+
+    private enum JavaScriptTiming {
+        static let diagramInitDelay = 100  // milliseconds
+        static let imageLoadTimeout: TimeInterval = 0.35  // WebView image load timeout for content updates
+    }
+
     @objcMembers
     private final class NavigationDelegateProxy: NSObject, WKNavigationDelegate {
         weak var owner: MPreviewView?
@@ -19,6 +37,10 @@ class MPreviewView: WKWebView, WKUIDelegate {
             }
             return await owner.handleNavigationAction(navigationAction)
         }
+
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            owner?.webView(webView, didFinish: navigation)
+        }
     }
 
     private lazy var navigationProxy = NavigationDelegateProxy(owner: self)
@@ -27,6 +49,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     public static var template: String?
     private static var bundleInitialized = false
     private static let initQueue = DispatchQueue(label: "preview.init", qos: .userInitiated)
+    weak var scrollDelegate: MPreviewScrollDelegate?
     init(frame: CGRect, note: Note, closure: MPreviewViewClosure?) {
         self.closure = closure
         let userContentController = WKUserContentController()
@@ -34,6 +57,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
         userContentController.add(HandlerSelection(), name: "newSelectionDetected")
         userContentController.add(HandlerCodeCopy(), name: "notification")
         userContentController.add(HandlerRevealBackgroundColor(), name: "revealBackgroundColor")
+        userContentController.add(HandlerPreviewScroll(), name: "previewScroll")
+        userContentController.add(HandlerTOCTip(), name: "tocTipClicked")
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = userContentController
         // macOS Sequoia beta: Simplified configuration to avoid sandbox conflicts
@@ -75,6 +100,10 @@ class MPreviewView: WKWebView, WKUIDelegate {
             hostingScrollView.drawsBackground = false
             hostingScrollView.backgroundColor = bgNSColor
             // 禁用弹性滚动
+            hostingScrollView.hasVerticalScroller = false
+            hostingScrollView.hasHorizontalScroller = false
+            hostingScrollView.verticalScroller = nil
+            hostingScrollView.horizontalScroller = nil
             hostingScrollView.hasVerticalRuler = false
             hostingScrollView.hasHorizontalRuler = false
             hostingScrollView.rulersVisible = false
@@ -99,6 +128,52 @@ class MPreviewView: WKWebView, WKUIDelegate {
     required init?(coder: NSCoder) {
         AppDelegate.trackError(NSError(domain: "InitError", code: 1, userInfo: [NSLocalizedDescriptionKey: "MPreviewView does not support NSCoder initialization"]), context: "MPreviewView.init")
         return nil
+    }
+
+    deinit {
+        // Cancel pending content update work items to prevent crashes
+        contentUpdateWorkItem?.cancel()
+    }
+
+    private func setupScrollObserver() {
+        guard !scrollObserverInjected else { return }
+        // Use JavaScript with requestAnimationFrame for smoother scroll sync
+        let script = """
+                (function() {
+                    let rafId = null;
+                    let lastReportedRatio = -1;
+
+                    function reportScroll() {
+                        const doc = document.scrollingElement || document.documentElement || document.body;
+                        const currentScroll = window.pageYOffset || doc.scrollTop || 0;
+                        const maxScroll = Math.max(0, (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
+
+                        const ratio = maxScroll === 0 ? 0 : currentScroll / maxScroll;
+
+                        // Only report if ratio changed significantly (> 0.1% difference)
+                        if (Math.abs(ratio - lastReportedRatio) > 0.001) {
+                            window.webkit.messageHandlers.previewScroll.postMessage(ratio);
+                            lastReportedRatio = ratio;
+                        }
+                    }
+
+                    window.addEventListener('scroll', function() {
+                        // Cancel previous animation frame to avoid duplicate work
+                        if (rafId !== null) {
+                            cancelAnimationFrame(rafId);
+                        }
+
+                        // Use requestAnimationFrame for 60fps smooth sync
+                        rafId = requestAnimationFrame(function() {
+                            reportScroll();
+                            rafId = null;
+                        });
+                    }, { passive: true });
+                })();
+            """
+
+        evaluateJavaScript(script, completionHandler: nil)
+        scrollObserverInjected = true
     }
 
     // MARK: - Appearance Helpers
@@ -129,7 +204,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
         if event.keyCode == kVK_ANSI_C, event.modifierFlags.contains(.command) {
             DispatchQueue.main.async {
-                self.evaluateJavaScript("document.execCommand('copy', false, null)", completionHandler: nil)
+                self.copySelectionToPasteboard()
             }
             return false
         }
@@ -164,6 +239,43 @@ class MPreviewView: WKWebView, WKUIDelegate {
         }
         return super.performKeyEquivalent(with: event)
     }
+
+    func copySelectionToPasteboard() {
+        let script = """
+                (function() {
+                    const selection = window.getSelection();
+                    if (!selection || selection.rangeCount === 0) {
+                        return { text: "", html: "" };
+                    }
+                    const text = selection.toString() || "";
+                    const range = selection.getRangeAt(0).cloneContents();
+                    const container = document.createElement('div');
+                    container.appendChild(range);
+                    return {
+                        text: text,
+                        html: container.innerHTML || ""
+                    };
+                })();
+            """
+
+        evaluateJavaScript(script) { result, _ in
+            guard let payload = result as? [String: Any] else { return }
+            let text = payload["text"] as? String ?? ""
+            let html = payload["html"] as? String ?? ""
+            guard !text.isEmpty else { return }
+
+            let pasteboard = NSPasteboard.general
+            var types: [NSPasteboard.PasteboardType] = [.string]
+            if !html.isEmpty {
+                types.append(.html)
+            }
+            pasteboard.declareTypes(types, owner: nil)
+            pasteboard.setString(text, forType: .string)
+            if !html.isEmpty {
+                pasteboard.setString(html, forType: .html)
+            }
+        }
+    }
     override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {
         for menuItem in menu.items {
             if menuItem.identifier?.rawValue == "WKMenuItemIdentifierSpeechMenu" || menuItem.identifier?.rawValue == "WKMenuItemIdentifierTranslate" || menuItem.identifier?.rawValue == "WKMenuItemIdentifierSearchWeb"
@@ -174,11 +286,121 @@ class MPreviewView: WKWebView, WKUIDelegate {
         }
     }
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        scrollObserverInjected = false
         closure?()
 
+        // Set up scroll observation after WebView is fully loaded
+        setupScrollObserver()
+        showTOCTipIfNeeded()
     }
 
     // MARK: - Helper Methods
+
+    private func buildUpdateScript(html: String, initializeMath: Bool, initializeDiagrams: Bool) -> String {
+        var initScripts: [String] = []
+
+        if initializeMath {
+            initScripts.append(
+                """
+                    if (typeof renderMathInElement === 'function') {
+                        renderMathInElement(document.body, {
+                            delimiters: [
+                                {left: "$$", right: "$$", display: true},
+                                {left: "$", right: "$", display: false},
+                                {left: "\\\\(", right: "\\\\)", display: false},
+                                {left: "\\\\[", right: "\\\\]", display: true}
+                            ],
+                            processEscapes: true,
+                            ignoredClasses: ['katex-display', 'katex', 'skip-math-dollar']
+                        });
+                    }
+                """)
+        }
+
+        if initializeDiagrams {
+            initScripts.append(
+                """
+                    if (window.DiagramHandler && typeof window.DiagramHandler.initializeAll === 'function') {
+                        setTimeout(() => window.DiagramHandler.initializeAll(), \(JavaScriptTiming.diagramInitDelay));
+                    }
+                """)
+        }
+
+        let initialization = initScripts.joined(separator: "\n")
+
+        return """
+                (function() {
+                    const container = document.querySelector('.markdown-body') || document.body;
+                    if (!container) return;
+
+                    // Save scroll ratio (not absolute position) for better stability
+                    const doc = document.scrollingElement || document.documentElement || document.body;
+                    const maxScroll = Math.max(0, (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
+                    const savedRatio = maxScroll > 0 ? (window.pageYOffset || doc.scrollTop || 0) / maxScroll : 0;
+
+                    // Check if we're near the bottom (within 10 pixels)
+                    const isNearBottom = maxScroll > 0 && (maxScroll - (window.pageYOffset || doc.scrollTop || 0)) < 10;
+
+                    container.innerHTML = `\(html)`;
+                    \(initialization)
+
+                    // Wait for images to load before restoring scroll to prevent jitter
+                    const images = container.querySelectorAll('img');
+                    if (images.length > 0) {
+                        let loadedCount = 0;
+                        const totalImages = images.length;
+                        const imageLoadTimeout = setTimeout(() => {
+                            restoreScroll();
+                        }, 300); // Reduced timeout for faster response
+
+                        function restoreScroll() {
+                            clearTimeout(imageLoadTimeout);
+                            requestAnimationFrame(() => {
+                                const newDoc = document.scrollingElement || document.documentElement || document.body;
+                                const newMaxScroll = Math.max(0, (newDoc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
+
+                                // If was at bottom, stay at bottom; otherwise restore ratio
+                                const targetScroll = isNearBottom ? newMaxScroll : newMaxScroll * savedRatio;
+                                window.scrollTo(0, targetScroll);
+                            });
+                        }
+
+                        images.forEach(img => {
+                            if (img.complete) {
+                                loadedCount++;
+                                if (loadedCount === totalImages) {
+                                    restoreScroll();
+                                }
+                            } else {
+                                img.addEventListener('load', () => {
+                                    loadedCount++;
+                                    if (loadedCount === totalImages) {
+                                        restoreScroll();
+                                    }
+                                }, { once: true });
+                                img.addEventListener('error', () => {
+                                    loadedCount++;
+                                    if (loadedCount === totalImages) {
+                                        restoreScroll();
+                                    }
+                                }, { once: true });
+                            }
+                        });
+                    } else {
+                        // No images, restore scroll immediately
+                        requestAnimationFrame(() => {
+                            const newDoc = document.scrollingElement || document.documentElement || document.body;
+                            const newMaxScroll = Math.max(0, (newDoc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
+
+                            // If was at bottom, stay at bottom; otherwise restore ratio
+                            const targetScroll = isNearBottom ? newMaxScroll : newMaxScroll * savedRatio;
+                            window.scrollTo(0, targetScroll);
+                        });
+                    }
+                })();
+            """
+    }
+
     // Internal so it can be used by extensions in other files
     func executeJavaScriptWhenReady(_ script: String, completion: (() -> Void)? = nil) {
         guard !script.isEmpty || completion != nil else { return }
@@ -197,23 +419,24 @@ class MPreviewView: WKWebView, WKUIDelegate {
         }
     }
     public func scrollToPosition(pre: CGFloat) {
-        guard pre != 0.0 else { return }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.executeJavaScriptWhenReady(
-                "",
-                completion: {
-                    self.evaluateJavaScript("document.body.scrollHeight") { height, _ in
-                        guard let contentHeight = height as? CGFloat else { return }
-                        self.evaluateJavaScript("window.innerHeight") { windowHeight, _ in
-                            guard let windowHeight = windowHeight as? CGFloat else { return }
-                            let offset = contentHeight - windowHeight
-                            if offset > 0 {
-                                let scrollerTop = offset * pre
-                                self.evaluateJavaScript("window.scrollTo({ top: \(scrollerTop), behavior: 'instant' })", completionHandler: nil)
-                            }
-                        }
-                    }
-                })
+        let clamped = Double(max(min(pre, 1), 0))
+        let script = """
+                (function() {
+                    const doc = document.scrollingElement || document.documentElement || document.body;
+                    const maxScroll = Math.max(0, (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
+                    const target = maxScroll * \(clamped);
+                    window.scrollTo(0, target);
+                })();
+            """
+        // Direct execution without async wrapper for smoother scrolling
+        // Note: Errors are silently ignored here for performance (called frequently during scroll sync)
+        self.evaluateJavaScript(script) { _, error in
+            if let error = error {
+                // Only log errors in debug builds to avoid log spam
+                #if DEBUG
+                print("[ScrollSync] JavaScript execution error: \(error.localizedDescription)")
+                #endif
+            }
         }
     }
     private func handleNavigationAction(_ navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
@@ -235,22 +458,101 @@ class MPreviewView: WKWebView, WKUIDelegate {
     public func load(note: Note, force: Bool = false) {
         // No alpha animation here - parent view controller handles transitions
         // This avoids double-animation when toggling preview mode
-        Task.detached { [weak self, note] in
-            let markdownString = await note.getPrettifiedContent()
-            let imagesStorage = await note.project.url
-            let css = await HtmlManager.previewStyle()
-            await MainActor.run { [weak self] in
-                guard let self = self else { return }
-                do {
-                    try self.loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
-                    self.note = note
-                } catch {
-                    AppDelegate.trackError(error, context: "MPreviewView.load")
-                    // Fallback: try to load minimal content
-                    let basicHTML = "<html><body><p>Failed to load preview</p></body></html>"
-                    self.loadHTMLString(basicHTML, baseURL: nil)
-                }
+        Task { @MainActor [weak self, note] in
+            guard let self else { return }
+            let markdownString = note.getPrettifiedContent()
+            let imagesStorage = note.project.url
+            let css = HtmlManager.previewStyle()
+            do {
+                try self.loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
+                self.note = note
+            } catch {
+                AppDelegate.trackError(error, context: "MPreviewView.load")
+                // Fallback: try to load minimal content
+                let basicHTML = "<html><body><p>Failed to load preview</p></body></html>"
+                self.loadHTMLString(basicHTML, baseURL: nil)
             }
+        }
+    }
+
+    // Lightweight content update for split view (preserves scroll position)
+    public func updateContent(note: Note) {
+        Task { @MainActor [weak self, note] in
+            guard let self else { return }
+
+            // Cancel previous content update reset task to avoid premature re-enable
+            self.contentUpdateWorkItem?.cancel()
+
+            // Disable scroll sync during content update
+            self.isUpdatingContent = true
+
+            let markdownString = note.getPrettifiedContent()
+            let imagesStorage = note.project.url
+
+            guard let htmlString = renderMarkdownHTML(markdown: markdownString) else {
+                AppDelegate.trackError(
+                    NSError(
+                        domain: "MarkdownRenderError", code: 1,
+                        userInfo: [NSLocalizedDescriptionKey: "Failed to render markdown in updateContent"]),
+                    context: "MPreviewView.updateContent"
+                )
+                // Fallback: reload the full view instead of silent failure
+                self.isUpdatingContent = false
+                self.contentUpdateWorkItem = nil
+                self.load(note: note, force: true)
+                return
+            }
+
+            let processedHtmlString = self.loadImages(imagesStorage: imagesStorage, html: htmlString)
+
+            // Escape HTML for JavaScript injection
+            let escapedHTML =
+                processedHtmlString
+                .replacingOccurrences(of: "\\", with: "\\\\")
+                .replacingOccurrences(of: "`", with: "\\`")
+                .replacingOccurrences(of: "$", with: "\\$")
+
+            // Detect special content requiring renderer initialization
+            let needsMath = escapedHTML.contains("$$") || escapedHTML.contains("$")
+            let needsDiagrams =
+                escapedHTML.contains("language-mermaid")
+                || escapedHTML.contains("language-plantuml")
+                || escapedHTML.contains("language-markmap")
+
+            let script = self.buildUpdateScript(
+                html: escapedHTML,
+                initializeMath: needsMath,
+                initializeDiagrams: needsDiagrams
+            )
+
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+
+                // Execute JavaScript with proper error handling
+                do {
+                    _ = try await self.evaluateJavaScript(script)
+                } catch {
+                    AppDelegate.trackError(error, context: "MPreviewView.updateContent.jsExec")
+                    // Fallback: reload the full view on JavaScript failure
+                    self.isUpdatingContent = false
+                    self.contentUpdateWorkItem = nil
+                    self.load(note: note, force: true)
+                    return
+                }
+
+                // Re-setup scroll observer after content update
+                self.setupScrollObserver()
+
+                // Re-enable scroll sync after images have loaded
+                // Use DispatchWorkItem to ensure proper cancellation on rapid updates
+                let resetWorkItem = DispatchWorkItem { [weak self] in
+                    self?.isUpdatingContent = false
+                    self?.contentUpdateWorkItem = nil
+                }
+                self.contentUpdateWorkItem = resetWorkItem
+                DispatchQueue.main.asyncAfter(deadline: .now() + JavaScriptTiming.imageLoadTimeout, execute: resetWorkItem)
+            }
+            self.note = note
         }
     }
 
@@ -376,6 +678,68 @@ class MPreviewView: WKWebView, WKUIDelegate {
     private func loadImages(imagesStorage: URL, html: String) -> String {
         return HtmlManager.processImages(in: html, imagesStorage: imagesStorage)
     }
+
+    // MARK: - TOC Hint
+    func showTOCTipIfNeeded() {
+        guard !UserDefaultsManagement.hasShownTOCTip else { return }
+
+        // Inject Red Dot script
+        let script = """
+                (function() {
+                    var trigger = document.querySelector('.toc-hover-trigger');
+                    if (!trigger) return;
+
+                    // Avoid duplicate dots
+                    if (document.getElementById('toc-red-dot-hint')) return;
+
+                    var dot = document.createElement('div');
+                    dot.id = 'toc-red-dot-hint';
+                    dot.innerText = 'TOC';
+                    dot.style.position = 'absolute';
+                    dot.style.backgroundColor = '#FF3B30'; // System Red
+                    dot.style.color = 'white';
+                    dot.style.fontSize = '8px';
+                    dot.style.fontWeight = 'bold';
+                    dot.style.padding = '2px 5px';
+                    dot.style.borderRadius = '8px';
+                    dot.style.top = '12px'; // Adjust based on visual testing
+                    dot.style.right = '12px';
+                    dot.style.zIndex = '9999';
+                    dot.style.boxShadow = '0 1px 3px rgba(0,0,0,0.2)';
+                    dot.style.cursor = 'pointer';
+                    dot.style.pointerEvents = 'auto'; // Make badge clickable directly
+
+                    trigger.appendChild(dot);
+
+                    // Function to dismiss
+                    function dismiss() {
+                        if (dot) dot.remove();
+                        window.webkit.messageHandlers.tocTipClicked.postMessage("clicked");
+                    }
+
+                    // Click on badge: dismiss AND click trigger (to open TOC)
+                    dot.addEventListener('click', function(e) {
+                        e.stopPropagation(); // Stop bubbling to avoid double triggering if logic is complex
+                        dismiss();
+                        trigger.click(); // Manually trigger the TOC opening
+                    }, { once: true });
+
+                    // Click on trigger (e.g. user missed the badge but hit the area): dismiss
+                    trigger.addEventListener('click', function() {
+                        dismiss();
+                    }, { once: true });
+                })();
+            """
+        executeJavaScriptWhenReady(script)
+    }
+}
+class HandlerTOCTip: NSObject, WKScriptMessageHandler {
+    func userContentController(
+        _ userContentController: WKUserContentController,
+        didReceive message: WKScriptMessage
+    ) {
+        UserDefaultsManagement.hasShownTOCTip = true
+    }
 }
 class HandlerCheckbox: NSObject, WKScriptMessageHandler {
     func userContentController(
@@ -448,6 +812,31 @@ class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
         } else {
             vc.sidebarSplitView.setValue(NSColor(css: message), forKey: "dividerColor")
             vc.splitView.setValue(NSColor(css: message), forKey: "dividerColor")
+        }
+    }
+}
+
+class HandlerPreviewScroll: NSObject, WKScriptMessageHandler {
+    func userContentController(
+        _ userContentController: WKUserContentController,
+        didReceive message: WKScriptMessage
+    ) {
+        guard let previewView = message.webView as? MPreviewView else {
+            return
+        }
+
+        if let ratio = message.body as? Double {
+            Task { @MainActor in
+                previewView.scrollDelegate?.previewDidScroll(ratio: CGFloat(ratio))
+            }
+        } else if let ratio = message.body as? CGFloat {
+            Task { @MainActor in
+                previewView.scrollDelegate?.previewDidScroll(ratio: ratio)
+            }
+        } else if let ratio = message.body as? Int {
+            Task { @MainActor in
+                previewView.scrollDelegate?.previewDidScroll(ratio: CGFloat(ratio))
+            }
         }
     }
 }
@@ -674,11 +1063,11 @@ extension PreviewSearchBar: NSSearchFieldDelegate {
             onClose?()
             return true
         case #selector(NSText.deleteToBeginningOfLine(_:)),
-             #selector(NSText.deleteToBeginningOfParagraph(_:)):
+            #selector(NSText.deleteToBeginningOfParagraph(_:)):
             clearSearchField()
             return true
         case #selector(NSResponder.insertNewline(_:)),
-             #selector(NSResponder.insertNewlineIgnoringFieldEditor(_:)):
+            #selector(NSResponder.insertNewlineIgnoringFieldEditor(_:)):
             if NSApp.currentEvent?.modifierFlags.contains(.shift) == true {
                 onPrevious?()
             } else {
@@ -691,8 +1080,8 @@ extension PreviewSearchBar: NSSearchFieldDelegate {
     }
 }
 
-private extension PreviewSearchBar {
-    static func panelBackgroundColor(base: NSColor) -> NSColor {
+extension PreviewSearchBar {
+    fileprivate static func panelBackgroundColor(base: NSColor) -> NSColor {
         guard let rgb = base.usingColorSpace(.sRGB) else {
             return base
         }
@@ -706,7 +1095,7 @@ private extension PreviewSearchBar {
         }
     }
 
-    func updatePanelBackground() {
+    fileprivate func updatePanelBackground() {
         guard wantsLayer else { return }
         let panelColor = PreviewSearchBar.panelBackgroundColor(base: panelBaseColor)
         layer?.backgroundColor = panelColor.cgColor
@@ -714,7 +1103,7 @@ private extension PreviewSearchBar {
         applyCornerMask()
     }
 
-    func updateShadowAppearance(for color: NSColor) {
+    fileprivate func updateShadowAppearance(for color: NSColor) {
         guard wantsLayer, let rgb = color.usingColorSpace(.sRGB) else { return }
         let luminance = 0.2126 * rgb.redComponent + 0.7152 * rgb.greenComponent + 0.0722 * rgb.blueComponent
         if luminance < 0.5 {
@@ -730,7 +1119,7 @@ private extension PreviewSearchBar {
         }
     }
 
-    func applyCornerMask() {
+    fileprivate func applyCornerMask() {
         guard wantsLayer else { return }
         if #available(macOS 10.13, *) {
             layer?.cornerRadius = 8
@@ -745,7 +1134,7 @@ private extension PreviewSearchBar {
         }
     }
 
-    func leftRoundedCornerPath(radius: CGFloat) -> NSBezierPath {
+    fileprivate func leftRoundedCornerPath(radius: CGFloat) -> NSBezierPath {
         let rect = bounds
         let minX = rect.minX
         let maxX = rect.maxX
@@ -764,12 +1153,12 @@ private extension PreviewSearchBar {
     }
 }
 
-private extension NSBezierPath {
-    var cgPath: CGPath {
+extension NSBezierPath {
+    fileprivate var cgPath: CGPath {
         let path = CGMutablePath()
         let points = UnsafeMutablePointer<NSPoint>.allocate(capacity: 3)
         defer { points.deallocate() }
-        for index in 0 ..< elementCount {
+        for index in 0..<elementCount {
             let type = element(at: index, associatedPoints: points)
             switch type {
             case .moveTo:
@@ -902,7 +1291,7 @@ extension MPreviewView {
             bar.topAnchor.constraint(equalTo: topAnchor, constant: marginTop),
             bar.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -marginRight),
             bar.widthAnchor.constraint(equalToConstant: barWidth),
-            bar.heightAnchor.constraint(equalToConstant: barHeight)
+            bar.heightAnchor.constraint(equalToConstant: barHeight),
         ])
         searchBar = bar
 
@@ -1015,8 +1404,8 @@ extension MPreviewView {
             .replacingOccurrences(of: "'", with: "\\'")
 
         let script = """
-        window.find('\(escapedText)', false, false, true, false, false, false);
-        """
+            window.find('\(escapedText)', false, false, true, false, false, false);
+            """
 
         evaluateJavaScript(script) { [weak self] _, _ in
             guard let self = self, self.searchSequence == sequence else { return }
@@ -1029,14 +1418,14 @@ extension MPreviewView {
             .replacingOccurrences(of: "'", with: "\\'")
 
         let script = """
-        (function() {
-            const text = '\(escapedText)';
-            const regex = new RegExp(text, 'gi');
-            const bodyText = document.body.innerText || document.body.textContent;
-            const matches = bodyText.match(regex);
-            return matches ? matches.length : 0;
-        })();
-        """
+            (function() {
+                const text = '\(escapedText)';
+                const regex = new RegExp(text, 'gi');
+                const bodyText = document.body.innerText || document.body.textContent;
+                const matches = bodyText.match(regex);
+                return matches ? matches.length : 0;
+            })();
+            """
 
         evaluateJavaScript(script) { [weak self] result, _ in
             guard let self = self, self.searchSequence == sequence else { return }
@@ -1101,42 +1490,43 @@ extension MPreviewView {
     private func focusFirstPreviewMatch(with text: String) {
         guard !text.isEmpty else { return }
 
-        let escapedText = text
+        let escapedText =
+            text
             .replacingOccurrences(of: "\\", with: "\\\\")
             .replacingOccurrences(of: "'", with: "\\'")
             .replacingOccurrences(of: "\n", with: "\\n")
             .replacingOccurrences(of: "\r", with: "")
 
         let script = """
-        (function() {
-            const query = '\(escapedText)';
-            if (!query) { return false; }
-            const lowerQuery = query.toLowerCase();
-            const walker = document.createTreeWalker(document.body || document.documentElement, NodeFilter.SHOW_TEXT, null);
-            if (!walker) { return false; }
-            const selection = window.getSelection();
-            if (!selection) { return false; }
-            while (walker.nextNode()) {
-                const node = walker.currentNode;
-                if (!node || !node.textContent) { continue; }
-                const textContent = node.textContent;
-                const index = textContent.toLowerCase().indexOf(lowerQuery);
-                if (index !== -1) {
-                    const range = document.createRange();
-                    range.setStart(node, index);
-                    range.setEnd(node, index + query.length);
-                    selection.removeAllRanges();
-                    selection.addRange(range);
-                    const element = node.parentElement || node.parentNode;
-                    if (element && element.scrollIntoView) {
-                        element.scrollIntoView({ block: 'center', behavior: 'auto' });
+            (function() {
+                const query = '\(escapedText)';
+                if (!query) { return false; }
+                const lowerQuery = query.toLowerCase();
+                const walker = document.createTreeWalker(document.body || document.documentElement, NodeFilter.SHOW_TEXT, null);
+                if (!walker) { return false; }
+                const selection = window.getSelection();
+                if (!selection) { return false; }
+                while (walker.nextNode()) {
+                    const node = walker.currentNode;
+                    if (!node || !node.textContent) { continue; }
+                    const textContent = node.textContent;
+                    const index = textContent.toLowerCase().indexOf(lowerQuery);
+                    if (index !== -1) {
+                        const range = document.createRange();
+                        range.setStart(node, index);
+                        range.setEnd(node, index + query.length);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                        const element = node.parentElement || node.parentNode;
+                        if (element && element.scrollIntoView) {
+                            element.scrollIntoView({ block: 'center', behavior: 'auto' });
+                        }
+                        return true;
                     }
-                    return true;
                 }
-            }
-            return false;
-        })();
-        """
+                return false;
+            })();
+            """
 
         evaluateJavaScript(script, completionHandler: nil)
     }
@@ -1148,19 +1538,19 @@ extension MPreviewView {
 
     private func resetSearchSelection(completion: @escaping () -> Void) {
         let script = """
-        (function() {
-            const selection = window.getSelection();
-            if (!selection) { return false; }
-            const root = document.body || document.documentElement;
-            if (!root) { return false; }
-            const range = document.createRange();
-            range.selectNodeContents(root);
-            range.collapse(true);
-            selection.removeAllRanges();
-            selection.addRange(range);
-            return true;
-        })();
-        """
+            (function() {
+                const selection = window.getSelection();
+                if (!selection) { return false; }
+                const root = document.body || document.documentElement;
+                if (!root) { return false; }
+                const range = document.createRange();
+                range.selectNodeContents(root);
+                range.collapse(true);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                return true;
+            })();
+            """
         evaluateJavaScript(script) { _, _ in
             completion()
         }

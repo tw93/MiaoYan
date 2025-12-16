@@ -47,7 +47,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         configureSystemLogging()
         NSFontManager.shared.fontPanel(false)?.orderOut(self)
-        UserDefaultsManagement.resetEditorState()
+
         applyAppearance()
 
         addGlobalKeyboardMonitor()
@@ -96,10 +96,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 }
             }
         }
+
+        // Apply fade-in for first launch to match re-open behavior and hide initial blank state
+        mainWC.window?.alphaValue = 0
         mainWC.window?.makeKeyAndOrderFront(nil)
+
         mainWindowController = mainWC
 
         mainWC.applyMiaoYanAppearance()
+
+        // Failsafe: Ensure window reveals after 3 seconds even if list loading hangs or fails
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            mainWC.revealWindowWhenReady()
+        }
 
         let startTime = CFAbsoluteTimeGetCurrent()
         #if DEBUG
@@ -139,7 +148,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func applicationWillTerminate(_ aNotification: Notification) {
         Self.signal("App.SessionEnd")
         if let vc = ViewController.shared() {
-            vc.notesTableView.saveScrollPosition()
+            vc.persistCurrentViewState()
         }
         let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
         try? FileManager.default.removeItem(at: webkitPreview)
@@ -175,30 +184,37 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
     #endif
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        applyAppearance()
         if !flag {
+            applyAppearance()
             mainWindowController?.makeNew()
-        } else {
-            mainWindowController?.refreshEditArea()
         }
         return true
     }
 
     func applyAppearance() {
         if UserDefaultsManagement.appearanceType != .Custom {
+            var targetAppearance: NSAppearance?
+            var isDark = false
+
             switch UserDefaultsManagement.appearanceType {
             case .Dark:
-                NSApp.appearance = NSAppearance(named: NSAppearance.Name.darkAqua)
-                UserDataService.instance.isDark = true
+                targetAppearance = NSAppearance(named: .darkAqua)
+                isDark = true
             case .Light:
-                NSApp.appearance = NSAppearance(named: NSAppearance.Name.aqua)
-                UserDataService.instance.isDark = false
+                targetAppearance = NSAppearance(named: .aqua)
+                isDark = false
             case .System:
-                NSApp.appearance = nil
-                UserDataService.instance.isDark = NSAppearance.current.isDark
+                targetAppearance = nil
+                isDark = NSAppearance.current.isDark
             default:
-                NSApp.appearance = nil
-                UserDataService.instance.isDark = NSAppearance.current.isDark
+                targetAppearance = nil
+                isDark = NSAppearance.current.isDark
+            }
+
+            UserDataService.instance.isDark = isDark
+
+            if NSApp.appearance != targetAppearance {
+                NSApp.appearance = targetAppearance
             }
         }
     }

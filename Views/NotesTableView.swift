@@ -48,6 +48,7 @@ class NotesTableView: NSTableView {
 
     public var loadingQueue = OperationQueue()
     public var fillTimestamp: Int64?
+    private var scrollSaveWorkItem: DispatchWorkItem?
 
     override func draw(_ dirtyRect: NSRect) {
         dataSource = adapter
@@ -112,29 +113,55 @@ class NotesTableView: NSTableView {
     }
 
     func scrollRowToVisible(row: Int, animated: Bool) {
-        if animated {
-            guard let clipView = superview as? NSClipView,
-                let scrollView = clipView.superview as? NSScrollView
-            else {
-                assertionFailure("Unexpected NSTableView view hiearchy")
-                return
-            }
-
-            let rowRect = rect(ofRow: row)
-            var scrollOrigin = rowRect.origin
-
-            if clipView.frame.height - scrollOrigin.y < rowRect.height {
-                scrollOrigin.y -= 8.0
-                if scrollView.responds(to: #selector(NSScrollView.flashScrollers)) {
-                    scrollView.flashScrollers()
-                }
-                clipView.animator().setBoundsOrigin(scrollOrigin)
-            } else {
-                scrollRowToVisible(row)
-            }
-        } else {
+        guard animated else {
             scrollRowToVisible(row)
+            return
         }
+
+        guard let clipView = superview as? NSClipView,
+            let scrollView = clipView.superview as? NSScrollView
+        else {
+            assertionFailure("Unexpected NSTableView view hiearchy")
+            return
+        }
+
+        let visibleRect = clipView.documentVisibleRect
+        let rowRect = rect(ofRow: row)
+
+        // Already fully visible – do nothing
+        if visibleRect.contains(rowRect) {
+            return
+        }
+
+        var targetRect = rowRect
+
+        if rowRect.minY < visibleRect.minY {
+            targetRect.origin.y = rowRect.minY
+        } else {
+            targetRect.origin.y = rowRect.maxY - visibleRect.height + 8.0
+        }
+
+        clipView.animator().setBoundsOrigin(targetRect.origin)
+        if scrollView.responds(to: #selector(NSScrollView.flashScrollers)) {
+            scrollView.flashScrollers()
+        }
+    }
+
+    func isRowFullyVisible(_ row: Int) -> Bool {
+        guard let clipView = superview as? NSClipView else { return true }
+        let visibleRect = clipView.documentVisibleRect
+        let rowRect = rect(ofRow: row)
+        return visibleRect.contains(rowRect)
+    }
+
+    func currentScrollOrigin() -> NSPoint? {
+        guard let clipView = superview as? NSClipView else { return nil }
+        return clipView.bounds.origin
+    }
+
+    func restoreScrollOrigin(_ origin: NSPoint) {
+        guard let clipView = superview as? NSClipView else { return }
+        clipView.setBoundsOrigin(origin)
     }
 
     override func mouseDown(with event: NSEvent) {
@@ -218,7 +245,9 @@ class NotesTableView: NSTableView {
                 currentNote.save()
             }
 
-            saveScrollPosition()
+            if !suppressSelectionSideEffects {
+                saveScrollPosition()
+            }
 
             loadingQueue.cancelAllOperations()
             let operation = BlockOperation()
@@ -236,7 +265,12 @@ class NotesTableView: NSTableView {
             }
             loadingQueue.addOperation(operation)
         } else {
-            vc.editArea.clear()
+            // UX: Auto-select first note to avoid empty editor (unified behavior)
+            if !noteList.isEmpty {
+                vc.ensureNoteSelection()
+            } else {
+                vc.editArea.clear()
+            }
         }
     }
 
@@ -390,19 +424,29 @@ class NotesTableView: NSTableView {
         selectRow(selectedRow - 1)
     }
 
-    func selectRow(_ i: Int) {
-        if noteList.indices.contains(i) {
-            DispatchQueue.main.async {
-                self.selectRowIndexes([i], byExtendingSelection: false)
+    private var suppressSelectionSideEffects = false
+
+    func selectRow(_ i: Int, ensureVisible: Bool = true, suppressSideEffects: Bool = false) {
+        guard noteList.indices.contains(i) else { return }
+        DispatchQueue.main.async {
+            let previousSuppression = self.suppressSelectionSideEffects
+            if suppressSideEffects {
+                self.suppressSelectionSideEffects = true
+            }
+            self.selectRowIndexes([i], byExtendingSelection: false)
+            if suppressSideEffects {
+                self.suppressSelectionSideEffects = previousSuppression
+            }
+            guard ensureVisible else { return }
+            if !self.isRowFullyVisible(i) {
                 self.scrollRowToVisible(i)
             }
         }
     }
 
-    func setSelected(note: Note) {
+    func setSelected(note: Note, ensureVisible: Bool = true, suppressSideEffects: Bool = false) {
         if let i = getIndex(note) {
-            selectRow(i)
-            scrollRowToVisible(i)
+            selectRow(i, ensureVisible: ensureVisible, suppressSideEffects: suppressSideEffects)
         }
     }
 
@@ -503,20 +547,62 @@ class NotesTableView: NSTableView {
     // MARK: - Scroll Position Memory
     func saveScrollPosition() {
         guard let clipView = superview as? NSClipView else { return }
+
+        // Cancel previous pending save
+        scrollSaveWorkItem?.cancel()
+
         let scrollPosition = clipView.bounds.origin.y
-        UserDefaultsManagement.notesTableScrollPosition = scrollPosition
+        let contextURL = currentScrollContextURL()
+
+        let workItem = DispatchWorkItem {
+            UserDefaultsManagement.setNotesTableScrollPosition(scrollPosition, for: contextURL)
+        }
+
+        scrollSaveWorkItem = workItem
+        // Debounce for 0.8 seconds to avoid frequent writes during rapid scrolling
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8, execute: workItem)
     }
 
-    func restoreScrollPosition() {
+    @discardableResult
+    func restoreScrollPosition(ensureSelectionVisible: Bool = true) -> Bool {
+        let contextURL = currentScrollContextURL()
+        let savedPosition = UserDefaultsManagement.notesTableScrollPosition(for: contextURL)
         DispatchQueue.main.async { [weak self] in
             guard let self = self,
                 let clipView = self.superview as? NSClipView
             else { return }
-            let savedPosition = UserDefaultsManagement.notesTableScrollPosition
-            if savedPosition > 0 {
-                let newOrigin = NSPoint(x: clipView.bounds.origin.x, y: savedPosition)
-                clipView.setBoundsOrigin(newOrigin)
+            let newOrigin = NSPoint(x: clipView.bounds.origin.x, y: savedPosition)
+            self.restoreScrollOrigin(newOrigin)
+            guard ensureSelectionVisible else { return }
+            let selectedRow = self.selectedRowSafe()
+            if selectedRow >= 0, !self.isRowFullyVisible(selectedRow) {
+                self.scrollRowToVisible(row: selectedRow, animated: false)
             }
         }
+        return savedPosition > 0
+    }
+
+    private func currentScrollContextURL() -> URL? {
+        if let vc = window?.contentViewController as? ViewController,
+            let sidebar = vc.storageOutlineView
+        {
+            let selectedRow = sidebar.selectedRow
+            if selectedRow >= 0,
+                let item = sidebar.item(atRow: selectedRow) as? SidebarItem
+            {
+                if let project = item.project {
+                    return project.url
+                }
+                if item.type == .All {
+                    return nil
+                }
+            }
+        }
+
+        if let selectedNote = getSelectedNote() {
+            return selectedNote.project.url
+        }
+
+        return UserDataService.instance.lastProject
     }
 }

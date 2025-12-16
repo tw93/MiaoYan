@@ -89,7 +89,7 @@
 "This action cannot be undone." = "此操作无法恢复。";
 
 /* No comment provided by engineer. */
-"Toggle Preview" = "切换预览";
+"Toggle Preview" = "预览";
 
 /* Sidebar label */
 "Trash" = "删除";
@@ -118,6 +118,14 @@
 "😶‍🌫 PDF export failed, please try again~" = "😶‍🌫 PDF导出失败，请重新试试~";
 
 "🎉 Saved to Downloads folder~" = "🎉 已导出到下载目录~";
+
+/* Clean attachments */
+"Clean Orphan Attachments" = "清理孤立附件";
+"Detected %d unused attachment(s). Move them to Trash?" = "检测到%d个未被引用的附件，是否移动到垃圾桶？";
+"No orphan attachments found" = "没有检测到孤立附件";
+"Removed %d unused attachment(s)" = "已清理%d个无引用附件";
+"Some attachments could not be removed" = "部分附件无法清理";
+"Clean" = "清理";
 
 "🙊 Starting export~" = "🙊 开始导出中~";
 
@@ -168,6 +176,9 @@
 "Code Background:" = "代码背景:";
 "Preview Location:" = "预览位置:";
 "Preview Width:" = "预览宽度:";
+"Editor Mode:" = "编辑模式:";
+"Split Mode" = "分栏模式";
+"Pure Editing" = "纯编辑";
 
 /* Interface Settings */
 "Interface" = "界面";
@@ -220,3 +231,9 @@
 "Previous" = "上一个";
 "Next" = "下一个";
 "Done" = "完成";
+
+/* Toolbar Tooltips */
+"Format" = "排版";
+"Presentation" = "演示";
+"Toggle Note List" = "列表";
+"Toggle Split Mode" = "分栏";

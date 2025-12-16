@@ -4,6 +4,7 @@ import Foundation
 extension Notification.Name {
     static let editorModeChanged = Notification.Name("editorModeChanged")
     static let preferencesChanged = Notification.Name("PreferencesChanged")
+    static let splitViewModeChanged = Notification.Name("SplitViewModeChanged")
 }
 @MainActor
 public enum UserDefaultsManagement {
@@ -83,6 +84,9 @@ public enum UserDefaultsManagement {
         static let NotesTableScrollPosition = "notesTableScrollPosition"
         static let AlwaysOnTop = "alwaysOnTop"
         static let HasShownImagePreviewTip = "hasShownImagePreviewTip"
+        static let SplitViewMode = "splitViewMode"
+        static let EditorContentSplitPosition = "editorContentSplitPosition"
+        static let EditorModeKey = "editorMode"
     }
 
     private static func resolvedFontName(forKey key: String) -> String {
@@ -199,6 +203,16 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.IsFirstLaunch)
         }
     }
+
+    static var hasShownTOCTip: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "hasShownTOCTip")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "hasShownTOCTip")
+        }
+    }
+
     static var isSingleMode: Bool {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.IsSingleMode) as? Bool {
@@ -471,9 +485,9 @@ public enum UserDefaultsManagement {
     }
     static var storagePath: String? {
         get {
-            if let storagePath = UserDefaults.standard.object(forKey: Constants.StoragePathKey) {
-                if FileManager.default.isWritableFile(atPath: storagePath as! String) {
-                    return storagePath as? String
+            if let storagePath = UserDefaults.standard.object(forKey: Constants.StoragePathKey) as? String {
+                if FileManager.default.isWritableFile(atPath: storagePath) {
+                    return storagePath
                 } else {
                     let error = NSError(domain: "StorageError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Storage path not accessible, resetting to default"])
                     AppDelegate.trackError(error, context: "UserDefaultsManagement.storagePath")
@@ -508,14 +522,24 @@ public enum UserDefaultsManagement {
         @MainActor static let shared = EditorStateManager()
         private var _currentMode: EditorMode = .normal
         private init() {
-            // Reset to normal mode on each startup, don't read from UserDefaults
-            _currentMode = .normal
+            // Read from UserDefaults
+            if let storedMode = UserDefaults.standard.string(forKey: Constants.EditorModeKey),
+                let mode = EditorMode(rawValue: storedMode)
+            {
+                _currentMode = mode
+            } else {
+                _currentMode = .normal
+            }
         }
         var currentMode: EditorMode {
             get { return _currentMode }
             set {
                 let oldMode = _currentMode
                 _currentMode = newValue
+
+                // Save to UserDefaults
+                UserDefaults.standard.set(newValue.rawValue, forKey: Constants.EditorModeKey)
+
                 // Send mode change notification
                 DispatchQueue.main.async {
                     NotificationCenter.default.post(
@@ -571,6 +595,40 @@ public enum UserDefaultsManagement {
             EditorStateManager.shared.setMode(newValue ? .ppt : .normal)
         }
     }
+    static var splitViewMode: Bool {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.SplitViewMode) as? Bool {
+                return result
+            }
+            return false
+        }
+        set {
+            let oldValue = splitViewMode
+            guard oldValue != newValue else { return }
+            UserDefaults.standard.set(newValue, forKey: Constants.SplitViewMode)
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: .splitViewModeChanged, object: nil)
+            }
+        }
+    }
+    static var editorContentSplitPosition: Double {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.EditorContentSplitPosition) {
+                if let ratio = result as? Double {
+                    return ratio
+                }
+                if let legacyWidth = result as? Int, legacyWidth > 0 {
+                    // Old absolute width value - reset to default 50/50
+                    UserDefaults.standard.removeObject(forKey: Constants.EditorContentSplitPosition)
+                    return 0
+                }
+            }
+            return 0
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.EditorContentSplitPosition)
+        }
+    }
     // Convenience properties
     static var isInSpecialMode: Bool {
         return EditorStateManager.shared.isInSpecialMode
@@ -623,10 +681,13 @@ public enum UserDefaultsManagement {
     }
     static var lastSelectedURL: URL? {
         get {
-            if let path = UserDefaults.standard.object(forKey: Constants.LastSelectedPath) as? String, let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) {
-                return URL(string: "file://" + encodedPath)
+            guard let path = UserDefaults.standard.object(forKey: Constants.LastSelectedPath) as? String else {
+                return nil
             }
-            return nil
+            if path.hasPrefix("file://") {
+                return URL(string: path)
+            }
+            return URL(fileURLWithPath: path)
         }
         set {
             if let url = newValue {
@@ -707,15 +768,29 @@ public enum UserDefaultsManagement {
             }
         }
     }
-    static var notesTableScrollPosition: CGFloat {
-        get {
-            if let result = UserDefaults.standard.object(forKey: Constants.NotesTableScrollPosition) as? CGFloat {
-                return result
-            }
+    private static func scrollPositionKey(for projectURL: URL?) -> String {
+        projectURL?.path ?? "__all__"
+    }
+
+    static func notesTableScrollPosition(for projectURL: URL?) -> CGFloat {
+        guard let stored = UserDefaults.standard.dictionary(forKey: Constants.NotesTableScrollPosition) as? [String: Double] else {
             return 0.0
         }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.NotesTableScrollPosition)
+        let key = scrollPositionKey(for: projectURL)
+        if let value = stored[key] {
+            return CGFloat(value)
         }
+        return 0.0
+    }
+
+    static func setNotesTableScrollPosition(_ value: CGFloat, for projectURL: URL?) {
+        var stored = UserDefaults.standard.dictionary(forKey: Constants.NotesTableScrollPosition) as? [String: Double] ?? [:]
+        let key = scrollPositionKey(for: projectURL)
+        if value == 0 {
+            stored.removeValue(forKey: key)
+        } else {
+            stored[key] = Double(value)
+        }
+        UserDefaults.standard.set(stored, forKey: Constants.NotesTableScrollPosition)
     }
 }

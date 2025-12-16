@@ -67,12 +67,29 @@ extension ViewController {
         editArea.updateTextContainerInset()
     }
 
+    func ensurePanelsVisibleAtStartup() {
+        guard !UserDefaultsManagement.isSingleMode else { return }
+        let shouldShowSidebar = sidebarWidth > 0
+        let shouldShowNotelist = notelistWidth > 0
+
+        if shouldShowSidebar && !shouldShowNotelist {
+            showNoteList("")
+        }
+    }
+
     private func setNotelistVisible(_ visible: Bool, saveState: Bool = true) {
         if visible {
             let savedWidth = UserDefaultsManagement.sidebarSize
             let targetWidth = savedWidth > 0 ? savedWidth : Int(LayoutConstants.defaultNotelistWidth)
             splitView.shouldHideDivider = false
             splitView.setPosition(CGFloat(targetWidth), ofDividerAt: 0)
+
+            // Sync selection: If editor has a note, select it in the list (suppressing side effects like reloading)
+            if let currentNote = EditTextView.note {
+                if let index = notesTableView.getIndex(currentNote) {
+                    notesTableView.selectRow(index, ensureVisible: true, suppressSideEffects: true)
+                }
+            }
         } else {
             if saveState && !isPresentationMode {
                 UserDefaultsManagement.sidebarSize = Int(notelistWidth)
@@ -127,9 +144,61 @@ extension ViewController {
         notelistWidth == 0 ? showNoteList(sender) : hideNoteList(sender)
     }
 
+    @IBAction func toggleLayoutCycle(_ sender: Any) {
+        guard splitView != nil, sidebarSplitView != nil else { return }
+
+        // 1. If Sidebar is visible -> Hide Sidebar (Enter Double Column)
+        if sidebarWidth > 0 {
+            setSidebarVisible(false)
+            isUnfoldingLayout = false
+            return
+        }
+
+        // 2. If Note List is visible -> Check unfolding direction
+        if notelistWidth > 0 {
+            if isUnfoldingLayout {
+                // Direction: Unfolding -> Show Sidebar (Return to Full)
+                setSidebarVisible(true)
+                isUnfoldingLayout = false
+            } else {
+                // Direction: Folding -> Hide Note List (Enter Focus Mode)
+                setNotelistVisible(false)
+            }
+            return
+        }
+
+        // 3. If Note List is hidden -> Show Note List (Start Unfolding)
+        setNotelistVisible(true)
+        isUnfoldingLayout = true
+    }
+
     @IBAction func toggleSidebarPanel(_ sender: Any) {
         guard sidebarSplitView != nil else { return }
         sidebarWidth == 0 ? showSidebar(sender) : hideSidebar(sender)
+    }
+
+    @IBAction func toggleSplitMode(_ sender: Any) {
+        let newMode = !UserDefaultsManagement.splitViewMode
+        UserDefaultsManagement.splitViewMode = newMode
+
+        // Trigger UI update
+        // If currently in Preview Mode, exit it.
+        // The disablePreview() logic will check splitViewMode and automatically transition to Split Mode.
+        if UserDefaultsManagement.preview {
+            UserDefaultsManagement.preview = false
+        } else {
+            applyEditorModePreferenceChange()
+        }
+
+        // Update Button Icon
+        if let button = toggleSplitButton {
+            // Use custom icons for two states (single/split)
+            let iconName = newMode ? "icon_editor_split" : "icon_editor_single"
+            if let image = NSImage(named: iconName) {
+                image.isTemplate = true
+                button.image = image
+            }
+        }
     }
 
     // MARK: - Gesture Handling

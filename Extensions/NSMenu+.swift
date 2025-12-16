@@ -53,7 +53,7 @@ enum MenuIconRegistry {
         IconMapping(symbol: "rectangle.stack", selectors: ["activeWindow:", "openMainWindow:", "arrangeInFront:"], identifiers: []),
         IconMapping(symbol: "eye.slash", selectors: ["hide:", "hideOtherApplications:"], identifiers: []),
         IconMapping(symbol: "eye", selectors: ["unhideAllApplications:", "togglePreview:"], identifiers: []),
-        IconMapping(symbol: "trash", selectors: ["emptyTrash:", "deleteNote:"], identifiers: []),
+        IconMapping(symbol: "trash", selectors: ["cleanUnusedAttachments:", "deleteNote:"], identifiers: []),
         IconMapping(symbol: "power", selectors: ["quiteApp:"], identifiers: []),
         IconMapping(symbol: "square.and.pencil", selectors: ["fileMenuNewNote:"], identifiers: []),
         IconMapping(symbol: "externaldrive.badge.plus", selectors: ["singleOpen:"], identifiers: []),

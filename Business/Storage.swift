@@ -26,6 +26,7 @@ class Storage {
         "md", "markdown",
         "txt",
     ]
+    private static let attachmentDirectoryNames = ["i", "files"]
 
     var pinned: Int = 0
 
@@ -84,7 +85,7 @@ class Storage {
         projects.filter {
             $0.parent == project
         }
-        .sorted(by: { $0.label.lowercased() < $1.label.lowercased() })
+        .sorted(by: { $0.label.localizedCaseInsensitiveCompare($1.label) == .orderedAscending })
     }
 
     public func getRootProject() -> Project? {
@@ -96,7 +97,7 @@ class Storage {
     }
 
     public func getRootProjects() -> [Project] {
-        projects.filter(\.isRoot).sorted(by: { $0.label.lowercased() < $1.label.lowercased() })
+        projects.filter(\.isRoot).sorted(by: { $0.label.localizedCaseInsensitiveCompare($1.label) == .orderedAscending })
     }
 
     public func getDefaultTrash() -> Project? {
@@ -148,20 +149,19 @@ class Storage {
         }
 
         var trashURL = getTrash(url: url)
+        var needsTrashCreation = true
 
-        do {
-            if let trashURL = trashURL {
-                try FileManager.default.contentsOfDirectory(atPath: trashURL.path)
-            } else {
-                throw "Trash not found"
-            }
-        } catch {
+        if let currentTrash = trashURL, FileManager.default.fileExists(atPath: currentTrash.path) {
+            needsTrashCreation = false
+        }
+
+        if needsTrashCreation {
             guard let trash = getDefault()?.url.appendingPathComponent("Trash") else {
                 return
             }
 
             var isDir = ObjCBool(false)
-            if !FileManager.default.fileExists(atPath: trash.path, isDirectory: &isDir), !isDir.boolValue {
+            if !FileManager.default.fileExists(atPath: trash.path, isDirectory: &isDir) || !isDir.boolValue {
                 do {
                     try FileManager.default.createDirectory(at: trash, withIntermediateDirectories: false, attributes: nil)
                 } catch {
@@ -339,22 +339,22 @@ class Storage {
     }
 
     func sortNotes(noteList: [Note], filter: String, project: Project? = nil, operation: BlockOperation? = nil) -> [Note] {
-        var searchQuery = ""
-        if !filter.isEmpty {
-            searchQuery = filter.lowercased()
-        }
+        let hasFilter = !filter.isEmpty
 
         return noteList.sorted(by: {
             if let operation = operation, operation.isCancelled {
                 return false
             }
 
-            if !filter.isEmpty, $0.title.lowercased().starts(with: searchQuery) {
-                if $0.title.lowercased().starts(with: searchQuery), $1.title.lowercased().starts(with: searchQuery) {
-                    return sortQuery(note: $0, next: $1, project: project)
+            if hasFilter {
+                let firstMatch = $0.title.range(of: filter, options: [.caseInsensitive, .anchored]) != nil
+                if firstMatch {
+                    let secondMatch = $1.title.range(of: filter, options: [.caseInsensitive, .anchored]) != nil
+                    if secondMatch {
+                        return sortQuery(note: $0, next: $1, project: project)
+                    }
+                    return true
                 }
-
-                return true
             }
 
             return sortQuery(note: $0, next: $1, project: project)
@@ -375,10 +375,8 @@ class Storage {
             case .modificationDate, .none:
                 return sortDirection == .asc && note.modifiedLocalAt < next.modifiedLocalAt || sortDirection == .desc && note.modifiedLocalAt > next.modifiedLocalAt
             case .title:
-                let title = note.title.lowercased()
-                let nextTitle = next.title.lowercased()
-                return
-                    sortDirection == .asc && title < nextTitle || sortDirection == .desc && title > nextTitle
+                let result = note.title.localizedCaseInsensitiveCompare(next.title)
+                return sortDirection == .asc && result == .orderedAscending || sortDirection == .desc && result == .orderedDescending
             }
         }
 
@@ -614,43 +612,41 @@ class Storage {
     }
 
     func getSubFolders(url: URL) -> [NSURL]? {
-        guard let fileEnumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions()) else {
+        let keys: [URLResourceKey] = [.isDirectoryKey, .isPackageKey, .isHiddenKey]
+        let options: FileManager.DirectoryEnumerationOptions = [.skipsHiddenFiles, .skipsPackageDescendants, .skipsSubdirectoryDescendants]
+
+        guard let fileEnumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: keys, options: options) else {
             return nil
         }
 
         var extensions = allowedExtensions
+        // Common image and file extensions to skip as "folders"
         for ext in ["jpg", "png", "gif", "jpeg", "json", "JPG", "PNG", ".icloud"] {
             extensions.append(ext)
         }
-        let lastPatch = ["assets", ".cache", "i", ".Trash"]
+        // Specific folder names to skip
+        let skipFolders = Set(["assets", ".cache", "i", ".Trash", "files"])
 
-        let urls =
-            fileEnumerator.allObjects.filter {
-                !extensions.contains(($0 as? NSURL)!.pathExtension!) && !lastPatch.contains(($0 as? NSURL)!.lastPathComponent!)
-            } as! [NSURL]
         var subDirs = [NSURL]()
-        var i = 0
 
-        for url in urls {
-            i += 1
+        for case let fileURL as URL in fileEnumerator {
+            // Skip check for extensions (optimization: check extension first as it's faster)
+            if extensions.contains(fileURL.pathExtension) { continue }
+
+            // Skip check for specific folder names
+            if skipFolders.contains(fileURL.lastPathComponent) { continue }
+
             do {
-                var isDirectoryResourceValue: AnyObject?
-                try url.getResourceValue(&isDirectoryResourceValue, forKey: URLResourceKey.isDirectoryKey)
+                let resourceValues = try fileURL.resourceValues(forKeys: Set(keys))
 
-                var isPackageResourceValue: AnyObject?
-                try url.getResourceValue(&isPackageResourceValue, forKey: URLResourceKey.isPackageKey)
-
-                if isDirectoryResourceValue as? Bool == true,
-                    isPackageResourceValue as? Bool == false
+                // Explicitly check for directory and not a package
+                if let isDirectory = resourceValues.isDirectory, isDirectory,
+                    let isPackage = resourceValues.isPackage, !isPackage
                 {
-                    subDirs.append(url)
+                    subDirs.append(fileURL as NSURL)
                 }
-            } catch let error as NSError {
-                AppDelegate.trackError(error, context: "Storage.saveImages")
-            }
-
-            if i > 50000 {
-                break
+            } catch {
+                continue
             }
         }
 
@@ -704,6 +700,108 @@ class Storage {
             }
         } catch {
         }
+    }
+
+    public func findOrphanAttachments(completion: @escaping @MainActor ([URL]) -> Void) {
+        let referenced = collectReferencedAttachmentPaths()
+        let attachmentFolders = collectAttachmentFolders()
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            let orphaned = Storage.scanOrphanAttachments(folders: attachmentFolders, referenced: referenced)
+
+            DispatchQueue.main.async {
+                completion(orphaned)
+            }
+        }
+    }
+
+    private func collectAttachmentFolders() -> [URL] {
+        var folders = [URL]()
+        let manager = FileManager.default
+
+        for project in projects where !project.isTrash {
+            for folderName in Storage.attachmentDirectoryNames {
+                let folderURL = project.url.appendingPathComponent(folderName)
+                var isDir = ObjCBool(false)
+
+                if manager.fileExists(atPath: folderURL.path, isDirectory: &isDir), isDir.boolValue {
+                    folders.append(folderURL)
+                }
+            }
+        }
+
+        return folders
+    }
+
+    nonisolated private static func scanOrphanAttachments(folders: [URL], referenced: Set<String>) -> [URL] {
+        var orphaned = [URL]()
+        let manager = FileManager.default
+
+        for folderURL in folders {
+            guard let enumerator = manager.enumerator(at: folderURL, includingPropertiesForKeys: [.isDirectoryKey], options: [.skipsHiddenFiles]) else {
+                continue
+            }
+
+            for case let fileURL as URL in enumerator {
+                if shouldSkipAttachmentCandidate(fileURL) {
+                    continue
+                }
+
+                if !referenced.contains(fileURL.path) {
+                    orphaned.append(fileURL)
+                }
+            }
+        }
+
+        return orphaned
+    }
+
+    public func removeAttachments(urls: [URL]) -> (removed: [URL], failed: [URL]) {
+        var removed = [URL]()
+        var failed = [URL]()
+        let manager = FileManager.default
+
+        for url in urls {
+            do {
+                var resultingItemUrl: NSURL?
+                try manager.trashItem(at: url, resultingItemURL: &resultingItemUrl)
+                removed.append(url)
+            } catch {
+                do {
+                    try manager.removeItem(at: url)
+                    removed.append(url)
+                } catch {
+                    failed.append(url)
+                    AppDelegate.trackError(error, context: "Storage.cleanOrphanAttachments")
+                }
+            }
+        }
+
+        return (removed, failed)
+    }
+
+    private func collectReferencedAttachmentPaths() -> Set<String> {
+        var referenced = Set<String>()
+
+        for note in noteList {
+            referenced.formUnion(note.getReferencedAttachmentPaths())
+        }
+
+        return referenced
+    }
+
+    nonisolated private static func shouldSkipAttachmentCandidate(_ url: URL) -> Bool {
+        var isDirectory = ObjCBool(false)
+        if FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory), isDirectory.boolValue {
+            return true
+        }
+
+        let name = url.lastPathComponent
+        if name.hasPrefix(".") || name.hasSuffix(".icloud") {
+            return true
+        }
+
+        return false
     }
 
     public func isDownloaded(url: URL) -> Bool {

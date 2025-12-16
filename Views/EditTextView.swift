@@ -9,6 +9,21 @@ struct FillOptions {
     let saveTyping: Bool
     let force: Bool
     let needScrollToCursor: Bool
+    let previewOnly: Bool
+
+    init(
+        highlight: Bool,
+        saveTyping: Bool,
+        force: Bool,
+        needScrollToCursor: Bool,
+        previewOnly: Bool = false
+    ) {
+        self.highlight = highlight
+        self.saveTyping = saveTyping
+        self.force = force
+        self.needScrollToCursor = needScrollToCursor
+        self.previewOnly = previewOnly
+    }
 
     // Common presets
     static let `default` = FillOptions(highlight: false, saveTyping: false, force: false, needScrollToCursor: true)
@@ -33,6 +48,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     public var markdownView: MPreviewView?
     public static var imagesLoaderQueue = OperationQueue()
     private var imagePreviewManager: ImagePreviewManager?
+    nonisolated(unsafe) private var splitViewUpdateTimer: Timer?
     private var clipboardManager: ClipboardManager?
     private var menuManager: EditorMenuManager?
     private var defaultVerticalInset: CGFloat = 0
@@ -49,6 +65,10 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     public var currentSearchQuery: String? {
         editorLastSearchText.isEmpty ? nil : editorLastSearchText
     }
+    // Tracks whether the last ESC key press was consumed by the IME
+    private var shouldIgnoreEscapeNavigation = false
+    // Debounce appearance changes to avoid flashing
+    private var lastAppearanceChangeTime: TimeInterval = 0
     override var textContainerOrigin: NSPoint {
         var origin = super.textContainerOrigin
         if bottomPadding > 0 {
@@ -75,6 +95,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     deinit {
         linkHighlightTimer?.invalidate()
         linkHighlightTimer = nil
+        splitViewUpdateTimer?.invalidate()
+        splitViewUpdateTimer = nil
     }
 
     override func drawInsertionPoint(in rect: NSRect, color: NSColor, turnedOn flag: Bool) {
@@ -141,15 +163,18 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     override func mouseMoved(with event: NSEvent) {
-        guard let viewController = window?.contentViewController as? ViewController else {
+        guard window?.contentViewController is ViewController else {
             imagePreviewManager?.hideImagePreview()
             return
         }
-        if !viewController.emptyEditAreaView.isHidden {
+
+        // Safety: Skip hover logic when no note is loaded
+        guard EditTextView.note != nil else {
             NSCursor.arrow.set()
             imagePreviewManager?.hideImagePreview()
             return
         }
+
         let point = convert(event.locationInWindow, from: nil)
         let origin = textContainerOrigin
         let properPoint = NSPoint(x: point.x - origin.x, y: point.y - origin.y)
@@ -378,6 +403,9 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     private func getViewController() -> ViewController? {
+        if let delegate = viewDelegate {
+            return delegate
+        }
         if let cached = cachedViewController {
             return cached
         }
@@ -395,7 +423,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     // New fill method using configuration object
     func fill(note: Note, options: FillOptions = .default) {
-        guard let viewController = window?.contentViewController as? ViewController else {
+        guard let viewController = getViewController() else {
             return
         }
 
@@ -410,7 +438,6 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     // Internal implementation method
     private func _performFill(note: Note, options: FillOptions, viewController: ViewController) {
-        viewController.emptyEditAreaView.isHidden = true
         // Only show title components if not in PPT mode
         if !UserDefaultsManagement.magicPPT {
             viewController.titleBarView.isHidden = false
@@ -434,30 +461,102 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 typingAttributes[.kern] = UserDefaultsManagement.editorLetterSpacing
             }
         }
-        // Render preview content in preview, PPT, or presentation modes
-        if UserDefaultsManagement.preview || UserDefaultsManagement.magicPPT || UserDefaultsManagement.presentation {
+        // Render preview content in preview, PPT, presentation, or split modes
+        let shouldRenderPreview =
+            UserDefaultsManagement.preview
+            || UserDefaultsManagement.magicPPT
+            || UserDefaultsManagement.presentation
+            || UserDefaultsManagement.splitViewMode
+
+        if shouldRenderPreview {
             EditTextView.note = note
+            let frame = viewController.previewScrollView?.bounds ?? viewController.editAreaScroll.bounds
+
             if markdownView == nil {
-                let frame = viewController.editAreaScroll.bounds
-                markdownView = MPreviewView(frame: frame, note: note, closure: {})
-                if let view = markdownView, EditTextView.note == note {
-                    viewController.editAreaScroll.addSubview(view)
-                }
-            } else {
-                /// Update frame only if size changed to avoid unnecessary layout
-                let newFrame = viewController.editAreaScroll.bounds
-                if markdownView?.frame.size != newFrame.size {
-                    markdownView?.frame = newFrame
-                }
-                /// Load note if needed
-                markdownView?.load(note: note, force: options.force)
-                /// Ensure it is visible in case it was hidden by clear() during sidebar switch
-                markdownView?.isHidden = false
-                markdownView?.alphaValue = 1.0
+                let previewView = MPreviewView(frame: frame, note: note, closure: {})
+                previewView.autoresizingMask = [.width, .height]
+                markdownView = previewView
             }
+            if let previewScroll = viewController.previewScrollView,
+                let previewView = markdownView
+            {
+                viewController.preparePreviewContainer(hidden: false)
+                let newFrame = previewScroll.bounds
+                if previewView.frame.size != newFrame.size {
+                    previewView.frame = newFrame
+                }
+                previewView.autoresizingMask = [.width, .height]
+
+                // Smooth transition: fade out -> load -> fade in
+                let needsTransition = !previewView.isHidden && previewView.alphaValue > 0
+                if needsTransition {
+                    NSAnimationContext.runAnimationGroup(
+                        { context in
+                            context.duration = 0.08
+                            previewView.animator().alphaValue = 0
+                        },
+                        completionHandler: {
+                            Task { @MainActor in
+                                previewView.load(note: note, force: options.force)
+                                NSAnimationContext.runAnimationGroup({ context in
+                                    context.duration = 0.12
+                                    previewView.animator().alphaValue = 1.0
+                                })
+                            }
+                        })
+                } else {
+                    previewView.load(note: note, force: options.force)
+                    previewView.isHidden = false
+                    previewView.alphaValue = 1.0
+                }
+            } else if let previewView = markdownView,
+                let fallbackContainer = viewController.editAreaScroll
+            {
+                if previewView.superview !== fallbackContainer {
+                    previewView.removeFromSuperview()
+                    fallbackContainer.addSubview(previewView)
+                }
+                let newFrame = fallbackContainer.bounds
+                if previewView.frame.size != newFrame.size {
+                    previewView.frame = newFrame
+                }
+                previewView.autoresizingMask = [.width, .height]
+
+                // Smooth transition: fade out -> load -> fade in
+                let needsTransition = !previewView.isHidden && previewView.alphaValue > 0
+                if needsTransition {
+                    NSAnimationContext.runAnimationGroup(
+                        { context in
+                            context.duration = 0.08
+                            previewView.animator().alphaValue = 0
+                        },
+                        completionHandler: {
+                            Task { @MainActor in
+                                previewView.load(note: note, force: options.force)
+                                NSAnimationContext.runAnimationGroup({ context in
+                                    context.duration = 0.12
+                                    previewView.animator().alphaValue = 1.0
+                                })
+                            }
+                        })
+                } else {
+                    previewView.load(note: note, force: options.force)
+                    previewView.isHidden = false
+                    previewView.alphaValue = 1.0
+                }
+            }
+        } else {
+            // Ensure preview is completely hidden and doesn't block editor
+            markdownView?.isHidden = true
+            markdownView?.alphaValue = 0
+            if markdownView?.superview != nil {
+                markdownView?.removeFromSuperview()
+            }
+        }
+
+        if options.previewOnly || (shouldRenderPreview && !UserDefaultsManagement.splitViewMode) {
             return
         }
-        markdownView?.isHidden = true
         guard let storage = textStorage else { return }
         if note.isMarkdown(), let content = note.content.mutableCopy() as? NSMutableAttributedString {
             EditTextView.shouldForceRescan = true
@@ -481,6 +580,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
     public func clear() {
         hideSearchBar()
+        splitViewUpdateTimer?.invalidate()
+        splitViewUpdateTimer = nil
         textStorage?.setAttributedString(NSAttributedString())
         markdownView?.isHidden = true
         imagePreviewManager?.hideImagePreview()
@@ -488,9 +589,6 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         let appDelegate = NSApplication.shared.delegate as! AppDelegate
         window?.title = appDelegate.appTitle
         if let viewController = window?.contentViewController as? ViewController {
-            viewController.emptyEditAreaImage.image = NSImage(imageLiteralResourceName: "makeNoteAsset")
-            viewController.emptyEditAreaView.isHidden = false
-            viewController.refreshMiaoYanNum()
             viewController.titleBarView.isHidden = true
             viewController.updateTitle(newTitle: "")
         }
@@ -575,6 +673,19 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         super.didChangeText()
         if editorSearchBar != nil, !editorLastSearchText.isEmpty {
             handleSearchInput(editorLastSearchText, jumpToFirstMatch: false)
+        }
+
+        // Update preview in split mode with debounce (300ms)
+        if UserDefaultsManagement.splitViewMode, EditTextView.note != nil {
+            splitViewUpdateTimer?.invalidate()
+            splitViewUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
+                Task { @MainActor [weak self] in
+                    guard let self = self else { return }
+                    if let note = EditTextView.note {
+                        self.markdownView?.updateContent(note: note)
+                    }
+                }
+            }
         }
     }
 
@@ -760,7 +871,15 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     public func applySystemAppearance() {
         guard let note = EditTextView.note else { return }
-        guard let vc = getViewController() else { return }
+        guard getViewController() != nil else { return }
+
+        // Debounce appearance changes to prevent flashing (allow only once per 0.3 seconds)
+        let now = Date().timeIntervalSince1970
+        let timeSinceLastChange = now - lastAppearanceChangeTime
+        if timeSinceLastChange < 0.3 {
+            return
+        }
+        lastAppearanceChangeTime = now
 
         if UserDefaultsManagement.appearanceType == .System {
             UserDataService.instance.isDark = effectiveAppearance.isDark
@@ -769,11 +888,12 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         NotesTextProcessor.hl = nil
         NotesTextProcessor.highlight(note: note)
 
+        // Don't toggle preview mode on theme change - just refresh the preview content
         if UserDefaultsManagement.preview && UserDefaultsManagement.appearanceType == .System {
-            vc.disablePreview()
-            vc.enablePreview()
+            viewDelegate?.refillEditArea(previewOnly: true, force: true)
+        } else {
+            viewDelegate?.refillEditArea()
         }
-        viewDelegate?.refillEditArea()
     }
 
     public func fillHighlightLinks(range: NSRange? = nil) {
@@ -927,6 +1047,13 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
 
         if event.keyCode == kVK_Escape {
+            if hasMarkedText() {
+                shouldIgnoreEscapeNavigation = true
+                super.keyDown(with: event)
+                return
+            }
+            shouldIgnoreEscapeNavigation = false
+
             if isSearchBarVisible {
                 hideSearchBar()
                 return
@@ -1032,7 +1159,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             }
         }
 
-        if characters == "\u{1f}\u{a}" { // Cmd+Enter etc fallback
+        if characters == "\u{1f}\u{a}" {  // Cmd+Enter etc fallback
             return super.performKeyEquivalent(with: event)
         }
 
@@ -1063,10 +1190,17 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     override func keyUp(with event: NSEvent) {
         if event.keyCode == kVK_Escape {
+            if shouldIgnoreEscapeNavigation {
+                shouldIgnoreEscapeNavigation = false
+                super.keyUp(with: event)
+                return
+            }
+
             guard let vc = window?.contentViewController as? ViewController else {
                 super.keyUp(with: event)
                 return
             }
+            // Skip navigation when the user is cancelling an active IME composition.
             vc.notesTableView.window?.makeFirstResponder(vc.notesTableView)
             if let selectedNote = EditTextView.note,
                 let noteIndex = vc.notesTableView.getIndex(selectedNote)

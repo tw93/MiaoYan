@@ -3,6 +3,19 @@
  */
 
 const DiagramHandler = {
+  createLoadingIndicator(diagramType) {
+    const loader = document.createElement('div');
+    loader.className = 'diagram-loading';
+    loader.innerHTML = `<span style="opacity: 0.6; font-size: 12px;">Rendering ${diagramType}...</span>`;
+    loader.style.cssText = 'padding: 10px; text-align: center; color: var(--text-color);';
+    return loader;
+  },
+
+  showError(loader, message) {
+    loader.innerHTML = `<span style="opacity: 0.5; font-size: 12px; color: #f44;">${message}</span>`;
+    setTimeout(() => loader.remove(), 2000);
+  },
+
   initializeAll() {
     const isDark = this.isDarkMode();
 
@@ -21,7 +34,18 @@ const DiagramHandler = {
     const config = window.ThemeConfig?.getMermaidConfig(isDark) || {};
 
     mermaid.initialize(config);
-    window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
+
+    const mermaidElements = document.querySelectorAll('.language-mermaid');
+    mermaidElements.forEach(element => {
+      if (element.dataset.mermaidRendered !== 'true') {
+        const loader = this.createLoadingIndicator('Mermaid diagram');
+        element.parentNode.insertBefore(loader, element);
+        setTimeout(() => loader.remove(), 1000);
+        element.dataset.mermaidRendered = 'true';
+      }
+    });
+
+    window.mermaid.init(undefined, mermaidElements);
   },
 
   initializePlantUML() {
@@ -42,6 +66,12 @@ const DiagramHandler = {
     const existingImage = code.parentNode.querySelector('.plantuml-image');
     if (existingImage) existingImage.remove();
 
+    const existingLoader = code.parentNode.querySelector('.diagram-loading');
+    if (existingLoader) existingLoader.remove();
+
+    const loader = this.createLoadingIndicator('PlantUML diagram');
+    code.parentNode.insertBefore(loader, code);
+
     const image = document.createElement('img');
     image.className = 'plantuml-image';
     image.loading = 'lazy';
@@ -57,11 +87,13 @@ const DiagramHandler = {
     image.src = 'https://www.plantuml.com/plantuml/svg/~1' + window.plantumlEncoder.encode(plantumlContent);
 
     image.onload = () => {
+      loader.remove();
       this.stylePlantumlImage(image, code, isDark);
     };
 
     image.onerror = () => {
       console.warn('PlantUML image failed to load, showing code block instead');
+      this.showError(loader, 'Failed to load diagram');
       code.style.display = 'block';
       image.style.display = 'none';
     };
@@ -135,9 +167,13 @@ const DiagramHandler = {
             return;
           }
 
+          const loader = this.createLoadingIndicator('Markmap');
+          element.parentNode.insertBefore(loader, element);
+
           try {
             autoLoader.render(element);
             element.dataset.markmapRendered = 'true';
+            loader.remove();
 
             // Set SVG height after rendering
             setTimeout(() => {
@@ -159,6 +195,7 @@ const DiagramHandler = {
             }, 150);
           } catch (error) {
             console.error('Failed to render markmap block', error);
+            this.showError(loader, 'Failed to render Markmap');
           }
         });
       });
