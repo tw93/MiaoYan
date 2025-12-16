@@ -3,7 +3,7 @@
   <channel>
     <title>妙言 / MiaoYan</title>
       <item>
-      <title>2.3.0</title>
+      <title>2.3.1</title>
       <description><![CDATA[
       <h3>大变化🎄</h3>
       <ol>
@@ -24,8 +24,8 @@
         <li>Fixed scroll sync jitter, preview rendering failures, menu lookup issues, and other known bugs</li>
       </ol>
           ]]>      </description>
-      <pubDate>周一, 16 12月 2025 20:20:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.3.0.zip" sparkle:shortVersionString="2.3.0" sparkle:version="2.3.0" sparkle:edSignature="Q4Uzj5qEMhumKVx448fGtVR23oRabuizswHTGEaevQT6B+8owNstvA3uTHlyNJX0GNdYie3yzYRKw9j8Dr8RCA==" length="1377104" type="application/octet-stream" />
+      <pubDate>周一, 16 12月 2025 21:20:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.3.1.zip" sparkle:shortVersionString="2.3.1" sparkle:version="2.3.1" sparkle:edSignature="Q4Uzj5qEMhumKVx448fGtVR23oRabuizswHTGEaevQT6B+8owNstvA3uTHlyNJX0GNdYie3yzYRKw9j8Dr8RCA==" length="1377104" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
     </item>
       <title>妙言 / MiaoYan</title>
