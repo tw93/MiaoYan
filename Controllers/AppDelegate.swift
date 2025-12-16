@@ -45,6 +45,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        NSApp.mainMenu?.applyMenuIcons()
         configureSystemLogging()
         NSFontManager.shared.fontPanel(false)?.orderOut(self)
 
