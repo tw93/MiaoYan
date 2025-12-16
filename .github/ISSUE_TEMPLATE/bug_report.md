@@ -7,6 +7,28 @@ assignees: ''
 
 ---
 
-[//]: # (🙊辛苦提 bug 前，去找一下历史的 issue <https://github.com/tw93/MiaoYan/issues?q=> 是否有提，同时检查一是否为最新版本。辛苦提供版本号、录屏或者截图、复现路径，期待解决的点这几个说明帮助我更好的解决问题。提交前请删除这些文字。)
+**Describe the bug**
+A clear and concise description of what the bug is.
 
-[//]: # (🙊Look for issue <https://github.com/tw93/MiaoYan/issues?q=> before you mention bugs Whether it is mentioned, and check whether it is the latest version. Need to provide the version number, screen capture or screenshot, reproduction path, and look forward to the points to be solved. These instructions help me better solve the problem. Please delete these words before submitting.)
+**To Reproduce**
+Steps to reproduce the behavior:
+
+1. Go to '...'
+2. Click on '...'
+3. Scroll down to '...'
+4. See error
+
+**Expected behavior**
+A clear and concise description of what you expected to happen.
+
+**Screenshots**
+If applicable, add screenshots to help explain your problem.
+
+**Environment**
+
+- Device: [e.g. MacBook Pro M1]
+- OS: [e.g. macOS 14.0]
+- MiaoYan Version: [e.g. 1.0.0]
+
+**Additional context**
+Add any other context about the problem here.
