@@ -403,6 +403,9 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     private func getViewController() -> ViewController? {
+        if let delegate = viewDelegate {
+            return delegate
+        }
         if let cached = cachedViewController {
             return cached
         }
@@ -420,7 +423,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     // New fill method using configuration object
     func fill(note: Note, options: FillOptions = .default) {
-        guard let viewController = window?.contentViewController as? ViewController else {
+        guard let viewController = getViewController() else {
             return
         }
 

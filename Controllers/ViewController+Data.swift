@@ -275,6 +275,37 @@ extension ViewController {
                     preserveScrollPosition: shouldPreserveScroll
                 )
             }
+
+            // Fix: Deep Safeguard against missed selection updates
+            // We delay the check slightly to allow for view layout and notification propagation.
+            // This handles cases where the view is hidden on launch and suppresses selection notifications.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                if self.notesTableView.loadingQueue.operationCount == 0, EditTextView.note == nil {
+                    // Case 1: Standard Selection Success
+                    if let selectedNote = self.notesTableView.getSelectedNote() {
+                        self.editArea.fill(note: selectedNote, options: .silent)
+                        self.revealEditor()
+                    }
+                    // Case 2: Selection missed/racing but data exists
+                    else if !self.notesTableView.noteList.isEmpty {
+                        let firstNote = self.notesTableView.noteList[0]
+
+                        // Force selection execution for UI consistency
+                        self.notesTableView.selectRowIndexes([0], byExtendingSelection: false)
+                        self.notesTableView.scrollRowToVisible(0)
+
+                        self.editArea.fill(note: firstNote, options: .silent)
+                        self.revealEditor()
+                    } else {
+                        // Reveal anyway if we have no notes (empty state)
+                        self.revealEditor()
+                    }
+                } else {
+                    // Ensure visible if already filled (e.g. by normal flow)
+                    self.revealEditor()
+                }
+            }
+
             completion()
         }
     }
