@@ -885,6 +885,9 @@ extension ViewController {
             trashMenu.title = I18n.str("Trash")
             trashMenu.action = #selector(vc.deleteNote(_:))
             trashMenu.tag = 555
+            if #available(macOS 11.0, *) {
+                trashMenu.image = NSImage(systemSymbolName: "trash", accessibilityDescription: "Trash")
+            }
             moveMenu.addItem(trashMenu)
             moveMenu.addItem(NSMenuItem.separator())
         }
@@ -899,6 +902,9 @@ extension ViewController {
             menuItem.title = item.label
             menuItem.representedObject = item
             menuItem.action = #selector(vc.moveNote(_:))
+            if #available(macOS 11.0, *) {
+                menuItem.image = NSImage(systemSymbolName: "folder", accessibilityDescription: "Folder")
+            }
             moveMenu.addItem(menuItem)
         }
 
@@ -912,6 +918,11 @@ extension ViewController {
             {
                 menu.isHidden = (vc.notesTableView.selectedRowIndexes.count > 1)
             }
+        }
+
+        if #available(macOS 11.0, *) {
+            moveMenu.applyMenuIcons()
+            noteMenu.applyMenuIcons()
         }
 
         noteMenu.setSubmenu(moveMenu, for: moveMenuItem)

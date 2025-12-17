@@ -276,6 +276,13 @@ class ViewController:
         fsManager?.start()
         loadMoveMenu()
         cacheMenuItems()
+
+        // Apply modern icons to menus
+        if #available(macOS 11.0, *) {
+            noteMenu.applyMenuIcons()
+            storageOutlineView.menu?.applyMenuIcons()
+        }
+
         updateSortMenuState()
         checkSidebarConstraint()
         checkTitlebarTopConstraint()
