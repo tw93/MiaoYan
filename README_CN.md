@@ -31,7 +31,7 @@
 ## 安装使用
 
 1. 从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) 下载最新 DMG 安装包(需要 macOS 11.5+)
-2. 双击安装 MiaoYan.app 到应用程序文件夹
+2. 双击安装 MiaoYan.app 到应用程序文件夹 (如提示已损坏，请在终端运行 `xattr -cr /Applications/MiaoYan.app`)
 3. 在 iCloud 云盘或其他位置创建 `MiaoYan` 文件夹
 4. 打开妙言偏好设置,将默认存储位置设置为该文件夹
 5. 点击左上角"新建文件夹"图标,创建文档分类,开始写作

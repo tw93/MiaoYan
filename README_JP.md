@@ -31,7 +31,7 @@
 ## インストール & セットアップ
 
 1. [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) から最新の DMG パッケージをダウンロード(macOS 11.5+ 必要)
-2. ダブルクリックして MiaoYan.app をアプリケーションフォルダにインストール
+2. ダブルクリックして MiaoYan.app をアプリケーションフォルダにインストール (「壊れている」と表示された場合、ターミナルで `xattr -cr /Applications/MiaoYan.app` を実行)
 3. iCloud Drive またはお好みの場所に `MiaoYan` フォルダを作成
 4. MiaoYan の環境設定を開き、保存場所をこのフォルダに設定
 5. 左上の「新規フォルダ」アイコンをクリックして文書カテゴリを作成し、執筆を開始
