@@ -11,6 +11,25 @@ class HtmlManager {
     private static let fontStack = "-apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Helvetica, Arial, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif"
     private static let codeFontStack = "SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace"
 
+    static func lightModeExportCSS() -> String {
+        return """
+            @media print, screen {
+               :root {
+                   --bg-color: #FFFFFF !important;
+                   --text-color: #262626 !important;
+                   --code-bg: #f7f7f7 !important;
+                   --side-bar-bg-color: #fafafa !important;
+                   --control-text-color: #777 !important;
+                   --primary-color: #fd8258 !important;
+               }
+               html, body {
+                   background-color: #FFFFFF !important;
+                   color: #262626 !important;
+               }
+            }
+            """
+    }
+
     // Cached regex patterns
     private static let imageRegex: NSRegularExpression? = {
         try? NSRegularExpression(pattern: "<img[^>]*?src=\"([^\"]*)\"[^>]*?/?>")
@@ -57,10 +76,18 @@ class HtmlManager {
             return "html {font-size: \(UserDefaultsManagement.presentationFontSize)px} \(fontConfig) #write { max-width: 100%;}"
         } else {
             let paddingStyle = UserDefaultsManagement.isOnExport ? " padding-top: 24px" : ""
-            let maxWidth = UserDefaultsManagement.previewWidth == UserDefaultsManagement.FullWidthValue ? "100%" : UserDefaultsManagement.previewWidth
-            let writeCSS = "max-width: \(maxWidth); margin: 0"
 
-            return "html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} \(fontConfig) #write { \(writeCSS)}"
+            var maxWidth = UserDefaultsManagement.previewWidth == UserDefaultsManagement.FullWidthValue ? "100%" : UserDefaultsManagement.previewWidth
+            var writeCSS = "max-width: \(maxWidth); margin: 0"
+
+            if UserDefaultsManagement.isOnExport {
+                maxWidth = "760px"
+                writeCSS = "max-width: \(maxWidth); margin: 0 auto;"
+
+                return "\(HtmlManager.lightModeExportCSS()) html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} \(fontConfig) #write { \(writeCSS) }"
+            }
+
+            return "html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} \(fontConfig) #write { \(writeCSS) }"
         }
     }
 

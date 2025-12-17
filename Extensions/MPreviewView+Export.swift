@@ -103,7 +103,7 @@ extension MPreviewView {
         note: Note,
         viewController: ViewController,
         needsDimensions: Bool,
-        exportAction: @escaping (ExportCache.ExportData) -> Void
+        exportAction: @escaping (ExportCache.ExportData, @escaping () -> Void) -> Void
     ) {
         // Check if already exporting
         if Self.isExporting {
@@ -137,6 +137,7 @@ extension MPreviewView {
             Self.isExporting = false
             Self.exportStartTime = nil
             timeoutWorkItem.cancel()
+            self.removePrintStyles()
         }
 
         // Check cache first
@@ -144,8 +145,7 @@ extension MPreviewView {
             cachedData.isImageLoaded
         {
             DispatchQueue.main.async {
-                exportAction(cachedData)
-                resetExportFlag()
+                exportAction(cachedData, resetExportFlag)
             }
             return
         }
@@ -158,28 +158,47 @@ extension MPreviewView {
                 return
             }
 
-            self.waitForImagesLoaded { [weak self] in
+            self.injectPrintStylesIfNeeded(needsDimensions: needsDimensions) { [weak self] in
                 guard let self else {
                     resetExportFlag()
                     viewController.toastExport(status: false)
                     return
                 }
 
-                // Get the actual rendered HTML from WebView
-                self.evaluateJavaScript("document.documentElement.outerHTML.toString()") { htmlResult, _ in
-                    let renderedHTML = htmlResult as? String ?? note.getPrettifiedContent()
-
-                    if !needsDimensions {
-                        let exportData = self.createExportData(note: note, processedHTML: renderedHTML)
-                        ExportCache.shared.setCachedData(exportData, for: note)
-                        exportAction(exportData)
+                self.waitForImagesLoaded { [weak self] in
+                    guard let self else {
                         resetExportFlag()
-                    } else {
-                        self.getContentDimensions { height, width in
-                            let exportData = self.createExportData(note: note, height: height, width: width, processedHTML: renderedHTML)
-                            ExportCache.shared.setCachedData(exportData, for: note)
-                            exportAction(exportData)
+                        viewController.toastExport(status: false)
+                        return
+                    }
+
+                    self.evaluateJavaScript("document.documentElement.outerHTML.toString()") { htmlResult, _ in
+                        let renderedHTML = htmlResult as? String ?? note.getPrettifiedContent()
+
+                        if renderedHTML.count < 50 {
+                            print("Export Error: Rendered HTML is too short/invalid")
                             resetExportFlag()
+                            viewController.toastExport(status: false)
+                            return
+                        }
+
+                        if !needsDimensions {
+                            let exportData = self.createExportData(note: note, processedHTML: renderedHTML)
+                            ExportCache.shared.setCachedData(exportData, for: note)
+                            exportAction(exportData, resetExportFlag)
+                        } else {
+                            self.getContentDimensions { height, width in
+                                guard height > 0 && width > 0 else {
+                                    print("Export Error: Invalid dimensions h:\(height) w:\(width)")
+                                    resetExportFlag()
+                                    viewController.toastExport(status: false)
+                                    return
+                                }
+
+                                let exportData = self.createExportData(note: note, height: height, width: width, processedHTML: renderedHTML)
+                                ExportCache.shared.setCachedData(exportData, for: note)
+                                exportAction(exportData, resetExportFlag)
+                            }
                         }
                     }
                 }
@@ -187,32 +206,112 @@ extension MPreviewView {
         }
     }
 
+    // MARK: - Style Injection
+    private func injectPrintStylesIfNeeded(needsDimensions: Bool, completion: @escaping () -> Void) {
+        if UserDefaultsManagement.magicPPT || UserDefaultsManagement.isOnExportPPT {
+            completion()
+            return
+        }
+
+        let baseCSS = HtmlManager.lightModeExportCSS()
+        let printCSS = """
+                (function() {
+                    var style = document.createElement('style');
+                    style.id = 'miaoyan-export-style';
+                    style.innerHTML = `\(baseCSS.dropLast())
+                           #write {
+                               max-width: 90% !important;
+                               width: 100% !important;
+                               margin: 0 auto !important;
+                               padding-top: 20px !important;
+                               padding-bottom: 20px !important;
+                           }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                    void document.body.offsetHeight;
+                    return true;
+                })();
+            """
+
+        evaluateJavaScript(printCSS) { _, _ in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                completion()
+            }
+        }
+    }
+
+    private func removePrintStyles() {
+        let removeScript = "var s = document.getElementById('miaoyan-export-style'); if(s) s.remove();"
+        evaluateJavaScript(removeScript, completionHandler: nil)
+    }
+
+    private func hideTOCTriggersForExport() {
+        let script = """
+                (function() {
+                    var selectors = ['.toc-hover-trigger', '.toc-pin-btn', '.toc-nav'];
+                    selectors.forEach(function(sel) {
+                        document.querySelectorAll(sel).forEach(function(el) {
+                            el.dataset.exportOriginalDisplay = el.style.display || '';
+                            el.style.display = 'none';
+                            el.style.pointerEvents = 'none';
+                        });
+                    });
+                })();
+            """
+        evaluateJavaScript(script, completionHandler: nil)
+    }
+
+    private func restoreTOCTriggers() {
+        let script = """
+                (function() {
+                    var selectors = ['.toc-hover-trigger', '.toc-pin-btn', '.toc-nav'];
+                    selectors.forEach(function(sel) {
+                        document.querySelectorAll(sel).forEach(function(el) {
+                            if (typeof el.dataset.exportOriginalDisplay !== 'undefined') {
+                                el.style.display = el.dataset.exportOriginalDisplay;
+                                delete el.dataset.exportOriginalDisplay;
+                            } else {
+                                el.style.display = '';
+                            }
+                            el.style.pointerEvents = '';
+                        });
+                    });
+                })();
+            """
+        evaluateJavaScript(script, completionHandler: nil)
+    }
     // MARK: - Export Methods
     public func exportPdf() {
         guard let vc = ViewController.shared(),
-            let note = vc.notesTableView.getSelectedNote()
+            vc.notesTableView.getSelectedNote() != nil
         else { return }
 
-        preparePPTExportIfNeeded()
-        hideTOCTriggersForExport()
+        self.hideTOCTriggersForExport()
+        self.preparePPTExportIfNeeded()
 
-        performExport(note: note, viewController: vc, needsDimensions: true) { [weak self] exportData in
-            guard let self else {
-                Self.isExporting = false
-                vc.toastExport(status: false)
-                return
-            }
+        self.injectPrintStylesIfNeeded(needsDimensions: true) { [weak self] in
+            guard let self else { return }
 
-            let pdfConfiguration = WKPDFConfiguration()
-            pdfConfiguration.rect = CGRect(x: 0, y: 0, width: self.bounds.width, height: exportData.contentHeight)
+            self.evaluateJavaScript("window.scrollTo(0,0)", completionHandler: nil)
 
-            self.createPDF(configuration: pdfConfiguration) { result in
-                Self.isExporting = false
-                switch result {
-                case .success(let pdfData):
-                    self.saveToDownloads(data: pdfData, extension: "pdf", viewController: vc)
-                case .failure:
-                    vc.toastExport(status: false)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                let pdfConfig = WKPDFConfiguration()
+
+                self.createPDF(configuration: pdfConfig) { [weak self] result in
+                    guard let self else { return }
+
+                    self.removePrintStyles()
+                    self.restoreTOCTriggers()
+
+                    switch result {
+                    case .success(let data):
+                        self.saveToDownloads(data: data, extension: "pdf", viewController: vc)
+                    case .failure:
+                        vc.toastExport(status: false)
+                    }
+
+                    Self.isExporting = false
                 }
             }
         }
@@ -223,9 +322,9 @@ extension MPreviewView {
             let note = vc.notesTableView.getSelectedNote()
         else { return }
 
-        performExport(note: note, viewController: vc, needsDimensions: true) { [weak self] exportData in
+        performExport(note: note, viewController: vc, needsDimensions: true) { [weak self] exportData, cleanup in
             guard let self else {
-                Self.isExporting = false
+                cleanup()
                 vc.toastExport(status: false)
                 return
             }
@@ -239,7 +338,8 @@ extension MPreviewView {
 
             self.takeSnapshot(with: config) { image, _ in
                 self.frame = originalFrame
-                Self.isExporting = false
+                cleanup()
+
                 if let image = image {
                     self.handleImageExportSuccess(image: image, note: note, viewController: vc)
                 } else {
@@ -479,20 +579,19 @@ extension MPreviewView {
         }
     }
 
-    // MARK: - Content Size Helpers
+
     private func getContentHeight(completion: @escaping (CGFloat?) -> Void) {
         // Robust height calculation using several DOM properties
         let js = "(function(){var b=document.body,e=document.documentElement;return Math.max(b.scrollHeight,b.offsetHeight,e.clientHeight,e.scrollHeight,e.offsetHeight);})()"
-        evaluateJavaScript(js) { result, _ in
-            if let h = result as? CGFloat {
-                completion(h)
-            } else if let h = result as? Double {
-                completion(CGFloat(h))
-            } else if let h = result as? Int {
-                completion(CGFloat(h))
-            } else {
-                completion(nil)
-            }
+        evaluateJavaScript(js) { [weak self] result, _ in
+            let height: CGFloat? = {
+                if let h = result as? CGFloat { return h }
+                if let h = result as? Double { return CGFloat(h) }
+                if let h = result as? Int { return CGFloat(h) }
+                return nil
+            }()
+
+            completion(height)
         }
     }
 
@@ -531,22 +630,6 @@ extension MPreviewView {
         }
 
         getContentDimensionsFallback(completion: completion)
-    }
-
-    private func hideTOCTriggersForExport() {
-        let script = """
-                (function() {
-                    var selectors = ['.toc-hover-trigger', '.toc-pin-btn', '.toc-nav'];
-                    selectors.forEach(function(sel) {
-                        document.querySelectorAll(sel).forEach(function(el) {
-                            el.dataset.exportOriginalDisplay = el.style.display || '';
-                            el.style.display = 'none';
-                            el.style.pointerEvents = 'none';
-                        });
-                    });
-                })();
-            """
-        evaluateJavaScript(script, completionHandler: nil)
     }
 
     // Prepare Reveal.js layout for accurate PDF capture
