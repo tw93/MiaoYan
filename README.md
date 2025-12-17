@@ -31,7 +31,7 @@
 ## Installation & Setup
 
 1. Download the latest DMG package from [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) (Requires macOS 11.5+)
-2. Double-click to install MiaoYan.app to Applications
+2. Double-click to install MiaoYan.app to Applications. (If "App is damaged", run `xattr -cr /Applications/MiaoYan.app` in Terminal)
 3. Create a `MiaoYan` folder in iCloud Drive or your preferred location
 4. Open MiaoYan Preferences and set the storage location to this folder
 5. Click the "New Folder" icon in the top-left corner to create document categories and start writing
