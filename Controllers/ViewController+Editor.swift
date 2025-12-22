@@ -940,16 +940,23 @@ extension ViewController {
     }
 
     // MARK: - Editor Content Management
-    func refillEditArea(cursor: Int? = nil, previewOnly: Bool = false, saveTyping: Bool = false, force: Bool = false) {
+    func refillEditArea(
+        cursor: Int? = nil,
+        previewOnly: Bool = false,
+        saveTyping: Bool = false,
+        force: Bool = false,
+        animatePreview: Bool = true
+    ) {
         DispatchQueue.main.async { [weak self] in
             self?.previewButton.state = UserDefaultsManagement.preview ? .on : .off
             self?.presentationButton.state = UserDefaultsManagement.presentation ? .on : .off
         }
         // Allow content refill in these scenarios:
         // - Normal refill (not preview-only), or
-        // - Preview-only refill when in any preview/presentation mode, or
+        // - Preview-only refill when in any preview/presentation mode (including split view mode), or
         // - Force refill regardless of conditions
-        guard force || !previewOnly || (previewOnly && (UserDefaultsManagement.preview || UserDefaultsManagement.magicPPT || UserDefaultsManagement.presentation)) else {
+        // Note: Split view mode needs preview refill to update the preview pane content
+        guard force || !previewOnly || (previewOnly && shouldShowPreview) else {
             return
         }
         DispatchQueue.main.async {
@@ -967,7 +974,8 @@ extension ViewController {
                         saveTyping: saveTyping,
                         force: force,
                         needScrollToCursor: true,
-                        previewOnly: previewOnly
+                        previewOnly: previewOnly,
+                        animatePreview: animatePreview
                     )
                     self.editArea.fill(note: note, options: options)
                     self.editArea.setSelectedRange(NSRange(location: location, length: 0))

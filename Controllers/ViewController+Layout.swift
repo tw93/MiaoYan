@@ -324,12 +324,49 @@ extension ViewController {
         checkSidebarConstraint()
         checkTitlebarTopConstraint()
 
-        if !refilled {
-            refilled = true
-            DispatchQueue.main.async {
-                self.refillEditArea(previewOnly: true)
-                self.refilled = false
-            }
+        handleEditorContentResize()
+    }
+
+    func handleEditorContentResize() {
+        editArea.updateTextContainerInset()
+        if view.window?.inLiveResize == true {
+            needsPreviewLayoutAfterLiveResize = true
+            return
+        }
+        updatePreviewLayoutDuringResize()
+        schedulePreviewLayoutUpdateAfterResize()
+    }
+
+    private func updatePreviewLayoutDuringResize() {
+        guard let previewView = editArea.markdownView else { return }
+
+        let targetBounds: CGRect
+        if let previewScroll = previewScrollView {
+            targetBounds = previewScroll.bounds
+        } else if let container = previewView.superview {
+            targetBounds = container.bounds
+        } else {
+            return
+        }
+
+        let targetFrame = CGRect(origin: .zero, size: targetBounds.size)
+        if previewView.frame != targetFrame {
+            previewView.frame = targetFrame
+        }
+    }
+
+    func handleWindowDidEndLiveResize() {
+        guard needsPreviewLayoutAfterLiveResize else { return }
+        needsPreviewLayoutAfterLiveResize = false
+        schedulePreviewLayoutUpdateAfterResize()
+    }
+
+    private func schedulePreviewLayoutUpdateAfterResize() {
+        guard shouldShowPreview else { return }
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.view.layoutSubtreeIfNeeded()
+            self.updatePreviewLayoutDuringResize()
         }
     }
 
