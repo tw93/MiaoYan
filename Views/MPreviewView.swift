@@ -15,6 +15,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     private var scrollObserverInjected = false
     internal var isUpdatingContent = false
     nonisolated(unsafe) private var contentUpdateWorkItem: DispatchWorkItem?
+    private var originalRedrawPolicy: NSView.LayerContentsRedrawPolicy?
 
     // MARK: - JavaScript Timing Constants
 
@@ -131,8 +132,31 @@ class MPreviewView: WKWebView, WKUIDelegate {
     }
 
     deinit {
+        NotificationCenter.default.removeObserver(self)
         // Cancel pending content update work items to prevent crashes
         contentUpdateWorkItem?.cancel()
+    }
+
+    override func viewWillStartLiveResize() {
+        super.viewWillStartLiveResize()
+        if originalRedrawPolicy == nil {
+            originalRedrawPolicy = layerContentsRedrawPolicy
+        }
+        layerContentsRedrawPolicy = .duringViewResize
+        needsDisplay = true
+        layer?.setNeedsDisplay()
+    }
+
+    override func viewDidEndLiveResize() {
+        super.viewDidEndLiveResize()
+        if let originalRedrawPolicy {
+            layerContentsRedrawPolicy = originalRedrawPolicy
+            self.originalRedrawPolicy = nil
+        } else {
+            layerContentsRedrawPolicy = .onSetNeedsDisplay
+        }
+        needsDisplay = true
+        layer?.setNeedsDisplay()
     }
 
     private func setupScrollObserver() {

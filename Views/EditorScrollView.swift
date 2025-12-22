@@ -78,6 +78,7 @@ class EditorContentSplitView: NSSplitView {
 
     private(set) var displayMode: DisplayMode = .editorOnly
     var shouldHideDivider = false
+    var onResize: (() -> Void)?
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -93,6 +94,7 @@ class EditorContentSplitView: NSSplitView {
         isVertical = true
         dividerStyle = .thin
         autosaveName = "EditorContentSplitView"
+        delegate = self
     }
 
     // MARK: - Mode Switching
@@ -199,5 +201,6 @@ extension EditorContentSplitView: NSSplitViewDelegate {
             let ratio = Double(editorWidth / totalWidth)
             UserDefaultsManagement.editorContentSplitPosition = ratio
         }
+        onResize?()
     }
 }

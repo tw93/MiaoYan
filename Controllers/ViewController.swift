@@ -34,6 +34,8 @@ class ViewController:
     var isFormatting: Bool = false
     var needRestorePreview: Bool = false
     private var disablePreviewWorkItem: DispatchWorkItem?
+    nonisolated(unsafe) var liveResizeObserver: NSObjectProtocol?
+    var needsPreviewLayoutAfterLiveResize = false
     var isHandlingScrollEvent = false
     var swipeLeftExecuted = false
     var swipeRightExecuted = false
@@ -44,6 +46,15 @@ class ViewController:
 
     // Presentation mode scroll position preservation
     var savedPresentationScrollPosition: CGPoint?
+
+    // Check if any preview mode is active
+    var shouldShowPreview: Bool {
+        UserDefaultsManagement.preview
+            || UserDefaultsManagement.magicPPT
+            || UserDefaultsManagement.presentation
+            || UserDefaultsManagement.splitViewMode
+    }
+
     override var representedObject: Any? {
         didSet {}
     }
@@ -252,6 +263,9 @@ class ViewController:
             NotificationCenter.default.removeObserver(observer)
         }
         splitScrollDebounceTimer?.invalidate()
+        if let observer = liveResizeObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
 
     override func viewDidLoad() {
@@ -297,6 +311,7 @@ class ViewController:
     // Handle webview performance impact from long-term inactivity
     override func viewDidDisappear() {
         super.viewWillDisappear()
+        removeLiveResizeObserver()
         if UserDefaultsManagement.preview {
             disablePreviewWorkItem = DispatchWorkItem { [weak self] in
                 self?.needRestorePreview = true
@@ -334,6 +349,7 @@ class ViewController:
     }
 
     override func viewDidAppear() {
+        installLiveResizeObserverIfNeeded()
         // Safety check: If data loaded very quickly (before window was attached), the reveal call might have been missed.
         // If window is still invisible but we have data, reveal it now.
         if let window = view.window, window.alphaValue == 0, !notesTableView.noteList.isEmpty {
@@ -377,6 +393,25 @@ class ViewController:
                 }
             }
         }
+    }
+
+    private func installLiveResizeObserverIfNeeded() {
+        guard liveResizeObserver == nil, let window = view.window else { return }
+        liveResizeObserver = NotificationCenter.default.addObserver(
+            forName: NSWindow.didEndLiveResizeNotification,
+            object: window,
+            queue: .main
+        ) { [weak self] _ in
+            self?.handleWindowDidEndLiveResize()
+        }
+    }
+
+    private func removeLiveResizeObserver() {
+        if let observer = liveResizeObserver {
+            NotificationCenter.default.removeObserver(observer)
+            liveResizeObserver = nil
+        }
+        needsPreviewLayoutAfterLiveResize = false
     }
 
     func handleForAppMode() {
@@ -790,6 +825,10 @@ class ViewController:
         // Store references
         self.editorContentSplitView = contentSplitView
         self.previewScrollView = previewScroll
+
+        contentSplitView.onResize = { [weak self] in
+            self?.handleEditorContentResize()
+        }
 
         // Set initial mode to editor only
         contentSplitView.setDisplayMode(.editorOnly, animated: false)

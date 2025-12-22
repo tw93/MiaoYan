@@ -10,19 +10,22 @@ struct FillOptions {
     let force: Bool
     let needScrollToCursor: Bool
     let previewOnly: Bool
+    let animatePreview: Bool
 
     init(
         highlight: Bool,
         saveTyping: Bool,
         force: Bool,
         needScrollToCursor: Bool,
-        previewOnly: Bool = false
+        previewOnly: Bool = false,
+        animatePreview: Bool = true
     ) {
         self.highlight = highlight
         self.saveTyping = saveTyping
         self.force = force
         self.needScrollToCursor = needScrollToCursor
         self.previewOnly = previewOnly
+        self.animatePreview = animatePreview
     }
 
     // Common presets
@@ -487,8 +490,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 }
                 previewView.autoresizingMask = [.width, .height]
 
-                // Smooth transition: fade out -> load -> fade in
-                let needsTransition = !previewView.isHidden && previewView.alphaValue > 0
+                // Smooth transition: fade out -> load -> fade in (skip when animation is disabled)
+                let needsTransition = options.animatePreview && !previewView.isHidden && previewView.alphaValue > 0
                 if needsTransition {
                     NSAnimationContext.runAnimationGroup(
                         { context in
@@ -522,8 +525,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 }
                 previewView.autoresizingMask = [.width, .height]
 
-                // Smooth transition: fade out -> load -> fade in
-                let needsTransition = !previewView.isHidden && previewView.alphaValue > 0
+                // Smooth transition: fade out -> load -> fade in (skip when animation is disabled)
+                let needsTransition = options.animatePreview && !previewView.isHidden && previewView.alphaValue > 0
                 if needsTransition {
                     NSAnimationContext.runAnimationGroup(
                         { context in
