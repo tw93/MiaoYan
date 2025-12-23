@@ -150,6 +150,7 @@ extension ViewController {
                 // Close search bar if open
                 webView.hideSearchBar()
                 self.hideWebView()
+                webView.resetTemplateState()
                 webView.loadHTMLString("<html><body style='background:transparent;'></body></html>", baseURL: nil)
                 self.refillEditArea()
                 // Restore editor's find bar
@@ -960,6 +961,11 @@ extension ViewController {
             return
         }
         DispatchQueue.main.async {
+            let now = ProcessInfo.processInfo.systemUptime
+            let isRapidPreviewSwitch = self.shouldShowPreview && (now - self.lastPreviewReloadTime) < 0.2
+            if self.shouldShowPreview {
+                self.lastPreviewReloadTime = now
+            }
             var location: Int = 0
             if let unwrappedCursor = cursor {
                 location = unwrappedCursor
@@ -975,7 +981,7 @@ extension ViewController {
                         force: force,
                         needScrollToCursor: true,
                         previewOnly: previewOnly,
-                        animatePreview: animatePreview
+                        animatePreview: animatePreview && !isRapidPreviewSwitch
                     )
                     self.editArea.fill(note: note, options: options)
                     self.editArea.setSelectedRange(NSRange(location: location, length: 0))

@@ -29,6 +29,7 @@ class ViewController:
     var sidebarTimer = Timer()
     var rowUpdaterTimer = Timer()
     let searchQueue = OperationQueue()
+    nonisolated(unsafe) private var previewUpdateTimer: Timer?
     var isFocusedTitle: Bool = false
     var formatContent: String = ""
     var isFormatting: Bool = false
@@ -43,6 +44,7 @@ class ViewController:
     var updateViews = [Note]()
     public var breakUndoTimer = Timer()
     var lastEnablePreviewTime: TimeInterval = 0
+    var lastPreviewReloadTime: TimeInterval = 0
 
     // Presentation mode scroll position preservation
     var savedPresentationScrollPosition: CGPoint?
@@ -263,6 +265,7 @@ class ViewController:
             NotificationCenter.default.removeObserver(observer)
         }
         splitScrollDebounceTimer?.invalidate()
+        previewUpdateTimer?.invalidate()
         if let observer = liveResizeObserver {
             NotificationCenter.default.removeObserver(observer)
         }
@@ -402,7 +405,9 @@ class ViewController:
             object: window,
             queue: .main
         ) { [weak self] _ in
-            self?.handleWindowDidEndLiveResize()
+            Task { @MainActor in
+                self?.handleWindowDidEndLiveResize()
+            }
         }
     }
 
@@ -928,10 +933,34 @@ class ViewController:
             let note = EditTextView.note,
             textView == editArea
         else { return }
+        // Performance: use debounced save instead of immediate file I/O
         editArea.saveTextStorageContent(to: note)
-        note.save()
+        note.save(content: note.content)
+
+        // Performance optimization: use lightweight updateContent with adaptive debounce
         if UserDefaultsManagement.preview || UserDefaultsManagement.magicPPT {
-            refillEditArea(previewOnly: true, force: true)
+            previewUpdateTimer?.invalidate()
+
+            // Adaptive debounce: longer delay for longer documents to reduce Markdown parsing overhead
+            let lineCount = note.content.string.utf8.reduce(1) { $1 == 10 ? $0 + 1 : $0 }
+            let debounceInterval: TimeInterval = {
+                if lineCount < 500 {
+                    return 0.3  // Short documents: 300ms
+                } else if lineCount < 1500 {
+                    return 0.6  // Medium documents: 600ms
+                } else {
+                    return 1.0  // Long documents: 1000ms (ramfs.md falls here)
+                }
+            }()
+
+            previewUpdateTimer = Timer.scheduledTimer(withTimeInterval: debounceInterval, repeats: false) { [weak self] _ in
+                Task { @MainActor [weak self] in
+                    guard let self = self else { return }
+                    guard let currentNote = EditTextView.note, currentNote === note else { return }
+                    // Use updateContent for incremental updates (same as split view mode)
+                    self.editArea.markdownView?.updateContent(note: note)
+                }
+            }
         }
     }
 

@@ -962,7 +962,8 @@ extension ViewController {
 
     public func saveHtmlAtClipboard() {
         if let note = notesTableView.getSelectedNote() {
-            if let render = renderMarkdownHTML(markdown: note.content.string) {
+            let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
+            if let render = renderMarkdownHTML(markdown: note.content.string, useGithubLineBreak: useGithubLineBreak) {
                 let pasteboard = NSPasteboard.general
                 pasteboard.declareTypes([NSPasteboard.PasteboardType.html], owner: nil)
                 pasteboard.setString(render, forType: NSPasteboard.PasteboardType.html)

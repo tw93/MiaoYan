@@ -396,7 +396,8 @@ extension MPreviewView {
                 UserDefaultsManagement.isOnExportHtml = true
                 defer { UserDefaultsManagement.isOnExportHtml = false }
 
-                let htmlBody = renderMarkdownHTML(markdown: markdown) ?? markdown
+                let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
+                let htmlBody = renderMarkdownHTML(markdown: markdown, useGithubLineBreak: useGithubLineBreak) ?? markdown
 
                 do {
                     return try HtmlManager.htmlFromTemplate(htmlBody, css: css, currentName: currentName)

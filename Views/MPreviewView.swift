@@ -16,12 +16,14 @@ class MPreviewView: WKWebView, WKUIDelegate {
     internal var isUpdatingContent = false
     nonisolated(unsafe) private var contentUpdateWorkItem: DispatchWorkItem?
     private var originalRedrawPolicy: NSView.LayerContentsRedrawPolicy?
+    private var contentUpdateVersion: UInt = 0
+    private(set) var hasLoadedTemplate = false
 
     // MARK: - JavaScript Timing Constants
 
     private enum JavaScriptTiming {
         static let diagramInitDelay = 100  // milliseconds
-        static let imageLoadTimeout: TimeInterval = 0.35  // WebView image load timeout for content updates
+        static let imageLoadTimeout: TimeInterval = 0.8  // WebView image load timeout (increased for diagram rendering)
     }
 
     @objcMembers
@@ -319,8 +321,11 @@ class MPreviewView: WKWebView, WKUIDelegate {
     }
 
     // MARK: - Helper Methods
+    func resetTemplateState() {
+        hasLoadedTemplate = false
+    }
 
-    private func buildUpdateScript(html: String, initializeMath: Bool, initializeDiagrams: Bool) -> String {
+    private func buildUpdateScript(html: String, initializeMath: Bool, initializeDiagrams: Bool, preserveScroll: Bool) -> String {
         var initScripts: [String] = []
 
         if initializeMath {
@@ -357,28 +362,68 @@ class MPreviewView: WKWebView, WKUIDelegate {
                     const container = document.querySelector('.markdown-body') || document.body;
                     if (!container) return;
 
-                    // Save scroll ratio (not absolute position) for better stability
-                    const doc = document.scrollingElement || document.documentElement || document.body;
-                    const maxScroll = Math.max(0, (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
-                    const savedRatio = maxScroll > 0 ? (window.pageYOffset || doc.scrollTop || 0) / maxScroll : 0;
+                    const preserveScroll = \(preserveScroll ? "true" : "false");
+                    let savedRatio = 0;
+                    let isNearBottom = false;
 
-                    // Check if we're near the bottom (within 10 pixels)
-                    const isNearBottom = maxScroll > 0 && (maxScroll - (window.pageYOffset || doc.scrollTop || 0)) < 10;
+                    if (preserveScroll) {
+                        // Save scroll ratio (not absolute position) for better stability
+                        const doc = document.scrollingElement || document.documentElement || document.body;
+                        const maxScroll = Math.max(0, (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
+                        savedRatio = maxScroll > 0 ? (window.pageYOffset || doc.scrollTop || 0) / maxScroll : 0;
+
+                        // Check if we're near the bottom (within 10 pixels)
+                        isNearBottom = maxScroll > 0 && (maxScroll - (window.pageYOffset || doc.scrollTop || 0)) < 10;
+                    }
 
                     container.innerHTML = `\(html)`;
                     \(initialization)
 
-                    // Wait for images to load before restoring scroll to prevent jitter
-                    const images = container.querySelectorAll('img');
-                    if (images.length > 0) {
-                        let loadedCount = 0;
-                        const totalImages = images.length;
-                        const imageLoadTimeout = setTimeout(() => {
-                            restoreScroll();
-                        }, 300); // Reduced timeout for faster response
+                    if (preserveScroll) {
+                        // Wait for images to load before restoring scroll to prevent jitter
+                        const images = container.querySelectorAll('img');
+                        if (images.length > 0) {
+                            let loadedCount = 0;
+                            const totalImages = images.length;
+                            const imageLoadTimeout = setTimeout(() => {
+                                restoreScroll();
+                            }, 300); // Reduced timeout for faster response
 
-                        function restoreScroll() {
-                            clearTimeout(imageLoadTimeout);
+                            function restoreScroll() {
+                                clearTimeout(imageLoadTimeout);
+                                requestAnimationFrame(() => {
+                                    const newDoc = document.scrollingElement || document.documentElement || document.body;
+                                    const newMaxScroll = Math.max(0, (newDoc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
+
+                                    // If was at bottom, stay at bottom; otherwise restore ratio
+                                    const targetScroll = isNearBottom ? newMaxScroll : newMaxScroll * savedRatio;
+                                    window.scrollTo(0, targetScroll);
+                                });
+                            }
+
+                            images.forEach(img => {
+                                if (img.complete) {
+                                    loadedCount++;
+                                    if (loadedCount === totalImages) {
+                                        restoreScroll();
+                                    }
+                                } else {
+                                    img.addEventListener('load', () => {
+                                        loadedCount++;
+                                        if (loadedCount === totalImages) {
+                                            restoreScroll();
+                                        }
+                                    }, { once: true });
+                                    img.addEventListener('error', () => {
+                                        loadedCount++;
+                                        if (loadedCount === totalImages) {
+                                            restoreScroll();
+                                        }
+                                    }, { once: true });
+                                }
+                            });
+                        } else {
+                            // No images, restore scroll immediately
                             requestAnimationFrame(() => {
                                 const newDoc = document.scrollingElement || document.documentElement || document.body;
                                 const newMaxScroll = Math.max(0, (newDoc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
@@ -388,37 +433,10 @@ class MPreviewView: WKWebView, WKUIDelegate {
                                 window.scrollTo(0, targetScroll);
                             });
                         }
-
-                        images.forEach(img => {
-                            if (img.complete) {
-                                loadedCount++;
-                                if (loadedCount === totalImages) {
-                                    restoreScroll();
-                                }
-                            } else {
-                                img.addEventListener('load', () => {
-                                    loadedCount++;
-                                    if (loadedCount === totalImages) {
-                                        restoreScroll();
-                                    }
-                                }, { once: true });
-                                img.addEventListener('error', () => {
-                                    loadedCount++;
-                                    if (loadedCount === totalImages) {
-                                        restoreScroll();
-                                    }
-                                }, { once: true });
-                            }
-                        });
                     } else {
-                        // No images, restore scroll immediately
+                        // No scroll preservation: reset to top
                         requestAnimationFrame(() => {
-                            const newDoc = document.scrollingElement || document.documentElement || document.body;
-                            const newMaxScroll = Math.max(0, (newDoc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
-
-                            // If was at bottom, stay at bottom; otherwise restore ratio
-                            const targetScroll = isNearBottom ? newMaxScroll : newMaxScroll * savedRatio;
-                            window.scrollTo(0, targetScroll);
+                            window.scrollTo(0, 0);
                         });
                     }
                 })();
@@ -489,8 +507,10 @@ class MPreviewView: WKWebView, WKUIDelegate {
             let css = HtmlManager.previewStyle()
             do {
                 try self.loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
+                self.hasLoadedTemplate = true
                 self.note = note
             } catch {
+                self.hasLoadedTemplate = false
                 AppDelegate.trackError(error, context: "MPreviewView.load")
                 // Fallback: try to load minimal content
                 let basicHTML = "<html><body><p>Failed to load preview</p></body></html>"
@@ -500,9 +520,11 @@ class MPreviewView: WKWebView, WKUIDelegate {
     }
 
     // Lightweight content update for split view (preserves scroll position)
-    public func updateContent(note: Note) {
+    public func updateContent(note: Note, preserveScroll: Bool = true) {
         Task { @MainActor [weak self, note] in
             guard let self else { return }
+            self.contentUpdateVersion &+= 1
+            let updateVersion = self.contentUpdateVersion
 
             // Cancel previous content update reset task to avoid premature re-enable
             self.contentUpdateWorkItem?.cancel()
@@ -513,19 +535,29 @@ class MPreviewView: WKWebView, WKUIDelegate {
             let markdownString = note.getPrettifiedContent()
             let imagesStorage = note.project.url
 
-            guard let htmlString = renderMarkdownHTML(markdown: markdownString) else {
-                AppDelegate.trackError(
-                    NSError(
-                        domain: "MarkdownRenderError", code: 1,
-                        userInfo: [NSLocalizedDescriptionKey: "Failed to render markdown in updateContent"]),
-                    context: "MPreviewView.updateContent"
-                )
-                // Fallback: reload the full view instead of silent failure
-                self.isUpdatingContent = false
-                self.contentUpdateWorkItem = nil
-                self.load(note: note, force: true)
+            // Performance: render Markdown on background thread to avoid blocking UI
+            let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
+            let htmlString = await Task.detached {
+                return renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak)
+            }.value
+
+            guard let htmlString = htmlString else {
+                await MainActor.run {
+                    AppDelegate.trackError(
+                        NSError(
+                            domain: "MarkdownRenderError", code: 1,
+                            userInfo: [NSLocalizedDescriptionKey: "Failed to render markdown in updateContent"]),
+                        context: "MPreviewView.updateContent"
+                    )
+                    // Fallback: reload the full view instead of silent failure
+                    self.isUpdatingContent = false
+                    self.contentUpdateWorkItem = nil
+                    self.load(note: note, force: true)
+                }
                 return
             }
+            guard updateVersion == self.contentUpdateVersion else { return }
+            guard self.note == nil || self.note === note else { return }
 
             let processedHtmlString = self.loadImages(imagesStorage: imagesStorage, html: htmlString)
 
@@ -546,11 +578,14 @@ class MPreviewView: WKWebView, WKUIDelegate {
             let script = self.buildUpdateScript(
                 html: escapedHTML,
                 initializeMath: needsMath,
-                initializeDiagrams: needsDiagrams
+                initializeDiagrams: needsDiagrams,
+                preserveScroll: preserveScroll
             )
 
             Task { @MainActor [weak self] in
                 guard let self else { return }
+                guard updateVersion == self.contentUpdateVersion else { return }
+                guard self.note == nil || self.note === note else { return }
 
                 // Execute JavaScript with proper error handling
                 do {
@@ -639,7 +674,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
     }
 
     func loadHTMLView(_ markdownString: String, css: String, imagesStorage: URL? = nil) throws {
-        guard let htmlString = renderMarkdownHTML(markdown: markdownString) else {
+        let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
+        guard let htmlString = renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak) else {
             throw PreviewError.markdownRenderFailed
         }
 
