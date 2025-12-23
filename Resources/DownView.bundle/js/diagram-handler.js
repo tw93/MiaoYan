@@ -3,6 +3,9 @@
  */
 
 const DiagramHandler = {
+  // Performance optimization: cache rendered diagram content hashes
+  _renderedHashes: new Map(),
+
   createLoadingIndicator(diagramType) {
     const loader = document.createElement('div');
     loader.className = 'diagram-loading';
@@ -27,6 +30,16 @@ const DiagramHandler = {
     this.updateContainerStyles();
   },
 
+  // Simple hash function for content comparison
+  _simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = ((hash << 5) - hash) + str.charCodeAt(i);
+      hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+  },
+
   initializeMermaid() {
     if (!window.mermaid) return;
 
@@ -36,16 +49,41 @@ const DiagramHandler = {
     mermaid.initialize(config);
 
     const mermaidElements = document.querySelectorAll('.language-mermaid');
+    const newOrChangedElements = [];
+
     mermaidElements.forEach(element => {
-      if (element.dataset.mermaidRendered !== 'true') {
-        const loader = this.createLoadingIndicator('Mermaid diagram');
-        element.parentNode.insertBefore(loader, element);
-        setTimeout(() => loader.remove(), 1000);
+      // Calculate content hash for change detection
+      const content = element.textContent || '';
+      const currentHash = this._simpleHash(content);
+      const elementId = element.dataset.elementId || Math.random().toString(36);
+      element.dataset.elementId = elementId;
+
+      // Check if already rendered and content unchanged
+      const cachedHash = this._renderedHashes.get(elementId);
+      const isRendered = element.dataset.mermaidRendered === 'true';
+
+      // Only re-render if: 1) never rendered, or 2) content changed
+      if (!isRendered || cachedHash !== currentHash) {
+        newOrChangedElements.push(element);
+        this._renderedHashes.set(elementId, currentHash);
+
+        if (!isRendered) {
+          const loader = this.createLoadingIndicator('Mermaid diagram');
+          element.parentNode.insertBefore(loader, element);
+          setTimeout(() => loader.remove(), 1000);
+        }
+
         element.dataset.mermaidRendered = 'true';
       }
     });
 
-    window.mermaid.init(undefined, mermaidElements);
+    // Only render new or changed diagrams (performance optimization)
+    if (newOrChangedElements.length > 0) {
+      console.log(`[DiagramHandler] Rendering ${newOrChangedElements.length} mermaid diagrams (${mermaidElements.length - newOrChangedElements.length} cached)`);
+      window.mermaid.init(undefined, newOrChangedElements);
+    } else {
+      console.log('[DiagramHandler] All mermaid diagrams cached, skipping render');
+    }
   },
 
   initializePlantUML() {

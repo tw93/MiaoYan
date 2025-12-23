@@ -7,7 +7,7 @@ extension String {
     }
 }
 
-@MainActor func renderMarkdownHTML(markdown: String) -> String? {
+func renderMarkdownHTML(markdown: String, useGithubLineBreak: Bool) -> String? {
     cmark_gfm_core_extensions_ensure_registered()
 
     guard let parser = cmark_parser_new(CMARK_OPT_FOOTNOTES) else { return nil }
@@ -24,7 +24,7 @@ extension String {
     guard let node = cmark_parser_finish(parser) else { return nil }
 
     var res: String
-    if UserDefaultsManagement.editorLineBreak == "Github" {
+    if useGithubLineBreak {
         res = String(cString: cmark_render_html(node, CMARK_OPT_UNSAFE | CMARK_OPT_NOBREAKS, nil))
     } else {
         res = String(cString: cmark_render_html(node, CMARK_OPT_UNSAFE | CMARK_OPT_HARDBREAKS, nil))

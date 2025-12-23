@@ -445,6 +445,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         if !UserDefaultsManagement.magicPPT {
             viewController.titleBarView.isHidden = false
             viewController.titleLabel.isHidden = false
+            viewController.titleBarView.alphaValue = 1
+            viewController.titleLabel.alphaValue = 1
         }
         EditTextView.note = note
         UserDefaultsManagement.lastSelectedURL = note.url
@@ -474,6 +476,15 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         if shouldRenderPreview {
             EditTextView.note = note
             let frame = viewController.previewScrollView?.bounds ?? viewController.editAreaScroll.bounds
+            let allowPreviewTransition = options.animatePreview
+                && !UserDefaultsManagement.preview
+                && !UserDefaultsManagement.presentation
+                && !UserDefaultsManagement.magicPPT
+            let shouldUseIncrementalPreviewUpdate = UserDefaultsManagement.preview
+                && !UserDefaultsManagement.presentation
+                && !UserDefaultsManagement.magicPPT
+                && !UserDefaultsManagement.splitViewMode
+                && !options.force
 
             if markdownView == nil {
                 let previewView = MPreviewView(frame: frame, note: note, closure: {})
@@ -491,7 +502,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 previewView.autoresizingMask = [.width, .height]
 
                 // Smooth transition: fade out -> load -> fade in (skip when animation is disabled)
-                let needsTransition = options.animatePreview && !previewView.isHidden && previewView.alphaValue > 0
+                let needsTransition = allowPreviewTransition && !previewView.isHidden && previewView.alphaValue > 0
                 if needsTransition {
                     NSAnimationContext.runAnimationGroup(
                         { context in
@@ -508,7 +519,11 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                             }
                         })
                 } else {
-                    previewView.load(note: note, force: options.force)
+                    if shouldUseIncrementalPreviewUpdate, previewView.hasLoadedTemplate {
+                        previewView.updateContent(note: note, preserveScroll: false)
+                    } else {
+                        previewView.load(note: note, force: options.force)
+                    }
                     previewView.isHidden = false
                     previewView.alphaValue = 1.0
                 }
@@ -526,7 +541,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 previewView.autoresizingMask = [.width, .height]
 
                 // Smooth transition: fade out -> load -> fade in (skip when animation is disabled)
-                let needsTransition = options.animatePreview && !previewView.isHidden && previewView.alphaValue > 0
+                let needsTransition = allowPreviewTransition && !previewView.isHidden && previewView.alphaValue > 0
                 if needsTransition {
                     NSAnimationContext.runAnimationGroup(
                         { context in
@@ -543,7 +558,11 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                             }
                         })
                 } else {
-                    previewView.load(note: note, force: options.force)
+                    if shouldUseIncrementalPreviewUpdate, previewView.hasLoadedTemplate {
+                        previewView.updateContent(note: note, preserveScroll: false)
+                    } else {
+                        previewView.load(note: note, force: options.force)
+                    }
                     previewView.isHidden = false
                     previewView.alphaValue = 1.0
                 }

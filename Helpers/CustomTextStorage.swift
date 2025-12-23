@@ -30,11 +30,25 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
 
     @MainActor private func shouldScanCompletely(textStorage: NSTextStorage, editedRange: NSRange) -> Bool {
         if editedRange.length == textStorage.length { return true }
-        let string = textStorage.mutableString.substring(with: editedRange)
-        return string == "`"
-            || string == "`\n"
-            || EditTextView.lastRemoved == "`"
-            || (EditTextView.shouldForceRescan && string.contains("```"))
+
+        // Performance: Avoid full scan for inline backticks; still honor forced rescans.
+        if EditTextView.shouldForceRescan {
+            return true
+        }
+
+        let paragraphRange = textStorage.mutableString.paragraphRange(for: editedRange)
+        let paragraph = textStorage.mutableString.substring(with: paragraphRange)
+        let trimmed = paragraph.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // Full scan only when a fenced code block marker changes.
+        if trimmed.hasPrefix("```") {
+            return true
+        }
+        if EditTextView.lastRemoved == "`", trimmed.hasPrefix("``") {
+            return true
+        }
+
+        return false
     }
 
     @MainActor private func rescanAll(textStorage: NSTextStorage) {
