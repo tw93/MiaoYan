@@ -1,3 +1,4 @@
+import Cocoa
 import Foundation
 import LocalAuthentication
 import ZipArchive
@@ -504,6 +505,15 @@ public class Note: NSObject {
         } catch {
             AppDelegate.trackError(error, context: "Note.writeError")
             AppDelegate.trackError(error, context: "Note.write")
+
+            DispatchQueue.main.async {
+                let alert = NSAlert()
+                alert.messageText = I18n.str("Save Failed")
+                alert.informativeText = I18n.str(error.localizedDescription)
+                alert.alertStyle = .warning
+                alert.addButton(withTitle: I18n.str("OK"))
+                alert.runModal()
+            }
             return
         }
 
