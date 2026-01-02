@@ -75,12 +75,12 @@ class HtmlManager {
         if UserDefaultsManagement.presentation {
             return "html {font-size: \(UserDefaultsManagement.presentationFontSize)px} \(fontConfig) #write { max-width: 100%;}"
         } else {
-            let paddingStyle = UserDefaultsManagement.isOnExport ? " padding-top: 24px" : ""
+            let paddingStyle = UserDefaultsManagement.isOnExportHtml ? " padding-top: 24px" : ""
 
             var maxWidth = UserDefaultsManagement.previewWidth == UserDefaultsManagement.FullWidthValue ? "100%" : UserDefaultsManagement.previewWidth
             var writeCSS = "max-width: \(maxWidth); margin: 0"
 
-            if UserDefaultsManagement.isOnExport {
+            if UserDefaultsManagement.isOnExportHtml {
                 maxWidth = "760px"
                 writeCSS = "max-width: \(maxWidth); margin: 0 auto;"
 
@@ -241,7 +241,7 @@ class HtmlManager {
 
     @MainActor
     static func getHtmlContent(_ htmlString: String, currentName: String) -> String {
-        if UserDefaultsManagement.isOnExport, !htmlString.hasPrefix("<h1>") {
+        if UserDefaultsManagement.isOnExportHtml, !htmlString.hasPrefix("<h1>") {
             return "<h1>\(currentName)</h1>\(htmlString)"
         }
         return htmlString
@@ -277,7 +277,7 @@ class HtmlManager {
             "CUSTOM_CSS": customCSS,
         ]
 
-        if UserDefaultsManagement.isOnExport {
+        if UserDefaultsManagement.isOnExportPPT {
             replacements["DOWN_EXPORT_TYPE"] = "ppt"
         }
 
