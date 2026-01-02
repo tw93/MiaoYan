@@ -123,6 +123,9 @@ extension MPreviewView {
         Self.isExporting = true
         Self.exportStartTime = Date()
 
+        // Show progress toast immediately
+        viewController.toastPersistent(message: "\(I18n.str("Exporting...")) 0%")
+
         // Setup timeout protection
         let timeoutWorkItem = DispatchWorkItem { [weak viewController] in
             if Self.isExporting {
@@ -151,36 +154,50 @@ extension MPreviewView {
         }
 
         // Need fresh export
+        viewController.toastUpdate(message: "\(I18n.str("Exporting...")) 10%")
         waitForWebViewReady { [weak self] in
             guard let self else {
                 resetExportFlag()
+                viewController.toastDismiss()
                 viewController.toastExport(status: false)
                 return
             }
 
-            self.injectPrintStylesIfNeeded(needsDimensions: needsDimensions) { [weak self] in
+            viewController.toastUpdate(message: "\(I18n.str("Exporting...")) 20%")
+            self.injectPrintStylesIfNeeded(
+                needsDimensions: needsDimensions,
+                adjustLayout: false
+            ) { [weak self] in
                 guard let self else {
                     resetExportFlag()
+                    viewController.toastDismiss()
                     viewController.toastExport(status: false)
                     return
                 }
 
-                self.waitForImagesLoaded { [weak self] in
+                viewController.toastUpdate(message: "\(I18n.str("Exporting...")) 30%")
+                self.waitForImagesLoaded(progressUpdate: { message in
+                    viewController.toastUpdate(message: message)
+                }) { [weak self] in
                     guard let self else {
                         resetExportFlag()
+                        viewController.toastDismiss()
                         viewController.toastExport(status: false)
                         return
                     }
 
+                    viewController.toastUpdate(message: "\(I18n.str("Exporting...")) 85%")
                     self.evaluateJavaScript("document.documentElement.outerHTML.toString()") { htmlResult, _ in
                         let renderedHTML = htmlResult as? String ?? note.getPrettifiedContent()
 
                         if renderedHTML.count < 50 {
                             print("Export Error: Rendered HTML is too short/invalid")
                             resetExportFlag()
+                            viewController.toastDismiss()
                             viewController.toastExport(status: false)
                             return
                         }
+                        viewController.toastUpdate(message: "\(I18n.str("Exporting...")) 95%")
 
                         if !needsDimensions {
                             let exportData = self.createExportData(note: note, processedHTML: renderedHTML)
@@ -207,18 +224,25 @@ extension MPreviewView {
     }
 
     // MARK: - Style Injection
-    private func injectPrintStylesIfNeeded(needsDimensions: Bool, completion: @escaping () -> Void) {
+    private func injectPrintStylesIfNeeded(
+        needsDimensions: Bool,
+        applyToScreen: Bool = true,
+        adjustLayout: Bool = true,
+        completion: @escaping () -> Void
+    ) {
         if UserDefaultsManagement.magicPPT || UserDefaultsManagement.isOnExportPPT {
             completion()
             return
         }
 
         let baseCSS = HtmlManager.lightModeExportCSS()
-        let printCSS = """
-                (function() {
-                    var style = document.createElement('style');
-                    style.id = 'miaoyan-export-style';
-                    style.innerHTML = `\(baseCSS.dropLast())
+        let mediaCSS = applyToScreen
+            ? baseCSS
+            : baseCSS.replacingOccurrences(of: "@media print, screen", with: "@media print")
+        let exportLayoutCSS: String
+        if applyToScreen {
+            let layoutCSS = adjustLayout
+                ? """
                            #write {
                                max-width: 90% !important;
                                width: 100% !important;
@@ -226,6 +250,47 @@ extension MPreviewView {
                                padding-top: 20px !important;
                                padding-bottom: 20px !important;
                            }
+                    """
+                : ""
+            exportLayoutCSS = """
+                       \(layoutCSS)
+                       .toc-hover-trigger,
+                       .toc-pin-btn,
+                       .toc-nav {
+                           display: none !important;
+                           pointer-events: none !important;
+                       }
+                    """
+        } else {
+            let layoutCSS = adjustLayout
+                ? """
+                            #write {
+                                max-width: 90% !important;
+                                width: 100% !important;
+                                margin: 0 auto !important;
+                                padding-top: 20px !important;
+                                padding-bottom: 20px !important;
+                            }
+                    """
+                : ""
+            exportLayoutCSS = """
+                    @media print {
+                        \(layoutCSS)
+                        .toc-hover-trigger,
+                        .toc-pin-btn,
+                        .toc-nav {
+                            display: none !important;
+                            pointer-events: none !important;
+                        }
+                    }
+                """
+        }
+        let printCSS = """
+                (function() {
+                    var style = document.createElement('style');
+                    style.id = 'miaoyan-export-style';
+                    style.innerHTML = `\(mediaCSS.dropLast())
+                           \(exportLayoutCSS)
                         }
                     `;
                     document.head.appendChild(style);
@@ -244,6 +309,15 @@ extension MPreviewView {
     private func removePrintStyles() {
         let removeScript = "var s = document.getElementById('miaoyan-export-style'); if(s) s.remove();"
         evaluateJavaScript(removeScript, completionHandler: nil)
+    }
+
+    private func escapeForJavaScriptString(_ value: String) -> String {
+        return value
+            .replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "\n", with: "\\n")
+            .replacingOccurrences(of: "\r", with: "\\r")
+            .replacingOccurrences(of: "\"", with: "\\\"")
+            .replacingOccurrences(of: "'", with: "\\'")
     }
 
     private func hideTOCTriggersForExport() {
@@ -284,34 +358,81 @@ extension MPreviewView {
     // MARK: - Export Methods
     public func exportPdf() {
         guard let vc = ViewController.shared(),
-            vc.notesTableView.getSelectedNote() != nil
+            let note = vc.notesTableView.getSelectedNote()
         else { return }
 
-        self.hideTOCTriggersForExport()
+        // Show progress toast immediately
+        vc.toastPersistent(message: "\(I18n.str("Exporting...")) 0%")
+
         self.preparePPTExportIfNeeded()
 
-        self.injectPrintStylesIfNeeded(needsDimensions: true) { [weak self] in
-            guard let self else { return }
+        vc.toastUpdate(message: "\(I18n.str("Exporting...")) 10%")
+
+        self.injectPrintStylesIfNeeded(
+            needsDimensions: true,
+            applyToScreen: false
+        ) { [weak self] in
+            guard let self else {
+                vc.toastDismiss()
+                vc.toastExport(status: false)
+                return
+            }
+
+            vc.toastUpdate(message: "\(I18n.str("Exporting...")) 30%")
 
             self.evaluateJavaScript("window.scrollTo(0,0)", completionHandler: nil)
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                let pdfConfig = WKPDFConfiguration()
+            // Wait for images to load with progress
+            self.waitForImagesLoaded(progressUpdate: { message in
+                vc.toastUpdate(message: message)
+            }) { [weak self] in
+                guard let self else {
+                    vc.toastDismiss()
+                    vc.toastExport(status: false)
+                    return
+                }
 
-                self.createPDF(configuration: pdfConfig) { [weak self] result in
-                    guard let self else { return }
+                vc.toastUpdate(message: "\(I18n.str("Exporting...")) 90%")
 
-                    self.removePrintStyles()
-                    self.restoreTOCTriggers()
+                let safeTitle = self.escapeForJavaScriptString(note.getExportTitle())
+                let titleScript = """
+                        (function() {
+                            var container = document.getElementById('write') || document.body;
+                            if (container && !document.getElementById('export-generated-title')) {
+                                var h1 = document.createElement('h1');
+                                h1.innerText = '\(safeTitle)';
+                                h1.id = 'export-generated-title';
+                                h1.style.cssText = 'font-size: 2em; font-weight: bold; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #eee; display: block;';
+                                container.insertBefore(h1, container.firstChild);
+                            }
+                        })();
+                    """
+                self.evaluateJavaScript(titleScript) { _, _ in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        let pdfConfig = WKPDFConfiguration()
 
-                    switch result {
-                    case .success(let data):
-                        self.saveToDownloads(data: data, extension: "pdf", viewController: vc)
-                    case .failure:
-                        vc.toastExport(status: false)
+                        vc.toastUpdate(message: "\(I18n.str("Exporting...")) 95%")
+
+                        self.createPDF(configuration: pdfConfig) { [weak self] result in
+                            guard let self else { return }
+
+                            // Cleanup: remove injected title and print styles
+                            self.evaluateJavaScript(
+                                "var t = document.getElementById('export-generated-title'); if(t) t.remove();",
+                                completionHandler: nil)
+                            self.removePrintStyles()
+                            vc.toastDismiss()
+
+                            switch result {
+                            case .success(let data):
+                                self.saveToDownloadsWithFilename(data: data, extension: "pdf", filename: note.getExportTitle(), viewController: vc)
+                            case .failure:
+                                vc.toastExport(status: false)
+                            }
+
+                            Self.isExporting = false
+                        }
                     }
-
-                    Self.isExporting = false
                 }
             }
         }
@@ -329,20 +450,123 @@ extension MPreviewView {
                 return
             }
 
-            let config = WKSnapshotConfiguration()
-            config.rect = CGRect(x: 0, y: 0, width: exportData.contentWidth, height: exportData.contentHeight)
-            config.afterScreenUpdates = true
-            config.snapshotWidth = NSNumber(value: Double(exportData.contentWidth) * 2.0)
-            let originalFrame = self.frame
-            self.frame.size.height = exportData.contentHeight
+        // Inject title at top of content
+        let exportTitle = note.getExportTitle()
+        let safeTitle = escapeForJavaScriptString(exportTitle)
+        let titleScript = """
+                (function() {
+                    var container = document.getElementById('write') || document.body;
+                        if (container && !document.getElementById('export-generated-title')) {
+                            var h1 = document.createElement('h1');
+                            h1.innerText = '\(safeTitle)';
+                            h1.id = 'export-generated-title';
+                            h1.style.cssText = 'font-size: 2em; font-weight: bold; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #eee; display: block;';
+                            container.insertBefore(h1, container.firstChild);
+                        }
+                    })();
+                """
 
-            self.takeSnapshot(with: config) { image, _ in
-                self.frame = originalFrame
-                cleanup()
+            self.evaluateJavaScript(titleScript) { _, _ in
+                // Recalculate dimensions after title injection
+                self.getContentDimensions { height, width in
+                    let config = WKSnapshotConfiguration()
+                    config.rect = CGRect(x: 0, y: 0, width: width, height: height)
+                    config.afterScreenUpdates = true
+                    config.snapshotWidth = NSNumber(value: Double(width) * 2.0)
+                    let originalFrame = self.frame
+                    self.frame.size.height = height
 
-                if let image = image {
-                    self.handleImageExportSuccess(image: image, note: note, viewController: vc)
-                } else {
+                    // Scroll to top and force layout recalculation before snapshot
+                    let scrollScript = """
+                            (function() {
+                                window.scrollTo(0, 0);
+                                document.documentElement.scrollTop = 0;
+                                document.body.scrollTop = 0;
+                                document.body.offsetHeight; // Force layout
+                                return true;
+                            })();
+                        """
+                    self.evaluateJavaScript(scrollScript) { _, _ in
+                        // Wait for layout to stabilize after frame change
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            self.takeSnapshot(with: config) { image, _ in
+                                self.frame = originalFrame
+
+                                // Cleanup: remove injected title
+                                self.evaluateJavaScript(
+                                    "var t = document.getElementById('export-generated-title'); if(t) t.remove();",
+                                    completionHandler: nil)
+                                cleanup()
+                                vc.toastDismiss()
+
+                                if let image = image {
+                                    self.handleImageExportSuccess(image: image, note: note, viewController: vc)
+                                } else {
+                                    vc.toastExport(status: false)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public func exportPPTOptimized() {
+        guard let vc = ViewController.shared(),
+            let note = vc.notesTableView.getSelectedNote()
+        else { return }
+
+        // Show progress toast immediately
+        vc.toastPersistent(message: "\(I18n.str("Exporting...")) 0%")
+
+        self.hideTOCTriggersForExport()
+        self.preparePPTExportIfNeeded()
+
+        vc.toastUpdate(message: "\(I18n.str("Exporting...")) 20%")
+
+        // Wait for Reveal.js layout to stabilize
+        self.waitForWebViewReady { [weak self] in
+            guard let self = self else {
+                vc.toastDismiss()
+                vc.toastExport(status: false)
+                if vc.shouldDisablePPTAfterExport {
+                    vc.disableMiaoYanPPT()
+                    vc.shouldDisablePPTAfterExport = false
+                }
+                return
+            }
+
+            vc.toastUpdate(message: "\(I18n.str("Exporting...")) 60%")
+
+            let pdfConfig = WKPDFConfiguration()
+            pdfConfig.rect = .null
+
+            vc.toastUpdate(message: "\(I18n.str("Exporting...")) 80%")
+
+            self.createPDF(configuration: pdfConfig) { [weak self] result in
+                guard let self = self else { return }
+
+                // Cleanup state
+                UserDefaultsManagement.isOnExportPPT = false
+                self.evaluateJavaScript(
+                    """
+                    document.documentElement.classList.remove('print-pdf');
+                    document.body.classList.remove('print-pdf');
+                    """, completionHandler: nil)
+                self.restoreTOCTriggers()
+                vc.toastDismiss()
+
+                if vc.shouldDisablePPTAfterExport {
+                    vc.disableMiaoYanPPT()
+                    vc.shouldDisablePPTAfterExport = false
+                }
+
+                switch result {
+                case .success(let data):
+                    let filename = note.getExportTitle() + "_PPT"
+                    self.saveToDownloadsWithFilename(data: data, extension: "pdf", filename: filename, viewController: vc)
+                case .failure:
                     vc.toastExport(status: false)
                 }
             }
@@ -429,12 +653,32 @@ extension MPreviewView {
 
     // (obsolete) previously used helper methods removed after direct HTML export refactor
 
-    private func waitForImagesLoaded(completion: @escaping () -> Void) {
+    private func waitForImagesLoaded(progressUpdate: ((String) -> Void)? = nil, completion: @escaping () -> Void) {
         let checkImagesScript = HtmlManager.checkImagesScript
+        var checkCount = 0
+        let maxChecks = 6  // 3 seconds max (6 * 0.5s)
 
         func checkImages() {
+            checkCount += 1
+
+            // Update progress message (30% to 80% range for image loading)
+            if let progressUpdate = progressUpdate {
+                let percent = min(30 + Int((Double(checkCount) / Double(maxChecks)) * 50), 80)
+                progressUpdate("\(I18n.str("Exporting...")) \(percent)%")
+            }
+
+            if checkCount >= maxChecks {
+                print("[Export] Image loading timeout after \\(checkCount) checks, proceeding anyway")
+                completion()
+                return
+            }
+
             evaluateJavaScript(checkImagesScript) { result, _ in
                 if let allImagesLoaded = result as? Bool, allImagesLoaded {
+                    // Images loaded, show final progress
+                    if let progressUpdate = progressUpdate {
+                        progressUpdate("\(I18n.str("Exporting...")) 82%")
+                    }
                     // Add additional delay to ensure layout and rendering are complete
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                         completion()
@@ -584,7 +828,7 @@ extension MPreviewView {
     private func getContentHeight(completion: @escaping (CGFloat?) -> Void) {
         // Robust height calculation using several DOM properties
         let js = "(function(){var b=document.body,e=document.documentElement;return Math.max(b.scrollHeight,b.offsetHeight,e.clientHeight,e.scrollHeight,e.offsetHeight);})()"
-        evaluateJavaScript(js) { [weak self] result, _ in
+        evaluateJavaScript(js) { result, _ in
             let height: CGFloat? = {
                 if let h = result as? CGFloat { return h }
                 if let h = result as? Double { return CGFloat(h) }
@@ -698,5 +942,17 @@ extension MPreviewView {
     @MainActor
     private enum AssociatedKeys {
         static var preparedPPTExport: UInt8 = 0
+    }
+}
+
+// MARK: - WKScriptMessageHandler Implementation for MPreviewView
+extension MPreviewView: WKScriptMessageHandler {
+    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        // Handle 'logging' messages for debugging
+        if message.name == "logging", let body = message.body as? String {
+            #if DEBUG
+                print("[JS Log] \(body)")
+            #endif
+        }
     }
 }
