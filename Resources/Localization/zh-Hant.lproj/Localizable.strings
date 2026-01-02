@@ -41,9 +41,6 @@
 "🙊 Press ESC key to exit~" = "🙊 按 ESC 鍵結束簡報模式～";
 
 /* No comment provided by engineer. */
-"🙊 Starting export~" = "🙊 開始匯出～";
-
-/* No comment provided by engineer. */
 "Add" = "加入";
 
 /* No comment provided by engineer. */
@@ -228,3 +225,8 @@
 "Removed %d unused attachment(s)" = "已清理%d個無引用附件";
 "Some attachments could not be removed" = "部分附件無法清理";
 "Clean" = "清理";
+
+/* Export Messages */
+"Exporting..." = "正在匯出";
+"Export failed" = "匯出失敗";
+"System version too low" = "系統版本過低";
