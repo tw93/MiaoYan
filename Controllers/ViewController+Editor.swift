@@ -975,6 +975,12 @@ extension ViewController {
             let selected = self.notesTableView.selectedRow
             if selected > -1, self.notesTableView.noteList.indices.contains(selected) {
                 if let note = self.notesTableView.getSelectedNote() {
+                    // Safety: Ensure current editor content is saved to note before reloading
+                    // This prevents data loss during rapid view switching where the editor might be dirty
+                    if let currentNote = EditTextView.note, currentNote === note, force || !previewOnly {
+                        self.editArea.saveTextStorageContent(to: currentNote)
+                    }
+
                     let options = FillOptions(
                         highlight: true,
                         saveTyping: saveTyping,
