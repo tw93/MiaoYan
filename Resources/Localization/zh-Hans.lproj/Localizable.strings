@@ -127,8 +127,6 @@
 "Some attachments could not be removed" = "部分附件无法清理";
 "Clean" = "清理";
 
-"🙊 Starting export~" = "🙊 开始导出中~";
-
 "🍭 Image upload in progress~" = "🍭 图片上传中~";
 
 "😶‍🌫 Image upload failed, Use local~" = "😶‍🌫 图片上传失败，优先使用本地，可手动上传~";
@@ -237,3 +235,8 @@
 "Presentation" = "演示";
 "Toggle Note List" = "列表";
 "Toggle Split Mode" = "分栏";
+
+/* Export Messages */
+"Exporting..." = "正在导出";
+"Export failed" = "导出失败";
+"System version too low" = "系统版本过低";
