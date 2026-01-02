@@ -907,7 +907,7 @@ CA
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="32" id="3QH-0a-na2"/>
                                                                 </constraints>
-                                                                <textFieldCell key="cell" lineBreakMode="truncatingMiddle" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" focusRingType="none" alignment="left" title="Title" placeholderString="输入标题" drawsBackground="YES" id="O9K-a1-3eu">
+                                                                <textFieldCell key="cell" lineBreakMode="truncatingMiddle" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" focusRingType="none" alignment="left" title="Title" placeholderString="Enter title" drawsBackground="YES" id="O9K-a1-3eu">
                                                                     <font key="font" metaFont="systemBold" size="20"/>
                                                                     <color key="textColor" name="underlineColor"/>
                                                                     <color key="backgroundColor" name="mainBackground"/>
