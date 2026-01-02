@@ -34,6 +34,8 @@ class ViewController:
     var formatContent: String = ""
     var isFormatting: Bool = false
     var needRestorePreview: Bool = false
+    var shouldRestorePreviewAfterExport: Bool = false
+    var shouldDisablePPTAfterExport: Bool = false
     private var disablePreviewWorkItem: DispatchWorkItem?
     nonisolated(unsafe) var liveResizeObserver: NSObjectProtocol?
     var needsPreviewLayoutAfterLiveResize = false
