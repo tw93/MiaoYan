@@ -855,7 +855,7 @@ class ViewController:
                 }
             }
             if UserDefaultsManagement.isSingleMode {
-                let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
+                let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath).resolvingSymlinksInPath()
                 self.hideSidebar("")
                 if !FileManager.default.directoryExists(atUrl: singleModeUrl), let lastNote = self.storage.getBy(url: singleModeUrl), let i = self.notesTableView.getIndex(lastNote) {
                     DispatchQueue.main.async {
