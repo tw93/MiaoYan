@@ -334,6 +334,9 @@
 /* Class = "NSTextFieldCell"; title = "Title"; ObjectID = "O9K-a1-3eu"; */
 "O9K-a1-3eu.title" = "标题";
 
+/* Class = "NSTextFieldCell"; placeholderString = "Enter title"; ObjectID = "O9K-a1-3eu"; */
+"O9K-a1-3eu.placeholderString" = "输入标题";
+
 /* Class = "NSMenuItem"; title = "Find Previous"; ObjectID = "OwM-mh-QMV"; */
 "OwM-mh-QMV.title" = "查找上一个";
 
