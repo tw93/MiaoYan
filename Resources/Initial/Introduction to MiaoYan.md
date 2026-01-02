@@ -2,7 +2,7 @@
     <div align="center"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138  /></div>
     <h2 align="center">MiaoYan</h2>
     <div align="center">Lightweight Markdown note-taking app for macOS</div>
-    <div align="center"><a href="https://github.com/tw93/MiaoYan/blob/master/README_CN.md">中文</a> | <strong>English</strong></div>
+
 </p>
 
 ## Features
