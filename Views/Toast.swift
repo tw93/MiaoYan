@@ -2,11 +2,12 @@ import AppKit
 
 // MARK: - Toast Configuration
 struct ToastConfiguration: Sendable {
-    var animationDuration: TimeInterval = 3.0
+    var animationDuration: TimeInterval = 1.5
     var fadeKeyTimes: [NSNumber] = [0, 0.05, 0.85, 1]
     var fadeValues: [Float] = [0, 0.92, 0.92, 0]
     var cornerRadius: CGFloat = 8
-    var padding: CGFloat = 8
+    var horizontalPadding: CGFloat = 16
+    var verticalPadding: CGFloat = 6
     var minWidth: CGFloat = 80
     var maxWidth: CGFloat = 420
     var minHeight: CGFloat = 20
@@ -49,6 +50,31 @@ final class ToastManager {
             animateToastFade(
                 toast,
                 duration: duration ?? configuration.animationDuration)
+        }
+    }
+
+    func updateToastMessage(_ message: String) {
+        // Find the label in current toast and update it
+        if let toast = currentToast {
+            updateLabelInView(toast, with: message)
+        }
+    }
+
+    private func updateLabelInView(_ view: NSView, with message: String) {
+        for subview in view.subviews {
+            if let label = subview as? NSTextField {
+                label.stringValue = message
+                return
+            } else if let stack = subview as? NSStackView {
+                for arrangedSubview in stack.arrangedSubviews {
+                    if let label = arrangedSubview as? NSTextField {
+                        label.stringValue = message
+                        return
+                    }
+                }
+            }
+            // Recursively search in subviews
+            updateLabelInView(subview, with: message)
         }
     }
 
@@ -225,14 +251,14 @@ enum ToastFactory {
 
     @MainActor
     private static func applyContentConstraints(stack: NSStackView, in container: NSView, configuration: ToastConfiguration) {
-        let minHeight = configuration.minHeight + configuration.padding * 2
+        let minHeight = configuration.minHeight + configuration.verticalPadding * 2
 
         NSLayoutConstraint.activate([
-            stack.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: configuration.padding),
-            stack.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -configuration.padding),
+            stack.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: configuration.horizontalPadding),
+            stack.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -configuration.horizontalPadding),
             stack.centerYAnchor.constraint(equalTo: container.centerYAnchor),
-            stack.topAnchor.constraint(greaterThanOrEqualTo: container.topAnchor, constant: configuration.padding),
-            stack.bottomAnchor.constraint(lessThanOrEqualTo: container.bottomAnchor, constant: -configuration.padding),
+            stack.topAnchor.constraint(greaterThanOrEqualTo: container.topAnchor, constant: configuration.verticalPadding),
+            stack.bottomAnchor.constraint(lessThanOrEqualTo: container.bottomAnchor, constant: -configuration.verticalPadding),
             container.heightAnchor.constraint(greaterThanOrEqualToConstant: minHeight),
         ])
     }
@@ -256,6 +282,11 @@ extension NSViewController {
     public func toastPersistent(message: String) {
         let toast = ToastFactory.makeToast(message: message)
         ToastManager.shared.showToast(toast, in: view, persistent: true)
+    }
+
+    @MainActor
+    public func toastUpdate(message: String) {
+        ToastManager.shared.updateToastMessage(message)
     }
 
     @MainActor

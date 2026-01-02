@@ -454,19 +454,23 @@ extension ViewController {
     }
 
     @IBAction func exportMiaoYanPPT(_ sender: Any) {
-        if !isMiaoYanPPT() {
-            return
+        guard isMiaoYanPPT() else { return }
+
+        // Only enable PPT mode if not already enabled
+        let needsDisableAfterExport = !UserDefaultsManagement.magicPPT
+        if needsDisableAfterExport {
+            enableMiaoYanPPT()
         }
-        toastPersistent(message: I18n.str("🙊 Starting export~"))
-        enableMiaoYanPPT()
-        UserDefaultsManagement.isOnExport = true
+        shouldDisablePPTAfterExport = needsDisableAfterExport
+
+        // Mark export state
         UserDefaultsManagement.isOnExportPPT = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-            self.editArea.markdownView?.exportPdf()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.disableMiaoYanPPT()
-            }
+
+        // Short delay then export (1.2s is sufficient for PPT layout)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
+            self.editArea.markdownView?.exportPPTOptimized()
         }
+
         TelemetryDeck.signal("Action.Export", parameters: ["Type": "PPT PDF"])
     }
 
@@ -974,15 +978,11 @@ extension ViewController {
     // MARK: - Export Operations
     func exportFile(type: String) {
         UserDefaultsManagement.isOnExport = true
+        shouldRestorePreviewAfterExport = false
 
         if type == "Html" {
             UserDefaultsManagement.isOnExportHtml = true
-        }
-
-        toastPersistent(message: I18n.str("🙊 Starting export~"))
-
-        // HTML export can be done immediately without preview
-        if type == "Html" {
+            // HTML export can be done immediately without preview
             self.editArea.markdownView?.exportHtml()
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 UserDefaultsManagement.isOnExport = false
@@ -993,12 +993,15 @@ extension ViewController {
         }
 
         // For PDF and Image exports, enable preview and wait for proper loading
-        if UserDefaultsManagement.preview {
-            disablePreview()
+        // For PDF and Image exports, ensure preview is enabled
+        // Only toggle if not already in preview to avoid unnecessary reload
+        if !UserDefaultsManagement.preview {
+            enablePreview()
+            shouldRestorePreviewAfterExport = true
         }
 
-        enablePreview()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 6.0) {
+        // Wait briefly for view initialization if needed, then trigger export
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             switch type {
             case "Image":
                 self.editArea.markdownView?.exportImage()
@@ -1007,10 +1010,7 @@ extension ViewController {
             default:
                 break
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                UserDefaultsManagement.isOnExport = false
-                self.disablePreview()
-            }
+            // Logic for cleanup is handled in the completion callbacks (toastExport)
         }
         TelemetryDeck.signal("Action.Export", parameters: ["Type": type])
     }
@@ -1019,11 +1019,17 @@ extension ViewController {
         if status {
             toast(message: I18n.str("🎉 Saved to Downloads folder~"))
         } else {
-            toast(message: I18n.str("😶‍🌫 Export failed, please try again~"))
+            toast(message: "😶‍🌫 \(I18n.str("Export failed"))")
         }
         // After the export is completed, restore the original state.
         UserDefaultsManagement.isOnExport = false
         UserDefaultsManagement.isOnExportPPT = false
+        UserDefaultsManagement.isOnExportHtml = false
+        shouldDisablePPTAfterExport = false
+        if shouldRestorePreviewAfterExport {
+            disablePreview()
+            shouldRestorePreviewAfterExport = false
+        }
     }
 
     public func toastNoTitle() {

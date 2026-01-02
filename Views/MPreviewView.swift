@@ -62,6 +62,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         userContentController.add(HandlerRevealBackgroundColor(), name: "revealBackgroundColor")
         userContentController.add(HandlerPreviewScroll(), name: "previewScroll")
         userContentController.add(HandlerTOCTip(), name: "tocTipClicked")
+
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = userContentController
         // macOS Sequoia beta: Simplified configuration to avoid sandbox conflicts
@@ -78,6 +79,9 @@ class MPreviewView: WKWebView, WKUIDelegate {
         configuration.defaultWebpagePreferences = preferences
         super.init(frame: frame, configuration: configuration)
         navigationDelegate = navigationProxy
+
+        // Add self as handler for logging (PDF export progress) - done after super.init so 'self' is available
+        self.configuration.userContentController.add(self, name: "logging")
 
         // Note: Frame is manually managed by EditTextView to avoid resize flicker
         // autoresizingMask is intentionally not set
@@ -476,7 +480,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
             if let error = error {
                 // Only log errors in debug builds to avoid log spam
                 #if DEBUG
-                print("[ScrollSync] JavaScript execution error: \(error.localizedDescription)")
+                    print("[ScrollSync] JavaScript execution error: \(error.localizedDescription)")
                 #endif
             }
         }
