@@ -436,8 +436,6 @@ class Storage {
                 }
             #endif
 
-            note.load()
-
             if loadContent {
                 note.load()
             }
@@ -514,8 +512,6 @@ class Storage {
                     note.isPinned = isPinned
                 }
             #endif
-
-            note.load()
 
             if note.isPinned {
                 pinned += 1
