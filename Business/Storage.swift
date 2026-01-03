@@ -22,6 +22,14 @@ class Storage {
 
     var notesDict: [String: Note] = [:]
 
+    private struct LoadedProjectInfo {
+        let lastScan: Date
+        let contentModifiedAt: Date?
+        let hadError: Bool
+    }
+
+    private var loadedProjectInfo: [String: LoadedProjectInfo] = [:]
+
     var allowedExtensions = [
         "md", "markdown",
         "txt",
@@ -211,6 +219,7 @@ class Storage {
         if let i = projects.firstIndex(of: project) {
             projects.remove(at: i)
         }
+        loadedProjectInfo.removeValue(forKey: project.url.path)
     }
 
     public func add(project: Project) -> [Project] {
@@ -248,6 +257,7 @@ class Storage {
     public func loadProjects(withTrash: Bool = false, skipRoot: Bool = false) {
         if !skipRoot {
             noteList.removeAll()
+            loadedProjectInfo.removeAll()
         }
 
         for project in projects {
@@ -330,12 +340,20 @@ class Storage {
 
     public func getProjectBy(url: URL) -> Project? {
         let projectURL = url.deletingLastPathComponent()
+        let path = projectURL.path
 
-        return
-            projects.first(where: {
-                $0.url == projectURL
+        // Find all projects that could be parents (prefix match)
+        let candidates = projects.filter { project in
+            let projectPath = project.url.path
+            if path == projectPath {
+                return true
+            }
+            let normalized = projectPath.hasSuffix("/") ? projectPath : projectPath + "/"
+            return path.hasPrefix(normalized)
+        }
 
-            })
+        // Return the one with the longest path (most specific match)
+        return candidates.max(by: { $0.url.path.count < $1.url.path.count })
     }
 
     func sortNotes(noteList: [Note], filter: String, project: Project? = nil, operation: BlockOperation? = nil) -> [Note] {
@@ -384,7 +402,9 @@ class Storage {
     }
 
     func loadLabel(_ item: Project, loadContent: Bool = false) {
-        let documents = readDirectory(item.url)
+        let result = readDirectoryWithStatus(item.url)
+        let documents = result.items
+        let contentModifiedAt = directoryContentModifiedAt(item.url)
 
         for document in documents {
             let url = document.url
@@ -428,6 +448,86 @@ class Storage {
 
             noteList.append(note)
         }
+        loadedProjectInfo[item.url.path] = LoadedProjectInfo(
+            lastScan: Date(),
+            contentModifiedAt: contentModifiedAt,
+            hadError: result.hadError
+        )
+    }
+
+    public func loadMissingNotes(for project: Project) {
+        let projectPath = project.url.path
+        let now = Date()
+        let contentModifiedAt = directoryContentModifiedAt(project.url)
+
+        if let info = loadedProjectInfo[projectPath] {
+            if !info.hadError {
+                if project.isCloudDrive {
+                    if now.timeIntervalSince(info.lastScan) < 2.0 {
+                        return
+                    }
+                } else {
+                    if let contentModifiedAt = contentModifiedAt,
+                        contentModifiedAt == info.contentModifiedAt
+                    {
+                        return
+                    }
+
+                    if contentModifiedAt == nil,
+                        now.timeIntervalSince(info.lastScan) < 1.0
+                    {
+                        return
+                    }
+                }
+            } else if now.timeIntervalSince(info.lastScan) < 2.0 {
+                return
+            }
+        }
+
+        let result = readDirectoryWithStatus(project.url)
+        let documents = result.items
+
+        for document in documents {
+            let url = document.url
+
+            // Check if note is already loaded to avoid duplicates
+            if noteList.contains(where: { $0.url == url }) {
+                continue
+            }
+
+            let note = Note(url: url.resolvingSymlinksInPath(), with: project)
+
+            if url.pathComponents.isEmpty {
+                continue
+            }
+
+            note.modifiedLocalAt = document.modificationDate
+            note.creationDate = document.creationDate
+            note.project = project
+
+            #if CLOUDKIT
+            #else
+                if let data = try? note.url.extendedAttribute(forName: "com.tw93.miaoyan.pin") {
+                    let isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
+                        ptr.load(as: Bool.self)
+                    }
+                    note.isPinned = isPinned
+                }
+            #endif
+
+            note.load()
+
+            if note.isPinned {
+                pinned += 1
+            }
+
+            noteList.append(note)
+        }
+        loadedProjectInfo[projectPath] = LoadedProjectInfo(
+            lastScan: now,
+            contentModifiedAt: contentModifiedAt,
+            hadError: result.hadError
+        )
     }
 
     public func unload(project: Project) {
@@ -437,6 +537,7 @@ class Storage {
                 noteList.remove(at: i)
             }
         }
+        loadedProjectInfo.removeValue(forKey: project.url.path)
     }
 
     public func reLoadTrash() {
@@ -447,14 +548,23 @@ class Storage {
         }
     }
 
-    public func readDirectory(_ url: URL) -> [DirectoryItem] {
+    private func directoryContentModifiedAt(_ url: URL) -> Date? {
+        (try? url.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate
+    }
+
+    private struct DirectoryReadResult {
+        let items: [DirectoryItem]
+        let hadError: Bool
+    }
+
+    private func readDirectoryWithStatus(_ url: URL) -> DirectoryReadResult {
         let url = url.resolvingSymlinksInPath()
 
         do {
             let directoryFiles =
                 try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: [.contentModificationDateKey, .creationDateKey, .typeIdentifierKey], options: .skipsHiddenFiles)
 
-            return
+            let items =
                 directoryFiles.filter {
                     allowedExtensions.contains($0.pathExtension)
                         && isValidUTI(url: $0)
@@ -466,11 +576,16 @@ class Storage {
                         creationDate: (try? url.resourceValues(forKeys: [.creationDateKey]))?.creationDate ?? Date.distantPast
                     )
                 }
+            return DirectoryReadResult(items: items, hadError: false)
         } catch {
             AppDelegate.trackError(error, context: "Storage.notFound: \(url.path)")
         }
 
-        return []
+        return DirectoryReadResult(items: [], hadError: true)
+    }
+
+    public func readDirectory(_ url: URL) -> [DirectoryItem] {
+        readDirectoryWithStatus(url).items
     }
 
     public func isValidUTI(url: URL) -> Bool {

@@ -71,6 +71,9 @@
 /* Class = "NSMenuItem"; title = "New Folder"; ObjectID = "3zv-SD-lSX"; */
 "3zv-SD-lSX.title" = "新規フォルダ";
 
+/* Class = "NSMenuItem"; title = "New Subfolder"; ObjectID = "foQ-7O-92Z"; */
+"foQ-7O-92Z.title" = "新規サブフォルダ";
+
 /* Class = "NSMenuItem"; title = "Editor Font"; ObjectID = "46V-wl-D4j"; */
 "46V-wl-D4j.title" = "Editor Font";
 

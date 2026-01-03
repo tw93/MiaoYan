@@ -14,6 +14,7 @@ private enum MenuTitles {
     static let showInFinder = I18n.str("Show in Finder")
     static let renameFolder = I18n.str("Rename Folder")
     static let deleteFolder = I18n.str("Delete Folder")
+    static let newSubfolder = I18n.str("New Subfolder")
 }
 
 private enum DragDropTypes {
@@ -73,6 +74,12 @@ class SidebarProjectView: NSOutlineView,
 
         case MenuTitles.deleteFolder:
             return validateDeleteMenuItem(sidebarItem: sidebarItem, menuItem: menuItem)
+
+        case MenuTitles.newSubfolder:
+            if sidebarItem.type == .Category {
+                return true
+            }
+            return false
 
         default:
             return false
@@ -372,6 +379,46 @@ class SidebarProjectView: NSOutlineView,
         adjustIconSize(cell, size: defaultIconSize)
         setupBasicCellAppearance(cell, baseFont: baseFont)
         updateLabelSpacing(cell, spacing: defaultSpacing)
+        alignContentVertically(cell)
+    }
+
+    private func alignContentVertically(_ cell: SidebarCellView) {
+        cell.layoutSubtreeIfNeeded()
+
+        cell.icon.translatesAutoresizingMaskIntoConstraints = false
+        cell.label.translatesAutoresizingMaskIntoConstraints = false
+
+        let hasIconCenterY = cell.constraints.contains { constraint in
+            if constraint.firstAttribute != .centerY || constraint.secondAttribute != .centerY {
+                return false
+            }
+            let firstView = constraint.firstItem as? NSView
+            let secondView = constraint.secondItem as? NSView
+            return (firstView === cell.icon && secondView === cell)
+                || (firstView === cell && secondView === cell.icon)
+        }
+
+        let hasLabelCenterY = cell.constraints.contains { constraint in
+            if constraint.firstAttribute != .centerY || constraint.secondAttribute != .centerY {
+                return false
+            }
+            let firstView = constraint.firstItem as? NSView
+            let secondView = constraint.secondItem as? NSView
+            return (firstView === cell.label && secondView === cell)
+                || (firstView === cell && secondView === cell.label)
+        }
+
+        if !hasIconCenterY {
+            NSLayoutConstraint.activate([
+                cell.icon.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
+            ])
+        }
+
+        if !hasLabelCenterY {
+            NSLayoutConstraint.activate([
+                cell.label.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
+            ])
+        }
     }
 
     private func setupBasicCellAppearance(_ cell: SidebarCellView, baseFont: NSFont) {
@@ -505,6 +552,13 @@ class SidebarProjectView: NSOutlineView,
             return sidebar.count
         }
 
+        if let sidebarItem = item as? SidebarItem {
+            if sidebarItem.children == nil {
+                sidebarItem.children = getSubdirectories(for: sidebarItem)
+            }
+            return sidebarItem.children?.count ?? 0
+        }
+
         return 0
     }
 
@@ -519,12 +573,30 @@ class SidebarProjectView: NSOutlineView,
     }
 
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
-        false
+        if let sidebarItem = item as? SidebarItem {
+            if sidebarItem.type != .Category {
+                return false
+            }
+            if sidebarItem.children == nil {
+                sidebarItem.children = getSubdirectories(for: sidebarItem)
+            }
+            return (sidebarItem.children?.count ?? 0) > 0
+        }
+        return false
     }
 
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         if let sidebar = sidebarItems, item == nil {
             return sidebar[index]
+        }
+
+        if let sidebarItem = item as? SidebarItem {
+            if sidebarItem.children == nil {
+                sidebarItem.children = getSubdirectories(for: sidebarItem)
+            }
+            if let children = sidebarItem.children, index < children.count {
+                return children[index]
+            }
         }
 
         return ""
@@ -577,11 +649,29 @@ class SidebarProjectView: NSOutlineView,
             return nil
         }
 
-        // Find the index of this item
-        let itemIndex = outlineView.row(forItem: item)
-        guard itemIndex >= 0 else { return nil }
+        // Check if allow dragging
+        guard let sidebarItems = sidebarItems else { return nil }
 
-        guard sidebarItems != nil else { return nil }
+        // Find the index in the root items list
+        // We use identity matching since sidebar items are regenerated, but we need the index in the current `sidebarItems` array
+        // Fallback to name/url matching if needed, but `sidebarItems` should contain the exact objects if not reloaded
+        guard let itemIndex = sidebarItems.firstIndex(where: { ($0 as? SidebarItem) === sidebarItem }) else {
+            // If strictly not equal, try matching by content to be safe
+            guard
+                let alternativeIndex = sidebarItems.firstIndex(where: {
+                    guard let si = $0 as? SidebarItem else { return false }
+                    return si.name == sidebarItem.name && si.project == sidebarItem.project
+                })
+            else {
+                return nil
+            }
+            // If found by content value
+            if alternativeIndex == 0 { return nil }
+            let pasteboardItem = NSPasteboardItem()
+            let encodedData = "SIDEBAR_REORDER:\(alternativeIndex):\(sidebarItem.name)"
+            pasteboardItem.setString(encodedData, forType: .string)
+            return pasteboardItem
+        }
 
         // Don't allow dragging the first item (MiaoYan - .All type)
         if itemIndex == 0 {
@@ -644,17 +734,17 @@ class SidebarProjectView: NSOutlineView,
             UserDataService.instance.isNotesTableEscape = false
         }
 
-        guard let sidebarItems = sidebarItems else {
+        guard sidebarItems != nil else {
             return
         }
 
         lastSelectedRow = selectedRow
 
         if let view = notification.object as? NSOutlineView {
-            let sidebar = sidebarItems
+
             let i = view.selectedRow
 
-            if sidebar.indices.contains(i), let item = sidebar[i] as? SidebarItem {
+            if let item = view.item(atRow: i) as? SidebarItem {
                 // During app launch, skip saving selection to avoid overwriting persisted state
                 // with programmatically restored selection. This ensures the correct last selection
                 // is preserved across app restarts.
@@ -743,14 +833,7 @@ class SidebarProjectView: NSOutlineView,
         }
 
         let selected = v.selectedRow
-        guard let si = v.sidebarItems,
-            si.indices.contains(selected)
-        else {
-            return
-        }
-
-        guard
-            let sidebarItem = si[selected] as? SidebarItem,
+        guard let sidebarItem = getSidebarItem(),
             sidebarItem.type == .Category,
             let projectRow = v.rowView(atRow: selected, makeIfNecessary: false),
             let cell = projectRow.view(atColumn: 0) as? SidebarCellView
@@ -767,12 +850,7 @@ class SidebarProjectView: NSOutlineView,
             return
         }
 
-        let selected = v.selectedRow
-        guard let si = v.sidebarItems, si.indices.contains(selected) else {
-            return
-        }
-
-        guard let sidebarItem = si[selected] as? SidebarItem, let project = sidebarItem.project, !project.isDefault, sidebarItem.type != .All, sidebarItem.type != .Trash else {
+        guard let sidebarItem = getSidebarItem(), let project = sidebarItem.project, !project.isDefault, sidebarItem.type != .All, sidebarItem.type != .Trash else {
             return
         }
 
@@ -816,6 +894,15 @@ class SidebarProjectView: NSOutlineView,
 
     @IBAction func addProject(_ sender: Any) {
         let project = Storage.sharedInstance().getMainProject()
+        showAddFolderAlert(parentProject: project)
+    }
+
+    @IBAction func newSubfolder(_ sender: Any) {
+        guard let sidebarItem = getSidebarItem(), let project = sidebarItem.project else { return }
+        showAddFolderAlert(parentProject: project)
+    }
+
+    private func showAddFolderAlert(parentProject: Project) {
         guard let window = MainWindowController.shared() else {
             return
         }
@@ -830,7 +917,7 @@ class SidebarProjectView: NSOutlineView,
         alert.addButton(withTitle: I18n.str("Cancel"))
         alert.beginSheetModal(for: window) { (returnCode: NSApplication.ModalResponse) in
             if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
-                self.addChild(field: field, project: project)
+                self.addChild(field: field, project: parentProject)
             }
         }
 
@@ -853,8 +940,7 @@ class SidebarProjectView: NSOutlineView,
         viewDelegate?.fsManager?.restart()
         viewDelegate?.cleanSearchAndEditArea()
 
-        sidebarItems = Sidebar().getList()
-        reloadData()
+        reloadSidebar()
     }
 
     private func addChild(field: NSTextField, project: Project) {
@@ -867,9 +953,31 @@ class SidebarProjectView: NSOutlineView,
             let projectURL = project.url.appendingPathComponent(value, isDirectory: true)
             try FileManager.default.createDirectory(at: projectURL, withIntermediateDirectories: false, attributes: nil)
 
-            let newProject = Project(url: projectURL, parent: project.getParent())
-            _ = storage.add(project: newProject)
+            // Correct logic: we are creating a child of `project`.
+            let actualNewProject = Project(url: projectURL, parent: project)
+
+            _ = storage.add(project: actualNewProject)
+
+            // Invalidate cache of the parent sidebar item so it re-fetches children
+            if let sidebarItems = sidebarItems {
+                // We need to find the sidebar item that corresponds to `project` and clear its children
+                clearChildrenCache(for: project, in: sidebarItems)
+            }
+
             reloadSidebar()
+
+            // Auto expand the parent
+            // We need to find the item to expand it. `reloadSidebar` rebuilds `sidebarItems`.
+            // Expansion restoration might handle it if we saved state, but new item needs explicit expansion potentially.
+            DispatchQueue.main.async {
+                if ViewController.shared() != nil {
+                    // Try to find and expand
+                    // Complex to find exact item after reload without tree traversal,
+                    // but `reloadSidebar` maintains selection?
+                    // Let's rely on user expanding for now, or existing auto-save.
+                }
+            }
+
         } catch {
             let alert = NSAlert()
             alert.messageText = error.localizedDescription
@@ -927,70 +1035,38 @@ class SidebarProjectView: NSOutlineView,
 
     public func selectNext() {
         let i = selectedRow + 1
-        guard let si = sidebarItems, si.indices.contains(i) else {
-            return
-        }
-
-        if let next = si[i] as? SidebarItem {
+        if i < numberOfRows, let next = item(atRow: i) as? SidebarItem {
             if next.project == nil {
                 let j = i + 1
-
-                guard let si = sidebarItems, si.indices.contains(j) else {
-                    return
-                }
-
-                if si[j] is SidebarItem {
+                if j < numberOfRows, item(atRow: j) is SidebarItem {
                     selectRowIndexes([j], byExtendingSelection: false)
                     return
                 }
-
                 return
             }
+            selectRowIndexes([i], byExtendingSelection: false)
         }
-
-        selectRowIndexes([i], byExtendingSelection: false)
     }
 
     public func selectPrev() {
         let i = selectedRow - 1
-        guard let si = sidebarItems, si.indices.contains(i) else {
-            return
-        }
-
-        if let next = si[i] as? SidebarItem {
-            if next.project == nil {
+        if i >= 0, let prev = item(atRow: i) as? SidebarItem {
+            if prev.project == nil {
                 let j = i - 1
-
-                guard let si = sidebarItems, si.indices.contains(j) else {
-                    return
-                }
-
-                if si[j] is SidebarItem {
+                if j >= 0, item(atRow: j) is SidebarItem {
                     selectRowIndexes([j], byExtendingSelection: false)
                     return
                 }
-
                 return
             }
+            selectRowIndexes([i], byExtendingSelection: false)
         }
-
-        selectRowIndexes([i], byExtendingSelection: false)
     }
 
     private func getSidebarItem() -> SidebarItem? {
-        guard let vc = ViewController.shared(), let v = vc.storageOutlineView else {
-            return nil
-        }
-
-        let selected = v.selectedRow
-        guard let si = v.sidebarItems,
-            si.indices.contains(selected)
-        else {
-            return nil
-        }
-
-        let sidebarItem = si[selected] as? SidebarItem
-        return sidebarItem
+        let row = selectedRow
+        if row < 0 { return nil }
+        return item(atRow: row) as? SidebarItem
     }
 
     @objc public func reloadSidebar() {
@@ -1001,8 +1077,43 @@ class SidebarProjectView: NSOutlineView,
         vc.loadMoveMenu()
 
         let selected = vc.storageOutlineView.selectedRow
-        vc.storageOutlineView.sidebarItems = Sidebar().getList()
+
+        // Save expanded state before reload
+        let expandedState = vc.storageOutlineView.saveExpandedState()
+
+        let newList = Sidebar().getList()
+        var mergedList = [Any]()
+
+        // Smarter merge: Reuse existing SidebarItem objects to preserve expanded state/identity
+        if let currentItems = vc.storageOutlineView.sidebarItems {
+            for newItem in newList {
+                if let newSidebarItem = newItem as? SidebarItem {
+                    if let existingItem = currentItems.first(where: {
+                        if let si = $0 as? SidebarItem {
+                            return si.isSame(as: newSidebarItem)
+                        }
+                        return false
+                    }) as? SidebarItem {
+                        // Reuse existing object and clear its children cache
+                        existingItem.children = nil
+                        mergedList.append(existingItem)
+                    } else {
+                        mergedList.append(newSidebarItem)
+                    }
+                } else {
+                    mergedList.append(newItem)
+                }
+            }
+        } else {
+            mergedList = newList
+        }
+
+        vc.storageOutlineView.sidebarItems = mergedList
         vc.storageOutlineView.reloadData()
+
+        // Restore expanded state after reload
+        vc.storageOutlineView.restoreExpandedState(expandedState)
+
         vc.storageOutlineView.selectRowIndexes([selected], byExtendingSelection: false)
     }
 
@@ -1021,5 +1132,117 @@ class SidebarProjectView: NSOutlineView,
 
         UserDefaults.standard.set(projectPaths, forKey: "SidebarProjectOrder")
         UserDefaults.standard.synchronize()
+    }
+    private func getSubdirectories(for sidebarItem: SidebarItem) -> [SidebarItem] {
+        guard let project = sidebarItem.project, sidebarItem.type == .Category else { return [] }
+
+        let url = project.url
+        let options: FileManager.DirectoryEnumerationOptions = [.skipsHiddenFiles, .skipsPackageDescendants, .skipsSubdirectoryDescendants]
+        let keys: [URLResourceKey] = [.isDirectoryKey, .isPackageKey, .isHiddenKey, .localizedNameKey]
+
+        guard let fileEnumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: keys, options: options) else {
+            return []
+        }
+
+        var subItems = [SidebarItem]()
+
+        // Common folders to skip
+        let skipFolders = Set(["assets", ".cache", "i", ".Trash", "files"])
+
+        for case let fileURL as URL in fileEnumerator {
+            // Skip common excluded folders
+            if skipFolders.contains(fileURL.lastPathComponent) { continue }
+
+            // Skip storage related folders
+            if fileURL.lastPathComponent.hasPrefix(".") { continue }
+
+            do {
+                let resourceValues = try fileURL.resourceValues(forKeys: Set(keys))
+
+                // Must be a directory and not a package
+                if let isDirectory = resourceValues.isDirectory, isDirectory,
+                    let isPackage = resourceValues.isPackage, !isPackage
+                {
+                    let subProject = Project(url: fileURL, parent: project)
+
+                    // Only add if not already in storage
+                    if !Storage.sharedInstance().projectExist(url: fileURL) {
+                        _ = Storage.sharedInstance().add(project: subProject)
+                    }
+
+                    let icon = NSImage(imageLiteralResourceName: "project")
+
+                    let subItem = SidebarItem(
+                        name: subProject.label,
+                        project: subProject,
+                        type: .Category,
+                        icon: icon
+                    )
+                    subItems.append(subItem)
+                }
+            } catch {
+                continue
+            }
+        }
+
+        return subItems.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+    }
+
+    private func clearChildrenCache(for targetProject: Project, in items: [Any]) {
+        for item in items {
+            if let sidebarItem = item as? SidebarItem {
+                if sidebarItem.project == targetProject {
+                    sidebarItem.children = nil
+                    return
+                }
+                if let children = sidebarItem.children {
+                    clearChildrenCache(for: targetProject, in: children)
+                }
+            }
+        }
+    }
+
+    private func saveExpandedState() -> Set<String> {
+        var expandedPaths = Set<String>()
+
+        for row in 0..<numberOfRows {
+            if let item = item(atRow: row) as? SidebarItem,
+               isItemExpanded(item),
+               let project = item.project {
+                expandedPaths.insert(project.url.path)
+            }
+        }
+
+        return expandedPaths
+    }
+
+    private func restoreExpandedState(_ expandedPaths: Set<String>) {
+        func expandRecursively(item: Any?) {
+            let childCount = numberOfChildren(ofItem: item)
+            for i in 0..<childCount {
+                let child = self.child(i, ofItem: item)
+                if let sidebarItem = child as? SidebarItem,
+                   let project = sidebarItem.project,
+                   expandedPaths.contains(project.url.path) {
+                    expandItem(sidebarItem)
+                    // Recursively expand children
+                    expandRecursively(item: sidebarItem)
+                }
+            }
+        }
+
+        expandRecursively(item: nil)
+    }
+
+    private func clearAllChildrenCache(items: [Any]) {
+        for item in items {
+            if let sidebarItem = item as? SidebarItem {
+                let children = sidebarItem.children
+                sidebarItem.children = nil
+                if let children = children {
+                    clearAllChildrenCache(items: children)
+                }
+            }
+        }
     }
 }

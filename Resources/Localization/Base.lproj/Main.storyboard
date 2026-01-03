@@ -1144,6 +1144,11 @@ CA
                                 <action selector="addProject:" target="rPt-NT-nkU" id="yjG-Jc-AJN"/>
                             </connections>
                         </menuItem>
+                        <menuItem title="New Subfolder" id="foQ-7O-92Z">
+                            <connections>
+                                <action selector="newSubfolder:" target="urA-eK-bWB" id="oZQ-7q-fjG"/>
+                            </connections>
+                        </menuItem>
                         <menuItem title="Rename Folder" keyEquivalent="" id="fzU-ZR-Ubv">
                             <modifierMask key="keyEquivalentModifierMask" shift="YES"/>
                             <connections>

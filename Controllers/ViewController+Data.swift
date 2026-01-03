@@ -28,6 +28,14 @@ extension ViewController {
     // MARK: - Search and Filtering
     func updateTable(search: Bool = false, searchText: String? = nil, sidebarItem: SidebarItem? = nil, projects: [Project]? = nil, completion: @escaping @MainActor @Sendable () -> Void = {}) {
         let searchParams = prepareSearchParameters(searchText: searchText, sidebarItem: sidebarItem, projects: projects)
+
+        // Ensure notes are loaded for the selected project(s)
+        if let projects = searchParams.projects {
+            for project in projects {
+                storage.loadMissingNotes(for: project)
+            }
+        }
+
         let timestamp = Date().toMillis()
 
         self.search.timestamp = timestamp
@@ -428,8 +436,7 @@ extension ViewController {
         return !note.name.isEmpty
             && (filter.isEmpty || isMatched(note: note, terms: terms!).matched)
             && (type == .All && note.project.showInCommon
-                || (type != .All && projects!.contains(note.project)
-                    || (note.project.parent != nil && projects!.contains(note.project.parent!)))
+                || (type != .All && (projects?.contains(where: { note.project.isDescendant(of: $0) }) ?? false))
                 || type == .Trash)
             && (type == .Trash && note.isTrash()
                 || type != .Trash && !note.isTrash())

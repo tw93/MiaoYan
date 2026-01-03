@@ -90,6 +90,14 @@ public class Project: Equatable {
         return self
     }
 
+    public func isDescendant(of target: Project) -> Bool {
+        if self == target { return true }
+        if let parent = parent {
+            return parent.isDescendant(of: target)
+        }
+        return false
+    }
+
     public func saveSettings() {
         let data: [String: Any] = [
             "sortBy": sortBySettings.rawValue,
