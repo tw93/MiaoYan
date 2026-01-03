@@ -18,6 +18,7 @@ disabled_rules:
   - trailing_comma
   - private_action
   - private_outlet
+  - void_function_in_ternary
 
 opt_in_rules:
   - empty_count
