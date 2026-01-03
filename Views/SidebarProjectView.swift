@@ -1,7 +1,6 @@
 import Carbon.HIToolbox
 import Cocoa
 import Foundation
-import TelemetryDeck
 
 @MainActor
 private enum UIConstants {
@@ -410,13 +409,13 @@ class SidebarProjectView: NSOutlineView,
 
         if !hasIconCenterY {
             NSLayoutConstraint.activate([
-                cell.icon.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
+                cell.icon.centerYAnchor.constraint(equalTo: cell.centerYAnchor)
             ])
         }
 
         if !hasLabelCenterY {
             NSLayoutConstraint.activate([
-                cell.label.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
+                cell.label.centerYAnchor.constraint(equalTo: cell.centerYAnchor)
             ])
         }
     }
@@ -823,8 +822,6 @@ class SidebarProjectView: NSOutlineView,
         }
 
         NSWorkspace.shared.activateFileViewerSelecting([p.url])
-
-        TelemetryDeck.signal("Action.RevealInFinder")
     }
 
     @IBAction func renameMenu(_ sender: Any) {
@@ -922,7 +919,6 @@ class SidebarProjectView: NSOutlineView,
         }
 
         field.becomeFirstResponder()
-        TelemetryDeck.signal("Action.NewProject")
     }
 
     @IBAction func openSettings(_ sender: NSMenuItem) {
@@ -931,7 +927,6 @@ class SidebarProjectView: NSOutlineView,
         }
 
         vc.openProjectViewSettings(sender)
-        TelemetryDeck.signal("Action.OpenSetting")
     }
 
     private func removeProject(project: Project) {
@@ -1207,8 +1202,9 @@ class SidebarProjectView: NSOutlineView,
 
         for row in 0..<numberOfRows {
             if let item = item(atRow: row) as? SidebarItem,
-               isItemExpanded(item),
-               let project = item.project {
+                isItemExpanded(item),
+                let project = item.project
+            {
                 expandedPaths.insert(project.url.path)
             }
         }
@@ -1222,8 +1218,9 @@ class SidebarProjectView: NSOutlineView,
             for i in 0..<childCount {
                 let child = self.child(i, ofItem: item)
                 if let sidebarItem = child as? SidebarItem,
-                   let project = sidebarItem.project,
-                   expandedPaths.contains(project.url.path) {
+                    let project = sidebarItem.project,
+                    expandedPaths.contains(project.url.path)
+                {
                     expandItem(sidebarItem)
                     // Recursively expand children
                     expandRecursively(item: sidebarItem)

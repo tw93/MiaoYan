@@ -2,7 +2,6 @@ import Cocoa
 import Foundation
 import Prettier
 import PrettierMarkdown
-import TelemetryDeck
 
 // MARK: - Editor Management
 extension ViewController {
@@ -137,6 +136,7 @@ extension ViewController {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func disablePreview() {
         guard !UserDefaultsManagement.magicPPT else { return }
 
@@ -292,7 +292,6 @@ extension ViewController {
             disablePreview()
         } else {
             enablePreview()
-            TelemetryDeck.signal("Editor.Preview")
         }
     }
 
@@ -302,7 +301,6 @@ extension ViewController {
 
         if UserDefaultsManagement.splitViewMode {
             applyEditorModePreferenceChange()
-            TelemetryDeck.signal("Editor.SplitView")
         } else {
             applyEditorModePreferenceChange()
         }
@@ -468,7 +466,6 @@ extension ViewController {
             }
         } else {
             enablePresentation()
-            TelemetryDeck.signal("Editor.Presentation")
         }
     }
     // MARK: - PPT Mode
@@ -551,7 +548,6 @@ extension ViewController {
                 vc.toast(message: I18n.str("🙊 Press ESC key to exit~"))
             }
         }
-        TelemetryDeck.signal("Editor.PPT")
     }
 
     func handlePPTAutoTransition() {
@@ -693,7 +689,6 @@ extension ViewController {
                 AppDelegate.trackError(error, context: "ViewController+Editor.format")
                 toast(message: I18n.str("❌ Formatting failed, please try again"))
             }
-            TelemetryDeck.signal("Editor.Format")
             isFormatting = false
         }
     }
