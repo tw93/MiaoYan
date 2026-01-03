@@ -26,6 +26,7 @@ public class Note: NSObject {
 
     public var imageUrl: [URL]?
     public var isParsed = false
+    private var isContentLoaded = false
 
     // Debounce for save operations
     private var saveWorkItem: DispatchWorkItem?
@@ -107,7 +108,10 @@ public class Note: NSObject {
     func load() {
         if let attributedString = getContent() {
             content = NSMutableAttributedString(attributedString: attributedString)
+            isContentLoaded = true
+            return
         }
+        isContentLoaded = false
     }
 
     func reload() -> Bool {
@@ -118,6 +122,9 @@ public class Note: NSObject {
         if modifiedAt != modifiedLocalAt {
             if let attributedString = getContent() {
                 content = NSMutableAttributedString(attributedString: attributedString)
+                isContentLoaded = true
+            } else {
+                isContentLoaded = false
             }
             loadModifiedLocalAt()
             return true
@@ -129,7 +136,10 @@ public class Note: NSObject {
     public func forceReload() {
         if let attributedString = getContent() {
             content = NSMutableAttributedString(attributedString: attributedString)
+            isContentLoaded = true
+            return
         }
+        isContentLoaded = false
     }
 
     func loadModifiedLocalAt() {
@@ -412,6 +422,7 @@ public class Note: NSObject {
     }
 
     func getPrettifiedContent() -> String {
+        ensureContentLoaded()
         let content = NotesTextProcessor.convertAppLinks(in: content)
         return cleanMetaData(content: content.string)
     }
@@ -597,7 +608,8 @@ public class Note: NSObject {
     }
 
     public func contains<S: StringProtocol>(terms: [S]) -> Bool {
-        name.localizedStandardContains(terms) || content.string.localizedStandardContains(terms)
+        ensureContentLoaded()
+        return name.localizedStandardContains(terms) || content.string.localizedStandardContains(terms)
     }
 
     private var excludeRanges = [NSRange]()
@@ -770,6 +782,13 @@ public class Note: NSObject {
         preview = String()
         title = String()
         isParsed = false
+        isContentLoaded = false
+    }
+
+    public func ensureContentLoaded() {
+        if !isContentLoaded {
+            load()
+        }
     }
 
     public func getMdImagePath(name: String) -> String {
