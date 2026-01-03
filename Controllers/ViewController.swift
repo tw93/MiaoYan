@@ -1,7 +1,6 @@
 import Cocoa
 import KeyboardShortcuts
 import LocalAuthentication
-import TelemetryDeck
 import WebKit
 
 extension KeyboardShortcuts.Name {
@@ -581,6 +580,7 @@ class ViewController:
         return true
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func configureLayout() {
         guard let parent = formatButton?.superview else { return }
 
