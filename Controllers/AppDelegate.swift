@@ -1,7 +1,6 @@
 import Cocoa
 import KeyboardShortcuts
 import Sparkle
-import TelemetryDeck
 import os.log
 
 @main
@@ -15,30 +14,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     public var searchQuery: String?
     public var newName: String?
     public var newContent: String?
-    private static var isTelemetryInitialized = false
     var appTitle: String {
         let name = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
         return name ?? Bundle.main.object(forInfoDictionaryKey: kCFBundleNameKey as String) as! String
     }
 
     func applicationWillFinishLaunching(_ notification: Notification) {
-        let config = TelemetryDeck.Config(appID: "49D82975-F243-4FEF-BC97-4291E56E1103")
-        config.defaultSignalPrefix = "MiaoYan."
-        config.defaultParameters = {
-            [
-                "miaoyanVersion": Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown",
-                "miaoyanBuild": Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "unknown",
-                "hostPlatform": "macOS",
-                "macosVersion": ProcessInfo.processInfo.operatingSystemVersionString,
-                "displayLanguage": NSLocale.preferredLanguages.first ?? "unknown",
-            ]
-        }
-        #if DEBUG
-            config.testMode = true
-        #endif
-        TelemetryDeck.initialize(config: config)
-        Self.isTelemetryInitialized = true
-
         let storage = Storage.sharedInstance()
         storage.loadProjects()
         storage.loadDocuments {}
@@ -58,7 +39,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                     do {
                         try FileManager.default.createDirectory(at: iCloudDocumentsURL, withIntermediateDirectories: true, attributes: nil)
                     } catch {
-                        AppDelegate.trackError(error, context: "AppDelegate.iCloudDocumentsSetup")
+                        print("Error creating iCloud directory: \(error)")
                     }
                 }
             }
@@ -69,8 +50,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
         let storyboard = NSStoryboard(name: "Main", bundle: nil)
         guard let mainWC = storyboard.instantiateController(withIdentifier: "MainWindowController") as? MainWindowController else {
-            AppDelegate.trackError(NSError(domain: "AppError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to get main window controller"]), context: "AppDelegate.startup")
-
             let alert = NSAlert()
             alert.alertStyle = .critical
             alert.messageText = I18n.str("Critical Error")
@@ -111,43 +90,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             mainWC.revealWindowWhenReady()
         }
 
-        let startTime = CFAbsoluteTimeGetCurrent()
-        #if DEBUG
-            Self.setupNetworkDebugging()
-        #endif
-        let launchTime = Int(startTime * 1000)
-        Self.signal(
-            "Performance.AppLaunch",
-            parameters: [
-                "launchTimeMs": "\(launchTime)"
-            ])
-        Self.signal("App.SessionStart")
-        Self.signal(
-            "App.Attribute",
-            parameters: [
-                "Appearance": String(UserDataService.instance.isDark),
-                "SingleMode": String(UserDefaultsManagement.isSingleMode),
-                "Language": String(UserDefaultsManagement.defaultLanguage),
-                "UploadType": UserDefaultsManagement.defaultPicUpload,
-                "EditorFont": UserDefaultsManagement.fontName,
-                "PreviewFont": UserDefaultsManagement.previewFontName,
-                "WindowFont": UserDefaultsManagement.windowFontName,
-                "EditorFontSize": String(UserDefaultsManagement.fontSize),
-                "PreviewFontSize": String(UserDefaultsManagement.previewFontSize),
-                "CodeFont": UserDefaultsManagement.codeFontName,
-                "PreviewWidth": UserDefaultsManagement.previewWidth,
-                "PreviewLocation": UserDefaultsManagement.previewLocation,
-                "ButtonShow": UserDefaultsManagement.buttonShow,
-                "EditorLineBreak": UserDefaultsManagement.editorLineBreak,
-            ])
-
         if KeyboardShortcuts.getShortcut(for: .activateWindow) == nil {
             KeyboardShortcuts.setShortcut(.init(.m, modifiers: [.command, .option]), for: .activateWindow)
         }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
-        Self.signal("App.SessionEnd")
         if let vc = ViewController.shared() {
             vc.persistCurrentViewState()
         }
@@ -157,33 +105,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         temporary.appendPathComponent("ThumbnailsBig")
         try? FileManager.default.removeItem(at: temporary)
     }
-    // MARK: - TelemetryDeck Helper Methods
-    static func signal(_ signalName: String, parameters: [String: String] = [:]) {
-        guard isTelemetryInitialized else { return }
-        TelemetryDeck.signal(signalName, parameters: parameters)
+
+    static func trackError(_ error: Error, context: String) {
+        #if DEBUG
+            print("Error in \(context): \(error)")
+        #endif
     }
 
-    static func debugSignal(_ signalName: String, parameters: [String: String] = [:]) {
-        signal(signalName, parameters: parameters)
-    }
-    static func trackError(_ error: Error, context: String) {
-        var parameters: [String: String] = [:]
-        parameters["context"] = context
-        if let nsError = error as NSError? {
-            parameters["errorDomain"] = nsError.domain
-            parameters["errorCode"] = "\(nsError.code)"
-        }
-        signal("Error.Occurred", parameters: parameters)
-    }
-    static func trackPerformance(_ metric: String, value: String, additionalParameters: [String: String] = [:]) {
-        var parameters = additionalParameters
-        parameters["value"] = value
-        signal("Performance.\(metric)", parameters: parameters)
-    }
-    #if DEBUG
-        private static func setupNetworkDebugging() {
-        }
-    #endif
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         if !flag {
             applyAppearance()

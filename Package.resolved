@@ -1,5 +1,5 @@
 {
-  "originHash" : "6b1f1874cce4e2f0e53392a518de96e74678cdecc9b78c2eb4f4e37f1c95a492",
+  "originHash" : "d1eb2162720aaf327f6ba45bea3427eefa9db28f434621814e4072ab781e8099",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -53,15 +53,6 @@
       "state" : {
         "revision" : "7ec44e7384793e507cf046336aef68586719a24e",
         "version" : "1.0.2"
-      }
-    },
-    {
-      "identity" : "swiftsdk",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/TelemetryDeck/SwiftSDK",
-      "state" : {
-        "revision" : "a7fd1eb469589a3c8fd8cc3abe19b092b5d674dc",
-        "version" : "2.9.4"
       }
     },
     {
