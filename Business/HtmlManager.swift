@@ -30,6 +30,31 @@ class HtmlManager {
             """
     }
 
+    static func darkModeExportCSS() -> String {
+        return """
+            @media print, screen {
+               :root {
+                   --bg-color: #1e1e1e !important;
+                   --text-color: #e0e0e0 !important;
+                   --code-bg: #2d2d2d !important;
+                   --side-bar-bg-color: #252525 !important;
+                   --control-text-color: #999 !important;
+                   --primary-color: #fd8258 !important;
+               }
+               html, body {
+                   background-color: #1e1e1e !important;
+                   color: #e0e0e0 !important;
+               }
+            }
+            """
+    }
+
+    @MainActor
+    static func exportCSS() -> String {
+        // Follow user's theme setting for export
+        return UserDataService.instance.isDark ? darkModeExportCSS() : lightModeExportCSS()
+    }
+
     // Cached regex patterns
     private static let imageRegex: NSRegularExpression? = {
         try? NSRegularExpression(pattern: "<img[^>]*?src=\"([^\"]*)\"[^>]*?/?>")
@@ -84,7 +109,7 @@ class HtmlManager {
                 maxWidth = "760px"
                 writeCSS = "max-width: \(maxWidth); margin: 0 auto;"
 
-                return "\(HtmlManager.lightModeExportCSS()) html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} \(fontConfig) #write { \(writeCSS) }"
+                return "\(HtmlManager.exportCSS()) html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} \(fontConfig) #write { \(writeCSS) }"
             }
 
             return "html {font-size: \(UserDefaultsManagement.previewFontSize)px; \(paddingStyle)} \(fontConfig) #write { \(writeCSS) }"
