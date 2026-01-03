@@ -166,7 +166,8 @@ extension MPreviewView {
             viewController.toastUpdate(message: "\(I18n.str("Exporting...")) 20%")
             self.injectPrintStylesIfNeeded(
                 needsDimensions: needsDimensions,
-                adjustLayout: false
+                adjustLayout: false,
+                forceLightMode: false
             ) { [weak self] in
                 guard let self else {
                     resetExportFlag()
@@ -231,6 +232,7 @@ extension MPreviewView {
         needsDimensions: Bool,
         applyToScreen: Bool = true,
         adjustLayout: Bool = true,
+        forceLightMode: Bool = true,
         completion: @escaping () -> Void
     ) {
         if UserDefaultsManagement.magicPPT || UserDefaultsManagement.isOnExportPPT {
@@ -238,64 +240,46 @@ extension MPreviewView {
             return
         }
 
-        let baseCSS = HtmlManager.lightModeExportCSS()
+        let baseCSS: String
+        if forceLightMode {
+            baseCSS = HtmlManager.lightModeExportCSS()
+        } else {
+            baseCSS = UserDataService.instance.isDark
+                ? HtmlManager.darkModeExportCSS()
+                : HtmlManager.lightModeExportCSS()
+        }
         let mediaCSS =
             applyToScreen
             ? baseCSS
             : baseCSS.replacingOccurrences(of: "@media print, screen", with: "@media print")
-        let exportLayoutCSS: String
-        if applyToScreen {
-            let layoutCSS =
-                adjustLayout
-                ? """
-                       #write {
-                           max-width: 90% !important;
-                           width: 100% !important;
-                           margin: 0 auto !important;
-                           padding-top: 20px !important;
-                           padding-bottom: 20px !important;
-                       }
-                """
-                : ""
-            exportLayoutCSS = """
-                   \(layoutCSS)
-                   .toc-hover-trigger,
-                   .toc-pin-btn,
-                   .toc-nav {
-                       display: none !important;
-                       pointer-events: none !important;
+        let layoutCSS =
+            adjustLayout
+            ? """
+                   #write {
+                       max-width: 90% !important;
+                       width: 100% !important;
+                       margin: 0 auto !important;
+                       padding-top: 20px !important;
+                       padding-bottom: 20px !important;
                    }
-                """
-        } else {
-            let layoutCSS =
-                adjustLayout
-                ? """
-                        #write {
-                            max-width: 90% !important;
-                            width: 100% !important;
-                            margin: 0 auto !important;
-                            padding-top: 20px !important;
-                            padding-bottom: 20px !important;
-                        }
-                """
-                : ""
-            exportLayoutCSS = """
-                    @media print {
-                        \(layoutCSS)
-                        .toc-hover-trigger,
-                        .toc-pin-btn,
-                        .toc-nav {
-                            display: none !important;
-                            pointer-events: none !important;
-                        }
-                    }
-                """
-        }
+            """
+            : ""
+        let exportLayoutCSS = """
+               \(layoutCSS)
+               .toc-hover-trigger,
+               .toc-pin-btn,
+               .toc-nav {
+                   display: none !important;
+                   pointer-events: none !important;
+               }
+            """
+        // Remove trailing whitespace and closing brace from mediaCSS to insert exportLayoutCSS inside the media query
+        let trimmedMediaCSS = mediaCSS.trimmingCharacters(in: .whitespacesAndNewlines).dropLast()
         let printCSS = """
                 (function() {
                     var style = document.createElement('style');
                     style.id = 'miaoyan-export-style';
-                    style.innerHTML = `\(mediaCSS.dropLast())
+                    style.innerHTML = `\(trimmedMediaCSS)
                            \(exportLayoutCSS)
                         }
                     `;
@@ -405,17 +389,17 @@ extension MPreviewView {
 
                     let safeTitle = self.escapeForJavaScriptString(note.getExportTitle())
                     let titleScript = """
-                        (function() {
-                            var container = document.getElementById('write') || document.body;
-                            if (container && !document.getElementById('export-generated-title')) {
-                                var h1 = document.createElement('h1');
-                                h1.innerText = '\(safeTitle)';
-                                h1.id = 'export-generated-title';
-                                h1.style.cssText = 'font-size: 2em; font-weight: bold; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #eee; display: block;';
-                                container.insertBefore(h1, container.firstChild);
-                            }
-                        })();
-                    """
+                            (function() {
+                                var container = document.getElementById('write') || document.body;
+                                if (container && !document.getElementById('export-generated-title')) {
+                                    var h1 = document.createElement('h1');
+                                    h1.innerText = '\(safeTitle)';
+                                    h1.id = 'export-generated-title';
+                                    h1.style.cssText = 'font-size: 2em; font-weight: bold; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #eee; display: block;';
+                                    container.insertBefore(h1, container.firstChild);
+                                }
+                            })();
+                        """
                     self.evaluateJavaScript(titleScript) { _, _ in
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                             let pdfConfig = WKPDFConfiguration()

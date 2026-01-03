@@ -3,6 +3,19 @@ import Carbon.HIToolbox
 import QuartzCore
 import WebKit
 
+private final class WeakScriptMessageHandler: NSObject, WKScriptMessageHandler {
+    private weak var handler: WKScriptMessageHandler?
+
+    init(_ handler: WKScriptMessageHandler) {
+        self.handler = handler
+        super.init()
+    }
+
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        handler?.userContentController(userContentController, didReceive: message)
+    }
+}
+
 public typealias MPreviewViewClosure = () -> Void
 
 // MARK: - Protocol Definition
@@ -84,7 +97,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
         navigationDelegate = navigationProxy
 
         // Add self as handler for logging (PDF export progress) - done after super.init so 'self' is available
-        self.configuration.userContentController.add(self, name: "logging")
+        let loggingHandler = WeakScriptMessageHandler(self)
+        self.configuration.userContentController.add(loggingHandler, name: "logging")
 
         // Note: Frame is manually managed by EditTextView to avoid resize flicker
         // autoresizingMask is intentionally not set
@@ -138,6 +152,13 @@ class MPreviewView: WKWebView, WKUIDelegate {
     required init?(coder: NSCoder) {
         AppDelegate.trackError(NSError(domain: "InitError", code: 1, userInfo: [NSLocalizedDescriptionKey: "MPreviewView does not support NSCoder initialization"]), context: "MPreviewView.init")
         return nil
+    }
+
+    override func viewWillMove(toWindow newWindow: NSWindow?) {
+        super.viewWillMove(toWindow: newWindow)
+        if newWindow == nil {
+            configuration.userContentController.removeScriptMessageHandler(forName: "logging")
+        }
     }
 
     deinit {
