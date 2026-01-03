@@ -23,7 +23,7 @@
 
 ## Features
 
-- **Fantastic**: Local-first, privacy-focused, syntax highlighting, split editor & preview, PPT mode, LaTeX, Mermaid diagrams
+- **Fantastic**: Local-first, privacy-focused, split editor & preview, LaTeX, Mermaid
 - **Beautiful**: Minimalist design, three-column layout, dark mode, distraction-free
 - **Fast**: Swift 6 native, better performance than Electron-based apps
 - **Simple**: Lightweight, keyboard shortcuts, auto-formatting
@@ -31,10 +31,11 @@
 ## Installation & Setup
 
 1. Download the latest DMG package from [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) (Requires macOS 11.5+)
-2. Double-click to install MiaoYan.app to Applications. (If "App is damaged", run `xattr -cr /Applications/MiaoYan.app` in Terminal)
-3. Create a `MiaoYan` folder in iCloud Drive or your preferred location
-4. Open MiaoYan Preferences and set the storage location to this folder
-5. Click the "New Folder" icon in the top-left corner to create document categories and start writing
+2. Double-click to install MiaoYan.app to Applications
+3. If macOS shows "App is damaged", run `xattr -cr /Applications/MiaoYan.app` in Terminal to clear the quarantine flag
+4. Create a `MiaoYan` folder in iCloud Drive or your preferred location
+5. Open MiaoYan Preferences and set the storage location to this folder
+6. Click the "New Folder" icon in the top-left corner to create document categories and start writing
 
 After installation, we recommend exploring Preferences (⌘,) to discover MiaoYan's rich customization options, including edit modes, themes, fonts, and more to create your perfect writing environment.
 
@@ -57,7 +58,7 @@ Why not WYSIWYG like Typora? We prioritize pure Markdown editing experience, and
 
 <a href="https://miaoyan.app/cats.html"><img src="https://miaoyan.app/assets/sponsors.svg" width="1000px" /></a>
 
-1. I have two cats named Tangyuan and Cola. If MiaoYan brightens your day, feel free to <a href="https://miaoyan.app/cats.html" target="_blank">treat them to some canned food 🥩</a>.
+1. Cats: Tangyuan & Cola — if MiaoYan helps, <a href="https://miaoyan.app/cats.html" target="_blank">treat them to canned food 🥩</a>.
 2. If you enjoy MiaoYan, please star the project on GitHub and share it with friends who might love it too.
 3. Follow me on [Twitter](https://twitter.com/HiTw93) for the latest updates or join the [Telegram group](https://t.me/+GclQS9ZnxyI2ODQ1) to chat with the community.
 
