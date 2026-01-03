@@ -65,8 +65,8 @@ class EditorContentSplitView: NSSplitView {
     // MARK: - Split View Constraints
 
     private enum SplitViewConstraints {
-        static let minPaneWidth: CGFloat = 200      // Minimum width for each pane
-        static let maxPaneWidth: CGFloat = 1200     // Maximum width for editor pane (for very wide displays)
+        static let minPaneWidth: CGFloat = 200  // Minimum width for each pane
+        static let maxPaneWidth: CGFloat = 1200  // Maximum width for editor pane (for very wide displays)
         static let preferredDefaultWidth: CGFloat = 600  // Preferred default width for first use
     }
 
