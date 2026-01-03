@@ -1,6 +1,5 @@
 import Carbon
 import Cocoa
-import TelemetryDeck
 
 // MARK: - User Actions and Operations
 extension ViewController {
@@ -470,10 +469,9 @@ extension ViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
             self.editArea.markdownView?.exportPPTOptimized()
         }
-
-        TelemetryDeck.signal("Action.Export", parameters: ["Type": "PPT PDF"])
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     @IBAction func textFinder(_ sender: NSMenuItem) {
         guard let vc = ViewController.shared() else { return }
 
@@ -688,8 +686,6 @@ extension ViewController {
                 self.completeNoteCreation(for: note, with: vc)
             }
         }
-
-        TelemetryDeck.signal("Action.NewNote")
     }
 
     // Prepare UI state for new note creation
@@ -813,7 +809,6 @@ extension ViewController {
         notesTableView.selectRowIndexes(newIndexes, byExtendingSelection: false)
         notesTableView.endUpdates()
         filteredNoteList = resorted
-        TelemetryDeck.signal("Action.Pin")
     }
 
     @objc func switchTitleToEditMode() {
@@ -988,7 +983,6 @@ extension ViewController {
                 UserDefaultsManagement.isOnExport = false
                 UserDefaultsManagement.isOnExportHtml = false
             }
-            TelemetryDeck.signal("Action.Export", parameters: ["Type": type])
             return
         }
 
@@ -1012,7 +1006,6 @@ extension ViewController {
             }
             // Logic for cleanup is handled in the completion callbacks (toastExport)
         }
-        TelemetryDeck.signal("Action.Export", parameters: ["Type": type])
     }
 
     public func toastExport(status: Bool) {
@@ -1369,7 +1362,6 @@ extension ViewController {
             popover.performClose(nil)
         } else {
             showInfo("")
-            TelemetryDeck.signal("Action.ShowInfo")
         }
     }
 
