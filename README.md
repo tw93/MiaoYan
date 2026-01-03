@@ -23,7 +23,7 @@
 
 ## Features
 
-- **Fantastic**: Local-first, privacy-focused, split editor & preview, LaTeX, Mermaid
+- **Fantastic**: Local-first, no data collection, split editor & preview, LaTeX, Mermaid
 - **Beautiful**: Minimalist design, three-column layout, dark mode, distraction-free
 - **Fast**: Swift 6 native, better performance than Electron-based apps
 - **Simple**: Lightweight, keyboard shortcuts, auto-formatting
