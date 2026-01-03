@@ -97,11 +97,7 @@ class ShortcutTemplateManager {
         ),
 
         "video": ShortcutTemplate(
-            template: """
-                <video width="800px" preload loop autoplay controls muted>
-                  <source src="{{cursor}}" type="video/mp4">
-                </video>
-                """
+            template: "<video width=\"800px\" preload loop autoplay controls muted><source src=\"{{cursor}}\" type=\"video/mp4\"></video>"
         ),
 
         "markmap": ShortcutTemplate(
