@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Carbon.HIToolbox
 import QuartzCore
 import WebKit
@@ -224,14 +225,59 @@ class MPreviewView: WKWebView, WKUIDelegate {
         return determineDarkTheme() ? Theme.previewDarkBackgroundColor : Theme.backgroundColor
     }
 
-    // MARK: - Appearance Update
-    // Appearance Update (kept for backward compatibility but not used)
     public func updateAppearance() {
-        // This method is kept for compatibility but the new approach is to recreate the WebView
-        // instead of trying to update its appearance, which is more reliable
+    }
+
+    // MARK: - Standard Find Actions
+
+    @objc func performFindPanelAction(_ sender: Any?) {
+        var resolvedAction: NSFindPanelAction?
+        if let menuItem = sender as? NSMenuItem {
+            resolvedAction = NSFindPanelAction(rawValue: UInt(menuItem.tag))
+        } else if let number = sender as? NSNumber {
+            resolvedAction = NSFindPanelAction(rawValue: number.uintValue)
+        }
+
+        guard let action = resolvedAction else {
+            showSearchBar()
+            return
+        }
+
+        switch action {
+        case .showFindPanel:
+            showSearchBar()
+        case .next:
+            findNext()
+        case .previous:
+            findPrevious()
+        default:
+            showSearchBar()
+        }
     }
 
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
+        if event.keyCode == kVK_ANSI_F,
+            event.modifierFlags.contains(.command),
+            !event.modifierFlags.contains(.option),
+            !event.modifierFlags.contains(.control)
+        {
+            showSearchBar()
+            return true
+        }
+
+        if event.keyCode == kVK_ANSI_G,
+            event.modifierFlags.contains(.command),
+            !event.modifierFlags.contains(.option),
+            !event.modifierFlags.contains(.control)
+        {
+            if event.modifierFlags.contains(.shift) {
+                findPrevious()
+            } else {
+                findNext()
+            }
+            return true
+        }
+
         if event.keyCode == kVK_ANSI_C, event.modifierFlags.contains(.command) {
             DispatchQueue.main.async {
                 self.copySelectionToPasteboard()
@@ -908,7 +954,47 @@ class HandlerPreviewScroll: NSObject, WKScriptMessageHandler {
 // MARK: - Preview Search Bar
 @MainActor
 class PreviewSearchBar: NSView {
-    private let searchField = NSSearchField()
+    private final class SearchField: NSSearchField {
+        override func performKeyEquivalent(with event: NSEvent) -> Bool {
+            if handlePreviewShortcuts(event) {
+                return true
+            }
+            return super.performKeyEquivalent(with: event)
+        }
+
+        override func keyDown(with event: NSEvent) {
+            if handlePreviewShortcuts(event) {
+                return
+            }
+            super.keyDown(with: event)
+        }
+
+        private func handlePreviewShortcuts(_ event: NSEvent) -> Bool {
+            let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+            guard flags.contains(.command), !flags.contains(.option), !flags.contains(.control) else {
+                return false
+            }
+
+            switch Int(event.keyCode) {
+            case Int(kVK_ANSI_3):
+                if NSApp.sendAction(#selector(ViewController.togglePreview(_:)), to: nil, from: self) {
+                    return true
+                }
+                ViewController.shared()?.togglePreview()
+                return true
+            case Int(kVK_ANSI_4):
+                if NSApp.sendAction(#selector(ViewController.togglePresentation(_:)), to: nil, from: self) {
+                    return true
+                }
+                ViewController.shared()?.togglePresentation()
+                return true
+            default:
+                return false
+            }
+        }
+    }
+
+    private let searchField = SearchField()
     private let matchLabel = NSTextField()
     private let previousButton = NSButton()
     private let nextButton = NSButton()
@@ -934,6 +1020,8 @@ class PreviewSearchBar: NSView {
     }
 
     private func setupUI() {
+        translatesAutoresizingMaskIntoConstraints = false
+        autoresizingMask = []
         wantsLayer = true
         applyCornerMask()
         layer?.borderWidth = 0
@@ -1315,58 +1403,90 @@ extension MPreviewView {
         searchBar != nil
     }
 
+    private func getViewController() -> ViewController? {
+        return self.window?.contentViewController as? ViewController
+    }
+
     func showSearchBar() {
         if let existingBar = searchBar {
-            // If bar already exists, select all text and trigger search
             existingBar.focusSearchField(selectAll: true)
             if !lastSearchText.isEmpty {
                 performSearch(lastSearchText)
             }
-            return
+
+            if let vc = getViewController(), existingBar.superview !== vc.view {
+                existingBar.removeFromSuperview()
+            } else if existingBar.superview != nil {
+                return
+            }
         }
 
+        let bar = searchBar ?? PreviewSearchBar(frame: .zero)
+        if searchBar == nil {
+            bar.translatesAutoresizingMaskIntoConstraints = false
+            bar.configureAppearance(baseColor: determineBackgroundColor())
+
+            bar.onSearch = { [weak self] text in
+                self?.scheduleSearch(text)
+            }
+
+            bar.onNext = { [weak self] in
+                self?.findNext()
+            }
+
+            bar.onPrevious = { [weak self] in
+                self?.findPrevious()
+            }
+
+            bar.onClose = { [weak self] in
+                self?.hideSearchBar()
+            }
+            searchBar = bar
+        }
+
+        var targetContainer: NSView?
+        var layoutGuideView: NSView?
+
+        if let vc = getViewController() {
+            targetContainer = vc.view
+            layoutGuideView = self.enclosingScrollView ?? self
+        } else if let scrollView = self.enclosingScrollView, let parent = scrollView.superview {
+            targetContainer = parent
+            layoutGuideView = scrollView
+        } else {
+            targetContainer = self
+            layoutGuideView = self
+        }
+
+        if let container = targetContainer, let guide = layoutGuideView {
+            if bar.superview !== container {
+                container.addSubview(bar)
+                activateSearchBarConstraints(bar: bar, container: container, guide: guide)
+            }
+        }
+
+        DispatchQueue.main.async {
+            bar.focusSearchField(selectAll: true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                if !self.lastSearchText.isEmpty {
+                    self.performSearch(self.lastSearchText)
+                }
+            }
+        }
+    }
+
+    private func activateSearchBarConstraints(bar: NSView, container: NSView, guide: NSView) {
         let barHeight: CGFloat = 36
         let barWidth: CGFloat = 360
         let marginRight: CGFloat = 26
         let marginTop: CGFloat = 0
 
-        let bar = PreviewSearchBar(frame: .zero)
-        bar.translatesAutoresizingMaskIntoConstraints = false
-        bar.configureAppearance(baseColor: determineBackgroundColor())
-
-        bar.onSearch = { [weak self] text in
-            self?.scheduleSearch(text)
-        }
-
-        bar.onNext = { [weak self] in
-            self?.findNext()
-        }
-
-        bar.onPrevious = { [weak self] in
-            self?.findPrevious()
-        }
-
-        bar.onClose = { [weak self] in
-            self?.hideSearchBar()
-        }
-
-        addSubview(bar)
         NSLayoutConstraint.activate([
-            bar.topAnchor.constraint(equalTo: topAnchor, constant: marginTop),
-            bar.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -marginRight),
+            bar.topAnchor.constraint(equalTo: guide.topAnchor, constant: marginTop),
+            bar.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -marginRight),
             bar.widthAnchor.constraint(equalToConstant: barWidth),
             bar.heightAnchor.constraint(equalToConstant: barHeight),
         ])
-        searchBar = bar
-
-        // Focus and select all text in search field, then trigger search if content exists
-        DispatchQueue.main.async {
-            bar.focusSearchField(selectAll: true)
-            // If there was a previous search, trigger it immediately
-            if !self.lastSearchText.isEmpty {
-                self.performSearch(self.lastSearchText)
-            }
-        }
     }
 
     func hideSearchBar() {
