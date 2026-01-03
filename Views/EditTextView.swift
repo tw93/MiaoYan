@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Carbon.HIToolbox
 import Cocoa
 import Highlightr
@@ -440,8 +441,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     // Internal implementation method
+    // swiftlint:disable:next cyclomatic_complexity
     private func _performFill(note: Note, options: FillOptions, viewController: ViewController) {
-        // Only show title components if not in PPT mode
         if !UserDefaultsManagement.magicPPT {
             viewController.titleBarView.isHidden = false
             viewController.titleLabel.isHidden = false
@@ -449,6 +450,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             viewController.titleLabel.alphaValue = 1
         }
         EditTextView.note = note
+        note.ensureContentLoaded()
         UserDefaultsManagement.lastSelectedURL = note.url
         viewController.updateTitle(newTitle: note.getTitleWithoutLabel())
         undoManager?.removeAllActions(withTarget: self)
@@ -476,11 +478,13 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         if shouldRenderPreview {
             EditTextView.note = note
             let frame = viewController.previewScrollView?.bounds ?? viewController.editAreaScroll.bounds
-            let allowPreviewTransition = options.animatePreview
+            let allowPreviewTransition =
+                options.animatePreview
                 && !UserDefaultsManagement.preview
                 && !UserDefaultsManagement.presentation
                 && !UserDefaultsManagement.magicPPT
-            let shouldUseIncrementalPreviewUpdate = UserDefaultsManagement.preview
+            let shouldUseIncrementalPreviewUpdate =
+                UserDefaultsManagement.preview
                 && !UserDefaultsManagement.presentation
                 && !UserDefaultsManagement.magicPPT
                 && !UserDefaultsManagement.splitViewMode
@@ -1138,76 +1142,96 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             return super.performKeyEquivalent(with: event)
         }
 
-        let baseFlags = event.modifierFlags.intersection([.command, .option, .control, .shift, .capsLock])
-        let normalizedFlags = baseFlags.subtracting(.capsLock)
-        let commandPressed = normalizedFlags.contains(.command)
-        let optionPressed = normalizedFlags.contains(.option)
-        let controlPressed = normalizedFlags.contains(.control)
-
-        if commandPressed, !optionPressed, !controlPressed {
-            if shouldRouteFindToPreview(), let web = markdownView {
-                switch characters.lowercased() {
-                case "f":
-                    web.showSearchBar()
-                    return true
-                case "g":
-                    if event.modifierFlags.contains(.shift) {
-                        web.findPrevious()
-                    } else {
-                        web.findNext()
-                    }
-                    return true
-                default:
-                    break
-                }
-            } else {
-                switch characters.lowercased() {
-                case "f":
-                    showSearchBar()
-                    return true
-                case "g":
-                    if editorSearchBar == nil {
-                        showSearchBar(prefilledText: editorLastSearchText.isEmpty ? nil : editorLastSearchText)
-                    }
-                    if event.modifierFlags.contains(.shift) {
-                        findPrevious()
-                    } else {
-                        findNext()
-                    }
-                    return true
-                default:
-                    break
-                }
+        let modifiers = parseModifiers(from: event)
+        if modifiers.commandOnly {
+            if handleFindCommands(characters: characters, isShiftPressed: modifiers.shiftPressed) {
+                return true
             }
         }
 
-        if characters == "\u{1f}\u{a}" {  // Cmd+Enter etc fallback
-            return super.performKeyEquivalent(with: event)
-        }
-
-        if characters == "\u{0}" && commandPressed {
+        if shouldSkipKeyEquivalent(characters: characters, commandPressed: modifiers.command) {
             return super.performKeyEquivalent(with: event)
         }
 
         let handled = super.performKeyEquivalent(with: event)
-
-        if handled && commandPressed && !optionPressed && !controlPressed {
-            switch characters.lowercased() {
-            case "f":
-                // If AppKit consumed Cmd+F but our bar isn't visible yet, ensure it is shown.
-                if !isSearchBarVisible {
-                    showSearchBar()
-                }
-            case "g":
-                if !isSearchBarVisible {
-                    showSearchBar(prefilledText: editorLastSearchText.isEmpty ? nil : editorLastSearchText)
-                }
-            default:
-                break
-            }
-        }
-
+        ensureSearchBarVisibleAfterAppKit(handled: handled, characters: characters, modifiers: modifiers)
         return handled
+    }
+
+    private struct KeyModifiers {
+        let command: Bool
+        let option: Bool
+        let control: Bool
+        let shiftPressed: Bool
+        var commandOnly: Bool { command && !option && !control }
+    }
+
+    private func parseModifiers(from event: NSEvent) -> KeyModifiers {
+        let baseFlags = event.modifierFlags.intersection([.command, .option, .control, .shift, .capsLock])
+        let normalized = baseFlags.subtracting(.capsLock)
+        return KeyModifiers(
+            command: normalized.contains(.command),
+            option: normalized.contains(.option),
+            control: normalized.contains(.control),
+            shiftPressed: event.modifierFlags.contains(.shift)
+        )
+    }
+
+    private func handleFindCommands(characters: String, isShiftPressed: Bool) -> Bool {
+        if shouldRouteFindToPreview(), let web = markdownView {
+            return handlePreviewFindCommands(characters: characters, isShiftPressed: isShiftPressed, webView: web)
+        } else {
+            return handleEditorFindCommands(characters: characters, isShiftPressed: isShiftPressed)
+        }
+    }
+
+    private func handlePreviewFindCommands(characters: String, isShiftPressed: Bool, webView: MPreviewView) -> Bool {
+        switch characters.lowercased() {
+        case "f":
+            webView.showSearchBar()
+            return true
+        case "g":
+            isShiftPressed ? webView.findPrevious() : webView.findNext()
+            return true
+        default:
+            return false
+        }
+    }
+
+    private func handleEditorFindCommands(characters: String, isShiftPressed: Bool) -> Bool {
+        switch characters.lowercased() {
+        case "f":
+            showSearchBar()
+            return true
+        case "g":
+            if editorSearchBar == nil {
+                showSearchBar(prefilledText: editorLastSearchText.isEmpty ? nil : editorLastSearchText)
+            }
+            isShiftPressed ? findPrevious() : findNext()
+            return true
+        default:
+            return false
+        }
+    }
+
+    private func shouldSkipKeyEquivalent(characters: String, commandPressed: Bool) -> Bool {
+        return characters == "\u{1f}\u{a}" || (characters == "\u{0}" && commandPressed)
+    }
+
+    private func ensureSearchBarVisibleAfterAppKit(handled: Bool, characters: String, modifiers: KeyModifiers) {
+        guard handled && modifiers.commandOnly else { return }
+        switch characters.lowercased() {
+        case "f":
+            if !isSearchBarVisible {
+                showSearchBar()
+            }
+        case "g":
+            if !isSearchBarVisible {
+                showSearchBar(prefilledText: editorLastSearchText.isEmpty ? nil : editorLastSearchText)
+            }
+        default:
+            break
+        }
     }
 
     override func keyUp(with event: NSEvent) {
@@ -1239,10 +1263,18 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     func showSearchBar(prefilledText: String? = nil) {
         guard
-            let scrollView = enclosingScrollView ?? getViewController()?.editAreaScroll,
-            let containerView = scrollView.superview
+            let vc = getViewController(),
+            let scrollView = enclosingScrollView ?? vc.editAreaScroll
         else {
             return
+        }
+        let containerView = vc.view
+
+        if let note = EditTextView.note {
+            note.ensureContentLoaded()
+            if let storage = textStorage, storage.length == 0, note.content.length > 0 {
+                storage.setAttributedString(note.content)
+            }
         }
         let barAlreadyVisible = editorSearchBar != nil
 
@@ -1445,57 +1477,68 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             return
         }
 
-        let tag = menuItem.tag
-
-        if let finderAction = NSTextFinder.Action(rawValue: tag) {
-            switch finderAction {
-            case .showFindInterface:
-                showSearchBar()
-                return
-            case .hideFindInterface:
-                hideSearchBar()
-                return
-            case .nextMatch:
-                if !isSearchBarVisible {
-                    showSearchBar(prefilledText: nil)
-                }
-                findNext()
-                return
-            case .previousMatch:
-                if !isSearchBarVisible {
-                    showSearchBar(prefilledText: nil)
-                }
-                findPrevious()
-                return
-            default:
-                break
-            }
+        if handleTextFinderAction(tag: menuItem.tag) {
+            return
         }
 
-        if let panelAction = NSFindPanelAction(rawValue: UInt(tag)) {
-            switch panelAction {
-            case .next:
-                if !isSearchBarVisible {
-                    showSearchBar(prefilledText: nil)
-                }
-                findNext()
-                return
-            case .previous:
-                if !isSearchBarVisible {
-                    showSearchBar(prefilledText: nil)
-                }
-                findPrevious()
-                return
-            default:
-                break
-            }
+        if handleFindPanelAction(tag: menuItem.tag) {
+            return
         }
 
         super.performTextFinderAction(sender)
 
-        // If AppKit showed its default find UI, ensure ours is visible too.
         if !isSearchBarVisible {
             showSearchBar()
+        }
+    }
+
+    private func handleTextFinderAction(tag: Int) -> Bool {
+        guard let finderAction = NSTextFinder.Action(rawValue: tag) else {
+            return false
+        }
+
+        switch finderAction {
+        case .showFindInterface:
+            showSearchBar()
+            return true
+        case .hideFindInterface:
+            hideSearchBar()
+            return true
+        case .nextMatch:
+            ensureSearchBarVisible()
+            findNext()
+            return true
+        case .previousMatch:
+            ensureSearchBarVisible()
+            findPrevious()
+            return true
+        default:
+            return false
+        }
+    }
+
+    private func handleFindPanelAction(tag: Int) -> Bool {
+        guard let panelAction = NSFindPanelAction(rawValue: UInt(tag)) else {
+            return false
+        }
+
+        switch panelAction {
+        case .next:
+            ensureSearchBarVisible()
+            findNext()
+            return true
+        case .previous:
+            ensureSearchBarVisible()
+            findPrevious()
+            return true
+        default:
+            return false
+        }
+    }
+
+    private func ensureSearchBarVisible() {
+        if !isSearchBarVisible {
+            showSearchBar(prefilledText: nil)
         }
     }
 

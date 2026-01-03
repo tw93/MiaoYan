@@ -247,6 +247,7 @@ extension ViewController {
         }
     }
 
+    // swiftlint:disable:next function_parameter_count
     private func handleNonEmptyResults(
         isSearch: Bool,
         searchParams: SearchParameters,
@@ -378,10 +379,8 @@ extension ViewController {
         var titleMatchCount = 0
 
         // First pass: check title only (fast path)
-        for term in lowercaseTerms {
-            if lowercaseTitle.contains(term) {
-                titleMatchCount += 1
-            }
+        for term in lowercaseTerms where lowercaseTitle.contains(term) {
+            titleMatchCount += 1
         }
 
         // If all terms match in title, highest priority - skip content search
@@ -390,6 +389,7 @@ extension ViewController {
         }
 
         // Second pass: check content for unmatched terms
+        note.ensureContentLoaded()
         let lowercaseContent = note.content.string.lowercased()
         var contentMatchCount = 0
 
