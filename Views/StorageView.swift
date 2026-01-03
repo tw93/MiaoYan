@@ -7,8 +7,4 @@ class StorageView: NSView {
         super.draw(dirtyRect)
         layer?.backgroundColor = Theme.backgroundColor.cgColor
     }
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
 }
