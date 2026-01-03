@@ -46,6 +46,9 @@ class ViewController:
     public var breakUndoTimer = Timer()
     var lastEnablePreviewTime: TimeInterval = 0
     var lastPreviewReloadTime: TimeInterval = 0
+    var savedEditorSelection: NSRange?
+    var savedEditorScrollRatio: CGFloat?
+    var savedEditorNoteURL: URL?
 
     // Presentation mode scroll position preservation
     var savedPresentationScrollPosition: CGPoint?
@@ -340,6 +343,8 @@ class ViewController:
                 // Pre-configure preview UI state before view appears to avoid white flash
                 editorContentSplitView?.setDisplayMode(.previewOnly, animated: false)
                 preparePreviewContainer(hidden: false)
+                // STARTUP FIX: Init with alpha 0 to ensure Soft Reveal works (hides content, shows container)
+                editArea.markdownView?.alphaValue = 0
                 editAreaScroll.hasVerticalScroller = false
                 editAreaScroll.hasHorizontalScroller = false
             }
