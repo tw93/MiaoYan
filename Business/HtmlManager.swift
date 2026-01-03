@@ -34,16 +34,16 @@ class HtmlManager {
         return """
             @media print, screen {
                :root {
-                   --bg-color: #1e1e1e !important;
-                   --text-color: #e0e0e0 !important;
-                   --code-bg: #2d2d2d !important;
-                   --side-bar-bg-color: #252525 !important;
+                   --bg-color: #23282D !important;
+                   --text-color: #E7E9EA !important;
+                   --code-bg: #282e33 !important;
+                   --side-bar-bg-color: #23282D !important;
                    --control-text-color: #999 !important;
                    --primary-color: #fd8258 !important;
                }
                html, body {
-                   background-color: #1e1e1e !important;
-                   color: #e0e0e0 !important;
+                   background-color: #23282D !important;
+                   color: #E7E9EA !important;
                }
             }
             """
