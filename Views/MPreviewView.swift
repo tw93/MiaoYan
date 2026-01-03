@@ -19,6 +19,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
     private var originalRedrawPolicy: NSView.LayerContentsRedrawPolicy?
     private var contentUpdateVersion: UInt = 0
     private(set) var hasLoadedTemplate = false
+    static var hasCompletedInitialLoad = false
+    private var loadCompletion: (() -> Void)?
 
     // MARK: - JavaScript Timing Constants
 
@@ -363,7 +365,12 @@ class MPreviewView: WKWebView, WKUIDelegate {
     }
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         scrollObserverInjected = false
+        if loadCompletion != nil {
+            Self.hasCompletedInitialLoad = true
+        }
         closure?()
+        loadCompletion?()
+        loadCompletion = nil
 
         // Set up scroll observation after WebView is fully loaded
         setupScrollObserver()
@@ -547,7 +554,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
             return .allow
         }
     }
-    public func load(note: Note, force: Bool = false) {
+    public func load(note: Note, force: Bool = false, completion: (() -> Void)? = nil) {
+        self.loadCompletion = completion
         // No alpha animation here - parent view controller handles transitions
         // This avoids double-animation when toggling preview mode
         Task { @MainActor [weak self, note] in

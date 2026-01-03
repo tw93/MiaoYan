@@ -37,6 +37,10 @@ struct FillOptions {
 
 @MainActor
 class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
+    private enum PreviewRevealTiming {
+        static let initialDelay: TimeInterval = 1.0
+        static let fadeDuration: TimeInterval = 0.2
+    }
     public static var note: Note?
     public static var isBusyProcessing: Bool = false
     public static var shouldForceRescan: Bool = false
@@ -525,11 +529,35 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 } else {
                     if shouldUseIncrementalPreviewUpdate, previewView.hasLoadedTemplate {
                         previewView.updateContent(note: note, preserveScroll: false)
+                        previewView.isHidden = false
+                        previewView.alphaValue = 1.0
                     } else {
-                        previewView.load(note: note, force: options.force)
+                        let shouldGateReveal = !MPreviewView.hasCompletedInitialLoad
+                        if shouldGateReveal {
+                            previewView.isHidden = false
+                            previewView.alphaValue = 0
+                        } else {
+                            // Fast reveal: show immediately to provide instant visual feedback
+                            previewView.isHidden = false
+                            previewView.alphaValue = 1.0
+                        }
+                        previewView.load(note: note, force: options.force) {
+                            if shouldGateReveal {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + PreviewRevealTiming.initialDelay) {
+                                    let shouldShowPreview =
+                                        UserDefaultsManagement.preview
+                                        || UserDefaultsManagement.presentation
+                                        || UserDefaultsManagement.magicPPT
+                                        || UserDefaultsManagement.splitViewMode
+                                    guard shouldShowPreview, !previewView.isHidden else { return }
+                                    NSAnimationContext.runAnimationGroup({ context in
+                                        context.duration = PreviewRevealTiming.fadeDuration
+                                        previewView.animator().alphaValue = 1.0
+                                    })
+                                }
+                            }
+                        }
                     }
-                    previewView.isHidden = false
-                    previewView.alphaValue = 1.0
                 }
             } else if let previewView = markdownView,
                 let fallbackContainer = viewController.editAreaScroll
@@ -564,11 +592,35 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 } else {
                     if shouldUseIncrementalPreviewUpdate, previewView.hasLoadedTemplate {
                         previewView.updateContent(note: note, preserveScroll: false)
+                        previewView.isHidden = false
+                        previewView.alphaValue = 1.0
                     } else {
-                        previewView.load(note: note, force: options.force)
+                        let shouldGateReveal = !MPreviewView.hasCompletedInitialLoad
+                        if shouldGateReveal {
+                            previewView.isHidden = false
+                            previewView.alphaValue = 0
+                        } else {
+                            // Fast reveal: show immediately to provide instant visual feedback
+                            previewView.isHidden = false
+                            previewView.alphaValue = 1.0
+                        }
+                        previewView.load(note: note, force: options.force) {
+                            if shouldGateReveal {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + PreviewRevealTiming.initialDelay) {
+                                    let shouldShowPreview =
+                                        UserDefaultsManagement.preview
+                                        || UserDefaultsManagement.presentation
+                                        || UserDefaultsManagement.magicPPT
+                                        || UserDefaultsManagement.splitViewMode
+                                    guard shouldShowPreview, !previewView.isHidden else { return }
+                                    NSAnimationContext.runAnimationGroup({ context in
+                                        context.duration = PreviewRevealTiming.fadeDuration
+                                        previewView.animator().alphaValue = 1.0
+                                    })
+                                }
+                            }
+                        }
                     }
-                    previewView.isHidden = false
-                    previewView.alphaValue = 1.0
                 }
             }
         } else {

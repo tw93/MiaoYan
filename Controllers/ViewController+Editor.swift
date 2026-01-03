@@ -52,6 +52,12 @@ extension ViewController {
         }
         lastEnablePreviewTime = now
 
+        if !UserDefaultsManagement.preview {
+            savedEditorSelection = editArea.selectedRange()
+            savedEditorScrollRatio = getScrollTop()
+            savedEditorNoteURL = EditTextView.note?.url
+        }
+
         if !UserDefaultsManagement.magicPPT {
             UserDefaultsManagement.preview = true
         }
@@ -63,14 +69,24 @@ extension ViewController {
         editorContentSplitView?.setDisplayMode(.previewOnly, animated: false)
 
         preparePreviewContainer(hidden: false)
+        // Ensure alpha is 0 so Soft Reveal animation triggers during fill()
+        editArea.markdownView?.alphaValue = 0
 
         previewScrollView?.hasVerticalScroller = true
 
-        // Full preview mode: original behavior
-        if editArea.markdownView != nil {
-            showWebView()
-        }
+        ensureNoteSelection(preferLastSelected: true, preserveScrollPosition: true)
+
         refillEditArea()
+
+        if notesTableView.selectedRow == -1 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) { [weak self] in
+                guard let self else { return }
+                self.ensureNoteSelection(preferLastSelected: true, preserveScrollPosition: true)
+                if self.notesTableView.selectedRow >= 0 {
+                    self.refillEditArea(force: true)
+                }
+            }
+        }
 
         titleLabel.isEditable = false
         // Disable editor's find bar to prevent Cmd+F from being intercepted by NSTextView
@@ -146,13 +162,27 @@ extension ViewController {
                 guard let self else { return }
                 guard let webView else { return }
 
+                var storedSelection = self.savedEditorSelection
+                var storedScrollRatio = self.savedEditorScrollRatio
+                let storedNoteURL = self.savedEditorNoteURL
+                let currentNoteURL = EditTextView.note?.url
+                let shouldUseStoredState = storedNoteURL != nil && storedNoteURL == currentNoteURL
+                if !shouldUseStoredState {
+                    storedSelection = nil
+                    storedScrollRatio = nil
+                }
+                let shouldRestoreCursor = storedSelection == nil
+                self.savedEditorSelection = nil
+                self.savedEditorScrollRatio = nil
+                self.savedEditorNoteURL = nil
+
                 UserDefaultsManagement.preview = false
                 // Close search bar if open
                 webView.hideSearchBar()
                 self.hideWebView()
                 webView.resetTemplateState()
                 webView.loadHTMLString("<html><body style='background:transparent;'></body></html>", baseURL: nil)
-                self.refillEditArea()
+                self.refillEditArea(suppressSave: true)
                 // Restore editor's find bar
                 self.editArea.usesFindBar = true
                 // Restore editor scrollbar
@@ -162,11 +192,12 @@ extension ViewController {
                 self.revealEditorIfNeeded()
 
                 let normalizedRatio = ratio.map { min(max($0, 0), 1) }
+                let ratioToRestore = shouldUseStoredState ? (storedScrollRatio ?? normalizedRatio) : nil
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.previewFocusDelay) { [weak self] in
                     guard let self = self else { return }
 
-                    if let ratio = normalizedRatio,
+                    if let ratio = ratioToRestore,
                         ratio > 0,
                         let documentView = self.editAreaScroll.documentView
                     {
@@ -181,7 +212,16 @@ extension ViewController {
 
                     self.titleLabel.isEditable = true
                     if !self.isFocusedTitle {
-                        self.focusEditArea()
+                        self.focusEditArea(restoreCursor: shouldRestoreCursor)
+                    }
+
+                    if let storedSelection,
+                        let storage = self.editArea.textStorage
+                    {
+                        let clampedLocation = min(max(storedSelection.location, 0), storage.length)
+                        let clampedLength = min(max(storedSelection.length, 0), max(storage.length - clampedLocation, 0))
+                        let clampedRange = NSRange(location: clampedLocation, length: clampedLength)
+                        self.editArea.setSelectedRange(clampedRange)
                     }
 
                     // Restore editor mode based on user preference
@@ -228,10 +268,23 @@ extension ViewController {
         }
 
         // Fallback if no webView (shouldn't happen but for safety)
+        var storedSelection = savedEditorSelection
+        var storedScrollRatio = savedEditorScrollRatio
+        let storedNoteURL = savedEditorNoteURL
+        let currentNoteURL = EditTextView.note?.url
+        let shouldUseStoredState = storedNoteURL != nil && storedNoteURL == currentNoteURL
+        if !shouldUseStoredState {
+            storedSelection = nil
+            storedScrollRatio = nil
+        }
+        let shouldRestoreCursor = storedSelection == nil
+        savedEditorSelection = nil
+        savedEditorScrollRatio = nil
+        savedEditorNoteURL = nil
         UserDefaultsManagement.preview = false
         // Close search bar if somehow exists
         editArea.markdownView?.hideSearchBar()
-        refillEditArea()
+        refillEditArea(suppressSave: true)
         // Restore editor's find bar
         editArea.usesFindBar = true
         // Restore editor scrollbar
@@ -241,9 +294,29 @@ extension ViewController {
         revealEditorIfNeeded()
         DispatchQueue.main.async {
             self.titleLabel.isEditable = true
-        }
-        if !isFocusedTitle {
-            focusEditArea()
+            if !self.isFocusedTitle {
+                self.focusEditArea(restoreCursor: shouldRestoreCursor)
+            }
+            if let storedSelection,
+                let storage = self.editArea.textStorage
+            {
+                let clampedLocation = min(max(storedSelection.location, 0), storage.length)
+                let clampedLength = min(max(storedSelection.length, 0), max(storage.length - clampedLocation, 0))
+                let clampedRange = NSRange(location: clampedLocation, length: clampedLength)
+                self.editArea.setSelectedRange(clampedRange)
+            }
+            if let ratio = storedScrollRatio,
+                ratio > 0,
+                let documentView = self.editAreaScroll.documentView
+            {
+                let contentHeight = self.editAreaScroll.contentSize.height
+                let scrollHeight = documentView.bounds.height
+                let offset = max(scrollHeight - contentHeight, 0)
+                if offset > 0 {
+                    let scrollTop = offset * ratio
+                    documentView.scroll(NSPoint(x: 0, y: scrollTop))
+                }
+            }
         }
 
         // Restore editor mode based on user preference
@@ -740,9 +813,8 @@ extension ViewController {
         markdownView.frame = previewScroll.bounds
         markdownView.autoresizingMask = [.width, .height]
         markdownView.isHidden = hidden
-        if !hidden {
-            markdownView.alphaValue = 1.0
-        }
+        // Alpha is managed by enablePreview/fill to support Soft Reveal
+        // if !hidden { markdownView.alphaValue = 1.0 }
         previewScroll.documentView = markdownView
         previewScroll.isHidden = hidden
     }
@@ -905,7 +977,7 @@ extension ViewController {
     }
 
     // MARK: - Editor Focus Management
-    func focusEditArea(firstResponder: NSResponder? = nil) {
+    func focusEditArea(firstResponder: NSResponder? = nil, restoreCursor: Bool = true) {
         guard EditTextView.note != nil else { return }
         var resp: NSResponder = editArea
         if let responder = firstResponder {
@@ -919,7 +991,9 @@ extension ViewController {
                     self.titleBarView.isHidden = false
                 }
                 self.editArea.window?.makeFirstResponder(resp)
-                self.editArea.restoreCursorPosition()
+                if restoreCursor {
+                    self.editArea.restoreCursorPosition()
+                }
             }
             return
         }
@@ -941,7 +1015,8 @@ extension ViewController {
         previewOnly: Bool = false,
         saveTyping: Bool = false,
         force: Bool = false,
-        animatePreview: Bool = true
+        animatePreview: Bool = true,
+        suppressSave: Bool = false
     ) {
         DispatchQueue.main.async { [weak self] in
             self?.previewButton.state = UserDefaultsManagement.preview ? .on : .off
@@ -972,8 +1047,15 @@ extension ViewController {
                 if let note = self.notesTableView.getSelectedNote() {
                     // Safety: Ensure current editor content is saved to note before reloading
                     // This prevents data loss during rapid view switching where the editor might be dirty
-                    if let currentNote = EditTextView.note, currentNote === note, force || !previewOnly {
-                        self.editArea.saveTextStorageContent(to: currentNote)
+                    let shouldPersistEditor = !self.shouldShowPreview || UserDefaultsManagement.splitViewMode
+                    if shouldPersistEditor,
+                        let currentNote = EditTextView.note,
+                        currentNote === note,
+                        force || !previewOnly
+                    {
+                        if !suppressSave {
+                            self.editArea.saveTextStorageContent(to: currentNote)
+                        }
                     }
 
                     let options = FillOptions(
