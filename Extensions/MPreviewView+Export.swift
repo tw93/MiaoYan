@@ -176,49 +176,52 @@ extension MPreviewView {
                 }
 
                 viewController.toastUpdate(message: "\(I18n.str("Exporting...")) 30%")
-                self.waitForImagesLoaded(progressUpdate: { message in
-                    viewController.toastUpdate(message: message)
-                }) { [weak self] in
-                    guard let self else {
-                        resetExportFlag()
-                        viewController.toastDismiss()
-                        viewController.toastExport(status: false)
-                        return
-                    }
-
-                    viewController.toastUpdate(message: "\(I18n.str("Exporting...")) 85%")
-                    self.evaluateJavaScript("document.documentElement.outerHTML.toString()") { htmlResult, _ in
-                        let renderedHTML = htmlResult as? String ?? note.getPrettifiedContent()
-
-                        if renderedHTML.count < 50 {
-                            print("Export Error: Rendered HTML is too short/invalid")
+                self.waitForImagesLoaded(
+                    progressUpdate: { message in
+                        viewController.toastUpdate(message: message)
+                    },
+                    completion: { [weak self] in
+                        guard let self else {
                             resetExportFlag()
                             viewController.toastDismiss()
                             viewController.toastExport(status: false)
                             return
                         }
-                        viewController.toastUpdate(message: "\(I18n.str("Exporting...")) 95%")
 
-                        if !needsDimensions {
-                            let exportData = self.createExportData(note: note, processedHTML: renderedHTML)
-                            ExportCache.shared.setCachedData(exportData, for: note)
-                            exportAction(exportData, resetExportFlag)
-                        } else {
-                            self.getContentDimensions { height, width in
-                                guard height > 0 && width > 0 else {
-                                    print("Export Error: Invalid dimensions h:\(height) w:\(width)")
-                                    resetExportFlag()
-                                    viewController.toastExport(status: false)
-                                    return
-                                }
+                        viewController.toastUpdate(message: "\(I18n.str("Exporting...")) 85%")
+                        self.evaluateJavaScript("document.documentElement.outerHTML.toString()") { htmlResult, _ in
+                            let renderedHTML = htmlResult as? String ?? note.getPrettifiedContent()
 
-                                let exportData = self.createExportData(note: note, height: height, width: width, processedHTML: renderedHTML)
+                            if renderedHTML.count < 50 {
+                                print("Export Error: Rendered HTML is too short/invalid")
+                                resetExportFlag()
+                                viewController.toastDismiss()
+                                viewController.toastExport(status: false)
+                                return
+                            }
+                            viewController.toastUpdate(message: "\(I18n.str("Exporting...")) 95%")
+
+                            if !needsDimensions {
+                                let exportData = self.createExportData(note: note, processedHTML: renderedHTML)
                                 ExportCache.shared.setCachedData(exportData, for: note)
                                 exportAction(exportData, resetExportFlag)
+                            } else {
+                                self.getContentDimensions { height, width in
+                                    guard height > 0 && width > 0 else {
+                                        print("Export Error: Invalid dimensions h:\(height) w:\(width)")
+                                        resetExportFlag()
+                                        viewController.toastExport(status: false)
+                                        return
+                                    }
+
+                                    let exportData = self.createExportData(note: note, height: height, width: width, processedHTML: renderedHTML)
+                                    ExportCache.shared.setCachedData(exportData, for: note)
+                                    exportAction(exportData, resetExportFlag)
+                                }
                             }
                         }
                     }
-                }
+                )
             }
         }
     }
@@ -236,42 +239,45 @@ extension MPreviewView {
         }
 
         let baseCSS = HtmlManager.lightModeExportCSS()
-        let mediaCSS = applyToScreen
+        let mediaCSS =
+            applyToScreen
             ? baseCSS
             : baseCSS.replacingOccurrences(of: "@media print, screen", with: "@media print")
         let exportLayoutCSS: String
         if applyToScreen {
-            let layoutCSS = adjustLayout
+            let layoutCSS =
+                adjustLayout
                 ? """
-                           #write {
-                               max-width: 90% !important;
-                               width: 100% !important;
-                               margin: 0 auto !important;
-                               padding-top: 20px !important;
-                               padding-bottom: 20px !important;
-                           }
-                    """
+                       #write {
+                           max-width: 90% !important;
+                           width: 100% !important;
+                           margin: 0 auto !important;
+                           padding-top: 20px !important;
+                           padding-bottom: 20px !important;
+                       }
+                """
                 : ""
             exportLayoutCSS = """
-                       \(layoutCSS)
-                       .toc-hover-trigger,
-                       .toc-pin-btn,
-                       .toc-nav {
-                           display: none !important;
-                           pointer-events: none !important;
-                       }
-                    """
+                   \(layoutCSS)
+                   .toc-hover-trigger,
+                   .toc-pin-btn,
+                   .toc-nav {
+                       display: none !important;
+                       pointer-events: none !important;
+                   }
+                """
         } else {
-            let layoutCSS = adjustLayout
+            let layoutCSS =
+                adjustLayout
                 ? """
-                            #write {
-                                max-width: 90% !important;
-                                width: 100% !important;
-                                margin: 0 auto !important;
-                                padding-top: 20px !important;
-                                padding-bottom: 20px !important;
-                            }
-                    """
+                        #write {
+                            max-width: 90% !important;
+                            width: 100% !important;
+                            margin: 0 auto !important;
+                            padding-top: 20px !important;
+                            padding-bottom: 20px !important;
+                        }
+                """
                 : ""
             exportLayoutCSS = """
                     @media print {
@@ -312,7 +318,8 @@ extension MPreviewView {
     }
 
     private func escapeForJavaScriptString(_ value: String) -> String {
-        return value
+        return
+            value
             .replacingOccurrences(of: "\\", with: "\\\\")
             .replacingOccurrences(of: "\n", with: "\\n")
             .replacingOccurrences(of: "\r", with: "\\r")
@@ -383,19 +390,21 @@ extension MPreviewView {
             self.evaluateJavaScript("window.scrollTo(0,0)", completionHandler: nil)
 
             // Wait for images to load with progress
-            self.waitForImagesLoaded(progressUpdate: { message in
-                vc.toastUpdate(message: message)
-            }) { [weak self] in
-                guard let self else {
-                    vc.toastDismiss()
-                    vc.toastExport(status: false)
-                    return
-                }
+            self.waitForImagesLoaded(
+                progressUpdate: { message in
+                    vc.toastUpdate(message: message)
+                },
+                completion: { [weak self] in
+                    guard let self else {
+                        vc.toastDismiss()
+                        vc.toastExport(status: false)
+                        return
+                    }
 
-                vc.toastUpdate(message: "\(I18n.str("Exporting...")) 90%")
+                    vc.toastUpdate(message: "\(I18n.str("Exporting...")) 90%")
 
-                let safeTitle = self.escapeForJavaScriptString(note.getExportTitle())
-                let titleScript = """
+                    let safeTitle = self.escapeForJavaScriptString(note.getExportTitle())
+                    let titleScript = """
                         (function() {
                             var container = document.getElementById('write') || document.body;
                             if (container && !document.getElementById('export-generated-title')) {
@@ -407,34 +416,35 @@ extension MPreviewView {
                             }
                         })();
                     """
-                self.evaluateJavaScript(titleScript) { _, _ in
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        let pdfConfig = WKPDFConfiguration()
+                    self.evaluateJavaScript(titleScript) { _, _ in
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            let pdfConfig = WKPDFConfiguration()
 
-                        vc.toastUpdate(message: "\(I18n.str("Exporting...")) 95%")
+                            vc.toastUpdate(message: "\(I18n.str("Exporting...")) 95%")
 
-                        self.createPDF(configuration: pdfConfig) { [weak self] result in
-                            guard let self else { return }
+                            self.createPDF(configuration: pdfConfig) { [weak self] result in
+                                guard let self else { return }
 
-                            // Cleanup: remove injected title and print styles
-                            self.evaluateJavaScript(
-                                "var t = document.getElementById('export-generated-title'); if(t) t.remove();",
-                                completionHandler: nil)
-                            self.removePrintStyles()
-                            vc.toastDismiss()
+                                // Cleanup: remove injected title and print styles
+                                self.evaluateJavaScript(
+                                    "var t = document.getElementById('export-generated-title'); if(t) t.remove();",
+                                    completionHandler: nil)
+                                self.removePrintStyles()
+                                vc.toastDismiss()
 
-                            switch result {
-                            case .success(let data):
-                                self.saveToDownloadsWithFilename(data: data, extension: "pdf", filename: note.getExportTitle(), viewController: vc)
-                            case .failure:
-                                vc.toastExport(status: false)
+                                switch result {
+                                case .success(let data):
+                                    self.saveToDownloadsWithFilename(data: data, extension: "pdf", filename: note.getExportTitle(), viewController: vc)
+                                case .failure:
+                                    vc.toastExport(status: false)
+                                }
+
+                                Self.isExporting = false
                             }
-
-                            Self.isExporting = false
                         }
                     }
                 }
-            }
+            )
         }
     }
 
@@ -443,17 +453,17 @@ extension MPreviewView {
             let note = vc.notesTableView.getSelectedNote()
         else { return }
 
-        performExport(note: note, viewController: vc, needsDimensions: true) { [weak self] exportData, cleanup in
+        performExport(note: note, viewController: vc, needsDimensions: true) { [weak self] _, cleanup in
             guard let self else {
                 cleanup()
                 vc.toastExport(status: false)
                 return
             }
 
-        // Inject title at top of content
-        let exportTitle = note.getExportTitle()
-        let safeTitle = escapeForJavaScriptString(exportTitle)
-        let titleScript = """
+            // Inject title at top of content
+            let exportTitle = note.getExportTitle()
+            let safeTitle = escapeForJavaScriptString(exportTitle)
+            let titleScript = """
                 (function() {
                     var container = document.getElementById('write') || document.body;
                         if (container && !document.getElementById('export-generated-title')) {
@@ -823,7 +833,6 @@ extension MPreviewView {
             }
         }
     }
-
 
     private func getContentHeight(completion: @escaping (CGFloat?) -> Void) {
         // Robust height calculation using several DOM properties

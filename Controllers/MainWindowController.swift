@@ -42,6 +42,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         isObservingAppearance = true
     }
 
+    // swiftlint:disable:next block_based_kvo
     nonisolated override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "effectiveAppearance" {
             Task { @MainActor in
