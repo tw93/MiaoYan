@@ -67,6 +67,9 @@
 /* Class = "NSMenuItem"; title = "New Folder"; ObjectID = "3zv-SD-lSX"; */
 "3zv-SD-lSX.title" = "新增檔案夾";
 
+/* Class = "NSMenuItem"; title = "New Subfolder"; ObjectID = "foQ-7O-92Z"; */
+"foQ-7O-92Z.title" = "新增子檔案夾";
+
 /* Class = "NSMenuItem"; title = "Find"; ObjectID = "4EN-yA-p0u"; */
 "4EN-yA-p0u.title" = "搜尋";
 

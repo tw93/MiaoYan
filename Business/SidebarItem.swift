@@ -5,6 +5,7 @@ class SidebarItem {
     var project: Project?
     var type: SidebarItemType
     public var icon: Image?
+    public var children: [SidebarItem]?
 
     init(name: String, project: Project? = nil, type: SidebarItemType, icon: Image? = nil) {
         self.name = name
@@ -36,6 +37,17 @@ class SidebarItem {
         default:  // Chinese, Japanese, etc.
             return "妙言"
         }
+    }
+
+    public func isSame(as other: SidebarItem) -> Bool {
+        if type != other.type { return false }
+        if type == .Category || type == .Trash {
+            return project?.url == other.project?.url
+        }
+        if type == .All {
+            return true
+        }
+        return name == other.name
     }
 }
 
