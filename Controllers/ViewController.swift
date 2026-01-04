@@ -445,6 +445,12 @@ class ViewController:
                 }
             }
         }
+
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.view.layoutSubtreeIfNeeded()
+            self.updateSidebarColumnWidth()
+        }
     }
 
 
@@ -945,33 +951,49 @@ class ViewController:
 
     func configureNotesList() {
         var lastSidebarItem = UserDefaultsManagement.lastProject
+        var shouldSelectSidebarItem = true
+        var targetProject: Project?
+        var targetSidebarItem: SidebarItem?
+
+        // Issue #455: In Single Mode, we must find the correct project containing the file
         if UserDefaultsManagement.isSingleMode {
-            lastSidebarItem = 0
+            let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath).resolvingSymlinksInPath()
+
+            if let project = storage.getProjectBy(url: singleModeUrl) {
+                targetProject = project
+
+                if let items = storageOutlineView.sidebarItems,
+                    let index = items.firstIndex(where: { ($0 as? SidebarItem)?.project == project })
+                {
+                    lastSidebarItem = index
+                    targetSidebarItem = items[index] as? SidebarItem
+                } else {
+                    shouldSelectSidebarItem = false
+                }
+            } else {
+                lastSidebarItem = 0
+            }
         }
-        updateTable {
+
+        let projects = targetProject.map { [$0] }
+
+        updateTable(sidebarItem: targetSidebarItem, projects: projects) {
             // Set sidebar selection after table update to properly trigger selection change
-            if let items = self.storageOutlineView.sidebarItems, items.indices.contains(lastSidebarItem) {
+            if shouldSelectSidebarItem,
+                let items = self.storageOutlineView.sidebarItems,
+                items.indices.contains(lastSidebarItem)
+            {
                 // Use a small delay to ensure table is fully loaded before selection
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    UserDataService.instance.skipSidebarSelection = true
                     self.storageOutlineView.selectRowIndexes([lastSidebarItem], byExtendingSelection: false)
                 }
             }
             if UserDefaultsManagement.isSingleMode {
                 let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath).resolvingSymlinksInPath()
                 self.hideSidebar("")
-                if !FileManager.default.directoryExists(atUrl: singleModeUrl), let lastNote = self.storage.getBy(url: singleModeUrl), let i = self.notesTableView.getIndex(lastNote) {
-                    DispatchQueue.main.async {
-                        self.notesTableView.selectRow(i)
-                        self.notesTableView.scrollRowToVisible(row: i, animated: false)
-                    }
-                } else if FileManager.default.directoryExists(atUrl: singleModeUrl) {
-                    DispatchQueue.main.async {
-                        if !self.notesTableView.noteList.isEmpty {
-                            self.notesTableView.selectRow(0)
-                            self.notesTableView.scrollRowToVisible(row: 0, animated: false)
-                        }
-                    }
-                }
+
+                self.selectSingleModeNote(for: singleModeUrl)
                 self.storageOutlineView.isLaunch = false
             }
 
@@ -1018,6 +1040,29 @@ class ViewController:
         search.delegate = search
         sidebarSplitView.delegate = self
         storageOutlineView.viewDelegate = self
+    }
+
+    private func selectSingleModeNote(for url: URL) {
+        if !FileManager.default.directoryExists(atUrl: url) {
+            guard let note = storage.getBy(url: url),
+                let index = notesTableView.getIndex(note)
+            else {
+                return
+            }
+            DispatchQueue.main.async {
+                self.notesTableView.selectRow(index)
+                self.notesTableView.scrollRowToVisible(row: index, animated: false)
+                self.editArea.fill(note: note, options: .silent)
+                self.revealEditor()
+            }
+        } else {
+            DispatchQueue.main.async {
+                if !self.notesTableView.noteList.isEmpty {
+                    self.notesTableView.selectRow(0)
+                    self.notesTableView.scrollRowToVisible(row: 0, animated: false)
+                }
+            }
+        }
     }
 
     // MARK: - Actions
