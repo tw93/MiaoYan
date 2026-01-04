@@ -65,8 +65,9 @@ extension ViewController {
             sidebarSplitView.setPosition(0, ofDividerAt: 0)
         }
         editArea.updateTextContainerInset()
-        updateToolbarButtonTints()
+        sidebarSplitView?.layoutSubtreeIfNeeded()
         checkSidebarConstraint()
+        updateToolbarButtonTints()
     }
 
     func ensurePanelsVisibleAtStartup() {
@@ -100,7 +101,6 @@ extension ViewController {
             splitView.setPosition(0, ofDividerAt: 0)
         }
         editArea.updateTextContainerInset()
-        updateToolbarButtonTints()
     }
 
     // MARK: - Sidebar Management
@@ -195,8 +195,10 @@ extension ViewController {
 
         // Update Button Icon
         if let button = toggleSplitButton {
-            // Use custom icon (Static split icon for both states per user request)
-            if let image = NSImage(named: "icon_editor_split") {
+            // Prefer split icon; fall back if the single icon asset is missing.
+            let iconName = newMode ? "icon_editor_split" : "icon_editor_single"
+            let image = NSImage(named: iconName) ?? NSImage(named: "icon_editor_split")
+            if let image {
                 image.isTemplate = true
                 button.image = image
             }
@@ -324,10 +326,10 @@ extension ViewController {
 
     // MARK: - View Resize
     func viewDidResize() {
+        checkSidebarConstraint()
         checkTitlebarTopConstraint()
 
         handleEditorContentResize()
-        updateToolbarButtonTints()
     }
 
     func handleEditorContentResize() {

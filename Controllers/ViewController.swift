@@ -282,12 +282,11 @@ class ViewController:
         // Hide empty state UI (no longer used)
         emptyEditAreaView.isHidden = true
         configureShortcuts()
-        // Initial layout configuration
-        configureLayout()
-        updateToolbarButtonTints()
         configureDelegates()
+        configureLayout()
         configureNotesList()
         configureEditor()
+        updateToolbarButtonTints()
 
         // Pre-hide editor if starting in preview mode to avoid white flash
         // Pre-hide editor to avoid white flash/empty state during initial load
@@ -324,7 +323,6 @@ class ViewController:
     func updateToolbarButtonTints() {
         let accent = Theme.accentColor
         let inactive = Theme.inactiveIconColor
-        let sidebarAction = Theme.sidebarActionColor
 
         // Toolbar Buttons (Unified Grey in all modes unless active)
         previewButton?.state = UserDefaultsManagement.preview ? .on : .off
@@ -336,22 +334,25 @@ class ViewController:
 
         // Split View
         toggleSplitButton?.state = UserDefaultsManagement.splitViewMode ? .on : .off
-        toggleSplitButton?.contentTintColor = UserDefaultsManagement.splitViewMode ? accent : inactive
+        toggleSplitButton?.image?.isTemplate = true
+        toggleSplitButton?.contentTintColor = UserDefaultsManagement.splitViewMode ? NSColor.controlAccentColor : inactive
 
         // Sidebar Toggle (Active when sidebar is hidden)
         let isSidebarHidden = sidebarWidth == 0
         toggleListButton?.state = isSidebarHidden ? .on : .off
-        toggleListButton?.contentTintColor = isSidebarHidden ? accent : inactive
+        toggleListButton?.image?.isTemplate = true
+        toggleListButton?.contentTintColor = isSidebarHidden ? NSColor.controlAccentColor : inactive
 
         // Format (Always inactive color)
         formatButton?.contentTintColor = inactive
 
-        // Sidebar Action Buttons (Modern Black/White for high contrast)
-        addProjectButton?.contentTintColor = sidebarAction
+        // Sidebar Action Buttons (Standard Label Color for Light/Dark adaptation)
+        // This ensures they are black in Light Mode and white in Dark Mode, not grey.
+        addProjectButton?.contentTintColor = .labelColor
         for subview in notesListCustomView.subviews {
             if let btn = subview as? NSButton, btn.image?.name() == "newNote" {
                 btn.image?.isTemplate = true
-                btn.contentTintColor = sidebarAction
+                btn.contentTintColor = .labelColor
             }
         }
     }
@@ -778,7 +779,7 @@ class ViewController:
 
             // Align from Right (Trailing) to match Text Content Alignment
             // Margin = 24 (Matches default textContainerInset width)
-            // Gap = 6 (Reduced from 8 as requested)
+            // Gap = 8 (Increased from 6 as requested)
 
             // 5. Presentation (Rightmost)
             NSLayoutConstraint.activate([
@@ -789,7 +790,7 @@ class ViewController:
             // 4. Preview
             NSLayoutConstraint.activate([
                 previewButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
-                previewButton.trailingAnchor.constraint(equalTo: presentationButton.leadingAnchor, constant: -6),
+                previewButton.trailingAnchor.constraint(equalTo: presentationButton.leadingAnchor, constant: -8),
                 previewButton.widthAnchor.constraint(equalToConstant: 20),
                 previewButton.heightAnchor.constraint(equalToConstant: 20),
             ])
@@ -797,19 +798,19 @@ class ViewController:
             // 3. Split
             NSLayoutConstraint.activate([
                 splitButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
-                splitButton.trailingAnchor.constraint(equalTo: previewButton.leadingAnchor, constant: -6),
+                splitButton.trailingAnchor.constraint(equalTo: previewButton.leadingAnchor, constant: -8),
                 splitButton.widthAnchor.constraint(equalToConstant: 20),
                 splitButton.heightAnchor.constraint(equalToConstant: 20),
             ])
 
             // 2. Format
             NSLayoutConstraint.activate([
-                formatButton.trailingAnchor.constraint(equalTo: splitButton.leadingAnchor, constant: -6)
+                formatButton.trailingAnchor.constraint(equalTo: splitButton.leadingAnchor, constant: -8)
             ])
 
             // 1. List (Leftmost)
             NSLayoutConstraint.activate([
-                listButton.trailingAnchor.constraint(equalTo: formatButton.leadingAnchor, constant: -6),
+                listButton.trailingAnchor.constraint(equalTo: formatButton.leadingAnchor, constant: -8),
                 listButton.widthAnchor.constraint(equalToConstant: 20),
                 listButton.heightAnchor.constraint(equalToConstant: 20),
             ])
