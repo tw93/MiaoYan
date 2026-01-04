@@ -16,6 +16,7 @@ private enum MenuTitles {
     static let newSubfolder = I18n.str("New Subfolder")
 }
 
+
 private enum DragDropTypes {
     static let publicData = NSPasteboard.PasteboardType(rawValue: "public.data")
     static let notesTable = NSPasteboard.PasteboardType(rawValue: "notesTable")
@@ -745,6 +746,7 @@ class SidebarProjectView: NSOutlineView,
 
             let i = view.selectedRow
 
+
             if let item = view.item(atRow: i) as? SidebarItem {
                 // During app launch, skip saving selection to avoid overwriting persisted state
                 // with programmatically restored selection. This ensures the correct last selection
@@ -759,11 +761,12 @@ class SidebarProjectView: NSOutlineView,
 
                     // Save user's manual selection for restoration on next launch
                     UserDefaultsManagement.lastProject = i
-
-                    UserDataService.instance.lastType = item.type.rawValue
-                    UserDataService.instance.lastProject = item.project?.url
-                    UserDataService.instance.lastName = item.name
                 }
+
+                UserDataService.instance.lastType = item.type.rawValue
+                UserDataService.instance.lastProject = item.project?.url
+                UserDataService.instance.lastName = item.name
+            } else {
             }
 
             // Don't clear edit area during launch to prevent flashing
@@ -782,7 +785,26 @@ class SidebarProjectView: NSOutlineView,
                 return
             }
 
-            vd.updateTable {
+            var projects = [Project]()
+            var targetItem: SidebarItem?
+
+            for i in view.selectedRowIndexes {
+                if let si = view.item(atRow: i) as? SidebarItem {
+                    if let project = si.project {
+                        projects.append(project)
+                    }
+
+                    if i == view.selectedRow {
+                        targetItem = si
+                    }
+                }
+            }
+
+            if targetItem == nil {
+                targetItem = getSidebarItem()
+            }
+
+            vd.updateTable(sidebarItem: targetItem, projects: projects.isEmpty ? nil : projects) {
                 if self.isLaunch {
                     // During launch, restore note selection
                     if let url = UserDefaultsManagement.lastSelectedURL,
@@ -795,7 +817,6 @@ class SidebarProjectView: NSOutlineView,
                         vd.notesTableView.restoreScrollPosition(ensureSelectionVisible: false)
                         vd.notesTableView.selectRow(0, ensureVisible: false)
                     }
-                    self.isLaunch = false
                 } else {
                     DispatchQueue.main.async {
                         // Keep note selection intact when single mode is active

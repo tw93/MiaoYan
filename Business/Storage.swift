@@ -356,7 +356,7 @@ class Storage {
         return candidates.max(by: { $0.url.path.count < $1.url.path.count })
     }
 
-    func sortNotes(noteList: [Note], filter: String, project: Project? = nil, operation: BlockOperation? = nil) -> [Note] {
+    func sortNotes(noteList: [Note], filter: String, project: Project? = nil, operation: Operation? = nil) -> [Note] {
         let hasFilter = !filter.isEmpty
 
         return noteList.sorted(by: {
