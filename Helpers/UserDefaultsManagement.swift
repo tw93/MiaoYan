@@ -204,6 +204,15 @@ public enum UserDefaultsManagement {
         }
     }
 
+    static var hasFixedInitialization: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "hasFixedInitialization")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "hasFixedInitialization")
+        }
+    }
+
     static var hasShownTOCTip: Bool {
         get {
             return UserDefaults.standard.bool(forKey: "hasShownTOCTip")

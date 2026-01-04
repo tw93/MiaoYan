@@ -48,7 +48,7 @@ extension ViewController {
         UserDefaultsManagement.presentation || UserDefaultsManagement.magicPPT
     }
 
-    private func setSidebarVisible(_ visible: Bool, saveState: Bool = true) {
+    func setSidebarVisible(_ visible: Bool, saveState: Bool = true) {
         if visible {
             let savedWidth = UserDefaultsManagement.realSidebarSize
             let targetWidth = max(savedWidth, Int(LayoutConstants.minSidebarWidth))
