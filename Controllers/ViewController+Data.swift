@@ -18,8 +18,70 @@ private struct NoteSearchResult {
 private struct UpdateContext {
     let isSearch: Bool
     let searchParams: SearchParameters
-    let operation: BlockOperation
+    let operation: Operation
     let completion: () -> Void
+}
+
+private final class AsyncSearchOperation: Operation, @unchecked Sendable {
+    var task: ((@escaping () -> Void) -> Void)?
+
+    private let stateLock = NSLock()
+    private var _isExecuting = false
+    private var _isFinished = false
+
+    override var isAsynchronous: Bool { true }
+
+    override var isExecuting: Bool {
+        stateLock.lock()
+        defer { stateLock.unlock() }
+        return _isExecuting
+    }
+
+    override var isFinished: Bool {
+        stateLock.lock()
+        defer { stateLock.unlock() }
+        return _isFinished
+    }
+
+    override func start() {
+        if isCancelled {
+            finish()
+            return
+        }
+
+        setExecuting(true)
+        guard let task = task else {
+            finish()
+            return
+        }
+        task { [weak self] in
+            self?.finish()
+        }
+    }
+
+    private func setExecuting(_ executing: Bool) {
+        willChangeValue(forKey: "isExecuting")
+        stateLock.lock()
+        _isExecuting = executing
+        stateLock.unlock()
+        didChangeValue(forKey: "isExecuting")
+    }
+
+    private func setFinished(_ finished: Bool) {
+        willChangeValue(forKey: "isFinished")
+        stateLock.lock()
+        _isFinished = finished
+        stateLock.unlock()
+        didChangeValue(forKey: "isFinished")
+    }
+
+    private func finish() {
+        if isFinished {
+            return
+        }
+        setExecuting(false)
+        setFinished(true)
+    }
 }
 
 // MARK: - Data Management
@@ -95,24 +157,27 @@ extension ViewController {
         )
     }
 
-    private func createSearchOperation(searchParams: SearchParameters, isSearch: Bool, completion: @escaping @MainActor @Sendable () -> Void) -> BlockOperation {
-        let operation = BlockOperation()
-        operation.addExecutionBlock { [weak self] in
+    private func createSearchOperation(searchParams: SearchParameters, isSearch: Bool, completion: @escaping @MainActor @Sendable () -> Void) -> Operation {
+        let operation = AsyncSearchOperation()
+        operation.task = { [weak self, weak operation] finish in
             guard let self = self else {
                 Task { @MainActor in
                     completion()
+                    finish()
                 }
                 return
             }
 
-            Task { @MainActor [weak self] in
+            Task { @MainActor [weak self, weak operation] in
                 guard let self else {
                     completion()
+                    finish()
                     return
                 }
 
-                guard !operation.isCancelled else {
+                guard let operation, !operation.isCancelled else {
                     completion()
+                    finish()
                     return
                 }
 
@@ -120,14 +185,17 @@ extension ViewController {
                     searchParams: searchParams,
                     isSearch: isSearch,
                     operation: operation,
-                    completion: completion
+                    completion: {
+                        completion()
+                        finish()
+                    }
                 )
             }
         }
         return operation
     }
 
-    private func executeSearchOperation(searchParams: SearchParameters, isSearch: Bool, operation: BlockOperation, completion: @escaping () -> Void) {
+    private func executeSearchOperation(searchParams: SearchParameters, isSearch: Bool, operation: Operation, completion: @escaping () -> Void) {
         if let projects = searchParams.projects {
             for project in projects {
                 preLoadNoteTitles(in: project)
@@ -184,7 +252,7 @@ extension ViewController {
         )
     }
 
-    private func filterNotes(searchParams: SearchParameters, isSearch: Bool, operation: BlockOperation, completion: @escaping () -> Void) -> [NoteSearchResult] {
+    private func filterNotes(searchParams: SearchParameters, isSearch: Bool, operation: Operation, completion: @escaping () -> Void) -> [NoteSearchResult] {
         let terms = searchParams.filter.split(separator: " ")
         let source = storage.noteList
         var notes: [NoteSearchResult] = []

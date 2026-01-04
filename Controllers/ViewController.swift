@@ -302,6 +302,7 @@ class ViewController:
         loadMoveMenu()
         cacheMenuItems()
 
+
         // Apply modern icons to menus
         if #available(macOS 11.0, *) {
             noteMenu.applyMenuIcons()
@@ -975,7 +976,18 @@ class ViewController:
             }
         }
 
-        let projects = targetProject.map { [$0] }
+        if targetSidebarItem == nil,
+            targetProject == nil,
+            let items = storageOutlineView.sidebarItems,
+            items.indices.contains(lastSidebarItem)
+        {
+            targetSidebarItem = items[lastSidebarItem] as? SidebarItem
+        }
+
+        var projects = targetProject.map { [$0] }
+        if projects == nil, let project = targetSidebarItem?.project {
+            projects = [project]
+        }
 
         updateTable(sidebarItem: targetSidebarItem, projects: projects) {
             // Set sidebar selection after table update to properly trigger selection change
@@ -985,6 +997,18 @@ class ViewController:
             {
                 // Use a small delay to ensure table is fully loaded before selection
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    // Prevent overwriting user selection if they have already switched projects
+                    if self.storageOutlineView.selectedRow != -1 && self.storageOutlineView.selectedRow != lastSidebarItem {
+                        return
+                    }
+
+                    // If we are already on the correct item, do nothing.
+                    // Setting skipSidebarSelection = true here would be a bug because selectRowIndexes won't trigger
+                    // the delegate if the selection doesn't change, leaving the flag stuck at true.
+                    if self.storageOutlineView.selectedRow == lastSidebarItem {
+                        return
+                    }
+
                     UserDataService.instance.skipSidebarSelection = true
                     self.storageOutlineView.selectRowIndexes([lastSidebarItem], byExtendingSelection: false)
                 }
@@ -994,8 +1018,9 @@ class ViewController:
                 self.hideSidebar("")
 
                 self.selectSingleModeNote(for: singleModeUrl)
-                self.storageOutlineView.isLaunch = false
             }
+
+            self.storageOutlineView.isLaunch = false
 
             // Trigger window fade-in now that data is loaded and initial Note is selected
             if let windowController = self.view.window?.windowController as? MainWindowController {
@@ -1120,5 +1145,28 @@ class ViewController:
             self.editAreaScroll.animator().alphaValue = 1
             self.titleLabel.animator().alphaValue = 1
         }
+    }
+
+    func internalLogDebug(_ message: String) {
+        #if DEBUG
+        DispatchQueue.global(qos: .utility).async {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+            let timestamp = formatter.string(from: Date())
+            let logMessage = "\(timestamp) [ViewController] \(message)\n"
+
+            let fileURL = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Downloads/miaoyan_debug.log")
+
+            if let handle = try? FileHandle(forWritingTo: fileURL) {
+                handle.seekToEndOfFile()
+                if let data = logMessage.data(using: .utf8) {
+                    handle.write(data)
+                }
+                try? handle.close()
+            } else {
+                try? logMessage.write(to: fileURL, atomically: true, encoding: .utf8)
+            }
+        }
+        #endif
     }
 }
