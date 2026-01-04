@@ -71,7 +71,7 @@ if [ -n "$SIGN_UPDATE" ] && [ -x "$SIGN_UPDATE" ]; then
         exit 1
     fi
     if [ -n "$KEY_PATH" ]; then
-        SIGNATURE=$("$SIGN_UPDATE" -k "$KEY_PATH" "./build/$ZIP_NAME" 2>/dev/null | grep "sparkle:edSignature" | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
+        SIGNATURE=$("$SIGN_UPDATE" -f "$KEY_PATH" "./build/$ZIP_NAME" 2>/dev/null | grep "sparkle:edSignature" | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
     else
         echo -e "${YELLOW}WARNING: SPARKLE_PRIVATE_KEY not set; using default key${NC}"
         SIGNATURE=$("$SIGN_UPDATE" "./build/$ZIP_NAME" 2>/dev/null | grep "sparkle:edSignature" | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
