@@ -1060,6 +1060,9 @@ extension ViewController {
                     {
                         if !suppressSave {
                             self.editArea.saveTextStorageContent(to: currentNote)
+                            // CRITICAL: Mark content as loaded to prevent ensureContentLoaded() from reloading stale disk content
+                            // This fixes content loss when rapidly toggling split view before auto-save completes
+                            currentNote.markContentAsLoaded()
                         }
                     }
 
