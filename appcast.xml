@@ -2,6 +2,45 @@
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
   <channel>
     <title>妙言 / MiaoYan</title>
+    <item>
+      <title>2.4.1</title>
+      <description><![CDATA[
+      <h3>更稳 🚵🏿‍♂️</h3>
+      <ol>
+        <li>视觉精致升级：图标统一尺寸与灰度状态，激活色更清晰，明暗模式更一致</li>
+        <li>预览切换体验优化：柔和显隐，保留选区/滚动，分栏与窗口缩放更稳定</li>
+        <li>导出体验全面升级：进度提示、标题注入、PDF/图片/PPT 输出改进，深色导出与预览一致</li>
+        <li>侧边栏支持子文件夹与展开状态维护，也即支持文件夹嵌套了</li>
+        <li>性能增强：笔记内容懒加载、预览更新防抖、输入/渲染更流畅</li>
+        <li>搜索能力增强，并在保存失败时提供更清晰的提示</li>
+        <li>可靠性与隐私：防止重载丢稿、单模式路径修复、移除遥测</li>
+        <li>单模式修复：正确定位项目与笔记，启动后编辑区保持可见</li>
+        <li>侧边栏宽度与分栏体验优化，修复旧版初始化宽度问题</li>
+        <li>内容安全增强：快速切换分屏时避免旧内容回滚</li>
+        <li>预览与样式细节优化：对齐规则、图片链接去下划线、TOC 提示更柔和</li>
+        <li>文档与发布流程升级：安装说明更新，新增构建脚本与导出配置</li>
+      </ol>
+
+      <h3>Steady 🚵🏿‍♂️</h3>
+      <ol>
+        <li>Visual refinement: unified icon sizing/tints, clearer active states, better dark/light adaptability</li>
+        <li>Smoother preview toggle with soft reveal, plus editor selection/scroll preservation and steadier split-view resizing</li>
+        <li>Export overhaul: progress feedback, improved PDF/image/PPT output, dark-mode export matches preview</li>
+        <li>Sidebar subfolders with proper expansion state handling</li>
+        <li>Performance boosts: lazy-loaded note content, debounced preview updates, faster input/preview rendering</li>
+        <li>Search improvements and better error feedback when note saving fails</li>
+        <li>Reliability & privacy: save-before-reload to prevent data loss, symlink fix for single mode, telemetry removed</li>
+        <li>Single mode fixes: correct project selection, stable note focus, editor stays visible on launch</li>
+        <li>Sidebar resizing: width syncing, legacy layout repair, smoother split-view behavior</li>
+        <li>Content safety: prevent stale reloads during rapid split toggles</li>
+        <li>Preview/TOC/typography tweaks: alignment rules, image link underline removal, lighter TOC hover</li>
+        <li>Docs & release tooling: updated install guidance, new build script and export options</li>
+      </ol>
+          ]]>      </description>
+      <pubDate>周日, 04 01月 2026 22:20:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_2.4.zip" sparkle:shortVersionString="2.4.1" sparkle:version="2.4.1" sparkle:edSignature="/Sd82uqKC3g0BHCXMKzwdJatVwUoMFeQQHCJ4KSo2Khifu9VBedWPi7TNz9Kp+sNbAaoZryoVKTcnOZJO4Y9DA==" length="23141557" type="application/octet-stream"/>
+      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+    </item>
       <item>
       <title>2.3.1</title>
       <description><![CDATA[
