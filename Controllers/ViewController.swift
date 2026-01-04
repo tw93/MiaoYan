@@ -124,6 +124,7 @@ class ViewController:
             layer.backgroundColor = .clear
             addProjectButton.wantsLayer = true
             addProjectButton.layer = layer
+            addProjectButton.image?.isTemplate = true
             if UserDefaultsManagement.buttonShow == "Hover" {
                 addProjectButton.alphaValue = 0
             } else {
@@ -281,8 +282,10 @@ class ViewController:
         // Hide empty state UI (no longer used)
         emptyEditAreaView.isHidden = true
         configureShortcuts()
-        configureDelegates()
+        // Initial layout configuration
         configureLayout()
+        updateToolbarButtonTints()
+        configureDelegates()
         configureNotesList()
         configureEditor()
 
@@ -315,6 +318,42 @@ class ViewController:
         searchQueue.maxConcurrentOperationCount = 1
         notesTableView.loadingQueue.maxConcurrentOperationCount = 1
         notesTableView.loadingQueue.qualityOfService = QualityOfService.userInteractive
+    }
+
+    /// Centralized method to update toolbar button tint colors based on current state
+    func updateToolbarButtonTints() {
+        let accent = Theme.accentColor
+        let inactive = Theme.inactiveIconColor
+        let sidebarAction = Theme.sidebarActionColor
+
+        // Toolbar Buttons (Unified Grey in all modes unless active)
+        previewButton?.state = UserDefaultsManagement.preview ? .on : .off
+        previewButton?.contentTintColor = UserDefaultsManagement.preview ? accent : inactive
+
+        // Presentation
+        presentationButton?.state = UserDefaultsManagement.presentation ? .on : .off
+        presentationButton?.contentTintColor = UserDefaultsManagement.presentation ? accent : inactive
+
+        // Split View
+        toggleSplitButton?.state = UserDefaultsManagement.splitViewMode ? .on : .off
+        toggleSplitButton?.contentTintColor = UserDefaultsManagement.splitViewMode ? accent : inactive
+
+        // Sidebar Toggle (Active when sidebar is hidden)
+        let isSidebarHidden = sidebarWidth == 0
+        toggleListButton?.state = isSidebarHidden ? .on : .off
+        toggleListButton?.contentTintColor = isSidebarHidden ? accent : inactive
+
+        // Format (Always inactive color)
+        formatButton?.contentTintColor = inactive
+
+        // Sidebar Action Buttons (Modern Black/White for high contrast)
+        addProjectButton?.contentTintColor = sidebarAction
+        for subview in notesListCustomView.subviews {
+            if let btn = subview as? NSButton, btn.image?.name() == "newNote" {
+                btn.image?.isTemplate = true
+                btn.contentTintColor = sidebarAction
+            }
+        }
     }
 
     // Handle webview performance impact from long-term inactivity
@@ -406,6 +445,7 @@ class ViewController:
             }
         }
     }
+
 
     private func installLiveResizeObserverIfNeeded() {
         guard liveResizeObserver == nil, let window = view.window else { return }
@@ -617,10 +657,9 @@ class ViewController:
         previewButton.toolTip = I18n.str("Toggle Preview")
         presentationButton.toolTip = I18n.str("Presentation")
 
-        // Unify button sizes: set all to 18x18 and remove borders/backgrounds for consistency
-        for button in [formatButton, previewButton, presentationButton] {
-            guard let btn = button else { continue }
-
+        // Unify button sizes: set all to 20x20 and remove borders/backgrounds for consistency
+        let toolbarButtons = [formatButton, previewButton, presentationButton, toggleListButton, toggleSplitButton].compactMap { $0 }
+        for btn in toolbarButtons {
             // Unify style to match programmatically created buttons
             btn.isBordered = false
             btn.bezelStyle = .texturedRounded
@@ -629,9 +668,9 @@ class ViewController:
 
             for constraint in btn.constraints {
                 if constraint.firstAttribute == .width {
-                    constraint.constant = 24
+                    constraint.constant = 20
                 } else if constraint.firstAttribute == .height {
-                    constraint.constant = 24
+                    constraint.constant = 20
                 }
             }
         }
@@ -658,9 +697,8 @@ class ViewController:
             button.translatesAutoresizingMaskIntoConstraints = false
             button.bezelStyle = .texturedRounded
 
-            // Use custom icons for two states (single/split)
-            let iconName = UserDefaultsManagement.splitViewMode ? "icon_editor_split" : "icon_editor_single"
-            if let image = NSImage(named: iconName) {
+            // Use custom icon (Static split icon for both states per user request)
+            if let image = NSImage(named: "icon_editor_split") {
                 image.isTemplate = true
                 button.image = image
             }
@@ -701,8 +739,8 @@ class ViewController:
             NSLayoutConstraint.activate([
                 listButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
                 listButton.leadingAnchor.constraint(equalTo: parent.leadingAnchor, constant: 8),
-                listButton.widthAnchor.constraint(equalToConstant: 24),
-                listButton.heightAnchor.constraint(equalToConstant: 24),
+                listButton.widthAnchor.constraint(equalToConstant: 20),
+                listButton.heightAnchor.constraint(equalToConstant: 20),
             ])
             toggleListButton = listButton
         }
@@ -710,6 +748,13 @@ class ViewController:
         // Setup constraints for toggleSplitButton after both buttons are created
         if let splitButton = toggleSplitButton, let listButton = toggleListButton {
             parent.addSubview(splitButton)
+
+            // Ensure splitButton also has 20x20 constraints if they weren't set in the loop above
+            // (The loop above might have run before toggleSplitButton was assigned to the property)
+            NSLayoutConstraint.activate([
+                splitButton.widthAnchor.constraint(equalToConstant: 20),
+                splitButton.heightAnchor.constraint(equalToConstant: 20),
+            ])
 
             // Recommended Order: List -> Format -> Split -> Preview -> Presentation
 
@@ -745,14 +790,16 @@ class ViewController:
             NSLayoutConstraint.activate([
                 previewButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
                 previewButton.trailingAnchor.constraint(equalTo: presentationButton.leadingAnchor, constant: -6),
+                previewButton.widthAnchor.constraint(equalToConstant: 20),
+                previewButton.heightAnchor.constraint(equalToConstant: 20),
             ])
 
             // 3. Split
             NSLayoutConstraint.activate([
                 splitButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
                 splitButton.trailingAnchor.constraint(equalTo: previewButton.leadingAnchor, constant: -6),
-                splitButton.widthAnchor.constraint(equalToConstant: 24),
-                splitButton.heightAnchor.constraint(equalToConstant: 24),
+                splitButton.widthAnchor.constraint(equalToConstant: 20),
+                splitButton.heightAnchor.constraint(equalToConstant: 20),
             ])
 
             // 2. Format
@@ -763,9 +810,28 @@ class ViewController:
             // 1. List (Leftmost)
             NSLayoutConstraint.activate([
                 listButton.trailingAnchor.constraint(equalTo: formatButton.leadingAnchor, constant: -6),
-                listButton.widthAnchor.constraint(equalToConstant: 24),
-                listButton.heightAnchor.constraint(equalToConstant: 24),
+                listButton.widthAnchor.constraint(equalToConstant: 20),
+                listButton.heightAnchor.constraint(equalToConstant: 20),
             ])
+        }
+
+        // Finalize Sidebar Action Buttons (New Note & Add Project) sizes to 20x20
+        addProjectButton.imageScaling = .scaleProportionallyUpOrDown
+        for constraint in addProjectButton.constraints {
+            if constraint.firstAttribute == .width || constraint.firstAttribute == .height {
+                constraint.constant = 20
+            }
+        }
+
+        for subview in notesListCustomView.subviews {
+            if let btn = subview as? NSButton, btn.image?.name() == "newNote" {
+                btn.imageScaling = .scaleProportionallyUpOrDown
+                for constraint in btn.constraints {
+                    if constraint.firstAttribute == .width || constraint.firstAttribute == .height {
+                        constraint.constant = 20
+                    }
+                }
+            }
         }
 
         titleLabel.isHidden = true

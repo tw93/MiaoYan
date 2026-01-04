@@ -62,6 +62,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
 
         if let vc = ViewController.shared() {
             vc.editArea.applySystemAppearance()
+            vc.updateToolbarButtonTints()
 
             // Save current selection before refreshing rows
             let selectedNotesRow = vc.notesTableView.selectedRow

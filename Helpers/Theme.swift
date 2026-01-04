@@ -52,6 +52,19 @@ enum Theme {
         NSColor(named: "accentColor") ?? .controlAccentColor
     }
 
+    static var inactiveIconColor: Color {
+        // This is now purely for the toolbar's inactive state (unified grey)
+        return NSColor(calibratedWhite: 0.53, alpha: 1.0)  // Standard 灰色 (#888888 approx)
+    }
+
+    static var sidebarActionColor: Color {
+        if UserDefaultsManagement.appearanceType == .Custom {
+            return UserDefaultsManagement.fontColor
+        }
+
+        return NSColor(named: "toolbarIcon") ?? .labelColor
+    }
+
     static var selectionTextColor: Color {
         .selectedMenuItemTextColor
     }
