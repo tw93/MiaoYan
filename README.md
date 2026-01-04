@@ -31,11 +31,15 @@
 ## Installation & Setup
 
 1. Download the latest DMG package from [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) (Requires macOS 11.5+)
-2. Double-click to install MiaoYan.app to Applications
-3. If macOS shows "App is damaged", run `xattr -cr /Applications/MiaoYan.app` in Terminal to clear the quarantine flag
+2. Double-click the DMG file and drag MiaoYan.app to your Applications folder
+3. **First Launch**: Right-click MiaoYan.app in Applications and select "Open" (don't double-click)
+   - If still blocked: System Settings → Privacy & Security → Click "Open Anyway"
+   - Or run in Terminal: `xattr -cr /Applications/MiaoYan.app && open /Applications/MiaoYan.app`
 4. Create a `MiaoYan` folder in iCloud Drive or your preferred location
 5. Open MiaoYan Preferences and set the storage location to this folder
 6. Click the "New Folder" icon in the top-left corner to create document categories and start writing
+
+**Why this security prompt?** MiaoYan is not notarized by Apple (requires paid developer account). The app is open source and safe to use - macOS just needs confirmation on first launch.
 
 After installation, we recommend exploring Preferences (⌘,) to discover MiaoYan's rich customization options, including edit modes, themes, fonts, and more to create your perfect writing environment.
 
