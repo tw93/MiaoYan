@@ -6,7 +6,7 @@ on:
     branches:
       - vercel
   schedule:
-    - cron: "0 2 */2 * *"
+    - cron: "0 2 * * *"
 
 permissions:
   contents: write
