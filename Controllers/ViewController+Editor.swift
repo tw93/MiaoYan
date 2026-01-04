@@ -406,9 +406,8 @@ extension ViewController {
             disableSplitViewMode()
         }
 
-        // Update toolbar button state
-        let iconName = UserDefaultsManagement.splitViewMode ? "icon_editor_split" : "icon_editor_single"
-        if let image = NSImage(named: iconName) {
+        // Update toolbar button state (Unified split icon for both states)
+        if let image = NSImage(named: "icon_editor_split") {
             image.isTemplate = true
             toggleSplitButton?.image = image
         }
@@ -1026,10 +1025,7 @@ extension ViewController {
         suppressSave: Bool = false
     ) {
         DispatchQueue.main.async { [weak self] in
-            self?.previewButton.state = UserDefaultsManagement.preview ? .on : .off
-            self?.previewButton.contentTintColor = UserDefaultsManagement.preview ? Theme.accentColor : nil
-            self?.presentationButton.state = UserDefaultsManagement.presentation ? .on : .off
-            self?.presentationButton.contentTintColor = UserDefaultsManagement.presentation ? Theme.accentColor : nil
+            self?.updateToolbarButtonTints()
         }
         // Allow content refill in these scenarios:
         // - Normal refill (not preview-only), or

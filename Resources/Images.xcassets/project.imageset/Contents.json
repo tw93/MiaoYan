@@ -1,56 +1,26 @@
 {
-  "images" : [
+  "images": [
     {
-      "filename" : "project.svg",
-      "idiom" : "universal",
-      "scale" : "1x"
+      "idiom": "universal",
+      "filename": "project.svg"
     },
     {
-      "appearances" : [
+      "idiom": "universal",
+      "filename": "project_dark.svg",
+      "appearances": [
         {
-          "appearance" : "luminosity",
-          "value" : "dark"
+          "appearance": "luminosity",
+          "value": "dark"
         }
-      ],
-      "filename" : "project-dark.svg",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "filename" : "project.svg",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "project-dark.svg",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "filename" : "project.svg",
-      "idiom" : "universal",
-      "scale" : "3x"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "project-dark.svg",
-      "idiom" : "universal",
-      "scale" : "3x"
+      ]
     }
   ],
-  "info" : {
-    "author" : "xcode",
-    "version" : 1
+  "info": {
+    "version": 1,
+    "author": "xcode"
+  },
+  "properties": {
+    "preserves-vector-representation": true,
+    "template-rendering-intent": "original"
   }
 }

@@ -370,8 +370,8 @@ class SidebarProjectView: NSOutlineView,
     // MARK: - Helper Methods
 
     private func configureCellLayout(_ cell: SidebarCellView, baseFont: NSFont) {
-        let defaultIconSize: CGFloat = 17
-        let defaultSpacing: CGFloat = 4
+        let defaultIconSize: CGFloat = 20
+        let defaultSpacing: CGFloat = 6
         let defaultIconLeading: CGFloat = 1
 
         updateIconLeading(cell, leading: defaultIconLeading)
@@ -502,16 +502,18 @@ class SidebarProjectView: NSOutlineView,
             cell.label.font = accentFont
             cell.label.textColor = accentColor
             updateLabelSpacing(cell, spacing: accentSpacing)
-            cell.label.lineBreakMode = .byClipping
-            cell.label.cell?.truncatesLastVisibleLine = false
+            cell.label.lineBreakMode = .byTruncatingTail
+            cell.label.cell?.truncatesLastVisibleLine = true
 
         case .Trash:
             cell.icon.image = NSImage(imageLiteralResourceName: "deleteNote")
-            cell.icon.image?.isTemplate = false
+            cell.icon.image?.isTemplate = true
+            cell.icon.contentTintColor = Theme.sidebarActionColor
 
         case .Category:
             cell.icon.image = NSImage(imageLiteralResourceName: "project")
-            cell.icon.image?.isTemplate = false
+            cell.icon.image?.isTemplate = true
+            cell.icon.contentTintColor = Theme.sidebarActionColor
         }
     }
 

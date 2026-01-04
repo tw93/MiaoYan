@@ -2,45 +2,11 @@
   "images": [
     {
       "idiom": "universal",
-      "filename": "newNote.svg",
-      "scale": "1x"
+      "filename": "newNote.svg"
     },
     {
       "idiom": "universal",
-      "filename": "newNote-dark.svg",
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "scale": "1x"
-    },
-    {
-      "idiom": "universal",
-      "filename": "newNote.svg",
-      "scale": "2x"
-    },
-    {
-      "idiom": "universal",
-      "filename": "newNote-dark.svg",
-      "appearances": [
-        {
-          "appearance": "luminosity",
-          "value": "dark"
-        }
-      ],
-      "scale": "2x"
-    },
-    {
-      "idiom": "universal",
-      "filename": "newNote.svg",
-      "scale": "3x"
-    },
-    {
-      "idiom": "universal",
-      "scale": "3x",
-      "filename": "newNote-dark.svg",
+      "filename": "newNote_dark.svg",
       "appearances": [
         {
           "appearance": "luminosity",
@@ -52,5 +18,9 @@
   "info": {
     "version": 1,
     "author": "xcode"
+  },
+  "properties": {
+    "preserves-vector-representation": true,
+    "template-rendering-intent": "original"
   }
 }
