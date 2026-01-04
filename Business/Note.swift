@@ -791,6 +791,10 @@ public class Note: NSObject {
         }
     }
 
+    public func markContentAsLoaded() {
+        isContentLoaded = true
+    }
+
     public func getMdImagePath(name: String) -> String {
         let encoded = name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         let name = encoded ?? name
