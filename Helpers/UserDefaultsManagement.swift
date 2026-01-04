@@ -458,28 +458,51 @@ public enum UserDefaultsManagement {
             }
         }
     }
+
+    // Cache to avoid multiple permission dialogs
+    private static var _cachedICloudURL: URL?
+    private static var _iCloudURLChecked = false
+
     static var iCloudDocumentsContainer: URL? {
+        if _iCloudURLChecked {
+            return _cachedICloudURL
+        }
+        _iCloudURLChecked = true
+
         if let iCloudDocumentsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents").resolvingSymlinksInPath() {
             if !FileManager.default.fileExists(atPath: iCloudDocumentsURL.path, isDirectory: nil) {
                 do {
                     try FileManager.default.createDirectory(at: iCloudDocumentsURL, withIntermediateDirectories: true, attributes: nil)
-                    return iCloudDocumentsURL.resolvingSymlinksInPath()
+                    _cachedICloudURL = iCloudDocumentsURL.resolvingSymlinksInPath()
+                    return _cachedICloudURL
                 } catch {
                     AppDelegate.trackError(error, context: "UserDefaultsManagement.iCloudDocumentsContainer creation failed")
                 }
             } else {
-                return iCloudDocumentsURL.resolvingSymlinksInPath()
+                _cachedICloudURL = iCloudDocumentsURL.resolvingSymlinksInPath()
+                return _cachedICloudURL
             }
         }
         return nil
     }
+
+    // Cache for local Documents
+    private static var _cachedLocalDocumentsURL: URL?
+    private static var _localDocumentsChecked = false
+
     static var localDocumentsContainer: URL? {
+        if _localDocumentsChecked {
+            return _cachedLocalDocumentsURL
+        }
+        _localDocumentsChecked = true
+
         if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
             let miaoyanPath: String = path + "/MiaoYan"
-            try! FileManager.default.createDirectory(
+            try? FileManager.default.createDirectory(
                 atPath: miaoyanPath,
                 withIntermediateDirectories: true, attributes: nil)
-            return URL(fileURLWithPath: miaoyanPath)
+            _cachedLocalDocumentsURL = URL(fileURLWithPath: miaoyanPath)
+            return _cachedLocalDocumentsURL
         }
         return nil
     }
