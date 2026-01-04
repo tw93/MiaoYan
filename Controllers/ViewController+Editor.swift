@@ -69,8 +69,7 @@ extension ViewController {
         editorContentSplitView?.setDisplayMode(.previewOnly, animated: false)
 
         preparePreviewContainer(hidden: false)
-        // Ensure alpha is 0 so Soft Reveal animation triggers during fill()
-        editArea.markdownView?.alphaValue = 0
+
 
         previewScrollView?.hasVerticalScroller = true
 
