@@ -20,9 +20,6 @@ class Sidebar {
             list = system
         }
 
-        if UserDefaultsManagement.isSingleMode {
-            return
-        }
 
         let rootProjects = storage.getRootProjects()
         var categoryItems: [SidebarItem] = []
