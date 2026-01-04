@@ -66,6 +66,7 @@ extension ViewController {
         }
         editArea.updateTextContainerInset()
         sidebarSplitView?.layoutSubtreeIfNeeded()
+        updateSidebarColumnWidth()
         checkSidebarConstraint()
         updateToolbarButtonTints()
     }
@@ -300,7 +301,12 @@ extension ViewController {
         editArea.updateTextContainerInset()
     }
 
-    func splitViewDidResizeSubviews(_ notification: Notification) {}
+    func splitViewDidResizeSubviews(_ notification: Notification) {
+        guard let splitView = notification.object as? NSSplitView,
+            splitView == sidebarSplitView
+        else { return }
+        updateSidebarColumnWidth()
+    }
 
     func splitView(_ splitView: NSSplitView, constrainMinCoordinate proposedMinimumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
         if splitView == sidebarSplitView && dividerIndex == 0 {
@@ -328,6 +334,7 @@ extension ViewController {
     func viewDidResize() {
         checkSidebarConstraint()
         checkTitlebarTopConstraint()
+        updateSidebarColumnWidth()
 
         handleEditorContentResize()
     }
@@ -376,6 +383,23 @@ extension ViewController {
     }
 
     // MARK: - Table and Sidebar Layout
+    func updateSidebarColumnWidth() {
+        guard sidebarWidth > 0,
+            let column = storageOutlineView?.tableColumns.first
+        else { return }
+
+        let clipWidth = sidebarScrollView?.contentView.bounds.width ?? 0
+        let fallbackWidth = sidebarSplitView?.subviews.first?.bounds.width ?? storageOutlineView.bounds.width
+        let measuredWidth = clipWidth > 1 ? clipWidth : fallbackWidth
+        let targetWidth = max(0, floor(measuredWidth))
+        if column.width != targetWidth {
+            column.width = targetWidth
+        }
+        if let outline = storageOutlineView, outline.frame.width != targetWidth {
+            outline.setFrameSize(NSSize(width: targetWidth, height: outline.frame.height))
+        }
+    }
+
     func reloadSideBar() {
         guard let outline = storageOutlineView else {
             return

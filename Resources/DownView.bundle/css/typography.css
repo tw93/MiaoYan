@@ -153,6 +153,18 @@ a {
   text-align: right;
 }
 
+.heti div[align='center'] p {
+  text-align: center;
+}
+
+.heti div[align='left'] p {
+  text-align: left;
+}
+
+.heti div[align='right'] p {
+  text-align: right;
+}
+
 .heti p > img {
   margin-top: 8px;
 }
@@ -332,6 +344,14 @@ blockquote blockquote {
 .heti a:hover {
   padding-block-end: 1px;
   border-block-end: 1px solid currentColor;
+  text-decoration: none;
+}
+
+/* Remove underline from image links */
+.heti a:has(img),
+.heti a:has(img):hover {
+  padding-block-end: 0;
+  border-block-end: none;
   text-decoration: none;
 }
 
