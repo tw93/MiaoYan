@@ -55,10 +55,24 @@ extension ViewController {
         var finalProjects = projects
         var sidebarName: String?
 
+        if searchText == nil,
+            UserDefaultsManagement.isSingleMode,
+            finalProjects == nil
+        {
+            let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath).resolvingSymlinksInPath()
+            if let project = storage.getProjectBy(url: singleModeUrl) {
+                finalProjects = [project]
+            }
+        }
+
         if searchText == nil {
-            finalProjects = storageOutlineView.getSidebarProjects()
-            finalSidebarItem = getSidebarItem()
-            sidebarName = getSidebarItem()?.getName()
+            if finalProjects == nil {
+                finalProjects = storageOutlineView.getSidebarProjects()
+            }
+            if finalSidebarItem == nil {
+                finalSidebarItem = getSidebarItem()
+            }
+            sidebarName = finalSidebarItem?.getName()
         }
 
         let filter = searchText ?? self.search.stringValue
@@ -271,24 +285,30 @@ extension ViewController {
                 didRestoreScroll = self.notesTableView.restoreScrollPosition(ensureSelectionVisible: false)
             }
 
-            let selectionRestored = self.restoreSelectionIfNeeded(
-                previouslySelectedNote: previousSelection,
-                fallbackRow: previousSelectedRow,
-                preserveScrollPosition: didRestoreScroll
-            )
-            if !isSearch {
-                let shouldPreferLastSelection = self.storageOutlineView?.isLaunch ?? false
-                let shouldPreserveScroll = didRestoreScroll && !selectionRestored
-                self.ensureNoteSelection(
-                    preferLastSelected: shouldPreferLastSelection,
-                    preserveScrollPosition: shouldPreserveScroll
+            if !UserDefaultsManagement.isSingleMode {
+                let selectionRestored = self.restoreSelectionIfNeeded(
+                    previouslySelectedNote: previousSelection,
+                    fallbackRow: previousSelectedRow,
+                    preserveScrollPosition: didRestoreScroll
                 )
+                if !isSearch {
+                    let shouldPreferLastSelection = self.storageOutlineView?.isLaunch ?? false
+                    let shouldPreserveScroll = didRestoreScroll && !selectionRestored
+                    self.ensureNoteSelection(
+                        preferLastSelected: shouldPreferLastSelection,
+                        preserveScrollPosition: shouldPreserveScroll
+                    )
+                }
             }
 
             // Fix: Deep Safeguard against missed selection updates
             // We delay the check slightly to allow for view layout and notification propagation.
             // This handles cases where the view is hidden on launch and suppresses selection notifications.
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                if UserDefaultsManagement.isSingleMode {
+                    self.revealEditor()
+                    return
+                }
                 if self.notesTableView.loadingQueue.operationCount == 0, EditTextView.note == nil {
                     // Case 1: Standard Selection Success
                     if let selectedNote = self.notesTableView.getSelectedNote() {
