@@ -34,9 +34,6 @@ img {
   color-rendering: optimizeQuality;
   image-rendering: -webkit-optimize-contrast;
   -webkit-color-correction: default;
-  /* Prevent layout shift during image loading */
-  min-height: 100px;
-  background: var(--code-bg, #f5f5f5);
 }
 
 /* ==================== Typography ==================== */
@@ -330,10 +327,6 @@ img.emoji {
 }
 
 /* ==================== Images ==================== */
-img[loading="lazy"] {
-  background-color: #eef1f2;
-  outline-color: #eef1f2;
-}
 
 #write>img,
 #write>p>img,
@@ -402,11 +395,6 @@ img.border {
   .heti li > code {
     background-color: var(--code-bg);
     color: var(--text-color);
-  }
-
-  img[loading="lazy"] {
-    background-color: var(--code-bg);
-    outline-color: var(--code-bg);
   }
 
   .heti mark {
