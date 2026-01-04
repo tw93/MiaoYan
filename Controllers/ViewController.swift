@@ -138,12 +138,14 @@ class ViewController:
     @IBOutlet var previewButton: NSButton! {
         didSet {
             previewButton.state = UserDefaultsManagement.preview ? .on : .off
+            previewButton.contentTintColor = UserDefaultsManagement.preview ? Theme.accentColor : nil
         }
     }
 
     @IBOutlet var presentationButton: NSButton! {
         didSet {
             presentationButton.state = UserDefaultsManagement.presentation ? .on : .off
+            presentationButton.contentTintColor = UserDefaultsManagement.presentation ? Theme.accentColor : nil
         }
     }
 
@@ -333,6 +335,7 @@ class ViewController:
 
     override func viewWillAppear() {
         super.viewWillAppear()
+        applyLegacySidebarWidthFixIfNeeded()
         if UserDefaultsManagement.preview {
             disablePreviewWorkItem?.cancel()
 
@@ -433,9 +436,22 @@ class ViewController:
                 self.showSidebar("")
             }
             UserDefaultsManagement.isFirstLaunch = false
+            UserDefaultsManagement.hasFixedInitialization = true
         } else {
             ensureInitialProjectSelection()
         }
+    }
+
+    private func applyLegacySidebarWidthFixIfNeeded() {
+        guard !UserDefaultsManagement.hasFixedInitialization else { return }
+        guard !UserDefaultsManagement.isFirstLaunch else { return }
+        view.layoutSubtreeIfNeeded()
+        sidebarSplitView?.layoutSubtreeIfNeeded()
+        if sidebarWidth > 0 {
+            // Re-apply sidebar visibility to enforce width constraints
+            setSidebarVisible(true)
+        }
+        UserDefaultsManagement.hasFixedInitialization = true
     }
 
     // MARK: - Selection Management
@@ -592,23 +608,9 @@ class ViewController:
         // Adjust parent width to accommodate new buttons
         for constraint in parent.constraints {
             if constraint.firstAttribute == .width && constraint.constant == 140 {
-                constraint.constant = 180
+                constraint.constant = 200
                 break
             }
-        }
-
-        // Set custom icons for formatButton, previewButton, presentationButton
-        if let image = NSImage(named: "icon_format") {
-            image.isTemplate = true
-            formatButton.image = image
-        }
-        if let image = NSImage(named: "icon_preview") {
-            image.isTemplate = true
-            previewButton.image = image
-        }
-        if let image = NSImage(named: "icon_presentation") {
-            image.isTemplate = true
-            presentationButton.image = image
         }
 
         formatButton.toolTip = I18n.str("Format")
@@ -632,6 +634,22 @@ class ViewController:
                     constraint.constant = 24
                 }
             }
+        }
+
+        // Set custom icons and Initial Tint State (Must be done AFTER generic styling)
+        if let image = NSImage(named: "icon_format") {
+            image.isTemplate = true
+            formatButton.image = image
+        }
+        if let image = NSImage(named: "icon_preview") {
+            image.isTemplate = true
+            previewButton.image = image
+            previewButton.contentTintColor = UserDefaultsManagement.preview ? Theme.accentColor : nil
+        }
+        if let image = NSImage(named: "icon_presentation") {
+            image.isTemplate = true
+            presentationButton.image = image
+            presentationButton.contentTintColor = UserDefaultsManagement.presentation ? Theme.accentColor : nil
         }
 
         // Create toggleSplitButton first (relative to formatButton to avoid overlap)
@@ -694,47 +712,59 @@ class ViewController:
             parent.addSubview(splitButton)
 
             // Recommended Order: List -> Format -> Split -> Preview -> Presentation
-            // 1. List (Sidebar) - Navigation Context
-            // 2. Format (Action) - Content Modification
-            // 3. Split (Layout) - View Experience
-            // 4. Preview (Mode) - View Experience
-            // 5. Presentation (Mode) - Immersive Experience
 
-            // Reset constraints for all movable buttons to ensure clean slate
-            for btn in [formatButton, previewButton, presentationButton] {
+            // Clear existing horizontal constraints for all buttons
+            let allButtons = [listButton, formatButton, splitButton, previewButton, presentationButton]
+            for btn in allButtons {
                 guard let btn = btn else { continue }
                 for constraint in parent.constraints {
-                    if constraint.firstItem as? NSButton == btn && constraint.firstAttribute == .leading {
-                        constraint.isActive = false
+                    if let target = constraint.firstItem as? NSButton, target == btn {
+                        if constraint.firstAttribute == .leading || constraint.firstAttribute == .trailing {
+                            constraint.isActive = false
+                        }
+                    }
+                    if let target = constraint.secondItem as? NSButton, target == btn {
+                        if constraint.firstAttribute == .leading || constraint.firstAttribute == .trailing {
+                            constraint.isActive = false
+                        }
                     }
                 }
             }
 
-            // 1. List is anchored to parent leading (set in creation block above)
+            // Align from Right (Trailing) to match Text Content Alignment
+            // Margin = 24 (Matches default textContainerInset width)
+            // Gap = 6 (Reduced from 8 as requested)
 
-            // 2. Format follows List (Uniform gap: 8)
+            // 5. Presentation (Rightmost)
             NSLayoutConstraint.activate([
-                formatButton.leadingAnchor.constraint(equalTo: listButton.trailingAnchor, constant: 8)
+                presentationButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
+                presentationButton.trailingAnchor.constraint(equalTo: parent.trailingAnchor, constant: -24),
             ])
 
-            // 3. Split follows Format (Uniform gap: 8)
+            // 4. Preview
+            NSLayoutConstraint.activate([
+                previewButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
+                previewButton.trailingAnchor.constraint(equalTo: presentationButton.leadingAnchor, constant: -6),
+            ])
+
+            // 3. Split
             NSLayoutConstraint.activate([
                 splitButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
-                splitButton.leadingAnchor.constraint(equalTo: formatButton.trailingAnchor, constant: 8),
+                splitButton.trailingAnchor.constraint(equalTo: previewButton.leadingAnchor, constant: -6),
                 splitButton.widthAnchor.constraint(equalToConstant: 24),
                 splitButton.heightAnchor.constraint(equalToConstant: 24),
             ])
 
-            // 4. Preview follows Split (Uniform gap: 8)
+            // 2. Format
             NSLayoutConstraint.activate([
-                previewButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
-                previewButton.leadingAnchor.constraint(equalTo: splitButton.trailingAnchor, constant: 8),
+                formatButton.trailingAnchor.constraint(equalTo: splitButton.leadingAnchor, constant: -6)
             ])
 
-            // 5. Presentation follows Preview (Uniform gap: 8)
+            // 1. List (Leftmost)
             NSLayoutConstraint.activate([
-                presentationButton.centerYAnchor.constraint(equalTo: formatButton.centerYAnchor),
-                presentationButton.leadingAnchor.constraint(equalTo: previewButton.trailingAnchor, constant: 8),
+                listButton.trailingAnchor.constraint(equalTo: formatButton.leadingAnchor, constant: -6),
+                listButton.widthAnchor.constraint(equalToConstant: 24),
+                listButton.heightAnchor.constraint(equalToConstant: 24),
             ])
         }
 

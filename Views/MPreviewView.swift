@@ -821,6 +821,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     // MARK: - TOC Hint
     func showTOCTipIfNeeded() {
         guard !UserDefaultsManagement.hasShownTOCTip else { return }
+        UserDefaultsManagement.hasShownTOCTip = true
 
         // Inject Red Dot script
         let script = """

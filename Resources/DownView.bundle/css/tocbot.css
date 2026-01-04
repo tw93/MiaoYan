@@ -36,13 +36,13 @@ body.darkmode .toc-nav .toc-link:hover::before {
   right: 20px;
   top: 74px;
   width: 8px;
-  height: 90px;
-  z-index: 199;
+  height: 60px;
+  z-index: 999;
   cursor: pointer;
   border-radius: 3px;
   background: linear-gradient(to bottom, rgba(28, 93, 51, 0.85), rgba(28, 93, 51, 0.45));
   box-shadow: 0 0 0 1px rgba(28, 93, 51, 0.30), 0 0 6px rgba(28, 93, 51, 0.35);
-  opacity: 0.2;
+  opacity: 0.12;
   transition: opacity 0.35s ease;
 }
 
@@ -54,7 +54,7 @@ body.darkmode .toc-nav .toc-link:hover::before {
 body.darkmode .toc-hover-trigger {
   background: linear-gradient(to bottom, rgba(84, 197, 159, 0.95), rgba(84, 197, 159, 0.52));
   box-shadow: 0 0 0 1px rgba(84, 197, 159, 0.55), 0 0 10px rgba(84, 197, 159, 0.65);
-  opacity: 0.2;
+  opacity: 0.12;
 }
 /* TOC Navigation Container */
 .toc-nav {
