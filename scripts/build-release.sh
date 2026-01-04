@@ -11,6 +11,7 @@ NC='\033[0m'
 # Auto-detect version from project.pbxproj
 VERSION=$(grep "MARKETING_VERSION" MiaoYan.xcodeproj/project.pbxproj | head -1 | sed 's/.*= \(.*\);/\1/' | tr -d ' ')
 [ -n "$1" ] && VERSION="$1"
+KEY_PATH="${SPARKLE_PRIVATE_KEY:-}"
 
 if [ -z "$VERSION" ]; then
     echo -e "${RED}ERROR: Could not detect version${NC}"
@@ -62,10 +63,19 @@ xattr -cr "./build/$DMG_NAME" "./build/$ZIP_NAME"
 
 # 5. Sparkle signature
 echo "[5/6] Signing..."
-SIGN_UPDATE=$(find ~/Library/Developer/Xcode/DerivedData/MiaoYan-*/SourcePackages/artifacts/sparkle/Sparkle/bin/sign_update 2>/dev/null | head -1)
+SIGN_UPDATE=$(ls -t ~/Library/Developer/Xcode/DerivedData/MiaoYan-*/SourcePackages/artifacts/sparkle/Sparkle/bin/sign_update 2>/dev/null | head -1)
 
 if [ -n "$SIGN_UPDATE" ] && [ -x "$SIGN_UPDATE" ]; then
-    SIGNATURE=$("$SIGN_UPDATE" "./build/$ZIP_NAME" 2>/dev/null | grep "sparkle:edSignature" | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
+    if [ -n "$KEY_PATH" ] && [ ! -f "$KEY_PATH" ]; then
+        echo -e "${RED}ERROR: SPARKLE_PRIVATE_KEY not found: $KEY_PATH${NC}"
+        exit 1
+    fi
+    if [ -n "$KEY_PATH" ]; then
+        SIGNATURE=$("$SIGN_UPDATE" -k "$KEY_PATH" "./build/$ZIP_NAME" 2>/dev/null | grep "sparkle:edSignature" | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
+    else
+        echo -e "${YELLOW}WARNING: SPARKLE_PRIVATE_KEY not set; using default key${NC}"
+        SIGNATURE=$("$SIGN_UPDATE" "./build/$ZIP_NAME" 2>/dev/null | grep "sparkle:edSignature" | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
+    fi
     ZIP_SIZE=$(stat -f%z "./build/$ZIP_NAME")
 else
     echo -e "${YELLOW}sign_update not found${NC}"
