@@ -490,6 +490,7 @@ extension ViewController {
         // Load content in presentation mode
         refillEditArea(previewOnly: true, force: true)
         presentationButton.state = .on
+        presentationButton.contentTintColor = Theme.accentColor
         // Disable editor's find bar to prevent Cmd+F from being intercepted by NSTextView
         editArea.usesFindBar = false
         // Hide editor scrollbar to prevent overlap with preview scrollbar
@@ -507,6 +508,7 @@ extension ViewController {
 
     func disablePresentation() {
         presentationButton.state = .off
+        presentationButton.contentTintColor = nil
         if UserDefaultsManagement.fullScreen {
             UserDefaultsManagement.fullScreen = false
             view.window?.toggleFullScreen(nil)
@@ -524,7 +526,9 @@ extension ViewController {
     private func updateButtonStates() {
         DispatchQueue.main.async {
             self.previewButton.state = UserDefaultsManagement.preview ? .on : .off
+            self.previewButton.contentTintColor = UserDefaultsManagement.preview ? Theme.accentColor : nil
             self.presentationButton.state = UserDefaultsManagement.presentation ? .on : .off
+            self.presentationButton.contentTintColor = UserDefaultsManagement.presentation ? Theme.accentColor : nil
         }
     }
 
@@ -586,7 +590,9 @@ extension ViewController {
         toggleSplitButton?.isHidden = true
         DispatchQueue.main.async {
             vc.previewButton.state = .on
+            vc.previewButton.contentTintColor = Theme.accentColor
             vc.presentationButton.state = .on
+            vc.presentationButton.contentTintColor = Theme.accentColor
         }
         if !UserDefaultsManagement.fullScreen {
             view.window?.toggleFullScreen(nil)
@@ -651,7 +657,9 @@ extension ViewController {
         // Update button states
         DispatchQueue.main.async {
             self.previewButton.state = .off
+            self.previewButton.contentTintColor = nil
             self.presentationButton.state = .off
+            self.presentationButton.contentTintColor = nil
         }
         // Restore title components that were hidden in PPT mode
         DispatchQueue.main.async {
@@ -1020,7 +1028,9 @@ extension ViewController {
     ) {
         DispatchQueue.main.async { [weak self] in
             self?.previewButton.state = UserDefaultsManagement.preview ? .on : .off
+            self?.previewButton.contentTintColor = UserDefaultsManagement.preview ? Theme.accentColor : nil
             self?.presentationButton.state = UserDefaultsManagement.presentation ? .on : .off
+            self?.presentationButton.contentTintColor = UserDefaultsManagement.presentation ? Theme.accentColor : nil
         }
         // Allow content refill in these scenarios:
         // - Normal refill (not preview-only), or
