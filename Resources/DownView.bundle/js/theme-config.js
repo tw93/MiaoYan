@@ -128,15 +128,27 @@ function getMermaidConfig(isDark = false) {
     relationColor: lineColor,
     lineColor
   };
-
   return {
     startOnLoad: true,
     theme: isDark ? 'dark' : 'neutral',
-    fontFamily: 'Helvetica, Arial, sans-serif',
+    themeVariables: extendedColors,
+    darkMode: isDark,
+    fontSize: 15,
+    fontFamily: "'TsangerJinKai02-W04', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', Arial, sans-serif",
     flowchart: {
       useMaxWidth: true,
       htmlLabels: true,
       curve: 'basis',
+      nodeSpacing: 80,
+      rankSpacing: 80,
+      padding: 30,
+    },
+    elk: {
+      cycleBreakingStrategy: 'GREEDY',
+      nodePlacementStrategy: 'SIMPLE',
+      padding: 40,
+      nodeSpacing: 120,
+      rankSpacing: 120,
     },
     sequence: {
       useMaxWidth: true,
