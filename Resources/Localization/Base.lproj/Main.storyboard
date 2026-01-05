@@ -114,6 +114,12 @@ CA
                                                 <action selector="renameMenu:" target="L4m-js-agn" id="H0Y-Fe-qfr"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Pin/unpin" keyEquivalent="P" id="Pin-Menu-Main">
+                                            <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="pinMenu:" target="L4m-js-agn" id="Pin-Action-Main"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Reveal in Finder" keyEquivalent="r" id="rXU-X3-UjC">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
