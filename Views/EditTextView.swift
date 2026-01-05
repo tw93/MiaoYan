@@ -12,6 +12,7 @@ struct FillOptions {
     let needScrollToCursor: Bool
     let previewOnly: Bool
     let animatePreview: Bool
+    let preserveUndo: Bool
 
     init(
         highlight: Bool,
@@ -19,7 +20,8 @@ struct FillOptions {
         force: Bool,
         needScrollToCursor: Bool,
         previewOnly: Bool = false,
-        animatePreview: Bool = true
+        animatePreview: Bool = true,
+        preserveUndo: Bool = false
     ) {
         self.highlight = highlight
         self.saveTyping = saveTyping
@@ -27,6 +29,7 @@ struct FillOptions {
         self.needScrollToCursor = needScrollToCursor
         self.previewOnly = previewOnly
         self.animatePreview = animatePreview
+        self.preserveUndo = preserveUndo
     }
 
     // Common presets
@@ -457,7 +460,9 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         note.ensureContentLoaded()
         UserDefaultsManagement.lastSelectedURL = note.url
         viewController.updateTitle(newTitle: note.getTitleWithoutLabel())
-        undoManager?.removeAllActions(withTarget: self)
+        if !options.preserveUndo {
+            undoManager?.removeAllActions(withTarget: self)
+        }
         if let appDelegate = NSApplication.shared.delegate as? AppDelegate,
             let md = appDelegate.mainWindowController
         {
