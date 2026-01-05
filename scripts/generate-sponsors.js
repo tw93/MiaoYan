@@ -278,17 +278,16 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
   const offsetX = Math.max(0, (width - gridWidth) / 2);
   let markup = `
     <g transform="translate(${x}, ${y})">
-      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#222222">GitHub Sponsors ❤️</text>
+      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#222222">GitHub Sponsors</text>
   `;
   const clipDefs = [];
 
     if (!sponsors.length) {
     markup += `
       <g transform="translate(0, 48)">
-        <rect width="${width}" height="140" rx="20" fill="rgba(0,0,0,0.02)" />
-        <text x="${width / 2}" y="60" text-anchor="middle" font-size="22" font-weight="600" fill="#444444">Become the first Sponsor</text>
+        <text x="${width / 2}" y="60" text-anchor="middle" font-size="20" font-weight="500" fill="#666666">Become the first Sponsor</text>
         <a xlink:href="${SPONSORS_URL}" target="_blank">
-          <text x="${width / 2}" y="100" text-anchor="middle" font-size="16" fill="#666666">Click to support tw93</text>
+          <text x="${width / 2}" y="95" text-anchor="middle" font-size="15" fill="#999999">Click to support tw93</text>
         </a>
       </g>
     </g>`;
@@ -297,8 +296,6 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
 
   markup += `
     <g transform="translate(0, 48)">
-      <rect width="${width}" height="${gridHeight + 48}" rx="20" fill="rgba(0,0,0,0.02)" />
-      <g transform="translate(0, 24)">
   `;
 
   sponsors.forEach((sponsor, index) => {
@@ -324,7 +321,7 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
     `;
   });
 
-  markup += '</g></g></g>';
+  markup += '</g></g>';
 
   return {
     markup,
@@ -344,10 +341,9 @@ function renderFriendTable({ friends, x, y, width }) {
   const centerX = width / 2;
   let markup = `
     <g transform="translate(${x}, ${y})">
-      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#222222">Tipping Friends ❤️</text>
+      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#222222">Tipping Friends</text>
       <g transform="translate(0, ${tableTop})">
-        <rect width="${width}" height="${tableHeight + 32}" rx="20" fill="rgba(0,0,0,0.02)" />
-        <g transform="translate(0, 16)">
+        <g transform="translate(0, 8)">
   `;
 
   const orderedFriends = [...friends].reverse();
