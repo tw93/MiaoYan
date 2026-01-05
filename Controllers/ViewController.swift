@@ -249,6 +249,7 @@ class ViewController:
         search.font = UserDefaultsManagement.searchFont
         titleLabel.font = UserDefaultsManagement.titleFont.titleBold()
         emptyEditTitle.font = UserDefaultsManagement.emptyEditTitleFont
+        titleLabel.placeholderString = I18n.str("Enter title")
 
         storageOutlineView.reloadData()
         notesTableView.reloadData()
