@@ -295,14 +295,14 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
   }
 
   markup += `
-    <g transform="translate(0, 48)">
+    <g transform="translate(0, 60)">
   `;
 
   sponsors.forEach((sponsor, index) => {
     const col = index % cols;
     const row = Math.floor(index / cols);
     const avatarX = offsetX + col * (avatarSize + spacing);
-    const avatarY = titleHeight + 32 + row * (avatarSize + gapY);
+    const avatarY = row * (avatarSize + gapY);
     const clipId = `cp-${sponsor.login}`;
     clipDefs.push(
       `<clipPath id="${clipId}">
@@ -342,7 +342,7 @@ function renderFriendTable({ friends, x, y, width }) {
   let markup = `
     <g transform="translate(${x}, ${y})">
       <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#222222">Tipping Friends (${friends.length})</text>
-      <g transform="translate(0, 68)">
+      <g transform="translate(0, 60)">
   `;
 
   const orderedFriends = [...friends].reverse();
