@@ -1035,6 +1035,10 @@ extension ViewController {
         guard force || !previewOnly || (previewOnly && shouldShowPreview) else {
             return
         }
+
+        // Fix race condition: Cancel any pending table selection updates to prevent them from interfering with this refill
+        notesTableView.loadingQueue.cancelAllOperations()
+
         DispatchQueue.main.async {
             let now = ProcessInfo.processInfo.systemUptime
             let isRapidPreviewSwitch = self.shouldShowPreview && (now - self.lastPreviewReloadTime) < 0.2
@@ -1059,10 +1063,16 @@ extension ViewController {
                         force || !previewOnly
                     {
                         if !suppressSave {
-                            self.editArea.saveTextStorageContent(to: currentNote)
-                            // CRITICAL: Mark content as loaded to prevent ensureContentLoaded() from reloading stale disk content
-                            // This fixes content loss when rapidly toggling split view before auto-save completes
-                            currentNote.markContentAsLoaded()
+                            // SAFETY CHECK: Prevent overwriting content with empty string during view mode toggle
+                            // This catches the specific data loss case where editor content is lost but note exists
+                            if self.editArea.string.isEmpty && currentNote.content.length > 0 {
+                                self.internalLogDebug("Skipping save of empty content to non-empty note: \(currentNote.getFileName())")
+                            } else {
+                                self.editArea.saveTextStorageContent(to: currentNote)
+                                // CRITICAL: Mark content as loaded to prevent ensureContentLoaded() from reloading stale disk content
+                                // This fixes content loss when rapidly toggling split view before auto-save completes
+                                currentNote.markContentAsLoaded()
+                            }
                         }
                     }
 
@@ -1072,7 +1082,8 @@ extension ViewController {
                         force: force,
                         needScrollToCursor: true,
                         previewOnly: previewOnly,
-                        animatePreview: animatePreview && !isRapidPreviewSwitch
+                        animatePreview: animatePreview && !isRapidPreviewSwitch,
+                        preserveUndo: true  // Preserve undo stack during view refreshes (e.g. Split View toggle)
                     )
                     self.editArea.fill(note: note, options: options)
                     self.editArea.setSelectedRange(NSRange(location: location, length: 0))
