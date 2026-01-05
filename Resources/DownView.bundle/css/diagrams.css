@@ -176,13 +176,26 @@ pre:has(.language-mermaid) {
 .language-markmap,
 .language-plantuml {
   border-radius: var(--border-radius);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .language-mermaid svg,
 .markmap svg,
 .plantuml-image {
   border-radius: var(--border-radius);
+}
+
+.mermaid foreignObject {
+  overflow: visible !important;
+}
+
+.mermaid .label,
+.mermaid .nodeLabel,
+.mermaid .edgeLabel,
+.mermaid foreignObject div {
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  display: inline-block !important;
 }
 
 .mermaid,
@@ -203,4 +216,8 @@ pre:has(.language-mermaid) {
 .mermaid .edgeLabel,
 .mermaid .label {
   font-family: var(--text-font), -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif;
+  font-size: 14px !important;
+  line-height: 1.2 !important;
+  text-rendering: optimizeSpeed !important;
+  -webkit-font-smoothing: antialiased !important;
 }

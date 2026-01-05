@@ -40,50 +40,84 @@ const DiagramHandler = {
     return hash;
   },
 
-  initializeMermaid() {
+  // Cache for SVG content to support zero-delay re-rendering
+  _svgCache: new Map(),
+
+  async initializeMermaid() {
     if (!window.mermaid) return;
 
     const isDark = this.isDarkMode();
     const config = window.ThemeConfig?.getMermaidConfig(isDark) || {};
 
+    if (mermaid.registerLayoutLoaders) {
+      mermaid.registerLayoutLoaders({
+        elk: async () => {
+          try {
+            const mod = await import('./mermaid-layout-elk.js');
+            return mod.default;
+          } catch (e) {
+            console.error('ELK Import FAILED:', e);
+            throw e;
+          }
+        },
+      });
+    }
+
     mermaid.initialize(config);
 
     const mermaidElements = document.querySelectorAll('.language-mermaid');
-    const newOrChangedElements = [];
 
-    mermaidElements.forEach(element => {
-      // Calculate content hash for change detection
+    // Process diagrams (parallel if possible)
+    const renderPromises = Array.from(mermaidElements).map(async (element, index) => {
       const content = element.textContent || '';
-      const currentHash = this._simpleHash(content);
-      const elementId = element.dataset.elementId || Math.random().toString(36);
-      element.dataset.elementId = elementId;
+      if (!content.trim()) return;
 
-      // Check if already rendered and content unchanged
-      const cachedHash = this._renderedHashes.get(elementId);
-      const isRendered = element.dataset.mermaidRendered === 'true';
+      const hash = this._simpleHash(content);
 
-      // Only re-render if: 1) never rendered, or 2) content changed
-      if (!isRendered || cachedHash !== currentHash) {
-        newOrChangedElements.push(element);
-        this._renderedHashes.set(elementId, currentHash);
-
-        if (!isRendered) {
-          const loader = this.createLoadingIndicator('Mermaid diagram');
-          element.parentNode.insertBefore(loader, element);
-          setTimeout(() => loader.remove(), 1000);
-        }
-
+      // 1. Check Cache
+      if (this._svgCache.has(hash)) {
+        element.innerHTML = this._svgCache.get(hash);
         element.dataset.mermaidRendered = 'true';
+        element.setAttribute('data-processed', 'true');
+        return;
+      }
+
+      // 2. Render fresh
+      const elementId = 'mermaid-' + Math.random().toString(36).substr(2, 9);
+      const loader = this.createLoadingIndicator('Mermaid diagram');
+      element.parentNode.insertBefore(loader, element);
+
+      try {
+        const svg = await new Promise((resolve, reject) => {
+          try {
+            const result = mermaid.render(elementId, content, (svgCode) => {
+                resolve(svgCode);
+            });
+            if (result && typeof result.then === 'function') {
+              result.then(r => resolve(r.svg)).catch(reject);
+            }
+          } catch (e) {
+            reject(e);
+          }
+        });
+
+        this._svgCache.set(hash, svg);
+        element.innerHTML = svg;
+        element.dataset.mermaidRendered = 'true';
+        element.setAttribute('data-processed', 'true');
+      } catch (error) {
+        console.error('Mermaid rendering failed:', error);
+        const errorMessage = error.message || 'Unknown Mermaid Error';
+        loader.innerHTML = `<div style="padding: 10px; color: #d00; border: 1px solid #ecc; background: #fee; border-radius: 4px; font-family: monospace; white-space: pre-wrap;">Mermaid Error: ${errorMessage}</div>`;
+        return;
+      } finally {
+        if (!loader.querySelector('div')) {
+             loader.remove();
+        }
       }
     });
 
-    // Only render new or changed diagrams (performance optimization)
-    if (newOrChangedElements.length > 0) {
-      console.log(`[DiagramHandler] Rendering ${newOrChangedElements.length} mermaid diagrams (${mermaidElements.length - newOrChangedElements.length} cached)`);
-      window.mermaid.init(undefined, newOrChangedElements);
-    } else {
-      console.log('[DiagramHandler] All mermaid diagrams cached, skipping render');
-    }
+    await Promise.all(renderPromises);
   },
 
   initializePlantUML() {

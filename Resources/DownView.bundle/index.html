@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="initial-scale=1.0" />
@@ -30,7 +31,8 @@
       --diagram-bg: #282e33;
     }
 
-    html, body {
+    html,
+    body {
       background: var(--bg-color);
       color: var(--text-color);
       margin: 0;
@@ -106,8 +108,9 @@
   <nav class="toc-nav">
     <div class="toc-content"></div>
     <button class="toc-pin-btn" title="Pin TOC" aria-label="Pin TOC">
-      <svg class="pin-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M16 9V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v5m0 0l-2 2v2h12v-2l-2-2m-8 0h8m-4 6v7"/>
+      <svg class="pin-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2">
+        <path d="M16 9V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v5m0 0l-2 2v2h12v-2l-2-2m-8 0h8m-4 6v7" />
       </svg>
     </button>
   </nav>
@@ -127,13 +130,13 @@
       ThemeConfig.applyDarkModeStyles();
     }
 
-    MiaoYanCommon.onDOMReady(function() {
+    MiaoYanCommon.onDOMReady(function () {
       renderMathInElement(document.body, {
         delimiters: [
-          {left: "$$", right: "$$", display: true},
-          {left: "$", right: "$", display: false},
-          {left: "\\(", right: "\\)", display: false},
-          {left: "\\[", right: "\\]", display: true}
+          { left: "$$", right: "$$", display: true },
+          { left: "$", right: "$", display: false },
+          { left: "\\(", right: "\\)", display: false },
+          { left: "\\[", right: "\\]", display: true }
         ],
         processEscapes: true,
         ignoredClasses: ['katex-display', 'katex', 'skip-math-dollar']
@@ -144,9 +147,12 @@
       MiaoYanCommon.setupImageZoom();
 
       setTimeout(() => {
-        DiagramHandler.initializeAll();
+        if (window.DiagramHandler) {
+          DiagramHandler.initializeAll();
+        }
       }, 100);
     });
   </script>
 </body>
+
 </html>

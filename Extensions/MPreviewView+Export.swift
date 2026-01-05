@@ -244,7 +244,8 @@ extension MPreviewView {
         if forceLightMode {
             baseCSS = HtmlManager.lightModeExportCSS()
         } else {
-            baseCSS = UserDataService.instance.isDark
+            baseCSS =
+                UserDataService.instance.isDark
                 ? HtmlManager.darkModeExportCSS()
                 : HtmlManager.lightModeExportCSS()
         }

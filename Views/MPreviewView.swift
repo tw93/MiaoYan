@@ -96,10 +96,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
         super.init(frame: frame, configuration: configuration)
         navigationDelegate = navigationProxy
 
-        // Add self as handler for logging (PDF export progress) - done after super.init so 'self' is available
-        let loggingHandler = WeakScriptMessageHandler(self)
-        self.configuration.userContentController.add(loggingHandler, name: "logging")
-
         // Note: Frame is manually managed by EditTextView to avoid resize flicker
         // autoresizingMask is intentionally not set
 
@@ -146,7 +142,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
 
         Self.ensureBundlePreinitialized()
         load(note: note)
-        // No additional background mask needed
     }
     @available(*, unavailable)
     required init?(coder: NSCoder) {
