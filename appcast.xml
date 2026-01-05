@@ -3,7 +3,7 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
-      <title>2.4.2</title>
+      <title>2.4.3</title>
       <description><![CDATA[
       <h3>更稳 🚵🏿‍♂️</h3>
       <ol>
@@ -37,8 +37,8 @@
         <li>Docs & release tooling: updated install guidance, new build script and export options</li>
       </ol>
           ]]>      </description>
-      <pubDate>周日, 04 01月 2026 23:20:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.4.2.1.zip" sparkle:shortVersionString="2.4.2" sparkle:version="2.4.2" sparkle:edSignature="8YKVvt7zk9mfXOqxTLXAKqzt3nPGhnypkwgHZl1LFoH4U1pzQeUTjr2qD6SwbWgdiWNZkQ21Qan7fXzFu13UBA==" length="23150505" type="application/octet-stream"/>
+      <pubDate>周一, 05 01月 2026 23:20:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.4.3.zip" sparkle:shortVersionString="2.4.3" sparkle:version="2.4.3" sparkle:edSignature="LjscVrzaajUMkFdMlqLydJXAKqsp65Jj6BthQv6TAuprJzrDU0qgUKvHVUcDhbCFKmCAQcbjiR12ZnQ4IJVcDA==" length="23630786" type="application/octet-stream"/>
       <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
     </item>
       <item>
