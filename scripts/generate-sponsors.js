@@ -278,7 +278,7 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
   const offsetX = Math.max(0, (width - gridWidth) / 2);
   let markup = `
     <g transform="translate(${x}, ${y})">
-      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#222222">GitHub Sponsors</text>
+      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#222222">GitHub Sponsors (${sponsors.length})</text>
   `;
   const clipDefs = [];
 
@@ -302,7 +302,7 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
     const col = index % cols;
     const row = Math.floor(index / cols);
     const avatarX = offsetX + col * (avatarSize + spacing);
-    const avatarY = titleHeight + 24 + row * (avatarSize + gapY);
+    const avatarY = titleHeight + 32 + row * (avatarSize + gapY);
     const clipId = `cp-${sponsor.login}`;
     clipDefs.push(
       `<clipPath id="${clipId}">
@@ -341,9 +341,8 @@ function renderFriendTable({ friends, x, y, width }) {
   const centerX = width / 2;
   let markup = `
     <g transform="translate(${x}, ${y})">
-      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#222222">Tipping Friends</text>
-      <g transform="translate(0, ${tableTop})">
-        <g transform="translate(0, 8)">
+      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#222222">Tipping Friends (${friends.length})</text>
+      <g transform="translate(0, 68)">
   `;
 
   const orderedFriends = [...friends].reverse();
@@ -355,7 +354,7 @@ function renderFriendTable({ friends, x, y, width }) {
     markup += `<text x="${textX}" y="${textY}" text-anchor="middle" alignment-baseline="middle" font-size="14" fill="#555555">${escapeText(name)}</text>`;
   });
 
-  markup += '</g></g></g>';
+  markup += '</g></g>';
 
   return {
     markup,
