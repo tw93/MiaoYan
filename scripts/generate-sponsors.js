@@ -188,9 +188,9 @@ async function fetchSponsors(token) {
 
 async function buildSvg({ sponsors, friends }) {
   const width = 1000;
-  const outerPadding = 32;
-  const innerPadding = 24;
-  const contentWidth = width - outerPadding * 2 - innerPadding * 2;
+  const outerPadding = 40;
+  const innerPadding = 32;
+  const contentWidth = width - outerPadding * 2;
   await embedAvatarData(sponsors);
 
   let cursorY = innerPadding;
@@ -198,7 +198,7 @@ async function buildSvg({ sponsors, friends }) {
 
   const sponsorGrid = renderSponsorGrid({
     sponsors,
-    x: innerPadding,
+    x: 0,
     y: cursorY,
     width: contentWidth,
   });
@@ -207,14 +207,14 @@ async function buildSvg({ sponsors, friends }) {
 
   const friendTable = renderFriendTable({
     friends,
-    x: innerPadding,
+    x: 0,
     y: cursorY,
     width: contentWidth,
   });
   cursorY += friendTable.height + innerPadding;
 
   const boardHeight = cursorY;
-  const height = boardHeight + outerPadding * 2 - 24;
+  const height = boardHeight + outerPadding * 2;
 
   const svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img">
     <title>Tw93 Sponsors</title>
@@ -254,9 +254,9 @@ async function embedAvatarData(sponsors) {
 
 function renderSponsorGrid({ sponsors, x, y, width }) {
   const avatarSize = 72;
-  const baseGap = 45;
+  const baseGap = 40;
   const gapY = 45;
-  let cols = Math.max(1, Math.floor((width - 40) / (avatarSize + baseGap)));
+  let cols = Math.floor(width / (avatarSize + baseGap));
   const rows = Math.max(1, Math.ceil(sponsors.length / cols));
   let spacing = baseGap;
   if (cols > 1) {
@@ -278,15 +278,15 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
   const offsetX = Math.max(0, (width - gridWidth) / 2);
   let markup = `
     <g transform="translate(${x}, ${y})">
-      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#333333">${sponsors.length} GitHub Sponsors</text>
+      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#222222">${sponsors.length} GitHub Sponsors</text>
   `;
   const clipDefs = [];
 
-  if (!sponsors.length) {
+    if (!sponsors.length) {
     markup += `
       <g transform="translate(0, 48)">
-        <rect width="${width}" height="140" rx="24" fill="rgba(0,0,0,0.02)" stroke="rgba(0,0,0,0.1)" />
-        <text x="${width / 2}" y="60" text-anchor="middle" font-size="22" font-weight="600" fill="#666666">Become the first GitHub Sponsor</text>
+        <rect width="${width}" height="140" rx="20" fill="rgba(0,0,0,0.02)" />
+        <text x="${width / 2}" y="60" text-anchor="middle" font-size="22" font-weight="600" fill="#444444">Become the first GitHub Sponsor</text>
         <a xlink:href="${SPONSORS_URL}" target="_blank">
           <text x="${width / 2}" y="100" text-anchor="middle" font-size="16" fill="#666666">Click to support tw93</text>
         </a>
@@ -294,6 +294,12 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
     </g>`;
     return { markup, height: sectionHeight, defs: [] };
   }
+
+  markup += `
+    <g transform="translate(0, 48)">
+      <rect width="${width}" height="${gridHeight + 48}" rx="20" fill="rgba(0,0,0,0.02)" />
+      <g transform="translate(0, 24)">
+  `;
 
   sponsors.forEach((sponsor, index) => {
     const col = index % cols;
@@ -318,7 +324,7 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
     `;
   });
 
-  markup += '</g>';
+  markup += '</g></g></g>';
 
   return {
     markup,
@@ -338,9 +344,9 @@ function renderFriendTable({ friends, x, y, width }) {
   const centerX = width / 2;
   let markup = `
     <g transform="translate(${x}, ${y})">
-      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#333333">${friends.length} Tipping Friends</text>
+      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#222222">${friends.length} Tipping Friends</text>
       <g transform="translate(0, ${tableTop})">
-        <rect width="${width}" height="${tableHeight + 32}" rx="16" fill="rgba(0,0,0,0.02)" />
+        <rect width="${width}" height="${tableHeight + 32}" rx="20" fill="rgba(0,0,0,0.02)" />
         <g transform="translate(0, 16)">
   `;
 
