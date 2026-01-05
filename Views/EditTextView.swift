@@ -41,7 +41,7 @@ struct FillOptions {
 @MainActor
 class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     private enum PreviewRevealTiming {
-        static let initialDelay: TimeInterval = 1.0
+        static let initialDelay: TimeInterval = 0.3
         static let fadeDuration: TimeInterval = 0.2
     }
     public static var note: Note?
@@ -514,56 +514,13 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 }
                 previewView.autoresizingMask = [.width, .height]
 
-                // Smooth transition: fade out -> load -> fade in (skip when animation is disabled)
-                let needsTransition = allowPreviewTransition && !previewView.isHidden && previewView.alphaValue > 0
-                if needsTransition {
-                    NSAnimationContext.runAnimationGroup(
-                        { context in
-                            context.duration = 0.08
-                            previewView.animator().alphaValue = 0
-                        },
-                        completionHandler: {
-                            Task { @MainActor in
-                                previewView.load(note: note, force: options.force)
-                                NSAnimationContext.runAnimationGroup({ context in
-                                    context.duration = 0.12
-                                    previewView.animator().alphaValue = 1.0
-                                })
-                            }
-                        })
-                } else {
-                    if shouldUseIncrementalPreviewUpdate, previewView.hasLoadedTemplate {
-                        previewView.updateContent(note: note, preserveScroll: false)
-                        previewView.isHidden = false
-                        previewView.alphaValue = 1.0
-                    } else {
-                        let shouldGateReveal = !MPreviewView.hasCompletedInitialLoad
-                        if shouldGateReveal {
-                            previewView.isHidden = false
-                            previewView.alphaValue = 0
-                        } else {
-                            // Fast reveal: show immediately to provide instant visual feedback
-                            previewView.isHidden = false
-                            previewView.alphaValue = 1.0
-                        }
-                        previewView.load(note: note, force: options.force) {
-                            if shouldGateReveal {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + PreviewRevealTiming.initialDelay) {
-                                    let shouldShowPreview =
-                                        UserDefaultsManagement.preview
-                                        || UserDefaultsManagement.presentation
-                                        || UserDefaultsManagement.magicPPT
-                                        || UserDefaultsManagement.splitViewMode
-                                    guard shouldShowPreview, !previewView.isHidden else { return }
-                                    NSAnimationContext.runAnimationGroup({ context in
-                                        context.duration = PreviewRevealTiming.fadeDuration
-                                        previewView.animator().alphaValue = 1.0
-                                    })
-                                }
-                            }
-                        }
-                    }
-                }
+                renderPreviewContent(
+                    note: note,
+                    previewView: previewView,
+                    options: options,
+                    allowTransition: allowPreviewTransition,
+                    useIncremental: shouldUseIncrementalPreviewUpdate
+                )
             } else if let previewView = markdownView,
                 let fallbackContainer = viewController.editAreaScroll
             {
@@ -577,56 +534,13 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 }
                 previewView.autoresizingMask = [.width, .height]
 
-                // Smooth transition: fade out -> load -> fade in (skip when animation is disabled)
-                let needsTransition = allowPreviewTransition && !previewView.isHidden && previewView.alphaValue > 0
-                if needsTransition {
-                    NSAnimationContext.runAnimationGroup(
-                        { context in
-                            context.duration = 0.08
-                            previewView.animator().alphaValue = 0
-                        },
-                        completionHandler: {
-                            Task { @MainActor in
-                                previewView.load(note: note, force: options.force)
-                                NSAnimationContext.runAnimationGroup({ context in
-                                    context.duration = 0.12
-                                    previewView.animator().alphaValue = 1.0
-                                })
-                            }
-                        })
-                } else {
-                    if shouldUseIncrementalPreviewUpdate, previewView.hasLoadedTemplate {
-                        previewView.updateContent(note: note, preserveScroll: false)
-                        previewView.isHidden = false
-                        previewView.alphaValue = 1.0
-                    } else {
-                        let shouldGateReveal = !MPreviewView.hasCompletedInitialLoad
-                        if shouldGateReveal {
-                            previewView.isHidden = false
-                            previewView.alphaValue = 0
-                        } else {
-                            // Fast reveal: show immediately to provide instant visual feedback
-                            previewView.isHidden = false
-                            previewView.alphaValue = 1.0
-                        }
-                        previewView.load(note: note, force: options.force) {
-                            if shouldGateReveal {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + PreviewRevealTiming.initialDelay) {
-                                    let shouldShowPreview =
-                                        UserDefaultsManagement.preview
-                                        || UserDefaultsManagement.presentation
-                                        || UserDefaultsManagement.magicPPT
-                                        || UserDefaultsManagement.splitViewMode
-                                    guard shouldShowPreview, !previewView.isHidden else { return }
-                                    NSAnimationContext.runAnimationGroup({ context in
-                                        context.duration = PreviewRevealTiming.fadeDuration
-                                        previewView.animator().alphaValue = 1.0
-                                    })
-                                }
-                            }
-                        }
-                    }
-                }
+                renderPreviewContent(
+                    note: note,
+                    previewView: previewView,
+                    options: options,
+                    allowTransition: allowPreviewTransition,
+                    useIncremental: shouldUseIncrementalPreviewUpdate
+                )
             }
         } else {
             // Ensure preview is completely hidden and doesn't block editor
@@ -660,6 +574,65 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             storage.applyEditorLetterSpacing()
         }
         restoreCursorPosition(needScrollToCursor: options.needScrollToCursor)
+    }
+
+    private func renderPreviewContent(
+        note: Note,
+        previewView: MPreviewView,
+        options: FillOptions,
+        allowTransition: Bool,
+        useIncremental: Bool
+    ) {
+        // Smooth transition: fade out -> load -> fade in (skip when animation is disabled)
+        let needsTransition = allowTransition && !previewView.isHidden && previewView.alphaValue > 0
+        if needsTransition {
+            NSAnimationContext.runAnimationGroup(
+                { context in
+                    context.duration = 0.08
+                    previewView.animator().alphaValue = 0
+                },
+                completionHandler: {
+                    Task { @MainActor in
+                        previewView.load(note: note, force: options.force)
+                        NSAnimationContext.runAnimationGroup({ context in
+                            context.duration = 0.12
+                            previewView.animator().alphaValue = 1.0
+                        })
+                    }
+                })
+        } else {
+            if useIncremental, previewView.hasLoadedTemplate {
+                previewView.updateContent(note: note, preserveScroll: false)
+                previewView.isHidden = false
+                previewView.alphaValue = 1.0
+            } else {
+                let shouldGateReveal = !MPreviewView.hasCompletedInitialLoad
+                if shouldGateReveal {
+                    previewView.isHidden = false
+                    previewView.alphaValue = 0
+                } else {
+                    // Fast reveal: show immediately to provide instant visual feedback
+                    previewView.isHidden = false
+                    previewView.alphaValue = 1.0
+                }
+                previewView.load(note: note, force: options.force) {
+                    if shouldGateReveal {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + PreviewRevealTiming.initialDelay) {
+                            let shouldShowPreview =
+                                UserDefaultsManagement.preview
+                                || UserDefaultsManagement.presentation
+                                || UserDefaultsManagement.magicPPT
+                                || UserDefaultsManagement.splitViewMode
+                            guard shouldShowPreview, !previewView.isHidden else { return }
+                            NSAnimationContext.runAnimationGroup({ context in
+                                context.duration = PreviewRevealTiming.fadeDuration
+                                previewView.animator().alphaValue = 1.0
+                            })
+                        }
+                    }
+                }
+            }
+        }
     }
     public func clear() {
         hideSearchBar()

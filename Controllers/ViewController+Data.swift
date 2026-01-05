@@ -353,6 +353,7 @@ extension ViewController {
                 didRestoreScroll = self.notesTableView.restoreScrollPosition(ensureSelectionVisible: false)
             }
 
+
             if !UserDefaultsManagement.isSingleMode {
                 let selectionRestored = self.restoreSelectionIfNeeded(
                     previouslySelectedNote: previousSelection,
@@ -360,12 +361,17 @@ extension ViewController {
                     preserveScrollPosition: didRestoreScroll
                 )
                 if !isSearch {
-                    let shouldPreferLastSelection = self.storageOutlineView?.isLaunch ?? false
-                    let shouldPreserveScroll = didRestoreScroll && !selectionRestored
-                    self.ensureNoteSelection(
-                        preferLastSelected: shouldPreferLastSelection,
-                        preserveScrollPosition: shouldPreserveScroll
-                    )
+                    // If we already have a valid selection (e.g., restored during preview mode startup),
+                    // don't override it. Only call ensureNoteSelection if no note is selected.
+                    let hasValidSelection = self.notesTableView.selectedRow >= 0
+                    if !hasValidSelection {
+                        let shouldPreferLastSelection = self.storageOutlineView?.isLaunch ?? false
+                        let shouldPreserveScroll = didRestoreScroll && !selectionRestored
+                        self.ensureNoteSelection(
+                            preferLastSelected: shouldPreferLastSelection,
+                            preserveScrollPosition: shouldPreserveScroll
+                        )
+                    }
                 }
             }
 

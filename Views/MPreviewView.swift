@@ -381,9 +381,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     }
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         scrollObserverInjected = false
-        if loadCompletion != nil {
-            Self.hasCompletedInitialLoad = true
-        }
+        Self.hasCompletedInitialLoad = true
         closure?()
         loadCompletion?()
         loadCompletion = nil

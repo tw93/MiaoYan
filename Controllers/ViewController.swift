@@ -378,28 +378,8 @@ class ViewController:
     override func viewWillAppear() {
         super.viewWillAppear()
         applyLegacySidebarWidthFixIfNeeded()
-        if UserDefaultsManagement.preview {
-            disablePreviewWorkItem?.cancel()
-
-            // Only pre-configure if not already configured (first appearance or after being hidden)
-            let needsConfiguration = editorContentSplitView?.displayMode != .previewOnly || editArea.markdownView == nil || editArea.markdownView?.isHidden == true
-
-            if needsConfiguration {
-                // Pre-configure preview UI state before view appears to avoid white flash
-                editorContentSplitView?.setDisplayMode(.previewOnly, animated: false)
-                preparePreviewContainer(hidden: false)
-                // STARTUP FIX: Init with alpha 0 to ensure Soft Reveal works (hides content, shows container)
-                editArea.markdownView?.alphaValue = 0
-                editAreaScroll.hasVerticalScroller = false
-                editAreaScroll.hasHorizontalScroller = false
-            }
-        }
-        if needRestorePreview {
-            if titleLabel.isEditable {
-                fileName(titleLabel)
-            }
-            enablePreview()
-        }
+        // Preview mode will be enabled manually by user when needed
+        // No longer auto-restore preview mode to simplify startup and avoid state issues
     }
 
     override func viewDidAppear() {
@@ -433,19 +413,11 @@ class ViewController:
         handleForAppMode()
         applyEditorModePreferenceChange()
 
-        // Restore Preview Mode if needed
+        // Always start in edit mode for simplicity and reliability
+        // User can manually enable preview mode with keyboard shortcut if needed
         if UserDefaultsManagement.preview {
-            // If a note is already selected, enable preview immediately
-            if notesTableView.selectedRow >= 0 {
-                enablePreview()
-            } else {
-                // Otherwise, wait briefly for note selection to complete
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                    if UserDefaultsManagement.preview {
-                        self.enablePreview()
-                    }
-                }
-            }
+            // Reset preview flag to ensure clean edit mode startup
+            UserDefaultsManagement.preview = false
         }
 
         DispatchQueue.main.async { [weak self] in
@@ -554,7 +526,11 @@ class ViewController:
             }
         }
 
-        if let selectedNote = notesTableView.getSelectedNote() {
+        // Save the currently displayed note URL
+        // Check both EditTextView.note and table selection for robustness
+        if let currentNote = EditTextView.note {
+            UserDefaultsManagement.lastSelectedURL = currentNote.url
+        } else if let selectedNote = notesTableView.getSelectedNote() {
             UserDefaultsManagement.lastSelectedURL = selectedNote.url
         }
 
@@ -1150,24 +1126,24 @@ class ViewController:
 
     func internalLogDebug(_ message: String) {
         #if DEBUG
-        DispatchQueue.global(qos: .utility).async {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
-            let timestamp = formatter.string(from: Date())
-            let logMessage = "\(timestamp) [ViewController] \(message)\n"
+            DispatchQueue.global(qos: .utility).async {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+                let timestamp = formatter.string(from: Date())
+                let logMessage = "\(timestamp) [ViewController] \(message)\n"
 
-            let fileURL = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Downloads/miaoyan_debug.log")
+                let fileURL = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Downloads/miaoyan_debug.log")
 
-            if let handle = try? FileHandle(forWritingTo: fileURL) {
-                handle.seekToEndOfFile()
-                if let data = logMessage.data(using: .utf8) {
-                    handle.write(data)
+                if let handle = try? FileHandle(forWritingTo: fileURL) {
+                    handle.seekToEndOfFile()
+                    if let data = logMessage.data(using: .utf8) {
+                        handle.write(data)
+                    }
+                    try? handle.close()
+                } else {
+                    try? logMessage.write(to: fileURL, atomically: true, encoding: .utf8)
                 }
-                try? handle.close()
-            } else {
-                try? logMessage.write(to: fileURL, atomically: true, encoding: .utf8)
             }
-        }
         #endif
     }
 }
