@@ -278,7 +278,7 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
   const offsetX = Math.max(0, (width - gridWidth) / 2);
   let markup = `
     <g transform="translate(${x}, ${y})">
-      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#222222">${sponsors.length} GitHub Sponsors</text>
+      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#222222">GitHub Sponsors ❤️</text>
   `;
   const clipDefs = [];
 
@@ -286,7 +286,7 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
     markup += `
       <g transform="translate(0, 48)">
         <rect width="${width}" height="140" rx="20" fill="rgba(0,0,0,0.02)" />
-        <text x="${width / 2}" y="60" text-anchor="middle" font-size="22" font-weight="600" fill="#444444">Become the first GitHub Sponsor</text>
+        <text x="${width / 2}" y="60" text-anchor="middle" font-size="22" font-weight="600" fill="#444444">Become the first Sponsor</text>
         <a xlink:href="${SPONSORS_URL}" target="_blank">
           <text x="${width / 2}" y="100" text-anchor="middle" font-size="16" fill="#666666">Click to support tw93</text>
         </a>
@@ -344,7 +344,7 @@ function renderFriendTable({ friends, x, y, width }) {
   const centerX = width / 2;
   let markup = `
     <g transform="translate(${x}, ${y})">
-      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#222222">${friends.length} Tipping Friends</text>
+      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#222222">Tipping Friends ❤️</text>
       <g transform="translate(0, ${tableTop})">
         <rect width="${width}" height="${tableHeight + 32}" rx="20" fill="rgba(0,0,0,0.02)" />
         <g transform="translate(0, 16)">
@@ -355,8 +355,8 @@ function renderFriendTable({ friends, x, y, width }) {
     const row = Math.floor(index / columns);
     const col = index % columns;
     const textX = col * colWidth + colWidth / 2;
-    const textY = row * rowHeight + rowHeight / 2 + 6;
-    markup += `<text x="${textX}" y="${textY}" text-anchor="middle" font-size="14" fill="#555555">${escapeText(name)}</text>`;
+    const textY = row * rowHeight + rowHeight / 2;
+    markup += `<text x="${textX}" y="${textY}" text-anchor="middle" alignment-baseline="middle" font-size="14" fill="#555555">${escapeText(name)}</text>`;
   });
 
   markup += '</g></g></g>';
