@@ -273,7 +273,7 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
     ? rows * avatarSize + Math.max(0, rows - 1) * gapY
     : 140;
   const titleHeight = 36;
-  const sectionHeight = titleHeight + 24 + gridHeight + 24;
+  const sectionHeight = titleHeight + 36 + gridHeight + 32;
   const centerX = width / 2;
   const offsetX = Math.max(0, (width - gridWidth) / 2);
   let markup = `
@@ -284,10 +284,10 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
 
     if (!sponsors.length) {
     markup += `
-      <g transform="translate(0, 48)">
-        <text x="${width / 2}" y="60" text-anchor="middle" font-size="20" font-weight="500" fill="#666666">Become the first Sponsor</text>
+      <g transform="translate(0, 60)">
+        <text x="${width / 2}" y="50" text-anchor="middle" font-size="20" font-weight="500" fill="#666666">Become the first Sponsor</text>
         <a xlink:href="${SPONSORS_URL}" target="_blank">
-          <text x="${width / 2}" y="95" text-anchor="middle" font-size="15" fill="#999999">Click to support tw93</text>
+          <text x="${width / 2}" y="85" text-anchor="middle" font-size="15" fill="#999999">Click to support tw93</text>
         </a>
       </g>
     </g>`;
@@ -342,7 +342,7 @@ function renderFriendTable({ friends, x, y, width }) {
   let markup = `
     <g transform="translate(${x}, ${y})">
       <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#222222">Tipping Friends (${friends.length})</text>
-      <g transform="translate(0, 60)">
+      <g transform="translate(0, 52)">
   `;
 
   const orderedFriends = [...friends].reverse();
