@@ -952,12 +952,7 @@ public class Note: NSObject {
     }
 
     public func getDefaultTitle() -> String? {
-        let preferredLanguage = Locale.preferredLanguages.first ?? "en"
-        if preferredLanguage.hasPrefix("zh") {
-            return "未命名"
-        } else {
-            return "Untitled"
-        }
+        return I18n.str("Untitled Note")
     }
 
     public func getTitle() -> String? {
