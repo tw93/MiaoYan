@@ -20,7 +20,7 @@ const OUTPUT_PATH = path.join(OUTPUT_DIR, 'sponsors.svg');
 const SPONSORS_URL = 'https://github.com/sponsors/tw93';
 const OWNER_LOGIN = 'tw93';
 const GRAPHQL_ENDPOINT = 'https://api.github.com/graphql';
-const FONT_FAMILY = "TsangerJinKai02, 'TsangerJinKai02', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif";
+const FONT_FAMILY = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'";
 
 async function main() {
   const friends = await loadFriends();
@@ -187,7 +187,7 @@ async function fetchSponsors(token) {
 }
 
 async function buildSvg({ sponsors, friends }) {
-  const width = 1200;
+  const width = 1000;
   const outerPadding = 32;
   const innerPadding = 24;
   const contentWidth = width - outerPadding * 2 - innerPadding * 2;
@@ -253,9 +253,9 @@ async function embedAvatarData(sponsors) {
 }
 
 function renderSponsorGrid({ sponsors, x, y, width }) {
-  const avatarSize = 82;
-  const baseGap = 28;
-  const gapY = 36;
+  const avatarSize = 72;
+  const baseGap = 45;
+  const gapY = 45;
   let cols = Math.max(1, Math.floor((width - 40) / (avatarSize + baseGap)));
   const rows = Math.max(1, Math.ceil(sponsors.length / cols));
   let spacing = baseGap;
@@ -278,7 +278,7 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
   const offsetX = Math.max(0, (width - gridWidth) / 2);
   let markup = `
     <g transform="translate(${x}, ${y})">
-      <text x="${centerX}" y="0" text-anchor="middle" font-size="30" font-weight="600" fill="#666666">${sponsors.length} GitHub Sponsors</text>
+      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#333333">${sponsors.length} GitHub Sponsors</text>
   `;
   const clipDefs = [];
 
@@ -300,20 +300,20 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
     const row = Math.floor(index / cols);
     const avatarX = offsetX + col * (avatarSize + spacing);
     const avatarY = titleHeight + 24 + row * (avatarSize + gapY);
-    const clipId = `clip-grid-${index}`;
+    const clipId = `cp-${sponsor.login}`;
     clipDefs.push(
-      `<clipPath id="${clipId}" clipPathUnits="objectBoundingBox">
-        <circle cx="0.5" cy="0.5" r="0.5" />
+      `<clipPath id="${clipId}">
+        <circle cx="${avatarSize / 2}" cy="${avatarSize / 2}" r="${avatarSize / 2}" />
       </clipPath>`,
     );
     markup += `
       <g transform="translate(${avatarX}, ${avatarY})">
         ${
           sponsor.avatar
-            ? `<image href="${sponsor.avatar}" x="0" y="0" width="${avatarSize}" height="${avatarSize}" clip-path="url(#${clipId})" preserveAspectRatio="xMidYMid slice" />`
+            ? `<image href="${sponsor.avatar}" x="0" y="0" width="${avatarSize}" height="${avatarSize}" clip-path="url(#${clipId})" />`
             : `<circle cx="${avatarSize / 2}" cy="${avatarSize / 2}" r="${avatarSize / 2}" fill="rgba(0,0,0,0.05)" />`
         }
-        <text x="${avatarSize / 2}" y="${avatarSize + 18}" text-anchor="middle" font-size="14" fill="#666666">${escapeText(sponsor.name).slice(0, 18)}</text>
+        <text x="${avatarSize / 2}" y="${avatarSize + 22}" text-anchor="middle" font-size="12" fill="#555555">${escapeText(sponsor.name).slice(0, 18)}</text>
       </g>
     `;
   });
@@ -338,20 +338,22 @@ function renderFriendTable({ friends, x, y, width }) {
   const centerX = width / 2;
   let markup = `
     <g transform="translate(${x}, ${y})">
-      <text x="${centerX}" y="${titleY}" text-anchor="middle" font-size="30" font-weight="600" fill="#666666">${friends.length} Tipping Friends</text>
+      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#333333">${friends.length} Tipping Friends</text>
       <g transform="translate(0, ${tableTop})">
+        <rect width="${width}" height="${tableHeight + 32}" rx="16" fill="rgba(0,0,0,0.02)" />
+        <g transform="translate(0, 16)">
   `;
 
   const orderedFriends = [...friends].reverse();
   orderedFriends.forEach((name, index) => {
     const row = Math.floor(index / columns);
     const col = index % columns;
-    const textX = col * colWidth;
+    const textX = col * colWidth + colWidth / 2;
     const textY = row * rowHeight + rowHeight / 2 + 6;
-    markup += `<text x="${textX}" y="${textY}" font-size="16" fill="#666666">${escapeText(name)}</text>`;
+    markup += `<text x="${textX}" y="${textY}" text-anchor="middle" font-size="14" fill="#555555">${escapeText(name)}</text>`;
   });
 
-  markup += '</g></g>';
+  markup += '</g></g></g>';
 
   return {
     markup,
