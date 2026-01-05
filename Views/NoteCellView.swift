@@ -55,7 +55,11 @@ class NoteCellView: NSTableCellView {
 
     func renderPin() {
         if let value = objectValue, let note = value as? Note {
-            pin.image = NSImage(named: "pin")
+            if let image = NSImage(named: "pinNote") {
+                image.isTemplate = true
+                pin.image = image
+            }
+            pin.contentTintColor = Theme.secondaryTextColor
             pin.isHidden = !note.isPinned
         }
 
@@ -72,13 +76,11 @@ class NoteCellView: NSTableCellView {
 
     public func adjustPinPosition() {
         for constraint in constraints {
-            if constraint.secondAttribute == .leading, let im = constraint.firstItem as? NSImageView {
-                if im.identifier?.rawValue == "pin" {
-                    if let note = objectValue as? Note, !note.showIconInList() {
-                        constraint.constant = -17
-                    } else {
-                        constraint.constant = 3
-                    }
+            if let firstItem = constraint.firstItem as? NSImageView, firstItem === pin, constraint.firstAttribute == .leading {
+                if let note = objectValue as? Note, !note.showIconInList() {
+                    constraint.constant = -17
+                } else {
+                    constraint.constant = 5
                 }
             }
         }

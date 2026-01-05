@@ -372,12 +372,10 @@ class NotesTableView: NSTableView {
         let note = noteList[row]
         if note.isPinned {
             pinnedCell = makeCell(note: note)
-            pinnedCell.pin.frame.size.width = 23
             return pinnedCell
         }
 
         defaultCell = makeCell(note: note)
-        defaultCell.pin.frame.size.width = 0
         return defaultCell
     }
 
