@@ -11,7 +11,7 @@ NC='\033[0m'
 # Auto-detect version from project.pbxproj
 VERSION=$(grep "MARKETING_VERSION" MiaoYan.xcodeproj/project.pbxproj | head -1 | sed 's/.*= \(.*\);/\1/' | tr -d ' ')
 [ -n "$1" ] && VERSION="$1"
-KEY_PATH="${SPARKLE_PRIVATE_KEY:-}"
+KEY_PATH="${SPARKLE_PRIVATE_KEY:-$HOME/.config/sparkle_ed25519}"
 
 if [ -z "$VERSION" ]; then
     echo -e "${RED}ERROR: Could not detect version${NC}"
