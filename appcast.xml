@@ -63,8 +63,8 @@
         <li>Fixed scroll sync jitter, preview rendering failures, menu lookup issues, and other known bugs</li>
       </ol>
           ]]>      </description>
-      <pubDate>周一, 16 12月 2025 21:20:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.3.zip" sparkle:shortVersionString="2.3.1" sparkle:version="2.3.1" sparkle:edSignature="LOVa7iPV/UTotNJntD3tmM2610cPuyRmFuS/iPT3YkYWdKWMUI6I2x2mcHH7L5VwVQZSk/UgzQwa3LJHK3u4Dw==" length="23012162" type="application/octet-stream" />
+      <pubDate>周二, 16 12月 2025 21:20:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.4.5.zip" sparkle:shortVersionString="2.4.5" sparkle:version="2.4.5" sparkle:edSignature="eyzLxNr8982gjYfcz3EUmBEKqDYbze+zbaCynHQCgfE/zX22UuXOcXTIdDMIHTansEraemjGrrTGC6NSvE0uCw==" length="25342790" type="application/octet-stream"/>
       <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
     </item>
   </channel>
