@@ -3,11 +3,9 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
-      <title>2.4.5</title>
+      <title>2.4.3</title>
       <description><![CDATA[
       <h3>更稳 🚵🏿‍♂️</h3>
-      <h4>假如自动更新失败，可以重试然后点击<a href="https://miaoyan.app/Release/MiaoYan.dmg">下载dmg</a> 覆盖安装<h4>
-      <h4>If the automatic update fails, you can retry and then click <a href="https://miaoyan.app/Release/MiaoYan.dmg">download the DMG</a> to reinstall by overwriting the existing installation.</h4>
       <ol>
         <li>视觉精致升级：图标统一尺寸与灰度状态，激活色更清晰，明暗模式更一致</li>
         <li>预览切换体验优化：柔和显隐，保留选区/滚动，分栏与窗口缩放更稳定</li>
@@ -39,8 +37,8 @@
         <li>Docs & release tooling: updated install guidance, new build script and export options</li>
       </ol>
           ]]>      </description>
-      <pubDate>周二, 06 01月 2026 23:20:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.4.5.1.zip" sparkle:shortVersionString="2.4.5" sparkle:version="2.4.5" sparkle:edSignature="d3DGUQfNVJrfJCaaWq7xu20r+4ufu4dKqZzrMV1IlOKonCgdBHUU8Dr1D0t5yffwal7KOKJHBhb8OYXZGoz0Bg==" length="25342801" type="application/octet-stream"/>
+      <pubDate>周一, 05 01月 2026 23:20:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.4.3.zip" sparkle:shortVersionString="2.4.3" sparkle:version="2.4.3" sparkle:edSignature="LjscVrzaajUMkFdMlqLydJXAKqsp65Jj6BthQv6TAuprJzrDU0qgUKvHVUcDhbCFKmCAQcbjiR12ZnQ4IJVcDA==" length="23630786" type="application/octet-stream"/>
       <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
     </item>
       <item>
