@@ -144,11 +144,10 @@ function getMermaidConfig(isDark = false) {
       padding: 30,
     },
     elk: {
-      cycleBreakingStrategy: 'GREEDY',
-      nodePlacementStrategy: 'SIMPLE',
+      mergeEdges: true,
       padding: 40,
-      nodeSpacing: 120,
-      rankSpacing: 120,
+      nodeSpacing: 80,
+      rankSpacing: 80,
     },
     sequence: {
       useMaxWidth: true,
