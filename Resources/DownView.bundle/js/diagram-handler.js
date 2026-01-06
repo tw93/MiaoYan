@@ -49,19 +49,19 @@ const DiagramHandler = {
     const isDark = this.isDarkMode();
     const config = window.ThemeConfig?.getMermaidConfig(isDark) || {};
 
-    if (mermaid.registerLayoutLoaders) {
-      mermaid.registerLayoutLoaders({
-        elk: async () => {
-          try {
-            const mod = await import('./mermaid-layout-elk.js');
-            return mod.default;
-          } catch (e) {
-            console.error('ELK Import FAILED:', e);
-            throw e;
-          }
-        },
-      });
-    }
+      if (mermaid.registerLayoutLoaders) {
+        mermaid.registerLayoutLoaders({
+          elk: async () => {
+            try {
+              const mod = await import('./mermaid-layout-elk.js');
+              return mod.default;
+            } catch (e) {
+              console.error('ELK Import FAILED:', e);
+              throw e;
+            }
+          },
+        });
+      }
 
     mermaid.initialize(config);
 
@@ -107,7 +107,13 @@ const DiagramHandler = {
         element.setAttribute('data-processed', 'true');
       } catch (error) {
         console.error('Mermaid rendering failed:', error);
-        const errorMessage = error.message || 'Unknown Mermaid Error';
+        let errorMessage = error.message || 'Unknown Mermaid Error';
+        if (error.str) {
+            errorMessage += `\n${error.str}`;
+        }
+        if (error.stack) {
+             console.error(error.stack);
+        }
         loader.innerHTML = `<div style="padding: 10px; color: #d00; border: 1px solid #ecc; background: #fee; border-radius: 4px; font-family: monospace; white-space: pre-wrap;">Mermaid Error: ${errorMessage}</div>`;
         return;
       } finally {
