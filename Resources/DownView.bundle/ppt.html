@@ -70,9 +70,13 @@
   <script src="ppt/plugin/math/math.js"></script>
 
   <script>
-    if ('DOWN_EXPORT_TYPE' === 'ppt') {
+    var exportType = 'DOWN_EXPORT_TYPE';
+    var isPPTExport = (exportType === 'ppt') || (window.location.search.indexOf('export-ppt') !== -1);
+
+    if (isPPTExport) {
       if (window.location.search.indexOf('print-pdf') === -1) {
-        window.location.search = 'print-pdf';
+        var separator = window.location.search ? '&' : '?';
+        window.location.search += separator + 'print-pdf';
       }
 
       document.getElementById('write').style.visibility = 'hidden';
