@@ -407,8 +407,21 @@ final class GeneralPrefsViewController: BasePrefsViewController {
 
         openPanel.begin { result in
             if result == .OK, let url = openPanel.url {
+                // 1. Save string path for legacy compatibility and display
                 self.settings.storagePath = url.path
                 self.storagePathControl.url = url
+
+                // 2. Create and observe Security Scoped Bookmark for Sandbox persistence
+                do {
+                    let bookmarkData = try url.bookmarkData(
+                        options: .withSecurityScope,
+                        includingResourceValuesForKeys: nil,
+                        relativeTo: nil)
+                    UserDefaultsManagement.storageBookmark = bookmarkData
+                } catch {
+                    AppDelegate.trackError(error, context: "GeneralPrefsViewController.changeStorageLocation.bookmarkData")
+                }
+
                 UserDefaults.standard.synchronize()
                 self.showRestartAlert()
             }

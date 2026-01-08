@@ -534,11 +534,39 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: Constants.StoragePathKey)
         }
     }
+    static var storageBookmark: Data? {
+        get {
+            return UserDefaults.standard.data(forKey: "StorageBookmark")
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "StorageBookmark")
+        }
+    }
+
     static var storageUrl: URL? {
+        if let bookmarkData = storageBookmark {
+            var isStale = false
+            do {
+                let url = try URL(
+                    resolvingBookmarkData: bookmarkData,
+                    options: .withSecurityScope,
+                    relativeTo: nil,
+                    bookmarkDataIsStale: &isStale)
+
+                if url.startAccessingSecurityScopedResource() {
+                    return url
+                }
+                return url
+            } catch {
+                AppDelegate.trackError(error, context: "UserDefaultsManagement.storageUrl.resolveBookmark")
+            }
+        }
+
         if let path = storagePath {
             let expanded = NSString(string: path).expandingTildeInPath
             return URL(fileURLWithPath: expanded).resolvingSymlinksInPath()
         }
+
         return nil
     }
     // MARK: - Editor Mode Management
