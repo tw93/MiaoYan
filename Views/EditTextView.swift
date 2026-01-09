@@ -2,7 +2,6 @@
 import Carbon.HIToolbox
 import Cocoa
 import Highlightr
-import SwiftyJSON
 
 // Configuration options for EditTextView fill operations
 struct FillOptions {

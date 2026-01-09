@@ -9,8 +9,6 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/sparkle-project/Sparkle.git", from: "2.8.0"),
-        .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.10.2"),
-        .package(url: "https://github.com/SwiftyJSON/SwiftyJSON.git", from: "5.0.2"),
         .package(url: "https://github.com/raspu/Highlightr.git", from: "2.3.0"),
         .package(url: "https://github.com/ZipArchive/ZipArchive.git", from: "2.6.0"),
         .package(url: "https://github.com/stackotter/swift-cmark-gfm", from: "1.0.2"),
