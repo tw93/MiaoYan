@@ -40,7 +40,7 @@ public enum UserDefaultsManagement {
     private enum Constants {
         static let AppearanceTypeKey = "appearanceType"
         static let BgColorKey = "bgColorKeyed"
-        static let CellFrameOriginY = "cellFrameOriginY"
+
         static let CodeFontNameKey = "codeFont"
         static let FontNameKey = "font"
         static let FontSizeKey = "fontsize"
@@ -57,17 +57,11 @@ public enum UserDefaultsManagement {
         static let LineWidthKey = "lineWidth"
         static let MarginSizeKey = "marginSize"
         static let MarkdownPreviewCSS = "markdownPreviewCSS"
-        static let NightModeAuto = "nightModeAuto"
-        static let NoteContainer = "noteContainer"
-        static let PinListKey = "pinList"
-        static let Preview = "preview"
-        static let Presentation = "presentation"
         static let PreviewFontSize = "previewFontSize"
         static let PresentationFontSize = "presentationFontSize"
         static let ProjectsKey = "projects"
         static let RestoreCursorPosition = "restoreCursorPosition"
         static let SaveInKeychain = "saveInKeychain"
-        static let SharedContainerKey = "sharedContainer"
         static let SortBy = "sortBy"
         static let StoragePathKey = "storageUrl"
         static let FontName = "fontName"
@@ -358,82 +352,37 @@ public enum UserDefaultsManagement {
         }
     }
     static var titleFont: Font! {
-        get {
-            if let font = Font(name: windowFontName, size: CGFloat(titleFontSize)) {
-                if windowFontName == "SF Pro Text" {
-                    return Font(name: "Helvetica Neue", size: CGFloat(titleFontSize))
-                }
-                return font
+        if let font = Font(name: windowFontName, size: CGFloat(titleFontSize)) {
+            if windowFontName == "SF Pro Text" {
+                return Font(name: "Helvetica Neue", size: CGFloat(titleFontSize))
             }
-            return Font.systemFont(ofSize: CGFloat(titleFontSize))
+            return font
         }
-        set {
-            guard let newValue = newValue else {
-                return
-            }
-            fontName = newValue.fontName
-            fontSize = Int(newValue.pointSize)
-        }
+        return Font.systemFont(ofSize: CGFloat(titleFontSize))
     }
     static var emptyEditTitleFont: Font! {
-        get {
-            if let font = Font(name: windowFontName, size: CGFloat(emptyEditTitleFontSize)) {
-                return font
-            }
-            return Font.systemFont(ofSize: CGFloat(emptyEditTitleFontSize))
+        if let font = Font(name: windowFontName, size: CGFloat(emptyEditTitleFontSize)) {
+            return font
         }
-        set {
-            guard let newValue = newValue else {
-                return
-            }
-            fontName = newValue.fontName
-            fontSize = Int(newValue.pointSize)
-        }
+        return Font.systemFont(ofSize: CGFloat(emptyEditTitleFontSize))
     }
     static var nameFont: Font! {
-        get {
-            if let font = Font(name: windowFontName, size: CGFloat(nameFontSize)) {
-                return font
-            }
-            return Font.systemFont(ofSize: CGFloat(nameFontSize))
+        if let font = Font(name: windowFontName, size: CGFloat(nameFontSize)) {
+            return font
         }
-        set {
-            guard let newValue = newValue else {
-                return
-            }
-            fontName = newValue.fontName
-            fontSize = Int(newValue.pointSize)
-        }
+        return Font.systemFont(ofSize: CGFloat(nameFontSize))
     }
     static var searchFont: Font! {
-        get {
-            if let font = Font(name: windowFontName, size: CGFloat(searchFontSize)) {
-                return font
-            }
-            return Font.systemFont(ofSize: CGFloat(searchFontSize))
+        if let font = Font(name: windowFontName, size: CGFloat(searchFontSize)) {
+            return font
         }
-        set {
-            guard let newValue = newValue else {
-                return
-            }
-            fontName = newValue.fontName
-            fontSize = Int(newValue.pointSize)
-        }
+        return Font.systemFont(ofSize: CGFloat(searchFontSize))
     }
     static var dateFont: Font! {
-        get {
-            if let font = Font(name: windowFontName, size: CGFloat(dateFontSize)) {
-                return font
-            }
-            return Font.systemFont(ofSize: CGFloat(dateFontSize))
+        if let font = Font(name: windowFontName, size: CGFloat(dateFontSize)) {
+            return font
         }
-        set {
-            guard let newValue = newValue else {
-                return
-            }
-            fontName = newValue.fontName
-            fontSize = Int(newValue.pointSize)
-        }
+        return Font.systemFont(ofSize: CGFloat(dateFontSize))
     }
     static var fontColor: Color {
         get {
@@ -647,6 +596,7 @@ public enum UserDefaultsManagement {
             }
         }
     }
+
     static var magicPPT: Bool {
         get {
             return EditorStateManager.shared.isPPTMode
@@ -655,6 +605,7 @@ public enum UserDefaultsManagement {
             EditorStateManager.shared.setMode(newValue ? .ppt : .normal)
         }
     }
+
     static var splitViewMode: Bool {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.SplitViewMode) as? Bool {
@@ -716,17 +667,7 @@ public enum UserDefaultsManagement {
             UserDefaults.standard.set(newValue, forKey: "lastSync")
         }
     }
-    static var cellViewFrameOriginY: CGFloat? {
-        get {
-            if let value = UserDefaults.standard.object(forKey: Constants.CellFrameOriginY) {
-                return value as? CGFloat
-            }
-            return nil
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: Constants.CellFrameOriginY)
-        }
-    }
+
     static var sort: SortBy {
         get {
             if let result = UserDefaults.standard.object(forKey: "sortBy"), let sortBy = SortBy(rawValue: result as! String) {
