@@ -1090,18 +1090,18 @@ extension ViewController {
             return true
         }
 
-        if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_P {
-            toggleMagicPPT()
-            return false
-        }
-
         if event.modifierFlags.contains(.shift), event.modifierFlags.contains(.control), event.keyCode == kVK_ANSI_H {
             exportHtml(self)
             return false
         }
 
-        if event.keyCode == kVK_Escape, UserDefaultsManagement.presentation {
-            disablePresentation()
+        if event.keyCode == kVK_Escape {
+            if UserDefaultsManagement.presentation {
+                if UserDefaultsManagement.magicPPT {
+                    return true  // Consume the event, do not disable presentation if magicPPT is active
+                }
+                disablePresentation()
+            }
         }
 
         if event.keyCode == kVK_Escape, UserDefaultsManagement.magicPPT {

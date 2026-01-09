@@ -155,6 +155,7 @@ extension ViewController {
     func disablePreview() {
         guard !UserDefaultsManagement.magicPPT else { return }
 
+
         // Save preview scroll position before disabling
         if let webView = editArea.markdownView {
             let applyPreviewDisable: (_ ratio: CGFloat?) -> Void = { [weak self, weak webView] ratio in
