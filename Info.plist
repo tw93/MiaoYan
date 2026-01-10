@@ -83,7 +83,7 @@
 			<key>CFBundleURLIconFile</key>
 			<string>icon</string>
 			<key>CFBundleURLName</key>
-			<string>com.tw93.miaoyan</string>
+			<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>nvalt</string>

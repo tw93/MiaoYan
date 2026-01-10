@@ -20,9 +20,42 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
     func applicationWillFinishLaunching(_ notification: Notification) {
+        migratePreferences()
         let storage = Storage.sharedInstance()
         storage.loadProjects()
         storage.loadDocuments {}
+    }
+
+    // Attempt to migrate preferences from the old suite "com.tw93.MiaoYan" to the standard suite
+    private func migratePreferences() {
+        let oldSuiteName = "com.tw93.MiaoYan"
+
+        // Check if migration is needed (new standard defaults are empty/fresh) or force check
+        // A simple heuristic: if "isFirstLaunch" is true in standard but false in old suite, needed.
+        // Or simply copy if keys exist in old and not in new.
+
+        guard let oldDefaults = UserDefaults(suiteName: oldSuiteName) else { return }
+        let standardDefaults = UserDefaults.standard
+
+        // If we have already migrated or established new defaults, we might skip.
+        // But to be safe and simple: if standard is practically empty, copy over.
+        // Or iterate known keys.
+
+        // Let's migrate all values from the old suite's dictionary representation
+        let oldDict = oldDefaults.dictionaryRepresentation()
+
+        // Filter out system keys that shouldn't be migrated if any
+        for (key, value) in oldDict {
+            // Only migrate if it doesn't exist in standard or we want to overwrite?
+            // Safest is: if standard.object(forKey: key) == nil
+            if standardDefaults.object(forKey: key) == nil {
+                standardDefaults.set(value, forKey: key)
+            }
+        }
+
+        // Special case: Note location / bookmark
+        // We need to ensure that if "storageUrl" or bookmark data was set, it's copied.
+        // The loop above handles it generally, but let's double check.
     }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {

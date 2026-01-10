@@ -168,7 +168,7 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
             textStorage.addAttribute(.paragraphStyle, value: paragraph, range: range)
 
             // Image: Call directly on main thread (assuming loadImage is @MainActor)
-            let imageKey = NSAttributedString.Key("com.tw93.miaoyan.image.url")
+            let imageKey = NSAttributedString.Key("\(Bundle.main.bundleIdentifier!).image.url")
             if let url = textStorage.attribute(imageKey, at: range.location, effectiveRange: nil) as? URL {
                 loadImage(attachment: attachment, url: url, range: range)
             }
