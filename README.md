@@ -19,7 +19,7 @@
   <div align="center">Lightweight Markdown note-taking app for macOS</div>
 </p>
 
-<img src="https://raw.githubusercontent.com/tw93/static/master/miaoyan/newmiaoyan.gif" width="900px" />
+<img src="https://raw.githubusercontent.com/tw93/static/main/miaoyan/miaoyan.gif" width="900px" />
 
 ## Features
 
