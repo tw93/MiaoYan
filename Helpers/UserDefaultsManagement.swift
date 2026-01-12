@@ -501,10 +501,6 @@ public enum UserDefaultsManagement {
                     options: .withSecurityScope,
                     relativeTo: nil,
                     bookmarkDataIsStale: &isStale)
-
-                if url.startAccessingSecurityScopedResource() {
-                    return url
-                }
                 return url
             } catch {
                 AppDelegate.trackError(error, context: "UserDefaultsManagement.storageUrl.resolveBookmark")

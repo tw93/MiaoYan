@@ -1,4 +1,5 @@
 import Cocoa
+import Darwin
 
 private let uploadServerURL = "http://127.0.0.1:36677/upload"
 
@@ -207,18 +208,50 @@ class ClipboardManager {
             return nil
         }
 
-        let fileHandle = pipe.fileHandleForReading
-        let data = fileHandle.readDataToEndOfFile()
+        final class ProcessOutput: @unchecked Sendable {
+            var outputData = Data()
+            var errorData = Data()
+        }
+
+        let semaphore = DispatchSemaphore(value: 0)
+        let result = ProcessOutput()
+
+        // Read output in background
+        DispatchQueue.global(qos: .utility).async {
+            result.outputData = pipe.fileHandleForReading.readDataToEndOfFile()
+            result.errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+            process.waitUntilExit()
+            semaphore.signal()
+        }
+
+        // Wait with timeout
+        let waitResult = semaphore.wait(timeout: .now() + 10.0)
+        if waitResult == .timedOut {
+            // Try graceful termination first
+            process.terminate()
+
+            // If still running after 1 second, force kill
+            DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 1.0) {
+                if process.isRunning {
+                    kill(process.processIdentifier, SIGKILL)
+                }
+            }
+            DispatchQueue.global(qos: .utility).async {
+                semaphore.wait()
+                if !result.errorData.isEmpty, let errorStr = String(data: result.errorData, encoding: .utf8) {
+                    print("MiaoYan Shell Stderr: \(errorStr)")
+                }
+            }
+            print("MiaoYan Shell Timeout: Command exceeded 10 seconds")
+            return nil
+        }
 
         // Print stderr if any
-        let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
-        if !errorData.isEmpty, let errorStr = String(data: errorData, encoding: .utf8) {
+        if !result.errorData.isEmpty, let errorStr = String(data: result.errorData, encoding: .utf8) {
             print("MiaoYan Shell Stderr: \(errorStr)")
         }
 
-        process.waitUntilExit()
-
-        return String(data: data, encoding: .utf8)
+        return String(data: result.outputData, encoding: .utf8)
     }
 
     nonisolated private func uploadToCloudAsync(parameters: UploadParameters) {

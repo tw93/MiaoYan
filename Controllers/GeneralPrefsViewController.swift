@@ -407,6 +407,10 @@ final class GeneralPrefsViewController: BasePrefsViewController {
 
         openPanel.begin { result in
             if result == .OK, let url = openPanel.url {
+                // Save old values for rollback if user cancels restart
+                let oldPath = self.settings.storagePath
+                let oldBookmark = UserDefaultsManagement.storageBookmark
+
                 // 1. Save string path for legacy compatibility and display
                 self.settings.storagePath = url.path
                 self.storagePathControl.url = url
@@ -423,7 +427,15 @@ final class GeneralPrefsViewController: BasePrefsViewController {
                 }
 
                 UserDefaults.standard.synchronize()
-                self.showRestartAlert()
+                self.showRestartAlert { userConfirmedRestart in
+                    if !userConfirmedRestart {
+                        // Rollback changes if user cancels restart
+                        self.settings.storagePath = oldPath
+                        self.storagePathControl.url = oldPath.map { URL(fileURLWithPath: $0) }
+                        UserDefaultsManagement.storageBookmark = oldBookmark
+                        UserDefaults.standard.synchronize()
+                    }
+                }
             }
         }
     }
@@ -462,18 +474,24 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         return display
     }
 
-    private func showRestartAlert() {
-        guard let window = view.window else { return }
+    private func showRestartAlert(completion: ((Bool) -> Void)? = nil) {
+        guard let window = view.window else {
+            completion?(false)
+            return
+        }
         let alert = NSAlert()
         alert.messageText = I18n.str("Restart to MiaoYan to take effect")
         alert.addButton(withTitle: I18n.str("Confirm"))
         alert.addButton(withTitle: I18n.str("Cancel"))
         alert.beginSheetModal(for: window) { response in
             if response == .alertFirstButtonReturn {
+                completion?(true)
                 UserDefaultsManagement.isFirstLaunch = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     AppDelegate.relaunchApp()
                 }
+            } else {
+                completion?(false)
             }
         }
     }
