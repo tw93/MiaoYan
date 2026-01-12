@@ -48,10 +48,18 @@ class Storage {
     ]
 
     private var bookmarks = [URL]()
+    private var scopedStorageURL: URL?
 
     init() {
         guard var url = UserDefaultsManagement.storageUrl else {
             return
+        }
+
+        // Start accessing security scoped resource if bookmark-based
+        if UserDefaultsManagement.storageBookmark != nil {
+            if url.startAccessingSecurityScopedResource() {
+                scopedStorageURL = url
+            }
         }
 
         if UserDefaultsManagement.isSingleMode, !UserDefaultsManagement.singleModePath.isEmpty {
@@ -1024,6 +1032,10 @@ class Storage {
         }
 
         return destination
+    }
+
+    deinit {
+        scopedStorageURL?.stopAccessingSecurityScopedResource()
     }
 }
 

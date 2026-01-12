@@ -1096,16 +1096,13 @@ extension ViewController {
         }
 
         if event.keyCode == kVK_Escape {
-            if UserDefaultsManagement.presentation {
-                if UserDefaultsManagement.magicPPT {
-                    return true  // Consume the event, do not disable presentation if magicPPT is active
-                }
+            if UserDefaultsManagement.magicPPT {
+                disableMiaoYanPPT()
+                return false
+            } else if UserDefaultsManagement.presentation {
                 disablePresentation()
+                return false
             }
-        }
-
-        if event.keyCode == kVK_Escape, UserDefaultsManagement.magicPPT {
-            disableMiaoYanPPT()
         }
 
         if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), search.hasFocus() {
