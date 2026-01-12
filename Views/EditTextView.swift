@@ -99,6 +99,11 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             defaultVerticalInset = textContainerInset.height
             hasCapturedDefaultVerticalInset = true
             bottomPadding = 0
+
+            isContinuousSpellCheckingEnabled = true
+            isAutomaticSpellingCorrectionEnabled = true
+            isAutomaticTextReplacementEnabled = true
+            isGrammarCheckingEnabled = true
         }
     }
 
