@@ -38,14 +38,6 @@ class Storage {
 
     var pinned: Int = 0
 
-    let initialFiles = [
-        "介绍妙言.md",
-        "妙言 PPT.md",
-        "妙言 Markdown 语法指南.md",
-        "Introduction to MiaoYan.md",
-        "MiaoYan PPT.md",
-        "MiaoYan Markdown Syntax Guide.md",
-    ]
 
     private var bookmarks = [URL]()
     private var scopedStorageURL: URL?
@@ -641,20 +633,61 @@ class Storage {
         }
 
         let initialPath = resourceURL.appendingPathComponent("Initial").path
-        let path = destination.path
+
+        // Skip directory structure in single mode
+        if UserDefaultsManagement.isSingleMode {
+            return true
+        }
+
+        // Detect system language
+        let isChinese = Locale.preferredLanguages.first?.hasPrefix("zh") ?? false
+
+        // Define folder structure
+        let folders = ["Guide", "Examples", "Notes", "Ideas"]
+
+        // File distribution mapping
+        let fileMapping: [String: [String]] = [
+            "Guide": [
+                isChinese ? "介绍妙言.md" : "Introduction to MiaoYan.md"
+            ],
+            "Examples": [
+                isChinese ? "妙言 PPT.md" : "MiaoYan PPT.md",
+                isChinese ? "妙言 Markdown 语法指南.md" : "MiaoYan Markdown Syntax Guide.md"
+            ],
+            "Notes": [
+                isChinese ? "欢迎使用.md" : "Welcome.md"
+            ],
+            "Ideas": [
+                isChinese ? "头脑风暴.md" : "Brainstorming.md"
+            ]
+        ]
 
         do {
-            let files = try FileManager.default.contentsOfDirectory(atPath: initialPath)
-            for file in files {
-                guard initialFiles.contains(file) else {
-                    continue
-                }
-                if !UserDefaultsManagement.isSingleMode {
-                    try? FileManager.default.copyItem(atPath: "\(initialPath)/\(file)", toPath: "\(path)/\(file)")
+            // Create folders and copy files
+            for folder in folders {
+                let folderURL = destination.appendingPathComponent(folder)
+                try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: true, attributes: nil)
+
+                if let files = fileMapping[folder] {
+                    for file in files {
+                        let sourcePath = "\(initialPath)/\(file)"
+                        let destPath = folderURL.appendingPathComponent(file).path
+
+                        if FileManager.default.fileExists(atPath: sourcePath) {
+                            try? FileManager.default.copyItem(atPath: sourcePath, toPath: destPath)
+                        }
+                    }
                 }
             }
+
+            // Rescan subdirectories and add them as projects
+            guard let rootProject = getRootProject() else {
+                return false
+            }
+            _ = checkSub(url: rootProject.url, parent: rootProject)
         } catch {
-            AppDelegate.trackError(error, context: "Storage.initialCopy")
+            AppDelegate.trackError(error, context: "Storage.initialSetup")
+            return false
         }
 
         return true
