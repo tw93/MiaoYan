@@ -6,6 +6,7 @@ enum LanguageType: Int {
     case Japanese = 0x02
     case ChineseTC = 0x03
 
+    @MainActor
     var description: String {
         switch self.rawValue {
         case 0x00: return "简体中文"
@@ -26,6 +27,7 @@ enum LanguageType: Int {
         }
     }
 
+    @MainActor
     static func withName(rawValue: String) -> LanguageType {
         switch rawValue {
         case "English": return LanguageType.English
