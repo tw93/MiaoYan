@@ -100,10 +100,9 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             hasCapturedDefaultVerticalInset = true
             bottomPadding = 0
 
-            isContinuousSpellCheckingEnabled = true
-            isAutomaticSpellingCorrectionEnabled = true
-            isAutomaticTextReplacementEnabled = true
-            isGrammarCheckingEnabled = true
+            isContinuousSpellCheckingEnabled = false
+            isAutomaticSpellingCorrectionEnabled = false
+            isGrammarCheckingEnabled = false
         }
     }
 
@@ -242,7 +241,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     override func willOpenMenu(_ menu: NSMenu, with event: NSEvent) {
         for menuItem in menu.items {
-            if menuItem.identifier?.rawValue == "_searchWithGoogleFromMenu:" || menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierSpellingAndGrammar"
+            if menuItem.identifier?.rawValue == "_searchWithGoogleFromMenu:"
                 || menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierSubstitutions" || menuItem.identifier?.rawValue == "__NSTextViewContextSubmenuIdentifierTransformations" || menuItem.identifier?.rawValue == "_NS:290"
                 || menuItem.identifier?.rawValue == "_NS:291" || menuItem.identifier?.rawValue == "_NS:328" || menuItem.identifier?.rawValue == "_NS:353"
             {
