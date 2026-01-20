@@ -91,8 +91,10 @@ public enum UserDefaultsManagement {
             return stored
         }
 
-        UserDefaults.standard.set(DefaultFont, forKey: key)
-        return DefaultFont
+        // Use Menlo as default for code font, otherwise use app default font
+        let defaultFont = (key == Constants.CodeFontNameKey) ? "Menlo" : DefaultFont
+        UserDefaults.standard.set(defaultFont, forKey: key)
+        return defaultFont
     }
     static var appearanceType: AppearanceType {
         get {
