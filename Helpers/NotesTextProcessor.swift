@@ -41,6 +41,10 @@ public class NotesTextProcessor {
 
     @MainActor public static var hideSyntax = false
 
+    // Performance optimization flags
+    @MainActor public static var shouldSkipCodeHighlighting = false
+    @MainActor public static var shouldUseSimplifiedHighlighting = false
+
     private var note: Note?
     private var storage: NSTextStorage?
     private var range: NSRange?
@@ -53,12 +57,7 @@ public class NotesTextProcessor {
     }
 
     public static func getFencedCodeBlockRange(paragraphRange: NSRange, string: NSMutableAttributedString) -> NSRange? {
-        guard
-            let regex = try? NSRegularExpression(
-                pattern: NotesTextProcessor._codeQuoteBlockPattern,
-                options: [.allowCommentsAndWhitespace, .anchorsMatchLines]
-            )
-        else {
+        guard let regex = getCodeBlockRegex() else {
             return nil
         }
 
@@ -104,26 +103,66 @@ public class NotesTextProcessor {
     }
 
     @MainActor public static var hl: Highlightr?
+    @MainActor private static var cachedTheme: String?
+    @MainActor private static var cachedCodeBlockRegex: NSRegularExpression?
 
     @MainActor public static func getHighlighter() -> Highlightr? {
+        let codeTheme = UserDataService.instance.isDark ? "tomorrow-night-blue" : "atom-one-light"
+        
+        if let instance = hl, cachedTheme == codeTheme {
+            return instance
+        }
+
         if let instance = hl {
+            instance.setTheme(to: codeTheme)
+            cachedTheme = codeTheme
             return instance
         }
 
         guard let highlightr = Highlightr() else { return nil }
-
-        let codeTheme = UserDataService.instance.isDark ? "tomorrow-night-blue" : "atom-one-light"
         highlightr.setTheme(to: codeTheme)
         highlightr.ignoreIllegals = true
 
         hl = highlightr
+        cachedTheme = codeTheme
         return highlightr
     }
 
+    @MainActor public static func getCodeBlockRegex() -> NSRegularExpression? {
+        if let cached = cachedCodeBlockRegex {
+            return cached
+        }
+        
+        guard let regex = try? NSRegularExpression(
+            pattern: _codeQuoteBlockPattern,
+            options: [.allowCommentsAndWhitespace, .anchorsMatchLines]
+        ) else {
+            return nil
+        }
+        
+        cachedCodeBlockRegex = regex
+        return regex
+    }
+
     public static func highlightCode(attributedString: NSMutableAttributedString, range: NSRange, language: String? = nil) {
-        guard let highlighter = NotesTextProcessor.getHighlighter(),
-            range.upperBound <= attributedString.length
-        else {
+        guard range.upperBound <= attributedString.length else {
+            return
+        }
+
+        if shouldSkipCodeHighlighting {
+            applyBasicCodeStyle(attributedString: attributedString, range: range)
+            return
+        }
+
+        let maxCodeBlockSize = shouldUseSimplifiedHighlighting ? 500 : 3000
+        
+        if range.length > maxCodeBlockSize {
+            applyBasicCodeStyle(attributedString: attributedString, range: range)
+            return
+        }
+
+        guard let highlighter = NotesTextProcessor.getHighlighter() else {
+            applyBasicCodeStyle(attributedString: attributedString, range: range)
             return
         }
 
@@ -133,28 +172,43 @@ public class NotesTextProcessor {
         guard let code = highlighter.highlight(codeString, as: preDefinedLanguage),
             code.string == attributedString.mutableString.substring(with: range)
         else {
+            applyBasicCodeStyle(attributedString: attributedString, range: range)
             return
         }
 
         code.enumerateAttributes(in: NSRange(location: 0, length: code.length)) { attrs, locRange, _ in
-            var fixedRange = NSRange(location: range.location + locRange.location, length: locRange.length)
-
-            // Clamp range to valid bounds
-            let maxLength = attributedString.length - fixedRange.location
-            fixedRange.length = min(max(fixedRange.length, 0), maxLength)
+            let fixedRange = NSRange(
+                location: range.location + locRange.location, 
+                length: min(locRange.length, attributedString.length - (range.location + locRange.location))
+            )
 
             guard fixedRange.length > 0, fixedRange.upperBound <= attributedString.length else {
                 return
             }
 
-            for (key, value) in attrs {
-                attributedString.addAttribute(key, value: value, range: fixedRange)
+            attributedString.setAttributes(attrs, range: fixedRange)
+            
+            if let font = NotesTextProcessor.codeFont {
+                attributedString.addAttribute(.font, value: font, range: fixedRange)
             }
-
-            guard let font = NotesTextProcessor.codeFont else { return }
-            attributedString.addAttribute(.font, value: font, range: fixedRange)
-            attributedString.fixAttributes(in: fixedRange)
         }
+        
+        attributedString.fixAttributes(in: range)
+    }
+
+    private static func applyBasicCodeStyle(attributedString: NSMutableAttributedString, range: NSRange) {
+        guard range.upperBound <= attributedString.length,
+              let codeFont = NotesTextProcessor.codeFont else {
+            return
+        }
+
+        let codeColor = UserDataService.instance.isDark 
+            ? NSColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0)
+            : NSColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0)
+
+        attributedString.addAttribute(.font, value: codeFont, range: range)
+        attributedString.addAttribute(.foregroundColor, value: codeColor, range: range)
+        attributedString.fixAttributes(in: range)
     }
 
     @MainActor public static var languages: [String]?
@@ -230,20 +284,126 @@ public class NotesTextProcessor {
     }
 
     public static func highlight(note: Note) {
-        highlightMarkdown(attributedString: note.content, note: note)
-        highlightFencedAndIndentCodeBlocks(attributedString: note.content)
+        // Tiered performance optimization based on file size
+        checkPerformanceLevel(attributedString: note.content)
+
+        // For very large files, skip all complex highlighting
+        if shouldUseSimplifiedHighlighting {
+            highlightBasicMarkdown(attributedString: note.content, note: note)
+        } else {
+            highlightMarkdown(attributedString: note.content, note: note)
+            highlightFencedAndIndentCodeBlocks(attributedString: note.content)
+        }
+    }
+
+    public static func checkPerformanceLevel(attributedString: NSMutableAttributedString) {
+        let content = attributedString.string
+        let lineCount = content.components(separatedBy: .newlines).count
+
+        if lineCount > 5000 {
+            shouldUseSimplifiedHighlighting = true
+            shouldSkipCodeHighlighting = true
+            return
+        }
+
+        if lineCount > 2000 {
+            shouldUseSimplifiedHighlighting = true
+            shouldSkipCodeHighlighting = false
+            return
+        }
+
+        shouldUseSimplifiedHighlighting = false
+
+        let range = NSRange(0..<attributedString.length)
+        guard range.length > 0 else {
+            shouldSkipCodeHighlighting = false
+            return
+        }
+
+        guard let regex = getCodeBlockRegex() else {
+            shouldSkipCodeHighlighting = false
+            return
+        }
+
+        var matchCount = 0
+        regex.enumerateMatches(in: attributedString.string, options: [], range: range) { _, _, stop in
+            matchCount += 1
+            if matchCount > 20 {
+                stop.pointee = true
+            }
+        }
+        shouldSkipCodeHighlighting = matchCount > 20
+    }
+
+    // Simplified highlighting for large files - only basic styles, no regex-heavy operations
+    public static func highlightBasicMarkdown(attributedString: NSMutableAttributedString, range: NSRange? = nil, note: Note) {
+        let range = range ?? NSRange(0..<attributedString.length)
+        let string = attributedString.string
+        
+        // Ensure range is valid
+        guard range.upperBound <= attributedString.length else { return }
+
+        // Apply basic font and color
+        attributedString.addAttribute(.font, value: font, range: range)
+        attributedString.addAttribute(.foregroundColor, value: fontColor, range: range)
+        
+        // 1. Headers (Fast & Critical for structure) - Support H1 to H6
+        NotesTextProcessor.headersAtxRegex.matches(string, range: range) { result in
+            guard let range = result?.range, range.upperBound <= attributedString.length else { return }
+            attributedString.addAttribute(.foregroundColor, value: titleColor, range: range)
+        }
+        
+        // 2. Lists (Fast & Visual)
+        NotesTextProcessor.listRegex.matches(string, range: range) { result in
+            guard let range = result?.range, range.upperBound <= attributedString.length else { return }
+            
+            // Only highlight the marker to keep it fast
+            NotesTextProcessor.listOpeningRegex.matches(string, range: range) { innerResult in
+                guard let innerRange = innerResult?.range, innerRange.upperBound <= attributedString.length else { return }
+                attributedString.addAttribute(.foregroundColor, value: listColor, range: innerRange)
+            }
+        }
+        
+        // 3. Blockquotes (Fast)
+        NotesTextProcessor.blockQuoteRegex.matches(string, range: range) { result in
+            guard let range = result?.range, range.upperBound <= attributedString.length else { return }
+            attributedString.addAttribute(.foregroundColor, value: listColor, range: range)
+        }
+        
+        // 4. Basic Fenced Code Blocks (No syntax highlighting, just color)
+        // Note: We use getCodeBlockRegex() which is cached, but we only iterate lightly
+        if let regex = getCodeBlockRegex() {
+            // Use enumerateMatches with a simpler block to avoid overhead
+            regex.enumerateMatches(in: string, options: [], range: range) { result, _, _ in
+                guard let codeRange = result?.range, codeRange.upperBound <= attributedString.length else { return }
+                
+                // Use a single color for the whole block instead of parsing language
+                let codeColor = UserDataService.instance.isDark
+                    ? NSColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0)
+                    : NSColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0)
+                
+                if let codeFont = NotesTextProcessor.codeFont {
+                    attributedString.addAttribute(.font, value: codeFont, range: codeRange)
+                }
+                attributedString.addAttribute(.foregroundColor, value: codeColor, range: codeRange)
+            }
+        }
+        
+        // 5. Images (Fast & Visual) - Critical for "default.md" which has many images
+        NotesTextProcessor.imageRegex.matches(string, range: range) { result in
+            guard let range = result?.range, range.upperBound <= attributedString.length else { return }
+            // Highlight the entire image markdown syntax
+            attributedString.addAttribute(.foregroundColor, value: linkColor, range: range)
+        }
+
+        attributedString.fixAttributes(in: range)
     }
 
     public static func highlightFencedAndIndentCodeBlocks(attributedString: NSMutableAttributedString) {
         let range = NSRange(0..<attributedString.length)
         guard range.length > 0 else { return }
 
-        guard
-            let regex = try? NSRegularExpression(
-                pattern: _codeQuoteBlockPattern,
-                options: [.allowCommentsAndWhitespace, .anchorsMatchLines]
-            )
-        else {
+        guard let regex = getCodeBlockRegex() else {
             return
         }
 
@@ -722,7 +882,7 @@ public class NotesTextProcessor {
     /*
      Head
      ======
-    
+
      Subhead
      -------
      */
@@ -747,7 +907,7 @@ public class NotesTextProcessor {
 
     /*
      # Head
-    
+
      ## Subhead ##
      */
 
@@ -970,7 +1130,7 @@ public class NotesTextProcessor {
      ```
      Code
      ```
-    
+
      Code
      */
     public static let _codeQuoteBlockPattern = [

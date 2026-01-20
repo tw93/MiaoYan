@@ -558,7 +558,9 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             return
         }
         guard let storage = textStorage else { return }
+        
         if note.isMarkdown(), let content = note.content.mutableCopy() as? NSMutableAttributedString {
+            NotesTextProcessor.checkPerformanceLevel(attributedString: content)
             EditTextView.shouldForceRescan = true
             storage.setAttributedString(content)
         } else {

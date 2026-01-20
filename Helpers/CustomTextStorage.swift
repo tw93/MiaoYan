@@ -15,13 +15,18 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
         guard let note = EditTextView.note, note.isMarkdown() else { return }
         guard editedRange.length != textStorage.length || EditTextView.shouldForceRescan else { return }
 
+        let isInitialLoad = editedRange.length == textStorage.length && EditTextView.shouldForceRescan
+        
         if shouldScanCompletely(textStorage: textStorage, editedRange: editedRange) {
-            rescanAll(textStorage: textStorage)
+            if isInitialLoad {
+                rescanAllAsync(textStorage: textStorage)
+            } else {
+                rescanAll(textStorage: textStorage)
+            }
         } else {
             rescanPartial(textStorage: textStorage, delta: delta, editedRange: editedRange)
         }
 
-        // Call @MainActor loadImages synchronously, no cross-actor dispatch
         loadImages(in: textStorage, checkRange: editedRange)
 
         EditTextView.shouldForceRescan = false
@@ -53,12 +58,59 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
 
     @MainActor private func rescanAll(textStorage: NSTextStorage) {
         guard let note = EditTextView.note else { return }
+        
+        NotesTextProcessor.checkPerformanceLevel(attributedString: textStorage)
+        
         removeAttribute(.backgroundColor, range: NSRange(0..<textStorage.length))
-        NotesTextProcessor.highlightMarkdown(attributedString: textStorage, note: note)
-        NotesTextProcessor.highlightFencedAndIndentCodeBlocks(attributedString: textStorage)
+        
+        if NotesTextProcessor.shouldUseSimplifiedHighlighting {
+            NotesTextProcessor.highlightBasicMarkdown(attributedString: textStorage, note: note)
+        } else {
+            NotesTextProcessor.highlightMarkdown(attributedString: textStorage, note: note)
+        }
+        
+        if !NotesTextProcessor.shouldSkipCodeHighlighting {
+            NotesTextProcessor.highlightFencedAndIndentCodeBlocks(attributedString: textStorage)
+        }
+    }
+
+    @MainActor private func rescanAllAsync(textStorage: NSTextStorage) {
+        guard let note = EditTextView.note else { return }
+        
+        NotesTextProcessor.checkPerformanceLevel(attributedString: textStorage)
+        
+        removeAttribute(.backgroundColor, range: NSRange(0..<textStorage.length))
+        
+        let fullRange = NSRange(0..<textStorage.length)
+        textStorage.addAttribute(.font, value: NotesTextProcessor.font, range: fullRange)
+        textStorage.addAttribute(.foregroundColor, value: NotesTextProcessor.fontColor, range: fullRange)
+        
+        // If simplified highlighting is needed, we should still apply it (headers, lists, etc.)
+        // even if code highlighting is skipped.
+        
+        DispatchQueue.main.async { [weak textStorage] in
+            guard let textStorage = textStorage else { return }
+            
+            if NotesTextProcessor.shouldUseSimplifiedHighlighting {
+                 NotesTextProcessor.highlightBasicMarkdown(attributedString: textStorage, note: note)
+            } else {
+                 NotesTextProcessor.highlightMarkdown(attributedString: textStorage, note: note)
+            }
+            
+            if !NotesTextProcessor.shouldSkipCodeHighlighting {
+                NotesTextProcessor.highlightFencedAndIndentCodeBlocks(attributedString: textStorage)
+            }
+        }
     }
 
     @MainActor private func rescanPartial(textStorage: NSTextStorage, delta: Int, editedRange: NSRange) {
+        if NotesTextProcessor.shouldUseSimplifiedHighlighting {
+            let parRange = textStorage.mutableString.paragraphRange(for: editedRange)
+            guard let note = EditTextView.note else { return }
+            NotesTextProcessor.highlightBasicMarkdown(attributedString: textStorage, range: parRange, note: note)
+            return
+        }
+
         guard delta == 1 || delta == -1 else {
             highlightMultiline(textStorage: textStorage, editedRange: editedRange)
             return
