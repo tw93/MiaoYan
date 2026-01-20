@@ -86,15 +86,11 @@ class HtmlManager {
     @MainActor
     static func previewStyle() -> String {
         // Add font configuration
-        var codeFontName = UserDefaultsManagement.previewFontName
-        if UserDefaultsManagement.codeFontName != UserDefaultsManagement.previewFontName {
-            codeFontName = UserDefaultsManagement.codeFontName
-        }
-
-        let fontConfig = ":root { --text-font: \(UserDefaultsManagement.previewFontName), \(fontStack); --code-text-font: \(codeFontName), \(codeFontStack); }"
+        let codeFontName = UserDefaultsManagement.codeFontName
+        let fontConfig = ":root { --text-font: \"\(UserDefaultsManagement.previewFontName)\", \(fontStack); --code-text-font: \"\(codeFontName)\", \(codeFontStack); }"
 
         if UserDefaultsManagement.magicPPT {
-            return "\(fontConfig) :root { --r-main-font: \(UserDefaultsManagement.previewFontName), sans-serif;}"
+            return "\(fontConfig) :root { --r-main-font: \"\(UserDefaultsManagement.previewFontName)\", sans-serif;}"
         }
 
         if UserDefaultsManagement.presentation {
