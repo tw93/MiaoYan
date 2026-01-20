@@ -534,7 +534,7 @@ blockquote blockquote {
   border-radius: 0;
   color: inherit;
   white-space: pre-wrap;
-  font-family: var(--text-font, 'TsangerJinKai02-W04', -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB, Microsoft YaHei UI, Microsoft YaHei, Arial, sans-serif);
+  font-family: var(--code-text-font);
 }
 
 .heti pre code span {

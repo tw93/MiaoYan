@@ -7,11 +7,10 @@ html {
   font-size: 15px;
   font-display: block;
   color: var(--text-color);
+  background: var(--bg-color);
   font-family: var(--text-font);
   -webkit-font-smoothing: subpixel-antialiased;
   overscroll-behavior: none;
-  width: 100%;
-  overflow-x: hidden;
 }
 
 body {
@@ -21,9 +20,6 @@ body {
   font-family: var(--text-font);
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
-  width: 100%;
-  min-height: 100vh;
-  overflow-x: hidden;
   box-sizing: border-box;
 }
 
@@ -58,14 +54,14 @@ a {
 .heti p > code,
 .heti li > code,
 code {
-  font-family: var(--text-font);
+  font-family: var(--code-text-font);
   background-color: var(--code-bg);
   padding: 2px 6px;
   border-radius: var(--border-radius-sm);
 }
 
 pre {
-  font-family: var(--text-font);
+  font-family: var(--code-text-font);
   background-color: var(--code-bg);
   padding: 16px;
   border-radius: var(--border-radius);
@@ -75,7 +71,7 @@ pre {
 }
 
 pre code {
-  font-family: var(--text-font);
+  font-family: var(--code-text-font);
   background-color: var(--code-bg);
 }
 
