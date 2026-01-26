@@ -10,7 +10,10 @@
         "-configuration", "Debug",
         "-destination", "platform=macOS",
         "-derivedDataPath", "${workspaceFolder}/.vscode/DerivedData",
-        "build"
+        "build",
+        "CODE_SIGNING_ALLOWED=NO",
+        "CODE_SIGNING_REQUIRED=NO",
+        "CODE_SIGN_IDENTITY="
       ],
       "options": {
         "cwd": "${workspaceFolder}"

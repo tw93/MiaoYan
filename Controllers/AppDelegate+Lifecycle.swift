@@ -3,10 +3,17 @@ import Cocoa
 extension AppDelegate {
     static func relaunchApp() {
         let appURL = Bundle.main.bundleURL
-        // Prefer robust shell launch to avoid API quirks and ensure new instance
+        func shellQuoted(_ value: String) -> String {
+            return "'" + value.replacingOccurrences(of: "'", with: "'\\''") + "'"
+        }
+        // Launch a fresh instance after a short delay so the current process can terminate first.
         let task = Process()
-        task.launchPath = "/usr/bin/open"
-        task.arguments = ["-n", appURL.path]
+        task.launchPath = "/bin/sh"
+        let quotedAppPath = shellQuoted(appURL.path)
+        task.arguments = [
+            "-c",
+            "sleep 0.7; /usr/bin/open -n -a \(quotedAppPath)"
+        ]
 
         DispatchQueue.main.async {
             // Try to close preference windows or sheets to avoid edge-case crashes
@@ -19,8 +26,8 @@ extension AppDelegate {
                 }
             }
             try? task.run()
-            // Give the launcher a moment to spawn, then terminate current app
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+            // Give the launcher a moment to start, then terminate current app
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 NSApp.terminate(nil)
             }
         }
