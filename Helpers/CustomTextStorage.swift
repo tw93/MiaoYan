@@ -62,6 +62,8 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
         NotesTextProcessor.checkPerformanceLevel(attributedString: textStorage)
         
         removeAttribute(.backgroundColor, range: NSRange(0..<textStorage.length))
+        removeAttribute(.codeBlock, range: NSRange(0..<textStorage.length))
+        removeAttribute(.codeLanguage, range: NSRange(0..<textStorage.length))
         
         if NotesTextProcessor.shouldUseSimplifiedHighlighting {
             NotesTextProcessor.highlightBasicMarkdown(attributedString: textStorage, note: note)
@@ -80,6 +82,8 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
         NotesTextProcessor.checkPerformanceLevel(attributedString: textStorage)
         
         removeAttribute(.backgroundColor, range: NSRange(0..<textStorage.length))
+        removeAttribute(.codeBlock, range: NSRange(0..<textStorage.length))
+        removeAttribute(.codeLanguage, range: NSRange(0..<textStorage.length))
         
         let fullRange = NSRange(0..<textStorage.length)
         textStorage.addAttribute(.font, value: NotesTextProcessor.font, range: fullRange)
@@ -111,12 +115,25 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
             return
         }
 
+        if NotesTextProcessor.shouldSkipCodeHighlighting {
+            highlightParagraph(textStorage: textStorage, editedRange: editedRange)
+            return
+        }
+
         guard delta == 1 || delta == -1 else {
             highlightMultiline(textStorage: textStorage, editedRange: editedRange)
             return
         }
 
         let parRange = textStorage.mutableString.paragraphRange(for: editedRange)
+
+        if editedRange.location < textStorage.length,
+           textStorage.attribute(.codeBlock, at: editedRange.location, effectiveRange: nil) != nil
+        {
+            let language = textStorage.attribute(.codeLanguage, at: editedRange.location, effectiveRange: nil) as? String
+            NotesTextProcessor.highlightCode(attributedString: textStorage, range: parRange, language: language)
+            return
+        }
 
         if let fencedRange = NotesTextProcessor.getFencedCodeBlockRange(paragraphRange: parRange, string: textStorage) {
             textStorage.removeAttribute(.backgroundColor, range: parRange)
@@ -168,6 +185,8 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
         } else {
             textStorage.removeAttribute(.backgroundColor, range: parRange)
         }
+        textStorage.removeAttribute(.codeBlock, range: parRange)
+        textStorage.removeAttribute(.codeLanguage, range: parRange)
 
         // Proper paragraph scan for two line markup "==" and "--"
         let prevParagraphLocation = parRange.lowerBound - 1
@@ -184,12 +203,23 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
     @MainActor private func highlightMultiline(textStorage: NSTextStorage, editedRange: NSRange) {
         let parRange = textStorage.mutableString.paragraphRange(for: editedRange)
 
+        if NotesTextProcessor.shouldSkipCodeHighlighting {
+            guard let note = EditTextView.note else { return }
+            textStorage.removeAttribute(.codeBlock, range: parRange)
+            textStorage.removeAttribute(.codeLanguage, range: parRange)
+            NotesTextProcessor.highlightMarkdown(attributedString: textStorage, paragraphRange: parRange, note: note)
+            NotesTextProcessor.checkBackTick(styleApplier: textStorage, paragraphRange: parRange)
+            return
+        }
+
         if let fencedRange = NotesTextProcessor.getFencedCodeBlockRange(paragraphRange: parRange, string: textStorage) {
             let code = textStorage.mutableString.substring(with: fencedRange)
             let language = NotesTextProcessor.getLanguage(code)
             NotesTextProcessor.highlightCode(attributedString: textStorage, range: parRange, language: language)
         } else {
             guard let note = EditTextView.note else { return }
+            textStorage.removeAttribute(.codeBlock, range: parRange)
+            textStorage.removeAttribute(.codeLanguage, range: parRange)
             NotesTextProcessor.highlightMarkdown(attributedString: textStorage, paragraphRange: parRange, note: note)
             NotesTextProcessor.checkBackTick(styleApplier: textStorage, paragraphRange: parRange)
         }

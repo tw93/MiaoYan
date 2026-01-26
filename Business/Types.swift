@@ -56,6 +56,14 @@ extension NSAttributedString.Key {
     public static var todo: NSAttributedString.Key {
         NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.todo")
     }
+
+    public static var codeBlock: NSAttributedString.Key {
+        NSAttributedString.Key(rawValue: "com.tw93.miaoyan.code.block")
+    }
+
+    public static var codeLanguage: NSAttributedString.Key {
+        NSAttributedString.Key(rawValue: "com.tw93.miaoyan.code.language")
+    }
 }
 
 // MARK: - Configuration Types

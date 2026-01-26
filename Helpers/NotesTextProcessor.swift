@@ -192,6 +192,13 @@ public class NotesTextProcessor {
                 attributedString.addAttribute(.font, value: font, range: fixedRange)
             }
         }
+
+        attributedString.addAttribute(.codeBlock, value: true, range: range)
+        if let language = preDefinedLanguage {
+            attributedString.addAttribute(.codeLanguage, value: language, range: range)
+        } else {
+            attributedString.removeAttribute(.codeLanguage, range: range)
+        }
         
         attributedString.fixAttributes(in: range)
     }
@@ -208,6 +215,8 @@ public class NotesTextProcessor {
 
         attributedString.addAttribute(.font, value: codeFont, range: range)
         attributedString.addAttribute(.foregroundColor, value: codeColor, range: range)
+        attributedString.addAttribute(.codeBlock, value: true, range: range)
+        attributedString.removeAttribute(.codeLanguage, range: range)
         attributedString.fixAttributes(in: range)
     }
 
@@ -344,6 +353,8 @@ public class NotesTextProcessor {
         guard range.upperBound <= attributedString.length else { return }
 
         // Apply basic font and color
+        attributedString.removeAttribute(.codeBlock, range: range)
+        attributedString.removeAttribute(.codeLanguage, range: range)
         attributedString.addAttribute(.font, value: font, range: range)
         attributedString.addAttribute(.foregroundColor, value: fontColor, range: range)
         
@@ -386,6 +397,8 @@ public class NotesTextProcessor {
                     attributedString.addAttribute(.font, value: codeFont, range: codeRange)
                 }
                 attributedString.addAttribute(.foregroundColor, value: codeColor, range: codeRange)
+                attributedString.addAttribute(.codeBlock, value: true, range: codeRange)
+                attributedString.removeAttribute(.codeLanguage, range: codeRange)
             }
         }
         
