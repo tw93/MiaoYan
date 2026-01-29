@@ -178,7 +178,7 @@ async function fetchSponsors(token) {
   sponsors.sort((a, b) => {
     if (b.amount !== a.amount) return b.amount - a.amount;
     if (a.createdAt && b.createdAt) {
-      return new Date(a.createdAt) - new Date(b.createdAt);
+      return new Date(b.createdAt) - new Date(a.createdAt);
     }
     return a.login.localeCompare(b.login);
   });
@@ -242,14 +242,16 @@ async function avatarDataUri(url) {
 }
 
 async function embedAvatarData(sponsors) {
-  for (const sponsor of sponsors) {
-    if (!sponsor.avatarUrl) continue;
-    try {
-      sponsor.avatar = await avatarDataUri(sponsor.avatarUrl);
-    } catch (err) {
-      console.warn(`Unable to download avatar for ${sponsor.login}: ${err.message}`);
-    }
-  }
+  await Promise.all(
+    sponsors.map(async (sponsor) => {
+      if (!sponsor.avatarUrl) return;
+      try {
+        sponsor.avatar = await avatarDataUri(sponsor.avatarUrl);
+      } catch (err) {
+        console.warn(`Unable to download avatar for ${sponsor.login}: ${err.message}`);
+      }
+    })
+  );
 }
 
 function renderSponsorGrid({ sponsors, x, y, width }) {
