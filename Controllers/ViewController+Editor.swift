@@ -745,6 +745,7 @@ extension ViewController {
                 note.save()
                 if let storage = editArea.textStorage {
                     NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
+                    storage.updateParagraphStyle()
                     editArea.fillHighlightLinks()
                     // Reapply letter spacing after formatting
                     storage.applyEditorLetterSpacing()
