@@ -126,26 +126,12 @@ public class TextFormatter {
     func unTab() {
         guard let pRange = getParagraphRange() else { return }
         guard range.length > 0 else {
-            var diff = 0
-            var text = storage.attributedSubstring(from: pRange).string
-            if text.starts(with: "   ") {
-                diff = 3
-                text = String(text.dropFirst(3))
-            } else if text.starts(with: "  ") {
-                diff = 2
-                text = String(text.dropFirst(2))
-            } else if text.starts(with: " ") {
-                diff = 1
-                text = String(text.dropFirst())
-            } else if text.starts(with: "\t") {
-                diff = 1
-                text = String(text.dropFirst())
-            } else {
-                return
-            }
-
-            guard !text.isEmpty else { return }
-            textView.insertText(text, replacementRange: pRange)
+            let text = storage.attributedSubstring(from: pRange).string
+            let (newText, diff) = removeLeadingIndent(from: text)
+            guard let processedText = newText else { return }
+            
+            guard !processedText.isEmpty else { return }
+            textView.insertText(processedText, replacementRange: pRange)
             setSelectedRange(NSRange(location: range.location - diff, length: 0))
             return
         }
@@ -153,12 +139,14 @@ public class TextFormatter {
         let string = storage.attributedSubstring(from: pRange).string
         var resultList: [String] = []
         string.enumerateLines { line, _ in
-            var line = line
-            if !line.isEmpty {
-                if line.first == "\t" { line = String(line.dropFirst()) } else if line.starts(with: "   ") { line = String(line.dropFirst(3)) } else if line.starts(with: "  ") { line = String(line.dropFirst(2)) }
-                    else if line.starts(with: " ") { line = String(line.dropFirst()) }
+            var processedLine = line
+            if !processedLine.isEmpty {
+                let (newLine, _) = self.removeLeadingIndent(from: processedLine)
+                if let text = newLine {
+                    processedLine = text
+                }
             }
-            resultList.append(line)
+            resultList.append(processedLine)
         }
 
         var result = resultList.joined(separator: "\n")
@@ -166,6 +154,19 @@ public class TextFormatter {
         textView.insertText(result, replacementRange: pRange)
         let finalRange = NSRange(location: pRange.lowerBound, length: result.count)
         setSelectedRange(finalRange)
+    }
+    
+    private func removeLeadingIndent(from text: String) -> (String?, Int) {
+        if text.starts(with: "   ") {
+            return (String(text.dropFirst(3)), 3)
+        } else if text.starts(with: "  ") {
+            return (String(text.dropFirst(2)), 2)
+        } else if text.starts(with: " ") {
+            return (String(text.dropFirst()), 1)
+        } else if text.starts(with: "\t") {
+            return (String(text.dropFirst()), 1)
+        }
+        return (nil, 0)
     }
 
     public func header(_ string: String) {
