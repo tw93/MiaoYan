@@ -134,6 +134,9 @@ public class TextFormatter {
             } else if text.starts(with: "  ") {
                 diff = 2
                 text = String(text.dropFirst(2))
+            } else if text.starts(with: " ") {
+                diff = 1
+                text = String(text.dropFirst())
             } else if text.starts(with: "\t") {
                 diff = 1
                 text = String(text.dropFirst())
@@ -141,7 +144,7 @@ public class TextFormatter {
                 return
             }
 
-            guard text.isEmpty else { return }
+            guard !text.isEmpty else { return }
             textView.insertText(text, replacementRange: pRange)
             setSelectedRange(NSRange(location: range.location - diff, length: 0))
             return
@@ -153,6 +156,7 @@ public class TextFormatter {
             var line = line
             if !line.isEmpty {
                 if line.first == "\t" { line = String(line.dropFirst()) } else if line.starts(with: "   ") { line = String(line.dropFirst(3)) } else if line.starts(with: "  ") { line = String(line.dropFirst(2)) }
+                    else if line.starts(with: " ") { line = String(line.dropFirst()) }
             }
             resultList.append(line)
         }
