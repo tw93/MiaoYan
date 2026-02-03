@@ -16,7 +16,7 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
         guard editedRange.length != textStorage.length || EditTextView.shouldForceRescan else { return }
 
         let isInitialLoad = editedRange.length == textStorage.length && EditTextView.shouldForceRescan
-        
+
         if shouldScanCompletely(textStorage: textStorage, editedRange: editedRange) {
             if isInitialLoad {
                 rescanAllAsync(textStorage: textStorage)
@@ -58,19 +58,19 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
 
     @MainActor private func rescanAll(textStorage: NSTextStorage) {
         guard let note = EditTextView.note else { return }
-        
+
         NotesTextProcessor.checkPerformanceLevel(attributedString: textStorage)
-        
+
         removeAttribute(.backgroundColor, range: NSRange(0..<textStorage.length))
         removeAttribute(.codeBlock, range: NSRange(0..<textStorage.length))
         removeAttribute(.codeLanguage, range: NSRange(0..<textStorage.length))
-        
+
         if NotesTextProcessor.shouldUseSimplifiedHighlighting {
             NotesTextProcessor.highlightBasicMarkdown(attributedString: textStorage, note: note)
         } else {
             NotesTextProcessor.highlightMarkdown(attributedString: textStorage, note: note)
         }
-        
+
         if !NotesTextProcessor.shouldSkipCodeHighlighting {
             NotesTextProcessor.highlightFencedAndIndentCodeBlocks(attributedString: textStorage)
         }
@@ -78,29 +78,29 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
 
     @MainActor private func rescanAllAsync(textStorage: NSTextStorage) {
         guard let note = EditTextView.note else { return }
-        
+
         NotesTextProcessor.checkPerformanceLevel(attributedString: textStorage)
-        
+
         removeAttribute(.backgroundColor, range: NSRange(0..<textStorage.length))
         removeAttribute(.codeBlock, range: NSRange(0..<textStorage.length))
         removeAttribute(.codeLanguage, range: NSRange(0..<textStorage.length))
-        
+
         let fullRange = NSRange(0..<textStorage.length)
         textStorage.addAttribute(.font, value: NotesTextProcessor.font, range: fullRange)
         textStorage.addAttribute(.foregroundColor, value: NotesTextProcessor.fontColor, range: fullRange)
-        
+
         // If simplified highlighting is needed, we should still apply it (headers, lists, etc.)
         // even if code highlighting is skipped.
-        
+
         DispatchQueue.main.async { [weak textStorage] in
             guard let textStorage = textStorage else { return }
-            
+
             if NotesTextProcessor.shouldUseSimplifiedHighlighting {
-                 NotesTextProcessor.highlightBasicMarkdown(attributedString: textStorage, note: note)
+                NotesTextProcessor.highlightBasicMarkdown(attributedString: textStorage, note: note)
             } else {
-                 NotesTextProcessor.highlightMarkdown(attributedString: textStorage, note: note)
+                NotesTextProcessor.highlightMarkdown(attributedString: textStorage, note: note)
             }
-            
+
             if !NotesTextProcessor.shouldSkipCodeHighlighting {
                 NotesTextProcessor.highlightFencedAndIndentCodeBlocks(attributedString: textStorage)
             }
@@ -128,7 +128,7 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
         let parRange = textStorage.mutableString.paragraphRange(for: editedRange)
 
         if editedRange.location < textStorage.length,
-           textStorage.attribute(.codeBlock, at: editedRange.location, effectiveRange: nil) != nil
+            textStorage.attribute(.codeBlock, at: editedRange.location, effectiveRange: nil) != nil
         {
             let language = textStorage.attribute(.codeLanguage, at: editedRange.location, effectiveRange: nil) as? String
             NotesTextProcessor.highlightCode(attributedString: textStorage, range: parRange, language: language)

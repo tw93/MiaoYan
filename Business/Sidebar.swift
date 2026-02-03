@@ -20,7 +20,6 @@ class Sidebar {
             list = system
         }
 
-
         let rootProjects = storage.getRootProjects()
         var categoryItems: [SidebarItem] = []
 

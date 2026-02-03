@@ -16,7 +16,6 @@ private enum MenuTitles {
     static let newSubfolder = I18n.str("New Subfolder")
 }
 
-
 private enum DragDropTypes {
     static let publicData = NSPasteboard.PasteboardType(rawValue: "public.data")
     static let notesTable = NSPasteboard.PasteboardType(rawValue: "notesTable")
@@ -745,7 +744,6 @@ class SidebarProjectView: NSOutlineView,
         if let view = notification.object as? NSOutlineView {
 
             let i = view.selectedRow
-
 
             if let item = view.item(atRow: i) as? SidebarItem {
                 // During app launch, skip saving selection to avoid overwriting persisted state

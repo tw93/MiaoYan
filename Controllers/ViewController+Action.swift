@@ -488,14 +488,14 @@ extension ViewController {
                     webView.findPrevious()
                     return
                 }
-                
+
                 if let textFinderAction = NSTextFinder.Action(rawValue: sender.tag) {
                     if textFinderAction == .showReplaceInterface {
                         webView.showSearchBar(mode: .replace)
                         return
                     }
                 }
-                
+
                 webView.showSearchBar(mode: .find)
                 return
             }

@@ -353,7 +353,6 @@ extension ViewController {
                 didRestoreScroll = self.notesTableView.restoreScrollPosition(ensureSelectionVisible: false)
             }
 
-
             if !UserDefaultsManagement.isSingleMode {
                 let selectionRestored = self.restoreSelectionIfNeeded(
                     previouslySelectedNote: previousSelection,
