@@ -218,6 +218,8 @@
 "Previous" = "上一個";
 "Next" = "下一個";
 "Done" = "完成";
+"Replace" = "取代";
+"Replace All" = "全部取代";
 
 /* Clean attachments */
 "Clean Orphan Attachments" = "清理孤立附件";

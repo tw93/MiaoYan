@@ -137,7 +137,7 @@ extension ViewController {
         titleBarView.isHidden = false
         titleLabel.isHidden = false
         titleLabel.isEditable = true
-        editArea.usesFindBar = true
+        editArea.usesFindBar = false
         editAreaScroll.hasVerticalScroller = false
         editAreaScroll.hasHorizontalScroller = true
         previewScrollView?.hasVerticalScroller = true
@@ -183,8 +183,7 @@ extension ViewController {
                 webView.resetTemplateState()
                 webView.loadHTMLString("<html><body style='background:transparent;'></body></html>", baseURL: nil)
                 self.refillEditArea(suppressSave: true)
-                // Restore editor's find bar
-                self.editArea.usesFindBar = true
+                self.editArea.usesFindBar = false
                 // Restore editor scrollbar
                 self.editAreaScroll.hasVerticalScroller = true
                 self.editAreaScroll.hasHorizontalScroller = true
@@ -285,8 +284,7 @@ extension ViewController {
         // Close search bar if somehow exists
         editArea.markdownView?.hideSearchBar()
         refillEditArea(suppressSave: true)
-        // Restore editor's find bar
-        editArea.usesFindBar = true
+        editArea.usesFindBar = false
         // Restore editor scrollbar
         editAreaScroll.hasVerticalScroller = true
         editAreaScroll.hasHorizontalScroller = true

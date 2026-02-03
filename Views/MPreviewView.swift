@@ -1017,19 +1017,30 @@ class PreviewSearchBar: NSView {
         }
     }
 
+    enum Mode {
+        case find
+        case replace
+    }
+
     private let searchField = SearchField()
+    private let replaceField = NSSearchField()
     private let matchLabel = NSTextField()
     private let previousButton = NSButton()
     private let nextButton = NSButton()
+    private let replaceButton = NSButton()
+    private let replaceAllButton = NSButton()
     private let doneButton = NSButton()
     private var panelBaseColor: NSColor = Theme.backgroundColor
 
     private var currentMatchIndex: Int = 0
     private var totalMatches: Int = 0
+    private var mode: Mode = .find
 
     var onSearch: ((String) -> Void)?
     var onNext: (() -> Void)?
     var onPrevious: (() -> Void)?
+    var onReplace: ((String) -> Void)?
+    var onReplaceAll: ((String) -> Void)?
     var onClose: (() -> Void)?
 
     override init(frame: NSRect) {
@@ -1061,8 +1072,21 @@ class PreviewSearchBar: NSView {
         searchField.delegate = self
         if let cell = searchField.cell as? NSSearchFieldCell {
             cell.focusRingType = .none
+            cell.searchButtonCell = nil
+            cell.cancelButtonCell = nil
         }
         addSubview(searchField)
+
+        replaceField.placeholderString = I18n.str("Replace")
+        replaceField.font = NSFont.systemFont(ofSize: 13)
+        replaceField.translatesAutoresizingMaskIntoConstraints = false
+        replaceField.focusRingType = .none
+        if let cell = replaceField.cell as? NSSearchFieldCell {
+            cell.focusRingType = .none
+            cell.searchButtonCell = nil
+            cell.cancelButtonCell = nil
+        }
+        addSubview(replaceField)
 
         matchLabel.isEditable = false
         matchLabel.isBordered = false
@@ -1075,54 +1099,95 @@ class PreviewSearchBar: NSView {
         addSubview(matchLabel)
 
         previousButton.image = NSImage(systemSymbolName: "chevron.up", accessibilityDescription: I18n.str("Previous"))
-        previousButton.bezelStyle = .texturedRounded
-        previousButton.isBordered = true
+        previousButton.bezelStyle = .shadowlessSquare
+        previousButton.isBordered = false
         previousButton.target = self
         previousButton.action = #selector(previousClicked)
         previousButton.translatesAutoresizingMaskIntoConstraints = false
         addSubview(previousButton)
 
         nextButton.image = NSImage(systemSymbolName: "chevron.down", accessibilityDescription: I18n.str("Next"))
-        nextButton.bezelStyle = .texturedRounded
-        nextButton.isBordered = true
+        nextButton.bezelStyle = .shadowlessSquare
+        nextButton.isBordered = false
         nextButton.target = self
         nextButton.action = #selector(nextClicked)
         nextButton.translatesAutoresizingMaskIntoConstraints = false
         addSubview(nextButton)
 
-        doneButton.title = I18n.str("Done")
-        doneButton.bezelStyle = .rounded
+        replaceButton.image = createReplaceIcon()
+        replaceButton.bezelStyle = .shadowlessSquare
+        replaceButton.isBordered = false
+        replaceButton.target = self
+        replaceButton.action = #selector(replaceClicked)
+        replaceButton.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(replaceButton)
+
+        replaceAllButton.image = createReplaceAllIcon()
+        replaceAllButton.bezelStyle = .shadowlessSquare
+        replaceAllButton.isBordered = false
+        replaceAllButton.target = self
+        replaceAllButton.action = #selector(replaceAllClicked)
+        replaceAllButton.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(replaceAllButton)
+
+        doneButton.image = NSImage(systemSymbolName: "xmark", accessibilityDescription: I18n.str("Done"))
+        doneButton.bezelStyle = .shadowlessSquare
+        doneButton.isBordered = false
         doneButton.target = self
         doneButton.action = #selector(doneClicked)
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         addSubview(doneButton)
 
+        replaceField.isHidden = true
+        replaceButton.isHidden = true
+        replaceAllButton.isHidden = true
+
         setupConstraints()
     }
 
+    private var searchFieldTopConstraint: NSLayoutConstraint!
+    private var buttonGroupLeading: CGFloat = 250
+
     private func setupConstraints() {
+        searchFieldTopConstraint = searchField.topAnchor.constraint(equalTo: topAnchor, constant: 8)
+        
         NSLayoutConstraint.activate([
             searchField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            searchField.centerYAnchor.constraint(equalTo: centerYAnchor),
-            searchField.widthAnchor.constraint(equalToConstant: 160),
+            searchFieldTopConstraint,
+            searchField.widthAnchor.constraint(equalToConstant: 180),
 
-            matchLabel.leadingAnchor.constraint(equalTo: searchField.trailingAnchor, constant: 8),
-            matchLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            matchLabel.leadingAnchor.constraint(equalTo: searchField.trailingAnchor, constant: 6),
+            matchLabel.centerYAnchor.constraint(equalTo: searchField.centerYAnchor),
             matchLabel.widthAnchor.constraint(equalToConstant: 50),
 
-            previousButton.leadingAnchor.constraint(equalTo: matchLabel.trailingAnchor, constant: 8),
-            previousButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            previousButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: buttonGroupLeading),
+            previousButton.centerYAnchor.constraint(equalTo: searchField.centerYAnchor),
             previousButton.widthAnchor.constraint(equalToConstant: 28),
             previousButton.heightAnchor.constraint(equalToConstant: 22),
 
-            nextButton.leadingAnchor.constraint(equalTo: previousButton.trailingAnchor, constant: 4),
-            nextButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            nextButton.leadingAnchor.constraint(equalTo: previousButton.trailingAnchor, constant: 2),
+            nextButton.centerYAnchor.constraint(equalTo: searchField.centerYAnchor),
             nextButton.widthAnchor.constraint(equalToConstant: 28),
             nextButton.heightAnchor.constraint(equalToConstant: 22),
 
-            doneButton.leadingAnchor.constraint(equalTo: nextButton.trailingAnchor, constant: 8),
             doneButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            doneButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            doneButton.centerYAnchor.constraint(equalTo: searchField.centerYAnchor),
+            doneButton.widthAnchor.constraint(equalToConstant: 28),
+            doneButton.heightAnchor.constraint(equalToConstant: 22),
+
+            replaceField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            replaceField.topAnchor.constraint(equalTo: searchField.bottomAnchor, constant: 6),
+            replaceField.widthAnchor.constraint(equalToConstant: 180),
+
+            replaceButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: buttonGroupLeading),
+            replaceButton.centerYAnchor.constraint(equalTo: replaceField.centerYAnchor),
+            replaceButton.widthAnchor.constraint(equalToConstant: 28),
+            replaceButton.heightAnchor.constraint(equalToConstant: 22),
+
+            replaceAllButton.leadingAnchor.constraint(equalTo: replaceButton.trailingAnchor, constant: 2),
+            replaceAllButton.centerYAnchor.constraint(equalTo: replaceField.centerYAnchor),
+            replaceAllButton.widthAnchor.constraint(equalToConstant: 28),
+            replaceAllButton.heightAnchor.constraint(equalToConstant: 22),
         ])
     }
 
@@ -1139,6 +1204,16 @@ class PreviewSearchBar: NSView {
         onNext?()
     }
 
+    @objc private func replaceClicked() {
+        let replaceText = replaceField.stringValue
+        onReplace?(replaceText)
+    }
+
+    @objc private func replaceAllClicked() {
+        let replaceText = replaceField.stringValue
+        onReplaceAll?(replaceText)
+    }
+
     @objc private func doneClicked() {
         onClose?()
     }
@@ -1152,13 +1227,29 @@ class PreviewSearchBar: NSView {
             matchLabel.textColor = .labelColor
         } else if !searchField.stringValue.isEmpty {
             matchLabel.stringValue = "0/0"
-            matchLabel.textColor = .systemRed
+            matchLabel.textColor = Theme.linkColor
         } else {
             matchLabel.stringValue = ""
         }
 
         previousButton.isEnabled = total > 0
         nextButton.isEnabled = total > 0
+        replaceButton.isEnabled = total > 0
+        replaceAllButton.isEnabled = total > 0
+    }
+
+    func setMode(_ newMode: Mode) {
+        mode = newMode
+        let isReplaceMode = (mode == .replace)
+        replaceField.isHidden = !isReplaceMode
+        replaceButton.isHidden = !isReplaceMode
+        replaceAllButton.isHidden = !isReplaceMode
+        
+        if isReplaceMode {
+            searchFieldTopConstraint.constant = 11
+        } else {
+            searchFieldTopConstraint.constant = 8
+        }
     }
 
     private func clearSearchField() {
@@ -1274,6 +1365,7 @@ extension PreviewSearchBar {
         guard wantsLayer else { return }
         let panelColor = PreviewSearchBar.panelBackgroundColor(base: panelBaseColor)
         layer?.backgroundColor = panelColor.cgColor
+        
         updateShadowAppearance(for: panelColor)
         applyCornerMask()
     }
@@ -1326,6 +1418,134 @@ extension PreviewSearchBar {
         path.close()
         return path
     }
+    
+    private func createReplaceIcon() -> NSImage? {
+        let size = NSSize(width: 16, height: 16)
+        let image = NSImage(size: size)
+        image.isTemplate = true
+        
+        image.lockFocus()
+        NSGraphicsContext.current?.imageInterpolation = .high
+        
+        let path = NSBezierPath()
+        let scale: CGFloat = 16.0 / 24.0
+        
+        path.move(to: NSPoint(x: 14 * scale, y: (24 - 4) * scale))
+        path.curve(to: NSPoint(x: 15 * scale, y: (24 - 3) * scale), 
+                   controlPoint1: NSPoint(x: 14.552 * scale, y: (24 - 4) * scale), 
+                   controlPoint2: NSPoint(x: 15 * scale, y: (24 - 3.552) * scale))
+        
+        path.move(to: NSPoint(x: 15 * scale, y: (24 - 10) * scale))
+        path.curve(to: NSPoint(x: 14 * scale, y: (24 - 9) * scale), 
+                   controlPoint1: NSPoint(x: 15 * scale, y: (24 - 9.448) * scale), 
+                   controlPoint2: NSPoint(x: 14.552 * scale, y: (24 - 9) * scale))
+        
+        path.move(to: NSPoint(x: 21 * scale, y: (24 - 4) * scale))
+        path.curve(to: NSPoint(x: 20 * scale, y: (24 - 3) * scale), 
+                   controlPoint1: NSPoint(x: 21 * scale, y: (24 - 3.448) * scale), 
+                   controlPoint2: NSPoint(x: 20.552 * scale, y: (24 - 3) * scale))
+        
+        path.move(to: NSPoint(x: 21 * scale, y: (24 - 9) * scale))
+        path.curve(to: NSPoint(x: 20 * scale, y: (24 - 10) * scale), 
+                   controlPoint1: NSPoint(x: 21 * scale, y: (24 - 9.552) * scale), 
+                   controlPoint2: NSPoint(x: 20.552 * scale, y: (24 - 10) * scale))
+        
+        path.move(to: NSPoint(x: 3 * scale, y: (24 - 7) * scale))
+        path.line(to: NSPoint(x: 6 * scale, y: (24 - 10) * scale))
+        path.line(to: NSPoint(x: 9 * scale, y: (24 - 7) * scale))
+        
+        path.move(to: NSPoint(x: 6 * scale, y: (24 - 10) * scale))
+        path.line(to: NSPoint(x: 6 * scale, y: (24 - 5) * scale))
+        path.curve(to: NSPoint(x: 8 * scale, y: (24 - 3) * scale), 
+                   controlPoint1: NSPoint(x: 6 * scale, y: (24 - 3.895) * scale), 
+                   controlPoint2: NSPoint(x: 6.895 * scale, y: (24 - 3) * scale))
+        path.line(to: NSPoint(x: 10 * scale, y: (24 - 3) * scale))
+        
+        path.appendRoundedRect(NSRect(x: 3 * scale, y: (24 - 21) * scale, width: 7 * scale, height: 7 * scale), 
+                              xRadius: 1 * scale, yRadius: 1 * scale)
+        
+        NSColor.black.setStroke()
+        path.lineWidth = 1.0
+        path.lineCapStyle = .round
+        path.lineJoinStyle = .round
+        path.stroke()
+        
+        image.unlockFocus()
+        return image
+    }
+    
+    private func createReplaceAllIcon() -> NSImage? {
+        let size = NSSize(width: 16, height: 16)
+        let image = NSImage(size: size)
+        image.isTemplate = true
+        
+        image.lockFocus()
+        NSGraphicsContext.current?.imageInterpolation = .high
+        
+        let path = NSBezierPath()
+        let scale: CGFloat = 16.0 / 24.0
+        
+        path.move(to: NSPoint(x: 14 * scale, y: (24 - 14) * scale))
+        path.curve(to: NSPoint(x: 15 * scale, y: (24 - 15) * scale), 
+                   controlPoint1: NSPoint(x: 14.552 * scale, y: (24 - 14) * scale), 
+                   controlPoint2: NSPoint(x: 15 * scale, y: (24 - 14.448) * scale))
+        path.line(to: NSPoint(x: 15 * scale, y: (24 - 20) * scale))
+        path.curve(to: NSPoint(x: 14 * scale, y: (24 - 21) * scale), 
+                   controlPoint1: NSPoint(x: 15 * scale, y: (24 - 20.552) * scale), 
+                   controlPoint2: NSPoint(x: 14.552 * scale, y: (24 - 21) * scale))
+        
+        path.move(to: NSPoint(x: 14 * scale, y: (24 - 4) * scale))
+        path.curve(to: NSPoint(x: 15 * scale, y: (24 - 3) * scale), 
+                   controlPoint1: NSPoint(x: 14.552 * scale, y: (24 - 4) * scale), 
+                   controlPoint2: NSPoint(x: 15 * scale, y: (24 - 3.552) * scale))
+        
+        path.move(to: NSPoint(x: 15 * scale, y: (24 - 10) * scale))
+        path.curve(to: NSPoint(x: 14 * scale, y: (24 - 9) * scale), 
+                   controlPoint1: NSPoint(x: 15 * scale, y: (24 - 9.448) * scale), 
+                   controlPoint2: NSPoint(x: 14.552 * scale, y: (24 - 9) * scale))
+        
+        path.move(to: NSPoint(x: 19 * scale, y: (24 - 14) * scale))
+        path.curve(to: NSPoint(x: 20 * scale, y: (24 - 15) * scale), 
+                   controlPoint1: NSPoint(x: 19.552 * scale, y: (24 - 14) * scale), 
+                   controlPoint2: NSPoint(x: 20 * scale, y: (24 - 14.448) * scale))
+        path.line(to: NSPoint(x: 20 * scale, y: (24 - 20) * scale))
+        path.curve(to: NSPoint(x: 19 * scale, y: (24 - 21) * scale), 
+                   controlPoint1: NSPoint(x: 20 * scale, y: (24 - 20.552) * scale), 
+                   controlPoint2: NSPoint(x: 19.552 * scale, y: (24 - 21) * scale))
+        
+        path.move(to: NSPoint(x: 21 * scale, y: (24 - 4) * scale))
+        path.curve(to: NSPoint(x: 20 * scale, y: (24 - 3) * scale), 
+                   controlPoint1: NSPoint(x: 21 * scale, y: (24 - 3.448) * scale), 
+                   controlPoint2: NSPoint(x: 20.552 * scale, y: (24 - 3) * scale))
+        
+        path.move(to: NSPoint(x: 21 * scale, y: (24 - 9) * scale))
+        path.curve(to: NSPoint(x: 20 * scale, y: (24 - 10) * scale), 
+                   controlPoint1: NSPoint(x: 21 * scale, y: (24 - 9.552) * scale), 
+                   controlPoint2: NSPoint(x: 20.552 * scale, y: (24 - 10) * scale))
+        
+        path.move(to: NSPoint(x: 3 * scale, y: (24 - 7) * scale))
+        path.line(to: NSPoint(x: 6 * scale, y: (24 - 10) * scale))
+        path.line(to: NSPoint(x: 9 * scale, y: (24 - 7) * scale))
+        
+        path.move(to: NSPoint(x: 6 * scale, y: (24 - 10) * scale))
+        path.line(to: NSPoint(x: 6 * scale, y: (24 - 5) * scale))
+        path.curve(to: NSPoint(x: 8 * scale, y: (24 - 3) * scale), 
+                   controlPoint1: NSPoint(x: 6 * scale, y: (24 - 3.895) * scale), 
+                   controlPoint2: NSPoint(x: 6.895 * scale, y: (24 - 3) * scale))
+        path.line(to: NSPoint(x: 10 * scale, y: (24 - 3) * scale))
+        
+        path.appendRoundedRect(NSRect(x: 3 * scale, y: (24 - 21) * scale, width: 7 * scale, height: 7 * scale), 
+                              xRadius: 1 * scale, yRadius: 1 * scale)
+        
+        NSColor.black.setStroke()
+        path.lineWidth = 1.0
+        path.lineCapStyle = .round
+        path.lineJoinStyle = .round
+        path.stroke()
+        
+        image.unlockFocus()
+        return image
+    }
 }
 
 extension NSBezierPath {
@@ -1367,6 +1587,7 @@ extension MPreviewView {
     private static var searchCurrentIndexKey: UInt8 = 0
     private static var searchTimerKey: UInt8 = 0
     private static var searchSequenceKey: UInt8 = 0
+    private static var searchBarHeightConstraintKey: UInt8 = 0
 
     private var searchBar: PreviewSearchBar? {
         get {
@@ -1422,6 +1643,15 @@ extension MPreviewView {
         }
     }
 
+    private var searchBarHeightConstraint: NSLayoutConstraint? {
+        get {
+            objc_getAssociatedObject(self, &MPreviewView.searchBarHeightConstraintKey) as? NSLayoutConstraint
+        }
+        set {
+            objc_setAssociatedObject(self, &MPreviewView.searchBarHeightConstraintKey, newValue, .OBJC_ASSOCIATION_RETAIN)
+        }
+    }
+
     var isSearchBarVisible: Bool {
         searchBar != nil
     }
@@ -1430,8 +1660,13 @@ extension MPreviewView {
         return self.window?.contentViewController as? ViewController
     }
 
-    func showSearchBar() {
+    func showSearchBar(mode: PreviewSearchBar.Mode = .find) {
         if let existingBar = searchBar {
+            existingBar.setMode(mode)
+            
+            let newHeight: CGFloat = (mode == .replace) ? 76 : 40
+            searchBarHeightConstraint?.constant = newHeight
+            
             existingBar.focusSearchField(selectAll: true)
             if !lastSearchText.isEmpty {
                 performSearch(lastSearchText)
@@ -1461,11 +1696,21 @@ extension MPreviewView {
                 self?.findPrevious()
             }
 
+            bar.onReplace = { [weak self] replaceText in
+                self?.replaceNext(with: replaceText)
+            }
+
+            bar.onReplaceAll = { [weak self] replaceText in
+                self?.replaceAll(with: replaceText)
+            }
+
             bar.onClose = { [weak self] in
                 self?.hideSearchBar()
             }
             searchBar = bar
         }
+
+        bar.setMode(mode)
 
         var targetContainer: NSView?
         var layoutGuideView: NSView?
@@ -1484,7 +1729,7 @@ extension MPreviewView {
         if let container = targetContainer, let guide = layoutGuideView {
             if bar.superview !== container {
                 container.addSubview(bar)
-                activateSearchBarConstraints(bar: bar, container: container, guide: guide)
+                activateSearchBarConstraints(bar: bar, container: container, guide: guide, mode: mode)
             }
         }
 
@@ -1498,17 +1743,20 @@ extension MPreviewView {
         }
     }
 
-    private func activateSearchBarConstraints(bar: NSView, container: NSView, guide: NSView) {
-        let barHeight: CGFloat = 36
+    private func activateSearchBarConstraints(bar: NSView, container: NSView, guide: NSView, mode: PreviewSearchBar.Mode = .find) {
+        let barHeight: CGFloat = (mode == .replace) ? 76 : 40
         let barWidth: CGFloat = 360
         let marginRight: CGFloat = 26
         let marginTop: CGFloat = 0
+
+        let heightConstraint = bar.heightAnchor.constraint(equalToConstant: barHeight)
+        searchBarHeightConstraint = heightConstraint
 
         NSLayoutConstraint.activate([
             bar.topAnchor.constraint(equalTo: guide.topAnchor, constant: marginTop),
             bar.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -marginRight),
             bar.widthAnchor.constraint(equalToConstant: barWidth),
-            bar.heightAnchor.constraint(equalToConstant: barHeight),
+            heightConstraint,
         ])
     }
 
@@ -1674,6 +1922,16 @@ extension MPreviewView {
         searchBar?.updateMatchInfo(current: searchCurrentMatchIndex + 1, total: searchMatchCount)
 
         performWebFind(backwards: true)
+    }
+
+    func replaceNext(with replaceText: String) {
+        guard let editArea = getViewController()?.editArea else { return }
+        editArea.replaceNext(with: replaceText)
+    }
+
+    func replaceAll(with replaceText: String) {
+        guard let editArea = getViewController()?.editArea else { return }
+        editArea.replaceAll(with: replaceText)
     }
 
     private func performWebFind(backwards: Bool) {

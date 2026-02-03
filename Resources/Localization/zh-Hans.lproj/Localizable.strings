@@ -232,6 +232,8 @@
 "Previous" = "上一个";
 "Next" = "下一个";
 "Done" = "完成";
+"Replace" = "替换";
+"Replace All" = "全部替换";
 
 /* Toolbar Tooltips */
 "Format" = "排版";
