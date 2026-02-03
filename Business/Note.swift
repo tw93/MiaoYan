@@ -375,7 +375,7 @@ public class Note: NSObject {
         isPinned = true
         var pin = true
         let data = Data(bytes: &pin, count: 1)
-        try? url.setExtendedAttribute(data: data, forName: "com.tw93.miaoyan.pin")
+        try? url.setExtendedAttribute(data: data, forName: "\(Bundle.main.bundleIdentifier!).pin")
     }
 
     func removePin(cloudSave: Bool = true) {
@@ -384,7 +384,7 @@ public class Note: NSObject {
             isPinned = false
             var pin = false
             let data = Data(bytes: &pin, count: 1)
-            try? url.setExtendedAttribute(data: data, forName: "com.tw93.miaoyan.pin")
+            try? url.setExtendedAttribute(data: data, forName: "\(Bundle.main.bundleIdentifier!).pin")
         }
     }
 

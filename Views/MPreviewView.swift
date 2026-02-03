@@ -300,7 +300,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
             DispatchQueue.main.async {
                 self.copySelectionToPasteboard()
             }
-            return false
+            return true
         }
 
         if event.keyCode == kVK_Escape, UserDefaultsManagement.presentation, !UserDefaultsManagement.magicPPT {
