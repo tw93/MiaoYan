@@ -302,7 +302,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
             }
             return false
         }
-        
+
         if event.keyCode == kVK_Escape, UserDefaultsManagement.presentation, !UserDefaultsManagement.magicPPT {
             DispatchQueue.main.async {
                 if let vc = ViewController.shared() {
@@ -311,7 +311,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
             }
             return true
         }
-        
+
         if event.keyCode == kVK_Escape, UserDefaultsManagement.magicPPT {
             DispatchQueue.main.async {
                 if let vc = ViewController.shared() {
@@ -329,7 +329,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         if UserDefaultsManagement.magicPPT {
             return false
         }
-        
+
         return false
     }
 
@@ -1151,7 +1151,7 @@ class PreviewSearchBar: NSView {
 
     private func setupConstraints() {
         searchFieldTopConstraint = searchField.topAnchor.constraint(equalTo: topAnchor, constant: 8)
-        
+
         NSLayoutConstraint.activate([
             searchField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
             searchFieldTopConstraint,
@@ -1245,7 +1245,7 @@ class PreviewSearchBar: NSView {
         replaceField.isHidden = !isReplaceMode
         replaceButton.isHidden = !isReplaceMode
         replaceAllButton.isHidden = !isReplaceMode
-        
+
         if isReplaceMode {
             searchFieldTopConstraint.constant = 11
         } else {
@@ -1366,7 +1366,7 @@ extension PreviewSearchBar {
         guard wantsLayer else { return }
         let panelColor = PreviewSearchBar.panelBackgroundColor(base: panelBaseColor)
         layer?.backgroundColor = panelColor.cgColor
-        
+
         updateShadowAppearance(for: panelColor)
         applyCornerMask()
     }
@@ -1419,131 +1419,147 @@ extension PreviewSearchBar {
         path.close()
         return path
     }
-    
+
     private func createReplaceIcon() -> NSImage? {
         let size = NSSize(width: 16, height: 16)
         let image = NSImage(size: size)
         image.isTemplate = true
-        
+
         image.lockFocus()
         NSGraphicsContext.current?.imageInterpolation = .high
-        
+
         let path = NSBezierPath()
         let scale: CGFloat = 16.0 / 24.0
-        
+
         path.move(to: NSPoint(x: 14 * scale, y: (24 - 4) * scale))
-        path.curve(to: NSPoint(x: 15 * scale, y: (24 - 3) * scale), 
-                   controlPoint1: NSPoint(x: 14.552 * scale, y: (24 - 4) * scale), 
-                   controlPoint2: NSPoint(x: 15 * scale, y: (24 - 3.552) * scale))
-        
+        path.curve(
+            to: NSPoint(x: 15 * scale, y: (24 - 3) * scale),
+            controlPoint1: NSPoint(x: 14.552 * scale, y: (24 - 4) * scale),
+            controlPoint2: NSPoint(x: 15 * scale, y: (24 - 3.552) * scale))
+
         path.move(to: NSPoint(x: 15 * scale, y: (24 - 10) * scale))
-        path.curve(to: NSPoint(x: 14 * scale, y: (24 - 9) * scale), 
-                   controlPoint1: NSPoint(x: 15 * scale, y: (24 - 9.448) * scale), 
-                   controlPoint2: NSPoint(x: 14.552 * scale, y: (24 - 9) * scale))
-        
+        path.curve(
+            to: NSPoint(x: 14 * scale, y: (24 - 9) * scale),
+            controlPoint1: NSPoint(x: 15 * scale, y: (24 - 9.448) * scale),
+            controlPoint2: NSPoint(x: 14.552 * scale, y: (24 - 9) * scale))
+
         path.move(to: NSPoint(x: 21 * scale, y: (24 - 4) * scale))
-        path.curve(to: NSPoint(x: 20 * scale, y: (24 - 3) * scale), 
-                   controlPoint1: NSPoint(x: 21 * scale, y: (24 - 3.448) * scale), 
-                   controlPoint2: NSPoint(x: 20.552 * scale, y: (24 - 3) * scale))
-        
+        path.curve(
+            to: NSPoint(x: 20 * scale, y: (24 - 3) * scale),
+            controlPoint1: NSPoint(x: 21 * scale, y: (24 - 3.448) * scale),
+            controlPoint2: NSPoint(x: 20.552 * scale, y: (24 - 3) * scale))
+
         path.move(to: NSPoint(x: 21 * scale, y: (24 - 9) * scale))
-        path.curve(to: NSPoint(x: 20 * scale, y: (24 - 10) * scale), 
-                   controlPoint1: NSPoint(x: 21 * scale, y: (24 - 9.552) * scale), 
-                   controlPoint2: NSPoint(x: 20.552 * scale, y: (24 - 10) * scale))
-        
+        path.curve(
+            to: NSPoint(x: 20 * scale, y: (24 - 10) * scale),
+            controlPoint1: NSPoint(x: 21 * scale, y: (24 - 9.552) * scale),
+            controlPoint2: NSPoint(x: 20.552 * scale, y: (24 - 10) * scale))
+
         path.move(to: NSPoint(x: 3 * scale, y: (24 - 7) * scale))
         path.line(to: NSPoint(x: 6 * scale, y: (24 - 10) * scale))
         path.line(to: NSPoint(x: 9 * scale, y: (24 - 7) * scale))
-        
+
         path.move(to: NSPoint(x: 6 * scale, y: (24 - 10) * scale))
         path.line(to: NSPoint(x: 6 * scale, y: (24 - 5) * scale))
-        path.curve(to: NSPoint(x: 8 * scale, y: (24 - 3) * scale), 
-                   controlPoint1: NSPoint(x: 6 * scale, y: (24 - 3.895) * scale), 
-                   controlPoint2: NSPoint(x: 6.895 * scale, y: (24 - 3) * scale))
+        path.curve(
+            to: NSPoint(x: 8 * scale, y: (24 - 3) * scale),
+            controlPoint1: NSPoint(x: 6 * scale, y: (24 - 3.895) * scale),
+            controlPoint2: NSPoint(x: 6.895 * scale, y: (24 - 3) * scale))
         path.line(to: NSPoint(x: 10 * scale, y: (24 - 3) * scale))
-        
-        path.appendRoundedRect(NSRect(x: 3 * scale, y: (24 - 21) * scale, width: 7 * scale, height: 7 * scale), 
-                              xRadius: 1 * scale, yRadius: 1 * scale)
-        
+
+        path.appendRoundedRect(
+            NSRect(x: 3 * scale, y: (24 - 21) * scale, width: 7 * scale, height: 7 * scale),
+            xRadius: 1 * scale, yRadius: 1 * scale)
+
         NSColor.black.setStroke()
         path.lineWidth = 1.0
         path.lineCapStyle = .round
         path.lineJoinStyle = .round
         path.stroke()
-        
+
         image.unlockFocus()
         return image
     }
-    
+
     private func createReplaceAllIcon() -> NSImage? {
         let size = NSSize(width: 16, height: 16)
         let image = NSImage(size: size)
         image.isTemplate = true
-        
+
         image.lockFocus()
         NSGraphicsContext.current?.imageInterpolation = .high
-        
+
         let path = NSBezierPath()
         let scale: CGFloat = 16.0 / 24.0
-        
+
         path.move(to: NSPoint(x: 14 * scale, y: (24 - 14) * scale))
-        path.curve(to: NSPoint(x: 15 * scale, y: (24 - 15) * scale), 
-                   controlPoint1: NSPoint(x: 14.552 * scale, y: (24 - 14) * scale), 
-                   controlPoint2: NSPoint(x: 15 * scale, y: (24 - 14.448) * scale))
+        path.curve(
+            to: NSPoint(x: 15 * scale, y: (24 - 15) * scale),
+            controlPoint1: NSPoint(x: 14.552 * scale, y: (24 - 14) * scale),
+            controlPoint2: NSPoint(x: 15 * scale, y: (24 - 14.448) * scale))
         path.line(to: NSPoint(x: 15 * scale, y: (24 - 20) * scale))
-        path.curve(to: NSPoint(x: 14 * scale, y: (24 - 21) * scale), 
-                   controlPoint1: NSPoint(x: 15 * scale, y: (24 - 20.552) * scale), 
-                   controlPoint2: NSPoint(x: 14.552 * scale, y: (24 - 21) * scale))
-        
+        path.curve(
+            to: NSPoint(x: 14 * scale, y: (24 - 21) * scale),
+            controlPoint1: NSPoint(x: 15 * scale, y: (24 - 20.552) * scale),
+            controlPoint2: NSPoint(x: 14.552 * scale, y: (24 - 21) * scale))
+
         path.move(to: NSPoint(x: 14 * scale, y: (24 - 4) * scale))
-        path.curve(to: NSPoint(x: 15 * scale, y: (24 - 3) * scale), 
-                   controlPoint1: NSPoint(x: 14.552 * scale, y: (24 - 4) * scale), 
-                   controlPoint2: NSPoint(x: 15 * scale, y: (24 - 3.552) * scale))
-        
+        path.curve(
+            to: NSPoint(x: 15 * scale, y: (24 - 3) * scale),
+            controlPoint1: NSPoint(x: 14.552 * scale, y: (24 - 4) * scale),
+            controlPoint2: NSPoint(x: 15 * scale, y: (24 - 3.552) * scale))
+
         path.move(to: NSPoint(x: 15 * scale, y: (24 - 10) * scale))
-        path.curve(to: NSPoint(x: 14 * scale, y: (24 - 9) * scale), 
-                   controlPoint1: NSPoint(x: 15 * scale, y: (24 - 9.448) * scale), 
-                   controlPoint2: NSPoint(x: 14.552 * scale, y: (24 - 9) * scale))
-        
+        path.curve(
+            to: NSPoint(x: 14 * scale, y: (24 - 9) * scale),
+            controlPoint1: NSPoint(x: 15 * scale, y: (24 - 9.448) * scale),
+            controlPoint2: NSPoint(x: 14.552 * scale, y: (24 - 9) * scale))
+
         path.move(to: NSPoint(x: 19 * scale, y: (24 - 14) * scale))
-        path.curve(to: NSPoint(x: 20 * scale, y: (24 - 15) * scale), 
-                   controlPoint1: NSPoint(x: 19.552 * scale, y: (24 - 14) * scale), 
-                   controlPoint2: NSPoint(x: 20 * scale, y: (24 - 14.448) * scale))
+        path.curve(
+            to: NSPoint(x: 20 * scale, y: (24 - 15) * scale),
+            controlPoint1: NSPoint(x: 19.552 * scale, y: (24 - 14) * scale),
+            controlPoint2: NSPoint(x: 20 * scale, y: (24 - 14.448) * scale))
         path.line(to: NSPoint(x: 20 * scale, y: (24 - 20) * scale))
-        path.curve(to: NSPoint(x: 19 * scale, y: (24 - 21) * scale), 
-                   controlPoint1: NSPoint(x: 20 * scale, y: (24 - 20.552) * scale), 
-                   controlPoint2: NSPoint(x: 19.552 * scale, y: (24 - 21) * scale))
-        
+        path.curve(
+            to: NSPoint(x: 19 * scale, y: (24 - 21) * scale),
+            controlPoint1: NSPoint(x: 20 * scale, y: (24 - 20.552) * scale),
+            controlPoint2: NSPoint(x: 19.552 * scale, y: (24 - 21) * scale))
+
         path.move(to: NSPoint(x: 21 * scale, y: (24 - 4) * scale))
-        path.curve(to: NSPoint(x: 20 * scale, y: (24 - 3) * scale), 
-                   controlPoint1: NSPoint(x: 21 * scale, y: (24 - 3.448) * scale), 
-                   controlPoint2: NSPoint(x: 20.552 * scale, y: (24 - 3) * scale))
-        
+        path.curve(
+            to: NSPoint(x: 20 * scale, y: (24 - 3) * scale),
+            controlPoint1: NSPoint(x: 21 * scale, y: (24 - 3.448) * scale),
+            controlPoint2: NSPoint(x: 20.552 * scale, y: (24 - 3) * scale))
+
         path.move(to: NSPoint(x: 21 * scale, y: (24 - 9) * scale))
-        path.curve(to: NSPoint(x: 20 * scale, y: (24 - 10) * scale), 
-                   controlPoint1: NSPoint(x: 21 * scale, y: (24 - 9.552) * scale), 
-                   controlPoint2: NSPoint(x: 20.552 * scale, y: (24 - 10) * scale))
-        
+        path.curve(
+            to: NSPoint(x: 20 * scale, y: (24 - 10) * scale),
+            controlPoint1: NSPoint(x: 21 * scale, y: (24 - 9.552) * scale),
+            controlPoint2: NSPoint(x: 20.552 * scale, y: (24 - 10) * scale))
+
         path.move(to: NSPoint(x: 3 * scale, y: (24 - 7) * scale))
         path.line(to: NSPoint(x: 6 * scale, y: (24 - 10) * scale))
         path.line(to: NSPoint(x: 9 * scale, y: (24 - 7) * scale))
-        
+
         path.move(to: NSPoint(x: 6 * scale, y: (24 - 10) * scale))
         path.line(to: NSPoint(x: 6 * scale, y: (24 - 5) * scale))
-        path.curve(to: NSPoint(x: 8 * scale, y: (24 - 3) * scale), 
-                   controlPoint1: NSPoint(x: 6 * scale, y: (24 - 3.895) * scale), 
-                   controlPoint2: NSPoint(x: 6.895 * scale, y: (24 - 3) * scale))
+        path.curve(
+            to: NSPoint(x: 8 * scale, y: (24 - 3) * scale),
+            controlPoint1: NSPoint(x: 6 * scale, y: (24 - 3.895) * scale),
+            controlPoint2: NSPoint(x: 6.895 * scale, y: (24 - 3) * scale))
         path.line(to: NSPoint(x: 10 * scale, y: (24 - 3) * scale))
-        
-        path.appendRoundedRect(NSRect(x: 3 * scale, y: (24 - 21) * scale, width: 7 * scale, height: 7 * scale), 
-                              xRadius: 1 * scale, yRadius: 1 * scale)
-        
+
+        path.appendRoundedRect(
+            NSRect(x: 3 * scale, y: (24 - 21) * scale, width: 7 * scale, height: 7 * scale),
+            xRadius: 1 * scale, yRadius: 1 * scale)
+
         NSColor.black.setStroke()
         path.lineWidth = 1.0
         path.lineCapStyle = .round
         path.lineJoinStyle = .round
         path.stroke()
-        
+
         image.unlockFocus()
         return image
     }
@@ -1664,10 +1680,10 @@ extension MPreviewView {
     func showSearchBar(mode: PreviewSearchBar.Mode = .find) {
         if let existingBar = searchBar {
             existingBar.setMode(mode)
-            
+
             let newHeight: CGFloat = (mode == .replace) ? 76 : 40
             searchBarHeightConstraint?.constant = newHeight
-            
+
             existingBar.focusSearchField(selectAll: true)
             if !lastSearchText.isEmpty {
                 performSearch(lastSearchText)

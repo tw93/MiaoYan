@@ -19,7 +19,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         window?.delegate = self
 
         updateAlwaysOnTopState()
-        
+
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(updateAlwaysOnTopState),
@@ -30,7 +30,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         applyMiaoYanAppearance()
         observeAppearanceChanges()
     }
-    
+
     @objc private func updateAlwaysOnTopState() {
         window?.level = UserDefaultsManagement.alwaysOnTop ? .floating : .normal
     }

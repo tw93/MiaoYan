@@ -303,7 +303,6 @@ class ViewController:
         loadMoveMenu()
         cacheMenuItems()
 
-
         // Apply modern icons to menus
         if #available(macOS 11.0, *) {
             noteMenu.applyMenuIcons()
@@ -426,7 +425,6 @@ class ViewController:
             self.updateSidebarColumnWidth()
         }
     }
-
 
     private func installLiveResizeObserverIfNeeded() {
         guard liveResizeObserver == nil, let window = view.window else { return }

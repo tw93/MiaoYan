@@ -38,7 +38,6 @@ class Storage {
 
     var pinned: Int = 0
 
-
     private var bookmarks = [URL]()
     private var scopedStorageURL: URL?
 
@@ -652,14 +651,14 @@ class Storage {
             ],
             "Examples": [
                 isChinese ? "妙言 PPT.md" : "MiaoYan PPT.md",
-                isChinese ? "妙言 Markdown 语法指南.md" : "MiaoYan Markdown Syntax Guide.md"
+                isChinese ? "妙言 Markdown 语法指南.md" : "MiaoYan Markdown Syntax Guide.md",
             ],
             "Notes": [
                 isChinese ? "欢迎使用.md" : "Welcome.md"
             ],
             "Ideas": [
                 isChinese ? "头脑风暴.md" : "Brainstorming.md"
-            ]
+            ],
         ]
 
         do {

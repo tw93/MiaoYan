@@ -12,7 +12,7 @@ extension AppDelegate {
         let quotedAppPath = shellQuoted(appURL.path)
         task.arguments = [
             "-c",
-            "sleep 0.7; /usr/bin/open -n -a \(quotedAppPath)"
+            "sleep 0.7; /usr/bin/open -n -a \(quotedAppPath)",
         ]
 
         DispatchQueue.main.async {

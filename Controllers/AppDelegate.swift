@@ -56,9 +56,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         NSApp.mainMenu?.applyMenuIcons()
-        
+
         NSApp.mainMenu?.update()
-        
+
         configureSystemLogging()
         NSFontManager.shared.fontPanel(false)?.orderOut(self)
 
@@ -269,11 +269,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
             mainWindowController?.makeNew()
         }
     }
-    
+
     @IBAction func toggleAlwaysOnTop(_ sender: NSMenuItem) {
         toggleAlwaysOnTop()
     }
-    
+
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         if menuItem.identifier?.rawValue == "viewMenu.alwaysOnTop" {
             menuItem.state = UserDefaultsManagement.alwaysOnTop ? .on : .off
@@ -311,15 +311,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
     private func toggleAlwaysOnTop() {
         let newValue = !UserDefaultsManagement.alwaysOnTop
         UserDefaultsManagement.alwaysOnTop = newValue
-        
+
         NotificationCenter.default.post(name: .alwaysOnTopChanged, object: nil)
-        
+
         if let vc = ViewController.shared() {
             let message = newValue ? I18n.str("📌 Window stays on top") : I18n.str("📋 Window normal mode")
             vc.toast(message: message)
         }
     }
-    
+
     private func addGlobalKeyboardMonitor() {
         NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
             if event.keyCode == 17,  // kVK_ANSI_T
@@ -332,7 +332,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
                     return nil
                 }
             }
-            
+
             if event.keyCode == 35,  // kVK_ANSI_P
                 event.modifierFlags.contains(.command),
                 event.modifierFlags.contains(.option),

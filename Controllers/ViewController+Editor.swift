@@ -70,7 +70,6 @@ extension ViewController {
 
         preparePreviewContainer(hidden: false)
 
-
         previewScrollView?.hasVerticalScroller = true
 
         ensureNoteSelection(preferLastSelected: true, preserveScrollPosition: true)
@@ -154,7 +153,6 @@ extension ViewController {
     // swiftlint:disable:next cyclomatic_complexity
     func disablePreview() {
         guard !UserDefaultsManagement.magicPPT else { return }
-
 
         // Save preview scroll position before disabling
         if let webView = editArea.markdownView {

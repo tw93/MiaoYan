@@ -65,7 +65,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         guard let editorModePopUp = editorModePopUp else { return }
         editorModePopUp.selectItem(withTitle: localizedEditorMode(UserDefaultsManagement.splitViewMode))
     }
-    
+
     @objc private func handleAlwaysOnTopChanged() {
         guard let alwaysOnTopPopUp = alwaysOnTopPopUp else { return }
         alwaysOnTopPopUp.selectItem(withTag: UserDefaultsManagement.alwaysOnTop ? 1 : 0)
@@ -168,11 +168,11 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         alwaysOnTopPopUp.translatesAutoresizingMaskIntoConstraints = false
         alwaysOnTopPopUp.target = self
         alwaysOnTopPopUp.action = #selector(alwaysOnTopChanged(_:))
-        
+
         let noItem = NSMenuItem(title: I18n.str("No"), action: nil, keyEquivalent: "")
         noItem.tag = 0
         alwaysOnTopPopUp.menu?.addItem(noItem)
-        
+
         let yesItem = NSMenuItem(title: I18n.str("Yes"), action: nil, keyEquivalent: "")
         yesItem.tag = 1
         alwaysOnTopPopUp.menu?.addItem(yesItem)
