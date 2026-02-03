@@ -220,6 +220,51 @@ class HtmlManager {
         return htmlString
     }
 
+    static func processImagesInMarkdown(_ markdown: String, imagesStorage: URL) -> String {
+        let pattern = #"!\[([^\]]*)\]\(([^)]+)\)"#
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
+            return markdown
+        }
+
+        var markdownString = markdown
+        let results = regex.matches(in: markdown, range: NSRange(markdown.startIndex..., in: markdown))
+
+        let images = results.compactMap { match -> (fullMatch: String, alt: String, srcPath: String)? in
+            guard let fullRange = Range(match.range, in: markdown),
+                let altRange = Range(match.range(at: 1), in: markdown),
+                let srcRange = Range(match.range(at: 2), in: markdown)
+            else { return nil }
+            return (String(markdown[fullRange]), String(markdown[altRange]), String(markdown[srcRange]))
+        }
+
+        for imageInfo in images {
+            guard !imageInfo.srcPath.starts(with: "http://"),
+                !imageInfo.srcPath.starts(with: "https://"),
+                !imageInfo.srcPath.starts(with: "file://")
+            else {
+                continue
+            }
+
+            let cleanPath = cleanImagePath(imageInfo.srcPath)
+
+            if isAbsolutePath(cleanPath) {
+                if FileManager.default.fileExists(atPath: cleanPath) {
+                    let newImageTag = "![\(imageInfo.alt)](file://\(cleanPath))"
+                    markdownString = markdownString.replacingOccurrences(of: imageInfo.fullMatch, with: newImageTag)
+                }
+                continue
+            }
+
+            let absolutePath = imagesStorage.appendingPathComponent(cleanPath).path
+            if FileManager.default.fileExists(atPath: absolutePath) {
+                let newImageTag = "![\(imageInfo.alt)](file://\(absolutePath))"
+                markdownString = markdownString.replacingOccurrences(of: imageInfo.fullMatch, with: newImageTag)
+            }
+        }
+
+        return markdownString
+    }
+
     // MARK: - Bundle and Resource Management
 
     static func getDownViewBundle() -> Bundle? {
