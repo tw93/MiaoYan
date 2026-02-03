@@ -1178,19 +1178,24 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             return super.performKeyEquivalent(with: event)
         }
 
-        let modifiers = parseModifiers(from: event)
-        if modifiers.commandOnly {
-            if handleFindCommands(characters: characters, isShiftPressed: modifiers.shiftPressed) {
+        let parsedModifiers = parseModifiers(from: event)
+        
+        if parsedModifiers.option || parsedModifiers.control {
+            return false
+        }
+        
+        if parsedModifiers.commandOnly {
+            if handleFindCommands(characters: characters, isShiftPressed: parsedModifiers.shiftPressed) {
                 return true
             }
         }
 
-        if shouldSkipKeyEquivalent(characters: characters, commandPressed: modifiers.command) {
+        if shouldSkipKeyEquivalent(characters: characters, commandPressed: parsedModifiers.command) {
             return super.performKeyEquivalent(with: event)
         }
 
         let handled = super.performKeyEquivalent(with: event)
-        ensureSearchBarVisibleAfterAppKit(handled: handled, characters: characters, modifiers: modifiers)
+        ensureSearchBarVisibleAfterAppKit(handled: handled, characters: characters, modifiers: parsedModifiers)
         return handled
     }
 
