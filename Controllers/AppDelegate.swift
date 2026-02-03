@@ -56,6 +56,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         NSApp.mainMenu?.applyMenuIcons()
+        
+        NSApp.mainMenu?.update()
+        
         configureSystemLogging()
         NSFontManager.shared.fontPanel(false)?.orderOut(self)
 
@@ -296,14 +299,25 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 event.modifierFlags.contains(.shift),
                 !event.modifierFlags.contains(.option)
             {
-
                 if let vc = ViewController.shared() {
                     vc.pin(vc.notesTableView.selectedRowIndexes)
-                    return nil  // Consume the event
+                    return nil
+                }
+            }
+            
+            if event.keyCode == 35,  // kVK_ANSI_P
+                event.modifierFlags.contains(.command),
+                event.modifierFlags.contains(.option),
+                !event.modifierFlags.contains(.shift),
+                !event.modifierFlags.contains(.control)
+            {
+                if let vc = ViewController.shared() {
+                    vc.toggleMagicPPT(self)
+                    return nil
                 }
             }
 
-            return event  // Let the event continue
+            return event
         }
     }
 }
