@@ -302,25 +302,23 @@ class MPreviewView: WKWebView, WKUIDelegate {
             }
             return false
         }
-        // Handle ESC in presentation modes
-        // - PPT mode: exit PPT completely
-        // - Presentation (preview fullscreen) mode: exit presentation and restore layout
+        
         if event.keyCode == kVK_Escape, UserDefaultsManagement.presentation, !UserDefaultsManagement.magicPPT {
             DispatchQueue.main.async {
                 if let vc = ViewController.shared() {
                     vc.disablePresentation()
                 }
             }
-            return true  // Consume the event to avoid only exiting fullscreen
+            return true
         }
-        // Handle ESC in PPT mode - exit PPT mode
+        
         if event.keyCode == kVK_Escape, UserDefaultsManagement.magicPPT {
             DispatchQueue.main.async {
                 if let vc = ViewController.shared() {
                     vc.disableMiaoYanPPT()
                 }
             }
-            return true  // Consume the event
+            return true
         }
         if event.keyCode == kVK_Space, UserDefaultsManagement.magicPPT {
             DispatchQueue.main.async {
@@ -331,7 +329,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
         if UserDefaultsManagement.magicPPT {
             return false
         }
-        return super.performKeyEquivalent(with: event)
+        
+        return false
     }
 
     func copySelectionToPasteboard() {
@@ -764,7 +763,9 @@ class MPreviewView: WKWebView, WKUIDelegate {
 
         let pageHTMLString: String
         if UserDefaultsManagement.magicPPT {
-            pageHTMLString = try HtmlManager.htmlFromTemplate(markdownString, css: css, currentName: vc.titleLabel.stringValue)
+            // Process images in markdown for PPT mode
+            let processedMarkdown = imagesStorage.map { HtmlManager.processImagesInMarkdown(markdownString, imagesStorage: $0) } ?? markdownString
+            pageHTMLString = try HtmlManager.htmlFromTemplate(processedMarkdown, css: css, currentName: vc.titleLabel.stringValue)
         } else {
             pageHTMLString = try HtmlManager.htmlFromTemplate(processedHtmlString, css: css, currentName: vc.titleLabel.stringValue)
         }
@@ -982,7 +983,7 @@ class PreviewSearchBar: NSView {
             if handlePreviewShortcuts(event) {
                 return true
             }
-            return super.performKeyEquivalent(with: event)
+            return false
         }
 
         override func keyDown(with event: NSEvent) {
@@ -1299,7 +1300,7 @@ class PreviewSearchBar: NSView {
             clearSearchField()
             return true
         }
-        return super.performKeyEquivalent(with: event)
+        return false
     }
 
     override func keyDown(with event: NSEvent) {
