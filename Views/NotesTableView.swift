@@ -361,7 +361,7 @@ class NotesTableView: NSTableView {
             return true
         }
 
-        return super.performKeyEquivalent(with: event)
+        return false
     }
 
     private func viewForRow(_ row: Int) -> NSView? {
