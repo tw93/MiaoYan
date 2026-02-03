@@ -98,7 +98,7 @@ CA
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="NDw-wG-Jov"/>
-                                        <menuItem title="Search" keyEquivalent="p" identifier="fileMenu.searchAndCreate" id="hPY-aY-QOE">
+                                        <menuItem title="Search" keyEquivalent="/" identifier="fileMenu.searchAndCreate" id="hPY-aY-QOE">
                                             <connections>
                                                 <action selector="searchAndCreate:" target="L4m-js-agn" id="ChM-Mj-Rdf"/>
                                             </connections>
@@ -1082,7 +1082,7 @@ CA
                         <menuItem title="MiaoYan PPT" keyEquivalent="p" id="uUS-sg-zGt">
                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                             <connections>
-                                <action selector="toggleMagicPPT:" target="XfG-lQ-9wD" id="dOP-eh-8uc"/>
+                                <action selector="toggleMagicPPT:" target="L4m-js-agn" id="dOP-eh-8uc"/>
                             </connections>
                         </menuItem>
                         <menuItem isSeparatorItem="YES" id="fyq-Vp-Cdw"/>
