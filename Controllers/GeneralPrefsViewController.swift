@@ -54,6 +54,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         NotificationCenter.default.addObserver(self, selector: #selector(handleSplitViewModeChanged), name: .splitViewModeChanged, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleAlwaysOnTopChanged), name: .alwaysOnTopChanged, object: nil)
     }
 
     deinit {
@@ -63,6 +64,11 @@ final class GeneralPrefsViewController: BasePrefsViewController {
     @objc private func handleSplitViewModeChanged() {
         guard let editorModePopUp = editorModePopUp else { return }
         editorModePopUp.selectItem(withTitle: localizedEditorMode(UserDefaultsManagement.splitViewMode))
+    }
+    
+    @objc private func handleAlwaysOnTopChanged() {
+        guard let alwaysOnTopPopUp = alwaysOnTopPopUp else { return }
+        alwaysOnTopPopUp.selectItem(withTag: UserDefaultsManagement.alwaysOnTop ? 1 : 0)
     }
 
     override func setupUI() {
@@ -162,8 +168,14 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         alwaysOnTopPopUp.translatesAutoresizingMaskIntoConstraints = false
         alwaysOnTopPopUp.target = self
         alwaysOnTopPopUp.action = #selector(alwaysOnTopChanged(_:))
-        alwaysOnTopPopUp.addItem(withTitle: I18n.str("No"))
-        alwaysOnTopPopUp.addItem(withTitle: I18n.str("Yes"))
+        
+        let noItem = NSMenuItem(title: I18n.str("No"), action: nil, keyEquivalent: "")
+        noItem.tag = 0
+        alwaysOnTopPopUp.menu?.addItem(noItem)
+        
+        let yesItem = NSMenuItem(title: I18n.str("Yes"), action: nil, keyEquivalent: "")
+        yesItem.tag = 1
+        alwaysOnTopPopUp.menu?.addItem(yesItem)
 
         activateShortcutRecorder = ThemeAwareShortcutRecorderView(for: .activateWindow)
         activateShortcutRecorder.translatesAutoresizingMaskIntoConstraints = false
@@ -342,7 +354,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         }
 
         buttonShowPopUp.selectItem(withTitle: localizedButtonShow(settings.buttonShow))
-        alwaysOnTopPopUp.selectItem(withTitle: UserDefaultsManagement.alwaysOnTop ? I18n.str("Yes") : I18n.str("No"))
+        alwaysOnTopPopUp.selectItem(withTag: UserDefaultsManagement.alwaysOnTop ? 1 : 0)
 
         // Editor settings values
         editorModePopUp.selectItem(withTitle: localizedEditorMode(UserDefaultsManagement.splitViewMode))
@@ -449,11 +461,9 @@ final class GeneralPrefsViewController: BasePrefsViewController {
     }
 
     @objc private func alwaysOnTopChanged(_ sender: NSPopUpButton) {
-        let enabled = sender.title == I18n.str("Yes")
+        let enabled = sender.selectedTag() == 1
         UserDefaultsManagement.alwaysOnTop = enabled
-        if let window = MainWindowController.shared() {
-            window.level = enabled ? .floating : .normal
-        }
+        NotificationCenter.default.post(name: .alwaysOnTopChanged, object: nil)
     }
 
     // MARK: - Localization helpers for raw/display mapping

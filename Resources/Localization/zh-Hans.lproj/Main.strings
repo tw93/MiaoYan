@@ -573,3 +573,9 @@
 
 /* Class = "NSMenuItem"; title = "Toggle Split View"; ObjectID = "Tgl-Spl-View"; */
 "Tgl-Spl-View.title" = "切换分栏";
+
+/* Class = "NSMenuItem"; title = "Always On Top"; ObjectID = "Always-On-Top-Menu"; */
+"Always-On-Top-Menu.title" = "窗口置顶";
+
+/* Class = "NSMenuItem"; title = "Pin Note"; ObjectID = "Pin-Menu-Main"; */
+"Pin-Menu-Main.title" = "置顶笔记";

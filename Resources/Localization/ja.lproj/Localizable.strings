@@ -244,3 +244,11 @@
 "Export failed" = "エクスポートに失敗しました";
 "System version too low" = "システムバージョンが低すぎます";
 "Enter title" = "タイトルを入力";
+
+/* Always On Top */
+"📌 Window stays on top" = "📌 ウィンドウを最前面に固定";
+"📋 Window normal mode" = "📋 ウィンドウ通常モード";
+
+/* Menu Items */
+"Always On Top" = "常に最前面に表示";
+"Pin Note" = "ノートをピン留め";

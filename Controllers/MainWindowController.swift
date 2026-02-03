@@ -18,14 +18,21 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         window?.restorationClass = MainWindowController.self
         window?.delegate = self
 
-        if UserDefaultsManagement.alwaysOnTop {
-            window?.level = .floating
-        } else {
-            window?.level = .normal
-        }
+        updateAlwaysOnTopState()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateAlwaysOnTopState),
+            name: .alwaysOnTopChanged,
+            object: nil
+        )
 
         applyMiaoYanAppearance()
         observeAppearanceChanges()
+    }
+    
+    @objc private func updateAlwaysOnTopState() {
+        window?.level = UserDefaultsManagement.alwaysOnTop ? .floating : .normal
     }
 
     private func observeAppearanceChanges() {
@@ -94,6 +101,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
                 contentView.removeObserver(self, forKeyPath: "effectiveAppearance")
                 isObservingAppearance = false
             }
+            NotificationCenter.default.removeObserver(self, name: .alwaysOnTopChanged, object: nil)
         }
     }
 

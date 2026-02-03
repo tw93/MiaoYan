@@ -91,6 +91,7 @@ enum MenuIconRegistry {
         IconMapping(symbol: "exclamationmark.bubble", selectors: ["openIssue:"], identifiers: []),
         IconMapping(symbol: "sparkles", selectors: ["toggleMagicPPT:"], identifiers: []),
         IconMapping(symbol: "flag", selectors: ["pinMenu:"], identifiers: []),
+        IconMapping(symbol: "pin.circle", selectors: ["toggleAlwaysOnTop:"], identifiers: ["viewMenu.alwaysOnTop"]),
         IconMapping(symbol: "chevron.left.forwardslash.chevron.right", selectors: ["exportHtml:"], identifiers: []),
         IconMapping(symbol: "photo", selectors: ["exportImage:"], identifiers: []),
         IconMapping(symbol: "doc.richtext", selectors: ["exportPdf:"], identifiers: []),

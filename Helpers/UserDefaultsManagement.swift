@@ -5,6 +5,7 @@ extension Notification.Name {
     static let editorModeChanged = Notification.Name("editorModeChanged")
     static let preferencesChanged = Notification.Name("PreferencesChanged")
     static let splitViewModeChanged = Notification.Name("SplitViewModeChanged")
+    static let alwaysOnTopChanged = Notification.Name("alwaysOnTopChanged")
 }
 @MainActor
 public enum UserDefaultsManagement {
