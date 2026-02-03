@@ -588,6 +588,10 @@ class ViewController:
             return vc.isMiaoYanPPT(needToast: false)
         }
 
+        if menuItem.action == #selector(toggleMagicPPT(_:)) {
+            return vc.notesTableView.selectedRow != -1
+        }
+
         let canUseMenu = UserDefaultsManagement.canUseMenu
         if let title = menuItem.menu?.identifier?.rawValue {
             switch title {

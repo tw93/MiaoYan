@@ -975,7 +975,15 @@ extension ViewController {
     }
 
     @IBAction func toggleMagicPPT(_ sender: Any) {
-        toggleMagicPPT()
+        saveTitleSafely()
+        if UserDefaultsManagement.magicPPT {
+            disableMiaoYanPPT()
+        } else {
+            if !isMiaoYanPPT() {
+                return
+            }
+            enableMiaoYanPPT()
+        }
     }
 
     @IBAction func formatText(_ sender: NSButton) {
