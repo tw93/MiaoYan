@@ -129,9 +129,14 @@ public class TextFormatter {
             let text = storage.attributedSubstring(from: pRange).string
             let (newText, diff) = removeLeadingIndent(from: text)
             guard let processedText = newText else { return }
-            
-            guard !processedText.isEmpty else { return }
-            textView.insertText(processedText, replacementRange: pRange)
+
+            let replacement: String
+            if processedText.isEmpty {
+                replacement = pRange.upperBound < storage.length ? "\n" : ""
+            } else {
+                replacement = processedText
+            }
+            textView.insertText(replacement, replacementRange: pRange)
             setSelectedRange(NSRange(location: range.location - diff, length: 0))
             return
         }
@@ -155,7 +160,7 @@ public class TextFormatter {
         let finalRange = NSRange(location: pRange.lowerBound, length: result.count)
         setSelectedRange(finalRange)
     }
-    
+
     private func removeLeadingIndent(from text: String) -> (String?, Int) {
         if text.starts(with: "   ") {
             return (String(text.dropFirst(3)), 3)

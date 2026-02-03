@@ -299,7 +299,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             else {
                 return
             }
-            let filePathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
+            let filePathKey = NSAttributedString.Key(rawValue: "\(Bundle.main.bundleIdentifier!).image.path")
             if (storage.attribute(filePathKey, at: range.location, effectiveRange: nil) as? String) != nil {
                 return
             }
@@ -559,7 +559,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             return
         }
         guard let storage = textStorage else { return }
-        
+
         if note.isMarkdown(), let content = note.content.mutableCopy() as? NSMutableAttributedString {
             NotesTextProcessor.checkPerformanceLevel(attributedString: content)
             EditTextView.shouldForceRescan = true
@@ -1001,7 +1001,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         var removedImages = [URL: URL]()
         storage.enumerateAttribute(.attachment, in: checkRange) { value, range, _ in
             if value is NSTextAttachment, storage.attribute(.todo, at: range.location, effectiveRange: nil) == nil {
-                let filePathKey = NSAttributedString.Key(rawValue: "com.tw93.miaoyan.image.path")
+                let filePathKey = NSAttributedString.Key(rawValue: "\(Bundle.main.bundleIdentifier!).image.path")
                 if let filePath = storage.attribute(filePathKey, at: range.location, effectiveRange: nil) as? String {
                     if let note = EditTextView.note {
                         guard let imageURL = note.getImageUrl(imageName: filePath) else { return }
@@ -1179,11 +1179,11 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
 
         let parsedModifiers = parseModifiers(from: event)
-        
+
         if parsedModifiers.option || parsedModifiers.control {
             return false
         }
-        
+
         if parsedModifiers.commandOnly {
             if handleFindCommands(characters: characters, isShiftPressed: parsedModifiers.shiftPressed) {
                 return true
@@ -1413,15 +1413,16 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     func replaceNext(with replaceText: String) {
         guard !editorSearchRanges.isEmpty,
-              editorSearchRanges.indices.contains(editorCurrentMatchIndex),
-              let storage = textStorage else { return }
+            editorSearchRanges.indices.contains(editorCurrentMatchIndex),
+            let storage = textStorage
+        else { return }
 
         let currentRange = editorSearchRanges[editorCurrentMatchIndex]
-        
+
         storage.replaceCharacters(in: currentRange, with: replaceText)
-        
+
         handleSearchInput(editorLastSearchText, jumpToFirstMatch: false)
-        
+
         if !editorSearchRanges.isEmpty {
             if editorCurrentMatchIndex >= editorSearchRanges.count {
                 editorCurrentMatchIndex = 0
@@ -1433,13 +1434,13 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     func replaceAll(with replaceText: String) {
         guard !editorSearchRanges.isEmpty, let storage = textStorage else { return }
-        
+
         let sortedRanges = editorSearchRanges.sorted { $0.location > $1.location }
-        
+
         for range in sortedRanges {
             storage.replaceCharacters(in: range, with: replaceText)
         }
-        
+
         handleSearchInput(editorLastSearchText, jumpToFirstMatch: false)
     }
 

@@ -183,11 +183,11 @@ class ClipboardManager {
         }
     }
 
-    // MARK: - Shell Execution for uPic/Picsee
-    nonisolated private func run(_ cmd: String) -> String? {
+    // MARK: - Process Execution for uPic/Picsee
+    nonisolated private func run(executablePath: String, arguments: [String]) -> String? {
         let process = Process()
-        process.launchPath = "/bin/bash"
-        process.arguments = ["-c", cmd]
+        process.executableURL = URL(fileURLWithPath: executablePath)
+        process.arguments = arguments
 
         // Set a default PATH to ensure tools can be found
         var env = ProcessInfo.processInfo.environment
@@ -216,10 +216,23 @@ class ClipboardManager {
         let semaphore = DispatchSemaphore(value: 0)
         let result = ProcessOutput()
 
-        // Read output in background
+        // Read stdout and stderr in parallel to avoid pipe deadlock
+        let group = DispatchGroup()
+
+        group.enter()
         DispatchQueue.global(qos: .utility).async {
             result.outputData = pipe.fileHandleForReading.readDataToEndOfFile()
+            group.leave()
+        }
+
+        group.enter()
+        DispatchQueue.global(qos: .utility).async {
             result.errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+            group.leave()
+        }
+
+        DispatchQueue.global(qos: .utility).async {
+            group.wait()
             process.waitUntilExit()
             semaphore.signal()
         }
@@ -262,8 +275,8 @@ class ClipboardManager {
         let note = parameters.note
 
         DispatchQueue.global(qos: .userInitiated).async {
-            let command = "/Applications/\(picType).app/Contents/MacOS/\(picType) -o url -u \"\(localPath)\""
-            let runList = self.run(command)
+            let executablePath = "/Applications/\(picType).app/Contents/MacOS/\(picType)"
+            let runList = self.run(executablePath: executablePath, arguments: ["-o", "url", "-u", localPath])
             let imageDesc = runList?.components(separatedBy: "\n") ?? []
 
             var uploadedURL: String?
@@ -324,7 +337,7 @@ class ClipboardManager {
             return
         }
 
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        let task = URLSession.shared.dataTask(with: request) { data, _, error in
             if let error = error {
                 completion(nil, error)
                 return
