@@ -228,6 +228,8 @@
 "Previous" = "前へ";
 "Next" = "次へ";
 "Done" = "完了";
+"Replace" = "置換";
+"Replace All" = "すべて置換";
 
 /* Clean attachments */
 "Clean Orphan Attachments" = "未使用の添付ファイルを整理";

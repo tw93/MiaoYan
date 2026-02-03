@@ -1007,7 +1007,7 @@ class ViewController:
     }
 
     private func configureEditor() {
-        editArea.usesFindBar = true
+        editArea.usesFindBar = false
         editArea.isIncrementalSearchingEnabled = true
         editArea.isAutomaticLinkDetectionEnabled = false
         editArea.isAutomaticQuoteSubstitutionEnabled = false

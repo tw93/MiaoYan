@@ -68,6 +68,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     public static var fontColor: NSColor { Theme.textColor }
     private var editorSearchBar: PreviewSearchBar?
     private var editorSearchBarConstraints: [NSLayoutConstraint] = []
+    private var editorSearchBarHeightConstraint: NSLayoutConstraint?
     private var editorSearchRanges: [NSRange] = []
     private var editorCurrentMatchIndex: Int = 0
     private var editorLastSearchText: String = ""
@@ -1296,7 +1297,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     // MARK: - Editor Search
 
-    func showSearchBar(prefilledText: String? = nil) {
+    func showSearchBar(prefilledText: String? = nil, mode: PreviewSearchBar.Mode = .find) {
         guard
             let vc = getViewController(),
             let scrollView = enclosingScrollView ?? vc.editAreaScroll
@@ -1326,21 +1327,35 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             bar.onPrevious = { [weak self] in
                 self?.findPrevious()
             }
+            bar.onReplace = { [weak self] replaceText in
+                self?.replaceNext(with: replaceText)
+            }
+            bar.onReplaceAll = { [weak self] replaceText in
+                self?.replaceAll(with: replaceText)
+            }
             bar.onClose = { [weak self] in
                 self?.hideSearchBar()
             }
             if containerView.subviews.contains(where: { $0 === bar }) == false {
                 containerView.addSubview(bar, positioned: .above, relativeTo: scrollView)
             }
+            let barHeight: CGFloat = (mode == .replace) ? 76 : 40
+            let heightConstraint = bar.heightAnchor.constraint(equalToConstant: barHeight)
+            editorSearchBarHeightConstraint = heightConstraint
             editorSearchBarConstraints = [
                 bar.topAnchor.constraint(equalTo: scrollView.topAnchor),
                 bar.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -24),
                 bar.widthAnchor.constraint(equalToConstant: 360),
-                bar.heightAnchor.constraint(equalToConstant: 36),
+                heightConstraint,
             ]
             NSLayoutConstraint.activate(editorSearchBarConstraints)
             editorSearchBar = bar
+        } else {
+            let newHeight: CGFloat = (mode == .replace) ? 76 : 40
+            editorSearchBarHeightConstraint?.constant = newHeight
         }
+
+        editorSearchBar?.setMode(mode)
 
         if prefilledText != nil || !barAlreadyVisible {
             let seed = prefilledText ?? selectionSearchSeed()
@@ -1371,6 +1386,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             NSLayoutConstraint.deactivate(editorSearchBarConstraints)
             editorSearchBarConstraints.removeAll()
         }
+        editorSearchBarHeightConstraint = nil
         if hadBar, restoreFocus {
             window?.makeFirstResponder(self)
         }
@@ -1388,6 +1404,38 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         editorCurrentMatchIndex = (editorCurrentMatchIndex - 1 + editorSearchRanges.count) % editorSearchRanges.count
         focusSearchResult(at: editorCurrentMatchIndex)
         editorSearchBar?.updateMatchInfo(current: editorCurrentMatchIndex + 1, total: editorSearchRanges.count)
+    }
+
+    func replaceNext(with replaceText: String) {
+        guard !editorSearchRanges.isEmpty,
+              editorSearchRanges.indices.contains(editorCurrentMatchIndex),
+              let storage = textStorage else { return }
+
+        let currentRange = editorSearchRanges[editorCurrentMatchIndex]
+        
+        storage.replaceCharacters(in: currentRange, with: replaceText)
+        
+        handleSearchInput(editorLastSearchText, jumpToFirstMatch: false)
+        
+        if !editorSearchRanges.isEmpty {
+            if editorCurrentMatchIndex >= editorSearchRanges.count {
+                editorCurrentMatchIndex = 0
+            }
+            focusSearchResult(at: editorCurrentMatchIndex)
+            editorSearchBar?.updateMatchInfo(current: editorCurrentMatchIndex + 1, total: editorSearchRanges.count)
+        }
+    }
+
+    func replaceAll(with replaceText: String) {
+        guard !editorSearchRanges.isEmpty, let storage = textStorage else { return }
+        
+        let sortedRanges = editorSearchRanges.sorted { $0.location > $1.location }
+        
+        for range in sortedRanges {
+            storage.replaceCharacters(in: range, with: replaceText)
+        }
+        
+        handleSearchInput(editorLastSearchText, jumpToFirstMatch: false)
     }
 
     private func handleSearchInput(_ text: String, jumpToFirstMatch: Bool) {
@@ -1521,10 +1569,6 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
 
         super.performTextFinderAction(sender)
-
-        if !isSearchBarVisible {
-            showSearchBar()
-        }
     }
 
     private func handleTextFinderAction(tag: Int) -> Bool {
@@ -1608,9 +1652,6 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             useSelectionForFind()
         default:
             super.performFindPanelAction(sender)
-            if !isSearchBarVisible {
-                showSearchBar()
-            }
         }
     }
 

@@ -475,25 +475,28 @@ extension ViewController {
     @IBAction func textFinder(_ sender: NSMenuItem) {
         guard let vc = ViewController.shared() else { return }
 
-        // If in preview mode, use WebView search
         if UserDefaultsManagement.preview || UserDefaultsManagement.presentation || UserDefaultsManagement.magicPPT {
             if let webView = vc.editArea.markdownView {
-                // Hide editor search bar when switching to preview search
                 if vc.editArea.isSearchBarVisible {
                     vc.editArea.hideSearchBar()
                 }
-                // Find next
                 if sender.tag == NSFindPanelAction.next.rawValue {
                     webView.findNext()
                     return
                 }
-                // Find previous
                 if sender.tag == NSFindPanelAction.previous.rawValue {
                     webView.findPrevious()
                     return
                 }
-                // Default: show search bar (for Cmd+F and other find commands)
-                webView.showSearchBar()
+                
+                if let textFinderAction = NSTextFinder.Action(rawValue: sender.tag) {
+                    if textFinderAction == .showReplaceInterface {
+                        webView.showSearchBar(mode: .replace)
+                        return
+                    }
+                }
+                
+                webView.showSearchBar(mode: .find)
                 return
             }
             return
@@ -524,7 +527,10 @@ extension ViewController {
         if let textFinderAction = NSTextFinder.Action(rawValue: sender.tag) {
             switch textFinderAction {
             case .showFindInterface:
-                vc.editArea.showSearchBar(prefilledText: nil)
+                vc.editArea.showSearchBar(prefilledText: nil, mode: .find)
+                return
+            case .showReplaceInterface:
+                vc.editArea.showSearchBar(prefilledText: nil, mode: .replace)
                 return
             case .hideFindInterface:
                 vc.editArea.hideSearchBar()
