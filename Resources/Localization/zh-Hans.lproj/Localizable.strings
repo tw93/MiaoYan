@@ -246,3 +246,11 @@
 "Export failed" = "导出失败";
 "System version too low" = "系统版本过低";
 "Enter title" = "输入标题";
+
+/* Always On Top */
+"📌 Window stays on top" = "📌 窗口已置顶";
+"📋 Window normal mode" = "📋 窗口正常模式";
+
+/* Menu Items */
+"Always On Top" = "窗口置顶";
+"Pin Note" = "置顶笔记";

@@ -5,7 +5,7 @@ import os.log
 
 @main
 @MainActor
-class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemValidation {
     var mainWindowController: MainWindowController?
     var prefsWindowController: PrefsWindowController?
     var aboutWindowController: AboutWindowController?
@@ -269,6 +269,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             mainWindowController?.makeNew()
         }
     }
+    
+    @IBAction func toggleAlwaysOnTop(_ sender: NSMenuItem) {
+        toggleAlwaysOnTop()
+    }
+    
+    func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+        if menuItem.identifier?.rawValue == "viewMenu.alwaysOnTop" {
+            menuItem.state = UserDefaultsManagement.alwaysOnTop ? .on : .off
+            return true
+        }
+        // Only validate menu items that AppDelegate can actually handle
+        if let action = menuItem.action {
+            return self.responds(to: action)
+        }
+        return true
+    }
 
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
         return true
@@ -291,7 +307,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         URLCache.shared = cache
     }
 
-    // MARK: - Global Keyboard Monitor
+    // MARK: - Always On Top Management
+    private func toggleAlwaysOnTop() {
+        let newValue = !UserDefaultsManagement.alwaysOnTop
+        UserDefaultsManagement.alwaysOnTop = newValue
+        
+        NotificationCenter.default.post(name: .alwaysOnTopChanged, object: nil)
+        
+        if let vc = ViewController.shared() {
+            let message = newValue ? I18n.str("📌 Window stays on top") : I18n.str("📋 Window normal mode")
+            vc.toast(message: message)
+        }
+    }
+    
     private func addGlobalKeyboardMonitor() {
         NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
             if event.keyCode == 17,  // kVK_ANSI_T

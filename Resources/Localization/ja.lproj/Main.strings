@@ -188,6 +188,12 @@
 /* Class = "NSMenuItem"; title = "Toggle Split View"; ObjectID = "Tgl-Spl-View"; */
 "Tgl-Spl-View.title" = "分割表示を切り替え";
 
+/* Class = "NSMenuItem"; title = "Always On Top"; ObjectID = "Always-On-Top-Menu"; */
+"Always-On-Top-Menu.title" = "常に最前面に表示";
+
+/* Class = "NSMenuItem"; title = "Pin Note"; ObjectID = "Pin-Menu-Main"; */
+"Pin-Menu-Main.title" = "ノートをピン留め";
+
 /* Class = "NSMenuItem"; title = "Duplicate"; ObjectID = "E6I-n5-dsi"; */
 "E6I-n5-dsi.title" = "複写する";
 

@@ -114,7 +114,7 @@ CA
                                                 <action selector="renameMenu:" target="L4m-js-agn" id="H0Y-Fe-qfr"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Pin/unpin" keyEquivalent="P" id="Pin-Menu-Main">
+                                        <menuItem title="Pin Note" keyEquivalent="P" id="Pin-Menu-Main">
                                             <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                             <connections>
                                                 <action selector="pinMenu:" target="L4m-js-agn" id="Pin-Action-Main"/>
@@ -246,6 +246,14 @@ CA
                                                 <action selector="toggleSplitMode:" target="Ady-hI-5gd" id="Act-Tgl-Spl"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="Sep-Before-OnTop"/>
+                                        <menuItem title="Always On Top" keyEquivalent="t" identifier="viewMenu.alwaysOnTop" id="Always-On-Top-Menu">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="toggleAlwaysOnTop:" target="Voe-Tx-rLC" id="Act-Always-On-Top"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="Sep-After-OnTop"/>
                                         <menuItem title="Enter Full Screen" keyEquivalent="f" id="4J7-dP-txa">
                                             <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                             <connections>

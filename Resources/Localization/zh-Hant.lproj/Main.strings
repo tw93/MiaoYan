@@ -205,6 +205,12 @@
 /* Class = "NSMenuItem"; title = "Toggle Split View"; ObjectID = "Tgl-Spl-View"; */
 "Tgl-Spl-View.title" = "切換分欄";
 
+/* Class = "NSMenuItem"; title = "Always On Top"; ObjectID = "Always-On-Top-Menu"; */
+"Always-On-Top-Menu.title" = "視窗置頂";
+
+/* Class = "NSMenuItem"; title = "Pin Note"; ObjectID = "Pin-Menu-Main"; */
+"Pin-Menu-Main.title" = "置頂筆記";
+
 /* Class = "NSMenuItem"; title = "Undo"; ObjectID = "dRJ-4n-Yzg"; */
 "dRJ-4n-Yzg.title" = "還原";
 
