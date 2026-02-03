@@ -1321,7 +1321,7 @@ extension ViewController {
             }
         }
 
-        if event.keyCode == kVK_ANSI_P, event.modifierFlags.contains(.command), !event.modifierFlags.contains(.shift), !event.modifierFlags.contains(.control) {
+        if event.keyCode == kVK_ANSI_Slash, event.modifierFlags.contains(.command), !event.modifierFlags.contains(.shift), !event.modifierFlags.contains(.control) {
             if notesTableView.getSelectedNote() != nil {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     if self.titleLabel.isEditable {
