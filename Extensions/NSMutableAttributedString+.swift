@@ -35,8 +35,8 @@ extension NSMutableAttributedString {
         }
 
         var offset = 0
-        let filePathKey = NSAttributedString.Key(rawValue: "\(Bundle.main.bundleIdentifier!).image.path")
-        let titleKey = NSAttributedString.Key(rawValue: "\(Bundle.main.bundleIdentifier!).image.title")
+        let filePathKey = NSAttributedString.Key(rawValue: AppIdentifier.imagePathKey)
+        let titleKey = NSAttributedString.Key(rawValue: AppIdentifier.imageTitleKey)
 
         enumerateAttribute(.attachment, in: NSRange(location: 0, length: length)) { value, range, _ in
             guard let textAttachment = value as? NSTextAttachment,

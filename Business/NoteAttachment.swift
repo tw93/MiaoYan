@@ -37,10 +37,9 @@ class NoteAttachment {
 
     @MainActor
     public func getAttributedString(lazy: Bool = true) -> NSMutableAttributedString? {
-        let bundleID = Bundle.main.bundleIdentifier!
-        let imageKey = NSAttributedString.Key(rawValue: "\(bundleID).image.url")
-        let pathKey = NSAttributedString.Key(rawValue: "\(bundleID).image.path")
-        let titleKey = NSAttributedString.Key(rawValue: "\(bundleID).image.title")
+        let imageKey = NSAttributedString.Key(rawValue: AppIdentifier.imageURLKey)
+        let pathKey = NSAttributedString.Key(rawValue: AppIdentifier.imagePathKey)
+        let titleKey = NSAttributedString.Key(rawValue: AppIdentifier.imageTitleKey)
 
         if let dst = imageCache {
             if FileManager.default.fileExists(atPath: dst.path) {
