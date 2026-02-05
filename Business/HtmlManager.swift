@@ -220,49 +220,76 @@ class HtmlManager {
         return htmlString
     }
 
+    private static let codeBlockRegex: NSRegularExpression? = {
+        try? NSRegularExpression(pattern: "(?:```|~~~)[\\s\\S]*?(?:```|~~~)", options: [])
+    }()
+
+    private static func codeBlockRanges(in text: String) -> [NSRange] {
+        guard let regex = codeBlockRegex else { return [] }
+        let fullRange = NSRange(text.startIndex..., in: text)
+        return regex.matches(in: text, range: fullRange).map { $0.range }
+    }
+
+    private static func isInsideCodeBlock(_ range: NSRange, codeRanges: [NSRange]) -> Bool {
+        for codeRange in codeRanges {
+            if codeRange.intersection(range) != nil {
+                return true
+            }
+        }
+        return false
+    }
+
     static func processImagesInMarkdown(_ markdown: String, imagesStorage: URL) -> String {
         let pattern = #"!\[([^\]]*)\]\(([^)]+)\)"#
         guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
             return markdown
         }
 
-        var markdownString = markdown
-        let results = regex.matches(in: markdown, range: NSRange(markdown.startIndex..., in: markdown))
+        let codeRanges = codeBlockRanges(in: markdown)
+        let nsMarkdown = markdown as NSString
+        let results = regex.matches(in: markdown, range: NSRange(location: 0, length: nsMarkdown.length))
 
-        let images = results.compactMap { match -> (fullMatch: String, alt: String, srcPath: String)? in
-            guard let fullRange = Range(match.range, in: markdown),
-                let altRange = Range(match.range(at: 1), in: markdown),
-                let srcRange = Range(match.range(at: 2), in: markdown)
-            else { return nil }
-            return (String(markdown[fullRange]), String(markdown[altRange]), String(markdown[srcRange]))
-        }
+        // Collect replacements with their ranges (only non-code-block matches)
+        var replacements: [(range: NSRange, replacement: String)] = []
 
-        for imageInfo in images {
-            guard !imageInfo.srcPath.starts(with: "http://"),
-                !imageInfo.srcPath.starts(with: "https://"),
-                !imageInfo.srcPath.starts(with: "file://")
+        for match in results {
+            if isInsideCodeBlock(match.range, codeRanges: codeRanges) {
+                continue
+            }
+            guard match.numberOfRanges >= 3 else { continue }
+
+            let alt = nsMarkdown.substring(with: match.range(at: 1))
+            let srcPath = nsMarkdown.substring(with: match.range(at: 2))
+
+            guard !srcPath.starts(with: "http://"),
+                !srcPath.starts(with: "https://"),
+                !srcPath.starts(with: "file://")
             else {
                 continue
             }
 
-            let cleanPath = cleanImagePath(imageInfo.srcPath)
+            let cleanPath = cleanImagePath(srcPath)
 
             if isAbsolutePath(cleanPath) {
                 if FileManager.default.fileExists(atPath: cleanPath) {
-                    let newImageTag = "![\(imageInfo.alt)](file://\(cleanPath))"
-                    markdownString = markdownString.replacingOccurrences(of: imageInfo.fullMatch, with: newImageTag)
+                    replacements.append((match.range, "![\(alt)](file://\(cleanPath))"))
                 }
                 continue
             }
 
             let absolutePath = imagesStorage.appendingPathComponent(cleanPath).path
             if FileManager.default.fileExists(atPath: absolutePath) {
-                let newImageTag = "![\(imageInfo.alt)](file://\(absolutePath))"
-                markdownString = markdownString.replacingOccurrences(of: imageInfo.fullMatch, with: newImageTag)
+                replacements.append((match.range, "![\(alt)](file://\(absolutePath))"))
             }
         }
 
-        return markdownString
+        // Apply replacements in reverse order to preserve earlier ranges
+        let mutable = NSMutableString(string: markdown)
+        for item in replacements.reversed() {
+            mutable.replaceCharacters(in: item.range, with: item.replacement)
+        }
+
+        return mutable as String
     }
 
     // MARK: - Bundle and Resource Management
