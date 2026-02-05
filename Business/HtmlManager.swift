@@ -220,14 +220,29 @@ class HtmlManager {
         return htmlString
     }
 
-    private static let codeBlockRegex: NSRegularExpression? = {
-        try? NSRegularExpression(pattern: "(?:```|~~~)[\\s\\S]*?(?:```|~~~)", options: [])
+    private static let fencedCodeBlockRegex: NSRegularExpression? = {
+        try? NSRegularExpression(pattern: "(?m)^(`{3,}|~{3,}).*\\n[\\s\\S]*?^\\1\\s*$", options: [])
     }()
 
-    private static func codeBlockRanges(in text: String) -> [NSRange] {
-        guard let regex = codeBlockRegex else { return [] }
+    private static let inlineCodeRegex: NSRegularExpression? = {
+        try? NSRegularExpression(pattern: "(`+)(?!`).+?(?<!`)\\1(?!`)", options: [])
+    }()
+
+    private static func matchRanges(using regex: NSRegularExpression?, in text: String) -> [NSRange] {
+        guard let regex = regex else { return [] }
         let fullRange = NSRange(text.startIndex..., in: text)
         return regex.matches(in: text, range: fullRange).map { $0.range }
+    }
+
+    private static func codeBlockRanges(in text: String) -> [NSRange] {
+        var ranges = matchRanges(using: fencedCodeBlockRegex, in: text)
+
+        let inlineRanges = matchRanges(using: inlineCodeRegex, in: text)
+        ranges.append(contentsOf: inlineRanges.filter { inlineRange in
+            !ranges.contains { $0.intersection(inlineRange) != nil }
+        })
+
+        return ranges
     }
 
     private static func isInsideCodeBlock(_ range: NSRange, codeRanges: [NSRange]) -> Bool {
