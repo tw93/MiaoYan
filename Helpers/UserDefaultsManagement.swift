@@ -7,6 +7,31 @@ extension Notification.Name {
     static let splitViewModeChanged = Notification.Name("SplitViewModeChanged")
     static let alwaysOnTopChanged = Notification.Name("alwaysOnTopChanged")
 }
+// MARK: - App Identifier
+enum AppIdentifier {
+    static let bundleID: String = Bundle.main.bundleIdentifier ?? "com.tw93.miaoyan"
+    static let legacyBundleID: String = "com.tw93.miaoyan"
+
+    // xattr keys (follow bundleID, with legacy fallback for reading)
+    static var pinKey: String { "\(bundleID).pin" }
+    static var legacyPinKey: String { "\(legacyBundleID).pin" }
+    static var cursorKey: String { "\(bundleID).cursor" }
+    static var legacyCursorKey: String { "\(legacyBundleID).cursor" }
+
+    // NSAttributedString.Key (image metadata in attributed strings)
+    static var imagePathKey: String { "\(bundleID).image.path" }
+    static var imageURLKey: String { "\(bundleID).image.url" }
+    static var imageTitleKey: String { "\(bundleID).image.title" }
+
+    // NSAttributedString.Key (internal, fixed identifiers)
+    static let todoKey = "\(legacyBundleID).image.todo"
+    static let codeBlockKey = "\(legacyBundleID).code.block"
+    static let codeLanguageKey = "\(legacyBundleID).code.language"
+
+    // CloudKit sync key (fixed, shared across devices)
+    static let cloudPinsKey = "\(legacyBundleID).pins.shared"
+}
+
 @MainActor
 public enum UserDefaultsManagement {
     typealias Color = NSColor
