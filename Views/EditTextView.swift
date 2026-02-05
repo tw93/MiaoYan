@@ -299,7 +299,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             else {
                 return
             }
-            let filePathKey = NSAttributedString.Key(rawValue: "\(Bundle.main.bundleIdentifier!).image.path")
+            let filePathKey = NSAttributedString.Key(rawValue: AppIdentifier.imagePathKey)
             if (storage.attribute(filePathKey, at: range.location, effectiveRange: nil) as? String) != nil {
                 return
             }
@@ -766,7 +766,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         viewDelegate?.blockFSUpdates()
         var length = range.lowerBound
         let data = Data(bytes: &length, count: MemoryLayout.size(ofValue: length))
-        try? note.url.setExtendedAttribute(data: data, forName: "com.tw93.miaoyan.cursor")
+        try? note.url.setExtendedAttribute(data: data, forName: AppIdentifier.cursorKey)
     }
 
     // MARK: - Link Highlighting Performance Optimization
@@ -1001,7 +1001,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         var removedImages = [URL: URL]()
         storage.enumerateAttribute(.attachment, in: checkRange) { value, range, _ in
             if value is NSTextAttachment, storage.attribute(.todo, at: range.location, effectiveRange: nil) == nil {
-                let filePathKey = NSAttributedString.Key(rawValue: "\(Bundle.main.bundleIdentifier!).image.path")
+                let filePathKey = NSAttributedString.Key(rawValue: AppIdentifier.imagePathKey)
                 if let filePath = storage.attribute(filePathKey, at: range.location, effectiveRange: nil) as? String {
                     if let note = EditTextView.note {
                         guard let imageURL = note.getImageUrl(imageName: filePath) else { return }
@@ -1344,13 +1344,19 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             if containerView.subviews.contains(where: { $0 === bar }) == false {
                 containerView.addSubview(bar, positioned: .above, relativeTo: scrollView)
             }
+            bar.setContentHuggingPriority(.defaultLow, for: .horizontal)
+            bar.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
             let barHeight: CGFloat = (mode == .replace) ? 76 : 40
-            let heightConstraint = bar.heightAnchor.constraint(equalToConstant: barHeight)
+            let heightConstraint = bar.heightAnchor.constraint(greaterThanOrEqualToConstant: barHeight)
             editorSearchBarHeightConstraint = heightConstraint
+            let preferredWidth = bar.widthAnchor.constraint(equalToConstant: 360)
+            preferredWidth.priority = .defaultHigh
             editorSearchBarConstraints = [
                 bar.topAnchor.constraint(equalTo: scrollView.topAnchor),
                 bar.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -24),
-                bar.widthAnchor.constraint(equalToConstant: 360),
+                bar.widthAnchor.constraint(greaterThanOrEqualToConstant: 320),
+                bar.widthAnchor.constraint(lessThanOrEqualToConstant: 480),
+                preferredWidth,
                 heightConstraint,
             ]
             NSLayoutConstraint.activate(editorSearchBarConstraints)
@@ -1419,7 +1425,9 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
         let currentRange = editorSearchRanges[editorCurrentMatchIndex]
 
+        guard shouldChangeText(in: currentRange, replacementString: replaceText) else { return }
         storage.replaceCharacters(in: currentRange, with: replaceText)
+        didChangeText()
 
         handleSearchInput(editorLastSearchText, jumpToFirstMatch: false)
 
@@ -1437,9 +1445,14 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
         let sortedRanges = editorSearchRanges.sorted { $0.location > $1.location }
 
+        undoManager?.beginUndoGrouping()
         for range in sortedRanges {
-            storage.replaceCharacters(in: range, with: replaceText)
+            if shouldChangeText(in: range, replacementString: replaceText) {
+                storage.replaceCharacters(in: range, with: replaceText)
+            }
         }
+        didChangeText()
+        undoManager?.endUndoGrouping()
 
         handleSearchInput(editorLastSearchText, jumpToFirstMatch: false)
     }
