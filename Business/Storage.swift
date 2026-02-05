@@ -426,7 +426,9 @@ class Storage {
 
             #if CLOUDKIT
             #else
-                if let data = try? note.url.extendedAttribute(forName: "\(Bundle.main.bundleIdentifier!).pin") {
+                let pinData = (try? note.url.extendedAttribute(forName: AppIdentifier.pinKey))
+                    ?? (try? note.url.extendedAttribute(forName: AppIdentifier.legacyPinKey))
+                if let data = pinData {
                     let isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
                         ptr.load(as: Bool.self)
                     }
@@ -504,7 +506,9 @@ class Storage {
 
             #if CLOUDKIT
             #else
-                if let data = try? note.url.extendedAttribute(forName: "\(Bundle.main.bundleIdentifier!).pin") {
+                let pinData = (try? note.url.extendedAttribute(forName: AppIdentifier.pinKey))
+                    ?? (try? note.url.extendedAttribute(forName: AppIdentifier.legacyPinKey))
+                if let data = pinData {
                     let isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
                         ptr.load(as: Bool.self)
                     }

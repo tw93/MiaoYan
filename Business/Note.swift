@@ -231,7 +231,9 @@ public class Note: NSObject {
     public func getCursorPosition() -> Int? {
         var position: Int?
 
-        if let data = try? url.extendedAttribute(forName: "com.tw93.miaoyan.cursor") {
+        let cursorData = (try? url.extendedAttribute(forName: AppIdentifier.cursorKey))
+            ?? (try? url.extendedAttribute(forName: AppIdentifier.legacyCursorKey))
+        if let data = cursorData {
             position = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Int in
                 ptr.load(as: Int.self)
             }
@@ -375,7 +377,7 @@ public class Note: NSObject {
         isPinned = true
         var pin = true
         let data = Data(bytes: &pin, count: 1)
-        try? url.setExtendedAttribute(data: data, forName: "\(Bundle.main.bundleIdentifier!).pin")
+        try? url.setExtendedAttribute(data: data, forName: AppIdentifier.pinKey)
     }
 
     func removePin(cloudSave: Bool = true) {
@@ -384,7 +386,7 @@ public class Note: NSObject {
             isPinned = false
             var pin = false
             let data = Data(bytes: &pin, count: 1)
-            try? url.setExtendedAttribute(data: data, forName: "\(Bundle.main.bundleIdentifier!).pin")
+            try? url.setExtendedAttribute(data: data, forName: AppIdentifier.pinKey)
         }
     }
 

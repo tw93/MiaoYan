@@ -692,7 +692,7 @@ extension ViewController {
 
         @objc func ubiquitousKeyValueStoreDidChange(notification: NSNotification) {
             if let keys = notification.userInfo?[NSUbiquitousKeyValueStoreChangedKeysKey] as? [String] {
-                for key in keys where key == "com.tw93.miaoyan.pins.shared" {
+                for key in keys where key == AppIdentifier.cloudPinsKey {
                     let changedNotes = storage.restoreCloudPins()
 
                     if let notes = changedNotes.added {
