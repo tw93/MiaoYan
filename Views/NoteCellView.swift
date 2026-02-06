@@ -86,25 +86,6 @@ class NoteCellView: NSTableCellView {
         }
     }
 
-    private func adjustTopMargin(margin: CGFloat) {
-        for constraint in constraints {
-            if constraint.secondAttribute == .top, let item = constraint.firstItem {
-                if let firstItem = item as? NSImageView, firstItem.identifier?.rawValue == "pin" {
-                    constraint.constant = margin - 1
-                    continue
-                }
-                if item.isKind(of: NameTextField.self) {
-                    constraint.constant = margin
-                    continue
-                }
-
-                if let item = item as? NSTextField, item.identifier?.rawValue == "cellDate" {
-                    constraint.constant = margin
-                }
-            }
-        }
-    }
-
     public func attachHeaders(note: Note) {
         if let title = note.getTitle() {
             name.stringValue = title
