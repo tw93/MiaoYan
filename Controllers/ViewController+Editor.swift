@@ -3,6 +3,56 @@ import Foundation
 import Prettier
 import PrettierMarkdown
 
+struct MarkdownFormatOutput: Sendable {
+    let protectedContent: String
+    let placeholders: [String: String]
+    let formattedString: String
+    let cursorOffset: Int
+}
+
+actor MarkdownFormatWorker {
+    private var formatter: PrettierFormatter?
+
+    private func getFormatter() -> PrettierFormatter {
+        if let formatter {
+            return formatter
+        }
+
+        let formatter = PrettierFormatter(plugins: [MarkdownPlugin()], parser: MarkdownParser())
+        formatter.htmlWhitespaceSensitivity = HTMLWhitespaceSensitivityStrategy.ignore
+        formatter.proseWrap = ProseWrapStrategy.preserve
+        formatter.prepare()
+        self.formatter = formatter
+        return formatter
+    }
+
+    func format(content: String, cursor: Int) throws -> MarkdownFormatOutput {
+        if Task.isCancelled {
+            throw CancellationError()
+        }
+
+        let (protectedContent, placeholders) = HtmlManager.protectHTMLTags(in: content)
+        let adjustedCursor = HtmlManager.adjustCursorForProtectedContent(cursor: cursor, original: content, protected: protectedContent)
+        let result = getFormatter().format(protectedContent, withCursorAtLocation: adjustedCursor)
+
+        if Task.isCancelled {
+            throw CancellationError()
+        }
+
+        switch result {
+        case .success(let formatResult):
+            return MarkdownFormatOutput(
+                protectedContent: protectedContent,
+                placeholders: placeholders,
+                formattedString: formatResult.formattedString,
+                cursorOffset: formatResult.cursorOffset
+            )
+        case .failure(let error):
+            throw error
+        }
+    }
+}
+
 // MARK: - Editor Management
 extension ViewController {
     // MARK: - Timing Constants
@@ -694,80 +744,133 @@ extension ViewController {
             )
             return
         }
-        // Prevent rapid successive formatting
-        guard !isFormatting else {
+        if isFormatting {
+            formatTask?.cancel()
+            formatTask = nil
+            isFormatting = false
+            updateFormatButtonState(isFormatting: false)
+            toast(message: I18n.str("⏹ Formatting cancelled"))
             return
         }
+
         if let note = notesTableView.getSelectedNote() {
             isFormatting = true
+            updateFormatButtonState(isFormatting: true)
+            formatRequestID += 1
+            let requestID = formatRequestID
+            let noteURL = note.url
             saveTitleSafely()
-            let formatter = PrettierFormatter(plugins: [MarkdownPlugin()], parser: MarkdownParser())
-            formatter.htmlWhitespaceSensitivity = HTMLWhitespaceSensitivityStrategy.ignore
-            formatter.proseWrap = ProseWrapStrategy.preserve  // Change from .never to .preserve to keep line breaks
-            formatter.prepare()
+
             // Get latest content from editor to ensure consistency
             let content = editArea.textStorage?.string ?? note.content.string
             let cursor = editArea.selectedRanges[0].rangeValue.location
             let top = editAreaScroll.contentView.bounds.origin.y
-            let (protectedContent, htmlPlaceholders) = HtmlManager.protectHTMLTags(in: content)
-            let adjustedCursor = HtmlManager.adjustCursorForProtectedContent(cursor: cursor, original: content, protected: protectedContent)
-            let result = formatter.format(protectedContent, withCursorAtLocation: adjustedCursor)
-            switch result {
-            case .success(let formatResult):
-                let restoredContent = HtmlManager.restoreHTMLTags(in: formatResult.formattedString, with: htmlPlaceholders)
-                var newContent = restoredContent
-                // Preserve line structure if Prettier removes line breaks
-                let originalLines = content.components(separatedBy: .newlines)
-                if originalLines.count > 1 && !restoredContent.contains("\n") {
-                    newContent = content
-                    for (_, originalTag) in htmlPlaceholders {
-                        let updatedTag = originalTag
-                        newContent = newContent.replacingOccurrences(of: originalTag, with: updatedTag)
-                    }
-                } else {
-                    newContent = restoredContent
-                    if content.last != "\n" && restoredContent.last == "\n" {
-                        newContent = restoredContent.removeLastNewLine()
-                    }
-                }
-                // Sync note.content with the current editor so state remains consistent
-                if let currentStorage = editArea.textStorage {
-                    note.content = NSMutableAttributedString(attributedString: currentStorage)
-                }
-                // Capture the original length before applying the update
-                let originalLength = note.content.length
-                // Replace the editor content so textStorage and note.content stay aligned
-                editArea.insertText(newContent, replacementRange: NSRange(0..<originalLength))
-                note.save()
-                if let storage = editArea.textStorage {
-                    NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
-                    storage.updateParagraphStyle()
-                    editArea.fillHighlightLinks()
-                    // Reapply letter spacing after formatting
-                    storage.applyEditorLetterSpacing()
-                }
-                let adjustedCursorOffset = HtmlManager.adjustCursorAfterRestore(originalOffset: formatResult.cursorOffset, protected: protectedContent, restored: newContent)
-                editArea.setSelectedRange(NSRange(location: adjustedCursorOffset, length: 0))
-                formatContent = newContent
 
-                // Restore scroll position after cursor is set to prevent auto-scroll
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    self.editAreaScroll.contentView.setBoundsOrigin(NSPoint(x: 0, y: top))
-                    self.editAreaScroll.reflectScrolledClipView(self.editAreaScroll.contentView)
-                }
-                toast(message: I18n.str("🎉 Automatic typesetting succeeded~"))
+            formatTask = Task(priority: .userInitiated) { [weak self] in
+                guard let self else { return }
+                do {
+                    let output = try await self.markdownFormatWorker.format(content: content, cursor: cursor)
+                    if Task.isCancelled {
+                        return
+                    }
 
-                // Trigger preview update if in Split View mode to re-render formulas and diagrams
-                if UserDefaultsManagement.splitViewMode, let previewView = editArea.markdownView {
-                    previewView.updateContent(note: note)
+                    await MainActor.run {
+                        self.applyFormattingResult(output, content: content, noteURL: noteURL, requestID: requestID, top: top)
+                    }
+                } catch is CancellationError {
+                    await MainActor.run {
+                        guard self.formatRequestID == requestID else { return }
+                        self.isFormatting = false
+                        self.updateFormatButtonState(isFormatting: false)
+                        self.formatTask = nil
+                    }
+                } catch {
+                    await MainActor.run {
+                        guard self.formatRequestID == requestID else { return }
+                        AppDelegate.trackError(error, context: "ViewController+Editor.format")
+                        self.toast(message: I18n.str("❌ Formatting failed, please try again"))
+                        self.isFormatting = false
+                        self.updateFormatButtonState(isFormatting: false)
+                        self.formatTask = nil
+                    }
                 }
-            case .failure(let error):
-                AppDelegate.trackError(error, context: "ViewController+Editor.format")
-                toast(message: I18n.str("❌ Formatting failed, please try again"))
             }
-            isFormatting = false
         }
+    }
+
+    private func applyFormattingResult(_ output: MarkdownFormatOutput, content: String, noteURL: URL, requestID: Int, top: CGFloat) {
+        guard formatRequestID == requestID else {
+            return
+        }
+
+        guard let note = notesTableView.getSelectedNote(), note.url == noteURL else {
+            isFormatting = false
+            updateFormatButtonState(isFormatting: false)
+            formatTask = nil
+            return
+        }
+
+        let restoredContent = HtmlManager.restoreHTMLTags(in: output.formattedString, with: output.placeholders)
+        var newContent = restoredContent
+        let originalLines = content.components(separatedBy: .newlines)
+        if originalLines.count > 1 && !restoredContent.contains("\n") {
+            newContent = content
+        } else if content.last != "\n" && restoredContent.last == "\n" {
+            newContent = restoredContent.removeLastNewLine()
+        }
+
+        if let storage = editArea.textStorage {
+            let originalLength = storage.length
+            storage.beginEditing()
+            storage.replaceCharacters(in: NSRange(0..<originalLength), with: newContent)
+            NotesTextProcessor.checkPerformanceLevel(attributedString: storage)
+            if NotesTextProcessor.shouldUseSimplifiedHighlighting {
+                NotesTextProcessor.highlightBasicMarkdown(attributedString: storage, note: note)
+            } else {
+                NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
+                NotesTextProcessor.highlightFencedAndIndentCodeBlocks(attributedString: storage)
+            }
+            storage.updateParagraphStyle()
+            let fullRange = NSRange(location: 0, length: storage.length)
+            let linkProcessor = NotesTextProcessor(storage: storage, range: fullRange)
+            linkProcessor.highlightLinks()
+            storage.applyEditorLetterSpacing()
+            storage.endEditing()
+        } else {
+            editArea.string = newContent
+        }
+
+        let adjustedCursorOffset = HtmlManager.adjustCursorAfterRestore(originalOffset: output.cursorOffset, protected: output.protectedContent, restored: newContent)
+        editArea.setSelectedRange(NSRange(location: adjustedCursorOffset, length: 0))
+        formatContent = newContent
+        note.save(attributed: editArea.attributedString())
+
+        restoreEditorScrollPosition(top)
+
+        toast(message: I18n.str("🎉 Automatic typesetting succeeded~"))
+
+        if UserDefaultsManagement.splitViewMode, let previewView = editArea.markdownView {
+            previewView.updateContent(note: note)
+        }
+
+        isFormatting = false
+        updateFormatButtonState(isFormatting: false)
+        formatTask = nil
+    }
+
+    private func updateFormatButtonState(isFormatting: Bool) {
+        formatButton.isEnabled = true
+        formatButton.alphaValue = isFormatting ? 0.6 : 1.0
+        formatButton.toolTip = isFormatting ? I18n.str("Formatting... click again to cancel") : I18n.str("Format")
+    }
+
+    private func restoreEditorScrollPosition(_ top: CGFloat) {
+        NSAnimationContext.beginGrouping()
+        NSAnimationContext.current.duration = 0
+        NSAnimationContext.current.allowsImplicitAnimation = false
+        editAreaScroll.contentView.setBoundsOrigin(NSPoint(x: 0, y: top))
+        editAreaScroll.reflectScrolledClipView(editAreaScroll.contentView)
+        NSAnimationContext.endGrouping()
     }
 
     // MARK: - WebView Management
