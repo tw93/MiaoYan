@@ -227,7 +227,8 @@ public class Note: NSObject {
     public func getCursorPosition() -> Int? {
         var position: Int?
 
-        let cursorData = (try? url.extendedAttribute(forName: AppIdentifier.cursorKey))
+        let cursorData =
+            (try? url.extendedAttribute(forName: AppIdentifier.cursorKey))
             ?? (try? url.extendedAttribute(forName: AppIdentifier.legacyCursorKey))
         if let data = cursorData {
             position = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Int in

@@ -823,7 +823,7 @@ extension ViewController {
             let originalLength = storage.length
             storage.beginEditing()
             storage.replaceCharacters(in: NSRange(0..<originalLength), with: newContent)
-            NotesTextProcessor.checkPerformanceLevel(attributedString: storage)
+            NotesTextProcessor.checkPerformanceLevel(attributedString: storage, note: note)
             if NotesTextProcessor.shouldUseSimplifiedHighlighting {
                 NotesTextProcessor.highlightBasicMarkdown(attributedString: storage, note: note)
             } else {

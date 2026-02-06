@@ -471,7 +471,6 @@ extension ViewController {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
     @IBAction func textFinder(_ sender: NSMenuItem) {
         guard let vc = ViewController.shared() else { return }
 

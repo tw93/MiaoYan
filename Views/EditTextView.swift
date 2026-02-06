@@ -1,4 +1,3 @@
-// swiftlint:disable file_length
 import Carbon.HIToolbox
 import Cocoa
 import Highlightr
@@ -452,7 +451,6 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     // Internal implementation method
-    // swiftlint:disable:next cyclomatic_complexity
     private func _performFill(note: Note, options: FillOptions, viewController: ViewController) {
         if !UserDefaultsManagement.magicPPT {
             viewController.titleBarView.isHidden = false
@@ -561,7 +559,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         guard let storage = textStorage else { return }
 
         if note.isMarkdown(), let content = note.content.mutableCopy() as? NSMutableAttributedString {
-            NotesTextProcessor.checkPerformanceLevel(attributedString: content)
+            NotesTextProcessor.checkPerformanceLevel(attributedString: content, note: note)
             EditTextView.shouldForceRescan = true
             storage.setAttributedString(content)
         } else {
@@ -782,6 +780,19 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             }
             return false
         }
+    }
+
+    private func shouldHighlightLinks(in paragraphRange: NSRange) -> Bool {
+        guard let storage = textStorage,
+            paragraphRange.location >= 0,
+            paragraphRange.upperBound <= storage.length
+        else {
+            return false
+        }
+
+        let paragraph = storage.mutableString.substring(with: paragraphRange)
+        let candidates = ["://", "www.", "miaoyan://", "/i/", "/files/", "[[", "]("]
+        return candidates.contains(where: { paragraph.contains($0) })
     }
 
     private func scheduleLinkHighlight(range: NSRange? = nil, immediate: Bool = false) {
@@ -1175,7 +1186,9 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         super.keyDown(with: event)
         if shouldTriggerLinkHighlight(for: event) {
             if let paragraphRange = getParagraphRange() {
-                scheduleLinkHighlight(range: paragraphRange)
+                if shouldHighlightLinks(in: paragraphRange) {
+                    scheduleLinkHighlight(range: paragraphRange)
+                }
             } else {
                 scheduleLinkHighlight()
             }
@@ -1456,10 +1469,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         let sortedRanges = editorSearchRanges.sorted { $0.location > $1.location }
 
         undoManager?.beginUndoGrouping()
-        for range in sortedRanges {
-            if shouldChangeText(in: range, replacementString: replaceText) {
-                storage.replaceCharacters(in: range, with: replaceText)
-            }
+        for range in sortedRanges where shouldChangeText(in: range, replacementString: replaceText) {
+            storage.replaceCharacters(in: range, with: replaceText)
         }
         didChangeText()
         undoManager?.endUndoGrouping()

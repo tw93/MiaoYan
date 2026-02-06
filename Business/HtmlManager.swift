@@ -238,18 +238,17 @@ class HtmlManager {
         var ranges = matchRanges(using: fencedCodeBlockRegex, in: text)
 
         let inlineRanges = matchRanges(using: inlineCodeRegex, in: text)
-        ranges.append(contentsOf: inlineRanges.filter { inlineRange in
-            !ranges.contains { $0.intersection(inlineRange) != nil }
-        })
+        ranges.append(
+            contentsOf: inlineRanges.filter { inlineRange in
+                !ranges.contains { $0.intersection(inlineRange) != nil }
+            })
 
         return ranges
     }
 
     private static func isInsideCodeBlock(_ range: NSRange, codeRanges: [NSRange]) -> Bool {
-        for codeRange in codeRanges {
-            if codeRange.intersection(range) != nil {
-                return true
-            }
+        for codeRange in codeRanges where codeRange.intersection(range) != nil {
+            return true
         }
         return false
     }
