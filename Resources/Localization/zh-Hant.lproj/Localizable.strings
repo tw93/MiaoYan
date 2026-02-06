@@ -1,44 +1,24 @@
 /* No comment provided by engineer. */
 "%d MiaoYan" = "%d 篇妙言";
 
-/* No comment provided by engineer. */
-"🍭 Found that there are multiple titles of this~" = "🍭 這裡有好幾個標題，使用搜尋能力～";
 
-/* No comment provided by engineer. */
-"🍭 Image upload in progress~" = "🍭 正在上傳圖片～";
+/* Toast messages without emoji prefix */
+"Automatic typesetting succeeded~" = "自動排版完成～";
+"Press ESC key to exit~" = "按 ESC 鍵結束簡報模式～";
+"Format is only possible after exiting preview mode~" = "文件排版得結束預覽模式才能使用～";
+"Saved to Downloads folder~" = "已經輸出到下載目錄～";
+"Image upload in progress~" = "正在上傳圖片～";
+"Image upload failed, Use local~" = "圖片上傳失敗，改放在本機端，可手動上傳～";
+"Please make sure your Mac is installed %@ ~" = "請確定你的 Mac 已經安裝並設定好 %@～";
+"In single open mode, Exit with Command+Shift+W ~" = "在單獨編輯器模式中，可以敲下 Command+Shift+W 結束～";
+"Please make sure your title exists~" = "請確定填寫的標題是否存在～";
+"Found that there are multiple titles of this~" = "這裡有好幾個標題，使用搜尋能力～";
+"URL is successfully copied, Use it anywhere~" = "成功複製外部連結，可以在其他地方使用了～";
+"No delimiter --- identification, Cannot use MiaoYan PPT~" = "沒有分隔符號 --- 標示，無法使用妙言 PPT～";
+"Formatting failed, please try again" = "排版失敗，請重試";
+"Formatting cancelled" = "已取消排版";
 
-/* No comment provided by engineer. */
-"🎉 Automatic typesetting succeeded~" = "🎉 自動排版完成～";
-
-/* No comment provided by engineer. */
-"🎉 Saved to Downloads folder~" = "🎉 已經輸出到下載目錄～";
-
-/* No comment provided by engineer. */
-"🎉 URL is successfully copied, Use it anywhere~" = "🎉 成功複製外部連結，可以在其他地方使用了～";
-
-/* No comment provided by engineer. */
-"😶‍🌫 Format is only possible after exiting preview mode~" = "😶‍🌫 文件排版得結束預覽模式才能使用～";
-
-/* No comment provided by engineer. */
-"😶‍🌫 Image upload failed, Use local~" = "😶‍🌫 圖片上傳失敗，改放在本機端，可手動上傳～";
-
-/* No comment provided by engineer. */
-"😶‍🌫 No delimiter --- identification, Cannot use MiaoYan PPT~" = "😶‍🌫 沒有分隔符號 --- 標示，無法使用妙言 PPT～";
-
-/* No comment provided by engineer. */
-"😶‍🌫 Please make sure your title exists~" = "😶‍🌫 請確定填寫的標題是否存在～";
-
-/* No comment provided by engineer. */
-"😶‍🌫 PDF export failed, please try again~" = "😶‍🌫 PDF 匯出失敗，請重新試試～";
-
-/* No comment provided by engineer. */
-"🙊 In single open mode, Exit with Command+Shift+W ~" = "🙊 在單獨編輯器模式中，可以敲下 Command+Shift+W 結束～";
-
-/* No comment provided by engineer. */
-"🙊 Please make sure your Mac is installed %@ ~" = "🙊 請確定你的 Mac 已經安裝並設定好 %@～";
-
-/* No comment provided by engineer. */
-"🙊 Press ESC key to exit~" = "🙊 按 ESC 鍵結束簡報模式～";
+"PDF export failed, please try again~" = "PDF 匯出失敗，請重新試試～";
 
 /* No comment provided by engineer. */
 "Add" = "加入";
@@ -209,7 +189,6 @@
 "Toggle Preview" = "切換預覽";
 "Underline" = "底線";
 "URL has been copied to clipboard" = "URL已複製到剪貼簿";
-"Interface" = "介面";
 "Preview Settings" = "預覽設定";
 "Code Background:" = "程式碼背景:";
 "Github" = "Github";
@@ -233,10 +212,22 @@
 "Exporting..." = "正在匯出";
 "Export failed" = "匯出失敗";
 "System version too low" = "系統版本過低";
+"Save Failed" = "儲存失敗";
+"Critical Error" = "嚴重錯誤";
+"Failed to initialize main window. Please restart the application." = "初始化主視窗失敗，請重新啟動應用程式。";
+"Delete Images" = "刪除圖片";
+"Restore Images" = "還原圖片";
+"Quit" = "結束";
+"Formatting... click again to cancel" = "正在排版...再次點擊可取消";
+"Format" = "排版";
+"Presentation" = "演示";
+"Toggle Note List" = "列表";
+"Toggle Split Mode" = "分欄";
+"Enter title" = "輸入標題";
 
 /* Always On Top */
-"📌 Window stays on top" = "📌 視窗已置頂";
-"📋 Window normal mode" = "📋 視窗正常模式";
+"Window stays on top" = "視窗已置頂";
+"Window normal mode" = "視窗正常模式";
 
 /* Menu Items */
 "Always On Top" = "視窗置頂";

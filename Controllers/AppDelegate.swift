@@ -313,10 +313,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         NotificationCenter.default.post(name: .alwaysOnTopChanged, object: nil)
 
         if let vc = ViewController.shared() {
-            let message = newValue ? I18n.str("📌 Window stays on top") : I18n.str("📋 Window normal mode")
-            vc.toast(message: message)
+                let message = newValue ? I18n.str("Window stays on top") : I18n.str("Window normal mode")
+                vc.toast(message: message)
+            }
         }
-    }
 
     private func addGlobalKeyboardMonitor() {
         NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
