@@ -299,7 +299,7 @@ class ClipboardManager {
                     )
                     self.deleteImage(tempPath: URL(fileURLWithPath: localPath))
                     if let viewController = textView.window?.contentViewController {
-                        viewController.toast(message: I18n.str("Image uploaded successfully"))
+                        viewController.toast(message: I18n.str("Image uploaded successfully"), style: .success)
                     }
                 } else {
                     self.replacePlaceholderWithURL(
@@ -309,7 +309,7 @@ class ClipboardManager {
                         note: note
                     )
                     if let viewController = textView.window?.contentViewController {
-                        viewController.toast(message: I18n.str("Image upload failed, using local path"))
+                        viewController.toast(message: I18n.str("Image upload failed, using local path"), style: .failure)
                     }
                 }
             }
