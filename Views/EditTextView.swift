@@ -58,6 +58,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     public static var imagesLoaderQueue = OperationQueue()
     private var imagePreviewManager: ImagePreviewManager?
     nonisolated(unsafe) private var splitViewUpdateTimer: Timer?
+    private var splitPreviewUpdateDelay: TimeInterval = 0.15
     private var clipboardManager: ClipboardManager?
     private var menuManager: EditorMenuManager?
     private var defaultVerticalInset: CGFloat = 0
@@ -710,6 +711,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     override func shouldChangeText(in affectedCharRange: NSRange, replacementString: String?) -> Bool {
+        updateSplitPreviewDelay(for: replacementString)
+
         guard let note = EditTextView.note else {
             return super.shouldChangeText(in: affectedCharRange, replacementString: replacementString)
         }
@@ -735,10 +738,11 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             handleSearchInput(editorLastSearchText, jumpToFirstMatch: false)
         }
 
-        // Update preview in split mode with debounce (300ms)
+        // Update preview in split mode with adaptive debounce.
         if UserDefaultsManagement.splitViewMode, EditTextView.note != nil {
             splitViewUpdateTimer?.invalidate()
-            splitViewUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
+            let eventDrivenDelay = window?.currentEvent == nil ? 0 : splitPreviewUpdateDelay
+            splitViewUpdateTimer = Timer.scheduledTimer(withTimeInterval: eventDrivenDelay, repeats: false) { [weak self] _ in
                 Task { @MainActor [weak self] in
                     guard let self = self else { return }
                     if let note = EditTextView.note {
@@ -746,7 +750,24 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                     }
                 }
             }
+            splitPreviewUpdateDelay = 0.15
         }
+    }
+
+    private func updateSplitPreviewDelay(for replacementString: String?) {
+        guard UserDefaultsManagement.splitViewMode else { return }
+
+        guard let replacementString else {
+            splitPreviewUpdateDelay = 0.15
+            return
+        }
+
+        if replacementString.contains("\n") || replacementString.count > 1 {
+            splitPreviewUpdateDelay = 0
+            return
+        }
+
+        splitPreviewUpdateDelay = 0.15
     }
 
     override func insertCompletion(_ word: String, forPartialWordRange charRange: NSRange, movement: Int, isFinal flag: Bool) {

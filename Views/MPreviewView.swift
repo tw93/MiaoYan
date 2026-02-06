@@ -32,6 +32,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     private var originalRedrawPolicy: NSView.LayerContentsRedrawPolicy?
     private var contentUpdateVersion: UInt = 0
     private(set) var hasLoadedTemplate = false
+    private var lastRendererInitializationTime: TimeInterval = 0
     static var hasCompletedInitialLoad = false
     private var loadCompletion: (() -> Void)?
 
@@ -645,11 +646,19 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 escapedHTML.contains("language-mermaid")
                 || escapedHTML.contains("language-plantuml")
                 || escapedHTML.contains("language-markmap")
+            let hasSpecialRenderers = needsMath || needsDiagrams
+            let now = Date().timeIntervalSince1970
+            let shouldInitializeSpecialRenderers =
+                hasSpecialRenderers
+                && (!preserveScroll || now - self.lastRendererInitializationTime > 0.8)
+            if shouldInitializeSpecialRenderers {
+                self.lastRendererInitializationTime = now
+            }
 
             let script = self.buildUpdateScript(
                 html: escapedHTML,
-                initializeMath: needsMath,
-                initializeDiagrams: needsDiagrams,
+                initializeMath: shouldInitializeSpecialRenderers && needsMath,
+                initializeDiagrams: shouldInitializeSpecialRenderers && needsDiagrams,
                 preserveScroll: preserveScroll
             )
 

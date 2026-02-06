@@ -18,6 +18,11 @@ class ViewController:
     NSUserNotificationCenterDelegate,
     MPreviewScrollDelegate
 {
+    enum SplitScrollSource {
+        case editor
+        case preview
+    }
+
     public var fsManager: FileSystemEventManager?
     var projectSettingsViewController: ProjectSettingsViewController?
     let storage = Storage.sharedInstance()
@@ -79,7 +84,7 @@ class ViewController:
     var previewScrollView: EditorScrollView?
     nonisolated(unsafe) var splitScrollObserver: NSObjectProtocol?
     var isProgrammaticSplitScroll = false
-    nonisolated(unsafe) var splitScrollDebounceTimer: Timer?
+    var activeSplitScrollSource: SplitScrollSource = .editor
     var lastSyncedScrollRatio: CGFloat = -1  // Track last synced ratio to avoid redundant JS execution
     var needsEditorModeUpdateAfterPreview = false
     var isUnfoldingLayout = false
@@ -275,7 +280,6 @@ class ViewController:
         if let observer = splitScrollObserver {
             NotificationCenter.default.removeObserver(observer)
         }
-        splitScrollDebounceTimer?.invalidate()
         previewUpdateTimer?.invalidate()
         if let observer = liveResizeObserver {
             NotificationCenter.default.removeObserver(observer)
