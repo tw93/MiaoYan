@@ -5,10 +5,18 @@ extension Date {
         Int64(timeIntervalSince1970 * 1000)
     }
 
-    static func getCurrentFormattedDate() -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH.mm.ss.SSS"
+}
 
-        return dateFormatter.string(from: Date())
+extension DateFormatter {
+    public func formatDateForDisplay(_ date: Date) -> String {
+        dateStyle = .short
+        timeStyle = .none
+        locale = NSLocale.autoupdatingCurrent
+        return string(from: date)
+    }
+
+    public func formatTimeForDisplay(_ date: Date) -> String {
+        dateFormat = "yyyy/MM/dd HH:mm"
+        return string(from: date)
     }
 }

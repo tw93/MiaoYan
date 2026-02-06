@@ -25,11 +25,6 @@ extension NoteAttachment {
         return attachment
     }
 
-    @MainActor
-    private func getEditorView() -> EditTextView? {
-        ViewController.shared()?.editArea
-    }
-
     // Read UserDefaultsManagement.imagesWidth from the main actor
     @MainActor
     func getSize(width: CGFloat, height: CGFloat) -> NSSize {

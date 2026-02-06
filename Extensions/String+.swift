@@ -1,4 +1,5 @@
 import CommonCrypto
+import CoreServices
 import CryptoKit
 import Foundation
 
@@ -48,13 +49,6 @@ extension String {
         terms.allSatisfy { localizedLowercase.contains($0) }
     }
 
-    public func startsWith(string: String) -> Bool {
-        guard let range = range(of: string, options: [.caseInsensitive, .diacriticInsensitive]) else {
-            return false
-        }
-        return range.lowerBound == startIndex
-    }
-
     public func removeLastNewLine() -> String {
         last == "\n" ? String(dropLast()) : self
     }
@@ -65,18 +59,6 @@ extension String {
         return regex.firstMatch(in: self, options: [], range: NSRange(location: 0, length: count)) != nil
     }
 
-    public func regexReplace(regex: String, content: String) -> String {
-        guard let regexExpression = getCachedRegex(pattern: regex, options: .caseInsensitive) else {
-            return self
-        }
-        return regexExpression.stringByReplacingMatches(
-            in: self,
-            options: .reportProgress,
-            range: NSRange(location: 0, length: count),
-            withTemplate: content
-        )
-    }
-
     public var isValidUUID: Bool {
         UUID(uuidString: self) != nil
     }
@@ -85,29 +67,34 @@ extension String {
         replacingOccurrences(of: "+", with: "%20")
     }
 
-    public func matchingStrings(regex: String) -> [[String]] {
-        guard let regex = getCachedRegex(pattern: regex, options: [.dotMatchesLineSeparators]) else { return [] }
+    public func tag(withClass: CFString) -> String? {
+        UTTypeCopyPreferredTagWithClass(self as CFString, withClass)?.takeRetainedValue() as String?
+    }
 
-        let nsString = self as NSString
-        let results = regex.matches(in: self, options: [], range: NSRange(0..<nsString.length))
-        return results.map { result in
-            (0..<result.numberOfRanges).map {
-                result.range(at: $0).location != NSNotFound
-                    ? nsString.substring(with: result.range(at: $0))
-                    : ""
-            }
-        }
+    public func uti(withClass: CFString) -> String? {
+        UTTypeCreatePreferredIdentifierForTag(withClass, self as CFString, nil)?.takeRetainedValue() as String?
+    }
+
+    public var utiMimeType: String? {
+        tag(withClass: kUTTagClassMIMEType)
+    }
+
+    public var utiFileExtension: String? {
+        tag(withClass: kUTTagClassFilenameExtension)
+    }
+
+    public var mimeTypeUTI: String? {
+        uti(withClass: kUTTagClassMIMEType)
+    }
+
+    public var fileExtensionUTI: String? {
+        uti(withClass: kUTTagClassFilenameExtension)
     }
 
     public var md5: String {
         let data = Data(self.utf8)
         let hash = Insecure.MD5.hash(data: data)
         return hash.map { String(format: "%02hhx", $0) }.joined()
-    }
-
-    public var isWhitespace: Bool {
-        guard !isEmpty else { return true }
-        return !unicodeScalars.contains { !CharacterSet.whitespacesAndNewlines.contains($0) }
     }
 
     public var isNumber: Bool {
