@@ -14,7 +14,7 @@ public class Note: NSObject {
     var content: NSMutableAttributedString = .init()
     var creationDate: Date? = Date()
     var sharedStorage = Storage.sharedInstance()
-    let dateFormatter = DateFormatter()
+    private static let dateFormatter = DateFormatter()
     let undoManager = UndoManager()
     public var originalExtension: String?
 
@@ -90,11 +90,7 @@ public class Note: NSObject {
     }
 
     public func getURL() -> URL {
-        if let url = decryptedTemporarySrc {
-            return url
-        }
-
-        return url
+        decryptedTemporarySrc ?? url
     }
 
     public func loadProject(url: URL) {
@@ -281,14 +277,6 @@ public class Note: NSObject {
         return nil
     }
 
-    private func getDefaultTrashURL() -> URL? {
-        if let url = sharedStorage.getDefaultTrash()?.url {
-            return url
-        }
-
-        return nil
-    }
-
     public func getPreviewLabel(with text: String? = nil) -> String {
         var preview = ""
         let content = text ?? content.string
@@ -327,22 +315,22 @@ public class Note: NSObject {
                 ? creationDate
                 : modifiedLocalAt
         else { return String() }
-        return dateFormatter.formatTimeForDisplay(date)
+        return Self.dateFormatter.formatTimeForDisplay(date)
     }
 
     @objc func getCreationDateForLabel() -> String? {
         guard let creationDate = creationDate else { return nil }
-        return dateFormatter.formatTimeForDisplay(creationDate)
+        return Self.dateFormatter.formatTimeForDisplay(creationDate)
     }
 
     @objc func getCreateTime() -> String? {
         guard let createDate = creationDate else { return nil }
-        return dateFormatter.formatTimeForDisplay(createDate)
+        return Self.dateFormatter.formatTimeForDisplay(createDate)
     }
 
     @objc func getUpdateTime() -> String? {
         guard let updateDate = getFileModifiedDate() else { return nil }
-        return dateFormatter.formatTimeForDisplay(updateDate)
+        return Self.dateFormatter.formatTimeForDisplay(updateDate)
     }
 
     @objc func getRelativePath() -> String? {
@@ -613,8 +601,6 @@ public class Note: NSObject {
         ensureContentLoaded()
         return name.localizedStandardContains(terms) || content.string.localizedStandardContains(terms)
     }
-
-    private var excludeRanges = [NSRange]()
 
     public func getImageUrl(imageName: String) -> URL? {
         if imageName.starts(with: "http://") || imageName.starts(with: "https://") {
