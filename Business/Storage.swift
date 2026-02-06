@@ -426,7 +426,8 @@ class Storage {
 
             #if CLOUDKIT
             #else
-                let pinData = (try? note.url.extendedAttribute(forName: AppIdentifier.pinKey))
+                let pinData =
+                    (try? note.url.extendedAttribute(forName: AppIdentifier.pinKey))
                     ?? (try? note.url.extendedAttribute(forName: AppIdentifier.legacyPinKey))
                 if let data = pinData {
                     let isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
@@ -506,7 +507,8 @@ class Storage {
 
             #if CLOUDKIT
             #else
-                let pinData = (try? note.url.extendedAttribute(forName: AppIdentifier.pinKey))
+                let pinData =
+                    (try? note.url.extendedAttribute(forName: AppIdentifier.pinKey))
                     ?? (try? note.url.extendedAttribute(forName: AppIdentifier.legacyPinKey))
                 if let data = pinData {
                     let isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in

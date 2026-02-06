@@ -45,6 +45,13 @@ public class NotesTextProcessor {
     @MainActor public static var shouldSkipCodeHighlighting = false
     @MainActor public static var shouldUseSimplifiedHighlighting = false
 
+    @MainActor private struct HighlightPerformanceState {
+        let simplified: Bool
+        let skipCode: Bool
+    }
+
+    @MainActor private static var performanceStateByNotePath: [String: HighlightPerformanceState] = [:]
+
     private var note: Note?
     private var storage: NSTextStorage?
     private var range: NSRange?
@@ -105,6 +112,8 @@ public class NotesTextProcessor {
     @MainActor public static var hl: Highlightr?
     @MainActor private static var cachedTheme: String?
     @MainActor private static var cachedCodeBlockRegex: NSRegularExpression?
+    @MainActor private static var cachedLinkRegex: NSRegularExpression?
+    @MainActor private static var cachedSearchRegex: [String: NSRegularExpression] = [:]
 
     @MainActor public static func getHighlighter() -> Highlightr? {
         let codeTheme = UserDataService.instance.isDark ? "tomorrow-night-blue" : "atom-one-light"
@@ -143,6 +152,47 @@ public class NotesTextProcessor {
         }
 
         cachedCodeBlockRegex = regex
+        return regex
+    }
+
+    @MainActor private static func getLinkRegex() -> NSRegularExpression? {
+        if let cached = cachedLinkRegex {
+            return cached
+        }
+
+        let chars = "[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*"
+        let host = "[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,7})(:\\d+)?"
+        let pattern = [
+            "((http[s]{0,1}|ftp)://\(host)(/\(chars))?)",
+            "(www\\.\(host)(/\(chars))?)",
+            "(miaoyan://[a-zA-Z0-9]+\\/[a-zA-Z0-9|%]*)",
+            "(/(?:i|files)/[a-zA-Z0-9-]+\\.[a-zA-Z0-9]*)",
+        ].joined(separator: "|")
+
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else {
+            return nil
+        }
+
+        cachedLinkRegex = regex
+        return regex
+    }
+
+    @MainActor private static func getSearchRegex(for search: String) -> NSRegularExpression? {
+        if let cached = cachedSearchRegex[search] {
+            return cached
+        }
+
+        let escapedSearch = NSRegularExpression.escapedPattern(for: search)
+        let pattern = "(\(escapedSearch))"
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else {
+            return nil
+        }
+
+        cachedSearchRegex[search] = regex
+        if cachedSearchRegex.count > 100 {
+            cachedSearchRegex.removeAll(keepingCapacity: true)
+        }
+
         return regex
     }
 
@@ -298,7 +348,7 @@ public class NotesTextProcessor {
 
     @MainActor public static func highlight(note: Note) {
         // Tiered performance optimization based on file size
-        checkPerformanceLevel(attributedString: note.content)
+        checkPerformanceLevel(attributedString: note.content, note: note)
 
         // For very large files, skip all complex highlighting
         if shouldUseSimplifiedHighlighting {
@@ -309,31 +359,28 @@ public class NotesTextProcessor {
         }
     }
 
-    @MainActor public static func checkPerformanceLevel(attributedString: NSMutableAttributedString) {
+    @MainActor public static func checkPerformanceLevel(attributedString: NSMutableAttributedString, note: Note? = nil) {
+        let state = calculatePerformanceState(attributedString: attributedString)
+        applyPerformanceState(state, note: note ?? EditTextView.note)
+    }
+
+    @MainActor private static func calculatePerformanceState(attributedString: NSMutableAttributedString) -> HighlightPerformanceState {
         let lineCount = attributedString.string.components(separatedBy: .newlines).count
         if lineCount > 5000 {
-            shouldUseSimplifiedHighlighting = true
-            shouldSkipCodeHighlighting = true
-            return
+            return HighlightPerformanceState(simplified: true, skipCode: true)
         }
 
         if lineCount > 2000 {
-            shouldUseSimplifiedHighlighting = true
-            shouldSkipCodeHighlighting = false
-            return
+            return HighlightPerformanceState(simplified: true, skipCode: false)
         }
-
-        shouldUseSimplifiedHighlighting = false
 
         let range = NSRange(0..<attributedString.length)
         guard range.length > 0 else {
-            shouldSkipCodeHighlighting = false
-            return
+            return HighlightPerformanceState(simplified: false, skipCode: false)
         }
 
         guard let regex = getCodeBlockRegex() else {
-            shouldSkipCodeHighlighting = false
-            return
+            return HighlightPerformanceState(simplified: false, skipCode: false)
         }
 
         var matchCount = 0
@@ -343,7 +390,30 @@ public class NotesTextProcessor {
                 stop.pointee = true
             }
         }
-        shouldSkipCodeHighlighting = matchCount > 20
+        return HighlightPerformanceState(simplified: false, skipCode: matchCount > 20)
+    }
+
+    @MainActor public static func applyPerformanceState(for note: Note? = nil) {
+        let currentNote = note ?? EditTextView.note
+        guard let currentNote else {
+            shouldUseSimplifiedHighlighting = false
+            shouldSkipCodeHighlighting = false
+            return
+        }
+
+        let key = currentNote.url.path
+        let state = performanceStateByNotePath[key] ?? HighlightPerformanceState(simplified: false, skipCode: false)
+        shouldUseSimplifiedHighlighting = state.simplified
+        shouldSkipCodeHighlighting = state.skipCode
+    }
+
+    @MainActor private static func applyPerformanceState(_ state: HighlightPerformanceState, note: Note?) {
+        if let note {
+            performanceStateByNotePath[note.url.path] = state
+        }
+
+        shouldUseSimplifiedHighlighting = state.simplified
+        shouldSkipCodeHighlighting = state.skipCode
     }
 
     // Simplified highlighting for large files - only basic styles, no regex-heavy operations
@@ -697,11 +767,11 @@ public class NotesTextProcessor {
             if NotesTextProcessor.hideSyntax {
                 attributedString.addAttribute(.font, value: hiddenFont, range: range)
             }
-            NotesTextProcessor.imageOpeningSquareRegex.matches(string, range: paragraphRange) { innerResult in
+            NotesTextProcessor.imageOpeningSquareRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
                 attributedString.addAttribute(.foregroundColor, value: linkColor, range: innerRange)
             }
-            NotesTextProcessor.imageClosingSquareRegex.matches(string, range: paragraphRange) { innerResult in
+            NotesTextProcessor.imageClosingSquareRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
                 attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
             }
@@ -753,11 +823,11 @@ public class NotesTextProcessor {
                 }
             }
 
-            NotesTextProcessor.imageOpeningSquareRegex.matches(string, range: paragraphRange) { innerResult in
+            NotesTextProcessor.imageOpeningSquareRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
                 attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
             }
-            NotesTextProcessor.imageClosingSquareRegex.matches(string, range: paragraphRange) { innerResult in
+            NotesTextProcessor.imageClosingSquareRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
                 attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
             }
@@ -1329,18 +1399,14 @@ public class NotesTextProcessor {
             return
         }
 
-        // Safe attribute removal
-        storage.removeAttribute(.link, range: range)
+        // Remove only auto-detected links to avoid overriding markdown semantic links.
+        storage.enumerateAttribute(NoteAttribute.autoLink, in: range) { value, autoRange, _ in
+            guard value != nil, autoRange.upperBound <= storage.length else { return }
+            storage.removeAttribute(NoteAttribute.autoLink, range: autoRange)
+            storage.removeAttribute(.link, range: autoRange)
+        }
 
-        let chars = "[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*"
-        let host = "[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,7})(:\\d+)?"
-        let pattern = [
-            "((http[s]{0,1}|ftp)://\(host)(/\(chars))?)",
-            "(www.\(host)(/\(chars))?)",
-            "(miaoyan://[a-zA-Z0-9]+\\/[a-zA-Z0-9|%]*)",
-            "(/[i|files]/[a-zA-Z0-9-]+\\.[a-zA-Z0-9]*)",
-        ].joined(separator: "|")
-        guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else {
+        guard let regex = NotesTextProcessor.getLinkRegex() else {
             return
         }
 
@@ -1368,6 +1434,10 @@ public class NotesTextProcessor {
                     return
                 }
 
+                if storage.attribute(.link, at: linkRange.location, effectiveRange: nil) != nil {
+                    return
+                }
+
                 guard let note = EditTextView.note else { return }
 
                 if str.starts(with: "/i/") || str.starts(with: "/files/"),
@@ -1375,38 +1445,15 @@ public class NotesTextProcessor {
                 {
                     str = "file://" + path
                     storage.addAttribute(.link, value: str, range: linkRange)
+                    storage.addAttribute(NoteAttribute.autoLink, value: true, range: linkRange)
                     return
                 }
 
                 guard let url = URL(string: str) else { return }
                 storage.addAttribute(.link, value: url, range: linkRange)
+                storage.addAttribute(NoteAttribute.autoLink, value: true, range: linkRange)
             }
         )
-
-        // Process app urls [[link]] with safe range checking
-        NotesTextProcessor.appUrlRegex.matches(storage.string, range: range) { result in
-            guard let innerRange = result?.range,
-                innerRange.upperBound <= storage.length,
-                innerRange.length >= 4
-            else {
-                return
-            }
-
-            let from = String.Index(utf16Offset: innerRange.lowerBound + 2, in: storage.string)
-            let to = String.Index(utf16Offset: innerRange.upperBound - 2, in: storage.string)
-            guard from < to else { return }
-
-            let appLink = storage.string[from..<to]
-
-            storage.addAttribute(.link, value: "miaoyan://goto/" + appLink, range: innerRange)
-            if let range = result?.range(at: 0), range.upperBound <= storage.length {
-                storage.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: range)
-            }
-
-            if let range = result?.range(at: 2), range.upperBound <= storage.length {
-                storage.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: range)
-            }
-        }
     }
 
     func highlightKeyword(search: String = "", remove: Bool = false) {
@@ -1415,10 +1462,7 @@ public class NotesTextProcessor {
         let range = NSRange(location: 0, length: storage.length)
         guard range.length > 0 else { return }
 
-        let searchTerm = NSRegularExpression.escapedPattern(for: search)
-        let pattern = "(\(searchTerm))"
-
-        guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else {
+        guard let regex = NotesTextProcessor.getSearchRegex(for: search) else {
             return
         }
 

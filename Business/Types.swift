@@ -46,9 +46,11 @@ public enum SortBy: String {
 // MARK: - Attribute Types
 enum NoteAttribute {
     static let highlight = NSAttributedString.Key(rawValue: "com.tw93.search.highlight")
+    static let autoLink = NSAttributedString.Key(rawValue: "com.tw93.link.autodetected")
 
     static let all = Set<NSAttributedString.Key>([
-        highlight
+        highlight,
+        autoLink,
     ])
 }
 

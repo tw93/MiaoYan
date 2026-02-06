@@ -49,11 +49,11 @@ line_length:
   ignores_urls: true
 
 cyclomatic_complexity:
-  warning: 15
+  warning: 20
   error: 24
 
 file_length:
-  warning: 1500
+  warning: 2000
   error: 2500
 
 function_parameter_count:

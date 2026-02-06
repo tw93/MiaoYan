@@ -43,10 +43,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         let oldDict = oldDefaults.dictionaryRepresentation()
 
         // Migrate all values from old suite that don't exist in standard defaults
-        for (key, value) in oldDict {
-            if standardDefaults.object(forKey: key) == nil {
-                standardDefaults.set(value, forKey: key)
-            }
+        for (key, value) in oldDict where standardDefaults.object(forKey: key) == nil {
+            standardDefaults.set(value, forKey: key)
         }
 
         // Mark migration as completed

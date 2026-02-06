@@ -59,7 +59,7 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
     @MainActor private func rescanAll(textStorage: NSTextStorage) {
         guard let note = EditTextView.note else { return }
 
-        NotesTextProcessor.checkPerformanceLevel(attributedString: textStorage)
+        NotesTextProcessor.checkPerformanceLevel(attributedString: textStorage, note: note)
 
         removeAttribute(.backgroundColor, range: NSRange(0..<textStorage.length))
         removeAttribute(.codeBlock, range: NSRange(0..<textStorage.length))
@@ -79,7 +79,7 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
     @MainActor private func rescanAllAsync(textStorage: NSTextStorage) {
         guard let note = EditTextView.note else { return }
 
-        NotesTextProcessor.checkPerformanceLevel(attributedString: textStorage)
+        NotesTextProcessor.checkPerformanceLevel(attributedString: textStorage, note: note)
 
         removeAttribute(.backgroundColor, range: NSRange(0..<textStorage.length))
         removeAttribute(.codeBlock, range: NSRange(0..<textStorage.length))
@@ -110,8 +110,9 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
     @MainActor private func rescanPartial(textStorage: NSTextStorage, delta: Int, editedRange: NSRange) {
         if NotesTextProcessor.shouldUseSimplifiedHighlighting {
             let parRange = textStorage.mutableString.paragraphRange(for: editedRange)
+            let contextRange = expandedSyntaxContextRange(for: parRange, in: textStorage)
             guard let note = EditTextView.note else { return }
-            NotesTextProcessor.highlightBasicMarkdown(attributedString: textStorage, range: parRange, note: note)
+            NotesTextProcessor.highlightBasicMarkdown(attributedString: textStorage, range: contextRange, note: note)
             return
         }
 
@@ -196,19 +197,21 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
         }
 
         guard let note = EditTextView.note else { return }
-        NotesTextProcessor.highlightMarkdown(attributedString: textStorage, paragraphRange: parRange, note: note)
-        NotesTextProcessor.checkBackTick(styleApplier: textStorage, paragraphRange: parRange)
+        let contextRange = expandedSyntaxContextRange(for: parRange, in: textStorage)
+        NotesTextProcessor.highlightMarkdown(attributedString: textStorage, paragraphRange: contextRange, note: note)
+        NotesTextProcessor.checkBackTick(styleApplier: textStorage, paragraphRange: contextRange)
     }
 
     @MainActor private func highlightMultiline(textStorage: NSTextStorage, editedRange: NSRange) {
         let parRange = textStorage.mutableString.paragraphRange(for: editedRange)
+        let contextRange = expandedSyntaxContextRange(for: parRange, in: textStorage)
 
         if NotesTextProcessor.shouldSkipCodeHighlighting {
             guard let note = EditTextView.note else { return }
-            textStorage.removeAttribute(.codeBlock, range: parRange)
-            textStorage.removeAttribute(.codeLanguage, range: parRange)
-            NotesTextProcessor.highlightMarkdown(attributedString: textStorage, paragraphRange: parRange, note: note)
-            NotesTextProcessor.checkBackTick(styleApplier: textStorage, paragraphRange: parRange)
+            textStorage.removeAttribute(.codeBlock, range: contextRange)
+            textStorage.removeAttribute(.codeLanguage, range: contextRange)
+            NotesTextProcessor.highlightMarkdown(attributedString: textStorage, paragraphRange: contextRange, note: note)
+            NotesTextProcessor.checkBackTick(styleApplier: textStorage, paragraphRange: contextRange)
             return
         }
 
@@ -218,11 +221,50 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
             NotesTextProcessor.highlightCode(attributedString: textStorage, range: parRange, language: language)
         } else {
             guard let note = EditTextView.note else { return }
-            textStorage.removeAttribute(.codeBlock, range: parRange)
-            textStorage.removeAttribute(.codeLanguage, range: parRange)
-            NotesTextProcessor.highlightMarkdown(attributedString: textStorage, paragraphRange: parRange, note: note)
-            NotesTextProcessor.checkBackTick(styleApplier: textStorage, paragraphRange: parRange)
+            textStorage.removeAttribute(.codeBlock, range: contextRange)
+            textStorage.removeAttribute(.codeLanguage, range: contextRange)
+            NotesTextProcessor.highlightMarkdown(attributedString: textStorage, paragraphRange: contextRange, note: note)
+            NotesTextProcessor.checkBackTick(styleApplier: textStorage, paragraphRange: contextRange)
         }
+    }
+
+    @MainActor private func expandedSyntaxContextRange(for range: NSRange, in textStorage: NSTextStorage) -> NSRange {
+        guard textStorage.length > 0 else { return NSRange(location: 0, length: 0) }
+
+        var lowerBound = range.location
+        var upperBound = range.upperBound
+        let maxParagraphExpansion = 8
+
+        if lowerBound > 0 {
+            for _ in 0..<maxParagraphExpansion {
+                guard lowerBound > 0 else { break }
+                let previousParagraph = textStorage.mutableString.paragraphRange(for: NSRange(location: lowerBound - 1, length: 0))
+                let paragraphText = textStorage.mutableString.substring(with: previousParagraph)
+                if isSyntaxBoundaryParagraph(paragraphText) {
+                    break
+                }
+                lowerBound = previousParagraph.location
+            }
+        }
+
+        if upperBound < textStorage.length {
+            for _ in 0..<maxParagraphExpansion {
+                guard upperBound < textStorage.length else { break }
+                let nextParagraph = textStorage.mutableString.paragraphRange(for: NSRange(location: upperBound, length: 0))
+                let paragraphText = textStorage.mutableString.substring(with: nextParagraph)
+                if isSyntaxBoundaryParagraph(paragraphText) {
+                    break
+                }
+                upperBound = nextParagraph.upperBound
+            }
+        }
+
+        return NSRange(location: lowerBound, length: max(0, upperBound - lowerBound))
+    }
+
+    private func isSyntaxBoundaryParagraph(_ paragraph: String) -> Bool {
+        let trimmed = paragraph.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty || trimmed.hasPrefix("```")
     }
 
     // Critical: Mark this function as @MainActor and remove Task dispatching
