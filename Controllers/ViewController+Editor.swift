@@ -187,7 +187,7 @@ extension ViewController {
         titleLabel.isHidden = false
         titleLabel.isEditable = true
         editArea.usesFindBar = false
-        editAreaScroll.hasVerticalScroller = false
+        editAreaScroll.hasVerticalScroller = true
         editAreaScroll.hasHorizontalScroller = true
         previewScrollView?.hasVerticalScroller = true
         previewScrollView?.hasHorizontalScroller = false
@@ -462,8 +462,11 @@ extension ViewController {
     }
 
     private struct SplitScrollConfig {
-        static let syncThreshold: CGFloat = 0.005
-        static let scrollDifferenceThreshold: CGFloat = 0.5
+        static let minSyncThreshold: CGFloat = 0.0015
+        static let maxSyncThreshold: CGFloat = 0.02
+        static let syncPixelThreshold: CGFloat = 4
+        static let minScrollDifferenceThreshold: CGFloat = 0.5
+        static let maxScrollDifferenceThreshold: CGFloat = 3
     }
 
     private func makeTempNote() -> Note? {
@@ -952,6 +955,8 @@ extension ViewController {
             markdownView.scrollDelegate = self
         }
 
+        activeSplitScrollSource = .editor
+
         scheduleSplitScrollSync()
     }
 
@@ -962,10 +967,8 @@ extension ViewController {
         }
         // Clear preview scroll delegate
         editArea.markdownView?.scrollDelegate = nil
-        // Cancel any pending sync
-        splitScrollDebounceTimer?.invalidate()
-        splitScrollDebounceTimer = nil
         isProgrammaticSplitScroll = false
+        activeSplitScrollSource = .editor
         lastSyncedScrollRatio = -1  // Reset for next sync session
     }
 
@@ -975,6 +978,7 @@ extension ViewController {
         guard editArea.markdownView?.isUpdatingContent != true else {
             return
         }
+        activeSplitScrollSource = .editor
         // Use debounce instead of blocking to ensure all user scrolls (including typing) are synced
         scheduleSplitScrollSync()
     }
@@ -994,6 +998,7 @@ extension ViewController {
             return
         }
 
+        activeSplitScrollSource = .preview
         isProgrammaticSplitScroll = true
         scrollEditor(to: ratio)
 
@@ -1005,16 +1010,40 @@ extension ViewController {
 
     private func scheduleSplitScrollSync() {
         guard UserDefaultsManagement.splitViewMode else { return }
+        guard activeSplitScrollSource == .editor else { return }
 
         let ratio = editorScrollRatio()
         let clampedRatio = max(0, min(ratio, 1))
+        let threshold = syncThresholdForCurrentDocument()
 
         // Performance optimization: Only sync if ratio changed significantly (> 0.5% difference)
         // This reduces JavaScript execution by 70-80% during scrolling
-        if abs(clampedRatio - lastSyncedScrollRatio) > SplitScrollConfig.syncThreshold {
+        if abs(clampedRatio - lastSyncedScrollRatio) > threshold {
             lastSyncedScrollRatio = clampedRatio
             applySplitScrollSync(ratio: clampedRatio)
         }
+    }
+
+    private func syncThresholdForCurrentDocument() -> CGFloat {
+        guard let documentView = editAreaScroll.documentView else { return SplitScrollConfig.maxSyncThreshold }
+        let contentHeight = editAreaScroll.contentSize.height
+        let scrollHeight = documentView.bounds.height
+        let maxOffset = max(scrollHeight - contentHeight, 0)
+        guard maxOffset > 0 else { return SplitScrollConfig.maxSyncThreshold }
+
+        let ratioThreshold = SplitScrollConfig.syncPixelThreshold / maxOffset
+        return min(max(ratioThreshold, SplitScrollConfig.minSyncThreshold), SplitScrollConfig.maxSyncThreshold)
+    }
+
+    private func scrollDifferenceThresholdForCurrentDocument() -> CGFloat {
+        guard let documentView = editAreaScroll.documentView else { return SplitScrollConfig.minScrollDifferenceThreshold }
+        let contentHeight = editAreaScroll.contentSize.height
+        let scrollHeight = documentView.bounds.height
+        let maxOffset = max(scrollHeight - contentHeight, 0)
+        guard maxOffset > 0 else { return SplitScrollConfig.minScrollDifferenceThreshold }
+
+        let adaptiveThreshold = maxOffset * 0.0004
+        return min(max(adaptiveThreshold, SplitScrollConfig.minScrollDifferenceThreshold), SplitScrollConfig.maxScrollDifferenceThreshold)
     }
 
     private func applySplitScrollSync(ratio: CGFloat) {
@@ -1048,7 +1077,7 @@ extension ViewController {
         let currentY = editAreaScroll.contentView.bounds.origin.y
 
         // Only scroll if there's a meaningful difference (> 0.5 pixels)
-        guard abs(targetY - currentY) > SplitScrollConfig.scrollDifferenceThreshold else {
+        guard abs(targetY - currentY) > scrollDifferenceThresholdForCurrentDocument() else {
             return
         }
 
