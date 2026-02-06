@@ -112,15 +112,6 @@
 "Search" = "搜索";
 
 
-"🎉 Automatic typesetting succeeded~" = "🎉 自动化排版完成~";
-
-"🙊 Press ESC key to exit~" = "🙊 按 ESC 键退出演示~";
-
-"😶‍🌫 Format is only possible after exiting preview mode~" = "😶‍🌫 文档排版需要退出预览模式才可使用~";
-
-"😶‍🌫 PDF export failed, please try again~" = "😶‍🌫 PDF导出失败，请重新试试~";
-
-"🎉 Saved to Downloads folder~" = "🎉 已导出到下载目录~";
 
 /* Clean attachments */
 "Clean Orphan Attachments" = "清理孤立附件";
@@ -130,23 +121,26 @@
 "Some attachments could not be removed" = "部分附件无法清理";
 "Clean" = "清理";
 
-"🍭 Image upload in progress~" = "🍭 图片上传中~";
-
-"😶‍🌫 Image upload failed, Use local~" = "😶‍🌫 图片上传失败，优先使用本地，可手动上传~";
 
 "%d MiaoYan" = "%d 篇妙言";
 
-"🙊 Please make sure your Mac is installed %@ ~" = "🙊 请确保你的 Mac 已安装并配置好了 %@ ~";
 
-"🙊 In single open mode, Exit with Command+Shift+W ~" = "🙊 单独编辑器模式中，可 Command+Shift+W 退出~";
 
-"😶‍🌫 Please make sure your title exists~" = "😶‍🌫 请确定你填写的标题是否存在~";
-
-"🍭 Found that there are multiple titles of this~" = "🍭 发现这里有多个标题，使用搜索能力~";
-
-"🎉 URL is successfully copied, Use it anywhere~" = "🎉 外链成功复制，你可以在任何地方使用~";
-
-"😶‍🌫 No delimiter --- identification, Cannot use MiaoYan PPT~" = "😶‍🌫 没有分隔符 --- 标识，无法使用妙言 PPT~";
+/* Toast messages without emoji prefix */
+"Automatic typesetting succeeded~" = "自动化排版完成~";
+"Press ESC key to exit~" = "按 ESC 键退出演示~";
+"Format is only possible after exiting preview mode~" = "文档排版需要退出预览模式才可使用~";
+"Saved to Downloads folder~" = "已导出到下载目录~";
+"Image upload in progress~" = "图片上传中~";
+"Image upload failed, Use local~" = "图片上传失败，优先使用本地，可手动上传~";
+"Please make sure your Mac is installed %@ ~" = "请确保你的 Mac 已安装并配置好了 %@ ~";
+"In single open mode, Exit with Command+Shift+W ~" = "单独编辑器模式中，可 Command+Shift+W 退出~";
+"Please make sure your title exists~" = "请确定你填写的标题是否存在~";
+"Found that there are multiple titles of this~" = "发现这里有多个标题，使用搜索能力~";
+"URL is successfully copied, Use it anywhere~" = "外链成功复制，你可以在任何地方使用~";
+"No delimiter --- identification, Cannot use MiaoYan PPT~" = "没有分隔符 --- 标识，无法使用妙言 PPT~";
+"Formatting failed, please try again" = "排版失败，请重试";
+"Formatting cancelled" = "已取消排版";
 
 "This %@ under this folder already exists!" = "此文件夹下 %@ 已经存在!";
 "Please change the title" = "请换一个标题";
@@ -182,7 +176,7 @@
 "Pure Editing" = "纯编辑";
 
 /* Interface Settings */
-"Interface" = "界面";
+
 "Button Display:" = "按钮显示:";
 "Always" = "始终显示";
 "On Hover" = "悬停显示";
@@ -246,10 +240,17 @@
 "Export failed" = "导出失败";
 "System version too low" = "系统版本过低";
 "Enter title" = "输入标题";
+"Save Failed" = "保存失败";
+"Critical Error" = "严重错误";
+"Failed to initialize main window. Please restart the application." = "初始化主窗口失败，请重启应用。";
+"Delete Images" = "删除图片";
+"Restore Images" = "还原图片";
+"Quit" = "退出";
+"Formatting... click again to cancel" = "正在排版...再次点击可取消";
 
 /* Always On Top */
-"📌 Window stays on top" = "📌 窗口已置顶";
-"📋 Window normal mode" = "📋 窗口正常模式";
+"Window stays on top" = "窗口已置顶";
+"Window normal mode" = "窗口正常模式";
 
 /* Menu Items */
 "Always On Top" = "窗口置顶";

@@ -171,34 +171,27 @@
 "Search" = "検索";
 
 
-"🎉 Automatic typesetting succeeded~" = "🎉 自動組版完了しました。";
 
-"🙊 Press ESC key to exit~" = "🙊 ESC キーを押して終了します。";
-
-"😶‍🌫 Format is only possible after exiting preview mode~" = "😶‍🌫 フォーマットの為に、プレビューモードを終了してください。";
-
-"😶‍🌫 PDF export failed, please try again~" = "😶‍🌫 PDFエクスポートに失敗しました。もう一度お試しください。";
-
-"🎉 Saved to Downloads folder~" = "🎉 ダウンロードフォルダに保存されました。";
-
-
-"🍭 Image upload in progress~" = "🍭 画像アップロード中~";
-
-"😶‍🌫 Image upload failed, Use local~" = "😶‍🌫 画像のアップロードに失敗しました。ローカルを使用してください";
 
 "%d MiaoYan" = "%d つ妙言";
 
-"🙊 Please make sure your Mac is installed %@ ~" = "🙊 Macに %@ をインストールされていることを確認してください。";
+"PDF export failed, please try again~" = "PDFエクスポートに失敗しました。もう一度お試しください。";
 
-"🙊 In single open mode, Exit with Command+Shift+W ~" = "🙊 シングルモードでは、Command+Shift+W で終了します";
-
-"😶‍🌫 Please make sure your title exists~" = "😶‍🌫 タイトルが既にあることを確認してください";
-
-"🍭 Found that there are multiple titles of this~" = "🍭 複数のタイトルが見つかりました、検索を利用ください。";
-
-"🎉 URL is successfully copied, Use it anywhere~" = "🎉 URLがコピーされました。ご利用ください。";
-
-"😶‍🌫 No delimiter --- identification, Cannot use MiaoYan PPT~" = "😶‍🌫 区切り「---」がなければ、MiaoYan PPT使えません。";
+/* Toast messages without emoji prefix */
+"Automatic typesetting succeeded~" = "自動組版完了しました。";
+"Press ESC key to exit~" = "ESC キーを押して終了します。";
+"Format is only possible after exiting preview mode~" = "フォーマットの為に、プレビューモードを終了してください。";
+"Saved to Downloads folder~" = "ダウンロードフォルダに保存されました。";
+"Image upload in progress~" = "画像アップロード中~";
+"Image upload failed, Use local~" = "画像のアップロードに失敗しました。ローカルを使用してください";
+"Please make sure your Mac is installed %@ ~" = "Macに %@ をインストールされていることを確認してください。";
+"In single open mode, Exit with Command+Shift+W ~" = "シングルモードでは、Command+Shift+W で終了します";
+"Please make sure your title exists~" = "タイトルが既にあることを確認してください";
+"Found that there are multiple titles of this~" = "複数のタイトルが見つかりました、検索を利用ください。";
+"URL is successfully copied, Use it anywhere~" = "URLがコピーされました。ご利用ください。";
+"No delimiter --- identification, Cannot use MiaoYan PPT~" = "区切り「---」がなければ、MiaoYan PPT使えません。";
+"Formatting failed, please try again" = "フォーマットに失敗しました。もう一度お試しください";
+"Formatting cancelled" = "フォーマットをキャンセルしました";
 
 "This %@ under this folder already exists!" = "このフォルダの下に %@ は既に存在します";
 "Please change the title" = "タイトルを変更してください。";
@@ -219,7 +212,6 @@
 "Hold ⌘ Command key to preview images" = "⌘ Command キーを押しながら画像をプレビュー";
 
 /* Missing translations */
-"Interface" = "インターフェース";
 "Preview Settings" = "プレビュー設定";
 "Code Background:" = "コード背景:";
 "Github" = "Github";
@@ -244,10 +236,21 @@
 "Export failed" = "エクスポートに失敗しました";
 "System version too low" = "システムバージョンが低すぎます";
 "Enter title" = "タイトルを入力";
+"Save Failed" = "保存に失敗しました";
+"Critical Error" = "重大なエラー";
+"Failed to initialize main window. Please restart the application." = "メインウィンドウの初期化に失敗しました。アプリを再起動してください。";
+"Delete Images" = "画像を削除";
+"Restore Images" = "画像を復元";
+"Quit" = "終了";
+"Formatting... click again to cancel" = "整形中...もう一度クリックでキャンセル";
+"Format" = "整形";
+"Presentation" = "プレゼン";
+"Toggle Note List" = "リスト";
+"Toggle Split Mode" = "分割";
 
 /* Always On Top */
-"📌 Window stays on top" = "📌 ウィンドウを最前面に固定";
-"📋 Window normal mode" = "📋 ウィンドウ通常モード";
+"Window stays on top" = "ウィンドウを最前面に固定";
+"Window normal mode" = "ウィンドウ通常モード";
 
 /* Menu Items */
 "Always On Top" = "常に最前面に表示";
