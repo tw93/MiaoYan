@@ -1,46 +1,15 @@
 import AppKit
 import Cocoa
 
-class NoteRowView: NSTableRowView {
-    override var isEmphasized: Bool {
-        get {
-            false
-        }
-        set {}
-    }
-
-    override var isSelected: Bool {
-        didSet {
-            if oldValue != isSelected {
-                needsDisplay = true
-            }
-        }
-    }
-
-    override var backgroundColor: NSColor {
-        get {
-            return .clear
-        }
-        set {}
-    }
-
-    override func drawSelection(in dirtyRect: NSRect) {
-        if isSelected {
-            let margin: CGFloat = 11
-            let cornerRadius: CGFloat = 8
-            let selectionRect = NSRect(
-                x: margin,
-                y: 2,
-                width: max(0, bounds.width - 2 * margin),
-                height: bounds.height - 4
-            )
-
-            let path = NSBezierPath(roundedRect: selectionRect, xRadius: cornerRadius, yRadius: cornerRadius)
-
-            Theme.selectionBackgroundColor.setFill()
-
-            path.fill()
-        }
+class NoteRowView: ThemedTableRowView {
+    override func selectionRect() -> NSRect {
+        let margin: CGFloat = 11
+        return NSRect(
+            x: margin,
+            y: 2,
+            width: max(0, bounds.width - 2 * margin),
+            height: bounds.height - 4
+        )
     }
 
     override func draw(_ dirtyRect: NSRect) {
@@ -104,8 +73,5 @@ class NoteRowView: NSTableRowView {
         dividerColor.setFill()
 
         separatorRect.fill()
-    }
-
-    override func drawBackground(in dirtyRect: NSRect) {
     }
 }

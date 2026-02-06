@@ -1,47 +1,13 @@
 import Cocoa
 
 @MainActor
-class EditorSplitView: NSSplitView, NSSplitViewDelegate {
+class EditorSplitView: ThemedSplitView {
     public var shouldHideDivider = false
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        MainActor.assumeIsolated { [self] in
-            delegate = self
-            applyDividerColor()
-        }
-    }
-
-    override func viewDidMoveToWindow() {
-        super.viewDidMoveToWindow()
-        applyDividerColor()
-    }
-
-    override func viewDidChangeEffectiveAppearance() {
-        super.viewDidChangeEffectiveAppearance()
-        applyDividerColor()
-    }
-
-    override func drawDivider(in rect: NSRect) {
-        resolvedDividerColor().setFill()
-        NSBezierPath(rect: rect).fill()
-    }
-
-    private func currentDividerColor() -> NSColor {
+    override func currentDividerColor() -> NSColor {
         let notelistWidth = subviews.first?.frame.width ?? 0
         let hideDivider = notelistWidth == 0 || shouldHideDivider
         return hideDivider ? Theme.backgroundColor : Theme.dividerColor
-    }
-
-    private func resolvedDividerColor() -> NSColor {
-        let appearance = window?.effectiveAppearance ?? effectiveAppearance
-        return currentDividerColor().resolvedColor(for: appearance)
-    }
-
-    private func applyDividerColor() {
-        setValue(resolvedDividerColor(), forKey: "dividerColor")
-        needsDisplay = true
-        displayIfNeeded()
     }
 
     override func minPossiblePositionOfDivider(at dividerIndex: Int) -> CGFloat {

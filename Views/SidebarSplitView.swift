@@ -1,46 +1,12 @@
 import Cocoa
 
 @MainActor
-class SidebarSplitView: NSSplitView, NSSplitViewDelegate {
+class SidebarSplitView: ThemedSplitView {
     private var isUserDragging = false
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        MainActor.assumeIsolated { [self] in
-            delegate = self
-            applyDividerColor()
-        }
-    }
-
-    override func viewDidMoveToWindow() {
-        super.viewDidMoveToWindow()
-        applyDividerColor()
-    }
-
-    override func viewDidChangeEffectiveAppearance() {
-        super.viewDidChangeEffectiveAppearance()
-        applyDividerColor()
-    }
-
-    override func drawDivider(in rect: NSRect) {
-        resolvedDividerColor().setFill()
-        NSBezierPath(rect: rect).fill()
-    }
-
-    private func currentDividerColor() -> NSColor {
+    override func currentDividerColor() -> NSColor {
         let sidebarWidth = subviews.first?.frame.width ?? 0
         return sidebarWidth == 0 ? Theme.backgroundColor : Theme.dividerColor
-    }
-
-    private func resolvedDividerColor() -> NSColor {
-        let appearance = window?.effectiveAppearance ?? effectiveAppearance
-        return currentDividerColor().resolvedColor(for: appearance)
-    }
-
-    private func applyDividerColor() {
-        setValue(resolvedDividerColor(), forKey: "dividerColor")
-        needsDisplay = true
-        displayIfNeeded()
     }
 
     func splitView(_ splitView: NSSplitView, constrainSplitPosition proposedPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
