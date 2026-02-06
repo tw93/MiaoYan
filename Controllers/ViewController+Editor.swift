@@ -549,7 +549,7 @@ extension ViewController {
         }
         if !UserDefaultsManagement.isOnExportPPT {
             DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.presentationLayoutDelay) {
-                self.toast(message: I18n.str("🙊 Press ESC key to exit~"))
+                self.toast(message: I18n.str("Press ESC key to exit~"))
             }
         }
     }
@@ -604,7 +604,7 @@ extension ViewController {
             return true
         }
         if needToast {
-            toast(message: I18n.str("😶‍🌫 No delimiter --- identification, Cannot use MiaoYan PPT~"))
+            toast(message: I18n.str("No delimiter --- identification, Cannot use MiaoYan PPT~"), style: .failure)
         }
         return false
     }
@@ -672,7 +672,7 @@ extension ViewController {
         }
         if !UserDefaultsManagement.isOnExportPPT {
             DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.presentationLayoutDelay) {
-                vc.toast(message: I18n.str("🙊 Press ESC key to exit~"))
+                vc.toast(message: I18n.str("Press ESC key to exit~"))
             }
         }
     }
@@ -743,7 +743,7 @@ extension ViewController {
     func formatText() {
         if UserDefaultsManagement.preview {
             toast(
-                message: I18n.str("😶‍🌫 Format is only possible after exiting preview mode~")
+                message: I18n.str("Format is only possible after exiting preview mode~"), style: .failure
             )
             return
         }
@@ -752,7 +752,7 @@ extension ViewController {
             formatTask = nil
             isFormatting = false
             updateFormatButtonState(isFormatting: false)
-            toast(message: I18n.str("⏹ Formatting cancelled"))
+            toast(message: I18n.str("Formatting cancelled"))
             return
         }
 
@@ -791,7 +791,7 @@ extension ViewController {
                     await MainActor.run {
                         guard self.formatRequestID == requestID else { return }
                         AppDelegate.trackError(error, context: "ViewController+Editor.format")
-                        self.toast(message: I18n.str("❌ Formatting failed, please try again"))
+                        self.toast(message: I18n.str("Formatting failed, please try again"), style: .failure)
                         self.isFormatting = false
                         self.updateFormatButtonState(isFormatting: false)
                         self.formatTask = nil
@@ -850,7 +850,7 @@ extension ViewController {
 
         restoreEditorScrollPosition(top)
 
-        toast(message: I18n.str("🎉 Automatic typesetting succeeded~"))
+        toast(message: I18n.str("Automatic typesetting succeeded~"), style: .success)
 
         if UserDefaultsManagement.splitViewMode, let previewView = editArea.markdownView {
             previewView.updateContent(note: note)

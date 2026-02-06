@@ -6,15 +6,55 @@ struct ToastConfiguration: Sendable {
     var fadeKeyTimes: [NSNumber] = [0, 0.05, 0.85, 1]
     var fadeValues: [Float] = [0, 0.92, 0.92, 0]
     var cornerRadius: CGFloat = 8
-    var horizontalPadding: CGFloat = 16
+    var horizontalPadding: CGFloat = 12
     var verticalPadding: CGFloat = 6
     var minWidth: CGFloat = 80
     var maxWidth: CGFloat = 420
     var minHeight: CGFloat = 20
-    var iconSize: CGFloat = 44
-    var iconSpacing: CGFloat = 6
+    var iconSize: CGFloat = 14
+    var iconSpacing: CGFloat = 5
+    var iconVerticalOffset: CGFloat = 1.2
 
     static let `default` = ToastConfiguration()
+}
+
+public enum ToastStyle {
+    case info
+    case success
+    case failure
+
+    var symbolName: String? {
+        switch self {
+        case .info:
+            return nil
+        case .success:
+            return "checkmark.circle.fill"
+        case .failure:
+            return "xmark.circle.fill"
+        }
+    }
+
+    var tintColor: NSColor {
+        switch self {
+        case .info:
+            return .white
+        case .success:
+            return .white
+        case .failure:
+            return .white
+        }
+    }
+
+    var fallbackSymbol: String {
+        switch self {
+        case .info:
+            return ""
+        case .success:
+            return "☺︎"
+        case .failure:
+            return "☹︎"
+        }
+    }
 }
 
 // MARK: - Toast Manager
@@ -164,6 +204,7 @@ enum ToastFactory {
     static func makeToast(
         message: String,
         title: String? = nil,
+        style: ToastStyle = .info,
         configuration: ToastConfiguration = .default
     ) -> NSView {
         let container = NSView()
@@ -178,11 +219,13 @@ enum ToastFactory {
                 container: container,
                 message: message,
                 title: title,
+                style: style,
                 configuration: configuration)
         } else {
             return makeSimpleToast(
                 container: container,
                 message: message,
+                style: style,
                 configuration: configuration)
         }
     }
@@ -191,14 +234,40 @@ enum ToastFactory {
     private static func makeSimpleToast(
         container: NSView,
         message: String,
+        style: ToastStyle,
         configuration: ToastConfiguration
     ) -> NSView {
-        let stack = makeContentStack(configuration: configuration)
         let label = makeLabel(message)
 
-        stack.addArrangedSubview(label)
-        container.addSubview(stack)
-        applyContentConstraints(stack: stack, in: container, configuration: configuration)
+        let row = NSView()
+        row.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(row)
+        row.addSubview(label)
+
+        var constraints: [NSLayoutConstraint] = [
+            row.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: configuration.horizontalPadding),
+            row.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -configuration.horizontalPadding),
+            row.topAnchor.constraint(equalTo: container.topAnchor, constant: configuration.verticalPadding),
+            row.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -configuration.verticalPadding),
+            container.heightAnchor.constraint(greaterThanOrEqualToConstant: configuration.minHeight + configuration.verticalPadding * 2),
+            label.centerYAnchor.constraint(equalTo: row.centerYAnchor),
+            label.topAnchor.constraint(greaterThanOrEqualTo: row.topAnchor),
+            label.bottomAnchor.constraint(lessThanOrEqualTo: row.bottomAnchor),
+            label.trailingAnchor.constraint(equalTo: row.trailingAnchor),
+        ]
+
+        if let icon = makeStatusIcon(style: style, configuration: configuration) {
+            row.addSubview(icon)
+            constraints.append(contentsOf: [
+                icon.leadingAnchor.constraint(equalTo: row.leadingAnchor),
+                icon.centerYAnchor.constraint(equalTo: row.centerYAnchor),
+                label.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: configuration.iconSpacing),
+            ])
+        } else {
+            constraints.append(label.leadingAnchor.constraint(equalTo: row.leadingAnchor))
+        }
+
+        NSLayoutConstraint.activate(constraints)
         return container
     }
 
@@ -207,18 +276,71 @@ enum ToastFactory {
         container: NSView,
         message: String,
         title: String,
+        style: ToastStyle,
         configuration: ToastConfiguration
     ) -> NSView {
         let stack = makeContentStack(configuration: configuration)
+        stack.orientation = .horizontal
+        stack.alignment = .top
+
+        if let icon = makeStatusIcon(style: style, configuration: configuration) {
+            stack.addArrangedSubview(icon)
+        }
+
+        let textStack = NSStackView()
+        textStack.translatesAutoresizingMaskIntoConstraints = false
+        textStack.orientation = .vertical
+        textStack.alignment = .leading
+        textStack.spacing = 2
         let titleLabel = makeLabel(title, isTitle: true)
         let messageLabel = makeLabel(message)
 
-        stack.addArrangedSubview(titleLabel)
-        stack.addArrangedSubview(messageLabel)
+        textStack.addArrangedSubview(titleLabel)
+        textStack.addArrangedSubview(messageLabel)
+        stack.addArrangedSubview(textStack)
         container.addSubview(stack)
         applyContentConstraints(stack: stack, in: container, configuration: configuration)
 
         return container
+    }
+
+    @MainActor
+    private static func makeStatusIcon(style: ToastStyle, configuration: ToastConfiguration) -> NSView? {
+        guard style != .info else { return nil }
+
+        if let symbolName = style.symbolName,
+            let image = NSImage(systemSymbolName: symbolName, accessibilityDescription: nil)
+        {
+            let symbolConfig = NSImage.SymbolConfiguration(pointSize: configuration.iconSize, weight: .semibold)
+            let configuredImage = image.withSymbolConfiguration(symbolConfig) ?? image
+            let iconContainer = NSView()
+            iconContainer.translatesAutoresizingMaskIntoConstraints = false
+            let imageView = NSImageView(image: configuredImage)
+            imageView.translatesAutoresizingMaskIntoConstraints = false
+            imageView.contentTintColor = style.tintColor
+            imageView.imageScaling = .scaleProportionallyUpOrDown
+            imageView.setContentHuggingPriority(.required, for: .horizontal)
+            imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
+            iconContainer.addSubview(imageView)
+
+            NSLayoutConstraint.activate([
+                iconContainer.widthAnchor.constraint(equalToConstant: configuration.iconSize),
+                iconContainer.heightAnchor.constraint(equalToConstant: configuration.iconSize),
+                imageView.widthAnchor.constraint(equalToConstant: configuration.iconSize),
+                imageView.heightAnchor.constraint(equalToConstant: configuration.iconSize),
+                imageView.centerXAnchor.constraint(equalTo: iconContainer.centerXAnchor),
+                imageView.centerYAnchor.constraint(equalTo: iconContainer.centerYAnchor, constant: configuration.iconVerticalOffset),
+            ])
+            return iconContainer
+        }
+
+        let fallback = NSTextField(labelWithString: style.fallbackSymbol)
+        fallback.translatesAutoresizingMaskIntoConstraints = false
+        fallback.textColor = style.tintColor
+        fallback.font = .systemFont(ofSize: max(configuration.iconSize - 1, 12), weight: .regular)
+        fallback.setContentHuggingPriority(.required, for: .horizontal)
+        fallback.setContentCompressionResistancePriority(.required, for: .horizontal)
+        return fallback
     }
 
     @MainActor
@@ -241,7 +363,7 @@ enum ToastFactory {
         stack.translatesAutoresizingMaskIntoConstraints = false
         stack.orientation = .vertical
         stack.alignment = .leading
-        stack.spacing = 2
+        stack.spacing = configuration.iconSpacing
         stack.edgeInsets = NSEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         stack.setHuggingPriority(.required, for: .vertical)
         stack.setHuggingPriority(.required, for: .horizontal)
@@ -267,14 +389,14 @@ enum ToastFactory {
 // MARK: - NSViewController Extension
 extension NSViewController {
     @MainActor
-    public func toast(message: String, title: String) {
-        let toast = ToastFactory.makeToast(message: message, title: title)
+    public func toast(message: String, title: String, style: ToastStyle = .info) {
+        let toast = ToastFactory.makeToast(message: message, title: title, style: style)
         ToastManager.shared.showToast(toast, in: view)
     }
 
     @MainActor
-    public func toast(message: String, duration: TimeInterval? = nil) {
-        let toast = ToastFactory.makeToast(message: message)
+    public func toast(message: String, duration: TimeInterval? = nil, style: ToastStyle = .info) {
+        let toast = ToastFactory.makeToast(message: message, style: style)
         ToastManager.shared.showToast(toast, in: view, duration: duration)
     }
 

@@ -336,7 +336,7 @@ extension ViewController {
 
             if !result.removed.isEmpty {
                 NSSound(named: "Pop")?.play()
-                vc.toast(message: String(format: I18n.str("Removed %d unused attachment(s)"), result.removed.count))
+                vc.toast(message: String(format: I18n.str("Removed %d unused attachment(s)"), result.removed.count), style: .success)
             }
 
             if !result.failed.isEmpty {
@@ -418,7 +418,7 @@ extension ViewController {
             let pasteboard = NSPasteboard.general
             pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
             pasteboard.setString(name, forType: NSPasteboard.PasteboardType.string)
-            toast(message: I18n.str("🎉 URL is successfully copied, Use it anywhere~"))
+            toast(message: I18n.str("URL is successfully copied, Use it anywhere~"), style: .success)
         }
     }
 
@@ -1015,9 +1015,9 @@ extension ViewController {
 
     public func toastExport(status: Bool) {
         if status {
-            toast(message: I18n.str("🎉 Saved to Downloads folder~"))
+            toast(message: I18n.str("Saved to Downloads folder~"), style: .success)
         } else {
-            toast(message: "😶‍🌫 \(I18n.str("Export failed"))")
+            toast(message: I18n.str("Export failed"), style: .failure)
         }
         // After the export is completed, restore the original state.
         UserDefaultsManagement.isOnExport = false
@@ -1031,22 +1031,22 @@ extension ViewController {
     }
 
     public func toastNoTitle() {
-        toast(message: I18n.str("😶‍🌫 Please make sure your title exists~"))
+        toast(message: I18n.str("Please make sure your title exists~"), style: .failure)
     }
 
     public func toastMoreTitle() {
-        toast(message: I18n.str("🍭 Found that there are multiple titles of this~"))
+        toast(message: I18n.str("Found that there are multiple titles of this~"), style: .failure)
     }
 
     public func toastImageSet(name: String) {
-        toast(message: String(format: I18n.str("🙊 Please make sure your Mac is installed %@ ~"), name))
+        toast(message: String(format: I18n.str("Please make sure your Mac is installed %@ ~"), name), style: .failure)
     }
 
     public func toastUpload(status: Bool) {
         if status {
-            toast(message: I18n.str("🍭 Image upload in progress~"))
+            toast(message: I18n.str("Image upload in progress~"))
         } else {
-            toast(message: I18n.str("😶‍🌫 Image upload failed, Use local~"))
+            toast(message: I18n.str("Image upload failed, Use local~"), style: .failure)
         }
     }
 
@@ -1372,6 +1372,6 @@ extension ViewController {
     }
 
     func toastInSingleMode() {
-        toast(message: I18n.str("🙊 In single open mode, Exit with Command+Shift+W ~"))
+        toast(message: I18n.str("In single open mode, Exit with Command+Shift+W ~"))
     }
 }
