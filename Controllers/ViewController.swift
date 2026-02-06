@@ -32,6 +32,9 @@ class ViewController:
     var isFocusedTitle: Bool = false
     var formatContent: String = ""
     var isFormatting: Bool = false
+    var formatTask: Task<Void, Never>?
+    var formatRequestID: Int = 0
+    let markdownFormatWorker = MarkdownFormatWorker()
     var needRestorePreview: Bool = false
     var shouldRestorePreviewAfterExport: Bool = false
     var shouldDisablePPTAfterExport: Bool = false
