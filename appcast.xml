@@ -7,8 +7,8 @@
       <link>https://github.com/tw93/MiaoYan/releases</link>
       <sparkle:informationalUpdate/>
       <description><![CDATA[
-      <p style="color:#e67e22;font-weight:bold;">本次更新因签名密钥更换，需手动下载安装。请点击下方按钮前往下载最新 DMG。安装后若提示无法验证，请在系统设置 → 隐私与安全性 → 点击"仍然打开"，或在终端执行 <code>xattr -cr /Applications/MiaoYan.app</code></p>
-      <p style="color:#e67e22;font-weight:bold;">This update requires a manual download due to a signing key change. Please click the button below to download the latest DMG. If macOS blocks the app, go to System Settings → Privacy & Security → click "Open Anyway", or run <code>xattr -cr /Applications/MiaoYan.app</code></p>
+      <p style="color:#e67e22;font-weight:bold;">本次更新因签名密钥更换，需手动下载安装。请点击下方按钮前往下载最新 DMG。下载后在终端执行 <code>sudo xattr -d com.apple.quarantine ~/Downloads/MiaoYan.dmg</code> 再打开安装，或在系统设置 → 隐私与安全性 → 点击"仍然打开"。</p>
+      <p style="color:#e67e22;font-weight:bold;">This update requires a manual download due to a signing key change. Please click the button below to download the latest DMG. After downloading, run <code>sudo xattr -d com.apple.quarantine ~/Downloads/MiaoYan.dmg</code> then install, or go to System Settings → Privacy & Security → click "Open Anyway".</p>
       <h3>更精致 🪿</h3>
       <ol>
         <li><strong>查找替换</strong>：预览区新增原生开发的查找替换栏，支持"替换"与"全部替换"，交互体验统一。</li>
