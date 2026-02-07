@@ -3,6 +3,34 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>2.5.0</title>
+      <link>https://github.com/tw93/MiaoYan/releases</link>
+      <sparkle:informationalUpdate/>
+      <description><![CDATA[
+      <p style="color:#e67e22;font-weight:bold;">本次更新因签名密钥更换，需手动下载安装。请点击下方按钮前往下载最新 DMG。</p>
+      <p style="color:#e67e22;font-weight:bold;">This update requires a manual download due to a signing key change. Please click the button below to download the latest DMG.</p>
+      <h3>更精致 🪿</h3>
+      <ol>
+        <li><strong>查找替换</strong>：预览区新增原生开发的查找替换栏，支持"替换"与"全部替换"，交互体验统一。</li>
+        <li><strong>滚动同步</strong>：重写分屏同步算法，采用动态阈值机制，彻底解决滚动抖动与错位问题。</li>
+        <li><strong>性能优化</strong>：文档格式化改为后台异步执行，拒绝界面卡顿；新增大文件智能降级高亮策略。</li>
+        <li><strong>存储权限</strong>：引入 Security Scoped Bookmark 机制，彻底修复重启后外部目录权限丢失问题。</li>
+        <li><strong>新手引导</strong>：首次启动自动生成多语言分类模版（指南/示例/笔记），目录结构更清晰。</li>
+      </ol>
+      <h3>More exquisite 🪿</h3>
+      <ol>
+        <li><strong>Preview Find & Replace</strong>: Implemented a brand new native Search bar for Preview, adding support for Replace and Replace All.</li>
+        <li><strong>Split-View Sync</strong>: Rewrote the scrolling synchronization algorithm with dynamic thresholds for perfect alignment and stability.</li>
+        <li><strong>Performance</strong>: Formatting is now asynchronous to avoid UI freezing; added smart highlighting downgrade for large files.</li>
+        <li><strong>Storage Stability</strong>: Adopted Security Scoped Bookmarks to permanently fix external folder permission issues on restart.</li>
+        <li><strong>Onboarding</strong>: Redesigned first-launch experience with localized folder templates (Guide/Examples/Notes).</li>
+      </ol>
+          ]]>      </description>
+      <pubDate>Sat, 07 Feb 2026 21:20:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.5.0.zip" sparkle:shortVersionString="2.5.0" sparkle:version="2.5.0" sparkle:edSignature="OvIDlW018a7eP3nyGrXajKjyRehiNcvfJDgOJQVHpEvW/nSPjplV9lGdEj+PYfFrbzQHgTF5peD9jzw6B1ZCCA==" length="25552261" type="application/octet-stream"/>
+      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>2.4.5</title>
       <description><![CDATA[
       <h3>更稳 🚵🏿‍♂️</h3>
