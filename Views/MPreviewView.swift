@@ -306,7 +306,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
 
         if event.keyCode == kVK_Escape, UserDefaultsManagement.presentation, !UserDefaultsManagement.magicPPT {
             DispatchQueue.main.async {
-                if let vc = ViewController.shared() {
+                if let vc = AppContext.shared.viewController {
                     vc.disablePresentation()
                 }
             }
@@ -315,7 +315,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
 
         if event.keyCode == kVK_Escape, UserDefaultsManagement.magicPPT {
             DispatchQueue.main.async {
-                if let vc = ViewController.shared() {
+                if let vc = AppContext.shared.viewController {
                     vc.disableMiaoYanPPT()
                 }
             }
@@ -766,7 +766,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
             processedHtmlString = htmlString
         }
 
-        guard let vc = ViewController.shared() else {
+        guard let vc = AppContext.shared.viewController else {
             throw PreviewError.viewControllerUnavailable
         }
 
@@ -948,7 +948,7 @@ class HandlerRevealBackgroundColor: NSObject, WKScriptMessageHandler {
         _ userContentController: WKUserContentController,
         didReceive message: WKScriptMessage
     ) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = AppContext.shared.viewController else { return }
         let message = (message.body as! String).trimmingCharacters(in: .whitespacesAndNewlines)
         if message == "" {
             vc.titleLabel.backgroundColor = Theme.backgroundColor
@@ -1013,13 +1013,13 @@ class PreviewSearchBar: NSView {
                 if NSApp.sendAction(#selector(ViewController.togglePreview(_:)), to: nil, from: self) {
                     return true
                 }
-                ViewController.shared()?.togglePreview()
+                AppContext.shared.viewController?.togglePreview()
                 return true
             case Int(kVK_ANSI_4):
                 if NSApp.sendAction(#selector(ViewController.togglePresentation(_:)), to: nil, from: self) {
                     return true
                 }
-                ViewController.shared()?.togglePresentation()
+                AppContext.shared.viewController?.togglePresentation()
                 return true
             default:
                 return false

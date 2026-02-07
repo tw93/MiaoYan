@@ -11,7 +11,7 @@ class NoteCellView: NSTableCellView {
 
     // Use Theme.secondaryTextColor instead of a hard-coded gray
     public var tableView: NotesTableView? {
-        guard let vc = ViewController.shared() else { return nil }
+        guard let vc = AppContext.shared.viewController else { return nil }
 
         return vc.notesTableView
     }
@@ -91,7 +91,7 @@ class NoteCellView: NSTableCellView {
             name.stringValue = title
         }
 
-        if let viewController = ViewController.shared(),
+        if let viewController = AppContext.shared.viewController,
             let sidebarItem = viewController.getSidebarItem(),
             let sort = sidebarItem.project?.sortBy,
             sort == .creationDate,

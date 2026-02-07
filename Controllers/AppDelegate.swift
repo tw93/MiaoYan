@@ -14,6 +14,29 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
     public var searchQuery: String?
     public var newName: String?
     public var newContent: String?
+    let appContext = AppContext.shared
+
+    private func resolveViewController() -> ViewController? {
+        if let cached = appContext.viewController {
+            return cached
+        }
+
+        let candidates: [NSViewController?] = [
+            mainWindowController?.window?.contentViewController,
+            mainWindowController?.contentViewController,
+            NSApp.mainWindow?.contentViewController,
+            NSApp.keyWindow?.contentViewController,
+        ]
+
+        for candidate in candidates {
+            if let vc = candidate as? ViewController {
+                appContext.bind(viewController: vc)
+                return vc
+            }
+        }
+
+        return nil
+    }
     var appTitle: String {
         let name = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
         return name ?? Bundle.main.object(forInfoDictionaryKey: kCFBundleNameKey as String) as! String
@@ -21,7 +44,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
 
     func applicationWillFinishLaunching(_ notification: Notification) {
         migratePreferences()
-        let storage = Storage.sharedInstance()
+        let storage = appContext.storage
         storage.loadProjects()
         storage.loadDocuments {}
     }
@@ -112,6 +135,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         mainWC.window?.makeKeyAndOrderFront(nil)
 
         mainWindowController = mainWC
+        appContext.bind(viewController: mainWC.window?.contentViewController as? ViewController)
 
         mainWC.applyMiaoYanAppearance()
 
@@ -126,7 +150,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
-        if let vc = ViewController.shared() {
+        if let vc = resolveViewController() {
             vc.persistCurrentViewState()
         }
         let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
@@ -240,12 +264,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
     @IBAction func new(_ sender: Any?) {
         mainWindowController?.makeNew()
         NSApp.activate(ignoringOtherApps: true)
-        ViewController.shared()?.fileMenuNewNote(self)
+        resolveViewController()?.fileMenuNewNote(self)
     }
     @IBAction func searchAndCreate(_ sender: Any?) {
         mainWindowController?.makeNew()
         NSApp.activate(ignoringOtherApps: true)
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = resolveViewController() else { return }
         DispatchQueue.main.async {
             vc.search.window?.makeFirstResponder(vc.search)
         }
@@ -312,11 +336,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
 
         NotificationCenter.default.post(name: .alwaysOnTopChanged, object: nil)
 
-        if let vc = ViewController.shared() {
-                let message = newValue ? I18n.str("Window stays on top") : I18n.str("Window normal mode")
-                vc.toast(message: message)
-            }
+        if let vc = resolveViewController() {
+            let message = newValue ? I18n.str("Window stays on top") : I18n.str("Window normal mode")
+            vc.toast(message: message)
         }
+    }
 
     private func addGlobalKeyboardMonitor() {
         NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
@@ -325,7 +349,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
                 event.modifierFlags.contains(.shift),
                 !event.modifierFlags.contains(.option)
             {
-                if let vc = ViewController.shared() {
+                if let vc = self.resolveViewController() {
                     vc.pin(vc.notesTableView.selectedRowIndexes)
                     return nil
                 }
@@ -337,7 +361,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
                 !event.modifierFlags.contains(.shift),
                 !event.modifierFlags.contains(.control)
             {
-                if let vc = ViewController.shared() {
+                if let vc = self.resolveViewController() {
                     vc.toggleMagicPPT(self)
                     return nil
                 }

@@ -67,7 +67,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
 
         applyMiaoYanAppearance()
 
-        if let vc = ViewController.shared() {
+        if let vc = AppContext.shared.viewController {
             vc.editArea.applySystemAppearance()
             vc.updateToolbarButtonTints()
 
@@ -133,7 +133,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
     }
 
     func refreshEditArea(focusSearch: Bool = false) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = AppContext.shared.viewController else { return }
         vc.editArea.updateTextContainerInset()
 
         // Update WebView frame if in preview mode
@@ -155,7 +155,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         }
 
         if fr.isKind(of: EditTextView.self) {
-            guard let vc = ViewController.shared(), let ev = vc.editArea, ev.isEditable else { return notesListUndoManager }
+            guard let vc = AppContext.shared.viewController, let ev = vc.editArea, ev.isEditable else { return notesListUndoManager }
             return editorUndoManager
         }
 
@@ -198,7 +198,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
     func windowDidExitFullScreen(_ notification: Notification) {
         UserDefaultsManagement.fullScreen = false
         // Auto-exit presentation modes when exiting full screen to prevent UI inconsistencies
-        if let vc = ViewController.shared() {
+        if let vc = AppContext.shared.viewController {
             if UserDefaultsManagement.presentation {
                 vc.disablePresentation()
             } else if UserDefaultsManagement.magicPPT {
@@ -211,7 +211,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         applyMiaoYanAppearance()
 
         // Ensure WebView background is transparent to avoid white flashes on reactivation
-        if let vc = ViewController.shared(),
+        if let vc = AppContext.shared.viewController,
             let markdownView = vc.editArea.markdownView,
             !markdownView.isHidden
         {
@@ -220,7 +220,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
     }
 
     func windowWillClose(_ notification: Notification) {
-        ViewController.shared()?.persistCurrentViewState()
+        AppContext.shared.viewController?.persistCurrentViewState()
     }
 
     func applyMiaoYanAppearance() {
@@ -275,7 +275,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
             window.contentView?.subviews.forEach { $0.needsDisplay = true }
         }
 
-        if let vc = ViewController.shared() {
+        if let vc = AppContext.shared.viewController {
             if let sidebarSplit = vc.sidebarSplitView as? SidebarSplitView {
                 sidebarSplit.displayIfNeeded()
             }

@@ -60,7 +60,7 @@ class TitleTextField: NSTextField, NSTextFieldDelegate {
     }
 
     public func updateNotesTableView() {
-        guard let vc = ViewController.shared(),
+        guard let vc = AppContext.shared.viewController,
             let note = vc.notesTableView.getSelectedNote()
         else { return }
 

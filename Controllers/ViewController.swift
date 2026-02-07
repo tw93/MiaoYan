@@ -25,7 +25,8 @@ class ViewController:
 
     public var fsManager: FileSystemEventManager?
     var projectSettingsViewController: ProjectSettingsViewController?
-    let storage = Storage.sharedInstance()
+    let appContext = AppContext.shared
+    var storage: Storage { appContext.storage }
     var filteredNoteList: [Note]?
     var alert: NSAlert?
     var refilled: Bool = false
@@ -57,16 +58,54 @@ class ViewController:
     var savedEditorSelection: NSRange?
     var savedEditorScrollRatio: CGFloat?
     var savedEditorNoteURL: URL?
+    var sessionState: EditorSessionState { appContext.sessionState }
+
+    var sessionPreviewMode: Bool {
+        get { sessionState.preview }
+        set { sessionState.preview = newValue }
+    }
+
+    var sessionPresentationMode: Bool {
+        get { sessionState.presentation }
+        set { sessionState.presentation = newValue }
+    }
+
+    var sessionMagicPPTMode: Bool {
+        get { sessionState.magicPPT }
+        set { sessionState.magicPPT = newValue }
+    }
+
+    var sessionSplitMode: Bool {
+        get { sessionState.splitViewMode }
+        set { sessionState.splitViewMode = newValue }
+    }
+
+    var sessionIsExporting: Bool {
+        get { sessionState.isOnExport }
+        set { sessionState.isOnExport = newValue }
+    }
+
+    var sessionIsExportingPPT: Bool {
+        get { sessionState.isOnExportPPT }
+        set { sessionState.isOnExportPPT = newValue }
+    }
+
+    var sessionIsExportingHTML: Bool {
+        get { sessionState.isOnExportHtml }
+        set { sessionState.isOnExportHtml = newValue }
+    }
+
+    var sessionFullScreenMode: Bool {
+        get { sessionState.fullScreen }
+        set { sessionState.fullScreen = newValue }
+    }
 
     // Presentation mode scroll position preservation
     var savedPresentationScrollPosition: CGPoint?
 
     // Check if any preview mode is active
     var shouldShowPreview: Bool {
-        UserDefaultsManagement.preview
-            || UserDefaultsManagement.magicPPT
-            || UserDefaultsManagement.presentation
-            || UserDefaultsManagement.splitViewMode
+        sessionState.shouldShowPreview
     }
 
     override var representedObject: Any? {
@@ -146,15 +185,15 @@ class ViewController:
     @IBOutlet var formatButton: NSButton!
     @IBOutlet var previewButton: NSButton! {
         didSet {
-            previewButton.state = UserDefaultsManagement.preview ? .on : .off
-            previewButton.contentTintColor = UserDefaultsManagement.preview ? Theme.accentColor : nil
+            previewButton.state = sessionPreviewMode ? .on : .off
+            previewButton.contentTintColor = sessionPreviewMode ? Theme.accentColor : nil
         }
     }
 
     @IBOutlet var presentationButton: NSButton! {
         didSet {
-            presentationButton.state = UserDefaultsManagement.presentation ? .on : .off
-            presentationButton.contentTintColor = UserDefaultsManagement.presentation ? Theme.accentColor : nil
+            presentationButton.state = sessionPresentationMode ? .on : .off
+            presentationButton.contentTintColor = sessionPresentationMode ? Theme.accentColor : nil
         }
     }
 
@@ -287,6 +326,7 @@ class ViewController:
     }
 
     override func viewDidLoad() {
+        appContext.bind(viewController: self)
         // Hide empty state UI (no longer used)
         emptyEditAreaView.isHidden = true
         configureShortcuts()
@@ -333,17 +373,17 @@ class ViewController:
         let inactive = Theme.inactiveIconColor
 
         // Toolbar Buttons (Unified Grey in all modes unless active)
-        previewButton?.state = UserDefaultsManagement.preview ? .on : .off
-        previewButton?.contentTintColor = UserDefaultsManagement.preview ? accent : inactive
+        previewButton?.state = sessionPreviewMode ? .on : .off
+        previewButton?.contentTintColor = sessionPreviewMode ? accent : inactive
 
         // Presentation
-        presentationButton?.state = UserDefaultsManagement.presentation ? .on : .off
-        presentationButton?.contentTintColor = UserDefaultsManagement.presentation ? accent : inactive
+        presentationButton?.state = sessionPresentationMode ? .on : .off
+        presentationButton?.contentTintColor = sessionPresentationMode ? accent : inactive
 
         // Split View
-        toggleSplitButton?.state = UserDefaultsManagement.splitViewMode ? .on : .off
+        toggleSplitButton?.state = sessionSplitMode ? .on : .off
         toggleSplitButton?.image?.isTemplate = true
-        toggleSplitButton?.contentTintColor = UserDefaultsManagement.splitViewMode ? NSColor.controlAccentColor : inactive
+        toggleSplitButton?.contentTintColor = sessionSplitMode ? NSColor.controlAccentColor : inactive
 
         // Sidebar Toggle (Active when sidebar is hidden)
         let isSidebarHidden = sidebarWidth == 0
@@ -369,7 +409,7 @@ class ViewController:
     override func viewDidDisappear() {
         super.viewWillDisappear()
         removeLiveResizeObserver()
-        if UserDefaultsManagement.preview {
+        if sessionPreviewMode {
             disablePreviewWorkItem = DispatchWorkItem { [weak self] in
                 self?.needRestorePreview = true
                 self?.disablePreview()
@@ -398,7 +438,7 @@ class ViewController:
             }
         }
 
-        if UserDefaultsManagement.fullScreen {
+        if sessionFullScreenMode {
             view.window?.toggleFullScreen(nil)
         }
         if let appDelegate = NSApplication.shared.delegate as? AppDelegate {
@@ -421,9 +461,9 @@ class ViewController:
 
         // Always start in edit mode for simplicity and reliability
         // User can manually enable preview mode with keyboard shortcut if needed
-        if UserDefaultsManagement.preview {
+        if sessionPreviewMode {
             // Reset preview flag to ensure clean edit mode startup
-            UserDefaultsManagement.preview = false
+            sessionPreviewMode = false
         }
 
         DispatchQueue.main.async { [weak self] in
@@ -585,16 +625,12 @@ class ViewController:
     }
 
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
-        guard let vc = ViewController.shared() else {
-            return false
-        }
-
         if menuItem.action == #selector(exportMiaoYanPPT(_:)) {
-            return vc.isMiaoYanPPT(needToast: false)
+            return isMiaoYanPPT(needToast: false)
         }
 
         if menuItem.action == #selector(toggleMagicPPT(_:)) {
-            return vc.notesTableView.selectedRow != -1
+            return notesTableView.selectedRow != -1
         }
 
         let canUseMenu = UserDefaultsManagement.canUseMenu
@@ -612,22 +648,22 @@ class ViewController:
                 if ["fileMenu.new", "fileMenu.searchAndCreate", "fileMenu.open"].contains(menuItem.identifier?.rawValue) {
                     return canUseMenu
                 }
-                if vc.notesTableView.selectedRow == -1 {
+                if notesTableView.selectedRow == -1 {
                     return false
                 }
             case "folderMenu":
                 if ["folderMenu.newFolder", "folderMenu.showInFinder", "folderMenu.renameFolder"].contains(menuItem.identifier?.rawValue) {
                     return canUseMenu
                 }
-                guard let p = vc.getSidebarProject(), !p.isTrash else {
+                guard let p = getSidebarProject(), !p.isTrash else {
                     return false
                 }
             case "findMenu":
-                if ["findMenu.find", "findMenu.findAndReplace", "findMenu.next", "findMenu.prev"].contains(menuItem.identifier?.rawValue), vc.notesTableView.selectedRow > -1 {
+                if ["findMenu.find", "findMenu.findAndReplace", "findMenu.next", "findMenu.prev"].contains(menuItem.identifier?.rawValue), notesTableView.selectedRow > -1 {
                     return canUseMenu
                 }
-                let isPreviewSearchVisible = vc.editArea.markdownView?.isSearchBarVisible ?? false
-                return vc.editArea.isSearchBarVisible || isPreviewSearchVisible || vc.editArea.hasFocus()
+                let isPreviewSearchVisible = editArea.markdownView?.isSearchBarVisible ?? false
+                return editArea.isSearchBarVisible || isPreviewSearchVisible || editArea.hasFocus()
             default:
                 break
             }
@@ -677,12 +713,12 @@ class ViewController:
         if let image = NSImage(named: "icon_preview") {
             image.isTemplate = true
             previewButton.image = image
-            previewButton.contentTintColor = UserDefaultsManagement.preview ? Theme.accentColor : nil
+            previewButton.contentTintColor = sessionPreviewMode ? Theme.accentColor : nil
         }
         if let image = NSImage(named: "icon_presentation") {
             image.isTemplate = true
             presentationButton.image = image
-            presentationButton.contentTintColor = UserDefaultsManagement.presentation ? Theme.accentColor : nil
+            presentationButton.contentTintColor = sessionPresentationMode ? Theme.accentColor : nil
         }
 
         // Create toggleSplitButton first (relative to formatButton to avoid overlap)
@@ -1098,7 +1134,7 @@ class ViewController:
         note.save(content: note.content)
 
         // Performance optimization: use lightweight updateContent with adaptive debounce
-        if UserDefaultsManagement.preview || UserDefaultsManagement.magicPPT {
+        if sessionPreviewMode || sessionMagicPPTMode {
             previewUpdateTimer?.invalidate()
 
             // Adaptive debounce: longer delay for longer documents to reduce Markdown parsing overhead
