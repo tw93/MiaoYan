@@ -106,7 +106,7 @@ class SidebarProjectView: NSOutlineView,
     }
 
     override func keyDown(with event: NSEvent) {
-        guard let vc = ViewController.shared() else {
+        guard let vc = AppContext.shared.viewController else {
             return
         }
 
@@ -156,7 +156,7 @@ class SidebarProjectView: NSOutlineView,
     }
 
     func outlineView(_ outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: Any?, childIndex index: Int) -> Bool {
-        guard let vc = ViewController.shared() else {
+        guard let vc = AppContext.shared.viewController else {
             return false
         }
         let board = info.draggingPasteboard
@@ -846,7 +846,7 @@ class SidebarProjectView: NSOutlineView,
     }
 
     @IBAction func renameMenu(_ sender: Any) {
-        guard let vc = ViewController.shared(), let v = vc.storageOutlineView else {
+        guard let vc = AppContext.shared.viewController, let v = vc.storageOutlineView else {
             return
         }
 
@@ -864,7 +864,7 @@ class SidebarProjectView: NSOutlineView,
     }
 
     @IBAction func deleteMenu(_ sender: Any) {
-        guard let vc = ViewController.shared(), let v = vc.storageOutlineView else {
+        guard let vc = AppContext.shared.viewController, let v = vc.storageOutlineView else {
             return
         }
 
@@ -943,7 +943,7 @@ class SidebarProjectView: NSOutlineView,
     }
 
     @IBAction func openSettings(_ sender: NSMenuItem) {
-        guard let vc = ViewController.shared() else {
+        guard let vc = AppContext.shared.viewController else {
             return
         }
 
@@ -986,7 +986,7 @@ class SidebarProjectView: NSOutlineView,
             // We need to find the item to expand it. `reloadSidebar` rebuilds `sidebarItems`.
             // Expansion restoration might handle it if we saved state, but new item needs explicit expansion potentially.
             DispatchQueue.main.async {
-                if ViewController.shared() != nil {
+                if AppContext.shared.viewController != nil {
                     // Try to find and expand
                     // Complex to find exact item after reload without tree traversal,
                     // but `reloadSidebar` maintains selection?
@@ -1028,7 +1028,7 @@ class SidebarProjectView: NSOutlineView,
     }
 
     public func getSidebarProjects() -> [Project]? {
-        guard let vc = ViewController.shared(), let v = vc.storageOutlineView else {
+        guard let vc = AppContext.shared.viewController, let v = vc.storageOutlineView else {
             return nil
         }
 
@@ -1086,7 +1086,7 @@ class SidebarProjectView: NSOutlineView,
     }
 
     @objc public func reloadSidebar() {
-        guard let vc = ViewController.shared() else {
+        guard let vc = AppContext.shared.viewController else {
             return
         }
         vc.fsManager?.restart()

@@ -24,7 +24,7 @@ class EditorSplitView: ThemedSplitView {
     func splitView(_ splitView: NSSplitView, constrainSplitPosition proposedPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
         if dividerIndex == 0 {
             if proposedPosition < 180 && proposedPosition > 0 {
-                if let vc = ViewController.shared() {
+                if let vc = AppContext.shared.viewController {
                     NSAnimationContext.runAnimationGroup({ context in
                         context.duration = 0.2
                         context.timingFunction = CAMediaTimingFunction(name: .easeOut)
@@ -39,11 +39,11 @@ class EditorSplitView: ThemedSplitView {
 
     func splitViewDidResizeSubviews(_ notification: Notification) {
         applyDividerColor()
-        ViewController.shared()?.viewDidResize()
+        AppContext.shared.viewController?.viewDidResize()
     }
 
     func splitViewWillResizeSubviews(_ notification: Notification) {
-        if let vc = ViewController.shared() {
+        if let vc = AppContext.shared.viewController {
             vc.editArea.updateTextContainerInset()
         }
     }
@@ -51,7 +51,7 @@ class EditorSplitView: ThemedSplitView {
     override func mouseUp(with event: NSEvent) {
         super.mouseUp(with: event)
 
-        if let vc = ViewController.shared() {
+        if let vc = AppContext.shared.viewController {
             // Save notelist width when drag ends
             let notelistWidth = vc.splitView.subviews[0].frame.width
             if notelistWidth > 0 {

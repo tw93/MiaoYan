@@ -97,19 +97,19 @@ extension ViewController {
         // Debounce rapid repeated calls (within 0.15 seconds)
         let now = Date().timeIntervalSince1970
         let timeSinceLastCall = now - lastEnablePreviewTime
-        if timeSinceLastCall < 0.15 && UserDefaultsManagement.preview {
+        if timeSinceLastCall < 0.15 && sessionPreviewMode {
             return
         }
         lastEnablePreviewTime = now
 
-        if !UserDefaultsManagement.preview {
+        if !sessionPreviewMode {
             savedEditorSelection = editArea.selectedRange()
             savedEditorScrollRatio = getScrollTop()
             savedEditorNoteURL = EditTextView.note?.url
         }
 
-        if !UserDefaultsManagement.magicPPT {
-            UserDefaultsManagement.preview = true
+        if !sessionMagicPPTMode {
+            sessionPreviewMode = true
         }
 
         isFocusedTitle = titleLabel.hasFocus()
@@ -150,7 +150,7 @@ extension ViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.previewFocusDelay) {
             self.editArea.window?.makeFirstResponder(self.editArea.markdownView)
         }
-        if UserDefaultsManagement.previewLocation == "Editing", !UserDefaultsManagement.isOnExport {
+        if UserDefaultsManagement.previewLocation == "Editing", !sessionIsExporting {
             let scrollPre = getScrollTop()
             DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.scrollRestoreDelay) {
                 self.editArea.markdownView?.scrollToPosition(pre: scrollPre)
@@ -202,7 +202,7 @@ extension ViewController {
 
     // swiftlint:disable:next cyclomatic_complexity
     func disablePreview() {
-        guard !UserDefaultsManagement.magicPPT else { return }
+        guard !sessionMagicPPTMode else { return }
 
         // Save preview scroll position before disabling
         if let webView = editArea.markdownView {
@@ -224,7 +224,7 @@ extension ViewController {
                 self.savedEditorScrollRatio = nil
                 self.savedEditorNoteURL = nil
 
-                UserDefaultsManagement.preview = false
+                self.sessionPreviewMode = false
                 // Close search bar if open
                 webView.hideSearchBar()
                 self.hideWebView()
@@ -275,7 +275,7 @@ extension ViewController {
                     if self.needsEditorModeUpdateAfterPreview {
                         self.needsEditorModeUpdateAfterPreview = false
                         self.applyEditorModePreferenceChange()
-                    } else if UserDefaultsManagement.splitViewMode {
+                    } else if self.sessionSplitMode {
                         self.enableSplitViewMode()
                     } else {
                         self.editorContentSplitView?.setDisplayMode(.editorOnly, animated: false)
@@ -328,7 +328,7 @@ extension ViewController {
         savedEditorSelection = nil
         savedEditorScrollRatio = nil
         savedEditorNoteURL = nil
-        UserDefaultsManagement.preview = false
+        sessionPreviewMode = false
         // Close search bar if somehow exists
         editArea.markdownView?.hideSearchBar()
         refillEditArea(suppressSave: true)
@@ -369,7 +369,7 @@ extension ViewController {
         if needsEditorModeUpdateAfterPreview {
             needsEditorModeUpdateAfterPreview = false
             applyEditorModePreferenceChange()
-        } else if UserDefaultsManagement.splitViewMode {
+        } else if sessionSplitMode {
             enableSplitViewMode()
         } else {
             editorContentSplitView?.setDisplayMode(.editorOnly, animated: false)
@@ -407,7 +407,7 @@ extension ViewController {
     func togglePreview() {
         saveTitleSafely()
 
-        if UserDefaultsManagement.preview {
+        if sessionPreviewMode {
             disablePreview()
         } else {
             enablePreview()
@@ -416,9 +416,9 @@ extension ViewController {
 
     @IBAction func toggleSplitView(_ sender: Any) {
         saveTitleSafely()
-        UserDefaultsManagement.splitViewMode.toggle()
+        sessionSplitMode.toggle()
 
-        if UserDefaultsManagement.splitViewMode {
+        if sessionSplitMode {
             applyEditorModePreferenceChange()
         } else {
             applyEditorModePreferenceChange()
@@ -428,7 +428,7 @@ extension ViewController {
     // Debug helper - can call this from console or add a menu item
     @objc func resetSplitViewPosition() {
         UserDefaultsManagement.editorContentSplitPosition = 0
-        if UserDefaultsManagement.splitViewMode {
+        if sessionSplitMode {
             editorContentSplitView?.setDisplayMode(.sideBySide, animated: false)
         }
     }
@@ -447,7 +447,7 @@ extension ViewController {
 
         needsEditorModeUpdateAfterPreview = false
 
-        if UserDefaultsManagement.splitViewMode {
+        if sessionSplitMode {
             enableSplitViewMode()
         } else {
             disableSplitViewMode()
@@ -516,7 +516,7 @@ extension ViewController {
         // Ensure a note is selected before entering presentation mode
         ensureNoteSelection(preferLastSelected: true)
 
-        UserDefaultsManagement.presentation = true
+        sessionPresentationMode = true
         savePresentationLayout()
         hideNoteList("")
         formatButton.isHidden = true
@@ -544,10 +544,10 @@ extension ViewController {
         // Hide editor scrollbar to prevent overlap with preview scrollbar
         editAreaScroll.hasVerticalScroller = false
         editAreaScroll.hasHorizontalScroller = false
-        if !UserDefaultsManagement.fullScreen {
+        if !sessionFullScreenMode {
             view.window?.toggleFullScreen(nil)
         }
-        if !UserDefaultsManagement.isOnExportPPT {
+        if !sessionIsExportingPPT {
             DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.presentationLayoutDelay) {
                 self.toast(message: I18n.str("Press ESC key to exit~"))
             }
@@ -557,15 +557,15 @@ extension ViewController {
     func disablePresentation() {
         presentationButton.state = .off
         presentationButton.contentTintColor = nil
-        if UserDefaultsManagement.fullScreen {
-            UserDefaultsManagement.fullScreen = false
+        if sessionFullScreenMode {
+            sessionFullScreenMode = false
             view.window?.toggleFullScreen(nil)
         }
         // Restore UI elements after fullscreen transition completes
         DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.presentationLayoutDelay) {
             self.restorePresentationLayout()
             self.disablePreview()
-            UserDefaultsManagement.presentation = false
+            self.sessionPresentationMode = false
             self.updateButtonStates()
         }
     }
@@ -573,18 +573,18 @@ extension ViewController {
     // MARK: - Helper Methods
     private func updateButtonStates() {
         DispatchQueue.main.async {
-            self.previewButton.state = UserDefaultsManagement.preview ? .on : .off
-            self.previewButton.contentTintColor = UserDefaultsManagement.preview ? Theme.accentColor : nil
-            self.presentationButton.state = UserDefaultsManagement.presentation ? .on : .off
-            self.presentationButton.contentTintColor = UserDefaultsManagement.presentation ? Theme.accentColor : nil
+            self.previewButton.state = self.sessionPreviewMode ? .on : .off
+            self.previewButton.contentTintColor = self.sessionPreviewMode ? Theme.accentColor : nil
+            self.presentationButton.state = self.sessionPresentationMode ? .on : .off
+            self.presentationButton.contentTintColor = self.sessionPresentationMode ? Theme.accentColor : nil
         }
     }
 
     func togglePresentation() {
         saveTitleSafely()
         // Handle both presentation and PPT modes
-        if UserDefaultsManagement.presentation || UserDefaultsManagement.magicPPT {
-            if UserDefaultsManagement.magicPPT {
+        if sessionPresentationMode || sessionMagicPPTMode {
+            if sessionMagicPPTMode {
                 disableMiaoYanPPT()
             } else {
                 disablePresentation()
@@ -611,7 +611,7 @@ extension ViewController {
 
     func toggleMagicPPT() {
         saveTitleSafely()
-        if UserDefaultsManagement.magicPPT {
+        if sessionMagicPPTMode {
             disableMiaoYanPPT()
         } else {
             if !isMiaoYanPPT() {
@@ -622,13 +622,10 @@ extension ViewController {
     }
 
     func enableMiaoYanPPT() {
-        guard let vc = ViewController.shared() else {
-            return
-        }
         // Ensure a note is selected before entering PPT mode
         ensureNoteSelection(preferLastSelected: true)
 
-        UserDefaultsManagement.magicPPT = true
+        sessionMagicPPTMode = true
         savePresentationLayout()
         hideNoteList("")
         hideNoteList("")
@@ -636,13 +633,13 @@ extension ViewController {
         previewButton.isHidden = true
         toggleListButton?.isHidden = true
         toggleSplitButton?.isHidden = true
-        DispatchQueue.main.async {
-            vc.previewButton.state = .on
-            vc.previewButton.contentTintColor = Theme.accentColor
-            vc.presentationButton.state = .on
-            vc.presentationButton.contentTintColor = Theme.accentColor
+        DispatchQueue.main.async { [self] in
+            previewButton.state = .on
+            previewButton.contentTintColor = Theme.accentColor
+            presentationButton.state = .on
+            presentationButton.contentTintColor = Theme.accentColor
         }
-        if !UserDefaultsManagement.fullScreen {
+        if !sessionFullScreenMode {
             view.window?.toggleFullScreen(nil)
         }
 
@@ -664,21 +661,20 @@ extension ViewController {
         // Hide editor scrollbar to prevent overlap with preview scrollbar
         editAreaScroll.hasVerticalScroller = false
         editAreaScroll.hasHorizontalScroller = false
-        DispatchQueue.main.async {
-            vc.titiebarHeight.constant = 0.0
-            vc.titleLabel.isHidden = true
-            vc.titleBarView.isHidden = true
-            vc.handlePPTAutoTransition()
+        DispatchQueue.main.async { [self] in
+            titiebarHeight.constant = 0.0
+            titleLabel.isHidden = true
+            titleBarView.isHidden = true
+            handlePPTAutoTransition()
         }
-        if !UserDefaultsManagement.isOnExportPPT {
-            DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.presentationLayoutDelay) {
-                vc.toast(message: I18n.str("Press ESC key to exit~"))
+        if !sessionIsExportingPPT {
+            DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.presentationLayoutDelay) { [self] in
+                toast(message: I18n.str("Press ESC key to exit~"))
             }
         }
     }
 
     func handlePPTAutoTransition() {
-        guard let vc = ViewController.shared() else { return }
         // Get cursor position and auto-navigate
         let range = editArea.selectedRange
         // If selectedIndex > editArea.string.count(), use string.count() value
@@ -687,20 +683,20 @@ extension ViewController {
         let beforeString = editArea.string[..<selectedIndex]
         let hrCount = beforeString.components(separatedBy: "---").count
         if UserDefaultsManagement.previewLocation == "Editing", hrCount > 1 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.pptSlideTransitionDelay) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.pptSlideTransitionDelay) { [self] in
                 // Auto-navigation in PPT mode
-                vc.editArea.markdownView?.slideTo(index: hrCount - 1)
+                editArea.markdownView?.slideTo(index: hrCount - 1)
             }
         }
         // Compatible with keyboard shortcut passthrough
-        DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.pptFocusDelay) {
-            NSApp.mainWindow?.makeFirstResponder(vc.editArea.markdownView)
+        DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.pptFocusDelay) { [self] in
+            NSApp.mainWindow?.makeFirstResponder(editArea.markdownView)
         }
     }
 
     func disableMiaoYanPPT() {
         // Clear magicPPT flag FIRST to allow disablePreview to work properly
-        UserDefaultsManagement.magicPPT = false
+        sessionMagicPPTMode = false
 
         // Update button states
         DispatchQueue.main.async {
@@ -716,8 +712,8 @@ extension ViewController {
             self.titiebarHeight.constant = 40.0
         }
         // Exit fullscreen if in fullscreen
-        if UserDefaultsManagement.fullScreen {
-            UserDefaultsManagement.fullScreen = false
+        if sessionFullScreenMode {
+            sessionFullScreenMode = false
             view.window?.toggleFullScreen(nil)
         }
         // Restore UI elements after fullscreen transition completes
@@ -741,7 +737,7 @@ extension ViewController {
 
     // MARK: - Text Formatting
     func formatText() {
-        if UserDefaultsManagement.preview {
+        if sessionPreviewMode {
             toast(
                 message: I18n.str("Format is only possible after exiting preview mode~"), style: .failure
             )
@@ -852,7 +848,7 @@ extension ViewController {
 
         toast(message: I18n.str("Automatic typesetting succeeded~"), style: .success)
 
-        if UserDefaultsManagement.splitViewMode, let previewView = editArea.markdownView {
+        if sessionSplitMode, let previewView = editArea.markdownView {
             previewView.updateContent(note: note)
         }
 
@@ -889,7 +885,7 @@ extension ViewController {
     }
 
     func preloadWebView() {
-        guard editArea.markdownView == nil, !UserDefaultsManagement.preview else { return }
+        guard editArea.markdownView == nil, !sessionPreviewMode else { return }
         guard let tempNote = makeTempNote() else { return }
         let frame = previewScrollView?.bounds ?? editArea.bounds
         let previewView = MPreviewView(frame: frame, note: tempNote, closure: {})
@@ -930,7 +926,7 @@ extension ViewController {
     }
 
     private func startSplitScrollSync() {
-        guard UserDefaultsManagement.splitViewMode,
+        guard sessionSplitMode,
             splitScrollObserver == nil,
             let editorClip = editAreaScroll?.contentView as? NSClipView
         else {
@@ -992,7 +988,7 @@ extension ViewController {
     private func handlePreviewScroll(ratio: CGFloat) {
         // Skip scroll sync if preview is updating content
         guard !isProgrammaticSplitScroll,
-            UserDefaultsManagement.splitViewMode,
+            sessionSplitMode,
             editArea.markdownView?.isUpdatingContent != true
         else {
             return
@@ -1009,7 +1005,7 @@ extension ViewController {
     }
 
     private func scheduleSplitScrollSync() {
-        guard UserDefaultsManagement.splitViewMode else { return }
+        guard sessionSplitMode else { return }
         guard activeSplitScrollSource == .editor else { return }
 
         let ratio = editorScrollRatio()
@@ -1047,7 +1043,7 @@ extension ViewController {
     }
 
     private func applySplitScrollSync(ratio: CGFloat) {
-        guard UserDefaultsManagement.splitViewMode else { return }
+        guard sessionSplitMode else { return }
         isProgrammaticSplitScroll = true
         // Editor scrolled -> sync to preview
         editArea.markdownView?.scrollToPosition(pre: ratio)
@@ -1088,7 +1084,7 @@ extension ViewController {
     }
 
     func cancelTextSearch() {
-        if UserDefaultsManagement.preview || UserDefaultsManagement.presentation || UserDefaultsManagement.magicPPT {
+        if sessionPreviewMode || sessionPresentationMode || sessionMagicPPTMode {
             editArea.markdownView?.hideSearchBar()
         } else {
             editArea.hideSearchBar()
@@ -1106,7 +1102,7 @@ extension ViewController {
 
     @IBAction func toggleMagicPPT(_ sender: Any) {
         saveTitleSafely()
-        if UserDefaultsManagement.magicPPT {
+        if sessionMagicPPTMode {
             disableMiaoYanPPT()
         } else {
             if !isMiaoYanPPT() {
@@ -1131,7 +1127,7 @@ extension ViewController {
             DispatchQueue.main.async {
                 self.editArea.isEditable = true
                 // Only show title bar if not in PPT mode
-                if !UserDefaultsManagement.magicPPT {
+                if !self.sessionMagicPPTMode {
                     self.titleBarView.isHidden = false
                 }
                 self.editArea.window?.makeFirstResponder(resp)
@@ -1194,7 +1190,7 @@ extension ViewController {
                 if let note = self.notesTableView.getSelectedNote() {
                     // Safety: Ensure current editor content is saved to note before reloading
                     // This prevents data loss during rapid view switching where the editor might be dirty
-                    let shouldPersistEditor = !self.shouldShowPreview || UserDefaultsManagement.splitViewMode
+                    let shouldPersistEditor = !self.shouldShowPreview || self.sessionSplitMode
                     if shouldPersistEditor,
                         let currentNote = EditTextView.note,
                         currentNote === note,

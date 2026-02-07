@@ -72,6 +72,26 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     private var editorSearchRanges: [NSRange] = []
     private var editorCurrentMatchIndex: Int = 0
     private var editorLastSearchText: String = ""
+    private var runtimeState: EditorSessionState? {
+        viewDelegate?.sessionState ?? AppContext.shared.sessionState
+    }
+
+    private var isPreviewModeActive: Bool {
+        runtimeState?.preview ?? UserDefaultsManagement.preview
+    }
+
+    private var isPresentationModeActive: Bool {
+        runtimeState?.presentation ?? UserDefaultsManagement.presentation
+    }
+
+    private var isMagicPPTModeActive: Bool {
+        runtimeState?.magicPPT ?? UserDefaultsManagement.magicPPT
+    }
+
+    private var isSplitModeActive: Bool {
+        runtimeState?.splitViewMode ?? UserDefaultsManagement.splitViewMode
+    }
+
     public var isSearchBarVisible: Bool { editorSearchBar != nil }
     public var currentSearchQuery: String? {
         editorLastSearchText.isEmpty ? nil : editorLastSearchText
@@ -169,7 +189,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         _ = manager.boundingRect(forGlyphRange: NSRange(location: index, length: 1), in: container)
         super.mouseDown(with: event)
         saveCursorPosition()
-        if !UserDefaultsManagement.preview {
+        if !isPreviewModeActive {
             isEditable = true
         }
         if initRange.length > 0 {
@@ -199,7 +219,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
         let index = manager.characterIndex(for: properPoint, in: container, fractionOfDistanceBetweenInsertionPoints: nil)
         _ = manager.boundingRect(forGlyphRange: NSRange(location: index, length: 1), in: container)
-        if UserDefaultsManagement.preview {
+        if isPreviewModeActive {
             imagePreviewManager?.hideImagePreview()
             return
         }
@@ -424,13 +444,13 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         if let cached = cachedViewController {
             return cached
         }
-        let vc = ViewController.shared()
+        let vc = AppContext.shared.viewController
         cachedViewController = vc
         return vc
     }
 
     public func isEditable(note: Note) -> Bool {
-        if UserDefaultsManagement.preview {
+        if isPreviewModeActive {
             return false
         }
         return true
@@ -453,7 +473,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     // Internal implementation method
     private func _performFill(note: Note, options: FillOptions, viewController: ViewController) {
-        if !UserDefaultsManagement.magicPPT {
+        if !isMagicPPTModeActive {
             viewController.titleBarView.isHidden = false
             viewController.titleLabel.isHidden = false
             viewController.titleBarView.alphaValue = 1
@@ -482,24 +502,24 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
         // Render preview content in preview, PPT, presentation, or split modes
         let shouldRenderPreview =
-            UserDefaultsManagement.preview
-            || UserDefaultsManagement.magicPPT
-            || UserDefaultsManagement.presentation
-            || UserDefaultsManagement.splitViewMode
+            isPreviewModeActive
+            || isMagicPPTModeActive
+            || isPresentationModeActive
+            || isSplitModeActive
 
         if shouldRenderPreview {
             EditTextView.note = note
             let frame = viewController.previewScrollView?.bounds ?? viewController.editAreaScroll.bounds
             let allowPreviewTransition =
                 options.animatePreview
-                && !UserDefaultsManagement.preview
-                && !UserDefaultsManagement.presentation
-                && !UserDefaultsManagement.magicPPT
+                && !isPreviewModeActive
+                && !isPresentationModeActive
+                && !isMagicPPTModeActive
             let shouldUseIncrementalPreviewUpdate =
-                UserDefaultsManagement.preview
-                && !UserDefaultsManagement.presentation
-                && !UserDefaultsManagement.magicPPT
-                && !UserDefaultsManagement.splitViewMode
+                isPreviewModeActive
+                && !isPresentationModeActive
+                && !isMagicPPTModeActive
+                && !isSplitModeActive
                 && !options.force
 
             if markdownView == nil {
@@ -554,7 +574,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             }
         }
 
-        if options.previewOnly || (shouldRenderPreview && !UserDefaultsManagement.splitViewMode) {
+        if options.previewOnly || (shouldRenderPreview && !isSplitModeActive) {
             return
         }
         guard let storage = textStorage else { return }
@@ -624,10 +644,10 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                     if shouldGateReveal {
                         DispatchQueue.main.asyncAfter(deadline: .now() + PreviewRevealTiming.initialDelay) {
                             let shouldShowPreview =
-                                UserDefaultsManagement.preview
-                                || UserDefaultsManagement.presentation
-                                || UserDefaultsManagement.magicPPT
-                                || UserDefaultsManagement.splitViewMode
+                                self.isPreviewModeActive
+                                || self.isPresentationModeActive
+                                || self.isMagicPPTModeActive
+                                || self.isSplitModeActive
                             guard shouldShowPreview, !previewView.isHidden else { return }
                             NSAnimationContext.runAnimationGroup({ context in
                                 context.duration = PreviewRevealTiming.fadeDuration
@@ -739,7 +759,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
 
         // Update preview in split mode with adaptive debounce.
-        if UserDefaultsManagement.splitViewMode, EditTextView.note != nil {
+        if isSplitModeActive, EditTextView.note != nil {
             splitViewUpdateTimer?.invalidate()
             let eventDrivenDelay = window?.currentEvent == nil ? 0 : splitPreviewUpdateDelay
             splitViewUpdateTimer = Timer.scheduledTimer(withTimeInterval: eventDrivenDelay, repeats: false) { [weak self] _ in
@@ -755,7 +775,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     private func updateSplitPreviewDelay(for replacementString: String?) {
-        guard UserDefaultsManagement.splitViewMode else { return }
+        guard isSplitModeActive else { return }
 
         guard let replacementString else {
             splitPreviewUpdateDelay = 0.15
@@ -993,7 +1013,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         NotesTextProcessor.highlight(note: note)
 
         // Don't toggle preview mode on theme change - just refresh the preview content
-        if UserDefaultsManagement.preview && UserDefaultsManagement.appearanceType == .System {
+        if isPreviewModeActive && UserDefaultsManagement.appearanceType == .System {
             viewDelegate?.refillEditArea(previewOnly: true, force: true)
         } else {
             viewDelegate?.refillEditArea()
@@ -1594,7 +1614,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         if web.isHidden {
             return false
         }
-        return UserDefaultsManagement.preview || UserDefaultsManagement.presentation || UserDefaultsManagement.magicPPT
+        return isPreviewModeActive || isPresentationModeActive || isMagicPPTModeActive
     }
 
     private func editorSearchBaseColor() -> NSColor {
@@ -1718,7 +1738,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     // MARK: - Preview Management
     public func recreatePreviewView() {
-        guard let viewController = ViewController.shared() else { return }
+        guard let viewController = getViewController() else { return }
 
         // Remove existing preview view if it exists
         if let existingView = markdownView {
@@ -1727,7 +1747,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
 
         // Recreate preview view if in preview mode
-        if UserDefaultsManagement.preview || UserDefaultsManagement.magicPPT || UserDefaultsManagement.presentation,
+        if isPreviewModeActive || isMagicPPTModeActive || isPresentationModeActive,
             let currentNote = EditTextView.note
         {
             let frame = viewController.editAreaScroll.bounds

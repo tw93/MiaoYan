@@ -13,7 +13,7 @@ class SidebarSplitView: ThemedSplitView {
         if dividerIndex == 0 && isUserDragging {
             if proposedPosition <= 86 {
                 DispatchQueue.main.async {
-                    if let vc = ViewController.shared() {
+                    if let vc = AppContext.shared.viewController {
                         vc.hideSidebar("")
                     }
                 }
@@ -35,7 +35,7 @@ class SidebarSplitView: ThemedSplitView {
         super.mouseUp(with: event)
         isUserDragging = false
 
-        if let vc = ViewController.shared() {
+        if let vc = AppContext.shared.viewController {
             let sidebarWidth = vc.sidebarSplitView.subviews[0].frame.width
             if sidebarWidth > 86 {
                 UserDefaultsManagement.realSidebarSize = Int(sidebarWidth)

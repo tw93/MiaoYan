@@ -75,7 +75,7 @@ class SidebarCellView: NSTableCellView {
     }
 
     @IBAction func add(_ sender: Any) {
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = AppContext.shared.viewController else { return }
         vc.storageOutlineView.addProject(self)
     }
 }

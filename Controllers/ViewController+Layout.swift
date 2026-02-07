@@ -182,14 +182,14 @@ extension ViewController {
     }
 
     @IBAction func toggleSplitMode(_ sender: Any) {
-        let newMode = !UserDefaultsManagement.splitViewMode
-        UserDefaultsManagement.splitViewMode = newMode
+        let newMode = !sessionSplitMode
+        sessionSplitMode = newMode
 
         // Trigger UI update
         // If currently in Preview Mode, exit it.
         // The disablePreview() logic will check splitViewMode and automatically transition to Split Mode.
-        if UserDefaultsManagement.preview {
-            UserDefaultsManagement.preview = false
+        if sessionPreviewMode {
+            sessionPreviewMode = false
         } else {
             applyEditorModePreferenceChange()
         }

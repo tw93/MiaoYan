@@ -1,3 +1,5 @@
+import Cocoa
+
 import Foundation
 
 // MARK: - Note Types
@@ -180,5 +182,128 @@ class Commit {
 
     public func getHash() -> String {
         hash
+    }
+}
+
+@MainActor
+final class EditorSessionState {
+    private var _preview = false
+    private var _presentation = false
+    private var _magicPPT = false
+    private var _splitViewMode = false
+    private var _isOnExport = false
+    private var _isOnExportPPT = false
+    private var _isOnExportHtml = false
+    private var _fullScreen = false
+    private var _isWillFullScreen = false
+
+    init() {
+        syncFromUserDefaults()
+    }
+
+    var preview: Bool {
+        get { _preview }
+        set {
+            _preview = newValue
+            UserDefaultsManagement.preview = newValue
+        }
+    }
+
+    var presentation: Bool {
+        get { _presentation }
+        set {
+            _presentation = newValue
+            UserDefaultsManagement.presentation = newValue
+        }
+    }
+
+    var magicPPT: Bool {
+        get { _magicPPT }
+        set {
+            _magicPPT = newValue
+            UserDefaultsManagement.magicPPT = newValue
+        }
+    }
+
+    var splitViewMode: Bool {
+        get { _splitViewMode }
+        set {
+            _splitViewMode = newValue
+            UserDefaultsManagement.splitViewMode = newValue
+        }
+    }
+
+    var isOnExport: Bool {
+        get { _isOnExport }
+        set {
+            _isOnExport = newValue
+            UserDefaultsManagement.isOnExport = newValue
+        }
+    }
+
+    var isOnExportPPT: Bool {
+        get { _isOnExportPPT }
+        set {
+            _isOnExportPPT = newValue
+            UserDefaultsManagement.isOnExportPPT = newValue
+        }
+    }
+
+    var isOnExportHtml: Bool {
+        get { _isOnExportHtml }
+        set {
+            _isOnExportHtml = newValue
+            UserDefaultsManagement.isOnExportHtml = newValue
+        }
+    }
+
+    var fullScreen: Bool {
+        get { _fullScreen }
+        set {
+            _fullScreen = newValue
+            UserDefaultsManagement.fullScreen = newValue
+        }
+    }
+
+    var isWillFullScreen: Bool {
+        get { _isWillFullScreen }
+        set {
+            _isWillFullScreen = newValue
+            UserDefaultsManagement.isWillFullScreen = newValue
+        }
+    }
+
+    var shouldShowPreview: Bool {
+        preview || magicPPT || presentation || splitViewMode
+    }
+
+    func syncFromUserDefaults() {
+        _preview = UserDefaultsManagement.preview
+        _presentation = UserDefaultsManagement.presentation
+        _magicPPT = UserDefaultsManagement.magicPPT
+        _splitViewMode = UserDefaultsManagement.splitViewMode
+        _isOnExport = UserDefaultsManagement.isOnExport
+        _isOnExportPPT = UserDefaultsManagement.isOnExportPPT
+        _isOnExportHtml = UserDefaultsManagement.isOnExportHtml
+        _fullScreen = UserDefaultsManagement.fullScreen
+        _isWillFullScreen = UserDefaultsManagement.isWillFullScreen
+    }
+}
+
+@MainActor
+final class AppContext {
+    static let shared = AppContext()
+
+    let storage: Storage
+    let sessionState: EditorSessionState
+    weak var viewController: ViewController?
+
+    private init() {
+        storage = Storage.sharedInstance()
+        sessionState = EditorSessionState()
+    }
+
+    func bind(viewController: ViewController?) {
+        self.viewController = viewController
     }
 }
