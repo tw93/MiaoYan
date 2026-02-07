@@ -3,6 +3,30 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>2.5.0</title>
+      <description><![CDATA[
+      <h3>More exquisite 🪿</h3>
+      <ol>
+        <li><strong>Preview Find & Replace</strong>: Implemented a brand new native Search bar for Preview, adding support for Replace and Replace All.</li>
+        <li><strong>Split-View Sync</strong>: Rewrote the scrolling synchronization algorithm with dynamic thresholds for perfect alignment and stability.</li>
+        <li><strong>Performance</strong>: Formatting is now asynchronous to avoid UI freezing; added smart highlighting downgrade for large files.</li>
+        <li><strong>Storage Stability</strong>: Adopted Security Scoped Bookmarks to permanently fix external folder permission issues on restart.</li>
+        <li><strong>Onboarding</strong>: Redesigned first-launch experience with localized folder templates (Guide/Examples/Notes).</li>
+      </ol>
+      <h3>更精致 🪿</h3>
+      <ol>
+        <li><strong>查找替换</strong>：预览区新增原生开发的查找替换栏，支持“替换”与“全部替换”，交互体验统一。</li>
+        <li><strong>滚动同步</strong>：重写分屏同步算法，采用动态阈值机制，彻底解决滚动抖动与错位问题。</li>
+        <li><strong>性能优化</strong>：文档格式化改为后台异步执行，拒绝界面卡顿；新增大文件智能降级高亮策略。</li>
+        <li><strong>存储权限</strong>：引入 Security Scoped Bookmark 机制，彻底修复重启后外部目录权限丢失问题。</li>
+        <li><strong>新手引导</strong>：首次启动自动生成多语言分类模版（指南/示例/笔记），目录结构更清晰。</li>
+      </ol>
+          ]]>      </description>
+      <pubDate>Sat, 07 Feb 2026 21:20:20 +0800</pubDate>
+      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.5.0.zip" sparkle:shortVersionString="2.5.0" sparkle:version="2.5.0" sparkle:edSignature="iZVxG+VbCvff4ks61g2yDIZ5dMmmQUz3Fr1kaZR0jJBy91AoHwOzhD64a2buAONBt8XvNMH6l9SMfr5RxKYFBg==" length="23777167" type="application/octet-stream" />
+      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>2.4.5</title>
       <description><![CDATA[
       <h3>更稳 🚵🏿‍♂️</h3>
@@ -37,34 +61,8 @@
         <li>Docs & release tooling: updated install guidance, new build script and export options</li>
       </ol>
           ]]>      </description>
-      <pubDate>周二, 06 01月 2026 23:20:20 +0800</pubDate>
+      <pubDate>Tue, 06 Jan 2026 23:20:20 +0800</pubDate>
       <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.4.5.2.zip" sparkle:shortVersionString="2.4.5" sparkle:version="2.4.5" sparkle:edSignature="SlRnos+DADaKA00dwaJ2PhM9m0N08g6lIUjPOjPb22ZG/qFnS2AKlqFwIg7jzuRsGI/8W2MdxO2yokWaORLwCw==" length="23633101" type="application/octet-stream"/>
-      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
-    </item>
-      <item>
-      <title>2.3.1</title>
-      <description><![CDATA[
-      <h3>大变化🎄</h3>
-      <ol>
-        <li>新增「分栏预览」模式，支持左右分栏同时编辑与预览，双向滚动自动同步</li>
-        <li>新增「布局循环」按钮，支持在侧边栏、笔记列表、专注模式间快速切换</li>
-        <li>新增「清理孤立附件」功能，一键扫描并移除未被引用的图片和文件</li>
-        <li>优化启动体验，消除白屏闪烁，窗口淡入更优雅</li>
-        <li>全面性能优化：笔记保存防抖、正则缓存、滚动位置记忆，大幅提升流畅度</li>
-        <li>修复滚动同步抖动、预览渲染失效、菜单查找等多个已知问题</li>
-      </ol>
-      <h3>Big change🎄</h3>
-      <ol>
-        <li>Added "Split View" mode with side-by-side editing and preview, featuring bidirectional scroll sync</li>
-        <li>Added "Layout Cycle" button for quick switching between sidebar, note list, and focus modes</li>
-        <li>Added "Clean Orphan Attachments" feature to scan and remove unreferenced images and files</li>
-        <li>Optimized startup experience: eliminated white flash with elegant window fade-in animation</li>
-        <li>Comprehensive performance optimizations: debounced saving, regex caching, scroll position memory for smoother experience</li>
-        <li>Fixed scroll sync jitter, preview rendering failures, menu lookup issues, and other known bugs</li>
-      </ol>
-          ]]>      </description>
-      <pubDate>周一, 16 12月 2025 21:20:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.3.zip" sparkle:shortVersionString="2.3.1" sparkle:version="2.3.1" sparkle:edSignature="LOVa7iPV/UTotNJntD3tmM2610cPuyRmFuS/iPT3YkYWdKWMUI6I2x2mcHH7L5VwVQZSk/UgzQwa3LJHK3u4Dw==" length="23012162" type="application/octet-stream" />
       <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
     </item>
   </channel>
