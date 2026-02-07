@@ -192,11 +192,11 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
     }
 
     func windowDidEnterFullScreen(_ notification: Notification) {
-        UserDefaultsManagement.fullScreen = true
+        AppContext.shared.sessionState.fullScreen = true
     }
 
     func windowDidExitFullScreen(_ notification: Notification) {
-        UserDefaultsManagement.fullScreen = false
+        AppContext.shared.sessionState.fullScreen = false
         // Auto-exit presentation modes when exiting full screen to prevent UI inconsistencies
         if let vc = AppContext.shared.viewController {
             if UserDefaultsManagement.presentation {
