@@ -11,7 +11,7 @@ NC='\033[0m'
 # Auto-detect version from project.pbxproj
 VERSION=$(grep "MARKETING_VERSION" MiaoYan.xcodeproj/project.pbxproj | head -1 | sed 's/.*= \(.*\);/\1/' | tr -d ' ')
 [ -n "$1" ] && VERSION="$1"
-KEY_PATH="${SPARKLE_PRIVATE_KEY:-$HOME/.config/sparkle_ed25519}"
+KEY_PATH="${SPARKLE_PRIVATE_KEY:-}"
 
 if [ -z "$VERSION" ]; then
     echo -e "${RED}ERROR: Could not detect version${NC}"
@@ -45,8 +45,9 @@ echo "[3/6] Exporting..."
 mkdir -p "./build/Release"
 cp -R "./build/MiaoYan.xcarchive/Products/Applications/MiaoYan.app" "./build/Release/MiaoYan.app"
 
-# 4. Create packages
-echo "[4/6] Packaging..."
+# 4. Ad-hoc sign & package
+echo "[4/6] Signing & packaging..."
+codesign --force --deep -s - "./build/Release/MiaoYan.app"
 xattr -cr "./build/Release/MiaoYan.app"
 
 ZIP_NAME="MiaoYan_V${VERSION}.zip"
@@ -66,16 +67,13 @@ echo "[5/6] Signing..."
 SIGN_UPDATE=$(ls -t ~/Library/Developer/Xcode/DerivedData/MiaoYan-*/SourcePackages/artifacts/sparkle/Sparkle/bin/sign_update 2>/dev/null | head -1)
 
 if [ -n "$SIGN_UPDATE" ] && [ -x "$SIGN_UPDATE" ]; then
-    if [ -n "$KEY_PATH" ] && [ ! -f "$KEY_PATH" ]; then
-        echo -e "${RED}ERROR: SPARKLE_PRIVATE_KEY not found: $KEY_PATH${NC}"
-        exit 1
-    fi
-    if [ -n "$KEY_PATH" ]; then
-        SIGNATURE=$("$SIGN_UPDATE" -f "$KEY_PATH" "./build/$ZIP_NAME" 2>/dev/null | grep "sparkle:edSignature" | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
+    if [ -n "$KEY_PATH" ] && [ -f "$KEY_PATH" ]; then
+        SPARKLE_OUTPUT=$("$SIGN_UPDATE" -f "$KEY_PATH" "./build/$ZIP_NAME" 2>&1)
     else
-        echo -e "${YELLOW}WARNING: SPARKLE_PRIVATE_KEY not set; using default key${NC}"
-        SIGNATURE=$("$SIGN_UPDATE" "./build/$ZIP_NAME" 2>/dev/null | grep "sparkle:edSignature" | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
+        # Use key from Keychain (default for Sparkle 2)
+        SPARKLE_OUTPUT=$("$SIGN_UPDATE" "./build/$ZIP_NAME" 2>&1)
     fi
+    SIGNATURE=$(echo "$SPARKLE_OUTPUT" | grep "sparkle:edSignature" | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
     ZIP_SIZE=$(stat -f%z "./build/$ZIP_NAME")
 else
     echo -e "${YELLOW}sign_update not found${NC}"

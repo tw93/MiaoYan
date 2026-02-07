@@ -131,7 +131,7 @@
 	<key>SUFeedURL</key>
 	<string>https://miaoyan.app/appcast.xml</string>
 	<key>SUPublicEDKey</key>
-	<string>4IB5REPPZ6ya7EP1aIYpaleXXOEVmenFqN4DFnsVbHc=</string>
+	<string>seQrPHFOWomxlN8ufdI3/ba1/HL1t86TkzRb53FSGys=</string>
 	<key>SUScheduledCheckInterval</key>
 	<real>3666</real>
 	<key>UILaunchStoryboardName</key>
