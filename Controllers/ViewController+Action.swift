@@ -463,7 +463,7 @@ extension ViewController {
         shouldDisablePPTAfterExport = needsDisableAfterExport
 
         // Mark export state
-        UserDefaultsManagement.isOnExportPPT = true
+        sessionIsExportingPPT = true
 
         // Short delay then export (1.2s is sufficient for PPT layout)
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
@@ -977,16 +977,16 @@ extension ViewController {
 
     // MARK: - Export Operations
     func exportFile(type: String) {
-        UserDefaultsManagement.isOnExport = true
+        sessionIsExporting = true
         shouldRestorePreviewAfterExport = false
 
         if type == "Html" {
-            UserDefaultsManagement.isOnExportHtml = true
+            sessionIsExportingHTML = true
             // HTML export can be done immediately without preview
             self.editArea.markdownView?.exportHtml()
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                UserDefaultsManagement.isOnExport = false
-                UserDefaultsManagement.isOnExportHtml = false
+                self.sessionIsExporting = false
+                self.sessionIsExportingHTML = false
             }
             return
         }
@@ -1020,9 +1020,9 @@ extension ViewController {
             toast(message: I18n.str("Export failed"), style: .failure)
         }
         // After the export is completed, restore the original state.
-        UserDefaultsManagement.isOnExport = false
-        UserDefaultsManagement.isOnExportPPT = false
-        UserDefaultsManagement.isOnExportHtml = false
+        sessionIsExporting = false
+        sessionIsExportingPPT = false
+        sessionIsExportingHTML = false
         shouldDisablePPTAfterExport = false
         if shouldRestorePreviewAfterExport {
             disablePreview()
