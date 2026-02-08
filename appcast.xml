@@ -3,7 +3,7 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
-      <title>2.5.0</title>
+      <title>2.5.1</title>
       <link>https://github.com/tw93/MiaoYan/releases</link>
       <sparkle:informationalUpdate/>
       <description><![CDATA[
@@ -26,8 +26,8 @@
         <li><strong>Onboarding</strong>: Redesigned first-launch experience with localized folder templates (Guide/Examples/Notes).</li>
       </ol>
           ]]>      </description>
-      <pubDate>Sat, 07 Feb 2026 21:20:20 +0800</pubDate>
-      <enclosure url="https://gw.alipayobjects.com/os/k/app/MiaoYan_V2.5.0.zip" sparkle:shortVersionString="2.5.0" sparkle:version="2.5.0" sparkle:edSignature="OvIDlW018a7eP3nyGrXajKjyRehiNcvfJDgOJQVHpEvW/nSPjplV9lGdEj+PYfFrbzQHgTF5peD9jzw6B1ZCCA==" length="25552261" type="application/octet-stream"/>
+      <pubDate>Sat, 07 Feb 2026 22:20:20 +0800</pubDate>
+      <enclosure url="https://miaoyan.app/Release/MiaoYan_V2.5.1.zip" sparkle:shortVersionString="2.5.1" sparkle:version="2.5.1" sparkle:edSignature="H9RdTkvEWyMNuM9ZfNiD2lPzDFvC7hd6Dm2OKkByU06alhfCE3lzmXVN/ypepn5yY4VApj9YbOrDu7eiEGuRCQ==" length="25552214" type="application/octet-stream"/>
       <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
     </item>
     <item>
