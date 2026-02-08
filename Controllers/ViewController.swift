@@ -625,6 +625,11 @@ class ViewController:
     }
 
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+        // Early return if outlets not yet initialized (prevents crash during app launch/accessibility checks)
+        guard notesTableView != nil, storageOutlineView != nil, editArea != nil else {
+            return true
+        }
+        
         if menuItem.action == #selector(exportMiaoYanPPT(_:)) {
             return isMiaoYanPPT(needToast: false)
         }
