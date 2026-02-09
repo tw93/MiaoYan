@@ -14,8 +14,8 @@ VERSION=$(grep "MARKETING_VERSION" MiaoYan.xcodeproj/project.pbxproj | head -1 |
 KEY_PATH="${SPARKLE_PRIVATE_KEY:-}"
 
 if [ -z "$VERSION" ]; then
-    echo -e "${RED}ERROR: Could not detect version${NC}"
-    exit 1
+	echo -e "${RED}ERROR: Could not detect version${NC}"
+	exit 1
 fi
 
 echo ""
@@ -30,13 +30,13 @@ xcodebuild clean -scheme MiaoYan -configuration Release 2>/dev/null || true
 # 2. Archive
 echo "[2/6] Archiving..."
 xcodebuild archive \
-  -scheme MiaoYan \
-  -configuration Release \
-  -archivePath "./build/MiaoYan.xcarchive" \
-  CODE_SIGN_IDENTITY="" \
-  CODE_SIGNING_REQUIRED=NO \
-  CODE_SIGNING_ALLOWED=NO \
-  2>&1 | grep -E "(error:|ARCHIVE)" || true
+	-scheme MiaoYan \
+	-configuration Release \
+	-archivePath "./build/MiaoYan.xcarchive" \
+	CODE_SIGN_IDENTITY="" \
+	CODE_SIGNING_REQUIRED=NO \
+	CODE_SIGNING_ALLOWED=NO \
+	2>&1 | grep -E "(error:|ARCHIVE)" || true
 
 [ ! -d "./build/MiaoYan.xcarchive" ] && echo -e "${RED}ERROR: Archive failed${NC}" && exit 1
 
@@ -47,8 +47,14 @@ cp -R "./build/MiaoYan.xcarchive/Products/Applications/MiaoYan.app" "./build/Rel
 
 # 4. Ad-hoc sign & package
 echo "[4/6] Signing & packaging..."
-codesign --force --deep -s - "./build/Release/MiaoYan.app"
+# Clean attributes FIRST, then sign (otherwise signature is invalidated)
 xattr -cr "./build/Release/MiaoYan.app"
+codesign --force --deep --options runtime -s - "./build/Release/MiaoYan.app"
+# Verify signature
+codesign -v "./build/Release/MiaoYan.app" || {
+	echo "Signature verification failed"
+	exit 1
+}
 
 ZIP_NAME="MiaoYan_V${VERSION}.zip"
 DMG_NAME="MiaoYan.dmg"
@@ -67,18 +73,18 @@ echo "[5/6] Signing..."
 SIGN_UPDATE=$(ls -t ~/Library/Developer/Xcode/DerivedData/MiaoYan-*/SourcePackages/artifacts/sparkle/Sparkle/bin/sign_update 2>/dev/null | head -1)
 
 if [ -n "$SIGN_UPDATE" ] && [ -x "$SIGN_UPDATE" ]; then
-    if [ -n "$KEY_PATH" ] && [ -f "$KEY_PATH" ]; then
-        SPARKLE_OUTPUT=$("$SIGN_UPDATE" -f "$KEY_PATH" "./build/$ZIP_NAME" 2>&1)
-    else
-        # Use key from Keychain (default for Sparkle 2)
-        SPARKLE_OUTPUT=$("$SIGN_UPDATE" "./build/$ZIP_NAME" 2>&1)
-    fi
-    SIGNATURE=$(echo "$SPARKLE_OUTPUT" | grep "sparkle:edSignature" | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
-    ZIP_SIZE=$(stat -f%z "./build/$ZIP_NAME")
+	if [ -n "$KEY_PATH" ] && [ -f "$KEY_PATH" ]; then
+		SPARKLE_OUTPUT=$("$SIGN_UPDATE" -f "$KEY_PATH" "./build/$ZIP_NAME" 2>&1)
+	else
+		# Use key from Keychain (default for Sparkle 2)
+		SPARKLE_OUTPUT=$("$SIGN_UPDATE" "./build/$ZIP_NAME" 2>&1)
+	fi
+	SIGNATURE=$(echo "$SPARKLE_OUTPUT" | grep "sparkle:edSignature" | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
+	ZIP_SIZE=$(stat -f%z "./build/$ZIP_NAME")
 else
-    echo -e "${YELLOW}sign_update not found${NC}"
-    SIGNATURE=""
-    ZIP_SIZE=$(stat -f%z "./build/$ZIP_NAME")
+	echo -e "${YELLOW}sign_update not found${NC}"
+	SIGNATURE=""
+	ZIP_SIZE=$(stat -f%z "./build/$ZIP_NAME")
 fi
 
 mv "./build/$DMG_NAME" "$DOWNLOADS/" && mv "./build/$ZIP_NAME" "$DOWNLOADS/"
@@ -91,8 +97,8 @@ echo "  DMG: $DOWNLOADS/$DMG_NAME"
 echo "  ZIP: $DOWNLOADS/$ZIP_NAME"
 
 if [ -n "$SIGNATURE" ]; then
-    echo ""
-    echo "appcast.xml:"
-    echo "<enclosure url=\"https://gw.alipayobjects.com/os/k/app/$ZIP_NAME\" sparkle:shortVersionString=\"$VERSION\" sparkle:version=\"$VERSION\" sparkle:edSignature=\"$SIGNATURE\" length=\"$ZIP_SIZE\" type=\"application/octet-stream\"/>"
+	echo ""
+	echo "appcast.xml:"
+	echo "<enclosure url=\"https://gw.alipayobjects.com/os/k/app/$ZIP_NAME\" sparkle:shortVersionString=\"$VERSION\" sparkle:version=\"$VERSION\" sparkle:edSignature=\"$SIGNATURE\" length=\"$ZIP_SIZE\" type=\"application/octet-stream\"/>"
 fi
 echo ""
