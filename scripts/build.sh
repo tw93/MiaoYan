@@ -49,7 +49,12 @@ cp -R "./build/MiaoYan.xcarchive/Products/Applications/MiaoYan.app" "./build/Rel
 echo "[4/6] Signing & packaging..."
 # Clean attributes FIRST, then sign (otherwise signature is invalidated)
 xattr -cr "./build/Release/MiaoYan.app"
-codesign --force --deep --options runtime -s - "./build/Release/MiaoYan.app"
+# Sign frameworks explicitly first to ensure consistency
+if [ -d "./build/Release/MiaoYan.app/Contents/Frameworks" ]; then
+	find "./build/Release/MiaoYan.app/Contents/Frameworks" -depth -name "*.framework" -print0 | xargs -0 codesign --force --deep -s -
+fi
+# Sign the main application (remove --options runtime to avoid Library Validation crashes with ad-hoc signatures)
+codesign --force --deep -s - "./build/Release/MiaoYan.app"
 # Verify signature
 codesign -v "./build/Release/MiaoYan.app" || {
 	echo "Signature verification failed"
