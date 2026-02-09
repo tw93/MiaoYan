@@ -67,10 +67,67 @@ DOWNLOADS=~/Downloads
 
 cd ./build/Release && zip -r -q "../$ZIP_NAME" MiaoYan.app && cd ../..
 
-# Create DMG with drag-to-Applications interface
-create-dmg "./build/Release/MiaoYan.app" "./build/" --overwrite 2>/dev/null || true
-# Rename to fixed name
-mv ./build/MiaoYan*.dmg "./build/$DMG_NAME" 2>/dev/null || true
+# Create DMG with drag-to-Applications interface using hdiutil (like Kaku)
+STAGING_DIR="./build/dmg_staging"
+
+# Cleanup function to detach existing volumes
+cleanup_volumes() {
+	local vol_pattern="/Volumes/MiaoYan"
+	local max_attempts=15
+	local attempt=1
+
+	while [ $attempt -le $max_attempts ]; do
+		if hdiutil info | grep -q "$vol_pattern"; then
+			echo "Detaching existing volumes (Attempt $attempt/$max_attempts)..."
+			hdiutil info | grep "$vol_pattern" | awk '{print $1}' | while read -r dev; do
+				hdiutil detach "$dev" -force || true
+			done
+			sleep 1
+		else
+			if [ -d "$vol_pattern" ]; then
+				rmdir "$vol_pattern" || true
+			fi
+			return 0
+		fi
+		attempt=$((attempt + 1))
+	done
+}
+
+cleanup_volumes
+sync
+
+rm -rf "$STAGING_DIR" "./build/$DMG_NAME"
+mkdir -p "$STAGING_DIR"
+cp -R "./build/Release/MiaoYan.app" "$STAGING_DIR/"
+ln -s /Applications "$STAGING_DIR/Applications"
+
+# Disable Spotlight indexing for staging
+mdutil -i off "$STAGING_DIR" >/dev/null 2>&1 || true
+
+echo "Creating DMG..."
+MAX_RETRIES=3
+RETRY_COUNT=0
+
+while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+	if hdiutil create -volname "MiaoYan" \
+		-srcfolder "$STAGING_DIR" \
+		-ov -format UDZO \
+		"./build/$DMG_NAME"; then
+		break
+	else
+		echo "hdiutil create failed. Retrying in 2 seconds... ($((RETRY_COUNT + 1))/$MAX_RETRIES)"
+		cleanup_volumes
+		sleep 2
+		RETRY_COUNT=$((RETRY_COUNT + 1))
+	fi
+done
+
+if [ ! -f "./build/$DMG_NAME" ]; then
+	echo -e "${RED}ERROR: Failed to create DMG after retries${NC}"
+	exit 1
+fi
+
+rm -rf "$STAGING_DIR"
 xattr -cr "./build/$DMG_NAME" "./build/$ZIP_NAME"
 
 # 5. Sparkle signature
@@ -104,6 +161,6 @@ echo "  ZIP: $DOWNLOADS/$ZIP_NAME"
 if [ -n "$SIGNATURE" ]; then
 	echo ""
 	echo "appcast.xml:"
-	echo "<enclosure url=\"https://gw.alipayobjects.com/os/k/app/$ZIP_NAME\" sparkle:shortVersionString=\"$VERSION\" sparkle:version=\"$VERSION\" sparkle:edSignature=\"$SIGNATURE\" length=\"$ZIP_SIZE\" type=\"application/octet-stream\"/>"
+	echo "<enclosure url=\"https://miaoyan.app/Release/$ZIP_NAME\" sparkle:shortVersionString=\"$VERSION\" sparkle:version=\"$VERSION\" sparkle:edSignature=\"$SIGNATURE\" length=\"$ZIP_SIZE\" type=\"application/octet-stream\"/>"
 fi
 echo ""
