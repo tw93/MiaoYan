@@ -111,17 +111,28 @@ public enum UserDefaultsManagement {
 
     private static func resolvedFontName(forKey key: String) -> String {
         if let stored = UserDefaults.standard.string(forKey: key)?.trimmingCharacters(in: .whitespacesAndNewlines),
-            !stored.isEmpty,
-            NSFont(name: stored, size: 12) != nil
+           !stored.isEmpty,
+           NSFont(name: stored, size: 12) != nil
         {
             return stored
         }
 
-        // Use Menlo as default for code font, otherwise use app default font
-        let defaultFont = (key == Constants.CodeFontNameKey) ? "Menlo" : DefaultFont
+        // Use centralized font configuration
+        let defaultFont: String
+        switch key {
+        case Constants.CodeFontNameKey:
+            defaultFont = FontConfiguration.defaultCodeFont
+        case Constants.WindowFontName:
+            defaultFont = FontConfiguration.defaultInterfaceFont
+        case Constants.PreviewFontName:
+            defaultFont = FontConfiguration.defaultPreviewFont
+        default:
+            defaultFont = FontConfiguration.defaultEditorFont
+        }
         UserDefaults.standard.set(defaultFont, forKey: key)
         return defaultFont
     }
+
     static var appearanceType: AppearanceType {
         get {
             if let result = UserDefaults.standard.object(forKey: Constants.AppearanceTypeKey) as? Int {
@@ -358,63 +369,38 @@ public enum UserDefaultsManagement {
             if let font = Font(name: codeFontName, size: CGFloat(fontSize)) {
                 return font
             }
-            return Font.systemFont(ofSize: CGFloat(fontSize))
+            return Font.userFixedPitchFont(ofSize: CGFloat(fontSize)) ?? Font.systemFont(ofSize: CGFloat(fontSize))
         }
         set {
-            guard let newValue = newValue else {
-                return
-            }
+            guard let newValue = newValue else { return }
             codeFontName = newValue.fontName
             fontSize = Int(newValue.pointSize)
         }
     }
     static var noteFont: Font! {
         get {
-            if let font = Font(name: fontName, size: CGFloat(fontSize)) {
-                return font
-            }
-            return Font.systemFont(ofSize: CGFloat(fontSize))
+            return FontConfiguration.editorFont(size: CGFloat(fontSize))
         }
         set {
-            guard let newValue = newValue else {
-                return
-            }
+            guard let newValue = newValue else { return }
             fontName = newValue.fontName
             fontSize = Int(newValue.pointSize)
         }
     }
     static var titleFont: Font! {
-        if let font = Font(name: windowFontName, size: CGFloat(titleFontSize)) {
-            if windowFontName == "SF Pro Text" {
-                return Font(name: "Helvetica Neue", size: CGFloat(titleFontSize))
-            }
-            return font
-        }
-        return Font.systemFont(ofSize: CGFloat(titleFontSize))
+        return FontConfiguration.interfaceFont(size: CGFloat(titleFontSize))
     }
     static var emptyEditTitleFont: Font! {
-        if let font = Font(name: windowFontName, size: CGFloat(emptyEditTitleFontSize)) {
-            return font
-        }
-        return Font.systemFont(ofSize: CGFloat(emptyEditTitleFontSize))
+        return FontConfiguration.interfaceFont(size: CGFloat(emptyEditTitleFontSize))
     }
     static var nameFont: Font! {
-        if let font = Font(name: windowFontName, size: CGFloat(nameFontSize)) {
-            return font
-        }
-        return Font.systemFont(ofSize: CGFloat(nameFontSize))
+        return FontConfiguration.interfaceFont(size: CGFloat(nameFontSize))
     }
     static var searchFont: Font! {
-        if let font = Font(name: windowFontName, size: CGFloat(searchFontSize)) {
-            return font
-        }
-        return Font.systemFont(ofSize: CGFloat(searchFontSize))
+        return FontConfiguration.interfaceFont(size: CGFloat(searchFontSize))
     }
     static var dateFont: Font! {
-        if let font = Font(name: windowFontName, size: CGFloat(dateFontSize)) {
-            return font
-        }
-        return Font.systemFont(ofSize: CGFloat(dateFontSize))
+        return FontConfiguration.interfaceFont(size: CGFloat(dateFontSize))
     }
     static var fontColor: Color {
         get {
