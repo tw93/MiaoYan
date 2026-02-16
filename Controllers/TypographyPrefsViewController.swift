@@ -5,7 +5,7 @@ final class TypographyPrefsViewController: BasePrefsViewController {
     private var settings = EditorSettings()
     private var fontStackView: NSStackView!
 
-    // Font types from original implementation
+    // Font types bundled with the app
     private enum FontType: String, CaseIterable {
         case tsanger = "TsangerJinKai02-W04"
 
@@ -20,7 +20,7 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         }
 
         var isAvailable: Bool {
-            return NSFont(name: rawValue, size: 12) != nil || NSFont(name: editorFontName, size: 12) != nil
+            return NSFont(name: rawValue, size: 12) != nil
         }
     }
 
