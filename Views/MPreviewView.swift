@@ -297,13 +297,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
             return true
         }
 
-        if event.keyCode == kVK_ANSI_C, event.modifierFlags.contains(.command) {
-            DispatchQueue.main.async {
-                self.copySelectionToPasteboard()
-            }
-            return true
-        }
-
         if event.keyCode == kVK_Escape, UserDefaultsManagement.presentation, !UserDefaultsManagement.magicPPT {
             DispatchQueue.main.async {
                 if let vc = AppContext.shared.viewController {
