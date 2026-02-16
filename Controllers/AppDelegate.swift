@@ -1,6 +1,8 @@
 import Cocoa
 import KeyboardShortcuts
+#if !APPSTORE
 import Sparkle
+#endif
 import os.log
 
 @main
