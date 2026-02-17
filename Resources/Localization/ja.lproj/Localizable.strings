@@ -1,3 +1,6 @@
+/* About Window */
+"About" = "MiaoYanについて";
+
 /* No comment provided by engineer. */
 "Add" = "追加";
 
@@ -255,3 +258,8 @@
 /* Menu Items */
 "Always On Top" = "常に最前面に表示";
 "Pin Note" = "ノートをピン留め";
+
+/* File Operations */
+"Duplicate note name" = "ノート名が重複しています";
+"Note \"%@\" already exists" = "ノート \"%@\" は既に存在します";
+"Please select default storage directory" = "デフォルトの保存先ディレクトリを選択してください";
