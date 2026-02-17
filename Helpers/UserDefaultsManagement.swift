@@ -519,6 +519,17 @@ public enum UserDefaultsManagement {
                     options: .withSecurityScope,
                     relativeTo: nil,
                     bookmarkDataIsStale: &isStale)
+                if isStale {
+                    do {
+                        let newBookmark = try url.bookmarkData(
+                            options: .withSecurityScope,
+                            includingResourceValuesForKeys: nil,
+                            relativeTo: nil)
+                        storageBookmark = newBookmark
+                    } catch {
+                        AppDelegate.trackError(error, context: "UserDefaultsManagement.storageUrl.refreshStaleBookmark")
+                    }
+                }
                 return url
             } catch {
                 AppDelegate.trackError(error, context: "UserDefaultsManagement.storageUrl.resolveBookmark")
