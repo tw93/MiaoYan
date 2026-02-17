@@ -219,13 +219,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
         panel.canCreateDirectories = true
-        panel.message = "Please select default storage directory"
+        panel.message = I18n.str("Please select default storage directory")
         panel.begin { result in
             if result == NSApplication.ModalResponse.OK {
                 guard let url = panel.url else {
                     return
                 }
                 UserDefaultsManagement.storagePath = url.path
+                do {
+                    let bookmarkData = try url.bookmarkData(
+                        options: .withSecurityScope,
+                        includingResourceValuesForKeys: nil,
+                        relativeTo: nil)
+                    UserDefaultsManagement.storageBookmark = bookmarkData
+                } catch {
+                    AppDelegate.trackError(error, context: "AppDelegate.requestStorageDirectory.bookmarkData")
+                }
                 self.restartApp()
             } else {
                 exit(EXIT_SUCCESS)
