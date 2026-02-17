@@ -181,8 +181,8 @@ extension ViewController {
                 return
             }
 
-            alert.messageText = "Hmm, something goes wrong 🙈"
-            alert.informativeText = "Note with name \"\(value)\" already exists in selected storage."
+            alert.messageText = I18n.str("Duplicate note name")
+            alert.informativeText = String(format: I18n.str("Note \"%@\" already exists"), value)
             alert.runModal()
 
             note.parseURL()
