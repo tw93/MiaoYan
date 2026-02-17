@@ -1,3 +1,6 @@
+/* About Window */
+"About" = "关于";
+
 /* No comment provided by engineer. */
 "Add" = "添加";
 
@@ -255,3 +258,8 @@
 /* Menu Items */
 "Always On Top" = "窗口置顶";
 "Pin Note" = "置顶笔记";
+
+/* File Operations */
+"Duplicate note name" = "笔记名称重复";
+"Note \"%@\" already exists" = "笔记 \"%@\" 已存在";
+"Please select default storage directory" = "请选择默认存储目录";

@@ -1,3 +1,6 @@
+/* About Window */
+"About" = "關於";
+
 /* No comment provided by engineer. */
 "%d MiaoYan" = "%d 篇妙言";
 
@@ -232,3 +235,8 @@
 /* Menu Items */
 "Always On Top" = "視窗置頂";
 "Pin Note" = "置頂筆記";
+
+/* File Operations */
+"Duplicate note name" = "筆記名稱重複";
+"Note \"%@\" already exists" = "筆記 \"%@\" 已存在";
+"Please select default storage directory" = "請選擇預設儲存目錄";
