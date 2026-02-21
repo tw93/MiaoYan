@@ -82,10 +82,10 @@ MiaoYan releases are **unsigned** to avoid strict macOS Gatekeeper blocking (sig
 
 ```bash
 # Update version in Xcode first: Target → General → Version
-./scripts/build.sh 2.5.0
+./scripts/build.sh <version>
 ```
 
-The script automatically cleans, archives without signing, creates DMG, and provides next steps.
+`scripts/build.sh` is available in-repo and will auto-delegate to `~/.config/miaoyan/build.sh` if present.
 
 ### Release Checklist
 

@@ -17,6 +17,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
     public var newName: String?
     public var newContent: String?
     let appContext = AppContext.shared
+    #if !APPSTORE
+    private var updaterController: SPUStandardUpdaterController?
+    #endif
 
     private func resolveViewController() -> ViewController? {
         if let cached = appContext.viewController {
@@ -78,6 +81,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
     }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        #if !APPSTORE
+        updaterController = SPUStandardUpdaterController(
+            startingUpdater: true,
+            updaterDelegate: nil,
+            userDriverDelegate: nil)
+        #endif
+
         NSApp.mainMenu?.applyMenuIcons()
 
         NSApp.mainMenu?.update()
@@ -262,6 +272,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
     }
     @IBAction func openIssue(_ sender: Any) {
         NSWorkspace.shared.open(URL(string: "https://github.com/tw93/MiaoYan/issues")!)
+    }
+    @IBAction func checkForUpdates(_ sender: Any?) {
+        #if APPSTORE
+        if let updatesUrl = URL(string: "macappstore://showUpdatesPage") {
+            NSWorkspace.shared.open(updatesUrl)
+        }
+        #else
+        updaterController?.checkForUpdates(sender)
+        #endif
     }
     @IBAction func openTelegram(_ sender: Any) {
         NSWorkspace.shared.open(URL(string: "https://t.me/+GclQS9ZnxyI2ODQ1")!)
