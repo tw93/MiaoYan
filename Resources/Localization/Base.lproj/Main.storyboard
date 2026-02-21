@@ -32,7 +32,7 @@
                                         <menuItem title="Check for Updates" id="BWp-m7-ySj">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
-                                                <action selector="checkForUpdates:" target="CIX-3n-zNP" id="J1Q-7s-jET"/>
+                                                <action selector="checkForUpdates:" target="Voe-Tx-rLC" id="J1Q-7s-jET"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="PnU-U6-FH9"/>
@@ -536,7 +536,6 @@ CA
                     </connections>
                 </application>
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="MiaoYan" customModuleProvider="target"/>
-                <customObject id="CIX-3n-zNP" customClass="SUUpdater"/>
                 <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
                 <customObject id="N0L-g4-qwj" customClass="EditTextView" customModule="MiaoYan" customModuleProvider="target"/>
                 <customObject id="L4m-js-agn" customClass="ViewController" customModule="MiaoYan" customModuleProvider="target"/>

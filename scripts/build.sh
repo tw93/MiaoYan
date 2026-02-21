@@ -1,0 +1,168 @@
+#!/bin/bash
+# MiaoYan Release Build Script - Build unsigned version
+
+set -e
+
+EXTERNAL_SCRIPT="$HOME/.config/miaoyan/build.sh"
+if [ -x "$EXTERNAL_SCRIPT" ]; then
+  exec "$EXTERNAL_SCRIPT" "$@"
+fi
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+# Auto-detect version from project.pbxproj
+VERSION=$(grep "MARKETING_VERSION" MiaoYan.xcodeproj/project.pbxproj | head -1 | sed 's/.*= \(.*\);/\1/' | tr -d ' ')
+[ -n "$1" ] && VERSION="$1"
+KEY_PATH="${SPARKLE_PRIVATE_KEY:-}"
+
+if [ -z "$VERSION" ]; then
+	echo -e "${RED}ERROR: Could not detect version${NC}"
+	exit 1
+fi
+
+echo ""
+echo "Building MiaoYan v$VERSION (unsigned)"
+echo "======================================"
+
+# 1. Clean
+echo "[1/6] Cleaning..."
+rm -rf ./build
+xcodebuild clean -scheme MiaoYan -configuration Release 2>/dev/null || true
+
+# 2. Archive
+echo "[2/6] Archiving..."
+xcodebuild archive \
+	-scheme MiaoYan \
+	-configuration Release \
+	-archivePath "./build/MiaoYan.xcarchive" \
+	CODE_SIGN_IDENTITY="" \
+	CODE_SIGNING_REQUIRED=NO \
+	CODE_SIGNING_ALLOWED=NO \
+	2>&1 | grep -E "(error:|ARCHIVE)" || true
+
+[ ! -d "./build/MiaoYan.xcarchive" ] && echo -e "${RED}ERROR: Archive failed${NC}" && exit 1
+
+# 3. Export
+echo "[3/6] Exporting..."
+mkdir -p "./build/Release"
+cp -R "./build/MiaoYan.xcarchive/Products/Applications/MiaoYan.app" "./build/Release/MiaoYan.app"
+
+# 4. Ad-hoc sign & package
+echo "[4/6] Signing & packaging..."
+# Clean attributes FIRST, then sign (otherwise signature is invalidated)
+xattr -cr "./build/Release/MiaoYan.app"
+# Sign frameworks explicitly first to ensure consistency
+if [ -d "./build/Release/MiaoYan.app/Contents/Frameworks" ]; then
+	find "./build/Release/MiaoYan.app/Contents/Frameworks" -depth -name "*.framework" -print0 | xargs -0 codesign --force --deep -s -
+fi
+# Sign the main application
+codesign --force --deep -s - "./build/Release/MiaoYan.app"
+# Verify signature
+codesign -v "./build/Release/MiaoYan.app" || {
+	echo "Signature verification failed"
+	exit 1
+}
+
+ZIP_NAME="MiaoYan_V${VERSION}.zip"
+DMG_NAME="MiaoYan.dmg"
+DOWNLOADS=~/Downloads
+
+cd ./build/Release && zip -r -q "../$ZIP_NAME" MiaoYan.app && cd ../..
+
+# Create DMG with drag-to-Applications interface using hdiutil
+STAGING_DIR="./build/dmg_staging"
+
+# Cleanup function to detach existing volumes
+cleanup_volumes() {
+	local vol_pattern="/Volumes/MiaoYan"
+	local max_attempts=15
+	local attempt=1
+
+	while [ $attempt -le $max_attempts ]; do
+		if hdiutil info | grep -q "$vol_pattern"; then
+			echo "Detaching existing volumes (Attempt $attempt/$max_attempts)..."
+			hdiutil info | grep "$vol_pattern" | awk '{print $1}' | while read -r dev; do
+				hdiutil detach "$dev" -force || true
+			done
+			sleep 1
+		else
+			if [ -d "$vol_pattern" ]; then
+				rmdir "$vol_pattern" || true
+			fi
+			return 0
+		fi
+		attempt=$((attempt + 1))
+	done
+}
+
+cleanup_volumes
+sync
+
+rm -rf "$STAGING_DIR" "./build/$DMG_NAME"
+mkdir -p "$STAGING_DIR"
+cp -R "./build/Release/MiaoYan.app" "$STAGING_DIR/"
+ln -s /Applications "$STAGING_DIR/Applications"
+
+echo "Creating DMG..."
+MAX_RETRIES=3
+RETRY_COUNT=0
+
+while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+	if hdiutil create -volname "MiaoYan" \
+		-srcfolder "$STAGING_DIR" \
+		-ov -format UDZO \
+		"./build/$DMG_NAME"; then
+		break
+	else
+		echo "hdiutil create failed. Retrying in 2 seconds... ($((RETRY_COUNT + 1))/$MAX_RETRIES)"
+		cleanup_volumes
+		sleep 2
+		RETRY_COUNT=$((RETRY_COUNT + 1))
+	fi
+done
+
+if [ ! -f "./build/$DMG_NAME" ]; then
+	echo -e "${RED}ERROR: Failed to create DMG after retries${NC}"
+	exit 1
+fi
+
+rm -rf "$STAGING_DIR"
+xattr -cr "./build/$DMG_NAME" "./build/$ZIP_NAME"
+
+# 5. Sparkle signature
+echo "[5/6] Signing..."
+SIGN_UPDATE=$(ls -t ~/Library/Developer/Xcode/DerivedData/MiaoYan-*/SourcePackages/artifacts/sparkle/Sparkle/bin/sign_update 2>/dev/null | head -1)
+
+if [ -n "$SIGN_UPDATE" ] && [ -x "$SIGN_UPDATE" ]; then
+	if [ -n "$KEY_PATH" ] && [ -f "$KEY_PATH" ]; then
+		SPARKLE_OUTPUT=$("$SIGN_UPDATE" -f "$KEY_PATH" "./build/$ZIP_NAME" 2>&1)
+	else
+		# Use key from Keychain (default for Sparkle 2)
+		SPARKLE_OUTPUT=$("$SIGN_UPDATE" "./build/$ZIP_NAME" 2>&1)
+	fi
+	SIGNATURE=$(echo "$SPARKLE_OUTPUT" | grep "sparkle:edSignature" | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
+	ZIP_SIZE=$(stat -f%z "./build/$ZIP_NAME")
+else
+	echo -e "${YELLOW}sign_update not found${NC}"
+	SIGNATURE=""
+	ZIP_SIZE=$(stat -f%z "./build/$ZIP_NAME")
+fi
+
+mv "./build/$DMG_NAME" "$DOWNLOADS/" && mv "./build/$ZIP_NAME" "$DOWNLOADS/"
+
+# 6. Done
+echo "[6/6] Done!"
+echo ""
+echo -e "${GREEN}MiaoYan v$VERSION build succeeded!${NC}"
+echo "  DMG: $DOWNLOADS/$DMG_NAME"
+echo "  ZIP: $DOWNLOADS/$ZIP_NAME"
+
+if [ -n "$SIGNATURE" ]; then
+	echo ""
+	echo "appcast.xml:"
+	echo "<enclosure url=\"https://miaoyan.app/Release/$ZIP_NAME\" sparkle:shortVersionString=\"$VERSION\" sparkle:version=\"$VERSION\" sparkle:edSignature=\"$SIGNATURE\" length=\"$ZIP_SIZE\" type=\"application/octet-stream\"/>"
+fi
+echo ""
