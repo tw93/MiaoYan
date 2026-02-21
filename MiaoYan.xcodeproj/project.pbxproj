@@ -609,7 +609,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"$CONFIGURATION\" = \"AppStore\" ]; then\n    rm -rf \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Sparkle.framework\"\n    echo \"Stripped Sparkle.framework for AppStore build\"\nfi\n";
+			shellScript = "if [ \"$CONFIGURATION\" = \"AppStore\" ]; then\n    rm -rf \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Sparkle.framework\"\n    echo \"Stripped Sparkle.framework for AppStore build\"\n    BINARY=\"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Contents/MacOS/${PRODUCT_NAME}\"\n    python3 - \"$BINARY\" << 'PYEOF'\nimport struct, sys\nLC_LOAD_DYLIB = 0x0000000C\nLC_LOAD_WEAK_DYLIB = 0x80000018\nFAT_MAGIC = 0xCAFEBABE\ndef patch_macho(data, offset):\n    magic = struct.unpack_from('>I', data, offset)[0]\n    if magic == 0xFEEDFACF:\n        e, hsize = '<', 32\n    elif magic == 0xCFFAEDFE:\n        e, hsize = '<', 32\n    elif magic == 0xFEEDFACE:\n        e, hsize = '<', 28\n    else:\n        return\n    ncmds = struct.unpack_from(e + 'I', data, offset + 16)[0]\n    pos = offset + hsize\n    for _ in range(ncmds):\n        cmd = struct.unpack_from(e + 'I', data, pos)[0]\n        cmdsize = struct.unpack_from(e + 'I', data, pos + 4)[0]\n        if cmd == LC_LOAD_DYLIB:\n            name_off = struct.unpack_from(e + 'I', data, pos + 8)[0]\n            name = data[pos + name_off: pos + cmdsize].split(b'\\x00')[0].decode('utf-8', errors='ignore')\n            if 'Sparkle' in name:\n                struct.pack_into(e + 'I', data, pos, LC_LOAD_WEAK_DYLIB)\n                print(f'Patched {name} -> LC_LOAD_WEAK_DYLIB')\n        pos += cmdsize\nbinary_path = sys.argv[1]\nwith open(binary_path, 'r+b') as f:\n    data = bytearray(f.read())\nmagic = struct.unpack_from('>I', data, 0)[0]\nif magic == FAT_MAGIC:\n    narch = struct.unpack_from('>I', data, 4)[0]\n    for i in range(narch):\n        arch_off = struct.unpack_from('>I', data, 8 + i * 20 + 8)[0]\n        patch_macho(data, arch_off)\nelse:\n    patch_macho(data, 0)\nwith open(binary_path, 'r+b') as f:\n    f.write(data)\nPYEOF\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -915,7 +915,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3.0.0;
+				CURRENT_PROJECT_VERSION = 2.6.0;
 				DEAD_CODE_STRIPPING = YES;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				ENABLE_APP_SANDBOX = NO;
@@ -936,7 +936,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 3.0.0;
+				MARKETING_VERSION = 2.6.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -964,7 +964,7 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3.0.0;
+				CURRENT_PROJECT_VERSION = 2.6.0;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_LOCATION = NO;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
@@ -986,7 +986,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 3.0.0;
+				MARKETING_VERSION = 2.6.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1086,13 +1086,12 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3.0.0;
+				CURRENT_PROJECT_VERSION = 2.6.0;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DEVELOPMENT_TEAM = 5EH69Y5X38;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				ENABLE_APP_SANDBOX = YES;
-				ENABLE_FILE_ACCESS_DOWNLOADS_FOLDER = readwrite;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
 				ENABLE_ON_DEMAND_RESOURCES = NO;
@@ -1122,12 +1121,14 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 3.0.0;
+				MARKETING_VERSION = 2.6.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-weak_framework",
 					AppIntents,
+					"-weak_framework",
+					Sparkle,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.miaoyan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
