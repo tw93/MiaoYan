@@ -408,19 +408,18 @@ class HtmlManager {
 
         let customCSS = UserDefaultsManagement.markdownPreviewCSS
 
-        if FileManager.default.fileExists(atPath: webkitPreviewURL.path) {
-            try? FileManager.default.removeItem(at: webkitPreviewURL)
-        }
-
         try? FileManager.default.createDirectory(at: webkitPreviewURL, withIntermediateDirectories: true, attributes: nil)
 
-        let indexURL = webkitPreviewURL.appendingPathComponent("index.html")
+        let indexName = "index-\(UUID().uuidString).html"
+        let indexURL = webkitPreviewURL.appendingPathComponent(indexName)
 
         do {
             let fileList = try FileManager.default.contentsOfDirectory(atPath: bundleResourceURL.path)
             for file in fileList {
                 let tmpURL = webkitPreviewURL.appendingPathComponent(file)
-                try FileManager.default.copyItem(atPath: bundleResourceURL.appendingPathComponent(file).path, toPath: tmpURL.path)
+                if !FileManager.default.fileExists(atPath: tmpURL.path) {
+                    try? FileManager.default.copyItem(atPath: bundleResourceURL.appendingPathComponent(file).path, toPath: tmpURL.path)
+                }
             }
         } catch {
             Task { @MainActor in
@@ -445,6 +444,27 @@ class HtmlManager {
         }
 
         try? pageHTMLString.write(to: indexURL, atomically: true, encoding: .utf8)
+
+        // Clean up old index files asynchronously to prevent storage growth
+        Task.detached {
+            let fileManager = FileManager.default
+            guard let contents = try? fileManager.contentsOfDirectory(at: webkitPreviewURL, includingPropertiesForKeys: [.creationDateKey], options: .skipsHiddenFiles) else { return }
+
+            let now = Date()
+            for fileURL in contents {
+                if fileURL.lastPathComponent.hasPrefix("index-") && fileURL.pathExtension == "html" && fileURL.lastPathComponent != indexName {
+                    if let attrs = try? fileManager.attributesOfItem(atPath: fileURL.path),
+                        let creationDate = attrs[.creationDate] as? Date
+                    {
+                        // Remove files older than 5 minutes to ensure parallel loading finishes
+                        if now.timeIntervalSince(creationDate) > 300 {
+                            try? fileManager.removeItem(at: fileURL)
+                        }
+                    }
+                }
+            }
+        }
+
         return indexURL
     }
 
