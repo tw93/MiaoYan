@@ -61,6 +61,10 @@ class MPreviewView: WKWebView, WKUIDelegate {
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             owner?.webView(webView, didFinish: navigation)
         }
+
+        func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+            owner?.webViewWebContentProcessDidTerminate(webView)
+        }
     }
 
     private lazy var navigationProxy = NavigationDelegateProxy(owner: self)
@@ -382,6 +386,15 @@ class MPreviewView: WKWebView, WKUIDelegate {
         // Set up scroll observation after WebView is fully loaded
         setupScrollObserver()
         showTOCTipIfNeeded()
+    }
+
+    public func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        AppDelegate.trackError(NSError(domain: "WKWebViewError", code: 1, userInfo: [NSLocalizedDescriptionKey: "WebContent process terminated"]), context: "MPreviewView.WebContentTerminated")
+
+        if let note = self.note {
+            // Reload the view explicitly
+            self.load(note: note, force: true)
+        }
     }
 
     // MARK: - Helper Methods
@@ -709,20 +722,24 @@ class MPreviewView: WKWebView, WKUIDelegate {
     }
 
     private func isFootNotes(url: URL) -> Bool {
-        let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory())
+        let webkitPreviewDir = URL(fileURLWithPath: NSTemporaryDirectory())
             .appendingPathComponent("wkPreview")
-            .appendingPathComponent("index.html")
             .absoluteString
-        let link = url.absoluteString.replacingOccurrences(of: webkitPreview, with: "")
-        if link.starts(with: "#") {
-            let anchor = link.dropFirst()
-            let javascript = "document.getElementById('\(anchor)').offsetTop"
-            evaluateJavaScript(javascript) { [weak self] result, _ in
-                if let offset = result as? CGFloat {
-                    self?.evaluateJavaScript("window.scrollTo(0,\(offset))", completionHandler: nil)
+
+        let urlString = url.absoluteString
+        if urlString.starts(with: webkitPreviewDir) && urlString.contains("#") {
+            if let hashRange = urlString.range(of: "#") {
+                let anchor = String(urlString[hashRange.upperBound...])
+                if !anchor.isEmpty {
+                    let javascript = "document.getElementById('\(anchor)').offsetTop"
+                    evaluateJavaScript(javascript) { [weak self] result, _ in
+                        if let offset = result as? CGFloat {
+                            self?.evaluateJavaScript("window.scrollTo(0,\(offset))", completionHandler: nil)
+                        }
+                    }
+                    return true
                 }
             }
-            return true
         }
         return false
     }
