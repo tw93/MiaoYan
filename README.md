@@ -32,12 +32,10 @@
 
 1. Download the latest DMG package from [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) (Requires macOS 11.5+)
 2. Open DMG and drag MiaoYan.app to Applications
-3. **First Launch**: Double-click MiaoYan.app → System Settings → Privacy & Security → Click "Open Anyway"
+3. **First Launch**: Double-click MiaoYan.app to launch directly — the app is now notarized by Apple ✓
 4. Create a `MiaoYan` folder in iCloud Drive or your preferred location
 5. Open MiaoYan Preferences and set the storage location to this folder
 6. Click the "New Folder" icon in the top-left corner to create document categories and start writing
-
-**Why this security prompt?** MiaoYan is not notarized by Apple (requires paid developer account). The app is open source and safe to use - macOS just needs confirmation on first launch.
 
 After installation, we recommend exploring Preferences (⌘,) to discover MiaoYan's rich customization options, including edit modes, themes, fonts, and more to create your perfect writing environment.
 
@@ -61,7 +59,7 @@ Why not WYSIWYG like Typora? We prioritize pure Markdown editing experience, and
 <a href="https://miaoyan.app/cats.html"><img src="https://miaoyan.app/assets/sponsors.svg" width="1000px" /></a>
 
 1. Cats: Tangyuan & Cola — if MiaoYan helps, <a href="https://miaoyan.app/cats.html" target="_blank">treat them to canned food 🥩</a>.
-2. If you enjoy MiaoYan, please star the project on GitHub and share it with friends who might love it too.
+2. If you enjoy MiaoYan, please consider giving it a star and recommending it to your friends.
 3. Follow me on [Twitter](https://twitter.com/HiTw93) for the latest updates or join the [Telegram group](https://t.me/+GclQS9ZnxyI2ODQ1) to chat with the community.
 
 ## Acknowledgments

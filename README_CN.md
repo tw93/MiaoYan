@@ -32,12 +32,10 @@
 
 1. 从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) 下载最新 DMG 安装包(需要 macOS 11.5+)
 2. 打开 DMG，拖拽 MiaoYan.app 到应用程序文件夹
-3. **首次打开**：双击 MiaoYan.app → 系统设置 → 隐私与安全性 → 点击「仍要打开」
+3. **首次打开**：双击 MiaoYan.app 即可直接启动，App 已通过 Apple 公证 ✓
 4. 在 iCloud 云盘或其他位置创建 `MiaoYan` 文件夹
 5. 打开妙言偏好设置,将默认存储位置设置为该文件夹
 6. 点击左上角"新建文件夹"图标,创建文档分类,开始写作
-
-**为什么会有安全提示？** 妙言未经过 Apple 公证(需要付费开发者账号)。应用是开源的，可以放心使用 - macOS 只是在首次启动时需要你的确认。
 
 安装完成后,建议打开设置 (⌘,) 浏览一下,妙言提供了丰富的自定义选项,包括编辑模式、主题样式、字体设置等,让你打造专属的写作环境。
 
@@ -62,7 +60,7 @@
 <a href="https://miaoyan.app/cats.html"><img src="https://miaoyan.app/assets/sponsors.svg" width="1000px" /></a>
 
 1. 我有两只猫：汤圆、可乐 — 若妙言让你开心，<a href="https://miaoyan.app/cats.html" target="_blank">请她们吃罐头 🥩</a>。
-2. 如果你喜欢妙言，可以在 Github Star，更欢迎推荐给你志同道合的朋友使用。
+2. 如果你喜欢妙言，欢迎给它一个 Star，更欢迎推荐给你志同道合的朋友使用。
 3. 可以关注我的 [Twitter](https://twitter.com/HiTw93) 获取最新的更新消息，也欢迎加入 [Telegram](https://t.me/+GclQS9ZnxyI2ODQ1) 聊天群。
 
 ## 致谢
