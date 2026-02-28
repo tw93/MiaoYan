@@ -240,3 +240,9 @@
 "Duplicate note name" = "筆記名稱重複";
 "Note \"%@\" already exists" = "筆記 \"%@\" 已存在";
 "Please select default storage directory" = "請選擇預設儲存目錄";
+
+/* Reload Note */
+"Reload Note" = "重新載入";
+"You have unsaved changes. Reload will discard them." = "你有未儲存的更改，重新載入將會丟棄它們。";
+"Reload" = "重新載入";
+"Note reloaded~" = "筆記已重新載入~";

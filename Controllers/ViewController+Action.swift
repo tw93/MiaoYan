@@ -255,6 +255,84 @@ extension ViewController {
         switchTitleToEditMode()
     }
 
+    // MARK: - Reload Note from Disk
+    @IBAction func reloadCurrentNote(_ sender: Any) {
+        guard let vc = ViewController.shared() else { return }
+        guard let note = vc.notesTableView.getSelectedNote() else { return }
+
+        // Ensure content is loaded before comparison
+        note.ensureContentLoaded()
+
+        // Check if editor has unsaved changes
+        let editorContent = vc.editArea.string
+        let noteContent = note.content.string
+
+        if editorContent != noteContent {
+            vc.showReloadConfirmation(note: note)
+            return
+        }
+
+        vc.reloadNoteFromDisk(note)
+    }
+
+    private func showReloadConfirmation(note: Note) {
+        let alert = NSAlert()
+        alert.messageText = I18n.str("Reload Note")
+        alert.informativeText = I18n.str("You have unsaved changes. Reload will discard them.")
+        alert.addButton(withTitle: I18n.str("Reload"))
+        alert.addButton(withTitle: I18n.str("Cancel"))
+        alert.alertStyle = .warning
+
+        if alert.runModal() == .alertFirstButtonReturn {
+            reloadNoteFromDisk(note)
+        }
+    }
+
+    private func reloadNoteFromDisk(_ note: Note) {
+        let oldContent = editArea.string
+
+        // Force reload from disk
+        note.forceReload()
+        note.loadModifiedLocalAt()
+
+        let newContent = note.content.string
+
+        // Find cursor position at end of changed content
+        let cursorPosition = findChangeEndPosition(oldContent: oldContent, newContent: newContent)
+
+        // Update editor (suppressSave: true to prevent overwriting disk content with old editor content)
+        refillEditArea(cursor: cursorPosition, force: true, suppressSave: true)
+
+        // Update table row
+        notesTableView.reloadRow(note: note)
+
+        // Toast feedback
+        toast(message: I18n.str("Note reloaded~"), style: .success)
+    }
+
+    private func findChangeEndPosition(oldContent: String, newContent: String) -> Int {
+        // Find common prefix length
+        var prefixEnd = 0
+        let oldChars = Array(oldContent)
+        let newChars = Array(newContent)
+        let minLen = min(oldChars.count, newChars.count)
+
+        while prefixEnd < minLen && oldChars[prefixEnd] == newChars[prefixEnd] {
+            prefixEnd += 1
+        }
+
+        // Find common suffix length
+        var suffixLen = 0
+        while suffixLen < minLen - prefixEnd
+            && oldChars[oldChars.count - 1 - suffixLen] == newChars[newChars.count - 1 - suffixLen]
+        {
+            suffixLen += 1
+        }
+
+        // Cursor goes to end of changed region in new content
+        return newChars.count - suffixLen
+    }
+
     @IBAction func deleteNote(_ sender: Any) {
         guard let vc = ViewController.shared() else {
             return

@@ -126,6 +126,12 @@ CA
                                                 <action selector="finderMenu:" target="Ady-hI-5gd" id="Ift-tc-85m"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Reload Note" keyEquivalent="R" identifier="fileMenu.reload" id="Rld-Nt-7Xm">
+                                            <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                                            <connections>
+                                                <action selector="reloadCurrentNote:" target="L4m-js-agn" id="Rld-Act-1"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="Zbi-vT-xIA"/>
                                         <menuItem title="Delete" identifier="fileMenu.delete" id="TjZ-PX-YVo">
                                             <string key="keyEquivalent" base64-UTF8="YES">

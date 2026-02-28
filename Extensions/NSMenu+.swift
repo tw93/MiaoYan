@@ -60,6 +60,7 @@ enum MenuIconRegistry {
         IconMapping(symbol: "magnifyingglass", selectors: ["searchAndCreate:"], identifiers: []),
         IconMapping(symbol: "plus.square.on.square", selectors: ["duplicate:"], identifiers: []),
         IconMapping(symbol: "pencil", selectors: ["renameMenu:"], identifiers: []),
+        IconMapping(symbol: "arrow.clockwise", selectors: ["reloadCurrentNote:"], identifiers: []),
         IconMapping(symbol: "folder", selectors: ["finderMenu:", "revealInFinder:"], identifiers: []),
         IconMapping(symbol: "square.and.arrow.up", selectors: ["exportMenu:"], identifiers: ["noteMenu.export"]),
         IconMapping(symbol: "arrow.up.right.circle", selectors: ["moveMenu:"], identifiers: ["noteMenu.move"]),

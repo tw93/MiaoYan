@@ -672,3 +672,6 @@
 
 /* Class = "NSMenuItem"; title = "Github"; ObjectID = "zxQ-hH-3Oh"; */
 "zxQ-hH-3Oh.title" = "Github";
+
+/* Class = "NSMenuItem"; title = "Reload Note"; ObjectID = "Rld-Nt-7Xm"; */
+"Rld-Nt-7Xm.title" = "重新載入";
