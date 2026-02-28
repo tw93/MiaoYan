@@ -89,21 +89,15 @@ extension NSTextStorage: @retroactive @preconcurrency NSTextStorageDelegate {
         textStorage.addAttribute(.font, value: NotesTextProcessor.font, range: fullRange)
         textStorage.addAttribute(.foregroundColor, value: NotesTextProcessor.fontColor, range: fullRange)
 
-        // If simplified highlighting is needed, we should still apply it (headers, lists, etc.)
-        // even if code highlighting is skipped.
+        // Apply highlighting synchronously to prevent color flashing when switching notes
+        if NotesTextProcessor.shouldUseSimplifiedHighlighting {
+            NotesTextProcessor.highlightBasicMarkdown(attributedString: textStorage, note: note)
+        } else {
+            NotesTextProcessor.highlightMarkdown(attributedString: textStorage, note: note)
+        }
 
-        DispatchQueue.main.async { [weak textStorage] in
-            guard let textStorage = textStorage else { return }
-
-            if NotesTextProcessor.shouldUseSimplifiedHighlighting {
-                NotesTextProcessor.highlightBasicMarkdown(attributedString: textStorage, note: note)
-            } else {
-                NotesTextProcessor.highlightMarkdown(attributedString: textStorage, note: note)
-            }
-
-            if !NotesTextProcessor.shouldSkipCodeHighlighting {
-                NotesTextProcessor.highlightFencedAndIndentCodeBlocks(attributedString: textStorage)
-            }
+        if !NotesTextProcessor.shouldSkipCodeHighlighting {
+            NotesTextProcessor.highlightFencedAndIndentCodeBlocks(attributedString: textStorage)
         }
     }
 
