@@ -759,12 +759,15 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
 
         // Update preview in split mode with adaptive debounce.
+        // Skip update when IME is composing to avoid interrupting Chinese/Japanese input.
         if isSplitModeActive, EditTextView.note != nil {
             splitViewUpdateTimer?.invalidate()
             let eventDrivenDelay = window?.currentEvent == nil ? 0 : splitPreviewUpdateDelay
             splitViewUpdateTimer = Timer.scheduledTimer(withTimeInterval: eventDrivenDelay, repeats: false) { [weak self] _ in
                 Task { @MainActor [weak self] in
                     guard let self = self else { return }
+                    // Skip if IME is still composing (marked text present)
+                    if self.hasMarkedText() { return }
                     if let note = EditTextView.note {
                         self.markdownView?.updateContent(note: note)
                     }
