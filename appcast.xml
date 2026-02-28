@@ -3,6 +3,31 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>2.7.0</title>
+      <link>https://github.com/tw93/MiaoYan/releases</link>
+      <description><![CDATA[
+      <h3>Apple 公证完成 🎉</h3>
+      <ol>
+        <li><strong>Apple 公证</strong>：花了 688 元、给库克写信投诉才办下来，终于不会出现 App 损坏提示以及不用再去系统设置里点"仍然打开"了！</li>
+        <li><strong>预览稳定性</strong>：修复预览偶发空白问题，增强 WebContent 进程异常后的恢复能力。</li>
+        <li><strong>编辑体验</strong>：修复分栏模式下输入法问题，解决系统快捷键冲突，消除切换笔记时高亮闪烁。</li>
+        <li><strong>App Store 能力</strong>：新增沙盒权限配置，强化存储路径持久化流程。</li>
+        <li><strong>多语言打磨</strong>：将硬编码文案迁移到国际化资源，完善首启模板内容。</li>
+      </ol>
+      <h3>Apple Notarized 🎉</h3>
+      <ol>
+        <li><strong>Notarization</strong>: After investing ¥688 and writing to Tim Cook, finally done — no more "app is damaged" or "Open Anyway" hassles!</li>
+        <li><strong>Preview stability</strong>: Fixed intermittent blank preview and enhanced WebContent crash recovery.</li>
+        <li><strong>Editing refinements</strong>: Fixed IME issues in split mode, resolved system shortcut conflicts, and eliminated highlight flashing when switching notes.</li>
+        <li><strong>App Store readiness</strong>: Added sandbox entitlements and improved Security Scoped Bookmark persistence.</li>
+        <li><strong>Internationalization</strong>: Replaced hardcoded strings with i18n resources and improved first-launch templates.</li>
+      </ol>
+          ]]>      </description>
+      <pubDate>Sat, 28 Feb 2026 13:48:18 +0000</pubDate>
+      <enclosure url="https://miaoyan.app/Release/MiaoYan_V2.7.0.zip" sparkle:shortVersionString="2.7.0" sparkle:version="2.7.0" sparkle:edSignature="V4yxF+sn54seXBFQADwDondWqCDYz6eurDP0bhkargByzkDVXYQT7kVPzWAYQertrxOD8Eb22hbdu9vjrYJPBg==" length="25766357" type="application/octet-stream"/>
+      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>2.5.2</title>
       <link>https://github.com/tw93/MiaoYan/releases</link>
       <sparkle:informationalUpdate/>
