@@ -579,3 +579,6 @@
 
 /* Class = "NSMenuItem"; title = "Pin Note"; ObjectID = "Pin-Menu-Main"; */
 "Pin-Menu-Main.title" = "置顶笔记";
+
+/* Class = "NSMenuItem"; title = "Reload Note"; ObjectID = "Rld-Nt-7Xm"; */
+"Rld-Nt-7Xm.title" = "重新加载";

@@ -263,3 +263,9 @@
 "Duplicate note name" = "ノート名が重複しています";
 "Note \"%@\" already exists" = "ノート \"%@\" は既に存在します";
 "Please select default storage directory" = "デフォルトの保存先ディレクトリを選択してください";
+
+/* Reload Note */
+"Reload Note" = "再読み込み";
+"You have unsaved changes. Reload will discard them." = "未保存の変更があります。再読み込みすると破棄されます。";
+"Reload" = "再読み込み";
+"Note reloaded~" = "ノートを再読み込みしました~";

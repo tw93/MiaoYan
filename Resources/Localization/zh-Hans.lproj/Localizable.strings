@@ -263,3 +263,9 @@
 "Duplicate note name" = "笔记名称重复";
 "Note \"%@\" already exists" = "笔记 \"%@\" 已存在";
 "Please select default storage directory" = "请选择默认存储目录";
+
+/* Reload Note */
+"Reload Note" = "重新加载";
+"You have unsaved changes. Reload will discard them." = "你有未保存的更改，重新加载将丢弃它们。";
+"Reload" = "重新加载";
+"Note reloaded~" = "笔记已刷新~";
