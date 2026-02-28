@@ -48,6 +48,8 @@ length="..."
 ```
 
 > ⚠️ **重要**：签名必须在打包完成后立即记录，若后续重新构建会生成新的 ZIP，签名和 length 都会变化，必须重新签名并同步。
+>
+> ⚠️ **Sparkle ZIP 必须用 `ditto` 打包**，不能用 `zip -r`。`zip -r` 不保留 app bundle 的符号链接和 resource forks，会导致 Sparkle 更新安装后报 "app is damaged"。脚本已使用 `/usr/bin/ditto -c -k --sequesterRsrc --keepParent`。
 
 ---
 
