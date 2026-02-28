@@ -1079,7 +1079,7 @@ class ViewController:
             $0
         }
         NSEvent.addLocalMonitorForEvents(matching: NSEvent.EventTypeMask.keyDown) {
-            _ = self.keyDown(with: $0)
+            _ = self.handleKeyDown(with: $0)
             return $0
         }
     }

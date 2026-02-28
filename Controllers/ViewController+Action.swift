@@ -1080,7 +1080,7 @@ extension ViewController {
 
     // MARK: - Keyboard Event Handling
     // swiftlint:disable:next cyclomatic_complexity
-    public func keyDown(with event: NSEvent) -> Bool {
+    public func handleKeyDown(with event: NSEvent) -> Bool {
 
         guard let mw = MainWindowController.shared() else {
             return false

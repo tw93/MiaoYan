@@ -518,7 +518,7 @@ class NotesTableView: NSTableView {
         }
 
         if let vc = window?.contentViewController as? ViewController {
-            if !vc.keyDown(with: event) {
+            if !vc.handleKeyDown(with: event) {
                 super.keyDown(with: event)
             }
         } else {
