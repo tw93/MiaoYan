@@ -26,11 +26,11 @@ cmd_help() {
     printf "  miao <command> [options]\n"
     echo
     printf "${BLUE}COMMANDS${NC}\n"
-    printf "  ${GREEN}%-24s${NC} %s\n" "open <title|path>" "Open note"
-    printf "  ${GREEN}%-24s${NC} %s\n" "new <title> [text]" "Create new note"
-    printf "  ${GREEN}%-24s${NC} %s\n" "search <query>" "Search notes"
     printf "  ${GREEN}%-24s${NC} %s\n" "list [folder]" "List top-level folders, or markdown in folder"
+    printf "  ${GREEN}%-24s${NC} %s\n" "search <query>" "Search notes in terminal"
+    printf "  ${GREEN}%-24s${NC} %s\n" "open <title|path>" "Open note"
     printf "  ${GREEN}%-24s${NC} %s\n" "cat <title|path>" "Print note content"
+    printf "  ${GREEN}%-24s${NC} %s\n" "new <title> [text]" "Create new note"
     printf "  ${GREEN}%-24s${NC} %s\n" "update" "Update to latest version"
     printf "  ${GREEN}%-24s${NC} %s\n" "help" "Show this help"
     echo
@@ -177,14 +177,37 @@ cmd_list() {
     fi
     
     find "$search_path" -mindepth 1 -maxdepth 1 -type d -not -name "Trash" -not -name ".*" | while read -r d; do
-        echo "${d#$NOTES_PATH/}"
+        # Only show top-level folders that actually contain markdown notes.
+        if find "$d" -type f -name "*.md" -not -path "*/Trash/*" -print -quit | grep -q .; then
+            echo "${d#$NOTES_PATH/}"
+        fi
     done | sort
 }
 
 cmd_search() {
     local query="$1"
+    local tmp_file
     [[ -z "$query" ]] && echo "Usage: miaoyan search <query>" >&2 && exit 1
-    open "miaoyan://find/$(urlencode "$query")"
+
+    tmp_file=$(mktemp)
+
+    if command -v rg >/dev/null 2>&1; then
+        rg -n --no-heading --color never -F --glob "*.md" --glob "!**/Trash/**" -- "$query" "$NOTES_PATH" >"$tmp_file" || true
+    else
+        find "$NOTES_PATH" -type f -name "*.md" -not -path "*/Trash/*" -exec grep -nH -- "$query" {} + >"$tmp_file" 2>/dev/null || true
+    fi
+
+    if [[ ! -s "$tmp_file" ]]; then
+        rm -f "$tmp_file"
+        echo "No matches found: $query" >&2
+        exit 1
+    fi
+
+    while IFS= read -r line; do
+        echo "${line#$NOTES_PATH/}"
+    done <"$tmp_file"
+
+    rm -f "$tmp_file"
 }
 
 cmd_open() {

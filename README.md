@@ -54,7 +54,7 @@ curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/main/scripts/install.s
 # Usage
 miao open <title|path>    # Open note
 miao new <title> [text]   # Create new note
-miao search <query>       # Search notes
+miao search <query>       # Search notes in terminal
 miao list [folder]        # List top-level folders, or markdown in folder
 miao cat <title|path>     # Print note content
 miao update               # Update CLI
