@@ -46,7 +46,7 @@ MiaoYan provides a command-line interface for quick note operations.
 ### Install CLI
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/master/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/main/scripts/install.sh | bash
 ```
 
 ### Usage
