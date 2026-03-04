@@ -48,11 +48,12 @@
 curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/main/scripts/install.sh | bash
 
 # 使用
-miaoyan list [folder]      # 列出笔记
-miaoyan search <关键词>     # 搜索笔记（打开妙言）
-miaoyan open <标题>         # 打开指定笔记
-miaoyan new <标题> [内容]   # 创建新笔记
-miaoyan cat <标题>          # 输出笔记内容
+miao open <标题|路径>    # 打开笔记
+miao new <标题> [内容]   # 创建新笔记
+miao search <关键词>     # 搜索笔记
+miao list [folder]      # 列出笔记
+miao cat <标题|路径>     # 输出笔记内容
+miao update             # 更新 CLI
 ```
 
 ## 分栏编辑预览模式

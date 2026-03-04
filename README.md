@@ -48,11 +48,12 @@ MiaoYan provides a command-line interface for quick note operations.
 curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/main/scripts/install.sh | bash
 
 # Usage
-miaoyan list [folder]      # List notes
-miaoyan search <query>     # Search notes (opens MiaoYan)
-miaoyan open <title>       # Open note by title
-miaoyan new <title> [text] # Create new note
-miaoyan cat <title>        # Print note content
+miao open <title|path>    # Open note
+miao new <title> [text]   # Create new note
+miao search <query>       # Search notes
+miao list [folder]        # List notes
+miao cat <title|path>     # Print note content
+miao update               # Update CLI
 ```
 
 ## Split Editor & Preview Mode

@@ -1,22 +1,46 @@
 #!/bin/bash
 #
-# miaoyan - CLI for MiaoYan (妙言) Markdown Editor
+# miaoyan - CLI for MiaoYan Markdown Editor
 # https://github.com/tw93/MiaoYan
-#
-# Usage:
-#   miaoyan list [folder]         List notes (optionally in a folder)
-#   miaoyan search <query>        Search notes (opens MiaoYan)
-#   miaoyan open <title>          Open note by title (opens MiaoYan)
-#   miaoyan new <title> [text]    Create new note
-#   miaoyan cat <title>           Print note content to stdout
-#   miaoyan folders               List all folders
-#   miaoyan help                  Show this help
-#
-# Environment:
-#   MIAOYAN_PATH    Notes directory (default: auto-detect)
 #
 
 set -e
+
+# Colors
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+show_banner() {
+    printf "${GREEN} __  __ _${NC}\n"
+    printf "${GREEN}|  \/  (_) __ _  ___${NC}\n"
+    printf "${GREEN}| |\/| | |/ _\` |/ _ \\\\${NC}\n"
+    printf "${GREEN}| |  | | | (_| | (_) |${NC}  ${BLUE}https://github.com/tw93/MiaoYan${NC}\n"
+    printf "${GREEN}|_|  |_|_|\__,_|\___/${NC}   ${GREEN}Lightweight Markdown app for macOS${NC}\n"
+}
+
+cmd_help() {
+    show_banner
+    echo
+    printf "${BLUE}USAGE${NC}\n"
+    printf "  miao <command> [options]\n"
+    echo
+    printf "${BLUE}COMMANDS${NC}\n"
+    printf "  ${GREEN}%-24s${NC} %s\n" "open <title|path>" "Open note"
+    printf "  ${GREEN}%-24s${NC} %s\n" "new <title> [text]" "Create new note"
+    printf "  ${GREEN}%-24s${NC} %s\n" "search <query>" "Search notes"
+    printf "  ${GREEN}%-24s${NC} %s\n" "list [folder]" "List notes"
+    printf "  ${GREEN}%-24s${NC} %s\n" "cat <title|path>" "Print note content"
+    printf "  ${GREEN}%-24s${NC} %s\n" "folders" "List all folders"
+    printf "  ${GREEN}%-24s${NC} %s\n" "update" "Update to latest version"
+    printf "  ${GREEN}%-24s${NC} %s\n" "help" "Show this help"
+    echo
+}
+
+# Handle help before path detection
+case "${1:-help}" in
+    help|--help|-h) cmd_help; exit 0 ;;
+esac
 
 # Auto-detect notes path from app preferences, fallback to common locations
 detect_path() {
@@ -91,9 +115,15 @@ cmd_search() {
 }
 
 cmd_open() {
-    local title="$1"
-    [[ -z "$title" ]] && echo "Usage: miaoyan open <title>" >&2 && exit 1
-    open "miaoyan://goto/$(urlencode "$title")"
+    local arg="$1"
+    [[ -z "$arg" ]] && echo "Usage: miaoyan open <title|path>" >&2 && exit 1
+
+    # If it's a file path, open directly
+    if [[ -f "$arg" ]]; then
+        open -a MiaoYan "$arg"
+    else
+        open "miaoyan://goto/$(urlencode "$arg")"
+    fi
 }
 
 cmd_new() {
@@ -107,54 +137,62 @@ cmd_new() {
 }
 
 cmd_cat() {
-    local title="$1"
-    [[ -z "$title" ]] && echo "Usage: miaoyan cat <title>" >&2 && exit 1
-    
+    local arg="$1"
+    [[ -z "$arg" ]] && echo "Usage: miaoyan cat <title|path>" >&2 && exit 1
+
+    # If it's a file path, cat directly
+    if [[ -f "$arg" ]]; then
+        cat "$arg"
+        return
+    fi
+
+    # Otherwise search by title
     local file
-    file=$(find_note "$title")
-    
+    file=$(find_note "$arg")
+
     if [[ -z "$file" ]]; then
-        echo "Note not found: $title" >&2
+        echo "Note not found: $arg" >&2
         exit 1
     fi
-    
+
     cat "$file"
 }
 
-cmd_help() {
-    cat << 'EOF'
-miaoyan - CLI for MiaoYan (妙言) Markdown Editor
+cmd_update() {
+    local script_path
+    script_path="$(command -v miao 2>/dev/null || echo "$0")"
+    local tmp_file
+    tmp_file=$(mktemp)
 
-Usage:
-  miaoyan list [folder]         List notes (optionally in a folder)
-  miaoyan search <query>        Search notes (opens MiaoYan)
-  miaoyan open <title>          Open note by title (opens MiaoYan)
-  miaoyan new <title> [text]    Create new note (opens MiaoYan)
-  miaoyan cat <title>           Print note content to stdout
-  miaoyan folders               List all folders
-  miaoyan help                  Show this help
+    printf "${GREEN}▸${NC} Checking for updates...\n"
 
-Environment:
-  MIAOYAN_PATH    Notes directory (default: auto-detect from preferences)
+    if ! curl -fsSL "https://raw.githubusercontent.com/tw93/MiaoYan/main/scripts/miaoyan" -o "$tmp_file" 2>/dev/null; then
+        rm -f "$tmp_file"
+        echo "Error: Failed to download update." >&2
+        exit 1
+    fi
 
-Examples:
-  miaoyan list                  # List all notes
-  miaoyan list 潮流              # List notes in '潮流' folder
-  miaoyan search "周刊"          # Search for '周刊'
-  miaoyan cat "潮流周刊168"      # Print note content
-  miaoyan new "新笔记" "内容"    # Create new note with content
-EOF
+    chmod +x "$tmp_file"
+    mv "$tmp_file" "$script_path" 2>/dev/null || {
+        sudo mv "$tmp_file" "$script_path" || {
+            rm -f "$tmp_file"
+            echo "Error: Failed to install update." >&2
+            exit 1
+        }
+    }
+
+    printf "${GREEN}▸${NC} Updated successfully!\n"
 }
 
 # Main
-case "${1:-help}" in
+case "$1" in
     list)    cmd_list "$2" ;;
     folders) cmd_folders ;;
     search)  cmd_search "$2" ;;
     open)    cmd_open "$2" ;;
     new)     cmd_new "$2" "$3" ;;
     cat)     cmd_cat "$2" ;;
-    help|--help|-h) cmd_help ;;
+    update)  cmd_update ;;
     *)
         echo "Unknown command: $1" >&2
         echo "Run 'miaoyan help' for usage." >&2
