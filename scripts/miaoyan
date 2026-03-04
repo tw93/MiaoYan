@@ -112,12 +112,46 @@ urlencode() {
 
 # Find note file by title (searches recursively, excludes Trash)
 find_note() {
-    local title="$1"
+    local title="${1%.md}"
     find "$NOTES_PATH" -name "*.md" -not -path "*/Trash/*" | while read -r f; do
         basename="${f##*/}"
         name="${basename%.md}"
         [[ "$name" == "$title" ]] && echo "$f" && return
     done
+}
+
+resolve_note_path() {
+    local arg="$1"
+    local candidate
+    local note
+
+    # Explicit path from current directory or absolute path
+    if [[ -f "$arg" ]]; then
+        echo "$arg"
+        return
+    fi
+
+    # Resolve relative paths against notes root
+    if [[ "$arg" != /* ]]; then
+        candidate="$NOTES_PATH/${arg#./}"
+        if [[ -f "$candidate" ]]; then
+            echo "$candidate"
+            return
+        fi
+        if [[ "$candidate" != *.md && -f "$candidate.md" ]]; then
+            echo "$candidate.md"
+            return
+        fi
+    elif [[ "$arg" != *.md && -f "$arg.md" ]]; then
+        echo "$arg.md"
+        return
+    fi
+
+    # Fallback to exact title match
+    note=$(find_note "$arg")
+    if [[ -n "$note" ]]; then
+        echo "$note"
+    fi
 }
 
 # Commands
@@ -155,14 +189,18 @@ cmd_search() {
 
 cmd_open() {
     local arg="$1"
+    local file
     [[ -z "$arg" ]] && echo "Usage: miaoyan open <title|path>" >&2 && exit 1
 
-    # If it's a file path, open directly
-    if [[ -f "$arg" ]]; then
-        open -a MiaoYan "$arg"
-    else
-        open "miaoyan://goto/$(urlencode "$arg")"
+    # Prefer opening a resolved file path to enter single mode
+    file=$(resolve_note_path "$arg")
+    if [[ -n "$file" ]]; then
+        open -a MiaoYan "$file"
+        return
     fi
+
+    # Fallback to title route (strip optional .md suffix)
+    open "miaoyan://goto/$(urlencode "${arg%.md}")"
 }
 
 cmd_new() {
@@ -177,17 +215,10 @@ cmd_new() {
 
 cmd_cat() {
     local arg="$1"
+    local file
     [[ -z "$arg" ]] && echo "Usage: miaoyan cat <title|path>" >&2 && exit 1
 
-    # If it's a file path, cat directly
-    if [[ -f "$arg" ]]; then
-        cat "$arg"
-        return
-    fi
-
-    # Otherwise search by title
-    local file
-    file=$(find_note "$arg")
+    file=$(resolve_note_path "$arg")
 
     if [[ -z "$file" ]]; then
         echo "Note not found: $arg" >&2
