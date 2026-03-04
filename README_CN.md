@@ -46,7 +46,7 @@
 ### 安装
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/master/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/main/scripts/install.sh | bash
 ```
 
 ### 使用

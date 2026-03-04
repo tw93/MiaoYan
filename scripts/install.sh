@@ -4,7 +4,7 @@
 # https://github.com/tw93/MiaoYan
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/master/scripts/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/main/scripts/install.sh | bash
 #
 
 set -e
@@ -31,7 +31,7 @@ mkdir -p "$INSTALL_DIR"
 
 # Download script
 info "Downloading miaoyan CLI..."
-curl -fsSL "https://raw.githubusercontent.com/$REPO/master/scripts/miaoyan" -o "$INSTALL_DIR/$SCRIPT_NAME"
+curl -fsSL "https://raw.githubusercontent.com/$REPO/main/scripts/miaoyan" -o "$INSTALL_DIR/$SCRIPT_NAME"
 chmod +x "$INSTALL_DIR/$SCRIPT_NAME"
 
 # Check PATH
