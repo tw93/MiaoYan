@@ -1,0 +1,163 @@
+#!/bin/bash
+#
+# miaoyan - CLI for MiaoYan (妙言) Markdown Editor
+# https://github.com/tw93/MiaoYan
+#
+# Usage:
+#   miaoyan list [folder]         List notes (optionally in a folder)
+#   miaoyan search <query>        Search notes (opens MiaoYan)
+#   miaoyan open <title>          Open note by title (opens MiaoYan)
+#   miaoyan new <title> [text]    Create new note
+#   miaoyan cat <title>           Print note content to stdout
+#   miaoyan folders               List all folders
+#   miaoyan help                  Show this help
+#
+# Environment:
+#   MIAOYAN_PATH    Notes directory (default: auto-detect)
+#
+
+set -e
+
+# Auto-detect notes path from app preferences, fallback to common locations
+detect_path() {
+    local pref_path
+    pref_path=$(defaults read com.tw93.MiaoYan NotesPath 2>/dev/null || true)
+    
+    if [[ -n "$pref_path" && -d "$pref_path" ]]; then
+        echo "$pref_path"
+        return
+    fi
+    
+    # Common default locations
+    for p in "$HOME/Documents/MiaoYan" "$HOME/Save/MiaoYan" "$HOME/MiaoYan"; do
+        [[ -d "$p" ]] && echo "$p" && return
+    done
+    
+    echo ""
+}
+
+NOTES_PATH="${MIAOYAN_PATH:-$(detect_path)}"
+
+if [[ -z "$NOTES_PATH" || ! -d "$NOTES_PATH" ]]; then
+    echo "Error: Notes directory not found." >&2
+    echo "Set MIAOYAN_PATH or configure in MiaoYan preferences." >&2
+    exit 1
+fi
+
+# URL encode helper
+urlencode() {
+    python3 -c "import urllib.parse; print(urllib.parse.quote('''$1''', safe=''))"
+}
+
+# Find note file by title (searches recursively, excludes Trash)
+find_note() {
+    local title="$1"
+    find "$NOTES_PATH" -name "*.md" -not -path "*/Trash/*" | while read -r f; do
+        basename="${f##*/}"
+        name="${basename%.md}"
+        [[ "$name" == "$title" ]] && echo "$f" && return
+    done
+}
+
+# Commands
+cmd_list() {
+    local folder="$1"
+    local search_path="$NOTES_PATH"
+    
+    if [[ -n "$folder" ]]; then
+        search_path="$NOTES_PATH/$folder"
+        if [[ ! -d "$search_path" ]]; then
+            echo "Folder not found: $folder" >&2
+            exit 1
+        fi
+    fi
+    
+    find "$search_path" -name "*.md" -not -path "*/Trash/*" | while read -r f; do
+        # Show relative path from notes root
+        echo "${f#$NOTES_PATH/}"
+    done | sort
+}
+
+cmd_folders() {
+    find "$NOTES_PATH" -type d -not -name "Trash" -not -name ".*" | while read -r d; do
+        [[ "$d" != "$NOTES_PATH" ]] && echo "${d#$NOTES_PATH/}"
+    done | sort
+}
+
+cmd_search() {
+    local query="$1"
+    [[ -z "$query" ]] && echo "Usage: miaoyan search <query>" >&2 && exit 1
+    open "miaoyan://find/$(urlencode "$query")"
+}
+
+cmd_open() {
+    local title="$1"
+    [[ -z "$title" ]] && echo "Usage: miaoyan open <title>" >&2 && exit 1
+    open "miaoyan://goto/$(urlencode "$title")"
+}
+
+cmd_new() {
+    local title="$1"
+    local text="${2:-}"
+    [[ -z "$title" ]] && echo "Usage: miaoyan new <title> [text]" >&2 && exit 1
+    
+    local url="miaoyan://new/?title=$(urlencode "$title")"
+    [[ -n "$text" ]] && url="$url&txt=$(urlencode "$text")"
+    open "$url"
+}
+
+cmd_cat() {
+    local title="$1"
+    [[ -z "$title" ]] && echo "Usage: miaoyan cat <title>" >&2 && exit 1
+    
+    local file
+    file=$(find_note "$title")
+    
+    if [[ -z "$file" ]]; then
+        echo "Note not found: $title" >&2
+        exit 1
+    fi
+    
+    cat "$file"
+}
+
+cmd_help() {
+    cat << 'EOF'
+miaoyan - CLI for MiaoYan (妙言) Markdown Editor
+
+Usage:
+  miaoyan list [folder]         List notes (optionally in a folder)
+  miaoyan search <query>        Search notes (opens MiaoYan)
+  miaoyan open <title>          Open note by title (opens MiaoYan)
+  miaoyan new <title> [text]    Create new note (opens MiaoYan)
+  miaoyan cat <title>           Print note content to stdout
+  miaoyan folders               List all folders
+  miaoyan help                  Show this help
+
+Environment:
+  MIAOYAN_PATH    Notes directory (default: auto-detect from preferences)
+
+Examples:
+  miaoyan list                  # List all notes
+  miaoyan list 潮流              # List notes in '潮流' folder
+  miaoyan search "周刊"          # Search for '周刊'
+  miaoyan cat "潮流周刊168"      # Print note content
+  miaoyan new "新笔记" "内容"    # Create new note with content
+EOF
+}
+
+# Main
+case "${1:-help}" in
+    list)    cmd_list "$2" ;;
+    folders) cmd_folders ;;
+    search)  cmd_search "$2" ;;
+    open)    cmd_open "$2" ;;
+    new)     cmd_new "$2" "$3" ;;
+    cat)     cmd_cat "$2" ;;
+    help|--help|-h) cmd_help ;;
+    *)
+        echo "Unknown command: $1" >&2
+        echo "Run 'miaoyan help' for usage." >&2
+        exit 1
+        ;;
+esac

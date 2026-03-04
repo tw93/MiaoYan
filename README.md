@@ -39,6 +39,37 @@
 
 After installation, we recommend exploring Preferences (⌘,) to discover MiaoYan's rich customization options, including edit modes, themes, fonts, and more to create your perfect writing environment.
 
+## CLI
+
+MiaoYan provides a command-line interface for quick note operations.
+
+### Install CLI
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/master/scripts/install.sh | bash
+```
+
+### Usage
+
+```bash
+miaoyan list [folder]      # List notes
+miaoyan folders            # List all folders
+miaoyan search <query>     # Search notes (opens MiaoYan)
+miaoyan open <title>       # Open note by title
+miaoyan new <title> [text] # Create new note
+miaoyan cat <title>        # Print note to stdout
+```
+
+### Examples
+
+```bash
+miaoyan list               # List all notes
+miaoyan list 潮流           # List notes in folder
+miaoyan search "周刊"       # Search for "周刊"
+miaoyan cat "My Note"      # Print note content
+miaoyan new "Hello" "Hi!"  # Create note with content
+```
+
 ## Split Editor & Preview Mode
 
 Edit and preview side by side with real-time preview and 60fps bidirectional scroll sync.
