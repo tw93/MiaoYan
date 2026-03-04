@@ -29,7 +29,7 @@ cmd_help() {
     printf "  ${GREEN}%-24s${NC} %s\n" "open <title|path>" "Open note"
     printf "  ${GREEN}%-24s${NC} %s\n" "new <title> [text]" "Create new note"
     printf "  ${GREEN}%-24s${NC} %s\n" "search <query>" "Search notes"
-    printf "  ${GREEN}%-24s${NC} %s\n" "list [folder]" "List all markdown, or only markdown in folder"
+    printf "  ${GREEN}%-24s${NC} %s\n" "list [folder]" "List top-level folders, or markdown in folder"
     printf "  ${GREEN}%-24s${NC} %s\n" "cat <title|path>" "Print note content"
     printf "  ${GREEN}%-24s${NC} %s\n" "update" "Update to latest version"
     printf "  ${GREEN}%-24s${NC} %s\n" "help" "Show this help"
@@ -142,9 +142,8 @@ cmd_list() {
         return
     fi
     
-    find "$search_path" -type f -name "*.md" -not -path "*/Trash/*" | while read -r f; do
-        # Show relative path from notes root
-        echo "${f#$NOTES_PATH/}"
+    find "$search_path" -mindepth 1 -maxdepth 1 -type d -not -name "Trash" -not -name ".*" | while read -r d; do
+        echo "${d#$NOTES_PATH/}"
     done | sort
 }
 
