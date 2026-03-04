@@ -43,31 +43,16 @@ After installation, we recommend exploring Preferences (⌘,) to discover MiaoYa
 
 MiaoYan provides a command-line interface for quick note operations.
 
-### Install CLI
-
 ```bash
+# Install
 curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/main/scripts/install.sh | bash
-```
 
-### Usage
-
-```bash
+# Usage
 miaoyan list [folder]      # List notes
-miaoyan folders            # List all folders
 miaoyan search <query>     # Search notes (opens MiaoYan)
 miaoyan open <title>       # Open note by title
 miaoyan new <title> [text] # Create new note
-miaoyan cat <title>        # Print note to stdout
-```
-
-### Examples
-
-```bash
-miaoyan list               # List all notes
-miaoyan list 潮流           # List notes in folder
-miaoyan search "周刊"       # Search for "周刊"
-miaoyan cat "My Note"      # Print note content
-miaoyan new "Hello" "Hi!"  # Create note with content
+miaoyan cat <title>        # Print note content
 ```
 
 ## Split Editor & Preview Mode
