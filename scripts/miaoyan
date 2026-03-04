@@ -159,6 +159,7 @@ cmd_list() {
     local folder="$1"
     local search_path="$NOTES_PATH"
     local rel_path
+    local has_root_notes=0
     
     if [[ -n "$folder" ]]; then
         search_path="$NOTES_PATH/${folder%/}"
@@ -182,6 +183,14 @@ cmd_list() {
             echo "${d#$NOTES_PATH/}"
         fi
     done | sort
+
+    if find "$search_path" -maxdepth 1 -type f -name "*.md" -print -quit | grep -q .; then
+        has_root_notes=1
+    fi
+
+    if [[ "$has_root_notes" -eq 1 ]]; then
+        echo "Tip: root notes are hidden in default list. Run 'miao list .' to show them." >&2
+    fi
 }
 
 cmd_search() {
