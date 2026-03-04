@@ -30,12 +30,17 @@
 
 ## Installation & Setup
 
-1. Download the latest DMG package from [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) (Requires macOS 11.5+)
-2. Open DMG and drag MiaoYan.app to Applications
-3. **First Launch**: Double-click MiaoYan.app to launch directly — the app is now notarized by Apple ✓
-4. Create a `MiaoYan` folder in iCloud Drive or your preferred location
-5. Open MiaoYan Preferences and set the storage location to this folder
-6. Click the "New Folder" icon in the top-left corner to create document categories and start writing
+1. Install by Homebrew (latest notarized DMG):
+```bash
+brew tap tw93/miaoyan https://github.com/tw93/MiaoYan
+brew install --cask tw93/miaoyan/miaoyan
+```
+2. Or install manually: download the latest DMG package from [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) (Requires macOS 11.5+)
+3. Open DMG and drag MiaoYan.app to Applications
+4. **First Launch**: Double-click MiaoYan.app to launch directly — the app is now notarized by Apple ✓
+5. Create a `MiaoYan` folder in iCloud Drive or your preferred location
+6. Open MiaoYan Preferences and set the storage location to this folder
+7. Click the "New Folder" icon in the top-left corner to create document categories and start writing
 
 After installation, we recommend exploring Preferences (⌘,) to discover MiaoYan's rich customization options, including edit modes, themes, fonts, and more to create your perfect writing environment.
 

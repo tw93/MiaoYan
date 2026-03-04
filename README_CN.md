@@ -30,12 +30,17 @@
 
 ## 安装使用
 
-1. 从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) 下载最新 DMG 安装包(需要 macOS 11.5+)
-2. 打开 DMG，拖拽 MiaoYan.app 到应用程序文件夹
-3. **首次打开**：双击 MiaoYan.app 即可直接启动，App 已通过 Apple 公证 ✓
-4. 在 iCloud 云盘或其他位置创建 `MiaoYan` 文件夹
-5. 打开妙言偏好设置,将默认存储位置设置为该文件夹
-6. 点击左上角"新建文件夹"图标,创建文档分类,开始写作
+1. Homebrew 安装（安装的是最新公证 DMG）：
+```bash
+brew tap tw93/miaoyan https://github.com/tw93/MiaoYan
+brew install --cask tw93/miaoyan/miaoyan
+```
+2. 或手动安装：从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) 下载最新 DMG 安装包（需要 macOS 11.5+）
+3. 打开 DMG，拖拽 MiaoYan.app 到应用程序文件夹
+4. **首次打开**：双击 MiaoYan.app 即可直接启动，App 已通过 Apple 公证 ✓
+5. 在 iCloud 云盘或其他位置创建 `MiaoYan` 文件夹
+6. 打开妙言偏好设置,将默认存储位置设置为该文件夹
+7. 点击左上角"新建文件夹"图标,创建文档分类,开始写作
 
 安装完成后,建议打开设置 (⌘,) 浏览一下,妙言提供了丰富的自定义选项,包括编辑模式、主题样式、字体设置等,让你打造专属的写作环境。
 

@@ -1,0 +1,306 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "V*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to release, e.g. V2.8.0"
+        required: false
+        type: string
+      ai_required:
+        description: "Fail the workflow when AI content generation fails"
+        required: false
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.vars.outputs.tag }}
+      version: ${{ steps.vars.outputs.version }}
+      previous_tag: ${{ steps.vars.outputs.previous_tag }}
+      release_sha: ${{ steps.vars.outputs.release_sha }}
+      ai_required: ${{ steps.vars.outputs.ai_required }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.MIAOYAN_RELEASE_PUSH_TOKEN != '' && secrets.MIAOYAN_RELEASE_PUSH_TOKEN || github.token }}
+
+      - id: vars
+        env:
+          TAG_INPUT: ${{ github.event.inputs.tag }}
+          AI_REQUIRED_INPUT: ${{ github.event.inputs.ai_required }}
+        run: |
+          set -euo pipefail
+
+          if [[ "${GITHUB_REF_TYPE:-}" == "tag" ]]; then
+            tag="${GITHUB_REF_NAME}"
+          else
+            tag="${TAG_INPUT:-}"
+          fi
+
+          if [[ -z "$tag" ]]; then
+            echo "No release tag found. Provide workflow_dispatch input 'tag'." >&2
+            exit 1
+          fi
+
+          git rev-parse "${tag}^{commit}" >/dev/null
+
+          version="${tag#V}"
+          version="${version#v}"
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Tag must match Vx.y.z format. Got: $tag" >&2
+            exit 1
+          fi
+
+          marketing_version="$(
+            git show "${tag}:MiaoYan.xcodeproj/project.pbxproj" \
+              | grep "MARKETING_VERSION" \
+              | head -1 \
+              | sed 's/.*= \(.*\);/\1/' \
+              | tr -d ' '
+          )"
+          if [[ "$marketing_version" != "$version" ]]; then
+            echo "MARKETING_VERSION (${marketing_version}) does not match tag version (${version})." >&2
+            exit 1
+          fi
+
+          previous_tag="$(
+            git tag --sort=-creatordate \
+              | grep '^V' \
+              | grep -Fxv "$tag" \
+              | head -1 \
+              || true
+          )"
+          release_sha="$(git rev-list -n 1 "$tag")"
+
+          ai_required="${AI_REQUIRED_INPUT:-true}"
+          [[ -z "$ai_required" ]] && ai_required="true"
+
+          echo "tag=$tag" >>"$GITHUB_OUTPUT"
+          echo "version=$version" >>"$GITHUB_OUTPUT"
+          echo "previous_tag=$previous_tag" >>"$GITHUB_OUTPUT"
+          echo "release_sha=$release_sha" >>"$GITHUB_OUTPUT"
+          echo "ai_required=$ai_required" >>"$GITHUB_OUTPUT"
+
+  generate_release_content:
+    needs: preflight
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout release tag
+        run: git checkout "${{ needs.preflight.outputs.tag }}"
+
+      - name: Load latest appcast style sample
+        run: |
+          set -euo pipefail
+          git fetch origin vercel --depth=1
+          style_sample="$(
+            git show origin/vercel:appcast.xml \
+              | awk '/<item>/{flag=1} flag{print} /<\/item>/{exit}' \
+              | head -n 80
+          )"
+          {
+            echo "RELEASE_STYLE_EXAMPLE<<EOF"
+            echo "$style_sample"
+            echo "EOF"
+          } >> "$GITHUB_ENV"
+
+      - name: Generate AI release content
+        env:
+          AI_BASE_URL: ${{ secrets.AI_BASE_URL != '' && secrets.AI_BASE_URL || 'https://api.vivgrid.com' }}
+          AI_API_KEY: ${{ secrets.AI_API_KEY }}
+          AI_MODEL: ${{ secrets.AI_MODEL != '' && secrets.AI_MODEL || 'gpt-5.3-codex' }}
+          AI_REQUIRED: ${{ needs.preflight.outputs.ai_required }}
+        run: |
+          set -euo pipefail
+          chmod +x scripts/release-ci/generate_release_content.sh
+          scripts/release-ci/generate_release_content.sh \
+            --tag "${{ needs.preflight.outputs.tag }}" \
+            --version "${{ needs.preflight.outputs.version }}" \
+            --prev-tag "${{ needs.preflight.outputs.previous_tag }}" \
+            --output "build/release-content.json"
+          jq . build/release-content.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-content
+          path: build/release-content.json
+          if-no-files-found: error
+
+  build_notarize_package:
+    needs: preflight
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout release tag
+        run: git checkout "${{ needs.preflight.outputs.tag }}"
+
+      - name: Import signing certificate
+        env:
+          MIAOYAN_CERTIFICATE_P12: ${{ secrets.MIAOYAN_CERTIFICATE_P12 }}
+          MIAOYAN_CERTIFICATE_PASSWORD: ${{ secrets.MIAOYAN_CERTIFICATE_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${MIAOYAN_CERTIFICATE_P12:-}" || -z "${MIAOYAN_CERTIFICATE_PASSWORD:-}" ]]; then
+            echo "Missing MIAOYAN_CERTIFICATE_P12 or MIAOYAN_CERTIFICATE_PASSWORD." >&2
+            exit 1
+          fi
+
+          KEYCHAIN_PATH="$RUNNER_TEMP/miaoyan-signing.keychain-db"
+          KEYCHAIN_PASSWORD="$(openssl rand -base64 16)"
+          CERT_PATH="$RUNNER_TEMP/miaoyan-signing.p12"
+
+          echo "$MIAOYAN_CERTIFICATE_P12" | base64 --decode > "$CERT_PATH"
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security import "$CERT_PATH" -k "$KEYCHAIN_PATH" -P "$MIAOYAN_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security list-keychains -d user -s "$KEYCHAIN_PATH" login.keychain-db
+          security default-keychain -d user -s "$KEYCHAIN_PATH"
+
+      - name: Build, notarize and package
+        env:
+          RELEASE_VERSION: ${{ needs.preflight.outputs.version }}
+          MIAOYAN_SIGNING_IDENTITY: ${{ secrets.MIAOYAN_SIGNING_IDENTITY }}
+          MIAOYAN_TEAM_ID: ${{ secrets.MIAOYAN_TEAM_ID }}
+          MIAOYAN_NOTARY_KEY_ID: ${{ secrets.MIAOYAN_NOTARY_KEY_ID }}
+          MIAOYAN_NOTARY_ISSUER_ID: ${{ secrets.MIAOYAN_NOTARY_ISSUER_ID }}
+          MIAOYAN_NOTARY_API_KEY_P8: ${{ secrets.MIAOYAN_NOTARY_API_KEY_P8 }}
+          MIAOYAN_NOTARY_APPLE_ID: ${{ secrets.MIAOYAN_NOTARY_APPLE_ID }}
+          MIAOYAN_NOTARY_PASSWORD: ${{ secrets.MIAOYAN_NOTARY_PASSWORD }}
+          MIAOYAN_SPARKLE_PRIVATE_KEY_BASE64: ${{ secrets.MIAOYAN_SPARKLE_PRIVATE_KEY_BASE64 }}
+        run: |
+          set -euo pipefail
+          chmod +x scripts/release-ci/build_notarize_package.sh
+          scripts/release-ci/build_notarize_package.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-assets
+          path: |
+            dist/MiaoYan_v${{ needs.preflight.outputs.version }}.dmg
+            dist/MiaoYan_V${{ needs.preflight.outputs.version }}.zip
+            dist/release-metadata.json
+          if-no-files-found: error
+
+  publish_release:
+    needs:
+      - preflight
+      - generate_release_content
+      - build_notarize_package
+    runs-on: ubuntu-latest
+    concurrency:
+      group: vercel-branch-writes
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-content
+          path: build
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-assets
+          path: dist
+
+      - name: Render GitHub release body
+        run: |
+          set -euo pipefail
+          chmod +x scripts/release-ci/render_release_body.sh
+          scripts/release-ci/render_release_body.sh \
+            --notes build/release-content.json \
+            --version "${{ needs.preflight.outputs.version }}" \
+            --output build/release-body.md
+
+      - id: release_title
+        run: |
+          set -euo pipefail
+          monster="$(jq -r '.monster_name' build/release-content.json)"
+          emoji="$(jq -r '.emoji' build/release-content.json)"
+          echo "title=V${{ needs.preflight.outputs.version }} ${monster} ${emoji}" >> "$GITHUB_OUTPUT"
+
+      - name: Update vercel branch appcast and artifacts
+        run: |
+          set -euo pipefail
+
+          VERSION="${{ needs.preflight.outputs.version }}"
+          DMG_PATH="dist/MiaoYan_v${VERSION}.dmg"
+          ZIP_PATH="dist/MiaoYan_V${VERSION}.zip"
+          META_PATH="dist/release-metadata.json"
+
+          git fetch origin vercel
+          git switch --create release-vercel origin/vercel
+
+          mkdir -p Release
+          cp "$DMG_PATH" "Release/MiaoYan.dmg"
+          cp "$ZIP_PATH" "Release/MiaoYan_V${VERSION}.zip"
+
+          signature="$(jq -r '.sparkle_signature' "$META_PATH")"
+          length="$(jq -r '.zip_length' "$META_PATH")"
+          pub_date="$(jq -r '.pub_date' "$META_PATH")"
+          zip_url="https://miaoyan.app/Release/MiaoYan_V${VERSION}.zip"
+
+          chmod +x scripts/release-ci/update_appcast.sh
+          scripts/release-ci/update_appcast.sh \
+            --appcast appcast.xml \
+            --notes build/release-content.json \
+            --version "$VERSION" \
+            --pub-date "$pub_date" \
+            --signature "$signature" \
+            --length "$length" \
+            --zip-url "$zip_url" \
+            --minimum-system-version "11.5"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add appcast.xml Release/MiaoYan.dmg "Release/MiaoYan_V${VERSION}.zip"
+
+          if git diff --cached --quiet; then
+            echo "No vercel changes to commit."
+          else
+            git commit -m "chore: release v${VERSION}"
+            git push origin HEAD:vercel
+          fi
+
+      - name: Prepare release DMG name
+        run: |
+          set -euo pipefail
+          cp "dist/MiaoYan_v${{ needs.preflight.outputs.version }}.dmg" "dist/MiaoYan.dmg"
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.MIAOYAN_RELEASE_PUSH_TOKEN != '' && secrets.MIAOYAN_RELEASE_PUSH_TOKEN || github.token }}
+        with:
+          tag_name: ${{ needs.preflight.outputs.tag }}
+          target_commitish: ${{ needs.preflight.outputs.release_sha }}
+          name: ${{ steps.release_title.outputs.title }}
+          body_path: build/release-body.md
+          files: dist/MiaoYan.dmg
+          fail_on_unmatched_files: true
+          generate_release_notes: false
+          overwrite_files: true
