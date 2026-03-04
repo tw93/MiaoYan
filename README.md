@@ -30,10 +30,9 @@
 
 ## Installation & Setup
 
-1. Install by Homebrew (latest notarized DMG):
+1. Install by Homebrew:
 ```bash
-brew tap tw93/miaoyan https://github.com/tw93/MiaoYan
-brew install --cask tw93/miaoyan/miaoyan
+brew install --cask miaoyan
 ```
 2. Or install manually: download the latest DMG package from [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) (Requires macOS 11.5+)
 3. Open DMG and drag MiaoYan.app to Applications
