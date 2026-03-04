@@ -39,6 +39,37 @@
 
 安装完成后,建议打开设置 (⌘,) 浏览一下,妙言提供了丰富的自定义选项,包括编辑模式、主题样式、字体设置等,让你打造专属的写作环境。
 
+## 命令行工具
+
+妙言提供命令行工具，方便在终端中快速操作笔记。
+
+### 安装
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/master/scripts/install.sh | bash
+```
+
+### 使用
+
+```bash
+miaoyan list [folder]      # 列出笔记
+miaoyan folders            # 列出所有文件夹
+miaoyan search <关键词>     # 搜索笔记（打开妙言）
+miaoyan open <标题>         # 打开指定笔记
+miaoyan new <标题> [内容]   # 创建新笔记
+miaoyan cat <标题>          # 输出笔记内容
+```
+
+### 示例
+
+```bash
+miaoyan list               # 列出所有笔记
+miaoyan list 潮流           # 列出「潮流」文件夹的笔记
+miaoyan search "周刊"       # 搜索「周刊」
+miaoyan cat "我的笔记"      # 输出笔记内容
+miaoyan new "新笔记" "内容" # 创建带内容的新笔记
+```
+
 ## 分栏编辑预览模式
 
 编辑区和预览区并排显示，支持 60fps 双向滚动同步，实时预览编辑效果。
