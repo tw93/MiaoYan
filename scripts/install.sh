@@ -11,7 +11,8 @@ set -e
 
 REPO="tw93/MiaoYan"
 INSTALL_DIR="${MIAOYAN_INSTALL_DIR:-$HOME/.local/bin}"
-SCRIPT_NAME="miaoyan"
+SCRIPT_NAME="miao"
+ALIAS_NAME="miaoyan"
 
 # Colors
 RED='\033[0;31m'
@@ -30,9 +31,12 @@ error() { echo -e "${RED}▸${NC} $1" >&2; exit 1; }
 mkdir -p "$INSTALL_DIR"
 
 # Download script
-info "Downloading miaoyan CLI..."
+info "Downloading miao CLI..."
 curl -fsSL "https://raw.githubusercontent.com/$REPO/main/scripts/miaoyan" -o "$INSTALL_DIR/$SCRIPT_NAME"
 chmod +x "$INSTALL_DIR/$SCRIPT_NAME"
+
+# Create alias symlink
+ln -sf "$INSTALL_DIR/$SCRIPT_NAME" "$INSTALL_DIR/$ALIAS_NAME"
 
 # Check PATH
 if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
@@ -59,14 +63,14 @@ if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
 fi
 
 echo ""
-info "MiaoYan CLI installed successfully! 🎉"
+info "Miao CLI installed successfully! 🎉"
 echo ""
 echo "  Usage:"
-echo "    miaoyan list              # List all notes"
-echo "    miaoyan search <query>    # Search notes"
-echo "    miaoyan open <title>      # Open note in MiaoYan"
-echo "    miaoyan new <title>       # Create new note"
-echo "    miaoyan cat <title>       # Print note content"
+echo "    miao open <title|path>    # Open note"
+echo "    miao new <title> [text]   # Create new note"
+echo "    miao search <query>       # Search notes"
+echo "    miao list [folder]        # List notes"
+echo "    miao cat <title|path>     # Print note content"
 echo ""
-echo "  Run 'miaoyan help' for more commands."
+echo "  Run 'miao help' for more commands."
 echo ""
