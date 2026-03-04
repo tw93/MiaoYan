@@ -13,10 +13,10 @@ NC='\033[0m'
 
 show_banner() {
     printf "${GREEN} __  __ _${NC}\n"
-    printf "${GREEN}|  \/  (_) __ _  ___${NC}\n"
-    printf "${GREEN}| |\/| | |/ _\` |/ _ \\\\${NC}\n"
-    printf "${GREEN}| |  | | | (_| | (_) |${NC}  ${BLUE}https://github.com/tw93/MiaoYan${NC}\n"
-    printf "${GREEN}|_|  |_|_|\__,_|\___/${NC}   ${GREEN}Lightweight Markdown app for macOS${NC}\n"
+    printf "${GREEN}|  \\/  (_) __ _  ___${NC}\n"
+    printf "${GREEN}| |\\/| | |/ _\` |/ _ \\\\${NC}\n"
+    printf "${GREEN}| |  | | | (_| | (_) |${NC}  ${BLUE}%s${NC}\n" "https://github.com/tw93/MiaoYan"
+    printf "${GREEN}|_|  |_|_|\\__,_|\\___/${NC}   ${GREEN}%s${NC}\n" "Lightweight Markdown app for macOS"
 }
 
 cmd_help() {
@@ -29,9 +29,8 @@ cmd_help() {
     printf "  ${GREEN}%-24s${NC} %s\n" "open <title|path>" "Open note"
     printf "  ${GREEN}%-24s${NC} %s\n" "new <title> [text]" "Create new note"
     printf "  ${GREEN}%-24s${NC} %s\n" "search <query>" "Search notes"
-    printf "  ${GREEN}%-24s${NC} %s\n" "list [folder]" "List notes"
+    printf "  ${GREEN}%-24s${NC} %s\n" "list [folder]" "List all markdown, or only markdown in folder"
     printf "  ${GREEN}%-24s${NC} %s\n" "cat <title|path>" "Print note content"
-    printf "  ${GREEN}%-24s${NC} %s\n" "folders" "List all folders"
     printf "  ${GREEN}%-24s${NC} %s\n" "update" "Update to latest version"
     printf "  ${GREEN}%-24s${NC} %s\n" "help" "Show this help"
     echo
@@ -43,11 +42,49 @@ case "${1:-help}" in
 esac
 
 # Auto-detect notes path from app preferences, fallback to common locations
+normalize_path() {
+    local path="$1"
+
+    [[ -z "$path" ]] && return
+
+    # defaults may wrap string values with quotes when spaces are present
+    path="${path#\"}"
+    path="${path%\"}"
+
+    # Handle file URLs from preferences
+    if [[ "$path" == file://* ]]; then
+        path="${path#file://}"
+        path=$(printf '%b' "${path//%/\\x}")
+    fi
+
+    case "$path" in
+        "~") path="$HOME" ;;
+        "~/"*) path="$HOME/${path#~/}" ;;
+    esac
+
+    echo "$path"
+}
+
+read_pref_path() {
+    local domain="$1"
+    local key="$2"
+    local raw_path
+    local path
+
+    raw_path=$(defaults read "$domain" "$key" 2>/dev/null || true)
+    path=$(normalize_path "$raw_path")
+
+    if [[ -n "$path" && -d "$path" ]]; then
+        echo "$path"
+    fi
+}
+
 detect_path() {
     local pref_path
-    pref_path=$(defaults read com.tw93.MiaoYan NotesPath 2>/dev/null || true)
-    
-    if [[ -n "$pref_path" && -d "$pref_path" ]]; then
+
+    # MiaoYan 2.7+ setting key
+    pref_path=$(read_pref_path "com.tw93.miaoyan" "storageUrl")
+    if [[ -n "$pref_path" ]]; then
         echo "$pref_path"
         return
     fi
@@ -87,24 +124,27 @@ find_note() {
 cmd_list() {
     local folder="$1"
     local search_path="$NOTES_PATH"
+    local rel_path
     
     if [[ -n "$folder" ]]; then
-        search_path="$NOTES_PATH/$folder"
+        search_path="$NOTES_PATH/${folder%/}"
         if [[ ! -d "$search_path" ]]; then
             echo "Folder not found: $folder" >&2
             exit 1
         fi
+
+        find "$search_path" -type f -name "*.md" -not -path "*/Trash/*" | while read -r f; do
+            rel_path="${f#$search_path/}"
+            [[ "$rel_path" == */* ]] && continue
+            # Keep output relative to notes root
+            echo "${f#$NOTES_PATH/}"
+        done | sort
+        return
     fi
     
-    find "$search_path" -name "*.md" -not -path "*/Trash/*" | while read -r f; do
+    find "$search_path" -type f -name "*.md" -not -path "*/Trash/*" | while read -r f; do
         # Show relative path from notes root
         echo "${f#$NOTES_PATH/}"
-    done | sort
-}
-
-cmd_folders() {
-    find "$NOTES_PATH" -type d -not -name "Trash" -not -name ".*" | while read -r d; do
-        [[ "$d" != "$NOTES_PATH" ]] && echo "${d#$NOTES_PATH/}"
     done | sort
 }
 
@@ -187,7 +227,6 @@ cmd_update() {
 # Main
 case "$1" in
     list)    cmd_list "$2" ;;
-    folders) cmd_folders ;;
     search)  cmd_search "$2" ;;
     open)    cmd_open "$2" ;;
     new)     cmd_new "$2" "$3" ;;
