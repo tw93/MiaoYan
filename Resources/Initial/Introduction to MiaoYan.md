@@ -14,7 +14,7 @@
 
 ## Getting Started
 
-1. Download the latest package from <a href="https://github.com/tw93/MiaoYan/releases" target="_blank">GitHub Releases</a>. Requires macOS 11.5+. For installation issues, refer to [this guide](https://zhuanlan.zhihu.com/p/135948430)
+1. MiaoYan supports macOS 11.5 and later. On first launch, review your default storage location in Settings.
 2. Create a `MiaoYan` folder in iCloud or preferred location, then set it as default storage in Settings
 3. Click the new folder icon in the upper left to create document categories
 4. Customize the default font in Settings if needed
@@ -74,7 +74,7 @@ Explore more shortcuts in the app.
 
 ## MiaoYan PPT
 
-1. New users get templates by default. Existing users can copy [this file](https://raw.githubusercontent.com/tw93/MiaoYan/master/Resources/Initial/%E5%A6%99%E8%A8%80%20PPT.md) to try it out
+1. New users get templates by default. Existing users can create a "MiaoYan PPT" note manually to try it out
 2. Press `command + option + p` to launch PPT preview, or right-click a document and select "MiaoYan PPT"
 3. PPT mode works with documents containing `---` separators. Press Enter to preview outline, ESC to exit
 4. Use HTML for custom effects. See [Reveal](https://revealjs.com/markdown/) docs for advanced usage

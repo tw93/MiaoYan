@@ -48,7 +48,6 @@ enum MenuIconRegistry {
 
     private static let iconMappings: [IconMapping] = [
         IconMapping(symbol: "info.circle", selectors: ["showInfo:", "showAboutWindow:"], identifiers: []),
-        IconMapping(symbol: "heart", selectors: ["openCats:"], identifiers: []),
         IconMapping(symbol: "gearshape", selectors: ["openPreferences:"], identifiers: []),
         IconMapping(symbol: "rectangle.stack", selectors: ["activeWindow:", "openMainWindow:", "arrangeInFront:"], identifiers: []),
         IconMapping(symbol: "eye.slash", selectors: ["hide:", "hideOtherApplications:"], identifiers: []),
@@ -84,12 +83,6 @@ enum MenuIconRegistry {
         IconMapping(symbol: "text.magnifyingglass", selectors: ["textFinder:"], identifiers: []),
         IconMapping(symbol: "arrow.down.right.and.arrow.up.left.rectangle", selectors: ["performMiniaturize:"], identifiers: []),
         IconMapping(symbol: "plus.magnifyingglass", selectors: ["performZoom:"], identifiers: []),
-        IconMapping(symbol: "globe", selectors: ["openMiaoYan:"], identifiers: []),
-        IconMapping(symbol: "chevron.left.slash.chevron.right", selectors: ["openGithub:"], identifiers: []),
-        IconMapping(symbol: "paperplane", selectors: ["openTelegram:"], identifiers: []),
-        IconMapping(symbol: "bird", selectors: ["openTwitter:"], identifiers: []),
-        IconMapping(symbol: "doc.text.magnifyingglass", selectors: ["openRelease:"], identifiers: []),
-        IconMapping(symbol: "exclamationmark.bubble", selectors: ["openIssue:"], identifiers: []),
         IconMapping(symbol: "sparkles", selectors: ["toggleMagicPPT:"], identifiers: []),
         IconMapping(symbol: "flag", selectors: ["pinMenu:"], identifiers: []),
         IconMapping(symbol: "pin.circle", selectors: ["toggleAlwaysOnTop:"], identifiers: ["viewMenu.alwaysOnTop"]),
