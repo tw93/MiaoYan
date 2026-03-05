@@ -255,24 +255,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
     @IBAction func openMainWindow(_ sender: Any) {
         mainWindowController?.makeNew()
     }
-    @IBAction func openMiaoYan(_ sender: Any) {
-        NSWorkspace.shared.open(URL(string: "https://miaoyan.app")!)
-    }
-    @IBAction func openCats(_ sender: Any) {
-        NSWorkspace.shared.open(URL(string: "https://miaoyan.app/cats.html")!)
-    }
-    @IBAction func openGithub(_ sender: Any) {
-        NSWorkspace.shared.open(URL(string: "https://github.com/tw93/MiaoYan")!)
-    }
-    @IBAction func openRelease(_ sender: Any) {
-        NSWorkspace.shared.open(URL(string: "https://github.com/tw93/MiaoYan/releases")!)
-    }
-    @IBAction func openTwitter(_ sender: Any) {
-        NSWorkspace.shared.open(URL(string: "https://twitter.com/intent/follow?&original_referer=https://miaoyan.app&screen_name=HiTw93")!)
-    }
-    @IBAction func openIssue(_ sender: Any) {
-        NSWorkspace.shared.open(URL(string: "https://github.com/tw93/MiaoYan/issues")!)
-    }
     @IBAction func checkForUpdates(_ sender: Any?) {
         #if APPSTORE
         if let updatesUrl = URL(string: "macappstore://showUpdatesPage") {
@@ -281,9 +263,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         #else
         updaterController?.checkForUpdates(sender)
         #endif
-    }
-    @IBAction func openTelegram(_ sender: Any) {
-        NSWorkspace.shared.open(URL(string: "https://t.me/+GclQS9ZnxyI2ODQ1")!)
     }
     @IBAction func openPreferences(_ sender: Any?) {
         if prefsWindowController == nil {

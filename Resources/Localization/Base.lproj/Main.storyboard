@@ -23,12 +23,6 @@
                                                 <action selector="showAboutWindow:" target="Voe-Tx-rLC" id="PR0-oC-n1f"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Feeding 2 cats" id="zeb-Y9-O9j">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="openCats:" target="Voe-Tx-rLC" id="mf0-qq-fy0"/>
-                                            </connections>
-                                        </menuItem>
                                         <menuItem title="Check for Updates" id="BWp-m7-ySj">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
@@ -486,50 +480,6 @@ CA
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="arrangeInFront:" target="Ady-hI-5gd" id="zFj-Sz-Cbg"/>
-                                            </connections>
-                                        </menuItem>
-                                    </items>
-                                </menu>
-                            </menuItem>
-                            <menuItem title="Help" id="cO1-tX-rzO">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Help" id="6fQ-gK-hbI">
-                                    <items>
-                                        <menuItem title="Website" id="8iA-X0-DFH">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="openMiaoYan:" target="Voe-Tx-rLC" id="MtJ-nT-Vro"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Github" id="c98-Hm-qYd">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="openGithub:" target="Voe-Tx-rLC" id="m5G-Wm-E6y"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Telegram" id="vvp-aA-TcP">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="openTelegram:" target="Voe-Tx-rLC" id="dyA-Xs-f78"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Follow Twitter" id="uXW-Mt-L5y">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="openTwitter:" target="Voe-Tx-rLC" id="ow1-by-iaG"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="COz-HW-hkK"/>
-                                        <menuItem title="Release Notes" id="iNW-7A-WXP">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="openRelease:" target="Voe-Tx-rLC" id="CvJ-lv-Wxl"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Report Issues" id="yiX-qe-QKb">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <connections>
-                                                <action selector="openIssue:" target="Voe-Tx-rLC" id="NF3-F4-pqf"/>
                                             </connections>
                                         </menuItem>
                                     </items>
@@ -1233,13 +1183,10 @@ CA
                             </imageView>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cgf-ax-Go5">
                                 <rect key="frame" x="119" y="63" width="62" height="17"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="MiaoYan" id="v9A-ZO-AAb">
+                                <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="MiaoYan" id="v9A-ZO-AAb">
                                     <font key="font" metaFont="menu" size="14"/>
                                     <color key="textColor" name="mainText"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                    <connections>
-                                        <action selector="openMiaoYan:" target="YNW-vn-A3h" id="g0M-cY-eZL"/>
-                                    </connections>
                                 </textFieldCell>
                             </textField>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="Bqv-Qw-wbK">
@@ -1249,9 +1196,6 @@ CA
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
-                                <connections>
-                                    <action selector="openVersion:" target="YNW-vn-A3h" id="KkY-hQ-2q0"/>
-                                </connections>
                             </textField>
                             <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="wKq-L7-eGG">
                                 <rect key="frame" x="63" y="21" width="174" height="16"/>
