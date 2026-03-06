@@ -27,7 +27,7 @@ const FONT_FAMILY = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, A
 const TITLE_FILL = '#6B7280';
 const BODY_FILL = '#7A7A7A';
 const GITHUB_SECTION_TITLE = 'GitHub Sponsors';
-const FRIENDS_SECTION_TITLE = 'Friends Who Feed the Cats';
+const FRIENDS_SECTION_TITLE = 'Supportive Friends';
 const ACTIVE_RING_COLOR = '#FAC965';
 const SECTION_GAP = 96;
 

@@ -51,6 +51,13 @@ body {
   content: 'Friends who feed cats';
 }
 
+.i18n-miao-support-heading:before {
+  content: '感谢大家请汤圆和可乐吃罐头';
+}
+[lang='en'] .i18n-miao-support-heading:before {
+  content: 'Thanks for supporting TangYuan & Coke';
+}
+
 .i18n-share-twitter:before {
   content: '一键分享到 Twitter';
 }
