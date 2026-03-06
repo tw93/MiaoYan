@@ -10,36 +10,75 @@
  * back to rendering only the friend list and a call-to-action link.
  */
 const fsp = require('fs/promises');
+const os = require('os');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const FRIENDS_PATH = path.join(ROOT, 'data', 'friends.json');
+const COMPANY_SPONSORS_PATH = path.join(ROOT, 'data', 'company-sponsors.json');
 const CSS_PATH = path.join(ROOT, 'tailwind.css');
 const OUTPUT_DIR = path.join(ROOT, 'assets');
 const OUTPUT_PATH = path.join(OUTPUT_DIR, 'sponsors.svg');
+const CONFIG_SPONSORS_TOKEN_PATH = path.join(os.homedir(), '.config', 'miaoyan', 'sponsors-token');
 const SPONSORS_URL = 'https://github.com/sponsors/tw93';
 const OWNER_LOGIN = 'tw93';
 const GRAPHQL_ENDPOINT = 'https://api.github.com/graphql';
 const FONT_FAMILY = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji'";
+const TITLE_FILL = '#6B7280';
+const BODY_FILL = '#7A7A7A';
+const GITHUB_SECTION_TITLE = 'GitHub Sponsors';
+const FRIENDS_SECTION_TITLE = 'Friends Who Feed the Cats';
+const ACTIVE_RING_COLOR = '#FAC965';
+const SECTION_GAP = 96;
 
 async function main() {
-  const friends = await loadFriends();
+  const [friends, companySponsors] = await Promise.all([
+    loadFriends(),
+    loadCompanySponsors(),
+  ]);
   await Promise.all([
     updateTailwindCss(friends),
     ensureDir(OUTPUT_DIR),
   ]);
 
-  const sponsorToken =
+  const sponsorToken = await loadSponsorToken();
+
+  const sponsors = await fetchSponsors(sponsorToken);
+  const svgContent = await buildSvg({ companySponsors, sponsors, friends });
+  await fsp.writeFile(OUTPUT_PATH, svgContent, 'utf8');
+  console.log(
+    `Generated ${path.relative(ROOT, OUTPUT_PATH)} with ${companySponsors.length} company sponsors, ${sponsors.length} GitHub sponsors, and ${friends.length} friends.`,
+  );
+}
+
+async function loadSponsorToken() {
+  const envToken =
     process.env.SPONSORS_TOKEN ||
     process.env.GH_TOKEN ||
     process.env.GITHUB_TOKEN;
+  if (envToken) {
+    return envToken.trim();
+  }
 
-  const sponsors = await fetchSponsors(sponsorToken);
-  const svgContent = await buildSvg({ sponsors, friends });
-  await fsp.writeFile(OUTPUT_PATH, svgContent, 'utf8');
-  console.log(
-    `Generated ${path.relative(ROOT, OUTPUT_PATH)} with ${sponsors.length} sponsors and ${friends.length} friends.`,
-  );
+  try {
+    const raw = await fsp.readFile(CONFIG_SPONSORS_TOKEN_PATH, 'utf8');
+    const envStyleMatch = raw.match(/(?:^|\n)\s*(?:export\s+)?(?:SPONSORS_TOKEN|GH_TOKEN|GITHUB_TOKEN)\s*=\s*['"]?([^'"\n]+)['"]?/);
+    if (envStyleMatch && envStyleMatch[1]) {
+      return envStyleMatch[1].trim();
+    }
+
+    const firstLine = raw
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .find(Boolean);
+
+    return firstLine || '';
+  } catch (err) {
+    if (err && err.code === 'ENOENT') {
+      return '';
+    }
+    throw err;
+  }
 }
 
 async function loadFriends() {
@@ -49,6 +88,43 @@ async function loadFriends() {
     throw new Error(`Friend data must be an array in ${FRIENDS_PATH}`);
   }
   return list.map((name) => String(name).trim()).filter(Boolean);
+}
+
+async function loadCompanySponsors() {
+  try {
+    const raw = await fsp.readFile(COMPANY_SPONSORS_PATH, 'utf8');
+    const list = JSON.parse(raw);
+    if (!Array.isArray(list)) {
+      throw new Error(`Company sponsor data must be an array in ${COMPANY_SPONSORS_PATH}`);
+    }
+
+    return list.map((item, index) => {
+      if (!item || typeof item !== 'object') {
+        throw new Error(`Company sponsor at index ${index} must be an object.`);
+      }
+
+      const name = String(item.name || '').trim();
+      const logoPath = String(item.logoPath || '').trim();
+      if (!name || !logoPath) {
+        throw new Error(`Company sponsor at index ${index} must include "name" and "logoPath".`);
+      }
+
+      const label = String(item.label || 'Company Sponsor').trim() || 'Company Sponsor';
+      const url = String(item.url || '').trim();
+
+      return {
+        name,
+        logoPath,
+        label,
+        url,
+      };
+    });
+  } catch (err) {
+    if (err && err.code === 'ENOENT') {
+      return [];
+    }
+    throw err;
+  }
 }
 
 async function ensureDir(target) {
@@ -87,11 +163,66 @@ function replaceCssContent(css, markerRegex, value) {
 
 async function fetchSponsors(token) {
   if (!token) {
+    const cachedSponsors = await loadCachedSponsors();
+    if (cachedSponsors.length) {
+      console.warn(`⚠️  No GitHub token available, reusing ${cachedSponsors.length} cached sponsor avatars from ${path.relative(ROOT, OUTPUT_PATH)}.`);
+      return cachedSponsors;
+    }
+
     console.warn('⚠️  No GitHub token available, sponsor avatars will be skipped.');
     return [];
   }
 
+  const [allNodes, activeNodes] = await Promise.all([
+    fetchSponsorshipNodes(token, false),
+    fetchSponsorshipNodes(token, true),
+  ]);
+  const sponsorsByLogin = new Map();
+  const activeByLogin = new Map();
+
+  for (const node of allNodes) {
+    const normalized = normalizeSponsorNode(node, false);
+    if (!normalized) continue;
+    const existing = sponsorsByLogin.get(normalized.login);
+    if (!existing || shouldReplaceSponsor(existing, normalized)) {
+      sponsorsByLogin.set(normalized.login, normalized);
+    }
+  }
+
+  for (const node of activeNodes) {
+    const normalized = normalizeSponsorNode(node, true);
+    if (!normalized) continue;
+    const existing = activeByLogin.get(normalized.login);
+    if (!existing || shouldReplaceSponsor(existing, normalized)) {
+      activeByLogin.set(normalized.login, normalized);
+    }
+  }
+
   const sponsors = [];
+  for (const [login, sponsor] of sponsorsByLogin.entries()) {
+    sponsors.push(activeByLogin.get(login) || sponsor);
+  }
+
+  for (const [login, sponsor] of activeByLogin.entries()) {
+    if (!sponsorsByLogin.has(login)) {
+      sponsors.push(sponsor);
+    }
+  }
+
+  sponsors.sort((a, b) => {
+    if (Number(b.isActive) !== Number(a.isActive)) return Number(b.isActive) - Number(a.isActive);
+    if (b.amount !== a.amount) return b.amount - a.amount;
+    if (a.createdAt && b.createdAt) {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    }
+    return a.login.localeCompare(b.login);
+  });
+
+  return sponsors;
+}
+
+async function fetchSponsorshipNodes(token, activeOnly) {
+  const nodes = [];
   let cursor = null;
   const headers = {
     'Content-Type': 'application/json',
@@ -102,9 +233,9 @@ async function fetchSponsors(token) {
   while (true) {
     const body = {
       query: `
-        query($login: String!, $cursor: String) {
+        query($login: String!, $cursor: String, $activeOnly: Boolean!) {
           user(login: $login) {
-            sponsorshipsAsMaintainer(first: 100, after: $cursor, includePrivate: true, activeOnly: false, orderBy: {field: CREATED_AT, direction: DESC}) {
+            sponsorships: sponsorshipsAsMaintainer(first: 100, after: $cursor, includePrivate: true, activeOnly: $activeOnly, orderBy: {field: CREATED_AT, direction: DESC}) {
               nodes {
                 sponsorEntity {
                   ... on User {
@@ -136,6 +267,7 @@ async function fetchSponsors(token) {
       variables: {
         login: OWNER_LOGIN,
         cursor,
+        activeOnly,
       },
     };
 
@@ -151,23 +283,12 @@ async function fetchSponsors(token) {
     }
 
     const payload = await res.json();
-    const data = payload?.data?.user?.sponsorshipsAsMaintainer;
+    const data = payload?.data?.user?.sponsorships;
     if (!data) {
       throw new Error('Unexpected response from GitHub Sponsors API.');
     }
 
-    for (const node of data.nodes || []) {
-      const sponsor = node?.sponsorEntity;
-      if (!sponsor?.login || !sponsor?.avatarUrl) continue;
-      sponsors.push({
-        login: sponsor.login,
-        name: sponsor.name || sponsor.login,
-        avatarUrl: sponsor.avatarUrl,
-        url: sponsor.url || `https://github.com/${sponsor.login}`,
-        amount: node?.tier?.monthlyPriceInDollars || 0,
-        createdAt: node?.createdAt,
-      });
-    }
+    nodes.push(...(data.nodes || []));
 
     if (!data.pageInfo?.hasNextPage) {
       break;
@@ -175,26 +296,88 @@ async function fetchSponsors(token) {
     cursor = data.pageInfo.endCursor;
   }
 
-  sponsors.sort((a, b) => {
-    if (b.amount !== a.amount) return b.amount - a.amount;
-    if (a.createdAt && b.createdAt) {
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    }
-    return a.login.localeCompare(b.login);
-  });
-
-  return sponsors;
+  return nodes;
 }
 
-async function buildSvg({ sponsors, friends }) {
+function normalizeSponsorNode(node, isActive) {
+  const sponsor = node?.sponsorEntity;
+  if (!sponsor?.login || !sponsor?.avatarUrl) return null;
+  return {
+    login: sponsor.login,
+    name: sponsor.name || sponsor.login,
+    avatarUrl: sponsor.avatarUrl,
+    url: sponsor.url || `https://github.com/${sponsor.login}`,
+    amount: node?.tier?.monthlyPriceInDollars || 0,
+    createdAt: node?.createdAt,
+    isActive,
+  };
+}
+
+function shouldReplaceSponsor(existing, next) {
+  if (Number(next.isActive) !== Number(existing.isActive)) {
+    return Number(next.isActive) > Number(existing.isActive);
+  }
+  if (next.createdAt && existing.createdAt && next.createdAt !== existing.createdAt) {
+    return new Date(next.createdAt) > new Date(existing.createdAt);
+  }
+  if (next.amount !== existing.amount) {
+    return next.amount > existing.amount;
+  }
+  return next.login.localeCompare(existing.login) < 0;
+}
+
+async function loadCachedSponsors() {
+  try {
+    const svg = await fsp.readFile(OUTPUT_PATH, 'utf8');
+    const sponsors = [];
+    const sponsorRegex =
+      /<g[^>]*data-login="([^"]+)"[^>]*data-active="([^"]+)"[^>]*transform="translate\([^)]*\)">\s*(?:<image[^>]*href="([^"]+)"[^>]*clip-path="url\(#cp-[^"]+\)"[^>]*\/>|<circle[^>]*\/>)(?:\s*<circle[^>]*data-active-ring="true"[^>]*\/>)?\s*<text[^>]*>([^<]*)<\/text>\s*<\/g>/g;
+
+    let match;
+    while ((match = sponsorRegex.exec(svg))) {
+      const [, login, isActive, avatar, name] = match;
+      if (!login) continue;
+      sponsors.push({
+        login,
+        name: unescapeText(name) || login,
+        avatar: avatar || '',
+        url: `https://github.com/${login}`,
+        amount: 0,
+        isActive: isActive === 'true',
+      });
+    }
+
+    return sponsors;
+  } catch (err) {
+    if (err && err.code === 'ENOENT') {
+      return [];
+    }
+    throw err;
+  }
+}
+
+async function buildSvg({ companySponsors, sponsors, friends }) {
   const width = 1000;
   const outerPadding = 40;
   const innerPadding = 32;
   const contentWidth = width - outerPadding * 2;
   await embedAvatarData(sponsors);
+  await embedCompanyLogoData(companySponsors);
 
   let cursorY = innerPadding;
   const defs = [];
+  const sections = [];
+
+  if (companySponsors.length) {
+    const companyGrid = renderCompanySponsorGrid({
+      companySponsors,
+      x: 0,
+      y: cursorY,
+      width: contentWidth,
+    });
+    sections.push(companyGrid.markup);
+    cursorY += companyGrid.height + SECTION_GAP;
+  }
 
   const sponsorGrid = renderSponsorGrid({
     sponsors,
@@ -203,7 +386,8 @@ async function buildSvg({ sponsors, friends }) {
     width: contentWidth,
   });
   defs.push(...sponsorGrid.defs);
-  cursorY += sponsorGrid.height + 90;
+  sections.push(sponsorGrid.markup);
+  cursorY += sponsorGrid.height + SECTION_GAP;
 
   const friendTable = renderFriendTable({
     friends,
@@ -211,6 +395,7 @@ async function buildSvg({ sponsors, friends }) {
     y: cursorY,
     width: contentWidth,
   });
+  sections.push(friendTable.markup);
   cursorY += friendTable.height + innerPadding;
 
   const boardHeight = cursorY;
@@ -222,12 +407,35 @@ async function buildSvg({ sponsors, friends }) {
       ${defs.join('\n')}
     </defs>
     <g transform="translate(${outerPadding}, ${outerPadding})" font-family="${FONT_FAMILY}">
-      ${sponsorGrid.markup}
-      ${friendTable.markup}
+      ${sections.join('\n')}
     </g>
   </svg>`;
 
   return svg;
+}
+
+async function embedCompanyLogoData(companySponsors) {
+  await Promise.all(
+    companySponsors.map(async (company) => {
+      if (company.logo) return;
+      company.logo = await fileDataUri(company.logoPath);
+    }),
+  );
+}
+
+async function fileDataUri(filePath) {
+  const resolvedPath = path.isAbsolute(filePath) ? filePath : path.join(ROOT, filePath);
+  const ext = path.extname(resolvedPath).toLowerCase();
+  const mimeType =
+    {
+      '.png': 'image/png',
+      '.jpg': 'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.svg': 'image/svg+xml',
+      '.webp': 'image/webp',
+    }[ext] || 'application/octet-stream';
+  const buffer = await fsp.readFile(resolvedPath);
+  return `data:${mimeType};base64,${buffer.toString('base64')}`;
 }
 
 async function avatarDataUri(url) {
@@ -244,6 +452,7 @@ async function avatarDataUri(url) {
 async function embedAvatarData(sponsors) {
   await Promise.all(
     sponsors.map(async (sponsor) => {
+      if (sponsor.avatar) return;
       if (!sponsor.avatarUrl) return;
       try {
         sponsor.avatar = await avatarDataUri(sponsor.avatarUrl);
@@ -252,6 +461,72 @@ async function embedAvatarData(sponsors) {
       }
     })
   );
+}
+
+function renderCompanySponsorGrid({ companySponsors, x, y, width }) {
+  const logoSize = 100;
+  const baseGap = 56;
+  const gapY = 52;
+  let cols = Math.max(1, Math.floor(width / (logoSize + baseGap)));
+  cols = Math.min(cols, Math.max(1, companySponsors.length));
+  const rows = Math.max(1, Math.ceil(companySponsors.length / cols));
+  let spacing = baseGap;
+  if (cols > 1) {
+    spacing = (width - cols * logoSize) / (cols - 1);
+    if (spacing < baseGap) {
+      spacing = baseGap;
+      cols = Math.max(1, Math.floor((width + baseGap) / (logoSize + baseGap)));
+    }
+  }
+  const gridWidth = companySponsors.length
+    ? cols * logoSize + Math.max(0, cols - 1) * spacing
+    : width;
+  const gridHeight = companySponsors.length
+    ? rows * logoSize + Math.max(0, rows - 1) * gapY
+    : 140;
+  const offsetX = Math.max(0, (width - gridWidth) / 2);
+  const centerX = width / 2;
+  const titleTopPadding = 12;
+  const contentTop = 52;
+  const titleHeight = 36;
+  const sectionHeight = titleTopPadding + titleHeight + (contentTop - titleHeight) + gridHeight + 32;
+  const sectionTitle = companySponsors.length === 1 ? 'Company Sponsor' : 'Company Sponsors';
+  let markup = `
+    <g transform="translate(${x}, ${y})">
+      <text x="${centerX}" y="${titleTopPadding}" text-anchor="middle" font-size="28" font-weight="600" fill="${TITLE_FILL}">${sectionTitle}</text>
+      <g transform="translate(0, ${contentTop})">
+  `;
+
+  companySponsors.forEach((company, index) => {
+    const col = index % cols;
+    const row = Math.floor(index / cols);
+    const logoX = offsetX + col * (logoSize + spacing);
+    const logoY = row * (logoSize + gapY);
+    const companyItem = `
+      <g transform="translate(${logoX}, ${logoY})">
+        ${
+          company.logo
+            ? `<image href="${company.logo}" x="0" y="0" width="${logoSize}" height="${logoSize}" preserveAspectRatio="xMidYMid meet" />`
+            : `<circle cx="${logoSize / 2}" cy="${logoSize / 2}" r="${logoSize / 2}" fill="rgba(0,0,0,0.05)" />`
+        }
+        <text x="${logoSize / 2}" y="${logoSize + 32}" text-anchor="middle" font-size="18" font-weight="600" fill="${BODY_FILL}">${escapeText(truncateText(company.name, 18))}</text>
+      </g>
+    `;
+
+    if (company.url) {
+      markup += `<a xlink:href="${escapeAttr(company.url)}" target="_blank" aria-label="${escapeAttr(company.name)}">${companyItem}</a>`;
+      return;
+    }
+
+    markup += companyItem;
+  });
+
+  markup += '</g></g>';
+
+  return {
+    markup,
+    height: sectionHeight,
+  };
 }
 
 function renderSponsorGrid({ sponsors, x, y, width }) {
@@ -280,7 +555,7 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
   const offsetX = Math.max(0, (width - gridWidth) / 2);
   let markup = `
     <g transform="translate(${x}, ${y})">
-      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#222222">GitHub Sponsors · ${sponsors.length}</text>
+      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="${TITLE_FILL}">${GITHUB_SECTION_TITLE}</text>
   `;
   const clipDefs = [];
 
@@ -311,16 +586,28 @@ function renderSponsorGrid({ sponsors, x, y, width }) {
         <circle cx="${avatarSize / 2}" cy="${avatarSize / 2}" r="${avatarSize / 2}" />
       </clipPath>`,
     );
-    markup += `
-      <g transform="translate(${avatarX}, ${avatarY})">
+    const sponsorCard = `
+      <g data-login="${escapeAttr(sponsor.login)}" data-active="${sponsor.isActive ? 'true' : 'false'}" transform="translate(${avatarX}, ${avatarY})">
         ${
           sponsor.avatar
             ? `<image href="${sponsor.avatar}" x="0" y="0" width="${avatarSize}" height="${avatarSize}" clip-path="url(#${clipId})" />`
             : `<circle cx="${avatarSize / 2}" cy="${avatarSize / 2}" r="${avatarSize / 2}" fill="rgba(0,0,0,0.05)" />`
         }
-        <text x="${avatarSize / 2}" y="${avatarSize + 22}" text-anchor="middle" font-size="12" fill="#555555">${escapeText(sponsor.name).slice(0, 18)}</text>
+        ${
+          sponsor.isActive
+            ? `<circle data-active-ring="true" cx="${avatarSize / 2}" cy="${avatarSize / 2}" r="${avatarSize / 2 - 1.5}" fill="none" stroke="${ACTIVE_RING_COLOR}" stroke-opacity="0.98" stroke-width="2.25" />`
+            : ''
+        }
+        <text x="${avatarSize / 2}" y="${avatarSize + 22}" text-anchor="middle" font-size="12" fill="${BODY_FILL}">${escapeText(sponsor.name).slice(0, 18)}</text>
       </g>
     `;
+
+    if (sponsor.url) {
+      markup += `<a xlink:href="${escapeAttr(sponsor.url)}" target="_blank" aria-label="${escapeAttr(sponsor.name)}">${sponsorCard}</a>`;
+      return;
+    }
+
+    markup += sponsorCard;
   });
 
   markup += '</g></g>';
@@ -343,7 +630,7 @@ function renderFriendTable({ friends, x, y, width }) {
   const centerX = width / 2;
   let markup = `
     <g transform="translate(${x}, ${y})">
-      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="#222222">Tipping Friends · ${friends.length}</text>
+      <text x="${centerX}" y="0" text-anchor="middle" font-size="28" font-weight="600" fill="${TITLE_FILL}">${FRIENDS_SECTION_TITLE}</text>
       <g transform="translate(0, 52)">
   `;
 
@@ -353,7 +640,7 @@ function renderFriendTable({ friends, x, y, width }) {
     const col = index % columns;
     const textX = col * colWidth + colWidth / 2;
     const textY = row * rowHeight + rowHeight / 2;
-    markup += `<text x="${textX}" y="${textY}" text-anchor="middle" alignment-baseline="middle" font-size="14" fill="#555555">${escapeText(name)}</text>`;
+    markup += `<text x="${textX}" y="${textY}" text-anchor="middle" alignment-baseline="middle" font-size="14" fill="${BODY_FILL}">${escapeText(name)}</text>`;
   });
 
   markup += '</g></g>';
@@ -371,8 +658,22 @@ function escapeText(value) {
     .replace(/>/g, '&gt;');
 }
 
+function unescapeText(value) {
+  return String(value)
+    .replace(/&quot;/g, '"')
+    .replace(/&gt;/g, '>')
+    .replace(/&lt;/g, '<')
+    .replace(/&amp;/g, '&');
+}
+
 function escapeAttr(value) {
   return escapeText(value).replace(/"/g, '&quot;');
+}
+
+function truncateText(value, maxLength) {
+  const text = String(value || '').trim();
+  if (text.length <= maxLength) return text;
+  return `${text.slice(0, Math.max(0, maxLength - 1))}\u2026`;
 }
 
 main().catch((err) => {
