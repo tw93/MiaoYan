@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Alamofire/Alamofire.git",
       "state" : {
-        "revision" : "513364f870f6bfc468f9d2ff0a95caccc10044c5",
-        "version" : "5.10.2"
+        "revision" : "3f99050e75bbc6fe71fc323adabb039756680016",
+        "version" : "5.11.1"
       }
     },
     {
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sindresorhus/KeyboardShortcuts",
       "state" : {
-        "revision" : "045cf174010beb335fa1d2567d18c057b8787165",
-        "version" : "2.3.0"
+        "revision" : "1aef85578fdd4f9eaeeb8d53b7b4fc31bf08fe27",
+        "version" : "2.4.0"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sparkle-project/Sparkle.git",
       "state" : {
-        "revision" : "06beff60e3b609a485290e4d5d2d1e2eedb1e55d",
-        "version" : "2.7.3"
+        "revision" : "21d8df80440b1ca3b65fa82e40782f1e5a9e6ba2",
+        "version" : "2.9.0"
       }
     },
     {
@@ -60,8 +60,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/TelemetryDeck/SwiftSDK",
       "state" : {
-        "revision" : "a7fd1eb469589a3c8fd8cc3abe19b092b5d674dc",
-        "version" : "2.9.4"
+        "revision" : "8f332c1c256ba26cc46f74c9e5af94f7b1c37a9c",
+        "version" : "2.11.0"
       }
     },
     {
