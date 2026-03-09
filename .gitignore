@@ -90,6 +90,7 @@ package-lock.json
 # Release & Distribution
 Releases/
 Release/
+/dist/
 *.ipa
 appcast.xml
 
