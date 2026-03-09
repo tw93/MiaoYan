@@ -69,59 +69,145 @@ codesign -v "./build/Release/MiaoYan.app" || {
 ZIP_NAME="MiaoYan_V${VERSION}.zip"
 DMG_NAME="MiaoYan.dmg"
 DOWNLOADS=~/Downloads
+APP_NAME="MiaoYan"
+BACKGROUND_IMAGE_SOURCE="./Resources/dmg-background.png"
+BACKGROUND_IMAGE_NAME="$(basename "$BACKGROUND_IMAGE_SOURCE")"
 
 cd ./build/Release && zip -r -q "../$ZIP_NAME" MiaoYan.app && cd ../..
 
 # Create DMG with drag-to-Applications interface using hdiutil
 STAGING_DIR="./build/dmg_staging"
+TEMP_DMG_PATH="./build/MiaoYan_temp.dmg"
+DMG_BASE_PATH="./build/${DMG_NAME%.dmg}"
 
 # Cleanup function to detach existing volumes
 cleanup_volumes() {
-	local vol_pattern="/Volumes/MiaoYan"
+	local vol_pattern="/Volumes/${APP_NAME}"
 	local max_attempts=15
 	local attempt=1
 
-	while [ $attempt -le $max_attempts ]; do
-		if hdiutil info | grep -q "$vol_pattern"; then
-			echo "Detaching existing volumes (Attempt $attempt/$max_attempts)..."
-			hdiutil info | grep "$vol_pattern" | awk '{print $1}' | while read -r dev; do
-				hdiutil detach "$dev" -force || true
-			done
-			sleep 1
-		else
-			if [ -d "$vol_pattern" ]; then
-				rmdir "$vol_pattern" || true
-			fi
+	while [[ $attempt -le $max_attempts ]]; do
+		local mounted_devices
+		mounted_devices="$(
+			hdiutil info \
+				| awk -v pattern="$vol_pattern" '
+						$0 ~ /^\/dev\// { device=$1 }
+						$0 ~ pattern { print device }
+					'
+		)"
+
+		if [[ -z "$mounted_devices" ]]; then
+			find /Volumes -maxdepth 1 -type d -name "${APP_NAME}*" -empty -exec rmdir {} + >/dev/null 2>&1 || true
 			return 0
 		fi
+
+		echo "Detaching existing volumes (Attempt $attempt/$max_attempts)..."
+		while IFS= read -r dev; do
+			[[ -n "$dev" ]] && hdiutil detach "$dev" -force >/dev/null 2>&1 || true
+		done <<<"$mounted_devices"
+		sleep 1
 		attempt=$((attempt + 1))
 	done
+	echo -e "${YELLOW}Warning: Failed to fully detach existing volumes.${NC}"
+}
+
+configure_dmg_layout() {
+	local disk_name="$1"
+	local app_name="$2"
+	local background_name="$3"
+
+	osascript >/dev/null <<EOF
+tell application "Finder"
+	tell disk "${disk_name}"
+		open
+		set current view of container window to icon view
+		set toolbar visible of container window to false
+		set statusbar visible of container window to false
+		set the bounds of container window to {100, 100, 780, 520}
+		set viewOptions to the icon view options of container window
+		set arrangement of viewOptions to not arranged
+		set icon size of viewOptions to 120
+		set text size of viewOptions to 14
+		try
+			set background picture of viewOptions to file ".background:${background_name}"
+		end try
+		set position of item "${app_name}.app" of container window to {190, 245}
+		set position of item "Applications" of container window to {500, 245}
+		close
+		open
+		update without registering applications
+		delay 1
+	end tell
+end tell
+EOF
 }
 
 cleanup_volumes
-sync
+/bin/sync
 
-rm -rf "$STAGING_DIR" "./build/$DMG_NAME"
+rm -rf "$STAGING_DIR" "./build/$DMG_NAME" "$TEMP_DMG_PATH"
 mkdir -p "$STAGING_DIR"
 cp -R "./build/Release/MiaoYan.app" "$STAGING_DIR/"
 ln -s /Applications "$STAGING_DIR/Applications"
+
+if [[ -f "$BACKGROUND_IMAGE_SOURCE" ]]; then
+	mkdir -p "$STAGING_DIR/.background"
+	cp "$BACKGROUND_IMAGE_SOURCE" "$STAGING_DIR/.background/$BACKGROUND_IMAGE_NAME"
+else
+	echo -e "${YELLOW}Warning: DMG background image not found at $BACKGROUND_IMAGE_SOURCE; using default Finder background.${NC}"
+fi
+
+mdutil -i off "$STAGING_DIR" >/dev/null 2>&1 || true
 
 echo "Creating DMG..."
 MAX_RETRIES=3
 RETRY_COUNT=0
 
-while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-	if hdiutil create -volname "MiaoYan" \
+while [[ $RETRY_COUNT -lt $MAX_RETRIES ]]; do
+	if ! hdiutil create -quiet -volname "$APP_NAME" \
 		-srcfolder "$STAGING_DIR" \
-		-ov -format UDZO \
-		"./build/$DMG_NAME"; then
-		break
-	else
+		-ov -format UDRW \
+		"$TEMP_DMG_PATH"; then
 		echo "hdiutil create failed. Retrying in 2 seconds... ($((RETRY_COUNT + 1))/$MAX_RETRIES)"
 		cleanup_volumes
 		sleep 2
 		RETRY_COUNT=$((RETRY_COUNT + 1))
+		continue
 	fi
+
+	ATTACH_OUTPUT="$(hdiutil attach -readwrite -noverify -noautoopen "$TEMP_DMG_PATH" 2>/dev/null || true)"
+	DEVICE="$(echo "$ATTACH_OUTPUT" | awk '/^\/dev\// { print $1; exit }')"
+	MOUNT_POINT="$(echo "$ATTACH_OUTPUT" | awk -F '\t' '/\/Volumes\// { print $NF; exit }')"
+
+	if [[ -z "$DEVICE" || -z "$MOUNT_POINT" ]]; then
+		echo "Failed to attach temporary DMG. Retrying..."
+		[[ -n "$DEVICE" ]] && hdiutil detach "$DEVICE" -force >/dev/null 2>&1 || true
+		cleanup_volumes
+		sleep 2
+		RETRY_COUNT=$((RETRY_COUNT + 1))
+		continue
+	fi
+
+	if [[ -f "$STAGING_DIR/.background/$BACKGROUND_IMAGE_NAME" ]]; then
+		if ! configure_dmg_layout "$(basename "$MOUNT_POINT")" "$APP_NAME" "$BACKGROUND_IMAGE_NAME"; then
+			echo -e "${YELLOW}Warning: Failed to configure Finder layout for DMG.${NC}"
+		fi
+	fi
+
+	/bin/sync
+	hdiutil detach "$DEVICE" -force >/dev/null 2>&1 || true
+
+	if hdiutil convert -quiet "$TEMP_DMG_PATH" \
+		-format UDZO \
+		-imagekey zlib-level=9 \
+		-ov -o "$DMG_BASE_PATH"; then
+		break
+	fi
+
+	echo "hdiutil convert failed. Retrying in 2 seconds... ($((RETRY_COUNT + 1))/$MAX_RETRIES)"
+	cleanup_volumes
+	sleep 2
+	RETRY_COUNT=$((RETRY_COUNT + 1))
 done
 
 if [ ! -f "./build/$DMG_NAME" ]; then
@@ -129,7 +215,7 @@ if [ ! -f "./build/$DMG_NAME" ]; then
 	exit 1
 fi
 
-rm -rf "$STAGING_DIR"
+rm -rf "$STAGING_DIR" "$TEMP_DMG_PATH"
 xattr -cr "./build/$DMG_NAME" "./build/$ZIP_NAME"
 
 # 5. Sparkle signature
