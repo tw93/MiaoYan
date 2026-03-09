@@ -35,6 +35,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     private var lastRendererInitializationTime: TimeInterval = 0
     static var hasCompletedInitialLoad = false
     private var loadCompletion: (() -> Void)?
+    private var appDidBecomeActiveObserver: NSObjectProtocol?
 
     // MARK: - JavaScript Timing Constants
 
@@ -144,6 +145,15 @@ class MPreviewView: WKWebView, WKUIDelegate {
         }
         // Set webview appearance to match current theme
         self.appearance = UserDataService.instance.isDark ? NSAppearance(named: .darkAqua) : NSAppearance(named: .aqua)
+        appDidBecomeActiveObserver = NotificationCenter.default.addObserver(
+            forName: NSApplication.didBecomeActiveNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                self?.handleApplicationDidBecomeActive()
+            }
+        }
 
         Self.ensureBundlePreinitialized()
         load(note: note)
@@ -158,6 +168,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         super.viewWillMove(toWindow: newWindow)
         if newWindow == nil {
             configuration.userContentController.removeScriptMessageHandler(forName: "logging")
+            removeAppDidBecomeActiveObserver()
         }
     }
 
@@ -722,9 +733,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     }
 
     private func isFootNotes(url: URL) -> Bool {
-        let webkitPreviewDir = URL(fileURLWithPath: NSTemporaryDirectory())
-            .appendingPathComponent("wkPreview")
-            .absoluteString
+        let webkitPreviewDir = HtmlManager.previewBundleURL().absoluteString
 
         let urlString = url.absoluteString
         if urlString.starts(with: webkitPreviewDir) && urlString.contains("#") {
@@ -800,31 +809,24 @@ class MPreviewView: WKWebView, WKUIDelegate {
     private static func ensureBundlePreinitialized() {
         Task { @MainActor in
             guard !bundleInitialized else { return }
-            Task.detached {
-                await MainActor.run {
-                    guard !Self.bundleInitialized else { return }
-                }
-                let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
-                if !FileManager.default.fileExists(atPath: webkitPreview.path),
-                    let bundle = HtmlManager.getDownViewBundle(),
-                    let bundleResourceURL = bundle.resourceURL
-                {
-                    try? FileManager.default.createDirectory(at: webkitPreview, withIntermediateDirectories: true, attributes: nil)
-                    do {
-                        let fileList = try FileManager.default.contentsOfDirectory(atPath: bundleResourceURL.path)
-                        for file in fileList {
-                            let tmpURL = webkitPreview.appendingPathComponent(file)
-                            try? FileManager.default.copyItem(atPath: bundleResourceURL.appendingPathComponent(file).path, toPath: tmpURL.path)
-                        }
-                    } catch {
-                        await AppDelegate.trackError(error, context: "MPreviewView.bundleInit")
-                    }
-                }
-                await MainActor.run {
-                    Self.bundleInitialized = true
-                }
-            }
+            _ = HtmlManager.ensurePreviewResourcesAvailable()
+            Self.bundleInitialized = true
         }
+    }
+
+    @MainActor
+    private func handleApplicationDidBecomeActive() {
+        guard hasLoadedTemplate else { return }
+        guard HtmlManager.ensurePreviewResourcesAvailable() else { return }
+        guard let note else { return }
+        load(note: note, force: true)
+    }
+
+    @MainActor
+    private func removeAppDidBecomeActiveObserver() {
+        guard let appDidBecomeActiveObserver else { return }
+        NotificationCenter.default.removeObserver(appDidBecomeActiveObserver)
+        self.appDidBecomeActiveObserver = nil
     }
 
     private func loadImages(imagesStorage: URL, html: String) -> String {

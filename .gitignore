@@ -103,6 +103,7 @@ IrEditor/
 fonts/
 
 .claude/
+.agents/
 
 AGENTS.md
 agents.md

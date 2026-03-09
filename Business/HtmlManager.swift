@@ -69,7 +69,21 @@ class HtmlManager {
     }()
 
     // Paths
-    private static let webkitPreviewURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
+    private static let webkitPreviewURL: URL = {
+        let baseURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
+            ?? URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+        return baseURL
+            .appendingPathComponent(Bundle.main.bundleIdentifier ?? "MiaoYan", isDirectory: true)
+            .appendingPathComponent("wkPreview", isDirectory: true)
+    }()
+    private static let previewHealthCheckPaths = [
+        "index.html",
+        "ppt.html",
+        "css/base.css",
+        "css/typography.css",
+        "js/app.js",
+        "js/common.js",
+    ]
 
     // Constants
     private static let cdnBaseURL = "https://cdn.miaoyan.app/Resources"
@@ -312,6 +326,97 @@ class HtmlManager {
         return downViewBundle
     }
 
+    static func previewBundleURL() -> URL {
+        return webkitPreviewURL
+    }
+
+    private static func areRequiredPreviewResourcesMissing() -> Bool {
+        let fileManager = FileManager.default
+        return previewHealthCheckPaths.contains { relativePath in
+            !fileManager.fileExists(atPath: webkitPreviewURL.appendingPathComponent(relativePath).path)
+        }
+    }
+
+    private static func syncBundleContents(from sourceDirectory: URL, to destinationDirectory: URL) throws -> Bool {
+        let fileManager = FileManager.default
+        var repairedAnyFile = false
+
+        try fileManager.createDirectory(at: destinationDirectory, withIntermediateDirectories: true, attributes: nil)
+
+        let sourceItems = try fileManager.contentsOfDirectory(
+            at: sourceDirectory,
+            includingPropertiesForKeys: [.isDirectoryKey],
+            options: [.skipsHiddenFiles]
+        )
+
+        for sourceItem in sourceItems {
+            let resourceValues = try sourceItem.resourceValues(forKeys: [.isDirectoryKey])
+            let destinationItem = destinationDirectory.appendingPathComponent(
+                sourceItem.lastPathComponent,
+                isDirectory: resourceValues.isDirectory == true
+            )
+
+            if resourceValues.isDirectory == true {
+                repairedAnyFile = (try syncBundleContents(from: sourceItem, to: destinationItem)) || repairedAnyFile
+                continue
+            }
+
+            guard !fileManager.fileExists(atPath: destinationItem.path) else {
+                continue
+            }
+
+            try fileManager.createDirectory(
+                at: destinationItem.deletingLastPathComponent(),
+                withIntermediateDirectories: true,
+                attributes: nil
+            )
+            try fileManager.copyItem(at: sourceItem, to: destinationItem)
+            repairedAnyFile = true
+        }
+
+        return repairedAnyFile
+    }
+
+    @MainActor
+    @discardableResult
+    static func ensurePreviewResourcesAvailable() -> Bool {
+        guard let bundle = getDownViewBundle(),
+            let bundleResourceURL = bundle.resourceURL
+        else {
+            return false
+        }
+
+        let fileManager = FileManager.default
+        var repairedResources = areRequiredPreviewResourcesMissing()
+
+        do {
+            repairedResources = (try syncBundleContents(from: bundleResourceURL, to: webkitPreviewURL)) || repairedResources
+        } catch {
+            AppDelegate.trackError(error, context: "HtmlManager.ensurePreviewResourcesAvailable.copyBundleResource")
+        }
+
+        if let customCSS = UserDefaultsManagement.markdownPreviewCSS {
+            let cssDst = webkitPreviewURL.appendingPathComponent("css", isDirectory: true)
+            let styleDst = cssDst.appendingPathComponent("markdown-preview.css", isDirectory: false)
+            do {
+                try fileManager.createDirectory(at: cssDst, withIntermediateDirectories: true, attributes: nil)
+                let needsRefresh = !fileManager.fileExists(atPath: styleDst.path)
+                    || !fileManager.contentsEqual(atPath: customCSS.path, andPath: styleDst.path)
+                if needsRefresh {
+                    if fileManager.fileExists(atPath: styleDst.path) {
+                        try fileManager.removeItem(at: styleDst)
+                    }
+                    try fileManager.copyItem(at: customCSS, to: styleDst)
+                    repairedResources = true
+                }
+            } catch {
+                AppDelegate.trackError(error, context: "HtmlManager.ensurePreviewResourcesAvailable.copyCustomCSS")
+            }
+        }
+
+        return repairedResources
+    }
+
     private static func escapeForPPT(_ content: String) -> String {
         // Don't escape backticks as they're needed for code blocks in Markdown
         // Reveal.js markdown plugin handles them correctly
@@ -400,48 +505,13 @@ class HtmlManager {
 
     @MainActor
     static func createTemporaryBundle(pageHTMLString: String) -> URL? {
-        guard let bundle = getDownViewBundle(),
-            let bundleResourceURL = bundle.resourceURL
-        else {
+        guard getDownViewBundle() != nil else {
             return nil
         }
-
-        let customCSS = UserDefaultsManagement.markdownPreviewCSS
-
-        try? FileManager.default.createDirectory(at: webkitPreviewURL, withIntermediateDirectories: true, attributes: nil)
+        _ = ensurePreviewResourcesAvailable()
 
         let indexName = "index-\(UUID().uuidString).html"
         let indexURL = webkitPreviewURL.appendingPathComponent(indexName)
-
-        do {
-            let fileList = try FileManager.default.contentsOfDirectory(atPath: bundleResourceURL.path)
-            for file in fileList {
-                let tmpURL = webkitPreviewURL.appendingPathComponent(file)
-                if !FileManager.default.fileExists(atPath: tmpURL.path) {
-                    try? FileManager.default.copyItem(atPath: bundleResourceURL.appendingPathComponent(file).path, toPath: tmpURL.path)
-                }
-            }
-        } catch {
-            Task { @MainActor in
-                AppDelegate.trackError(error, context: "HtmlManager.createTemporaryBundle.copyBundleResource")
-            }
-        }
-
-        if let customCSS {
-            let cssDst = webkitPreviewURL.appendingPathComponent("css")
-            let styleDst = cssDst.appendingPathComponent("markdown-preview.css", isDirectory: false)
-            do {
-                try FileManager.default.createDirectory(at: cssDst, withIntermediateDirectories: true, attributes: nil)
-                if FileManager.default.fileExists(atPath: styleDst.path) {
-                    try FileManager.default.removeItem(at: styleDst)
-                }
-                _ = try FileManager.default.copyItem(at: customCSS, to: styleDst)
-            } catch {
-                Task { @MainActor in
-                    AppDelegate.trackError(error, context: "HtmlManager.createTemporaryBundle.copyCustomCSS")
-                }
-            }
-        }
 
         try? pageHTMLString.write(to: indexURL, atomically: true, encoding: .utf8)
 
