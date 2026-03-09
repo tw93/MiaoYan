@@ -165,8 +165,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         if let vc = resolveViewController() {
             vc.persistCurrentViewState()
         }
-        let webkitPreview = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("wkPreview")
-        try? FileManager.default.removeItem(at: webkitPreview)
+        try? FileManager.default.removeItem(at: HtmlManager.previewBundleURL())
         var temporary = URL(fileURLWithPath: NSTemporaryDirectory())
         temporary.appendPathComponent("ThumbnailsBig")
         try? FileManager.default.removeItem(at: temporary)
