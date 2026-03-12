@@ -89,22 +89,20 @@ class ImagePreviewWindow: NSWindow {
         showLightLoading(at: displayPoint)
 
         loadImage(from: imageURL) { [weak self] image in
-            DispatchQueue.main.async {
-                guard self?.currentImageURL == imageURL else { return }
+            guard self?.currentImageURL == imageURL else { return }
 
-                self?.hideLoadingIndicator()
+            self?.hideLoadingIndicator()
 
-                if let image = image {
-                    Self.imageCache.setObject(image, forKey: imageURL as NSString)
-                    self?.displayImage(image, at: displayPoint)
-                } else {
-                    self?.hidePreview()
-                }
+            if let image = image {
+                Self.imageCache.setObject(image, forKey: imageURL as NSString)
+                self?.displayImage(image, at: displayPoint)
+            } else {
+                self?.hidePreview()
             }
         }
     }
 
-    private func loadImage(from imageURL: String, completion: @escaping @Sendable (NSImage?) -> Void) {
+    private func loadImage(from imageURL: String, completion: @escaping @MainActor (NSImage?) -> Void) {
         if imageURL.hasPrefix("http://") || imageURL.hasPrefix("https://") {
             loadRemoteImage(from: imageURL, completion: completion)
         } else if imageURL.hasPrefix("file://") {
@@ -116,7 +114,7 @@ class ImagePreviewWindow: NSWindow {
         }
     }
 
-    private func loadRemoteImage(from url: String, completion: @escaping @Sendable (NSImage?) -> Void) {
+    private func loadRemoteImage(from url: String, completion: @escaping @MainActor (NSImage?) -> Void) {
         // Use URLSession with explicit timeout instead of Alamofire
         guard let imageURL = URL(string: url) else {
             completion(nil)
@@ -149,7 +147,7 @@ class ImagePreviewWindow: NSWindow {
         task.resume()
     }
 
-    private func loadLocalImage(from imagePath: String, completion: @escaping @Sendable (NSImage?) -> Void) {
+    private func loadLocalImage(from imagePath: String, completion: @escaping @MainActor (NSImage?) -> Void) {
         guard let note = EditTextView.note else {
             completion(nil)
             return
