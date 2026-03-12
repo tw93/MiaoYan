@@ -126,7 +126,10 @@ xcodebuild clean -scheme MiaoYan -configuration Release >/dev/null 2>&1 || true
 xcodebuild archive \
   -scheme MiaoYan \
   -configuration Release \
+  -destination "generic/platform=macOS" \
   -archivePath "$BUILD_DIR/MiaoYan.xcarchive" \
+  ARCHS="arm64 x86_64" \
+  ONLY_ACTIVE_ARCH=NO \
   CODE_SIGN_STYLE=Manual \
   CODE_SIGN_IDENTITY="$SIGNING_IDENTITY" \
   DEVELOPMENT_TEAM="$TEAM_ID" \

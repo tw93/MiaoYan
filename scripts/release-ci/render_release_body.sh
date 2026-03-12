@@ -75,5 +75,5 @@ mkdir -p "$(dirname "$OUTPUT")"
   echo
   echo "If you find MiaoYan useful, please consider giving it a star and recommending it to your friends."
   echo
-  echo "> https://github.com/tw93/Pake"
+  echo "> https://github.com/tw93/MiaoYan"
 } >"$OUTPUT"
