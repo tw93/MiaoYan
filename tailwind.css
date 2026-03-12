@@ -1,0 +1,201 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+:root {
+  --data-friend: '木子君、Jerk、芸璟、薛定谔的盲盒、沙溪、忸祁、*锐、木呀、π~mong、Hsin、Kake、喜多🍒、**飞、陆蔚青 sluke、红色的弓箭手、Catch、子岚、Linmi、小小小小小国、zhyncs、YuYuMi、匿名妙友、**辉、Robin、孑虚乌有、嗨嗨皮、熏锅锅、**泰、EugEnE 六金、Chen Chen、走鹃、飞🇨🇳🇨🇳、刘奇、**雄、邓旭东、**主、**得、*过、Wayne、再见孙悟空、牧野 Peikon、Grug、**文、奥特饭、LXC、瓮 J、董超、永遇乐、匿名妙友、Koobal、simonkuang、大团🐱、xiang、凨、Jimmy、互花米草、嘟嘟噜、晶晶、CLICK、折宝亭、*懂、*双、*泰、January、**招、Kamus、MING、WZ、夏清昕_Nicole、Rio :)、星星、Kieda、我们的曾经、*钦、我们的曾经、匿名妙友、Devqiu599、**梅、匿名妙友、坐和坐宽、匿名妙友、pan、明明会多努力学习、匿名妙友、Zan_Minkian、匿名妙友、李騁昊、西苑前、depthsy、Frank、Arthur、匿名妙友、Uwant、我L.N、Yorks0n、匿名妙友、曉傑同學、MartinKuo-XY、Pake很好用、刘青林、刘志龙、Images、毛毛、Remember、Feng、Edward、**书、Devqiu599、Shawn Harmsen、xxholly32、晚天、**谷、*祥、南京雨花吴彦祖、屠夫哥哥、Cheers、Cindy、严济之、落叶挽歌、xxholly32、匿名妙友、LL、美式咖啡、yancey、阿栋 Adonis、**渝、*鑫、**玲、**飞、**伦、darklinden、夏永锋、匿名妙友、Burn、XX、hpc4you阿斌、Reda、Joe-董健、HatMatrix、*洋、匿名妙友、世界线收束、一身都是月、匿名妙友、lx、匿名妙友、davywalker、匿名妙友、赵环宇 Henry、HE、tzxdtc、xxholly32、LittleWang6770、rexarski、shawnharmsen、**财、不是周日是周一、往事随风、DustinTang、凌一、徐俊国、Witt、祁陌、攸、*丽、*㒰、**轩、LZ、草草、吴超、Joel、匿名妙友、SkyWang、长发飘飘、LXA、梦游、HE、cc、Ga091an、沉寂、a锦龙、兜率、黑天小飞侠、YJ、Kelly、*涵、**钦、**涛、**高、**航、**文、**菲、**祚、**栋、Tyler、凌一、森度、童建飙、zhouwfang、HappyFox001、yo1995、mrmuminov、王胡砸2、zozo☁️、Cheers、*明、**卓、**彬、王有毒、液态蟒蛇🥖Castor、豪、后现代骑士、假城、Spencer、ʚDayday🥱ɞ、小光.Re2、Zy.😶、充钱就AC、王恩浩、👍、**山、AnNiE、源、jmchen、Fine、**碧、匿名妙友、Steven.Huang、He、**源、windwild、我的朋友叫垃圾呆、lc、匿名妙友';
+}
+
+.i18n-miao-people-desc:before {
+  content: '数据每日自动更新，当前 234 位朋友喜欢汤圆可乐';
+}
+[lang='en'] .i18n-miao-people-desc:before {
+  content: 'Daily sync · 234 friends like TangYuan & Coke';
+}
+
+body {
+  font-family: "TsangerJinKai02", "STKaiti", "KaiTi", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-display: swap;
+}
+
+.font-letter {
+  letter-spacing: 0.5px;
+  line-height: 1.7;
+}
+
+.miaoyan-image-container {
+  padding-bottom: 62.5%;
+  height: 0;
+}
+
+.gradient {
+  background: linear-gradient(60deg, #36563c 0%, #36563c 100%);
+}
+
+.i18n-switch-lang,
+.i18n-home-href {
+  z-index: 100;
+}
+
+.i18n-miao-href:before {
+  content: '喂猫 ❤️';
+}
+[lang='en'] .i18n-miao-href:before {
+  content: 'Like ❤️';
+}
+
+.i18n-miao-people:before {
+  content: '喂猫的朋友们';
+}
+[lang='en'] .i18n-miao-people:before {
+  content: 'Friends who feed cats';
+}
+
+.i18n-miao-support-heading:before {
+  content: '感谢大家请汤圆和可乐吃罐头';
+}
+[lang='en'] .i18n-miao-support-heading:before {
+  content: 'Thanks for supporting TangYuan & Coke';
+}
+
+.i18n-share-twitter:before {
+  content: '一键分享到 Twitter';
+}
+[lang='en'] .i18n-share-twitter:before {
+  content: 'Share To Twitter';
+}
+
+.i18n-home-href:before {
+  content: '首页';
+}
+[lang='en'] .i18n-home-href:before {
+  content: 'Home';
+}
+
+.i18n-switch-lang:before {
+  content: 'EN';
+}
+[lang='en'] .i18n-switch-lang:before {
+  content: '中文';
+}
+
+
+[lang='en'] .i18n-title {
+  letter-spacing: normal;
+  zoom: 0.86;
+  margin-right: 12px;
+}
+
+.hide-before:before {
+  display: none !important;
+}
+
+.i18n-title:before {
+  content: '妙言';
+}
+
+[lang='en'] .i18n-title:before {
+  content: 'MiaoYan';
+}
+
+.i18n-cats-desc:before {
+  content: '觉得不错？可以给我家「汤圆 & 可乐」买 🥩🍤 罐头吃！';
+}
+[lang='en'] .i18n-cats-desc:before {
+  content: 'Like it? Buy 🥩🍤 cans for my「TangYuan & Coke」.';
+}
+
+.i18n-description:before {
+  content: '轻灵的 Markdown 笔记本伴你写出妙言~';
+}
+[lang='en'] .i18n-description:before {
+  content: 'Lightweight Markdown app to help you write great sentences.';
+}
+
+[lang='en'] .i18n-description {
+  width: 105%;
+}
+
+.i18n-download:before {
+  content: '下载';
+}
+[lang='en'] .i18n-download:before {
+  content: 'Download';
+}
+
+.i18n-feature:before {
+  content: '特征';
+}
+[lang='en'] .i18n-feature:before {
+  content: 'Features';
+}
+.i18n-miao:before {
+  content: '妙';
+}
+[lang='en'] .i18n-miao:before {
+  content: 'Fantastic';
+}
+.i18n-miao-desc:before {
+  content: '1. 纯本地使用，无需联网即可使用，源文件保存\a 2. 安全，完全开源 Github，不会上传用户信息\a 3. 支持语法高亮、黑暗模式、国际化、演示模式、单独编辑、PPT 模式、导出文件、内部跳转、自动排版、图床、LaTeX、Mermaid、PlantUML、Markmap';
+}
+[lang='en'] .i18n-miao-desc:before {
+  content: '1. Purely local, no internet access required, source files saved.\a 2. Secure, fully open source Github, no user information uploaded.\a 3. Supports syntax highlighting, dark mode, internationalization, presentation mode, PPT mode, single edit mode, export file, internal jump, document auto typesetting, picture upload, laTeX, mermaid, plantUML, Markmap.';
+}
+
+@media (min-width: 1024px) {
+  [lang='en'] .i18n-jian-view.lg\:pl-48,
+  [lang='en'] .i18n-mei-view.lg\:pl-48 {
+    padding-left: 4rem;
+  }
+}
+.i18n-mei:before {
+  content: '美';
+}
+[lang='en'] .i18n-mei:before {
+  content: 'Beauty';
+}
+.i18n-mei-desc:before {
+  content: '1. 极简的设计风格，没有多余的东西\a 2. 文件夹 + 文件列表 + 编辑器三栏设计，可收起\a 3. 中文默认使用霞鹜文楷字体，让文字也很美';
+}
+[lang='en'] .i18n-mei-desc:before {
+  content: '1. Minimalist design style, no unnecessary stuff.\a 2. Folder + Note list + Editor three-column design, can be tucked away.\a 3. Chinese default use LxgwWenKai font, make the text is also beautiful.';
+}
+
+.i18n-kuai:before {
+  content: '快';
+}
+[lang='en'] .i18n-kuai:before {
+  content: 'Fast';
+}
+.i18n-kuai-desc:before {
+  content: '1. 使用 Swift5 开发，原生极致性能\a 2. 对多文件做了特别的性能优化，确保不卡顿\a 3. 相比当前市面上套壳 Web 的方式轻巧很多';
+}
+[lang='en'] .i18n-kuai-desc:before {
+  content: '1. Developed in Swift5 for the ultimate in native performance.\a 2. Specially optimized for multi-file performance to ensure no lag.\a 3. Much lighter than any electron app on the market.';
+}
+
+.i18n-jian:before {
+  content: '简';
+}
+[lang='en'] .i18n-jian:before {
+  content: 'Simple';
+}
+.i18n-jian-desc:before {
+  content: '1. 操作过程很轻巧，不耽误你的时间\a 2. 编辑体验媲美原生代码编辑器\a 3. 内置众多快捷键助你快人一步';
+}
+[lang='en'] .i18n-jian-desc:before {
+  content: '1. The operation process is very light and does not delay your time.\a 2. Editing experience comparable to native code editor.\a 3. Many built-in shortcuts to help you get up to speed.';
+}
+
+.i18n-footer-title:before {
+  content: '觉得不错？';
+}
+[lang='en'] .i18n-footer-title:before {
+  content: 'Feel Good?';
+}
+.i18n-footer-desc:before {
+  content: '将妙言分享给你的好朋友~';
+}
+[lang='en'] .i18n-footer-desc:before {
+  content: 'Share MiaoYan with your friends~';
+}
