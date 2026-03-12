@@ -1233,11 +1233,6 @@ extension ViewController {
             }
         }
 
-        if event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_1, !UserDefaultsManagement.presentation {
-            toggleSidebarPanel(self)
-            return false
-        }
-
         if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_I, !UserDefaultsManagement.presentation {
             toggleInfo()
             return false
@@ -1405,11 +1400,6 @@ extension ViewController {
                 NSApp.mainWindow?.makeFirstResponder(search)
                 return true
             }
-        }
-
-        if event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_1, !UserDefaultsManagement.presentation {
-            toggleSidebarPanel("")
-            return false
         }
 
         if event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_S {
