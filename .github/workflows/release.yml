@@ -10,14 +10,6 @@ on:
         description: "Tag to release, e.g. V2.8.0"
         required: false
         type: string
-      ai_required:
-        description: "Fail the workflow when AI content generation fails"
-        required: false
-        default: "true"
-        type: choice
-        options:
-          - "true"
-          - "false"
 
 permissions:
   contents: write
@@ -30,7 +22,6 @@ jobs:
       version: ${{ steps.vars.outputs.version }}
       previous_tag: ${{ steps.vars.outputs.previous_tag }}
       release_sha: ${{ steps.vars.outputs.release_sha }}
-      ai_required: ${{ steps.vars.outputs.ai_required }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -40,7 +31,6 @@ jobs:
       - id: vars
         env:
           TAG_INPUT: ${{ github.event.inputs.tag }}
-          AI_REQUIRED_INPUT: ${{ github.event.inputs.ai_required }}
         run: |
           set -euo pipefail
 
@@ -85,62 +75,10 @@ jobs:
           )"
           release_sha="$(git rev-list -n 1 "$tag")"
 
-          ai_required="${AI_REQUIRED_INPUT:-true}"
-          [[ -z "$ai_required" ]] && ai_required="true"
-
-          echo "tag=$tag" >>"$GITHUB_OUTPUT"
-          echo "version=$version" >>"$GITHUB_OUTPUT"
-          echo "previous_tag=$previous_tag" >>"$GITHUB_OUTPUT"
-          echo "release_sha=$release_sha" >>"$GITHUB_OUTPUT"
-          echo "ai_required=$ai_required" >>"$GITHUB_OUTPUT"
-
-  generate_release_content:
-    needs: preflight
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Checkout release tag
-        run: git checkout "${{ needs.preflight.outputs.tag }}"
-
-      - name: Load latest appcast style sample
-        run: |
-          set -euo pipefail
-          git fetch origin vercel --depth=1
-          style_sample="$(
-            git show origin/vercel:appcast.xml \
-              | awk '/<item>/{flag=1} flag{print} /<\/item>/{exit}' \
-              | head -n 80
-          )"
-          {
-            echo "RELEASE_STYLE_EXAMPLE<<EOF"
-            echo "$style_sample"
-            echo "EOF"
-          } >> "$GITHUB_ENV"
-
-      - name: Generate AI release content
-        env:
-          AI_BASE_URL: ${{ secrets.AI_BASE_URL != '' && secrets.AI_BASE_URL || 'https://api.vivgrid.com' }}
-          AI_API_KEY: ${{ secrets.AI_API_KEY }}
-          AI_MODEL: ${{ secrets.AI_MODEL != '' && secrets.AI_MODEL || 'gpt-5.3-codex' }}
-          AI_REQUIRED: ${{ needs.preflight.outputs.ai_required }}
-        run: |
-          set -euo pipefail
-          chmod +x scripts/release-ci/generate_release_content.sh
-          scripts/release-ci/generate_release_content.sh \
-            --tag "${{ needs.preflight.outputs.tag }}" \
-            --version "${{ needs.preflight.outputs.version }}" \
-            --prev-tag "${{ needs.preflight.outputs.previous_tag }}" \
-            --output "build/release-content.json"
-          jq . build/release-content.json
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: release-content
-          path: build/release-content.json
-          if-no-files-found: error
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "previous_tag=$previous_tag" >> "$GITHUB_OUTPUT"
+          echo "release_sha=$release_sha" >> "$GITHUB_OUTPUT"
 
   build_notarize_package:
     needs: preflight
@@ -206,7 +144,6 @@ jobs:
   publish_release:
     needs:
       - preflight
-      - generate_release_content
       - build_notarize_package
     runs-on: ubuntu-latest
     concurrency:
@@ -219,29 +156,8 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          name: release-content
-          path: build
-
-      - uses: actions/download-artifact@v4
-        with:
           name: release-assets
           path: dist
-
-      - name: Render GitHub release body
-        run: |
-          set -euo pipefail
-          chmod +x scripts/release-ci/render_release_body.sh
-          scripts/release-ci/render_release_body.sh \
-            --notes build/release-content.json \
-            --version "${{ needs.preflight.outputs.version }}" \
-            --output build/release-body.md
-
-      - id: release_title
-        run: |
-          set -euo pipefail
-          monster="$(jq -r '.monster_name' build/release-content.json)"
-          emoji="$(jq -r '.emoji' build/release-content.json)"
-          echo "title=V${{ needs.preflight.outputs.version }} ${monster} ${emoji}" >> "$GITHUB_OUTPUT"
 
       - name: Update vercel branch appcast and artifacts
         run: |
@@ -270,7 +186,6 @@ jobs:
 
           "$UPDATE_APPCAST_SCRIPT" \
             --appcast appcast.xml \
-            --notes build/release-content.json \
             --version "$VERSION" \
             --pub-date "$pub_date" \
             --signature "$signature" \
@@ -301,11 +216,10 @@ jobs:
         with:
           tag_name: ${{ needs.preflight.outputs.tag }}
           target_commitish: ${{ needs.preflight.outputs.release_sha }}
-          name: ${{ steps.release_title.outputs.title }}
-          body_path: build/release-body.md
+          name: ${{ needs.preflight.outputs.tag }}
           files: |
             dist/MiaoYan.dmg
             dist/MiaoYan_V${{ needs.preflight.outputs.version }}.zip
           fail_on_unmatched_files: true
-          generate_release_notes: false
+          generate_release_notes: true
           overwrite_files: true
