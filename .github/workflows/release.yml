@@ -266,7 +266,7 @@ jobs:
           signature="$(jq -r '.sparkle_signature' "$META_PATH")"
           length="$(jq -r '.zip_length' "$META_PATH")"
           pub_date="$(jq -r '.pub_date' "$META_PATH")"
-          zip_url="https://miaoyan.app/Release/MiaoYan_V${VERSION}.zip"
+          zip_url="https://github.com/tw93/MiaoYan/releases/download/V${VERSION}/MiaoYan_V${VERSION}.zip"
 
           "$UPDATE_APPCAST_SCRIPT" \
             --appcast appcast.xml \
@@ -303,7 +303,9 @@ jobs:
           target_commitish: ${{ needs.preflight.outputs.release_sha }}
           name: ${{ steps.release_title.outputs.title }}
           body_path: build/release-body.md
-          files: dist/MiaoYan.dmg
+          files: |
+            dist/MiaoYan.dmg
+            dist/MiaoYan_V${{ needs.preflight.outputs.version }}.zip
           fail_on_unmatched_files: true
           generate_release_notes: false
           overwrite_files: true
