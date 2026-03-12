@@ -174,7 +174,9 @@ fi
 
 api_style="$AI_API_STYLE"
 if [[ "$api_style" == "auto" ]]; then
-  if [[ "$AI_MODEL" == gpt-* || "$AI_MODEL" == o1* || "$AI_MODEL" == o3* || "$AI_MODEL" == o4* ]]; then
+  if [[ "$AI_MODEL" == gpt-5.4* ]]; then
+    api_style="chat_completions"
+  elif [[ "$AI_MODEL" == gpt-* || "$AI_MODEL" == o1* || "$AI_MODEL" == o3* || "$AI_MODEL" == o4* ]]; then
     api_style="responses"
   else
     api_style="anthropic"
@@ -241,6 +243,9 @@ build_chat_completions_payload() {
     '{
       model: $model,
       max_tokens: 1400,
+      response_format: {
+        type: "json_object"
+      },
       messages: [
         {
           role: "user",
@@ -330,6 +335,22 @@ if [[ "$api_style" == "responses" ]]; then
     -d "$(build_chat_completions_payload)"; then
     request_succeeded=true
   fi
+elif [[ "$api_style" == "chat_completions" ]]; then
+  if run_ai_request \
+    "$(openai_endpoint "chat/completions")" \
+    "$response_file" \
+    -H "content-type: application/json" \
+    -H "authorization: Bearer ${AI_API_KEY}" \
+    -d "$(build_chat_completions_payload)"; then
+    request_succeeded=true
+  elif run_ai_request \
+    "$(openai_endpoint "responses")" \
+    "$response_file" \
+    -H "content-type: application/json" \
+    -H "authorization: Bearer ${AI_API_KEY}" \
+    -d "$(build_responses_payload)"; then
+    request_succeeded=true
+  fi
 else
   if run_ai_request \
     "$(anthropic_endpoint)" \
@@ -362,12 +383,22 @@ fi
 
 text="$(
   jq -r '
-    .output_text
-    // ([.output[]? | .content[]? | select(.type == "output_text" or .type == "text") | (.text // .content // "")] | join("\n"))
-    // ([.content[]? | select(.type == "text") | .text] | join("\n"))
-    // .completion
-    // .choices[0].message.content
-    // ""
+    [
+      .output_text,
+      ([.output[]? | .content[]? | select(.type == "output_text" or .type == "text") | (.text // .content // "")] | join("\n")),
+      ([.content[]? | select(.type == "text") | (.text // .content // "")] | join("\n")),
+      .completion,
+      (
+        if (.choices[0].message.content? | type) == "array" then
+          [.choices[0].message.content[]? | (.text // .content // "")]
+          | join("\n")
+        else
+          .choices[0].message.content
+        end
+      )
+    ]
+    | map(select(type == "string" and length > 0))
+    | .[0] // ""
   ' "$response_file"
 )"
 rm -f "$response_file"

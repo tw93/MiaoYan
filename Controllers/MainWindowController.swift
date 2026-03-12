@@ -4,7 +4,7 @@ import AppKit
 class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestoration {
     let notesListUndoManager = UndoManager()
     var editorUndoManager = UndoManager()
-    private var appearanceObservation: NSKeyValueObservation?
+    private var isObservingAppearance = false
 
     override func windowDidLoad() {
         let appDelegate = NSApplication.shared.delegate as! AppDelegate
@@ -36,13 +36,24 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
     }
 
     private func observeAppearanceChanges() {
-        guard appearanceObservation == nil, let contentView = window?.contentView else {
+        guard !isObservingAppearance, let contentView = window?.contentView else {
             return
         }
 
-        appearanceObservation = contentView.observe(\.effectiveAppearance, options: [.new]) { [weak self] _, _ in
+        contentView.addObserver(
+            self,
+            forKeyPath: "effectiveAppearance",
+            options: [.new],
+            context: nil
+        )
+        isObservingAppearance = true
+    }
+
+    // swiftlint:disable:next block_based_kvo
+    nonisolated override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "effectiveAppearance" {
             Task { @MainActor in
-                self?.handleAppearanceChange()
+                handleAppearanceChange()
             }
         }
     }
@@ -199,6 +210,11 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
     }
 
     func windowWillClose(_ notification: Notification) {
+        if isObservingAppearance, let contentView = window?.contentView {
+            contentView.removeObserver(self, forKeyPath: "effectiveAppearance")
+            isObservingAppearance = false
+        }
+        NotificationCenter.default.removeObserver(self, name: .alwaysOnTopChanged, object: nil)
         AppContext.shared.viewController?.persistCurrentViewState()
     }
 
