@@ -80,8 +80,7 @@ extension ViewController {
 
     @IBAction func quiteApp(_ sender: Any) {
         if UserDefaultsManagement.isSingleMode {
-            UserDefaultsManagement.isSingleMode = false
-            UserDefaultsManagement.singleModePath = ""
+            UserDefaultsManagement.clearSingleMode()
             UserDefaultsManagement.isFirstLaunch = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 NSApplication.shared.terminate(self)
@@ -129,8 +128,7 @@ extension ViewController {
         panel.begin { result in
             if result == NSApplication.ModalResponse.OK {
                 let urls = panel.urls
-                UserDefaultsManagement.singleModePath = urls[0].path
-                UserDefaultsManagement.isSingleMode = true
+                UserDefaultsManagement.beginSingleMode(for: urls[0])
                 self.restart()
             }
         }
@@ -1252,9 +1250,8 @@ extension ViewController {
 
         if event.keyCode == kVK_ANSI_W, event.modifierFlags.contains(.command), event.modifierFlags.contains(.shift) {
             if UserDefaultsManagement.isSingleMode {
-                UserDefaultsManagement.isSingleMode = false
+                UserDefaultsManagement.clearSingleMode()
                 UserDefaultsManagement.isFirstLaunch = true
-                UserDefaultsManagement.singleModePath = ""
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     self.restart()
                 }

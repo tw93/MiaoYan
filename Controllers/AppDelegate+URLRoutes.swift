@@ -49,8 +49,7 @@ extension AppDelegate {
     @MainActor
     func openNotes(urls: [URL]) {
         guard let vc = ViewController.shared() else { return }
-        UserDefaultsManagement.singleModePath = urls[0].path
-        UserDefaultsManagement.isSingleMode = true
+        UserDefaultsManagement.beginSingleMode(for: urls[0])
         vc.restart()
     }
 
