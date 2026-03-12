@@ -223,73 +223,136 @@ if [[ -n "$STYLE_EXAMPLE" ]]; then
 ${STYLE_EXAMPLE}"
 fi
 
-payload="$(
-  if [[ "$api_style" == "responses" ]]; then
-    jq -n \
-      --arg model "$AI_MODEL" \
-      --arg prompt "$prompt" \
-      '{
-        model: $model,
-        input: $prompt,
-        max_output_tokens: 1400
-      }'
+build_responses_payload() {
+  jq -n \
+    --arg model "$AI_MODEL" \
+    --arg prompt "$prompt" \
+    '{
+      model: $model,
+      input: $prompt,
+      max_output_tokens: 1400
+    }'
+}
+
+build_chat_completions_payload() {
+  jq -n \
+    --arg model "$AI_MODEL" \
+    --arg prompt "$prompt" \
+    '{
+      model: $model,
+      max_tokens: 1400,
+      messages: [
+        {
+          role: "user",
+          content: $prompt
+        }
+      ]
+    }'
+}
+
+build_anthropic_payload() {
+  jq -n \
+    --arg model "$AI_MODEL" \
+    --arg prompt "$prompt" \
+    '{
+      model: $model,
+      max_tokens: 1400,
+      temperature: 0.2,
+      messages: [
+        {
+          role: "user",
+          content: $prompt
+        }
+      ]
+    }'
+}
+
+openai_endpoint() {
+  local endpoint="${AI_BASE_URL%/}"
+  local suffix="$1"
+  if [[ "$endpoint" == */v1 ]]; then
+    printf '%s/%s\n' "$endpoint" "$suffix"
   else
-    jq -n \
-      --arg model "$AI_MODEL" \
-      --arg prompt "$prompt" \
-      '{
-        model: $model,
-        max_tokens: 1400,
-        temperature: 0.2,
-        messages: [
-          {
-            role: "user",
-            content: $prompt
-          }
-        ]
-      }'
+    printf '%s/v1/%s\n' "$endpoint" "$suffix"
   fi
-)"
+}
+
+anthropic_endpoint() {
+  local endpoint="${AI_BASE_URL%/}"
+  if [[ "$endpoint" == */v1 ]]; then
+    printf '%s/messages\n' "$endpoint"
+  else
+    printf '%s/v1/messages\n' "$endpoint"
+  fi
+}
+
+run_ai_request() {
+  local endpoint="$1"
+  local response_file="$2"
+  shift 2
+
+  local http_code
+  local status
+  set +e
+  http_code="$(curl -sS "$endpoint" "$@" -o "$response_file" -w '%{http_code}')"
+  status=$?
+  set -e
+
+  if [[ $status -eq 0 && "$http_code" =~ ^2 ]]; then
+    return 0
+  fi
+
+  echo "AI request failed: endpoint=${endpoint} http=${http_code:-unknown}" >&2
+  if [[ -s "$response_file" ]]; then
+    cat "$response_file" >&2
+    echo >&2
+  fi
+
+  return 1
+}
 
 response_file="$(mktemp)"
+request_succeeded=false
+
 if [[ "$api_style" == "responses" ]]; then
-  endpoint="${AI_BASE_URL%/}"
-  if [[ "$endpoint" != */responses ]]; then
-    if [[ "$endpoint" == */v1 ]]; then
-      endpoint="${endpoint}/responses"
-    else
-      endpoint="${endpoint}/v1/responses"
-    fi
+  if run_ai_request \
+    "$(openai_endpoint "responses")" \
+    "$response_file" \
+    -H "content-type: application/json" \
+    -H "authorization: Bearer ${AI_API_KEY}" \
+    -d "$(build_responses_payload)"; then
+    request_succeeded=true
+  elif run_ai_request \
+    "$(openai_endpoint "chat/completions")" \
+    "$response_file" \
+    -H "content-type: application/json" \
+    -H "authorization: Bearer ${AI_API_KEY}" \
+    -d "$(build_chat_completions_payload)"; then
+    request_succeeded=true
   fi
-
-  curl_cmd=(
-    curl -fsSL "$endpoint"
-    -H "content-type: application/json"
-    -H "authorization: Bearer ${AI_API_KEY}"
-    -d "$payload"
-  )
 else
-  endpoint="${AI_BASE_URL%/}"
-  if [[ "$endpoint" != */messages ]]; then
-    if [[ "$endpoint" == */v1 ]]; then
-      endpoint="${endpoint}/messages"
-    else
-      endpoint="${endpoint}/v1/messages"
-    fi
+  if run_ai_request \
+    "$(anthropic_endpoint)" \
+    "$response_file" \
+    -H "content-type: application/json" \
+    -H "x-api-key: ${AI_API_KEY}" \
+    -H "anthropic-version: 2023-06-01" \
+    -d "$(build_anthropic_payload)"; then
+    request_succeeded=true
+  elif run_ai_request \
+    "$(openai_endpoint "chat/completions")" \
+    "$response_file" \
+    -H "content-type: application/json" \
+    -H "authorization: Bearer ${AI_API_KEY}" \
+    -d "$(build_chat_completions_payload)"; then
+    request_succeeded=true
   fi
-
-  curl_cmd=(
-    curl -fsSL "$endpoint"
-    -H "content-type: application/json"
-    -H "x-api-key: ${AI_API_KEY}"
-    -H "anthropic-version: 2023-06-01"
-    -d "$payload"
-  )
 fi
 
-if ! "${curl_cmd[@]}" >"$response_file"; then
+if [[ "$request_succeeded" != "true" ]]; then
   if [[ "$AI_REQUIRED" == "true" ]]; then
     echo "AI request failed and AI_REQUIRED=true." >&2
+    rm -f "$response_file"
     exit 1
   fi
   fallback_json
