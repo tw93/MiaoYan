@@ -291,6 +291,28 @@ anthropic_endpoint() {
   fi
 }
 
+responses_api_supported() {
+  [[ "$AI_MODEL" != gpt-5.4* ]]
+}
+
+should_retry_request() {
+  local curl_status="$1"
+  local http_code="${2:-}"
+
+  if [[ "$curl_status" -ne 0 ]]; then
+    return 0
+  fi
+
+  case "$http_code" in
+    000|408|409|425|429|500|502|503|504)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
 run_ai_request() {
   local endpoint="$1"
   local response_file="$2"
@@ -298,20 +320,33 @@ run_ai_request() {
 
   local http_code
   local status
-  set +e
-  http_code="$(curl -sS "$endpoint" "$@" -o "$response_file" -w '%{http_code}')"
-  status=$?
-  set -e
+  local attempt max_attempts
+  attempt=1
+  max_attempts=3
 
-  if [[ $status -eq 0 && "$http_code" =~ ^2 ]]; then
-    return 0
-  fi
+  while ((attempt <= max_attempts)); do
+    set +e
+    http_code="$(curl -sS "$endpoint" "$@" -o "$response_file" -w '%{http_code}')"
+    status=$?
+    set -e
 
-  echo "AI request failed: endpoint=${endpoint} http=${http_code:-unknown}" >&2
-  if [[ -s "$response_file" ]]; then
-    cat "$response_file" >&2
-    echo >&2
-  fi
+    if [[ $status -eq 0 && "$http_code" =~ ^2 ]]; then
+      return 0
+    fi
+
+    echo "AI request failed: endpoint=${endpoint} http=${http_code:-unknown} attempt=${attempt}/${max_attempts}" >&2
+    if [[ -s "$response_file" ]]; then
+      cat "$response_file" >&2
+      echo >&2
+    fi
+
+    if ! should_retry_request "$status" "${http_code:-}" || ((attempt == max_attempts)); then
+      return 1
+    fi
+
+    sleep "$attempt"
+    attempt=$((attempt + 1))
+  done
 
   return 1
 }
@@ -343,7 +378,7 @@ elif [[ "$api_style" == "chat_completions" ]]; then
     -H "authorization: Bearer ${AI_API_KEY}" \
     -d "$(build_chat_completions_payload)"; then
     request_succeeded=true
-  elif run_ai_request \
+  elif responses_api_supported && run_ai_request \
     "$(openai_endpoint "responses")" \
     "$response_file" \
     -H "content-type: application/json" \
