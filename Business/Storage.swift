@@ -39,22 +39,20 @@ class Storage {
     var pinned: Int = 0
 
     private var bookmarks = [URL]()
-    private var scopedStorageURL: URL?
+    private var scopedURLs = [URL]()
 
     init() {
         guard var url = UserDefaultsManagement.storageUrl else {
             return
         }
 
-        // Start accessing security scoped resource if bookmark-based
-        if UserDefaultsManagement.storageBookmark != nil {
-            if url.startAccessingSecurityScopedResource() {
-                scopedStorageURL = url
-            }
-        }
+        startAccessingSecurityScopedResourceIfNeeded(url, bookmarkData: UserDefaultsManagement.storageBookmark)
 
-        if UserDefaultsManagement.isSingleMode, !UserDefaultsManagement.singleModePath.isEmpty {
-            let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
+        if UserDefaultsManagement.isSingleMode, let singleModeUrl = UserDefaultsManagement.singleModeURL {
+            let singleModeScopeURL = UserDefaultsManagement.singleModeScopeURL ?? singleModeUrl
+            let singleModeScopeBookmark = UserDefaultsManagement.singleModeAccessBookmark ?? UserDefaultsManagement.singleModeBookmark
+
+            startAccessingSecurityScopedResourceIfNeeded(singleModeScopeURL, bookmarkData: singleModeScopeBookmark)
             if !FileManager.default.directoryExists(atUrl: singleModeUrl) {
                 url = singleModeUrl.deletingLastPathComponent()
             } else {
@@ -229,12 +227,35 @@ class Storage {
             added.append(project)
         }
 
-        if project.isRoot, !UserDefaultsManagement.isSingleMode {
+        let shouldScanSubProjects: Bool
+        if project.isRoot {
+            if UserDefaultsManagement.isSingleMode, let singleModeUrl = UserDefaultsManagement.singleModeURL {
+                shouldScanSubProjects =
+                    FileManager.default.directoryExists(atUrl: singleModeUrl)
+                    && project.url == singleModeUrl
+            } else {
+                shouldScanSubProjects = true
+            }
+        } else {
+            shouldScanSubProjects = false
+        }
+
+        if shouldScanSubProjects {
             let addedSubProjects = checkSub(url: project.url, parent: project)
             added += addedSubProjects
         }
 
         return added
+    }
+
+    private func startAccessingSecurityScopedResourceIfNeeded(_ url: URL, bookmarkData: Data?) {
+        guard bookmarkData != nil else {
+            return
+        }
+
+        if url.startAccessingSecurityScopedResource() {
+            scopedURLs.append(url)
+        }
     }
 
     func getTrash(url: URL) -> URL? {
@@ -259,6 +280,16 @@ class Storage {
             loadedProjectInfo.removeAll()
         }
 
+        let singleModeRootProject: Project? = {
+            guard UserDefaultsManagement.isSingleMode,
+                let singleModeURL = UserDefaultsManagement.singleModeURL,
+                FileManager.default.directoryExists(atUrl: singleModeURL)
+            else {
+                return nil
+            }
+            return getRootProject()
+        }()
+
         for project in projects {
             if project.isTrash, !withTrash {
                 continue
@@ -267,8 +298,11 @@ class Storage {
             if project.isRoot, skipRoot {
                 continue
             }
-            if UserDefaultsManagement.isSingleMode {
-                let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath)
+            if let singleModeRootProject, project.isDescendant(of: singleModeRootProject) {
+                loadLabel(project)
+                continue
+            }
+            if UserDefaultsManagement.isSingleMode, let singleModeUrl = UserDefaultsManagement.singleModeURL {
                 let singleRootUrl = singleModeUrl.deletingLastPathComponent()
 
                 if project.url == singleModeUrl {
@@ -1073,7 +1107,9 @@ class Storage {
     }
 
     deinit {
-        scopedStorageURL?.stopAccessingSecurityScopedResource()
+        for url in scopedURLs {
+            url.stopAccessingSecurityScopedResource()
+        }
     }
 }
 

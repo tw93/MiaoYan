@@ -982,11 +982,21 @@ class ViewController:
         var shouldSelectSidebarItem = true
         var targetProject: Project?
         var targetSidebarItem: SidebarItem?
+        let singleModeUrl = UserDefaultsManagement.singleModeURL
+            ?? URL(fileURLWithPath: UserDefaultsManagement.singleModePath).resolvingSymlinksInPath()
+        let isSingleModeDirectory =
+            UserDefaultsManagement.isSingleMode && FileManager.default.directoryExists(atUrl: singleModeUrl)
+
+        if isSingleModeDirectory,
+            let items = storageOutlineView.sidebarItems,
+            let allIndex = items.firstIndex(where: { ($0 as? SidebarItem)?.type == .All })
+        {
+            lastSidebarItem = allIndex
+            targetSidebarItem = items[allIndex] as? SidebarItem
+        }
 
         // Issue #455: In Single Mode, we must find the correct project containing the file
-        if UserDefaultsManagement.isSingleMode {
-            let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath).resolvingSymlinksInPath()
-
+        if UserDefaultsManagement.isSingleMode, !isSingleModeDirectory {
             if let project = storage.getProjectBy(url: singleModeUrl) {
                 targetProject = project
 
@@ -1041,10 +1051,13 @@ class ViewController:
                 }
             }
             if UserDefaultsManagement.isSingleMode {
-                let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath).resolvingSymlinksInPath()
-                self.hideSidebar("")
+                if isSingleModeDirectory {
+                    self.showSidebar("")
+                } else {
+                    self.hideSidebar("")
+                    self.selectSingleModeNote(for: singleModeUrl)
+                }
 
-                self.selectSingleModeNote(for: singleModeUrl)
             }
 
             self.storageOutlineView.isLaunch = false

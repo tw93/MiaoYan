@@ -117,12 +117,18 @@ extension ViewController {
         var finalProjects = projects
         var sidebarName: String?
 
+        let singleModeUrl = UserDefaultsManagement.singleModeURL
+            ?? URL(fileURLWithPath: UserDefaultsManagement.singleModePath).resolvingSymlinksInPath()
+        let isSingleModeDirectory =
+            UserDefaultsManagement.isSingleMode && FileManager.default.directoryExists(atUrl: singleModeUrl)
+
         if searchText == nil,
             UserDefaultsManagement.isSingleMode,
             finalProjects == nil
         {
-            let singleModeUrl = URL(fileURLWithPath: UserDefaultsManagement.singleModePath).resolvingSymlinksInPath()
-            if let project = storage.getProjectBy(url: singleModeUrl) {
+            if !FileManager.default.directoryExists(atUrl: singleModeUrl),
+                let project = storage.getProjectBy(url: singleModeUrl)
+            {
                 finalProjects = [project]
             }
         }
@@ -135,6 +141,15 @@ extension ViewController {
                 finalSidebarItem = getSidebarItem()
             }
             sidebarName = finalSidebarItem?.getName()
+        }
+
+        if searchText == nil,
+            isSingleModeDirectory,
+            finalSidebarItem?.type == .All,
+            let rootProject = storage.getRootProject(),
+            rootProject.url == singleModeUrl
+        {
+            finalProjects = [rootProject] + storage.getChildProjects(project: rootProject)
         }
 
         let filter = searchText ?? self.search.stringValue
@@ -526,11 +541,22 @@ extension ViewController {
             terms = search.stringValue.split(separator: " ")
         }
 
+        let matchesScopedProjects = projects?.contains(where: { note.project.isDescendant(of: $0) }) ?? false
+        let matchesSidebar: Bool
+
+        if type == .Trash {
+            matchesSidebar = true
+        } else if matchesScopedProjects {
+            matchesSidebar = true
+        } else if type == .All {
+            matchesSidebar = note.project.showInCommon
+        } else {
+            matchesSidebar = false
+        }
+
         return !note.name.isEmpty
             && (filter.isEmpty || isMatched(note: note, terms: terms!).matched)
-            && (type == .All && note.project.showInCommon
-                || (type != .All && (projects?.contains(where: { note.project.isDescendant(of: $0) }) ?? false))
-                || type == .Trash)
+            && matchesSidebar
             && (type == .Trash && note.isTrash()
                 || type != .Trash && !note.isTrash())
     }

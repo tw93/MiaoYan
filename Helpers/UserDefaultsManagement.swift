@@ -97,6 +97,8 @@ public enum UserDefaultsManagement {
         static let SortDirection = "sortDirection"
         static let IsSingleMode = "isSingleMode"
         static let SingleModePath = "singleModePath"
+        static let SingleModeBookmark = "singleModeBookmark"
+        static let SingleModeAccessBookmark = "singleModeAccessBookmark"
         static let PreviewWidth = "previewWidth"
         static let PreviewLocation = "previewLocation"
         static let EditorLineBreak = "editorLineBreak"
@@ -280,6 +282,140 @@ public enum UserDefaultsManagement {
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.SingleModePath)
         }
+    }
+    static var singleModeBookmark: Data? {
+        get {
+            UserDefaults.standard.data(forKey: Constants.SingleModeBookmark)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.SingleModeBookmark)
+        }
+    }
+    static var singleModeAccessBookmark: Data? {
+        get {
+            UserDefaults.standard.data(forKey: Constants.SingleModeAccessBookmark)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.SingleModeAccessBookmark)
+        }
+    }
+
+    private static func resolveSecurityScopedURL(
+        bookmarkData: Data?,
+        bookmarkKey: String,
+        context: String,
+        resolveSymlinks: Bool = true
+    ) -> URL? {
+        guard let bookmarkData else {
+            return nil
+        }
+
+        var isStale = false
+        do {
+            let url = try URL(
+                resolvingBookmarkData: bookmarkData,
+                options: .withSecurityScope,
+                relativeTo: nil,
+                bookmarkDataIsStale: &isStale)
+            if isStale {
+                do {
+                    let newBookmark = try url.bookmarkData(
+                        options: .withSecurityScope,
+                        includingResourceValuesForKeys: nil,
+                        relativeTo: nil)
+                    UserDefaults.standard.set(newBookmark, forKey: bookmarkKey)
+                } catch {
+                    AppDelegate.trackError(error, context: "\(context).refreshStaleBookmark")
+                }
+            }
+            return resolveSymlinks ? url.resolvingSymlinksInPath() : url
+        } catch {
+            AppDelegate.trackError(error, context: "\(context).resolveBookmark")
+        }
+
+        return nil
+    }
+
+    static var singleModeURL: URL? {
+        if let url = resolveSecurityScopedURL(
+            bookmarkData: singleModeBookmark,
+            bookmarkKey: Constants.SingleModeBookmark,
+            context: "UserDefaultsManagement.singleModeURL"
+        ) {
+            return url
+        }
+
+        guard !singleModePath.isEmpty else {
+            return nil
+        }
+
+        return URL(fileURLWithPath: singleModePath).resolvingSymlinksInPath()
+    }
+
+    static var singleModeScopeURL: URL? {
+        if let url = resolveSecurityScopedURL(
+            bookmarkData: singleModeAccessBookmark,
+            bookmarkKey: Constants.SingleModeAccessBookmark,
+            context: "UserDefaultsManagement.singleModeScopeURL",
+            resolveSymlinks: false
+        ) {
+            return url
+        }
+
+        guard let resolvedURL = singleModeURL else {
+            return nil
+        }
+
+        let accessURL = FileManager.default.directoryExists(atUrl: resolvedURL) ? resolvedURL : resolvedURL.deletingLastPathComponent()
+
+        do {
+            singleModeAccessBookmark = try accessURL.bookmarkData(
+                options: .withSecurityScope,
+                includingResourceValuesForKeys: nil,
+                relativeTo: nil)
+            return accessURL
+        } catch {
+            AppDelegate.trackError(error, context: "UserDefaultsManagement.singleModeScopeURL.createAccessBookmark")
+            return resolvedURL
+        }
+    }
+
+    static func beginSingleMode(for url: URL) {
+        let resolvedURL = url.resolvingSymlinksInPath()
+        let bookmarkURL = url
+        let accessBookmarkURL =
+            FileManager.default.directoryExists(atUrl: bookmarkURL)
+            ? bookmarkURL
+            : bookmarkURL.deletingLastPathComponent()
+        singleModePath = resolvedURL.path
+        isSingleMode = true
+
+        do {
+            singleModeBookmark = try bookmarkURL.bookmarkData(
+                options: .withSecurityScope,
+                includingResourceValuesForKeys: nil,
+                relativeTo: nil)
+        } catch {
+            singleModeBookmark = nil
+            AppDelegate.trackError(error, context: "UserDefaultsManagement.beginSingleMode.bookmarkData")
+        }
+
+        do {
+            singleModeAccessBookmark = try accessBookmarkURL.bookmarkData(
+                options: .withSecurityScope,
+                includingResourceValuesForKeys: nil,
+                relativeTo: nil)
+        } catch {
+            singleModeAccessBookmark = nil
+            AppDelegate.trackError(error, context: "UserDefaultsManagement.beginSingleMode.accessBookmarkData")
+        }
+    }
+
+    static func clearSingleMode() {
+        isSingleMode = false
+        singleModePath = ""
+        singleModeBookmark = nil
+        singleModeAccessBookmark = nil
     }
     static var sortDirection: Bool {
         get {
