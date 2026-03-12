@@ -398,6 +398,15 @@ extension ViewController {
         if let outline = storageOutlineView, outline.frame.width != targetWidth {
             outline.setFrameSize(NSSize(width: targetWidth, height: outline.frame.height))
         }
+
+        if let scrollView = sidebarScrollView {
+            let clipView = scrollView.contentView
+            let origin = clipView.bounds.origin
+            if origin.x != 0 {
+                clipView.scroll(to: NSPoint(x: 0, y: origin.y))
+                scrollView.reflectScrolledClipView(clipView)
+            }
+        }
     }
 
     func reloadSideBar() {
