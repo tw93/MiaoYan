@@ -7,7 +7,6 @@ usage() {
 Usage:
   update_appcast.sh \
     --appcast appcast.xml \
-    --notes build/release-content.json \
     --version 2.8.0 \
     --pub-date "Wed, 04 Mar 2026 10:00:00 +0000" \
     --signature "<sparkle signature>" \
@@ -71,13 +70,10 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-[[ -z "$APPCAST" || -z "$NOTES" || -z "$VERSION" || -z "$PUB_DATE" || -z "$SIGNATURE" || -z "$LENGTH" || -z "$ZIP_URL" ]] && {
+[[ -z "$APPCAST" || -z "$VERSION" || -z "$PUB_DATE" || -z "$SIGNATURE" || -z "$LENGTH" || -z "$ZIP_URL" ]] && {
   usage
   exit 1
 }
-
-monster="$(jq -r '.monster_name' "$NOTES")"
-emoji="$(jq -r '.emoji' "$NOTES")"
 
 sanitize_cdata() {
   printf '%s' "$1" | sed 's/]]>/]]]]><![CDATA[>/g'
@@ -89,18 +85,8 @@ item_file="$(mktemp)"
   echo "      <title>${VERSION}</title>"
   echo "      <link>https://github.com/tw93/MiaoYan/releases</link>"
   echo "      <description><![CDATA["
-  printf '      <h3>%s %s</h3>\n' "$(sanitize_cdata "$monster")" "$(sanitize_cdata "$emoji")"
-  echo "      <ol>"
-  while IFS=$'\t' read -r title description; do
-    printf '        <li><strong>%s</strong>：%s</li>\n' "$(sanitize_cdata "$title")" "$(sanitize_cdata "$description")"
-  done < <(jq -r '.highlights_zh[] | [.title, .description] | @tsv' "$NOTES")
-  echo "      </ol>"
-  printf '      <h3>%s %s</h3>\n' "$(sanitize_cdata "$monster")" "$(sanitize_cdata "$emoji")"
-  echo "      <ol>"
-  while IFS=$'\t' read -r title description; do
-    printf '        <li><strong>%s</strong>: %s</li>\n' "$(sanitize_cdata "$title")" "$(sanitize_cdata "$description")"
-  done < <(jq -r '.highlights_en[] | [.title, .description] | @tsv' "$NOTES")
-  echo "      </ol>"
+  echo "      <p>详细更新请查看 GitHub Release 页面。</p>"
+  echo "      <p>See the GitHub release page for full release notes.</p>"
   echo "          ]]>      </description>"
   echo "      <pubDate>${PUB_DATE}</pubDate>"
   echo "      <enclosure url=\"${ZIP_URL}\" sparkle:shortVersionString=\"${VERSION}\" sparkle:version=\"${VERSION}\" sparkle:edSignature=\"${SIGNATURE}\" length=\"${LENGTH}\" type=\"application/octet-stream\"/>"
