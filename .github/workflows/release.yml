@@ -251,6 +251,10 @@ jobs:
           DMG_PATH="dist/MiaoYan_v${VERSION}.dmg"
           ZIP_PATH="dist/MiaoYan_V${VERSION}.zip"
           META_PATH="dist/release-metadata.json"
+          UPDATE_APPCAST_SCRIPT="$RUNNER_TEMP/update_appcast.sh"
+
+          cp scripts/release-ci/update_appcast.sh "$UPDATE_APPCAST_SCRIPT"
+          chmod +x "$UPDATE_APPCAST_SCRIPT"
 
           git fetch origin vercel
           git switch --create release-vercel origin/vercel
@@ -264,8 +268,7 @@ jobs:
           pub_date="$(jq -r '.pub_date' "$META_PATH")"
           zip_url="https://miaoyan.app/Release/MiaoYan_V${VERSION}.zip"
 
-          chmod +x scripts/release-ci/update_appcast.sh
-          scripts/release-ci/update_appcast.sh \
+          "$UPDATE_APPCAST_SCRIPT" \
             --appcast appcast.xml \
             --notes build/release-content.json \
             --version "$VERSION" \
