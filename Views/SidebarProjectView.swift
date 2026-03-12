@@ -1085,6 +1085,33 @@ class SidebarProjectView: NSOutlineView,
         return item(atRow: row) as? SidebarItem
     }
 
+    private func rowForSidebarSelection(type: SidebarItemType, projectURL: URL?, name: String?) -> Int? {
+        for row in 0..<numberOfRows {
+            guard let item = item(atRow: row) as? SidebarItem else {
+                continue
+            }
+
+            guard item.type == type else {
+                continue
+            }
+
+            switch type {
+            case .All:
+                return row
+            case .Category, .Trash:
+                if item.project?.url == projectURL {
+                    return row
+                }
+            default:
+                if item.name == name {
+                    return row
+                }
+            }
+        }
+
+        return nil
+    }
+
     @objc public func reloadSidebar() {
         guard let vc = AppContext.shared.viewController else {
             return
@@ -1092,7 +1119,8 @@ class SidebarProjectView: NSOutlineView,
         vc.fsManager?.restart()
         vc.loadMoveMenu()
 
-        let selected = vc.storageOutlineView.selectedRow
+        let selectedRow = vc.storageOutlineView.selectedRow
+        let selectedItem = vc.storageOutlineView.item(atRow: selectedRow) as? SidebarItem
 
         // Save expanded state before reload
         let expandedState = vc.storageOutlineView.saveExpandedState()
@@ -1111,6 +1139,10 @@ class SidebarProjectView: NSOutlineView,
                         return false
                     }) as? SidebarItem {
                         // Reuse existing object and clear its children cache
+                        existingItem.name = newSidebarItem.name
+                        existingItem.project = newSidebarItem.project
+                        existingItem.type = newSidebarItem.type
+                        existingItem.icon = newSidebarItem.icon
                         existingItem.children = nil
                         mergedList.append(existingItem)
                     } else {
@@ -1130,7 +1162,18 @@ class SidebarProjectView: NSOutlineView,
         // Restore expanded state after reload
         vc.storageOutlineView.restoreExpandedState(expandedState)
 
-        vc.storageOutlineView.selectRowIndexes([selected], byExtendingSelection: false)
+        let restoredRow =
+            vc.storageOutlineView.rowForSidebarSelection(
+                type: selectedItem?.type ?? .All,
+                projectURL: selectedItem?.project?.url,
+                name: selectedItem?.name
+            )
+            ?? (vc.storageOutlineView.numberOfRows > selectedRow && selectedRow >= 0 ? selectedRow : nil)
+            ?? vc.storageOutlineView.rowForSidebarSelection(type: .All, projectURL: nil, name: nil)
+
+        if let restoredRow {
+            vc.storageOutlineView.selectRowIndexes([restoredRow], byExtendingSelection: false)
+        }
     }
 
     private func saveSidebarOrder(_ items: [Any]) {
