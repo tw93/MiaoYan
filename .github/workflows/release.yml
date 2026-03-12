@@ -209,6 +209,68 @@ jobs:
           set -euo pipefail
           cp "dist/MiaoYan_v${{ needs.preflight.outputs.version }}.dmg" "dist/MiaoYan.dmg"
 
+      - name: Read release notes
+        id: release_notes
+        run: |
+          set -euo pipefail
+          VERSION="${{ needs.preflight.outputs.version }}"
+
+          # Read RELEASE_NOTES.md from the tagged commit
+          notes_content="$(git show "${{ needs.preflight.outputs.tag }}:.github/RELEASE_NOTES.md" 2>/dev/null || echo '')"
+
+          if [[ -z "$notes_content" ]]; then
+            echo "Error: .github/RELEASE_NOTES.md not found in release commit" >&2
+            exit 1
+          fi
+
+          # Extract title (first line, remove #)
+          title="$(echo "$notes_content" | head -1 | sed 's/^# //')"
+
+          # Extract Changelog section
+          changelog="$(echo "$notes_content" | awk '/^## Changelog$/,/^## /{if(/^## / && NR>1)exit; print}' | tail -n +2 | grep -v '^$' || true)"
+
+          # Extract 更新日志 section
+          changelog_zh="$(echo "$notes_content" | awk '/^## 更新日志$/,/^## /{if(/^## / && NR>1)exit; print}' | tail -n +2 | grep -v '^$' || true)"
+
+          if [[ -z "$changelog" || -z "$changelog_zh" ]]; then
+            echo "Error: Missing Changelog or 更新日志 section" >&2
+            exit 1
+          fi
+
+          # Build release body
+          {
+            echo "RELEASE_BODY<<EOF"
+            echo "<p align=\"center\">"
+            echo "  <img src=\"https://gw.alipayobjects.com/zos/k/t0/43.png\" width=\"110\" />"
+            echo "  <h1 align=\"center\">MiaoYan V${VERSION}</h1>"
+            echo "</p>"
+            echo ""
+            echo "<h3>Changelog</h3>"
+            echo "<ol>"
+            echo "$changelog" | while read -r line; do
+              item="$(echo "$line" | sed 's/^[0-9]*\. //')"
+              echo "  <li>${item}</li>"
+            done
+            echo "</ol>"
+            echo ""
+            echo "<h3>更新日志</h3>"
+            echo "<ol>"
+            echo "$changelog_zh" | while read -r line; do
+              item="$(echo "$line" | sed 's/^[0-9]*\. //')"
+              echo "  <li>${item}</li>"
+            done
+            echo "</ol>"
+            echo ""
+            echo "<hr />"
+            echo "<p>If you find MiaoYan useful, please consider giving it a star and recommending it to your friends.</p>"
+            echo ""
+            echo "> https://github.com/tw93/Pake"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          # Output title
+          echo "title=${title}" >> "$GITHUB_OUTPUT"
+
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         env:
@@ -216,10 +278,11 @@ jobs:
         with:
           tag_name: ${{ needs.preflight.outputs.tag }}
           target_commitish: ${{ needs.preflight.outputs.release_sha }}
-          name: ${{ needs.preflight.outputs.tag }}
+          name: ${{ steps.release_notes.outputs.title }}
+          body: ${{ steps.release_notes.outputs.RELEASE_BODY }}
           files: |
             dist/MiaoYan.dmg
             dist/MiaoYan_V${{ needs.preflight.outputs.version }}.zip
           fail_on_unmatched_files: true
-          generate_release_notes: true
+          generate_release_notes: false
           overwrite_files: true
