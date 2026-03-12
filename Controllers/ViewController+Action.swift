@@ -714,7 +714,44 @@ extension ViewController {
     }
 
     func createNote(name: String = "", content: String = "", type: NoteType? = nil, project: Project? = nil, load: Bool = false) {
-        guard let vc = ViewController.shared() else { return }
+        if exitReadOnlyModeIfNeededBeforeCreatingNote(name: name, content: content, type: type, project: project, load: load) {
+            return
+        }
+
+        performCreateNote(name: name, content: content, type: type, project: project, load: load)
+    }
+
+    private func exitReadOnlyModeIfNeededBeforeCreatingNote(
+        name: String,
+        content: String,
+        type: NoteType?,
+        project: Project?,
+        load: Bool
+    ) -> Bool {
+        let retryDelay: TimeInterval
+
+        if sessionMagicPPTMode {
+            disableMiaoYanPPT()
+            retryDelay = 0.35
+        } else if sessionPresentationMode {
+            disablePresentation()
+            retryDelay = 0.35
+        } else if sessionPreviewMode {
+            disablePreview()
+            retryDelay = 0.2
+        } else {
+            return false
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + retryDelay) { [weak self] in
+            self?.performCreateNote(name: name, content: content, type: type, project: project, load: load)
+        }
+
+        return true
+    }
+
+    private func performCreateNote(name: String, content: String, type: NoteType?, project: Project?, load: Bool) {
+        let vc = self
         let selectedProjects = vc.storageOutlineView.getSidebarProjects()
         var sidebarProject = project ?? selectedProjects?.first
         let text = content
@@ -736,18 +773,14 @@ extension ViewController {
             return
         }
 
-        // Don't force disable preview mode - let user maintain their preferred mode
-        // Only clean up the webview if we're NOT in preview mode
-        if !UserDefaultsManagement.preview {
-            editArea.markdownView?.removeFromSuperview()
-            previewScrollView?.documentView = nil
-            editArea.markdownView = nil
+        editArea.markdownView?.removeFromSuperview()
+        previewScrollView?.documentView = nil
+        editArea.markdownView = nil
 
-            guard let editor = editArea else {
-                return
-            }
-            editor.subviews.removeAll(where: { $0.isKind(of: MPreviewView.self) })
+        guard let editor = editArea else {
+            return
         }
+        editor.subviews.removeAll(where: { $0.isKind(of: MPreviewView.self) })
 
         // Set flag to prevent edit area updates during note creation
         UserDataService.instance.isCreatingNote = true
