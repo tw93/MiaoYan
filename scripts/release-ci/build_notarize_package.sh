@@ -121,7 +121,8 @@ mkdir -p "$BUILD_DIR" "$DIST_DIR"
 
 echo "Building MiaoYan v${VERSION}"
 
-xcodebuild clean -scheme MiaoYan -configuration Release >/dev/null 2>&1 || true
+# Skip clean to preserve Asset Catalog cache
+# xcodebuild clean -scheme MiaoYan -configuration Release >/dev/null 2>&1 || true
 
 xcodebuild archive \
   -scheme MiaoYan \
