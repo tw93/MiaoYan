@@ -3,6 +3,31 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>3.1.0</title>
+      <link>https://github.com/tw93/MiaoYan/releases</link>
+      <description><![CDATA[
+      <h3>Mizutsune 🫧</h3>
+      <ol>
+        <li><strong>CLI 更顺手</strong>：新增更完整的 miao 命令，支持搜索、列出、打开和查看笔记，并改进路径解析与默认列表行为。</li>
+        <li><strong>刷新外部改动</strong>：新增重新加载当前笔记的快捷键，外部修改文件后可以更方便地同步最新内容。</li>
+        <li><strong>侧边栏更稳定</strong>：修复窗口缩放时侧边栏行内容溢出的问题，并恢复 Cmd+1 侧边栏快捷键。</li>
+        <li><strong>笔记切换更平滑</strong>：修复笔记变化时列表不稳定的问题，减少切换和更新过程中的跳动感。</li>
+        <li><strong>预览与文件访问修复</strong>：修复预览样式在空闲后消失的问题，并恢复单栏模式下的文件夹访问能力。</li>
+      </ol>
+      <h3>Mizutsune 🫧</h3>
+      <ol>
+        <li><strong>Better CLI</strong>: Expanded the miao command with search, list, open, and cat support, while improving path resolution and smarter list defaults.</li>
+        <li><strong>Reload external changes</strong>: Added a shortcut to reload the current note so edits made outside the app can be refreshed more easily.</li>
+        <li><strong>Steadier sidebar</strong>: Fixed sidebar row overflow during window resizing and restored the Cmd+1 shortcut for the sidebar.</li>
+        <li><strong>Smoother note switching</strong>: Fixed notes list instability during note updates to reduce jumping while switching and editing.</li>
+        <li><strong>Preview and folder access fixes</strong>: Fixed preview styles disappearing after idle and restored folder access in single-pane mode.</li>
+      </ol>
+          ]]>      </description>
+      <pubDate>Thu, 12 Mar 2026 10:17:20 +0000</pubDate>
+      <enclosure url="https://miaoyan.app/Release/MiaoYan_V3.1.0.zip" sparkle:shortVersionString="3.1.0" sparkle:version="3.1.0" sparkle:edSignature="ECAPmZW4cIqhFwJoghItRBVCkUPfsya2goJlX2KZthtcCxABIlILRu2IHu0MUnXQZABZqybs7duTg8NEEMvPCg==" length="19804107" type="application/octet-stream"/>
+      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>2.7.0</title>
       <link>https://github.com/tw93/MiaoYan/releases</link>
       <description><![CDATA[
