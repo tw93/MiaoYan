@@ -2,6 +2,10 @@ import Cocoa
 
 @MainActor
 class SidebarCellView: NSTableCellView {
+    private enum LayoutConstants {
+        static let trailingPadding: CGFloat = 6
+    }
+
     @IBOutlet var icon: NSImageView!
     @IBOutlet var label: NSTextField!
 
@@ -18,14 +22,28 @@ class SidebarCellView: NSTableCellView {
         MainActor.assumeIsolated { [self] in
             guard let label = label else { return }
 
-            // Enhanced text truncation behavior for better narrow width display
             label.lineBreakMode = .byTruncatingTail
             label.cell?.truncatesLastVisibleLine = true
             label.cell?.wraps = false
-
-            // Set maximum layout width to help with text measurement
-            label.preferredMaxLayoutWidth = 200
+            label.cell?.usesSingleLineMode = true
+            label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+            label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         }
+    }
+
+    override func layout() {
+        super.layout()
+        updatePreferredLabelWidth()
+    }
+
+    private func updatePreferredLabelWidth() {
+        guard let label else { return }
+
+        let availableWidth = max(0, bounds.width - label.frame.minX - LayoutConstants.trailingPadding)
+        guard abs(label.preferredMaxLayoutWidth - availableWidth) > 0.5 else { return }
+
+        label.preferredMaxLayoutWidth = availableWidth
+        label.invalidateIntrinsicContentSize()
     }
 
     private var trackingArea: NSTrackingArea?
