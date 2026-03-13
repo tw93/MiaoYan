@@ -1,0 +1,271 @@
+/* About Window */
+"About" = "Acerca de MiaoYan";
+
+/* No comment provided by engineer. */
+"Add" = "Añadir";
+
+/* No comment provided by engineer. */
+"Are you sure you want to irretrievably delete %d note(s)?" = "¿Estás seguro de que deseas eliminar irremediablemente %d nota(s)?";
+
+/* No comment provided by engineer. */
+"Are you sure you want to remove project \"%@\" and all files inside?" = "¿Estás seguro de que deseas eliminar el proyecto \"%@\" y todos los archivos en su interior?";
+
+/* Delete menu */
+"Cancel" = "Cancelar";
+
+/* No comment provided by engineer. */
+"Copy HTML" = "Copiar HTML";
+
+/* No comment provided by engineer. */
+"Copy Link" = "Copiar Enlace";
+
+/* No comment provided by engineer. */
+"Copy Plain Text" = "Copiar Texto Sin Formato";
+
+/* No comment provided by engineer. */
+"Delete" = "Eliminar";
+
+/* No comment provided by engineer. */
+"Delete Folder" = "Eliminar Carpeta";
+
+
+/* No comment provided by engineer. */
+"MiaoYan [preview]" = "MiaoYan [vista previa]";
+
+/* No comment provided by engineer. */
+"Link" = "Enlace";
+
+/* Menu */
+"Move" = "Mover";
+
+/* Menu */
+"Export" = "Exportar";
+
+/* 設定 - セクション */
+"Appearance & Language" = "Apariencia e Idioma";
+"Interface & Upload" = "Interfaz y Subida";
+"Storage Location" = "Ubicación de Almacenamiento";
+"Note Location" = "Ubicación de Notas";
+"Interface" = "Interfaz";
+"Experience" = "Experiencia";
+"Typography" = "Tipografía";
+
+/* 設定 - ラベル */
+"Appearance" = "Apariencia";
+"Language" = "Idioma";
+"Change" = "Cambiar";
+"General" = "General";
+"Editor" = "Editor";
+"Fonts" = "Fuentes";
+"Editor Behavior" = "Comportamiento del Editor";
+"Preview" = "Vista Previa";
+"Editor Font:" = "Fuente del Editor:";
+"Preview Font:" = "Fuente de Vista Previa:";
+"Interface Font:" = "Fuente de la Interfaz:";
+"Code Font:" = "Fuente de Código:";
+"Presentation Font Size:" = "Tamaño de Fuente de Presentación:";
+"Preview Location:" = "Ubicación de Vista Previa:";
+"Preview Width:" = "Ancho de Vista Previa:";
+"Editor Mode:" = "Modo de Editor:";
+"Split Mode" = "Modo Dividido";
+"Pure Editing" = "Solo Edición";
+"Appearance:" = "Apariencia:";
+"Language:" = "Idioma:";
+"Button Display:" = "Visualización de Botones:";
+"Always On Top:" = "Siempre Visible:";
+"Activate Shortcut:" = "Activar Atajo:";
+"Yes" = "Sí";
+"No" = "No";
+
+/* 設定 - オプション */
+"System" = "Sistema";
+"Light" = "Claro";
+"Dark" = "Oscuro";
+"Always" = "Siempre";
+"On Hover" = "Al pasar el cursor";
+"Never" = "Nunca";
+"Image Upload" = "Subida de Imágenes";
+"Upload Service:" = "Servicio de Subida:";
+"None" = "Ninguno";
+
+/* エディタ設定 - オプション */
+"Begin" = "Inicio";
+"End" = "Fin";
+"Right" = "Derecha";
+"Bottom" = "Abajo";
+"Editing" = "Edición";
+"Full Width" = "Ancho Completo";
+"Line Break:" = "Salto de Línea:";
+"MiaoYan" = "MiaoYan";
+"Auto" = "Auto";
+
+/* No comment provided by engineer. */
+"New" = "Nuevo";
+
+/* No comment provided by engineer. */
+"New Folder" = "Nueva Carpeta";
+
+/* No comment provided by engineer. */
+"New Subfolder" = "Nueva Subcarpeta";
+
+/* No comment provided by engineer. */
+"New project" = "Nuevo proyecto";
+
+/* Sidebar label */
+"Notes" = "Notas";
+
+/* No comment provided by engineer. */
+"OK" = "Aceptar";
+
+/* Edit area */
+"Please enter image title:" = "Por favor ingresa el título de la imagen:";
+
+/* No comment provided by engineer. */
+"Please enter project name:" = "Por favor ingresa el nombre del proyecto:";
+
+/* No comment provided by engineer. */
+"Please try again" = "Por favor inténtalo de nuevo";
+
+/* No comment provided by engineer. */
+"Preferences" = "Preferencias";
+
+/* No comment provided by engineer. */
+"Quit MiaoYan" = "Salir de MiaoYan";
+
+/* Delete menu */
+"Remove" = "Eliminar";
+
+/* No comment provided by engineer. */
+"Remove note(s)" = "Eliminar nota(s)";
+
+/* No comment provided by engineer. */
+"Rename Folder" = "Renombrar Carpeta";
+
+/* No comment provided by engineer. */
+"Show in Finder" = "Mostrar en Finder";
+
+/* View menu */
+"Sort by" = "Ordenar por";
+
+/* No comment provided by engineer. */
+"Strikethrough" = "Tachado";
+
+/* Delete menu */
+"This action cannot be undone." = "Esta acción no se puede deshacer.";
+
+/* No comment provided by engineer. */
+"Toggle Preview" = "Alternar Vista Previa";
+
+/* Sidebar label */
+"Trash" = "Papelera";
+
+/* No comment provided by engineer. */
+"Underline" = "Subrayado";
+
+/* Untitled Note */
+"Untitled Note" = "Nota Sin Título";
+
+/* No comment provided by engineer. */
+"URL has been copied to clipboard" = "La URL se ha copiado al portapapeles";
+
+/* Menu */
+"View" = "Ver";
+
+"Search" = "Buscar";
+
+
+
+
+"%d MiaoYan" = "%d MiaoYan";
+
+"PDF export failed, please try again~" = "Falló la exportación a PDF, por favor inténtalo de nuevo~";
+
+/* Toast messages without emoji prefix */
+"Automatic typesetting succeeded~" = "Composición tipográfica automática exitosa~";
+"Press ESC key to exit~" = "Presiona la tecla ESC para salir~";
+"Format is only possible after exiting preview mode~" = "El formato solo es posible después de salir del modo de vista previa~";
+"Saved to Downloads folder~" = "Guardado en la carpeta de Descargas~";
+"Image upload in progress~" = "Subida de imagen en progreso~";
+"Image upload failed, Use local~" = "Falló la subida de imagen, usando local~";
+"Please make sure your Mac is installed %@ ~" = "Por favor asegúrate de que tu Mac tenga instalado %@ ~";
+"In single open mode, Exit with Command+Shift+W ~" = "En el modo de apertura única, sal con Command+Shift+W ~";
+"Please make sure your title exists~" = "Por favor asegúrate de que tu título exista~";
+"Found that there are multiple titles of this~" = "Se encontró que hay múltiples títulos de esto~";
+"URL is successfully copied, Use it anywhere~" = "La URL se copió correctamente, úsala en cualquier lugar~";
+"No delimiter --- identification, Cannot use MiaoYan PPT~" = "No hay identificador de delimitador ---, no se puede usar MiaoYan PPT~";
+"Formatting failed, please try again" = "El formato falló, por favor inténtalo de nuevo";
+"Formatting cancelled" = "Formato cancelado";
+
+"This %@ under this folder already exists!" = "¡Este %@ bajo esta carpeta ya existe!";
+"Please change the title" = "Por favor cambia el título";
+
+"Edit Link…" = "Editar Enlace…";
+"Remove Link" = "Eliminar Enlace";
+
+"Restart to MiaoYan to take effect" = "Reinicia MiaoYan para que surta efecto";
+"Confirm" = "Confirmar";
+
+/* Font Names */
+
+/* ClipboardManager Messages */
+"Image uploaded successfully" = "Imagen subida exitosamente";
+"Image upload failed, using local path" = "Falló la subida de la imagen, usando ruta local";
+
+/* Image Preview Tip */
+"Hold ⌘ Command key to preview images" = "Mantén la tecla ⌘ Command para previsualizar imágenes";
+
+/* Missing translations */
+"Preview Settings" = "Configuración de Vista Previa";
+"Code Background:" = "Fondo de Código:";
+"Github" = "Github";
+
+/* Preview Search Bar */
+"Previous" = "Anterior";
+"Next" = "Siguiente";
+"Done" = "Hecho";
+"Replace" = "Reemplazar";
+"Replace All" = "Reemplazar Todo";
+
+/* Clean attachments */
+"Clean Orphan Attachments" = "Limpiar Archivos Adjuntos Huérfanos";
+"Detected %d unused attachment(s). Move them to Trash?" = "Se detectaron %d archivo(s) adjunto(s) sin usar. ¿Moverlos a la Papelera?";
+"No orphan attachments found" = "No se encontraron archivos adjuntos huérfanos";
+"Removed %d unused attachment(s)" = "Se eliminaron %d archivo(s) adjunto(s) sin usar";
+"Some attachments could not be removed" = "Algunos archivos adjuntos no pudieron ser eliminados";
+"Clean" = "Limpiar";
+
+/* Export Messages */
+"Exporting..." = "Exportando...";
+"Export failed" = "Exportación fallida";
+"System version too low" = "Versión del sistema demasiado baja";
+"Enter title" = "Ingresar título";
+"Save Failed" = "Error al Guardar";
+"Critical Error" = "Error Crítico";
+"Failed to initialize main window. Please restart the application." = "Error al inicializar la ventana principal. Por favor, reinicia la aplicación.";
+"Delete Images" = "Eliminar Imágenes";
+"Restore Images" = "Restaurar Imágenes";
+"Quit" = "Salir";
+"Formatting... click again to cancel" = "Dando formato... haz clic nuevamente para cancelar";
+"Format" = "Formato";
+"Presentation" = "Presentación";
+"Toggle Note List" = "Alternar Lista de Notas";
+"Toggle Split Mode" = "Alternar Modo Dividido";
+
+/* Always On Top */
+"Window stays on top" = "La ventana se mantiene visible";
+"Window normal mode" = "Modo de ventana normal";
+
+/* Menu Items */
+"Always On Top" = "Siempre Visible";
+"Pin Note" = "Fijar Nota";
+
+/* File Operations */
+"Duplicate note name" = "Nombre de nota duplicado";
+"Note \"%@\" already exists" = "La nota \"%@\" ya existe";
+"Please select default storage directory" = "Por favor, selecciona el directorio de almacenamiento por defecto";
+
+/* Reload Note */
+"Reload Note" = "Recargar Nota";
+"You have unsaved changes. Reload will discard them." = "Tienes cambios sin guardar. Recargar los descartará.";
+"Reload" = "Recargar";
+"Note reloaded~" = "Nota recargada~";
