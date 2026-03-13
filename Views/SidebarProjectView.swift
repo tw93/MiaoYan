@@ -1102,10 +1102,6 @@ class SidebarProjectView: NSOutlineView,
                 if item.project?.url == projectURL {
                     return row
                 }
-            default:
-                if item.name == name {
-                    return row
-                }
             }
         }
 
