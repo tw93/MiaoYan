@@ -3,6 +3,29 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>3.1.1</title>
+      <link>https://github.com/tw93/MiaoYan/releases</link>
+      <description><![CDATA[
+      <h3>Astalos ⚙️</h3>
+      <ol>
+        <li><strong>CLI 更顺手</strong>：扩展了 miao 命令，补全搜索、列出、打开和查看笔记等能力，并改进了路径解析与默认列表行为。</li>
+        <li><strong>外部修改可重载</strong>：新增重新加载当前笔记的快捷入口，文件被其他工具改动后可以更快同步回应用。</li>
+        <li><strong>侧边栏更稳定</strong>：修复窗口启动和宽度变化时侧边栏项目内容溢出的问题，并恢复 Cmd+1 侧边栏快捷键。</li>
+        <li><strong>预览与访问修复</strong>：修复预览样式空闲后丢失的问题，并恢复单栏模式下的文件夹访问能力。</li>
+      </ol>
+      <h3>Astalos ⚙️</h3>
+      <ol>
+        <li><strong>Better CLI</strong>: Expanded the miao command with search, list, open, and note viewing support, while improving path resolution and default list behavior.</li>
+        <li><strong>Reload external edits</strong>: Added a quick way to reload the current note so changes made by other tools can be pulled back into the app faster.</li>
+        <li><strong>Steadier sidebar</strong>: Fixed sidebar item overflow during launch and width changes, and restored the Cmd+1 shortcut for the sidebar.</li>
+        <li><strong>Preview and access fixes</strong>: Fixed preview styles disappearing after idle and restored folder access in single-pane mode.</li>
+      </ol>
+          ]]>      </description>
+      <pubDate>Thu, 12 Mar 2026 23:40:55 +0000</pubDate>
+      <enclosure url="https://github.com/tw93/MiaoYan/releases/download/V3.1.1/MiaoYan_V3.1.1.zip" sparkle:shortVersionString="3.1.1" sparkle:version="3.1.1" sparkle:edSignature="5C4CfUcc6Vd9pmjoiusTKG3bG3XFL7cACoazzFf0zHt6oXG0tKUl51MwepENfQT+fyZrqaY+sujHPiBSuqLODg==" length="24305186" type="application/octet-stream"/>
+      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>3.1.0</title>
       <link>https://github.com/tw93/MiaoYan/releases</link>
       <description><![CDATA[
