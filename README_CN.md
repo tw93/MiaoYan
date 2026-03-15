@@ -30,7 +30,7 @@
 
 ## 安装使用
 
-1. 从 [Mac App Store](https://apps.apple.com/cn/app/miaoyan/id6759252269) 下载 —— 后续更多更新会持续在 App Store 发布，非常欢迎大家使用！
+1. 从 [Mac App Store](https://apps.apple.com/cn/app/miaoyan/id6759252269) 下载 —— 后续更多更新会持续在 App Store 发布，非常欢迎大家使用！如果想支持我，可以在 App Store 付费下载，开源版本使用体验完全一致。
 
    <a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
 

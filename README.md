@@ -30,7 +30,7 @@
 
 ## Installation & Setup
 
-1. Download from the [Mac App Store](https://apps.apple.com/cn/app/miaoyan/id6759252269) — future updates will be continuously published there, warmly welcome!
+1. Download from the [Mac App Store](https://apps.apple.com/cn/app/miaoyan/id6759252269) — future updates will be continuously published there, warmly welcome! If you'd like to support me, a paid download on the App Store is a great way to do so. The open-source version offers the same experience.
 
    <a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
 
