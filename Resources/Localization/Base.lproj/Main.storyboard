@@ -1134,7 +1134,7 @@ CA
                             </connections>
                         </menuItem>
                         <menuItem isSeparatorItem="YES" id="TSp-01-Sep"/>
-                        <menuItem title="Open in Terminal" id="OiT-01-iTm">
+                        <menuItem title="Open in Terminal" keyEquivalent="j" id="OiT-01-iTm">
                             <connections>
                                 <action selector="openInTerminal:" target="urA-eK-bWB" id="OiT-02-act"/>
                             </connections>
