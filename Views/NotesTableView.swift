@@ -349,7 +349,7 @@ class NotesTableView: NSTableView {
     }
 
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
-        if [kVK_ANSI_8, kVK_ANSI_J].contains(Int(event.keyCode)), event.modifierFlags.contains(.command) {
+        if [kVK_ANSI_8].contains(Int(event.keyCode)), event.modifierFlags.contains(.command) {
             return true
         }
 
