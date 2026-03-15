@@ -17,6 +17,7 @@
 "Please make sure your title exists~" = "請確定填寫的標題是否存在～";
 "Found that there are multiple titles of this~" = "這裡有好幾個標題，使用搜尋能力～";
 "URL is successfully copied, Use it anywhere~" = "成功複製外部連結，可以在其他地方使用了～";
+"Path is successfully copied~" = "路徑成功複製～";
 "No delimiter --- identification, Cannot use MiaoYan PPT~" = "沒有分隔符號 --- 標示，無法使用妙言 PPT～";
 "Formatting failed, please try again" = "排版失敗，請重試";
 "Formatting cancelled" = "已取消排版";
@@ -147,6 +148,7 @@
 
 /* No comment provided by engineer. */
 "Show in Finder" = "在 Finder 中顯示";
+"Open in Terminal" = "在終端機中開啟";
 
 /* View menu */
 "Sort by" = "排序方式";

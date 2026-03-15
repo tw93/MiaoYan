@@ -1038,6 +1038,12 @@ CA
                                 <action selector="copyURL:" target="XfG-lQ-9wD" id="OX3-4O-Cg1"/>
                             </connections>
                         </menuItem>
+                        <menuItem title="Copy Path" keyEquivalent="c" id="CpP-01-iTm">
+                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                            <connections>
+                                <action selector="copyPath:" target="XfG-lQ-9wD" id="CpP-02-act"/>
+                            </connections>
+                        </menuItem>
                         <menuItem isSeparatorItem="YES" id="a1l-Gt-eA9"/>
                         <menuItem title="MiaoYan PPT" keyEquivalent="p" id="uUS-sg-zGt">
                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
@@ -1125,6 +1131,12 @@ CA
                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                             <connections>
                                 <action selector="revealInFinder:" target="urA-eK-bWB" id="lPM-Ou-AK0"/>
+                            </connections>
+                        </menuItem>
+                        <menuItem isSeparatorItem="YES" id="TSp-01-Sep"/>
+                        <menuItem title="Open in Terminal" id="OiT-01-iTm">
+                            <connections>
+                                <action selector="openInTerminal:" target="urA-eK-bWB" id="OiT-02-act"/>
                             </connections>
                         </menuItem>
                         <menuItem title="Delete Folder" id="RwR-P0-ycK">

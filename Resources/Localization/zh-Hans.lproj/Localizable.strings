@@ -84,6 +84,7 @@
 
 /* No comment provided by engineer. */
 "Show in Finder" = "在Finder中显示";
+"Open in Terminal" = "在终端中打开";
 
 /* View menu */
 "Sort by" = "排序方式";
@@ -141,6 +142,7 @@
 "Please make sure your title exists~" = "请确定你填写的标题是否存在~";
 "Found that there are multiple titles of this~" = "发现这里有多个标题，使用搜索能力~";
 "URL is successfully copied, Use it anywhere~" = "外链成功复制，你可以在任何地方使用~";
+"Path is successfully copied~" = "路径成功复制~";
 "No delimiter --- identification, Cannot use MiaoYan PPT~" = "没有分隔符 --- 标识，无法使用妙言 PPT~";
 "Formatting failed, please try again" = "排版失败，请重试";
 "Formatting cancelled" = "已取消排版";

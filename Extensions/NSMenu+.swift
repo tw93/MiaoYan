@@ -92,6 +92,8 @@ enum MenuIconRegistry {
         IconMapping(symbol: "wand.and.stars", selectors: ["exportMiaoYanPPT:"], identifiers: []),
         IconMapping(symbol: "folder.badge.plus", selectors: ["addProject:"], identifiers: []),
         IconMapping(symbol: "folder.badge.plus", selectors: ["newSubfolder:"], identifiers: []),
+        IconMapping(symbol: "terminal", selectors: ["openInTerminal:"], identifiers: []),
+        IconMapping(symbol: "doc.on.clipboard", selectors: ["copyPath:"], identifiers: []),
         IconMapping(symbol: "trash", selectors: ["deleteMenu:"], identifiers: []),
         IconMapping(symbol: "xmark.circle.fill", selectors: ["closeAll:"], identifiers: []),
         IconMapping(symbol: "plus.circle", selectors: ["add:"], identifiers: []),

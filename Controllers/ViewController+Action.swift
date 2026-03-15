@@ -498,6 +498,15 @@ extension ViewController {
         }
     }
 
+    @IBAction func copyPath(_ sender: Any) {
+        guard let notes = notesTableView.getSelectedNotes() else { return }
+        let paths = notes.map { $0.url.path }.joined(separator: "\n")
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(paths, forType: .string)
+        toast(message: I18n.str("Path is successfully copied~"), style: .success)
+    }
+
     private func responder(_ responder: NSResponder, belongsTo view: NSView?) -> Bool {
         guard let view else { return false }
 

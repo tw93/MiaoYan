@@ -14,6 +14,7 @@ private enum MenuTitles {
     static let renameFolder = I18n.str("Rename Folder")
     static let deleteFolder = I18n.str("Delete Folder")
     static let newSubfolder = I18n.str("New Subfolder")
+    static let openInTerminal = I18n.str("Open in Terminal")
 }
 
 private enum DragDropTypes {
@@ -79,6 +80,9 @@ class SidebarProjectView: NSOutlineView,
                 return true
             }
             return false
+
+        case MenuTitles.openInTerminal:
+            return sidebarItem.project != nil && !sidebarItem.isTrash()
 
         default:
             return false
@@ -387,24 +391,21 @@ class SidebarProjectView: NSOutlineView,
         cell.icon.translatesAutoresizingMaskIntoConstraints = false
         cell.label.translatesAutoresizingMaskIntoConstraints = false
 
-        let hasIconCenterY = cell.constraints.contains { constraint in
-            if constraint.firstAttribute != .centerY || constraint.secondAttribute != .centerY {
-                return false
-            }
-            let firstView = constraint.firstItem as? NSView
-            let secondView = constraint.secondItem as? NSView
-            return (firstView === cell.icon && secondView === cell)
-                || (firstView === cell && secondView === cell.icon)
-        }
+        var hasIconCenterY = false
+        var hasLabelCenterY = false
 
-        let hasLabelCenterY = cell.constraints.contains { constraint in
-            if constraint.firstAttribute != .centerY || constraint.secondAttribute != .centerY {
-                return false
+        for constraint in cell.constraints {
+            guard constraint.firstAttribute == .centerY && constraint.secondAttribute == .centerY else { continue }
+            let first = constraint.firstItem as? NSView
+            let second = constraint.secondItem as? NSView
+            if first === cell.icon || second === cell.icon {
+                constraint.constant = 0
+                hasIconCenterY = true
             }
-            let firstView = constraint.firstItem as? NSView
-            let secondView = constraint.secondItem as? NSView
-            return (firstView === cell.label && secondView === cell)
-                || (firstView === cell && secondView === cell.label)
+            if first === cell.label || second === cell.label {
+                constraint.constant = 0
+                hasLabelCenterY = true
+            }
         }
 
         if !hasIconCenterY {
@@ -504,6 +505,14 @@ class SidebarProjectView: NSOutlineView,
             updateLabelSpacing(cell, spacing: accentSpacing)
             cell.label.lineBreakMode = .byTruncatingTail
             cell.label.cell?.truncatesLastVisibleLine = true
+            // Shift icon up to compensate for the bird icon's visual content being biased below center
+            for constraint in cell.constraints
+            where constraint.firstAttribute == .centerY && constraint.secondAttribute == .centerY
+                && (constraint.firstItem as? NSView) === cell.icon
+            {
+                constraint.constant = -3
+                break
+            }
 
         case .Trash:
             cell.icon.image = NSImage(imageLiteralResourceName: "deleteNote")
@@ -843,6 +852,31 @@ class SidebarProjectView: NSOutlineView,
         }
 
         NSWorkspace.shared.activateFileViewerSelecting([p.url])
+    }
+
+    @IBAction func openInTerminal(_ sender: Any) {
+        guard let si = getSidebarItem(), let p = si.project else { return }
+        let bundleID = Self.preferredTerminalBundleID()
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/open")
+        process.arguments = ["-b", bundleID, p.url.path]
+        try? process.run()
+    }
+
+    private static func preferredTerminalBundleID() -> String {
+        let candidates = [
+            "fun.tw93.kaku",               // Kaku
+            "dev.warp.Warp-Stable",        // Warp
+            "com.googlecode.iterm2",        // iTerm2
+            "net.kovidgoyal.kitty",         // Kitty
+            "com.apple.Terminal",           // Terminal (always present)
+        ]
+        for id in candidates {
+            if NSWorkspace.shared.urlForApplication(withBundleIdentifier: id) != nil {
+                return id
+            }
+        }
+        return "com.apple.Terminal"
     }
 
     @IBAction func renameMenu(_ sender: Any) {

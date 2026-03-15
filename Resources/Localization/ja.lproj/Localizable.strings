@@ -143,6 +143,7 @@
 
 /* No comment provided by engineer. */
 "Show in Finder" = "Finderに表示";
+"Open in Terminal" = "ターミナルで開く";
 
 /* View menu */
 "Sort by" = "並び替え";
@@ -192,6 +193,7 @@
 "Please make sure your title exists~" = "タイトルが既にあることを確認してください";
 "Found that there are multiple titles of this~" = "複数のタイトルが見つかりました、検索を利用ください。";
 "URL is successfully copied, Use it anywhere~" = "URLがコピーされました。ご利用ください。";
+"Path is successfully copied~" = "パスがコピーされました。";
 "No delimiter --- identification, Cannot use MiaoYan PPT~" = "区切り「---」がなければ、MiaoYan PPT使えません。";
 "Formatting failed, please try again" = "フォーマットに失敗しました。もう一度お試しください";
 "Formatting cancelled" = "フォーマットをキャンセルしました";

@@ -229,6 +229,9 @@
 /* Class = "NSMenuItem"; title = "Show in Finder"; ObjectID = "goN-LO-L7l"; */
 "goN-LO-L7l.title" = "在Finder中显示";
 
+/* Class = "NSMenuItem"; title = "Open in Terminal"; ObjectID = "OiT-01-iTm"; */
+"OiT-01-iTm.title" = "在终端中打开";
+
 /* Class = "NSMenuItem"; title = "Paste"; ObjectID = "gVA-U4-sdL"; */
 "gVA-U4-sdL.title" = "粘贴";
 
@@ -462,6 +465,9 @@
 
 /* Class = "NSMenuItem"; title = "Copy URL"; ObjectID = "9Fg-2C-7a5"; */
 "9Fg-2C-7a5.title" = "复制外链";
+
+/* Class = "NSMenuItem"; title = "Copy Path"; ObjectID = "CpP-01-iTm"; */
+"CpP-01-iTm.title" = "复制路径";
 
 /* Class = "NSMenuItem"; title = "MiaoYan PPT"; ObjectID = "uUS-sg-zGt"; */
 "uUS-sg-zGt.title" = "妙言 PPT";
