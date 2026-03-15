@@ -65,28 +65,29 @@ class SidebarProjectView: NSOutlineView,
             return false
         }
 
-        switch menuItem.title {
-        case MenuTitles.showInFinder:
+        switch menuItem.action {
+        case #selector(revealInFinder(_:)):
             return sidebarItem.project != nil || sidebarItem.isTrash()
 
-        case MenuTitles.renameFolder:
+        case #selector(renameMenu(_:)):
             return validateRenameMenuItem(sidebarItem: sidebarItem, menuItem: menuItem)
 
-        case MenuTitles.deleteFolder:
+        case #selector(deleteMenu(_:)):
             return validateDeleteMenuItem(sidebarItem: sidebarItem, menuItem: menuItem)
 
-        case MenuTitles.newSubfolder:
-            if sidebarItem.type == .Category {
-                return true
-            }
-            return false
-
-        case MenuTitles.openInTerminal:
-            return !sidebarItem.isTrash() && UserDefaultsManagement.storageUrl != nil
+        case #selector(newSubfolder(_:)):
+            return sidebarItem.type == .Category
 
         default:
-            return false
+            break
         }
+
+        // openInTerminal: lives in ViewController; match by title since we can't use #selector here
+        if menuItem.title == MenuTitles.openInTerminal {
+            return !sidebarItem.isTrash() && UserDefaultsManagement.storageUrl != nil
+        }
+
+        return false
     }
 
     private func validateRenameMenuItem(sidebarItem: SidebarItem, menuItem: NSMenuItem) -> Bool {
@@ -1089,9 +1090,19 @@ class SidebarProjectView: NSOutlineView,
     }
 
     private func getSidebarItem() -> SidebarItem? {
-        let row = selectedRow
+        // When called on a proxy (Application Scene customObject, not in any window),
+        // delegate to the actual SidebarProjectView in the window via AppContext.
+        let target: SidebarProjectView
+        if window != nil {
+            target = self
+        } else if let actual = AppContext.shared.viewController?.storageOutlineView as? SidebarProjectView {
+            target = actual
+        } else {
+            return nil
+        }
+        let row = target.selectedRow
         if row < 0 { return nil }
-        return item(atRow: row) as? SidebarItem
+        return target.item(atRow: row) as? SidebarItem
     }
 
     private func rowForSidebarSelection(type: SidebarItemType, projectURL: URL?, name: String?) -> Int? {
