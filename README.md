@@ -32,7 +32,7 @@
 
 1. Download from the [Mac App Store](https://apps.apple.com/cn/app/miaoyan/id6759252269) — future updates will be continuously published there, warmly welcome!
 
-   [![Download on the Mac App Store](https://cdn.tw93.fun/uPic/C3Renh.png)](https://apps.apple.com/cn/app/miaoyan/id6759252269)
+   <a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
 
 2. Or install by Homebrew:
 ```bash

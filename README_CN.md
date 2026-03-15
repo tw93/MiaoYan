@@ -32,7 +32,7 @@
 
 1. 从 [Mac App Store](https://apps.apple.com/cn/app/miaoyan/id6759252269) 下载 —— 后续更多更新会持续在 App Store 发布，非常欢迎大家使用！
 
-   [![Download on the Mac App Store](https://cdn.tw93.fun/uPic/C3Renh.png)](https://apps.apple.com/cn/app/miaoyan/id6759252269)
+   <a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
 
 2. 或 Homebrew 安装：
 ```bash
