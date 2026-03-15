@@ -631,8 +631,8 @@ class ViewController:
         }
         
         if menuItem.action == #selector(openInTerminal(_:)) {
-            guard let si = getSidebarItem() else { return false }
-            return si.project != nil && !si.isTrash()
+            if let si = getSidebarItem(), si.isTrash() { return false }
+            return UserDefaultsManagement.storageUrl != nil
         }
 
         if menuItem.action == #selector(exportMiaoYanPPT(_:)) {

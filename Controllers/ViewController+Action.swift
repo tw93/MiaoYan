@@ -499,11 +499,18 @@ extension ViewController {
     }
 
     @IBAction func openInTerminal(_ sender: Any) {
-        guard let si = getSidebarItem(), let p = si.project, !si.isTrash() else { return }
+        let path: String
+        if let si = getSidebarItem(), !si.isTrash(), let p = si.project {
+            path = p.url.path
+        } else if let rootURL = UserDefaultsManagement.storageUrl {
+            path = rootURL.path
+        } else {
+            return
+        }
         let bundleID = Self.preferredTerminalBundleID()
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/open")
-        process.arguments = ["-b", bundleID, p.url.path]
+        process.arguments = ["-b", bundleID, path]
         try? process.run()
     }
 

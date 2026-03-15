@@ -82,7 +82,7 @@ class SidebarProjectView: NSOutlineView,
             return false
 
         case MenuTitles.openInTerminal:
-            return sidebarItem.project != nil && !sidebarItem.isTrash()
+            return !sidebarItem.isTrash() && UserDefaultsManagement.storageUrl != nil
 
         default:
             return false
