@@ -176,6 +176,11 @@ CA
                                                 <action selector="revealInFinder:" target="yxb-XH-bXh" id="7V6-4X-pMA"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Open in Terminal" keyEquivalent="j" identifier="folderMenu.openInTerminal" id="OiT-03-mnu">
+                                            <connections>
+                                                <action selector="openInTerminal:" target="XfG-lQ-9wD" id="OiT-04-act"/>
+                                            </connections>
+                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>

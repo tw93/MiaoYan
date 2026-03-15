@@ -232,6 +232,9 @@
 /* Class = "NSMenuItem"; title = "Open in Terminal"; ObjectID = "OiT-01-iTm"; */
 "OiT-01-iTm.title" = "在终端中打开";
 
+/* Class = "NSMenuItem"; title = "Open in Terminal"; ObjectID = "OiT-03-mnu"; */
+"OiT-03-mnu.title" = "在终端中打开";
+
 /* Class = "NSMenuItem"; title = "Paste"; ObjectID = "gVA-U4-sdL"; */
 "gVA-U4-sdL.title" = "粘贴";
 
