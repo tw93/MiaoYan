@@ -499,8 +499,11 @@ extension ViewController {
     }
 
     @IBAction func openInTerminal(_ sender: Any) {
+        // When invoked from the main menu, `self` may be the App Scene proxy with nil outlets.
+        // Always delegate to the real ViewController instance, matching the pattern used by other IBActions.
+        guard let vc = ViewController.shared() else { return }
         let path: String
-        if let si = getSidebarItem(), !si.isTrash(), let p = si.project {
+        if let si = vc.getSidebarItem(), !si.isTrash(), let p = si.project {
             path = p.url.path
         } else if let rootURL = UserDefaultsManagement.storageUrl {
             path = rootURL.path
