@@ -178,7 +178,7 @@ CA
                                         </menuItem>
                                         <menuItem title="Open in Terminal" keyEquivalent="j" identifier="folderMenu.openInTerminal" id="OiT-03-mnu">
                                             <connections>
-                                                <action selector="openInTerminal:" target="XfG-lQ-9wD" id="OiT-04-act"/>
+                                                <action selector="openInTerminal:" target="L4m-js-agn" id="OiT-04-act"/>
                                             </connections>
                                         </menuItem>
                                     </items>
