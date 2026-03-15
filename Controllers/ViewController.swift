@@ -630,6 +630,11 @@ class ViewController:
             return true
         }
         
+        if menuItem.action == #selector(openInTerminal(_:)) {
+            guard let si = getSidebarItem() else { return false }
+            return si.project != nil && !si.isTrash()
+        }
+
         if menuItem.action == #selector(exportMiaoYanPPT(_:)) {
             return isMiaoYanPPT(needToast: false)
         }

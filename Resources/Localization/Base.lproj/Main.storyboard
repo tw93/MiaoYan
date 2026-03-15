@@ -1136,7 +1136,7 @@ CA
                         <menuItem isSeparatorItem="YES" id="TSp-01-Sep"/>
                         <menuItem title="Open in Terminal" keyEquivalent="j" id="OiT-01-iTm">
                             <connections>
-                                <action selector="openInTerminal:" target="urA-eK-bWB" id="OiT-02-act"/>
+                                <action selector="openInTerminal:" target="XfG-lQ-9wD" id="OiT-02-act"/>
                             </connections>
                         </menuItem>
                         <menuItem title="Delete Folder" id="RwR-P0-ycK">

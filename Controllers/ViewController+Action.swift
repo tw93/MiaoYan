@@ -498,6 +498,31 @@ extension ViewController {
         }
     }
 
+    @IBAction func openInTerminal(_ sender: Any) {
+        guard let si = getSidebarItem(), let p = si.project, !si.isTrash() else { return }
+        let bundleID = Self.preferredTerminalBundleID()
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/open")
+        process.arguments = ["-b", bundleID, p.url.path]
+        try? process.run()
+    }
+
+    private static func preferredTerminalBundleID() -> String {
+        let candidates = [
+            "fun.tw93.kaku",               // Kaku
+            "dev.warp.Warp-Stable",        // Warp
+            "com.googlecode.iterm2",        // iTerm2
+            "net.kovidgoyal.kitty",         // Kitty
+            "com.apple.Terminal",           // Terminal (always present)
+        ]
+        for id in candidates {
+            if NSWorkspace.shared.urlForApplication(withBundleIdentifier: id) != nil {
+                return id
+            }
+        }
+        return "com.apple.Terminal"
+    }
+
     @IBAction func copyPath(_ sender: Any) {
         guard let notes = notesTableView.getSelectedNotes() else { return }
         let paths = notes.map { $0.url.path }.joined(separator: "\n")

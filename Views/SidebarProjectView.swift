@@ -854,31 +854,6 @@ class SidebarProjectView: NSOutlineView,
         NSWorkspace.shared.activateFileViewerSelecting([p.url])
     }
 
-    @IBAction func openInTerminal(_ sender: Any) {
-        guard let si = getSidebarItem(), let p = si.project else { return }
-        let bundleID = Self.preferredTerminalBundleID()
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/open")
-        process.arguments = ["-b", bundleID, p.url.path]
-        try? process.run()
-    }
-
-    private static func preferredTerminalBundleID() -> String {
-        let candidates = [
-            "fun.tw93.kaku",               // Kaku
-            "dev.warp.Warp-Stable",        // Warp
-            "com.googlecode.iterm2",        // iTerm2
-            "net.kovidgoyal.kitty",         // Kitty
-            "com.apple.Terminal",           // Terminal (always present)
-        ]
-        for id in candidates {
-            if NSWorkspace.shared.urlForApplication(withBundleIdentifier: id) != nil {
-                return id
-            }
-        }
-        return "com.apple.Terminal"
-    }
-
     @IBAction func renameMenu(_ sender: Any) {
         guard let vc = AppContext.shared.viewController, let v = vc.storageOutlineView else {
             return
