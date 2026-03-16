@@ -62,7 +62,7 @@
       debugDocumentVersioning = "YES">
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "Debug">
+      buildConfiguration = "AppStore">
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "AppStore"
