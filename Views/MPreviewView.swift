@@ -417,6 +417,18 @@ class MPreviewView: WKWebView, WKUIDelegate {
         hasLoadedTemplate = false
     }
 
+    func resetPreviewStateForReuse() {
+        contentUpdateVersion &+= 1
+        contentUpdateWorkItem?.cancel()
+        contentUpdateWorkItem = nil
+        loadCompletion = nil
+        isUpdatingContent = false
+        scrollObserverInjected = false
+        hasLoadedTemplate = false
+        note = nil
+        stopLoading()
+    }
+
     private func buildUpdateScript(html: String, initializeMath: Bool, initializeDiagrams: Bool, preserveScroll: Bool) -> String {
         var initScripts: [String] = []
 

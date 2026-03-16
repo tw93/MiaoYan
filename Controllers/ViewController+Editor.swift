@@ -228,8 +228,7 @@ extension ViewController {
                 // Close search bar if open
                 webView.hideSearchBar()
                 self.hideWebView()
-                webView.resetTemplateState()
-                webView.loadHTMLString("<html><body style='background:transparent;'></body></html>", baseURL: nil)
+                webView.resetPreviewStateForReuse()
                 self.refillEditArea(suppressSave: true)
                 self.editArea.usesFindBar = false
                 // Restore editor scrollbar

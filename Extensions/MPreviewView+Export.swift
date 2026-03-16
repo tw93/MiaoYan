@@ -757,9 +757,7 @@ extension MPreviewView {
         let currentName = vc.notesTableView.getSelectedNote()?.getExportTitle() ?? "MiaoYan"
 
         // Perform file save on background queue
-        DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard self != nil else { return }
-
+        DispatchQueue.global(qos: .utility).async {
             guard let downloadsURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first else {
                 DispatchQueue.main.async {
                     vc.toastExport(status: false)
@@ -785,7 +783,7 @@ extension MPreviewView {
             } catch {
                 // Fallback: use save panel for sandboxed environments (e.g., App Store)
                 DispatchQueue.main.async {
-                    self?.presentSavePanel(data: data, filename: currentName, extension: `extension`, viewController: vc)
+                    Self.presentSavePanel(data: data, filename: currentName, extension: `extension`, viewController: vc)
                 }
             }
         }
@@ -795,9 +793,7 @@ extension MPreviewView {
         guard let vc = viewController as? ViewController else { return }
 
         // Perform file save on background queue
-        DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard self != nil else { return }
-
+        DispatchQueue.global(qos: .utility).async {
             guard let downloadsURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first else {
                 DispatchQueue.main.async {
                     vc.toastExport(status: false)
@@ -824,13 +820,13 @@ extension MPreviewView {
             } catch {
                 // Fallback: use save panel for sandboxed environments (e.g., App Store)
                 DispatchQueue.main.async {
-                    self?.presentSavePanel(data: data, filename: filename, extension: `extension`, viewController: vc)
+                    Self.presentSavePanel(data: data, filename: filename, extension: `extension`, viewController: vc)
                 }
             }
         }
     }
 
-    private func presentSavePanel(data: Data, filename: String, extension: String, viewController: ViewController) {
+    private static func presentSavePanel(data: Data, filename: String, extension: String, viewController: ViewController) {
         let savePanel = NSSavePanel()
         savePanel.nameFieldStringValue = "\(filename).\(`extension`)"
         savePanel.allowedContentTypes = [UTType(filenameExtension: `extension`) ?? .data]

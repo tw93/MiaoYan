@@ -39,8 +39,8 @@ struct FillOptions {
 @MainActor
 class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     private enum PreviewRevealTiming {
-        static let initialDelay: TimeInterval = 0.3
-        static let fadeDuration: TimeInterval = 0.2
+        static let initialDelay: TimeInterval = 0
+        static let fadeDuration: TimeInterval = 0.08
     }
     public static var note: Note?
     public static var isBusyProcessing: Bool = false
@@ -522,6 +522,10 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 && !isSplitModeActive
                 && !options.force
                 && markdownView?.displayedNote === note
+            let shouldHidePreviewUntilReload =
+                !shouldUseIncrementalPreviewUpdate
+                && markdownView?.displayedNote !== nil
+                && markdownView?.displayedNote !== note
 
             if markdownView == nil {
                 let previewView = MPreviewView(frame: frame, note: note, closure: {})
@@ -537,6 +541,10 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                     previewView.frame = newFrame
                 }
                 previewView.autoresizingMask = [.width, .height]
+                if shouldHidePreviewUntilReload {
+                    previewView.isHidden = true
+                    previewView.alphaValue = 0
+                }
 
                 renderPreviewContent(
                     note: note,
@@ -557,6 +565,10 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                     previewView.frame = newFrame
                 }
                 previewView.autoresizingMask = [.width, .height]
+                if shouldHidePreviewUntilReload {
+                    previewView.isHidden = true
+                    previewView.alphaValue = 0
+                }
 
                 renderPreviewContent(
                     note: note,
@@ -632,9 +644,11 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 previewView.isHidden = false
                 previewView.alphaValue = 1.0
             } else {
-                let shouldGateReveal = !MPreviewView.hasCompletedInitialLoad
+                let shouldGateReveal =
+                    !MPreviewView.hasCompletedInitialLoad
+                    || previewView.displayedNote !== note
+                    || previewView.isHidden
                 if shouldGateReveal {
-                    previewView.isHidden = false
                     previewView.alphaValue = 0
                 } else {
                     // Fast reveal: show immediately to provide instant visual feedback
@@ -649,7 +663,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                                 || self.isPresentationModeActive
                                 || self.isMagicPPTModeActive
                                 || self.isSplitModeActive
-                            guard shouldShowPreview, !previewView.isHidden else { return }
+                            guard shouldShowPreview else { return }
+                            previewView.isHidden = false
                             NSAnimationContext.runAnimationGroup({ context in
                                 context.duration = PreviewRevealTiming.fadeDuration
                                 previewView.animator().alphaValue = 1.0
