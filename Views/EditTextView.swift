@@ -521,6 +521,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 && !isMagicPPTModeActive
                 && !isSplitModeActive
                 && !options.force
+                && markdownView?.displayedNote === note
 
             if markdownView == nil {
                 let previewView = MPreviewView(frame: frame, note: note, closure: {})

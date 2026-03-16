@@ -75,6 +75,10 @@ class MPreviewView: WKWebView, WKUIDelegate {
     private static var bundleInitialized = false
     private static let initQueue = DispatchQueue(label: "preview.init", qos: .userInitiated)
     weak var scrollDelegate: MPreviewScrollDelegate?
+    var displayedNote: Note? {
+        note
+    }
+
     init(frame: CGRect, note: Note, closure: MPreviewViewClosure?) {
         self.closure = closure
         let userContentController = WKUserContentController()
@@ -617,6 +621,13 @@ class MPreviewView: WKWebView, WKUIDelegate {
 
             // Cancel previous content update reset task to avoid premature re-enable
             self.contentUpdateWorkItem?.cancel()
+            self.contentUpdateWorkItem = nil
+
+            if let currentNote = self.note, currentNote !== note {
+                self.isUpdatingContent = false
+                self.load(note: note, force: true)
+                return
+            }
 
             // Disable scroll sync during content update
             self.isUpdatingContent = true
@@ -646,7 +657,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 return
             }
             guard updateVersion == self.contentUpdateVersion else { return }
-            guard self.note == nil || self.note === note else { return }
 
             let processedHtmlString = self.loadImages(imagesStorage: imagesStorage, html: htmlString)
 
@@ -682,7 +692,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 guard updateVersion == self.contentUpdateVersion else { return }
-                guard self.note == nil || self.note === note else { return }
 
                 // Execute JavaScript with proper error handling
                 do {
