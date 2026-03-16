@@ -3,6 +3,7 @@ import Carbon.HIToolbox
 import CryptoKit
 import ObjectiveC.runtime
 import PDFKit
+import UniformTypeIdentifiers
 import WebKit
 
 // MARK: - Export Cache Manager
@@ -136,11 +137,12 @@ extension MPreviewView {
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + Self.exportTimeout, execute: timeoutWorkItem)
 
-        let resetExportFlag = {
+        let resetExportFlag = { [weak self] in
             Self.isExporting = false
             Self.exportStartTime = nil
             timeoutWorkItem.cancel()
-            self.removePrintStyles()
+            self?.removePrintStyles()
+            self?.hasPreparedPPTExport = false
         }
 
         // Check cache first
@@ -410,11 +412,17 @@ extension MPreviewView {
                             self.createPDF(configuration: pdfConfig) { [weak self] result in
                                 guard let self else { return }
 
-                                // Cleanup: remove injected title and print styles
+                                // Cleanup: remove injected title, print styles, and PPT classes
                                 self.evaluateJavaScript(
                                     "var t = document.getElementById('export-generated-title'); if(t) t.remove();",
                                     completionHandler: nil)
                                 self.removePrintStyles()
+                                self.evaluateJavaScript(
+                                    """
+                                    document.documentElement.classList.remove('print-pdf');
+                                    document.body.classList.remove('print-pdf');
+                                    """, completionHandler: nil)
+                                self.hasPreparedPPTExport = false
                                 vc.toastDismiss()
 
                                 switch result {
@@ -544,6 +552,7 @@ extension MPreviewView {
 
                 // Cleanup state
                 UserDefaultsManagement.isOnExportPPT = false
+                self.hasPreparedPPTExport = false
                 self.evaluateJavaScript(
                     """
                     document.documentElement.classList.remove('print-pdf');
@@ -774,8 +783,9 @@ extension MPreviewView {
                     vc.toastExport(status: true)
                 }
             } catch {
+                // Fallback: use save panel for sandboxed environments (e.g., App Store)
                 DispatchQueue.main.async {
-                    vc.toastExport(status: false)
+                    self?.presentSavePanel(data: data, filename: currentName, extension: `extension`, viewController: vc)
                 }
             }
         }
@@ -812,9 +822,32 @@ extension MPreviewView {
                     vc.toastExport(status: true)
                 }
             } catch {
+                // Fallback: use save panel for sandboxed environments (e.g., App Store)
                 DispatchQueue.main.async {
-                    vc.toastExport(status: false)
+                    self?.presentSavePanel(data: data, filename: filename, extension: `extension`, viewController: vc)
                 }
+            }
+        }
+    }
+
+    private func presentSavePanel(data: Data, filename: String, extension: String, viewController: ViewController) {
+        let savePanel = NSSavePanel()
+        savePanel.nameFieldStringValue = "\(filename).\(`extension`)"
+        savePanel.allowedContentTypes = [UTType(filenameExtension: `extension`) ?? .data]
+        savePanel.canCreateDirectories = true
+
+        savePanel.begin { result in
+            if result == NSApplication.ModalResponse.OK, let url = savePanel.url {
+                do {
+                    try data.write(to: url, options: .atomic)
+                    viewController.toastExport(status: true)
+                } catch {
+                    viewController.toastExport(status: false)
+                }
+            } else if result == NSApplication.ModalResponse.cancel {
+                viewController.toastDismiss()
+            } else {
+                viewController.toastExport(status: false)
             }
         }
     }

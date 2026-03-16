@@ -390,22 +390,25 @@ public class Note: NSObject {
     private static let metaTitleRegex = try! NSRegularExpression(pattern: "title: (.*?)", options: [])
 
     func cleanMetaData(content: String) -> String {
-        if content.hasPrefix("---\n") {
-            var list = content.components(separatedBy: "---")
+        guard content.hasPrefix("---\n") else { return content }
 
-            if list.count > 2 {
-                let headerList = list[1].components(separatedBy: "\n")
-                for header in headerList {
-                    let nsHeader = header as NSString
-                    let matches = Note.metaTitleRegex.matches(in: String(nsHeader), options: [], range: NSRange(location: 0, length: (nsHeader as String).count))
+        // Find the closing --- of the front matter section (only at the start)
+        guard let endRange = content.range(of: "\n---\n", range: content.index(content.startIndex, offsetBy: 4)..<content.endIndex) else {
+            return content
+        }
 
-                    if matches.first != nil {
-                        list.remove(at: 1)
-                        break
-                    }
-                }
+        let frontMatterStart = content.index(content.startIndex, offsetBy: 4) // After "---\n"
+        let frontMatter = content[frontMatterStart..<endRange.lowerBound]
+        let headerList = frontMatter.components(separatedBy: "\n")
 
-                return list.joined()
+        for header in headerList {
+            let nsHeader = header as NSString
+            let matches = Note.metaTitleRegex.matches(in: String(nsHeader), options: [], range: NSRange(location: 0, length: nsHeader.length))
+
+            if matches.first != nil {
+                // Return content after the front matter closing ---\n
+                let remainingStart = endRange.upperBound
+                return String(content[remainingStart...])
             }
         }
 
