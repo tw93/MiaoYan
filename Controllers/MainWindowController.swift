@@ -189,9 +189,9 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         AppContext.shared.sessionState.fullScreen = false
         // Auto-exit presentation modes when exiting full screen to prevent UI inconsistencies
         if let vc = AppContext.shared.viewController {
-            if UserDefaultsManagement.presentation {
+            if vc.sessionPresentationMode {
                 vc.disablePresentation()
-            } else if UserDefaultsManagement.magicPPT {
+            } else if vc.sessionMagicPPTMode {
                 vc.disableMiaoYanPPT()
             }
         }

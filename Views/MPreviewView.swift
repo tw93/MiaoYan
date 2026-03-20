@@ -316,30 +316,33 @@ class MPreviewView: WKWebView, WKUIDelegate {
             return true
         }
 
-        if event.keyCode == kVK_Escape, UserDefaultsManagement.presentation, !UserDefaultsManagement.magicPPT {
-            DispatchQueue.main.async {
-                if let vc = AppContext.shared.viewController {
-                    vc.disablePresentation()
+        if event.keyCode == kVK_Escape {
+            if let vc = AppContext.shared.viewController {
+                if vc.sessionMagicPPTMode {
+                    DispatchQueue.main.async {
+                        vc.disableMiaoYanPPT()
+                    }
+                    return true
+                } else if vc.sessionPresentationMode {
+                    DispatchQueue.main.async {
+                        vc.disablePresentation()
+                    }
+                    return true
                 }
             }
-            return true
         }
 
-        if event.keyCode == kVK_Escape, UserDefaultsManagement.magicPPT {
-            DispatchQueue.main.async {
-                if let vc = AppContext.shared.viewController {
-                    vc.disableMiaoYanPPT()
-                }
-            }
-            return true
-        }
-        if event.keyCode == kVK_Space, UserDefaultsManagement.magicPPT {
+        if event.keyCode == kVK_Space,
+            let vc = AppContext.shared.viewController,
+            vc.sessionMagicPPTMode
+        {
             DispatchQueue.main.async {
                 self.evaluateJavaScript("Reveal.next();", completionHandler: nil)
             }
             return false
         }
-        if UserDefaultsManagement.magicPPT {
+
+        if let vc = AppContext.shared.viewController, vc.sessionMagicPPTMode {
             return false
         }
 
