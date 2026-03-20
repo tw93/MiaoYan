@@ -417,8 +417,8 @@ extension ViewController {
         saveTitleSafely()
         sessionSplitMode.toggle()
 
-        if sessionSplitMode {
-            applyEditorModePreferenceChange()
+        if sessionPreviewMode {
+            disablePreview()
         } else {
             applyEditorModePreferenceChange()
         }
@@ -563,8 +563,8 @@ extension ViewController {
         // Restore UI elements after fullscreen transition completes
         DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.presentationLayoutDelay) {
             self.restorePresentationLayout()
-            self.disablePreview()
             self.sessionPresentationMode = false
+            self.disablePreview()
             self.updateButtonStates()
         }
     }

@@ -63,12 +63,14 @@ class NotesTableView: NSTableView {
             return
         }
 
-        if EditTextView.note != nil, event.keyCode == kVK_Tab, !event.modifierFlags.contains(.control), !UserDefaultsManagement.preview {
+        let shouldUseEditorTextContent = vc.shouldUseEditorTextContent
+
+        if EditTextView.note != nil, event.keyCode == kVK_Tab, !event.modifierFlags.contains(.control), shouldUseEditorTextContent {
             vc.focusEditArea()
             vc.editArea.updateTextContainerInset()
         }
 
-        if event.keyCode == kVK_LeftArrow, !UserDefaultsManagement.magicPPT {
+        if event.keyCode == kVK_LeftArrow, !vc.sessionMagicPPTMode {
             if let fr = window?.firstResponder, fr.isKind(of: NSTextView.self) {
                 super.keyUp(with: event)
                 return
@@ -80,7 +82,7 @@ class NotesTableView: NSTableView {
             deselectNotes()
         }
 
-        if event.keyCode == kVK_RightArrow, !UserDefaultsManagement.magicPPT {
+        if event.keyCode == kVK_RightArrow, !vc.sessionMagicPPTMode {
             if let fr = window?.firstResponder, fr.isKind(of: NSTextView.self) {
                 super.keyUp(with: event)
                 return
@@ -239,8 +241,7 @@ class NotesTableView: NSTableView {
 
         if noteList.indices.contains(selectedRow) {
             let note = noteList[selectedRow]
-
-            if let currentNote = EditTextView.note, currentNote != note, !UserDefaultsManagement.preview {
+            if let currentNote = EditTextView.note, currentNote != note, vc.shouldUseEditorTextContent {
                 vc.editArea.saveTextStorageContent(to: currentNote)
                 currentNote.save()
             }
@@ -496,10 +497,10 @@ class NotesTableView: NSTableView {
     }
 
     override func keyDown(with event: NSEvent) {
-        if UserDefaultsManagement.magicPPT {
+        let vc = window?.contentViewController as? ViewController
+        if vc?.sessionMagicPPTMode == true {
             return
         }
-        let vc = window?.contentViewController as? ViewController
         if event.modifierFlags.contains(.control),
             !event.modifierFlags.contains(.option), event.modifierFlags.contains(.shift), event.keyCode == kVK_ANSI_P
         {

@@ -108,6 +108,11 @@ class ViewController:
         sessionState.shouldShowPreview
     }
 
+    // True when the editor text content can be safely edited (not in any preview-like mode)
+    var shouldUseEditorTextContent: Bool {
+        !sessionPreviewMode && !sessionPresentationMode && !sessionMagicPPTMode
+    }
+
     override var representedObject: Any? {
         didSet {}
     }

@@ -337,7 +337,7 @@ extension ViewController {
         }
 
         let isPreviewSearchVisible = vc.editArea.markdownView?.isSearchBarVisible ?? false
-        if vc.titleLabel.hasFocus() || vc.editArea.hasFocus() || vc.search.hasFocus() || UserDefaultsManagement.magicPPT || UserDefaultsManagement.presentation || vc.editArea.isSearchBarVisible || isPreviewSearchVisible {
+        if vc.titleLabel.hasFocus() || vc.editArea.hasFocus() || vc.search.hasFocus() || vc.sessionMagicPPTMode || vc.sessionPresentationMode || vc.editArea.isSearchBarVisible || isPreviewSearchVisible {
             return
         }
 
@@ -594,7 +594,7 @@ extension ViewController {
     @IBAction func textFinder(_ sender: NSMenuItem) {
         guard let vc = ViewController.shared() else { return }
 
-        if UserDefaultsManagement.preview || UserDefaultsManagement.presentation || UserDefaultsManagement.magicPPT {
+        if !vc.shouldUseEditorTextContent {
             if let webView = vc.editArea.markdownView {
                 if vc.editArea.isSearchBarVisible {
                     vc.editArea.hideSearchBar()
@@ -1147,7 +1147,7 @@ extension ViewController {
         // For PDF and Image exports, enable preview and wait for proper loading
         // For PDF and Image exports, ensure preview is enabled
         // Only toggle if not already in preview to avoid unnecessary reload
-        if !UserDefaultsManagement.preview {
+        if !shouldShowPreview {
             enablePreview()
             shouldRestorePreviewAfterExport = true
         }
@@ -1234,7 +1234,6 @@ extension ViewController {
     // MARK: - Keyboard Event Handling
     // swiftlint:disable:next cyclomatic_complexity
     public func handleKeyDown(with event: NSEvent) -> Bool {
-
         guard let mw = MainWindowController.shared() else {
             return false
         }
@@ -1254,10 +1253,10 @@ extension ViewController {
         }
 
         if event.keyCode == kVK_Escape {
-            if UserDefaultsManagement.magicPPT {
+            if sessionMagicPPTMode {
                 disableMiaoYanPPT()
                 return false
-            } else if UserDefaultsManagement.presentation {
+            } else if sessionPresentationMode {
                 disablePresentation()
                 return false
             }
@@ -1280,12 +1279,12 @@ extension ViewController {
             return false
         }
 
-        if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), editArea.hasFocus(), !UserDefaultsManagement.presentation {
+        if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), editArea.hasFocus(), shouldUseEditorTextContent {
             editArea.deleteToBeginningOfLine(nil)
             return false
         }
 
-        if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), titleLabel.hasFocus(), !UserDefaultsManagement.preview {
+        if event.keyCode == kVK_Delete, event.modifierFlags.contains(.command), titleLabel.hasFocus(), shouldUseEditorTextContent {
             updateTitle(newTitle: "")
             return false
         }
@@ -1310,7 +1309,7 @@ extension ViewController {
             }
         }
 
-        if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_I, !UserDefaultsManagement.presentation {
+        if event.modifierFlags.contains(.command), event.modifierFlags.contains(.option), event.keyCode == kVK_ANSI_I, !sessionPresentationMode {
             toggleInfo()
             return false
         }
@@ -1366,7 +1365,7 @@ extension ViewController {
                         return false
                     }
 
-                    if fr.isKind(of: NotesTableView.self), !(UserDefaultsManagement.preview) {
+                    if fr.isKind(of: NotesTableView.self), shouldUseEditorTextContent {
                         NSApp.mainWindow?.makeFirstResponder(editArea)
                         return false
                     }
@@ -1455,7 +1454,7 @@ extension ViewController {
         if event.keyCode == kVK_ANSI_F, event.modifierFlags.contains(.command), !event.modifierFlags.contains(.shift), !event.modifierFlags.contains(.control) {
             if notesTableView.getSelectedNote() != nil {
                 // If in preview mode, use WebView search instead of exiting preview
-                if UserDefaultsManagement.preview || UserDefaultsManagement.presentation || UserDefaultsManagement.magicPPT {
+                if !shouldUseEditorTextContent {
                     if let webView = editArea.markdownView {
                         webView.showSearchBar()
                         return true

@@ -45,7 +45,7 @@ extension ViewController {
     // MARK: - Core Panel Operations
 
     private var isPresentationMode: Bool {
-        UserDefaultsManagement.presentation || UserDefaultsManagement.magicPPT
+        sessionPresentationMode || sessionMagicPPTMode
     }
 
     func setSidebarVisible(_ visible: Bool, saveState: Bool = true) {
@@ -182,6 +182,7 @@ extension ViewController {
     }
 
     @IBAction func toggleSplitMode(_ sender: Any) {
+        saveTitleSafely()
         let newMode = !sessionSplitMode
         sessionSplitMode = newMode
 
@@ -189,7 +190,7 @@ extension ViewController {
         // If currently in Preview Mode, exit it.
         // The disablePreview() logic will check splitViewMode and automatically transition to Split Mode.
         if sessionPreviewMode {
-            sessionPreviewMode = false
+            disablePreview()
         } else {
             applyEditorModePreferenceChange()
         }

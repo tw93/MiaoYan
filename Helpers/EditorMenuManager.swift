@@ -13,7 +13,9 @@ class EditorMenuManager {
             let vc = ViewController.shared(),
             let editArea = vc.editArea,
             let note = EditTextView.note,
-            !UserDefaultsManagement.preview,
+            !vc.sessionPreviewMode,
+            !vc.sessionPresentationMode,
+            !vc.sessionMagicPPTMode,
             editArea.hasFocus()
         else { return }
 
