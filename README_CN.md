@@ -82,7 +82,7 @@ miao update             # 更新 CLI
 
 ## 支持
 
-<a href="https://miaoyan.app/cats.html"><img src="https://miaoyan.app/assets/sponsors.svg" width="1000px" /></a>
+<a href="https://miaoyan.app/cats.html"><img src="https://rawcdn.githack.com/tw93/MiaoYan/vercel/assets/sponsors.svg" width="1000px" /></a>
 
 1. 我有两只猫：汤圆、可乐 — 若妙言让你开心，<a href="https://miaoyan.app/cats.html" target="_blank">请她们吃罐头 🥩</a>。
 2. 如果你喜欢妙言，欢迎给它一个 Star，更欢迎推荐给你志同道合的朋友使用。

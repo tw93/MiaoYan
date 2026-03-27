@@ -81,7 +81,7 @@ Why not WYSIWYG like Typora? We prioritize pure Markdown editing experience, and
 
 ## Support
 
-<a href="https://miaoyan.app/cats.html"><img src="https://miaoyan.app/assets/sponsors.svg" width="1000px" /></a>
+<a href="https://miaoyan.app/cats.html"><img src="https://rawcdn.githack.com/tw93/MiaoYan/vercel/assets/sponsors.svg" width="1000px" /></a>
 
 1. Cats: Tangyuan & Cola — if MiaoYan helps, <a href="https://miaoyan.app/cats.html" target="_blank">treat them to canned food 🥩</a>.
 2. If you enjoy MiaoYan, please consider giving it a star and recommending it to your friends.

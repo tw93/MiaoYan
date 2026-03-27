@@ -78,7 +78,7 @@ El área de edición y el área de vista previa se muestran lado a lado, soporta
 
 ## Soporte
 
-<a href="https://miaoyan.app/cats.html"><img src="https://miaoyan.app/assets/sponsors.svg" width="1000px" /></a>
+<a href="https://miaoyan.app/cats.html"><img src="https://rawcdn.githack.com/tw93/MiaoYan/vercel/assets/sponsors.svg" width="1000px" /></a>
 
 1. Tengo dos gatos: Tangyuan y Cola. Si MiaoYan te hace feliz, <a href="https://miaoyan.app/cats.html" target="_blank">invítales una lata de comida 🥩</a>.
 2. Si te gusta MiaoYan, eres bienvenido a darle una Estrella (Star), y te invitamos a recomendarlo a amigos con intereses similares.
