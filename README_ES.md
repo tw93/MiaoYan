@@ -68,7 +68,7 @@ El área de edición y el área de vista previa se muestran lado a lado, soporta
 
 ¿Por qué no usar una vista previa instantánea al estilo Typora? Buscamos una experiencia de edición Markdown pura, y la implementación nativa en Swift de la vista previa instantánea es demasiado compleja, lo que dificulta garantizar su estabilidad. El modo de columnas divididas proporciona retroalimentación visual en tiempo real mientras mantiene una experiencia de edición limpia.
 
-<img src="https://cdn.tw93.fun/pic/1jZnC4.png" width="100%" alt="Modo de vista previa y edición en columnas divididas" />
+<img src="https://gw.alipayobjects.com/zos/k/eg/jV8Gra.png" width="100%" alt="Modo de vista previa y edición en columnas divididas" />
 
 ## Guías de Uso
 

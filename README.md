@@ -72,7 +72,7 @@ Edit and preview side by side with real-time preview and 60fps bidirectional scr
 
 Why not WYSIWYG like Typora? We prioritize pure Markdown editing experience, and implementing WYSIWYG in native Swift is overly complex with reliability concerns. Split mode maintains clean editing while providing instant visual feedback.
 
-<img src="https://cdn.tw93.fun/pic/1jZnC4.png" width="100%" alt="Split Editor & Preview Mode" />
+<img src="https://gw.alipayobjects.com/zos/k/eg/jV8Gra.png" width="100%" alt="Split Editor & Preview Mode" />
 
 ## Documentation
 

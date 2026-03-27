@@ -72,7 +72,7 @@ miao update             # 更新 CLI
 
 为什么不做 Typora 式即时预览？我们追求纯粹的 Markdown 编辑体验，用 Swift 原生实现即时预览过于复杂且稳定性难以保证。分栏模式在保持纯净编辑体验的同时，提供了实时的视觉反馈。
 
-<img src="https://cdn.tw93.fun/pic/1jZnC4.png" width="100%" alt="分栏编辑预览模式" />
+<img src="https://gw.alipayobjects.com/zos/k/eg/jV8Gra.png" width="100%" alt="分栏编辑预览模式" />
 
 ## 使用指南
 
