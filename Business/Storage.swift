@@ -317,6 +317,35 @@ class Storage {
         }
     }
 
+    public func reconfigureForSingleMode() {
+        guard UserDefaultsManagement.isSingleMode,
+              let singleModeUrl = UserDefaultsManagement.singleModeURL else { return }
+
+        let singleModeScopeURL = UserDefaultsManagement.singleModeScopeURL ?? singleModeUrl
+        let singleModeScopeBookmark = UserDefaultsManagement.singleModeAccessBookmark ?? UserDefaultsManagement.singleModeBookmark
+        startAccessingSecurityScopedResourceIfNeeded(singleModeScopeURL, bookmarkData: singleModeScopeBookmark)
+
+        let rootUrl: URL
+        if FileManager.default.directoryExists(atUrl: singleModeUrl) {
+            rootUrl = singleModeUrl
+        } else {
+            rootUrl = singleModeUrl.deletingLastPathComponent()
+        }
+
+        projects.removeAll()
+        noteList.removeAll()
+        loadedProjectInfo.removeAll()
+        pinned = 0
+
+        var name = rootUrl.lastPathComponent
+        if let iCloudURL = getCloudDrive(), iCloudURL == rootUrl {
+            name = "iCloud Drive"
+        }
+        let project = Project(url: rootUrl, label: name, isRoot: true, isDefault: true)
+        _ = add(project: project)
+        loadProjects()
+    }
+
     func loadDocuments(tryCount: Int = 0, completion: @escaping () -> Void) {
         _ = restoreCloudPins()
 

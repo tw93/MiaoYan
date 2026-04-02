@@ -129,7 +129,7 @@ extension ViewController {
             if result == NSApplication.ModalResponse.OK {
                 let urls = panel.urls
                 UserDefaultsManagement.beginSingleMode(for: urls[0])
-                self.restart()
+                self.reloadForSingleMode()
             }
         }
     }

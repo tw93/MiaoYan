@@ -337,7 +337,15 @@ class ViewController:
         configureShortcuts()
         configureDelegates()
         configureLayout()
-        configureNotesList()
+        let hasStashedUrls: Bool
+        if let appDelegate = NSApplication.shared.delegate as? AppDelegate, appDelegate.urls != nil {
+            hasStashedUrls = true
+        } else {
+            hasStashedUrls = false
+        }
+        if !hasStashedUrls {
+            configureNotesList()
+        }
         configureEditor()
         updateToolbarButtonTints()
 
@@ -448,6 +456,7 @@ class ViewController:
         }
         if let appDelegate = NSApplication.shared.delegate as? AppDelegate {
             if let urls = appDelegate.urls {
+                appDelegate.urls = nil
                 appDelegate.openNotes(urls: urls)
                 return
             }
@@ -987,6 +996,15 @@ class ViewController:
         contentSplitView.setDisplayMode(.editorOnly, animated: false)
     }
 
+    func reloadForSingleMode() {
+        searchQueue.cancelAllOperations()
+        storage.reconfigureForSingleMode()
+        storageOutlineView.sidebarItems = Sidebar().getList()
+        storageOutlineView.reloadData()
+        fsManager?.restart()
+        configureNotesList()
+    }
+
     func configureNotesList() {
         var lastSidebarItem = UserDefaultsManagement.lastProject
         var shouldSelectSidebarItem = true
@@ -1043,21 +1061,22 @@ class ViewController:
                 items.indices.contains(lastSidebarItem)
             {
                 // Use a small delay to ensure table is fully loaded before selection
+                let capturedSidebarItem = lastSidebarItem
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                     // Prevent overwriting user selection if they have already switched projects
-                    if self.storageOutlineView.selectedRow != -1 && self.storageOutlineView.selectedRow != lastSidebarItem {
+                    if self.storageOutlineView.selectedRow != -1 && self.storageOutlineView.selectedRow != capturedSidebarItem {
                         return
                     }
 
                     // If we are already on the correct item, do nothing.
                     // Setting skipSidebarSelection = true here would be a bug because selectRowIndexes won't trigger
                     // the delegate if the selection doesn't change, leaving the flag stuck at true.
-                    if self.storageOutlineView.selectedRow == lastSidebarItem {
+                    if self.storageOutlineView.selectedRow == capturedSidebarItem {
                         return
                     }
 
                     UserDataService.instance.skipSidebarSelection = true
-                    self.storageOutlineView.selectRowIndexes([lastSidebarItem], byExtendingSelection: false)
+                    self.storageOutlineView.selectRowIndexes([capturedSidebarItem], byExtendingSelection: false)
                 }
             }
             if UserDefaultsManagement.isSingleMode {
