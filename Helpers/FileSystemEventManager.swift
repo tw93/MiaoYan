@@ -137,7 +137,12 @@ class FileSystemEventManager {
     }
 
     private func checkFile(url: URL, pathList: [String]) -> Bool {
-        FileManager.default.fileExists(atPath: url.path) && storage.allowedExtensions.contains(url.pathExtension) && storage.isValidUTI(url: url) && pathList.contains(url.deletingLastPathComponent().path)
+        let parentPath = url.deletingLastPathComponent().resolvingSymlinksInPath().path
+        let resolvedPathList = pathList.map { URL(fileURLWithPath: $0).resolvingSymlinksInPath().path }
+        return FileManager.default.fileExists(atPath: url.path)
+            && storage.allowedExtensions.contains(url.pathExtension)
+            && storage.isValidUTI(url: url)
+            && resolvedPathList.contains(parentPath)
     }
 
     private func importNote(_ url: URL) {
@@ -244,8 +249,13 @@ class FileSystemEventManager {
         delegate?.notesTableView.reloadRow(note: note)
 
         if EditTextView.note == note {
-            delegate?.refillEditArea()
+            delegate?.refillEditArea(suppressSave: true)
         }
+    }
+
+    @MainActor
+    public func recheckNote(_ note: Note) {
+        reloadNote(note: note)
     }
 
     public func restart() {

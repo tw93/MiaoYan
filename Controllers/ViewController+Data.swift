@@ -704,6 +704,9 @@ extension ViewController {
 
     @objc func enableFSUpdates() {
         UserDataService.instance.fsUpdatesDisabled = false
+        if let note = EditTextView.note {
+            fsManager?.recheckNote(note)
+        }
     }
 
     // MARK: - CloudKit Data Sync
