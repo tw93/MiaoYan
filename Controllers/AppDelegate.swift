@@ -49,6 +49,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
 
     func applicationWillFinishLaunching(_ notification: Notification) {
         migratePreferences()
+        UserDefaultsManagement.clearSingleMode()
         let storage = appContext.storage
         storage.loadProjects()
         storage.loadDocuments {}
@@ -162,6 +163,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
+        UserDefaultsManagement.clearSingleMode()
         if let vc = resolveViewController() {
             vc.persistCurrentViewState()
         }
