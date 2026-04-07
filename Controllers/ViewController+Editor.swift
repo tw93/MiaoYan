@@ -556,14 +556,15 @@ extension ViewController {
     func disablePresentation() {
         presentationButton.state = .off
         presentationButton.contentTintColor = nil
+        // Clear state immediately so guards in deleteNote etc. stop blocking
+        sessionPresentationMode = false
         if sessionFullScreenMode {
             sessionFullScreenMode = false
             view.window?.toggleFullScreen(nil)
         }
-        // Restore UI elements after fullscreen transition completes
+        // Layout restoration still needs delay for fullscreen animation
         DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.presentationLayoutDelay) {
             self.restorePresentationLayout()
-            self.sessionPresentationMode = false
             self.disablePreview()
             self.updateButtonStates()
         }
@@ -715,19 +716,16 @@ extension ViewController {
             sessionFullScreenMode = false
             view.window?.toggleFullScreen(nil)
         }
-        // Restore UI elements after fullscreen transition completes
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-            self.restorePresentationLayout()
-            self.disablePreview()
-            self.updateButtonStates()
-        }
-
-        // Hide webview and return to text editor
+        // Hide webview immediately rather than leaving stale PPT view during animation
         if editArea.markdownView != nil {
             hideWebView()
         }
-        // Restore editor content and focus
-        refillEditArea()
+        // Restore UI elements after fullscreen transition completes
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            self.restorePresentationLayout()
+            self.disablePreview()  // handles refillEditArea internally
+            self.updateButtonStates()
+        }
         DispatchQueue.main.async {
             self.titleLabel.isEditable = true
             self.focusEditArea()

@@ -58,25 +58,25 @@
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/diagrams.css" />
 
-  <script src="js/highlight.min.js"></script>
-  <script src="js/mermaid.min.js"></script>
-  <script src="js/plantuml-encoder.min.js"></script>
-  <script src="js/katex.min.js"></script>
-  <script src="js/auto-render.min.js"></script>
-  <script src="js/emoji.min.js"></script>
-  <script src="js/d3.min.js"></script>
-  <script src="js/markmap.min.js"></script>
-  <script src="js/markmap-view.min.js"></script>
+  <script defer src="js/highlight.min.js"></script>
+  <script defer src="js/mermaid.min.js"></script>
+  <script defer src="js/plantuml-encoder.min.js"></script>
+  <script defer src="js/katex.min.js"></script>
+  <script defer src="js/auto-render.min.js"></script>
+  <script defer src="js/emoji.min.js"></script>
+  <script defer src="js/d3.min.js"></script>
+  <script defer src="js/markmap.min.js"></script>
+  <script defer src="js/markmap-view.min.js"></script>
 
-  <script src="js/lightense.min.js"></script>
-  <script src="js/tocbot.min.js"></script>
+  <script defer src="js/lightense.min.js"></script>
+  <script defer src="js/tocbot.min.js"></script>
 
   <!-- MiaoYan Modular Scripts -->
-  <script src="js/theme-config.js"></script>
-  <script src="js/common.js"></script>
-  <script src="js/theme-manager.js"></script>
-  <script src="js/diagram-handler.js"></script>
-  <script src="js/app.js"></script>
+  <script defer src="js/theme-config.js"></script>
+  <script defer src="js/common.js"></script>
+  <script defer src="js/theme-manager.js"></script>
+  <script defer src="js/diagram-handler.js"></script>
+  <script defer src="js/app.js"></script>
 
   <script>
     if ('CUSTOM_CSS' === 'darkmode') {
@@ -146,11 +146,9 @@
       MiaoYanCommon.optimizeImages();
       MiaoYanCommon.setupImageZoom();
 
-      setTimeout(() => {
-        if (window.DiagramHandler) {
-          DiagramHandler.initializeAll();
-        }
-      }, 100);
+      if (window.DiagramHandler) {
+        DiagramHandler.initializeAll();
+      }
     });
   </script>
 </body>
