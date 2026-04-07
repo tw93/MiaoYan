@@ -1,8 +1,14 @@
 [
   {
+    "name": "PIPELLM",
+    "logoPath": "assets/company-sponsors/pipellm-mark.svg",
+    "label": "Company Sponsor",
+    "url": "https://www.pipellm.ai/"
+  },
+  {
     "name": "Vivgrid",
     "logoPath": "assets/company-sponsors/vivgrid-mark.png",
     "label": "Company Sponsor",
-    "url": ""
+    "url": "https://vivgrid.com/"
   }
 ]

@@ -476,6 +476,8 @@ function renderCompanySponsorGrid({ companySponsors, x, y, width }) {
     if (spacing < baseGap) {
       spacing = baseGap;
       cols = Math.max(1, Math.floor((width + baseGap) / (logoSize + baseGap)));
+    } else if (spacing > baseGap) {
+      spacing = baseGap;
     }
   }
   const gridWidth = companySponsors.length

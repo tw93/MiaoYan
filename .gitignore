@@ -26,3 +26,5 @@ IrEditor
 build
 AGENTS.md
 CLAUDE.md
+dist/
+.agents/
