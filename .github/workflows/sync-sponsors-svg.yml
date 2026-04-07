@@ -1,0 +1,38 @@
+name: Sync sponsors.svg to main
+
+on:
+  push:
+    branches:
+      - vercel
+    paths:
+      - assets/sponsors.svg
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'tw93'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Copy sponsors.svg from vercel branch
+        run: |
+          git fetch origin vercel
+          mkdir -p assets
+          git checkout origin/vercel -- assets/sponsors.svg
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git add assets/sponsors.svg
+            git commit -m "chore: sync sponsors.svg from vercel branch"
+            git push origin main
+          else
+            echo "No changes."
+          fi
