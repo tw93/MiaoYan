@@ -41,7 +41,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
 
     private enum JavaScriptTiming {
         static let diagramInitDelay = 100  // milliseconds
-        static let imageLoadTimeout: TimeInterval = 0.8  // WebView image load timeout (increased for diagram rendering)
+        static let imageLoadTimeout: TimeInterval = 0.4  // WebView image load timeout
+        static let diagramLoadTimeout: TimeInterval = 0.8  // Extended timeout for diagram rendering
     }
 
     @objcMembers
@@ -752,15 +753,18 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 // Re-setup scroll observer after content update
                 self.setupScrollObserver()
 
-                // Re-enable scroll sync; only delay if images are present (they need time to load)
+                // Re-enable scroll sync; delay based on content type
                 let hasImages = processedHtmlString.contains("<img")
-                if hasImages {
+                let hasDiagrams = needsDiagrams || needsMath
+
+                if hasImages || hasDiagrams {
+                    let timeout = hasDiagrams ? JavaScriptTiming.diagramLoadTimeout : JavaScriptTiming.imageLoadTimeout
                     let resetWorkItem = DispatchWorkItem { [weak self] in
                         self?.isUpdatingContent = false
                         self?.contentUpdateWorkItem = nil
                     }
                     self.contentUpdateWorkItem = resetWorkItem
-                    DispatchQueue.main.asyncAfter(deadline: .now() + JavaScriptTiming.imageLoadTimeout, execute: resetWorkItem)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + timeout, execute: resetWorkItem)
                 } else {
                     self.isUpdatingContent = false
                     self.contentUpdateWorkItem = nil

@@ -207,6 +207,10 @@ class HtmlManager {
             return (String(html[fullRange]), String(html[srcRange]))
         }
 
+        // Batch file existence checks to reduce I/O overhead
+        let fileManager = FileManager.default
+        var pathCache: [String: Bool] = [:]
+
         for imageInfo in images {
             guard !imageInfo.srcPath.starts(with: "http://"),
                 !imageInfo.srcPath.starts(with: "https://")
@@ -218,7 +222,10 @@ class HtmlManager {
 
             // Check if it's an absolute system path
             if isAbsolutePath(cleanPath) {
-                if FileManager.default.fileExists(atPath: cleanPath) {
+                let exists = pathCache[cleanPath] ?? fileManager.fileExists(atPath: cleanPath)
+                pathCache[cleanPath] = exists
+
+                if exists {
                     htmlString = updateImageSrc(in: htmlString, fullMatch: imageInfo.fullMatch, oldSrc: imageInfo.srcPath, newSrc: "file://\(cleanPath)")
                 } else {
                     htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: imageNotFoundPlaceholder)
@@ -228,7 +235,10 @@ class HtmlManager {
 
             // Process relative paths - convert to absolute file:// URLs
             let absolutePath = imagesStorage.appendingPathComponent(cleanPath).path
-            if FileManager.default.fileExists(atPath: absolutePath) {
+            let exists = pathCache[absolutePath] ?? fileManager.fileExists(atPath: absolutePath)
+            pathCache[absolutePath] = exists
+
+            if exists {
                 htmlString = updateImageSrc(in: htmlString, fullMatch: imageInfo.fullMatch, oldSrc: imageInfo.srcPath, newSrc: "file://\(absolutePath)")
             } else {
                 htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: imageNotFoundPlaceholder)
@@ -261,14 +271,20 @@ class HtmlManager {
 
                 let cleanPath = cleanImagePath(videoInfo.srcPath)
                 if isAbsolutePath(cleanPath) {
-                    if FileManager.default.fileExists(atPath: cleanPath) {
+                    let exists = pathCache[cleanPath] ?? fileManager.fileExists(atPath: cleanPath)
+                    pathCache[cleanPath] = exists
+
+                    if exists {
                         htmlString = htmlString.replacingOccurrences(
                             of: "src=\"\(videoInfo.srcPath)\"",
                             with: "src=\"file://\(cleanPath)\"")
                     }
                 } else {
                     let absolutePath = imagesStorage.appendingPathComponent(cleanPath).path
-                    if FileManager.default.fileExists(atPath: absolutePath) {
+                    let exists = pathCache[absolutePath] ?? fileManager.fileExists(atPath: absolutePath)
+                    pathCache[absolutePath] = exists
+
+                    if exists {
                         htmlString = htmlString.replacingOccurrences(
                             of: "src=\"\(videoInfo.srcPath)\"",
                             with: "src=\"file://\(absolutePath)\"")
