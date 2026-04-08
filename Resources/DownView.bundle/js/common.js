@@ -99,21 +99,33 @@ const MiaoYanCommon = {
     const allImages = document.querySelectorAll('img');
 
     // Configuration
-    const EAGER_LOAD_COUNT = 3; // First 3 images load immediately
-    const INTERSECTION_MARGIN = '200px'; // Start loading 200px before viewport
+    const EAGER_LOAD_COUNT = 1; // Only load first image immediately (hero image)
+    const INTERSECTION_MARGIN = '400px'; // Start loading 400px before viewport for smoother experience
     const PLACEHOLDER = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
     allImages.forEach((img, index) => {
       img.style.maxWidth = '100%';
       img.style.height = 'auto';
 
+      // Optimize CDN images with compression
+      let srcToUse = img.src;
+      if (srcToUse && (srcToUse.includes('alipayobjects.com') || srcToUse.includes('alicdn.com') || srcToUse.includes('fliggy.com'))) {
+        // Skip GIF and SVG
+        if (!srcToUse.toLowerCase().match(/\.(gif|svg)(\?|$)/)) {
+          const separator = srcToUse.includes('?') ? '&' : '?';
+          srcToUse = `${srcToUse}${separator}x-oss-process=image/auto-orient,1/resize,w_1600/format,webp`;
+        }
+      }
+
       if (index < EAGER_LOAD_COUNT) {
-        // First 3 images: load immediately
+        // First image: load immediately with optimized URL
+        if (srcToUse !== img.src) {
+          img.src = srcToUse;
+        }
         img.setAttribute('loading', 'eager');
       } else {
         // Remaining images: aggressive lazy load
-        const originalSrc = img.src;
-        img.dataset.src = originalSrc;
+        img.dataset.src = srcToUse;
         img.src = PLACEHOLDER;
         img.classList.add('lazy-image');
         img.setAttribute('loading', 'lazy'); // Keep for CSS styling
