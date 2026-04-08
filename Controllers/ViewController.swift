@@ -646,6 +646,9 @@ class ViewController:
         
         if menuItem.action == #selector(openInTerminal(_:)) {
             if let si = getSidebarItem(), si.isTrash() { return false }
+            // Enable when a valid sidebar project is selected (covers single-mode and
+            // Finder-open flows where storageUrl may be nil but a project path exists)
+            if let si = getSidebarItem(), !si.isTrash(), si.project != nil { return true }
             return UserDefaultsManagement.storageUrl != nil
         }
 

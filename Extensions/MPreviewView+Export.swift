@@ -146,8 +146,8 @@ extension MPreviewView {
 
         // Need fresh export
         viewController.toastUpdate(message: "\(I18n.str("Exporting...")) 10%")
-        waitForWebViewReady { [weak self] in
-            guard let self else {
+        waitForWebViewReady { [weak self] ready in
+            guard ready, let self else {
                 resetExportFlag()
                 viewController.toastDismiss()
                 viewController.toastExport(status: false)
@@ -518,8 +518,8 @@ extension MPreviewView {
         vc.toastUpdate(message: "\(I18n.str("Exporting...")) 20%")
 
         // Wait for Reveal.js layout to stabilize
-        self.waitForWebViewReady { [weak self] in
-            guard let self = self else {
+        self.waitForWebViewReady { [weak self] ready in
+            guard ready, let self = self else {
                 vc.toastDismiss()
                 vc.toastExport(status: false)
                 if vc.shouldDisablePPTAfterExport {
@@ -687,7 +687,7 @@ extension MPreviewView {
         checkImages()
     }
 
-    private func waitForWebViewReady(maxRetries: Int = 150, completion: @escaping () -> Void) {
+    private func waitForWebViewReady(maxRetries: Int = 150, completion: @escaping (_ ready: Bool) -> Void) {
         // Check if WebView has finished loading and rendering
         let readyScript = """
                 (function() {
@@ -709,14 +709,14 @@ extension MPreviewView {
 
         func checkReady(remaining: Int) {
             guard remaining > 0 else {
-                completion()
+                completion(false)
                 return
             }
             evaluateJavaScript(readyScript) { result, _ in
                 if let isReady = result as? Bool, isReady {
                     // Additional small delay for final layout stabilization
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        completion()
+                        completion(true)
                     }
                 } else {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {

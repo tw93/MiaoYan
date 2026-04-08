@@ -123,32 +123,36 @@
   </script>
 
   <script>
-    MiaoYanCommon.initializeCore();
-    MiaoYanCommon.setupTextSelection();
+    // Deferred scripts (common.js, theme-config.js) execute before DOMContentLoaded,
+    // so wrapping here ensures MiaoYanCommon and ThemeConfig are defined before use.
+    document.addEventListener('DOMContentLoaded', function () {
+      MiaoYanCommon.initializeCore();
+      MiaoYanCommon.setupTextSelection();
 
-    if ('CUSTOM_CSS' === 'darkmode') {
-      ThemeConfig.applyDarkModeStyles();
-    }
-
-    MiaoYanCommon.onDOMReady(function () {
-      renderMathInElement(document.body, {
-        delimiters: [
-          { left: "$$", right: "$$", display: true },
-          { left: "$", right: "$", display: false },
-          { left: "\\(", right: "\\)", display: false },
-          { left: "\\[", right: "\\]", display: true }
-        ],
-        processEscapes: true,
-        ignoredClasses: ['katex-display', 'katex', 'skip-math-dollar']
-      });
-
-      MiaoYanCommon.setupHeaderAnchors();
-      MiaoYanCommon.optimizeImages();
-      MiaoYanCommon.setupImageZoom();
-
-      if (window.DiagramHandler) {
-        DiagramHandler.initializeAll();
+      if ('CUSTOM_CSS' === 'darkmode') {
+        ThemeConfig.applyDarkModeStyles();
       }
+
+      MiaoYanCommon.onDOMReady(function () {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false },
+            { left: "\\(", right: "\\)", display: false },
+            { left: "\\[", right: "\\]", display: true }
+          ],
+          processEscapes: true,
+          ignoredClasses: ['katex-display', 'katex', 'skip-math-dollar']
+        });
+
+        MiaoYanCommon.setupHeaderAnchors();
+        MiaoYanCommon.optimizeImages();
+        MiaoYanCommon.setupImageZoom();
+
+        if (window.DiagramHandler) {
+          DiagramHandler.initializeAll();
+        }
+      });
     });
   </script>
 </body>
