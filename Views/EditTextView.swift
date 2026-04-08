@@ -43,12 +43,11 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         static let fadeDuration: TimeInterval = 0.08
     }
     public static var note: Note?
-    public static var isBusyProcessing: Bool = false
     public static var shouldForceRescan: Bool = false
     public static var lastRemoved: String?
     public var viewDelegate: ViewController?
     nonisolated(unsafe) private var linkHighlightTimer: Timer?
-    nonisolated(unsafe) private weak var cachedViewController: ViewController?
+    private weak var cachedViewController: ViewController?
     var isHighlighted: Bool = false
     let storage = Storage.sharedInstance()
     let caretWidth: CGFloat = 1
@@ -657,7 +656,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 }
                 previewView.load(note: note, force: options.force) {
                     if shouldGateReveal {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + PreviewRevealTiming.initialDelay) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + PreviewRevealTiming.initialDelay) { [weak self] in
+                            guard let self = self else { return }
                             let shouldShowPreview =
                                 self.isPreviewModeActive
                                 || self.isPresentationModeActive
@@ -720,7 +720,10 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 mask = NSFontBoldTrait
             }
         }
-        return NSFontManager().font(withFamily: family, traits: NSFontTraitMask(rawValue: NSFontTraitMask.RawValue(mask)), weight: 5, size: CGFloat(UserDefaultsManagement.fontSize))!
+        guard let result = NSFontManager().font(withFamily: family, traits: NSFontTraitMask(rawValue: NSFontTraitMask.RawValue(mask)), weight: 5, size: CGFloat(UserDefaultsManagement.fontSize)) else {
+            return font
+        }
+        return result
     }
 
     func toggleItalicFont(font: NSFont) -> NSFont? {
@@ -1860,7 +1863,9 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         textStorage.replaceCharacters(in: range, with: attributedText)
 
         // Trigger layout update and change notification
-        layoutManager?.ensureLayout(for: textContainer!)
+        if let tc = textContainer {
+            layoutManager?.ensureLayout(for: tc)
+        }
         didChangeText()
     }
 }

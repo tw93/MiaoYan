@@ -184,13 +184,9 @@ class NotesTableView: NSTableView {
         let i = row(at: point)
 
         if noteList.indices.contains(i) {
-            DispatchQueue.main.async {
-                let selectedRows = self.selectedRowIndexes
-                if !selectedRows.contains(i) {
-                    self.selectRowIndexes(IndexSet(integer: i), byExtendingSelection: false)
-                    self.scrollRowToVisible(i)
-                    return
-                }
+            if !selectedRowIndexes.contains(i) {
+                selectRowIndexes(IndexSet(integer: i), byExtendingSelection: false)
+                scrollRowToVisible(i)
             }
             super.rightMouseDown(with: event)
         }
@@ -212,7 +208,7 @@ class NotesTableView: NSTableView {
         let timestamp = Date().toMillis()
         fillTimestamp = timestamp
 
-        let vc = window?.contentViewController as! ViewController
+        guard let vc = window?.contentViewController as? ViewController else { return }
 
         if let pendingChange = UserDataService.instance.pendingTitleChange {
             let title = pendingChange.title
@@ -252,9 +248,9 @@ class NotesTableView: NSTableView {
 
             loadingQueue.cancelAllOperations()
             let operation = BlockOperation()
-            operation.addExecutionBlock { [weak self] in
+            operation.addExecutionBlock { [weak self, weak vc] in
                 DispatchQueue.main.async {
-                    guard !operation.isCancelled, self?.fillTimestamp == timestamp else {
+                    guard !operation.isCancelled, self?.fillTimestamp == timestamp, let vc = vc else {
                         return
                     }
                     // Avoid filling during note creation to prevent content flashing
