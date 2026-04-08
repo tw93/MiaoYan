@@ -606,23 +606,51 @@ class MPreviewView: WKWebView, WKUIDelegate {
     }
     public func load(note: Note, force: Bool = false, completion: (() -> Void)? = nil) {
         self.loadCompletion = completion
-        // No alpha animation here - parent view controller handles transitions
-        // This avoids double-animation when toggling preview mode
         Task { @MainActor [weak self, note] in
             guard let self else { return }
             let markdownString = note.getPrettifiedContent()
             let imagesStorage = note.project.url
             let css = HtmlManager.previewStyle()
+            let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
+            let isMagicPPT = UserDefaultsManagement.magicPPT
+
+            // Move markdown rendering and image processing to background thread
+            let rendered: (processedHtml: String, processedMarkdown: String?)? = await Task.detached {
+                if isMagicPPT {
+                    let processedMarkdown = HtmlManager.processImagesInMarkdown(markdownString, imagesStorage: imagesStorage)
+                    return (processedMarkdown, processedMarkdown)
+                }
+                guard let html = renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak) else {
+                    return nil
+                }
+                let processed = HtmlManager.processImages(in: html, imagesStorage: imagesStorage)
+                return (processed, nil)
+            }.value
+
+            guard let rendered else {
+                self.hasLoadedTemplate = false
+                AppDelegate.trackError(
+                    NSError(domain: "MarkdownRenderError", code: 1,
+                        userInfo: [NSLocalizedDescriptionKey: "Failed to render markdown in load"]),
+                    context: "MPreviewView.load")
+                self.loadHTMLString("<html><body><p>Failed to load preview</p></body></html>", baseURL: nil)
+                return
+            }
+
             do {
-                try self.loadHTMLView(markdownString, css: css, imagesStorage: imagesStorage)
+                guard let vc = AppContext.shared.viewController else { return }
+                let pageHTMLString = try HtmlManager.htmlFromTemplate(
+                    rendered.processedHtml, css: css, currentName: vc.titleLabel.stringValue)
+                guard let indexURL = HtmlManager.createTemporaryBundle(pageHTMLString: pageHTMLString) else {
+                    throw PreviewError.temporaryBundleCreationFailed
+                }
+                self.loadFileURL(indexURL, allowingReadAccessTo: URL(fileURLWithPath: "/"))
                 self.hasLoadedTemplate = true
                 self.note = note
             } catch {
                 self.hasLoadedTemplate = false
                 AppDelegate.trackError(error, context: "MPreviewView.load")
-                // Fallback: try to load minimal content
-                let basicHTML = "<html><body><p>Failed to load preview</p></body></html>"
-                self.loadHTMLString(basicHTML, baseURL: nil)
+                self.loadHTMLString("<html><body><p>Failed to load preview</p></body></html>", baseURL: nil)
             }
         }
     }
@@ -650,13 +678,17 @@ class MPreviewView: WKWebView, WKUIDelegate {
             let markdownString = note.getPrettifiedContent()
             let imagesStorage = note.project.url
 
-            // Performance: render Markdown on background thread to avoid blocking UI
+            // Render Markdown and process images on background thread
             let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
-            let htmlString = await Task.detached {
-                return renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak)
+            let renderResult = await Task.detached {
+                guard let html = renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak) else {
+                    return (nil as String?, nil as String?)
+                }
+                let processed = HtmlManager.processImages(in: html, imagesStorage: imagesStorage)
+                return (html as String?, processed as String?)
             }.value
 
-            guard let htmlString = htmlString else {
+            guard let htmlString = renderResult.0, let processedHtmlString = renderResult.1 else {
                 await MainActor.run {
                     AppDelegate.trackError(
                         NSError(
@@ -664,7 +696,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
                             userInfo: [NSLocalizedDescriptionKey: "Failed to render markdown in updateContent"]),
                         context: "MPreviewView.updateContent"
                     )
-                    // Fallback: reload the full view instead of silent failure
                     self.isUpdatingContent = false
                     self.contentUpdateWorkItem = nil
                     self.load(note: note, force: true)
@@ -672,8 +703,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 return
             }
             guard updateVersion == self.contentUpdateVersion else { return }
-
-            let processedHtmlString = self.loadImages(imagesStorage: imagesStorage, html: htmlString)
 
             // Escape HTML for JavaScript injection
             let escapedHTML =
@@ -723,14 +752,19 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 // Re-setup scroll observer after content update
                 self.setupScrollObserver()
 
-                // Re-enable scroll sync after images have loaded
-                // Use DispatchWorkItem to ensure proper cancellation on rapid updates
-                let resetWorkItem = DispatchWorkItem { [weak self] in
-                    self?.isUpdatingContent = false
-                    self?.contentUpdateWorkItem = nil
+                // Re-enable scroll sync; only delay if images are present (they need time to load)
+                let hasImages = processedHtmlString.contains("<img")
+                if hasImages {
+                    let resetWorkItem = DispatchWorkItem { [weak self] in
+                        self?.isUpdatingContent = false
+                        self?.contentUpdateWorkItem = nil
+                    }
+                    self.contentUpdateWorkItem = resetWorkItem
+                    DispatchQueue.main.asyncAfter(deadline: .now() + JavaScriptTiming.imageLoadTimeout, execute: resetWorkItem)
+                } else {
+                    self.isUpdatingContent = false
+                    self.contentUpdateWorkItem = nil
                 }
-                self.contentUpdateWorkItem = resetWorkItem
-                DispatchQueue.main.asyncAfter(deadline: .now() + JavaScriptTiming.imageLoadTimeout, execute: resetWorkItem)
             }
             self.note = note
         }

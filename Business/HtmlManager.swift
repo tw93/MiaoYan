@@ -60,6 +60,10 @@ class HtmlManager {
         try? NSRegularExpression(pattern: "<img[^>]*?src=\"([^\"]*)\"[^>]*?/?>")
     }()
 
+    private static let videoSrcRegex: NSRegularExpression? = {
+        try? NSRegularExpression(pattern: "<(?:video|source)\\b[^>]*?\\bsrc=\"([^\"]*)\"[^>]*?/?>", options: [.caseInsensitive])
+    }()
+
     private static let htmlTagPatterns: [NSRegularExpression] = {
         let patterns = [
             try? NSRegularExpression(pattern: "<(?:img|br|hr|input|meta|link|area|base|col|embed|source|track|wbr)\\s*[^>]*/?\\s*>", options: [.caseInsensitive]),
@@ -228,6 +232,48 @@ class HtmlManager {
                 htmlString = updateImageSrc(in: htmlString, fullMatch: imageInfo.fullMatch, oldSrc: imageInfo.srcPath, newSrc: "file://\(absolutePath)")
             } else {
                 htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: imageNotFoundPlaceholder)
+            }
+        }
+
+        // Process <video src> and <source src> — rewrite local paths to file://
+        // CDN (http/https) video src: force preload="none" to prevent WebKit from
+        // blocking preview while downloading a remote video
+        if let videoRegex = videoSrcRegex {
+            let videoResults = videoRegex.matches(in: htmlString, range: NSRange(htmlString.startIndex..., in: htmlString))
+            let videoMatches = videoResults.compactMap { match -> (fullMatch: String, srcPath: String)? in
+                guard let fullRange = Range(match.range, in: htmlString),
+                    let srcRange = Range(match.range(at: 1), in: htmlString)
+                else { return nil }
+                return (String(htmlString[fullRange]), String(htmlString[srcRange]))
+            }
+
+            for videoInfo in videoMatches {
+                if videoInfo.srcPath.starts(with: "http://") || videoInfo.srcPath.starts(with: "https://") {
+                    // Remote video: disable eager preload so CDN latency/failure doesn't block preview
+                    let noPreload = videoInfo.fullMatch
+                        .replacingOccurrences(of: #"\bpreload="[^"]*""#, with: "preload=\"none\"", options: .regularExpression)
+                        .replacingOccurrences(of: #"(?<=[^-\w])preload(?=[^=]|$)"#, with: "preload=\"none\"", options: .regularExpression)
+                    if noPreload != videoInfo.fullMatch {
+                        htmlString = htmlString.replacingOccurrences(of: videoInfo.fullMatch, with: noPreload)
+                    }
+                    continue
+                }
+
+                let cleanPath = cleanImagePath(videoInfo.srcPath)
+                if isAbsolutePath(cleanPath) {
+                    if FileManager.default.fileExists(atPath: cleanPath) {
+                        htmlString = htmlString.replacingOccurrences(
+                            of: "src=\"\(videoInfo.srcPath)\"",
+                            with: "src=\"file://\(cleanPath)\"")
+                    }
+                } else {
+                    let absolutePath = imagesStorage.appendingPathComponent(cleanPath).path
+                    if FileManager.default.fileExists(atPath: absolutePath) {
+                        htmlString = htmlString.replacingOccurrences(
+                            of: "src=\"\(videoInfo.srcPath)\"",
+                            with: "src=\"file://\(absolutePath)\"")
+                    }
+                }
             }
         }
 
