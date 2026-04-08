@@ -109,7 +109,7 @@ extension ViewController {
 
     @IBAction func fileMenuNewNote(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
-        if UserDefaultsManagement.magicPPT {
+        if vc.sessionMagicPPTMode {
             return
         }
         if let type = vc.getSidebarType(), type == .Trash {
@@ -576,7 +576,7 @@ extension ViewController {
         guard isMiaoYanPPT() else { return }
 
         // Only enable PPT mode if not already enabled
-        let needsDisableAfterExport = !UserDefaultsManagement.magicPPT
+        let needsDisableAfterExport = !sessionMagicPPTMode
         if needsDisableAfterExport {
             enableMiaoYanPPT()
         }
@@ -1346,7 +1346,7 @@ extension ViewController {
         if event.keyCode == kVK_Return {
             if let fr = NSApp.mainWindow?.firstResponder, alert == nil {
                 // Ensure selection handling works correctly in PPT mode
-                if UserDefaultsManagement.magicPPT {
+                if sessionMagicPPTMode {
                     DispatchQueue.main.async {
                         self.editArea.markdownView!.evaluateJavaScript("Reveal.toggleOverview();", completionHandler: nil)
                     }

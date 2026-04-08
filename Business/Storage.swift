@@ -321,6 +321,11 @@ class Storage {
         guard UserDefaultsManagement.isSingleMode,
               let singleModeUrl = UserDefaultsManagement.singleModeURL else { return }
 
+        for url in scopedURLs {
+            url.stopAccessingSecurityScopedResource()
+        }
+        scopedURLs.removeAll()
+
         let singleModeScopeURL = UserDefaultsManagement.singleModeScopeURL ?? singleModeUrl
         let singleModeScopeBookmark = UserDefaultsManagement.singleModeAccessBookmark ?? UserDefaultsManagement.singleModeBookmark
         startAccessingSecurityScopedResourceIfNeeded(singleModeScopeURL, bookmarkData: singleModeScopeBookmark)

@@ -11,7 +11,6 @@ import WebKit
 class ExportCache {
     static let shared = ExportCache()
     private var cache: [String: ExportData] = [:]
-    private let cacheQueue = DispatchQueue(label: "export.cache", qos: .utility)
     private let maxCacheSize = 50
 
     struct ExportData {
@@ -31,32 +30,22 @@ class ExportCache {
 
     func getCachedData(for note: Note) -> ExportData? {
         let key = getCacheKey(for: note)
-        return cacheQueue.sync {
-            guard let data = cache[key], data.isValid else {
-                cache.removeValue(forKey: key)
-                return nil
-            }
-            return data
+        guard let data = cache[key], data.isValid else {
+            cache.removeValue(forKey: key)
+            return nil
         }
+        return data
     }
 
     func setCachedData(_ data: ExportData, for note: Note) {
         let key = getCacheKey(for: note)
-        cacheQueue.async { [weak self] in
-            Task { @MainActor [weak self] in
-                self?.cache[key] = data
-                self?.cleanupCacheIfNeeded()
-            }
-        }
+        cache[key] = data
+        cleanupCacheIfNeeded()
     }
 
     func invalidateCache(for note: Note) {
         let key = getCacheKey(for: note)
-        cacheQueue.async { [weak self] in
-            Task { @MainActor [weak self] in
-                self?.cache.removeValue(forKey: key)
-            }
-        }
+        cache.removeValue(forKey: key)
     }
 
     private func getCacheKey(for note: Note) -> String {
@@ -698,7 +687,7 @@ extension MPreviewView {
         checkImages()
     }
 
-    private func waitForWebViewReady(completion: @escaping () -> Void) {
+    private func waitForWebViewReady(maxRetries: Int = 150, completion: @escaping () -> Void) {
         // Check if WebView has finished loading and rendering
         let readyScript = """
                 (function() {
@@ -718,7 +707,11 @@ extension MPreviewView {
                 })()
             """
 
-        func checkReady() {
+        func checkReady(remaining: Int) {
+            guard remaining > 0 else {
+                completion()
+                return
+            }
             evaluateJavaScript(readyScript) { result, _ in
                 if let isReady = result as? Bool, isReady {
                     // Additional small delay for final layout stabilization
@@ -727,13 +720,13 @@ extension MPreviewView {
                     }
                 } else {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                        checkReady()
+                        checkReady(remaining: remaining - 1)
                     }
                 }
             }
         }
 
-        checkReady()
+        checkReady(remaining: maxRetries)
     }
 
     // MARK: - Legacy Support
