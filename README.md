@@ -81,11 +81,11 @@ Why not WYSIWYG like Typora? We prioritize pure Markdown editing experience, and
 
 ## Support
 
-<a href="https://miaoyan.app/cats.html"><img src="https://cdn.jsdelivr.net/gh/tw93/MiaoYan@main/assets/sponsors.svg" width="1000px" /></a>
+- If MiaoYan helped you, [share it](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20A%20fast%2C%20elegant%20Markdown%20editor%20for%20Mac.) with friends. A star is always welcome.
+- Have ideas or found bugs? Open an issue or PR. Feel free to contribute your best AI model to solve it.
+- I have two cats, TangYuan and Coke. If you think MiaoYan delights your life, you can feed them <a href="https://miaoyan.app/cats.html?name=MiaoYan" target="_blank">canned food 🥩</a>.
 
-1. Cats: Tangyuan & Cola — if MiaoYan helps, <a href="https://miaoyan.app/cats.html" target="_blank">treat them to canned food 🥩</a>.
-2. If you enjoy MiaoYan, please consider giving it a star and recommending it to your friends.
-3. Follow me on [Twitter](https://twitter.com/HiTw93) for the latest updates or join the [Telegram group](https://t.me/+GclQS9ZnxyI2ODQ1) to chat with the community.
+<a href="https://miaoyan.app/cats.html?name=MiaoYan"><img src="https://cdn.jsdelivr.net/gh/tw93/MiaoYan@main/assets/sponsors.svg" width="1000" loading="lazy" /></a>
 
 ## Acknowledgments
 
