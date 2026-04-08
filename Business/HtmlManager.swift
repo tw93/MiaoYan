@@ -407,12 +407,12 @@ class HtmlManager {
 
         let sourceItems = try fileManager.contentsOfDirectory(
             at: sourceDirectory,
-            includingPropertiesForKeys: [.isDirectoryKey],
+            includingPropertiesForKeys: [.isDirectoryKey, .contentModificationDateKey],
             options: [.skipsHiddenFiles]
         )
 
         for sourceItem in sourceItems {
-            let resourceValues = try sourceItem.resourceValues(forKeys: [.isDirectoryKey])
+            let resourceValues = try sourceItem.resourceValues(forKeys: [.isDirectoryKey, .contentModificationDateKey])
             let destinationItem = destinationDirectory.appendingPathComponent(
                 sourceItem.lastPathComponent,
                 isDirectory: resourceValues.isDirectory == true
@@ -423,7 +423,18 @@ class HtmlManager {
                 continue
             }
 
-            guard !fileManager.fileExists(atPath: destinationItem.path) else {
+            // Check if file needs update: missing or source is newer
+            var needsUpdate = !fileManager.fileExists(atPath: destinationItem.path)
+            if !needsUpdate, let sourceModDate = resourceValues.contentModificationDate {
+                let destResourceValues = try? destinationItem.resourceValues(forKeys: [.contentModificationDateKey])
+                if let destModDate = destResourceValues?.contentModificationDate {
+                    needsUpdate = sourceModDate > destModDate
+                } else {
+                    needsUpdate = true
+                }
+            }
+
+            guard needsUpdate else {
                 continue
             }
 
@@ -432,6 +443,11 @@ class HtmlManager {
                 withIntermediateDirectories: true,
                 attributes: nil
             )
+
+            if fileManager.fileExists(atPath: destinationItem.path) {
+                try fileManager.removeItem(at: destinationItem)
+            }
+
             try fileManager.copyItem(at: sourceItem, to: destinationItem)
             repairedAnyFile = true
         }
