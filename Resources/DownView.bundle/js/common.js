@@ -97,11 +97,69 @@ const MiaoYanCommon = {
 
   optimizeImages() {
     const allImages = document.querySelectorAll('img');
+
+    // Configuration
+    const EAGER_LOAD_COUNT = 3; // First 3 images load immediately
+    const INTERSECTION_MARGIN = '200px'; // Start loading 200px before viewport
+    const PLACEHOLDER = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+
     allImages.forEach((img, index) => {
-      img.setAttribute('loading', index < 3 ? 'eager' : 'lazy');
       img.style.maxWidth = '100%';
       img.style.height = 'auto';
+
+      if (index < EAGER_LOAD_COUNT) {
+        // First 3 images: load immediately
+        img.setAttribute('loading', 'eager');
+      } else {
+        // Remaining images: aggressive lazy load
+        const originalSrc = img.src;
+        img.dataset.src = originalSrc;
+        img.src = PLACEHOLDER;
+        img.classList.add('lazy-image');
+        img.setAttribute('loading', 'lazy'); // Keep for CSS styling
+      }
     });
+
+    // Intersection Observer for aggressive lazy loading
+    if ('IntersectionObserver' in window) {
+      const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            if (img.dataset.src) {
+              img.src = img.dataset.src;
+              img.classList.remove('lazy-image');
+              delete img.dataset.src;
+              observer.unobserve(img);
+
+              // Re-initialize Lightense for this image after it loads
+              if (window.Lightense && (img.closest('#write') || img.parentElement?.tagName === 'P' || img.closest('table'))) {
+                img.addEventListener('load', () => {
+                  window.Lightense([img], {
+                    background: MiaoYanCommon.isDarkMode() ? 'rgba(33, 38, 43, .8)' : 'rgba(255, 255, 255, .8)',
+                  });
+                }, { once: true });
+              }
+            }
+          }
+        });
+      }, {
+        rootMargin: INTERSECTION_MARGIN,
+        threshold: 0.01
+      });
+
+      document.querySelectorAll('img.lazy-image').forEach(img => {
+        imageObserver.observe(img);
+      });
+    } else {
+      // Fallback for older browsers (shouldn't happen on macOS 11.5+)
+      document.querySelectorAll('img.lazy-image').forEach(img => {
+        if (img.dataset.src) {
+          img.src = img.dataset.src;
+          delete img.dataset.src;
+        }
+      });
+    }
   },
 
   setupImageZoom() {
