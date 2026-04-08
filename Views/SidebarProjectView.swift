@@ -278,7 +278,10 @@ class SidebarProjectView: NSOutlineView,
                 return false
             }
 
-            let notes = rows.map { vc.notesTableView.noteList[$0] }
+            let notes = rows.compactMap { index -> Note? in
+                guard index < vc.notesTableView.noteList.count else { return nil }
+                return vc.notesTableView.noteList[index]
+            }
 
             if let project = sidebarItem.project {
                 vc.move(notes: notes, project: project)
@@ -894,7 +897,8 @@ class SidebarProjectView: NSOutlineView,
             alert.informativeText = I18n.str("This action cannot be undone.")
             alert.addButton(withTitle: I18n.str("Remove"))
             alert.addButton(withTitle: I18n.str("Cancel"))
-            alert.beginSheetModal(for: w) { (returnCode: NSApplication.ModalResponse) in
+            alert.beginSheetModal(for: w) { [weak vc, weak v] (returnCode: NSApplication.ModalResponse) in
+                guard let vc = vc, let v = v else { return }
                 if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
                     guard let resultingItemUrl = Storage.sharedInstance().trashItem(url: project.url) else {
                         return
@@ -943,9 +947,9 @@ class SidebarProjectView: NSOutlineView,
         alert.alertStyle = .informational
         alert.addButton(withTitle: I18n.str("Add"))
         alert.addButton(withTitle: I18n.str("Cancel"))
-        alert.beginSheetModal(for: window) { (returnCode: NSApplication.ModalResponse) in
+        alert.beginSheetModal(for: window) { [weak self] (returnCode: NSApplication.ModalResponse) in
             if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
-                self.addChild(field: field, project: parentProject)
+                self?.addChild(field: field, project: parentProject)
             }
         }
 
@@ -1017,7 +1021,8 @@ class SidebarProjectView: NSOutlineView,
         openPanel.canChooseDirectories = true
         openPanel.canCreateDirectories = true
         openPanel.canChooseFiles = false
-        openPanel.begin { result in
+        openPanel.begin { [weak self] result in
+            guard let self = self else { return }
             if result == NSApplication.ModalResponse.OK {
                 guard let url = openPanel.url else {
                     return

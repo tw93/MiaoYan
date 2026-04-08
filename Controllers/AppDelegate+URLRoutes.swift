@@ -106,7 +106,7 @@ extension AppDelegate {
 
     @MainActor
     func RouteMiaoYanGoto(_ url: URL) {
-        let query = url.lastPathComponent.removingPercentEncoding!
+        let query = url.lastPathComponent.removingPercentEncoding ?? url.lastPathComponent
         guard let vc = ViewController.shared() else { return }
         let notes = vc.storage.noteList.filter { $0.title == query }
         if notes.count > 1 {
