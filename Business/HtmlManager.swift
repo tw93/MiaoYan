@@ -183,6 +183,24 @@ class HtmlManager {
         return html.replacingOccurrences(of: fullMatch, with: updatedTag)
     }
 
+    private static func optimizeCDNImageURL(_ url: String) -> String {
+        // Apply OSS compression for alipay CDN images (skip GIF/SVG)
+        let lowerURL = url.lowercased()
+        guard lowerURL.contains("alipayobjects.com") || lowerURL.contains("alicdn.com") || lowerURL.contains("fliggy.com") else {
+            return url
+        }
+        // Skip GIF/SVG including URLs with query strings like image.gif?token=abc
+        guard lowerURL.range(of: #"\.(gif|svg)(\?|#|$)"#, options: .regularExpression) == nil else {
+            return url
+        }
+        let separator = url.contains("?") ? "&" : "?"
+        return "\(url)\(separator)x-oss-process=image/auto-orient,1/resize,w_1600/format,webp"
+    }
+
+    // Transparent 1x1 GIF placeholder — used by Swift-side lazy image injection
+    // Matches the placeholder in common.js so JS can pick up data-src and load the real image
+    static let lazyPlaceholder = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+
     static func processImages(in html: String, imagesStorage: URL) -> String {
         guard let regex = imageRegex else {
             Task { @MainActor in
@@ -211,35 +229,71 @@ class HtmlManager {
         let fileManager = FileManager.default
         var pathCache: [String: Bool] = [:]
 
-        for imageInfo in images {
-            guard !imageInfo.srcPath.starts(with: "http://"),
-                !imageInfo.srcPath.starts(with: "https://")
-            else {
+        for (index, imageInfo) in images.enumerated() {
+            let isFirstImage = index == 0
+
+            // CDN images (http/https): rewrite to lazy-load format in Swift so browser never
+            // starts downloading them before JS runs.
+            // First image loads eagerly (hero/cover); rest use data-src + placeholder.
+            if imageInfo.srcPath.starts(with: "http://") || imageInfo.srcPath.starts(with: "https://") {
+                if isFirstImage {
+                    // Hero image: keep eager, but compress if it's an alipay OSS image
+                    let optimized = optimizeCDNImageURL(imageInfo.srcPath)
+                    if optimized != imageInfo.srcPath {
+                        htmlString = updateImageSrc(in: htmlString, fullMatch: imageInfo.fullMatch, oldSrc: imageInfo.srcPath, newSrc: optimized)
+                    }
+                } else {
+                    // Non-hero CDN images: rewrite src → placeholder, add data-src + lazy-image class
+                    let optimized = optimizeCDNImageURL(imageInfo.srcPath)
+                    let lazyTag = imageInfo.fullMatch
+                        .replacingOccurrences(of: "src=\"\(imageInfo.srcPath)\"", with: "src=\"\(lazyPlaceholder)\" data-src=\"\(optimized)\"")
+                        .replacingOccurrences(of: "class=\"", with: "class=\"lazy-image ")
+                    let finalTag = lazyTag.contains("class=") ? lazyTag : lazyTag.replacingOccurrences(of: "<img ", with: "<img class=\"lazy-image\" ")
+                    htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: finalTag)
+                }
                 continue
             }
 
             let cleanPath = cleanImagePath(imageInfo.srcPath)
 
-            // Check if it's an absolute system path
+            // Local images: apply lazy loading (except first image)
             if isAbsolutePath(cleanPath) {
                 let exists = pathCache[cleanPath] ?? fileManager.fileExists(atPath: cleanPath)
                 pathCache[cleanPath] = exists
 
                 if exists {
-                    htmlString = updateImageSrc(in: htmlString, fullMatch: imageInfo.fullMatch, oldSrc: imageInfo.srcPath, newSrc: "file://\(cleanPath)")
+                    if isFirstImage {
+                        // First image: eager load
+                        htmlString = updateImageSrc(in: htmlString, fullMatch: imageInfo.fullMatch, oldSrc: imageInfo.srcPath, newSrc: "file://\(cleanPath)")
+                    } else {
+                        // Rest: lazy load
+                        let lazyTag = imageInfo.fullMatch
+                            .replacingOccurrences(of: "src=\"\(imageInfo.srcPath)\"", with: "src=\"\(lazyPlaceholder)\" data-src=\"file://\(cleanPath)\"")
+                            .replacingOccurrences(of: "class=\"", with: "class=\"lazy-image ")
+                        let finalTag = lazyTag.contains("class=") ? lazyTag : lazyTag.replacingOccurrences(of: "<img ", with: "<img class=\"lazy-image\" ")
+                        htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: finalTag)
+                    }
                 } else {
                     htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: imageNotFoundPlaceholder)
                 }
                 continue
             }
 
-            // Process relative paths - convert to absolute file:// URLs
+            // Process relative paths - convert to absolute file:// URLs with lazy loading
             let absolutePath = imagesStorage.appendingPathComponent(cleanPath).path
             let exists = pathCache[absolutePath] ?? fileManager.fileExists(atPath: absolutePath)
             pathCache[absolutePath] = exists
 
             if exists {
-                htmlString = updateImageSrc(in: htmlString, fullMatch: imageInfo.fullMatch, oldSrc: imageInfo.srcPath, newSrc: "file://\(absolutePath)")
+                if isFirstImage {
+                    htmlString = updateImageSrc(in: htmlString, fullMatch: imageInfo.fullMatch, oldSrc: imageInfo.srcPath, newSrc: "file://\(absolutePath)")
+                } else {
+                    let lazyTag = imageInfo.fullMatch
+                        .replacingOccurrences(of: "src=\"\(imageInfo.srcPath)\"", with: "src=\"\(lazyPlaceholder)\" data-src=\"file://\(absolutePath)\"")
+                        .replacingOccurrences(of: "class=\"", with: "class=\"lazy-image ")
+                    let finalTag = lazyTag.contains("class=") ? lazyTag : lazyTag.replacingOccurrences(of: "<img ", with: "<img class=\"lazy-image\" ")
+                    htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: finalTag)
+                }
             } else {
                 htmlString = htmlString.replacingOccurrences(of: imageInfo.fullMatch, with: imageNotFoundPlaceholder)
             }
@@ -275,9 +329,12 @@ class HtmlManager {
                     pathCache[cleanPath] = exists
 
                     if exists {
-                        htmlString = htmlString.replacingOccurrences(
-                            of: "src=\"\(videoInfo.srcPath)\"",
-                            with: "src=\"file://\(cleanPath)\"")
+                        var updatedTag = videoInfo.fullMatch
+                            .replacingOccurrences(of: "src=\"\(videoInfo.srcPath)\"", with: "src=\"file://\(cleanPath)\"")
+                        if !updatedTag.contains("preload=") {
+                            updatedTag = updatedTag.replacingOccurrences(of: "<video ", with: "<video preload=\"none\" ")
+                        }
+                        htmlString = htmlString.replacingOccurrences(of: videoInfo.fullMatch, with: updatedTag)
                     }
                 } else {
                     let absolutePath = imagesStorage.appendingPathComponent(cleanPath).path
@@ -285,9 +342,12 @@ class HtmlManager {
                     pathCache[absolutePath] = exists
 
                     if exists {
-                        htmlString = htmlString.replacingOccurrences(
-                            of: "src=\"\(videoInfo.srcPath)\"",
-                            with: "src=\"file://\(absolutePath)\"")
+                        var updatedTag = videoInfo.fullMatch
+                            .replacingOccurrences(of: "src=\"\(videoInfo.srcPath)\"", with: "src=\"file://\(absolutePath)\"")
+                        if !updatedTag.contains("preload=") {
+                            updatedTag = updatedTag.replacingOccurrences(of: "<video ", with: "<video preload=\"none\" ")
+                        }
+                        htmlString = htmlString.replacingOccurrences(of: videoInfo.fullMatch, with: updatedTag)
                     }
                 }
             }

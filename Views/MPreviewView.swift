@@ -96,10 +96,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
         configuration.websiteDataStore = WKWebsiteDataStore.default()
         // Allow incremental rendering to avoid feeling "stuck" before load finishes
         configuration.suppressesIncrementalRendering = false
-        // Basic WebKit configuration for quieter operation
-        #if DEBUG
-            configuration.preferences.setValue(true, forKey: "developerExtrasEnabled")
-        #endif
         configuration.preferences.setValue(false, forKey: "javaScriptCanOpenWindowsAutomatically")
         let preferences = WKWebpagePreferences()
         preferences.allowsContentJavaScript = true
@@ -440,16 +436,24 @@ class MPreviewView: WKWebView, WKUIDelegate {
             initScripts.append(
                 """
                     if (typeof renderMathInElement === 'function') {
-                        renderMathInElement(document.body, {
-                            delimiters: [
-                                {left: "$$", right: "$$", display: true},
-                                {left: "$", right: "$", display: false},
-                                {left: "\\\\(", right: "\\\\)", display: false},
-                                {left: "\\\\[", right: "\\\\]", display: true}
-                            ],
-                            processEscapes: true,
-                            ignoredClasses: ['katex-display', 'katex', 'skip-math-dollar']
-                        });
+                        const renderMath = () => {
+                            renderMathInElement(document.body, {
+                                delimiters: [
+                                    {left: "$$", right: "$$", display: true},
+                                    {left: "$", right: "$", display: false},
+                                    {left: "\\\\(", right: "\\\\)", display: false},
+                                    {left: "\\\\[", right: "\\\\]", display: true}
+                                ],
+                                processEscapes: true,
+                                ignoredClasses: ['katex-display', 'katex', 'skip-math-dollar']
+                            });
+                        };
+
+                        if ('requestIdleCallback' in window) {
+                            requestIdleCallback(renderMath, { timeout: 100 });
+                        } else {
+                            setTimeout(renderMath, 0);
+                        }
                     }
                 """)
         }
@@ -462,6 +466,14 @@ class MPreviewView: WKWebView, WKUIDelegate {
                     }
                 """)
         }
+
+        // Always re-initialize lazy loading after content update
+        initScripts.append(
+            """
+                if (window.MiaoYanCommon && typeof window.MiaoYanCommon.optimizeImages === 'function') {
+                    window.MiaoYanCommon.optimizeImages();
+                }
+            """)
 
         let initialization = initScripts.joined(separator: "\n")
 
@@ -488,59 +500,15 @@ class MPreviewView: WKWebView, WKUIDelegate {
                     \(initialization)
 
                     if (preserveScroll) {
-                        // Wait for images to load before restoring scroll to prevent jitter
-                        const images = container.querySelectorAll('img');
-                        if (images.length > 0) {
-                            let loadedCount = 0;
-                            const totalImages = images.length;
-                            const imageLoadTimeout = setTimeout(() => {
-                                restoreScroll();
-                            }, 300); // Reduced timeout for faster response
+                        // Restore scroll immediately without waiting for images
+                        requestAnimationFrame(() => {
+                            const newDoc = document.scrollingElement || document.documentElement || document.body;
+                            const newMaxScroll = Math.max(0, (newDoc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
 
-                            function restoreScroll() {
-                                clearTimeout(imageLoadTimeout);
-                                requestAnimationFrame(() => {
-                                    const newDoc = document.scrollingElement || document.documentElement || document.body;
-                                    const newMaxScroll = Math.max(0, (newDoc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
-
-                                    // If was at bottom, stay at bottom; otherwise restore ratio
-                                    const targetScroll = isNearBottom ? newMaxScroll : newMaxScroll * savedRatio;
-                                    window.scrollTo(0, targetScroll);
-                                });
-                            }
-
-                            images.forEach(img => {
-                                if (img.complete) {
-                                    loadedCount++;
-                                    if (loadedCount === totalImages) {
-                                        restoreScroll();
-                                    }
-                                } else {
-                                    img.addEventListener('load', () => {
-                                        loadedCount++;
-                                        if (loadedCount === totalImages) {
-                                            restoreScroll();
-                                        }
-                                    }, { once: true });
-                                    img.addEventListener('error', () => {
-                                        loadedCount++;
-                                        if (loadedCount === totalImages) {
-                                            restoreScroll();
-                                        }
-                                    }, { once: true });
-                                }
-                            });
-                        } else {
-                            // No images, restore scroll immediately
-                            requestAnimationFrame(() => {
-                                const newDoc = document.scrollingElement || document.documentElement || document.body;
-                                const newMaxScroll = Math.max(0, (newDoc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
-
-                                // If was at bottom, stay at bottom; otherwise restore ratio
-                                const targetScroll = isNearBottom ? newMaxScroll : newMaxScroll * savedRatio;
-                                window.scrollTo(0, targetScroll);
-                            });
-                        }
+                            // If was at bottom, stay at bottom; otherwise restore ratio
+                            const targetScroll = isNearBottom ? newMaxScroll : newMaxScroll * savedRatio;
+                            window.scrollTo(0, targetScroll);
+                        });
                     } else {
                         // No scroll preservation: reset to top
                         requestAnimationFrame(() => {
@@ -663,7 +631,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
             self.contentUpdateVersion &+= 1
             let updateVersion = self.contentUpdateVersion
 
-            // Cancel previous content update reset task to avoid premature re-enable
             self.contentUpdateWorkItem?.cancel()
             self.contentUpdateWorkItem = nil
 
@@ -673,105 +640,177 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 return
             }
 
-            // Disable scroll sync during content update
             self.isUpdatingContent = true
 
             let markdownString = note.getPrettifiedContent()
             let imagesStorage = note.project.url
-
-            // Render Markdown and process images on background thread
             let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
-            let renderResult = await Task.detached {
-                guard let html = renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak) else {
-                    return (nil as String?, nil as String?)
-                }
-                let processed = HtmlManager.processImages(in: html, imagesStorage: imagesStorage)
-                return (html as String?, processed as String?)
+
+            // Phase 1: Render Markdown only (fast, ~20ms) — inject immediately so text is visible
+            let htmlString = await Task.detached {
+                renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak)
             }.value
 
-            guard let htmlString = renderResult.0, let processedHtmlString = renderResult.1 else {
-                await MainActor.run {
-                    AppDelegate.trackError(
-                        NSError(
-                            domain: "MarkdownRenderError", code: 1,
-                            userInfo: [NSLocalizedDescriptionKey: "Failed to render markdown in updateContent"]),
-                        context: "MPreviewView.updateContent"
-                    )
-                    self.isUpdatingContent = false
-                    self.contentUpdateWorkItem = nil
-                    self.load(note: note, force: true)
-                }
+            guard let htmlString else {
+                AppDelegate.trackError(
+                    NSError(
+                        domain: "MarkdownRenderError", code: 1,
+                        userInfo: [NSLocalizedDescriptionKey: "Failed to render markdown in updateContent"]),
+                    context: "MPreviewView.updateContent"
+                )
+                self.isUpdatingContent = false
+                self.contentUpdateWorkItem = nil
+                self.load(note: note, force: true)
                 return
             }
-            guard updateVersion == self.contentUpdateVersion else { return }
+            guard updateVersion == self.contentUpdateVersion else {
+                self.isUpdatingContent = false
+                return
+            }
 
-            // Escape HTML for JavaScript injection
-            let escapedHTML =
-                processedHtmlString
+            // Detect special content on unescaped HTML to avoid false positives
+            let needsMath = htmlString.contains("$$") || htmlString.contains("$")
+            let needsDiagrams =
+                htmlString.contains("language-mermaid")
+                || htmlString.contains("language-plantuml")
+                || htmlString.contains("language-markmap")
+
+            let rawEscaped = htmlString
                 .replacingOccurrences(of: "\\", with: "\\\\")
                 .replacingOccurrences(of: "`", with: "\\`")
                 .replacingOccurrences(of: "$", with: "\\$")
-
-            // Detect special content requiring renderer initialization
-            let needsMath = escapedHTML.contains("$$") || escapedHTML.contains("$")
-            let needsDiagrams =
-                escapedHTML.contains("language-mermaid")
-                || escapedHTML.contains("language-plantuml")
-                || escapedHTML.contains("language-markmap")
-            let hasSpecialRenderers = needsMath || needsDiagrams
             let now = Date().timeIntervalSince1970
             let shouldInitializeSpecialRenderers =
-                hasSpecialRenderers
+                (needsMath || needsDiagrams)
                 && (!preserveScroll || now - self.lastRendererInitializationTime > 0.8)
             if shouldInitializeSpecialRenderers {
                 self.lastRendererInitializationTime = now
             }
 
-            let script = self.buildUpdateScript(
-                html: escapedHTML,
+            let phase1Script = self.buildUpdateScript(
+                html: rawEscaped,
                 initializeMath: shouldInitializeSpecialRenderers && needsMath,
                 initializeDiagrams: shouldInitializeSpecialRenderers && needsDiagrams,
                 preserveScroll: preserveScroll
             )
 
-            Task { @MainActor [weak self] in
-                guard let self else { return }
-                guard updateVersion == self.contentUpdateVersion else { return }
+            do {
+                _ = try await self.evaluateJavaScript(phase1Script)
+            } catch {
+                AppDelegate.trackError(error, context: "MPreviewView.updateContent.phase1")
+                self.isUpdatingContent = false
+                self.contentUpdateWorkItem = nil
+                self.load(note: note, force: true)
+                return
+            }
 
-                // Execute JavaScript with proper error handling
+            self.setupScrollObserver()
+            self.note = note
+
+            // Phase 2: Process image paths in background (~50-200ms) — patch srcs without DOM rebuild
+            guard updateVersion == self.contentUpdateVersion else {
+                self.isUpdatingContent = false
+                return
+            }
+
+            let processedHtml = await Task.detached {
+                HtmlManager.processImages(in: htmlString, imagesStorage: imagesStorage)
+            }.value
+
+            guard updateVersion == self.contentUpdateVersion else {
+                self.isUpdatingContent = false
+                return
+            }
+
+            if processedHtml != htmlString {
+                let patchScript = MPreviewView.buildImagePatchScript(processedHtml: processedHtml)
                 do {
-                    _ = try await self.evaluateJavaScript(script)
+                    _ = try await self.evaluateJavaScript(patchScript)
                 } catch {
-                    AppDelegate.trackError(error, context: "MPreviewView.updateContent.jsExec")
-                    // Fallback: reload the full view on JavaScript failure
-                    self.isUpdatingContent = false
-                    self.contentUpdateWorkItem = nil
-                    self.load(note: note, force: true)
-                    return
-                }
-
-                // Re-setup scroll observer after content update
-                self.setupScrollObserver()
-
-                // Re-enable scroll sync; delay based on content type
-                let hasImages = processedHtmlString.contains("<img")
-                let hasDiagrams = needsDiagrams || needsMath
-
-                if hasImages || hasDiagrams {
-                    let timeout = hasDiagrams ? JavaScriptTiming.diagramLoadTimeout : JavaScriptTiming.imageLoadTimeout
-                    let resetWorkItem = DispatchWorkItem { [weak self] in
-                        self?.isUpdatingContent = false
-                        self?.contentUpdateWorkItem = nil
-                    }
-                    self.contentUpdateWorkItem = resetWorkItem
-                    DispatchQueue.main.asyncAfter(deadline: .now() + timeout, execute: resetWorkItem)
-                } else {
-                    self.isUpdatingContent = false
-                    self.contentUpdateWorkItem = nil
+                    AppDelegate.trackError(error, context: "MPreviewView.updateContent.phase2")
                 }
             }
-            self.note = note
+
+            self.isUpdatingContent = false
+            self.contentUpdateWorkItem = nil
         }
+    }
+
+    // Patch image src attributes in place without rebuilding the DOM.
+    // processedHtml contains the final img src / data-src values in document order.
+    private static func buildImagePatchScript(processedHtml: String) -> String {
+        struct ImgUpdate {
+            let src: String
+            let isLazy: Bool
+        }
+
+        var updates: [ImgUpdate] = []
+        let pattern = #"<img\s[^>]*>"#
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: [.dotMatchesLineSeparators]) else {
+            return ""
+        }
+        let ns = processedHtml as NSString
+        let matches = regex.matches(in: processedHtml, range: NSRange(location: 0, length: ns.length))
+
+        let srcRegex = try? NSRegularExpression(pattern: #"\bsrc="([^"]*)""#)
+        let dataSrcRegex = try? NSRegularExpression(pattern: #"\bdata-src="([^"]*)""#)
+        let lazyRegex = try? NSRegularExpression(pattern: #"\blazy-image\b"#)
+
+        for match in matches {
+            let tag = ns.substring(with: match.range)
+            let tagNS = tag as NSString
+            let tagRange = NSRange(location: 0, length: tagNS.length)
+
+            let isLazy = lazyRegex?.firstMatch(in: tag, range: tagRange) != nil
+
+            if isLazy,
+                let m = dataSrcRegex?.firstMatch(in: tag, range: tagRange),
+                let r = Range(m.range(at: 1), in: tag)
+            {
+                updates.append(ImgUpdate(src: String(tag[r]), isLazy: true))
+            } else if let m = srcRegex?.firstMatch(in: tag, range: tagRange),
+                let r = Range(m.range(at: 1), in: tag)
+            {
+                updates.append(ImgUpdate(src: String(tag[r]), isLazy: false))
+            }
+        }
+
+        guard !updates.isEmpty else { return "" }
+
+        let lazyPlaceholder = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+        var jsonParts: [String] = []
+        for u in updates {
+            let escapedSrc = u.src
+                .replacingOccurrences(of: "\\", with: "\\\\")
+                .replacingOccurrences(of: "\"", with: "\\\"")
+                .replacingOccurrences(of: "\n", with: "\\n")
+                .replacingOccurrences(of: "\r", with: "\\r")
+            jsonParts.append("{\"src\":\"\(escapedSrc)\",\"lazy\":\(u.isLazy ? "true" : "false")}")
+        }
+        let jsonArray = "[" + jsonParts.joined(separator: ",") + "]"
+
+        return """
+        (function() {
+            const container = document.querySelector('.markdown-body') || document.body;
+            const imgs = container.querySelectorAll('img');
+            const updates = \(jsonArray);
+            const placeholder = '\(lazyPlaceholder)';
+            updates.forEach(function(u, i) {
+                if (i >= imgs.length) return;
+                const img = imgs[i];
+                if (u.lazy) {
+                    img.setAttribute('data-src', u.src);
+                    img.src = placeholder;
+                    img.classList.add('lazy-image');
+                } else {
+                    img.src = u.src;
+                    img.classList.remove('lazy-image');
+                    img.removeAttribute('data-src');
+                }
+            });
+            if (window.MiaoYanCommon) window.MiaoYanCommon.optimizeImages();
+        })();
+        """
     }
 
     private func getTemplate(css: String) -> String? {

@@ -134,23 +134,32 @@
       }
 
       MiaoYanCommon.onDOMReady(function () {
-        renderMathInElement(document.body, {
-          delimiters: [
-            { left: "$$", right: "$$", display: true },
-            { left: "$", right: "$", display: false },
-            { left: "\\(", right: "\\)", display: false },
-            { left: "\\[", right: "\\]", display: true }
-          ],
-          processEscapes: true,
-          ignoredClasses: ['katex-display', 'katex', 'skip-math-dollar']
-        });
-
+        // Initialize lazy loading and layout immediately
         MiaoYanCommon.setupHeaderAnchors();
         MiaoYanCommon.optimizeImages();
         MiaoYanCommon.setupImageZoom();
 
         if (window.DiagramHandler) {
           DiagramHandler.initializeAll();
+        }
+
+        // Defer KaTeX rendering so it doesn't block image loading
+        const renderMath = () => {
+          renderMathInElement(document.body, {
+            delimiters: [
+              { left: "$$", right: "$$", display: true },
+              { left: "$", right: "$", display: false },
+              { left: "\\(", right: "\\)", display: false },
+              { left: "\\[", right: "\\]", display: true }
+            ],
+            processEscapes: true,
+            ignoredClasses: ['katex-display', 'katex', 'skip-math-dollar']
+          });
+        };
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(renderMath, { timeout: 200 });
+        } else {
+          setTimeout(renderMath, 0);
         }
       });
     });
