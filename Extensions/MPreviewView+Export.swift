@@ -393,6 +393,16 @@ extension MPreviewView {
                             })();
                         """
                     self.evaluateJavaScript(titleScript) { _, _ in
+                        // Hide TOC before export so it doesn't appear in the PDF output
+                        self.evaluateJavaScript("""
+                            (function() {
+                                var tocNav = document.querySelector('.toc-nav');
+                                var tocTrigger = document.querySelector('.toc-hover-trigger');
+                                if (tocNav) tocNav.style.display = 'none';
+                                if (tocTrigger) tocTrigger.style.display = 'none';
+                            })();
+                            """, completionHandler: nil)
+
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                             let pdfConfig = WKPDFConfiguration()
 
@@ -411,6 +421,17 @@ extension MPreviewView {
                                     document.documentElement.classList.remove('print-pdf');
                                     document.body.classList.remove('print-pdf');
                                     """, completionHandler: nil)
+
+                                // Restore TOC after export completes
+                                self.evaluateJavaScript("""
+                                    (function() {
+                                        var tocNav = document.querySelector('.toc-nav');
+                                        var tocTrigger = document.querySelector('.toc-hover-trigger');
+                                        if (tocNav) tocNav.style.display = '';
+                                        if (tocTrigger) tocTrigger.style.display = '';
+                                    })();
+                                    """, completionHandler: nil)
+
                                 self.hasPreparedPPTExport = false
                                 vc.toastDismiss()
 
