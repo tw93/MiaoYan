@@ -679,21 +679,20 @@ class HtmlManager {
     // MARK: - JavaScript Utilities
     static let checkImagesScript = """
         (function() {
+            // Force-load any lazy images so they are included in the export
+            document.querySelectorAll('img[data-src]').forEach(function(img) {
+                img.src = img.dataset.src;
+                img.classList.remove('lazy-image');
+                img.removeAttribute('data-src');
+            });
+
             var images = document.getElementsByTagName('img');
-            var loadedCount = 0;
-            var totalImages = images.length;
+            if (images.length === 0) return true;
 
-            if (totalImages === 0) {
-                return true;
+            for (var i = 0; i < images.length; i++) {
+                if (!images[i].complete) return false;
             }
-
-            for (var i = 0; i < totalImages; i++) {
-                if (images[i].complete && images[i].naturalWidth > 0) {
-                    loadedCount++;
-                }
-            }
-
-            return loadedCount === totalImages;
+            return true;
         })();
         """
 

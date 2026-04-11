@@ -705,13 +705,13 @@ class MPreviewView: WKWebView, WKUIDelegate {
             }
 
             self.setupScrollObserver()
-            self.note = note
 
             // Phase 2: Process image paths in background (~50-200ms) — patch srcs without DOM rebuild
             guard updateVersion == self.contentUpdateVersion else {
                 self.isUpdatingContent = false
                 return
             }
+            self.note = note
 
             let processedHtml = await Task.detached {
                 HtmlManager.processImages(in: htmlString, imagesStorage: imagesStorage)
