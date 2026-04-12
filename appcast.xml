@@ -6,7 +6,7 @@
       <title>3.2.0</title>
       <link>https://github.com/tw93/MiaoYan/releases</link>
       <description><![CDATA[
-  <p style="font-size:12px;color:#888;">更新失败？<a href="https://github.com/tw93/MiaoYan/releases/latest">直接下载最新版</a> · Update failed? <a href="https://github.com/tw93/MiaoYan/releases/latest">Download directly</a></p>
+  <p style="font-size:12px;color:#888;">更新失败 / Update failed? <a href="https://github.com/tw93/MiaoYan/releases/latest">直接下载 / Download directly</a></p>
   <h3>Zinogre ⚡</h3>
   <ol>
     <li>Faster preview: Two-phase rendering shows text instantly while local images load lazily in the background, cutting perceived latency significantly</li>
