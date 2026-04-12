@@ -17,6 +17,7 @@ EOF
 
 APPCAST=""
 NOTES=""
+DESCRIPTION_HTML_FILE=""
 VERSION=""
 PUB_DATE=""
 SIGNATURE=""
@@ -32,6 +33,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --notes)
       NOTES="$2"
+      shift 2
+      ;;
+    --description-html-file)
+      DESCRIPTION_HTML_FILE="$2"
       shift 2
       ;;
     --version)
@@ -79,14 +84,20 @@ sanitize_cdata() {
   printf '%s' "$1" | sed 's/]]>/]]]]><![CDATA[>/g'
 }
 
+description_body=""
+if [[ -n "$DESCRIPTION_HTML_FILE" && -f "$DESCRIPTION_HTML_FILE" ]]; then
+  description_body="$(cat "$DESCRIPTION_HTML_FILE")"
+else
+  description_body="$(printf '      <p>详细更新请查看 GitHub Release 页面。</p>\n      <p>See the GitHub release page for full release notes.</p>')"
+fi
+
 item_file="$(mktemp)"
 {
   echo "    <item>"
   echo "      <title>${VERSION}</title>"
   echo "      <link>https://github.com/tw93/MiaoYan/releases</link>"
   echo "      <description><![CDATA["
-  echo "      <p>详细更新请查看 GitHub Release 页面。</p>"
-  echo "      <p>See the GitHub release page for full release notes.</p>"
+  printf '%s\n' "$description_body"
   echo "          ]]>      </description>"
   echo "      <pubDate>${PUB_DATE}</pubDate>"
   echo "      <enclosure url=\"${ZIP_URL}\" sparkle:shortVersionString=\"${VERSION}\" sparkle:version=\"${VERSION}\" sparkle:edSignature=\"${SIGNATURE}\" length=\"${LENGTH}\" type=\"application/octet-stream\"/>"
