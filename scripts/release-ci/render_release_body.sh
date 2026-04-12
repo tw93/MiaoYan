@@ -1,79 +1,63 @@
 #!/usr/bin/env bash
+# Generate GitHub release HTML body from .github/RELEASE_NOTES.md.
+# Usage: render_release_body.sh [path-to-RELEASE_NOTES.md]
+# Output: GitHub release HTML to stdout
 
 set -euo pipefail
 
-usage() {
-  cat <<'EOF'
-Usage:
-  render_release_body.sh --notes build/release-content.json --version 2.8.0 --output build/release-body.md
-EOF
-}
+NOTES_FILE="${1:-.github/RELEASE_NOTES.md}"
 
-NOTES=""
-VERSION=""
-OUTPUT=""
-
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --notes)
-      NOTES="$2"
-      shift 2
-      ;;
-    --version)
-      VERSION="$2"
-      shift 2
-      ;;
-    --output)
-      OUTPUT="$2"
-      shift 2
-      ;;
-    -h|--help)
-      usage
-      exit 0
-      ;;
-    *)
-      echo "Unknown argument: $1" >&2
-      usage
-      exit 1
-      ;;
-  esac
-done
-
-[[ -z "$NOTES" || -z "$VERSION" || -z "$OUTPUT" ]] && {
-  usage
+if [[ ! -f "$NOTES_FILE" ]]; then
+  echo "Error: $NOTES_FILE not found" >&2
   exit 1
+fi
+
+# "# V3.2.0 Zinogre ⚡" -> version "3.2.0"
+HEADER="$(head -1 "$NOTES_FILE")"
+VERSION="$(printf '%s' "$HEADER" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+
+emit_ol() {
+  local section_header="$1"
+  local in_section=0
+  echo "  <ol>"
+  while IFS= read -r line; do
+    if [[ "$line" =~ ^##[[:space:]]+"$section_header" ]]; then
+      in_section=1; continue
+    fi
+    if [[ "$in_section" -eq 1 && "$line" =~ ^##[[:space:]] ]]; then break; fi
+    if [[ "$in_section" -eq 1 && "$line" =~ ^[0-9]+\. ]]; then
+      body="${line#*. }"
+      # **Title**: desc  ->  <strong>Title</strong>: desc
+      body="$(printf '%s' "$body" | sed 's/\*\*\([^*]*\)\*\*[：:][[:space:]]*/\<strong\>\1\<\/strong\>: /')"
+      body="${body//\`/}"
+      echo "    <li>${body}</li>"
+    fi
+  done <"$NOTES_FILE"
+  echo "  </ol>"
 }
 
-mkdir -p "$(dirname "$OUTPUT")"
+cat <<EOF
+<p align="center">
+  <a href="https://miaoyan.app/" target="_blank">
+    <img src="https://gw.alipayobjects.com/zos/k/t0/43.png" width="110" />
+  </a>
+  <h1 align="center">MiaoYan V${VERSION}</h1>
+  <div align="center">A native Markdown editor for engineers.</div>
+</p>
 
-{
-  echo "<p align=\"center\">"
-  echo "  <a href=\"https://miaoyan.app/\" target=\"_blank\">"
-  echo "    <img src=\"https://gw.alipayobjects.com/zos/k/t0/43.png\" width=\"110\" />"
-  echo "  </a>"
-  echo "  <h1 align=\"center\">MiaoYan V${VERSION}</h1>"
-  echo "  <div align=\"center\">A native Markdown editor for engineers.</div>"
-  echo "</p>"
-  echo
-  echo "### Changelog"
-  i=1
-  while IFS=$'\t' read -r title description; do
-    echo "${i}. **${title}**: ${description}"
-    i=$((i + 1))
-  done < <(jq -r '.highlights_en[] | [.title, .description] | @tsv' "$NOTES")
+<h3>Changelog</h3>
+EOF
 
-  echo
-  echo "### 更新日志"
-  i=1
-  while IFS=$'\t' read -r title description; do
-    echo "${i}. **${title}**：${description}"
-    i=$((i + 1))
-  done < <(jq -r '.highlights_zh[] | [.title, .description] | @tsv' "$NOTES")
+emit_ol "Changelog"
 
-  echo
-  echo "---"
-  echo
-  echo "If you find MiaoYan useful, please consider giving it a star and recommending it to your friends."
-  echo
-  echo "> https://github.com/tw93/MiaoYan"
-} >"$OUTPUT"
+printf '\n<h3>更新日志</h3>\n'
+
+emit_ol "更新日志"
+
+cat <<'FOOTER'
+
+<hr />
+<p>If you find MiaoYan useful, please consider giving it a star and recommending it to your friends.</p>
+
+> https://github.com/tw93/MiaoYan
+FOOTER
