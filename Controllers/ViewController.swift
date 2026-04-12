@@ -1177,6 +1177,12 @@ class ViewController:
             let note = EditTextView.note,
             textView == editArea
         else { return }
+
+        // Block FS events so the debounced disk write does not trigger
+        // reloadNote, which would overwrite in-progress editor content
+        // (especially destructive during Chinese IME composition).
+        blockFSUpdates()
+
         // Performance: use debounced save instead of immediate file I/O
         editArea.saveTextStorageContent(to: note)
         note.save(content: note.content)

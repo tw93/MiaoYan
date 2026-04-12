@@ -238,6 +238,10 @@ class FileSystemEventManager {
 
     @MainActor
     private func reloadNote(note: Note) {
+        // Skip reload while a debounced save is pending: the disk content
+        // is stale and overwriting the editor would discard in-progress edits.
+        guard !note.hasPendingSave else { return }
+
         guard let fsContent = note.getContent() else { return }
 
         let memoryContent = note.content.attributedSubstring(from: NSRange(0..<note.content.length))
