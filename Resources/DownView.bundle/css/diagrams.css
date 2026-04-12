@@ -98,7 +98,7 @@ pre:has(.language-mermaid) {
 .language-mermaid .edgeLabel .label,
 .language-mermaid foreignObject div,
 .language-mermaid foreignObject span {
-  background-color: transparent !important;
+  background-color: #e8e8e8 !important;
 }
 
 /* Dark mode specific mermaid overrides */
@@ -117,12 +117,14 @@ pre:has(.language-mermaid) {
 .darkmode .mermaid .edgeLabel,
 .darkmode .mermaid .edgeLabel rect,
 .darkmode .language-mermaid .edgeLabel,
-.darkmode .language-mermaid .edgeLabel rect,
+.darkmode .language-mermaid .edgeLabel rect {
+  fill: transparent !important;
+}
+
 .darkmode .language-mermaid .edgeLabel .label,
 .darkmode .language-mermaid foreignObject div,
 .darkmode .language-mermaid foreignObject span {
-  background-color: transparent !important;
-  fill: transparent !important;
+  background-color: #323a42 !important;
 }
 
 .darkmode .markmap text,
