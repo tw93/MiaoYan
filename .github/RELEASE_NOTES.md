@@ -6,9 +6,10 @@
 3. Copy Path: Right-click any note to copy its full file path to the clipboard
 4. Spanish localization: Full Spanish (es) UI translation covering all menus, settings, and system strings
 5. Mermaid upgraded to v11.14.0, fixing subgraph edge rendering and adding new diagram features
-6. Live reload fixed: Notes modified by external tools now reload correctly, including files inside symlinked directories
-7. Export reliability: Fixed blank preview on note switch, PPT/Presentation mode exit timing, and export timeout handling
-8. Concurrency fixes: Resolved ExportCache data race, scoped URL leaks, and stale-note assignment after async rendering
+6. Live reload fixed: Notes modified by external tools now reload correctly, including files inside symlinked directories (closes #502)
+7. Launch and window fixes: Opening `.md` files directly from Finder no longer shows a blank window, and single-pane mode correctly restores notes on launch and quit
+8. Export and mode transitions: Fixed blank preview on note switch, PPT/Presentation mode exit timing, and export timeout handling
+9. Concurrency safety: Resolved ExportCache data race, scoped URL leaks, and stale-note assignment after async rendering
 
 ## 更新日志
 1. 预览更快：两阶段渲染让文字立即显示，本地图片在后台懒加载，明显减少预览首屏等待时间
@@ -17,5 +18,6 @@
 4. 西班牙语本地化：完整覆盖菜单、设置页和系统字符串的西班牙语翻译
 5. Mermaid 升级至 v11.14.0，修复子图连线渲染问题并新增图表功能
 6. 实时重载修复：其他工具修改的笔记现在能正确触发重载，含符号链接目录内的文件（closes #502）
-7. 导出稳定性：修复切换笔记时预览空白、PPT 演示模式退出时序混乱、导出超时处理异常等问题
-8. 并发安全：修复 ExportCache 数据竞争、安全作用域 URL 泄漏、异步渲染后笔记状态错乱等问题
+7. 启动与窗口修复：从 Finder 直接打开 `.md` 文件不再出现白屏，单栏模式下启动和退出时也不会再丢失笔记
+8. 导出与模式切换：修复切换笔记时预览空白、PPT 演示模式退出时序混乱、导出超时处理异常等问题
+9. 并发安全：修复 ExportCache 数据竞争、安全作用域 URL 泄漏、异步渲染后笔记状态错乱等问题
