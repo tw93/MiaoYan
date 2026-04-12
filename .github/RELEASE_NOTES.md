@@ -1,4 +1,4 @@
-# V3.2.0 Zinogre ⚡
+# V3.2.0 Nargacuga 🐆
 
 ## Changelog
 1. Faster preview: Two-phase rendering shows text instantly while local images load lazily in the background, cutting perceived latency significantly
