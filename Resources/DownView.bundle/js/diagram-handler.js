@@ -88,18 +88,7 @@ const DiagramHandler = {
       element.parentNode.insertBefore(loader, element);
 
       try {
-        const svg = await new Promise((resolve, reject) => {
-          try {
-            const result = mermaid.render(elementId, content, (svgCode) => {
-                resolve(svgCode);
-            });
-            if (result && typeof result.then === 'function') {
-              result.then(r => resolve(r.svg)).catch(reject);
-            }
-          } catch (e) {
-            reject(e);
-          }
-        });
+        const { svg } = await mermaid.render(elementId, content);
 
         this._svgCache.set(hash, svg);
         element.innerHTML = svg;
