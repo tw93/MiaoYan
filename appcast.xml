@@ -31,8 +31,8 @@
     <li>并发安全：修复 ExportCache 数据竞争、安全作用域 URL 泄漏、异步渲染后笔记状态错乱等问题</li>
   </ol>
           ]]>      </description>
-      <pubDate>Sun, 12 Apr 2026 02:29:55 +0000</pubDate>
-      <enclosure url="https://github.com/tw93/MiaoYan/releases/download/V3.2.0/MiaoYan_V3.2.0.zip" sparkle:shortVersionString="3.2.0" sparkle:version="3.2.0" sparkle:edSignature="+8r7lS/M+RdgCpQr2QmIKCFZGkGXa4Vh9eJ+ja1+yavFuKxnGvRj9RyMXwbnDP9cKI49Pp30xsAeCrlDu0k8CQ==" length="24361857" type="application/octet-stream"/>
+      <pubDate>Sun, 12 Apr 2026 11:01:30 +0800</pubDate>
+      <enclosure url="https://github.com/tw93/MiaoYan/releases/download/V3.2.0/MiaoYan_V3.2.0.zip" sparkle:shortVersionString="3.2.0" sparkle:version="3.2.0" sparkle:edSignature="kDhuozZOVQl0784TAPdJ+QiQ0mtDfMrjJBoFLUv/azXq48Y3zL4dvulp0+xw5NfK8rA0L04gIAMPOOTt1LgXAg==" length="24361698" type="application/octet-stream"/>
       <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
     </item>
     <item>
