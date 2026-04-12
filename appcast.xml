@@ -6,6 +6,7 @@
       <title>3.2.0</title>
       <link>https://github.com/tw93/MiaoYan/releases</link>
       <description><![CDATA[
+  <p style="font-size:12px;color:#888;">更新失败？<a href="https://github.com/tw93/MiaoYan/releases/latest">直接下载最新版</a> · Update failed? <a href="https://github.com/tw93/MiaoYan/releases/latest">Download directly</a></p>
   <h3>Zinogre ⚡</h3>
   <ol>
     <li>Faster preview: Two-phase rendering shows text instantly while local images load lazily in the background, cutting perceived latency significantly</li>
@@ -34,6 +35,7 @@
       <pubDate>Sun, 12 Apr 2026 11:01:30 +0800</pubDate>
       <enclosure url="https://github.com/tw93/MiaoYan/releases/download/V3.2.0/MiaoYan_V3.2.0.zip" sparkle:shortVersionString="3.2.0" sparkle:version="3.2.0" sparkle:edSignature="kDhuozZOVQl0784TAPdJ+QiQ0mtDfMrjJBoFLUv/azXq48Y3zL4dvulp0+xw5NfK8rA0L04gIAMPOOTt1LgXAg==" length="24361698" type="application/octet-stream"/>
       <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+      <sparkle:minimumAutoupdateVersion>2.5.2</sparkle:minimumAutoupdateVersion>
     </item>
     <item>
       <title>3.1.1</title>
@@ -57,6 +59,7 @@
       <pubDate>Thu, 12 Mar 2026 23:40:55 +0000</pubDate>
       <enclosure url="https://github.com/tw93/MiaoYan/releases/download/V3.1.1/MiaoYan_V3.1.1.zip" sparkle:shortVersionString="3.1.1" sparkle:version="3.1.1" sparkle:edSignature="5C4CfUcc6Vd9pmjoiusTKG3bG3XFL7cACoazzFf0zHt6oXG0tKUl51MwepENfQT+fyZrqaY+sujHPiBSuqLODg==" length="24305186" type="application/octet-stream"/>
       <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+      <sparkle:minimumAutoupdateVersion>2.5.2</sparkle:minimumAutoupdateVersion>
     </item>
     <item>
       <title>2.7.0</title>
@@ -82,6 +85,7 @@
       <pubDate>Sat, 28 Feb 2026 13:48:18 +0000</pubDate>
       <enclosure url="https://miaoyan.app/Release/MiaoYan_V2.7.0.zip" sparkle:shortVersionString="2.7.0" sparkle:version="2.7.0" sparkle:edSignature="/5H9hNhItBP4QefSJa+KnbhzR8aUcu1IES9axcAEU/c/wXThEaL8U2gu0JK7yMvCEVt9liL5+FMOtkcrHUQdBQ==" length="24201986" type="application/octet-stream"/>
       <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+      <sparkle:minimumAutoupdateVersion>2.5.2</sparkle:minimumAutoupdateVersion>
     </item>
     <item>
       <title>2.5.2</title>
