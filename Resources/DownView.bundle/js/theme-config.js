@@ -129,7 +129,7 @@ function getMermaidConfig(isDark = false) {
     lineColor
   };
   return {
-    startOnLoad: true,
+    startOnLoad: false,
     theme: isDark ? 'dark' : 'neutral',
     themeVariables: extendedColors,
     darkMode: isDark,
