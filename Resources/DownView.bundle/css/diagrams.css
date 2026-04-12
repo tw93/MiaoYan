@@ -82,14 +82,23 @@ pre:has(.language-mermaid) {
   fill: var(--mermaid-line-color) !important;
 }
 
-.mermaid .edgeLabel {
+.mermaid .edgeLabel,
+.language-mermaid .edgeLabel {
   background-color: transparent !important;
   color: var(--mermaid-text-color) !important;
 }
 
-.mermaid .edgeLabel rect {
+.mermaid .edgeLabel rect,
+.language-mermaid .edgeLabel rect {
   fill: transparent !important;
   stroke: none !important;
+}
+
+/* Edge label HTML span (htmlLabels: true) */
+.language-mermaid .edgeLabel .label,
+.language-mermaid foreignObject div,
+.language-mermaid foreignObject span {
+  background-color: transparent !important;
 }
 
 /* Dark mode specific mermaid overrides */
@@ -106,7 +115,12 @@ pre:has(.language-mermaid) {
 }
 
 .darkmode .mermaid .edgeLabel,
-.darkmode .mermaid .edgeLabel rect {
+.darkmode .mermaid .edgeLabel rect,
+.darkmode .language-mermaid .edgeLabel,
+.darkmode .language-mermaid .edgeLabel rect,
+.darkmode .language-mermaid .edgeLabel .label,
+.darkmode .language-mermaid foreignObject div,
+.darkmode .language-mermaid foreignObject span {
   background-color: transparent !important;
   fill: transparent !important;
 }

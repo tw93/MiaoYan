@@ -49,26 +49,11 @@ const DiagramHandler = {
     const isDark = this.isDarkMode();
     const config = window.ThemeConfig?.getMermaidConfig(isDark) || {};
 
-      if (mermaid.registerLayoutLoaders) {
-        mermaid.registerLayoutLoaders({
-          elk: async () => {
-            try {
-              const mod = await import('./mermaid-layout-elk.js');
-              return mod.default;
-            } catch (e) {
-              console.error('ELK Import FAILED:', e);
-              throw e;
-            }
-          },
-        });
-      }
-
     mermaid.initialize(config);
 
     const mermaidElements = document.querySelectorAll('.language-mermaid');
 
-    // Process diagrams (parallel if possible)
-    const renderPromises = Array.from(mermaidElements).map(async (element, index) => {
+    const renderPromises = Array.from(mermaidElements).map(async (element) => {
       const content = element.textContent || '';
       if (!content.trim()) return;
 
@@ -89,7 +74,6 @@ const DiagramHandler = {
 
       try {
         const { svg } = await mermaid.render(elementId, content);
-
         this._svgCache.set(hash, svg);
         element.innerHTML = svg;
         element.dataset.mermaidRendered = 'true';
@@ -97,18 +81,11 @@ const DiagramHandler = {
       } catch (error) {
         console.error('Mermaid rendering failed:', error);
         let errorMessage = error.message || 'Unknown Mermaid Error';
-        if (error.str) {
-            errorMessage += `\n${error.str}`;
-        }
-        if (error.stack) {
-             console.error(error.stack);
-        }
+        if (error.str) errorMessage += `\n${error.str}`;
         loader.innerHTML = `<div style="padding: 10px; color: #d00; border: 1px solid #ecc; background: #fee; border-radius: 4px; font-family: monospace; white-space: pre-wrap;">Mermaid Error: ${errorMessage}</div>`;
         return;
       } finally {
-        if (!loader.querySelector('div')) {
-             loader.remove();
-        }
+        if (!loader.querySelector('div')) loader.remove();
       }
     });
 
