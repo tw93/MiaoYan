@@ -95,9 +95,8 @@ pre:has(.language-mermaid) {
 }
 
 /* Edge label HTML span (htmlLabels: true) */
-.language-mermaid .edgeLabel .label,
-.language-mermaid foreignObject div,
-.language-mermaid foreignObject span {
+.language-mermaid .edgeLabel foreignObject div,
+.language-mermaid .edgeLabel foreignObject span {
   background-color: #e8e8e8 !important;
 }
 
@@ -121,9 +120,8 @@ pre:has(.language-mermaid) {
   fill: transparent !important;
 }
 
-.darkmode .language-mermaid .edgeLabel .label,
-.darkmode .language-mermaid foreignObject div,
-.darkmode .language-mermaid foreignObject span {
+.darkmode .language-mermaid .edgeLabel foreignObject div,
+.darkmode .language-mermaid .edgeLabel foreignObject span {
   background-color: #323a42 !important;
 }
 
