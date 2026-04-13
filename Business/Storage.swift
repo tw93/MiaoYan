@@ -837,7 +837,7 @@ class Storage {
     }
 
     func getSubFolders(url: URL) -> [NSURL]? {
-        let keys: [URLResourceKey] = [.isDirectoryKey, .isPackageKey, .isHiddenKey]
+        let keys: [URLResourceKey] = [.isDirectoryKey, .isPackageKey, .isHiddenKey, .isSymbolicLinkKey]
         let options: FileManager.DirectoryEnumerationOptions = [.skipsHiddenFiles, .skipsPackageDescendants, .skipsSubdirectoryDescendants]
 
         guard let fileEnumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: keys, options: options) else {
@@ -869,6 +869,18 @@ class Storage {
                     let isPackage = resourceValues.isPackage, !isPackage
                 {
                     subDirs.append(fileURL as NSURL)
+                }
+                
+                let isSymlink = resourceValues.isSymbolicLink ?? false
+                
+                // For symbolic links, resolve and check if target is a directory
+                if isSymlink {
+                    let resolved = fileURL.resolvingSymlinksInPath()
+                    var isDir: ObjCBool = false
+                    if FileManager.default.fileExists(atPath: resolved.path, isDirectory: &isDir), isDir.boolValue {
+                        subDirs.append(fileURL as NSURL)
+                    }
+                    continue
                 }
             } catch {
                 continue
