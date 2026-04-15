@@ -878,7 +878,10 @@ class Storage {
                     let resolved = fileURL.resolvingSymlinksInPath()
                     var isDir: ObjCBool = false
                     if FileManager.default.fileExists(atPath: resolved.path, isDirectory: &isDir), isDir.boolValue {
-                        subDirs.append(fileURL as NSURL)
+                        if let resolvedResourceValues = try? resolved.resourceValues(forKeys: [.isPackageKey]),
+                           let resolvedIsPackage = resolvedResourceValues.isPackage, !resolvedIsPackage {
+                            subDirs.append(fileURL as NSURL)
+                        }
                     }
                     continue
                 }
