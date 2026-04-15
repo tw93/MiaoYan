@@ -261,6 +261,17 @@ class MPreviewView: WKWebView, WKUIDelegate {
     }
 
     public func updateAppearance() {
+        let isDark = determineDarkTheme()
+        self.appearance = isDark ? NSAppearance(named: .darkAqua) : NSAppearance(named: .aqua)
+        let js = """
+            (function() {
+                var body = document.body;
+                if (!body) return;
+                body.classList.remove('darkmode', 'lightmode');
+                body.classList.add('\(isDark ? "darkmode" : "lightmode")');
+            })();
+        """
+        evaluateJavaScript(js, completionHandler: nil)
     }
 
     // MARK: - Standard Find Actions
