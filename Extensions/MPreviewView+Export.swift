@@ -403,46 +403,55 @@ extension MPreviewView {
                             })();
                             """, completionHandler: nil)
 
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            let pdfConfig = WKPDFConfiguration()
+                        self.evaluateJavaScript(Self.pdfHeadingExtractionScript) { [weak self] extractResult, _ in
+                            guard let self else { return }
+                            let extracted = Self.parseHeadingExtractResult(extractResult)
 
-                            vc.toastUpdate(message: "\(I18n.str("Exporting...")) 95%")
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                let pdfConfig = WKPDFConfiguration()
 
-                            self.createPDF(configuration: pdfConfig) { [weak self] result in
-                                guard let self else { return }
+                                vc.toastUpdate(message: "\(I18n.str("Exporting...")) 95%")
 
-                                // Cleanup: remove injected title, print styles, and PPT classes
-                                self.evaluateJavaScript(
-                                    "var t = document.getElementById('export-generated-title'); if(t) t.remove();",
-                                    completionHandler: nil)
-                                self.removePrintStyles()
-                                self.evaluateJavaScript(
-                                    """
-                                    document.documentElement.classList.remove('print-pdf');
-                                    document.body.classList.remove('print-pdf');
-                                    """, completionHandler: nil)
+                                self.createPDF(configuration: pdfConfig) { [weak self] result in
+                                    guard let self else { return }
 
-                                // Restore TOC after export completes
-                                self.evaluateJavaScript("""
-                                    (function() {
-                                        var tocNav = document.querySelector('.toc-nav');
-                                        var tocTrigger = document.querySelector('.toc-hover-trigger');
-                                        if (tocNav) tocNav.style.display = '';
-                                        if (tocTrigger) tocTrigger.style.display = '';
-                                    })();
-                                    """, completionHandler: nil)
+                                    // Cleanup: remove injected title, print styles, and PPT classes
+                                    self.evaluateJavaScript(
+                                        "var t = document.getElementById('export-generated-title'); if(t) t.remove();",
+                                        completionHandler: nil)
+                                    self.removePrintStyles()
+                                    self.evaluateJavaScript(
+                                        """
+                                        document.documentElement.classList.remove('print-pdf');
+                                        document.body.classList.remove('print-pdf');
+                                        """, completionHandler: nil)
 
-                                self.hasPreparedPPTExport = false
-                                vc.toastDismiss()
+                                    // Restore TOC after export completes
+                                    self.evaluateJavaScript("""
+                                        (function() {
+                                            var tocNav = document.querySelector('.toc-nav');
+                                            var tocTrigger = document.querySelector('.toc-hover-trigger');
+                                            if (tocNav) tocNav.style.display = '';
+                                            if (tocTrigger) tocTrigger.style.display = '';
+                                        })();
+                                        """, completionHandler: nil)
 
-                                switch result {
-                                case .success(let data):
-                                    self.saveToDownloadsWithFilename(data: data, extension: "pdf", filename: note.getExportTitle(), viewController: vc)
-                                case .failure:
-                                    vc.toastExport(status: false)
+                                    self.hasPreparedPPTExport = false
+                                    vc.toastDismiss()
+
+                                    switch result {
+                                    case .success(let data):
+                                        let finalData = Self.buildPdfOutline(
+                                            pdfData: data,
+                                            headings: extracted.items,
+                                            totalHeight: extracted.totalHeight)
+                                        self.saveToDownloadsWithFilename(data: finalData, extension: "pdf", filename: note.getExportTitle(), viewController: vc)
+                                    case .failure:
+                                        vc.toastExport(status: false)
+                                    }
+
+                                    Self.isExporting = false
                                 }
-
-                                Self.isExporting = false
                             }
                         }
                     }
@@ -964,6 +973,101 @@ extension MPreviewView {
             }
         }
         return pdfDocument.dataRepresentation()
+    }
+
+    // MARK: - PDF Outline (heading bookmarks)
+
+    fileprivate struct PdfHeading {
+        let level: Int
+        let text: String
+        let y: Double
+    }
+
+    fileprivate struct HeadingExtractResult {
+        let items: [PdfHeading]
+        let totalHeight: Double
+    }
+
+    fileprivate static let pdfHeadingExtractionScript = """
+        (function() {
+            var root = document.getElementById('write') || document.body;
+            var total = Math.max(
+                document.body ? document.body.scrollHeight : 0,
+                document.documentElement ? document.documentElement.scrollHeight : 0
+            );
+            var list = [];
+            root.querySelectorAll('h1, h2, h3').forEach(function(h) {
+                var rect = h.getBoundingClientRect();
+                var text = (h.innerText || h.textContent || '').trim();
+                if (!text) return;
+                list.push({
+                    level: parseInt(h.tagName.substring(1), 10),
+                    text: text,
+                    y: rect.top + window.scrollY
+                });
+            });
+            return { total: total, items: list };
+        })();
+        """
+
+    fileprivate static func parseHeadingExtractResult(_ raw: Any?) -> HeadingExtractResult {
+        guard let dict = raw as? [String: Any] else {
+            return HeadingExtractResult(items: [], totalHeight: 0)
+        }
+        let total = doubleValue(dict["total"])
+        let rawItems = dict["items"] as? [[String: Any]] ?? []
+        let items: [PdfHeading] = rawItems.compactMap { item in
+            guard let level = item["level"] as? Int,
+                let text = item["text"] as? String,
+                !text.isEmpty,
+                level >= 1, level <= 6
+            else { return nil }
+            return PdfHeading(level: level, text: text, y: doubleValue(item["y"]))
+        }
+        return HeadingExtractResult(items: items, totalHeight: total)
+    }
+
+    private static func doubleValue(_ any: Any?) -> Double {
+        if let v = any as? Double { return v }
+        if let v = any as? Int { return Double(v) }
+        if let v = any as? CGFloat { return Double(v) }
+        if let v = any as? NSNumber { return v.doubleValue }
+        return 0
+    }
+
+    fileprivate static func buildPdfOutline(pdfData: Data, headings: [PdfHeading], totalHeight: Double) -> Data {
+        guard !headings.isEmpty, totalHeight > 0 else { return pdfData }
+        guard let doc = PDFDocument(data: pdfData), doc.pageCount > 0 else { return pdfData }
+        guard doc.outlineRoot == nil else { return pdfData }
+
+        let root = PDFOutline()
+        // Stack of (level, node). Sentinel (0, root) keeps the top level non-empty.
+        var stack: [(level: Int, node: PDFOutline)] = [(0, root)]
+        let pageCount = doc.pageCount
+
+        for heading in headings {
+            let ratio = max(0.0, min(1.0, heading.y / totalHeight))
+            var pageIndex = Int(floor(ratio * Double(pageCount)))
+            if pageIndex >= pageCount { pageIndex = pageCount - 1 }
+            if pageIndex < 0 { pageIndex = 0 }
+            guard let page = doc.page(at: pageIndex) else { continue }
+
+            let item = PDFOutline()
+            item.label = heading.text
+            let topY = page.bounds(for: .mediaBox).height
+            item.destination = PDFDestination(page: page, at: CGPoint(x: 0, y: topY))
+
+            while stack.count > 1, let last = stack.last, last.level >= heading.level {
+                stack.removeLast()
+            }
+            let parent = stack.last?.node ?? root
+            parent.insertChild(item, at: parent.numberOfChildren)
+            stack.append((heading.level, item))
+        }
+
+        if root.numberOfChildren == 0 { return pdfData }
+        doc.outlineRoot = root
+        return doc.dataRepresentation() ?? pdfData
     }
 
     // Stored property emulation for extensions
