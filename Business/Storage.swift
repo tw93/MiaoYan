@@ -864,26 +864,25 @@ class Storage {
             do {
                 let resourceValues = try fileURL.resourceValues(forKeys: Set(keys))
 
-                // Explicitly check for directory and not a package
+                // Symlinks first: .isDirectoryKey follows the link, so a directory-symlink
+                // would otherwise be appended twice.
+                if resourceValues.isSymbolicLink ?? false {
+                    let resolved = fileURL.resolvingSymlinksInPath()
+                    var isDir: ObjCBool = false
+                    if FileManager.default.fileExists(atPath: resolved.path, isDirectory: &isDir),
+                        isDir.boolValue,
+                        let resolvedValues = try? resolved.resourceValues(forKeys: [.isPackageKey]),
+                        !(resolvedValues.isPackage ?? true)
+                    {
+                        subDirs.append(fileURL as NSURL)
+                    }
+                    continue
+                }
+
                 if let isDirectory = resourceValues.isDirectory, isDirectory,
                     let isPackage = resourceValues.isPackage, !isPackage
                 {
                     subDirs.append(fileURL as NSURL)
-                }
-                
-                let isSymlink = resourceValues.isSymbolicLink ?? false
-                
-                // For symbolic links, resolve and check if target is a directory
-                if isSymlink {
-                    let resolved = fileURL.resolvingSymlinksInPath()
-                    var isDir: ObjCBool = false
-                    if FileManager.default.fileExists(atPath: resolved.path, isDirectory: &isDir), isDir.boolValue {
-                        if let resolvedResourceValues = try? resolved.resourceValues(forKeys: [.isPackageKey]),
-                           let resolvedIsPackage = resolvedResourceValues.isPackage, !resolvedIsPackage {
-                            subDirs.append(fileURL as NSURL)
-                        }
-                    }
-                    continue
                 }
             } catch {
                 continue
