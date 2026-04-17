@@ -69,7 +69,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
 
         if let vc = AppContext.shared.viewController {
             vc.editArea.applySystemAppearance()
-            vc.markdownView?.updateAppearance()
+            vc.editArea.markdownView?.updateAppearance()
             vc.updateToolbarButtonTints()
 
             // Save current selection before refreshing rows
