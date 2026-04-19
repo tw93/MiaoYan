@@ -566,7 +566,7 @@ CA
                                                     <constraint firstItem="Yei-Or-qiI" firstAttribute="top" secondItem="vp7-cq-QSI" secondAttribute="top" constant="18" id="qdV-AB-OBk"/>
                                                 </constraints>
                                             </customView>
-                                            <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="50" horizontalPageScroll="10" verticalLineScroll="50" verticalPageScroll="10" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BdT-Ac-GAV">
+                                            <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="50" horizontalPageScroll="10" verticalLineScroll="50" verticalPageScroll="10" hasVerticalScroller="NO" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="none" translatesAutoresizingMaskIntoConstraints="NO" id="BdT-Ac-GAV">
                                                 <rect key="frame" x="0.0" y="0.0" width="170" height="587"/>
                                                 <clipView key="contentView" drawsBackground="NO" id="ceg-yR-Ncf">
                                                     <rect key="frame" x="0.0" y="0.0" width="170" height="587"/>

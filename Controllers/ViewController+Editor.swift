@@ -960,14 +960,14 @@ extension ViewController {
         }
         // Clear preview scroll delegate
         editArea.markdownView?.scrollDelegate = nil
-        isProgrammaticSplitScroll = false
+        splitScrollSuppressionCount = 0
         activeSplitScrollSource = .editor
-        lastSyncedScrollRatio = -1  // Reset for next sync session
+        lastSyncedScrollRatio = -1
+        lastSyncedLine = -1
     }
 
     private func handleSplitScrollEvent() {
-        guard !isProgrammaticSplitScroll else { return }
-        // Skip scroll sync if preview is updating content
+        guard splitScrollSuppressionCount == 0 else { return }
         guard editArea.markdownView?.isUpdatingContent != true else {
             return
         }
@@ -982,39 +982,80 @@ extension ViewController {
         handlePreviewScroll(ratio: ratio)
     }
 
-    private func handlePreviewScroll(ratio: CGFloat) {
-        // Skip scroll sync if preview is updating content
-        guard !isProgrammaticSplitScroll,
-            sessionSplitMode,
-            editArea.markdownView?.isUpdatingContent != true
-        else {
+    func previewDidScroll(line: CGFloat) {
+        guard splitScrollSuppressionCount == 0,
+              sessionSplitMode,
+              editArea.markdownView?.isUpdatingContent != true else { return }
+        activeSplitScrollSource = .preview
+        splitScrollSuppressionCount += 1
+
+        let lineInt = Int(line)
+        let fraction = line - CGFloat(lineInt)
+        let rect = editorLineRect(forLine: lineInt)
+        guard rect != .zero,
+              let documentView = editAreaScroll.documentView else {
+            splitScrollSuppressionCount -= 1
             return
         }
+        let contentHeight = editAreaScroll.contentSize.height
+        let maxOffset = max(documentView.bounds.height - contentHeight, 0)
+        let targetY = max(0, min(rect.minY + fraction * rect.height, maxOffset))
+        let currentY = editAreaScroll.contentView.bounds.origin.y
+        guard abs(targetY - currentY) > 0.5 else {
+            splitScrollSuppressionCount -= 1
+            return
+        }
+        editAreaScroll.contentView.setBoundsOrigin(NSPoint(x: 0, y: targetY))
+        editAreaScroll.reflectScrolledClipView(editAreaScroll.contentView)
+        DispatchQueue.main.async { [weak self] in
+            self?.splitScrollSuppressionCount = max(0, (self?.splitScrollSuppressionCount ?? 0) - 1)
+        }
+    }
+
+    private func editorLineRect(forLine line: Int) -> NSRect {
+        guard let lm = editArea.layoutManager,
+              let tc = editArea.textContainer,
+              let storage = editArea.textStorage else { return .zero }
+        let ns = storage.string as NSString
+        var loc = 0
+        var idx = 0
+        ns.enumerateSubstrings(
+            in: NSRange(location: 0, length: ns.length),
+            options: [.byLines, .substringNotRequired]
+        ) { _, range, _, stop in
+            if idx == line { loc = range.location; stop.pointee = true }
+            idx += 1
+        }
+        let safeIdx = min(loc, storage.length)
+        let glyphRange = lm.glyphRange(
+            forCharacterRange: NSRange(location: safeIdx, length: 0),
+            actualCharacterRange: nil
+        )
+        let rect = lm.boundingRect(forGlyphRange: glyphRange, in: tc)
+        return rect.offsetBy(dx: editArea.textContainerOrigin.x, dy: editArea.textContainerOrigin.y)
+    }
+
+    private func handlePreviewScroll(ratio: CGFloat) {
+        guard splitScrollSuppressionCount == 0,
+            sessionSplitMode,
+            editArea.markdownView?.isUpdatingContent != true
+        else { return }
 
         activeSplitScrollSource = .preview
-        isProgrammaticSplitScroll = true
+        splitScrollSuppressionCount += 1
         scrollEditor(to: ratio)
 
-        // Immediate reset for faster response (scroll events are already debounced in JS)
         DispatchQueue.main.async { [weak self] in
-            self?.isProgrammaticSplitScroll = false
+            self?.splitScrollSuppressionCount = max(0, (self?.splitScrollSuppressionCount ?? 0) - 1)
         }
     }
 
     private func scheduleSplitScrollSync() {
-        guard sessionSplitMode else { return }
-        guard activeSplitScrollSource == .editor else { return }
-
-        let ratio = editorScrollRatio()
-        let clampedRatio = max(0, min(ratio, 1))
-        let threshold = syncThresholdForCurrentDocument()
-
-        // Performance optimization: Only sync if ratio changed significantly (> 0.5% difference)
-        // This reduces JavaScript execution by 70-80% during scrolling
-        if abs(clampedRatio - lastSyncedScrollRatio) > threshold {
-            lastSyncedScrollRatio = clampedRatio
-            applySplitScrollSync(ratio: clampedRatio)
-        }
+        guard sessionSplitMode, activeSplitScrollSource == .editor else { return }
+        let topLine = editorTopLine()
+        guard abs(topLine - lastSyncedLine) >= 0.25 else { return }
+        lastSyncedLine = topLine
+        applySplitScrollSync(line: topLine)
     }
 
     private func syncThresholdForCurrentDocument() -> CGFloat {
@@ -1039,19 +1080,33 @@ extension ViewController {
         return min(max(adaptiveThreshold, SplitScrollConfig.minScrollDifferenceThreshold), SplitScrollConfig.maxScrollDifferenceThreshold)
     }
 
-    private func applySplitScrollSync(ratio: CGFloat) {
+    private func applySplitScrollSync(line: CGFloat) {
         guard sessionSplitMode else { return }
-        isProgrammaticSplitScroll = true
-        // Editor scrolled -> sync to preview
-        editArea.markdownView?.scrollToPosition(pre: ratio)
-        // Reset after JS requestAnimationFrame completes
+        splitScrollSuppressionCount += 1
+        editArea.markdownView?.scrollToLine(line)
         DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.splitScrollSyncDelay) { [weak self] in
-            self?.isProgrammaticSplitScroll = false
+            self?.splitScrollSuppressionCount = max(0, (self?.splitScrollSuppressionCount ?? 0) - 1)
         }
     }
 
-    private func editorScrollRatio() -> CGFloat {
-        getScrollTop()
+    private func editorTopLine() -> CGFloat {
+        let topY = editAreaScroll.contentView.bounds.origin.y
+        guard let lm = editArea.layoutManager,
+              let tc = editArea.textContainer,
+              let storage = editArea.textStorage else { return 1 }
+        let adjustedY = max(topY - editArea.textContainerOrigin.y, 0)
+        let charIndex = lm.characterIndex(
+            for: NSPoint(x: 8, y: adjustedY),
+            in: tc,
+            fractionOfDistanceBetweenInsertionPoints: nil
+        )
+        let ns = storage.string as NSString
+        var lineCount = 1
+        ns.enumerateSubstrings(
+            in: NSRange(location: 0, length: min(charIndex, ns.length)),
+            options: [.byLines, .substringNotRequired]
+        ) { _, _, _, _ in lineCount += 1 }
+        return CGFloat(lineCount)
     }
 
     private func scrollEditor(to ratio: CGFloat) {

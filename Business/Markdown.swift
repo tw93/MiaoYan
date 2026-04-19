@@ -25,22 +25,24 @@ func renderMarkdownHTML(markdown: String, useGithubLineBreak: Bool) -> String? {
 
     var res: String
     if useGithubLineBreak {
-        res = String(cString: cmark_render_html(node, CMARK_OPT_UNSAFE | CMARK_OPT_NOBREAKS, nil))
+        res = String(cString: cmark_render_html(node, CMARK_OPT_UNSAFE | CMARK_OPT_NOBREAKS | CMARK_OPT_SOURCEPOS, nil))
     } else {
-        res = String(cString: cmark_render_html(node, CMARK_OPT_UNSAFE | CMARK_OPT_HARDBREAKS, nil))
+        res = String(cString: cmark_render_html(node, CMARK_OPT_UNSAFE | CMARK_OPT_HARDBREAKS | CMARK_OPT_SOURCEPOS, nil))
     }
 
-    let pattern = #"<p>(\$\$[\s\S]*?\$\$)<\/p>"#
+    // Match <p> with or without data-sourcepos attribute, capture both to preserve the attrs.
+    let pattern = #"(<p\b[^>]*>)(\$\$[\s\S]*?\$\$)<\/p>"#
     let regex = try? NSRegularExpression(pattern: pattern, options: [])
     let nsRes = res as NSString
     var newRes = res
     regex?.enumerateMatches(in: res, options: [], range: NSRange(location: 0, length: nsRes.length)) { match, _, _ in
         guard let match = match else { return }
-        let formulaBlock = nsRes.substring(with: match.range(at: 1))
+        let openTag = nsRes.substring(with: match.range(at: 1))
+        let formulaBlock = nsRes.substring(with: match.range(at: 2))
         let cleaned = formulaBlock.replacingOccurrences(of: "<br>", with: "")
             .replacingOccurrences(of: "<br />", with: "")
         let fullMatch = nsRes.substring(with: match.range(at: 0))
-        let replaced = "<p>\(cleaned)</p>"
+        let replaced = "\(openTag)\(cleaned)</p>"
         newRes = newRes.replacingOccurrences(of: fullMatch, with: replaced)
     }
 

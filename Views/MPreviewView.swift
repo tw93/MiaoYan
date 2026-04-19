@@ -22,6 +22,12 @@ public typealias MPreviewViewClosure = () -> Void
 @MainActor
 protocol MPreviewScrollDelegate: AnyObject {
     func previewDidScroll(ratio: CGFloat)
+    func previewDidScroll(line: CGFloat)
+}
+
+extension MPreviewScrollDelegate {
+    func previewDidScroll(ratio: CGFloat) {}
+    func previewDidScroll(line: CGFloat) {}
 }
 
 @MainActor
@@ -203,36 +209,98 @@ class MPreviewView: WKWebView, WKUIDelegate {
 
     private func setupScrollObserver() {
         guard !scrollObserverInjected else { return }
-        // Use JavaScript with requestAnimationFrame for smoother scroll sync
+        // Source-line anchor sync: queries data-sourcepos attributes emitted by cmark-gfm
+        // and builds a {line, top} index for binary-search interpolation (VS Code algorithm).
         let script = """
                 (function() {
-                    let rafId = null;
-                    let lastReportedRatio = -1;
+                    if (window.__miaoyanSync) { return; }
+                    var anchors = [];
+                    var rebuildTimer = null;
+                    var rafId = null;
+                    var lastReportedLine = -1;
 
-                    function reportScroll() {
-                        const doc = document.scrollingElement || document.documentElement || document.body;
-                        const currentScroll = window.pageYOffset || doc.scrollTop || 0;
-                        const maxScroll = Math.max(0, (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
-
-                        const ratio = maxScroll === 0 ? 0 : currentScroll / maxScroll;
-
-                        // Only report if ratio changed significantly (> 0.1% difference)
-                        if (Math.abs(ratio - lastReportedRatio) > 0.001) {
-                            window.webkit.messageHandlers.previewScroll.postMessage(ratio);
-                            lastReportedRatio = ratio;
+                    function rebuildAnchors() {
+                        var els = document.querySelectorAll('[data-sourcepos]');
+                        var result = [];
+                        for (var i = 0; i < els.length; i++) {
+                            var el = els[i];
+                            if (el.offsetHeight === 0) { continue; }
+                            if (el.offsetParent === null && el !== document.body) { continue; }
+                            var attr = el.getAttribute('data-sourcepos');
+                            if (!attr) { continue; }
+                            var line = parseInt(attr, 10);
+                            if (isNaN(line) || line < 1) { continue; }
+                            var top = el.getBoundingClientRect().top + window.scrollY;
+                            result.push({ line: line, top: top });
                         }
+                        result.sort(function(a, b) { return a.line - b.line; });
+                        anchors = result;
+                    }
+
+                    function lineForScroll(scrollY) {
+                        if (anchors.length === 0) { return 0; }
+                        if (scrollY <= anchors[0].top) { return anchors[0].line; }
+                        var last = anchors[anchors.length - 1];
+                        if (scrollY >= last.top) { return last.line; }
+                        var lo = 0, hi = anchors.length - 1;
+                        while (lo + 1 < hi) {
+                            var mid = (lo + hi) >> 1;
+                            if (anchors[mid].top <= scrollY) { lo = mid; } else { hi = mid; }
+                        }
+                        var a = anchors[lo], b = anchors[hi];
+                        if (b.top === a.top) { return a.line; }
+                        return a.line + (b.line - a.line) * (scrollY - a.top) / (b.top - a.top);
+                    }
+
+                    function scrollToLine(line) {
+                        if (anchors.length === 0) { return; }
+                        var first = anchors[0], last = anchors[anchors.length - 1];
+                        if (line <= first.line) { window.scrollTo(0, first.top); return; }
+                        if (line >= last.line) { window.scrollTo(0, last.top); return; }
+                        var lo = 0, hi = anchors.length - 1;
+                        while (lo + 1 < hi) {
+                            var mid = (lo + hi) >> 1;
+                            if (anchors[mid].line <= line) { lo = mid; } else { hi = mid; }
+                        }
+                        var a = anchors[lo], b = anchors[hi];
+                        var frac = (b.line === a.line) ? 0 : (line - a.line) / (b.line - a.line);
+                        window.scrollTo(0, a.top + (b.top - a.top) * frac);
+                    }
+
+                    function scheduleRebuild() {
+                        if (rebuildTimer !== null) { clearTimeout(rebuildTimer); }
+                        rebuildTimer = setTimeout(function() {
+                            rebuildTimer = null;
+                            rebuildAnchors();
+                        }, 100);
+                    }
+
+                    window.__miaoyanSync = {
+                        rebuild: function() { rebuildAnchors(); },
+                        lineForScroll: lineForScroll,
+                        scrollToLine: scrollToLine
+                    };
+
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', rebuildAnchors);
+                    } else {
+                        rebuildAnchors();
+                    }
+                    window.addEventListener('load', rebuildAnchors);
+                    if (typeof ResizeObserver !== 'undefined') {
+                        new ResizeObserver(scheduleRebuild).observe(document.body);
                     }
 
                     window.addEventListener('scroll', function() {
-                        // Cancel previous animation frame to avoid duplicate work
-                        if (rafId !== null) {
-                            cancelAnimationFrame(rafId);
-                        }
-
-                        // Use requestAnimationFrame for 60fps smooth sync
+                        if (rafId !== null) { cancelAnimationFrame(rafId); }
                         rafId = requestAnimationFrame(function() {
-                            reportScroll();
                             rafId = null;
+                            var scrollY = window.pageYOffset || 0;
+                            var line = lineForScroll(scrollY);
+                            if (Math.abs(line - lastReportedLine) > 0.1) {
+                                window.webkit.messageHandlers.previewScroll.postMessage({ line: line });
+                                lastReportedLine = line;
+                            }
                         });
                     }, { passive: true });
                 })();
@@ -494,37 +562,36 @@ class MPreviewView: WKWebView, WKUIDelegate {
                     if (!container) return;
 
                     const preserveScroll = \(preserveScroll ? "true" : "false");
-                    let savedRatio = 0;
-                    let isNearBottom = false;
+                    let savedLine = 0;
+                    let usedAnchorScroll = false;
 
-                    if (preserveScroll) {
-                        // Save scroll ratio (not absolute position) for better stability
+                    if (preserveScroll && window.__miaoyanSync) {
+                        savedLine = window.__miaoyanSync.lineForScroll(window.pageYOffset || 0);
+                        usedAnchorScroll = true;
+                    } else if (preserveScroll) {
+                        // Fallback: ratio-based save when anchor index not yet built
                         const doc = document.scrollingElement || document.documentElement || document.body;
                         const maxScroll = Math.max(0, (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
-                        savedRatio = maxScroll > 0 ? (window.pageYOffset || doc.scrollTop || 0) / maxScroll : 0;
-
-                        // Check if we're near the bottom (within 10 pixels)
-                        isNearBottom = maxScroll > 0 && (maxScroll - (window.pageYOffset || doc.scrollTop || 0)) < 10;
+                        savedLine = maxScroll > 0 ? (window.pageYOffset || doc.scrollTop || 0) / maxScroll : 0;
                     }
 
                     container.innerHTML = `\(html)`;
                     \(initialization)
 
                     if (preserveScroll) {
-                        // Restore scroll immediately without waiting for images
                         requestAnimationFrame(() => {
-                            const newDoc = document.scrollingElement || document.documentElement || document.body;
-                            const newMaxScroll = Math.max(0, (newDoc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
-
-                            // If was at bottom, stay at bottom; otherwise restore ratio
-                            const targetScroll = isNearBottom ? newMaxScroll : newMaxScroll * savedRatio;
-                            window.scrollTo(0, targetScroll);
+                            if (usedAnchorScroll && window.__miaoyanSync) {
+                                window.__miaoyanSync.rebuild();
+                                window.__miaoyanSync.scrollToLine(savedLine);
+                            } else if (!usedAnchorScroll) {
+                                // Ratio fallback
+                                const newDoc = document.scrollingElement || document.documentElement || document.body;
+                                const newMaxScroll = Math.max(0, (newDoc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
+                                window.scrollTo(0, newMaxScroll * savedLine);
+                            }
                         });
                     } else {
-                        // No scroll preservation: reset to top
-                        requestAnimationFrame(() => {
-                            window.scrollTo(0, 0);
-                        });
+                        requestAnimationFrame(() => { window.scrollTo(0, 0); });
                     }
                 })();
             """
@@ -557,15 +624,19 @@ class MPreviewView: WKWebView, WKUIDelegate {
                     window.scrollTo(0, target);
                 })();
             """
-        // Direct execution without async wrapper for smoother scrolling
-        // Note: Errors are silently ignored here for performance (called frequently during scroll sync)
         self.evaluateJavaScript(script) { _, error in
-            if let error = error {
-                // Only log errors in debug builds to avoid log spam
-                #if DEBUG
-                    print("[ScrollSync] JavaScript execution error: \(error.localizedDescription)")
-                #endif
-            }
+            #if DEBUG
+            if let error = error { print("[ScrollSync] scrollToPosition error: \(error.localizedDescription)") }
+            #endif
+        }
+    }
+
+    public func scrollToLine(_ line: CGFloat) {
+        let script = "window.__miaoyanSync && window.__miaoyanSync.scrollToLine(\(line));"
+        evaluateJavaScript(script) { _, error in
+            #if DEBUG
+            if let error = error { print("[ScrollSync] scrollToLine error: \(error.localizedDescription)") }
+            #endif
         }
     }
     private func handleNavigationAction(_ navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
@@ -1092,7 +1163,13 @@ class HandlerPreviewScroll: NSObject, WKScriptMessageHandler {
             return
         }
 
-        if let ratio = message.body as? Double {
+        if let dict = message.body as? [String: Any],
+           let lineNum = (dict["line"] as? NSNumber)?.doubleValue
+        {
+            Task { @MainActor in
+                previewView.scrollDelegate?.previewDidScroll(line: CGFloat(lineNum))
+            }
+        } else if let ratio = message.body as? Double {
             Task { @MainActor in
                 previewView.scrollDelegate?.previewDidScroll(ratio: CGFloat(ratio))
             }

@@ -344,9 +344,51 @@ extension MPreviewView {
             let note = vc.notesTableView.getSelectedNote()
         else { return }
 
-        // Show progress toast immediately
         vc.toastPersistent(message: "\(I18n.str("Exporting...")) 0%")
 
+        // Reveal.js-backed PPT export stays on createPDF: slide pagination is provided by reveal,
+        // and the snapshot API is exactly what captures each slide page.
+        if UserDefaultsManagement.magicPPT || UserDefaultsManagement.isOnExportPPT {
+            exportPdfViaSnapshot(note: note, viewController: vc)
+            return
+        }
+
+        exportPdfViaPrintOperation(note: note, viewController: vc)
+    }
+
+    private func exportPdfViaPrintOperation(note: Note, viewController vc: ViewController) {
+        Self.isExporting = true
+        vc.toastUpdate(message: "\(I18n.str("Exporting...")) 20%")
+
+        self.evaluateJavaScript("document.documentElement.outerHTML") { [weak self] html, _ in
+            let renderedHTML = (html as? String) ?? ""
+            guard renderedHTML.count > 50 else {
+                vc.toastDismiss()
+                vc.toastExport(status: false)
+                Self.isExporting = false
+                return
+            }
+
+            vc.toastUpdate(message: "\(I18n.str("Exporting...")) 40%")
+
+            let baseURL = HtmlManager.previewBundleURL()
+            let controller = PdfExportController(note: note, html: renderedHTML, baseURL: baseURL, viewController: vc)
+
+            // Retain the controller for the duration of the export; release on completion.
+            objc_setAssociatedObject(self ?? NSObject(), &AssociatedKeys.pdfExportController, controller, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+
+            controller.run { success in
+                vc.toastDismiss()
+                vc.toastExport(status: success)
+                Self.isExporting = false
+                if let self = self {
+                    objc_setAssociatedObject(self, &AssociatedKeys.pdfExportController, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                }
+            }
+        }
+    }
+
+    private func exportPdfViaSnapshot(note: Note, viewController vc: ViewController) {
         self.preparePPTExportIfNeeded()
 
         vc.toastUpdate(message: "\(I18n.str("Exporting...")) 10%")
@@ -365,7 +407,6 @@ extension MPreviewView {
 
             self.evaluateJavaScript("window.scrollTo(0,0)", completionHandler: nil)
 
-            // Wait for images to load with progress
             self.waitForImagesLoaded(
                 progressUpdate: { message in
                     vc.toastUpdate(message: message)
@@ -393,7 +434,6 @@ extension MPreviewView {
                             })();
                         """
                     self.evaluateJavaScript(titleScript) { _, _ in
-                        // Hide TOC before export so it doesn't appear in the PDF output
                         self.evaluateJavaScript("""
                             (function() {
                                 var tocNav = document.querySelector('.toc-nav');
@@ -415,7 +455,6 @@ extension MPreviewView {
                                 self.createPDF(configuration: pdfConfig) { [weak self] result in
                                     guard let self else { return }
 
-                                    // Cleanup: remove injected title, print styles, and PPT classes
                                     self.evaluateJavaScript(
                                         "var t = document.getElementById('export-generated-title'); if(t) t.remove();",
                                         completionHandler: nil)
@@ -426,7 +465,6 @@ extension MPreviewView {
                                         document.body.classList.remove('print-pdf');
                                         """, completionHandler: nil)
 
-                                    // Restore TOC after export completes
                                     self.evaluateJavaScript("""
                                         (function() {
                                             var tocNav = document.querySelector('.toc-nav');
@@ -812,7 +850,7 @@ extension MPreviewView {
         }
     }
 
-    private func saveToDownloadsWithFilename(data: Data, extension: String, filename: String, viewController: Any) {
+    func saveToDownloadsWithFilename(data: Data, extension: String, filename: String, viewController: Any) {
         guard let vc = viewController as? ViewController else { return }
 
         // Perform file save on background queue
@@ -977,18 +1015,18 @@ extension MPreviewView {
 
     // MARK: - PDF Outline (heading bookmarks)
 
-    fileprivate struct PdfHeading {
+    struct PdfHeading {
         let level: Int
         let text: String
         let y: Double
     }
 
-    fileprivate struct HeadingExtractResult {
+    struct HeadingExtractResult {
         let items: [PdfHeading]
         let totalHeight: Double
     }
 
-    fileprivate static let pdfHeadingExtractionScript = """
+    static let pdfHeadingExtractionScript = """
         (function() {
             var root = document.getElementById('write') || document.body;
             var total = Math.max(
@@ -1010,7 +1048,7 @@ extension MPreviewView {
         })();
         """
 
-    fileprivate static func parseHeadingExtractResult(_ raw: Any?) -> HeadingExtractResult {
+    static func parseHeadingExtractResult(_ raw: Any?) -> HeadingExtractResult {
         guard let dict = raw as? [String: Any] else {
             return HeadingExtractResult(items: [], totalHeight: 0)
         }
@@ -1035,7 +1073,7 @@ extension MPreviewView {
         return 0
     }
 
-    fileprivate static func buildPdfOutline(pdfData: Data, headings: [PdfHeading], totalHeight: Double) -> Data {
+    static func buildPdfOutline(pdfData: Data, headings: [PdfHeading], totalHeight: Double) -> Data {
         guard !headings.isEmpty, totalHeight > 0 else { return pdfData }
         guard let doc = PDFDocument(data: pdfData), doc.pageCount > 0 else { return pdfData }
         guard doc.outlineRoot == nil else { return pdfData }
@@ -1083,6 +1121,7 @@ extension MPreviewView {
     @MainActor
     private enum AssociatedKeys {
         static var preparedPPTExport: UInt8 = 0
+        static var pdfExportController: UInt8 = 0
     }
 }
 

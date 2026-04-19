@@ -27,6 +27,7 @@
 		275F9F5C2E68150E006BC2AC /* EditorMenuManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F5A2E68150E006BC2AC /* EditorMenuManager.swift */; };
 		275F9F5D2E68150E006BC2AC /* ClipboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F592E68150E006BC2AC /* ClipboardManager.swift */; };
 		275F9F5E2E68150E006BC2AC /* ImagePreviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F5B2E68150E006BC2AC /* ImagePreviewManager.swift */; };
+		27A1B2C32E681510006BC2AC /* PdfExportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A1B2C42E681510006BC2AC /* PdfExportController.swift */; };
 		275F9F602E6820F8006BC2AC /* ViewController+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F5F2E6820F8006BC2AC /* ViewController+Layout.swift */; };
 		275F9F622E682239006BC2AC /* ViewController+Editor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F612E682239006BC2AC /* ViewController+Editor.swift */; };
 		276312612E7580B5007BB5E9 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276312602E7580B5007BB5E9 /* Localization.swift */; };
@@ -166,6 +167,7 @@
 		275F9F592E68150E006BC2AC /* ClipboardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardManager.swift; sourceTree = "<group>"; };
 		275F9F5A2E68150E006BC2AC /* EditorMenuManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMenuManager.swift; sourceTree = "<group>"; };
 		275F9F5B2E68150E006BC2AC /* ImagePreviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewManager.swift; sourceTree = "<group>"; };
+		27A1B2C42E681510006BC2AC /* PdfExportController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExportController.swift; sourceTree = "<group>"; };
 		275F9F5F2E6820F8006BC2AC /* ViewController+Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Layout.swift"; sourceTree = "<group>"; };
 		275F9F612E682239006BC2AC /* ViewController+Editor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Editor.swift"; sourceTree = "<group>"; };
 		276312602E7580B5007BB5E9 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
@@ -470,6 +472,7 @@
 				275F9F5A2E68150E006BC2AC /* EditorMenuManager.swift */,
 				D7038E1C20FA86C100A54E69 /* SharingService.swift */,
 				275F9F5B2E68150E006BC2AC /* ImagePreviewManager.swift */,
+				27A1B2C42E681510006BC2AC /* PdfExportController.swift */,
 				6F13BB3820FEDE230005E120 /* UserDataService.swift */,
 				D7470D062170E890006B2A92 /* CustomTextStorage.swift */,
 				D730BD29222BF32A00E69C93 /* KeychainPasswordItem.swift */,
@@ -720,6 +723,7 @@
 				275F9F5C2E68150E006BC2AC /* EditorMenuManager.swift in Sources */,
 				275F9F5D2E68150E006BC2AC /* ClipboardManager.swift in Sources */,
 				275F9F5E2E68150E006BC2AC /* ImagePreviewManager.swift in Sources */,
+				27A1B2C32E681510006BC2AC /* PdfExportController.swift in Sources */,
 				D7153E092285EC6100A2C20F /* TitleTextField.swift in Sources */,
 				D7D372F4207B5B0F00AFBD9F /* SidebarNotesView.swift in Sources */,
 				3680DE38C941303E615282C4 /* MPreviewView.swift in Sources */,

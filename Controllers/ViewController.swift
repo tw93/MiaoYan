@@ -127,9 +127,10 @@ class ViewController:
     var editorContentSplitView: EditorContentSplitView?
     var previewScrollView: EditorScrollView?
     nonisolated(unsafe) var splitScrollObserver: NSObjectProtocol?
-    var isProgrammaticSplitScroll = false
+    var splitScrollSuppressionCount: Int = 0
     var activeSplitScrollSource: SplitScrollSource = .editor
-    var lastSyncedScrollRatio: CGFloat = -1  // Track last synced ratio to avoid redundant JS execution
+    var lastSyncedScrollRatio: CGFloat = -1
+    var lastSyncedLine: CGFloat = -1
     var needsEditorModeUpdateAfterPreview = false
     var isUnfoldingLayout = false
     @IBOutlet var search: SearchTextField!

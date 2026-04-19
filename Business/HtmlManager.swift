@@ -55,6 +55,91 @@ class HtmlManager {
         return UserDataService.instance.isDark ? darkModeExportCSS() : lightModeExportCSS()
     }
 
+    // Print-only pagination rules injected into the offscreen WKWebView that hosts PDF export.
+    // Paper size and page margins come from NSPrintInfo; macOS WebKit below 15.2 ignores
+    // `@page { size; margin }`, so this stylesheet sticks to properties that work on 11.5+.
+    //
+    // The compact spacing overrides fight `.heti` typography defaults, which are tuned for
+    // on-screen reading (1.74 line-height, 1.6em paragraph gutters). Print rendering gets
+    // tighter metrics closer to a typeset article.
+    static func paginatedPrintCSS() -> String {
+        return """
+            @media print {
+                html, body {
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    background: #FFFFFF !important;
+                    color: #262626 !important;
+                    -webkit-print-color-adjust: exact;
+                    print-color-adjust: exact;
+                }
+                #write {
+                    max-width: none !important;
+                    width: auto !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+
+                /* Pull the first element on page 1 flush with the top margin. */
+                .heti > *:first-child,
+                #write > *:first-child,
+                #export-generated-title {
+                    margin-top: 0 !important;
+                    margin-block-start: 0 !important;
+                    padding-top: 0 !important;
+                }
+
+                /* Page-break rules. Let content flow naturally: no forced h1 page break
+                   (that strategy left huge bottom gaps on short sections). Keep break-inside:
+                   avoid only on small, coherent blocks — not on img, since tall images forced
+                   to the next page created worse gaps than the occasional split. */
+                h1, h2, h3, h4, h5, h6 { page-break-after: avoid; }
+                pre, table, figure, blockquote,
+                .miaoyan-mermaid, .md-diagram-panel {
+                    page-break-inside: avoid;
+                }
+                img {
+                    max-width: 100% !important;
+                    display: block;
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+
+                /* Compact vertical rhythm: .heti defaults are 1.6em/0.8em, too airy for print. */
+                .heti, body { line-height: 1.55 !important; }
+                .heti p,
+                .heti ul, .heti ol,
+                .heti blockquote,
+                .heti table,
+                .heti pre,
+                .heti hr,
+                .heti figure {
+                    margin-block-start: 0.6em !important;
+                    margin-block-end: 0.6em !important;
+                }
+                .heti h1 {
+                    margin-block-start: 0.9em !important;
+                    margin-block-end: 0.4em !important;
+                }
+                .heti h2, .heti h3, .heti h4, .heti h5, .heti h6 {
+                    margin-block-start: 0.7em !important;
+                    margin-block-end: 0.3em !important;
+                }
+                .heti li > p,
+                .heti li > ul,
+                .heti li > ol {
+                    margin-block-start: 0.2em !important;
+                    margin-block-end: 0.2em !important;
+                }
+
+                .toc-nav, .toc-hover-trigger, .toc-pin-btn {
+                    display: none !important;
+                }
+                a { color: inherit !important; text-decoration: none !important; }
+            }
+            """
+    }
+
     // Cached regex patterns
     private static let imageRegex: NSRegularExpression? = {
         try? NSRegularExpression(pattern: "<img[^>]*?src=\"([^\"]*)\"[^>]*?/?>")
