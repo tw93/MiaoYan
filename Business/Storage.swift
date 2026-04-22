@@ -304,7 +304,6 @@ class Storage {
             }
             if UserDefaultsManagement.isSingleMode, let singleModeUrl = UserDefaultsManagement.singleModeURL {
                 let singleRootUrl = singleModeUrl.deletingLastPathComponent()
-
                 if project.url == singleModeUrl {
                     loadLabel(project)
                 }
@@ -317,9 +316,11 @@ class Storage {
         }
     }
 
-    public func reconfigureForSingleMode() {
+    public func reconfigureForSingleMode(originalFileURL: URL? = nil, siblingFiles: [URL]? = nil) {
         guard UserDefaultsManagement.isSingleMode,
-              let singleModeUrl = UserDefaultsManagement.singleModeURL else { return }
+              let singleModeUrl = UserDefaultsManagement.singleModeURL else {
+            return
+        }
 
         for url in scopedURLs {
             url.stopAccessingSecurityScopedResource()
@@ -349,6 +350,33 @@ class Storage {
         let project = Project(url: rootUrl, label: name, isRoot: true, isDefault: true)
         _ = add(project: project)
         loadProjects()
+
+        // Sandbox fallback: in App Store builds the sandbox extension from
+        // application:open: may not persist to the deferred directory enumeration
+        // in loadLabel. Use the pre-enumerated sibling files to populate the list
+        // so ALL .md files in the directory are visible, not just the opened one.
+        if noteList.isEmpty, let files = siblingFiles, !files.isEmpty {
+            for fileURL in files {
+                let resolved = fileURL.resolvingSymlinksInPath()
+                guard FileManager.default.fileExists(atPath: resolved.path),
+                      !FileManager.default.directoryExists(atUrl: resolved)
+                else { continue }
+                let note = Note(url: resolved, with: project)
+                note.loadModifiedLocalAt()
+                note.creationDate = (try? resolved.resourceValues(forKeys: [.creationDateKey]))?.creationDate
+                noteList.append(note)
+            }
+        } else if noteList.isEmpty, let fileURL = originalFileURL {
+            // Final fallback: just the opened file
+            let resolved = fileURL.resolvingSymlinksInPath()
+            if FileManager.default.fileExists(atPath: resolved.path),
+               !FileManager.default.directoryExists(atUrl: resolved)
+            {
+                let note = Note(url: resolved, with: project)
+                note.loadModifiedLocalAt()
+                noteList.append(note)
+            }
+        }
     }
 
     func loadDocuments(tryCount: Int = 0, completion: @escaping () -> Void) {
@@ -771,13 +799,11 @@ class Storage {
             return nil
         }
 
-        let resolvedPath = url.path.lowercased()
+        let resolvedPath = url.resolvingSymlinksInPath().path.lowercased()
 
         return
             noteList.first(where: {
-                $0.url.path.lowercased() == resolvedPath
-                    || "/private" + $0.url.path.lowercased() == resolvedPath
-
+                $0.url.resolvingSymlinksInPath().path.lowercased() == resolvedPath
             })
     }
 

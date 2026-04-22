@@ -1000,9 +1000,9 @@ class ViewController:
         contentSplitView.setDisplayMode(.editorOnly, animated: false)
     }
 
-    func reloadForSingleMode() {
+    func reloadForSingleMode(originalFileURL: URL? = nil, siblingFiles: [URL]? = nil) {
         searchQueue.cancelAllOperations()
-        storage.reconfigureForSingleMode()
+        storage.reconfigureForSingleMode(originalFileURL: originalFileURL, siblingFiles: siblingFiles)
         storageOutlineView.sidebarItems = Sidebar().getList()
         storageOutlineView.reloadData()
         fsManager?.restart()
@@ -1087,10 +1087,9 @@ class ViewController:
                 if isSingleModeDirectory {
                     self.showSidebar("")
                 } else {
-                    self.hideSidebar("")
+                    self.showSidebar("")
                     self.selectSingleModeNote(for: singleModeUrl)
                 }
-
             }
 
             self.storageOutlineView.isLaunch = false
@@ -1140,11 +1139,8 @@ class ViewController:
 
     private func selectSingleModeNote(for url: URL) {
         if !FileManager.default.directoryExists(atUrl: url) {
-            guard let note = storage.getBy(url: url),
-                let index = notesTableView.getIndex(note)
-            else {
-                return
-            }
+            guard let note = storage.getBy(url: url) else { return }
+            guard let index = notesTableView.getIndex(note) else { return }
             DispatchQueue.main.async {
                 self.notesTableView.selectRow(index)
                 self.notesTableView.scrollRowToVisible(row: index, animated: false)

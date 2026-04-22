@@ -49,8 +49,26 @@ extension AppDelegate {
     @MainActor
     func openNotes(urls: [URL]) {
         guard let vc = ViewController.shared() else { return }
-        UserDefaultsManagement.beginSingleMode(for: urls[0])
-        vc.reloadForSingleMode()
+        let fileURL = urls[0]
+        UserDefaultsManagement.beginSingleMode(for: fileURL)
+
+        // Pre-enumerate sibling files while sandbox implicit access is active.
+        // In the App Store build, the sandbox extension from application:open:
+        // grants access to the parent directory only during this call scope.
+        var siblingFiles: [URL]?
+        if !FileManager.default.directoryExists(atUrl: fileURL) {
+            let parentDir = fileURL.deletingLastPathComponent()
+            let extensions = Storage.sharedInstance().allowedExtensions
+            if let contents = try? FileManager.default.contentsOfDirectory(
+                at: parentDir,
+                includingPropertiesForKeys: [.contentModificationDateKey, .creationDateKey],
+                options: .skipsHiddenFiles)
+            {
+                siblingFiles = contents.filter { extensions.contains($0.pathExtension) }
+            }
+        }
+
+        vc.reloadForSingleMode(originalFileURL: fileURL, siblingFiles: siblingFiles)
     }
 
     @MainActor
