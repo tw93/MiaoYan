@@ -302,6 +302,16 @@ CA
                                                 <action selector="todoMenu:" target="N0L-g4-qwj" id="az6-KC-Ymg"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Inline Code" keyEquivalent="e" id="InC-Cd-Mnu">
+                                            <connections>
+                                                <action selector="inlineCodeMenu:" target="N0L-g4-qwj" id="InC-Cd-Act"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Code Block" keyEquivalent="E" id="CdB-Blk-Mnu">
+                                            <connections>
+                                                <action selector="codeBlockMenu:" target="N0L-g4-qwj" id="CdB-Blk-Act"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem title="Tab Quick Input" image="wand.and.sparkles" catalog="system" id="xgO-jF-1ab">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <menu key="submenu" title="Tab Quick Input" id="1bu-5n-fpO">

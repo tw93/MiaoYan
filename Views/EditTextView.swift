@@ -361,6 +361,14 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         menuManager?.performFormattingAction(.deleteline)
     }
 
+    @IBAction func inlineCodeMenu(_ sender: Any) {
+        menuManager?.performFormattingAction(.inlineCode)
+    }
+
+    @IBAction func codeBlockMenu(_ sender: Any) {
+        menuManager?.performFormattingAction(.codeBlock)
+    }
+
     @IBAction func togglePreview(_ sender: Any) {
         menuManager?.togglePreview()
     }

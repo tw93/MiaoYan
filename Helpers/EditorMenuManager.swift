@@ -34,6 +34,10 @@ class EditorMenuManager {
             formatter.underline()
         case .deleteline:
             formatter.deleteline()
+        case .inlineCode:
+            formatter.backTick()
+        case .codeBlock:
+            formatter.codeBlock()
         }
     }
 
@@ -151,6 +155,8 @@ enum FormattingAction {
     case todo
     case underline
     case deleteline
+    case inlineCode
+    case codeBlock
 
     var shouldScanMarkdown: Bool {
         switch self {
