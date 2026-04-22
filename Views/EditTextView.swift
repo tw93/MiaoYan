@@ -474,12 +474,14 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             return
         }
 
-        // Call the internal implementation
-        _performFill(note: note, options: options, viewController: viewController)
+        // Call the internal implementation asynchronously
+        Task { @MainActor in
+            await _performFill(note: note, options: options, viewController: viewController)
+        }
     }
 
     // Internal implementation method
-    private func _performFill(note: Note, options: FillOptions, viewController: ViewController) {
+    private func _performFill(note: Note, options: FillOptions, viewController: ViewController) async {
         if !isMagicPPTModeActive {
             viewController.titleBarView.isHidden = false
             viewController.titleLabel.isHidden = false
@@ -487,7 +489,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             viewController.titleLabel.alphaValue = 1
         }
         EditTextView.note = note
-        note.ensureContentLoaded()
+        await note.ensureContentLoadedAsync()
         UserDefaultsManagement.lastSelectedURL = note.url
         viewController.updateTitle(newTitle: note.getTitleWithoutLabel())
         if !options.preserveUndo {

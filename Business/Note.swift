@@ -111,6 +111,15 @@ public class Note: NSObject {
         isContentLoaded = false
     }
 
+    func loadAsync() async {
+        if let attributedString = await getContentAsync() {
+            content = NSMutableAttributedString(attributedString: attributedString)
+            isContentLoaded = true
+            return
+        }
+        isContentLoaded = false
+    }
+
     func reload() -> Bool {
         guard let modifiedAt = getFileModifiedDate() else {
             return false
@@ -356,6 +365,31 @@ public class Note: NSObject {
         }
 
         return nil
+    }
+
+    func getContentAsync() async -> NSAttributedString? {
+        guard let url = getContentFileURL() else { return nil }
+
+        let stringContent = await Task.detached(priority: .userInitiated) { () -> String? in
+            do {
+                return try String(contentsOf: url, encoding: .utf8)
+            } catch {
+                if let data = try? Data(contentsOf: url) {
+                    let encoding = NSString.stringEncoding(for: data, encodingOptions: nil, convertedString: nil, usedLossyConversion: nil)
+                    if let fallbackString = try? String(contentsOf: url, encoding: String.Encoding(rawValue: encoding)) {
+                        return fallbackString
+                    }
+                }
+            }
+            return nil
+        }.value
+
+        guard let string = stringContent else { return nil }
+
+        let attrs: [NSAttributedString.Key: Any] = [
+            .font: UserDefaultsManagement.noteFont as Any
+        ]
+        return NSAttributedString(string: string, attributes: attrs)
     }
 
     func isMarkdown() -> Bool {
@@ -781,6 +815,12 @@ public class Note: NSObject {
     public func ensureContentLoaded() {
         if !isContentLoaded {
             load()
+        }
+    }
+
+    public func ensureContentLoadedAsync() async {
+        if !isContentLoaded {
+            await loadAsync()
         }
     }
 
