@@ -52,6 +52,11 @@ extension AppDelegate {
         let fileURL = urls[0]
         UserDefaultsManagement.beginSingleMode(for: fileURL)
 
+        if let mwc = mainWindowController,
+           mwc.window?.isVisible != true {
+            mwc.makeNew()
+        }
+
         // Pre-enumerate sibling files while sandbox implicit access is active.
         // In the App Store build, the sandbox extension from application:open:
         // grants access to the parent directory only during this call scope.
