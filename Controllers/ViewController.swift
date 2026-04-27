@@ -129,7 +129,6 @@ class ViewController:
     nonisolated(unsafe) var splitScrollObserver: NSObjectProtocol?
     var splitScrollSuppressionCount: Int = 0
     var activeSplitScrollSource: SplitScrollSource = .editor
-    var lastSyncedScrollRatio: CGFloat = -1
     var lastSyncedLine: CGFloat = -1
     var needsEditorModeUpdateAfterPreview = false
     var isUnfoldingLayout = false

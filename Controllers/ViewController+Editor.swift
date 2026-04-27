@@ -460,14 +460,6 @@ extension ViewController {
 
     }
 
-    private struct SplitScrollConfig {
-        static let minSyncThreshold: CGFloat = 0.0015
-        static let maxSyncThreshold: CGFloat = 0.02
-        static let syncPixelThreshold: CGFloat = 4
-        static let minScrollDifferenceThreshold: CGFloat = 0.5
-        static let maxScrollDifferenceThreshold: CGFloat = 3
-    }
-
     private func makeTempNote() -> Note? {
         let tempProject = getSidebarProject() ?? storage.noteList.first?.project
         guard let project = tempProject else { return nil }
@@ -962,7 +954,6 @@ extension ViewController {
         editArea.markdownView?.scrollDelegate = nil
         splitScrollSuppressionCount = 0
         activeSplitScrollSource = .editor
-        lastSyncedScrollRatio = -1
         lastSyncedLine = -1
     }
 
@@ -977,10 +968,6 @@ extension ViewController {
     }
 
     // MARK: - MPreviewScrollDelegate
-
-    func previewDidScroll(ratio: CGFloat) {
-        handlePreviewScroll(ratio: ratio)
-    }
 
     func previewDidScroll(line: CGFloat) {
         guard splitScrollSuppressionCount == 0,
@@ -1035,49 +1022,12 @@ extension ViewController {
         return rect.offsetBy(dx: editArea.textContainerOrigin.x, dy: editArea.textContainerOrigin.y)
     }
 
-    private func handlePreviewScroll(ratio: CGFloat) {
-        guard splitScrollSuppressionCount == 0,
-            sessionSplitMode,
-            editArea.markdownView?.isUpdatingContent != true
-        else { return }
-
-        activeSplitScrollSource = .preview
-        splitScrollSuppressionCount += 1
-        scrollEditor(to: ratio)
-
-        DispatchQueue.main.async { [weak self] in
-            self?.splitScrollSuppressionCount = max(0, (self?.splitScrollSuppressionCount ?? 0) - 1)
-        }
-    }
-
     private func scheduleSplitScrollSync() {
         guard sessionSplitMode, activeSplitScrollSource == .editor else { return }
         let topLine = editorTopLine()
         guard abs(topLine - lastSyncedLine) >= 0.25 else { return }
         lastSyncedLine = topLine
         applySplitScrollSync(line: topLine)
-    }
-
-    private func syncThresholdForCurrentDocument() -> CGFloat {
-        guard let documentView = editAreaScroll.documentView else { return SplitScrollConfig.maxSyncThreshold }
-        let contentHeight = editAreaScroll.contentSize.height
-        let scrollHeight = documentView.bounds.height
-        let maxOffset = max(scrollHeight - contentHeight, 0)
-        guard maxOffset > 0 else { return SplitScrollConfig.maxSyncThreshold }
-
-        let ratioThreshold = SplitScrollConfig.syncPixelThreshold / maxOffset
-        return min(max(ratioThreshold, SplitScrollConfig.minSyncThreshold), SplitScrollConfig.maxSyncThreshold)
-    }
-
-    private func scrollDifferenceThresholdForCurrentDocument() -> CGFloat {
-        guard let documentView = editAreaScroll.documentView else { return SplitScrollConfig.minScrollDifferenceThreshold }
-        let contentHeight = editAreaScroll.contentSize.height
-        let scrollHeight = documentView.bounds.height
-        let maxOffset = max(scrollHeight - contentHeight, 0)
-        guard maxOffset > 0 else { return SplitScrollConfig.minScrollDifferenceThreshold }
-
-        let adaptiveThreshold = maxOffset * 0.0004
-        return min(max(adaptiveThreshold, SplitScrollConfig.minScrollDifferenceThreshold), SplitScrollConfig.maxScrollDifferenceThreshold)
     }
 
     private func applySplitScrollSync(line: CGFloat) {
@@ -1107,32 +1057,6 @@ extension ViewController {
             options: [.byLines, .substringNotRequired]
         ) { _, _, _, _ in lineCount += 1 }
         return CGFloat(lineCount)
-    }
-
-    private func scrollEditor(to ratio: CGFloat) {
-        guard let documentView = editAreaScroll.documentView else {
-            return
-        }
-        let contentHeight = editAreaScroll.contentSize.height
-        let scrollHeight = documentView.bounds.height
-        let offset = max(scrollHeight - contentHeight, 0)
-
-        guard offset > 0 else {
-            return
-        }
-
-        let targetY = offset * ratio
-        let currentY = editAreaScroll.contentView.bounds.origin.y
-
-        // Only scroll if there's a meaningful difference (> 0.5 pixels)
-        guard abs(targetY - currentY) > scrollDifferenceThresholdForCurrentDocument() else {
-            return
-        }
-
-        // Direct scroll for instant response
-        let newOrigin = NSPoint(x: 0, y: targetY)
-        editAreaScroll.contentView.setBoundsOrigin(newOrigin)
-        editAreaScroll.reflectScrolledClipView(editAreaScroll.contentView)
     }
 
     func cancelTextSearch() {

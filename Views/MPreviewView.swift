@@ -21,13 +21,7 @@ public typealias MPreviewViewClosure = () -> Void
 // MARK: - Protocol Definition
 @MainActor
 protocol MPreviewScrollDelegate: AnyObject {
-    func previewDidScroll(ratio: CGFloat)
     func previewDidScroll(line: CGFloat)
-}
-
-extension MPreviewScrollDelegate {
-    func previewDidScroll(ratio: CGFloat) {}
-    func previewDidScroll(line: CGFloat) {}
 }
 
 @MainActor
@@ -332,13 +326,13 @@ class MPreviewView: WKWebView, WKUIDelegate {
         let isDark = determineDarkTheme()
         self.appearance = isDark ? NSAppearance(named: .darkAqua) : NSAppearance(named: .aqua)
         let js = """
-            (function() {
-                var body = document.body;
-                if (!body) return;
-                body.classList.remove('darkmode', 'lightmode');
-                body.classList.add('\(isDark ? "darkmode" : "lightmode")');
-            })();
-        """
+                (function() {
+                    var body = document.body;
+                    if (!body) return;
+                    body.classList.remove('darkmode', 'lightmode');
+                    body.classList.add('\(isDark ? "darkmode" : "lightmode")');
+                })();
+            """
         evaluateJavaScript(js, completionHandler: nil)
     }
 
@@ -626,7 +620,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
             """
         self.evaluateJavaScript(script) { _, error in
             #if DEBUG
-            if let error = error { print("[ScrollSync] scrollToPosition error: \(error.localizedDescription)") }
+                if let error = error { print("[ScrollSync] scrollToPosition error: \(error.localizedDescription)") }
             #endif
         }
     }
@@ -635,7 +629,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         let script = "window.__miaoyanSync && window.__miaoyanSync.scrollToLine(\(line));"
         evaluateJavaScript(script) { _, error in
             #if DEBUG
-            if let error = error { print("[ScrollSync] scrollToLine error: \(error.localizedDescription)") }
+                if let error = error { print("[ScrollSync] scrollToLine error: \(error.localizedDescription)") }
             #endif
         }
     }
@@ -681,7 +675,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
             guard let rendered else {
                 self.hasLoadedTemplate = false
                 AppDelegate.trackError(
-                    NSError(domain: "MarkdownRenderError", code: 1,
+                    NSError(
+                        domain: "MarkdownRenderError", code: 1,
                         userInfo: [NSLocalizedDescriptionKey: "Failed to render markdown in load"]),
                     context: "MPreviewView.load")
                 self.loadHTMLString("<html><body><p>Failed to load preview</p></body></html>", baseURL: nil)
@@ -757,7 +752,8 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 || htmlString.contains("language-plantuml")
                 || htmlString.contains("language-markmap")
 
-            let rawEscaped = htmlString
+            let rawEscaped =
+                htmlString
                 .replacingOccurrences(of: "\\", with: "\\\\")
                 .replacingOccurrences(of: "`", with: "\\`")
                 .replacingOccurrences(of: "$", with: "\\$")
@@ -872,27 +868,27 @@ class MPreviewView: WKWebView, WKUIDelegate {
         let jsonArray = "[" + jsonParts.joined(separator: ",") + "]"
 
         return """
-        (function() {
-            const container = document.querySelector('.markdown-body') || document.body;
-            const imgs = container.querySelectorAll('img');
-            const updates = \(jsonArray);
-            const placeholder = '\(lazyPlaceholder)';
-            updates.forEach(function(u, i) {
-                if (i >= imgs.length) return;
-                const img = imgs[i];
-                if (u.lazy) {
-                    img.setAttribute('data-src', u.src);
-                    img.src = placeholder;
-                    img.classList.add('lazy-image');
-                } else {
-                    img.src = u.src;
-                    img.classList.remove('lazy-image');
-                    img.removeAttribute('data-src');
-                }
-            });
-            if (window.MiaoYanCommon) window.MiaoYanCommon.optimizeImages();
-        })();
-        """
+            (function() {
+                const container = document.querySelector('.markdown-body') || document.body;
+                const imgs = container.querySelectorAll('img');
+                const updates = \(jsonArray);
+                const placeholder = '\(lazyPlaceholder)';
+                updates.forEach(function(u, i) {
+                    if (i >= imgs.length) return;
+                    const img = imgs[i];
+                    if (u.lazy) {
+                        img.setAttribute('data-src', u.src);
+                        img.src = placeholder;
+                        img.classList.add('lazy-image');
+                    } else {
+                        img.src = u.src;
+                        img.classList.remove('lazy-image');
+                        img.removeAttribute('data-src');
+                    }
+                });
+                if (window.MiaoYanCommon) window.MiaoYanCommon.optimizeImages();
+            })();
+            """
     }
 
     private func getTemplate(css: String) -> String? {
@@ -1163,24 +1159,11 @@ class HandlerPreviewScroll: NSObject, WKScriptMessageHandler {
             return
         }
 
-        if let dict = message.body as? [String: Any],
-           let lineNum = (dict["line"] as? NSNumber)?.doubleValue
-        {
-            Task { @MainActor in
-                previewView.scrollDelegate?.previewDidScroll(line: CGFloat(lineNum))
-            }
-        } else if let ratio = message.body as? Double {
-            Task { @MainActor in
-                previewView.scrollDelegate?.previewDidScroll(ratio: CGFloat(ratio))
-            }
-        } else if let ratio = message.body as? CGFloat {
-            Task { @MainActor in
-                previewView.scrollDelegate?.previewDidScroll(ratio: ratio)
-            }
-        } else if let ratio = message.body as? Int {
-            Task { @MainActor in
-                previewView.scrollDelegate?.previewDidScroll(ratio: CGFloat(ratio))
-            }
+        guard let dict = message.body as? [String: Any],
+            let lineNum = (dict["line"] as? NSNumber)?.doubleValue
+        else { return }
+        Task { @MainActor in
+            previewView.scrollDelegate?.previewDidScroll(line: CGFloat(lineNum))
         }
     }
 }
