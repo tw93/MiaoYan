@@ -1,23 +1,15 @@
-# V3.2.0 Nargacuga 🐆
+# V3.3.0 Glavenus 🦕
 
 ## Changelog
-1. Faster preview: Two-phase rendering shows text instantly while local images load lazily in the background, cutting perceived latency significantly
-2. Open in Terminal: New Cmd+J shortcut opens the current folder in Terminal from anywhere in the app, with a folder context menu entry as well
-3. Copy Path: Right-click any note to copy its full file path to the clipboard
-4. Spanish localization: Full Spanish (es) UI translation covering all menus, settings, and system strings
-5. Mermaid upgraded to v11.14.0, fixing subgraph edge rendering and adding new diagram features
-6. Live reload fixed: Notes modified by external tools now reload correctly, including files inside symlinked directories (closes #502)
-7. Launch and window fixes: Opening `.md` files directly from Finder no longer shows a blank window, and single-pane mode correctly restores notes on launch and quit
-8. Export and mode transitions: Fixed blank preview on note switch, PPT/Presentation mode exit timing, and export timeout handling
-9. Concurrency safety: Resolved ExportCache data race, scoped URL leaks, and stale-note assignment after async rendering
+1. PDF export now produces real paginated output: properly sized A4 pages with margins, heading bookmarks, and correct rendering of images and diagrams — no more endless single-column scrolls
+2. Split view scroll sync upgraded to line-based algorithm, keeping editor and preview locked in position even in documents with images or code blocks
+3. Symbolic link directories now work in the sidebar without duplication, and opening a single .md from Finder shows all sibling files as expected
+4. Switching to large notes no longer blocks the UI — content loads asynchronously so the app stays responsive
+5. Cmd+E wraps selected text as inline code; Shift+Cmd+E wraps it in a fenced code block
 
 ## 更新日志
-1. 预览更快：两阶段渲染让文字立即显示，本地图片在后台懒加载，明显减少预览首屏等待时间
-2. 终端快捷入口：新增 Cmd+J 全局快捷键，随时打开当前文件夹所在终端，文件夹右键菜单也有对应入口
-3. 复制路径：右键任意笔记可直接复制完整文件路径
-4. 西班牙语本地化：完整覆盖菜单、设置页和系统字符串的西班牙语翻译
-5. Mermaid 升级至 v11.14.0，修复子图连线渲染问题并新增图表功能
-6. 实时重载修复：其他工具修改的笔记现在能正确触发重载，含符号链接目录内的文件（closes #502）
-7. 启动与窗口修复：从 Finder 直接打开 `.md` 文件不再出现白屏，单栏模式下启动和退出时也不会再丢失笔记
-8. 导出与模式切换：修复切换笔记时预览空白、PPT 演示模式退出时序混乱、导出超时处理异常等问题
-9. 并发安全：修复 ExportCache 数据竞争、安全作用域 URL 泄漏、异步渲染后笔记状态错乱等问题
+1. PDF 导出终于真正分页了：标准 A4 尺寸、留白边距、标题生成书签，图片和图表也能正确渲染，再也不是一张拉很长的滚动页
+2. 分栏滚动从比例模式升级为行级同步，含图片或代码块的文档也能精准对齐，不再偏位
+3. 符号链接目录在侧栏正常显示不重复，从 Finder 打开单个 .md 也能看到同目录所有文件
+4. 切换大文件时主线程不再卡顿，内容异步加载，界面保持流畅
+5. Cmd+E 格式化行内代码，Shift+Cmd+E 包裹代码块
