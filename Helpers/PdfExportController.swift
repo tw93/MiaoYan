@@ -96,6 +96,10 @@ final class PdfExportController: NSObject {
             return
         }
         indexURL = url
+        // Root access mirrors the live preview (MPreviewView at the loadFileURL call site):
+        // notes can reference absolute image paths anywhere on disk, so narrowing here would
+        // break exports that the live preview can render. The HTML body is generated locally
+        // from trusted markdown, no untrusted JS runs in this offscreen view.
         webView?.loadFileURL(url, allowingReadAccessTo: URL(fileURLWithPath: "/"))
     }
 
@@ -254,8 +258,10 @@ final class PdfExportController: NSObject {
     // NSPrintOperation invokes this on a background thread when runModal finishes.
     // Mark nonisolated so Swift Concurrency doesn't trap the executor mismatch; hop to main
     // before touching any @MainActor state.
-    @objc nonisolated
-    private func printOperationDidRun(_ printOperation: NSPrintOperation, success: Bool, contextInfo: UnsafeMutableRawPointer?) {
+    @objc
+    nonisolated
+        private func printOperationDidRun(_ printOperation: NSPrintOperation, success: Bool, contextInfo: UnsafeMutableRawPointer?)
+    {
         Task { @MainActor [weak self] in
             self?.handlePrintCompletion(success: success)
         }
@@ -331,12 +337,17 @@ final class PdfExportController: NSObject {
     }
 
     private func escapeForJS(_ value: String) -> String {
+        // Backtick / ${ escapes are needed if value is ever interpolated into a template literal.
+        // Title currently lives inside single quotes, but escape defensively so the helper is
+        // safe to drop anywhere.
         value
             .replacingOccurrences(of: "\\", with: "\\\\")
             .replacingOccurrences(of: "\n", with: "\\n")
             .replacingOccurrences(of: "\r", with: "\\r")
             .replacingOccurrences(of: "\"", with: "\\\"")
             .replacingOccurrences(of: "'", with: "\\'")
+            .replacingOccurrences(of: "`", with: "\\`")
+            .replacingOccurrences(of: "${", with: "\\${")
     }
 
     // Navigation delegate held off-self so the controller can remain @MainActor and stay clean.

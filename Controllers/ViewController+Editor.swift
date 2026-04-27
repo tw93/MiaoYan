@@ -971,8 +971,9 @@ extension ViewController {
 
     func previewDidScroll(line: CGFloat) {
         guard splitScrollSuppressionCount == 0,
-              sessionSplitMode,
-              editArea.markdownView?.isUpdatingContent != true else { return }
+            sessionSplitMode,
+            editArea.markdownView?.isUpdatingContent != true
+        else { return }
         activeSplitScrollSource = .preview
         splitScrollSuppressionCount += 1
 
@@ -980,7 +981,8 @@ extension ViewController {
         let fraction = line - CGFloat(lineInt)
         let rect = editorLineRect(forLine: lineInt)
         guard rect != .zero,
-              let documentView = editAreaScroll.documentView else {
+            let documentView = editAreaScroll.documentView
+        else {
             splitScrollSuppressionCount -= 1
             return
         }
@@ -1001,21 +1003,15 @@ extension ViewController {
 
     private func editorLineRect(forLine line: Int) -> NSRect {
         guard let lm = editArea.layoutManager,
-              let tc = editArea.textContainer,
-              let storage = editArea.textStorage else { return .zero }
-        let ns = storage.string as NSString
-        var loc = 0
-        var idx = 0
-        ns.enumerateSubstrings(
-            in: NSRange(location: 0, length: ns.length),
-            options: [.byLines, .substringNotRequired]
-        ) { _, range, _, stop in
-            if idx == line { loc = range.location; stop.pointee = true }
-            idx += 1
-        }
-        let safeIdx = min(loc, storage.length)
+            let tc = editArea.textContainer,
+            let storage = editArea.textStorage
+        else { return .zero }
+        let starts = lineStarts(for: storage)
+        guard !starts.isEmpty else { return .zero }
+        let clamped = max(0, min(line, starts.count - 1))
+        let loc = min(starts[clamped], storage.length)
         let glyphRange = lm.glyphRange(
-            forCharacterRange: NSRange(location: safeIdx, length: 0),
+            forCharacterRange: NSRange(location: loc, length: 0),
             actualCharacterRange: nil
         )
         let rect = lm.boundingRect(forGlyphRange: glyphRange, in: tc)
@@ -1042,21 +1038,54 @@ extension ViewController {
     private func editorTopLine() -> CGFloat {
         let topY = editAreaScroll.contentView.bounds.origin.y
         guard let lm = editArea.layoutManager,
-              let tc = editArea.textContainer,
-              let storage = editArea.textStorage else { return 1 }
+            let tc = editArea.textContainer,
+            let storage = editArea.textStorage
+        else { return 1 }
         let adjustedY = max(topY - editArea.textContainerOrigin.y, 0)
         let charIndex = lm.characterIndex(
             for: NSPoint(x: 8, y: adjustedY),
             in: tc,
             fractionOfDistanceBetweenInsertionPoints: nil
         )
+        let starts = lineStarts(for: storage)
+        guard !starts.isEmpty else { return 1 }
+        let clamped = min(charIndex, storage.length)
+        // Binary search the largest line start <= clamped.
+        var lo = 0
+        var hi = starts.count - 1
+        while lo < hi {
+            let mid = (lo + hi + 1) / 2
+            if starts[mid] <= clamped { lo = mid } else { hi = mid - 1 }
+        }
+        return CGFloat(lo + 1)
+    }
+
+    // Lazily-populated, per-document cache of line-start character indices.
+    // textDidChange invalidates via invalidateEditorLineCache() so the next
+    // sync rebuilds. Length comparison is a defensive cross-check for missed
+    // invalidations (programmatic content swaps that bypass textDidChange).
+    private func lineStarts(for storage: NSTextStorage) -> [Int] {
+        if let cached = editorLineStartsCache, editorLineStartsCacheLength == storage.length {
+            return cached
+        }
         let ns = storage.string as NSString
-        var lineCount = 1
+        var starts: [Int] = [0]
+        starts.reserveCapacity(max(64, ns.length / 40))
         ns.enumerateSubstrings(
-            in: NSRange(location: 0, length: min(charIndex, ns.length)),
+            in: NSRange(location: 0, length: ns.length),
             options: [.byLines, .substringNotRequired]
-        ) { _, _, _, _ in lineCount += 1 }
-        return CGFloat(lineCount)
+        ) { _, _, enclosing, _ in
+            let next = enclosing.location + enclosing.length
+            if next < ns.length { starts.append(next) }
+        }
+        editorLineStartsCache = starts
+        editorLineStartsCacheLength = storage.length
+        return starts
+    }
+
+    func invalidateEditorLineCache() {
+        editorLineStartsCache = nil
+        editorLineStartsCacheLength = -1
     }
 
     func cancelTextSearch() {

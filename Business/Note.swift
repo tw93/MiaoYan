@@ -157,6 +157,27 @@ public class Note: NSObject {
         modifiedLocalAt = modifiedAt
     }
 
+    // Populates creation/modification dates and pin state directly from disk.
+    // Used by Storage's sandbox fallback path (App Store builds whose deferred
+    // directory enumeration drops the security-scoped extension) so a note
+    // built outside loadProjects ends up with the same metadata fields set.
+    func loadMetadataFromDisk() {
+        loadModifiedLocalAt()
+        creationDate = (try? url.resourceValues(forKeys: [.creationDateKey]))?.creationDate
+
+        #if CLOUDKIT
+        #else
+            let pinData =
+                (try? url.extendedAttribute(forName: AppIdentifier.pinKey))
+                ?? (try? url.extendedAttribute(forName: AppIdentifier.legacyPinKey))
+            if let data = pinData {
+                isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
+                    ptr.load(as: Bool.self)
+                }
+            }
+        #endif
+    }
+
     public func getExtensionForContainer() -> String {
         type.fileExtension
     }
@@ -432,7 +453,7 @@ public class Note: NSObject {
             return content
         }
 
-        let frontMatterStart = content.index(content.startIndex, offsetBy: 4) // After "---\n"
+        let frontMatterStart = content.index(content.startIndex, offsetBy: 4)  // After "---\n"
         let frontMatter = content[frontMatterStart..<endRange.lowerBound]
         let headerList = frontMatter.components(separatedBy: "\n")
 
@@ -812,6 +833,10 @@ public class Note: NSObject {
         isContentLoaded = false
     }
 
+    // Synchronous load. Blocks the calling thread for the entire file read; on
+    // large notes that means main-thread stalls. Prefer ensureContentLoadedAsync()
+    // for new code and limit this to paths where async is impractical (search
+    // iteration, save/unload of already-resident notes) or content is known small.
     public func ensureContentLoaded() {
         if !isContentLoaded {
             load()

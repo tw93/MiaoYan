@@ -434,7 +434,8 @@ extension MPreviewView {
                             })();
                         """
                     self.evaluateJavaScript(titleScript) { _, _ in
-                        self.evaluateJavaScript("""
+                        self.evaluateJavaScript(
+                            """
                             (function() {
                                 var tocNav = document.querySelector('.toc-nav');
                                 var tocTrigger = document.querySelector('.toc-hover-trigger');
@@ -465,7 +466,8 @@ extension MPreviewView {
                                         document.body.classList.remove('print-pdf');
                                         """, completionHandler: nil)
 
-                                    self.evaluateJavaScript("""
+                                    self.evaluateJavaScript(
+                                        """
                                         (function() {
                                             var tocNav = document.querySelector('.toc-nav');
                                             var tocTrigger = document.querySelector('.toc-hover-trigger');
@@ -1073,6 +1075,13 @@ extension MPreviewView {
         return 0
     }
 
+    // Page mapping is a linear approximation: heading.y is its offset in the live
+    // preview's continuous scroll, divided by totalHeight to get a [0,1] ratio,
+    // multiplied by page count. This skews when the printed PDF has images,
+    // tables, or page-break-inside: avoid blocks that force non-uniform page
+    // breaks. Bookmarks may land one page off in those cases. Acceptable v1
+    // tradeoff; a future pass could reverse-search PDFPage.string(for:) to
+    // locate the heading text on its real page.
     static func buildPdfOutline(pdfData: Data, headings: [PdfHeading], totalHeight: Double) -> Data {
         guard !headings.isEmpty, totalHeight > 0 else { return pdfData }
         guard let doc = PDFDocument(data: pdfData), doc.pageCount > 0 else { return pdfData }

@@ -130,6 +130,11 @@ class ViewController:
     var splitScrollSuppressionCount: Int = 0
     var activeSplitScrollSource: SplitScrollSource = .editor
     var lastSyncedLine: CGFloat = -1
+    // Line-start char-index cache for split scroll sync. Built lazily by
+    // editorTopLine() / editorLineRect(forLine:) so a 5000-line note doesn't
+    // re-walk the whole text storage on every scroll tick. Invalidated on edit.
+    var editorLineStartsCache: [Int]?
+    var editorLineStartsCacheLength: Int = -1
     var needsEditorModeUpdateAfterPreview = false
     var isUnfoldingLayout = false
     @IBOutlet var search: SearchTextField!
@@ -643,7 +648,7 @@ class ViewController:
         guard notesTableView != nil, storageOutlineView != nil, editArea != nil else {
             return true
         }
-        
+
         if menuItem.action == #selector(openInTerminal(_:)) {
             if let si = getSidebarItem(), si.isTrash() { return false }
             // Enable when a valid sidebar project is selected (covers single-mode and
@@ -1013,7 +1018,8 @@ class ViewController:
         var shouldSelectSidebarItem = true
         var targetProject: Project?
         var targetSidebarItem: SidebarItem?
-        let singleModeUrl = UserDefaultsManagement.singleModeURL
+        let singleModeUrl =
+            UserDefaultsManagement.singleModeURL
             ?? URL(fileURLWithPath: UserDefaultsManagement.singleModePath).resolvingSymlinksInPath()
         let isSingleModeDirectory =
             UserDefaultsManagement.isSingleMode && FileManager.default.directoryExists(atUrl: singleModeUrl)
@@ -1173,6 +1179,8 @@ class ViewController:
             let note = EditTextView.note,
             textView == editArea
         else { return }
+
+        invalidateEditorLineCache()
 
         // Block FS events so the debounced disk write does not trigger
         // reloadNote, which would overwrite in-progress editor content

@@ -318,7 +318,8 @@ class Storage {
 
     public func reconfigureForSingleMode(originalFileURL: URL? = nil, siblingFiles: [URL]? = nil) {
         guard UserDefaultsManagement.isSingleMode,
-              let singleModeUrl = UserDefaultsManagement.singleModeURL else {
+            let singleModeUrl = UserDefaultsManagement.singleModeURL
+        else {
             return
         }
 
@@ -359,21 +360,20 @@ class Storage {
             for fileURL in files {
                 let resolved = fileURL.resolvingSymlinksInPath()
                 guard FileManager.default.fileExists(atPath: resolved.path),
-                      !FileManager.default.directoryExists(atUrl: resolved)
+                    !FileManager.default.directoryExists(atUrl: resolved)
                 else { continue }
                 let note = Note(url: resolved, with: project)
-                note.loadModifiedLocalAt()
-                note.creationDate = (try? resolved.resourceValues(forKeys: [.creationDateKey]))?.creationDate
+                note.loadMetadataFromDisk()
                 noteList.append(note)
             }
         } else if noteList.isEmpty, let fileURL = originalFileURL {
             // Final fallback: just the opened file
             let resolved = fileURL.resolvingSymlinksInPath()
             if FileManager.default.fileExists(atPath: resolved.path),
-               !FileManager.default.directoryExists(atUrl: resolved)
+                !FileManager.default.directoryExists(atUrl: resolved)
             {
                 let note = Note(url: resolved, with: project)
-                note.loadModifiedLocalAt()
+                note.loadMetadataFromDisk()
                 noteList.append(note)
             }
         }
