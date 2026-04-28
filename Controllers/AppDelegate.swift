@@ -178,7 +178,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         alert.alertStyle = .informational
         alert.messageText = I18n.str("MiaoYan 4.0 is on the way")
         alert.informativeText = I18n.str(
-            "From 4.0 onward MiaoYan moves to the App Store. This is the last DMG release. If you have sponsored or contributed code, feel free to DM me for a redemption code."
+            "Thanks so much for five years of support. MiaoYan will keep going, it is my main editor after all. To prepare for iOS and cross-device support and reduce maintenance overhead, from 4.0 onward it will be distributed through the App Store. Source stays open and self-buildable. If you have sponsored or contributed code to MiaoYan, feel free to DM me for a redemption code."
         )
         alert.addButton(withTitle: I18n.str("Go to App Store"))
         alert.addButton(withTitle: I18n.str("Got It"))
