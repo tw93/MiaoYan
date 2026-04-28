@@ -30,7 +30,7 @@
 
 ## Installation
 
-Download from the **Mac App Store** — all future updates ship there. A paid download is the best way to support ongoing development; the open-source build offers the same experience.
+Download from the **Mac App Store**; all future updates ship there. A paid download is the best way to support ongoing development; the open-source build offers the same experience.
 
 <a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
 
