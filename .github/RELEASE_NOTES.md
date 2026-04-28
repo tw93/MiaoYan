@@ -4,9 +4,10 @@
 
 这个版本主要的变化：
 
-1. 应用内一次性迁移提示，方便老用户知道后续去哪里更新
-2. 分栏滚动从比例模式升级为行级同步，图片、代码块多的文档也能精准对齐
-3. 从 Finder 打开单个 .md 能正确展示同目录所有文件
+1. 从 4.0 起改为 App Store 发布，这是最后一个 DMG 版本，后续请在 App Store 更新
+2. 应用内一次性迁移提示，方便老用户知道后续去哪里更新
+3. 分栏滚动从比例模式升级为行级同步，图片、代码块多的文档也能精准对齐
+4. 从 Finder 打开单个 .md 能正确展示同目录所有文件
 
 没有用过的小伙伴，欢迎去 App Store 试试看，玩玩。
 
@@ -16,6 +17,7 @@ Thanks so much for five years of support. MiaoYan will keep going. To prepare fo
 
 Key changes in this release:
 
-1. One-time in-app notice letting open-source build users know where to follow future updates
-2. Split-view scroll sync upgraded to line-based algorithm, accurate even in documents with images or code blocks
-3. Opening a single .md from Finder now shows all sibling files correctly
+1. From 4.0 onward MiaoYan moves to the App Store — this is the last DMG release, future updates will be on the App Store
+2. One-time in-app notice letting open-source build users know where to follow future updates
+3. Split-view scroll sync upgraded to line-based algorithm, accurate even in documents with images or code blocks
+4. Opening a single .md from Finder now shows all sibling files correctly
