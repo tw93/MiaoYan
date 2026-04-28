@@ -1,15 +1,25 @@
-# V3.3.0 Glavenus 🦕
+# V3.4.0 Mizutsune 🌊
 
-## Changelog
-1. PDF export now produces real paginated output: properly sized A4 pages with margins, heading bookmarks, and correct rendering of images and diagrams — no more endless single-column scrolls
-2. Split view scroll sync upgraded to line-based algorithm, keeping editor and preview locked in position even in documents with images or code blocks
-3. Symbolic link directories now work in the sidebar without duplication, and opening a single .md from Finder shows all sibling files as expected
-4. Switching to large notes no longer blocks the UI — content loads asynchronously so the app stays responsive
-5. Cmd+E wraps selected text as inline code; Shift+Cmd+E wraps it in a fenced code block
+非常感谢大家这 5 年的陪伴，妙言会一直维护下去的，毕竟是我自己每天用的编辑器。
 
-## 更新日志
-1. PDF 导出终于真正分页了：标准 A4 尺寸、留白边距、标题生成书签，图片和图表也能正确渲染，再也不是一张拉很长的滚动页
-2. 分栏滚动从比例模式升级为行级同步，含图片或代码块的文档也能精准对齐，不再偏位
-3. 符号链接目录在侧栏正常显示不重复，从 Finder 打开单个 .md 也能看到同目录所有文件
-4. 切换大文件时主线程不再卡顿，内容异步加载，界面保持流畅
-5. Cmd+E 格式化行内代码，Shift+Cmd+E 包裹代码块
+考虑到后面 iOS 多端开发和降低维护成本，从 4.0 开始会统一在 App Store 发布，源码持续开源，自行编译没问题。任何赞助过或给妙言提交过代码的小伙伴，欢迎直接找我要兑换码。
+
+这个版本主要的变化：
+
+1. 应用内一次性迁移提示，方便老用户知道后续去哪里更新
+2. 分栏滚动从比例模式升级为行级同步，图片、代码块多的文档也能精准对齐
+3. 从 Finder 打开单个 .md 能正确展示同目录所有文件
+
+没有用过的小伙伴，欢迎去 App Store 试试看，玩玩。
+
+---
+
+Thanks so much for five years of support. MiaoYan will keep going — it's my main editor after all.
+
+To prepare for iOS and cross-device support and reduce maintenance overhead, from 4.0 onward MiaoYan will be distributed through the App Store. Source stays open and self-buildable. If you've sponsored or contributed code, feel free to DM me for a redemption code.
+
+Key changes in this release:
+
+1. One-time in-app notice letting open-source build users know where to follow future updates
+2. Split-view scroll sync upgraded to line-based algorithm, accurate even in documents with images or code blocks
+3. Opening a single .md from Finder now shows all sibling files correctly

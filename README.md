@@ -28,24 +28,17 @@
 - **Fast**: Swift 6 native, better performance than Electron-based apps
 - **Simple**: Lightweight, keyboard shortcuts, auto-formatting
 
-## Installation & Setup
+## Installation
 
-1. Download from the [Mac App Store](https://apps.apple.com/cn/app/miaoyan/id6759252269). Future updates will be continuously published there, warmly welcome! If you'd like to support me, a paid download on the App Store is a great way to do so. The open-source version offers the same experience.
+Download from the **Mac App Store** — all future updates ship there. A paid download is the best way to support ongoing development; the open-source build offers the same experience.
 
-   <a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
+<a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
 
-2. Or install by Homebrew:
-```bash
-brew install --cask miaoyan
-```
-3. Or install manually: download the latest DMG package from [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) (Requires macOS 11.5+)
-4. Open DMG and drag MiaoYan.app to Applications
-5. **First Launch**: Double-click MiaoYan.app to launch directly — the app is now notarized by Apple ✓
-6. Create a `MiaoYan` folder in iCloud Drive or your preferred location
-7. Open MiaoYan Preferences and set the storage location to this folder
-8. Click the "New Folder" icon in the top-left corner to create document categories and start writing
+After installing, create a `MiaoYan` folder in iCloud Drive or your preferred location, open Preferences (⌘,), set the storage path, and start writing. Existing sponsors can DM me directly for an App Store redemption code.
 
-After installation, we recommend exploring Preferences (⌘,) to discover MiaoYan's rich customization options, including edit modes, themes, fonts, and more to create your perfect writing environment.
+### Build from source / older versions
+
+From **4.0** onward MiaoYan is distributed through the App Store. You can still build from the MIT-licensed source, or grab a pre-4.0 DMG from [GitHub Releases](https://github.com/tw93/MiaoYan/releases).
 
 ## CLI
 

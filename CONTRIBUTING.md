@@ -76,22 +76,23 @@ Build artifacts land in `.vscode/DerivedData/` (VS Code) or your default Derived
 
 ## Release Build
 
-MiaoYan releases are **unsigned** to avoid strict macOS Gatekeeper blocking (signed but not notarized apps are blocked more strictly than unsigned ones).
+From **4.0** onward, MiaoYan binary distribution has moved to the Mac App Store. GitHub Releases continues to receive git tags and release notes, but no DMG or ZIP is uploaded.
 
-### Build Release DMG
+### App Store Release
 
 ```bash
-# Update version in Xcode first: Target → General → Version
-./scripts/build.sh <version>
+./scripts/build-appstore.sh <version>
 ```
 
-`scripts/build.sh` is available in-repo and will auto-delegate to `~/.config/miaoyan/build.sh` if present.
+Submit the resulting archive via Xcode Organizer or Transporter.
 
 ### Release Checklist
 
-1. Test DMG on a clean macOS (right-click → Open on first launch)
-2. Create Git tag: `git tag V2.5.0 && git push origin V2.5.0`
-3. Create GitHub Release and upload DMG
-4. Update appcast.xml for Sparkle auto-update
+1. Bump `MARKETING_VERSION` in `MiaoYan.xcodeproj/project.pbxproj` (all three configurations)
+2. Create Git tag: `git tag V<version> && git push origin V<version>`
+3. Create GitHub Release with release notes only, no binary attachment
+4. Submit App Store build via Transporter
+
+> **Self-build path still works.** `scripts/build.sh` produces a runnable Release build for local use or CI. Sparkle integration is retained so existing non-App Store installs can see the migration notice in appcast.
 
 Thank you for investing time in MiaoYan ❤️

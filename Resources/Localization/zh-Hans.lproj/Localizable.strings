@@ -271,3 +271,9 @@
 "You have unsaved changes. Reload will discard them." = "你有未保存的更改，重新加载将丢弃它们。";
 "Reload" = "重新加载";
 "Note reloaded~" = "笔记已刷新~";
+
+/* Store Migration Notice (shown once in non-AppStore builds only) */
+"MiaoYan 4.0 is on the way" = "妙言 4.0 快来了";
+"Thanks so much for five years of support. MiaoYan will keep going — it is my main editor after all. To prepare for iOS and cross-device support and reduce maintenance overhead, from 4.0 onward it will be distributed through the App Store. Source stays open and self-buildable. If you have sponsored or contributed code to MiaoYan, feel free to DM me for a redemption code." = "非常感谢大家这 5 年的陪伴，妙言会一直维护下去的，毕竟是我自己每天用的编辑器。考虑到后面 iOS 多端开发和降低维护成本，从 4.0 开始会统一在 App Store 发布，源码持续开源，自行编译没问题。任何赞助过或给妙言提交过代码的小伙伴，欢迎直接找我要兑换码。";
+"Go to App Store" = "去 App Store";
+"Got It" = "知道了";

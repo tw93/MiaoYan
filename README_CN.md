@@ -30,22 +30,15 @@
 
 ## 安装使用
 
-1. 从 [Mac App Store](https://apps.apple.com/cn/app/miaoyan/id6759252269) 下载，后续更多更新会持续在 App Store 发布，非常欢迎大家使用！如果想支持我，可以在 App Store 付费下载，开源版本使用体验完全一致。
+从 **Mac App Store** 下载，后续所有更新都会在那里发布。付费下载是支持持续维护和后续多端同步最直接的方式，开源版本使用体验完全一致。
 
-   <a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
+<a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
 
-2. 或 Homebrew 安装：
-```bash
-brew install --cask miaoyan
-```
-3. 或手动安装：从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) 下载最新 DMG 安装包（需要 macOS 11.5+）
-4. 打开 DMG，拖拽 MiaoYan.app 到应用程序文件夹
-5. **首次打开**：双击 MiaoYan.app 即可直接启动，App 已通过 Apple 公证 ✓
-6. 在 iCloud 云盘或其他位置创建 `MiaoYan` 文件夹
-7. 打开妙言偏好设置,将默认存储位置设置为该文件夹
-8. 点击左上角"新建文件夹"图标,创建文档分类,开始写作
+安装后在 iCloud 云盘或其他位置创建 `MiaoYan` 文件夹，打开设置 (⌘,) 指定存储位置，就可以开始写了。任何赞助过或给妙言提交过代码的小伙伴，欢迎直接找我要兑换码。
 
-安装完成后,建议打开设置 (⌘,) 浏览一下,妙言提供了丰富的自定义选项,包括编辑模式、主题样式、字体设置等,让你打造专属的写作环境。
+### 自行编译 / 历史版本
+
+从 **4.0** 开始妙言统一在 App Store 发布。你仍可以从开源代码自行编译，或在 [GitHub Releases](https://github.com/tw93/MiaoYan/releases) 下载 4.0 之前的 DMG。
 
 ## 命令行工具
 
