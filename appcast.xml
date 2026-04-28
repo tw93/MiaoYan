@@ -8,7 +8,7 @@
       <description><![CDATA[
   <h3>Mizutsune 🌊</h3>
   <ol>
-    <li>From 4.0 onward MiaoYan moves to the App Store — this is the last DMG release, future updates will be on the App Store</li>
+    <li>From 4.0 onward MiaoYan moves to the App Store. This is the last DMG release; future updates will be on the App Store</li>
     <li>One-time in-app notice letting open-source build users know where to follow future updates</li>
     <li>Split-view scroll sync upgraded to line-based algorithm, accurate even in documents with images or code blocks</li>
     <li>Opening a single .md from Finder now shows all sibling files correctly</li>
@@ -21,7 +21,7 @@
     <li>从 Finder 打开单个 .md 能正确展示同目录所有文件</li>
   </ol>
           ]]>      </description>
-      <pubDate>Tue, 28 Apr 2026 06:21:21 +0000</pubDate>
+      <pubDate>Tue, 28 Apr 2026 06:21:56 +0000</pubDate>
       <enclosure url="https://github.com/tw93/MiaoYan/releases/download/V3.4.0/MiaoYan_V3.4.0.zip" sparkle:shortVersionString="3.4.0" sparkle:version="3.4.0" sparkle:edSignature="lrSBS2U+ix4onF4aq7IFWr7ByV0S9bubMhoE9lrlyQR1uTqejx4x9RdESw9Eo58JXpkSBKQHa5P/o/g9CJfJAw==" length="24423679" type="application/octet-stream"/>
       <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
     </item>
