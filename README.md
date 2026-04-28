@@ -78,8 +78,6 @@ Why not WYSIWYG like Typora? We prioritize pure Markdown editing experience, and
 - Got ideas or bugs? Open an issue or PR, feel free to contribute your best AI model.
 - I have two cats, TangYuan and Coke. If you think MiaoYan delights your life, you can feed them <a href="https://miaoyan.app/cats.html?name=MiaoYan" target="_blank">canned food 🥩</a>.
 
-<a href="https://miaoyan.app/cats.html?name=MiaoYan"><img src="https://cdn.jsdelivr.net/gh/tw93/MiaoYan@main/assets/sponsors.svg" width="1000" loading="lazy" /></a>
-
 ## Acknowledgments
 
 - [glushchenko/fsnotes](https://github.com/glushchenko/fsnotes) - Initial project structure reference
@@ -88,11 +86,6 @@ Why not WYSIWYG like Typora? We prioritize pure Markdown editing experience, and
 - [raspu/Highlightr](https://github.com/raspu/Highlightr) - Syntax highlighting
 - [TsangerType](https://tsanger.cn/product) - TsangerJinKai font (default font)
 - [hakimel/reveal.js](https://github.com/hakimel/reveal.js) - PPT presentation framework
-- [Vercel](https://vercel.com?utm_source=tw93&utm_campaign=oss) - Static hosting for [miaoyan.app](https://miaoyan.app/)  
-  <a href="https://vercel.com?utm_source=tw93&utm_campaign=oss">
-    <img src="https://gw.alipayobjects.com/zos/k/wr/powered-by-vercel.svg" width="136" alt="Powered by Vercel" />
-  </a>
-
 ## License
 
 MIT License - Feel free to use and contribute.

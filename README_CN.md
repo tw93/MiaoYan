@@ -75,8 +75,6 @@ miao update             # 更新 CLI
 
 ## 支持
 
-<a href="https://miaoyan.app/cats.html"><img src="https://cdn.jsdelivr.net/gh/tw93/MiaoYan@main/assets/sponsors.svg" width="1000px" /></a>
-
 1. 我有两只猫：汤圆、可乐，若妙言让你开心，<a href="https://miaoyan.app/cats.html" target="_blank">请她们吃罐头 🥩</a>。
 2. 如果你喜欢妙言，欢迎给它一个 Star，更欢迎推荐给你志同道合的朋友使用。
 3. 可以关注我的 [Twitter](https://twitter.com/HiTw93) 获取最新的更新消息，也欢迎加入 [Telegram](https://t.me/+GclQS9ZnxyI2ODQ1) 聊天群。
@@ -89,8 +87,6 @@ miao update             # 更新 CLI
 - [raspu/Highlightr](https://github.com/raspu/Highlightr) - 语法高亮支持
 - [仓耳字库](https://tsanger.cn/product) - 仓耳今楷字体(默认字体)
 - [hakimel/reveal.js](https://github.com/hakimel/reveal.js) - PPT 演示框架
-- [Vercel](https://vercel.com?utm_source=tw93&utm_campaign=oss) - [miaoyan.app](https://miaoyan.app/) 静态托管支持
-
 ## 协议
 
 MIT License - 欢迎自由使用与贡献
