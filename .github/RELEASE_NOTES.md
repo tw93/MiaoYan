@@ -17,7 +17,7 @@ Thanks so much for five years of support. MiaoYan will keep going. To prepare fo
 
 Key changes in this release:
 
-1. From 4.0 onward MiaoYan moves to the App Store — this is the last DMG release, future updates will be on the App Store
+1. From 4.0 onward MiaoYan moves to the App Store. This is the last DMG release; future updates will be on the App Store
 2. One-time in-app notice letting open-source build users know where to follow future updates
 3. Split-view scroll sync upgraded to line-based algorithm, accurate even in documents with images or code blocks
 4. Opening a single .md from Finder now shows all sibling files correctly
