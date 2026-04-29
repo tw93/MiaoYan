@@ -5,7 +5,7 @@
 "Add" = "追加";
 
 /* No comment provided by engineer. */
-"Are you sure you want to irretrievably delete %d note(s)?" = "%dのメモを削除しても宜しいでしょうか？";
+"Are you sure you want to move %d note(s) to the system Trash?" = "%d件のメモをシステムのゴミ箱に移動しますか？";
 
 /* No comment provided by engineer. */
 "Are you sure you want to remove project \"%@\" and all files inside?" = "フォルダ\"%@\"と中の全てファイルを削除してもよろしいですか?";
@@ -136,7 +136,7 @@
 "Remove" = "削除";
 
 /* No comment provided by engineer. */
-"Remove note(s)" = "メモを削除しても宜しいでしょうか";
+"Move to Trash" = "ゴミ箱に移動";
 
 /* No comment provided by engineer. */
 "Rename Folder" = "フォルダの名前を変更";
@@ -150,6 +150,9 @@
 
 /* No comment provided by engineer. */
 "Strikethrough" = "取り消し線";
+
+/* Delete menu */
+"The note(s) will be moved to the system Trash and can be recovered." = "メモはシステムのゴミ箱に移動され、後で復元できます。";
 
 /* Delete menu */
 "This action cannot be undone." = "この操作は元に戻せません。宜しいでしょうか？";
@@ -271,3 +274,11 @@
 "You have unsaved changes. Reload will discard them." = "未保存の変更があります。再読み込みすると破棄されます。";
 "Reload" = "再読み込み";
 "Note reloaded~" = "ノートを再読み込みしました~";
+
+/* Version History */
+"Version History" = "バージョン履歴";
+"Current Version" = "現在のバージョン";
+"Restore to This Version" = "このバージョンに復元";
+"Restored to version from %@" = "%@ のバージョンに復元しました";
+"No Version History" = "バージョン履歴はありません";
+"Versions are saved automatically every 5 minutes while editing" = "編集中は5分ごとに自動保存されます";

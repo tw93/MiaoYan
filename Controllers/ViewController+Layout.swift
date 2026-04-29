@@ -42,6 +42,20 @@ extension ViewController {
         titleTopConstraint.constant = isNarrow ? LayoutConstants.titleTopNarrow : LayoutConstants.titleTopNormal
     }
 
+    // MARK: - Sidebar Style
+
+    func applySidebarStyle() {
+        guard #available(macOS 26, *) else { return }
+        let isCustom = UserDefaultsManagement.appearanceType == .Custom
+
+        storageOutlineView.backgroundColor = isCustom ? Theme.backgroundColor : .clear
+        storageOutlineView.enclosingScrollView?.drawsBackground = isCustom
+        outlineHeader?.needsDisplay = true
+
+        notesTableView.backgroundColor = isCustom ? Theme.backgroundColor : .clear
+        notesScrollView.drawsBackground = isCustom
+    }
+
     // MARK: - Core Panel Operations
 
     private var isPresentationMode: Bool {

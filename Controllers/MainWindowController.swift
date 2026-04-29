@@ -261,17 +261,22 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
             window.backgroundColor = backgroundColor
 
             if let contentView = window.contentView {
-                contentView.wantsLayer = true
-                let effectiveAppearance = contentView.effectiveAppearance
-                let resolvedBackground = backgroundColor.resolvedColor(for: effectiveAppearance)
-                contentView.layer?.backgroundColor = resolvedBackground.cgColor
-                contentView.needsDisplay = true
+                if #available(macOS 26, *), UserDefaultsManagement.appearanceType != .Custom {
+                    contentView.needsDisplay = true
+                } else {
+                    contentView.wantsLayer = true
+                    let effectiveAppearance = contentView.effectiveAppearance
+                    let resolvedBackground = backgroundColor.resolvedColor(for: effectiveAppearance)
+                    contentView.layer?.backgroundColor = resolvedBackground.cgColor
+                    contentView.needsDisplay = true
+                }
             }
 
             window.contentView?.subviews.forEach { $0.needsDisplay = true }
         }
 
         if let vc = AppContext.shared.viewController {
+            vc.applySidebarStyle()
             if let sidebarSplit = vc.sidebarSplitView as? SidebarSplitView {
                 sidebarSplit.displayIfNeeded()
             }

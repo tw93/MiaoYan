@@ -63,17 +63,8 @@ extension ViewController {
         if let id = sender.identifier {
             let key = String(id.rawValue.dropFirst(3))
             guard let sortBy = SortBy(rawValue: key) else { return }
-
             UserDefaultsManagement.sort = sortBy
-
-            if let submenu = sortByOutlet?.submenu {
-                for item in submenu.items {
-                    item.state = NSControl.StateValue.off
-                }
-            }
-
-            sender.state = NSControl.StateValue.on
-
+            syncSortFieldMenuState()
             reSortByDirection()
         }
     }
@@ -876,10 +867,10 @@ extension ViewController {
         vc.alert = NSAlert()
         guard let alert = vc.alert else { return }
 
-        alert.messageText = String(format: I18n.str("Are you sure you want to irretrievably delete %d note(s)?"), notes.count)
+        alert.messageText = String(format: I18n.str("Are you sure you want to move %d note(s) to the system Trash?"), notes.count)
 
-        alert.informativeText = I18n.str("This action cannot be undone.")
-        alert.addButton(withTitle: I18n.str("Remove note(s)"))
+        alert.informativeText = I18n.str("The note(s) will be moved to the system Trash and can be recovered.")
+        alert.addButton(withTitle: I18n.str("Move to Trash"))
         alert.addButton(withTitle: I18n.str("Cancel"))
         alert.beginSheetModal(for: window) { (returnCode: NSApplication.ModalResponse) in
             if returnCode == NSApplication.ModalResponse.alertFirstButtonReturn {
@@ -1022,6 +1013,11 @@ extension ViewController {
             noteMenu.removeItem(prevMenu)
         }
 
+        let historyTitle = I18n.str("Version History")
+        if let prevHistory = noteMenu.item(withTitle: historyTitle) {
+            noteMenu.removeItem(prevHistory)
+        }
+
         let moveMenuItem = NSMenuItem()
         moveMenuItem.title = I18n.str("Move")
         moveMenuItem.setIdentifier("noteMenu.move")
@@ -1032,6 +1028,18 @@ extension ViewController {
         {
             image.isTemplate = true
             moveMenuItem.image = image
+        }
+
+        if !note.isTrash() {
+            let historyItem = NSMenuItem()
+            historyItem.title = historyTitle
+            historyItem.action = #selector(vc.showVersionHistory(_:))
+            historyItem.keyEquivalent = "H"
+            historyItem.keyEquivalentModifierMask = [.command]
+            if #available(macOS 11, *) {
+                historyItem.image = NSImage(systemSymbolName: "clock.arrow.circlepath", accessibilityDescription: nil)
+            }
+            noteMenu.addItem(historyItem)
         }
 
         noteMenu.addItem(moveMenuItem)
@@ -1085,26 +1093,12 @@ extension ViewController {
         noteMenu.setSubmenu(moveMenu, for: moveMenuItem)
     }
 
-    func loadSortBySetting() {
-        let viewLabel = I18n.str("View")
-        let sortByLabel = I18n.str("Sort by")
-
-        guard
-            let menu = NSApp.menu,
-            let view = menu.item(withTitle: viewLabel),
-            let submenu = view.submenu,
-            let sortMenu = submenu.item(withTitle: sortByLabel),
-            let sortItems = sortMenu.submenu
-        else {
-            return
-        }
-
-        let sort = UserDefaultsManagement.sort
-
-        for item in sortItems.items {
-            if let id = item.identifier, id.rawValue == "SB.\(sort.rawValue)" {
-                item.state = NSControl.StateValue.on
-            }
+    @IBAction func showVersionHistory(_ sender: Any) {
+        guard let note = notesTableView.getSelectedNote() else { return }
+        NoteVersionManager.shared.saveVersionIfNeeded(for: note, force: false) { [weak self] in
+            guard let self else { return }
+            let controller = VersionHistoryViewController(note: note)
+            self.presentAsSheet(controller)
         }
     }
 
@@ -1245,6 +1239,15 @@ extension ViewController {
             }
 
             return true
+        }
+
+        if event.modifierFlags.contains(.command),
+            event.modifierFlags.contains(.shift),
+            !event.modifierFlags.contains(.control),
+            event.keyCode == kVK_ANSI_H
+        {
+            showVersionHistory(self)
+            return false
         }
 
         if event.modifierFlags.contains(.shift), event.modifierFlags.contains(.control), event.keyCode == kVK_ANSI_H {

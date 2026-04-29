@@ -66,6 +66,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     private let extraTopPadding: CGFloat = 8
     public static var fontColor: NSColor { Theme.textColor }
     private var editorSearchBar: PreviewSearchBar?
+    private var currentFillTask: Task<Void, Never>?
     private var editorSearchBarConstraints: [NSLayoutConstraint] = []
     private var editorSearchBarHeightConstraint: NSLayoutConstraint?
     private var editorSearchRanges: [NSRange] = []
@@ -474,8 +475,14 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             return
         }
 
-        // Call the internal implementation asynchronously
-        Task { @MainActor in
+        // Cancel any in-flight fill to prevent a stale task from overwriting the
+        // textStorage after a newer note has already been selected. Without this,
+        // Task A (note A) can resume its await after Task B (note B) has committed
+        // note B's content, then overwrite textStorage with note A's content while
+        // EditTextView.note still points to note B -- causing note A's content to
+        // be saved into note B's file on the next save.
+        currentFillTask?.cancel()
+        currentFillTask = Task { @MainActor in
             await _performFill(note: note, options: options, viewController: viewController)
         }
     }
@@ -490,6 +497,10 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
         EditTextView.note = note
         await note.ensureContentLoadedAsync()
+        // After the async content load, verify this fill is still the active one.
+        // A newer fill task may have set EditTextView.note to a different note;
+        // proceeding would overwrite textStorage with stale content and corrupt saves.
+        guard EditTextView.note === note else { return }
         UserDefaultsManagement.lastSelectedURL = note.url
         viewController.updateTitle(newTitle: note.getTitleWithoutLabel())
         if !options.preserveUndo {
@@ -686,6 +697,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
     }
     public func clear() {
+        currentFillTask?.cancel()
+        currentFillTask = nil
         hideSearchBar()
         splitViewUpdateTimer?.invalidate()
         splitViewUpdateTimer = nil

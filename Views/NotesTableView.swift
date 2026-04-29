@@ -53,7 +53,11 @@ class NotesTableView: NSTableView {
     override func draw(_ dirtyRect: NSRect) {
         dataSource = adapter
         delegate = adapter
-        backgroundColor = Theme.backgroundColor
+        if #available(macOS 26, *), UserDefaultsManagement.appearanceType != .Custom {
+            backgroundColor = .clear
+        } else {
+            backgroundColor = Theme.backgroundColor
+        }
         super.draw(dirtyRect)
     }
 

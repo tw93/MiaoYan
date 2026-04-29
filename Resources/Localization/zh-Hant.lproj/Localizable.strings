@@ -28,7 +28,7 @@
 "Add" = "加入";
 
 /* No comment provided by engineer. */
-"Are you sure you want to irretrievably delete %d note(s)?" = "您確定要永久刪除 %d 篇筆記嗎？";
+"Are you sure you want to move %d note(s) to the system Trash?" = "您確定要將 %d 篇筆記移入系統廢紙簍嗎？";
 
 /* No comment provided by engineer. */
 "Are you sure you want to remove project \"%@\" and all files inside?" = "您確定要刪除「%@」專案及其所有檔案嗎？";
@@ -138,7 +138,7 @@
 "Remove Link" = "移除連結";
 
 /* No comment provided by engineer. */
-"Remove note(s)" = "移除筆記";
+"Move to Trash" = "移入廢紙簍";
 
 /* No comment provided by engineer. */
 "Rename Folder" = "重新命名檔案夾";
@@ -155,6 +155,9 @@
 
 /* No comment provided by engineer. */
 "This %@ under this folder already exists!" = "此檔案夾下的 $@ 已經存在！";
+
+/* Delete menu */
+"The note(s) will be moved to the system Trash and can be recovered." = "筆記將被移入系統廢紙簍，可在廢紙簍中找回。";
 
 /* Delete menu */
 "This action cannot be undone." = "本動作不可復原。";
@@ -248,3 +251,11 @@
 "You have unsaved changes. Reload will discard them." = "你有未儲存的更改，重新載入將會丟棄它們。";
 "Reload" = "重新載入";
 "Note reloaded~" = "筆記已重新載入~";
+
+/* Version History */
+"Version History" = "版本歷史";
+"Current Version" = "目前版本";
+"Restore to This Version" = "還原到此版本";
+"Restored to version from %@" = "已還原到 %@ 的版本";
+"No Version History" = "暫無歷史版本";
+"Versions are saved automatically every 5 minutes while editing" = "編輯時每 5 分鐘自動儲存一個版本";

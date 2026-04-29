@@ -5,7 +5,7 @@
 "Add" = "Añadir";
 
 /* No comment provided by engineer. */
-"Are you sure you want to irretrievably delete %d note(s)?" = "¿Estás seguro de que deseas eliminar irremediablemente %d nota(s)?";
+"Are you sure you want to move %d note(s) to the system Trash?" = "¿Estás seguro de que deseas mover %d nota(s) a la Papelera del sistema?";
 
 /* No comment provided by engineer. */
 "Are you sure you want to remove project \"%@\" and all files inside?" = "¿Estás seguro de que deseas eliminar el proyecto \"%@\" y todos los archivos en su interior?";
@@ -136,7 +136,7 @@
 "Remove" = "Eliminar";
 
 /* No comment provided by engineer. */
-"Remove note(s)" = "Eliminar nota(s)";
+"Move to Trash" = "Mover a la Papelera";
 
 /* No comment provided by engineer. */
 "Rename Folder" = "Renombrar Carpeta";
@@ -149,6 +149,9 @@
 
 /* No comment provided by engineer. */
 "Strikethrough" = "Tachado";
+
+/* Delete menu */
+"The note(s) will be moved to the system Trash and can be recovered." = "Las notas se moverán a la Papelera del sistema y podrán recuperarse.";
 
 /* Delete menu */
 "This action cannot be undone." = "Esta acción no se puede deshacer.";
@@ -269,3 +272,11 @@
 "You have unsaved changes. Reload will discard them." = "Tienes cambios sin guardar. Recargar los descartará.";
 "Reload" = "Recargar";
 "Note reloaded~" = "Nota recargada~";
+
+/* Version History */
+"Version History" = "Historial de versiones";
+"Current Version" = "Versión actual";
+"Restore to This Version" = "Restaurar a esta versión";
+"Restored to version from %@" = "Restaurado a la versión del %@";
+"No Version History" = "Sin historial de versiones";
+"Versions are saved automatically every 5 minutes while editing" = "Las versiones se guardan automáticamente cada 5 minutos al editar";

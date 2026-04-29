@@ -25,10 +25,20 @@ class SearchFieldCell: NSSearchFieldCell {
         path.fill()
     }
 
+    private func isFocused(in controlView: NSView) -> Bool {
+        guard let window = controlView.window,
+              let firstResponder = window.firstResponder as? NSTextView,
+              window.fieldEditor(false, for: nil) != nil
+        else { return false }
+        return controlView.isEqual(to: firstResponder.delegate)
+    }
+
     private func drawBorder(in frame: NSRect, appearance: NSAppearance?) {
+        let focused = isFocused(in: controlView!)
         let path = NSBezierPath(roundedRect: frame, xRadius: Self.height / 2, yRadius: Self.height / 2)
-        Theme.dividerColor.resolvedColor(for: appearance).setStroke()
-        path.lineWidth = 1.0
+        let borderColor = focused ? Theme.accentColor.withAlphaComponent(0.7) : Theme.dividerColor.resolvedColor(for: appearance)
+        borderColor.setStroke()
+        path.lineWidth = focused ? 1.5 : 1.0
         path.stroke()
     }
 
@@ -77,6 +87,18 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
         MainActor.assumeIsolated {
             configureSearchField()
         }
+    }
+
+    override func becomeFirstResponder() -> Bool {
+        let result = super.becomeFirstResponder()
+        needsDisplay = true
+        return result
+    }
+
+    override func resignFirstResponder() -> Bool {
+        let result = super.resignFirstResponder()
+        needsDisplay = true
+        return result
     }
 
     @MainActor private func configureSearchField() {

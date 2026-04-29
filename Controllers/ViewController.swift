@@ -227,10 +227,21 @@ class ViewController:
             guard let ascending = ascendingCheckItem, let descending = descendingCheckItem else { return }
             ascending.state = UserDefaultsManagement.sortDirection ? .off : .on
             descending.state = UserDefaultsManagement.sortDirection ? .on : .off
+            syncSortFieldMenuState()
             return
         }
         ascending.state = UserDefaultsManagement.sortDirection ? .off : .on
         descending.state = UserDefaultsManagement.sortDirection ? .on : .off
+        syncSortFieldMenuState()
+    }
+
+    func syncSortFieldMenuState() {
+        guard let submenu = sortByOutlet?.submenu else { return }
+        let current = UserDefaultsManagement.sort
+        for item in submenu.items {
+            guard let id = item.identifier, id.rawValue.hasPrefix("SB.") else { continue }
+            item.state = id.rawValue == "SB.\(current.rawValue)" ? .on : .off
+        }
     }
 
     @IBOutlet var titleBarView: TitleBarView! {
@@ -383,6 +394,7 @@ class ViewController:
         searchQueue.maxConcurrentOperationCount = 1
         notesTableView.loadingQueue.maxConcurrentOperationCount = 1
         notesTableView.loadingQueue.qualityOfService = QualityOfService.userInteractive
+        applySidebarStyle()
     }
 
     /// Centralized method to update toolbar button tint colors based on current state

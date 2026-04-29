@@ -3,7 +3,7 @@ import Cocoa
 
 class NoteRowView: ThemedTableRowView {
     override func selectionRect() -> NSRect {
-        let margin: CGFloat = 11
+        let margin: CGFloat = 8
         return NSRect(
             x: margin,
             y: 2,

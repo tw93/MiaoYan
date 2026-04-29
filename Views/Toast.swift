@@ -5,7 +5,7 @@ struct ToastConfiguration: Sendable {
     var animationDuration: TimeInterval = 1.5
     var fadeKeyTimes: [NSNumber] = [0, 0.05, 0.85, 1]
     var fadeValues: [Float] = [0, 0.92, 0.92, 0]
-    var cornerRadius: CGFloat = 8
+    var cornerRadius: CGFloat = 12
     var horizontalPadding: CGFloat = 12
     var verticalPadding: CGFloat = 6
     var minWidth: CGFloat = 80
@@ -182,6 +182,9 @@ final class ToastManager {
         anim.isRemovedOnCompletion = true
         anim.fillMode = .removed
         anim.calculationMode = .linear
+
+        toast.layer?.borderWidth = 0.5
+        toast.layer?.borderColor = NSColor.white.withAlphaComponent(0.12).cgColor
 
         CATransaction.begin()
         CATransaction.setCompletionBlock { [weak self, weak toast] in

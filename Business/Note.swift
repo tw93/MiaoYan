@@ -280,7 +280,8 @@ public class Note: NSObject {
         guard FileManager.default.fileExists(atPath: url.path) else { return nil }
 
         if isTrash() {
-            try? FileManager.default.removeItem(at: url)
+            try? FileManager.default.trashItem(at: url, resultingItemURL: nil)
+            NoteVersionManager.shared.removeVersions(for: self)
             return nil
         }
 
@@ -563,6 +564,7 @@ public class Note: NSObject {
             try FileManager.default.setAttributes(attributes, ofItemAtPath: dst.path)
 
             modifiedLocalAt = Date()
+            NoteVersionManager.shared.saveVersionIfNeeded(for: self)
         } catch {
             AppDelegate.trackError(error, context: "Note.writeError")
             AppDelegate.trackError(error, context: "Note.write")
