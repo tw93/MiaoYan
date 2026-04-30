@@ -242,8 +242,19 @@ class NotesTableView: NSTableView {
         if noteList.indices.contains(selectedRow) {
             let note = noteList[selectedRow]
             if let currentNote = EditTextView.note, currentNote != note, vc.shouldUseEditorTextContent {
-                vc.editArea.saveTextStorageContent(to: currentNote)
-                currentNote.save()
+                // Tripwire: after the fill() epoch fix, EditTextView.note and
+                // textStorage are in sync. The guard catches any future regression
+                // before it writes the wrong bytes into the outgoing note's file.
+                if EditTextView.note?.isEqualURL(url: currentNote.url) == true {
+                    vc.editArea.saveTextStorageContent(to: currentNote)
+                    currentNote.save()
+                } else {
+                    let mismatch = NSError(
+                        domain: "com.tw93.miaoyan.race",
+                        code: 2,
+                        userInfo: [NSLocalizedDescriptionKey: "EditTextView.note URL drift in tableViewSelectionDidChange"])
+                    AppDelegate.trackError(mismatch, context: "NotesTableView.tableViewSelectionDidChange.urlGuard")
+                }
             }
 
             if !suppressSelectionSideEffects {

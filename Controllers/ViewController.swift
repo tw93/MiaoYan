@@ -394,7 +394,6 @@ class ViewController:
         searchQueue.maxConcurrentOperationCount = 1
         notesTableView.loadingQueue.maxConcurrentOperationCount = 1
         notesTableView.loadingQueue.qualityOfService = QualityOfService.userInteractive
-        applySidebarStyle()
     }
 
     /// Centralized method to update toolbar button tint colors based on current state
@@ -734,9 +733,13 @@ class ViewController:
         // Unify button sizes: set all to 20x20 and remove borders/backgrounds for consistency
         let toolbarButtons = [formatButton, previewButton, presentationButton, toggleListButton, toggleSplitButton].compactMap { $0 }
         for btn in toolbarButtons {
-            // Unify style to match programmatically created buttons
-            btn.isBordered = false
-            btn.bezelStyle = .texturedRounded
+            if #available(macOS 26, *) {
+                btn.bezelStyle = .glass
+                btn.isBordered = true
+            } else {
+                btn.isBordered = false
+                btn.bezelStyle = .texturedRounded
+            }
             btn.contentTintColor = .secondaryLabelColor
             btn.imagePosition = .imageOnly
 
@@ -769,7 +772,13 @@ class ViewController:
         if toggleSplitButton == nil {
             let button = NSButton()
             button.translatesAutoresizingMaskIntoConstraints = false
-            button.bezelStyle = .texturedRounded
+            if #available(macOS 26, *) {
+                button.bezelStyle = .glass
+                button.isBordered = true
+            } else {
+                button.bezelStyle = .texturedRounded
+                button.isBordered = false
+            }
 
             // Use custom icon (Static split icon for both states per user request)
             if let image = NSImage(named: "icon_editor_split") {
@@ -779,7 +788,6 @@ class ViewController:
 
             button.target = self
             button.action = #selector(toggleSplitMode(_:))
-            button.isBordered = false
             button.contentTintColor = .secondaryLabelColor
             button.toolTip = I18n.str("Toggle Split Mode")
 
@@ -790,7 +798,13 @@ class ViewController:
         if toggleListButton == nil {
             let listButton = NSButton()
             listButton.translatesAutoresizingMaskIntoConstraints = false
-            listButton.bezelStyle = .texturedRounded
+            if #available(macOS 26, *) {
+                listButton.bezelStyle = .glass
+                listButton.isBordered = true
+            } else {
+                listButton.bezelStyle = .texturedRounded
+                listButton.isBordered = false
+            }
             listButton.imagePosition = .imageOnly
 
             // Use custom icon
@@ -801,7 +815,6 @@ class ViewController:
 
             listButton.target = self
             listButton.action = #selector(toggleLayoutCycle(_:))
-            listButton.isBordered = false
             listButton.contentTintColor = .secondaryLabelColor
             listButton.toolTip = I18n.str("Toggle Note List")
 
@@ -1191,6 +1204,19 @@ class ViewController:
             let note = EditTextView.note,
             textView == editArea
         else { return }
+
+        // Tripwire: after the fill() epoch fix, EditTextView.note and textStorage
+        // are always in sync at this point. If a future refactor reintroduces a
+        // stale-pointer path the guard fires and we skip the save instead of
+        // writing the wrong note's bytes to disk.
+        guard EditTextView.note?.isEqualURL(url: note.url) == true else {
+            let mismatch = NSError(
+                domain: "com.tw93.miaoyan.race",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "EditTextView.note URL drift in textDidChange"])
+            AppDelegate.trackError(mismatch, context: "ViewController.textDidChange.urlGuard")
+            return
+        }
 
         invalidateEditorLineCache()
 

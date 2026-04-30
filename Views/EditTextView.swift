@@ -67,6 +67,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     public static var fontColor: NSColor { Theme.textColor }
     private var editorSearchBar: PreviewSearchBar?
     private var currentFillTask: Task<Void, Never>?
+    private var fillEpoch: UInt64 = 0
     private var editorSearchBarConstraints: [NSLayoutConstraint] = []
     private var editorSearchBarHeightConstraint: NSLayoutConstraint?
     private var editorSearchRanges: [NSRange] = []
@@ -475,32 +476,52 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             return
         }
 
-        // Cancel any in-flight fill to prevent a stale task from overwriting the
-        // textStorage after a newer note has already been selected. Without this,
-        // Task A (note A) can resume its await after Task B (note B) has committed
-        // note B's content, then overwrite textStorage with note A's content while
-        // EditTextView.note still points to note B -- causing note A's content to
-        // be saved into note B's file on the next save.
+        // Snapshot the outgoing note so its last-known-good state is in version
+        // history regardless of when its next Note.write() lands. The 300s
+        // throttle in saveVersionIfNeeded would otherwise leave a gap if the
+        // user navigates away inside that window. force:true bypasses the
+        // throttle; content dedup still skips no-op snapshots.
+        if let previous = EditTextView.note, previous !== note {
+            NoteVersionManager.shared.saveVersionIfNeeded(for: previous, force: true)
+        }
+
+        // Two distinct races have to be defended against here:
+        //   1. Stale-task race: an older fill task resumes from its await after a
+        //      newer fill has already published its content. Cancellation plus the
+        //      epoch guard below makes the older task no-op on resume.
+        //   2. Stale-textStorage race: while the *current* fill is suspended on
+        //      ensureContentLoadedAsync, EditTextView.note already points at the
+        //      new note but textStorage still holds the previous note's bytes.
+        //      Any save trigger (textDidChange from a pending IME commit, a
+        //      table-row click that fires another selection change, etc.) would
+        //      then write the previous note's content into the new note's file.
+        //      The fix is to defer the EditTextView.note assignment until the
+        //      same synchronous main-actor stretch that updates textStorage, so
+        //      the two are always in sync.
+        // fillEpoch is the authoritative cancellation signal; the cancel call is
+        // kept so long-running preview work can short-circuit cooperatively.
+        fillEpoch &+= 1
+        let epoch = fillEpoch
         currentFillTask?.cancel()
         currentFillTask = Task { @MainActor in
-            await _performFill(note: note, options: options, viewController: viewController)
+            await _performFill(note: note, options: options, viewController: viewController, epoch: epoch)
         }
     }
 
     // Internal implementation method
-    private func _performFill(note: Note, options: FillOptions, viewController: ViewController) async {
+    private func _performFill(note: Note, options: FillOptions, viewController: ViewController, epoch: UInt64) async {
         if !isMagicPPTModeActive {
             viewController.titleBarView.isHidden = false
             viewController.titleLabel.isHidden = false
             viewController.titleBarView.alphaValue = 1
             viewController.titleLabel.alphaValue = 1
         }
-        EditTextView.note = note
         await note.ensureContentLoadedAsync()
         // After the async content load, verify this fill is still the active one.
-        // A newer fill task may have set EditTextView.note to a different note;
-        // proceeding would overwrite textStorage with stale content and corrupt saves.
-        guard EditTextView.note === note else { return }
+        // A newer fill task increments fillEpoch; if that has happened, this task
+        // must not touch EditTextView.note or textStorage -- doing so would race
+        // the newer task and corrupt saves.
+        guard self.fillEpoch == epoch else { return }
         UserDefaultsManagement.lastSelectedURL = note.url
         viewController.updateTitle(newTitle: note.getTitleWithoutLabel())
         if !options.preserveUndo {
@@ -612,6 +633,11 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
         guard let storage = textStorage else { return }
 
+        // Atomic publish: assign EditTextView.note and update textStorage inside
+        // one synchronous main-actor stretch so textDidChange cannot observe a
+        // state where note points at the new note while textStorage still holds
+        // the previous note's content.
+        EditTextView.note = note
         if note.isMarkdown(), let content = note.content.mutableCopy() as? NSMutableAttributedString {
             NotesTextProcessor.checkPerformanceLevel(attributedString: content, note: note)
             EditTextView.shouldForceRescan = true
