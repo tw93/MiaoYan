@@ -27,7 +27,6 @@
 		275F9F5C2E68150E006BC2AC /* EditorMenuManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F5A2E68150E006BC2AC /* EditorMenuManager.swift */; };
 		275F9F5D2E68150E006BC2AC /* ClipboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F592E68150E006BC2AC /* ClipboardManager.swift */; };
 		275F9F5E2E68150E006BC2AC /* ImagePreviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F5B2E68150E006BC2AC /* ImagePreviewManager.swift */; };
-		27A1B2C32E681510006BC2AC /* PdfExportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A1B2C42E681510006BC2AC /* PdfExportController.swift */; };
 		275F9F602E6820F8006BC2AC /* ViewController+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F5F2E6820F8006BC2AC /* ViewController+Layout.swift */; };
 		275F9F622E682239006BC2AC /* ViewController+Editor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275F9F612E682239006BC2AC /* ViewController+Editor.swift */; };
 		276312612E7580B5007BB5E9 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276312602E7580B5007BB5E9 /* Localization.swift */; };
@@ -61,6 +60,7 @@
 		27A0774E2E714C43008A5483 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 27A0774D2E714C43008A5483 /* Sparkle */; };
 		27A077512E714C56008A5483 /* ZipArchive in Frameworks */ = {isa = PBXBuildFile; productRef = 27A077502E714C56008A5483 /* ZipArchive */; };
 		27A077542E7152C9008A5483 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 27A077532E7152C9008A5483 /* KeyboardShortcuts */; };
+		27A1B2C32E681510006BC2AC /* PdfExportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A1B2C42E681510006BC2AC /* PdfExportController.swift */; };
 		27B4A5AA2E6924CC00C89EFF /* ViewController+Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4A5A82E6924CC00C89EFF /* ViewController+Action.swift */; };
 		27B4A5AB2E6924CC00C89EFF /* ViewController+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B4A5A92E6924CC00C89EFF /* ViewController+Data.swift */; };
 		27B5AC602E45F23B00C83B3A /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 27B5AC5F2E45F23B00C83B3A /* SwiftyJSON */; };
@@ -78,10 +78,22 @@
 		27F1C0112F40000200AAA001 /* CodeBlockHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F1C0102F40000200AAA001 /* CodeBlockHighlighter.swift */; };
 		27F1C0212F40000300AAA001 /* MarkdownRuleHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F1C0202F40000300AAA001 /* MarkdownRuleHighlighter.swift */; };
 		27F1C0312F40000400AAA001 /* BacktickAndFontNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F1C0302F40000400AAA001 /* BacktickAndFontNormalizer.swift */; };
+		2AA8D503AFCEEDEA1CDCD715 /* MiaoYanMobileApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862CEAF6F6034A969D40B0D4 /* MiaoYanMobileApp.swift */; };
 		3680D573468EA822F427197E /* NSTextField+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3680D20013301CC48E2BEC53 /* NSTextField+.swift */; };
 		3680DE38C941303E615282C4 /* MPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3680DA19202046722D9BEEA2 /* MPreviewView.swift */; };
+		5EA2FE92CBA734EDEFE7E309 /* FolderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3B40DC2D5EDC92F599928F /* FolderListView.swift */; };
+		666A37171C539EB17C4BF4D5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A09E5DF80DF858A174443D8F /* Foundation.framework */; };
+		6C3DB93C4196F313D77666BB /* FileReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF5878451919D13759B1D46 /* FileReader.swift */; };
+		6EB32CA84A9FE302AB9534A0 /* NotesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799BE3B629AEB2051AF69AB2 /* NotesListView.swift */; };
 		6ebaaf6024d941179530c9dc966d60c6 /* FontConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = b2384ca08b9b4d1389a7bf4e0ae47758 /* FontConfiguration.swift */; };
+		8B143F56BB019B808CC4386A /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D3FBA9ED5365B3869702E8 /* AppState.swift */; };
 		8F7136EE23490CBF004DFA6E /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7136ED23490CBF004DFA6E /* Markdown.swift */; };
+		9A4658B9B745E08FC4DB8577 /* CMarkGFM in Frameworks */ = {isa = PBXBuildFile; productRef = CBD4E726D8FB3B404AC19059 /* CMarkGFM */; };
+		A090A42DDDB5B3599F6B47E6 /* MobileHtmlRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DADE53B7E8BD46549942E2B /* MobileHtmlRenderer.swift */; };
+		AA001001AA001001AA001001 /* NoteVersionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA001000AA001000AA001000 /* NoteVersionManager.swift */; };
+		AA002001AA002001AA002001 /* VersionHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA002000AA002000AA002000 /* VersionHistoryViewController.swift */; };
+		AD1A58D367BB6D65BED591E9 /* NoteReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D788C8F47BFF1191612E9D13 /* NoteReaderView.swift */; };
+		BD629B775B7BA6BE009109A9 /* mobile-reader.css in Resources */ = {isa = PBXBuildFile; fileRef = 0C6D1E9F6DF428F005279AD6 /* mobile-reader.css */; };
 		D7038E1D20FA86C100A54E69 /* SharingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7038E1C20FA86C100A54E69 /* SharingService.swift */; };
 		D7038E2620FB24E000A54E69 /* NoteAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7038E2520FB24E000A54E69 /* NoteAttachment.swift */; };
 		D708AC672000EF5800A1760F /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = D708AC662000EF5800A1760F /* Types.swift */; };
@@ -116,8 +128,6 @@
 		D792297521A845B4005F468F /* ProjectSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D792297421A845B4005F468F /* ProjectSettingsViewController.swift */; };
 		D797004C1F3DD10700BAD94D /* EditTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D797004B1F3DD10700BAD94D /* EditTextView.swift */; };
 		D79FE8A21F77D04A00113CFD /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79FE8A01F77D04A00113CFD /* Note.swift */; };
-		AA001001AA001001AA001001 /* NoteVersionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA001000AA001000AA001000 /* NoteVersionManager.swift */; };
-		AA002001AA002001AA002001 /* VersionHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA002000AA002000AA002000 /* VersionHistoryViewController.swift */; };
 		D7A415141F2FBDA00099B82C /* NotesTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A415131F2FBDA00099B82C /* NotesTableView.swift */; };
 		D7B3FE7121027A6D00764C39 /* UserDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F13BB3820FEDE230005E120 /* UserDataService.swift */; };
 		D7B6E59A207912E300FE0E20 /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B6E599207912E300FE0E20 /* Project.swift */; };
@@ -133,6 +143,7 @@
 		D7E025081F3B6DDB00EDDA32 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7E025071F3B6DDB00EDDA32 /* Storage.swift */; };
 		D7ED6892200F87BD00FF975A /* Initial in Resources */ = {isa = PBXBuildFile; fileRef = D7ED6891200F87BD00FF975A /* Initial */; };
 		D7F95F3A1FF2759300E2A447 /* NotesTextProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F95F391FF2759300E2A447 /* NotesTextProcessor.swift */; };
+		FF1B607FC2BE7EC27BDCC919 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E80EC32C30794536C13709 /* SearchView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -158,6 +169,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0C6D1E9F6DF428F005279AD6 /* mobile-reader.css */ = {isa = PBXFileReference; includeInIndex = 1; name = "mobile-reader.css"; path = "MiaoYanMobile/Resources/mobile-reader.css"; sourceTree = SOURCE_ROOT; };
+		0DADE53B7E8BD46549942E2B /* MobileHtmlRenderer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MobileHtmlRenderer.swift; path = MiaoYanMobile/Services/MobileHtmlRenderer.swift; sourceTree = SOURCE_ROOT; };
+		22D3FBA9ED5365B3869702E8 /* AppState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppState.swift; path = MiaoYanMobile/App/AppState.swift; sourceTree = SOURCE_ROOT; };
 		27159CF42F34C9EE0081E876 /* ThemedSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemedSplitView.swift; sourceTree = "<group>"; };
 		27159CF62F34CA000081E876 /* ThemedTableRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemedTableRowView.swift; sourceTree = "<group>"; };
 		272ABB5E285F305500CCD651 /* SidebarProjectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarProjectView.swift; sourceTree = "<group>"; };
@@ -169,7 +183,6 @@
 		275F9F592E68150E006BC2AC /* ClipboardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardManager.swift; sourceTree = "<group>"; };
 		275F9F5A2E68150E006BC2AC /* EditorMenuManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorMenuManager.swift; sourceTree = "<group>"; };
 		275F9F5B2E68150E006BC2AC /* ImagePreviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePreviewManager.swift; sourceTree = "<group>"; };
-		27A1B2C42E681510006BC2AC /* PdfExportController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExportController.swift; sourceTree = "<group>"; };
 		275F9F5F2E6820F8006BC2AC /* ViewController+Layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Layout.swift"; sourceTree = "<group>"; };
 		275F9F612E682239006BC2AC /* ViewController+Editor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Editor.swift"; sourceTree = "<group>"; };
 		276312602E7580B5007BB5E9 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
@@ -204,6 +217,7 @@
 		2789B1E3287FD9C500BF8BC1 /* MiaoYan.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = MiaoYan.entitlements; sourceTree = "<group>"; };
 		2795956327B12CDC000B754C /* MiaoYan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiaoYan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2799407B218484C900727B20 /* TitleBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleBarView.swift; sourceTree = "<group>"; };
+		27A1B2C42E681510006BC2AC /* PdfExportController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfExportController.swift; sourceTree = "<group>"; };
 		27B4A5A82E6924CC00C89EFF /* ViewController+Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Action.swift"; sourceTree = "<group>"; };
 		27B4A5A92E6924CC00C89EFF /* ViewController+Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Data.swift"; sourceTree = "<group>"; };
 		27C34C0D28928D0B007369E5 /* Emoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emoji.swift; sourceTree = "<group>"; };
@@ -216,13 +230,22 @@
 		27F1C0102F40000200AAA001 /* CodeBlockHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBlockHighlighter.swift; sourceTree = "<group>"; };
 		27F1C0202F40000300AAA001 /* MarkdownRuleHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownRuleHighlighter.swift; sourceTree = "<group>"; };
 		27F1C0302F40000400AAA001 /* BacktickAndFontNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BacktickAndFontNormalizer.swift; sourceTree = "<group>"; };
+		2E1ED33F66C65396E5BA710C /* MiaoYanMobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiaoYanMobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3680D20013301CC48E2BEC53 /* NSTextField+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTextField+.swift"; sourceTree = "<group>"; };
 		3680D9AA33A891E0F14496C6 /* NSColor+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+.swift"; sourceTree = "<group>"; };
 		3680DA19202046722D9BEEA2 /* MPreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPreviewView.swift; sourceTree = "<group>"; };
+		62E80EC32C30794536C13709 /* SearchView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SearchView.swift; path = MiaoYanMobile/Views/SearchView.swift; sourceTree = SOURCE_ROOT; };
 		6F13BB2920FEDE230005E120 /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
 		6F13BB2A20FEDE230005E120 /* URL+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+.swift"; sourceTree = "<group>"; };
 		6F13BB3820FEDE230005E120 /* UserDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataService.swift; sourceTree = "<group>"; };
+		799BE3B629AEB2051AF69AB2 /* NotesListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotesListView.swift; path = MiaoYanMobile/Views/NotesListView.swift; sourceTree = SOURCE_ROOT; };
+		862CEAF6F6034A969D40B0D4 /* MiaoYanMobileApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MiaoYanMobileApp.swift; path = MiaoYanMobile/App/MiaoYanMobileApp.swift; sourceTree = SOURCE_ROOT; };
 		8F7136ED23490CBF004DFA6E /* Markdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Markdown.swift; sourceTree = "<group>"; };
+		A09E5DF80DF858A174443D8F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		A4E99034F3562EF94A115552 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = MiaoYanMobile/Resources/Info.plist; sourceTree = SOURCE_ROOT; };
+		AA001000AA001000AA001000 /* NoteVersionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteVersionManager.swift; sourceTree = "<group>"; };
+		AA002000AA002000AA002000 /* VersionHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionHistoryViewController.swift; sourceTree = "<group>"; };
+		CD3B40DC2D5EDC92F599928F /* FolderListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FolderListView.swift; path = MiaoYanMobile/Views/FolderListView.swift; sourceTree = SOURCE_ROOT; };
 		D7038E1C20FA86C100A54E69 /* SharingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharingService.swift; sourceTree = "<group>"; };
 		D7038E2520FB24E000A54E69 /* NoteAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteAttachment.swift; sourceTree = "<group>"; };
 		D708AC662000EF5800A1760F /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
@@ -256,11 +279,10 @@
 		D7793C7B1F211C6000CA39B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D77CC040216A608500582B97 /* EditorScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorScrollView.swift; sourceTree = "<group>"; };
 		D783B504208A1BFD00328A41 /* EditorSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorSplitView.swift; sourceTree = "<group>"; };
+		D788C8F47BFF1191612E9D13 /* NoteReaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NoteReaderView.swift; path = MiaoYanMobile/Views/NoteReaderView.swift; sourceTree = SOURCE_ROOT; };
 		D792297421A845B4005F468F /* ProjectSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSettingsViewController.swift; sourceTree = "<group>"; };
 		D797004B1F3DD10700BAD94D /* EditTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTextView.swift; sourceTree = "<group>"; };
 		D79FE8A01F77D04A00113CFD /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
-		AA001000AA001000AA001000 /* NoteVersionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteVersionManager.swift; sourceTree = "<group>"; };
-		AA002000AA002000AA002000 /* VersionHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionHistoryViewController.swift; sourceTree = "<group>"; };
 		D7A415131F2FBDA00099B82C /* NotesTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesTableView.swift; sourceTree = "<group>"; };
 		D7B6E599207912E300FE0E20 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		D7C302C421F320FD0041627F /* ImageAttachment+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageAttachment+.swift"; sourceTree = "<group>"; };
@@ -275,10 +297,21 @@
 		D7E025071F3B6DDB00EDDA32 /* Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		D7ED6891200F87BD00FF975A /* Initial */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Initial; sourceTree = "<group>"; };
 		D7F95F391FF2759300E2A447 /* NotesTextProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesTextProcessor.swift; sourceTree = "<group>"; };
+		E781F9F37C5B57FD7F09C19D /* MiaoYanMobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiaoYanMobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FFF5878451919D13759B1D46 /* FileReader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileReader.swift; path = MiaoYanMobile/Services/FileReader.swift; sourceTree = SOURCE_ROOT; };
 		b2384ca08b9b4d1389a7bf4e0ae47758 /* FontConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontConfiguration.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		C07179042A107EAD3214CBA7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				666A37171C539EB17C4BF4D5 /* Foundation.framework in Frameworks */,
+				9A4658B9B745E08FC4DB8577 /* CMarkGFM in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D7793C6C1F211C6000CA39B7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -329,6 +362,76 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
+		57582879F18B6D05C8F0E5DE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				804A87787B320D9A6D81D269 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		804A87787B320D9A6D81D269 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				A09E5DF80DF858A174443D8F /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		AE84379FC17D8DFDB7CB7D9E /* App */ = {
+			isa = PBXGroup;
+			children = (
+				862CEAF6F6034A969D40B0D4 /* MiaoYanMobileApp.swift */,
+				22D3FBA9ED5365B3869702E8 /* AppState.swift */,
+			);
+			name = App;
+			path = MiaoYanMobile/App;
+			sourceTree = "<group>";
+		};
+		B043B07BFA19BA23A3F8522F /* MiaoYanMobile */ = {
+			isa = PBXGroup;
+			children = (
+				AE84379FC17D8DFDB7CB7D9E /* App */,
+				B73C3607A3E6C74E713D8041 /* Views */,
+				CC644E7279BF01BEF66CC448 /* Services */,
+				BC86824E215BAED0364EB49B /* Resources */,
+			);
+			name = MiaoYanMobile;
+			path = MiaoYanMobile;
+			sourceTree = "<group>";
+		};
+		B73C3607A3E6C74E713D8041 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CD3B40DC2D5EDC92F599928F /* FolderListView.swift */,
+				799BE3B629AEB2051AF69AB2 /* NotesListView.swift */,
+				D788C8F47BFF1191612E9D13 /* NoteReaderView.swift */,
+				62E80EC32C30794536C13709 /* SearchView.swift */,
+			);
+			name = Views;
+			path = MiaoYanMobile/Views;
+			sourceTree = "<group>";
+		};
+		BC86824E215BAED0364EB49B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0C6D1E9F6DF428F005279AD6 /* mobile-reader.css */,
+				A4E99034F3562EF94A115552 /* Info.plist */,
+			);
+			name = Resources;
+			path = MiaoYanMobile/Resources;
+			sourceTree = "<group>";
+		};
+		CC644E7279BF01BEF66CC448 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				FFF5878451919D13759B1D46 /* FileReader.swift */,
+				0DADE53B7E8BD46549942E2B /* MobileHtmlRenderer.swift */,
+			);
+			name = Services;
+			path = MiaoYanMobile/Services;
+			sourceTree = "<group>";
+		};
 		D7793C661F211C6000CA39B7 = {
 			isa = PBXGroup;
 			children = (
@@ -336,6 +439,10 @@
 				D7D61FCC1F32EEA1004357C2 /* Resources */,
 				2789B1E3287FD9C500BF8BC1 /* MiaoYan.entitlements */,
 				2795956327B12CDC000B754C /* MiaoYan.app */,
+				2E1ED33F66C65396E5BA710C /* MiaoYanMobile.app */,
+				57582879F18B6D05C8F0E5DE /* Frameworks */,
+				E781F9F37C5B57FD7F09C19D /* MiaoYanMobile.app */,
+				B043B07BFA19BA23A3F8522F /* MiaoYanMobile */,
 			);
 			sourceTree = "<group>";
 		};
@@ -499,6 +606,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		991C000B32FC77C0DFFF152D /* MiaoYanMobile */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4167C2CDF003915A3377B87D /* Build configuration list for PBXNativeTarget "MiaoYanMobile" */;
+			buildPhases = (
+				9F4843A44F01844E27DE5A9F /* Sources */,
+				C07179042A107EAD3214CBA7 /* Frameworks */,
+				6163FA0038C47CE7A1951B23 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MiaoYanMobile;
+			packageProductDependencies = (
+				CBD4E726D8FB3B404AC19059 /* CMarkGFM */,
+			);
+			productName = MiaoYanMobile;
+			productReference = E781F9F37C5B57FD7F09C19D /* MiaoYanMobile.app */;
+			productType = "com.apple.product-type.application";
+		};
 		D7793C6E1F211C6000CA39B7 /* MiaoYan */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D7793C951F211C6000CA39B7 /* Build configuration list for PBXNativeTarget "MiaoYan" */;
@@ -594,11 +721,20 @@
 			projectRoot = "";
 			targets = (
 				D7793C6E1F211C6000CA39B7 /* MiaoYan */,
+				991C000B32FC77C0DFFF152D /* MiaoYanMobile */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		6163FA0038C47CE7A1951B23 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BD629B775B7BA6BE009109A9 /* mobile-reader.css in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D7793C6D1F211C6000CA39B7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -636,6 +772,21 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		9F4843A44F01844E27DE5A9F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2AA8D503AFCEEDEA1CDCD715 /* MiaoYanMobileApp.swift in Sources */,
+				8B143F56BB019B808CC4386A /* AppState.swift in Sources */,
+				5EA2FE92CBA734EDEFE7E309 /* FolderListView.swift in Sources */,
+				6EB32CA84A9FE302AB9534A0 /* NotesListView.swift in Sources */,
+				AD1A58D367BB6D65BED591E9 /* NoteReaderView.swift in Sources */,
+				FF1B607FC2BE7EC27BDCC919 /* SearchView.swift in Sources */,
+				6C3DB93C4196F313D77666BB /* FileReader.swift in Sources */,
+				A090A42DDDB5B3599F6B47E6 /* MobileHtmlRenderer.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D7793C6B1F211C6000CA39B7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -787,6 +938,31 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		9056156D38D87C8C6F9A5568 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = MiaoYanMobile/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.miaoyan.mobile;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		D7793C931F211C6000CA39B7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1172,9 +1348,68 @@
 			};
 			name = AppStore;
 		};
+		E403B6D11972D19C51B84498 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = MiaoYanMobile/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.miaoyan.mobile;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E52249E4442856CB98F0074C /* AppStore */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = MiaoYanMobile/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.miaoyan.mobile;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = AppStore;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4167C2CDF003915A3377B87D /* Build configuration list for PBXNativeTarget "MiaoYanMobile" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9056156D38D87C8C6F9A5568 /* Release */,
+				E403B6D11972D19C51B84498 /* Debug */,
+				E52249E4442856CB98F0074C /* AppStore */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D7793C6A1F211C6000CA39B7 /* Build configuration list for PBXProject "MiaoYan" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1441,6 +1676,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 27B5AC6C2E45F27A00C83B3A /* XCRemoteSwiftPackageReference "Sparkle" */;
 			productName = Sparkle;
+		};
+		CBD4E726D8FB3B404AC19059 /* CMarkGFM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27A077382E714AB1008A5483 /* XCRemoteSwiftPackageReference "swift-cmark-gfm" */;
+			productName = CMarkGFM;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

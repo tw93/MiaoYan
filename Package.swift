@@ -5,7 +5,8 @@ let package = Package(
     name: "MiaoYan",
     defaultLocalization: "en",
     platforms: [
-        .macOS(.v11)
+        .macOS(.v11),
+        .iOS(.v16),
     ],
     dependencies: [
         .package(url: "https://github.com/sparkle-project/Sparkle.git", from: "2.8.0"),
