@@ -86,9 +86,13 @@ private struct NoteRow: View {
         .frame(minHeight: 60)
     }
 
+    private static let dateFormatter: RelativeDateTimeFormatter = {
+        let f = RelativeDateTimeFormatter()
+        f.unitsStyle = .abbreviated
+        return f
+    }()
+
     private func relativeDate(_ date: Date) -> String {
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .abbreviated
-        return formatter.localizedString(for: date, relativeTo: Date())
+        Self.dateFormatter.localizedString(for: date, relativeTo: Date())
     }
 }

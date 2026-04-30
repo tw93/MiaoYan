@@ -65,7 +65,7 @@ struct NoteReaderView: View {
                             Text(size.label).tag(size.rawValue)
                         }
                     }
-                    ShareLink(item: cachedHTML, subject: Text(note.title))
+                    ShareLink(item: FileReader.readContent(of: note), subject: Text(note.title))
                 } label: {
                     Image(systemName: "ellipsis.circle")
                 }

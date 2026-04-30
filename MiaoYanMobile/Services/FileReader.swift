@@ -1,7 +1,7 @@
 import Foundation
 
 struct NoteFile: Identifiable, Equatable, Sendable {
-    let id: UUID
+    let id: String
     let url: URL
     let title: String
     let modifiedDate: Date
@@ -9,36 +9,42 @@ struct NoteFile: Identifiable, Equatable, Sendable {
     let isPinned: Bool
 
     init(url: URL) {
-        self.id = UUID()
+        self.id = url.absoluteString
         self.url = url
         self.title = url.deletingPathExtension().lastPathComponent
         self.modifiedDate = (try? FileManager.default
             .attributesOfItem(atPath: url.path)[.modificationDate] as? Date) ?? Date.distantPast
         self.isPinned = url.lastPathComponent.hasPrefix("📌")
-        if let content = try? String(contentsOf: url, encoding: .utf8) {
-            let lines = content.components(separatedBy: "\n")
-                .map { $0.trimmingCharacters(in: .whitespaces) }
-                .filter { !$0.isEmpty && !$0.hasPrefix("#") && !$0.hasPrefix("---") }
-            self.preview = lines.prefix(2).joined(separator: " ")
+        if let handle = try? FileHandle(forReadingFrom: url) {
+            defer { try? handle.close() }
+            if let data = try? handle.read(upToCount: 512),
+               let head = String(data: data, encoding: .utf8) {
+                let lines = head.components(separatedBy: "\n")
+                    .map { $0.trimmingCharacters(in: .whitespaces) }
+                    .filter { !$0.isEmpty && !$0.hasPrefix("#") && !$0.hasPrefix("---") }
+                self.preview = lines.prefix(2).joined(separator: " ")
+            } else {
+                self.preview = ""
+            }
         } else {
             self.preview = ""
         }
     }
 
     static func == (lhs: NoteFile, rhs: NoteFile) -> Bool {
-        lhs.id == rhs.id
+        lhs.url == rhs.url
     }
 }
 
 struct FolderItem: Identifiable, Sendable {
-    let id: UUID
+    let id: String
     let url: URL
     let name: String
     let noteCount: Int
     let isTrash: Bool
 
     init(url: URL, name: String, noteCount: Int, isTrash: Bool = false) {
-        self.id = UUID()
+        self.id = url.absoluteString
         self.url = url
         self.name = name
         self.noteCount = noteCount

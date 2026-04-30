@@ -36,7 +36,11 @@ enum MobileHtmlRenderer {
 
         cmark_parser_feed(parser, markdown, markdown.utf8.count)
         guard let node = cmark_parser_finish(parser) else { return "" }
-        return String(cString: cmark_render_html(node, CMARK_OPT_UNSAFE | CMARK_OPT_HARDBREAKS, nil))
+        defer { cmark_node_free(node) }
+        guard let cString = cmark_render_html(node, CMARK_OPT_UNSAFE | CMARK_OPT_HARDBREAKS, nil) else { return "" }
+        let html = String(cString: cString)
+        free(cString)
+        return html
     }
 
     private static func loadCSS() -> String {
