@@ -3,6 +3,33 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>3.5.0</title>
+      <link>https://github.com/tw93/MiaoYan/releases</link>
+      <description><![CDATA[
+  <h3># V3.5.0</h3>
+  <ol>
+    <li>Version history: right-click a note to view and restore any previous version</li>
+    <li>Notes are now moved to the system Trash instead of permanent deletion</li>
+    <li>Wikilink support: note info panel shows backlinks</li>
+    <li>macOS 26 glass toolbar adaptation</li>
+    <li>iCloud sync manager, laying the groundwork for cross-device sync</li>
+    <li>Open-source and App Store builds are now updated in sync, sharing the same codebase</li>
+  </ol>
+  <h3># V3.5.0</h3>
+  <ol>
+    <li>新增版本历史功能,右键笔记可查看和恢复到任意历史版本</li>
+    <li>删除笔记改为移到系统废纸篓,误删可恢复</li>
+    <li>新增 Wikilink 双向链接,笔记面板展示反向链接</li>
+    <li>适配 macOS 26 玻璃质感工具栏</li>
+    <li>新增 iCloud 同步管理器,为后续多端同步打基础</li>
+    <li>开源版和 App Store 版恢复同步更新,共享同一份代码</li>
+  </ol>
+          ]]>      </description>
+      <pubDate>Sat, 02 May 2026 15:17:55 +0000</pubDate>
+      <enclosure url="https://github.com/tw93/MiaoYan/releases/download/V3.5.0/MiaoYan_V3.5.0.zip" sparkle:shortVersionString="3.5.0" sparkle:version="3.5.0" sparkle:edSignature="L/cXMJtKEhsS13D0kIGzKP2aPxObpEUS1UwA5rjU0Q/RM5FV8119BCCd1SSkVsvT6bvpes6FiE2poYnthB+TDA==" length="24517869" type="application/octet-stream"/>
+      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>3.4.0</title>
       <link>https://github.com/tw93/MiaoYan/releases</link>
       <description><![CDATA[
