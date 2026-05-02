@@ -505,8 +505,16 @@ class Storage {
             let url = document.url
 
             if let currentNoteURL = EditTextView.note?.url,
-                currentNoteURL == url
+                currentNoteURL.resolvingSymlinksInPath().path == url.resolvingSymlinksInPath().path
             {
+                // Re-use the existing Note object so the currently open file
+                // stays visible in the list after a single-mode reload.
+                if let existingNote = EditTextView.note {
+                    if existingNote.isPinned {
+                        pinned += 1
+                    }
+                    noteList.append(existingNote)
+                }
                 continue
             }
 
