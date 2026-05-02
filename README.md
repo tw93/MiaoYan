@@ -30,21 +30,18 @@
 
 ## Installation
 
-You can download MiaoYan from the **Mac App Store** (paid, with automatic updates) or grab a free DMG from [GitHub Releases](https://github.com/tw93/MiaoYan/releases). Both versions share the same codebase and receive the same updates.
+1. **Mac App Store** (paid, automatic updates):
 
-<a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
+   <a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
 
-After installing, create a `MiaoYan` folder in iCloud Drive or your preferred location, open Preferences (⌘,), set the storage path, and start writing.
+2. **Homebrew**:
+   ```bash
+   brew install --cask miaoyan
+   ```
 
-### Build from source
+3. **GitHub Releases**: download the latest DMG from [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) (macOS 11.5+)
 
-MiaoYan is MIT-licensed. You can build from source anytime:
-
-```bash
-git clone https://github.com/tw93/MiaoYan.git
-cd MiaoYan
-xcodebuild -scheme MiaoYan -configuration Release build
-```
+All three options share the same codebase and receive the same updates. After installing, create a `MiaoYan` folder in iCloud Drive or your preferred location, open Preferences (⌘,), and set the storage path.
 
 ## CLI
 

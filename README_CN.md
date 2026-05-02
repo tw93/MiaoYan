@@ -30,21 +30,18 @@
 
 ## 安装使用
 
-可以从 **Mac App Store** 下载(付费,自动更新),也可以从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases) 免费下载 DMG。两个版本共享同一份代码,功能完全一致,同步更新。
+1. **Mac App Store**(付费,自动更新):
 
-<a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
+   <a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
 
-安装后在 iCloud 云盘或其他位置创建 `MiaoYan` 文件夹,打开设置 (⌘,) 指定存储位置,就可以开始写了。
+2. **Homebrew**:
+   ```bash
+   brew install --cask miaoyan
+   ```
 
-### 自行编译
+3. **GitHub Releases**: 从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) 下载最新 DMG(macOS 11.5+)
 
-妙言基于 MIT 协议开源,随时可以自行编译:
-
-```bash
-git clone https://github.com/tw93/MiaoYan.git
-cd MiaoYan
-xcodebuild -scheme MiaoYan -configuration Release build
-```
+三种方式共享同一份代码,功能完全一致,同步更新。安装后在 iCloud 云盘或其他位置创建 `MiaoYan` 文件夹,打开设置 (⌘,) 指定存储位置,就可以开始写了。
 
 ## 命令行工具
 
