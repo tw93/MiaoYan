@@ -71,7 +71,7 @@ struct NoteDetailView: View {
     }
 
     private func deleteNote() {
-        try? FileManager.default.removeItem(at: note.url)
+        try? FileManager.default.trashItem(at: note.url, resultingItemURL: nil)
         dismiss()
     }
 }

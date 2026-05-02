@@ -3,7 +3,7 @@ import UniformTypeIdentifiers
 
 struct FolderListView: View {
     @EnvironmentObject private var appState: AppState
-    @StateObject private var syncManager = CloudSyncManager.shared
+    @ObservedObject private var syncManager = CloudSyncManager.shared
     @State private var folders: [FolderItem] = []
     @State private var showPicker = false
 

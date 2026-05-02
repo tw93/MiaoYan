@@ -9,6 +9,13 @@ class ContentViewController: NSViewController, NSPopoverDelegate {
     private var backlinksListView: NSTextView!
     private var scrollView: NSScrollView!
 
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
+
     override func loadView() {
         view = NSView(frame: NSRect(x: 0, y: 0, width: 280, height: 200))
 
@@ -69,6 +76,7 @@ class ContentViewController: NSViewController, NSPopoverDelegate {
     }
 
     override func viewDidAppear() {
+        super.viewDidAppear()
         guard let vc = ViewController.shared() else { return }
         guard let note = vc.notesTableView.getSelectedNote() else { return }
 
@@ -93,7 +101,5 @@ class ContentViewController: NSViewController, NSPopoverDelegate {
             backlinksListView.string = backlinks.joined(separator: "\n")
             scrollView.isHidden = false
         }
-
-        super.viewDidAppear()
     }
 }

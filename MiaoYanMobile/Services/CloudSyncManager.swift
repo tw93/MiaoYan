@@ -101,31 +101,39 @@ final class CloudSyncManager: ObservableObject {
     }
 
     func readFile(at url: URL) throws -> String {
-        var nsError: NSError?
+        var coordinationError: NSError?
+        var readError: Error?
         let coordinator = NSFileCoordinator()
         var content = ""
 
-        coordinator.coordinate(readingItemAt: url, options: [], error: &nsError) { readURL in
-            content = (try? String(contentsOf: readURL, encoding: .utf8)) ?? ""
+        coordinator.coordinate(readingItemAt: url, options: [], error: &coordinationError) { readURL in
+            do {
+                content = try String(contentsOf: readURL, encoding: .utf8)
+            } catch {
+                readError = error
+            }
         }
 
-        if let nsError {
-            throw nsError
-        }
+        if let coordinationError { throw coordinationError }
+        if let readError { throw readError }
         return content
     }
 
     func writeFile(content: String, to url: URL) throws {
-        var nsError: NSError?
+        var coordinationError: NSError?
+        var writeError: Error?
         let coordinator = NSFileCoordinator()
 
-        coordinator.coordinate(writingItemAt: url, options: [], error: &nsError) { writeURL in
-            try? content.write(to: writeURL, atomically: true, encoding: .utf8)
+        coordinator.coordinate(writingItemAt: url, options: [], error: &coordinationError) { writeURL in
+            do {
+                try content.write(to: writeURL, atomically: true, encoding: .utf8)
+            } catch {
+                writeError = error
+            }
         }
 
-        if let nsError {
-            throw nsError
-        }
+        if let coordinationError { throw coordinationError }
+        if let writeError { throw writeError }
     }
 
     deinit {

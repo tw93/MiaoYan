@@ -33,9 +33,10 @@ final class WikilinkIndex: ObservableObject {
         Array(outlinks[noteTitle] ?? []).sorted()
     }
 
+    private static let wikilinkRegex: NSRegularExpression? = try? NSRegularExpression(pattern: #"\[\[([^\]]+)\]\]"#)
+
     private func extractWikilinks(from text: String) -> Set<String> {
-        let pattern = #"\[\[([^\]]+)\]\]"#
-        guard let regex = try? NSRegularExpression(pattern: pattern) else {
+        guard let regex = Self.wikilinkRegex else {
             return []
         }
 
