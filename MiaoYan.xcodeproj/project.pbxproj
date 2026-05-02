@@ -83,7 +83,11 @@
 		3680DE38C941303E615282C4 /* MPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3680DA19202046722D9BEEA2 /* MPreviewView.swift */; };
 		5EA2FE92CBA734EDEFE7E309 /* FolderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3B40DC2D5EDC92F599928F /* FolderListView.swift */; };
 		666A37171C539EB17C4BF4D5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A09E5DF80DF858A174443D8F /* Foundation.framework */; };
+				4C5E0C6B57054F9C9A0C7A9C /* CloudSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B671C2C7154C33A6BDC59A /* CloudSyncManager.swift */; };
 		6C3DB93C4196F313D77666BB /* FileReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF5878451919D13759B1D46 /* FileReader.swift */; };
+				A5729D50AA284578BBE88E50 /* NoteEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 754FE5B86E5A41BFB19B421E /* NoteEditorView.swift */; };
+		CB24CEF08026448580C9CFBB /* NoteDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD610C0BFC74068B993BC2C /* NoteDetailView.swift */; };
+		29A0687A7FD54D1AB241774F /* NewNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E21F00885D42989822E5FF /* NewNoteView.swift */; };
 		6EB32CA84A9FE302AB9534A0 /* NotesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799BE3B629AEB2051AF69AB2 /* NotesListView.swift */; };
 		6ebaaf6024d941179530c9dc966d60c6 /* FontConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = b2384ca08b9b4d1389a7bf4e0ae47758 /* FontConfiguration.swift */; };
 		8B143F56BB019B808CC4386A /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D3FBA9ED5365B3869702E8 /* AppState.swift */; };
@@ -144,7 +148,7 @@
 		D7ED6892200F87BD00FF975A /* Initial in Resources */ = {isa = PBXBuildFile; fileRef = D7ED6891200F87BD00FF975A /* Initial */; };
 		D7F95F3A1FF2759300E2A447 /* NotesTextProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F95F391FF2759300E2A447 /* NotesTextProcessor.swift */; };
 		FF1B607FC2BE7EC27BDCC919 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E80EC32C30794536C13709 /* SearchView.swift */; };
-/* End PBXBuildFile section */
+		/* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		6F13BB1A20FEDDF50005E120 /* Embed Frameworks */ = {
@@ -170,6 +174,7 @@
 
 /* Begin PBXFileReference section */
 		0C6D1E9F6DF428F005279AD6 /* mobile-reader.css */ = {isa = PBXFileReference; includeInIndex = 1; name = "mobile-reader.css"; path = "MiaoYanMobile/Resources/mobile-reader.css"; sourceTree = SOURCE_ROOT; };
+				95B671C2C7154C33A6BDC59A /* CloudSyncManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CloudSyncManager.swift; path = MiaoYanMobile/Services/CloudSyncManager.swift; sourceTree = SOURCE_ROOT; };
 		0DADE53B7E8BD46549942E2B /* MobileHtmlRenderer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MobileHtmlRenderer.swift; path = MiaoYanMobile/Services/MobileHtmlRenderer.swift; sourceTree = SOURCE_ROOT; };
 		22D3FBA9ED5365B3869702E8 /* AppState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppState.swift; path = MiaoYanMobile/App/AppState.swift; sourceTree = SOURCE_ROOT; };
 		27159CF42F34C9EE0081E876 /* ThemedSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemedSplitView.swift; sourceTree = "<group>"; };
@@ -238,10 +243,14 @@
 		6F13BB2920FEDE230005E120 /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
 		6F13BB2A20FEDE230005E120 /* URL+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+.swift"; sourceTree = "<group>"; };
 		6F13BB3820FEDE230005E120 /* UserDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataService.swift; sourceTree = "<group>"; };
+				754FE5B86E5A41BFB19B421E /* NoteEditorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NoteEditorView.swift; path = MiaoYanMobile/Views/NoteEditorView.swift; sourceTree = SOURCE_ROOT; };
+		ABD610C0BFC74068B993BC2C /* NoteDetailView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NoteDetailView.swift; path = MiaoYanMobile/Views/NoteDetailView.swift; sourceTree = SOURCE_ROOT; };
+		A6E21F00885D42989822E5FF /* NewNoteView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NewNoteView.swift; path = MiaoYanMobile/Views/NewNoteView.swift; sourceTree = SOURCE_ROOT; };
 		799BE3B629AEB2051AF69AB2 /* NotesListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotesListView.swift; path = MiaoYanMobile/Views/NotesListView.swift; sourceTree = SOURCE_ROOT; };
 		862CEAF6F6034A969D40B0D4 /* MiaoYanMobileApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MiaoYanMobileApp.swift; path = MiaoYanMobile/App/MiaoYanMobileApp.swift; sourceTree = SOURCE_ROOT; };
 		8F7136ED23490CBF004DFA6E /* Markdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Markdown.swift; sourceTree = "<group>"; };
 		A09E5DF80DF858A174443D8F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+				6C2871D0A580446591C753F0 /* MiaoYanMobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MiaoYanMobile.entitlements; sourceTree = "<group>"; };
 		A4E99034F3562EF94A115552 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = MiaoYanMobile/Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		AA001000AA001000AA001000 /* NoteVersionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteVersionManager.swift; sourceTree = "<group>"; };
 		AA002000AA002000AA002000 /* VersionHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionHistoryViewController.swift; sourceTree = "<group>"; };
@@ -282,6 +291,8 @@
 		D788C8F47BFF1191612E9D13 /* NoteReaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NoteReaderView.swift; path = MiaoYanMobile/Views/NoteReaderView.swift; sourceTree = SOURCE_ROOT; };
 		D792297421A845B4005F468F /* ProjectSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectSettingsViewController.swift; sourceTree = "<group>"; };
 		D797004B1F3DD10700BAD94D /* EditTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTextView.swift; sourceTree = "<group>"; };
+				2B5045CD50BB4556AAB3F390 /* WikilinkIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WikilinkIndex.swift; sourceTree = "<group>"; };
+				6E47052AE52C4762B0C8640F /* WikilinkIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5045CD50BB4556AAB3F390 /* WikilinkIndex.swift */; };
 		D79FE8A01F77D04A00113CFD /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		D7A415131F2FBDA00099B82C /* NotesTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesTableView.swift; sourceTree = "<group>"; };
 		D7B6E599207912E300FE0E20 /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
@@ -300,7 +311,7 @@
 		E781F9F37C5B57FD7F09C19D /* MiaoYanMobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiaoYanMobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFF5878451919D13759B1D46 /* FileReader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileReader.swift; path = MiaoYanMobile/Services/FileReader.swift; sourceTree = SOURCE_ROOT; };
 		b2384ca08b9b4d1389a7bf4e0ae47758 /* FontConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontConfiguration.swift; sourceTree = "<group>"; };
-/* End PBXFileReference section */
+		/* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		C07179042A107EAD3214CBA7 /* Frameworks */ = {
@@ -405,6 +416,9 @@
 			children = (
 				CD3B40DC2D5EDC92F599928F /* FolderListView.swift */,
 				799BE3B629AEB2051AF69AB2 /* NotesListView.swift */,
+								754FE5B86E5A41BFB19B421E /* NoteEditorView.swift */,
+								ABD610C0BFC74068B993BC2C /* NoteDetailView.swift */,
+								A6E21F00885D42989822E5FF /* NewNoteView.swift */,
 				D788C8F47BFF1191612E9D13 /* NoteReaderView.swift */,
 				62E80EC32C30794536C13709 /* SearchView.swift */,
 			);
@@ -427,6 +441,7 @@
 			children = (
 				FFF5878451919D13759B1D46 /* FileReader.swift */,
 				0DADE53B7E8BD46549942E2B /* MobileHtmlRenderer.swift */,
+				95B671C2C7154C33A6BDC59A /* CloudSyncManager.swift */,
 			);
 			name = Services;
 			path = MiaoYanMobile/Services;
@@ -467,6 +482,7 @@
 				D7038E2520FB24E000A54E69 /* NoteAttachment.swift */,
 				D7B6E599207912E300FE0E20 /* Project.swift */,
 				27EFD7892E40E2E400DE6636 /* HtmlManager.swift */,
+				2B5045CD50BB4556AAB3F390 /* WikilinkIndex.swift */,
 				D79FE8A01F77D04A00113CFD /* Note.swift */,
 				AA001000AA001000AA001000 /* NoteVersionManager.swift */,
 				D75EE7F92078B3C00055F159 /* Sidebar.swift */,
@@ -779,9 +795,13 @@
 				2AA8D503AFCEEDEA1CDCD715 /* MiaoYanMobileApp.swift in Sources */,
 				8B143F56BB019B808CC4386A /* AppState.swift in Sources */,
 				5EA2FE92CBA734EDEFE7E309 /* FolderListView.swift in Sources */,
+								A5729D50AA284578BBE88E50 /* NoteEditorView.swift in Sources */,
+								CB24CEF08026448580C9CFBB /* NoteDetailView.swift in Sources */,
+								29A0687A7FD54D1AB241774F /* NewNoteView.swift in Sources */,
 				6EB32CA84A9FE302AB9534A0 /* NotesListView.swift in Sources */,
 				AD1A58D367BB6D65BED591E9 /* NoteReaderView.swift in Sources */,
 				FF1B607FC2BE7EC27BDCC919 /* SearchView.swift in Sources */,
+				4C5E0C6B57054F9C9A0C7A9C /* CloudSyncManager.swift in Sources */,
 				6C3DB93C4196F313D77666BB /* FileReader.swift in Sources */,
 				A090A42DDDB5B3599F6B47E6 /* MobileHtmlRenderer.swift in Sources */,
 			);
@@ -878,6 +898,7 @@
 				275F9F602E6820F8006BC2AC /* ViewController+Layout.swift in Sources */,
 				2781609A2E75553600F3D54B /* GeneralPrefsViewController.swift in Sources */,
 				2781609B2E75553600F3D54B /* PrefsWindowController.swift in Sources */,
+				6E47052AE52C4762B0C8640F /* WikilinkIndex.swift in Sources */,
 				D79FE8A21F77D04A00113CFD /* Note.swift in Sources */,
 				275F9F5C2E68150E006BC2AC /* EditorMenuManager.swift in Sources */,
 				275F9F5D2E68150E006BC2AC /* ClipboardManager.swift in Sources */,
@@ -1119,7 +1140,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3.4.0;
+				CURRENT_PROJECT_VERSION = 3.5.0;
 				DEAD_CODE_STRIPPING = YES;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				ENABLE_APP_SANDBOX = NO;
@@ -1140,7 +1161,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 3.4.0;
+				MARKETING_VERSION = 3.5.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1169,7 +1190,7 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3.4.0;
+				CURRENT_PROJECT_VERSION = 3.5.0;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_LOCATION = NO;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
@@ -1191,7 +1212,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 3.4.0;
+				MARKETING_VERSION = 3.5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1293,7 +1314,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3.4.0;
+				CURRENT_PROJECT_VERSION = 3.5.0;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DEVELOPMENT_TEAM = 5EH69Y5X38;
@@ -1328,7 +1349,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 3.4.0;
+				MARKETING_VERSION = 3.5.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",

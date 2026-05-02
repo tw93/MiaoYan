@@ -1,23 +1,17 @@
-# V3.4.0 Mizutsune 🌊
+# V3.5.0
 
-非常感谢大家这 5 年的陪伴，妙言会持续维护下去。考虑到后面 iOS 多端开发和降低维护成本，从 4.0 开始会统一在 App Store 发布，源码持续开源，自行编译没问题。任何赞助过或给妙言提交过代码的小伙伴，欢迎直接找我要兑换码。
-
-这个版本主要的变化：
-
-1. 从 4.0 起改为 App Store 发布，这是最后一个 DMG 版本，后续请在 App Store 更新
-2. 应用内一次性迁移提示，方便老用户知道后续去哪里更新
-3. 分栏滚动从比例模式升级为行级同步，图片、代码块多的文档也能精准对齐
-4. 从 Finder 打开单个 .md 能正确展示同目录所有文件
-
-没有用过的小伙伴，欢迎去 App Store 试试看，玩玩。
+1. 新增版本历史功能,右键笔记可查看和恢复到任意历史版本
+2. 删除笔记改为移到系统废纸篓,误删可恢复
+3. 新增 Wikilink 双向链接,笔记面板展示反向链接
+4. 适配 macOS 26 玻璃质感工具栏
+5. 新增 iCloud 同步管理器,为后续多端同步打基础
+6. 开源版和 App Store 版恢复同步更新,共享同一份代码
 
 ---
 
-Thanks so much for five years of support. MiaoYan will keep going. To prepare for iOS and cross-device support and reduce maintenance overhead, from 4.0 onward MiaoYan will be distributed through the App Store. Source stays open and self-buildable. If you've sponsored or contributed code, feel free to DM me for a redemption code.
-
-Key changes in this release:
-
-1. From 4.0 onward MiaoYan moves to the App Store. This is the last DMG release; future updates will be on the App Store
-2. One-time in-app notice letting open-source build users know where to follow future updates
-3. Split-view scroll sync upgraded to line-based algorithm, accurate even in documents with images or code blocks
-4. Opening a single .md from Finder now shows all sibling files correctly
+1. Version history: right-click a note to view and restore any previous version
+2. Notes are now moved to the system Trash instead of permanent deletion
+3. Wikilink support: note info panel shows backlinks
+4. macOS 26 glass toolbar adaptation
+5. iCloud sync manager, laying the groundwork for cross-device sync
+6. Open-source and App Store builds are now updated in sync, sharing the same codebase

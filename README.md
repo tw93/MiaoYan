@@ -23,22 +23,28 @@
 
 ## Features
 
-- **Fantastic**: Local-first, no data collection, split editor & preview, LaTeX, Mermaid
-- **Beautiful**: Minimalist design, three-column layout, dark mode, distraction-free
+- **Fantastic**: Local-first, no data collection, split editor & preview, wikilink backlinks, LaTeX, Mermaid
+- **Beautiful**: Minimalist design, three-column layout, dark mode, macOS 26 glass, distraction-free
 - **Fast**: Swift 6 native, better performance than Electron-based apps
-- **Simple**: Lightweight, keyboard shortcuts, auto-formatting
+- **Simple**: Lightweight, version history, keyboard shortcuts, auto-formatting
 
 ## Installation
 
-Download from the **Mac App Store**; all future updates ship there. A paid download is the best way to support ongoing development; the open-source build offers the same experience.
+You can download MiaoYan from the **Mac App Store** (paid, with automatic updates) or grab a free DMG from [GitHub Releases](https://github.com/tw93/MiaoYan/releases). Both versions share the same codebase and receive the same updates.
 
 <a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
 
-After installing, create a `MiaoYan` folder in iCloud Drive or your preferred location, open Preferences (⌘,), set the storage path, and start writing. Existing sponsors can DM me directly for an App Store redemption code.
+After installing, create a `MiaoYan` folder in iCloud Drive or your preferred location, open Preferences (⌘,), set the storage path, and start writing.
 
-### Build from source / older versions
+### Build from source
 
-From **4.0** onward MiaoYan is distributed through the App Store. You can still build from the MIT-licensed source, or grab a pre-4.0 DMG from [GitHub Releases](https://github.com/tw93/MiaoYan/releases).
+MiaoYan is MIT-licensed. You can build from source anytime:
+
+```bash
+git clone https://github.com/tw93/MiaoYan.git
+cd MiaoYan
+xcodebuild -scheme MiaoYan -configuration Release build
+```
 
 ## CLI
 

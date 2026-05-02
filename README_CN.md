@@ -23,22 +23,28 @@
 
 ## 特点
 
-- **妙**：纯本地使用、不收集任何数据、语法高亮、分栏编辑预览、PPT 演示、LaTeX、Mermaid 图表
-- **美**：极简设计风格、三栏模式、深色模式、专注写作
+- **妙**：纯本地使用、不收集任何数据、语法高亮、分栏编辑预览、Wikilink 双向链接、PPT 演示、LaTeX、Mermaid 图表
+- **美**：极简设计风格、三栏模式、深色模式、macOS 26 玻璃质感、专注写作
 - **快**：Swift 6 原生开发、相比 Web 套壳性能体验更好
-- **简**：轻量纯粹、众多快捷键、自动排版
+- **简**：轻量纯粹、版本历史、众多快捷键、自动排版
 
 ## 安装使用
 
-从 **Mac App Store** 下载，后续所有更新都会在那里发布。付费下载是支持持续维护和后续多端同步最直接的方式，开源版本使用体验完全一致。
+可以从 **Mac App Store** 下载(付费,自动更新),也可以从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases) 免费下载 DMG。两个版本共享同一份代码,功能完全一致,同步更新。
 
 <a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
 
-安装后在 iCloud 云盘或其他位置创建 `MiaoYan` 文件夹，打开设置 (⌘,) 指定存储位置，就可以开始写了。任何赞助过或给妙言提交过代码的小伙伴，欢迎直接找我要兑换码。
+安装后在 iCloud 云盘或其他位置创建 `MiaoYan` 文件夹,打开设置 (⌘,) 指定存储位置,就可以开始写了。
 
-### 自行编译 / 历史版本
+### 自行编译
 
-从 **4.0** 开始妙言统一在 App Store 发布。你仍可以从开源代码自行编译，或在 [GitHub Releases](https://github.com/tw93/MiaoYan/releases) 下载 4.0 之前的 DMG。
+妙言基于 MIT 协议开源,随时可以自行编译:
+
+```bash
+git clone https://github.com/tw93/MiaoYan.git
+cd MiaoYan
+xcodebuild -scheme MiaoYan -configuration Release build
+```
 
 ## 命令行工具
 

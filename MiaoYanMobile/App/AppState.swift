@@ -8,7 +8,10 @@ final class AppState: ObservableObject {
     private var securityScopedURL: URL?
 
     init() {
-        if let url = loadBookmarkedURL() {
+        // Try iCloud first, fall back to user-selected folder
+        if let iCloudURL = CloudSyncManager.shared.getNotesDirectory() {
+            rootURL = iCloudURL
+        } else if let url = loadBookmarkedURL() {
             activate(url)
         }
     }

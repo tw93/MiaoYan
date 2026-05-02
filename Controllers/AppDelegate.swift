@@ -161,35 +161,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
             KeyboardShortcuts.setShortcut(.init(.m, modifiers: [.command, .option]), for: .activateWindow)
         }
 
-        #if !APPSTORE
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.showMigrationNoticeIfNeeded()
-        }
-        #endif
     }
-
-    #if !APPSTORE
-    private func showMigrationNoticeIfNeeded() {
-        let key = "migrationNoticeShownV340"
-        guard !UserDefaults.standard.bool(forKey: key) else { return }
-        UserDefaults.standard.set(true, forKey: key)
-
-        let alert = NSAlert()
-        alert.alertStyle = .informational
-        alert.messageText = I18n.str("MiaoYan 4.0 is on the way")
-        alert.informativeText = I18n.str(
-            "Thanks so much for five years of support. MiaoYan will keep going, it is my main editor after all. To prepare for iOS and cross-device support and reduce maintenance overhead, from 4.0 onward it will be distributed through the App Store. Source stays open and self-buildable. If you have sponsored or contributed code to MiaoYan, feel free to DM me for a redemption code."
-        )
-        alert.addButton(withTitle: I18n.str("Go to App Store"))
-        alert.addButton(withTitle: I18n.str("Got It"))
-
-        if alert.runModal() == .alertFirstButtonReturn,
-            let url = URL(string: "macappstore://apps.apple.com/app/id6759252269")
-        {
-            NSWorkspace.shared.open(url)
-        }
-    }
-    #endif
 
     func applicationWillTerminate(_ aNotification: Notification) {
         UserDefaultsManagement.clearSingleMode()

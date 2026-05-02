@@ -565,6 +565,7 @@ public class Note: NSObject {
 
             modifiedLocalAt = Date()
             NoteVersionManager.shared.saveVersionIfNeeded(for: self)
+            WikilinkIndex.shared.updateNote(title: title, content: attributedString.string)
         } catch {
             AppDelegate.trackError(error, context: "Note.writeError")
             AppDelegate.trackError(error, context: "Note.write")

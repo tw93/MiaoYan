@@ -3,6 +3,7 @@ import UniformTypeIdentifiers
 
 struct FolderListView: View {
     @EnvironmentObject private var appState: AppState
+    @StateObject private var syncManager = CloudSyncManager.shared
     @State private var folders: [FolderItem] = []
     @State private var showPicker = false
 
@@ -18,6 +19,9 @@ struct FolderListView: View {
             .navigationTitle("妙言")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    syncStatusIcon
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         showPicker = true
@@ -43,13 +47,13 @@ struct FolderListView: View {
 
     private var emptyState: some View {
         VStack(spacing: 20) {
-            Image(systemName: "icloud.and.arrow.down")
+            Image(systemName: syncManager.iCloudAvailable ? "icloud.and.arrow.down" : "folder")
                 .font(.system(size: 56))
                 .foregroundStyle(.secondary)
-            Text("选择 iCloud Drive 中的笔记文件夹")
+            Text(syncManager.iCloudAvailable ? "iCloud Drive 已就绪" : "选择笔记文件夹")
                 .font(.headline)
                 .multilineTextAlignment(.center)
-            Text("请确保选择 iCloud Drive 中的文件夹，以便在 Mac 和 iPhone 间同步笔记。")
+            Text(syncManager.iCloudAvailable ? "笔记将自动在 Mac 和 iPhone 间同步。" : "请选择一个文件夹存放笔记。")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -60,6 +64,26 @@ struct FolderListView: View {
             .buttonStyle(.borderedProminent)
         }
         .padding()
+    }
+
+    private var syncStatusIcon: some View {
+        Group {
+            switch syncManager.status {
+            case .syncing:
+                Image(systemName: "icloud.and.arrow.up.and.down")
+                    .foregroundStyle(.blue)
+            case .synced:
+                Image(systemName: "icloud.and.arrow.up")
+                    .foregroundStyle(.green)
+            case .offline:
+                Image(systemName: "icloud.slash")
+                    .foregroundStyle(.secondary)
+            case .error:
+                Image(systemName: "exclamationmark.icloud")
+                    .foregroundStyle(.red)
+            }
+        }
+        .font(.body)
     }
 
     private var folderList: some View {

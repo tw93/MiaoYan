@@ -5,6 +5,7 @@ struct NotesListView: View {
     @EnvironmentObject private var appState: AppState
     @State private var notes: [NoteFile] = []
     @State private var showSearch = false
+    @State private var showNewNote = false
 
     var body: some View {
         Group {
@@ -25,6 +26,13 @@ struct NotesListView: View {
         .navigationTitle(folder.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    showNewNote = true
+                } label: {
+                    Image(systemName: "square.and.pencil")
+                }
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
                     showSearch = true
@@ -33,23 +41,31 @@ struct NotesListView: View {
                 }
             }
         }
+        .sheet(isPresented: $showNewNote) {
+            NewNoteView(folder: folder)
+                .environmentObject(appState)
+        }
         .navigationDestination(isPresented: $showSearch) {
             if let root = appState.rootURL {
                 SearchView(root: root)
             }
         }
         .onAppear { loadNotes() }
+        .onChange(of: showNewNote) { _ in
+            if !showNewNote { loadNotes() }
+        }
     }
 
     private var notesList: some View {
         List(notes) { note in
             NavigationLink {
-                NoteReaderView(note: note)
+                NoteDetailView(note: note)
             } label: {
                 NoteRow(note: note)
             }
         }
         .listStyle(.plain)
+        .refreshable { loadNotes() }
     }
 
     private func loadNotes() {
