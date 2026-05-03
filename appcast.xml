@@ -3,6 +3,29 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>3.5.1</title>
+      <link>https://github.com/tw93/MiaoYan/releases</link>
+      <description><![CDATA[
+  <h3># V3.5.1</h3>
+  <ol>
+    <li>Fix toolbar buttons showing grey background bar on macOS 26</li>
+    <li>Fix transparent sidebar and notes list background on macOS 26</li>
+    <li>Faster note switching: synchronous path for loaded notes, zero delay</li>
+    <li>Debounced save on note switch, no longer blocking main thread</li>
+  </ol>
+  <h3># V3.5.1</h3>
+  <ol>
+    <li>修复 macOS 26 上工具栏按钮出现灰色背景条的问题</li>
+    <li>修复侧边栏和笔记列表在 macOS 26 上背景透明的问题</li>
+    <li>优化笔记切换速度,已加载笔记走同步路径,切换无延迟</li>
+    <li>切换笔记时保存改为异步防抖,不再阻塞主线程</li>
+  </ol>
+          ]]>      </description>
+      <pubDate>Sat, 03 May 2026 21:35:00 +0800</pubDate>
+      <enclosure url="https://github.com/tw93/MiaoYan/releases/download/V3.5.1/MiaoYan_V3.5.1.zip" sparkle:shortVersionString="3.5.1" sparkle:version="3.5.1" sparkle:edSignature="XgLa9BrkFAsPPn1M4wlfWoDaQ39QXf56OaoH6bqLxNTMkSmj3um383KMpT7a/LblXewi2wEr5vlrnd4iLAoQAA==" length="23918852" type="application/octet-stream"/>
+      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>3.5.0</title>
       <link>https://github.com/tw93/MiaoYan/releases</link>
       <description><![CDATA[
