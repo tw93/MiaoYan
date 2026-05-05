@@ -69,14 +69,14 @@
 		27B5AC6B2E45F26A00C83B3A /* ZipArchive in Frameworks */ = {isa = PBXBuildFile; productRef = 27B5AC6A2E45F26A00C83B3A /* ZipArchive */; };
 		27B5AC6E2E45F27A00C83B3A /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 27B5AC6D2E45F27A00C83B3A /* Sparkle */; };
 		27C34C0E28928D0B007369E5 /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C34C0D28928D0B007369E5 /* Emoji.swift */; };
+		27D000A22EAB000000D13871 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 27D000A12EAB000000D13871 /* Localizable.xcstrings */; };
+		27D000A42EAB000000D13871 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 27D000A32EAB000000D13871 /* InfoPlist.xcstrings */; };
+		27D000A62EAB000000D13871 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 27D000A52EAB000000D13871 /* PrivacyInfo.xcprivacy */; };
 		27D95122285B5E4400F40306 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D95121285B5E4400F40306 /* Toast.swift */; };
 		27D9A4F72873D345006317AD /* FileManager+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D9A4F62873D345006317AD /* FileManager+.swift */; };
 		27E951092E814E61004E2883 /* ShortcutTemplateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E951082E814E61004E2883 /* ShortcutTemplateManager.swift */; };
 		27EAA59A2EA8C76500D13871 /* app.icon in Resources */ = {isa = PBXBuildFile; fileRef = 27EAA5992EA8C76500D13871 /* app.icon */; };
 		27EAA5A02EA93D8800D13871 /* MobileAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27EAA59F2EA93D8800D13871 /* MobileAssets.xcassets */; };
-		27D000A22EAB000000D13871 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 27D000A12EAB000000D13871 /* Localizable.xcstrings */; };
-		27D000A42EAB000000D13871 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 27D000A32EAB000000D13871 /* InfoPlist.xcstrings */; };
-		27D000A62EAB000000D13871 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 27D000A52EAB000000D13871 /* PrivacyInfo.xcprivacy */; };
 		27EFD78A2E40E2E400DE6636 /* HtmlManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EFD7892E40E2E400DE6636 /* HtmlManager.swift */; };
 		27F1C0012F40000100AAA001 /* LinkHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F1C0002F40000100AAA001 /* LinkHighlighter.swift */; };
 		27F1C0112F40000200AAA001 /* CodeBlockHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F1C0102F40000200AAA001 /* CodeBlockHighlighter.swift */; };
@@ -87,7 +87,6 @@
 		3680D573468EA822F427197E /* NSTextField+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3680D20013301CC48E2BEC53 /* NSTextField+.swift */; };
 		3680DE38C941303E615282C4 /* MPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3680DA19202046722D9BEEA2 /* MPreviewView.swift */; };
 		4C5E0C6B57054F9C9A0C7A9C /* CloudSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B671C2C7154C33A6BDC59A /* CloudSyncManager.swift */; };
-		8C5E0C6B57054F9C9A0C7AAA /* RecentNotesCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B671C2C7154C33A6BDCAAA /* RecentNotesCache.swift */; };
 		4D5CD5E8152C42BE97383DAA /* app.icon in Resources */ = {isa = PBXBuildFile; fileRef = 27EAA5992EA8C76500D13871 /* app.icon */; };
 		5EA2FE92CBA734EDEFE7E309 /* FolderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3B40DC2D5EDC92F599928F /* FolderListView.swift */; };
 		666A37171C539EB17C4BF4D5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A09E5DF80DF858A174443D8F /* Foundation.framework */; };
@@ -96,6 +95,7 @@
 		6EB32CA84A9FE302AB9534A0 /* NotesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799BE3B629AEB2051AF69AB2 /* NotesListView.swift */; };
 		6ebaaf6024d941179530c9dc966d60c6 /* FontConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = b2384ca08b9b4d1389a7bf4e0ae47758 /* FontConfiguration.swift */; };
 		8B143F56BB019B808CC4386A /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D3FBA9ED5365B3869702E8 /* AppState.swift */; };
+		8C5E0C6B57054F9C9A0C7AAA /* RecentNotesCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B671C2C7154C33A6BDCAAA /* RecentNotesCache.swift */; };
 		8F7136EE23490CBF004DFA6E /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7136ED23490CBF004DFA6E /* Markdown.swift */; };
 		9A4658B9B745E08FC4DB8577 /* CMarkGFM in Frameworks */ = {isa = PBXBuildFile; productRef = CBD4E726D8FB3B404AC19059 /* CMarkGFM */; };
 		A090A42DDDB5B3599F6B47E6 /* MobileHtmlRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DADE53B7E8BD46549942E2B /* MobileHtmlRenderer.swift */; };
@@ -232,14 +232,14 @@
 		27B4A5A82E6924CC00C89EFF /* ViewController+Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Action.swift"; sourceTree = "<group>"; };
 		27B4A5A92E6924CC00C89EFF /* ViewController+Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Data.swift"; sourceTree = "<group>"; };
 		27C34C0D28928D0B007369E5 /* Emoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emoji.swift; sourceTree = "<group>"; };
+		27D000A12EAB000000D13871 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = Localizable.xcstrings; path = MiaoYanMobile/Resources/Localizable.xcstrings; sourceTree = SOURCE_ROOT; };
+		27D000A32EAB000000D13871 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = InfoPlist.xcstrings; path = MiaoYanMobile/Resources/InfoPlist.xcstrings; sourceTree = SOURCE_ROOT; };
+		27D000A52EAB000000D13871 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = MiaoYanMobile/Resources/PrivacyInfo.xcprivacy; sourceTree = SOURCE_ROOT; };
 		27D95121285B5E4400F40306 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		27D9A4F62873D345006317AD /* FileManager+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+.swift"; sourceTree = "<group>"; };
 		27E951082E814E61004E2883 /* ShortcutTemplateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutTemplateManager.swift; sourceTree = "<group>"; };
 		27EAA5992EA8C76500D13871 /* app.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = app.icon; sourceTree = "<group>"; };
 		27EAA59F2EA93D8800D13871 /* MobileAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = MobileAssets.xcassets; path = MiaoYanMobile/Resources/MobileAssets.xcassets; sourceTree = SOURCE_ROOT; };
-		27D000A12EAB000000D13871 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = Localizable.xcstrings; path = MiaoYanMobile/Resources/Localizable.xcstrings; sourceTree = SOURCE_ROOT; };
-		27D000A32EAB000000D13871 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = InfoPlist.xcstrings; path = MiaoYanMobile/Resources/InfoPlist.xcstrings; sourceTree = SOURCE_ROOT; };
-		27D000A52EAB000000D13871 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = MiaoYanMobile/Resources/PrivacyInfo.xcprivacy; sourceTree = SOURCE_ROOT; };
 		27EFD7892E40E2E400DE6636 /* HtmlManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HtmlManager.swift; sourceTree = "<group>"; };
 		27F1C0002F40000100AAA001 /* LinkHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkHighlighter.swift; sourceTree = "<group>"; };
 		27F1C0102F40000200AAA001 /* CodeBlockHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBlockHighlighter.swift; sourceTree = "<group>"; };
@@ -994,20 +994,20 @@
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_ENTITLEMENTS = MiaoYanMobile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.0;
+				CURRENT_PROJECT_VERSION = 4.0.0;
 				DEVELOPMENT_TEAM = 5EH69Y5X38;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = MiaoYanMobile/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MiaoYan;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.miaoyan.mobile;
+				MARKETING_VERSION = 4.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.miaoyan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_STRICT_CONCURRENCY = complete;
@@ -1173,7 +1173,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3.5.1;
+				CURRENT_PROJECT_VERSION = 4.0.0;
 				DEAD_CODE_STRIPPING = YES;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				ENABLE_APP_SANDBOX = NO;
@@ -1194,7 +1194,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 3.5.1;
+				MARKETING_VERSION = 4.0.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1223,7 +1223,7 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3.5.1;
+				CURRENT_PROJECT_VERSION = 4.0.0;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_LOCATION = NO;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
@@ -1245,7 +1245,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 3.5.1;
+				MARKETING_VERSION = 4.0.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1347,7 +1347,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3.5.1;
+				CURRENT_PROJECT_VERSION = 4.0.0;
 				DEAD_CODE_STRIPPING = YES;
 				DEPLOYMENT_LOCATION = NO;
 				DEVELOPMENT_TEAM = 5EH69Y5X38;
@@ -1382,7 +1382,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
-				MARKETING_VERSION = 3.5.1;
+				MARKETING_VERSION = 4.0.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1411,20 +1411,20 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.0;
+				CURRENT_PROJECT_VERSION = 4.0.0;
 				DEVELOPMENT_TEAM = 5EH69Y5X38;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = MiaoYanMobile/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MiaoYan;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.miaoyan.mobile;
+				MARKETING_VERSION = 4.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.miaoyan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_STRICT_CONCURRENCY = complete;
@@ -1440,20 +1440,20 @@
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_ENTITLEMENTS = MiaoYanMobile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.0;
+				CURRENT_PROJECT_VERSION = 4.0.0;
 				DEVELOPMENT_TEAM = 5EH69Y5X38;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = MiaoYanMobile/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MiaoYan;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.miaoyan.mobile;
+				MARKETING_VERSION = 4.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.miaoyan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_STRICT_CONCURRENCY = complete;

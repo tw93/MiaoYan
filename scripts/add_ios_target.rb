@@ -18,7 +18,7 @@ target = project.new_target(:application, 'MiaoYanMobile', :ios, '16.0')
 
 target.build_configurations.each do |config|
   s = config.build_settings
-  s['PRODUCT_BUNDLE_IDENTIFIER']          = 'com.tw93.miaoyan.mobile'
+  s['PRODUCT_BUNDLE_IDENTIFIER']          = 'com.tw93.miaoyan'
   s['PRODUCT_NAME']                       = '$(TARGET_NAME)'
   s['SWIFT_VERSION']                      = '6.0'
   s['IPHONEOS_DEPLOYMENT_TARGET']         = '16.0'

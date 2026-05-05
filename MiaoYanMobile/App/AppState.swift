@@ -37,7 +37,10 @@ final class AppState: ObservableObject {
             isResolvingInitialRoot = false
             return true
         }
-        guard let url = CloudSyncManager.shared.getNotesDirectory() else { return false }
+        guard let url = CloudSyncManager.shared.getNotesDirectory() else {
+            isResolvingInitialRoot = false
+            return false
+        }
         deactivate()
         activate(url, isExternalFolder: false)
         saveBookmark(for: url, securityScoped: false)
@@ -45,10 +48,6 @@ final class AppState: ObservableObject {
     }
 
     func finishInitialRootResolution() {
-        guard rootURL == nil else {
-            isResolvingInitialRoot = false
-            return
-        }
         isResolvingInitialRoot = false
     }
 

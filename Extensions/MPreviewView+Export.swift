@@ -364,6 +364,13 @@ extension MPreviewView {
         vc.toastUpdate(message: "\(I18n.str("Exporting...")) 20%")
 
         self.evaluateJavaScript("document.documentElement.outerHTML") { [weak self] html, _ in
+            guard let self else {
+                vc.toastDismiss()
+                vc.toastExport(status: false)
+                Self.isExporting = false
+                return
+            }
+
             let renderedHTML = (html as? String) ?? ""
             guard renderedHTML.count > 50 else {
                 vc.toastDismiss()
@@ -377,14 +384,13 @@ extension MPreviewView {
             let baseURL = HtmlManager.previewBundleURL()
             let controller = PdfExportController(note: note, html: renderedHTML, baseURL: baseURL, viewController: vc)
 
-            // Retain the controller for the duration of the export; release on completion.
-            objc_setAssociatedObject(self ?? NSObject(), &AssociatedKeys.pdfExportController, controller, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &AssociatedKeys.pdfExportController, controller, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 
-            controller.run { success in
+            controller.run { [weak self] success in
                 vc.toastDismiss()
                 vc.toastExport(status: success)
                 Self.isExporting = false
-                if let self = self {
+                if let self {
                     objc_setAssociatedObject(self, &AssociatedKeys.pdfExportController, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
                 }
             }

@@ -325,7 +325,16 @@ struct NoteDetailView: View {
             )
 
             if let cachedHTML = await ReaderHTMLCache.shared.html(for: cacheKey) {
-                let resolvedContent = await NoteFileStore.readContent(of: note)
+                let resolvedContent: String
+                do {
+                    resolvedContent = try await NoteFileStore.readContent(of: note)
+                } catch {
+                    guard !Task.isCancelled else { return }
+                    saveState = .failed(error.localizedDescription)
+                    isApplyingLoadedContent = false
+                    showToast("Reload")
+                    return
+                }
                 guard !Task.isCancelled else { return }
                 content = resolvedContent
                 lastKnownModifiedDate = resolvedModifiedDate
@@ -336,7 +345,16 @@ struct NoteDetailView: View {
                 return
             }
 
-            let resolvedContent = await NoteFileStore.readContent(of: note)
+            let resolvedContent: String
+            do {
+                resolvedContent = try await NoteFileStore.readContent(of: note)
+            } catch {
+                guard !Task.isCancelled else { return }
+                saveState = .failed(error.localizedDescription)
+                isApplyingLoadedContent = false
+                showToast("Reload")
+                return
+            }
             let html = await Task.detached(priority: .userInitiated) {
                 MobileHtmlRenderer.render(markdown: resolvedContent, title: title, fontSize: fontSize)
             }.value

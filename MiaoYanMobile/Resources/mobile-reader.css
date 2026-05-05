@@ -251,7 +251,6 @@ img {
   outline-offset: -1px;
 }
 
-p > img:only-child,
 figure img {
   width: 100% !important;
 }
@@ -273,9 +272,7 @@ svg {
   margin: 1.18em auto;
 }
 
-video,
-canvas,
-svg {
+video {
   width: 100% !important;
   height: auto !important;
 }

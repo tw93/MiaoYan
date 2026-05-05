@@ -152,8 +152,15 @@ enum NoteFileStore {
     nonisolated static func readFirstBytes(at url: URL, maxBytes: Int) -> String? {
         guard let handle = try? FileHandle(forReadingFrom: url) else { return nil }
         defer { try? handle.close() }
-        guard let data = try? handle.read(upToCount: maxBytes) else { return nil }
-        return String(data: data, encoding: .utf8)
+        guard var data = try? handle.read(upToCount: maxBytes), !data.isEmpty else { return nil }
+        if let s = String(data: data, encoding: .utf8) { return s }
+        // Truncation may split a multi-byte UTF-8 sequence (CJK = 3 bytes,
+        // emoji = 4 bytes). Trim up to 3 trailing bytes to find a valid boundary.
+        for _ in 0..<3 {
+            data.removeLast()
+            if let s = String(data: data, encoding: .utf8) { return s }
+        }
+        return nil
     }
 
     // MARK: - Folders
@@ -315,9 +322,9 @@ enum NoteFileStore {
 
     // MARK: - Read / write
 
-    static func readContent(of note: NoteFile) async -> String {
-        await Task.detached(priority: .userInitiated) {
-            (try? coordinatedReadString(at: note.url)) ?? ""
+    static func readContent(of note: NoteFile) async throws -> String {
+        try await Task.detached(priority: .userInitiated) {
+            try coordinatedReadString(at: note.url)
         }.value
     }
 
