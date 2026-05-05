@@ -567,14 +567,17 @@ struct NoteCard: View {
                 Spacer(minLength: 0)
             }
 
-            if !displayedPreview.isEmpty {
-                Text(displayedPreview)
-                    .font(MobileTheme.font(.subheadline))
-                    .foregroundStyle(MobileTheme.secondaryInk)
-                    .lineSpacing(2)
-                    .lineLimit(2)
-                    .transition(.opacity)
-            }
+            // Always render the preview Text so card height is stable.
+            // Before the lazy preview arrives, the space character keeps
+            // the Text from collapsing to zero height; once real text
+            // lands, it replaces the placeholder in-place with no layout
+            // jump. The opacity fade makes the swap imperceptible.
+            Text(displayedPreview.isEmpty ? " " : displayedPreview)
+                .font(MobileTheme.font(.subheadline))
+                .foregroundStyle(MobileTheme.secondaryInk)
+                .lineSpacing(2)
+                .lineLimit(2)
+                .opacity(displayedPreview.isEmpty ? 0 : 1)
 
             HStack(spacing: 8) {
                 Text(note.modifiedDate, style: .date)
@@ -587,7 +590,6 @@ struct NoteCard: View {
             .foregroundStyle(MobileTheme.secondaryInk.opacity(0.75))
         }
         .mobileCard()
-        .animation(.easeOut(duration: 0.18), value: displayedPreview.isEmpty)
         .onAppear {
             // Hot path: cache hit returns the preview immediately without
             // hitting the filesystem.
