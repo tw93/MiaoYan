@@ -34,7 +34,7 @@ final class CloudSyncManager: ObservableObject {
     /// view up indefinitely even though usable data is already available.
     private static let gatheringSoftTimeout: TimeInterval = 5.0
 
-    @Published var status: CloudSyncStatus = .offline
+    @Published var status: CloudSyncStatus = .syncing
     @Published var iCloudAvailable = false
     @Published private(set) var didFinishInitialSetup = false
     /// True after `NSMetadataQueryDidFinishGathering` fires for the first time
