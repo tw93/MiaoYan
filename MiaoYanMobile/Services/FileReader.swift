@@ -120,6 +120,18 @@ enum NoteFileStore {
     /// Order matters: `**` must be consumed before `*`.
     nonisolated(unsafe) private static let emphasisRegex = try? NSRegularExpression(
         pattern: "\\*\\*|__|~~|[*_]", options: [])
+    nonisolated(unsafe) private static let checkboxRegex = try? NSRegularExpression(
+        pattern: "\\[[ xX]\\]\\s*", options: [])
+    nonisolated(unsafe) private static let wikilinkRegex = try? NSRegularExpression(
+        pattern: "\\[\\[(?:[^\\]|]*\\|)?([^\\]]*)\\]\\]", options: [])
+    nonisolated(unsafe) private static let tableSepRegex = try? NSRegularExpression(
+        pattern: "^[\\|\\-:]+$", options: [.anchorsMatchLines])
+    nonisolated(unsafe) private static let tablePipeRegex = try? NSRegularExpression(
+        pattern: "\\|", options: [])
+    nonisolated(unsafe) private static let hrUnderscoreRegex = try? NSRegularExpression(
+        pattern: "^_{3,}$", options: [.anchorsMatchLines])
+    nonisolated(unsafe) private static let htmlEntityRegex = try? NSRegularExpression(
+        pattern: "&[a-zA-Z]+;|&#\\d+;", options: [])
 
     /// Remove HTML tags and Markdown noise (raw image syntax, link URLs,
     /// bare URLs, inline-code backticks) so card previews and search
@@ -134,6 +146,24 @@ enum NoteFileStore {
         var s = input
         let full = { (str: String) in NSRange(location: 0, length: (str as NSString).length) }
         if let re = htmlTagRegex {
+            s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "")
+        }
+        if let re = htmlEntityRegex {
+            s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "")
+        }
+        if let re = wikilinkRegex {
+            s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "$1")
+        }
+        if let re = checkboxRegex {
+            s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "")
+        }
+        if let re = tableSepRegex {
+            s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "")
+        }
+        if let re = tablePipeRegex {
+            s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: " ")
+        }
+        if let re = hrUnderscoreRegex {
             s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "")
         }
         if let re = mdImageRegex {
