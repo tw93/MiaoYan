@@ -47,7 +47,12 @@ enum Theme {
             return UserDefaultsManagement.bgColor
         }
 
-        return usesModernSystemChrome ? .clear : backgroundColor
+        return Color(name: nil) { appearance in
+            if appearance.isDark {
+                return backgroundColor
+            }
+            return Color(srgbRed: 0.98, green: 0.98, blue: 0.98, alpha: 1.0)
+        }
     }
 
     static var editorSurfaceBackgroundColor: Color {
