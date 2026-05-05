@@ -1,5 +1,9 @@
 {
   "github": {
-      "silent": true
-  }
+    "silent": true
+  },
+  "redirects": [
+    { "source": "/cats.html", "destination": "https://cats.tw93.fun", "permanent": true },
+    { "source": "/cats.html/(.*)", "destination": "https://cats.tw93.fun/$1", "permanent": true }
+  ]
 }
