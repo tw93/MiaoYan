@@ -127,6 +127,19 @@ struct MiaoYanMobileApp: App {
     @StateObject private var appState = AppState()
     @StateObject private var readerWebViewStore = ReaderWebViewStore()
 
+    init() {
+        // Paint every UIWindow's root background to paper so navigation
+        // transitions (push/pop crossfade) never briefly expose the
+        // system default white underneath — visible as a bright flash
+        // in dark mode.
+        let paperColor = MobileTheme.paperUIColor
+        UIWindow.appearance().backgroundColor = paperColor
+        // NavigationBar and TabBar backgrounds also need to match so
+        // the bar regions don't flash during transitions.
+        UINavigationBar.appearance().backgroundColor = paperColor
+        UITabBar.appearance().backgroundColor = paperColor
+    }
+
     var body: some Scene {
         WindowGroup {
             FolderListView()
