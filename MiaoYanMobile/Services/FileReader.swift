@@ -113,9 +113,9 @@ enum NoteFileStore {
     nonisolated(unsafe) private static let codeBlockRegex = try? NSRegularExpression(
         pattern: "```.*?```", options: [.dotMatchesLineSeparators])
     nonisolated(unsafe) private static let mdMarkerRegex = try? NSRegularExpression(
-        pattern: "^[#>*+\\-]+\\s+", options: [.anchorsMatchLines])
+        pattern: "^[#>*+\\-]+\\s*", options: [.anchorsMatchLines])
     nonisolated(unsafe) private static let mdOrderedListRegex = try? NSRegularExpression(
-        pattern: "^\\d+\\.\\s+", options: [.anchorsMatchLines])
+        pattern: "^\\d+[\\.\\)、]\\s*", options: [.anchorsMatchLines])
     /// `**` and `__` first (greedy), then single `*` and `_`, then `~~`.
     /// Order matters: `**` must be consumed before `*`.
     nonisolated(unsafe) private static let emphasisRegex = try? NSRegularExpression(
