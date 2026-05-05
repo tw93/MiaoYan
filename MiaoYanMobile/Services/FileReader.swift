@@ -116,6 +116,10 @@ enum NoteFileStore {
         pattern: "^[#>*+\\-]+\\s+", options: [.anchorsMatchLines])
     nonisolated(unsafe) private static let mdOrderedListRegex = try? NSRegularExpression(
         pattern: "^\\d+\\.\\s+", options: [.anchorsMatchLines])
+    /// `**` and `__` first (greedy), then single `*` and `_`, then `~~`.
+    /// Order matters: `**` must be consumed before `*`.
+    nonisolated(unsafe) private static let emphasisRegex = try? NSRegularExpression(
+        pattern: "\\*\\*|__|~~|[*_]", options: [])
 
     /// Remove HTML tags and Markdown noise (raw image syntax, link URLs,
     /// bare URLs, inline-code backticks) so card previews and search
@@ -144,10 +148,11 @@ enum NoteFileStore {
         if let re = inlineCodeRegex {
             s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "$1")
         }
-        if let re = whitespaceRunRegex {
-            s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: " ")
-        }
-        return s.trimmingCharacters(in: .whitespacesAndNewlines)
+        // Whitespace collapse is intentionally NOT done here — newlines
+        // must survive so downstream stripMarkdownMarkers can anchor
+        // `^` to real line starts. Callers that need single-line output
+        // collapse whitespace after the full pipeline finishes.
+        return s
     }
 
     /// Strip YAML/TOML frontmatter fenced by `---` or `+++` at the
@@ -183,6 +188,13 @@ enum NoteFileStore {
             s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "")
         }
         return s
+    }
+
+    /// Strip bold/italic/strikethrough markers (`**`, `*`, `__`, `_`, `~~`).
+    nonisolated private static func stripEmphasisMarkers(_ input: String) -> String {
+        guard let re = emphasisRegex else { return input }
+        let full = NSRange(location: 0, length: (input as NSString).length)
+        return re.stringByReplacingMatches(in: input, range: full, withTemplate: "")
     }
 
     /// Read up to `maxBytes` from a file via plain FileHandle, no
@@ -610,8 +622,12 @@ enum NoteFileStore {
         var s = head
         s = stripFrontmatter(s)
         s = stripCodeBlocks(s)
-        s = stripPreviewNoise(s)
+        // Markers BEFORE noise: stripMarkdownMarkers uses ^ anchors that
+        // need real newlines. stripPreviewNoise no longer collapses
+        // whitespace, so newlines survive into this step.
         s = stripMarkdownMarkers(s)
+        s = stripPreviewNoise(s)
+        s = stripEmphasisMarkers(s)
 
         let lines = s.components(separatedBy: .newlines)
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
@@ -685,7 +701,9 @@ enum NoteFileStore {
         from content: String, query: String, knownRange: Range<String.Index>? = nil
     ) -> String {
         let opts: String.CompareOptions = [.caseInsensitive, .diacriticInsensitive]
-        let cleaned = stripPreviewNoise(content)
+        var cleaned = stripMarkdownMarkers(content)
+        cleaned = stripPreviewNoise(cleaned)
+        cleaned = stripEmphasisMarkers(cleaned)
         guard let range = cleaned.range(of: query, options: opts) else {
             // Title-only match (no body hit) — fall back to a clean
             // opening snippet rather than echoing raw markdown.
