@@ -82,17 +82,7 @@ enum Theme {
     }
 
     static var sidebarSelectionStrokeColor: Color {
-        guard usesModernSystemChrome else {
-            return .clear
-        }
-
-        return Color(name: nil) { appearance in
-            if appearance.isDark {
-                return Color.white.withAlphaComponent(0.14)
-            }
-
-            return Color.separatorColor.withAlphaComponent(0.22)
-        }
+        return .clear
     }
 
     static var settingsWindowBackgroundColor: Color {
