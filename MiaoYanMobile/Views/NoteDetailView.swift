@@ -317,17 +317,26 @@ struct NoteDetailView: View {
         let title = note.title
 
         loadTask = Task { @MainActor in
-            let resolvedModifiedDate = await NoteFileStore.modificationDateOffMain(for: note.url)
+            // Fire mtime + content reads in parallel so iCloud
+            // coordinator latency (~100-500ms) overlaps instead of
+            // stacking. Both run on detached tasks off the main actor.
+            async let mtimeResult = NoteFileStore.modificationDateOffMain(for: note.url)
+            async let contentResult = NoteFileStore.readContent(of: note)
+
+            let resolvedModifiedDate = await mtimeResult
             let cacheKey = ReaderHTMLCacheKey(
                 noteURL: note.url,
                 modifiedDate: resolvedModifiedDate,
                 fontSize: fontSize
             )
 
+            // Cache hit: install HTML immediately, content arrives in
+            // parallel for the editor backing store.
             if let cachedHTML = await ReaderHTMLCache.shared.html(for: cacheKey) {
+                installRenderedHTML(cachedHTML)
                 let resolvedContent: String
                 do {
-                    resolvedContent = try await NoteFileStore.readContent(of: note)
+                    resolvedContent = try await contentResult
                 } catch {
                     guard !Task.isCancelled else { return }
                     saveState = .failed(error.localizedDescription)
@@ -340,14 +349,14 @@ struct NoteDetailView: View {
                 lastKnownModifiedDate = resolvedModifiedDate
                 saveState = .saved
                 hasLoadedContent = true
-                installRenderedHTML(cachedHTML)
                 isApplyingLoadedContent = false
                 return
             }
 
+            // Cache miss: wait for content, render, then install.
             let resolvedContent: String
             do {
-                resolvedContent = try await NoteFileStore.readContent(of: note)
+                resolvedContent = try await contentResult
             } catch {
                 guard !Task.isCancelled else { return }
                 saveState = .failed(error.localizedDescription)
