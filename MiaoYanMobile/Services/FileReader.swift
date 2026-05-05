@@ -557,20 +557,54 @@ enum NoteFileStore {
             let head = String(data: data, encoding: .utf8)
         else { return "" }
 
-        let lines = head.components(separatedBy: .newlines)
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .filter { line in
-                !line.isEmpty
-                    && !line.hasPrefix("#")
-                    && !line.hasPrefix("---")
-                    && !line.hasPrefix("```")
-                    && !line.hasPrefix("!")
+        // Two-pass strategy:
+        //  1. Skip structural lines (title heading, frontmatter fences,
+        //     code fences) but keep everything else — including secondary
+        //     headings (## / ###) which often carry meaningful context.
+        //  2. Run stripPreviewNoise to clean inline HTML, image syntax,
+        //     bare URLs, etc.
+        //
+        // The old filter was too aggressive: it dropped ALL `#` lines
+        // (including useful ## subheadings) and ALL `!` lines (including
+        // lines that just start with `!` in prose). Notes whose first
+        // few lines were all filtered ended up with no preview at all.
+        var skippedFirstHeading = false
+        var inFrontmatter = false
+        var inCodeBlock = false
+        var collected: [String] = []
+
+        for rawLine in head.components(separatedBy: .newlines) {
+            let line = rawLine.trimmingCharacters(in: .whitespacesAndNewlines)
+            if line.isEmpty { continue }
+
+            // Toggle frontmatter (--- at line 1 or after blank-only prefix)
+            if line == "---" || line == "+++" {
+                inFrontmatter.toggle()
+                continue
+            }
+            if inFrontmatter { continue }
+
+            // Toggle fenced code blocks
+            if line.hasPrefix("```") {
+                inCodeBlock.toggle()
+                continue
+            }
+            if inCodeBlock { continue }
+
+            // Skip only the FIRST top-level heading (the title) — it
+            // already shows as the card's title label, so repeating it
+            // as preview is wasted space. Keep subsequent headings.
+            if !skippedFirstHeading, line.hasPrefix("# ") {
+                skippedFirstHeading = true
+                continue
             }
 
-        // Line filter handles whole-line markdown noise; the post-pass
-        // handles inline noise (HTML tags, ![](...), [text](url), bare
-        // URLs, inline-code backticks) that survives the line filter.
-        return stripPreviewNoise(lines.prefix(2).joined(separator: " "))
+            collected.append(line)
+            if collected.count >= 4 { break }
+        }
+
+        let raw = collected.prefix(2).joined(separator: " ")
+        return stripPreviewNoise(raw)
     }
 
     nonisolated static func coordinatedReadString(at url: URL) throws -> String {
