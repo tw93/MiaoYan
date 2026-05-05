@@ -616,7 +616,6 @@ enum NoteFileStore {
         let lines = s.components(separatedBy: .newlines)
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             .filter { !$0.isEmpty }
-            .dropFirst()
         return lines.prefix(2).joined(separator: " ")
     }
 
