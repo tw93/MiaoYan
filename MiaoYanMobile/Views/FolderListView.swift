@@ -604,11 +604,7 @@ struct NoteCard: View {
             if !note.preview.isEmpty { return }
             if lazyPreview != nil { return }
             let url = note.url
-            // .background priority: previews never compete with user-driven
-            // navigation or rendering. previewIfDownloaded returns nil for
-            // not-yet-downloaded iCloud files so we don't trigger downloads
-            // just to render a snippet.
-            let preview = await Task.detached(priority: .background) {
+            let preview = await Task.detached(priority: .userInitiated) {
                 NoteFileStore.previewIfDownloaded(for: url) ?? ""
             }.value
             guard !preview.isEmpty else { return }

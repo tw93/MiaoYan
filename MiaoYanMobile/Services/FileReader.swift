@@ -276,18 +276,21 @@ enum NoteFileStore {
             .sorted(by: sortNotes)
     }
 
-    /// Lazy preview helper for the card layer. Returns nil for iCloud files
-    /// that haven't been downloaded yet, so visible cards never trigger a
-    /// blocking download just to render a two-line snippet. Once the file is
-    /// downloaded by NSMetadataQuery, the next revision bump re-renders the
-    /// card and this returns the preview.
+    /// Lazy preview helper for the card layer. Returns nil only for iCloud
+    /// files that are still pure placeholders (not downloaded at all).
+    /// Files that are `.downloaded` (content available locally, maybe not
+    /// latest) or `.current` (fully up to date) are read — we already
+    /// call `startDownloadingUbiquitousItem` proactively so most files
+    /// land quickly; blocking on a 900-byte head read for an already-
+    /// downloaded file is negligible.
     nonisolated static func previewIfDownloaded(for url: URL) -> String? {
         let status =
             (try? url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
                 .ubiquitousItemDownloadingStatus)
-        // Non-iCloud files have no status (nil) — proceed.
-        // iCloud files only proceed when fully current locally.
-        if let status, status != .current { return nil }
+        // nil status = non-iCloud file → always proceed.
+        // `.notDownloaded` = pure placeholder, no local content → skip.
+        // `.downloaded` / `.current` = content is on disk → proceed.
+        if status == .notDownloaded { return nil }
         return previewTextSync(for: url)
     }
 
