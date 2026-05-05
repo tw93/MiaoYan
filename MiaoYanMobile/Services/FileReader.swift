@@ -363,20 +363,21 @@ enum NoteFileStore {
             .sorted(by: sortNotes)
     }
 
-    /// Lazy preview helper for the card layer. Returns nil only for pure
-    /// iCloud placeholders (`.notDownloaded`). Both `.downloaded` and
-    /// `.current` files have content on disk and are safe to read.
-    /// Non-iCloud files (nil status) always proceed.
+    /// Lazy preview helper for the card layer. Tries to read the first
+    /// 900 bytes directly — if the file is a pure iCloud placeholder
+    /// FileHandle simply fails to open and `previewTextSync` returns
+    /// an empty string (which we surface as nil so the caller can
+    /// retry on the next revision bump). No explicit download-status
+    /// gate: the ubiquitous status value can lag behind the real file
+    /// state, causing downloaded-but-not-yet-current files to show
+    /// blank previews even though their content is on disk.
     ///
     /// Callers must use `.low` or `.background` task priority — running
     /// 40+ of these at `.userInitiated` simultaneously saturates CPU
     /// with the regex cleanup pipeline and freezes the UI.
     nonisolated static func previewIfDownloaded(for url: URL) -> String? {
-        let status =
-            (try? url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
-                .ubiquitousItemDownloadingStatus)
-        if status == .notDownloaded { return nil }
-        return previewTextSync(for: url)
+        let result = previewTextSync(for: url)
+        return result.isEmpty ? nil : result
     }
 
     static func recentNotes(in root: URL, limit: Int = recentNoteLimit) async -> [NoteFile] {
