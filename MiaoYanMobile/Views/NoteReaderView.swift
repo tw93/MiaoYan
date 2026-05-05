@@ -51,13 +51,24 @@ struct NoteReaderView: View {
 enum ReaderWebViewFactory {
     static let warmupHTML = """
         <!doctype html>
-        <html><head><meta name="viewport" content="width=device-width, initial-scale=1"></head><body></body></html>
+        <html><head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+        :root { background: #f9f7f0; }
+        @media (prefers-color-scheme: dark) { :root { background: #161716; } }
+        </style>
+        </head><body></body></html>
         """
 
     static func makeConfiguration() -> WKWebViewConfiguration {
         let config = WKWebViewConfiguration()
         config.allowsInlineMediaPlayback = true
-        config.suppressesIncrementalRendering = false
+        // Suppress incremental rendering so WebView waits for the full
+        // HTML + CSS to be parsed before painting. Without this, the
+        // first frame shows a white/light background before dark-mode
+        // CSS kicks in, producing a visible flash on the first and
+        // second note open.
+        config.suppressesIncrementalRendering = true
         return config
     }
 
