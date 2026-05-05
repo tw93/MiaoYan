@@ -2,6 +2,147 @@ import AppKit
 import PDFKit
 import WebKit
 
+@MainActor
+final class PdfExportPreviewController: NSViewController {
+    private let note: Note
+    private let estimatedPages: Int
+    private let onExport: () -> Void
+
+    init(note: Note, onExport: @escaping () -> Void) {
+        self.note = note
+        self.estimatedPages = Self.estimatePages(for: note)
+        self.onExport = onExport
+        super.init(nibName: nil, bundle: nil)
+        preferredContentSize = NSSize(width: 440, height: 286)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    static func present(note: Note, from viewController: ViewController, onExport: @escaping () -> Void) {
+        let controller = PdfExportPreviewController(note: note, onExport: onExport)
+        viewController.presentAsSheet(controller)
+    }
+
+    override func loadView() {
+        view = NSView(frame: NSRect(origin: .zero, size: preferredContentSize))
+        view.wantsLayer = true
+        view.layer?.backgroundColor = Theme.panelBackgroundColor.resolvedColor(for: view.effectiveAppearance).cgColor
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        buildInterface()
+    }
+
+    private func buildInterface() {
+        let root = NSStackView()
+        root.orientation = .vertical
+        root.spacing = 18
+        root.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(root)
+
+        NSLayoutConstraint.activate([
+            root.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 28),
+            root.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -28),
+            root.topAnchor.constraint(equalTo: view.topAnchor, constant: 26),
+            root.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20),
+        ])
+
+        let title = label("PDF Export", size: 20, weight: .semibold, color: Theme.textColor)
+        root.addArrangedSubview(title)
+
+        let subtitle = label(note.getExportTitle(), size: 13, weight: .regular, color: Theme.secondaryTextColor)
+        subtitle.lineBreakMode = .byTruncatingMiddle
+        root.addArrangedSubview(subtitle)
+
+        let details = NSStackView()
+        details.orientation = .vertical
+        details.spacing = 10
+        details.edgeInsets = NSEdgeInsets(top: 14, left: 16, bottom: 14, right: 16)
+        details.wantsLayer = true
+        details.layer?.cornerRadius = 10
+        details.layer?.backgroundColor = Theme.panelSecondaryBackgroundColor.resolvedColor(for: view.effectiveAppearance).cgColor
+        root.addArrangedSubview(details)
+
+        details.addArrangedSubview(infoRow(title: "Template", value: "MiaoYan Article"))
+        details.addArrangedSubview(infoRow(title: "Paper", value: "A4 · Light"))
+        details.addArrangedSubview(infoRow(title: "Estimated", value: "\(estimatedPages) page\(estimatedPages == 1 ? "" : "s")"))
+
+        let divider = NSView()
+        divider.translatesAutoresizingMaskIntoConstraints = false
+        divider.wantsLayer = true
+        divider.layer?.backgroundColor = Theme.panelHairlineColor.resolvedColor(for: view.effectiveAppearance).cgColor
+        divider.heightAnchor.constraint(equalToConstant: 1 / (NSScreen.main?.backingScaleFactor ?? 2)).isActive = true
+        root.addArrangedSubview(divider)
+
+        let footer = NSStackView()
+        footer.orientation = .horizontal
+        footer.alignment = .centerY
+        footer.spacing = 10
+        root.addArrangedSubview(footer)
+
+        let hint = label("Images, Mermaid, tables, and outline are rendered before export.", size: 12, weight: .regular, color: Theme.secondaryTextColor)
+        hint.lineBreakMode = .byWordWrapping
+        hint.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        footer.addArrangedSubview(hint)
+
+        let cancel = NSButton(title: I18n.str("Cancel"), target: self, action: #selector(cancelAction))
+        let export = NSButton(title: "Export PDF", target: self, action: #selector(exportAction))
+        export.bezelStyle = .rounded
+        export.keyEquivalent = "\r"
+        cancel.keyEquivalent = "\u{1b}"
+        footer.addArrangedSubview(cancel)
+        footer.addArrangedSubview(export)
+    }
+
+    private func infoRow(title: String, value: String) -> NSView {
+        let row = NSStackView()
+        row.orientation = .horizontal
+        row.alignment = .centerY
+        row.spacing = 12
+
+        let titleLabel = label(title, size: 12, weight: .regular, color: Theme.secondaryTextColor)
+        titleLabel.widthAnchor.constraint(equalToConstant: 84).isActive = true
+        row.addArrangedSubview(titleLabel)
+
+        let valueLabel = label(value, size: 13, weight: .medium, color: Theme.textColor)
+        valueLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        row.addArrangedSubview(valueLabel)
+        return row
+    }
+
+    private func label(_ string: String, size: CGFloat, weight: NSFont.Weight, color: NSColor) -> NSTextField {
+        let label = NSTextField(labelWithString: string)
+        label.font = .systemFont(ofSize: size, weight: weight)
+        label.textColor = color
+        return label
+    }
+
+    @objc
+    private func cancelAction() {
+        dismiss(nil)
+    }
+
+    @objc
+    private func exportAction() {
+        dismiss(nil)
+        DispatchQueue.main.async { [onExport] in
+            onExport()
+        }
+    }
+
+    private static func estimatePages(for note: Note) -> Int {
+        let content = note.getPrettifiedContent()
+        let imageCount = content.components(separatedBy: "![").count - 1
+            + content.components(separatedBy: "<img").count - 1
+        let tableWeight = content.contains("|") ? 0.35 : 0
+        let estimated = (Double(content.count) / 1_850.0) + (Double(imageCount) * 0.45) + tableWeight
+        return max(1, Int(ceil(estimated)))
+    }
+}
+
 // Drives a single paginated PDF export end-to-end using an offscreen WKWebView + NSPrintOperation.
 //
 // Why offscreen: WKWebView.printOperation(with:) crashes with "WKPrintingView frame not initialized"
@@ -273,10 +414,13 @@ final class PdfExportController: NSObject {
             return
         }
 
-        let finalData = MPreviewView.buildPdfOutline(
+        let outlinedData = MPreviewView.buildPdfOutline(
             pdfData: data,
             headings: headings.items,
             totalHeight: headings.totalHeight)
+        let finalData = MPreviewView.decoratePdfForExport(
+            pdfData: outlinedData,
+            title: note.getExportTitle())
 
         if let vc = viewController {
             // Reuse the live preview's save helper (requires an MPreviewView instance for routing).

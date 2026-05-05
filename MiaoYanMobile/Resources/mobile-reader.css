@@ -1,35 +1,41 @@
 :root {
+  color-scheme: light dark;
   --font-size: 17px;
-  --line-height: 1.75;
-  --max-width: 680px;
-  --padding: 20px;
-  --font: -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif;
-  --code-font: "SFMono-Regular", "SF Mono", Menlo, "Courier New", monospace;
-
-  --bg: #ffffff;
-  --text: #1c1c1e;
-  --text-secondary: #48484a;
-  --border: #d1d1d6;
-  --code-bg: #f2f2f7;
-  --blockquote-border: #fd8258;
-  --link: #007aff;
-  --heading: #1c1c1e;
-  --table-alt: #f9f9fb;
-  --hr: #e5e5ea;
+  --line-height: 1.65;
+  --reader-width: 54rem;
+  --page-x: clamp(14px, 3.7vw, 20px);
+  --page-top: 22px;
+  --page-bottom: 46px;
+  --bleed-x: min(12px, var(--page-x));
+  --font: Charter, "New York", "Iowan Old Style", Georgia, "Songti SC", "STSong", "PingFang SC", "Heiti SC", system-ui, serif;
+  --heading-font: Charter, "New York", "Iowan Old Style", Georgia, "Songti SC", "STSong", "PingFang SC", system-ui, serif;
+  --code-font: "SFMono-Regular", "SF Mono", Menlo, monospace;
+  --bg: #f9f6f0;
+  --paper: #f9f6f0;
+  --ink: #27231d;
+  --muted: #6e6658;
+  --hairline: rgba(39, 35, 29, 0.10);
+  --code-bg: rgba(39, 35, 29, 0.055);
+  --quote-bg: rgba(37, 108, 70, 0.07);
+  --quote-bar: #2f744c;
+  --link: #256c46;
+  --image-outline: rgba(39, 35, 29, 0.10);
+  --table-alt: rgba(39, 35, 29, 0.035);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1c1c1e;
-    --text: #f2f2f7;
-    --text-secondary: #aeaeb2;
-    --border: #38383a;
-    --code-bg: #2c2c2e;
-    --blockquote-border: #fd8258;
-    --link: #0a84ff;
-    --heading: #f2f2f7;
-    --table-alt: #2c2c2e;
-    --hr: #38383a;
+    --bg: #161716;
+    --paper: #161716;
+    --ink: #d6d1c6;
+    --muted: #9d9685;
+    --hairline: rgba(214, 209, 198, 0.12);
+    --code-bg: rgba(214, 209, 198, 0.07);
+    --quote-bg: rgba(111, 177, 124, 0.10);
+    --quote-bar: #6fb17c;
+    --link: #7fca8e;
+    --image-outline: rgba(214, 209, 198, 0.14);
+    --table-alt: rgba(214, 209, 198, 0.045);
   }
 }
 
@@ -38,158 +44,305 @@
 }
 
 html {
+  width: 100%;
+  min-height: 100%;
   font-size: var(--font-size);
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
 }
 
 body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
   font-family: var(--font);
   font-size: var(--font-size);
   line-height: var(--line-height);
-  color: var(--text);
-  background-color: var(--bg);
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: var(--padding);
-  padding-bottom: 60px;
-  word-break: break-word;
+  /* heti-inspired CJK letter-spacing. 0.015em is between heti's
+     recommended 0.02em (visible breathing for Chinese) and the 0.01em that
+     keeps Charter / English text from looking strung out. Sub-pixel at
+     17px (~0.25px) so English readers won't notice. */
+  letter-spacing: 0.015em;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
-/* Headings */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font);
-  color: var(--heading);
-  line-height: 1.3;
-  margin-top: 1.6em;
-  margin-bottom: 0.5em;
+/* Reset letter-spacing on inline tokens whose width should follow the glyph
+   metric exactly. Mirrors heti's
+   `.heti a, .heti abbr, .heti code { letter-spacing: normal }` rule:
+   monospace columns, link underline length, and abbreviation kerning all
+   break if extra spacing is added. */
+code,
+pre,
+a,
+kbd,
+samp {
+  letter-spacing: normal;
+}
+
+.reader {
+  width: 100%;
+  max-width: none;
+  min-height: 100vh;
+  margin: 0;
+  padding: var(--page-top) var(--page-x) calc(var(--page-bottom) + env(safe-area-inset-bottom));
+  background: var(--paper);
+  overflow-x: hidden;
+}
+
+@media (min-width: 768px) {
+  .reader {
+    max-width: var(--reader-width);
+    margin: 0 auto;
+    padding-right: clamp(30px, 5vw, 56px);
+    padding-left: clamp(30px, 5vw, 56px);
+    background: color-mix(in srgb, var(--paper) 92%, transparent);
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--heading-font);
+  color: var(--ink);
+  /* Slightly more than body (heti uses 0.05em on h1-h3 but that reads loose
+     on mobile; 0.02em keeps the editorial feel without scattering). */
+  letter-spacing: 0.02em;
+  line-height: 1.22;
   font-weight: 600;
 }
-h1 { font-size: 1.7em; margin-top: 0.8em; }
-h2 { font-size: 1.4em; }
-h3 { font-size: 1.2em; }
-h4, h5, h6 { font-size: 1em; }
 
-/* Paragraphs */
-p {
-  margin: 0.8em 0;
+h1 {
+  margin: 0.7em 0 0.55em;
+  font-size: 1.72em;
 }
 
-/* Links */
+h2 {
+  margin: 1.55em 0 0.55em;
+  font-size: 1.36em;
+}
+
+h3 {
+  margin: 1.35em 0 0.48em;
+  font-size: 1.14em;
+}
+
+h4,
+h5,
+h6 {
+  margin: 1.15em 0 0.42em;
+  font-size: 1em;
+}
+
+p {
+  margin: 1em 0;
+}
+
 a {
   color: var(--link);
   text-decoration: none;
-}
-a:hover {
-  text-decoration: underline;
-}
-
-/* Code */
-code {
-  font-family: var(--code-font);
-  font-size: 0.875em;
-  background: var(--code-bg);
-  padding: 0.15em 0.4em;
-  border-radius: 4px;
-  color: var(--text);
-}
-pre {
-  background: var(--code-bg);
-  border-radius: 8px;
-  padding: 16px;
-  overflow-x: auto;
-  margin: 1em 0;
-  -webkit-overflow-scrolling: touch;
-}
-pre code {
-  background: none;
-  padding: 0;
-  font-size: 0.85em;
-  border-radius: 0;
-  line-height: 1.5;
+  border-bottom: 0;
+  background: transparent;
 }
 
-/* Blockquote */
-blockquote {
-  border-left: 3px solid var(--blockquote-border);
-  margin: 1em 0;
-  padding: 0.2em 1em;
-  color: var(--text-secondary);
-}
-blockquote p {
-  margin: 0.3em 0;
+a:active {
+  opacity: 0.72;
 }
 
-/* Lists */
-ul, ol {
-  padding-left: 1.5em;
-  margin: 0.6em 0;
-}
-li {
-  margin: 0.3em 0;
-}
-li > p {
-  margin: 0.2em 0;
-}
-
-/* Task lists */
-li.task-list-item {
-  list-style: none;
-  margin-left: -1.2em;
-}
-li.task-list-item input[type="checkbox"] {
-  margin-right: 0.4em;
-  accent-color: var(--blockquote-border);
-}
-
-/* Tables */
-table {
-  border-collapse: collapse;
-  width: 100%;
-  margin: 1em 0;
-  font-size: 0.9em;
-  overflow-x: auto;
-  display: block;
-}
-th, td {
-  border: 1px solid var(--border);
-  padding: 8px 12px;
-  text-align: left;
-}
-th {
-  background: var(--code-bg);
+strong {
   font-weight: 600;
 }
-tr:nth-child(even) td {
-  background: var(--table-alt);
+
+ul,
+ol {
+  margin: 0.75em 0;
+  padding-left: 1.45em;
 }
 
-/* Images */
-img {
-  max-width: 100%;
-  height: auto;
+li {
+  margin: 0.34em 0;
+}
+
+li > p {
+  margin: 0.26em 0;
+}
+
+/* Editorial book-style quote (kami-inspired): no fill, no rounding, just a
+   slim left rule. The --quote-bg variable is intentionally retained for any
+   future variant; this base rule no longer uses it. */
+blockquote {
+  margin: 1.2em 0;
+  padding: 0.1em 0 0.1em 1.1em;
+  color: var(--muted);
+  border-left: 2px solid var(--quote-bar);
+}
+
+blockquote p {
+  margin: 0.34em 0;
+}
+
+code {
+  font-family: var(--code-font);
+  font-size: 0.86em;
+  background: var(--code-bg);
+  padding: 0.16em 0.38em;
+  border-radius: 6px;
+}
+
+pre {
+  overflow-x: auto;
+  max-width: calc(100% + var(--bleed-x) * 2);
+  margin: 1.12em calc(var(--bleed-x) * -1);
+  padding: 14px max(14px, var(--page-x));
+  background: var(--code-bg);
   border-radius: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+
+pre code {
   display: block;
-  margin: 0.8em auto;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  line-height: 1.55;
+  white-space: pre;
 }
 
-/* Horizontal rule */
+table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 1.15em 0;
+  border-collapse: collapse;
+  font-size: 0.92em;
+  -webkit-overflow-scrolling: touch;
+}
+
+th,
+td {
+  border-bottom: 1px solid var(--hairline);
+  padding: 9px 11px;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  color: var(--ink);
+  font-weight: 500;
+  border-bottom-color: var(--muted);
+}
+
+img {
+  display: block;
+  width: auto;
+  max-width: 100% !important;
+  height: auto !important;
+  margin: 1.18em auto;
+  border-radius: 14px;
+  outline: 1px solid var(--image-outline);
+  outline-offset: -1px;
+}
+
+p > img:only-child,
+figure img {
+  width: 100% !important;
+}
+
+figure {
+  max-width: 100%;
+  margin: 1.18em 0;
+}
+
+video,
+iframe,
+object,
+embed,
+canvas,
+svg {
+  display: block;
+  box-sizing: border-box;
+  max-width: 100% !important;
+  margin: 1.18em auto;
+}
+
+video,
+canvas,
+svg {
+  width: 100% !important;
+  height: auto !important;
+}
+
+iframe,
+object,
+embed {
+  width: 100% !important;
+  border: 0;
+  border-radius: 14px;
+}
+
+iframe {
+  aspect-ratio: 16 / 9;
+  min-height: 210px;
+}
+
 hr {
-  border: none;
-  border-top: 1px solid var(--hr);
   margin: 2em 0;
+  border: 0;
+  border-top: 1px solid var(--hairline);
 }
 
-/* Strikethrough */
-del {
-  color: var(--text-secondary);
-}
-
-/* Footnotes */
+del,
 .footnotes {
-  font-size: 0.85em;
-  color: var(--text-secondary);
-  border-top: 1px solid var(--hr);
-  margin-top: 2em;
+  color: var(--muted);
+}
+
+.footnotes {
+  margin-top: 2.2em;
   padding-top: 1em;
+  border-top: 1px solid var(--hairline);
+  font-size: 0.88em;
+}
+
+li.task-list-item {
+  list-style: none;
+  margin-left: -1.15em;
+}
+
+li.task-list-item input[type="checkbox"] {
+  margin-right: 0.45em;
+  accent-color: var(--quote-bar);
+}
+
+/* Reader hero title — injected by MobileHtmlRenderer when the document does
+   not already begin with an H1, so the page has a clear, large title even
+   though the navigation bar shows only a small inline title. */
+.reader-title {
+  font-family: var(--heading-font);
+  font-size: 1.95em;
+  font-weight: 700;
+  line-height: 1.22;
+  /* Match body's heti-inspired CJK rhythm; the previous -0.005em came from
+     an English-Charter optimization that left Chinese hero titles cramped. */
+  letter-spacing: 0.015em;
+  margin: 0 0 0.85em;
+  padding-bottom: 0.45em;
+  color: var(--ink);
+}
+
+.reader-title + p,
+.reader-title + ul,
+.reader-title + ol,
+.reader-title + blockquote,
+.reader-title + pre,
+.reader-title + h2,
+.reader-title + h3 {
+  margin-top: 0;
 }

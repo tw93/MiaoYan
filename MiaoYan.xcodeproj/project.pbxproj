@@ -73,6 +73,10 @@
 		27D9A4F72873D345006317AD /* FileManager+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D9A4F62873D345006317AD /* FileManager+.swift */; };
 		27E951092E814E61004E2883 /* ShortcutTemplateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E951082E814E61004E2883 /* ShortcutTemplateManager.swift */; };
 		27EAA59A2EA8C76500D13871 /* app.icon in Resources */ = {isa = PBXBuildFile; fileRef = 27EAA5992EA8C76500D13871 /* app.icon */; };
+		27EAA5A02EA93D8800D13871 /* MobileAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27EAA59F2EA93D8800D13871 /* MobileAssets.xcassets */; };
+		27D000A22EAB000000D13871 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 27D000A12EAB000000D13871 /* Localizable.xcstrings */; };
+		27D000A42EAB000000D13871 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 27D000A32EAB000000D13871 /* InfoPlist.xcstrings */; };
+		27D000A62EAB000000D13871 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 27D000A52EAB000000D13871 /* PrivacyInfo.xcprivacy */; };
 		27EFD78A2E40E2E400DE6636 /* HtmlManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EFD7892E40E2E400DE6636 /* HtmlManager.swift */; };
 		27F1C0012F40000100AAA001 /* LinkHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F1C0002F40000100AAA001 /* LinkHighlighter.swift */; };
 		27F1C0112F40000200AAA001 /* CodeBlockHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F1C0102F40000200AAA001 /* CodeBlockHighlighter.swift */; };
@@ -83,6 +87,8 @@
 		3680D573468EA822F427197E /* NSTextField+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3680D20013301CC48E2BEC53 /* NSTextField+.swift */; };
 		3680DE38C941303E615282C4 /* MPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3680DA19202046722D9BEEA2 /* MPreviewView.swift */; };
 		4C5E0C6B57054F9C9A0C7A9C /* CloudSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B671C2C7154C33A6BDC59A /* CloudSyncManager.swift */; };
+		8C5E0C6B57054F9C9A0C7AAA /* RecentNotesCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B671C2C7154C33A6BDCAAA /* RecentNotesCache.swift */; };
+		4D5CD5E8152C42BE97383DAA /* app.icon in Resources */ = {isa = PBXBuildFile; fileRef = 27EAA5992EA8C76500D13871 /* app.icon */; };
 		5EA2FE92CBA734EDEFE7E309 /* FolderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3B40DC2D5EDC92F599928F /* FolderListView.swift */; };
 		666A37171C539EB17C4BF4D5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A09E5DF80DF858A174443D8F /* Foundation.framework */; };
 		6C3DB93C4196F313D77666BB /* FileReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF5878451919D13759B1D46 /* FileReader.swift */; };
@@ -230,6 +236,10 @@
 		27D9A4F62873D345006317AD /* FileManager+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+.swift"; sourceTree = "<group>"; };
 		27E951082E814E61004E2883 /* ShortcutTemplateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutTemplateManager.swift; sourceTree = "<group>"; };
 		27EAA5992EA8C76500D13871 /* app.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = app.icon; sourceTree = "<group>"; };
+		27EAA59F2EA93D8800D13871 /* MobileAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = MobileAssets.xcassets; path = MiaoYanMobile/Resources/MobileAssets.xcassets; sourceTree = SOURCE_ROOT; };
+		27D000A12EAB000000D13871 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = Localizable.xcstrings; path = MiaoYanMobile/Resources/Localizable.xcstrings; sourceTree = SOURCE_ROOT; };
+		27D000A32EAB000000D13871 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; name = InfoPlist.xcstrings; path = MiaoYanMobile/Resources/InfoPlist.xcstrings; sourceTree = SOURCE_ROOT; };
+		27D000A52EAB000000D13871 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = MiaoYanMobile/Resources/PrivacyInfo.xcprivacy; sourceTree = SOURCE_ROOT; };
 		27EFD7892E40E2E400DE6636 /* HtmlManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HtmlManager.swift; sourceTree = "<group>"; };
 		27F1C0002F40000100AAA001 /* LinkHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkHighlighter.swift; sourceTree = "<group>"; };
 		27F1C0102F40000200AAA001 /* CodeBlockHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeBlockHighlighter.swift; sourceTree = "<group>"; };
@@ -249,6 +259,7 @@
 		862CEAF6F6034A969D40B0D4 /* MiaoYanMobileApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MiaoYanMobileApp.swift; path = MiaoYanMobile/App/MiaoYanMobileApp.swift; sourceTree = SOURCE_ROOT; };
 		8F7136ED23490CBF004DFA6E /* Markdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Markdown.swift; sourceTree = "<group>"; };
 		95B671C2C7154C33A6BDC59A /* CloudSyncManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CloudSyncManager.swift; path = MiaoYanMobile/Services/CloudSyncManager.swift; sourceTree = SOURCE_ROOT; };
+		95B671C2C7154C33A6BDCAAA /* RecentNotesCache.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RecentNotesCache.swift; path = MiaoYanMobile/Services/RecentNotesCache.swift; sourceTree = SOURCE_ROOT; };
 		A09E5DF80DF858A174443D8F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		A4E99034F3562EF94A115552 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = MiaoYanMobile/Resources/Info.plist; sourceTree = SOURCE_ROOT; };
 		A6E21F00885D42989822E5FF /* NewNoteView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NewNoteView.swift; path = MiaoYanMobile/Views/NewNoteView.swift; sourceTree = SOURCE_ROOT; };
@@ -428,7 +439,11 @@
 			isa = PBXGroup;
 			children = (
 				0C6D1E9F6DF428F005279AD6 /* mobile-reader.css */,
+				27EAA59F2EA93D8800D13871 /* MobileAssets.xcassets */,
 				A4E99034F3562EF94A115552 /* Info.plist */,
+				27D000A32EAB000000D13871 /* InfoPlist.xcstrings */,
+				27D000A12EAB000000D13871 /* Localizable.xcstrings */,
+				27D000A52EAB000000D13871 /* PrivacyInfo.xcprivacy */,
 			);
 			name = Resources;
 			path = MiaoYanMobile/Resources;
@@ -440,6 +455,7 @@
 				FFF5878451919D13759B1D46 /* FileReader.swift */,
 				0DADE53B7E8BD46549942E2B /* MobileHtmlRenderer.swift */,
 				95B671C2C7154C33A6BDC59A /* CloudSyncManager.swift */,
+				95B671C2C7154C33A6BDCAAA /* RecentNotesCache.swift */,
 			);
 			name = Services;
 			path = MiaoYanMobile/Services;
@@ -680,9 +696,17 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1000;
-				LastUpgradeCheck = 2620;
+				LastUpgradeCheck = 2640;
 				ORGANIZATIONNAME = "MiaoYan App";
 				TargetAttributes = {
+					991C000B32FC77C0DFFF152D = {
+						CreatedOnToolsVersion = 26.0;
+						SystemCapabilities = {
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
+					};
 					D7793C6E1F211C6000CA39B7 = {
 						CreatedOnToolsVersion = 9.0;
 						LastSwiftMigration = 0920;
@@ -745,7 +769,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D5CD5E8152C42BE97383DAA /* app.icon in Resources */,
+				27EAA5A02EA93D8800D13871 /* MobileAssets.xcassets in Resources */,
 				BD629B775B7BA6BE009109A9 /* mobile-reader.css in Resources */,
+				27D000A22EAB000000D13871 /* Localizable.xcstrings in Resources */,
+				27D000A42EAB000000D13871 /* InfoPlist.xcstrings in Resources */,
+				27D000A62EAB000000D13871 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -800,6 +829,7 @@
 				AD1A58D367BB6D65BED591E9 /* NoteReaderView.swift in Sources */,
 				FF1B607FC2BE7EC27BDCC919 /* SearchView.swift in Sources */,
 				4C5E0C6B57054F9C9A0C7A9C /* CloudSyncManager.swift in Sources */,
+				8C5E0C6B57054F9C9A0C7AAA /* RecentNotesCache.swift in Sources */,
 				6C3DB93C4196F313D77666BB /* FileReader.swift in Sources */,
 				A090A42DDDB5B3599F6B47E6 /* MobileHtmlRenderer.swift in Sources */,
 			);
@@ -960,18 +990,23 @@
 		9056156D38D87C8C6F9A5568 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_APPICON_NAME = app;
 				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = MiaoYanMobile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				CURRENT_PROJECT_VERSION = 1.0.0;
+				DEVELOPMENT_TEAM = 5EH69Y5X38;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = MiaoYanMobile/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				INFOPLIST_KEY_CFBundleDisplayName = MiaoYan;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.miaoyan.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1370,18 +1405,25 @@
 		E403B6D11972D19C51B84498 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_APPICON_NAME = app;
 				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = MiaoYanMobile.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				CURRENT_PROJECT_VERSION = 1.0.0;
+				DEVELOPMENT_TEAM = 5EH69Y5X38;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = MiaoYanMobile/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				INFOPLIST_KEY_CFBundleDisplayName = MiaoYan;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.miaoyan.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1394,18 +1436,23 @@
 		E52249E4442856CB98F0074C /* AppStore */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_APPICON_NAME = app;
 				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = MiaoYanMobile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				CURRENT_PROJECT_VERSION = 1.0.0;
+				DEVELOPMENT_TEAM = 5EH69Y5X38;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = MiaoYanMobile/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				INFOPLIST_KEY_CFBundleDisplayName = MiaoYan;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.miaoyan.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;

@@ -2,113 +2,145 @@ import SwiftUI
 
 struct NotesListView: View {
     let folder: FolderItem
-    @EnvironmentObject private var appState: AppState
     @State private var notes: [NoteFile] = []
-    @State private var showSearch = false
+    @State private var hasLoadedOnce = false
     @State private var showNewNote = false
+    @State private var pendingDeletion: NoteFile?
+    @State private var loadTask: Task<Void, Never>?
+    @State private var isReloading = false
+    @State private var pendingReload = false
+    @ObservedObject private var syncManager = CloudSyncManager.shared
 
     var body: some View {
-        Group {
-            if notes.isEmpty {
-                VStack(spacing: 16) {
-                    Image(systemName: "note.text")
-                        .font(.system(size: 48))
-                        .foregroundStyle(.secondary)
-                    Text("暂无笔记")
-                        .font(.headline)
-                        .foregroundStyle(.secondary)
+        // Always mount the real list shell; the parent FolderListView owns
+        // the syncing view. See RecentNotesView for the full rationale.
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: 14) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(folder.name)
+                        .font(MobileTheme.editorialFont(size: 32, weight: .semibold))
+                        .foregroundStyle(MobileTheme.ink)
+                    Text("\(notes.count) notes")
+                        .font(MobileTheme.font(.subheadline, weight: .medium))
+                        .foregroundStyle(MobileTheme.secondaryInk)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            } else {
-                notesList
+                .padding(.horizontal, MobileTheme.pagePadding)
+                .padding(.top, 22)
+
+                if hasLoadedOnce && notes.isEmpty {
+                    MobileEmptyContentView(
+                        systemImage: "tray",
+                        title: "No notes here",
+                        message: "New notes in this folder will appear here."
+                    )
+                    .padding(.horizontal, MobileTheme.pagePadding)
+                } else if !hasLoadedOnce && notes.isEmpty {
+                    // See RecentNotesView for the same rationale: large
+                    // iCloud libraries can stretch the first-reload window,
+                    // so signal in-progress instead of going blank.
+                    InlineLoadingHint(text: "Loading notes…")
+                } else {
+                    ForEach(notes) { note in
+                        NavigationLink {
+                            NoteDetailView(note: note)
+                        } label: {
+                            NoteCard(note: note)
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.horizontal, MobileTheme.pagePadding)
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                            Button(role: .destructive) {
+                                Haptics.warning()
+                                pendingDeletion = note
+                            } label: {
+                                Label("Trash", systemImage: "trash")
+                            }
+                        }
+                        .contextMenu {
+                            Button(role: .destructive) {
+                                Haptics.warning()
+                                pendingDeletion = note
+                            } label: {
+                                Label("Move to Trash", systemImage: "trash")
+                            }
+                        }
+                    }
+                }
             }
+            .padding(.bottom, 22)
         }
-        .navigationTitle(folder.name)
+        .refreshable { await reload() }
+        .background(MobileTheme.paper)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
+            ToolbarItem(placement: .topBarTrailing) {
                 Button {
+                    Haptics.tap()
                     showNewNote = true
                 } label: {
                     Image(systemName: "square.and.pencil")
                 }
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    showSearch = true
-                } label: {
-                    Image(systemName: "magnifyingglass")
-                }
+                .foregroundStyle(MobileTheme.accent)
             }
         }
-        .sheet(isPresented: $showNewNote) {
+        .sheet(isPresented: $showNewNote, onDismiss: { triggerLoad() }) {
             NewNoteView(folder: folder)
-                .environmentObject(appState)
         }
-        .navigationDestination(isPresented: $showSearch) {
-            if let root = appState.rootURL {
-                SearchView(root: root)
-            }
-        }
-        .onAppear { loadNotes() }
-        .onChange(of: showNewNote) { _ in
-            if !showNewNote { loadNotes() }
-        }
-    }
-
-    private var notesList: some View {
-        List(notes) { note in
-            NavigationLink {
-                NoteDetailView(note: note)
-            } label: {
-                NoteRow(note: note)
-            }
-        }
-        .listStyle(.plain)
-        .refreshable { loadNotes() }
-    }
-
-    private func loadNotes() {
-        notes = FileReader.notes(in: folder.url)
-    }
-}
-
-private struct NoteRow: View {
-    let note: NoteFile
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack {
-                if note.isPinned {
-                    Image(systemName: "pin.fill")
-                        .font(.caption)
-                        .foregroundStyle(Color.accentColor)
+        .alert(
+            "Move note to Trash?",
+            isPresented: Binding(
+                get: { pendingDeletion != nil },
+                set: { if !$0 { pendingDeletion = nil } }
+            ),
+            presenting: pendingDeletion
+        ) { note in
+            Button("Cancel", role: .cancel) { pendingDeletion = nil }
+            Button("Move to Trash", role: .destructive) {
+                Task {
+                    do {
+                        try await NoteFileStore.trash(note)
+                        Haptics.success()
+                        triggerLoad()
+                    } catch {
+                        Haptics.error()
+                    }
                 }
-                Text(note.title)
-                    .font(.headline)
-                    .lineLimit(1)
             }
-            if !note.preview.isEmpty {
-                Text(note.preview)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
-            }
-            Text(relativeDate(note.modifiedDate))
-                .font(.caption)
-                .foregroundStyle(.tertiary)
+        } message: { note in
+            Text("You can recover \u{201C}\(note.title)\u{201D} from Trash.")
         }
-        .padding(.vertical, 4)
-        .frame(minHeight: 60)
+        .onAppear { triggerLoad() }
+        .onDisappear { loadTask?.cancel() }
+        .onChange(of: syncManager.revision) { triggerLoad() }
     }
 
-    private static let dateFormatter: RelativeDateTimeFormatter = {
-        let f = RelativeDateTimeFormatter()
-        f.unitsStyle = .abbreviated
-        return f
-    }()
+    /// Coalesce revision-driven reloads so the skeleton doesn't get stuck
+    /// during iCloud first-sync update bursts. See RecentNotesView for the
+    /// full rationale.
+    private func triggerLoad() {
+        guard !isReloading else {
+            pendingReload = true
+            return
+        }
+        runLoad()
+    }
 
-    private func relativeDate(_ date: Date) -> String {
-        Self.dateFormatter.localizedString(for: date, relativeTo: Date())
+    private func runLoad() {
+        isReloading = true
+        loadTask = Task {
+            await reload()
+            isReloading = false
+            if pendingReload {
+                pendingReload = false
+                runLoad()
+            }
+        }
+    }
+
+    private func reload() async {
+        let recursive = folder.isVirtualAll
+        let loaded = await NoteFileStore.notes(in: folder.url, recursive: recursive)
+        notes = loaded
+        hasLoadedOnce = true
     }
 }

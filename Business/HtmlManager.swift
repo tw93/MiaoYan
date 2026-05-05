@@ -65,13 +65,25 @@ class HtmlManager {
     static func paginatedPrintCSS() -> String {
         return """
             @media print {
+                :root {
+                    --pdf-ink: #26231d;
+                    --pdf-muted: #6a6256;
+                    --pdf-accent: #2f744c;
+                    --pdf-hairline: rgba(38, 35, 29, 0.13);
+                    --pdf-code-bg: #f6f2ea;
+                    --pdf-quote-bg: #f3f7f2;
+                }
                 html, body {
                     margin: 0 !important;
                     padding: 0 !important;
-                    background: #FFFFFF !important;
-                    color: #262626 !important;
+                    background: #ffffff !important;
+                    color: var(--pdf-ink) !important;
                     -webkit-print-color-adjust: exact;
                     print-color-adjust: exact;
+                }
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", sans-serif !important;
+                    line-height: 1.58 !important;
                 }
                 #write {
                     max-width: none !important;
@@ -79,8 +91,6 @@ class HtmlManager {
                     margin: 0 !important;
                     padding: 0 !important;
                 }
-
-                /* Pull the first element on page 1 flush with the top margin. */
                 .heti > *:first-child,
                 #write > *:first-child,
                 #export-generated-title {
@@ -88,25 +98,79 @@ class HtmlManager {
                     margin-block-start: 0 !important;
                     padding-top: 0 !important;
                 }
-
-                /* Page-break rules. Let content flow naturally: no forced h1 page break
-                   (that strategy left huge bottom gaps on short sections). Keep break-inside:
-                   avoid only on small, coherent blocks — not on img, since tall images forced
-                   to the next page created worse gaps than the occasional split. */
-                h1, h2, h3, h4, h5, h6 { page-break-after: avoid; }
+                #export-generated-title {
+                    font-family: "New York", "Songti SC", "STSong", serif !important;
+                    font-size: 30px !important;
+                    line-height: 1.22 !important;
+                    color: var(--pdf-ink) !important;
+                    letter-spacing: 0 !important;
+                    font-weight: 650 !important;
+                    margin: 0 0 22px 0 !important;
+                    padding: 0 0 12px 0 !important;
+                    border-bottom: 1px solid var(--pdf-hairline) !important;
+                }
+                h1, h2, h3, h4, h5, h6 {
+                    font-family: "New York", "Songti SC", "STSong", serif !important;
+                    color: var(--pdf-ink) !important;
+                    page-break-after: avoid;
+                    line-height: 1.28 !important;
+                    letter-spacing: 0 !important;
+                }
                 pre, table, figure, blockquote,
                 .miaoyan-mermaid, .md-diagram-panel {
                     page-break-inside: avoid;
+                }
+                p {
+                    color: var(--pdf-ink) !important;
                 }
                 img {
                     max-width: 100% !important;
                     display: block;
                     margin-left: auto;
                     margin-right: auto;
+                    border-radius: 8px !important;
                 }
-
-                /* Compact vertical rhythm: .heti defaults are 1.6em/0.8em, too airy for print. */
-                .heti, body { line-height: 1.55 !important; }
+                blockquote {
+                    color: var(--pdf-muted) !important;
+                    background: var(--pdf-quote-bg) !important;
+                    border-left: 3px solid var(--pdf-accent) !important;
+                    border-radius: 0 6px 6px 0 !important;
+                    padding: 0.5em 0.9em !important;
+                }
+                code {
+                    background: var(--pdf-code-bg) !important;
+                    color: var(--pdf-ink) !important;
+                    border-radius: 4px !important;
+                    padding: 0.12em 0.32em !important;
+                }
+                pre {
+                    background: var(--pdf-code-bg) !important;
+                    border-radius: 8px !important;
+                    padding: 12px 14px !important;
+                    white-space: pre-wrap !important;
+                }
+                pre code {
+                    padding: 0 !important;
+                    background: transparent !important;
+                }
+                table {
+                    width: 100% !important;
+                    border-collapse: collapse !important;
+                    font-size: 0.92em !important;
+                }
+                th, td {
+                    border: 1px solid var(--pdf-hairline) !important;
+                    padding: 7px 9px !important;
+                }
+                th {
+                    background: var(--pdf-code-bg) !important;
+                    font-weight: 650 !important;
+                }
+                a {
+                    color: inherit !important;
+                    text-decoration: none !important;
+                }
+                .heti, body { line-height: 1.58 !important; }
                 .heti p,
                 .heti ul, .heti ol,
                 .heti blockquote,
@@ -135,7 +199,6 @@ class HtmlManager {
                 .toc-nav, .toc-hover-trigger, .toc-pin-btn {
                     display: none !important;
                 }
-                a { color: inherit !important; text-decoration: none !important; }
             }
             """
     }
