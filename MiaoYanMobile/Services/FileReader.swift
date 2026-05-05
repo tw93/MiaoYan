@@ -363,20 +363,41 @@ enum NoteFileStore {
             .sorted(by: sortNotes)
     }
 
-    /// Lazy preview helper for the card layer. Tries to read the first
-    /// 900 bytes directly — if the file is a pure iCloud placeholder
-    /// FileHandle simply fails to open and `previewTextSync` returns
-    /// an empty string (which we surface as nil so the caller can
-    /// retry on the next revision bump). No explicit download-status
-    /// gate: the ubiquitous status value can lag behind the real file
-    /// state, causing downloaded-but-not-yet-current files to show
-    /// blank previews even though their content is on disk.
+    /// Lazy preview helper for the card layer.
     ///
-    /// Callers must use `.low` or `.background` task priority — running
-    /// 40+ of these at `.userInitiated` simultaneously saturates CPU
-    /// with the regex cleanup pipeline and freezes the UI.
+    /// Fast path: `previewTextSync` reads via plain `FileHandle` — if
+    /// the file is already on disk this takes microseconds.
+    ///
+    /// Slow path: if `FileHandle` fails (iCloud placeholder — the real
+    /// file lives at `.filename.icloud`), we fall back to
+    /// `coordinatedReadString` which transparently triggers an iCloud
+    /// on-demand download. This is slower (~100-500ms per file) but
+    /// guarantees the user sees a preview for every note they scroll
+    /// past. The coordinated read is bounded to 900 bytes via the
+    /// downstream pipeline so we never download a full file just for
+    /// a preview snippet.
+    ///
+    /// Callers must use `.low` task priority so 40+ concurrent probes
+    /// don't saturate the CPU with regex work.
     nonisolated static func previewIfDownloaded(for url: URL) -> String? {
-        let result = previewTextSync(for: url)
+        // Fast path: file already on disk.
+        let fast = previewTextSync(for: url)
+        if !fast.isEmpty { return fast }
+
+        // Slow path: iCloud placeholder. NSFileCoordinator triggers the
+        // download transparently and hands us the bytes once ready.
+        guard let body = try? coordinatedReadString(at: url) else { return nil }
+        let head = String(body.prefix(900))
+        var s = head
+        s = stripFrontmatter(s)
+        s = stripCodeBlocks(s)
+        s = stripMarkdownMarkers(s)
+        s = stripPreviewNoise(s)
+        s = stripEmphasisMarkers(s)
+        let lines = s.components(separatedBy: .newlines)
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+        let result = lines.prefix(2).joined(separator: " ")
         return result.isEmpty ? nil : result
     }
 
