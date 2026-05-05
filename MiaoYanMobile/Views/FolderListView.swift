@@ -272,6 +272,7 @@ private struct RecentNotesView: View {
 
     private func refreshNotes() {
         Haptics.tap()
+        NotePreviewCache.shared.clearAll()
         triggerLoad()
         syncManager.notifyExternalChange()
     }
@@ -541,6 +542,7 @@ final class NotePreviewCache {
 
     func preview(for url: URL) -> String? { cache[url] }
     func store(_ preview: String, for url: URL) { cache[url] = preview }
+    func clearAll() { cache.removeAll() }
 }
 
 struct NoteCard: View {
@@ -604,7 +606,12 @@ struct NoteCard: View {
             if !note.preview.isEmpty { return }
             if lazyPreview != nil { return }
             let url = note.url
-            let preview = await Task.detached(priority: .userInitiated) {
+            // .low priority: 40+ cards can fire tasks simultaneously on
+            // tab switch. Each runs ~10 regex passes in previewTextSync.
+            // At .userInitiated this saturated all cores and froze the
+            // UI; at .low the scheduler gives render/scroll priority and
+            // previews trickle in smoothly over a few frames.
+            let preview = await Task.detached(priority: .low) {
                 NoteFileStore.previewIfDownloaded(for: url) ?? ""
             }.value
             guard !preview.isEmpty else { return }

@@ -106,6 +106,16 @@ enum NoteFileStore {
         pattern: "`([^`]+)`", options: [])
     nonisolated(unsafe) private static let whitespaceRunRegex = try? NSRegularExpression(
         pattern: "\\s+", options: [])
+    nonisolated(unsafe) private static let frontmatterDashRegex = try? NSRegularExpression(
+        pattern: "\\A---.*?---\\n?", options: [.dotMatchesLineSeparators])
+    nonisolated(unsafe) private static let frontmatterPlusRegex = try? NSRegularExpression(
+        pattern: "\\A\\+\\+\\+.*?\\+\\+\\+\\n?", options: [.dotMatchesLineSeparators])
+    nonisolated(unsafe) private static let codeBlockRegex = try? NSRegularExpression(
+        pattern: "```.*?```", options: [.dotMatchesLineSeparators])
+    nonisolated(unsafe) private static let mdMarkerRegex = try? NSRegularExpression(
+        pattern: "^[#>*+\\-]+\\s+", options: [.anchorsMatchLines])
+    nonisolated(unsafe) private static let mdOrderedListRegex = try? NSRegularExpression(
+        pattern: "^\\d+\\.\\s+", options: [.anchorsMatchLines])
 
     /// Remove HTML tags and Markdown noise (raw image syntax, link URLs,
     /// bare URLs, inline-code backticks) so card previews and search
@@ -138,6 +148,41 @@ enum NoteFileStore {
             s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: " ")
         }
         return s.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    /// Strip YAML/TOML frontmatter fenced by `---` or `+++` at the
+    /// start of the file.
+    nonisolated private static func stripFrontmatter(_ input: String) -> String {
+        var s = input
+        let full = { (str: String) in NSRange(location: 0, length: (str as NSString).length) }
+        if let re = frontmatterDashRegex {
+            s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "")
+        }
+        if let re = frontmatterPlusRegex {
+            s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "")
+        }
+        return s
+    }
+
+    /// Strip fenced code blocks (``` ... ```).
+    nonisolated private static func stripCodeBlocks(_ input: String) -> String {
+        guard let re = codeBlockRegex else { return input }
+        let full = NSRange(location: 0, length: (input as NSString).length)
+        return re.stringByReplacingMatches(in: input, range: full, withTemplate: "")
+    }
+
+    /// Strip Markdown line-start markers: `# `, `## `, `> `, `- `,
+    /// `* `, `+ `, `1. ` etc. Keeps the text content.
+    nonisolated private static func stripMarkdownMarkers(_ input: String) -> String {
+        var s = input
+        let full = { (str: String) in NSRange(location: 0, length: (str as NSString).length) }
+        if let re = mdMarkerRegex {
+            s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "")
+        }
+        if let re = mdOrderedListRegex {
+            s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "")
+        }
+        return s
     }
 
     /// Read up to `maxBytes` from a file via plain FileHandle, no
@@ -276,20 +321,18 @@ enum NoteFileStore {
             .sorted(by: sortNotes)
     }
 
-    /// Lazy preview helper for the card layer. Returns nil only for iCloud
-    /// files that are still pure placeholders (not downloaded at all).
-    /// Files that are `.downloaded` (content available locally, maybe not
-    /// latest) or `.current` (fully up to date) are read — we already
-    /// call `startDownloadingUbiquitousItem` proactively so most files
-    /// land quickly; blocking on a 900-byte head read for an already-
-    /// downloaded file is negligible.
+    /// Lazy preview helper for the card layer. Returns nil only for pure
+    /// iCloud placeholders (`.notDownloaded`). Both `.downloaded` and
+    /// `.current` files have content on disk and are safe to read.
+    /// Non-iCloud files (nil status) always proceed.
+    ///
+    /// Callers must use `.low` or `.background` task priority — running
+    /// 40+ of these at `.userInitiated` simultaneously saturates CPU
+    /// with the regex cleanup pipeline and freezes the UI.
     nonisolated static func previewIfDownloaded(for url: URL) -> String? {
         let status =
             (try? url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
                 .ubiquitousItemDownloadingStatus)
-        // nil status = non-iCloud file → always proceed.
-        // `.notDownloaded` = pure placeholder, no local content → skip.
-        // `.downloaded` / `.current` = content is on disk → proceed.
         if status == .notDownloaded { return nil }
         return previewTextSync(for: url)
     }
@@ -552,6 +595,10 @@ enum NoteFileStore {
 
     // MARK: - Internal: file IO
 
+    /// Pure regex-pipeline preview: strip every non-prose element, then
+    /// take the first two content lines after the title. No line-level
+    /// if/else logic — just successive regex passes that delete
+    /// structural markup and leave clean text.
     nonisolated static func previewTextSync(for url: URL) -> String {
         guard let handle = try? FileHandle(forReadingFrom: url) else { return "" }
         defer { try? handle.close() }
@@ -560,54 +607,17 @@ enum NoteFileStore {
             let head = String(data: data, encoding: .utf8)
         else { return "" }
 
-        // Two-pass strategy:
-        //  1. Skip structural lines (title heading, frontmatter fences,
-        //     code fences) but keep everything else — including secondary
-        //     headings (## / ###) which often carry meaningful context.
-        //  2. Run stripPreviewNoise to clean inline HTML, image syntax,
-        //     bare URLs, etc.
-        //
-        // The old filter was too aggressive: it dropped ALL `#` lines
-        // (including useful ## subheadings) and ALL `!` lines (including
-        // lines that just start with `!` in prose). Notes whose first
-        // few lines were all filtered ended up with no preview at all.
-        var skippedFirstHeading = false
-        var inFrontmatter = false
-        var inCodeBlock = false
-        var collected: [String] = []
+        var s = head
+        s = stripFrontmatter(s)
+        s = stripCodeBlocks(s)
+        s = stripPreviewNoise(s)
+        s = stripMarkdownMarkers(s)
 
-        for rawLine in head.components(separatedBy: .newlines) {
-            let line = rawLine.trimmingCharacters(in: .whitespacesAndNewlines)
-            if line.isEmpty { continue }
-
-            // Toggle frontmatter (--- at line 1 or after blank-only prefix)
-            if line == "---" || line == "+++" {
-                inFrontmatter.toggle()
-                continue
-            }
-            if inFrontmatter { continue }
-
-            // Toggle fenced code blocks
-            if line.hasPrefix("```") {
-                inCodeBlock.toggle()
-                continue
-            }
-            if inCodeBlock { continue }
-
-            // Skip only the FIRST top-level heading (the title) — it
-            // already shows as the card's title label, so repeating it
-            // as preview is wasted space. Keep subsequent headings.
-            if !skippedFirstHeading, line.hasPrefix("# ") {
-                skippedFirstHeading = true
-                continue
-            }
-
-            collected.append(line)
-            if collected.count >= 4 { break }
-        }
-
-        let raw = collected.prefix(2).joined(separator: " ")
-        return stripPreviewNoise(raw)
+        let lines = s.components(separatedBy: .newlines)
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+            .dropFirst()
+        return lines.prefix(2).joined(separator: " ")
     }
 
     nonisolated static func coordinatedReadString(at url: URL) throws -> String {
