@@ -17,8 +17,9 @@ struct NoteFile: Identifiable, Equatable, Sendable {
     /// for seconds on iCloud placeholder files that haven't synced
     /// down yet.
     init(snapshotEntry entry: RecentNotesSnapshot.Entry) {
-        self.id = entry.urlString
-        self.url = URL(string: entry.urlString) ?? URL(fileURLWithPath: "/")
+        let url = URL(fileURLWithPath: entry.path)
+        self.id = url.absoluteString
+        self.url = url
         self.title = entry.title
         self.modifiedDate = entry.modifiedDate
         self.createdDate = entry.modifiedDate

@@ -156,7 +156,10 @@ final class CloudSyncManager: ObservableObject {
             guard let item = query.result(at: index) as? NSMetadataItem,
                 let url = item.value(forAttribute: NSMetadataItemURLKey) as? URL
             else { continue }
-            if url.resolvingSymlinksInPath().path.hasPrefix(rootPath) {
+            // NSMetadataQuery returns resolved (real) paths, so we only
+            // need to resolve the root once. Resolving every item URL
+            // was a per-call stat() × 1500 URLs = ~50ms main-thread cost.
+            if url.path.hasPrefix(rootPath) {
                 urls.append(url)
             }
         }

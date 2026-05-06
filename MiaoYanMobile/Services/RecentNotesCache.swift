@@ -15,7 +15,11 @@ struct RecentNotesSnapshot: Codable {
     let notes: [Entry]
 
     struct Entry: Codable {
-        let urlString: String
+        /// Stored as a plain file-system path (e.g. `/private/var/…/note.md`)
+        /// rather than `url.absoluteString` because `URL(string:)` cannot
+        /// round-trip paths that contain spaces or non-ASCII characters.
+        /// Reconstruct the URL with `URL(fileURLWithPath: path)`.
+        let path: String
         let title: String
         let modifiedDate: Date
     }
@@ -61,7 +65,7 @@ final class RecentNotesCache {
             savedAt: Date(),
             notes: notes.map {
                 RecentNotesSnapshot.Entry(
-                    urlString: $0.url.absoluteString,
+                    path: $0.url.path,
                     title: $0.title,
                     modifiedDate: $0.modifiedDate
                 )
