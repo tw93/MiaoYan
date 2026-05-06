@@ -80,12 +80,18 @@ const DiagramHandler = {
         element.setAttribute('data-processed', 'true');
       } catch (error) {
         console.error('Mermaid rendering failed:', error);
-        let errorMessage = error.message || 'Unknown Mermaid Error';
-        if (error.str) errorMessage += `\n${error.str}`;
-        loader.innerHTML = `<div style="padding: 10px; color: #d00; border: 1px solid #ecc; background: #fee; border-radius: 4px; font-family: monospace; white-space: pre-wrap;">Mermaid Error: ${errorMessage}</div>`;
-        return;
+        // Keep the original fenced-block source in place; do not inject verbose error HTML
+        // into the DOM (it leaks into PDF exports and prints).
+        element.dataset.mermaidRendered = 'failed';
+        element.setAttribute('data-processed', 'true');
+        const pre = element.closest('pre');
+        if (pre) {
+          pre.classList.add('mermaid-source-fallback');
+        }
       } finally {
-        if (!loader.querySelector('div')) loader.remove();
+        if (loader.parentNode) {
+          loader.remove();
+        }
       }
     });
 

@@ -321,8 +321,9 @@ final class PdfExportController: NSObject {
             (function() {
                 var imgs = Array.prototype.slice.call(document.images || []);
                 var imgsReady = imgs.every(function(i) { return i.complete && i.naturalWidth > 0; });
-                var pendingMermaid = document.querySelectorAll('.miaoyan-mermaid:not(.rendered), svg.mermaid-unrendered').length;
-                return imgsReady && pendingMermaid === 0;
+                var pendingLegacy = document.querySelectorAll('.miaoyan-mermaid:not(.rendered), svg.mermaid-unrendered').length;
+                var pendingCode = document.querySelectorAll('code.language-mermaid:not([data-processed])').length;
+                return imgsReady && pendingLegacy === 0 && pendingCode === 0;
             })();
             """
         web.evaluateJavaScript(probe) { [weak self] result, _ in
