@@ -29,7 +29,7 @@ struct NoteFile: Identifiable, Equatable, Sendable {
     }
 
     /// Lightweight initializer that does not touch file contents.
-    /// Preview is filled in lazily by `NoteFileStore.fillPreviews(for:)`.
+    /// Preview is filled in lazily by the card layer.
     init(url: URL, preview: String = "") {
         let values = try? url.resourceValues(forKeys: [
             .contentModificationDateKey,
@@ -95,43 +95,43 @@ enum NoteFileStore {
 
     /// Pre-compiled regexes for `stripPreviewNoise`. Compiling per-call
     /// would dominate CPU for a 1500-note search.
-    nonisolated(unsafe) private static let htmlTagRegex = try? NSRegularExpression(
+    private static let htmlTagRegex = try? NSRegularExpression(
         pattern: "<[^>]+>", options: [])
-    nonisolated(unsafe) private static let mdImageRegex = try? NSRegularExpression(
+    private static let mdImageRegex = try? NSRegularExpression(
         pattern: "!\\[[^\\]]*\\]\\([^)]*\\)", options: [])
-    nonisolated(unsafe) private static let mdLinkRegex = try? NSRegularExpression(
+    private static let mdLinkRegex = try? NSRegularExpression(
         pattern: "\\[([^\\]]*)\\]\\([^)]*\\)", options: [])
-    nonisolated(unsafe) private static let bareUrlRegex = try? NSRegularExpression(
+    private static let bareUrlRegex = try? NSRegularExpression(
         pattern: "https?://\\S+", options: [])
-    nonisolated(unsafe) private static let inlineCodeRegex = try? NSRegularExpression(
+    private static let inlineCodeRegex = try? NSRegularExpression(
         pattern: "`([^`]+)`", options: [])
-    nonisolated(unsafe) private static let whitespaceRunRegex = try? NSRegularExpression(
+    private static let whitespaceRunRegex = try? NSRegularExpression(
         pattern: "\\s+", options: [])
-    nonisolated(unsafe) private static let frontmatterDashRegex = try? NSRegularExpression(
+    private static let frontmatterDashRegex = try? NSRegularExpression(
         pattern: "\\A---.*?---\\n?", options: [.dotMatchesLineSeparators])
-    nonisolated(unsafe) private static let frontmatterPlusRegex = try? NSRegularExpression(
+    private static let frontmatterPlusRegex = try? NSRegularExpression(
         pattern: "\\A\\+\\+\\+.*?\\+\\+\\+\\n?", options: [.dotMatchesLineSeparators])
-    nonisolated(unsafe) private static let codeBlockRegex = try? NSRegularExpression(
+    private static let codeBlockRegex = try? NSRegularExpression(
         pattern: "```.*?```", options: [.dotMatchesLineSeparators])
-    nonisolated(unsafe) private static let mdMarkerRegex = try? NSRegularExpression(
+    private static let mdMarkerRegex = try? NSRegularExpression(
         pattern: "^[#>*+\\-]+\\s*", options: [.anchorsMatchLines])
-    nonisolated(unsafe) private static let mdOrderedListRegex = try? NSRegularExpression(
+    private static let mdOrderedListRegex = try? NSRegularExpression(
         pattern: "^\\d+[\\.\\)、]\\s*", options: [.anchorsMatchLines])
     /// `**` and `__` first (greedy), then single `*` and `_`, then `~~`.
     /// Order matters: `**` must be consumed before `*`.
-    nonisolated(unsafe) private static let emphasisRegex = try? NSRegularExpression(
+    private static let emphasisRegex = try? NSRegularExpression(
         pattern: "\\*\\*|__|~~|[*_]", options: [])
-    nonisolated(unsafe) private static let checkboxRegex = try? NSRegularExpression(
+    private static let checkboxRegex = try? NSRegularExpression(
         pattern: "\\[[ xX]\\]\\s*", options: [])
-    nonisolated(unsafe) private static let wikilinkRegex = try? NSRegularExpression(
+    private static let wikilinkRegex = try? NSRegularExpression(
         pattern: "\\[\\[(?:[^\\]|]*\\|)?([^\\]]*)\\]\\]", options: [])
-    nonisolated(unsafe) private static let tableSepRegex = try? NSRegularExpression(
+    private static let tableSepRegex = try? NSRegularExpression(
         pattern: "^[\\|\\-:]+$", options: [.anchorsMatchLines])
-    nonisolated(unsafe) private static let tablePipeRegex = try? NSRegularExpression(
+    private static let tablePipeRegex = try? NSRegularExpression(
         pattern: "\\|", options: [])
-    nonisolated(unsafe) private static let hrUnderscoreRegex = try? NSRegularExpression(
+    private static let hrUnderscoreRegex = try? NSRegularExpression(
         pattern: "^_{3,}$", options: [.anchorsMatchLines])
-    nonisolated(unsafe) private static let htmlEntityRegex = try? NSRegularExpression(
+    private static let htmlEntityRegex = try? NSRegularExpression(
         pattern: "&[a-zA-Z]+;|&#\\d+;", options: [])
 
     /// Remove HTML tags and Markdown noise (raw image syntax, link URLs,
