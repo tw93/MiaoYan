@@ -239,8 +239,16 @@ class FileSystemEventManager {
     @MainActor
     private func reloadNote(note: Note) {
         // Skip reload while a debounced save is pending: the disk content
-        // is stale and overwriting the editor would discard in-progress edits.
-        guard !note.hasPendingSave else { return }
+        // we'd read might be from before our save lands. Re-check shortly
+        // after the save fires so a real external change is not lost.
+        if note.hasPendingSave {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.6) { [weak self] in
+                Task { @MainActor [weak self] in
+                    self?.recheckNote(note)
+                }
+            }
+            return
+        }
 
         guard let fsContent = note.getContent() else { return }
 
@@ -249,11 +257,120 @@ class FileSystemEventManager {
 
         guard contentChanged else { return }
 
+        // Conflict-aware path for the active editor:
+        // If this note is open and its editor body diverges from what we are
+        // about to overwrite with disk content, write a backup so the user's
+        // in-progress text is not silently destroyed by an external sync /
+        // editor.
+        if EditTextView.note == note,
+            let editArea = delegate?.editArea
+        {
+            let editorString = editArea.string
+            if editorString != fsContent.string {
+                writeConflictBackup(for: note, editorContent: editorString)
+                delegate?.toast(
+                    message: I18n.str("External change detected. Local copy backed up~"),
+                    style: .failure
+                )
+            }
+        }
+
         note.content = NSMutableAttributedString(attributedString: fsContent)
+        // The per-note UndoManager (Views/EditTextView.swift undo policy) is
+        // tied to textStorage edits made within MiaoYan. After we replace
+        // note.content with the disk version, any action still on that
+        // manager points at pre-external-change state. Cmd-Z would happily
+        // pop that state back into the editor, and the next debounced save
+        // would write it to disk, silently undoing the external change. Wipe
+        // the manager so undo can only target edits made *after* the merge.
+        note.undoManager.removeAllActions()
         delegate?.notesTableView.reloadRow(note: note)
 
         if EditTextView.note == note {
             delegate?.refillEditArea(suppressSave: true)
+        }
+    }
+
+    private func writeConflictBackup(for note: Note, editorContent: String) {
+        // Conflicts must NOT live under the note's project directory:
+        // the project is in `observedFolders` so FSEvents would re-fire for
+        // our own write and import the backup as a brand-new note (with a
+        // hideous .myNote-conflict-2026-... title cluttering the sidebar).
+        // Instead route every project's conflicts to a single hidden
+        // sibling of the storage root, which is never registered as a
+        // project and therefore never observed.
+        guard let storageRoot = UserDefaultsManagement.storageUrl else {
+            let err = NSError(
+                domain: "com.tw93.miaoyan.conflict",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "storageUrl unavailable, conflict backup skipped"])
+            AppDelegate.trackError(err, context: "FileSystemEventManager.writeConflictBackup")
+            return
+        }
+
+        let conflictsRoot = storageRoot.appendingPathComponent(".miaoyan-conflicts", isDirectory: true)
+        do {
+            try FileManager.default.createDirectory(at: conflictsRoot, withIntermediateDirectories: true)
+        } catch {
+            AppDelegate.trackError(error, context: "FileSystemEventManager.writeConflictBackup.createDir")
+            return
+        }
+
+        let timestamp = ISO8601DateFormatter().string(from: Date())
+            .replacingOccurrences(of: ":", with: "-")
+        let projectName = note.project.url.lastPathComponent
+        let safeProject = projectName.replacingOccurrences(of: "/", with: "_")
+        let base = note.url.deletingPathExtension().lastPathComponent
+        let safeBase = base.replacingOccurrences(of: "/", with: "_")
+        let backupURL = conflictsRoot.appendingPathComponent(
+            "\(safeProject)-\(safeBase)-\(timestamp).\(note.url.pathExtension)")
+        do {
+            try editorContent.write(to: backupURL, atomically: true, encoding: .utf8)
+            pruneOldConflictBackups(in: conflictsRoot)
+        } catch {
+            AppDelegate.trackError(error, context: "FileSystemEventManager.writeConflictBackup")
+        }
+    }
+
+    /// Cap the conflict-backup directory so heavy sync setups (many small
+    /// conflicts a day) don't grow the folder unboundedly. Retain the most
+    /// recent N entries unconditionally, plus anything younger than `maxAge`.
+    /// All other entries are removed best-effort.
+    private func pruneOldConflictBackups(in directory: URL) {
+        let keepCount = 100
+        let maxAge: TimeInterval = 30 * 24 * 60 * 60  // 30 days
+
+        let resourceKeys: [URLResourceKey] = [.contentModificationDateKey]
+        guard
+            let files = try? FileManager.default.contentsOfDirectory(
+                at: directory,
+                includingPropertiesForKeys: resourceKeys,
+                options: [.skipsHiddenFiles])
+        else { return }
+
+        struct Entry {
+            let url: URL
+            let mtime: Date
+        }
+        let entries: [Entry] = files.compactMap { url in
+            guard
+                let values = try? url.resourceValues(forKeys: Set(resourceKeys)),
+                let mtime = values.contentModificationDate
+            else { return nil }
+            return Entry(url: url, mtime: mtime)
+        }
+        let sorted = entries.sorted { $0.mtime > $1.mtime }
+        let cutoff = Date().addingTimeInterval(-maxAge)
+
+        for (idx, entry) in sorted.enumerated() {
+            // Always keep the newest `keepCount` entries.
+            if idx < keepCount { continue }
+            // For older entries beyond the cap, only delete those past
+            // maxAge so a one-time burst of conflicts isn't immediately
+            // pruned in the same session.
+            if entry.mtime < cutoff {
+                try? FileManager.default.removeItem(at: entry.url)
+            }
         }
     }
 

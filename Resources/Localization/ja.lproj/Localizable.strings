@@ -189,6 +189,11 @@
 "Press ESC key to exit~" = "ESC キーを押して終了します。";
 "Format is only possible after exiting preview mode~" = "フォーマットの為に、プレビューモードを終了してください。";
 "Saved to Downloads folder~" = "ダウンロードフォルダに保存されました。";
+"Saved~" = "保存しました。";
+"Click the title again to rename~" = "タイトル未保存。タイトルをもう一度クリックしてから編集してください。";
+"External change detected. Local copy backed up~" = "外部からの変更を検出しました。ローカルの内容をバックアップしました。";
+"Switching notes is disabled during export~" = "エクスポート中はノートを切り替えできません。";
+"Failed to move %d note(s) to Trash~" = "%d 件のノートをゴミ箱に移動できませんでした。";
 "Image upload in progress~" = "画像アップロード中~";
 "Image upload failed, Use local~" = "画像のアップロードに失敗しました。ローカルを使用してください";
 "Please make sure your Mac is installed %@ ~" = "Macに %@ をインストールされていることを確認してください。";

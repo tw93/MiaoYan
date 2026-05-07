@@ -531,16 +531,49 @@ public class Note: NSObject {
         executeSave(attributedString: content, globalStorage: globalStorage)
     }
 
+    /// Synchronously runs any pending debounced save and clears the work item.
+    /// Use from app/window lifecycle hooks (terminate, will-close, resign-key)
+    /// and from explicit Cmd+S so unsaved edits cannot disappear in the 1.5s
+    /// debounce window. Safe to call when no save is pending (no-op).
+    ///
+    /// Note on the worst-case race: if the debounce timer fires at almost
+    /// exactly the same instant a caller invokes flushPendingSave, both can
+    /// end up calling executeSave with the same content (`workItem.cancel()`
+    /// is documented to only prevent execution that has not yet started).
+    /// The double-write is harmless because executeSave is idempotent for the
+    /// same `content` value, costing one extra atomic disk write at most. The
+    /// debounceSave hook below also clears `saveWorkItem` from inside its own
+    /// handler so the second branch becomes a no-op as soon as the workItem
+    /// finishes naturally.
+    public func flushPendingSave(globalStorage: Bool = true) {
+        guard let workItem = saveWorkItem, !workItem.isCancelled else {
+            return
+        }
+        workItem.cancel()
+        saveWorkItem = nil
+        executeSave(attributedString: content, globalStorage: globalStorage)
+    }
+
     private func debounceSave(attributedString: NSAttributedString, globalStorage: Bool = true) {
         saveWorkItem?.cancel()
 
-        let workItem = DispatchWorkItem { [weak self] in
-            self?.executeSave(attributedString: attributedString, globalStorage: globalStorage)
+        // Two-step bind so the closure can compare against its own
+        // DispatchWorkItem identity. After the timer fires naturally we
+        // clear `saveWorkItem` if it still points at us; that turns a
+        // subsequent flushPendingSave call into a no-op instead of running
+        // executeSave a second time with the same content.
+        var pending: DispatchWorkItem!
+        pending = DispatchWorkItem { [weak self] in
+            guard let self = self else { return }
+            if self.saveWorkItem === pending {
+                self.saveWorkItem = nil
+            }
+            self.executeSave(attributedString: attributedString, globalStorage: globalStorage)
         }
 
-        saveWorkItem = workItem
+        saveWorkItem = pending
         // Debounce for 1.5 seconds
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: workItem)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: pending)
     }
 
     private func executeSave(attributedString: NSAttributedString, globalStorage: Bool = true) {

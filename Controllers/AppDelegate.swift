@@ -167,6 +167,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         UserDefaultsManagement.clearSingleMode()
         if let vc = resolveViewController() {
             vc.persistCurrentViewState()
+            // Capture the current editor buffer into the active note before
+            // we drain the debounce queue, otherwise an in-flight keystroke
+            // from the last 1.5s would never reach Note.content.
+            if let activeNote = EditTextView.note {
+                vc.editArea.saveTextStorageContent(to: activeNote)
+            }
+            vc.storage.flushPendingSaves()
         }
         try? FileManager.default.removeItem(at: HtmlManager.previewBundleURL())
         var temporary = URL(fileURLWithPath: NSTemporaryDirectory())

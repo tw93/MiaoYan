@@ -843,24 +843,51 @@ class Storage {
         return nil
     }
 
-    func removeNotes(notes: [Note], fsRemove: Bool = true, completely: Bool = false, completion: @escaping ([URL: URL]?) -> Void) {
+    func removeNotes(notes: [Note], fsRemove: Bool = true, completely: Bool = false, partialFailure: ((Int) -> Void)? = nil, completion: @escaping ([URL: URL]?) -> Void) {
         guard !notes.isEmpty else {
             completion(nil)
             return
         }
 
+        // Run the file IO first. If the trash / move fails for a note, keep
+        // it in the in-memory list and the sidebar so the user does not see
+        // it disappear from the UI while the file is still on disk. Without
+        // this ordering a denied permission, full Trash, or iCloud stall
+        // would silently make the note vanish from MiaoYan but persist as
+        // an orphan file.
+        var removed = [URL: URL]()
+        var succeeded = [Note]()
+        var failedCount = 0
+
         for note in notes {
+            if !fsRemove {
+                succeeded.append(note)
+                continue
+            }
+            let originalPath = note.url.path
+            if let trashURLs = note.removeFile(completely: completely) {
+                removed[trashURLs[0]] = trashURLs[1]
+                succeeded.append(note)
+            } else if !FileManager.default.fileExists(atPath: originalPath) {
+                // removeFile returned nil because the file was already gone.
+                // Treat as success so the empty row does not linger.
+                succeeded.append(note)
+            } else {
+                failedCount += 1
+            }
+        }
+
+        for note in succeeded {
             removeBy(note: note)
         }
 
-        var removed = [URL: URL]()
-
-        if fsRemove {
-            for note in notes {
-                if let trashURLs = note.removeFile(completely: completely) {
-                    removed[trashURLs[0]] = trashURLs[1]
-                }
-            }
+        if failedCount > 0 {
+            let warning = NSError(
+                domain: "com.tw93.miaoyan.delete",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "removeNotes: \(failedCount) of \(notes.count) failed"])
+            AppDelegate.trackError(warning, context: "Storage.removeNotes.partialFailure")
+            partialFailure?(failedCount)
         }
 
         if !removed.isEmpty {
@@ -1137,6 +1164,23 @@ class Storage {
     public func getNotesBy(project: Project) -> [Note] {
         noteList.filter {
             $0.project == project
+        }
+    }
+
+    /// Flush every note's pending debounced save synchronously.
+    /// Called from lifecycle hooks (applicationWillTerminate, windowWillClose,
+    /// windowDidResignKey) and explicit Cmd+S so the 1.5s debounce window
+    /// cannot eat user edits.
+    ///
+    /// The .filter() pass produces a snapshot array up front so we never
+    /// iterate `noteList` directly. flushPendingSave -> executeSave can
+    /// trigger storage.add(self) (line ~603, when globalStorage=true), which
+    /// mutates noteList. Iterating the original would crash with the
+    /// "modified during iteration" trap on a hot path that the user feels.
+    public func flushPendingSaves() {
+        let pending = noteList.filter { $0.hasPendingSave }
+        for note in pending {
+            note.flushPendingSave()
         }
     }
 

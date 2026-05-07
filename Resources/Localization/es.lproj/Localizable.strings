@@ -188,6 +188,11 @@
 "Press ESC key to exit~" = "Presiona la tecla ESC para salir~";
 "Format is only possible after exiting preview mode~" = "El formato solo es posible después de salir del modo de vista previa~";
 "Saved to Downloads folder~" = "Guardado en la carpeta de Descargas~";
+"Saved~" = "Guardado~";
+"Click the title again to rename~" = "Título no guardado. Haz clic en el título y vuelve a editarlo~";
+"External change detected. Local copy backed up~" = "Cambio externo detectado. Copia local respaldada~";
+"Switching notes is disabled during export~" = "No se puede cambiar de nota durante la exportación~";
+"Failed to move %d note(s) to Trash~" = "No se pudo mover %d nota(s) a la Papelera~";
 "Image upload in progress~" = "Subida de imagen en progreso~";
 "Image upload failed, Use local~" = "Falló la subida de imagen, usando local~";
 "Please make sure your Mac is installed %@ ~" = "Por favor asegúrate de que tu Mac tenga instalado %@ ~";

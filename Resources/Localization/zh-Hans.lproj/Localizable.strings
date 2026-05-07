@@ -138,6 +138,11 @@
 "Press ESC key to exit~" = "按 ESC 键退出演示~";
 "Format is only possible after exiting preview mode~" = "文档排版需要退出预览模式才可使用~";
 "Saved to Downloads folder~" = "已导出到下载目录~";
+"Saved~" = "已保存~";
+"Click the title again to rename~" = "标题未保存,请再次点击标题后修改~";
+"External change detected. Local copy backed up~" = "检测到外部修改,本地内容已备份~";
+"Switching notes is disabled during export~" = "导出过程中无法切换笔记~";
+"Failed to move %d note(s) to Trash~" = "%d 条笔记未能移入回收站,可能受权限或同步限制~";
 "Image upload in progress~" = "图片上传中~";
 "Image upload failed, Use local~" = "图片上传失败，优先使用本地，可手动上传~";
 "Please make sure your Mac is installed %@ ~" = "请确保你的 Mac 已安装并配置好了 %@ ~";

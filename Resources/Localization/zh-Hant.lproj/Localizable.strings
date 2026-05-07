@@ -10,6 +10,11 @@
 "Press ESC key to exit~" = "按 ESC 鍵結束簡報模式～";
 "Format is only possible after exiting preview mode~" = "文件排版得結束預覽模式才能使用～";
 "Saved to Downloads folder~" = "已經輸出到下載目錄～";
+"Saved~" = "已儲存～";
+"Click the title again to rename~" = "標題未儲存，請再次點擊標題後修改～";
+"External change detected. Local copy backed up~" = "檢測到外部修改，本地內容已備份～";
+"Switching notes is disabled during export~" = "匯出過程中無法切換筆記～";
+"Failed to move %d note(s) to Trash~" = "%d 篇筆記未能移入垃圾桶，可能受權限或同步限制～";
 "Image upload in progress~" = "正在上傳圖片～";
 "Image upload failed, Use local~" = "圖片上傳失敗，改放在本機端，可手動上傳～";
 "Please make sure your Mac is installed %@ ~" = "請確定你的 Mac 已經安裝並設定好 %@～";
