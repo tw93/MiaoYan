@@ -411,3 +411,25 @@ img.border {
     border-block-start-color: var(--border-color);
   }
 }
+
+/* ==================== Split-mode chrome ====================
+ * Toggled by MPreviewView.setSplitChrome via JS classList. When the host
+ * pane is part of MiaoYan's side-by-side editor view, the editor's macOS
+ * NSScrollView (left pane) is the single visible scroll indicator and
+ * the preview's WebKit-rendered scrollbar (right pane) becomes redundant.
+ * Hiding it removes the simultaneous-scrollbars flash without losing the
+ * ability to scroll: wheel/trackpad still work, and the bidirectional
+ * sync engine pushes any preview-side scroll back to the editor's
+ * scrollbar so the user keeps a position indicator.
+ *
+ * In single-preview mode (Cmd+3) and Magic PPT mode this class is not
+ * applied, so the standalone pane retains its native scrollbar.
+ */
+body.miaoyan-split-mode::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+body.miaoyan-split-mode {
+  scrollbar-width: none;
+}

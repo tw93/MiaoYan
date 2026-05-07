@@ -49,6 +49,12 @@ class MPreviewView: WKWebView, WKUIDelegate {
     /// that would either fire too early on slow loads or waste time on fast
     /// ones.
     private var postReadyCallbacks: [() -> Void] = []
+    /// Whether this preview is currently rendered as the right pane of
+    /// MiaoYan's split editor. Tracked locally so we can re-apply the
+    /// `body.miaoyan-split-mode` class on every webView(_:didFinish:),
+    /// because each `load(note:)` rebuilds the bundled HTML and the body
+    /// element starts out without our class. Driven by setSplitChrome.
+    private var splitChromeEnabled = false
     private var lastRendererInitializationTime: TimeInterval = 0
     static var hasCompletedInitialLoad = false
     private var loadCompletion: (() -> Void)?
@@ -489,6 +495,16 @@ class MPreviewView: WKWebView, WKUIDelegate {
         loadCompletion?()
         loadCompletion = nil
 
+        // Re-apply split-mode chrome on every fresh template. load(note:)
+        // rebuilds the page from index.html so the body class set by an
+        // earlier setSplitChrome call gets reset. Inject again here while
+        // the cached state says we're still in split mode.
+        if splitChromeEnabled {
+            evaluateJavaScript(
+                "document.body.classList.add('miaoyan-split-mode');",
+                completionHandler: nil)
+        }
+
         // Set up scroll observation after WebView is fully loaded
         setupScrollObserver()
         showTOCTipIfNeeded()
@@ -524,6 +540,22 @@ class MPreviewView: WKWebView, WKUIDelegate {
         }
     }
 
+    /// Toggle the `body.miaoyan-split-mode` class so base.css can hide the
+    /// WebKit-rendered scrollbar while the preview is the right pane of the
+    /// split editor. The state is also persisted on `splitChromeEnabled` so
+    /// `webView(_:didFinish:)` can re-apply it after every full template
+    /// reload (note switch in split mode triggers a fresh load).
+    public func setSplitChrome(_ enabled: Bool) {
+        splitChromeEnabled = enabled
+        let script =
+            enabled
+            ? "document.body.classList.add('miaoyan-split-mode');"
+            : "document.body.classList.remove('miaoyan-split-mode');"
+        runWhenPreviewReady { [weak self] in
+            self?.evaluateJavaScript(script, completionHandler: nil)
+        }
+    }
+
     public func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
         AppDelegate.trackError(NSError(domain: "WKWebViewError", code: 1, userInfo: [NSLocalizedDescriptionKey: "WebContent process terminated"]), context: "MPreviewView.WebContentTerminated")
 
@@ -549,6 +581,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
         isLoadingTemplate = false
         pendingPostLoadUpdateNote = nil
         postReadyCallbacks.removeAll()
+        splitChromeEnabled = false
         note = nil
         stopLoading()
     }

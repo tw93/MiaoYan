@@ -111,8 +111,21 @@ extension ViewController {
             sessionPreviewMode = true
         }
 
+        // Defensive: a stale `miaoyan-split-mode` body class would leave the
+        // standalone preview without any visible scrollbar. togglePreview
+        // already clears sessionSplitMode, but the underlying WKWebView
+        // class is not toggled by that flag flip alone.
+        editArea.markdownView?.setSplitChrome(false)
+
         isFocusedTitle = titleLabel.hasFocus()
         cancelTextSearch()
+
+        // Critical: unhide the preview pane *before* setDisplayMode so
+        // NSSplitView includes it in adjustSubviews. Coming from split via
+        // disableSplitViewMode the previewScroll is isHidden=true, and an
+        // NSSplitView skips hidden subviews when sizing. The result was a
+        // 0-width preview pane (visible white) until the next layout pass.
+        previewScrollView?.isHidden = false
 
         // Use animated: false to ensure immediate layout update
         editorContentSplitView?.setDisplayMode(.previewOnly, animated: false)
@@ -120,6 +133,12 @@ extension ViewController {
         preparePreviewContainer(hidden: false)
 
         previewScrollView?.hasVerticalScroller = true
+
+        // Sync the toolbar tint immediately so the preview button highlights
+        // in the same frame the mode change is committed. refillEditArea
+        // also schedules this asynchronously, but that lands a runloop tick
+        // later and looked unresponsive on the Cmd+3 path.
+        updateToolbarButtonTints()
 
         ensureNoteSelection(preferLastSelected: true, preserveScrollPosition: true)
 
@@ -171,6 +190,13 @@ extension ViewController {
         // UX: Ensure a note is selected when entering split mode (prefer last selected note)
         ensureNoteSelection(preferLastSelected: true)
 
+        // Same NSSplitView trap as enablePreview: a previous disable* path
+        // may have left previewScroll isHidden=true, in which case
+        // adjustSubviews would skip it during setDisplayMode and the right
+        // pane would settle at 0 width. Unhide first so the layout pass
+        // accounts for it.
+        previewScrollView?.isHidden = false
+
         // Force layout update BEFORE setting display mode to ensure correct bounds
         contentSplitView.layoutSubtreeIfNeeded()
 
@@ -197,6 +223,12 @@ extension ViewController {
         previewScrollView?.hasHorizontalScroller = false
 
         startSplitScrollSync()
+
+        // Hide the WebKit-rendered scrollbar in the right pane so the
+        // editor's NSScrollView overlay scroller is the single visible
+        // indicator. The bidirectional sync keeps both panes aligned, so
+        // hiding the preview scrollbar does not lose information.
+        editArea.markdownView?.setSplitChrome(true)
 
         // Keep editor focused
         if !isFocusedTitle {
@@ -413,6 +445,10 @@ extension ViewController {
         previewScrollView?.hasVerticalScroller = false
         editAreaScroll.hasVerticalScroller = true
 
+        // Restore the WebKit scrollbar so the next time the preview is shown
+        // standalone (Cmd+3) it has its own position indicator.
+        editArea.markdownView?.setSplitChrome(false)
+
         // Split mode doesn't affect preview state - don't set preview=false here
         titleLabel.isEditable = true
 
@@ -525,6 +561,10 @@ extension ViewController {
         // Ensure a note is selected before entering presentation mode
         ensureNoteSelection(preferLastSelected: true)
 
+        // Defensive: same as enablePreview, presentation is a single-pane
+        // mode so the body should not carry the split-mode class.
+        editArea.markdownView?.setSplitChrome(false)
+
         sessionPresentationMode = true
         savePresentationLayout()
         hideNoteList("")
@@ -533,11 +573,14 @@ extension ViewController {
         toggleListButton?.isHidden = true
         toggleSplitButton?.isHidden = true
 
-        // Set up split view and preview container synchronously
+        // Set up split view and preview container synchronously.
+        // Unhide previewScroll *before* setDisplayMode so NSSplitView's
+        // adjustSubviews includes it. Same trap that affected enablePreview;
+        // matching the order across all enable* paths.
+        previewScrollView?.isHidden = false
         editorContentSplitView?.setDisplayMode(.previewOnly, animated: false)
         preparePreviewContainer(hidden: false)
         previewScrollView?.hasVerticalScroller = true
-        previewScrollView?.isHidden = false
 
         // Force immediate content load
         if editArea.markdownView != nil {
@@ -642,6 +685,11 @@ extension ViewController {
         // Ensure a note is selected before entering PPT mode
         ensureNoteSelection(preferLastSelected: true)
 
+        // Defensive: PPT replaces the page chrome with Reveal.js layout, but
+        // the body class would otherwise persist from a prior split session
+        // and accidentally hide Reveal's own scroll affordances.
+        editArea.markdownView?.setSplitChrome(false)
+
         sessionMagicPPTMode = true
         savePresentationLayout()
         hideNoteList("")
@@ -657,11 +705,14 @@ extension ViewController {
             view.window?.toggleFullScreen(nil)
         }
 
-        // Set up split view and preview container synchronously
+        // Set up split view and preview container synchronously.
+        // Unhide previewScroll *before* setDisplayMode so NSSplitView's
+        // adjustSubviews includes it. See enablePreview comment for the
+        // hidden-subview adjustSubviews trap.
+        previewScrollView?.isHidden = false
         editorContentSplitView?.setDisplayMode(.previewOnly, animated: false)
         preparePreviewContainer(hidden: false)
         previewScrollView?.hasVerticalScroller = true
-        previewScrollView?.isHidden = false
 
         // Force immediate content load
         if editArea.markdownView != nil {
