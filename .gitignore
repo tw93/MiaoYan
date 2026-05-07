@@ -103,10 +103,12 @@ Resources/DownView.bundle/demo.html
 IrEditor/
 fonts/
 
-# Shared agent instructions and repo-local skills are intentionally tracked.
-AGENTS.override.md
+# AI agent files (synced via private dotfiles)
+CLAUDE.md
 CLAUDE.local.md
-.claude/settings.local.json
+AGENTS.md
+AGENTS.override.md
+.claude/
 .agents/settings.local.json
 
 # Local AI Assistant files
