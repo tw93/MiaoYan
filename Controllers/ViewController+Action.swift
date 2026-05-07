@@ -87,9 +87,11 @@ extension ViewController {
 
         let value = sender.stringValue
 
+        // Avoid editArea.clear() here: it hides titleBarView and would cause a
+        // hide-then-show flicker. prepareForNoteCreation (inside createNote)
+        // already clears the title field and editor body in the same frame.
         if !value.isEmpty {
             search.stringValue = String()
-            editArea.clear()
             createNote(name: value, content: "")
         } else {
             createNote(content: "")
@@ -104,7 +106,6 @@ extension ViewController {
         if let type = vc.getSidebarType(), type == .Trash {
             vc.storageOutlineView.deselectAll(nil)
         }
-        vc.focusTable()
         vc.createNote(name: "", content: "")
     }
 
@@ -189,16 +190,30 @@ extension ViewController {
             return
         }
 
-        note.overwrite(url: newUrl)
+        // Suppress our own FSEvent during the rename so the editor isn't
+        // reloaded mid-flight. Even on failure the 0.2s window self-resets.
+        blockFSUpdates()
 
+        // Order matters for crash safety:
+        //   1. Move the file on disk first.
+        //   2. Only after success do we update note.url, otherwise a failed
+        //      moveItem leaves note.url pointing at a path that doesn't exist
+        //      and the next debounced save writes to the wrong place,
+        //      splitting content across two files.
         do {
             try FileManager.default.moveItem(at: url, to: newUrl)
+            note.overwrite(url: newUrl)
             updateTitleAndFinishImport(note: note, title: value)
         } catch {
-            note.overwrite(url: url)
+            AppDelegate.trackError(error, context: "Note.rename.moveItem")
             note.parseURL()
             let originalTitle = note.getTitleWithoutLabel()
             updateTitleAndFinishImport(note: note, title: originalTitle)
+            MiaoYanAlert.show(
+                message: I18n.str("Save Failed"),
+                informativeText: I18n.str(error.localizedDescription),
+                for: view.window
+            )
         }
     }
 
@@ -336,14 +351,25 @@ extension ViewController {
             return
         }
 
-        let selectedRow = vc.notesTableView.selectedRowIndexes.min()
+        let selectedRow = vc.notesTableView.selectedRowIndexes.min() ?? -1
 
         UserDataService.instance.searchTrigger = true
 
-        vc.notesTableView.removeByNotes(notes: notes)
+        // Compute next selection deterministically and apply in the same
+        // synchronous stretch as the row removal so the user never sees the
+        // auto-select-first row 0 flash followed by a second jump.
+        vc.notesTableView.removeAndReselect(notes: notes, originalRow: selectedRow)
 
-        vc.storage.removeNotes(notes: notes) { urls in
-
+        let onPartialFailure: (Int) -> Void = { failedCount in
+            DispatchQueue.main.async { [weak vc] in
+                guard let vc = vc else { return }
+                vc.toast(
+                    message: String(format: I18n.str("Failed to move %d note(s) to Trash~"), failedCount),
+                    style: .failure
+                )
+            }
+        }
+        vc.storage.removeNotes(notes: notes, partialFailure: onPartialFailure) { urls in
             if let appd = NSApplication.shared.delegate as? AppDelegate,
                 let md = appd.mainWindowController
             {
@@ -354,16 +380,16 @@ extension ViewController {
                     undoManager.setActionName(I18n.str("Delete"))
                 }
 
-                if let i = selectedRow, i > -1 {
-                    vc.notesTableView.selectRow(i)
-                }
-
                 UserDataService.instance.searchTrigger = false
             }
 
-            // Don't disable preview mode when deleting notes
-            // Let the selection change handler update the preview with the next note
-            vc.editArea.clear()
+            // Only clear the editor when the list became empty. With a next
+            // note auto-selected above, handleSelectionChange has already
+            // filled the editor with the new content, so calling clear() now
+            // would just blank the editor for one frame before the new fill.
+            if vc.notesTableView.noteList.isEmpty {
+                vc.editArea.clear()
+            }
         }
 
         NSApp.mainWindow?.makeFirstResponder(vc.notesTableView)
@@ -432,8 +458,26 @@ extension ViewController {
                 guard let name = note.getDupeName() else {
                     continue
                 }
+
+                // Make sure note.content actually reflects what is on disk
+                // before we copy it. Two failure modes the next two lines
+                // defend against:
+                //   1. The note was never opened in this session, so
+                //      isContentLoaded is false and note.content is an
+                //      empty NSMutableAttributedString.
+                //   2. The active note has unsaved edits sitting in the
+                //      1.5s debounce queue; without flushing, the duplicate
+                //      contains the previous on-disk version.
+                if note === EditTextView.note {
+                    editArea.saveTextStorageContent(to: note)
+                }
+                note.flushPendingSave()
+                if !note.isContentLoaded {
+                    note.ensureContentLoaded()
+                }
+
                 let noteDupe = Note(name: name, project: note.project, type: note.type)
-                noteDupe.content = NSMutableAttributedString(string: note.content.string)
+                noteDupe.content = NSMutableAttributedString(attributedString: note.content)
 
                 // Clone images
                 if note.type == .markdown, note.container == .none {
@@ -819,12 +863,16 @@ extension ViewController {
         editArea.string = text
         EditTextView.note = note
 
+        // Move focus into the title field in the same frame, so the cursor is
+        // already blinking by the time the table reload finishes.
+        titleLabel.editModeOn()
+
         // Update table and handle completion
         updateTable {
             DispatchQueue.main.async {
                 // Clear the flag before final setup
                 UserDataService.instance.isCreatingNote = false
-                self.completeNoteCreation(for: note, with: vc)
+                self.completeNoteCreation(for: note)
             }
         }
     }
@@ -833,22 +881,59 @@ extension ViewController {
     private func prepareForNoteCreation() {
         notesTableView.deselectNotes()
         search.stringValue.removeAll()
+
+        // Drop any half-edited title from the previous note so it cannot bleed
+        // into the new note via pendingTitleChange or controlTextDidEndEditing.
+        UserDataService.instance.pendingTitleChange = nil
+
+        // Tripwire: titiebarHeight is supposed to be 0 only inside PPT mode
+        // (Controllers/ViewController+Editor.swift sets it to 0 on enter and
+        // back to 40 on exit). If we land here with constant=0 outside PPT
+        // / Presentation, an exit path leaked. Track it once so we can fix
+        // the leak instead of relying on the defensive reset below.
+        //
+        // TODO(tripwire): this is a temporary diagnostic. Remove (along with
+        // the err init) once two consecutive releases have shipped without
+        // any "prepareForNoteCreation.titlebarHeight" report. Defensive
+        // checkTitlebarTopConstraint() below stays as the actual fix.
+        if titiebarHeight.constant == 0 && !sessionMagicPPTMode && !sessionPresentationMode {
+            let leak = NSError(
+                domain: "com.tw93.miaoyan.layout",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "titiebarHeight stuck at 0 outside PPT/Presentation"])
+            AppDelegate.trackError(leak, context: "prepareForNoteCreation.titlebarHeight")
+        }
+
+        // Keep the title bar visible (we may be coming back from preview / PPT
+        // where it was hidden) and clear the previous title in the same frame
+        // as the editor body, so users never see the old title on a new note.
+        titleBarView.isHidden = false
+        titleBarView.alphaValue = 1
+        titleLabel.isHidden = false
+        titleLabel.alphaValue = 1
         titleLabel.isEditable = true
+
+        // Force the height constraint back to the layout-driven value (40
+        // or 64 depending on notelist width). PPT entry sets this to 0 and
+        // a non-clean exit can leave it stuck, which makes the title bar
+        // collapse to invisible even with isHidden=false. Restart fixes it
+        // because storyboard re-applies the initial 52, but a Cmd+N path
+        // should self-heal too.
+        checkTitlebarTopConstraint()
+
+        UserDataService.instance.isUpdatingTitle = true
+        titleLabel.setStringValueSafely("")
+        UserDataService.instance.isUpdatingTitle = false
     }
 
     // Complete final setup for newly created note
-    private func completeNoteCreation(for note: Note, with viewController: ViewController) {
+    private func completeNoteCreation(for note: Note) {
         guard let index = notesTableView.getIndex(note) else {
             return
         }
 
         notesTableView.selectRowIndexes([index], byExtendingSelection: false)
         notesTableView.scrollRowToVisible(index)
-
-        // Focus on title after UI stabilizes
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            viewController.titleLabel.editModeOn()
-        }
     }
 
     private func removeForever() {
@@ -863,18 +948,25 @@ extension ViewController {
             for: window
         ) { confirmed in
             if confirmed {
-                let selectedRow = vc.notesTableView.selectedRowIndexes.min()
-                vc.editArea.clear()
-                vc.storage.removeNotes(notes: notes) { _ in
+                let selectedRow = vc.notesTableView.selectedRowIndexes.min() ?? -1
+                vc.notesTableView.removeAndReselect(notes: notes, originalRow: selectedRow)
+                let onPartialFailure: (Int) -> Void = { failedCount in
+                    DispatchQueue.main.async {
+                        vc.toast(
+                            message: String(format: I18n.str("Failed to move %d note(s) to Trash~"), failedCount),
+                            style: .failure
+                        )
+                    }
+                }
+                vc.storage.removeNotes(notes: notes, partialFailure: onPartialFailure) { _ in
                     DispatchQueue.main.async {
                         vc.storageOutlineView.reloadSidebar()
-                        vc.notesTableView.removeByNotes(notes: notes)
-                        if let i = selectedRow, i > -1 {
-                            vc.notesTableView.selectRow(i)
-                        }
                         if vc.getSidebarItem() == nil {
                             vc.storageOutlineView.selectRowIndexes([0], byExtendingSelection: false)
                             vc.notesTableView.selectRow(0)
+                        }
+                        if vc.notesTableView.noteList.isEmpty {
+                            vc.editArea.clear()
                         }
                     }
                 }
@@ -1471,6 +1563,19 @@ extension ViewController {
         if event.modifierFlags.contains(.command), event.keyCode == kVK_ANSI_S {
             if titleLabel.isEditable {
                 fileName(titleLabel)
+            }
+            // Force flush of the 1.5s debounce queue so the user can rely
+            // on Cmd+S as a hard-save point instead of a rename shortcut.
+            // Toast only when something was actually flushed; otherwise a
+            // user spamming Cmd+S sees a constant stream of "Saved~" toasts
+            // even when there is nothing pending.
+            if let activeNote = EditTextView.note {
+                editArea.saveTextStorageContent(to: activeNote)
+            }
+            let hadPending = storage.noteList.contains { $0.hasPendingSave }
+            storage.flushPendingSaves()
+            if hadPending {
+                toast(message: I18n.str("Saved~"), style: .success)
             }
             return false
         }

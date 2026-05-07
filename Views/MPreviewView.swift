@@ -32,6 +32,23 @@ class MPreviewView: WKWebView, WKUIDelegate {
     private var originalRedrawPolicy: NSView.LayerContentsRedrawPolicy?
     private var contentUpdateVersion: UInt = 0
     private(set) var hasLoadedTemplate = false
+    /// True between `load()` calling `loadFileURL` and `webView(_:didFinish:)`
+    /// firing. While true, the WKWebView is in the middle of swapping its DOM
+    /// for the bundled template, so any incremental DOM mutation we run will
+    /// be wiped when the navigation lands. Used by `updateContent` to defer
+    /// split-view paste/typing updates until the template is actually live.
+    private var isLoadingTemplate = false
+    /// Set by `updateContent` when it is invoked while `isLoadingTemplate`
+    /// is true. The didFinish handler consumes it to re-run the update once
+    /// the template DOM is ready, otherwise rapid paste after entering
+    /// split mode leaves the right pane stuck on the pre-paste content.
+    private var pendingPostLoadUpdateNote: Note?
+    /// Closures queued by callers (e.g. enablePreview's makeFirstResponder
+    /// and scrollToPosition) that need the preview DOM to be ready first.
+    /// Drained in webView(_:didFinish:). Replaces fixed asyncAfter timers
+    /// that would either fire too early on slow loads or waste time on fast
+    /// ones.
+    private var postReadyCallbacks: [() -> Void] = []
     private var lastRendererInitializationTime: TimeInterval = 0
     static var hasCompletedInitialLoad = false
     private var loadCompletion: (() -> Void)?
@@ -467,6 +484,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
     public func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         scrollObserverInjected = false
         Self.hasCompletedInitialLoad = true
+        isLoadingTemplate = false
         closure?()
         loadCompletion?()
         loadCompletion = nil
@@ -474,6 +492,36 @@ class MPreviewView: WKWebView, WKUIDelegate {
         // Set up scroll observation after WebView is fully loaded
         setupScrollObserver()
         showTOCTipIfNeeded()
+
+        // Drain any updateContent calls that arrived while the template was
+        // still loading (typical: user pastes immediately after entering
+        // split mode or after switching notes). Without this, the split
+        // pane stays stuck on whatever the bundled template rendered with
+        // the pre-paste note.content snapshot.
+        if let pending = pendingPostLoadUpdateNote {
+            pendingPostLoadUpdateNote = nil
+            updateContent(note: pending, preserveScroll: false)
+        }
+
+        // Drain any post-ready callbacks queued by enablePreview etc.
+        let callbacks = postReadyCallbacks
+        postReadyCallbacks.removeAll()
+        for cb in callbacks {
+            cb()
+        }
+    }
+
+    /// Runs the closure once the preview DOM is ready. If we are already
+    /// past `webView(_:didFinish:)` for the current template, the closure
+    /// fires immediately on the main actor; otherwise it is queued and
+    /// drained when didFinish lands. Replaces fixed asyncAfter delays
+    /// scattered across mode-transition code.
+    public func runWhenPreviewReady(_ block: @escaping () -> Void) {
+        if hasLoadedTemplate && !isLoadingTemplate {
+            block()
+        } else {
+            postReadyCallbacks.append(block)
+        }
     }
 
     public func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
@@ -498,6 +546,9 @@ class MPreviewView: WKWebView, WKUIDelegate {
         isUpdatingContent = false
         scrollObserverInjected = false
         hasLoadedTemplate = false
+        isLoadingTemplate = false
+        pendingPostLoadUpdateNote = nil
+        postReadyCallbacks.removeAll()
         note = nil
         stopLoading()
     }
@@ -604,8 +655,12 @@ class MPreviewView: WKWebView, WKUIDelegate {
         }
     }
     public func slideTo(index: Int) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.executeJavaScriptWhenReady("Reveal.slide(\(index));")
+        // Wait for the preview's WKNavigation to actually finish rather than
+        // hard-coding 1.0s. Reveal.js is reachable as soon as the bundle
+        // navigation lands; the previous fixed timer either fired before
+        // Reveal was defined (silently failed) or wasted ~700ms after it.
+        runWhenPreviewReady { [weak self] in
+            self?.evaluateJavaScript("Reveal.slide(\(index));", completionHandler: nil)
         }
     }
     public func scrollToPosition(pre: CGFloat) {
@@ -651,6 +706,15 @@ class MPreviewView: WKWebView, WKUIDelegate {
     }
     public func load(note: Note, force: Bool = false, completion: (() -> Void)? = nil) {
         self.loadCompletion = completion
+        // Mark the template-load window. updateContent will defer until this
+        // clears in webView(_:didFinish:) so split-view edits made during the
+        // load don't get wiped by the bundle's DOM replacement.
+        isLoadingTemplate = true
+        // Drop any deferred update that was queued for a different note;
+        // we're about to load a new template that supersedes it.
+        if let pending = pendingPostLoadUpdateNote, pending !== note {
+            pendingPostLoadUpdateNote = nil
+        }
         Task { @MainActor [weak self, note] in
             guard let self else { return }
             let markdownString = note.getPrettifiedContent()
@@ -674,6 +738,13 @@ class MPreviewView: WKWebView, WKUIDelegate {
 
             guard let rendered else {
                 self.hasLoadedTemplate = false
+                self.isLoadingTemplate = false
+                // Drop queued post-ready callbacks so they don't fire against
+                // the next, unrelated template (slideTo with a stale index,
+                // makeFirstResponder on a webview that displays a different
+                // note).
+                self.postReadyCallbacks.removeAll()
+                self.pendingPostLoadUpdateNote = nil
                 AppDelegate.trackError(
                     NSError(
                         domain: "MarkdownRenderError", code: 1,
@@ -695,6 +766,9 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 self.note = note
             } catch {
                 self.hasLoadedTemplate = false
+                self.isLoadingTemplate = false
+                self.postReadyCallbacks.removeAll()
+                self.pendingPostLoadUpdateNote = nil
                 AppDelegate.trackError(error, context: "MPreviewView.load")
                 self.loadHTMLString("<html><body><p>Failed to load preview</p></body></html>", baseURL: nil)
             }
@@ -714,6 +788,18 @@ class MPreviewView: WKWebView, WKUIDelegate {
             if let currentNote = self.note, currentNote !== note {
                 self.isUpdatingContent = false
                 self.load(note: note, force: true)
+                return
+            }
+
+            // Defer if the template is still loading. Running the incremental
+            // DOM mutation now would either no-op (no .markdown-body yet) or
+            // be overwritten when the bundle's index.html navigation lands.
+            // didFinish picks up pendingPostLoadUpdateNote and re-runs us
+            // against the freshly-rendered DOM with the latest note.content
+            // (which by then includes whatever the user just pasted/typed).
+            if self.isLoadingTemplate || !self.hasLoadedTemplate {
+                self.pendingPostLoadUpdateNote = note
+                self.isUpdatingContent = false
                 return
             }
 

@@ -322,6 +322,23 @@ class NotesTableView: NSTableView {
 
         guard let vc = window?.contentViewController as? ViewController else { return }
 
+        // Block note switching during an export. The PDF/PNG/HTML export
+        // pipelines capture the live preview's outerHTML and snapshot
+        // dimensions; if the user switches notes mid-export, the output's
+        // filename comes from one note and the body from another. Toast
+        // and re-select the previous row so the user gets explicit
+        // feedback instead of a silently-mislabeled file.
+        if vc.sessionIsExporting || vc.sessionIsExportingPPT || vc.sessionIsExportingHTML {
+            if let currentNote = EditTextView.note,
+                let row = self.getIndex(currentNote),
+                row != self.selectedRow
+            {
+                self.selectRowIndexes([row], byExtendingSelection: false)
+            }
+            vc.toast(message: I18n.str("Switching notes is disabled during export~"), style: .failure)
+            return
+        }
+
         if let pendingChange = UserDataService.instance.pendingTitleChange {
             let title = pendingChange.title
             let note = pendingChange.note
@@ -373,7 +390,14 @@ class NotesTableView: NSTableView {
                 vc.editArea.fill(note: note, options: .silent)
             }
         } else {
-            // UX: Auto-select first note to avoid empty editor (unified behavior)
+            // UX: Auto-select first note to avoid empty editor (unified behavior).
+            // suppressSelectionSideEffects guards the brief window between
+            // removeAndReselect's removeByNotes and its explicit
+            // selectRowIndexes(target). Without this guard the auto-select
+            // fallback would race the deterministic target selection through
+            // ensureNoteSelection -> selectRow(0) on a DispatchQueue.main.async,
+            // producing a row-0 flash for one frame before the right row lands.
+            guard !suppressSelectionSideEffects else { return }
             if !noteList.isEmpty {
                 vc.ensureNoteSelection()
             } else {
@@ -562,6 +586,52 @@ class NotesTableView: NSTableView {
                 let indexSet = IndexSet(integer: i)
                 noteList.remove(at: i)
                 removeRows(at: indexSet, withAnimation: .slideDown)
+            }
+        }
+    }
+
+    /// Atomic delete-and-reselect for the active row(s).
+    /// Without this helper, `removeByNotes` triggers a tableViewSelectionDidChange
+    /// with selectedRow = -1, which the else-branch of handleSelectionChange
+    /// turns into a synchronous `ensureNoteSelection()` -> auto-select row 0,
+    /// then the caller's own `selectRow(originalRow)` jumps a second time.
+    /// Two highlight flashes in two frames.
+    ///
+    /// We compute the deterministic next row before the removal, suppress the
+    /// auto-select-first side effect for the duration of removeRows, and then
+    /// commit the next row in the same synchronous stretch.
+    func removeAndReselect(notes: [Note], originalRow: Int) {
+        let removedAbove = noteList.prefix(max(originalRow, 0))
+            .filter { n in notes.contains(where: { $0 === n }) }
+            .count
+        let prospective = max(originalRow - removedAbove, 0)
+
+        // Keep suppression on for the whole sequence: removeByNotes synchronously
+        // fires selectionDidChange with selectedRow=-1 between the row removal
+        // and our explicit reselection below. Without this, the else branch of
+        // handleSelectionChange would call ensureNoteSelection -> selectRow(0)
+        // (async via DispatchQueue.main.async), producing a row-0 highlight
+        // flash one frame before the deterministic target lands.
+        let previousSuppression = suppressSelectionSideEffects
+        suppressSelectionSideEffects = true
+        defer { suppressSelectionSideEffects = previousSuppression }
+
+        removeByNotes(notes: notes)
+
+        guard !noteList.isEmpty else {
+            return
+        }
+
+        let target = min(prospective, noteList.count - 1)
+        if selectedRow != target {
+            // Briefly drop suppression so the selectRowIndexes-driven
+            // selectionDidChange runs the IF branch's fill(note:.silent),
+            // which is exactly the editor refresh we want for the new row.
+            suppressSelectionSideEffects = previousSuppression
+            selectRowIndexes([target], byExtendingSelection: false)
+            suppressSelectionSideEffects = true
+            if !isRowFullyVisible(target) {
+                scrollRowToVisible(target)
             }
         }
     }

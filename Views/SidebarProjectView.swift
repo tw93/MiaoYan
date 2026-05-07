@@ -782,10 +782,14 @@ class SidebarProjectView: NSOutlineView,
 
             // Don't clear edit area during launch to prevent flashing
             if !isLaunch {
-                // Keep editor content intact when single mode is active
-                if !UserDefaultsManagement.isSingleMode {
-                    vd.editArea.clear()
-                }
+                // Previously we called editArea.clear() here, which wiped the
+                // editor body and titleBar to a blank frame for the entire
+                // duration of updateTable + selection change (typically 100-
+                // 300 ms). The fill() triggered by the new sidebar's first
+                // note will replace content atomically, so leaving the prior
+                // note visible until then yields a smoother crossfade with no
+                // intermediate blank state. handleEmptyResults still clears
+                // when the new sidebar item has zero notes.
                 vd.search.stringValue = ""
                 // Save current scroll position when switching projects
                 vd.notesTableView.saveScrollPosition()

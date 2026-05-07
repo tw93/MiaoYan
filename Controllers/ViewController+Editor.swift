@@ -58,17 +58,16 @@ extension ViewController {
     // MARK: - Timing Constants
 
     private enum EditorTiming {
-        static let previewFocusDelay: TimeInterval = 0.1
-        static let scrollRestoreDelay: TimeInterval = 0.3
         static let scrollSyncResetDelay: TimeInterval = 0.016  // ~60fps (1/60 second)
+        // Toast nudges and the small "press ESC" prompt after entering
+        // Presentation / Magic PPT. Not on a layout-critical path; keep
+        // the fixed delay so the toast appears slightly after the mode
+        // visually settles rather than overlapping it.
         static let presentationLayoutDelay: TimeInterval = 0.15
-        static let pptSlideTransitionDelay: TimeInterval = 0.3
-        static let pptFocusDelay: TimeInterval = 0.6
-
-        // Split View timing
-        static let splitScrollSyncDelay: TimeInterval = 0.05  // Allow JS rendering + callback
-        static let splitModeTransitionDelay: TimeInterval = 0.08  // Animation duration
-        static let imageLoadTimeout: TimeInterval = 0.35  // WebView image load timeout
+        // Split-view scroll sync coalesce window. WebKit fires its scroll
+        // events on a ~60fps cadence; this delay clears the pending sync
+        // request after JS rendering is likely complete.
+        static let splitScrollSyncDelay: TimeInterval = 0.05
     }
 
     // MARK: - WebView Helper
@@ -146,14 +145,19 @@ extension ViewController {
         // Restore editor scroll alpha if it was hidden during startup
         revealEditorIfNeeded()
 
-        // Make WebView the first responder to handle Cmd+F properly
-        DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.previewFocusDelay) {
+        // Hook focus / scroll restore into the preview's actual didFinish
+        // signal so they land in the same frame the DOM becomes interactive.
+        // The previous fixed asyncAfter(0.1) / asyncAfter(0.3) timers either
+        // fired before the webview was ready (bad scroll) or after it was
+        // long-since ready (visible delay).
+        editArea.markdownView?.runWhenPreviewReady { [weak self] in
+            guard let self else { return }
             self.editArea.window?.makeFirstResponder(self.editArea.markdownView)
         }
         if UserDefaultsManagement.previewLocation == "Editing", !sessionIsExporting {
             let scrollPre = getScrollTop()
-            DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.scrollRestoreDelay) {
-                self.editArea.markdownView?.scrollToPosition(pre: scrollPre)
+            editArea.markdownView?.runWhenPreviewReady { [weak self] in
+                self?.editArea.markdownView?.scrollToPosition(pre: scrollPre)
             }
         }
     }
@@ -229,6 +233,22 @@ extension ViewController {
                 webView.hideSearchBar()
                 self.hideWebView()
                 webView.resetPreviewStateForReuse()
+
+                // Switch the split layout to editor-only synchronously so the
+                // user does not see the preview pane disappear, leaving an
+                // empty 0-width editor for ~100ms before it grows back.
+                // sessionSplitMode/needsEditorModeUpdateAfterPreview branches
+                // run their own setDisplayMode so we only do this when no
+                // alternative layout is queued up.
+                let shouldRestoreEditorOnly = !self.needsEditorModeUpdateAfterPreview && !self.sessionSplitMode
+                if shouldRestoreEditorOnly {
+                    self.editorContentSplitView?.setDisplayMode(.editorOnly, animated: false)
+                    self.previewScrollView?.documentView = nil
+                    self.previewScrollView?.isHidden = true
+                    self.previewScrollView?.hasVerticalScroller = false
+                    self.editAreaScroll.hasVerticalScroller = true
+                }
+
                 self.refillEditArea(suppressSave: true)
                 self.editArea.usesFindBar = false
                 // Restore editor scrollbar
@@ -240,51 +260,49 @@ extension ViewController {
                 let normalizedRatio = ratio.map { min(max($0, 0), 1) }
                 let ratioToRestore = shouldUseStoredState ? (storedScrollRatio ?? normalizedRatio) : nil
 
-                DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.previewFocusDelay) { [weak self] in
-                    guard let self = self else { return }
+                // Force a layout pass so contentSize / documentView bounds
+                // are valid before we restore scroll position. With the
+                // splitView already collapsed above this is now a single
+                // synchronous tick rather than the previous 0.1s timer.
+                self.editAreaScroll.contentView.layoutSubtreeIfNeeded()
+                self.editArea.layoutSubtreeIfNeeded()
 
-                    if let ratio = ratioToRestore,
-                        ratio > 0,
-                        let documentView = self.editAreaScroll.documentView
-                    {
-                        let contentHeight = self.editAreaScroll.contentSize.height
-                        let scrollHeight = documentView.bounds.height
-                        let offset = max(scrollHeight - contentHeight, 0)
-                        if offset > 0 {
-                            let scrollTop = offset * ratio
-                            documentView.scroll(NSPoint(x: 0, y: scrollTop))
-                        }
+                if let ratio = ratioToRestore,
+                    ratio > 0,
+                    let documentView = self.editAreaScroll.documentView
+                {
+                    let contentHeight = self.editAreaScroll.contentSize.height
+                    let scrollHeight = documentView.bounds.height
+                    let offset = max(scrollHeight - contentHeight, 0)
+                    if offset > 0 {
+                        let scrollTop = offset * ratio
+                        documentView.scroll(NSPoint(x: 0, y: scrollTop))
                     }
+                }
 
-                    self.titleLabel.isEditable = true
-                    if !self.isFocusedTitle {
-                        self.focusEditArea(restoreCursor: shouldRestoreCursor)
-                    }
+                self.titleLabel.isEditable = true
+                if !self.isFocusedTitle {
+                    self.focusEditArea(restoreCursor: shouldRestoreCursor)
+                }
 
-                    if let storedSelection,
-                        let storage = self.editArea.textStorage
-                    {
-                        let clampedLocation = min(max(storedSelection.location, 0), storage.length)
-                        let clampedLength = min(max(storedSelection.length, 0), max(storage.length - clampedLocation, 0))
-                        let clampedRange = NSRange(location: clampedLocation, length: clampedLength)
-                        self.editArea.setSelectedRange(clampedRange)
-                    }
+                if let storedSelection,
+                    let storage = self.editArea.textStorage
+                {
+                    let clampedLocation = min(max(storedSelection.location, 0), storage.length)
+                    let clampedLength = min(max(storedSelection.length, 0), max(storage.length - clampedLocation, 0))
+                    let clampedRange = NSRange(location: clampedLocation, length: clampedLength)
+                    self.editArea.setSelectedRange(clampedRange)
+                }
 
-                    // Restore editor mode based on user preference
-                    if self.needsEditorModeUpdateAfterPreview {
-                        self.needsEditorModeUpdateAfterPreview = false
-                        self.applyEditorModePreferenceChange()
-                    } else if self.sessionSplitMode {
-                        self.enableSplitViewMode()
-                    } else {
-                        self.editorContentSplitView?.setDisplayMode(.editorOnly, animated: false)
-
-                        // Clear preview views AFTER setDisplayMode
-                        self.previewScrollView?.documentView = nil
-                        self.previewScrollView?.isHidden = true
-                        self.previewScrollView?.hasVerticalScroller = false
-                        self.editAreaScroll.hasVerticalScroller = true
-                    }
+                // Apply queued editor-mode change in a follow-up runloop tick.
+                // These branches replace the layout the synchronous block
+                // already chose, so they must run after the user-visible
+                // restoration is committed.
+                if self.needsEditorModeUpdateAfterPreview {
+                    self.needsEditorModeUpdateAfterPreview = false
+                    self.applyEditorModePreferenceChange()
+                } else if self.sessionSplitMode {
+                    self.enableSplitViewMode()
                 }
             }
 
@@ -548,15 +566,27 @@ extension ViewController {
         // Clear state immediately so guards in deleteNote etc. stop blocking
         sessionPresentationMode = false
         updateToolbarButtonTints()
-        if sessionFullScreenMode {
-            sessionFullScreenMode = false
-            view.window?.toggleFullScreen(nil)
-        }
-        // Layout restoration still needs delay for fullscreen animation
-        DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.presentationLayoutDelay) {
+
+        let restoreLayout: () -> Void = { [weak self] in
+            guard let self = self else { return }
             self.restorePresentationLayout()
             self.disablePreview()
             self.updateButtonStates()
+        }
+
+        if sessionFullScreenMode {
+            // Defer layout restore to the actual end of the fullscreen-exit
+            // animation. macOS takes ~700ms; the previous fixed 0.15s timer
+            // landed during the animation and made the sidebar / notelist
+            // sizes pop after the user could already see the window.
+            sessionFullScreenMode = false
+            let appDelegate = NSApplication.shared.delegate as? AppDelegate
+            appDelegate?.mainWindowController?.pendingPostFullScreenAction = restoreLayout
+            view.window?.toggleFullScreen(nil)
+        } else {
+            // Already non-fullscreen (e.g. invoked from windowDidExitFullScreen
+            // auto-exit), no transition to wait for.
+            restoreLayout()
         }
     }
 
@@ -666,15 +696,17 @@ extension ViewController {
         let selectedIndex = max(min(range.location, editArea.string.count) - 1, 0)
         let beforeString = editArea.string[..<selectedIndex]
         let hrCount = beforeString.components(separatedBy: "---").count
-        if UserDefaultsManagement.previewLocation == "Editing", hrCount > 1 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.pptSlideTransitionDelay) { [self] in
-                // Auto-navigation in PPT mode
-                editArea.markdownView?.slideTo(index: hrCount - 1)
+
+        // Both auto-slide and focus need the bundle navigation to be live
+        // first. Previously these were two parallel asyncAfter timers
+        // (0.3s + 0.6s) that could fire in either order, leaving the
+        // webview focused but on the wrong slide for ~700ms.
+        editArea.markdownView?.runWhenPreviewReady { [weak self] in
+            guard let self else { return }
+            if UserDefaultsManagement.previewLocation == "Editing", hrCount > 1 {
+                self.editArea.markdownView?.slideTo(index: hrCount - 1)
             }
-        }
-        // Compatible with keyboard shortcut passthrough
-        DispatchQueue.main.asyncAfter(deadline: .now() + EditorTiming.pptFocusDelay) { [self] in
-            NSApp.mainWindow?.makeFirstResponder(editArea.markdownView)
+            NSApp.mainWindow?.makeFirstResponder(self.editArea.markdownView)
         }
     }
 
@@ -682,34 +714,40 @@ extension ViewController {
         // Clear magicPPT flag FIRST to allow disablePreview to work properly
         sessionMagicPPTMode = false
 
-        // Update button states
-        DispatchQueue.main.async {
-            self.updateToolbarButtonTints()
-        }
-        // Restore title components that were hidden in PPT mode
-        DispatchQueue.main.async {
-            self.titleLabel.isHidden = false
-            self.titleBarView.isHidden = false
-            self.titiebarHeight.constant = 40.0
-        }
-        // Exit fullscreen if in fullscreen
-        if sessionFullScreenMode {
-            sessionFullScreenMode = false
-            view.window?.toggleFullScreen(nil)
-        }
+        // Collapse the previous three separate DispatchQueue.main.async hops
+        // into one synchronous block so the title bar comes back in a single
+        // frame rather than being toggled three times across runloop ticks.
+        // titiebarHeight, titleLabel/titleBarView visibility, and toolbar
+        // tint must all be coherent before any asynchronous follow-up.
+        updateToolbarButtonTints()
+        titleLabel.isHidden = false
+        titleBarView.isHidden = false
+        titiebarHeight.constant = 40.0
+        titleLabel.isEditable = true
+
         // Hide webview immediately rather than leaving stale PPT view during animation
         if editArea.markdownView != nil {
             hideWebView()
         }
-        // Restore UI elements after fullscreen transition completes
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+
+        let restoreLayout: () -> Void = { [weak self] in
+            guard let self = self else { return }
             self.restorePresentationLayout()
-            self.disablePreview()  // handles refillEditArea internally
+            self.disablePreview()
             self.updateButtonStates()
-        }
-        DispatchQueue.main.async {
-            self.titleLabel.isEditable = true
             self.focusEditArea()
+        }
+
+        if sessionFullScreenMode {
+            // Same treatment as disablePresentation: wait for the actual
+            // fullscreen-exit animation to land instead of guessing 0.15s
+            // and then re-laying out into a half-animated frame.
+            sessionFullScreenMode = false
+            let appDelegate = NSApplication.shared.delegate as? AppDelegate
+            appDelegate?.mainWindowController?.pendingPostFullScreenAction = restoreLayout
+            view.window?.toggleFullScreen(nil)
+        } else {
+            restoreLayout()
         }
     }
 
@@ -893,13 +931,21 @@ extension ViewController {
         guard let markdownView = editArea.markdownView else {
             return
         }
-        markdownView.removeFromSuperview()
+
+        let alreadyAttached =
+            markdownView.superview === previewScroll
+            && previewScroll.documentView === markdownView
+        if !alreadyAttached {
+            markdownView.removeFromSuperview()
+            previewScroll.documentView = markdownView
+        }
+        // Always sync the cheap state. Even on the fast path the bounds may
+        // have changed (e.g. window resized while preview was inactive).
         markdownView.frame = previewScroll.bounds
         markdownView.autoresizingMask = [.width, .height]
         markdownView.isHidden = hidden
         // Alpha is managed by enablePreview/fill to support Soft Reveal
         // if !hidden { markdownView.alphaValue = 1.0 }
-        previewScroll.documentView = markdownView
         previewScroll.isHidden = hidden
     }
 
@@ -1293,19 +1339,28 @@ extension ViewController {
         let titleToSave: String
 
         if let pendingChange = UserDataService.instance.pendingTitleChange {
-            // Use tracked changes to save to the correct note
+            // Authoritative path: pendingTitleChange ties the typed title to
+            // the exact note it was typed against, so this is correct even
+            // if the user already started navigating away.
             targetNote = pendingChange.note
             titleToSave = pendingChange.title
         } else {
-            // Fall back to selected note with safety check
+            // Fallback path: no pendingChange means controlTextDidChange
+            // never fired for the current title text. The titleLabel value
+            // can be stale (still showing previous note) or unchanged.
+            // We must not write the visible title onto a different note,
+            // so when it diverges from the selected note's filename we
+            // surface a toast rather than silently dropping the input.
             targetNote = notesTableView.getSelectedNote()
             titleToSave = clean(titleLabel.stringValue)
 
-            // Ensure title matches the selected note to prevent data corruption
             if let note = targetNote {
                 let currentNoteTitle = note.getTitleWithoutLabel()
                 if titleToSave != currentNoteTitle {
-                    return  // Skip save if title doesn't match note
+                    if !titleToSave.isEmpty {
+                        toast(message: I18n.str("Click the title again to rename~"), style: .failure)
+                    }
+                    return
                 }
             }
         }

@@ -521,12 +521,20 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             viewController.titleLabel.isHidden = false
             viewController.titleBarView.alphaValue = 1
             viewController.titleLabel.alphaValue = 1
+            // Restore titiebarHeight in case a PPT/Presentation exit left
+            // the constraint stuck at 0. isHidden=false alone is not enough:
+            // the height is enforced by the IBOutlet constraint and stays
+            // at whatever value the last enable*/disable* path set it to.
+            viewController.checkTitlebarTopConstraint()
         }
         UserDefaultsManagement.lastSelectedURL = note.url
         viewController.updateTitle(newTitle: note.getTitleWithoutLabel())
-        if !options.preserveUndo {
-            undoManager?.removeAllActions(withTarget: self)
-        }
+        // Each Note carries its own UndoManager (Business/Note.swift:18), so
+        // simply swapping the active manager preserves the outgoing note's
+        // undo history. The earlier removeAllActions(withTarget: self) ran
+        // against the *outgoing* manager (the swap happens next), which
+        // wiped the user's prior edits' undo stack on every note switch and
+        // broke Cmd-Z after switching back. Drop it.
         if let appDelegate = NSApplication.shared.delegate as? AppDelegate,
             let md = appDelegate.mainWindowController
         {
@@ -734,8 +742,13 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         isEditable = false
         let appDelegate = NSApplication.shared.delegate as! AppDelegate
         window?.title = appDelegate.appTitle
+        // Keep the title bar visible with an empty label rather than hiding
+        // it. Hiding here used to cause a one-frame "no title bar" flash
+        // whenever clear() was followed by fill() (now eliminated in the
+        // sidebar-switch and delete paths). The truly-empty no-note state
+        // shows an empty title bar, which is consistent with Bear/Notion
+        // and avoids vertical layout jitter.
         if let viewController = window?.contentViewController as? ViewController {
-            viewController.titleBarView.isHidden = true
             viewController.updateTitle(newTitle: "")
         }
         EditTextView.note = nil

@@ -5,6 +5,12 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
     let notesListUndoManager = UndoManager()
     var editorUndoManager = UndoManager()
     private var isObservingAppearance = false
+    /// Last time `windowDidResignKey` flushed pending saves. Used to throttle
+    /// the lifecycle flush so transient resign events (Spotlight, system
+    /// permission dialogs, NSAlert, etc.) don't trigger a synchronous disk
+    /// write storm against an iCloud-backed notes folder.
+    private var lastResignKeyFlushAt: TimeInterval = 0
+    private static let resignKeyFlushMinInterval: TimeInterval = 2.0
 
     override func windowDidLoad() {
         let appDelegate = NSApplication.shared.delegate as! AppDelegate
@@ -175,6 +181,12 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         return nil
     }
 
+    /// Closure scheduled by mode-transition code that needs to run only
+    /// after macOS finishes its fullscreen exit animation (~700ms in
+    /// practice). Replaces the previous 0.15s asyncAfter heuristic so layout
+    /// restoration lands in the same frame the fullscreen transition ends.
+    var pendingPostFullScreenAction: (() -> Void)?
+
     func windowWillEnterFullScreen(_ notification: Notification) {
         UserDefaultsManagement.isWillFullScreen = true
     }
@@ -185,10 +197,16 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
 
     func windowDidEnterFullScreen(_ notification: Notification) {
         AppContext.shared.sessionState.fullScreen = true
+        // Drop anything queued from before we entered fullscreen; it would
+        // run against the wrong layout.
+        pendingPostFullScreenAction = nil
     }
 
     func windowDidExitFullScreen(_ notification: Notification) {
         AppContext.shared.sessionState.fullScreen = false
+        let pending = pendingPostFullScreenAction
+        pendingPostFullScreenAction = nil
+        pending?()
         // Auto-exit presentation modes when exiting full screen to prevent UI inconsistencies
         if let vc = AppContext.shared.viewController {
             if vc.sessionPresentationMode {
@@ -211,13 +229,48 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         }
     }
 
+    func windowDidResignKey(_ notification: Notification) {
+        // Switching to another app or window can be the last interaction
+        // before a kill / power loss. Drain the 1.5s debounce queue so the
+        // current edits are durable on disk before we lose focus.
+        //
+        // But: macOS fires resign-key for transient events too (Spotlight,
+        // permission prompts, NSOpenPanel, system notifications stealing
+        // focus). Without a throttle we'd issue a synchronous disk write
+        // every time, which is especially painful on iCloud-backed notes
+        // (each write nudges the sync engine). Skip if we already flushed
+        // very recently, and only push the active note rather than scanning
+        // the entire noteList.
+        guard let vc = AppContext.shared.viewController else { return }
+
+        let now = ProcessInfo.processInfo.systemUptime
+        if now - lastResignKeyFlushAt < Self.resignKeyFlushMinInterval {
+            return
+        }
+        lastResignKeyFlushAt = now
+
+        guard let activeNote = EditTextView.note else { return }
+        // hasPendingSave means textDidChange already pushed the latest editor
+        // contents into note.content and queued a debounced write. Skipping
+        // when it's false avoids gratuitous IO when the user just lost focus
+        // without touching anything.
+        guard activeNote.hasPendingSave else { return }
+        activeNote.flushPendingSave()
+    }
+
     func windowWillClose(_ notification: Notification) {
         if isObservingAppearance, let contentView = window?.contentView {
             contentView.removeObserver(self, forKeyPath: "effectiveAppearance")
             isObservingAppearance = false
         }
         NotificationCenter.default.removeObserver(self, name: .alwaysOnTopChanged, object: nil)
-        AppContext.shared.viewController?.persistCurrentViewState()
+        if let vc = AppContext.shared.viewController {
+            vc.persistCurrentViewState()
+            if let activeNote = EditTextView.note {
+                vc.editArea.saveTextStorageContent(to: activeNote)
+            }
+            vc.storage.flushPendingSaves()
+        }
     }
 
     func applyMiaoYanAppearance() {

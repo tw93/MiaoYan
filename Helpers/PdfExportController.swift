@@ -317,13 +317,26 @@ final class PdfExportController: NSObject {
         // After un-lazy swap, every image has its real src. complete + naturalWidth>0 is
         // enough: it means the image finished downloading and is a valid bitmap. Skipping
         // img.decode() cuts a couple of seconds on note pages with many images.
+        // The selectors we probe must match the markers DiagramHandler
+        // actually sets (Resources/DownView.bundle/js/diagram-handler.js).
+        // Previously we also queried .miaoyan-mermaid:not(.rendered) and
+        // svg.mermaid-unrendered, neither of which exists in the bundle,
+        // so they always passed and Mermaid pages could go to print before
+        // the SVG was rendered.
+        // - Mermaid: data-processed is set when the SVG is mounted
+        // - PlantUML: data-processed is set synchronously *before* the
+        //   <img>.src request resolves; the imgs.complete check below is
+        //   what actually proves the diagram is rendered
+        // - Markmap: data-markmap-rendered is set after autoLoader.render
         let probe = """
             (function() {
                 var imgs = Array.prototype.slice.call(document.images || []);
                 var imgsReady = imgs.every(function(i) { return i.complete && i.naturalWidth > 0; });
-                var pendingLegacy = document.querySelectorAll('.miaoyan-mermaid:not(.rendered), svg.mermaid-unrendered').length;
-                var pendingCode = document.querySelectorAll('code.language-mermaid:not([data-processed])').length;
-                return imgsReady && pendingLegacy === 0 && pendingCode === 0;
+                var pendingMermaid = document.querySelectorAll('code.language-mermaid:not([data-processed])').length;
+                var pendingMarkmap = document.querySelectorAll('code.language-markmap:not([data-markmap-rendered])').length;
+                return imgsReady
+                    && pendingMermaid === 0
+                    && pendingMarkmap === 0;
             })();
             """
         web.evaluateJavaScript(probe) { [weak self] result, _ in

@@ -397,6 +397,34 @@ extension MPreviewView {
         }
     }
 
+    /// Drop every piece of state exportPdfViaSnapshot might have toggled on
+    /// the live preview / export pipeline. Called from each early-return
+    /// branch so a failed PPT export never leaves the live preview stuck
+    /// in print-pdf styling, with isExporting / hasPreparedPPTExport set,
+    /// or with the next user export blocked for 30s by the stuck flag.
+    private func cleanupAfterPPTExport() {
+        evaluateJavaScript(
+            "var t = document.getElementById('export-generated-title'); if(t) t.remove();",
+            completionHandler: nil)
+        removePrintStyles()
+        evaluateJavaScript(
+            """
+            document.documentElement.classList.remove('print-pdf');
+            document.body.classList.remove('print-pdf');
+            """, completionHandler: nil)
+        evaluateJavaScript(
+            """
+            (function() {
+                var tocNav = document.querySelector('.toc-nav');
+                var tocTrigger = document.querySelector('.toc-hover-trigger');
+                if (tocNav) tocNav.style.display = '';
+                if (tocTrigger) tocTrigger.style.display = '';
+            })();
+            """, completionHandler: nil)
+        hasPreparedPPTExport = false
+        Self.isExporting = false
+    }
+
     private func exportPdfViaSnapshot(note: Note, viewController vc: ViewController) {
         self.preparePPTExportIfNeeded()
 
@@ -407,6 +435,10 @@ extension MPreviewView {
             applyToScreen: false
         ) { [weak self] in
             guard let self else {
+                // self deallocated mid-export. We can't restore the live
+                // preview's DOM, but we must clear the static export lock
+                // or the next 30s of exports will be silently rejected.
+                Self.isExporting = false
                 vc.toastDismiss()
                 vc.toastExport(status: false)
                 return
@@ -422,6 +454,7 @@ extension MPreviewView {
                 },
                 completion: { [weak self] in
                     guard let self else {
+                        Self.isExporting = false
                         vc.toastDismiss()
                         vc.toastExport(status: false)
                         return
@@ -464,28 +497,7 @@ extension MPreviewView {
 
                                 self.createPDF(configuration: pdfConfig) { [weak self] result in
                                     guard let self else { return }
-
-                                    self.evaluateJavaScript(
-                                        "var t = document.getElementById('export-generated-title'); if(t) t.remove();",
-                                        completionHandler: nil)
-                                    self.removePrintStyles()
-                                    self.evaluateJavaScript(
-                                        """
-                                        document.documentElement.classList.remove('print-pdf');
-                                        document.body.classList.remove('print-pdf');
-                                        """, completionHandler: nil)
-
-                                    self.evaluateJavaScript(
-                                        """
-                                        (function() {
-                                            var tocNav = document.querySelector('.toc-nav');
-                                            var tocTrigger = document.querySelector('.toc-hover-trigger');
-                                            if (tocNav) tocNav.style.display = '';
-                                            if (tocTrigger) tocTrigger.style.display = '';
-                                        })();
-                                        """, completionHandler: nil)
-
-                                    self.hasPreparedPPTExport = false
+                                    self.cleanupAfterPPTExport()
                                     vc.toastDismiss()
 
                                     switch result {
@@ -498,8 +510,6 @@ extension MPreviewView {
                                     case .failure:
                                         vc.toastExport(status: false)
                                     }
-
-                                    Self.isExporting = false
                                 }
                             }
                         }
