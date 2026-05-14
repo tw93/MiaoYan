@@ -224,9 +224,16 @@ final class TypographyPrefsViewController: BasePrefsViewController {
     }
 
     private func selectSizeInPopUp(_ rowView: NSView, size: Int) {
-        if let sizePopUp = rowView.subviews.last as? NSPopUpButton {
-            sizePopUp.selectItem(withTitle: String(size))
+        guard let sizePopUp = lastPopUpButton(in: rowView) else { return }
+        sizePopUp.selectItem(withTitle: String(size))
+    }
+
+    private func lastPopUpButton(in view: NSView) -> NSPopUpButton? {
+        for subview in view.subviews.reversed() {
+            if let popUp = subview as? NSPopUpButton { return popUp }
+            if let found = lastPopUpButton(in: subview) { return found }
         }
+        return nil
     }
 
     // MARK: - Actions

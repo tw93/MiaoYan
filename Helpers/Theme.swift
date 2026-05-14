@@ -47,12 +47,7 @@ enum Theme {
             return UserDefaultsManagement.bgColor
         }
 
-        return Color(name: nil) { appearance in
-            if appearance.isDark {
-                return backgroundColor
-            }
-            return Color(srgbRed: 0.98, green: 0.98, blue: 0.98, alpha: 1.0)
-        }
+        return backgroundColor
     }
 
     static var editorSurfaceBackgroundColor: Color {

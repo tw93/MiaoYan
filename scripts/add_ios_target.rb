@@ -14,21 +14,35 @@ if project.targets.any? { |t| t.name == 'MiaoYanMobile' }
 end
 
 # --- Create iOS application target ---
-target = project.new_target(:application, 'MiaoYanMobile', :ios, '16.0')
+target = project.new_target(:application, 'MiaoYanMobile', :ios, '18.0')
+
+project.root_object.attributes['TargetAttributes'] ||= {}
+project.root_object.attributes['TargetAttributes'][target.uuid] = {
+  'CreatedOnToolsVersion' => '26.0',
+  'SystemCapabilities' => {
+    'com.apple.iCloud' => { 'enabled' => 1 },
+  },
+}
 
 target.build_configurations.each do |config|
   s = config.build_settings
   s['PRODUCT_BUNDLE_IDENTIFIER']          = 'com.tw93.miaoyan'
   s['PRODUCT_NAME']                       = '$(TARGET_NAME)'
   s['SWIFT_VERSION']                      = '6.0'
-  s['IPHONEOS_DEPLOYMENT_TARGET']         = '16.0'
+  s['IPHONEOS_DEPLOYMENT_TARGET']         = '18.0'
+  s['CURRENT_PROJECT_VERSION']            = '4.0.0'
+  s['MARKETING_VERSION']                  = '4.0.0'
   s['INFOPLIST_FILE']                     = 'MiaoYanMobile/Resources/Info.plist'
+  s['INFOPLIST_KEY_CFBundleDisplayName']  = 'MiaoYan'
+  s['INFOPLIST_KEY_LSApplicationCategoryType'] = 'public.app-category.productivity'
   s['TARGETED_DEVICE_FAMILY']             = '1,2'
   s['ENABLE_PREVIEWS']                    = 'YES'
   s['SWIFT_STRICT_CONCURRENCY']           = 'complete'
-  s['ASSETCATALOG_COMPILER_APPICON_NAME'] = 'AppIcon'
+  s['ASSETCATALOG_COMPILER_APPICON_NAME'] = 'app'
+  s['CODE_SIGN_ENTITLEMENTS']             = 'MiaoYanMobile.entitlements'
   s['CODE_SIGN_STYLE']                    = 'Automatic'
-  s['DEVELOPMENT_TEAM']                   = ''
+  s['DEVELOPMENT_TEAM']                   = '5EH69Y5X38'
+  s['MACOSX_DEPLOYMENT_TARGET']           = '11.0'
   s.delete('COMBINE_HIDPI_IMAGES')
 end
 
@@ -54,10 +68,15 @@ source_files = [
   ['MiaoYanMobile/App/AppState.swift',          app_group],
   ['MiaoYanMobile/Views/FolderListView.swift',  views_group],
   ['MiaoYanMobile/Views/NotesListView.swift',   views_group],
+  ['MiaoYanMobile/Views/NoteEditorView.swift',  views_group],
+  ['MiaoYanMobile/Views/NoteDetailView.swift',  views_group],
+  ['MiaoYanMobile/Views/NewNoteView.swift',     views_group],
   ['MiaoYanMobile/Views/NoteReaderView.swift',  views_group],
   ['MiaoYanMobile/Views/SearchView.swift',      views_group],
+  ['MiaoYanMobile/Services/CloudSyncManager.swift',    services_group],
   ['MiaoYanMobile/Services/FileReader.swift',         services_group],
   ['MiaoYanMobile/Services/MobileHtmlRenderer.swift', services_group],
+  ['MiaoYanMobile/Services/RecentNotesCache.swift',   services_group],
 ]
 
 source_files.each do |rel_path, group|
@@ -66,10 +85,22 @@ source_files.each do |rel_path, group|
 end
 
 # --- Resource files ---
-css_ref = add_file(resources_group, PROJECT_ROOT, 'MiaoYanMobile/Resources/mobile-reader.css')
-target.resources_build_phase.add_file_reference(css_ref)
+resource_files = [
+  'Resources/app.icon',
+  'MiaoYanMobile/Resources/mobile-reader.css',
+  'MiaoYanMobile/Resources/MobileAssets.xcassets',
+  'MiaoYanMobile/Resources/Localizable.xcstrings',
+  'MiaoYanMobile/Resources/InfoPlist.xcstrings',
+  'MiaoYanMobile/Resources/PrivacyInfo.xcprivacy',
+]
 
-plist_ref = add_file(resources_group, PROJECT_ROOT, 'MiaoYanMobile/Resources/Info.plist')
+resource_files.each do |rel_path|
+  ref = add_file(resources_group, PROJECT_ROOT, rel_path)
+  target.resources_build_phase.add_file_reference(ref)
+end
+
+add_file(resources_group, PROJECT_ROOT, 'MiaoYanMobile/Resources/Info.plist')
+add_file(resources_group, PROJECT_ROOT, 'MiaoYanMobile.entitlements')
 # Info.plist is referenced via INFOPLIST_FILE build setting, not added to resources phase
 
 # --- CMarkGFM Swift Package dependency ---

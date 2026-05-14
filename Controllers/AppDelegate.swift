@@ -126,22 +126,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
             NSApplication.shared.terminate(nil)
             return
         }
-        if UserDefaultsManagement.isFirstLaunch {
-            let size = NSSize(width: 1280, height: 700)
-            mainWC.window?.setContentSize(size)
-            mainWC.window?.center()
-        } else {
-            if let window = mainWC.window {
-                let currentFrame = window.frame
-                let isOffScreen = NSScreen.screens.allSatisfy { screen in
-                    !screen.visibleFrame.intersects(currentFrame)
-                }
-
-                if isOffScreen {
-                    window.center()
-                }
-            }
-        }
+        normalizeMainWindowFrame(mainWC.window)
 
         // Apply fade-in for first launch to match re-open behavior and hide initial blank state
         mainWC.window?.alphaValue = 0
@@ -149,6 +134,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
 
         mainWindowController = mainWC
         appContext.bind(viewController: mainWC.window?.contentViewController as? ViewController)
+        normalizeMainWindowFrame(mainWC.window)
+        DispatchQueue.main.async { [weak self, weak window = mainWC.window] in
+            self?.normalizeMainWindowFrame(window)
+        }
 
         mainWC.applyMiaoYanAppearance()
 
@@ -260,6 +249,42 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
             }
         }
     }
+
+    private func normalizeMainWindowFrame(_ window: NSWindow?) {
+        guard let window else { return }
+
+        let savedFrame = window.frame
+        let isOffScreen = NSScreen.screens.allSatisfy { screen in
+            !screen.visibleFrame.intersects(savedFrame)
+        }
+        let layoutMinimum = NSSize(width: 1100, height: 680)
+        let isTooSmall = savedFrame.width < layoutMinimum.width || savedFrame.height < layoutMinimum.height
+
+        window.minSize = NSSize(width: 960, height: 600)
+
+        guard UserDefaultsManagement.isFirstLaunch || isTooSmall || isOffScreen else { return }
+
+        let preferredSize = NSSize(width: 1280, height: 760)
+        let visibleFrame = window.screen?.visibleFrame ?? NSScreen.main?.visibleFrame
+        let targetFrame: NSRect
+        if let visibleFrame {
+            let size = NSSize(
+                width: min(preferredSize.width, max(900, visibleFrame.width - 40)),
+                height: min(preferredSize.height, max(620, visibleFrame.height - 40))
+            )
+            targetFrame = NSRect(
+                x: visibleFrame.midX - size.width / 2,
+                y: visibleFrame.midY - size.height / 2,
+                width: size.width,
+                height: size.height
+            )
+        } else {
+            targetFrame = NSRect(origin: savedFrame.origin, size: preferredSize)
+        }
+
+        window.setFrame(targetFrame, display: true)
+    }
+
     // MARK: IBActions
     @IBAction func openMainWindow(_ sender: Any) {
         mainWindowController?.makeNew()
@@ -362,10 +387,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
 
     private func addGlobalKeyboardMonitor() {
         NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
-            if event.keyCode == 17,  // kVK_ANSI_T
-                event.modifierFlags.contains(.command),
-                event.modifierFlags.contains(.shift),
-                !event.modifierFlags.contains(.option)
+            let flags = event.modifierFlags.intersection([.command, .shift, .option, .control])
+            let key = event.charactersIgnoringModifiers?.lowercased()
+
+            if (event.keyCode == 17 || key == "t"),  // kVK_ANSI_T
+                flags == [.command, .shift]
             {
                 if let vc = self.resolveViewController() {
                     vc.pin(vc.notesTableView.selectedRowIndexes)
@@ -373,11 +399,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
                 }
             }
 
-            if event.keyCode == 35,  // kVK_ANSI_P
-                event.modifierFlags.contains(.command),
-                event.modifierFlags.contains(.option),
-                !event.modifierFlags.contains(.shift),
-                !event.modifierFlags.contains(.control)
+            if (event.keyCode == 35 || key == "p"),  // kVK_ANSI_P
+                flags == [.command, .option]
             {
                 if let vc = self.resolveViewController() {
                     vc.toggleMagicPPT(self)

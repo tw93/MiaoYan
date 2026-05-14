@@ -39,6 +39,15 @@ public class NotesTextProcessor {
     @MainActor public static var monacoFont = NSFont(name: "Monaco", size: CGFloat(UserDefaultsManagement.fontSize))
     @MainActor public static var titleFont = NSFont(name: UserDefaultsManagement.windowFontName, size: CGFloat(UserDefaultsManagement.titleFontSize))
 
+    @MainActor public static func refreshFonts() {
+        let size = CGFloat(UserDefaultsManagement.fontSize)
+        codeFont = NSFont(name: UserDefaultsManagement.codeFontName, size: size)
+        georgiaFont = NSFont(name: "Georgia", size: size)
+        publicFont = NSFont(name: "Helvetica Neue", size: size)
+        monacoFont = NSFont(name: "Monaco", size: size)
+        titleFont = NSFont(name: UserDefaultsManagement.windowFontName, size: CGFloat(UserDefaultsManagement.titleFontSize))
+    }
+
     @MainActor public static var hideSyntax = false
 
     // Performance optimization flags

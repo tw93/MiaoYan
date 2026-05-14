@@ -136,18 +136,19 @@ struct EditorSettings: SettingsConfigurable {
     func applyChanges() {
         guard let vc = ViewController.shared() else { return }
         NotesTextProcessor.hl = nil
+        NotesTextProcessor.refreshFonts()
 
         let wasPreviewOn = UserDefaultsManagement.preview
         if wasPreviewOn {
             vc.disablePreview()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak vc] in
-                vc?.refillEditArea()
+                vc?.refillEditArea(force: true)
                 if let vc, !vc.isMiaoYanPPT(needToast: false) {
                     vc.enablePreview()
                 }
             }
         } else {
-            vc.refillEditArea()
+            vc.refillEditArea(force: true)
         }
     }
 }

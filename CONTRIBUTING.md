@@ -88,10 +88,11 @@ Submit the resulting archive via Xcode Organizer or Transporter.
 
 ### Release Checklist
 
-1. Bump `MARKETING_VERSION` in `MiaoYan.xcodeproj/project.pbxproj` (all three configurations)
-2. Create Git tag: `git tag V<version> && git push origin V<version>`
-3. Create GitHub Release with release notes only, no binary attachment
-4. Submit App Store build via Transporter
+1. Bump `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in `MiaoYan.xcodeproj/project.pbxproj` across macOS and iOS configurations
+2. Confirm `.github/RELEASE_NOTES.md` matches the intended uppercase tag, for example `V4.0.0`
+3. Create Git tag: `git tag V<version> && git push origin V<version>`
+4. Create GitHub Release with release notes only, no binary attachment
+5. Submit App Store build via Transporter
 
 > **Self-build path still works.** `scripts/build.sh` produces a runnable Release build for local use or CI. Sparkle integration is retained so existing non-App Store installs can see the migration notice in appcast.
 

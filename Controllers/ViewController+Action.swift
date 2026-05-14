@@ -153,7 +153,9 @@ extension ViewController {
     }
 
     @IBAction func fileName(_ sender: NSTextField) {
-        guard let note = notesTableView.getNoteFromSelectedRow() else {
+        let pendingNote = UserDataService.instance.pendingTitleChange?.note
+        let focusedNote = titleLabel.hasFocus() ? EditTextView.note : nil
+        guard let note = pendingNote ?? focusedNote ?? notesTableView.getNoteFromSelectedRow() else {
             return
         }
 
@@ -863,6 +865,19 @@ extension ViewController {
         editArea.string = text
         EditTextView.note = note
 
+        if sessionSplitMode {
+            let previewOptions = FillOptions(
+                highlight: false,
+                saveTyping: true,
+                force: true,
+                needScrollToCursor: false,
+                previewOnly: true,
+                animatePreview: false
+            )
+            editArea.fill(note: note, options: previewOptions)
+            editArea.markdownView?.setSplitChrome(true)
+        }
+
         // Move focus into the title field in the same frame, so the cursor is
         // already blinking by the time the table reload finishes.
         titleLabel.editModeOn()
@@ -932,8 +947,10 @@ extension ViewController {
             return
         }
 
-        notesTableView.selectRowIndexes([index], byExtendingSelection: false)
-        notesTableView.scrollRowToVisible(index)
+        notesTableView.selectRow(index, suppressSideEffects: true)
+        DispatchQueue.main.async { [weak self] in
+            self?.notesTableView.scrollRowToVisible(index)
+        }
     }
 
     private func removeForever() {

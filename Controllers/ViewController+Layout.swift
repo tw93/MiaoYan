@@ -9,12 +9,14 @@ extension ViewController {
         static let maxSidebarWidth: CGFloat = 280
         static let defaultNotelistWidth: CGFloat = 280
         static let narrowThreshold: CGFloat = 50
-        static let searchTopNarrow: CGFloat = 34.0
+        static let searchTopNarrow: CGFloat = 24.0
         static let searchTopNormal: CGFloat = 13.0
-        static let titlebarHeightNarrow: CGFloat = 64.0
+        static let titlebarHeightNarrow: CGFloat = 54.0
         static let titlebarHeightNormal: CGFloat = 52.0
-        static let titleTopNarrow: CGFloat = 30.0
+        static let titleTopNarrow: CGFloat = 22.0
         static let titleTopNormal: CGFloat = 16.0
+        static let titleLeadingNormal: CGFloat = 25.0
+        static let titleLeadingDetailOnly: CGFloat = 96.0
     }
 
     // MARK: - Properties
@@ -40,6 +42,15 @@ extension ViewController {
         let isNarrow = notelistWidth < LayoutConstants.narrowThreshold && !UserDefaultsManagement.isWillFullScreen
         titiebarHeight.constant = isNarrow ? LayoutConstants.titlebarHeightNarrow : LayoutConstants.titlebarHeightNormal
         titleTopConstraint.constant = isNarrow ? LayoutConstants.titleTopNarrow : LayoutConstants.titleTopNormal
+        let isDetailOnly = isNarrow && sidebarWidth < LayoutConstants.narrowThreshold
+        updateTitleLeadingInset(isDetailOnly ? LayoutConstants.titleLeadingDetailOnly : LayoutConstants.titleLeadingNormal)
+    }
+
+    private func updateTitleLeadingInset(_ inset: CGFloat) {
+        guard let titleLabel, let container = titleLabel.superview else { return }
+        for constraint in container.constraints where constraint.firstItem === titleLabel && constraint.firstAttribute == .leading {
+            constraint.constant = inset
+        }
     }
 
     // MARK: - Core Panel Operations

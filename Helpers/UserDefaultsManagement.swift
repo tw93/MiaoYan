@@ -252,6 +252,43 @@ public enum UserDefaultsManagement {
         }
     }
 
+    static var hasMigratedFontDefaults: Bool {
+        get { UserDefaults.standard.bool(forKey: "hasMigratedFontDefaults_v2") }
+        set { UserDefaults.standard.set(newValue, forKey: "hasMigratedFontDefaults_v2") }
+    }
+
+    static var hasMigratedCodeFontDefault: Bool {
+        get { UserDefaults.standard.bool(forKey: "hasMigratedCodeFontDefault_v1") }
+        set { UserDefaults.standard.set(newValue, forKey: "hasMigratedCodeFontDefault_v1") }
+    }
+
+    static func migrateFontDefaultsIfNeeded() {
+        if !hasMigratedCodeFontDefault {
+            hasMigratedCodeFontDefault = true
+            let handwrittenCodeFonts = [
+                FontConfiguration.defaultEditorFont,
+                FontConfiguration.defaultInterfaceFont,
+                FontConfiguration.defaultPreviewFont,
+                "TsangerJinKai02-W04",
+            ]
+            let storedCode = UserDefaults.standard.string(forKey: Constants.CodeFontNameKey) ?? ""
+            if storedCode.isEmpty || handwrittenCodeFonts.contains(storedCode) {
+                UserDefaults.standard.set(FontConfiguration.defaultCodeFont, forKey: Constants.CodeFontNameKey)
+            }
+        }
+
+        guard !hasMigratedFontDefaults else { return }
+        hasMigratedFontDefaults = true
+
+        if let storedSize = UserDefaults.standard.object(forKey: Constants.FontSizeKey) as? Int, storedSize < 14 {
+            UserDefaults.standard.set(DefaultFontSize, forKey: Constants.FontSizeKey)
+        }
+
+        if let storedPreviewSize = UserDefaults.standard.object(forKey: Constants.PreviewFontSize) as? Int, storedPreviewSize < 14 {
+            UserDefaults.standard.set(DefaultPreviewFontSize, forKey: Constants.PreviewFontSize)
+        }
+    }
+
     static var hasShownTOCTip: Bool {
         get {
             return UserDefaults.standard.bool(forKey: "hasShownTOCTip")

@@ -58,6 +58,17 @@ class NotesTableView: NSTableView {
         super.draw(dirtyRect)
     }
 
+    override func tile() {
+        super.tile()
+        guard let clipView = superview as? NSClipView,
+              let column = tableColumns.first
+        else { return }
+        let availableWidth = clipView.bounds.width - intercellSpacing.width
+        if column.width != availableWidth && availableWidth > 0 {
+            column.width = availableWidth
+        }
+    }
+
     override func selectRowIndexes(_ indexes: IndexSet, byExtendingSelection extend: Bool) {
         beginSynchronizedSelectionRedraw()
         defer { endSynchronizedSelectionRedraw() }

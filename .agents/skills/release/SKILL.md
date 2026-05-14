@@ -19,6 +19,7 @@ Use this skill only when the maintainer explicitly asks for a GitHub Release.
 
 - Release tags use uppercase `Vx.y.z`.
 - `MARKETING_VERSION` in `MiaoYan.xcodeproj/project.pbxproj` must match the tag without the leading `V`.
+- `CURRENT_PROJECT_VERSION` must equal `MARKETING_VERSION`. Sparkle compares `sparkle:version` in appcast.xml against the app's `CFBundleVersion` (which maps to `CURRENT_PROJECT_VERSION`). If they diverge, users get an infinite update prompt loop (see V3.5.1 incident, #524).
 - Release notes should be prepared before tagging.
 - Signing, notarization, and Sparkle credentials are maintainer-managed. Do not commit credential paths, private key filenames, passwords, or secret values.
 
@@ -27,11 +28,16 @@ Use this skill only when the maintainer explicitly asks for a GitHub Release.
 ```bash
 git diff --quiet && git diff --cached --quiet
 grep "MARKETING_VERSION" MiaoYan.xcodeproj/project.pbxproj | head -1
+grep "CURRENT_PROJECT_VERSION" MiaoYan.xcodeproj/project.pbxproj | head -1
 gh release list --limit 10
 gh run list --limit 10
 ```
 
-Stop if the working tree is dirty, the version is unclear, or the intended tag already exists and recovery has not been discussed.
+Stop if:
+- The working tree is dirty.
+- The version is unclear.
+- `CURRENT_PROJECT_VERSION` does not equal `MARKETING_VERSION` (hard stop, fix before proceeding).
+- The intended tag already exists and recovery has not been discussed.
 
 ## Build And Publish
 

@@ -23,24 +23,16 @@ class StorageView: NSVisualEffectView {
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
         configureSidebarMaterial()
-        guard !Theme.usesModernSystemChrome else { return }
 
         fillMiaoYanPaneBackground(dirtyRect)
         applyMiaoYanPaneBackground()
     }
 
     private func configureSidebarMaterial() {
-        if Theme.usesModernSystemChrome {
-            material = .sidebar
-            blendingMode = .behindWindow
-            state = .active
-            isEmphasized = false
-            wantsLayer = true
-            layer?.backgroundColor = NSColor.clear.cgColor
-        } else {
-            material = .contentBackground
-            blendingMode = .withinWindow
-            state = .inactive
-        }
+        material = .contentBackground
+        blendingMode = .withinWindow
+        state = .inactive
+        isEmphasized = false
+        applyMiaoYanPaneBackground()
     }
 }

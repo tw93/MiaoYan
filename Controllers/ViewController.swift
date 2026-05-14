@@ -345,6 +345,7 @@ class ViewController:
     }
 
     override func viewDidLoad() {
+        UserDefaultsManagement.migrateFontDefaultsIfNeeded()
         appContext.bind(viewController: self)
         // Hide empty state UI (no longer used)
         emptyEditAreaView.isHidden = true
@@ -949,6 +950,8 @@ class ViewController:
         storageOutlineView.autosaveExpandedItems = true
         storageOutlineView.autosaveName = "SidebarOutlineView"
         notesScrollView.scrollerStyle = .overlay
+        notesScrollView.hasHorizontalScroller = false
+        notesScrollView.horizontalScrollElasticity = .none
         sidebarScrollView.scrollerStyle = .overlay
         sidebarScrollView.horizontalScroller = .none
         sidebarScrollView.hasHorizontalScroller = false
@@ -958,6 +961,11 @@ class ViewController:
             column.resizingMask = .autoresizingMask
             column.minWidth = 50
             column.maxWidth = 1000
+        }
+        // Prevent horizontal scrolling in notes list during live resize
+        notesTableView.columnAutoresizingStyle = .uniformColumnAutoresizingStyle
+        if let column = notesTableView.tableColumns.first {
+            column.resizingMask = .autoresizingMask
         }
         // Configure split view for editor content
         configureEditorContentSplitView()
