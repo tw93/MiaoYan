@@ -22,6 +22,27 @@ struct RecentNotesSnapshot: Codable {
         let path: String
         let title: String
         let modifiedDate: Date
+        /// Pin state captured at snapshot time so the cold-start
+        /// `NoteFile(snapshotEntry:)` path can sort pinned notes without
+        /// a disk read.
+        let isPinned: Bool
+
+        init(path: String, title: String, modifiedDate: Date, isPinned: Bool) {
+            self.path = path
+            self.title = title
+            self.modifiedDate = modifiedDate
+            self.isPinned = isPinned
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            path = try container.decode(String.self, forKey: .path)
+            title = try container.decode(String.self, forKey: .title)
+            modifiedDate = try container.decode(Date.self, forKey: .modifiedDate)
+            // Snapshots written before the pin field existed decode as
+            // unpinned; the next background reload corrects them.
+            isPinned = try container.decodeIfPresent(Bool.self, forKey: .isPinned) ?? false
+        }
     }
 }
 
@@ -67,7 +88,8 @@ final class RecentNotesCache {
                 RecentNotesSnapshot.Entry(
                     path: $0.url.path,
                     title: $0.title,
-                    modifiedDate: $0.modifiedDate
+                    modifiedDate: $0.modifiedDate,
+                    isPinned: $0.isPinned
                 )
             }
         )

@@ -11,8 +11,8 @@ private enum MobileTab: Hashable {
 struct FolderListView: View {
     @EnvironmentObject private var appState: AppState
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @ObservedObject private var syncManager = CloudSyncManager.shared
-    @State private var selectedTab: MobileTab = .notes
     @State private var folderPickerError: String?
 
     var body: some View {
@@ -26,29 +26,20 @@ struct FolderListView: View {
                 syncManager.hasFinishedInitialGathering
                     || RecentNotesCache.shared.hasSnapshot(for: root)
             {
-                TabView(selection: $selectedTab) {
-                    NavigationStack {
-                        RecentNotesView(root: root, openPicker: openFolderPicker)
-                            .environmentObject(appState)
-                    }
-                    .tabItem { Label("Notes", systemImage: "note.text") }
-                    .tag(MobileTab.notes)
-
-                    NavigationStack {
-                        FoldersHomeView(root: root, openPicker: openFolderPicker)
-                            .environmentObject(appState)
-                    }
-                    .tabItem { Label("Folders", systemImage: "folder") }
-                    .tag(MobileTab.folders)
-
-                    NavigationStack {
-                        SearchView(root: root)
-                    }
-                    .tabItem { Label("Search", systemImage: "magnifyingglass") }
-                    .tag(MobileTab.search)
+                // iPad at regular width gets the three-column split view;
+                // everything else (iPhone, including Plus/Max in landscape,
+                // and iPad in a compact-width Slide Over) keeps the tab
+                // shell. Both shells share the leaf views (note cards,
+                // NoteDetailView) — only the navigation container differs.
+                if usePadLayout {
+                    MobilePadShell(root: root, openPicker: openFolderPicker)
+                        .environmentObject(appState)
+                        .transition(.opacity)
+                } else {
+                    MobilePhoneShell(root: root, openPicker: openFolderPicker)
+                        .environmentObject(appState)
+                        .transition(.opacity)
                 }
-                .tint(MobileTheme.accent)
-                .transition(.opacity)
             } else if appState.rootURL != nil && !syncManager.hasFinishedInitialGathering {
                 // Have a folder bookmark but iCloud catalog is still gathering.
                 // Show a calm full-screen syncing view at the top level — no
@@ -98,6 +89,13 @@ struct FolderListView: View {
         }
     }
 
+    /// Three-column layout only on an iPad running at regular width. A
+    /// compact-width iPad (Slide Over) and every iPhone fall back to the
+    /// tab shell.
+    private var usePadLayout: Bool {
+        UIDevice.current.userInterfaceIdiom == .pad && horizontalSizeClass == .regular
+    }
+
     private func openFolderPicker() {
         FolderPickerService.shared.present(
             onSelect: { url in
@@ -118,6 +116,44 @@ struct FolderListView: View {
     }
 }
 
+// MARK: - iPhone shell
+
+/// The compact (iPhone) shell: the original three-tab layout. Extracted
+/// verbatim from FolderListView so the iPad split layout can branch beside
+/// it without changing any iPhone behaviour.
+private struct MobilePhoneShell: View {
+    let root: URL
+    let openPicker: () -> Void
+
+    @EnvironmentObject private var appState: AppState
+    @State private var selectedTab: MobileTab = .notes
+
+    var body: some View {
+        TabView(selection: $selectedTab) {
+            NavigationStack {
+                RecentNotesView(root: root, openPicker: openPicker)
+                    .environmentObject(appState)
+            }
+            .tabItem { Label("Notes", systemImage: "note.text") }
+            .tag(MobileTab.notes)
+
+            NavigationStack {
+                FoldersHomeView(root: root, openPicker: openPicker)
+                    .environmentObject(appState)
+            }
+            .tabItem { Label("Folders", systemImage: "folder") }
+            .tag(MobileTab.folders)
+
+            NavigationStack {
+                SearchView(root: root)
+            }
+            .tabItem { Label("Search", systemImage: "magnifyingglass") }
+            .tag(MobileTab.search)
+        }
+        .tint(MobileTheme.accent)
+    }
+}
+
 // MARK: - Recent
 
 private struct RecentNotesView: View {
@@ -125,10 +161,12 @@ private struct RecentNotesView: View {
     let openPicker: () -> Void
 
     @EnvironmentObject private var readerWebViewStore: ReaderWebViewStore
+    @EnvironmentObject private var appState: AppState
     @ObservedObject private var syncManager = CloudSyncManager.shared
     @State private var notes: [NoteFile] = []
     @State private var hasLoadedOnce = false
     @State private var showNewNote = false
+    @State private var showSettings = false
     @State private var pendingDeletion: NoteFile?
     @State private var loadTask: Task<Void, Never>?
     @State private var isReloading = false
@@ -153,7 +191,11 @@ private struct RecentNotesView: View {
                         Haptics.tap()
                         showNewNote = true
                     },
-                    openPicker: openPicker
+                    openPicker: openPicker,
+                    settingsAction: {
+                        Haptics.tap()
+                        showSettings = true
+                    }
                 )
 
                 if hasLoadedOnce && notes.isEmpty {
@@ -171,10 +213,25 @@ private struct RecentNotesView: View {
                     // than leaving the card area completely blank.
                     InlineLoadingHint(text: "Loading your notes…")
                 } else {
-                    ForEach(notes) { note in
-                        NoteCardLink(note: note) {
-                            pendingDeletion = note
+                    let pinned = notes.filter(\.isPinned)
+                    let others = notes.filter { !$0.isPinned }
+                    if !pinned.isEmpty {
+                        NoteSectionHeader(title: "Pinned")
+                        ForEach(pinned) { note in
+                            NoteCardLink(
+                                note: note,
+                                onTogglePin: { togglePin(note) },
+                                onTrash: { pendingDeletion = note })
                         }
+                        if !others.isEmpty {
+                            NoteSectionHeader(title: "Notes")
+                        }
+                    }
+                    ForEach(others) { note in
+                        NoteCardLink(
+                            note: note,
+                            onTogglePin: { togglePin(note) },
+                            onTrash: { pendingDeletion = note })
                     }
                 }
             }
@@ -186,6 +243,10 @@ private struct RecentNotesView: View {
         .toolbar(.hidden, for: .navigationBar)
         .sheet(isPresented: $showNewNote, onDismiss: { triggerLoad() }) {
             NewNoteView(folder: rootFolder)
+        }
+        .sheet(isPresented: $showSettings) {
+            SettingsView(onChooseFolder: openPicker)
+                .environmentObject(appState)
         }
         .alert(
             "Move note to Trash?",
@@ -276,6 +337,21 @@ private struct RecentNotesView: View {
         triggerLoad()
         syncManager.notifyExternalChange()
     }
+
+    /// Toggle pin state, then reload so the list re-reads the pin xattr and
+    /// re-sorts. Pin is a device-local metadata change (see PinService), so
+    /// there is no cross-device sync to wait on.
+    private func togglePin(_ note: NoteFile) {
+        Task {
+            do {
+                try await NoteFileStore.setPinned(!note.isPinned, for: note)
+                Haptics.success()
+                triggerLoad()
+            } catch {
+                Haptics.error()
+            }
+        }
+    }
 }
 
 // MARK: - Folders
@@ -301,7 +377,8 @@ private struct FoldersHomeView: View {
                     title: "Folders",
                     refreshAction: refreshFolders,
                     newNoteAction: nil,
-                    openPicker: openPicker
+                    openPicker: openPicker,
+                    settingsAction: nil
                 )
 
                 ForEach(folders) { folder in
@@ -368,6 +445,7 @@ private struct MobileLibraryHeader: View {
     let refreshAction: () -> Void
     let newNoteAction: (() -> Void)?
     let openPicker: () -> Void
+    let settingsAction: (() -> Void)?
 
     @ObservedObject private var syncManager = CloudSyncManager.shared
 
@@ -402,6 +480,15 @@ private struct MobileLibraryHeader: View {
                     tint: MobileTheme.ink,
                     action: openPicker
                 )
+
+                if let settingsAction {
+                    MobileHeaderIconButton(
+                        systemName: "gearshape",
+                        accessibilityLabel: "Settings",
+                        tint: MobileTheme.ink,
+                        action: settingsAction
+                    )
+                }
             }
         }
         .padding(.horizontal, MobileTheme.pagePadding)
@@ -500,8 +587,12 @@ private struct SyncRefreshButton: View {
 
 // MARK: - Cards
 
-private struct NoteCardLink: View {
+/// Shared note row used by both the Notes tab and the folder note list.
+/// `onTogglePin` / `onTrash` are injected so the two surfaces keep one
+/// copy of the swipe + context-menu actions.
+struct NoteCardLink: View {
     let note: NoteFile
+    let onTogglePin: () -> Void
     let onTrash: () -> Void
 
     var body: some View {
@@ -512,6 +603,17 @@ private struct NoteCardLink: View {
         }
         .buttonStyle(.plain)
         .padding(.horizontal, MobileTheme.pagePadding)
+        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+            Button {
+                Haptics.tap()
+                onTogglePin()
+            } label: {
+                Label(
+                    note.isPinned ? "Unpin" : "Pin",
+                    systemImage: note.isPinned ? "pin.slash" : "pin")
+            }
+            .tint(MobileTheme.warmAccent)
+        }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
             Button(role: .destructive) {
                 Haptics.warning()
@@ -521,6 +623,14 @@ private struct NoteCardLink: View {
             }
         }
         .contextMenu {
+            Button {
+                Haptics.tap()
+                onTogglePin()
+            } label: {
+                Label(
+                    note.isPinned ? "Unpin" : "Pin",
+                    systemImage: note.isPinned ? "pin.slash" : "pin")
+            }
             Button(role: .destructive) {
                 Haptics.warning()
                 onTrash()
@@ -528,6 +638,19 @@ private struct NoteCardLink: View {
                 Label("Move to Trash", systemImage: "trash")
             }
         }
+    }
+}
+
+/// Lightweight section label for the pinned / other note groups.
+struct NoteSectionHeader: View {
+    let title: String
+
+    var body: some View {
+        Text(title)
+            .font(MobileTheme.font(.subheadline, weight: .semibold))
+            .foregroundStyle(MobileTheme.secondaryInk)
+            .padding(.horizontal, MobileTheme.pagePadding)
+            .padding(.top, 4)
     }
 }
 
@@ -752,6 +875,15 @@ extension UIViewController {
             let selectedViewController = tabBarController.selectedViewController
         {
             return selectedViewController.topMostPresentedViewController
+        }
+
+        // iPad split layout: the root is a UISplitViewController. Walk into
+        // its last (detail) column so the document picker has a valid
+        // presenter — without this branch the picker fails to appear on iPad.
+        if let splitController = self as? UISplitViewController,
+            let lastViewController = splitController.viewControllers.last
+        {
+            return lastViewController.topMostPresentedViewController
         }
 
         if let presentedViewController {

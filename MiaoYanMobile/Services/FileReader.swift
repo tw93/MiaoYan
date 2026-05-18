@@ -24,7 +24,10 @@ struct NoteFile: Identifiable, Equatable, Sendable {
         self.modifiedDate = entry.modifiedDate
         self.createdDate = entry.modifiedDate
         self.byteSize = 0
-        self.isPinned = self.url.lastPathComponent.hasPrefix("📌")
+        // Snapshot path is deliberately disk-free; the pin state was
+        // captured into the snapshot at save time. A stale value just
+        // renders briefly until the background reload corrects it.
+        self.isPinned = entry.isPinned
         self.preview = ""
     }
 
@@ -50,7 +53,8 @@ struct NoteFile: Identifiable, Equatable, Sendable {
             ?? fallbackAttributes?[.creationDate] as? Date
             ?? modifiedDate
         self.byteSize = Int64(values?.fileSize ?? 0)
-        self.isPinned = url.lastPathComponent.hasPrefix("📌")
+        // Pin state lives in an extended attribute, same as the macOS app.
+        self.isPinned = PinService.isPinned(url)
         self.preview = preview
     }
 
@@ -465,6 +469,30 @@ enum NoteFileStore {
     static func trash(_ note: NoteFile) async throws {
         try await Task.detached(priority: .userInitiated) {
             try FileManager.default.trashItem(at: note.url, resultingItemURL: nil)
+        }.value
+    }
+
+    /// Pin or unpin a note. Writes the pin extended attribute under
+    /// `NSFileCoordinator` so iCloud sees a clean metadata change and a
+    /// concurrent reader on another device isn't mid-read. The file is
+    /// not renamed, so the note's URL stays valid for callers.
+    @MainActor
+    static func setPinned(_ pinned: Bool, for note: NoteFile) async throws {
+        try await Task.detached(priority: .userInitiated) {
+            var coordinationError: NSError?
+            var pinError: Error?
+            let coordinator = NSFileCoordinator()
+            coordinator.coordinate(
+                writingItemAt: note.url, options: [], error: &coordinationError
+            ) { writeURL in
+                do {
+                    try PinService.setPinned(pinned, for: writeURL)
+                } catch {
+                    pinError = error
+                }
+            }
+            if let coordinationError { throw coordinationError }
+            if let pinError { throw pinError }
         }.value
     }
 

@@ -129,6 +129,9 @@ struct NoteDetailView: View {
     @State private var showDeleteAlert = false
     @State private var showConflictAlert = false
     @State private var toastMessage: String?
+    /// Pin state edited from this view. `nil` until the user toggles it,
+    /// at which point it overrides the immutable `note.isPinned`.
+    @State private var isPinnedOverride: Bool?
 
     /// Slack in seconds for "another device modified the file" detection.
     private static let conflictTimestampSlack: TimeInterval = 0.5
@@ -139,6 +142,10 @@ struct NoteDetailView: View {
 
     private var fontSize: ReaderFontSize {
         ReaderFontSize(rawValue: fontSizeRaw) ?? .medium
+    }
+
+    private var isPinned: Bool {
+        isPinnedOverride ?? note.isPinned
     }
 
     var body: some View {
@@ -230,6 +237,14 @@ struct NoteDetailView: View {
 
                         Divider()
                         Button {
+                            Haptics.tap()
+                            togglePin()
+                        } label: {
+                            Label(
+                                isPinned ? "Unpin" : "Pin",
+                                systemImage: isPinned ? "pin.slash" : "pin")
+                        }
+                        Button(role: .destructive) {
                             Haptics.warning()
                             showDeleteAlert = true
                         } label: {
@@ -500,10 +515,30 @@ struct NoteDetailView: View {
             do {
                 try await NoteFileStore.trash(note)
                 Haptics.success()
+                // Refresh list views (the iPad content column stays mounted
+                // behind this detail and has no other reload trigger).
+                CloudSyncManager.shared.notifyExternalChange()
                 dismiss()
             } catch {
                 saveState = .failed(error.localizedDescription)
                 showToast("Move failed")
+                Haptics.error()
+            }
+        }
+    }
+
+    private func togglePin() {
+        let newValue = !isPinned
+        Task { @MainActor in
+            do {
+                try await NoteFileStore.setPinned(newValue, for: note)
+                isPinnedOverride = newValue
+                Haptics.success()
+                // Nudge list views to re-sort; on iPad the content column
+                // behind this detail won't otherwise see the pin change.
+                CloudSyncManager.shared.notifyExternalChange()
+            } catch {
+                showToast("Pin failed")
                 Haptics.error()
             }
         }

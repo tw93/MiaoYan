@@ -40,30 +40,25 @@ struct NotesListView: View {
                     // so signal in-progress instead of going blank.
                     InlineLoadingHint(text: "Loading notes…")
                 } else {
-                    ForEach(notes) { note in
-                        NavigationLink {
-                            NoteDetailView(note: note)
-                        } label: {
-                            NoteCard(note: note)
+                    let pinned = notes.filter(\.isPinned)
+                    let others = notes.filter { !$0.isPinned }
+                    if !pinned.isEmpty {
+                        NoteSectionHeader(title: "Pinned")
+                        ForEach(pinned) { note in
+                            NoteCardLink(
+                                note: note,
+                                onTogglePin: { togglePin(note) },
+                                onTrash: { pendingDeletion = note })
                         }
-                        .buttonStyle(.plain)
-                        .padding(.horizontal, MobileTheme.pagePadding)
-                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                            Button(role: .destructive) {
-                                Haptics.warning()
-                                pendingDeletion = note
-                            } label: {
-                                Label("Trash", systemImage: "trash")
-                            }
+                        if !others.isEmpty {
+                            NoteSectionHeader(title: "Notes")
                         }
-                        .contextMenu {
-                            Button(role: .destructive) {
-                                Haptics.warning()
-                                pendingDeletion = note
-                            } label: {
-                                Label("Move to Trash", systemImage: "trash")
-                            }
-                        }
+                    }
+                    ForEach(others) { note in
+                        NoteCardLink(
+                            note: note,
+                            onTogglePin: { togglePin(note) },
+                            onTrash: { pendingDeletion = note })
                     }
                 }
             }
@@ -142,5 +137,19 @@ struct NotesListView: View {
         let loaded = await NoteFileStore.notes(in: folder.url, recursive: recursive)
         notes = loaded
         hasLoadedOnce = true
+    }
+
+    /// Toggle pin state, then reload so the list re-reads the pin xattr and
+    /// re-sorts. See RecentNotesView.togglePin for the rationale.
+    private func togglePin(_ note: NoteFile) {
+        Task {
+            do {
+                try await NoteFileStore.setPinned(!note.isPinned, for: note)
+                Haptics.success()
+                triggerLoad()
+            } catch {
+                Haptics.error()
+            }
+        }
     }
 }
