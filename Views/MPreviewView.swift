@@ -556,6 +556,17 @@ class MPreviewView: WKWebView, WKUIDelegate {
         }
     }
 
+    /// Toggle the in-preview table-of-contents panel. The TOC itself lives in
+    /// the preview's JavaScript (`window.MiaoYanTOC`, see common.js); this
+    /// just drives it from the menu / keyboard. No-op in PPT mode where the
+    /// reveal.js template has no TOC.
+    public func toggleTOC() {
+        runWhenPreviewReady { [weak self] in
+            self?.evaluateJavaScript(
+                "window.MiaoYanTOC && window.MiaoYanTOC.toggle();", completionHandler: nil)
+        }
+    }
+
     public func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
         AppDelegate.trackError(NSError(domain: "WKWebViewError", code: 1, userInfo: [NSLocalizedDescriptionKey: "WebContent process terminated"]), context: "MPreviewView.WebContentTerminated")
 

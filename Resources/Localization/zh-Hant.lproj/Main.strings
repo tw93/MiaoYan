@@ -205,6 +205,9 @@
 /* Class = "NSMenuItem"; title = "Toggle Split View"; ObjectID = "Tgl-Spl-View"; */
 "Tgl-Spl-View.title" = "切換分欄";
 
+/* Class = "NSMenuItem"; title = "Toggle TOC"; ObjectID = "Tgl-TOC-Menu"; */
+"Tgl-TOC-Menu.title" = "切換目錄";
+
 /* Class = "NSMenuItem"; title = "Always On Top"; ObjectID = "Always-On-Top-Menu"; */
 "Always-On-Top-Menu.title" = "視窗置頂";
 

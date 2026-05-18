@@ -684,6 +684,12 @@ class ViewController:
             return notesTableView.selectedRow != -1
         }
 
+        if menuItem.action == #selector(toggleTOC(_:)) {
+            // TOC lives in the preview WebView; only meaningful in preview or
+            // split mode, and not in PPT (reveal.js template has no TOC).
+            return editArea.markdownView != nil && !sessionMagicPPTMode
+        }
+
         let canUseMenu = UserDefaultsManagement.canUseMenu
         if let title = menuItem.menu?.identifier?.rawValue {
             switch title {

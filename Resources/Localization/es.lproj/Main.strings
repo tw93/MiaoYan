@@ -188,6 +188,9 @@
 /* Class = "NSMenuItem"; title = "Toggle Split View"; ObjectID = "Tgl-Spl-View"; */
 "Tgl-Spl-View.title" = "Alternar Vista Dividida";
 
+/* Class = "NSMenuItem"; title = "Toggle TOC"; ObjectID = "Tgl-TOC-Menu"; */
+"Tgl-TOC-Menu.title" = "Alternar Índice";
+
 /* Class = "NSMenuItem"; title = "Always On Top"; ObjectID = "Always-On-Top-Menu"; */
 "Always-On-Top-Menu.title" = "Siempre Visible";
 

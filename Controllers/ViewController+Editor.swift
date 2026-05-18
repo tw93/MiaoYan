@@ -1191,6 +1191,13 @@ extension ViewController {
         togglePresentation()
     }
 
+    /// Toggle the table-of-contents panel in the preview pane. Only meaningful
+    /// when a preview WebView exists (preview or split mode); the menu item is
+    /// disabled otherwise via `validateMenuItem`.
+    @IBAction func toggleTOC(_ sender: Any) {
+        editArea.markdownView?.toggleTOC()
+    }
+
     @IBAction func toggleMagicPPT(_ sender: Any) {
         saveTitleSafely()
         if sessionMagicPPTMode {

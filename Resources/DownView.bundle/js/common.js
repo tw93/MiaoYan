@@ -359,6 +359,10 @@ const TOC_CONFIG = {
 };
 
 (function() {
+  // Default no-op so a menu/shortcut trigger never hits an undefined call
+  // before initTOC runs (or when there are too few headings to build a TOC).
+  window.MiaoYanTOC = { toggle: function() {} };
+
   function initTOC() {
     const nav = document.querySelector('.toc-nav');
     const trigger = document.querySelector('.toc-hover-trigger');
@@ -416,6 +420,26 @@ const TOC_CONFIG = {
       nav.classList.remove('active');
       trigger.classList.remove('hidden');
     };
+
+    // Menu / keyboard toggle: opening pins the panel so it stays visible
+    // instead of auto-hiding; closing unpins and hides. Bypasses the
+    // isPinned guard in hide() on purpose so the shortcut always works.
+    const menuToggle = () => {
+      if (nav.classList.contains('active')) {
+        isPinned = false;
+        localStorage.setItem('toc-pinned', 'false');
+        nav.classList.remove('pinned');
+        nav.classList.remove('active');
+        trigger.classList.remove('hidden');
+        startAutoHideTimer();
+      } else {
+        isPinned = true;
+        localStorage.setItem('toc-pinned', 'true');
+        nav.classList.add('pinned');
+        show();
+      }
+    };
+    window.MiaoYanTOC = { toggle: menuToggle };
 
     // Auto-scroll active link into view within TOC panel
     const scrollToActive = () => {
