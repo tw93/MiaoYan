@@ -750,7 +750,7 @@ extension MPreviewView {
             }
 
             if checkCount >= maxChecks {
-                print("[Export] Image loading timeout after \\(checkCount) checks, proceeding anyway")
+                print("[Export] Image loading timeout after \(checkCount) checks, proceeding anyway")
                 completion()
                 return
             }
