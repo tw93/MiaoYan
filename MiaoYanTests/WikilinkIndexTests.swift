@@ -10,20 +10,25 @@ final class WikilinkIndexTests: XCTestCase {
 
     private var index: WikilinkIndex { WikilinkIndex.shared }
 
-    override func setUp() {
-        super.setUp()
-        // Clean slate. removeNote on a non-existent title is a no-op so this
-        // is safe even on a fresh index.
+    // XCTestCase's sync setUp/tearDown are nonisolated and Swift 6 strict
+    // concurrency rejects re-entering MainActor from there. The async
+    // variants inherit the @MainActor class isolation, which lets us touch
+    // the index without bouncing through MainActor.assumeIsolated and
+    // tripping data-race diagnostics on `self`.
+    override func setUp() async throws {
+        try await super.setUp()
         for title in ["A", "B", "C", "D"] {
+            // Clean slate. removeNote on a non-existent title is a no-op
+            // so this is safe even on a fresh index.
             index.removeNote(title: title)
         }
     }
 
-    override func tearDown() {
+    override func tearDown() async throws {
         for title in ["A", "B", "C", "D"] {
             index.removeNote(title: title)
         }
-        super.tearDown()
+        try await super.tearDown()
     }
 
     func testUpdateNoteRecordsOutlinks() {

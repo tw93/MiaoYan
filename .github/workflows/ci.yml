@@ -66,10 +66,13 @@ jobs:
 
   build-ios:
     name: iOS build
-    runs-on: macos-15
+    # MiaoYanMobile uses iOS 26 SwiftUI APIs (glassEffect / Liquid Glass).
+    # Those symbols only ship in Xcode 26 SDKs, so this job requires the
+    # macos-26 runner image. If macos-26 is unavailable the job will fail
+    # with a clear runner-not-found error; switch to advisory or skip
+    # rather than downgrading the iOS code.
+    runs-on: macos-26
     timeout-minutes: 25
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_16.3.app/Contents/Developer
     steps:
       - uses: actions/checkout@v4
 
