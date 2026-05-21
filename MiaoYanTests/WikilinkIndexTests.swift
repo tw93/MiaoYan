@@ -10,34 +10,28 @@ final class WikilinkIndexTests: XCTestCase {
 
     private var index: WikilinkIndex { WikilinkIndex.shared }
 
-    // XCTestCase's sync setUp/tearDown are nonisolated and Swift 6 strict
-    // concurrency rejects re-entering MainActor from there. The async
-    // variants inherit the @MainActor class isolation, which lets us touch
-    // the index without bouncing through MainActor.assumeIsolated and
-    // tripping data-race diagnostics on `self`.
-    override func setUp() async throws {
-        try await super.setUp()
+    // XCTestCase's setUp/tearDown across Swift 6.1's strict concurrency
+    // are awkward: the sync variants are nonisolated (can't touch the
+    // @MainActor index), and `super.setUp()` in the async variants flags
+    // XCTestCase as non-Sendable. Sidestep both by cleaning the shared
+    // index inline at the start of each test instead.
+    private func resetIndex() {
         for title in ["A", "B", "C", "D"] {
-            // Clean slate. removeNote on a non-existent title is a no-op
-            // so this is safe even on a fresh index.
+            // removeNote on a non-existent title is a no-op, so this is
+            // safe even on a fresh index.
             index.removeNote(title: title)
         }
-    }
-
-    override func tearDown() async throws {
-        for title in ["A", "B", "C", "D"] {
-            index.removeNote(title: title)
-        }
-        try await super.tearDown()
     }
 
     func testUpdateNoteRecordsOutlinks() {
+        resetIndex()
         index.updateNote(title: "A", content: "see [[B]] and [[C]]")
 
         XCTAssertEqual(Set(index.getOutlinks(for: "A")), Set(["B", "C"]))
     }
 
     func testBacklinksReverseUpdateNote() {
+        resetIndex()
         index.updateNote(title: "A", content: "links to [[B]]")
         index.updateNote(title: "C", content: "also links to [[B]]")
 
@@ -45,6 +39,7 @@ final class WikilinkIndexTests: XCTestCase {
     }
 
     func testUpdateNoteReplacesPreviousOutlinks() {
+        resetIndex()
         index.updateNote(title: "A", content: "[[B]]")
         index.updateNote(title: "A", content: "[[C]]")
 
@@ -54,6 +49,7 @@ final class WikilinkIndexTests: XCTestCase {
     }
 
     func testRemoveNoteClearsBothDirections() {
+        resetIndex()
         index.updateNote(title: "A", content: "[[B]]")
         index.removeNote(title: "A")
 
@@ -62,18 +58,21 @@ final class WikilinkIndexTests: XCTestCase {
     }
 
     func testWhitespaceInsideBracketsIsTrimmed() {
+        resetIndex()
         index.updateNote(title: "A", content: "[[  B  ]]")
 
         XCTAssertEqual(index.getOutlinks(for: "A"), ["B"])
     }
 
     func testEmptyContentYieldsNoLinks() {
+        resetIndex()
         index.updateNote(title: "A", content: "no wikilinks here")
 
         XCTAssertTrue(index.getOutlinks(for: "A").isEmpty)
     }
 
     func testMultipleOccurrencesOfSameLinkAreDeduped() {
+        resetIndex()
         index.updateNote(title: "A", content: "[[B]] then [[B]] then [[B]]")
 
         XCTAssertEqual(index.getOutlinks(for: "A"), ["B"])
