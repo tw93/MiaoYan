@@ -71,7 +71,7 @@ extension ViewController {
         if UserDefaultsManagement.isSingleMode {
             UserDefaultsManagement.clearSingleMode()
             UserDefaultsManagement.isFirstLaunch = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + UIDelay.short) {
                 NSApplication.shared.terminate(self)
             }
         } else {

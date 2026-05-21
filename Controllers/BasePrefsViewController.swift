@@ -167,7 +167,7 @@ class BasePrefsViewController: NSViewController {
         ) { confirmed in
             if confirmed {
                 UserDefaultsManagement.isFirstLaunch = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + UIDelay.short) {
                     AppDelegate.relaunchApp()
                 }
             }

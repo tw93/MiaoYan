@@ -282,7 +282,7 @@ extension MPreviewView {
             """
 
         evaluateJavaScript(printCSS) { _, _ in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + UIDelay.short) {
                 completion()
             }
         }
