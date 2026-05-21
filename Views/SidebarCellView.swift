@@ -9,7 +9,7 @@ class SidebarCellView: NSTableCellView {
     @IBOutlet var icon: NSImageView!
     @IBOutlet var label: NSTextField!
 
-    var storage = Storage.sharedInstance()
+    var storage: Storage { AppEnvironment.current.storage }
 
     override func draw(_ dirtyRect: NSRect) {
         label?.font = UserDefaultsManagement.nameFont

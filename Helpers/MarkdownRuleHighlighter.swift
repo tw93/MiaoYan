@@ -36,7 +36,7 @@ enum MarkdownRuleHighlighter {
                 guard let codeRange = result?.range, codeRange.upperBound <= attributedString.length else { return }
 
                 let codeColor =
-                    UserDataService.instance.isDark
+                    AppEnvironment.current.userData.isDark
                     ? NSColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1.0)
                     : NSColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0)
 

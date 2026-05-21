@@ -84,7 +84,7 @@ custom_rules:
       - "Business/Storage.swift"
       - "Business/Types.swift"
       - "Controllers/AppDelegate.swift"
-      - "Controllers/AppDelegate+URLRoutes.swift"
+      - "Controllers/AppDelegate\\+URLRoutes.swift"
       - "Controllers/ContentViewController.swift"
       - "Controllers/EditorPrefsViewController.swift"
       - "Controllers/GeneralPrefsViewController.swift"
@@ -93,25 +93,23 @@ custom_rules:
       - "Controllers/TypographyPrefsViewController.swift"
       - "Controllers/VersionHistoryViewController.swift"
       - "Controllers/ViewController.swift"
-      - "Controllers/ViewController+Action.swift"
-      - "Controllers/ViewController+Data.swift"
-      - "Controllers/ViewController+Editor.swift"
-      - "Extensions/MPreviewView+Export.swift"
-      - "Extensions/NSTextStorage+.swift"
-      - "Helpers/ClipboardManager.swift"
-      - "Helpers/CodeBlockHighlighter.swift"
+      - "Controllers/ViewController\\+Action.swift"
+      - "Controllers/ViewController\\+Data.swift"
+      - "Controllers/ViewController\\+Editor.swift"
+      - "Extensions/MPreviewView\\+Export.swift"
+      - "Extensions/NSTextStorage\\+.swift"
       - "Helpers/EditorMenuManager.swift"
       - "Helpers/FileSystemEventManager.swift"
-      - "Helpers/MarkdownRuleHighlighter.swift"
       - "Helpers/NotesTextProcessor.swift"
       - "Helpers/TextFormatter.swift"
       - "Views/EditTextView.swift"
       - "Views/MPreviewView.swift"
       - "Views/NotesTableView.swift"
-      - "Views/SearchTextField.swift"
-      - "Views/SidebarCellView.swift"
       - "Views/SidebarProjectView.swift"
+      # MiaoYanMobile composes services through AppState, not AppEnvironment.
+      # The whole iOS target is out of scope for this macOS-only facade rule.
+      - "MiaoYanMobile"
       # Tests are an explicit access boundary; using the singleton directly is
-      # fine when AppEnvironment is not wired in the build yet, and once it is,
-      # tests will switch to `AppEnvironment.withOverride(...)`.
+      # fine. Once a test needs a sandboxed environment it can use
+      # `AppEnvironment.withOverride(...)`.
       - "MiaoYanTests"

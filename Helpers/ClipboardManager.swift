@@ -126,7 +126,7 @@ class ClipboardManager {
 
     private func saveClipboard(data: Data, note: Note, ext: String? = nil, url: URL? = nil) {
         guard let textView = textView,
-            let vc = ViewController.shared()
+            let vc = AppContext.shared.viewController
         else { return }
 
         if let path = ImagesProcessor.writeFile(data: data, url: url, note: note, ext: ext) {
@@ -368,7 +368,7 @@ class ClipboardManager {
 
     @MainActor private func deleteImage(tempPath: URL) {
         do {
-            guard let resultingItemUrl = Storage.sharedInstance().trashItem(url: tempPath) else { return }
+            guard let resultingItemUrl = AppEnvironment.current.storage.trashItem(url: tempPath) else { return }
             try FileManager.default.moveItem(at: tempPath, to: resultingItemUrl)
         } catch {
             AppDelegate.trackError(error, context: "ClipboardManager.deleteImage")

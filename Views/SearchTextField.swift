@@ -271,7 +271,7 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     }
 
     private func performSearch(with text: String) {
-        UserDataService.instance.searchTrigger = true
+        AppEnvironment.current.userData.searchTrigger = true
         lastQueryLength = text.count
 
         filterQueue.cancelAllOperations()
