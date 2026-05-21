@@ -175,7 +175,11 @@ public class NotesTextProcessor {
     }
 
     public static func convertAppLinks(in content: NSMutableAttributedString) -> NSMutableAttributedString {
-        let attributedString = content.mutableCopy() as! NSMutableAttributedString
+        // `mutableCopy()` on NSMutableAttributedString is documented to return
+        // an `NSMutableAttributedString`; the cast cannot legitimately fail.
+        guard let attributedString = content.mutableCopy() as? NSMutableAttributedString else {
+            return content
+        }
         let fullRange = NSRange(location: 0, length: attributedString.length)
         let tagQuery = "miaoyan://goto/"
 
@@ -241,11 +245,32 @@ public class NotesTextProcessor {
         applyPerformanceState(state, note: note ?? EditTextView.note)
     }
 
+    /// Hard ceilings beyond which regex-based highlighting is unsafe regardless
+    /// of line count. Picked to catch the "pasted 1MB of unbroken text" case
+    /// that historically froze the editor: `NSRegularExpression` over a single
+    /// 100KB+ line on the main actor stalls perceptibly.
+    private static let totalLengthCeiling = 1_000_000  // ~1MB UTF-16
+    private static let singleParagraphCeiling = 64_000  // ~64KB UTF-16
+
     @MainActor private static func calculatePerformanceState(attributedString: NSMutableAttributedString) -> HighlightPerformanceState {
         var lineCount = 1
+        var currentLineLength = 0
+        var maxLineLength = 0
         for char in attributedString.string.utf16 {
-            if char == 0x0A { lineCount += 1 }
+            if char == 0x0A {
+                lineCount += 1
+                if currentLineLength > maxLineLength { maxLineLength = currentLineLength }
+                currentLineLength = 0
+            } else {
+                currentLineLength += 1
+            }
         }
+        if currentLineLength > maxLineLength { maxLineLength = currentLineLength }
+
+        if attributedString.length > totalLengthCeiling || maxLineLength > singleParagraphCeiling {
+            return HighlightPerformanceState(simplified: true, skipCode: true)
+        }
+
         if lineCount > 5000 {
             return HighlightPerformanceState(simplified: true, skipCode: true)
         }
