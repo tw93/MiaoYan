@@ -2,15 +2,32 @@ import Foundation
 
 class ImageLinkParser {
 
-    static let markdownImageRegex = try! NSRegularExpression(
-        pattern: "!\\[([^\\]]*)\\]\\(([^\\)]+)\\)",
-        options: []
-    )
+    // Patterns are compile-time literals; compilation cannot fail at runtime.
+    // If a future edit breaks the pattern, the precondition fires at first use
+    // instead of crashing inside `enumerateMatches` with a less actionable trace.
+    static let markdownImageRegex: NSRegularExpression = {
+        let pattern = "!\\[([^\\]]*)\\]\\(([^\\)]+)\\)"
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
+            preconditionFailure("ImageLinkParser.markdownImageRegex literal is invalid: \(pattern)")
+        }
+        return regex
+    }()
 
-    static let htmlImageRegex = try! NSRegularExpression(
-        pattern: "<img[^>]*src\\s*=\\s*[\"']([^\"']+)[\"'][^>]*>",
-        options: [.caseInsensitive]
-    )
+    static let htmlImageRegex: NSRegularExpression = {
+        let pattern = "<img[^>]*src\\s*=\\s*[\"']([^\"']+)[\"'][^>]*>"
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else {
+            preconditionFailure("ImageLinkParser.htmlImageRegex literal is invalid: \(pattern)")
+        }
+        return regex
+    }()
+
+    private static let htmlAltRegex: NSRegularExpression = {
+        let pattern = "alt\\s*=\\s*[\"']([^\"']+)[\"']"
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else {
+            preconditionFailure("ImageLinkParser.htmlAltRegex literal is invalid: \(pattern)")
+        }
+        return regex
+    }()
 
     static func detectImageLink(in text: String, at location: Int) -> ImageLinkInfo? {
         let nsText = text as NSString
@@ -87,13 +104,8 @@ class ImageLinkParser {
     }
 
     private static func extractAltFromHtmlImg(_ htmlImg: String) -> String {
-        let altRegex = try! NSRegularExpression(
-            pattern: "alt\\s*=\\s*[\"']([^\"']+)[\"']",
-            options: [.caseInsensitive]
-        )
-
         let range = NSRange(location: 0, length: htmlImg.count)
-        if let match = altRegex.firstMatch(in: htmlImg, options: [], range: range) {
+        if let match = htmlAltRegex.firstMatch(in: htmlImg, options: [], range: range) {
             let altRange = match.range(at: 1)
             if altRange.location != NSNotFound {
                 return (htmlImg as NSString).substring(with: altRange)
