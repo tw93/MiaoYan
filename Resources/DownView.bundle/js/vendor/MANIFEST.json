@@ -1,0 +1,151 @@
+{
+  "$schema": "https://raw.githubusercontent.com/tw93/MiaoYan/main/Resources/DownView.bundle/js/vendor/MANIFEST.schema.json",
+  "description": "Vendored third-party JavaScript that ships inside MiaoYan's preview bundle. Each entry records what file was downloaded, where from, when, and its SHA-256 so the next maintainer can audit and refresh without guessing.",
+  "verify_command": "shasum -a 256 Resources/DownView.bundle/js/<name>",
+  "vendored": [
+    {
+      "name": "highlight.min.js",
+      "version": "11.5.1",
+      "source_url": "https://github.com/highlightjs/highlight.js/releases/tag/11.5.1",
+      "license": "BSD-3-Clause",
+      "sha256": "7d31127fbc6c7cdfef1eb59800f9ec50cedb15efa81ff571dcfa5d13a0ad90f4",
+      "purpose": "Syntax highlight for fenced code blocks in preview.",
+      "version_source": "banner comment line 1"
+    },
+    {
+      "name": "d3.min.js",
+      "version": "6.7.0",
+      "source_url": "https://d3js.org/d3.v6.min.js",
+      "license": "ISC",
+      "sha256": "fbb8da602a76f4ed49bac3561da62d8149fa121b8fd15685bacc21355d3a3322",
+      "purpose": "Charting primitives used by Mermaid and markmap.",
+      "version_source": "banner comment line 1"
+    },
+    {
+      "name": "lightense.min.js",
+      "version": "1.0.17",
+      "source_url": "https://github.com/sparanoid/lightense-images",
+      "license": "MIT",
+      "sha256": "8df829761b2b403613e194325533ebd671cbb6483b13d21d9293328fc3656734",
+      "purpose": "Click-to-zoom image lightbox in preview.",
+      "version_source": "banner comment line 1"
+    },
+    {
+      "name": "emoji.min.js",
+      "version": "2022-06-03",
+      "source_url": "https://github.com/iamcal/js-emoji",
+      "license": "MIT",
+      "sha256": "3a0bb8fc6250796cd4c926b973201227d672927466cb6611c9cbdf425d19c76b",
+      "purpose": "Convert shortcodes (`:smile:`) to emoji in preview.",
+      "version_source": "banner comment line 1 (build date stamp; no semver)"
+    },
+    {
+      "name": "mermaid.min.js",
+      "version": "unknown",
+      "source_url": "https://github.com/mermaid-js/mermaid",
+      "license": "MIT",
+      "sha256": "217b66ef4279c33c141b4afe22effad10a91c02558dc70917be2c0981e78ed87",
+      "purpose": "Diagram and flowchart rendering.",
+      "version_source": "no banner; esbuild bundle. Refresh when next vendored and record version then."
+    },
+    {
+      "name": "mermaid-layout-elk.js",
+      "version": "unknown",
+      "source_url": "https://github.com/mermaid-js/mermaid (elk layout plugin)",
+      "license": "MIT",
+      "sha256": "31fbc8ea3468ddfb1f6c19a95a1e51230a230076cfb3330fb1be8b40dcf42705",
+      "purpose": "ELK auto-layout plugin for Mermaid.",
+      "version_source": "no banner."
+    },
+    {
+      "name": "mermaid-layout-elk-render.js",
+      "version": "unknown",
+      "source_url": "https://github.com/mermaid-js/mermaid (elk layout plugin)",
+      "license": "MIT",
+      "sha256": "340ed89b6df9c2b99df62c48e01c27d5deca9a47d51a1ca599442611b81a5448",
+      "purpose": "ELK render entry point chunk loaded by mermaid-layout-elk.js.",
+      "version_source": "no banner."
+    },
+    {
+      "name": "mermaid-layout-elk-chunk.js",
+      "version": "unknown",
+      "source_url": "https://github.com/mermaid-js/mermaid (elk layout plugin)",
+      "license": "MIT",
+      "sha256": "3a5c5345325742c2088edaaaa67661f00082d20a3e1902e4864ac5feb5e918f9",
+      "purpose": "Dynamic chunk loaded by mermaid-layout-elk.js.",
+      "version_source": "no banner."
+    },
+    {
+      "name": "katex.min.js",
+      "version": "unknown",
+      "source_url": "https://github.com/KaTeX/KaTeX/releases",
+      "license": "MIT",
+      "sha256": "eb18207487161674e717087c317db14ac1a62dadaecccb802499ce173bfeb739",
+      "purpose": "LaTeX math rendering in preview.",
+      "version_source": "no banner. Pair with auto-render.min.js."
+    },
+    {
+      "name": "auto-render.min.js",
+      "version": "unknown",
+      "source_url": "https://github.com/KaTeX/KaTeX/tree/main/contrib/auto-render",
+      "license": "MIT",
+      "sha256": "cb7f4ca60ed5dc3e258415f8c7a3b46d4a93578a52adf83011f18a7f190e7602",
+      "purpose": "KaTeX `renderMathInElement` helper that walks the DOM and renders.",
+      "version_source": "no banner."
+    },
+    {
+      "name": "tocbot.min.js",
+      "version": "unknown",
+      "source_url": "https://github.com/tscanlin/tocbot",
+      "license": "MIT",
+      "sha256": "7211afdadda60eda5c66ace08b07b90a9cf8e49db797c65adcb65f1011b1935e",
+      "purpose": "Floating table of contents in preview.",
+      "version_source": "no banner."
+    },
+    {
+      "name": "plantuml-encoder.min.js",
+      "version": "unknown",
+      "source_url": "https://github.com/markushedvall/plantuml-encoder",
+      "license": "MIT",
+      "sha256": "42c936291042379a95657ec1fbcfb622f425d40a9cef6dea575b41090695a2aa",
+      "purpose": "Encode PlantUML source into URLs the public render service accepts.",
+      "version_source": "no banner."
+    },
+    {
+      "name": "markmap.min.js",
+      "version": "unknown",
+      "source_url": "https://github.com/markmap/markmap",
+      "license": "MIT",
+      "sha256": "7708007bc3ffb2f2078211ba692d350a90eaccef8081949393de0709998d594d",
+      "purpose": "Mindmap rendering from Markdown.",
+      "version_source": "no banner."
+    },
+    {
+      "name": "markmap-view.min.js",
+      "version": "unknown",
+      "source_url": "https://github.com/markmap/markmap",
+      "license": "MIT",
+      "sha256": "40ba3d1e3c2c5f0b82a51a8c76767a6a8838f2b2fcdcc79e72cb7292a7585963",
+      "purpose": "DOM renderer companion to markmap.min.js.",
+      "version_source": "no banner."
+    }
+  ],
+  "project_local": {
+    "description": "These files are written and maintained inside MiaoYan, not vendored from upstream. Listed here for completeness so any new file under js/ is either vendored or project-local.",
+    "files": [
+      "app.js",
+      "common.js",
+      "diagram-handler.js",
+      "theme-config.js",
+      "theme-manager.js"
+    ]
+  },
+  "refresh_workflow": [
+    "Download the new minified bundle from the source_url.",
+    "Replace the file in Resources/DownView.bundle/js/.",
+    "Run `shasum -a 256 Resources/DownView.bundle/js/<file>` and update the sha256 here.",
+    "Update the version field. If the upstream has no version banner, write the release tag you downloaded from.",
+    "Open the preview in MiaoYan locally and smoke test: code block highlight, KaTeX, Mermaid, Markmap, PlantUML, TOC.",
+    "Commit the updated file + this manifest in one atomic commit so reviewers can verify the hash."
+  ]
+}
