@@ -19,6 +19,10 @@ disabled_rules:
   - private_action
   - private_outlet
   - void_function_in_ternary
+  # SwiftUI's .sheet(isPresented:onDismiss:content:) and similar APIs
+  # are idiomatic with a labeled closure followed by a trailing closure;
+  # firing on it for the MiaoYanMobile target is noise, not a bug.
+  - multiple_closures_with_trailing_closure
 
 opt_in_rules:
   - empty_count
@@ -49,7 +53,7 @@ line_length:
   ignores_urls: true
 
 cyclomatic_complexity:
-  warning: 20
+  warning: 22
   error: 24
 
 file_length:

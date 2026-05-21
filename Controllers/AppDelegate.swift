@@ -393,7 +393,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
             let flags = event.modifierFlags.intersection([.command, .shift, .option, .control])
             let key = event.charactersIgnoringModifiers?.lowercased()
 
-            if (event.keyCode == 17 || key == "t"),  // kVK_ANSI_T
+            if event.keyCode == 17 || key == "t",  // kVK_ANSI_T
                 flags == [.command, .shift]
             {
                 if let vc = self.resolveViewController() {
@@ -402,7 +402,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
                 }
             }
 
-            if (event.keyCode == 35 || key == "p"),  // kVK_ANSI_P
+            if event.keyCode == 35 || key == "p",  // kVK_ANSI_P
                 flags == [.command, .option]
             {
                 if let vc = self.resolveViewController() {

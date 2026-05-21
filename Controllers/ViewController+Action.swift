@@ -554,10 +554,8 @@ extension ViewController {
             "net.kovidgoyal.kitty",         // Kitty
             "com.apple.Terminal",           // Terminal (always present)
         ]
-        for id in candidates {
-            if NSWorkspace.shared.urlForApplication(withBundleIdentifier: id) != nil {
-                return id
-            }
+        for id in candidates where NSWorkspace.shared.urlForApplication(withBundleIdentifier: id) != nil {
+            return id
         }
         return "com.apple.Terminal"
     }

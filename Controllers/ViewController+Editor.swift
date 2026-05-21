@@ -236,7 +236,6 @@ extension ViewController {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
     func disablePreview() {
         guard !sessionMagicPPTMode else { return }
 
