@@ -1,0 +1,137 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-mac:
+    name: macOS build
+    runs-on: macos-15
+    timeout-minutes: 25
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: |
+          xcodebuild -version
+          swift --version
+
+      - name: Resolve SPM dependencies
+        run: |
+          xcodebuild \
+            -project MiaoYan.xcodeproj \
+            -scheme MiaoYan \
+            -resolvePackageDependencies
+
+      - name: Build macOS app (Debug)
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project MiaoYan.xcodeproj \
+            -scheme MiaoYan \
+            -configuration Debug \
+            -destination 'platform=macOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            build | xcbeautify --renderer github-actions || \
+          xcodebuild \
+            -project MiaoYan.xcodeproj \
+            -scheme MiaoYan \
+            -configuration Debug \
+            -destination 'platform=macOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      # Uncomment after the MiaoYanTests target is wired in project.pbxproj (Phase 1, step 4).
+      # - name: Run unit tests
+      #   run: |
+      #     xcodebuild test \
+      #       -project MiaoYan.xcodeproj \
+      #       -scheme MiaoYan \
+      #       -destination 'platform=macOS' \
+      #       CODE_SIGNING_ALLOWED=NO
+
+  build-ios:
+    name: iOS build
+    runs-on: macos-15
+    timeout-minutes: 25
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build iOS app (Debug)
+        run: |
+          xcodebuild \
+            -project MiaoYan.xcodeproj \
+            -scheme MiaoYanMobile \
+            -configuration Debug \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+  lint:
+    name: Lint
+    runs-on: macos-15
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install SwiftLint
+        run: brew install swiftlint
+
+      - name: Run SwiftLint
+        run: swiftlint lint --strict --reporter github-actions-logging
+
+      - name: Install swift-format
+        run: brew install swift-format
+
+      - name: Run swift-format
+        run: swift-format lint --recursive --strict .
+
+  release-notes-smoke:
+    name: Release notes smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Render appcast description HTML
+        run: bash scripts/release-ci/notes_to_html.sh .github/RELEASE_NOTES.md > /tmp/description.html
+
+      - name: Render GitHub release body
+        run: bash scripts/release-ci/render_release_body.sh .github/RELEASE_NOTES.md > /tmp/release-body.html
+
+      - name: Sanity check rendered outputs
+        run: |
+          test -s /tmp/description.html
+          test -s /tmp/release-body.html
+
+  version-consistency:
+    name: Version consistency
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    if: startsWith(github.ref, 'refs/tags/V')
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify MARKETING_VERSION == CURRENT_PROJECT_VERSION == tag
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          STRIPPED="${TAG#V}"
+          MARKETING=$(grep -m1 'MARKETING_VERSION = ' MiaoYan.xcodeproj/project.pbxproj | sed -E 's/.*MARKETING_VERSION = ([^;]+);.*/\1/' | tr -d ' ')
+          PROJECT=$(grep -m1 'CURRENT_PROJECT_VERSION = ' MiaoYan.xcodeproj/project.pbxproj | sed -E 's/.*CURRENT_PROJECT_VERSION = ([^;]+);.*/\1/' | tr -d ' ')
+          echo "tag=${STRIPPED} marketing=${MARKETING} project=${PROJECT}"
+          if [ "${STRIPPED}" != "${MARKETING}" ] || [ "${STRIPPED}" != "${PROJECT}" ]; then
+            echo "::error::Version drift. Tag ${STRIPPED} must equal MARKETING_VERSION (${MARKETING}) and CURRENT_PROJECT_VERSION (${PROJECT}). See AGENTS.md V3.5.1 / #524."
+            exit 1
+          fi
