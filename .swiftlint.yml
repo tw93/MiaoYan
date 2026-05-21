@@ -63,3 +63,55 @@ function_parameter_count:
 large_tuple:
   warning: 2
   error: 3
+
+custom_rules:
+  no_direct_singleton_in_new_code:
+    name: "Prefer AppEnvironment over raw singletons"
+    regex: '\b(?:Storage\.sharedInstance\(\)|Storage\.instance|WikilinkIndex\.shared|CloudSyncManager\.shared|NoteVersionManager\.shared|UserDataService\.instance|ViewController\.shared\(\))'
+    match_kinds:
+      - identifier
+    message: "Use AppEnvironment.current.<service> for new code. Existing call sites are grandfathered; do not add new ones."
+    severity: warning
+    # Grandfathered call sites as of the AppEnvironment introduction. Remove
+    # files from this list as their singleton usage migrates to AppEnvironment.
+    # Do NOT add new files here; the warning is the point.
+    excluded:
+      - "Business/AppEnvironment.swift"
+      - "Business/HtmlManager.swift"
+      - "Business/Note.swift"
+      - "Business/PrefsModel.swift"
+      - "Business/Sidebar.swift"
+      - "Business/Storage.swift"
+      - "Business/Types.swift"
+      - "Controllers/AppDelegate.swift"
+      - "Controllers/AppDelegate+URLRoutes.swift"
+      - "Controllers/ContentViewController.swift"
+      - "Controllers/EditorPrefsViewController.swift"
+      - "Controllers/GeneralPrefsViewController.swift"
+      - "Controllers/MainWindowController.swift"
+      - "Controllers/ProjectSettingsViewController.swift"
+      - "Controllers/TypographyPrefsViewController.swift"
+      - "Controllers/VersionHistoryViewController.swift"
+      - "Controllers/ViewController.swift"
+      - "Controllers/ViewController+Action.swift"
+      - "Controllers/ViewController+Data.swift"
+      - "Controllers/ViewController+Editor.swift"
+      - "Extensions/MPreviewView+Export.swift"
+      - "Extensions/NSTextStorage+.swift"
+      - "Helpers/ClipboardManager.swift"
+      - "Helpers/CodeBlockHighlighter.swift"
+      - "Helpers/EditorMenuManager.swift"
+      - "Helpers/FileSystemEventManager.swift"
+      - "Helpers/MarkdownRuleHighlighter.swift"
+      - "Helpers/NotesTextProcessor.swift"
+      - "Helpers/TextFormatter.swift"
+      - "Views/EditTextView.swift"
+      - "Views/MPreviewView.swift"
+      - "Views/NotesTableView.swift"
+      - "Views/SearchTextField.swift"
+      - "Views/SidebarCellView.swift"
+      - "Views/SidebarProjectView.swift"
+      # Tests are an explicit access boundary; using the singleton directly is
+      # fine when AppEnvironment is not wired in the build yet, and once it is,
+      # tests will switch to `AppEnvironment.withOverride(...)`.
+      - "MiaoYanTests"
