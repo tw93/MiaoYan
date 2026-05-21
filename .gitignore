@@ -103,10 +103,10 @@ Resources/DownView.bundle/demo.html
 IrEditor/
 fonts/
 
-# AI agent files (synced via private dotfiles)
-CLAUDE.md
+# AI agent files
+# CLAUDE.md and AGENTS.md are committed (CLAUDE.md is a symlink to AGENTS.md);
+# only the per-user overrides and private skills stay local.
 CLAUDE.local.md
-AGENTS.md
 AGENTS.override.md
 .claude/
 .agents/settings.local.json
