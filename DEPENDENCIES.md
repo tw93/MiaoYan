@@ -1,115 +1,71 @@
 # MiaoYan Dependencies
 
-This document describes the dependencies used in the MiaoYan project and their migration from CocoaPods to Swift Package Manager.
+This document is the source of truth for runtime dependencies. It is verified
+against `Package.swift` in CI (see `.github/workflows/ci.yml`); divergence
+fails the build.
 
-## Swift Package Manager Dependencies
+## Swift Package Manager
 
-The project now uses Swift Package Manager for all dependencies. The `Package.swift` file in the root directory documents all dependencies used by the Xcode project.
+All Swift dependencies are managed through `Package.swift`. The Xcode project
+consumes them via the standard SPM integration, not the `Package.swift` build
+itself (the `targets:` array is intentionally empty; the file is a manifest
+of declared versions only).
 
-### Current Dependencies
+| Package                                                            | Constraint | Purpose                                                |
+| ------------------------------------------------------------------ | ---------- | ------------------------------------------------------ |
+| [Sparkle](https://github.com/sparkle-project/Sparkle)              | 2.8.0+     | macOS auto-update (non-AppStore builds only)           |
+| [Highlightr](https://github.com/raspu/Highlightr)                  | 2.3.0+     | Native syntax highlighting in `Helpers/NotesTextProcessor.swift` |
+| [ZipArchive](https://github.com/ZipArchive/ZipArchive)             | 2.6.0+     | Note attachment + version archive zip/unzip            |
+| [swift-cmark-gfm](https://github.com/stackotter/swift-cmark-gfm)   | 1.0.2+     | GitHub Flavored Markdown parsing (preview + export)    |
+| [KeyboardShortcuts](https://github.com/sindresorhus/KeyboardShortcuts) | 2.4.0+ | Global keyboard shortcut registration (window activation) |
+| [Prettier](https://github.com/simonbs/Prettier.git)                | 0.2.1+     | Markdown auto-format on save                           |
 
-| Package                                                       | Version | Purpose                                |
-| ------------------------------------------------------------- | ------- | -------------------------------------- |
-| [Sparkle](https://github.com/sparkle-project/Sparkle)         | 2.7.1+  | Auto-update framework for macOS apps   |
-| [AppCenter](https://github.com/microsoft/appcenter-sdk-apple) | 5.0.6+  | App analytics and crash reporting      |
-| [Alamofire](https://github.com/Alamofire/Alamofire)           | 5.10.2+ | HTTP networking library                |
-| [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON)        | 5.0.2+  | JSON parsing library                   |
-| [Highlightr](https://github.com/raspu/Highlightr)             | 2.3.0+  | Syntax highlighting for code blocks    |
-| [ZipArchive](https://github.com/ZipArchive/ZipArchive)        | 2.6.0+  | ZIP file compression and decompression |
-| [swift-cmark-gfm](https://github.com/stackotter/swift-cmark-gfm) | 1.0.2+  | GitHub Flavored Markdown parsing      |
-| [MASShortcut](https://github.com/shpakovski/MASShortcut)      | master  | Global keyboard shortcuts for macOS    |
+## Conditional Compilation
 
-### Migration Notes
+- `#if !APPSTORE` gates Sparkle imports; the Mac App Store target ships without
+  the auto-update path and relies on Apple's update mechanism instead.
 
-#### From CocoaPods to Swift Package Manager (2025)
+## Bundled Frontend Assets
 
-The project was successfully migrated from CocoaPods to Swift Package Manager:
+MiaoYan renders previews inside a `WKWebView` that loads bundled HTML/CSS/JS
+from `Resources/DownView.bundle/`. These are vendored, not pulled by SPM, so
+they are documented in a separate manifest:
 
-- ✅ **Removed**: `Podfile`, `Podfile.lock`, and all CocoaPods configurations
-- ✅ **Migrated**: All dependencies to SPM equivalents
-- ✅ **Replaced**: `libcmark_gfm` with `swift-cmark-gfm` for better Swift integration
-- ✅ **Fixed**: Module naming conflicts and import issues
+- See `Resources/DownView.bundle/js/vendor/MANIFEST.json` for the exact
+  version, source URL, license and SHA-256 of each vendored `.min.js`.
+- Update flow: replace the file, regenerate the manifest hash via
+  `shasum -a 256 path/to/file.min.js`, bump the manifest entry, and commit.
 
-#### Key Changes
+## Platform Requirements
 
-1. **Markdown Parser**: Replaced `libcmark_gfm` with `swift-cmark-gfm`
+- macOS host target: 11.5+ (Big Sur)
+- iOS Mobile target: 18.0+
+- Swift toolchain: 6.0
+- Xcode: 16.0+ (matches the build setting in `MiaoYan.xcodeproj`)
 
-   ```swift
-   // Old (libcmark_gfm)
-   import libcmark_gfm
+## Working with Dependencies
 
-   // New (swift-cmark-gfm)
-   import CMarkGFM
-   
-   // Usage remains similar with C API wrapper
-   let html = renderMarkdownHTML(markdown: markdownContent)
-   ```
+Add a new SPM dependency via Xcode (File > Add Package Dependencies...) and
+**also** add a line to `Package.swift` in the same commit. CI fails if the
+two diverge.
 
-2. **ZIP Archive**: Updated import statement
-
-   ```swift
-   // Old
-   import SSZipArchive
-
-   // New
-   import ZipArchive
-   ```
-
-3. **AppCenter**: Removed `AppCenterDistribute`, kept `AppCenterAnalytics` and `AppCenterCrashes`
-
-## Building the Project
-
-### Using Xcode (Recommended)
+Updating versions:
 
 ```bash
-open MiaoYan.xcodeproj
-# Build using Xcode (⌘+B)
-```
+# Resolve latest within the declared constraints
+xcodebuild -project MiaoYan.xcodeproj -scheme MiaoYan -resolvePackageDependencies
 
-### Using Package.swift (Documentation Only)
-
-The `Package.swift` file is primarily for documentation and dependency tracking. To work with dependencies:
-
-```bash
-# Show dependency tree
+# Show the resolved dependency tree
 swift package show-dependencies
-
-# Resolve dependencies (for reference)
-swift package resolve
 ```
 
-**Note**: The actual app build uses the Xcode project, not the Package.swift file.
+Remove a dependency by deleting it from both `Package.swift` and the Xcode
+project's package references, then delete `Package.resolved` and re-resolve.
 
-## Dependency Management
+## History
 
-### Adding New Dependencies
-
-1. **In Xcode**: File → Add Package Dependencies...
-2. **Update Package.swift**: Add the new dependency to the dependencies array for documentation
-
-### Updating Dependencies
-
-1. **In Xcode**: File → Packages → Update to Latest Package Versions
-2. **Update Package.swift**: Update version numbers to match
-
-### Platform Requirements
-
-- **macOS**: 11.5+ (Big Sur)
-- **Swift**: 5.9+
-- **Xcode**: 12.0+
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Module not found**: Clean build folder (`⌘+Shift+K`) and rebuild
-2. **Package resolution errors**: Delete `Package.resolved` and resolve again
-3. **Duplicate dependencies**: Check for conflicting SPM/CocoaPods remnants
-
-### Support
-
-For dependency-related issues, please check:
-
-1. [MiaoYan Issues](https://github.com/tw93/MiaoYan/issues)
-2. Individual package documentation
-3. Swift Package Manager documentation
+- 2025: Migrated off CocoaPods. `Podfile` and `Podfile.lock` removed.
+  `libcmark_gfm` replaced with `swift-cmark-gfm`. `SSZipArchive` import
+  renamed to `ZipArchive`. AppCenter, Alamofire, SwiftyJSON, and MASShortcut
+  were removed in this transition; if you find references to them in older
+  documentation or commit messages, that is why.
