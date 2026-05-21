@@ -43,8 +43,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         return nil
     }
     var appTitle: String {
-        let name = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
-        return name ?? Bundle.main.object(forInfoDictionaryKey: kCFBundleNameKey as String) as! String
+        if let display = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String {
+            return display
+        }
+        return Bundle.main.object(forInfoDictionaryKey: kCFBundleNameKey as String) as? String ?? "MiaoYan"
     }
 
     func applicationWillFinishLaunching(_ notification: Notification) {
@@ -174,6 +176,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         #if DEBUG
             print("Error in \(context): \(error)")
         #endif
+        // TODO: After `Helpers/Diagnostics.swift` is added to the MiaoYan target
+        // in Xcode (File > Add Files to "MiaoYan"...), uncomment the next line.
+        // Diagnostics.record(error: error, context: context)
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
