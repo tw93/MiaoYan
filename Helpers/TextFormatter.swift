@@ -460,7 +460,13 @@ public class TextFormatter {
     func toggleItalicFont(font: Font) -> Font { font.isItalic ? font.unItalic() : font.italic() }
 
     func getTypingAttributes() -> Font {
-        textView.typingAttributes[.font] as! Font
+        // textView is configured with a non-optional font typing attribute at
+        // setup; the as? Font path here is a soft fallback to the default
+        // editor font rather than a crash if a future refactor breaks that.
+        if let font = textView.typingAttributes[.font] as? Font {
+            return font
+        }
+        return Font.systemFont(ofSize: CGFloat(UserDefaultsManagement.fontSize))
     }
 
     private func getDefaultColor() -> NSColor { Theme.textColor }

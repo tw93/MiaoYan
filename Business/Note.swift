@@ -444,7 +444,16 @@ public class Note: NSObject {
         }
     }
 
-    private static let metaTitleRegex = try! NSRegularExpression(pattern: "title: (.*?)", options: [])
+    // Compile-time literal; if a future edit breaks the pattern, the
+    // precondition fails at first use instead of crashing later from a
+    // less actionable site.
+    private static let metaTitleRegex: NSRegularExpression = {
+        let pattern = "title: (.*?)"
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
+            preconditionFailure("Note.metaTitleRegex literal is invalid: \(pattern)")
+        }
+        return regex
+    }()
 
     func cleanMetaData(content: String) -> String {
         guard content.hasPrefix("---\n") else { return content }
@@ -811,10 +820,13 @@ public class Note: NSObject {
         return standardized
     }
 
-    private static let attachmentPathRegex = try! NSRegularExpression(
-        pattern: #"(?:(?:\.\./|\./|/)*)(?:i|files)/[^)\s'"]+"#,
-        options: []
-    )
+    private static let attachmentPathRegex: NSRegularExpression = {
+        let pattern = #"(?:(?:\.\./|\./|/)*)(?:i|files)/[^)\s'"]+"#
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
+            preconditionFailure("Note.attachmentPathRegex literal is invalid: \(pattern)")
+        }
+        return regex
+    }()
 
     public func duplicate() {
         guard let duplicateName = getDupeName() else { return }

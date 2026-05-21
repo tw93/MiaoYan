@@ -148,11 +148,7 @@ public enum UserDefaultsManagement {
     }
     static var lastProject: Int {
         get {
-            if let lastProject = UserDefaults.standard.object(forKey: Constants.LastProject) {
-                return lastProject as! Int
-            } else {
-                return 0
-            }
+            UserDefaults.standard.object(forKey: Constants.LastProject) as? Int ?? 0
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.LastProject)
@@ -467,11 +463,7 @@ public enum UserDefaultsManagement {
     }
     static var fontSize: Int {
         get {
-            if let returnFontSize = UserDefaults.standard.object(forKey: Constants.FontSizeKey) {
-                return returnFontSize as! Int
-            } else {
-                return DefaultFontSize
-            }
+            UserDefaults.standard.object(forKey: Constants.FontSizeKey) as? Int ?? DefaultFontSize
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.FontSizeKey)
@@ -868,11 +860,12 @@ public enum UserDefaultsManagement {
 
     static var sort: SortBy {
         get {
-            if let result = UserDefaults.standard.object(forKey: "sortBy"), let sortBy = SortBy(rawValue: result as! String) {
-                return sortBy
-            } else {
+            guard let raw = UserDefaults.standard.object(forKey: "sortBy") as? String,
+                let sortBy = SortBy(rawValue: raw)
+            else {
                 return .creationDate
             }
+            return sortBy
         }
         set {
             UserDefaults.standard.set(newValue.rawValue, forKey: "sortBy")
@@ -899,10 +892,7 @@ public enum UserDefaultsManagement {
     static var restoreCursorPosition = true
     static var imagesWidth: Float {
         get {
-            if let result = UserDefaults.standard.object(forKey: Constants.ImagesWidthKey) {
-                return result as! Float
-            }
-            return 300
+            UserDefaults.standard.object(forKey: Constants.ImagesWidthKey) as? Float ?? 300
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.ImagesWidthKey)

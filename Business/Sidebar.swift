@@ -49,7 +49,11 @@ class Sidebar {
     public func getList() -> [Any] { list }
 
     public func getProjects() -> [SidebarItem] {
-        list.filter { ($0 as? SidebarItem)?.type == .Category && ($0 as? SidebarItem)?.project != nil && ($0 as? SidebarItem)!.project!.showInSidebar } as! [SidebarItem]
+        list.compactMap { $0 as? SidebarItem }
+            .filter { item in
+                guard item.type == .Category, let project = item.project else { return false }
+                return project.showInSidebar
+            }
     }
 
     private func getLocalizedAppName() -> String {
