@@ -46,9 +46,15 @@ FILES_TO_WIRE.each do |rel_path, group_name|
     next
   end
 
-  # Locate the group by its top-level name inside main_group.
-  group = project.main_group.find_subpath(group_name, false)
-  abort "group not found: #{group_name}" unless group
+  # Locate the group: source files live under main_group -> MiaoYan -> <group_name>.
+  parent = project.main_group.children.find { |c|
+    c.is_a?(Xcodeproj::Project::Object::PBXGroup) && c.display_name == 'MiaoYan'
+  }
+  abort "MiaoYan source group not found in main_group" unless parent
+  group = parent.children.find { |c|
+    c.is_a?(Xcodeproj::Project::Object::PBXGroup) && c.display_name == group_name
+  }
+  abort "group not found under MiaoYan: #{group_name}" unless group
 
   # Reuse an existing file reference if one already lives in the group,
   # otherwise create a new one.
