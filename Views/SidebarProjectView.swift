@@ -904,7 +904,7 @@ class SidebarProjectView: NSOutlineView,
             ) { [weak vc, weak v] confirmed in
                 guard let vc = vc, let v = v else { return }
                 if confirmed {
-                    guard let resultingItemUrl = Storage.sharedInstance().trashItem(url: project.url) else {
+                    guard let resultingItemUrl = self.storage.trashItem(url: project.url) else {
                         return
                     }
 
@@ -929,7 +929,7 @@ class SidebarProjectView: NSOutlineView,
     }
 
     @IBAction func addProject(_ sender: Any) {
-        let project = Storage.sharedInstance().getMainProject()
+        let project = storage.getMainProject()
         showAddFolderAlert(parentProject: project)
     }
 
@@ -1068,7 +1068,7 @@ class SidebarProjectView: NSOutlineView,
             return projects
         }
 
-        if let root = Storage.sharedInstance().getRootProject() {
+        if let root = storage.getRootProject() {
             return [root]
         }
         return nil
@@ -1256,8 +1256,8 @@ class SidebarProjectView: NSOutlineView,
                     let subProject = Project(url: fileURL, parent: project)
 
                     // Only add if not already in storage
-                    if !Storage.sharedInstance().projectExist(url: fileURL) {
-                        _ = Storage.sharedInstance().add(project: subProject)
+                    if !storage.projectExist(url: fileURL) {
+                        _ = storage.add(project: subProject)
                     }
 
                     let icon = NSImage(imageLiteralResourceName: "project")
