@@ -50,14 +50,19 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             build
 
-      # Uncomment after the MiaoYanTests target is wired in project.pbxproj (Phase 1, step 4).
-      # - name: Run unit tests
-      #   run: |
-      #     xcodebuild test \
-      #       -project MiaoYan.xcodeproj \
-      #       -scheme MiaoYan \
-      #       -destination 'platform=macOS' \
-      #       CODE_SIGNING_ALLOWED=NO
+      - name: Run unit tests
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project MiaoYan.xcodeproj \
+            -scheme MiaoYan \
+            -destination 'platform=macOS' \
+            CODE_SIGNING_ALLOWED=NO | xcbeautify --renderer github-actions || \
+          xcodebuild test \
+            -project MiaoYan.xcodeproj \
+            -scheme MiaoYan \
+            -destination 'platform=macOS' \
+            CODE_SIGNING_ALLOWED=NO
 
   build-ios:
     name: iOS build
