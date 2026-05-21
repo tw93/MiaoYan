@@ -176,9 +176,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         #if DEBUG
             print("Error in \(context): \(error)")
         #endif
-        // TODO: After `Helpers/Diagnostics.swift` is added to the MiaoYan target
-        // in Xcode (File > Add Files to "MiaoYan"...), uncomment the next line.
-        // Diagnostics.record(error: error, context: context)
+        Diagnostics.record(error: error, context: context)
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
