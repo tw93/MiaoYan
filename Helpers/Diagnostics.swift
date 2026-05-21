@@ -1,4 +1,3 @@
-import AppKit
 import Foundation
 import os.log
 
@@ -16,29 +15,19 @@ enum Diagnostics {
     private static let subsystem = AppIdentifier.bundleID
     private static let log = OSLog(subsystem: subsystem, category: "diagnostics")
 
-    /// Sandbox-aware log directory. Returns nil when neither the user's home
-    /// directory nor the container Library is writable; callers degrade to
-    /// os_log only.
-    private static var logDirectory: URL? {
+    /// Sandbox-aware log path under the user's Library/Logs (mapped into the
+    /// container for sandboxed builds). Returns nil only if the directory
+    /// cannot be created at all, in which case callers degrade to os_log.
+    private static var logFileURL: URL? {
         let fm = FileManager.default
-        let candidates: [URL] = [
-            fm.urls(for: .libraryDirectory, in: .userDomainMask).first?.appendingPathComponent("Logs/MiaoYan"),
-            fm.homeDirectoryForCurrentUser.appendingPathComponent("Library/Logs/MiaoYan"),
-        ].compactMap { $0 }
-
-        for url in candidates {
-            do {
-                try fm.createDirectory(at: url, withIntermediateDirectories: true)
-                return url
-            } catch {
-                continue
-            }
+        guard let library = fm.urls(for: .libraryDirectory, in: .userDomainMask).first else {
+            return nil
         }
-        return nil
-    }
-
-    static var logFileURL: URL? {
-        logDirectory?.appendingPathComponent("diagnostics.log")
+        let dir = library.appendingPathComponent("Logs/MiaoYan")
+        guard (try? fm.createDirectory(at: dir, withIntermediateDirectories: true)) != nil else {
+            return nil
+        }
+        return dir.appendingPathComponent("diagnostics.log")
     }
 
     /// Cap the ring buffer at 50 lines. Picked to fit a typical pasteable
@@ -105,30 +94,4 @@ enum Diagnostics {
         }
     }
 
-    /// Read the current ring buffer for the "Export Diagnostics" UI action.
-    /// Returns an empty string when the log does not exist yet, so the caller
-    /// can present a clean "no events recorded" state instead of an error.
-    static func exportContents() -> String {
-        guard let logFileURL,
-            let contents = try? String(contentsOf: logFileURL, encoding: .utf8)
-        else {
-            return ""
-        }
-        return contents
-    }
-
-    /// Reveal the diagnostics log in Finder, or the parent directory when the
-    /// log has not been created yet. Called by the (future) Help menu item.
-    @discardableResult
-    static func revealInFinder() -> Bool {
-        guard let logFileURL else { return false }
-        if FileManager.default.fileExists(atPath: logFileURL.path) {
-            NSWorkspace.shared.activateFileViewerSelecting([logFileURL])
-        } else if let dir = logDirectory {
-            NSWorkspace.shared.open(dir)
-        } else {
-            return false
-        }
-        return true
-    }
 }
