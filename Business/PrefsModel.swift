@@ -67,11 +67,6 @@ struct GeneralSettings: SettingsConfigurable {
         set { UserDefaultsManagement.buttonShow = newValue }
     }
 
-    var hideDockWhenHiddenByShortcut: Bool {
-        get { UserDefaultsManagement.hideDockWhenHiddenByShortcut }
-        set { UserDefaultsManagement.hideDockWhenHiddenByShortcut = newValue }
-    }
-
     var defaultPicUpload: String {
         get { UserDefaultsManagement.defaultPicUpload }
         set { UserDefaultsManagement.defaultPicUpload = newValue }

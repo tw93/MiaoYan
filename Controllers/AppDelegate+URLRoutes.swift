@@ -52,12 +52,9 @@ extension AppDelegate {
         let fileURL = urls[0]
         UserDefaultsManagement.beginSingleMode(for: fileURL)
 
-        if let mwc = mainWindowController {
-            let shouldRevealWindow =
-                mwc.window?.isVisible != true || NSApp.isHidden || NSApp.activationPolicy() != .regular
-            if shouldRevealWindow {
-                mwc.makeNew()
-            }
+        if let mwc = mainWindowController,
+           mwc.window?.isVisible != true {
+            mwc.makeNew()
         }
 
         // Pre-enumerate sibling files while sandbox implicit access is active.
