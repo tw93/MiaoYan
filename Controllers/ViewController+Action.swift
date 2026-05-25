@@ -1302,10 +1302,18 @@ extension ViewController {
             !mainWindow.isMiniaturized
         {
             NSApplication.shared.hide(nil)
+            if UserDefaultsManagement.hideDockWhenHiddenByShortcut {
+                NSApp.setActivationPolicy(.accessory)
+            }
             return
         }
 
+        NSApp.setActivationPolicy(.regular)
+        NSApplication.shared.unhide(nil)
         NSApp.activate(ignoringOtherApps: true)
+        if mainWindow.isMiniaturized {
+            mainWindow.deminiaturize(self)
+        }
         mainWindow.makeKeyAndOrderFront(self)
     }
 

@@ -11,6 +11,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
     private var storageChangeButton: NSButton!
     private var buttonShowSegmented: PrefsSegmentedControl!
     private var alwaysOnTopCheckbox: NSButton!
+    private var hideDockShortcutCheckbox: NSButton!
     private var activateShortcutRecorder: ThemeAwareShortcutRecorderView!
 
     // Editor settings controls
@@ -77,6 +78,8 @@ final class GeneralPrefsViewController: BasePrefsViewController {
 
         alwaysOnTopCheckbox = NSButton(checkboxWithTitle: "", target: self, action: #selector(alwaysOnTopChanged(_:)))
         alwaysOnTopCheckbox.translatesAutoresizingMaskIntoConstraints = false
+        hideDockShortcutCheckbox = NSButton(checkboxWithTitle: "", target: self, action: #selector(hideDockShortcutChanged(_:)))
+        hideDockShortcutCheckbox.translatesAutoresizingMaskIntoConstraints = false
 
         activateShortcutRecorder = ThemeAwareShortcutRecorderView(for: .activateWindow)
         activateShortcutRecorder.translatesAutoresizingMaskIntoConstraints = false
@@ -85,6 +88,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         let buttonRow = makePreferencesRow(labelText: I18n.str("Button Display:"), control: buttonShowSegmented)
         let alwaysRow = makePreferencesRow(labelText: I18n.str("Always On Top:"), control: alwaysOnTopCheckbox, controlWidth: nil)
         let shortcutRow = makePreferencesRow(labelText: I18n.str("Activate Shortcut:"), control: activateShortcutRecorder)
+        let hideDockRow = makePreferencesRow(labelText: I18n.str("Hide Dock Icon:"), control: hideDockShortcutCheckbox, controlWidth: nil)
 
         editorModeSegmented = makeSegmentedControl(
             labels: [localizedEditorMode(false), localizedEditorMode(true)],
@@ -102,6 +106,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
             buttonRow,
             alwaysRow,
             shortcutRow,
+            hideDockRow,
         ].forEach { stackView.addArrangedSubview($0) }
         stackView.setCustomSpacing(PrefsFormMetrics.groupSpacing, after: storageSeparator)
     }
@@ -132,6 +137,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
 
         buttonShowSegmented.selectedSegment = rawButtonShow(from: localizedButtonShow(settings.buttonShow)) == "Hover" ? 1 : 0
         alwaysOnTopCheckbox.state = UserDefaultsManagement.alwaysOnTop ? .on : .off
+        hideDockShortcutCheckbox.state = settings.hideDockWhenHiddenByShortcut ? .on : .off
 
         // Editor settings values
         editorModeSegmented.selectedSegment = UserDefaultsManagement.splitViewMode ? 1 : 0
@@ -247,6 +253,10 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         let enabled = sender.state == .on
         UserDefaultsManagement.alwaysOnTop = enabled
         NotificationCenter.default.post(name: .alwaysOnTopChanged, object: nil)
+    }
+
+    @objc private func hideDockShortcutChanged(_ sender: NSButton) {
+        settings.hideDockWhenHiddenByShortcut = sender.state == .on
     }
 
     // MARK: - Localization helpers for raw/display mapping

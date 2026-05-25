@@ -108,6 +108,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
     }
 
     func makeNew() {
+        NSApp.setActivationPolicy(.regular)
         applyMiaoYanAppearance()
 
         // Check if window needs to be shown (and wasn't just minimized)

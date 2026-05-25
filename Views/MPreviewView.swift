@@ -270,10 +270,10 @@ class MPreviewView: WKWebView, WKUIDelegate {
                     }
 
                     function scrollToLine(line) {
-                        if (anchors.length === 0) { return; }
+                        if (anchors.length === 0) { return false; }
                         var first = anchors[0], last = anchors[anchors.length - 1];
-                        if (line <= first.line) { window.scrollTo(0, first.top); return; }
-                        if (line >= last.line) { window.scrollTo(0, last.top); return; }
+                        if (line <= first.line) { window.scrollTo(0, first.top); return true; }
+                        if (line >= last.line) { window.scrollTo(0, last.top); return true; }
                         var lo = 0, hi = anchors.length - 1;
                         while (lo + 1 < hi) {
                             var mid = (lo + hi) >> 1;
@@ -282,6 +282,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
                         var a = anchors[lo], b = anchors[hi];
                         var frac = (b.line === a.line) ? 0 : (line - a.line) / (b.line - a.line);
                         window.scrollTo(0, a.top + (b.top - a.top) * frac);
+                        return true;
                     }
 
                     function scheduleRebuild() {
@@ -724,8 +725,21 @@ class MPreviewView: WKWebView, WKUIDelegate {
         }
     }
 
-    public func scrollToLine(_ line: CGFloat) {
-        let script = "window.__miaoyanSync && window.__miaoyanSync.scrollToLine(\(line));"
+    public func scrollToLine(_ line: CGFloat, fallbackRatio: CGFloat? = nil) {
+        let clampedFallback = fallbackRatio.map { Double(max(min($0, 1), 0)) }
+        let fallback = clampedFallback.map { String($0) } ?? "null"
+        let script = """
+                (function() {
+                    const fallbackRatio = \(fallback);
+                    const canUseLineSync = window.__miaoyanSync && typeof window.__miaoyanSync.scrollToLine === 'function';
+                    const didScroll = canUseLineSync ? window.__miaoyanSync.scrollToLine(\(line)) : false;
+                    if (!didScroll && fallbackRatio !== null) {
+                        const doc = document.scrollingElement || document.documentElement || document.body;
+                        const maxScroll = Math.max(0, (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
+                        window.scrollTo(0, maxScroll * fallbackRatio);
+                    }
+                })();
+            """
         evaluateJavaScript(script) { _, error in
             #if DEBUG
                 if let error = error { print("[ScrollSync] scrollToLine error: \(error.localizedDescription)") }

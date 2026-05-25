@@ -101,9 +101,12 @@ extension ViewController {
         }
         lastEnablePreviewTime = now
 
+        let editorScrollRatio = getScrollTop()
+        let editorVisibleLine = editorTopLine()
+
         if !sessionPreviewMode {
             savedEditorSelection = editArea.selectedRange()
-            savedEditorScrollRatio = getScrollTop()
+            savedEditorScrollRatio = editorScrollRatio
             savedEditorNoteURL = EditTextView.note?.url
         }
 
@@ -174,9 +177,8 @@ extension ViewController {
             self.editArea.window?.makeFirstResponder(self.editArea.markdownView)
         }
         if UserDefaultsManagement.previewLocation == "Editing", !sessionIsExporting {
-            let scrollPre = getScrollTop()
             editArea.markdownView?.runWhenPreviewReady { [weak self] in
-                self?.editArea.markdownView?.scrollToPosition(pre: scrollPre)
+                self?.editArea.markdownView?.scrollToLine(editorVisibleLine, fallbackRatio: editorScrollRatio)
             }
         }
     }

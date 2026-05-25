@@ -105,6 +105,7 @@ public enum UserDefaultsManagement {
         static let ButtonShow = "buttonShow"
         static let NotesTableScrollPosition = "notesTableScrollPosition"
         static let AlwaysOnTop = "alwaysOnTop"
+        static let hideDockWhenHiddenByShortcut = "hideDockWhenHiddenByShortcut"
         static let HasShownImagePreviewTip = "hasShownImagePreviewTip"
         static let SplitViewMode = "splitViewMode"
         static let EditorContentSplitPosition = "editorContentSplitPosition"
@@ -212,6 +213,18 @@ public enum UserDefaultsManagement {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.AlwaysOnTop)
+        }
+    }
+
+    static var hideDockWhenHiddenByShortcut: Bool {
+        get {
+            if let result = UserDefaults.standard.object(forKey: Constants.hideDockWhenHiddenByShortcut) as? Bool {
+                return result
+            }
+            return false
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.hideDockWhenHiddenByShortcut)
         }
     }
 
@@ -485,7 +498,7 @@ public enum UserDefaultsManagement {
             if let result = UserDefaults.standard.object(forKey: Constants.PreviewLocation) as? String {
                 return result
             }
-            return "Begin"
+            return "Editing"
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.PreviewLocation)
