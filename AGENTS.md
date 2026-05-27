@@ -109,7 +109,8 @@ string is the only breadcrumb the maintainer has when triaging.
 - **付费用户视角**: 默认按 App Store 付费版的精致度做。每次视觉 / 交互改动思考"对得起付费用户吗"。能精致一分就精致一分。
 - **Markdown 预览里图片 / 视频 / iframe / 表格必须 `max-width: 100%`**, 禁止横向滚动。任何引入 raw HTML 渲染的改动都要复查这一条。
 - **设计参考**: UI / CSS 抄不出来时去看 `~/www/weekly` 和 `~/www/tw93.github.io`, 那里有维护者已经满意的样式。不要凭空发挥。
-- **目标视觉风格**: macOS 26 风格的 sidebar (玻璃态、透明、SF Symbols 最新一代)。不是经典 Big Sur 风格。
+- **目标视觉风格**: macOS 26 风格的 sidebar (玻璃态、透明、SF Symbols 最新一代) 是长期方向, 不是经典 Big Sur 风格。
+- **不要再提议整套 macOS 26 / Liquid Glass 重设计**。一次实机改造 (侧栏换原生 `.sidebar` 半透明材质 + 选中态改强调色玻璃 pill + 图标整体迁 SF Symbols + 自绘 pill `ChromeToolbarButton`) 已被维护者否决, 原话"还不如之前好看, 不强求这个"。要打磨侧栏 / 按钮就在现有不透明设计上做小步增量: 间距、对齐、hover、focus、字重。不要整体换材质或换图标体系, 除非维护者在当前回合明确要求。
 - **`cmd+3` 是专注模式核心快捷键**, 不要冲突。新增任何 cmd-数字快捷键前先 grep 现有 keyBindings。打字机滚动 / 链接相关另开模式或子开关即可。
 
 ## Working Rules
