@@ -378,20 +378,30 @@ class ClipboardManager {
     private func replacePlaceholderWithURL(placeholder: String, cloudURL: String, textView: EditTextView, note: Note) {
         guard let storage = textView.textStorage else { return }
 
-        let content = storage.string
+        let replacement = "![](\(cloudURL))"
         let placeholderPattern = NSRegularExpression.escapedPattern(for: placeholder)
 
-        do {
-            let regex = try NSRegularExpression(pattern: placeholderPattern, options: [])
-            let range = NSRange(location: 0, length: content.count)
-            let replacement = "![](\(cloudURL))"
+        guard let regex = try? NSRegularExpression(pattern: placeholderPattern) else { return }
 
-            if let match = regex.firstMatch(in: content, options: [], range: range) {
-                storage.replaceCharacters(in: match.range, with: replacement)
-                textView.saveTextStorageContent(to: note)
-                note.save()
+        // Primary path: placeholder is still raw text in textStorage.
+        let storageContent = storage.string
+        if let match = regex.firstMatch(in: storageContent, range: NSRange(location: 0, length: storageContent.count)) {
+            storage.replaceCharacters(in: match.range, with: replacement)
+            textView.saveTextStorageContent(to: note)
+            note.save()
+            return
+        }
+
+        // Fallback: refillEditArea converted ![](uploading...) to an NSTextAttachment so
+        // storage.string no longer contains the literal text. Search note.content (the raw
+        // string synced from disk) instead, update it directly, then reload the editor.
+        let rawContent = note.content.string
+        if let match = regex.firstMatch(in: rawContent, range: NSRange(location: 0, length: rawContent.count)) {
+            note.content.replaceCharacters(in: match.range, with: replacement)
+            note.save()
+            if let vc = textView.window?.contentViewController as? ViewController {
+                vc.refillEditArea(suppressSave: true)
             }
-        } catch {
         }
     }
 }
