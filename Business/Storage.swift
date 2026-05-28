@@ -733,7 +733,9 @@ class Storage {
     }
 
     func checkFirstRun() -> Bool {
-        guard noteList.isEmpty, let resourceURL = Bundle.main.resourceURL else {
+        guard noteList.isEmpty,
+              !UserDefaultsManagement.hasCreatedInitContent,
+              let resourceURL = Bundle.main.resourceURL else {
             return false
         }
 
@@ -799,6 +801,7 @@ class Storage {
             return false
         }
 
+        UserDefaultsManagement.hasCreatedInitContent = true
         return true
     }
 
