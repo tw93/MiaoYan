@@ -279,6 +279,7 @@
 "You have unsaved changes. Reload will discard them." = "未保存の変更があります。再読み込みすると破棄されます。";
 "Reload" = "再読み込み";
 "Note reloaded~" = "ノートを再読み込みしました~";
+"Font size: %d" = "文字サイズ：%d";
 
 /* Version History */
 "Version History" = "バージョン履歴";

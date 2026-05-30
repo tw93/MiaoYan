@@ -191,6 +191,15 @@
 /* Class = "NSMenuItem"; title = "Toggle TOC"; ObjectID = "Tgl-TOC-Menu"; */
 "Tgl-TOC-Menu.title" = "Alternar Índice";
 
+/* Class = "NSMenuItem"; title = "Zoom In"; ObjectID = "Zoom-In-Menu"; */
+"Zoom-In-Menu.title" = "Aumentar Tamaño";
+
+/* Class = "NSMenuItem"; title = "Zoom Out"; ObjectID = "Zoom-Out-Menu"; */
+"Zoom-Out-Menu.title" = "Reducir Tamaño";
+
+/* Class = "NSMenuItem"; title = "Actual Size"; ObjectID = "Zoom-Reset-Menu"; */
+"Zoom-Reset-Menu.title" = "Tamaño Real";
+
 /* Class = "NSMenuItem"; title = "Always On Top"; ObjectID = "Always-On-Top-Menu"; */
 "Always-On-Top-Menu.title" = "Siempre Visible";
 

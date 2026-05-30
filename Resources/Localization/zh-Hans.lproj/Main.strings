@@ -586,6 +586,15 @@
 /* Class = "NSMenuItem"; title = "Toggle TOC"; ObjectID = "Tgl-TOC-Menu"; */
 "Tgl-TOC-Menu.title" = "切换目录";
 
+/* Class = "NSMenuItem"; title = "Zoom In"; ObjectID = "Zoom-In-Menu"; */
+"Zoom-In-Menu.title" = "放大字体";
+
+/* Class = "NSMenuItem"; title = "Zoom Out"; ObjectID = "Zoom-Out-Menu"; */
+"Zoom-Out-Menu.title" = "缩小字体";
+
+/* Class = "NSMenuItem"; title = "Actual Size"; ObjectID = "Zoom-Reset-Menu"; */
+"Zoom-Reset-Menu.title" = "实际大小";
+
 /* Class = "NSMenuItem"; title = "Always On Top"; ObjectID = "Always-On-Top-Menu"; */
 "Always-On-Top-Menu.title" = "窗口置顶";
 

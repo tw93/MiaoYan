@@ -1416,6 +1416,19 @@ extension ViewController {
             return false
         }
 
+        // ⌘= zoom-in alias (no Shift). The View-menu item carries "+" so ⌘+
+        // (⌘⇧=) routes through the menu; this branch adds the bare ⌘= without
+        // double-firing, since no menu item binds the "=" key.
+        if event.modifierFlags.contains(.command),
+            !event.modifierFlags.contains(.shift),
+            !event.modifierFlags.contains(.option),
+            !event.modifierFlags.contains(.control),
+            event.keyCode == kVK_ANSI_Equal
+        {
+            zoomInFontSize(self)
+            return false
+        }
+
         if event.keyCode == kVK_ANSI_W, event.modifierFlags.contains(.command), event.modifierFlags.contains(.shift) {
             if UserDefaultsManagement.isSingleMode {
                 UserDefaultsManagement.clearSingleMode()

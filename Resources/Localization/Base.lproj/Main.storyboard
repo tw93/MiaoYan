@@ -256,6 +256,22 @@ CA
                                                 <action selector="toggleTOC:" target="N0L-g4-qwj" id="Act-Tgl-TOC"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="Sep-Before-Zoom"/>
+                                        <menuItem title="Zoom In" keyEquivalent="+" identifier="viewMenu.zoomIn" id="Zoom-In-Menu">
+                                            <connections>
+                                                <action selector="zoomInFontSize:" target="Ady-hI-5gd" id="Act-Zoom-In"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Zoom Out" keyEquivalent="-" identifier="viewMenu.zoomOut" id="Zoom-Out-Menu">
+                                            <connections>
+                                                <action selector="zoomOutFontSize:" target="Ady-hI-5gd" id="Act-Zoom-Out"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Actual Size" keyEquivalent="0" identifier="viewMenu.actualSize" id="Zoom-Reset-Menu">
+                                            <connections>
+                                                <action selector="resetFontSize:" target="Ady-hI-5gd" id="Act-Zoom-Reset"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="Sep-Before-OnTop"/>
                                         <menuItem title="Always On Top" keyEquivalent="t" identifier="viewMenu.alwaysOnTop" id="Always-On-Top-Menu">
                                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>

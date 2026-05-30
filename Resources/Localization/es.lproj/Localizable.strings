@@ -277,6 +277,7 @@
 "You have unsaved changes. Reload will discard them." = "Tienes cambios sin guardar. Recargar los descartará.";
 "Reload" = "Recargar";
 "Note reloaded~" = "Nota recargada~";
+"Font size: %d" = "Tamaño de fuente: %d";
 
 /* Version History */
 "Version History" = "Historial de versiones";

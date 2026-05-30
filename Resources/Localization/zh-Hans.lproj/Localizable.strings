@@ -279,6 +279,7 @@
 "You have unsaved changes. Reload will discard them." = "你有未保存的更改，重新加载将丢弃它们。";
 "Reload" = "重新加载";
 "Note reloaded~" = "笔记已刷新~";
+"Font size: %d" = "字体大小：%d";
 
 /* Version History */
 "Version History" = "版本历史";
