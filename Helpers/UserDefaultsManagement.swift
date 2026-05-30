@@ -239,6 +239,11 @@ public enum UserDefaultsManagement {
         }
     }
 
+    static var hasCreatedInitContent: Bool {
+        get { UserDefaults.standard.bool(forKey: "hasCreatedInitContent") }
+        set { UserDefaults.standard.set(newValue, forKey: "hasCreatedInitContent") }
+    }
+
     static var hasFixedInitialization: Bool {
         get {
             return UserDefaults.standard.bool(forKey: "hasFixedInitialization")
