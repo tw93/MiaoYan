@@ -384,8 +384,11 @@ class ClipboardManager {
         guard let regex = try? NSRegularExpression(pattern: placeholderPattern) else { return }
 
         // Primary path: placeholder is still raw text in textStorage.
+        // NSRegularExpression works in UTF-16 space, so the search range must use
+        // the NSString length, not String.count, or a non-ASCII prefix (emoji,
+        // CJK surrogate pairs) would shrink the range and miss the placeholder.
         let storageContent = storage.string
-        if let match = regex.firstMatch(in: storageContent, range: NSRange(location: 0, length: storageContent.count)) {
+        if let match = regex.firstMatch(in: storageContent, range: NSRange(location: 0, length: (storageContent as NSString).length)) {
             storage.replaceCharacters(in: match.range, with: replacement)
             textView.saveTextStorageContent(to: note)
             note.save()
@@ -396,7 +399,7 @@ class ClipboardManager {
         // storage.string no longer contains the literal text. Search note.content (the raw
         // string synced from disk) instead, update it directly, then reload the editor.
         let rawContent = note.content.string
-        if let match = regex.firstMatch(in: rawContent, range: NSRange(location: 0, length: rawContent.count)) {
+        if let match = regex.firstMatch(in: rawContent, range: NSRange(location: 0, length: (rawContent as NSString).length)) {
             note.content.replaceCharacters(in: match.range, with: replacement)
             note.save()
             if let vc = textView.window?.contentViewController as? ViewController {
