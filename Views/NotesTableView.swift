@@ -61,7 +61,7 @@ class NotesTableView: NSTableView {
     override func tile() {
         super.tile()
         guard let clipView = superview as? NSClipView,
-              let column = tableColumns.first
+            let column = tableColumns.first
         else { return }
         let availableWidth = clipView.bounds.width - intercellSpacing.width
         if column.width != availableWidth && availableWidth > 0 {

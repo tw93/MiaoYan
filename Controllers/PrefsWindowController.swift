@@ -111,12 +111,13 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
 
     private func setupContent() {
         prefsContentViewController = NSViewController()
-        let contentView = PrefsContentBackgroundView(frame: NSRect(
-            x: 0,
-            y: 0,
-            width: Metrics.windowSize.width - Metrics.sidebarWidth,
-            height: Metrics.windowSize.height
-        ))
+        let contentView = PrefsContentBackgroundView(
+            frame: NSRect(
+                x: 0,
+                y: 0,
+                width: Metrics.windowSize.width - Metrics.sidebarWidth,
+                height: Metrics.windowSize.height
+            ))
         prefsContentViewController.view = contentView
 
         let contentItem = NSSplitViewItem(viewController: prefsContentViewController)

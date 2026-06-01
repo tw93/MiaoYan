@@ -739,7 +739,8 @@ class Storage {
         }
 
         guard !UserDefaultsManagement.hasCreatedInitContent,
-              let resourceURL = Bundle.main.resourceURL else {
+            let resourceURL = Bundle.main.resourceURL
+        else {
             return false
         }
 

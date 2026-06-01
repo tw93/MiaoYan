@@ -136,7 +136,8 @@ final class PdfExportPreviewController: NSViewController {
 
     private static func estimatePages(for note: Note) -> Int {
         let content = note.getPrettifiedContent()
-        let imageCount = content.components(separatedBy: "![").count - 1
+        let imageCount =
+            content.components(separatedBy: "![").count - 1
             + content.components(separatedBy: "<img").count - 1
         let tableWeight = content.contains("|") ? 0.35 : 0
         let estimated = (Double(content.count) / 1_850.0) + (Double(imageCount) * 0.45) + tableWeight

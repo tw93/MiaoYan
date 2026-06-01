@@ -50,10 +50,11 @@ final class CloudSyncManager: ObservableObject {
         guard iCloudAvailable else { return }
 
         let query = NSMetadataQuery()
-        query.predicate = NSPredicate(format: "%K LIKE '*.md' OR %K LIKE '*.markdown' OR %K LIKE '*.txt'",
-                                      NSMetadataItemFSNameKey,
-                                      NSMetadataItemFSNameKey,
-                                      NSMetadataItemFSNameKey)
+        query.predicate = NSPredicate(
+            format: "%K LIKE '*.md' OR %K LIKE '*.markdown' OR %K LIKE '*.txt'",
+            NSMetadataItemFSNameKey,
+            NSMetadataItemFSNameKey,
+            NSMetadataItemFSNameKey)
         query.searchScopes = [NSMetadataQueryUbiquitousDocumentsScope]
 
         NotificationCenter.default.addObserver(

@@ -24,5 +24,11 @@
   "spaceAroundOperators": true,
   "allmanBraces": false,
   "trailingCommas": "always",
-  "redundantParens": "remove"
+  "redundantParens": "remove",
+  "rules": {
+    "AlwaysUseLowerCamelCase": false,
+    "AvoidRetroactiveConformances": false,
+    "NoBlockComments": false,
+    "ReplaceForEachWithForLoop": false
+  }
 }

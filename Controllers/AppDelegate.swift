@@ -1,7 +1,7 @@
 import Cocoa
 import KeyboardShortcuts
 #if !APPSTORE
-import Sparkle
+    import Sparkle
 #endif
 import os.log
 
@@ -18,7 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
     public var newContent: String?
     let appContext = AppContext.shared
     #if !APPSTORE
-    private var updaterController: SPUStandardUpdaterController?
+        private var updaterController: SPUStandardUpdaterController?
     #endif
 
     private func resolveViewController() -> ViewController? {
@@ -85,10 +85,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         #if !APPSTORE
-        updaterController = SPUStandardUpdaterController(
-            startingUpdater: true,
-            updaterDelegate: nil,
-            userDriverDelegate: nil)
+            updaterController = SPUStandardUpdaterController(
+                startingUpdater: true,
+                updaterDelegate: nil,
+                userDriverDelegate: nil)
         #endif
 
         NSApp.mainMenu?.applyMenuIcons()
@@ -294,11 +294,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
     }
     @IBAction func checkForUpdates(_ sender: Any?) {
         #if APPSTORE
-        if let updatesUrl = URL(string: "macappstore://showUpdatesPage") {
-            NSWorkspace.shared.open(updatesUrl)
-        }
+            if let updatesUrl = URL(string: "macappstore://showUpdatesPage") {
+                NSWorkspace.shared.open(updatesUrl)
+            }
         #else
-        updaterController?.checkForUpdates(sender)
+            updaterController?.checkForUpdates(sender)
         #endif
     }
     @IBAction func openPreferences(_ sender: Any?) {

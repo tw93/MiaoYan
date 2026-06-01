@@ -222,9 +222,11 @@ class HtmlManager {
 
     // Paths
     private static let webkitPreviewURL: URL = {
-        let baseURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
+        let baseURL =
+            FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
             ?? URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
-        return baseURL
+        return
+            baseURL
             .appendingPathComponent(Bundle.main.bundleIdentifier ?? "MiaoYan", isDirectory: true)
             .appendingPathComponent("wkPreview", isDirectory: true)
     }()
@@ -686,7 +688,8 @@ class HtmlManager {
             let styleDst = cssDst.appendingPathComponent("markdown-preview.css", isDirectory: false)
             do {
                 try fileManager.createDirectory(at: cssDst, withIntermediateDirectories: true, attributes: nil)
-                let needsRefresh = !fileManager.fileExists(atPath: styleDst.path)
+                let needsRefresh =
+                    !fileManager.fileExists(atPath: styleDst.path)
                     || !fileManager.contentsEqual(atPath: customCSS.path, andPath: styleDst.path)
                 if needsRefresh {
                     if fileManager.fileExists(atPath: styleDst.path) {

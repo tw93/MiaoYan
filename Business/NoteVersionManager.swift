@@ -38,8 +38,9 @@ final class NoteVersionManager: @unchecked Sendable {
             try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
 
             if let latest = self.versionsInDir(dir).first,
-               let prev = try? String(contentsOf: latest.url, encoding: .utf8),
-               self.normalizeForComparison(prev) == self.normalizeForComparison(text) {
+                let prev = try? String(contentsOf: latest.url, encoding: .utf8),
+                self.normalizeForComparison(prev) == self.normalizeForComparison(text)
+            {
                 return
             }
 
@@ -104,7 +105,8 @@ final class NoteVersionManager: @unchecked Sendable {
 
     private func prune(dir: URL) {
         guard let all = try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil),
-              all.count > maxVersions else { return }
+            all.count > maxVersions
+        else { return }
         all.sorted { $0.lastPathComponent > $1.lastPathComponent }
             .dropFirst(maxVersions)
             .forEach { try? FileManager.default.removeItem(at: $0) }

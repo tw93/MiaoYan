@@ -113,8 +113,8 @@ public enum UserDefaultsManagement {
 
     private static func resolvedFontName(forKey key: String) -> String {
         if let stored = UserDefaults.standard.string(forKey: key)?.trimmingCharacters(in: .whitespacesAndNewlines),
-           !stored.isEmpty,
-           NSFont(name: stored, size: 12) != nil
+            !stored.isEmpty,
+            NSFont(name: stored, size: 12) != nil
         {
             return stored
         }

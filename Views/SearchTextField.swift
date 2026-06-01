@@ -32,8 +32,8 @@ class SearchFieldCell: NSSearchFieldCell {
 
     private func isFocused(in controlView: NSView) -> Bool {
         guard let window = controlView.window,
-              let firstResponder = window.firstResponder as? NSTextView,
-              window.fieldEditor(false, for: nil) != nil
+            let firstResponder = window.firstResponder as? NSTextView,
+            window.fieldEditor(false, for: nil) != nil
         else { return false }
         return controlView.isEqual(to: firstResponder.delegate)
     }

@@ -53,7 +53,8 @@ extension AppDelegate {
         UserDefaultsManagement.beginSingleMode(for: fileURL)
 
         if let mwc = mainWindowController,
-           mwc.window?.isVisible != true {
+            mwc.window?.isVisible != true
+        {
             mwc.makeNew()
         }
 

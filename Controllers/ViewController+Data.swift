@@ -117,7 +117,8 @@ extension ViewController {
         var finalProjects = projects
         var sidebarName: String?
 
-        let singleModeUrl = UserDefaultsManagement.singleModeURL
+        let singleModeUrl =
+            UserDefaultsManagement.singleModeURL
             ?? URL(fileURLWithPath: UserDefaultsManagement.singleModePath).resolvingSymlinksInPath()
         let isSingleModeDirectory =
             UserDefaultsManagement.isSingleMode && FileManager.default.directoryExists(atUrl: singleModeUrl)

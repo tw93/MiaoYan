@@ -548,11 +548,11 @@ extension ViewController {
 
     private static func preferredTerminalBundleID() -> String {
         let candidates = [
-            "fun.tw93.kaku",               // Kaku
-            "dev.warp.Warp-Stable",        // Warp
-            "com.googlecode.iterm2",        // iTerm2
-            "net.kovidgoyal.kitty",         // Kitty
-            "com.apple.Terminal",           // Terminal (always present)
+            "fun.tw93.kaku",  // Kaku
+            "dev.warp.Warp-Stable",  // Warp
+            "com.googlecode.iterm2",  // iTerm2
+            "net.kovidgoyal.kitty",  // Kitty
+            "com.apple.Terminal",  // Terminal (always present)
         ]
         for id in candidates where NSWorkspace.shared.urlForApplication(withBundleIdentifier: id) != nil {
             return id

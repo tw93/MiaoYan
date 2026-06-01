@@ -1218,7 +1218,8 @@ extension ViewController {
 
     /// ⌘0: restore editor and preview fonts to their default sizes.
     @IBAction func resetFontSize(_ sender: Any) {
-        let alreadyDefault = UserDefaultsManagement.fontSize == UserDefaultsManagement.DefaultFontSize
+        let alreadyDefault =
+            UserDefaultsManagement.fontSize == UserDefaultsManagement.DefaultFontSize
             && UserDefaultsManagement.previewFontSize == UserDefaultsManagement.DefaultPreviewFontSize
         guard !alreadyDefault else { return }
         UserDefaultsManagement.fontSize = UserDefaultsManagement.DefaultFontSize
