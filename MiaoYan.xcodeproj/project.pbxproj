@@ -92,6 +92,9 @@
 		2AA8D503AFCEEDEA1CDCD715 /* MiaoYanMobileApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862CEAF6F6034A969D40B0D4 /* MiaoYanMobileApp.swift */; };
 		3680D573468EA822F427197E /* NSTextField+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3680D20013301CC48E2BEC53 /* NSTextField+.swift */; };
 		3680DE38C941303E615282C4 /* MPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3680DA19202046722D9BEEA2 /* MPreviewView.swift */; };
+		6D9423AC132D4C308417D388 /* MPreviewHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DAAEBBFDC7479FBCA61754 /* MPreviewHandlers.swift */; };
+		331929C54BAC4FB9BE1C4BB3 /* PreviewSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919F545BD00240BFACE54736 /* PreviewSearchBar.swift */; };
+		8A77E867900A4918AFD5B168 /* MPreviewView+Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE6142E8B5D4BB380FC2B38 /* MPreviewView+Search.swift */; };
 		4C5E0C6B57054F9C9A0C7A9C /* CloudSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B671C2C7154C33A6BDC59A /* CloudSyncManager.swift */; };
 		4D5CD5E8152C42BE97383DAA /* app.icon in Resources */ = {isa = PBXBuildFile; fileRef = 27EAA5992EA8C76500D13871 /* app.icon */; };
 		4E240503121F054AEB3DDDCC /* ImageLinkParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D372825902F0E2A6F8CCF40 /* ImageLinkParserTests.swift */; };
@@ -278,6 +281,9 @@
 		3680D20013301CC48E2BEC53 /* NSTextField+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTextField+.swift"; sourceTree = "<group>"; };
 		3680D9AA33A891E0F14496C6 /* NSColor+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+.swift"; sourceTree = "<group>"; };
 		3680DA19202046722D9BEEA2 /* MPreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPreviewView.swift; sourceTree = "<group>"; };
+		82DAAEBBFDC7479FBCA61754 /* MPreviewHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPreviewHandlers.swift; sourceTree = "<group>"; };
+		919F545BD00240BFACE54736 /* PreviewSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewSearchBar.swift; sourceTree = "<group>"; };
+		BEE6142E8B5D4BB380FC2B38 /* MPreviewView+Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MPreviewView+Search.swift"; sourceTree = "<group>"; };
 		62E80EC32C30794536C13709 /* SearchView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SearchView.swift; path = MiaoYanMobile/Views/SearchView.swift; sourceTree = SOURCE_ROOT; };
 		6F13BB2920FEDE230005E120 /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
 		6F13BB2A20FEDE230005E120 /* URL+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+.swift"; sourceTree = "<group>"; };
@@ -673,6 +679,9 @@
 				D7153E082285EC6100A2C20F /* TitleTextField.swift */,
 				27D95121285B5E4400F40306 /* Toast.swift */,
 				3680DA19202046722D9BEEA2 /* MPreviewView.swift */,
+				82DAAEBBFDC7479FBCA61754 /* MPreviewHandlers.swift */,
+				919F545BD00240BFACE54736 /* PreviewSearchBar.swift */,
+				BEE6142E8B5D4BB380FC2B38 /* MPreviewView+Search.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1059,6 +1068,9 @@
 				D7153E092285EC6100A2C20F /* TitleTextField.swift in Sources */,
 				D7D372F4207B5B0F00AFBD9F /* SidebarNotesView.swift in Sources */,
 				3680DE38C941303E615282C4 /* MPreviewView.swift in Sources */,
+				6D9423AC132D4C308417D388 /* MPreviewHandlers.swift in Sources */,
+				331929C54BAC4FB9BE1C4BB3 /* PreviewSearchBar.swift in Sources */,
+				8A77E867900A4918AFD5B168 /* MPreviewView+Search.swift in Sources */,
 				3680D573468EA822F427197E /* NSTextField+.swift in Sources */,
 				68D7221402016BFCFB4EBFC7 /* Diagnostics.swift in Sources */,
 				272B1F8F5FB78A7F647D931A /* UIDelay.swift in Sources */,
