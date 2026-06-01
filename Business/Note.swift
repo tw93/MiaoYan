@@ -30,7 +30,12 @@ public class Note: NSObject {
 
     // Debounce for save operations
     private var saveWorkItem: DispatchWorkItem?
-    public var hasPendingSave: Bool { saveWorkItem != nil && !saveWorkItem!.isCancelled }
+    public var hasPendingSave: Bool {
+        if let item = saveWorkItem {
+            return !item.isCancelled
+        }
+        return false
+    }
 
     private var decryptedTemporarySrc: URL?
     public var ciphertextWriter = OperationQueue()

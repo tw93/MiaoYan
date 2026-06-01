@@ -1245,5 +1245,3 @@ class Storage {
         }
     }
 }
-
-extension String: @retroactive Error {}

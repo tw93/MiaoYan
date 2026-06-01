@@ -241,7 +241,7 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         // (each write nudges the sync engine). Skip if we already flushed
         // very recently, and only push the active note rather than scanning
         // the entire noteList.
-        guard let vc = AppContext.shared.viewController else { return }
+        guard AppContext.shared.viewController != nil else { return }
 
         let now = ProcessInfo.processInfo.systemUptime
         if now - lastResignKeyFlushAt < Self.resignKeyFlushMinInterval {
