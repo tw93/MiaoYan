@@ -46,7 +46,7 @@ MiaoYan is a lightweight Markdown editor built with Swift. The main app is macOS
 ```bash
 xcodebuild -project MiaoYan.xcodeproj -scheme MiaoYan -configuration Debug build
 xcodebuild clean
-xcodebuild test -project MiaoYan.xcodeproj -scheme MiaoYan -destination 'platform=macOS'
+xcodebuild test -project MiaoYan.xcodeproj -scheme MiaoYan -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO
 swiftlint lint --strict
 swift-format lint --recursive .
 bash scripts/build.sh
@@ -71,6 +71,13 @@ Add a new test:
    target in Xcode. Otherwise run `ruby scripts/add_tests_target.rb` which
    picks up every `MiaoYanTests/*.swift` it sees.
 3. Run `xcodebuild test ...` locally, then push.
+
+`CODE_SIGNING_ALLOWED=NO` is required on the local test command because
+the dev signing identity used for `MiaoYan.app` and the per-developer
+identity used for `MiaoYanTests.xctest` end up with different Team IDs,
+which makes dyld refuse to load the test bundle into the host app. CI
+uses a clean runner where signing is consistent, so `ci.yml` does not
+pass this flag.
 
 ## CI
 
