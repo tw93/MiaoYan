@@ -14,6 +14,20 @@ INSTALL_DIR="${MIAOYAN_INSTALL_DIR:-$HOME/.local/bin}"
 SCRIPT_NAME="miao"
 ALIAS_NAME="miaoyan"
 
+# Source ref for the `miao` script. Defaults to the latest GitHub release tag
+# so a bad push to main cannot break new installs. Set MIAOYAN_INSTALL_REF to
+# override (e.g. `MIAOYAN_INSTALL_REF=main` for local development).
+INSTALL_REF="${MIAOYAN_INSTALL_REF:-}"
+if [[ -z "$INSTALL_REF" ]]; then
+    INSTALL_REF=$(curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" \
+        | grep -m1 '"tag_name"' \
+        | cut -d'"' -f4)
+    if [[ -z "$INSTALL_REF" ]]; then
+        warn "Could not resolve latest release tag, falling back to main"
+        INSTALL_REF="main"
+    fi
+fi
+
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -31,8 +45,8 @@ error() { echo -e "${RED}▸${NC} $1" >&2; exit 1; }
 mkdir -p "$INSTALL_DIR"
 
 # Download script
-info "Downloading miao CLI..."
-curl -fsSL "https://raw.githubusercontent.com/$REPO/main/scripts/miaoyan" -o "$INSTALL_DIR/$SCRIPT_NAME"
+info "Downloading miao CLI (ref: $INSTALL_REF)..."
+curl -fsSL "https://raw.githubusercontent.com/$REPO/$INSTALL_REF/scripts/miaoyan" -o "$INSTALL_DIR/$SCRIPT_NAME"
 chmod +x "$INSTALL_DIR/$SCRIPT_NAME"
 
 # Create alias symlink
