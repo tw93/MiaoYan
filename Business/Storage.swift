@@ -732,15 +732,38 @@ class Storage {
         noteList.count
     }
 
+    /// Pure decision the storage takes on first launch / each launch about
+    /// whether to seed the bundled demo folders. Extracted as a static helper
+    /// so the case matrix (specifically the V3.5.1 regression `13964acd` where
+    /// existing users with non-empty noteLists never got the initialized flag
+    /// set) is regression-testable without spinning up a real Storage.
+    enum InitContentDecision: Equatable {
+        case skip  // already initialized; nothing to do
+        case markInitialized  // user has notes; just record the flag
+        case createInitFolders  // empty noteList + flag unset; seed demo
+    }
+
+    static func decideInitContent(noteListIsEmpty: Bool, hasCreatedInitContent: Bool) -> InitContentDecision {
+        if !noteListIsEmpty { return .markInitialized }
+        if hasCreatedInitContent { return .skip }
+        return .createInitFolders
+    }
+
     func checkFirstRun() -> Bool {
-        if !noteList.isEmpty {
+        switch Storage.decideInitContent(
+            noteListIsEmpty: noteList.isEmpty,
+            hasCreatedInitContent: UserDefaultsManagement.hasCreatedInitContent
+        ) {
+        case .markInitialized:
             UserDefaultsManagement.hasCreatedInitContent = true
             return false
+        case .skip:
+            return false
+        case .createInitFolders:
+            break
         }
 
-        guard !UserDefaultsManagement.hasCreatedInitContent,
-            let resourceURL = Bundle.main.resourceURL
-        else {
+        guard let resourceURL = Bundle.main.resourceURL else {
             return false
         }
 
