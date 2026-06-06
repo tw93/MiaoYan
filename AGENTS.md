@@ -158,6 +158,8 @@ Avoid broad scans of `build/`, `.build/`, `dist/`, and bundled web assets unless
 - Mermaid and PDF export span `Business/HtmlManager.swift`, `Helpers/PdfExportController.swift`, and `Extensions/MPreviewView+Export.swift`. Wait for images and Mermaid rendering before capture.
 - Async note/image/file loading is intentional. Do not reintroduce blocking reads on the main thread for large notes or previews.
 - Directory symlinks are supported by storage scanning. Avoid recursion loops and duplicate notes when following symlinked directories.
+- Image upload posts to a local PicGo/PicList HTTP endpoint at `127.0.0.1:36677` (`Helpers/ClipboardManager.swift`). The macOS `Info.plist` ATS permits this via `NSAllowsLocalNetworking`; do not widen it back to `NSAllowsArbitraryLoads`. The markdown preview loads through `loadFileURL` (file://), not a local web server, so ATS does not gate preview rendering.
+- iOS user-facing strings live in `MiaoYanMobile/Resources/Localizable.xcstrings` and ship `en` + `zh-Hans` only (the macOS app ships five languages). Add a `zh-Hans` value for every new iOS string, or Chinese users fall back to English.
 
 ## Release Notes
 
