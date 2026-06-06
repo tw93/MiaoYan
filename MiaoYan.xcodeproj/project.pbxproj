@@ -26,7 +26,6 @@
 		2732D3012E7047D400F00158 /* PrettierMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 2732D3002E7047D400F00158 /* PrettierMarkdown */; };
 		2732D3032E70482E00F00158 /* PrettierMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 2732D3022E70482E00F00158 /* PrettierMarkdown */; };
 		2732D3052E70487B00F00158 /* PrettierMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 2732D3042E70487B00F00158 /* PrettierMarkdown */; };
-		2732D3082E7123B300F00158 /* TelemetryDeck in Frameworks */ = {isa = PBXBuildFile; productRef = 2732D3072E7123B300F00158 /* TelemetryDeck */; };
 		274D62CF2E434B6D003C075F /* ImageLinkParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274D62CE2E434B6D003C075F /* ImageLinkParser.swift */; };
 		274D62D12E434B9C003C075F /* ImagePreviewWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274D62D02E434B9C003C075F /* ImagePreviewWindow.swift */; };
 		275592971F3AE9B5006B8988 /* MainWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275592961F3AE9B5006B8988 /* MainWindowController.swift */; };
@@ -58,7 +57,6 @@
 		2799407C218484C900727B20 /* TitleBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799407B218484C900727B20 /* TitleBarView.swift */; };
 		27A077372E714A98008A5483 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 27A077362E714A98008A5483 /* Alamofire */; };
 		27A0773A2E714AB1008A5483 /* CMarkGFM in Frameworks */ = {isa = PBXBuildFile; productRef = 27A077392E714AB1008A5483 /* CMarkGFM */; };
-		27A0773D2E714ABF008A5483 /* TelemetryDeck in Frameworks */ = {isa = PBXBuildFile; productRef = 27A0773C2E714ABF008A5483 /* TelemetryDeck */; };
 		27A077402E714ACC008A5483 /* Prettier in Frameworks */ = {isa = PBXBuildFile; productRef = 27A0773F2E714ACC008A5483 /* Prettier */; };
 		27A077422E714ACC008A5483 /* PrettierMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 27A077412E714ACC008A5483 /* PrettierMarkdown */; };
 		27A077452E714AEE008A5483 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 27A077442E714AEE008A5483 /* SwiftyJSON */; };
@@ -396,11 +394,9 @@
 				27B5AC6B2E45F26A00C83B3A /* ZipArchive in Frameworks */,
 				2732D2FF2E70450B00F00158 /* Prettier in Frameworks */,
 				27A077542E7152C9008A5483 /* KeyboardShortcuts in Frameworks */,
-				27A0773D2E714ABF008A5483 /* TelemetryDeck in Frameworks */,
 				27B5AC682E45F25F00C83B3A /* Highlightr in Frameworks */,
 				27B5AC602E45F23B00C83B3A /* SwiftyJSON in Frameworks */,
 				27A077402E714ACC008A5483 /* Prettier in Frameworks */,
-				2732D3082E7123B300F00158 /* TelemetryDeck in Frameworks */,
 				27A0774E2E714C43008A5483 /* Sparkle in Frameworks */,
 				27B5AC6E2E45F27A00C83B3A /* Sparkle in Frameworks */,
 				2732D3012E7047D400F00158 /* PrettierMarkdown in Frameworks */,
@@ -798,7 +794,6 @@
 				27A077412E714ACC008A5483 /* PrettierMarkdown */,
 				27A0774D2E714C43008A5483 /* Sparkle */,
 				27A077442E714AEE008A5483 /* SwiftyJSON */,
-				27A0773C2E714ABF008A5483 /* TelemetryDeck */,
 				27A077502E714C56008A5483 /* ZipArchive */,
 			);
 			productName = MiaoYan;
@@ -867,7 +862,6 @@
 			packageReferences = (
 				27A077352E714A98008A5483 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				27A077382E714AB1008A5483 /* XCRemoteSwiftPackageReference "swift-cmark-gfm" */,
-				27A0773B2E714ABF008A5483 /* XCRemoteSwiftPackageReference "SwiftSDK" */,
 				27A0773E2E714ACC008A5483 /* XCRemoteSwiftPackageReference "Prettier" */,
 				27A077432E714AEE008A5483 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 				27A077462E714AFE008A5483 /* XCRemoteSwiftPackageReference "Highlightr" */,
@@ -1747,14 +1741,6 @@
 				minimumVersion = 0.2.1;
 			};
 		};
-		2732D3062E7123B300F00158 /* XCRemoteSwiftPackageReference "SwiftSDK" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/TelemetryDeck/SwiftSDK";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.9.4;
-			};
-		};
 		27977FF22E7126C40016D57D /* XCRemoteSwiftPackageReference "swift-cmark-gfm" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/stackotter/swift-cmark-gfm";
@@ -1777,14 +1763,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.0.0;
-			};
-		};
-		27A0773B2E714ABF008A5483 /* XCRemoteSwiftPackageReference "SwiftSDK" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/TelemetryDeck/SwiftSDK";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.9.4;
 			};
 		};
 		27A0773E2E714ACC008A5483 /* XCRemoteSwiftPackageReference "Prettier" */ = {
@@ -1898,11 +1876,6 @@
 			package = 2732D2FD2E70450B00F00158 /* XCRemoteSwiftPackageReference "Prettier" */;
 			productName = PrettierMarkdown;
 		};
-		2732D3072E7123B300F00158 /* TelemetryDeck */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2732D3062E7123B300F00158 /* XCRemoteSwiftPackageReference "SwiftSDK" */;
-			productName = TelemetryDeck;
-		};
 		27977FF32E7126C40016D57D /* CMarkGFM */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 27977FF22E7126C40016D57D /* XCRemoteSwiftPackageReference "swift-cmark-gfm" */;
@@ -1917,11 +1890,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 27A077382E714AB1008A5483 /* XCRemoteSwiftPackageReference "swift-cmark-gfm" */;
 			productName = CMarkGFM;
-		};
-		27A0773C2E714ABF008A5483 /* TelemetryDeck */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 27A0773B2E714ABF008A5483 /* XCRemoteSwiftPackageReference "SwiftSDK" */;
-			productName = TelemetryDeck;
 		};
 		27A0773F2E714ACC008A5483 /* Prettier */ = {
 			isa = XCSwiftPackageProductDependency;
