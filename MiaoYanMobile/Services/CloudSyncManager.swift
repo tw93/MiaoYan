@@ -159,7 +159,9 @@ final class CloudSyncManager: ObservableObject {
             // NSMetadataQuery returns resolved (real) paths, so we only
             // need to resolve the root once. Resolving every item URL
             // was a per-call stat() × 1500 URLs = ~50ms main-thread cost.
-            if url.path.hasPrefix(rootPath) {
+            // Match on a trailing separator so a sibling folder that shares
+            // a name prefix (e.g. "Work" vs "Workout") can't leak in.
+            if url.path == rootPath || url.path.hasPrefix(rootPath + "/") {
                 urls.append(url)
             }
         }

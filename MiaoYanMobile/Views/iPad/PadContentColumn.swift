@@ -96,8 +96,14 @@ struct PadContentColumn: View {
             // Clear immediately so the previous folder's notes can't linger
             // on screen while the new folder loads.
             searchQuery = ""
+            searchResults = []
+            isSearching = false
             notes = []
             hasLoadedOnce = false
+            // Drop the previous folder's selection so the detail column
+            // doesn't keep rendering a note that isn't in the new folder.
+            selectedNote = nil
+            selectedNoteID = ""
             triggerLoad()
         }
         .onChange(of: searchQuery) { _, newValue in runSearch(newValue) }

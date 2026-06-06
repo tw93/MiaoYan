@@ -55,19 +55,30 @@ final class RecentNotesCache {
     /// re-decode JSON. Cleared implicitly when `save(_:for:)` overwrites.
     private var memoryCache: [String: RecentNotesSnapshot] = [:]
 
+    /// Keys whose disk read came back empty. Without this a user with no
+    /// snapshot re-stats and re-fails the cache file on every `body`
+    /// re-evaluation during cold start (the hot path this lookup guards),
+    /// because a miss was never memoized. Cleared in `save(_:for:)`.
+    private var knownMissing: Set<String> = []
+
     private init() {}
 
     /// Synchronous lookup. Memory hit first, then a one-shot disk read.
     /// Safe to call on the main thread on a hot path — JSON decode of
-    /// ~40 entries is sub-millisecond.
+    /// ~40 entries is sub-millisecond, and misses are memoized.
     func snapshot(for root: URL) -> RecentNotesSnapshot? {
         let key = cacheKey(for: root)
         if let mem = memoryCache[key] { return mem }
-        guard let snapshot = readFromDisk(key: key) else { return nil }
+        if knownMissing.contains(key) { return nil }
         // Defence against MD5 collisions: the snapshot's stored
         // rootURLString must match the root we were asked about. Without
         // this, a stale snapshot from a previous folder could surface.
-        guard snapshot.rootURLString == root.absoluteString else { return nil }
+        guard let snapshot = readFromDisk(key: key),
+            snapshot.rootURLString == root.absoluteString
+        else {
+            knownMissing.insert(key)
+            return nil
+        }
         memoryCache[key] = snapshot
         return snapshot
     }
@@ -95,6 +106,7 @@ final class RecentNotesCache {
         )
         let key = cacheKey(for: root)
         memoryCache[key] = snapshot
+        knownMissing.remove(key)
         Task.detached(priority: .background) {
             Self.writeToDisk(snapshot, key: key)
         }
