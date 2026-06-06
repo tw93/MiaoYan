@@ -139,10 +139,27 @@ jobs:
           set -euo pipefail
           TAG="${GITHUB_REF_NAME}"
           STRIPPED="${TAG#V}"
-          MARKETING=$(grep -m1 'MARKETING_VERSION = ' MiaoYan.xcodeproj/project.pbxproj | sed -E 's/.*MARKETING_VERSION = ([^;]+);.*/\1/' | tr -d ' ')
-          PROJECT=$(grep -m1 'CURRENT_PROJECT_VERSION = ' MiaoYan.xcodeproj/project.pbxproj | sed -E 's/.*CURRENT_PROJECT_VERSION = ([^;]+);.*/\1/' | tr -d ' ')
-          echo "tag=${STRIPPED} marketing=${MARKETING} project=${PROJECT}"
-          if [ "${STRIPPED}" != "${MARKETING}" ] || [ "${STRIPPED}" != "${PROJECT}" ]; then
-            echo "::error::Version drift. Tag ${STRIPPED} must equal MARKETING_VERSION (${MARKETING}) and CURRENT_PROJECT_VERSION (${PROJECT}). See AGENTS.md V3.5.1 / #524."
-            exit 1
-          fi
+          # Every target/config must match the tag, not just the first
+          # occurrence: the V3.5.1 / #524 drift was a single target out of
+          # sync. Collect the distinct values and assert each equals the tag.
+          MARKETING=$(grep 'MARKETING_VERSION = ' MiaoYan.xcodeproj/project.pbxproj | sed -E 's/.*MARKETING_VERSION = ([^;]+);.*/\1/' | tr -d ' ' | sort -u)
+          PROJECT=$(grep 'CURRENT_PROJECT_VERSION = ' MiaoYan.xcodeproj/project.pbxproj | sed -E 's/.*CURRENT_PROJECT_VERSION = ([^;]+);.*/\1/' | tr -d ' ' | sort -u)
+          echo "tag=${STRIPPED}"
+          printf 'MARKETING_VERSION values:\n%s\n' "${MARKETING}"
+          printf 'CURRENT_PROJECT_VERSION values:\n%s\n' "${PROJECT}"
+          fail=0
+          while IFS= read -r v; do
+            [ -n "${v}" ] || continue
+            if [ "${v}" != "${STRIPPED}" ]; then
+              echo "::error::MARKETING_VERSION ${v} != tag ${STRIPPED}. See AGENTS.md V3.5.1 / #524."
+              fail=1
+            fi
+          done <<< "${MARKETING}"
+          while IFS= read -r v; do
+            [ -n "${v}" ] || continue
+            if [ "${v}" != "${STRIPPED}" ]; then
+              echo "::error::CURRENT_PROJECT_VERSION ${v} != tag ${STRIPPED}. See AGENTS.md V3.5.1 / #524."
+              fail=1
+            fi
+          done <<< "${PROJECT}"
+          [ "${fail}" -eq 0 ]
