@@ -100,13 +100,8 @@
 	<false/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-		<key>NSAllowsArbitraryLoads</key>
+		<key>NSAllowsLocalNetworking</key>
 		<true/>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>127.0.0.1:36677</key>
-			<string></string>
-		</dict>
 	</dict>
 	<key>NSMainStoryboardFile</key>
 	<string>Main</string>
