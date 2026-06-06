@@ -5,13 +5,34 @@
 
     },
     "%@ iCloud notes still downloading; results will improve as they sync." : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "还有 %@ 篇 iCloud 笔记正在下载，同步完成后搜索结果会更全。"
+          }
+        }
+      }
     },
     "%@ notes" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 篇笔记"
+          }
+        }
+      }
     },
     "%@. Refresh library" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@。刷新笔记库"
+          }
+        }
+      }
     },
     "%lld notes" : {
       "extractionState" : "stale",
@@ -157,7 +178,14 @@
       }
     },
     "Downloading your iCloud notes. Next launch will be instant." : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在从 iCloud 下载笔记，下次启动就会瞬间打开。"
+          }
+        }
+      }
     },
     "Edit" : {
       "extractionState" : "stale",
@@ -532,7 +560,14 @@
       }
     },
     "Setting up your library" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在准备你的笔记库"
+          }
+        }
+      }
     },
     "Share" : {
       "extractionState" : "stale",
