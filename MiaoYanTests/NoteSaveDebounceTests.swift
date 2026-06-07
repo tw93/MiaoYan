@@ -7,7 +7,6 @@ import XCTest
 /// real data-loss surface. `flushPendingSave` must drain the queued work item
 /// synchronously so app-lifecycle hooks (`applicationWillTerminate`,
 /// window-will-close, resign-key) cannot exit with unsaved keystrokes.
-@MainActor
 final class NoteSaveDebounceTests: XCTestCase {
 
     private var tempDir: URL!
@@ -24,6 +23,7 @@ final class NoteSaveDebounceTests: XCTestCase {
         super.tearDown()
     }
 
+    @MainActor
     func testHasPendingSaveIsFalseOnFreshNote() {
         let url = tempDir.appendingPathComponent("fresh.md")
         let project = Project(url: tempDir, label: "test", isRoot: true)
@@ -32,6 +32,7 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertFalse(note.hasPendingSave, "a brand-new Note has no debounced work item")
     }
 
+    @MainActor
     func testSaveContentSchedulesDebouncedWorkItem() {
         let url = tempDir.appendingPathComponent("scheduled.md")
         let project = Project(url: tempDir, label: "test", isRoot: true)
@@ -44,6 +45,7 @@ final class NoteSaveDebounceTests: XCTestCase {
             "save(attributed:) routes through debounceSave and must mark the note as pending")
     }
 
+    @MainActor
     func testFlushPendingSaveClearsTheWorkItem() {
         let url = tempDir.appendingPathComponent("flushed.md")
         let project = Project(url: tempDir, label: "test", isRoot: true)

@@ -146,6 +146,11 @@ class EditorMenuManager {
         guard let vc = ViewController.shared() else { return }
         vc.togglePresentation()
     }
+
+    func toggleTOC() {
+        guard let vc = ViewController.shared() else { return }
+        vc.toggleTOC(self)
+    }
 }
 
 enum FormattingAction {

@@ -12,7 +12,17 @@ if [[ ! -f "$NOTES_FILE" ]]; then
   exit 1
 fi
 
-MONSTER="$(head -1 "$NOTES_FILE" | sed 's/^# V[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]* //')"
+HEADER="$(head -1 "$NOTES_FILE")"
+if [[ "$HEADER" =~ ^#\ V([0-9]+\.[0-9]+\.[0-9]+)[[:space:]]*(.*)$ ]]; then
+  VERSION="${BASH_REMATCH[1]}"
+  MONSTER="${BASH_REMATCH[2]}"
+else
+  VERSION=""
+  MONSTER="$HEADER"
+fi
+if [[ -n "$VERSION" && -z "$MONSTER" ]]; then
+  MONSTER="V${VERSION}"
+fi
 
 format_item() {
   local line="$1"
