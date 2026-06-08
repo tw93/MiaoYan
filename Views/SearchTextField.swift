@@ -29,20 +29,12 @@ class SearchFieldCell: NSSearchFieldCell {
         path.fill()
     }
 
-    private func isFocused(in controlView: NSView) -> Bool {
-        guard let window = controlView.window,
-            let firstResponder = window.firstResponder as? NSTextView,
-            window.fieldEditor(false, for: nil) != nil
-        else { return false }
-        return controlView.isEqual(to: firstResponder.delegate)
-    }
-
     private func drawBorder(in frame: NSRect, appearance: NSAppearance?) {
-        let focused = isFocused(in: controlView!)
+        // One quiet hairline border in every state. Focus is shown by the text
+        // cursor, not by an accent ring, so the field stays calm when active.
         let path = NSBezierPath(roundedRect: frame, xRadius: Self.height / 2, yRadius: Self.height / 2)
-        let borderColor = focused ? Theme.accentColor.withAlphaComponent(0.7) : Theme.dividerColor.resolvedColor(for: appearance)
-        borderColor.setStroke()
-        path.lineWidth = focused ? 1.5 : 1.0
+        Theme.hairlineColor.resolvedColor(for: appearance).setStroke()
+        path.lineWidth = 1.0
         path.stroke()
     }
 
