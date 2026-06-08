@@ -76,20 +76,23 @@ Build artifacts land in `.vscode/DerivedData/` (VS Code) or your default Derived
 
 ## Release Build
 
-From **4.0** onward, MiaoYan binary distribution has moved to the Mac App Store. GitHub Releases continues to receive git tags and release notes, but no DMG or ZIP is uploaded.
+For App Store distribution builds, GitHub Releases continues to receive git
+tags and release notes, but no DMG or ZIP is uploaded.
 
 ### App Store Release
 
 ```bash
-./scripts/build-appstore.sh <version>
+./scripts/build-appstore.sh
 ```
 
-Submit the resulting archive via Xcode Organizer or Transporter.
+The version comes from `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION` in
+`MiaoYan.xcodeproj/project.pbxproj`. Submit the resulting archive via Xcode
+Organizer or Transporter.
 
 ### Release Checklist
 
 1. Bump `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in `MiaoYan.xcodeproj/project.pbxproj` across macOS and iOS configurations
-2. Confirm `.github/RELEASE_NOTES.md` matches the intended uppercase tag, for example `V4.0.0`
+2. Confirm `.github/RELEASE_NOTES.md` matches the intended uppercase tag, for example `Vx.y.z`
 3. Create Git tag: `git tag V<version> && git push origin V<version>`
 4. Create GitHub Release with release notes only, no binary attachment
 5. Submit App Store build via Transporter

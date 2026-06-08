@@ -73,7 +73,7 @@ APP_NAME="MiaoYan"
 BACKGROUND_IMAGE_SOURCE="./Resources/dmg-background.png"
 BACKGROUND_IMAGE_NAME="$(basename "$BACKGROUND_IMAGE_SOURCE")"
 
-cd ./build/Release && zip -r -q "../$ZIP_NAME" MiaoYan.app && cd ../..
+/usr/bin/ditto -c -k --sequesterRsrc --keepParent "./build/Release/MiaoYan.app" "./build/$ZIP_NAME"
 
 # Create DMG with drag-to-Applications interface using hdiutil
 STAGING_DIR="./build/dmg_staging"

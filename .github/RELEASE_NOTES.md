@@ -1,4 +1,4 @@
-# V4.0.0
+# V3.6.0
 
 1. 新增 iPhone 和 iPad 版本,并与 macOS 使用统一 Bundle ID 和 Universal Purchase
 2. iPad 改为文件夹边栏、笔记列表、阅读详情的三栏布局,不再是放大的手机界面
