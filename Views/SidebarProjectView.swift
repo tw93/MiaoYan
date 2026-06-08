@@ -492,9 +492,13 @@ class SidebarProjectView: NSOutlineView,
     }
 
     private func configureForSidebarItemType(_ cell: SidebarCellView, sidebarItem: SidebarItem, baseFont: NSFont, accentColor: NSColor) {
-        let accentIconSize: CGFloat = Theme.usesModernSystemChrome ? 20 : 24
-        let accentSpacing: CGFloat = Theme.usesModernSystemChrome ? 6 : 4
-        let accentIconLeading: CGFloat = Theme.usesModernSystemChrome ? 2 : -2
+        // The "妙言" header lockup keeps its pre-macOS-26 sizing: the modern
+        // chrome compaction (icon 24->20, font +2->+1) made it read noticeably
+        // smaller, which the maintainer rejected. Icon, spacing, leading and
+        // font weight stay at the larger legacy values on every OS.
+        let accentIconSize: CGFloat = 24
+        let accentSpacing: CGFloat = 4
+        let accentIconLeading: CGFloat = -2
         let accentFont = createAccentFont(from: baseFont)
 
         switch sidebarItem.type {
@@ -536,7 +540,7 @@ class SidebarProjectView: NSOutlineView,
                 NSFontDescriptor.TraitKey.weight: NSNumber(value: Double(NSFont.Weight.semibold.rawValue))
             ]
         ])
-        let accentFontSize = baseFont.pointSize + (Theme.usesModernSystemChrome ? 1 : 2)
+        let accentFontSize = baseFont.pointSize + 2
         return NSFont(
             descriptor: accentFontDescriptor,
             size: accentFontSize

@@ -63,10 +63,23 @@ class NotesTableView: NSTableView {
         guard let clipView = superview as? NSClipView,
             let column = tableColumns.first
         else { return }
-        let availableWidth = clipView.bounds.width - intercellSpacing.width
-        if column.width != availableWidth && availableWidth > 0 {
+        let clipWidth = clipView.bounds.width
+        if abs(frame.width - clipWidth) > 0.5 {
+            setFrameSize(NSSize(width: clipWidth, height: frame.height))
+        }
+        // Keep the title column narrower than the clip so long note names
+        // truncate with a right-side gutter instead of butting against the
+        // pane edge. The row separator and selection highlight still span the
+        // full row width (they use the row bounds, not the column).
+        let contentRightInset = Theme.Metrics.noteListContentInset
+        let availableWidth = max(0, clipWidth - intercellSpacing.width - contentRightInset)
+        if availableWidth > 0 {
+            column.maxWidth = max(column.maxWidth, availableWidth)
+        }
+        if abs(column.width - availableWidth) > 0.5 && availableWidth > 0 {
             column.width = availableWidth
         }
+        resetHorizontalScroll(in: clipView)
     }
 
     override func selectRowIndexes(_ indexes: IndexSet, byExtendingSelection extend: Bool) {
@@ -265,6 +278,7 @@ class NotesTableView: NSTableView {
         } else {
             targetRect.origin.y = rowRect.maxY - visibleRect.height + 8.0
         }
+        targetRect.origin.x = 0
 
         clipView.animator().setBoundsOrigin(targetRect.origin)
         if scrollView.responds(to: #selector(NSScrollView.flashScrollers)) {
@@ -286,7 +300,7 @@ class NotesTableView: NSTableView {
 
     func restoreScrollOrigin(_ origin: NSPoint) {
         guard let clipView = superview as? NSClipView else { return }
-        clipView.setBoundsOrigin(origin)
+        clipView.setBoundsOrigin(NSPoint(x: 0, y: origin.y))
     }
 
     override func mouseDown(with event: NSEvent) {
@@ -755,10 +769,8 @@ class NotesTableView: NSTableView {
         let contextURL = currentScrollContextURL()
         let savedPosition = UserDefaultsManagement.notesTableScrollPosition(for: contextURL)
         DispatchQueue.main.async { [weak self] in
-            guard let self = self,
-                let clipView = self.superview as? NSClipView
-            else { return }
-            let newOrigin = NSPoint(x: clipView.bounds.origin.x, y: savedPosition)
+            guard let self else { return }
+            let newOrigin = NSPoint(x: 0, y: savedPosition)
             self.restoreScrollOrigin(newOrigin)
             guard ensureSelectionVisible else { return }
             let selectedRow = self.selectedRowSafe()
@@ -767,6 +779,12 @@ class NotesTableView: NSTableView {
             }
         }
         return savedPosition > 0
+    }
+
+    private func resetHorizontalScroll(in clipView: NSClipView) {
+        guard clipView.bounds.origin.x != 0 else { return }
+        clipView.scroll(to: NSPoint(x: 0, y: clipView.bounds.origin.y))
+        (clipView.superview as? NSScrollView)?.reflectScrolledClipView(clipView)
     }
 
     private func currentScrollContextURL() -> URL? {

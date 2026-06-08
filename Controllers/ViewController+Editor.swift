@@ -550,10 +550,8 @@ extension ViewController {
         if notelistWidth == 0 { showNoteList("") }
         checkTitlebarTopConstraint()
 
-        if let savedPosition = savedPresentationScrollPosition,
-            let clipView = notesTableView.superview as? NSClipView
-        {
-            clipView.setBoundsOrigin(savedPosition)
+        if let savedPosition = savedPresentationScrollPosition {
+            notesTableView.restoreScrollOrigin(savedPosition)
             savedPresentationScrollPosition = nil
         }
     }

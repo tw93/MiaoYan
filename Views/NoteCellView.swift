@@ -46,6 +46,7 @@ class NoteCellView: NSTableCellView {
 
         applyTextColor(Theme.secondaryTextColor, to: date)
         applyTextColor(Theme.textColor, to: name)
+        configureTitleTruncation()
     }
 
     private func applyTextColor(_ color: NSColor, to field: NSTextField) {
@@ -56,6 +57,13 @@ class NoteCellView: NSTableCellView {
             attributed.addAttribute(.foregroundColor, value: color, range: range)
             field.attributedStringValue = attributed
         }
+    }
+
+    private func configureTitleTruncation() {
+        name.lineBreakMode = .byTruncatingMiddle
+        name.maximumNumberOfLines = 1
+        name.cell?.lineBreakMode = .byTruncatingMiddle
+        name.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
     }
 
     func renderPin() {

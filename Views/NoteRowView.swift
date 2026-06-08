@@ -4,11 +4,12 @@ import Cocoa
 class NoteRowView: ThemedTableRowView {
     override func selectionRect() -> NSRect {
         let margin: CGFloat = 8
+        let rowBounds = visibleRowBounds()
         return NSRect(
-            x: margin,
+            x: rowBounds.minX + margin,
             y: 2,
-            width: max(0, bounds.width - 2 * margin),
-            height: bounds.height - 4
+            width: max(0, rowBounds.width - 2 * margin),
+            height: max(0, bounds.height - 4)
         )
     }
 
@@ -26,23 +27,43 @@ class NoteRowView: ThemedTableRowView {
     }
 
     private func shouldHideSeparator() -> Bool {
-        var parentView: NSView? = superview
-        while parentView != nil {
-            if let tableView = parentView as? NotesTableView {
-                return tableView.shouldHideNoteSeparator(for: self)
-            }
-            parentView = parentView?.superview
+        if let tableView = enclosingNotesTableView() {
+            return tableView.shouldHideNoteSeparator(for: self)
         }
 
         return false
     }
 
+    private func visibleRowBounds() -> NSRect {
+        guard let tableView = enclosingNotesTableView(),
+            let clipView = tableView.enclosingScrollView?.contentView
+        else {
+            return bounds
+        }
+
+        let visibleRect = convert(clipView.bounds, from: clipView)
+        let clippedBounds = bounds.intersection(visibleRect)
+        return clippedBounds.isNull || clippedBounds.isEmpty ? bounds : clippedBounds
+    }
+
+    private func enclosingNotesTableView() -> NotesTableView? {
+        var parentView: NSView? = superview
+        while let view = parentView {
+            if let tableView = view as? NotesTableView {
+                return tableView
+            }
+            parentView = view.superview
+        }
+        return nil
+    }
+
     override func drawSeparator(in dirtyRect: NSRect) {
         let separatorHeight: CGFloat = 1.0
+        let rowBounds = visibleRowBounds()
         let separatorRect = NSRect(
-            x: 20,
+            x: rowBounds.minX + 20,
             y: bounds.height - separatorHeight,
-            width: bounds.width - 40,
+            width: max(0, rowBounds.width - 40),
             height: separatorHeight
         )
 

@@ -12,11 +12,6 @@ class SidebarNotesView: NSView {
         super.awakeFromNib()
         MainActor.assumeIsolated { [self] in
             applyMiaoYanPaneBackground()
-            var f = frame
-            f.size.width = 280
-            frame = f
-            setFrameSize(f.size)
-            setBoundsSize(f.size)
         }
     }
 }

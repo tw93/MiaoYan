@@ -5,6 +5,10 @@ class SearchFieldCell: NSSearchFieldCell {
     static let height: CGFloat = 30
     private static let padding: CGFloat = 12
     private static let lineHeight: CGFloat = 17.0
+    /// The placeholder and field editor sat slightly high; nudge the text rect
+    /// down. The control is flipped (y grows downward) so a positive value
+    /// moves the text down on screen.
+    private static let verticalNudge: CGFloat = 2.0
 
     override var cellSize: NSSize {
         var size = super.cellSize
@@ -13,11 +17,6 @@ class SearchFieldCell: NSSearchFieldCell {
     }
 
     override func draw(withFrame cellFrame: NSRect, in controlView: NSView) {
-        if Theme.usesModernSystemChrome {
-            super.draw(withFrame: cellFrame, in: controlView)
-            return
-        }
-
         let insetFrame = cellFrame.insetBy(dx: 0.5, dy: 0.5)
         drawBackground(in: insetFrame)
         drawBorder(in: insetFrame, appearance: controlView.effectiveAppearance)
@@ -48,37 +47,17 @@ class SearchFieldCell: NSSearchFieldCell {
     }
 
     override func searchTextRect(forBounds rect: NSRect) -> NSRect {
-        if Theme.usesModernSystemChrome {
-            return verticallyCentered(super.searchTextRect(forBounds: rect), in: rect, height: textLineHeight())
-        }
-
         return NSRect(
             x: rect.origin.x + Self.padding,
-            y: rect.origin.y + (rect.height - Self.lineHeight) / 2,
+            y: rect.origin.y + (rect.height - Self.lineHeight) / 2 + Self.verticalNudge,
             width: rect.width - Self.padding * 2,
             height: Self.lineHeight
         )
     }
 
     override func drawingRect(forBounds rect: NSRect) -> NSRect {
-        if Theme.usesModernSystemChrome {
-            return searchTextRect(forBounds: rect)
-        }
-
         // Same as searchTextRect for placeholder
         return searchTextRect(forBounds: rect)
-    }
-
-    private func textLineHeight() -> CGFloat {
-        guard let font else { return Self.lineHeight }
-        return ceil(font.ascender - font.descender + font.leading)
-    }
-
-    private func verticallyCentered(_ proposedRect: NSRect, in bounds: NSRect, height: CGFloat) -> NSRect {
-        var centeredRect = proposedRect
-        centeredRect.size.height = min(height, bounds.height)
-        centeredRect.origin.y = bounds.origin.y + (bounds.height - centeredRect.height) / 2
-        return centeredRect
     }
 }
 
@@ -127,18 +106,29 @@ class SearchTextField: NSSearchField, NSSearchFieldDelegate {
     }
 
     @MainActor private func configureSearchField() {
+        // Use the app's interface font (TsangerJinKai) for both the typed text
+        // and the placeholder so the search field matches the rest of the UI
+        // instead of falling back to the system font. The placeholder must be
+        // set as an attributed string carrying this font: NSSearchFieldCell
+        // snapshots a plain `placeholderString` with whatever font is current,
+        // so it would otherwise render in the wrong typeface/size.
+        let searchFont = UserDefaultsManagement.searchFont ?? NSFont.systemFont(ofSize: CGFloat(UserDefaultsManagement.searchFontSize))
+        font = searchFont
+
         if let searchFieldCell = self.cell as? NSSearchFieldCell {
-            if !Theme.usesModernSystemChrome {
-                searchFieldCell.searchButtonCell = nil
-                searchFieldCell.cancelButtonCell = nil
-            }
-            searchFieldCell.placeholderString = I18n.str("Search")
+            searchFieldCell.searchButtonCell = nil
+            searchFieldCell.cancelButtonCell = nil
+            searchFieldCell.placeholderAttributedString = NSAttributedString(
+                string: I18n.str("Search"),
+                attributes: [
+                    .font: searchFont,
+                    .foregroundColor: NSColor.placeholderTextColor,
+                ]
+            )
         }
 
         sendsWholeSearchString = false
         sendsSearchStringImmediately = true
-        drawsBackground = true
-        Theme.configureModernControlMetrics(self)
         invalidateIntrinsicContentSize()
     }
 

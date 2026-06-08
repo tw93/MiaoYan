@@ -6,14 +6,15 @@
   max-width: 100%;
   padding: 0 28px 80px;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
-pre, video, iframe {
+pre, video, iframe, table {
   max-width: 100%;
 }
 
 a {
-  color: #0C6ADA;
+  color: var(--link-color);
   cursor: pointer;
 }
 
@@ -250,7 +251,7 @@ a {
   margin-block-end: 1.6em;
   padding: 0 15px;
   border-radius: 8px;
-  color: #777;
+  color: var(--text-secondary);
   border-left: 4px solid var(--blockquote-border-color, #d0d0d0);
   line-height: 1;
   overflow: hidden;
@@ -282,7 +283,7 @@ blockquote blockquote {
   border-collapse: collapse;
   border-width: 1px;
   border-style: solid;
-  border-color: #e6e6e6;
+  border-color: var(--border-color);
   word-break: break-word;
 }
 
@@ -294,7 +295,7 @@ blockquote blockquote {
   padding-inline-end: 8px;
   border-width: 1px;
   border-style: solid;
-  border-color: #e6e6e6;
+  border-color: var(--border-color);
 }
 
 .heti caption {
@@ -314,7 +315,7 @@ blockquote blockquote {
   margin-inline-start: auto;
   margin-inline-end: auto;
   border: 0;
-  background-color: #e6e6e6;
+  background-color: var(--border-color);
 }
 
 /* Figure */
@@ -507,9 +508,9 @@ blockquote blockquote {
 
 .heti p > code,
 .heti li > code {
-  background-color: #eef1f2;
+  background-color: var(--code-bg);
   padding: 2px;
-  border-radius: 8px;
+  border-radius: var(--border-radius-lg);
 }
 
 .heti pre {
@@ -521,9 +522,11 @@ blockquote blockquote {
   padding-block-end: 12px;
   padding-inline-start: 16px;
   padding-inline-end: 16px;
-  overflow: auto;
-  white-space: pre;
-  word-wrap: normal;
+  overflow-x: hidden;
+  overflow-y: visible;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   border-radius: 8px;
 }
 
@@ -534,6 +537,8 @@ blockquote blockquote {
   border-radius: 0;
   color: inherit;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   font-family: var(--code-text-font);
 }
 
@@ -667,7 +672,7 @@ mjx-container[display='block'] {
 .heti .heti-fn {
   margin-block-start: 59px;
   border-block-start: 1px solid;
-  border-block-start-color: #e6e6e6;
+  border-block-start-color: var(--border-color);
   font-size: 14px;
   line-height: 24px;
 }

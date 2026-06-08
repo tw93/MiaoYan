@@ -11,6 +11,7 @@ html {
   font-family: var(--text-font);
   -webkit-font-smoothing: subpixel-antialiased;
   overscroll-behavior: none;
+  overflow-x: hidden;
 }
 
 body {
@@ -21,6 +22,7 @@ body {
   overscroll-behavior: none;
   -webkit-overflow-scrolling: touch;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 img {
@@ -66,21 +68,25 @@ pre {
   padding: 16px;
   border-radius: var(--border-radius);
   max-width: 100%;
-  overflow-x: auto;
+  overflow-x: hidden;
   box-sizing: border-box;
 }
 
 pre code {
   font-family: var(--code-text-font);
   background-color: var(--code-bg);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* ==================== Tables ==================== */
 .heti table {
   border-color: var(--border-color);
   color: var(--text-color);
+  width: 100%;
   max-width: 100%;
-  table-layout: auto;
+  table-layout: fixed;
   box-sizing: border-box;
 }
 
@@ -88,6 +94,8 @@ pre code {
 .heti td {
   border-color: var(--border-color);
   color: var(--text-color);
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* ==================== Blockquote ==================== */

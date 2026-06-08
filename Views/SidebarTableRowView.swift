@@ -6,8 +6,8 @@ class SidebarTableRowView: ThemedTableRowView {
     }
 
     override func selectionRect() -> NSRect {
-        let horizontalInset: CGFloat = 6
-        let verticalInset: CGFloat = 3
+        let horizontalInset = Theme.Metrics.selectionInsetH
+        let verticalInset = Theme.Metrics.selectionInsetV
         let leadingOffset = indentationOffset()
         let width = max(0, bounds.width - horizontalInset * 2 - leadingOffset)
         return NSRect(
@@ -29,7 +29,8 @@ class SidebarTableRowView: ThemedTableRowView {
         guard isSelected else { return }
 
         let selectionRect = selectionRect()
-        let path = NSBezierPath(roundedRect: selectionRect, xRadius: 8, yRadius: 8)
+        let radius = Theme.Metrics.selectionCornerRadius
+        let path = NSBezierPath(roundedRect: selectionRect, xRadius: radius, yRadius: radius)
         selectionBackgroundColor().resolvedColor(for: effectiveAppearance).setFill()
         path.fill()
 
@@ -38,7 +39,7 @@ class SidebarTableRowView: ThemedTableRowView {
         let backingScale = window?.backingScaleFactor ?? NSScreen.main?.backingScaleFactor ?? 2
         let strokeWidth = 1 / backingScale
         let strokeRect = selectionRect.insetBy(dx: strokeWidth / 2, dy: strokeWidth / 2)
-        let strokePath = NSBezierPath(roundedRect: strokeRect, xRadius: 8, yRadius: 8)
+        let strokePath = NSBezierPath(roundedRect: strokeRect, xRadius: radius, yRadius: radius)
         strokePath.lineWidth = strokeWidth
         Theme.sidebarSelectionStrokeColor.resolvedColor(for: effectiveAppearance).setStroke()
         strokePath.stroke()
