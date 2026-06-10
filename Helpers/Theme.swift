@@ -18,7 +18,11 @@ enum Theme {
         /// Vertical inset of the selection pill from the row edge.
         static let selectionInsetV: CGFloat = 3
         /// Right-side gutter so long note titles truncate before the pane edge.
-        static let noteListContentInset: CGFloat = 28
+        /// The visible gutter inside the selection pill varies by title because
+        /// truncation snaps to whole glyphs (CJK chars are ~14pt), so this is
+        /// tuned to center that spread near the ~12pt left padding rather than
+        /// to a single exact value.
+        static let noteListContentInset: CGFloat = 30
     }
 
     static var textColor: Color {
