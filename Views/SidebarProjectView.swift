@@ -386,14 +386,22 @@ class SidebarProjectView: NSOutlineView,
         adjustIconSize(cell, size: defaultIconSize)
         setupBasicCellAppearance(cell, baseFont: baseFont)
         updateLabelSpacing(cell, spacing: defaultSpacing)
-        alignContentVertically(cell)
+        alignContentVertically(cell, baseFont: baseFont)
     }
 
-    private func alignContentVertically(_ cell: SidebarCellView) {
+    private func alignContentVertically(_ cell: SidebarCellView, baseFont: NSFont) {
         cell.layoutSubtreeIfNeeded()
 
         cell.icon.translatesAutoresizingMaskIntoConstraints = false
         cell.label.translatesAutoresizingMaskIntoConstraints = false
+
+        // The text field centers its whole line box, but CJK glyphs sit high in
+        // that box (the descent space below the baseline is mostly unused), so an
+        // icon centered on the cell reads slightly low next to the text. Lift the
+        // icon by half the font's descent to optically center it with the ink.
+        // The cell lives in the outline's flipped space, so a negative centerY
+        // constant moves the icon up toward the text.
+        let iconLift = (abs(baseFont.descender)).rounded() / 2
 
         var hasIconCenterY = false
         var hasLabelCenterY = false
@@ -402,8 +410,11 @@ class SidebarProjectView: NSOutlineView,
             guard constraint.firstAttribute == .centerY && constraint.secondAttribute == .centerY else { continue }
             let first = constraint.firstItem as? NSView
             let second = constraint.secondItem as? NSView
-            if first === cell.icon || second === cell.icon {
-                constraint.constant = 0
+            if first === cell.icon {
+                constraint.constant = -iconLift
+                hasIconCenterY = true
+            } else if second === cell.icon {
+                constraint.constant = iconLift
                 hasIconCenterY = true
             }
             if first === cell.label || second === cell.label {
@@ -414,7 +425,7 @@ class SidebarProjectView: NSOutlineView,
 
         if !hasIconCenterY {
             NSLayoutConstraint.activate([
-                cell.icon.centerYAnchor.constraint(equalTo: cell.centerYAnchor)
+                cell.icon.centerYAnchor.constraint(equalTo: cell.centerYAnchor, constant: -iconLift)
             ])
         }
 
