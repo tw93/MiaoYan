@@ -1257,6 +1257,10 @@ class SidebarProjectView: NSOutlineView,
                 if let isDirectory = resourceValues.isDirectory, isDirectory,
                     let isPackage = resourceValues.isPackage, !isPackage
                 {
+                    // Hide leaf folders that hold only inline attachments (images,
+                    // videos, etc.) with no notes inside, regardless of their name.
+                    if storage.isAttachmentOnlyFolder(url: fileURL) { continue }
+
                     let subProject = Project(url: fileURL, parent: project)
 
                     // Only add if not already in storage

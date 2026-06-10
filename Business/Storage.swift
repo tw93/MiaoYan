@@ -966,6 +966,7 @@ class Storage {
                         let resolvedValues = try? resolved.resourceValues(forKeys: [.isPackageKey]),
                         !(resolvedValues.isPackage ?? true)
                     {
+                        if isAttachmentOnlyFolder(url: resolved) { continue }
                         subDirs.append(fileURL as NSURL)
                     }
                     continue
@@ -974,6 +975,7 @@ class Storage {
                 if let isDirectory = resourceValues.isDirectory, isDirectory,
                     let isPackage = resourceValues.isPackage, !isPackage
                 {
+                    if isAttachmentOnlyFolder(url: fileURL) { continue }
                     subDirs.append(fileURL as NSURL)
                 }
             } catch {
@@ -982,6 +984,33 @@ class Storage {
         }
 
         return subDirs
+    }
+
+    /// True when `url` is a leaf folder that holds only attachment-style files:
+    /// at least one file, no note file (md/markdown/txt), and no subfolder. Such
+    /// folders (an `images` / `videos` dir of inline media, regardless of name)
+    /// carry nothing to navigate to, so the sidebar hides them. Empty folders and
+    /// folders that contain notes or subfolders return false, so a freshly created
+    /// folder still appears. Immediate children only, no recursion, so a large
+    /// media dir costs one shallow read and symlink loops are impossible.
+    func isAttachmentOnlyFolder(url: URL) -> Bool {
+        let keys: [URLResourceKey] = [.isDirectoryKey, .isPackageKey]
+        let options: FileManager.DirectoryEnumerationOptions = [.skipsHiddenFiles, .skipsPackageDescendants, .skipsSubdirectoryDescendants]
+        guard let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: keys, options: options) else {
+            return false
+        }
+
+        var hasFile = false
+        for case let fileURL as URL in enumerator {
+            let values = try? fileURL.resourceValues(forKeys: Set(keys))
+            // A subfolder means this is a structural folder, not a leaf media dump.
+            if values?.isDirectory == true { return false }
+            // A note file means there is something to navigate to; keep it.
+            if allowedExtensions.contains(fileURL.pathExtension.lowercased()) { return false }
+            hasFile = true
+        }
+
+        return hasFile
     }
 
     public func getCurrentProject() -> Project? {
