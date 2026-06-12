@@ -81,6 +81,7 @@ miao update             # 更新 CLI
 1. 我有两只猫：汤圆、可乐，若妙言让你开心，<a href="https://cats.tw93.fun" target="_blank">请她们吃罐头 🥩</a>。
 2. 如果你喜欢妙言，欢迎给它一个 Star，更欢迎推荐给你志同道合的朋友使用。
 3. 可以关注我的 [Twitter](https://twitter.com/HiTw93) 获取最新的更新消息，也欢迎加入 [Telegram](https://t.me/+GclQS9ZnxyI2ODQ1) 聊天群。
+4. 购买我做的 Mac 清理应用 [Mole for Mac](https://mole.fit)，也是对我最直接的支持。
 
 ## 致谢
 
