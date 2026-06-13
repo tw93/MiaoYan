@@ -77,7 +77,7 @@ Why not WYSIWYG like Typora? We prioritize pure Markdown editing experience, and
 
 ## Support
 
-- The most direct way to support me is getting [Mole for Mac](https://mole.fit), my paid app that deep cleans and speeds up your Mac.
+- The most direct way to support me is getting [Mole for Mac](https://mole.fit), my paid Mac cleanup app.
 - If MiaoYan helped you, [share it](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20A%20fast%2C%20elegant%20Markdown%20editor%20for%20Mac.) with friends or give it a star.
 - Got ideas or bugs? Open an issue or PR, feel free to contribute your best AI model.
 - I have two cats, TangYuan and Coke. If you think MiaoYan delights your life, you can feed them <a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">canned food 🥩</a>.
