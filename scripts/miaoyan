@@ -28,7 +28,7 @@ cmd_help() {
     printf "${BLUE}COMMANDS${NC}\n"
     printf "  ${GREEN}%-24s${NC} %s\n" "list [folder]" "List top-level folders, or markdown in folder"
     printf "  ${GREEN}%-24s${NC} %s\n" "search <query>" "Search notes in terminal"
-    printf "  ${GREEN}%-24s${NC} %s\n" "open <title|path>" "Open note"
+    printf "  ${GREEN}%-24s${NC} %s\n" "open <title|path>" "Open note or folder"
     printf "  ${GREEN}%-24s${NC} %s\n" "cat <title|path>" "Print note content"
     printf "  ${GREEN}%-24s${NC} %s\n" "new <title> [text]" "Create new note"
     printf "  ${GREEN}%-24s${NC} %s\n" "update" "Update to latest version"
@@ -154,6 +154,40 @@ resolve_note_path() {
     fi
 }
 
+resolve_open_path() {
+    local arg="$1"
+    local candidate
+    local note
+
+    # Explicit path from current directory or absolute path
+    if [[ -f "$arg" || -d "$arg" ]]; then
+        echo "$arg"
+        return
+    fi
+
+    # Resolve relative paths against notes root
+    if [[ "$arg" != /* ]]; then
+        candidate="$NOTES_PATH/${arg#./}"
+        if [[ -f "$candidate" || -d "$candidate" ]]; then
+            echo "$candidate"
+            return
+        fi
+        if [[ "$candidate" != *.md && -f "$candidate.md" ]]; then
+            echo "$candidate.md"
+            return
+        fi
+    elif [[ "$arg" != *.md && -f "$arg.md" ]]; then
+        echo "$arg.md"
+        return
+    fi
+
+    # Fallback to exact title match
+    note=$(find_note "$arg")
+    if [[ -n "$note" ]]; then
+        echo "$note"
+    fi
+}
+
 # Commands
 cmd_list() {
     local folder="$1"
@@ -224,8 +258,8 @@ cmd_open() {
     local file
     [[ -z "$arg" ]] && echo "Usage: miaoyan open <title|path>" >&2 && exit 1
 
-    # Prefer opening a resolved file path to enter single mode
-    file=$(resolve_note_path "$arg")
+    # Prefer opening a resolved file or folder path to enter single mode
+    file=$(resolve_open_path "$arg")
     if [[ -n "$file" ]]; then
         open -a MiaoYan "$file"
         return

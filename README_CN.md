@@ -52,7 +52,7 @@
 curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/main/scripts/install.sh | bash
 
 # 使用
-miao open <标题|路径>    # 打开笔记
+miao open <标题|路径>    # 打开笔记或文件夹
 miao new <标题> [内容]   # 创建新笔记
 miao search <关键词>     # 在终端搜索笔记
 miao list [folder]      # 列出一级目录，或列出指定目录下的 Markdown
