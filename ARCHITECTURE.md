@@ -157,25 +157,15 @@ implementation to (not a thin wrapper over) the macOS storage flow.
 - Version triplet (must stay aligned): git tag `Vx.y.z`, `MARKETING_VERSION`,
   `CURRENT_PROJECT_VERSION`. CI rejects mismatches when a tag is pushed.
 
-## What Is Not Wired Yet
+## Current Wiring Notes
 
-Tracked here so future readers do not assume the code is buggier than it is:
-
-- `Helpers/Diagnostics.swift` exists but is not yet added to the Xcode
-  target. After it is, uncomment `Diagnostics.record(...)` in
-  `AppDelegate.trackError` and a "Reveal diagnostics" menu item under Help.
-- `Business/AppEnvironment.swift` exists but is not yet added to the Xcode
-  target. After it is, replace the `private var storage = Storage.sharedInstance()`
-  in `Views/SidebarProjectView.swift:59` with
-  `private var storage = AppEnvironment.current.storage`.
-- `Helpers/UIDelay.swift` exists but is not yet added to the Xcode target.
-  After it is, the 9 sites that call `DispatchQueue.main.asyncAfter(deadline: .now() + 0.1)`
-  can be migrated to `UIDelay.short` for grep-ability.
-- `MiaoYanTests/` exists with three test files (~23 cases); the unit test
-  target needs `ruby scripts/add_tests_target.rb` (or manual wiring in Xcode)
-  before `xcodebuild test` works.
-- `.github/workflows/ci.yml` has the test step commented out for the same
-  reason; uncomment after the test target is wired.
+- `Helpers/Diagnostics.swift` is in the app target, and
+  `AppDelegate.trackError` records release diagnostics through it.
+- `Business/AppEnvironment.swift` is in the app target and is the preferred
+  facade for new singleton access.
+- `Helpers/UIDelay.swift` is in the app target for semantic async delay names.
+- `MiaoYanTests/` is wired into `MiaoYan.xcodeproj`, and CI runs the macOS unit
+  test step together with the Debug app build.
 
 ## See Also
 

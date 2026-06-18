@@ -88,7 +88,7 @@ description_body=""
 if [[ -n "$DESCRIPTION_HTML_FILE" && -f "$DESCRIPTION_HTML_FILE" ]]; then
   description_body="$(cat "$DESCRIPTION_HTML_FILE")"
 else
-  description_body="$(printf '      <p>非常感谢大家这 5 年的陪伴，妙言会一直维护下去的。考虑到后面 iOS 多端开发和降低维护成本，从 4.0 开始会统一在 App Store 发布，源码持续开源，自行编译没问题。任何赞助过或给妙言提交过代码的小伙伴，欢迎直接找我要兑换码。</p>\n      <p>Thanks so much for five years of support. MiaoYan will keep going. From 4.0 onward it will be distributed through the App Store. Source stays open and self-buildable. If you have sponsored or contributed code, feel free to DM me for a redemption code.</p>\n      <p><a href=\"https://apps.apple.com/app/id6759252269\">Mac App Store</a></p>')"
+  description_body="$(printf '      <p>妙言 4.0 新增 iPhone 和 iPad 版本,同时继续提供 GitHub 下载和 Sparkle 更新。你可以选择 App Store 自动更新,也可以继续使用 direct-download 版本。</p>\n      <p>MiaoYan 4.0 adds iPhone and iPad support while keeping GitHub downloads and Sparkle updates available. You can use App Store automatic updates or stay on the direct-download build.</p>\n      <p><a href=\"https://apps.apple.com/app/id6759252269\">Mac App Store</a> · <a href=\"https://github.com/tw93/MiaoYan/releases\">GitHub Releases</a></p>')"
 fi
 
 item_file="$(mktemp)"

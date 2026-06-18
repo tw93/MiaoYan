@@ -76,8 +76,9 @@ Build artifacts land in `.vscode/DerivedData/` (VS Code) or your default Derived
 
 ## Release Build
 
-For App Store distribution builds, GitHub Releases continues to receive git
-tags and release notes, but no DMG or ZIP is uploaded.
+MiaoYan 4.0 ships on both distribution lanes: App Store/TestFlight and
+direct-download GitHub Releases. Keep the tag, release notes, DMG, ZIP, and
+Sparkle appcast aligned before announcing the release.
 
 ### App Store Release
 
@@ -94,9 +95,10 @@ Organizer or Transporter.
 1. Bump `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in `MiaoYan.xcodeproj/project.pbxproj` across macOS and iOS configurations
 2. Confirm `.github/RELEASE_NOTES.md` matches the intended uppercase tag, for example `Vx.y.z`
 3. Create Git tag: `git tag V<version> && git push origin V<version>`
-4. Create GitHub Release with release notes only, no binary attachment
-5. Submit App Store build via Transporter
+4. Build and notarize the direct-download DMG and ZIP, then update the Sparkle appcast
+5. Create GitHub Release with release notes plus the DMG and ZIP assets
+6. Submit App Store build via Transporter or Xcode Organizer
 
-> **Self-build path still works.** `scripts/build.sh` produces a runnable Release build for local use or CI. Sparkle integration is retained so existing non-App Store installs can see the migration notice in appcast.
+> **Self-build path still works.** `scripts/build.sh` produces a runnable Release build for local use or CI. Sparkle integration remains active for direct-download users.
 
 Thank you for investing time in MiaoYan ❤️
