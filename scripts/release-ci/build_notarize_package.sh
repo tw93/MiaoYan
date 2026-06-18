@@ -284,10 +284,10 @@ if [[ -z "$SIGN_UPDATE" || ! -x "$SIGN_UPDATE" ]]; then
 fi
 
 SPARKLE_KEY_FILE="$BUILD_DIR/sparkle_private.key"
-printf '%s' "$SPARKLE_PRIVATE_KEY_BASE64" | base64_decode >"$SPARKLE_KEY_FILE"
+printf '%s\n' "$SPARKLE_PRIVATE_KEY_BASE64" >"$SPARKLE_KEY_FILE"
 
 SPARKLE_OUTPUT="$(
-  base64 <"$SPARKLE_KEY_FILE" | "$SIGN_UPDATE" --ed-key-file - "$ZIP_PATH"
+  "$SIGN_UPDATE" --ed-key-file "$SPARKLE_KEY_FILE" "$ZIP_PATH"
 )"
 SPARKLE_SIGNATURE="$(echo "$SPARKLE_OUTPUT" | grep "sparkle:edSignature" | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')"
 

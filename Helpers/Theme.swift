@@ -17,9 +17,9 @@ enum Theme {
         static let selectionInsetH: CGFloat = 6
         /// Vertical inset of the selection pill from the row edge.
         static let selectionInsetV: CGFloat = 3
-        /// Optical vertical offset for sidebar row content. Sidebar cell views
-        /// are flipped, so a positive value moves the label and icon downward.
-        static let sidebarContentOffsetY: CGFloat = 1.5
+        /// Optical vertical offset for sidebar row labels. Sidebar cell views
+        /// are flipped, so a positive value moves the text downward.
+        static let sidebarLabelOffsetY: CGFloat = 1.5
         /// Right-side gutter so long note titles truncate before the pane edge.
         /// The visible gutter inside the selection pill varies by title because
         /// truncation snaps to whole glyphs (CJK chars are ~14pt), so this is
