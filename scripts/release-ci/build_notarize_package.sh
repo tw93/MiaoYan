@@ -23,10 +23,8 @@ BACKGROUND_IMAGE_NAME="$(basename "$BACKGROUND_IMAGE_SOURCE")"
 
 if [[ -z "$VERSION" ]]; then
   VERSION="$(
-    grep "MARKETING_VERSION" "$PROJECT_DIR/MiaoYan.xcodeproj/project.pbxproj" \
-      | head -1 \
-      | sed 's/.*= \(.*\);/\1/' \
-      | tr -d ' '
+    awk -F'=|;' '/MARKETING_VERSION/ { gsub(/[[:space:]]/, "", $2); print $2; exit }' \
+      "$PROJECT_DIR/MiaoYan.xcodeproj/project.pbxproj"
   )"
 fi
 
@@ -270,13 +268,13 @@ fi
 xcrun stapler staple "$DMG_PATH" || true
 rm -rf "$STAGING_DIR" "$TEMP_DMG_PATH"
 
-SIGN_UPDATE="$(
-  find "$HOME/Library/Developer/Xcode/DerivedData" \
-    -path "*/SourcePackages/artifacts/sparkle/Sparkle/bin/sign_update" \
-    -type f \
-    2>/dev/null \
-    | head -1
-)"
+SIGN_UPDATE_CANDIDATES="$BUILD_DIR/sign_update_candidates.txt"
+find "$HOME/Library/Developer/Xcode/DerivedData" \
+  -path "*/SourcePackages/artifacts/sparkle/Sparkle/bin/sign_update" \
+  -type f \
+  >"$SIGN_UPDATE_CANDIDATES" \
+  2>/dev/null
+SIGN_UPDATE="$(sed -n '1p' "$SIGN_UPDATE_CANDIDATES")"
 
 if [[ -z "$SIGN_UPDATE" || ! -x "$SIGN_UPDATE" ]]; then
   echo "Sparkle sign_update tool not found." >&2
