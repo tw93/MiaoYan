@@ -9,14 +9,18 @@ extension ViewController {
         static let maxSidebarWidth: CGFloat = 280
         static let defaultNotelistWidth: CGFloat = 280
         static let narrowThreshold: CGFloat = 50
-        static let searchTopNarrow: CGFloat = 24.0
+        static let searchTopSidebarCollapsed: CGFloat = 30.0
         static let searchTopNormal: CGFloat = 13.0
         static let titlebarHeightNarrow: CGFloat = 54.0
+        static let titlebarHeightEditorOnly: CGFloat = 66.0
         static let titlebarHeightNormal: CGFloat = 52.0
         static let titleTopNarrow: CGFloat = 22.0
+        static let titleTopEditorOnly: CGFloat = 32.0
         static let titleTopNormal: CGFloat = 16.0
         static let titleLeadingNormal: CGFloat = 25.0
-        static let titleLeadingDetailOnly: CGFloat = 96.0
+        static let titleLeadingEditorOnly: CGFloat = 30.0
+        static let titleBarActionsTopNormal: CGFloat = 18.0
+        static let titleBarActionsTopEditorOnly: CGFloat = 28.0
     }
 
     // MARK: - Properties
@@ -32,24 +36,60 @@ extension ViewController {
         return splitView.subviews[0].frame.width
     }
 
+    private var isSidebarVisible: Bool {
+        guard let sidebarView = sidebarSplitView?.subviews.first else { return false }
+        return !sidebarView.isHidden && sidebarWidth > Theme.Metrics.collapsedSplitWidthEpsilon
+    }
+
+    private var isNotelistVisible: Bool {
+        guard let noteListView = splitView?.subviews.first else { return false }
+        return !noteListView.isHidden && notelistWidth > Theme.Metrics.collapsedSplitWidthEpsilon
+    }
+
     // MARK: - Layout Management Methods
     func checkSidebarConstraint() {
-        let isNarrow = sidebarWidth < LayoutConstants.narrowThreshold && !UserDefaultsManagement.isWillFullScreen
-        searchTopConstraint.constant = isNarrow ? LayoutConstants.searchTopNarrow : LayoutConstants.searchTopNormal
+        let isSidebarCollapsed = !isSidebarVisible && !UserDefaultsManagement.isWillFullScreen
+        searchTopConstraint.constant = isSidebarCollapsed ? LayoutConstants.searchTopSidebarCollapsed : LayoutConstants.searchTopNormal
     }
 
     func checkTitlebarTopConstraint() {
-        let isNarrow = notelistWidth < LayoutConstants.narrowThreshold && !UserDefaultsManagement.isWillFullScreen
-        titiebarHeight.constant = isNarrow ? LayoutConstants.titlebarHeightNarrow : LayoutConstants.titlebarHeightNormal
-        titleTopConstraint.constant = isNarrow ? LayoutConstants.titleTopNarrow : LayoutConstants.titleTopNormal
-        let isDetailOnly = isNarrow && sidebarWidth < LayoutConstants.narrowThreshold
-        updateTitleLeadingInset(isDetailOnly ? LayoutConstants.titleLeadingDetailOnly : LayoutConstants.titleLeadingNormal)
+        let isNarrow = !isNotelistVisible && !UserDefaultsManagement.isWillFullScreen
+        let isEditorOnly = isNarrow && !isSidebarVisible
+
+        if isEditorOnly {
+            titiebarHeight.constant = LayoutConstants.titlebarHeightEditorOnly
+            titleTopConstraint.constant = LayoutConstants.titleTopEditorOnly
+        } else {
+            titiebarHeight.constant = isNarrow ? LayoutConstants.titlebarHeightNarrow : LayoutConstants.titlebarHeightNormal
+            titleTopConstraint.constant = isNarrow ? LayoutConstants.titleTopNarrow : LayoutConstants.titleTopNormal
+        }
+
+        updateTitleLeadingInset(isEditorOnly ? LayoutConstants.titleLeadingEditorOnly : LayoutConstants.titleLeadingNormal)
+        updateTitleBarActionsTop(isEditorOnly ? LayoutConstants.titleBarActionsTopEditorOnly : LayoutConstants.titleBarActionsTopNormal)
     }
 
     private func updateTitleLeadingInset(_ inset: CGFloat) {
         guard let titleLabel, let container = titleLabel.superview else { return }
         for constraint in container.constraints where constraint.firstItem === titleLabel && constraint.firstAttribute == .leading {
             constraint.constant = inset
+        }
+    }
+
+    private func updateTitleBarActionsTop(_ top: CGFloat) {
+        guard let titleBarAdditionalView, let formatButton else { return }
+
+        for constraint in titleBarAdditionalView.constraints {
+            let first = constraint.firstItem as? NSView
+            let second = constraint.secondItem as? NSView
+            guard constraint.firstAttribute == .top,
+                constraint.secondAttribute == .top
+            else { continue }
+
+            if first === formatButton && second === titleBarAdditionalView {
+                constraint.constant = top
+            } else if first === titleBarAdditionalView && second === formatButton {
+                constraint.constant = -top
+            }
         }
     }
 
@@ -60,7 +100,9 @@ extension ViewController {
     }
 
     func setSidebarVisible(_ visible: Bool, saveState: Bool = true) {
+        let sidebarView = sidebarSplitView.subviews.first
         if visible {
+            sidebarView?.isHidden = false
             let savedWidth = UserDefaultsManagement.realSidebarSize
             let targetWidth = max(savedWidth, Int(LayoutConstants.minSidebarWidth))
 
@@ -70,13 +112,15 @@ extension ViewController {
 
             sidebarSplitView.setPosition(CGFloat(targetWidth), ofDividerAt: 0)
         } else {
-            if saveState && !isPresentationMode {
+            if saveState && !isPresentationMode && sidebarWidth > Theme.Metrics.sidebarCollapseSnapWidth {
                 UserDefaultsManagement.realSidebarSize = Int(sidebarWidth)
             }
             sidebarSplitView.setPosition(0, ofDividerAt: 0)
+            sidebarView?.isHidden = true
         }
         editArea.updateTextContainerInset()
         sidebarSplitView?.layoutSubtreeIfNeeded()
+        (sidebarSplitView as? ThemedSplitView)?.applyDividerColor()
         updateSidebarColumnWidth()
         checkSidebarConstraint()
         updateToolbarButtonTints()
@@ -84,18 +128,23 @@ extension ViewController {
 
     func ensurePanelsVisibleAtStartup() {
         guard !UserDefaultsManagement.isSingleMode else { return }
-        let shouldShowSidebar = sidebarWidth > 0
-        let shouldShowNotelist = notelistWidth > 0
+        let shouldShowSidebar = isSidebarVisible
+        let shouldShowNotelist = isNotelistVisible
 
         if shouldShowSidebar && !shouldShowNotelist {
             showNoteList("")
         }
+
+        normalizeNotelistWidth(saveState: false)
     }
 
     private func setNotelistVisible(_ visible: Bool, saveState: Bool = true) {
+        let noteListView = splitView.subviews.first
         if visible {
+            noteListView?.isHidden = false
             let savedWidth = UserDefaultsManagement.sidebarSize
-            let targetWidth = savedWidth > 0 ? savedWidth : Int(LayoutConstants.defaultNotelistWidth)
+            let fallbackWidth = Int(LayoutConstants.defaultNotelistWidth)
+            let targetWidth = max(savedWidth > 0 ? savedWidth : fallbackWidth, Int(Theme.Metrics.noteListMinimumWidth))
             splitView.shouldHideDivider = false
             splitView.setPosition(CGFloat(targetWidth), ofDividerAt: 0)
 
@@ -106,29 +155,57 @@ extension ViewController {
                 }
             }
         } else {
-            if saveState && !isPresentationMode {
+            if saveState && !isPresentationMode && notelistWidth >= Theme.Metrics.noteListMinimumWidth {
                 UserDefaultsManagement.sidebarSize = Int(notelistWidth)
             }
             splitView.shouldHideDivider = true
             splitView.setPosition(0, ofDividerAt: 0)
+            noteListView?.isHidden = true
         }
         editArea.updateTextContainerInset()
+        splitView.layoutSubtreeIfNeeded()
+        splitView.applyDividerColor()
+        checkTitlebarTopConstraint()
+        updateToolbarButtonTints()
+    }
+
+    private func normalizeNotelistWidth(saveState: Bool) {
+        let width = notelistWidth
+        guard !isNormalizingNotelistWidth,
+            isNotelistVisible,
+            width < Theme.Metrics.noteListMinimumWidth
+        else { return }
+
+        isNormalizingNotelistWidth = true
+        defer { isNormalizingNotelistWidth = false }
+        if width < Theme.Metrics.noteListCollapseSnapWidth {
+            collapseNotelist(saveState: saveState)
+        } else {
+            setNotelistVisible(true, saveState: saveState)
+        }
+    }
+
+    private func collapseNotelist(saveState: Bool = true) {
+        setNotelistVisible(false, saveState: saveState)
+        if isSidebarVisible {
+            setSidebarVisible(false, saveState: saveState)
+        }
     }
 
     // MARK: - Sidebar Management
 
     func hideSidebar(_ sender: Any) {
-        guard sidebarWidth > 0 else { return }
+        guard isSidebarVisible else { return }
 
         // 隐藏 sidebar → 不影响 notelist（允许两栏模式）
         setSidebarVisible(false)
     }
 
     func showSidebar(_ sender: Any) {
-        guard sidebarWidth == 0 else { return }
+        guard !isSidebarVisible else { return }
 
         // 显示 sidebar → 自动显示 notelist
-        if notelistWidth == 0 {
+        if !isNotelistVisible {
             setNotelistVisible(true)
         }
         setSidebarVisible(true)
@@ -137,40 +214,37 @@ extension ViewController {
     // MARK: - Note List Management
 
     func showNoteList(_ sender: Any) {
-        guard notelistWidth == 0 else { return }
+        guard !isNotelistVisible else { return }
 
         // 显示 notelist → 不强制显示 sidebar（允许两栏模式）
         setNotelistVisible(true)
     }
 
     func hideNoteList(_ sender: Any) {
-        guard notelistWidth > 0 else { return }
+        guard isNotelistVisible else { return }
 
         // 隐藏 notelist → 自动隐藏 sidebar
-        setNotelistVisible(false)
-        if sidebarWidth > 0 {
-            setSidebarVisible(false)
-        }
+        collapseNotelist()
     }
 
     // MARK: - Toggle Actions
     @IBAction func toggleNoteList(_ sender: Any) {
         guard splitView != nil else { return }
-        notelistWidth == 0 ? showNoteList(sender) : hideNoteList(sender)
+        isNotelistVisible ? hideNoteList(sender) : showNoteList(sender)
     }
 
     @IBAction func toggleLayoutCycle(_ sender: Any) {
         guard splitView != nil, sidebarSplitView != nil else { return }
 
         // 1. If Sidebar is visible -> Hide Sidebar (Enter Double Column)
-        if sidebarWidth > 0 {
+        if isSidebarVisible {
             setSidebarVisible(false)
             isUnfoldingLayout = false
             return
         }
 
         // 2. If Note List is visible -> Check unfolding direction
-        if notelistWidth > 0 {
+        if isNotelistVisible {
             if isUnfoldingLayout {
                 // Direction: Unfolding -> Show Sidebar (Return to Full)
                 setSidebarVisible(true)
@@ -189,7 +263,7 @@ extension ViewController {
 
     @IBAction func toggleSidebarPanel(_ sender: Any) {
         guard sidebarSplitView != nil else { return }
-        sidebarWidth == 0 ? showSidebar(sender) : hideSidebar(sender)
+        isSidebarVisible ? hideSidebar(sender) : showSidebar(sender)
     }
 
     @IBAction func toggleSplitMode(_ sender: Any) {
@@ -293,16 +367,16 @@ extension ViewController {
 
         if swipedLeft {
             // 向左滑：优先隐藏 sidebar，然后隐藏 notelist
-            if sidebarWidth > 0 {
+            if isSidebarVisible {
                 hideSidebar("")
-            } else if notelistWidth > 0 {
+            } else if isNotelistVisible {
                 hideNoteList("")
             }
         } else {
             // 向右滑：优先显示 notelist，然后显示 sidebar
-            if notelistWidth == 0 {
+            if !isNotelistVisible {
                 showNoteList("")
-            } else if sidebarWidth == 0 {
+            } else if !isSidebarVisible {
                 showSidebar("")
             }
         }
@@ -317,7 +391,22 @@ extension ViewController {
         guard let splitView = notification.object as? NSSplitView,
             splitView == sidebarSplitView
         else { return }
+        (sidebarSplitView as? ThemedSplitView)?.applyDividerColor()
         updateSidebarColumnWidth()
+        checkSidebarConstraint()
+        updateToolbarButtonTints()
+    }
+
+    func splitView(_ splitView: NSSplitView, constrainSplitPosition proposedPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
+        if splitView == sidebarSplitView,
+            dividerIndex == 0,
+            proposedPosition > 0,
+            proposedPosition <= Theme.Metrics.sidebarCollapseSnapWidth
+        {
+            return 0
+        }
+
+        return proposedPosition
     }
 
     func splitView(_ splitView: NSSplitView, constrainMinCoordinate proposedMinimumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
@@ -347,6 +436,10 @@ extension ViewController {
         checkSidebarConstraint()
         checkTitlebarTopConstraint()
         updateSidebarColumnWidth()
+
+        if view.window?.inLiveResize != true {
+            normalizeNotelistWidth(saveState: false)
+        }
 
         handleEditorContentResize()
     }

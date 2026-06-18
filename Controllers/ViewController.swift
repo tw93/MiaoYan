@@ -137,6 +137,7 @@ class ViewController:
     var editorLineStartsCacheLength: Int = -1
     var needsEditorModeUpdateAfterPreview = false
     var isUnfoldingLayout = false
+    var isNormalizingNotelistWidth = false
     @IBOutlet var search: SearchTextField!
     @IBOutlet var notesTableView: NotesTableView!
     @IBOutlet var noteMenu: NSMenu! {
@@ -508,6 +509,8 @@ class ViewController:
             guard let self else { return }
             self.view.layoutSubtreeIfNeeded()
             self.updateSidebarColumnWidth()
+            self.checkSidebarConstraint()
+            self.checkTitlebarTopConstraint()
         }
     }
 

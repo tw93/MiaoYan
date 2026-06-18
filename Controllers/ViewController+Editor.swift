@@ -529,10 +529,10 @@ extension ViewController {
         let currentSidebarWidth = sidebarWidth
         let currentNotelistWidth = notelistWidth
 
-        if currentSidebarWidth > 86 {
+        if currentSidebarWidth > Theme.Metrics.sidebarCollapseSnapWidth {
             UserDefaultsManagement.realSidebarSize = Int(currentSidebarWidth)
         }
-        if currentNotelistWidth > 0 {
+        if currentNotelistWidth >= Theme.Metrics.noteListMinimumWidth {
             UserDefaultsManagement.sidebarSize = Int(currentNotelistWidth)
         }
         if let clipView = notesTableView.superview as? NSClipView {

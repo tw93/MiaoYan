@@ -17,9 +17,22 @@ enum Theme {
         static let selectionInsetH: CGFloat = 6
         /// Vertical inset of the selection pill from the row edge.
         static let selectionInsetV: CGFloat = 3
-        /// Optical vertical offset for sidebar row labels. Sidebar cell views
-        /// are flipped, so a positive value moves the text downward.
-        static let sidebarLabelOffsetY: CGFloat = 1.5
+        /// Split widths below this are treated as collapsed.
+        static let collapsedSplitWidthEpsilon: CGFloat = 1
+        /// Project sidebar snap point when dragging toward the closed state.
+        static let sidebarCollapseSnapWidth: CGFloat = 86
+        /// Smallest useful note-list width. Below this the list shows clipped
+        /// dates and titles instead of a usable column.
+        static let noteListMinimumWidth: CGFloat = 220
+        /// Note-list snap point when dragging toward the closed state.
+        static let noteListCollapseSnapWidth: CGFloat = 180
+        /// Standard sidebar rows keep icon and label on the same Auto Layout
+        /// center. Text drawing is nudged separately to account for CJK ink.
+        static let sidebarStandardIconOffsetY: CGFloat = 0
+        static let sidebarLabelOffsetY: CGFloat = 0
+        static let sidebarStandardLabelVerticalNudge: CGFloat = 1.5
+        static let sidebarBrandLabelVerticalNudge: CGFloat = 3.5
+        static let sidebarBrandIconOffsetY: CGFloat = 0
         /// Right-side gutter so long note titles truncate before the pane edge.
         /// The visible gutter inside the selection pill varies by title because
         /// truncation snaps to whole glyphs (CJK chars are ~14pt), so this is

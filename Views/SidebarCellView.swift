@@ -1,5 +1,59 @@
 import Cocoa
 
+final class SidebarLabelCell: NSTextFieldCell {
+    var verticalNudge: CGFloat = 0
+
+    override func drawingRect(forBounds rect: NSRect) -> NSRect {
+        nudgedRect(forBounds: rect)
+    }
+
+    override func edit(
+        withFrame cellFrame: NSRect,
+        in controlView: NSView,
+        editor textObj: NSText,
+        delegate: Any?,
+        event: NSEvent?
+    ) {
+        super.edit(
+            withFrame: nudgedRect(forBounds: cellFrame),
+            in: controlView,
+            editor: textObj,
+            delegate: delegate,
+            event: event
+        )
+    }
+
+    override func select(
+        withFrame cellFrame: NSRect,
+        in controlView: NSView,
+        editor textObj: NSText,
+        delegate: Any?,
+        start selStart: Int,
+        length selLength: Int
+    ) {
+        super.select(
+            withFrame: nudgedRect(forBounds: cellFrame),
+            in: controlView,
+            editor: textObj,
+            delegate: delegate,
+            start: selStart,
+            length: selLength
+        )
+    }
+
+    override func copy(with zone: NSZone? = nil) -> Any {
+        let copied = super.copy(with: zone) as! SidebarLabelCell
+        copied.verticalNudge = verticalNudge
+        return copied
+    }
+
+    private func nudgedRect(forBounds rect: NSRect) -> NSRect {
+        var textRect = super.drawingRect(forBounds: rect)
+        textRect.origin.y += verticalNudge
+        return textRect
+    }
+}
+
 @MainActor
 class SidebarCellView: NSTableCellView {
     private enum LayoutConstants {
@@ -22,6 +76,7 @@ class SidebarCellView: NSTableCellView {
         MainActor.assumeIsolated { [self] in
             guard let label = label else { return }
 
+            installSidebarLabelCellIfNeeded(label)
             label.lineBreakMode = .byTruncatingTail
             label.cell?.truncatesLastVisibleLine = true
             label.cell?.wraps = false
@@ -29,6 +84,29 @@ class SidebarCellView: NSTableCellView {
             label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         }
+    }
+
+    private func installSidebarLabelCellIfNeeded(_ label: NSTextField) {
+        guard !(label.cell is SidebarLabelCell),
+            let existingCell = label.cell as? NSTextFieldCell
+        else { return }
+
+        let labelCell = SidebarLabelCell(textCell: existingCell.stringValue)
+        labelCell.font = existingCell.font
+        labelCell.textColor = existingCell.textColor
+        labelCell.alignment = existingCell.alignment
+        labelCell.lineBreakMode = existingCell.lineBreakMode
+        labelCell.isEditable = existingCell.isEditable
+        labelCell.isSelectable = existingCell.isSelectable
+        labelCell.isBordered = existingCell.isBordered
+        labelCell.isBezeled = existingCell.isBezeled
+        labelCell.drawsBackground = existingCell.drawsBackground
+        labelCell.backgroundColor = existingCell.backgroundColor
+        labelCell.sendsActionOnEndEditing = existingCell.sendsActionOnEndEditing
+        labelCell.wraps = false
+        labelCell.usesSingleLineMode = true
+        labelCell.truncatesLastVisibleLine = true
+        label.cell = labelCell
     }
 
     override func layout() {

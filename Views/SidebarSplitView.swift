@@ -5,13 +5,22 @@ class SidebarSplitView: ThemedSplitView {
     private var isUserDragging = false
 
     override func currentDividerColor() -> NSColor {
+        isDividerHidden ? .clear : Theme.splitDividerColor
+    }
+
+    override var dividerThickness: CGFloat {
+        isDividerHidden ? 0 : super.dividerThickness
+    }
+
+    private var isDividerHidden: Bool {
         let sidebarWidth = subviews.first?.frame.width ?? 0
-        return sidebarWidth == 0 ? Theme.paneBackgroundColor : Theme.splitDividerColor
+        let isSidebarHidden = subviews.first?.isHidden == true
+        return isSidebarHidden || sidebarWidth <= Theme.Metrics.collapsedSplitWidthEpsilon
     }
 
     func splitView(_ splitView: NSSplitView, constrainSplitPosition proposedPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
         if dividerIndex == 0 && isUserDragging {
-            if proposedPosition <= 86 {
+            if proposedPosition <= Theme.Metrics.sidebarCollapseSnapWidth {
                 DispatchQueue.main.async {
                     if let vc = AppContext.shared.viewController {
                         vc.hideSidebar("")
@@ -37,7 +46,7 @@ class SidebarSplitView: ThemedSplitView {
 
         if let vc = AppContext.shared.viewController {
             let sidebarWidth = vc.sidebarSplitView.subviews[0].frame.width
-            if sidebarWidth > 86 {
+            if sidebarWidth > Theme.Metrics.sidebarCollapseSnapWidth {
                 UserDefaultsManagement.realSidebarSize = Int(sidebarWidth)
             }
         }

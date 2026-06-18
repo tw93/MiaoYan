@@ -385,25 +385,21 @@ class SidebarProjectView: NSOutlineView,
         updateIconLeading(cell, leading: defaultIconLeading)
         adjustIconSize(cell, size: defaultIconSize)
         setupBasicCellAppearance(cell, baseFont: baseFont)
+        updateLabelVerticalNudge(cell, nudge: Theme.Metrics.sidebarStandardLabelVerticalNudge)
         updateLabelSpacing(cell, spacing: defaultSpacing)
-        alignContentVertically(cell, baseFont: baseFont)
+        alignContentVertically(cell)
     }
 
-    private func alignContentVertically(_ cell: SidebarCellView, baseFont: NSFont) {
+    private func alignContentVertically(_ cell: SidebarCellView) {
         cell.layoutSubtreeIfNeeded()
 
         cell.icon.translatesAutoresizingMaskIntoConstraints = false
         cell.label.translatesAutoresizingMaskIntoConstraints = false
 
-        // The text field centers its whole line box, but CJK glyphs sit high in
-        // that box (the descent space below the baseline is mostly unused).
-        // Move the label down slightly, then lift the icon by half the font's
-        // descent so icon ink still aligns with text ink without shifting the
-        // logo together with the text.
-        // The cell lives in the outline's flipped space, so positive centerY
-        // constants move the text downward.
+        // Keep the view frames on the same center line. CJK ink is adjusted by
+        // SidebarLabelCell drawing, so the constraints remain stable.
+        let iconOffset = Theme.Metrics.sidebarStandardIconOffsetY
         let labelOffset = Theme.Metrics.sidebarLabelOffsetY
-        let iconLift = (abs(baseFont.descender)).rounded() / 2
 
         var hasIconCenterY = false
         var hasLabelCenterY = false
@@ -413,10 +409,10 @@ class SidebarProjectView: NSOutlineView,
             let first = constraint.firstItem as? NSView
             let second = constraint.secondItem as? NSView
             if first === cell.icon {
-                constraint.constant = -iconLift
+                constraint.constant = iconOffset
                 hasIconCenterY = true
             } else if second === cell.icon {
-                constraint.constant = iconLift
+                constraint.constant = -iconOffset
                 hasIconCenterY = true
             }
             if first === cell.label {
@@ -430,7 +426,7 @@ class SidebarProjectView: NSOutlineView,
 
         if !hasIconCenterY {
             NSLayoutConstraint.activate([
-                cell.icon.centerYAnchor.constraint(equalTo: cell.centerYAnchor, constant: -iconLift)
+                cell.icon.centerYAnchor.constraint(equalTo: cell.centerYAnchor, constant: iconOffset)
             ])
         }
 
@@ -507,6 +503,13 @@ class SidebarProjectView: NSOutlineView,
         cell.layoutSubtreeIfNeeded()
     }
 
+    private func updateLabelVerticalNudge(_ cell: SidebarCellView, nudge: CGFloat) {
+        if let labelCell = cell.label.cell as? SidebarLabelCell {
+            labelCell.verticalNudge = nudge
+            cell.label.needsDisplay = true
+        }
+    }
+
     private func configureForSidebarItemType(_ cell: SidebarCellView, sidebarItem: SidebarItem, baseFont: NSFont, accentColor: NSColor) {
         // The "妙言" header lockup keeps its pre-macOS-26 sizing: the modern
         // chrome compaction (icon 24->20, font +2->+1) made it read noticeably
@@ -526,18 +529,22 @@ class SidebarProjectView: NSOutlineView,
             adjustIconSize(cell, size: accentIconSize)
             cell.label.font = accentFont
             cell.label.textColor = accentColor
+            updateLabelVerticalNudge(cell, nudge: Theme.Metrics.sidebarBrandLabelVerticalNudge)
             updateLabelSpacing(cell, spacing: accentSpacing)
             cell.label.lineBreakMode = .byTruncatingTail
             cell.label.cell?.truncatesLastVisibleLine = true
-            // Keep the bird icon slightly above the title because its visual
-            // content is biased below center. The title offset is applied by
-            // the shared label constraint above.
+            // The bird icon has a different visual center from folder icons.
             for constraint in cell.constraints
-            where constraint.firstAttribute == .centerY && constraint.secondAttribute == .centerY
-                && (constraint.firstItem as? NSView) === cell.icon
-            {
-                constraint.constant = -3
-                break
+            where constraint.firstAttribute == .centerY && constraint.secondAttribute == .centerY {
+                let first = constraint.firstItem as? NSView
+                let second = constraint.secondItem as? NSView
+                if first === cell.icon {
+                    constraint.constant = Theme.Metrics.sidebarBrandIconOffsetY
+                    break
+                } else if second === cell.icon {
+                    constraint.constant = -Theme.Metrics.sidebarBrandIconOffsetY
+                    break
+                }
             }
 
         case .Trash:
