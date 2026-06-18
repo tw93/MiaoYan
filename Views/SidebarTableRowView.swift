@@ -8,12 +8,11 @@ class SidebarTableRowView: ThemedTableRowView {
     override func selectionRect() -> NSRect {
         let horizontalInset = Theme.Metrics.selectionInsetH
         let verticalInset = Theme.Metrics.selectionInsetV
-        let verticalOffset = Theme.Metrics.sidebarSelectionOffsetY
         let leadingOffset = indentationOffset()
         let width = max(0, bounds.width - horizontalInset * 2 - leadingOffset)
         return NSRect(
             x: horizontalInset + leadingOffset,
-            y: verticalInset + verticalOffset,
+            y: verticalInset,
             width: width,
             height: bounds.height - verticalInset * 2
         )

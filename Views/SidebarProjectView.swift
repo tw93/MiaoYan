@@ -396,11 +396,12 @@ class SidebarProjectView: NSOutlineView,
         cell.label.translatesAutoresizingMaskIntoConstraints = false
 
         // The text field centers its whole line box, but CJK glyphs sit high in
-        // that box (the descent space below the baseline is mostly unused), so an
-        // icon centered on the cell reads slightly low next to the text. Lift the
-        // icon by half the font's descent to optically center it with the ink.
-        // The cell lives in the outline's flipped space, so a negative centerY
-        // constant moves the icon up toward the text.
+        // that box (the descent space below the baseline is mostly unused).
+        // Move the whole row lockup down slightly, then lift the icon by half
+        // the font's descent so icon ink still aligns with text ink.
+        // The cell lives in the outline's flipped space, so positive centerY
+        // constants move content downward.
+        let contentOffset = Theme.Metrics.sidebarContentOffsetY
         let iconLift = (abs(baseFont.descender)).rounded() / 2
 
         var hasIconCenterY = false
@@ -411,27 +412,30 @@ class SidebarProjectView: NSOutlineView,
             let first = constraint.firstItem as? NSView
             let second = constraint.secondItem as? NSView
             if first === cell.icon {
-                constraint.constant = -iconLift
+                constraint.constant = contentOffset - iconLift
                 hasIconCenterY = true
             } else if second === cell.icon {
-                constraint.constant = iconLift
+                constraint.constant = iconLift - contentOffset
                 hasIconCenterY = true
             }
-            if first === cell.label || second === cell.label {
-                constraint.constant = 0
+            if first === cell.label {
+                constraint.constant = contentOffset
+                hasLabelCenterY = true
+            } else if second === cell.label {
+                constraint.constant = -contentOffset
                 hasLabelCenterY = true
             }
         }
 
         if !hasIconCenterY {
             NSLayoutConstraint.activate([
-                cell.icon.centerYAnchor.constraint(equalTo: cell.centerYAnchor, constant: -iconLift)
+                cell.icon.centerYAnchor.constraint(equalTo: cell.centerYAnchor, constant: contentOffset - iconLift)
             ])
         }
 
         if !hasLabelCenterY {
             NSLayoutConstraint.activate([
-                cell.label.centerYAnchor.constraint(equalTo: cell.centerYAnchor)
+                cell.label.centerYAnchor.constraint(equalTo: cell.centerYAnchor, constant: contentOffset)
             ])
         }
     }
@@ -524,12 +528,14 @@ class SidebarProjectView: NSOutlineView,
             updateLabelSpacing(cell, spacing: accentSpacing)
             cell.label.lineBreakMode = .byTruncatingTail
             cell.label.cell?.truncatesLastVisibleLine = true
-            // Shift icon up to compensate for the bird icon's visual content being biased below center
+            // Keep the bird icon slightly above the title because its visual
+            // content is biased below center, while still following the row's
+            // small downward content offset.
             for constraint in cell.constraints
             where constraint.firstAttribute == .centerY && constraint.secondAttribute == .centerY
                 && (constraint.firstItem as? NSView) === cell.icon
             {
-                constraint.constant = -3
+                constraint.constant = Theme.Metrics.sidebarContentOffsetY - 3
                 break
             }
 
