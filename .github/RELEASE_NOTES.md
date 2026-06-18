@@ -5,7 +5,7 @@
 3. iOS 支持 iCloud 笔记库、外部文件夹、置顶笔记、新建和编辑
 4. 优化 iOS 首次同步、大库加载、搜索和卡片预览,打开更稳
 5. macOS 新增目录菜单和 cmd+5 快捷键,长文导航更直接
-6. 修复 Sparkle 版本号漂移、PDF Mermaid 导出、附件文件名等问题
+6. 修复 Sparkle 签名和版本号漂移、侧边栏选中态对齐、PDF Mermaid 导出、附件文件名等问题
 7. 改进保存、删除、版本历史、Finder 打开、符号链接和 iCloud placeholder 场景
 
 ---
@@ -15,5 +15,5 @@
 3. Support iCloud libraries, external folders, pinned notes, new notes, and editing on iOS
 4. Improve iOS first sync, large library loading, search, and note card previews
 5. Add a TOC menu item and cmd+5 shortcut on macOS for faster long-note navigation
-6. Fix Sparkle version drift, PDF Mermaid export, and attachment filenames with spaces or punctuation
+6. Fix Sparkle signing and version drift, sidebar selection alignment, PDF Mermaid export, and attachment filenames with spaces or punctuation
 7. Strengthen save, delete, version history, Finder-open, symlink, and iCloud placeholder handling

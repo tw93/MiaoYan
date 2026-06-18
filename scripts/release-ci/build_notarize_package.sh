@@ -297,6 +297,10 @@ if [[ -z "$SPARKLE_SIGNATURE" ]]; then
   exit 1
 fi
 
+"$PROJECT_DIR/scripts/release-ci/verify_sparkle_signature.sh" \
+  --zip "$ZIP_PATH" \
+  --signature "$SPARKLE_SIGNATURE"
+
 ZIP_SIZE="$(stat -f%z "$ZIP_PATH")"
 PUB_DATE="$(LC_ALL=C date -u "+%a, %d %b %Y %H:%M:%S +0000")"
 DMG_SHA256="$(shasum -a 256 "$DMG_PATH" | awk '{print $1}')"

@@ -22,6 +22,7 @@ Use this skill only when the maintainer explicitly asks for a GitHub Release.
 - `CURRENT_PROJECT_VERSION` must equal `MARKETING_VERSION`. Sparkle compares `sparkle:version` in appcast.xml against the app's `CFBundleVersion` (which maps to `CURRENT_PROJECT_VERSION`). If they diverge, users get an infinite update prompt loop (see V3.5.1 incident, #524).
 - Release notes should be prepared before tagging.
 - Signing, notarization, and Sparkle credentials are maintainer-managed. Do not commit credential paths, private key filenames, passwords, or secret values.
+- Sparkle signing must use the MiaoYan release key. Do not rely on the default Sparkle Keychain account because it may belong to another app.
 
 ## Preflight
 
@@ -58,6 +59,7 @@ gh run list --limit 5
 ```
 
 After publication, confirm that the release assets exist, the appcast points at the intended ZIP, and the Sparkle signature metadata matches the published ZIP.
+Use `scripts/release-ci/verify_sparkle_signature.sh --zip <zip> --signature <signature>` to verify the appcast signature against the ZIP bytes and the app's embedded `SUPublicEDKey` before pushing appcast changes.
 
 ## Safety Rules
 
