@@ -1,4 +1,4 @@
-# V4.0.0
+# V4.0.0 Valstrax 🚀
 
 1. 新增 iPhone 和 iPad 版本,同一个 App Store 购买可在 macOS 和 iOS 使用
 2. iPad 提供三栏布局,文件夹、笔记列表和阅读详情同时展开

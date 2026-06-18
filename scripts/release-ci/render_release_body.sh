@@ -14,6 +14,7 @@ fi
 
 HEADER="$(head -1 "$NOTES_FILE")"
 VERSION="$(printf '%s' "$HEADER" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
+TITLE="$(printf '%s' "$HEADER" | sed -E 's/^#[[:space:]]*//')"
 
 format_item() {
   local line="$1"
@@ -28,7 +29,7 @@ cat <<EOF
   <a href="https://miaoyan.app/" target="_blank">
     <img src="https://gw.alipayobjects.com/zos/k/t0/43.png" width="110" />
   </a>
-  <h1 align="center">MiaoYan V${VERSION}</h1>
+  <h1 align="center">MiaoYan ${TITLE}</h1>
   <div align="center">A native Markdown editor for engineers.</div>
 </p>
 EOF
