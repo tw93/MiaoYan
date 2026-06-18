@@ -3,6 +3,35 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>4.0.0</title>
+      <link>https://github.com/tw93/MiaoYan/releases</link>
+      <description><![CDATA[
+  <h3>V4.0.0</h3>
+  <ol>
+    <li>Add iPhone and iPad support with one Universal Purchase across macOS and iOS</li>
+    <li>Add a real iPad three-column layout for folders, notes, and reading</li>
+    <li>Support iCloud libraries, external folders, pinned notes, new notes, and editing on iOS</li>
+    <li>Improve iOS first sync, large library loading, search, and note card previews</li>
+    <li>Add a TOC menu item and cmd+5 shortcut on macOS for faster long-note navigation</li>
+    <li>Fix Sparkle version drift, PDF Mermaid export, and attachment filenames with spaces or punctuation</li>
+    <li>Strengthen save, delete, version history, Finder-open, symlink, and iCloud placeholder handling</li>
+  </ol>
+  <h3>V4.0.0</h3>
+  <ol>
+    <li>新增 iPhone 和 iPad 版本,同一个 App Store 购买可在 macOS 和 iOS 使用</li>
+    <li>iPad 提供三栏布局,文件夹、笔记列表和阅读详情同时展开</li>
+    <li>iOS 支持 iCloud 笔记库、外部文件夹、置顶笔记、新建和编辑</li>
+    <li>优化 iOS 首次同步、大库加载、搜索和卡片预览,打开更稳</li>
+    <li>macOS 新增目录菜单和 cmd+5 快捷键,长文导航更直接</li>
+    <li>修复 Sparkle 版本号漂移、PDF Mermaid 导出、附件文件名等问题</li>
+    <li>改进保存、删除、版本历史、Finder 打开、符号链接和 iCloud placeholder 场景</li>
+  </ol>
+          ]]>      </description>
+      <pubDate>Thu, 18 Jun 2026 07:54:22 +0000</pubDate>
+      <enclosure url="https://github.com/tw93/MiaoYan/releases/download/V4.0.0/MiaoYan_V4.0.0.zip" sparkle:shortVersionString="4.0.0" sparkle:version="4.0.0" sparkle:edSignature="vrB8VYbctovvmTgyFmH6ptrGBNZwde8ry11ASv3+G8Uf4bRTXr2g1PubX1XSpfbPOzF5fM9wzoj/9dQgjOIrDg==" length="24430901" type="application/octet-stream"/>
+      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>3.5.1</title>
       <link>https://github.com/tw93/MiaoYan/releases</link>
       <description><![CDATA[
