@@ -51,6 +51,38 @@ base64_decode() {
   fi
 }
 
+submit_notary() {
+  local artifact_path="$1"
+  local output_file="$2"
+
+  if [[ -n "$NOTARY_KEY_ID" && -n "$NOTARY_ISSUER_ID" && -n "$NOTARY_API_KEY_P8" ]]; then
+    local notary_key_file="$BUILD_DIR/AuthKey.p8"
+    if [[ ! -f "$notary_key_file" ]]; then
+      printf '%s' "$NOTARY_API_KEY_P8" | base64_decode >"$notary_key_file"
+    fi
+    xcrun notarytool submit "$artifact_path" \
+      --key "$notary_key_file" \
+      --key-id "$NOTARY_KEY_ID" \
+      --issuer "$NOTARY_ISSUER_ID" \
+      --wait | tee "$output_file"
+  elif [[ -n "$NOTARY_APPLE_ID" && -n "$NOTARY_PASSWORD" && -n "$TEAM_ID" ]]; then
+    xcrun notarytool submit "$artifact_path" \
+      --apple-id "$NOTARY_APPLE_ID" \
+      --team-id "$TEAM_ID" \
+      --password "$NOTARY_PASSWORD" \
+      --wait | tee "$output_file"
+  else
+    echo "Notary credentials missing. Provide API key credentials or Apple ID credentials." >&2
+    exit 1
+  fi
+
+  if ! grep -q "status: Accepted" "$output_file"; then
+    echo "Notarization failed for $artifact_path." >&2
+    cat "$output_file" >&2
+    exit 1
+  fi
+}
+
 cleanup_volumes() {
   local volume_pattern="/Volumes/${APP_NAME}"
   local max_attempts=15
@@ -159,31 +191,8 @@ codesign --verify --deep --strict --verbose=2 "$APP_PATH"
 NOTARY_ZIP="$BUILD_DIR/MiaoYan_for_notary.zip"
 ditto -c -k --keepParent "$APP_PATH" "$NOTARY_ZIP"
 
-NOTARY_OUTPUT_FILE="$BUILD_DIR/notary-submit.log"
-if [[ -n "$NOTARY_KEY_ID" && -n "$NOTARY_ISSUER_ID" && -n "$NOTARY_API_KEY_P8" ]]; then
-  NOTARY_KEY_FILE="$BUILD_DIR/AuthKey.p8"
-  printf '%s' "$NOTARY_API_KEY_P8" | base64_decode >"$NOTARY_KEY_FILE"
-  xcrun notarytool submit "$NOTARY_ZIP" \
-    --key "$NOTARY_KEY_FILE" \
-    --key-id "$NOTARY_KEY_ID" \
-    --issuer "$NOTARY_ISSUER_ID" \
-    --wait | tee "$NOTARY_OUTPUT_FILE"
-elif [[ -n "$NOTARY_APPLE_ID" && -n "$NOTARY_PASSWORD" && -n "$TEAM_ID" ]]; then
-  xcrun notarytool submit "$NOTARY_ZIP" \
-    --apple-id "$NOTARY_APPLE_ID" \
-    --team-id "$TEAM_ID" \
-    --password "$NOTARY_PASSWORD" \
-    --wait | tee "$NOTARY_OUTPUT_FILE"
-else
-  echo "Notary credentials missing. Provide API key credentials or Apple ID credentials." >&2
-  exit 1
-fi
-
-if ! grep -q "status: Accepted" "$NOTARY_OUTPUT_FILE"; then
-  echo "Notarization failed." >&2
-  cat "$NOTARY_OUTPUT_FILE" >&2
-  exit 1
-fi
+NOTARY_OUTPUT_FILE="$BUILD_DIR/notary-submit-app.log"
+submit_notary "$NOTARY_ZIP" "$NOTARY_OUTPUT_FILE"
 
 xcrun stapler staple "$APP_PATH"
 
@@ -265,7 +274,9 @@ if [[ ! -f "$DMG_PATH" ]]; then
   exit 1
 fi
 
-xcrun stapler staple "$DMG_PATH" || true
+DMG_NOTARY_OUTPUT_FILE="$BUILD_DIR/notary-submit-dmg.log"
+submit_notary "$DMG_PATH" "$DMG_NOTARY_OUTPUT_FILE"
+xcrun stapler staple "$DMG_PATH"
 rm -rf "$STAGING_DIR" "$TEMP_DMG_PATH"
 
 SIGN_UPDATE_CANDIDATES="$BUILD_DIR/sign_update_candidates.txt"
