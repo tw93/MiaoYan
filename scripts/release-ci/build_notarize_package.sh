@@ -289,7 +289,10 @@ printf '%s\n' "$SPARKLE_PRIVATE_KEY_BASE64" >"$SPARKLE_KEY_FILE"
 SPARKLE_OUTPUT="$(
   "$SIGN_UPDATE" --ed-key-file "$SPARKLE_KEY_FILE" "$ZIP_PATH"
 )"
-SPARKLE_SIGNATURE="$(echo "$SPARKLE_OUTPUT" | grep "sparkle:edSignature" | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')"
+SPARKLE_SIGNATURE=""
+if [[ "$SPARKLE_OUTPUT" =~ sparkle:edSignature=\"([^\"]+)\" ]]; then
+  SPARKLE_SIGNATURE="${BASH_REMATCH[1]}"
+fi
 
 if [[ -z "$SPARKLE_SIGNATURE" ]]; then
   echo "Failed to parse Sparkle signature." >&2
