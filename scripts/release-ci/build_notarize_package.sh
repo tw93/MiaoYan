@@ -274,6 +274,9 @@ if [[ ! -f "$DMG_PATH" ]]; then
   exit 1
 fi
 
+codesign --force --timestamp --sign "$SIGNING_IDENTITY" "$DMG_PATH"
+codesign --verify --verbose=2 "$DMG_PATH"
+
 DMG_NOTARY_OUTPUT_FILE="$BUILD_DIR/notary-submit-dmg.log"
 submit_notary "$DMG_PATH" "$DMG_NOTARY_OUTPUT_FILE"
 xcrun stapler staple "$DMG_PATH"
