@@ -53,7 +53,7 @@ struct MobilePadShell: View {
                 PadDetailPlaceholder()
             }
         }
-        .navigationSplitViewStyle(.balanced)
+        .navigationSplitViewStyle(.prominentDetail)
         .tint(MobileTheme.accent)
         .sheet(isPresented: $showSettings) {
             SettingsView(onChooseFolder: openPicker)

@@ -39,7 +39,7 @@ struct PadContentColumn: View {
     }
 
     var body: some View {
-        List(selection: listSelection) {
+        List {
             if isSearchingActive {
                 searchSection
             } else {
@@ -172,12 +172,22 @@ struct PadContentColumn: View {
             if case .recent = sidebarSelection { return root }
             return nil
         }()
+        let isSelected = selectedNote?.id == note.id
         return NoteCard(note: note, snapshotRoot: snapshotRoot)
-            .overlay {
-                if selectedNote?.id == note.id {
-                    RoundedRectangle(cornerRadius: MobileTheme.cardRadius, style: .continuous)
-                        .strokeBorder(MobileTheme.accent, lineWidth: 2)
-                }
+            .padding(2)
+            .background(
+                RoundedRectangle(cornerRadius: MobileTheme.cardRadius + 5, style: .continuous)
+                    .fill(isSelected ? MobileTheme.accent.opacity(0.08) : .clear)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: MobileTheme.cardRadius + 5, style: .continuous)
+                    .strokeBorder(isSelected ? MobileTheme.accent.opacity(0.24) : .clear, lineWidth: 1)
+            )
+            .contentShape(RoundedRectangle(cornerRadius: MobileTheme.cardRadius + 5, style: .continuous))
+            .onTapGesture {
+                Haptics.tap()
+                selectedNote = note
+                selectedNoteID = note.id
             }
             .tag(note.id)
             .listRowBackground(Color.clear)
@@ -190,21 +200,6 @@ struct PadContentColumn: View {
     }
 
     // MARK: - Selection
-
-    /// `List(selection:)` reports the tapped row's `note.id`; resolve it back
-    /// to the full `NoteFile` so the detail column can render it.
-    private var listSelection: Binding<String?> {
-        Binding(
-            get: { selectedNote?.id },
-            set: { newID in
-                guard let newID,
-                    let note = visibleNotes.first(where: { $0.id == newID })
-                else { return }
-                selectedNote = note
-                selectedNoteID = note.id
-            }
-        )
-    }
 
     private func resolveSelectionIfNeeded() {
         guard selectedNote == nil, !selectedNoteID.isEmpty else { return }
