@@ -965,6 +965,11 @@ class ViewController:
         sidebarScrollView.horizontalScroller = .none
         sidebarScrollView.hasHorizontalScroller = false
         sidebarScrollView.autohidesScrollers = true
+        // Match notesScrollView: the sidebar is left-aligned and must never
+        // scroll sideways. Without this the column width drifting wider than
+        // the pane (seen intermittently after a light/dark switch) lets the
+        // content rubber-band horizontally.
+        sidebarScrollView.horizontalScrollElasticity = .none
         // Keep the sidebar column width in sync with its parent view
         if let column = storageOutlineView.tableColumns.first {
             column.resizingMask = .autoresizingMask

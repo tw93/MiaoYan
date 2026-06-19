@@ -312,17 +312,24 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
 
         window.isOpaque = !Theme.usesModernSystemChrome
 
-        // Background
+        // Background. window.backgroundColor holds a dynamic NSColor, so it
+        // only needs assigning when the color identity actually changes. The
+        // contentView's layer, however, holds a *resolved* cgColor snapshot
+        // that does not auto-adapt, so it must be re-resolved against the
+        // current appearance on every call. In modern chrome all modes use the
+        // same dynamic .windowBackgroundColor, so the old equality gate was
+        // always false on a light/dark switch and left the previous
+        // appearance's color baked into the layer until the next relaunch,
+        // showing as a stale light strip under a dark window (and vice versa).
         if window.backgroundColor != backgroundColor {
             window.backgroundColor = backgroundColor
-            if let contentView = window.contentView {
-                contentView.wantsLayer = true
-                let effectiveAppearance = contentView.effectiveAppearance
-                let resolvedBackground = backgroundColor.resolvedColor(for: effectiveAppearance)
-                contentView.layer?.backgroundColor = resolvedBackground.cgColor
-                contentView.needsDisplay = true
-            }
-            window.contentView?.subviews.forEach { $0.needsDisplay = true }
+        }
+        if let contentView = window.contentView {
+            contentView.wantsLayer = true
+            let resolvedBackground = backgroundColor.resolvedColor(for: contentView.effectiveAppearance)
+            contentView.layer?.backgroundColor = resolvedBackground.cgColor
+            contentView.needsDisplay = true
+            contentView.subviews.forEach { $0.needsDisplay = true }
         }
 
         if let vc = AppContext.shared.viewController {
@@ -331,6 +338,17 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
             }
             if let editorSplit = vc.splitView {
                 editorSplit.displayIfNeeded()
+            }
+            // Re-clamp the sidebar column to the pane after the appearance
+            // change. The column has resizingMask = .autoresizingMask, so the
+            // relayout triggered by switching light/dark can leave it (and the
+            // outline's document frame) wider than the clip view. Every other
+            // relayout path calls updateSidebarColumnWidth(); the appearance
+            // path is the one that skipped it, which let the sidebar content
+            // stay horizontally scrollable until the next resize or relaunch.
+            // Deferred so the switch's own layout pass settles first.
+            DispatchQueue.main.async {
+                vc.updateSidebarColumnWidth()
             }
         }
     }
