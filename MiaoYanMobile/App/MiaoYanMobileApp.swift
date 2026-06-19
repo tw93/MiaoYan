@@ -151,51 +151,11 @@ struct MiaoYanMobileApp: App {
                     // tap (refresh button, new-note, etc.) is instant
                     // instead of paying the ~50-100ms cold start.
                     Haptics.warmUp()
-                    // Pre-warm the soft keyboard subsystem so the user's
-                    // first tap on SearchView's input field doesn't pay
-                    // the ~100-300ms cold start (loading IME, dictionary,
-                    // key layout). Delayed 800ms so we don't fight the
-                    // critical cold-start path (bookmark / cache hydrate
-                    // / NSMetadataQuery) for main-thread time.
-                    try? await Task.sleep(for: .milliseconds(800))
-                    warmUpKeyboard()
                 }
             // WebView warm-up is kicked off from the list views' `onAppear`
             // (see RecentNotesView / FoldersHomeView). That fires earlier in
             // cold-start than `WindowGroup.onAppear` and matches the moment
             // the user might be about to open a note.
-        }
-    }
-
-    /// Pre-warm the iOS soft-keyboard subsystem.
-    ///
-    /// Why: the first `becomeFirstResponder` of a process triggers the
-    /// keyboard system to load IME, dictionary, key layout, etc — a
-    /// 100-300ms cost the user feels as "tap-then-wait" the first time
-    /// they tap any text field. By doing the same dance on a hidden
-    /// `UITextField` shortly after launch we move that cost off the
-    /// user's interaction path.
-    ///
-    /// How: add a hidden field to the key window, become first responder,
-    /// then resign on the next runloop tick (so the keyboard subsystem
-    /// has a chance to actually initialise) and remove the field. The
-    /// field is `isHidden = true` so there's no visual artefact.
-    @MainActor
-    private func warmUpKeyboard() {
-        guard
-            let scene = UIApplication.shared.connectedScenes
-                .compactMap({ $0 as? UIWindowScene }).first,
-            let window = scene.windows.first(where: { $0.isKeyWindow })
-                ?? scene.windows.first
-        else { return }
-
-        let field = UITextField(frame: .zero)
-        field.isHidden = true
-        window.addSubview(field)
-        field.becomeFirstResponder()
-        DispatchQueue.main.async {
-            field.resignFirstResponder()
-            field.removeFromSuperview()
         }
     }
 }

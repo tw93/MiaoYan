@@ -28,7 +28,7 @@ struct NoteFile: Identifiable, Equatable, Sendable {
         // captured into the snapshot at save time. A stale value just
         // renders briefly until the background reload corrects it.
         self.isPinned = entry.isPinned
-        self.preview = ""
+        self.preview = entry.preview
     }
 
     /// Lightweight initializer that does not touch file contents.

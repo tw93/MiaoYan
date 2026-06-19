@@ -221,8 +221,8 @@ struct NoteDetailView: View {
                         Image(systemName: "square.and.pencil")
                     }
 
-                    // Menu intentionally only carries Font size + destructive
-                    // Trash. ShareLink used to live here but its eager
+                    // Menu intentionally carries secondary reader and note
+                    // management actions. ShareLink used to live here but its eager
                     // evaluation (serialising content + scanning available
                     // share targets + LinkPresentation metadata) made the
                     // first ellipsis tap visibly stutter. iOS already exposes
@@ -253,6 +253,7 @@ struct NoteDetailView: View {
                     } label: {
                         Image(systemName: "ellipsis.circle")
                     }
+                    .accessibilityLabel(Text("Note actions"))
                 }
                 .foregroundStyle(MobileTheme.ink)
             }

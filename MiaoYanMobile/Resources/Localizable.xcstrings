@@ -101,6 +101,17 @@
         }
       }
     },
+    "Checking iCloud Drive. You can choose a folder now." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在检查 iCloud Drive，你也可以现在选择文件夹。"
+          }
+        }
+      }
+    },
     "Choose folder" : {
       "localizations" : {
         "zh-Hans" : {
@@ -395,6 +406,16 @@
         }
       }
     },
+    "Note actions" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "笔记操作"
+          }
+        }
+      }
+    },
     "Notes" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -446,6 +467,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "选择存放 Markdown 笔记的文件夹。"
+          }
+        }
+      }
+    },
+    "Pin" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "置顶"
           }
         }
       }
@@ -686,6 +718,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "请重新选择文件夹。"
+          }
+        }
+      }
+    },
+    "Unpin" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消置顶"
           }
         }
       }

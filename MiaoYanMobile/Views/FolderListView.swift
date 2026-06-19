@@ -47,13 +47,12 @@ struct FolderListView: View {
                 // pull-to-refresh bounce while content is still landing.
                 MobileSyncingLibraryView()
                     .transition(.opacity)
-            } else if appState.isResolvingInitialRoot || !syncManager.didFinishInitialSetup {
-                NavigationStack {
-                    MobileResolvingLibraryView()
-                }
             } else {
                 NavigationStack {
-                    MobileEmptyLibraryView(openPicker: openFolderPicker)
+                    MobileEmptyLibraryView(
+                        isCheckingCloud: appState.isResolvingInitialRoot || !syncManager.didFinishInitialSetup,
+                        openPicker: openFolderPicker
+                    )
                 }
             }
         }
@@ -167,7 +166,6 @@ private struct RecentNotesView: View {
     @State private var hasLoadedOnce = false
     @State private var showNewNote = false
     @State private var showSettings = false
-    @State private var pendingDeletion: NoteFile?
     @State private var loadTask: Task<Void, Never>?
     @State private var isReloading = false
     @State private var pendingReload = false
@@ -218,20 +216,14 @@ private struct RecentNotesView: View {
                     if !pinned.isEmpty {
                         NoteSectionHeader(title: "Pinned")
                         ForEach(pinned) { note in
-                            NoteCardLink(
-                                note: note,
-                                onTogglePin: { togglePin(note) },
-                                onTrash: { pendingDeletion = note })
+                            NoteCardLink(note: note, snapshotRoot: root)
                         }
                         if !others.isEmpty {
                             NoteSectionHeader(title: "Notes")
                         }
                     }
                     ForEach(others) { note in
-                        NoteCardLink(
-                            note: note,
-                            onTogglePin: { togglePin(note) },
-                            onTrash: { pendingDeletion = note })
+                        NoteCardLink(note: note, snapshotRoot: root)
                     }
                 }
             }
@@ -247,29 +239,6 @@ private struct RecentNotesView: View {
         .sheet(isPresented: $showSettings) {
             SettingsView(onChooseFolder: openPicker)
                 .environmentObject(appState)
-        }
-        .alert(
-            "Move note to Trash?",
-            isPresented: Binding(
-                get: { pendingDeletion != nil },
-                set: { if !$0 { pendingDeletion = nil } }
-            ),
-            presenting: pendingDeletion
-        ) { note in
-            Button("Cancel", role: .cancel) { pendingDeletion = nil }
-            Button("Move to Trash", role: .destructive) {
-                Task {
-                    do {
-                        try await NoteFileStore.trash(note)
-                        Haptics.success()
-                        triggerLoad()
-                    } catch {
-                        Haptics.error()
-                    }
-                }
-            }
-        } message: { note in
-            Text("You can recover \u{201C}\(note.title)\u{201D} from Trash.")
         }
         .onAppear {
             // Hydrate from the on-disk snapshot first (synchronous, sub-ms),
@@ -321,13 +290,14 @@ private struct RecentNotesView: View {
 
     private func reload() async {
         let loaded = await NoteFileStore.recentNotes(in: root)
-        notes = loaded
+        let hydrated = RecentNotesCache.shared.hydratePreviews(loaded, for: root)
+        notes = hydrated
         hasLoadedOnce = true
         // Persist the snapshot for the next cold start. Skip when the
         // load returned empty so a one-off failure (transient iCloud
         // hiccup, etc.) doesn't wipe a known-good cache.
-        if !loaded.isEmpty {
-            RecentNotesCache.shared.save(loaded, for: root)
+        if !hydrated.isEmpty {
+            RecentNotesCache.shared.save(hydrated, for: root)
         }
     }
 
@@ -338,20 +308,6 @@ private struct RecentNotesView: View {
         syncManager.notifyExternalChange()
     }
 
-    /// Toggle pin state, then reload so the list re-reads the pin xattr and
-    /// re-sorts. Pin is a device-local metadata change (see PinService), so
-    /// there is no cross-device sync to wait on.
-    private func togglePin(_ note: NoteFile) {
-        Task {
-            do {
-                try await NoteFileStore.setPinned(!note.isPinned, for: note)
-                Haptics.success()
-                triggerLoad()
-            } catch {
-                Haptics.error()
-            }
-        }
-    }
 }
 
 // MARK: - Folders
@@ -588,56 +544,24 @@ private struct SyncRefreshButton: View {
 // MARK: - Cards
 
 /// Shared note row used by both the Notes tab and the folder note list.
-/// `onTogglePin` / `onTrash` are injected so the two surfaces keep one
-/// copy of the swipe + context-menu actions.
+/// List cards stay read-only; note management lives in `NoteDetailView`.
 struct NoteCardLink: View {
     let note: NoteFile
-    let onTogglePin: () -> Void
-    let onTrash: () -> Void
+    let snapshotRoot: URL?
+
+    init(note: NoteFile, snapshotRoot: URL? = nil) {
+        self.note = note
+        self.snapshotRoot = snapshotRoot
+    }
 
     var body: some View {
         NavigationLink {
             NoteDetailView(note: note)
         } label: {
-            NoteCard(note: note)
+            NoteCard(note: note, snapshotRoot: snapshotRoot)
         }
         .buttonStyle(.plain)
         .padding(.horizontal, MobileTheme.pagePadding)
-        .swipeActions(edge: .leading, allowsFullSwipe: true) {
-            Button {
-                Haptics.tap()
-                onTogglePin()
-            } label: {
-                Label(
-                    note.isPinned ? "Unpin" : "Pin",
-                    systemImage: note.isPinned ? "pin.slash" : "pin")
-            }
-            .tint(MobileTheme.warmAccent)
-        }
-        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-            Button(role: .destructive) {
-                Haptics.warning()
-                onTrash()
-            } label: {
-                Label("Trash", systemImage: "trash")
-            }
-        }
-        .contextMenu {
-            Button {
-                Haptics.tap()
-                onTogglePin()
-            } label: {
-                Label(
-                    note.isPinned ? "Unpin" : "Pin",
-                    systemImage: note.isPinned ? "pin.slash" : "pin")
-            }
-            Button(role: .destructive) {
-                Haptics.warning()
-                onTrash()
-            } label: {
-                Label("Move to Trash", systemImage: "trash")
-            }
-        }
     }
 }
 
@@ -661,19 +585,38 @@ struct NoteSectionHeader: View {
 @MainActor
 final class NotePreviewCache {
     static let shared = NotePreviewCache()
-    private var cache: [URL: String] = [:]
+    private struct Entry {
+        let modifiedDate: Date
+        let preview: String
+    }
+    private var cache: [URL: Entry] = [:]
 
-    func preview(for url: URL) -> String? { cache[url] }
-    func store(_ preview: String, for url: URL) { cache[url] = preview }
+    func preview(for url: URL, modifiedDate: Date) -> String? {
+        guard let entry = cache[url], entry.modifiedDate == modifiedDate else { return nil }
+        return entry.preview
+    }
+
+    func store(_ preview: String, for url: URL, modifiedDate: Date) {
+        cache[url] = Entry(modifiedDate: modifiedDate, preview: preview)
+    }
+
     func clearAll() { cache.removeAll() }
 }
 
 struct NoteCard: View {
     let note: NoteFile
+    let snapshotRoot: URL?
     @State private var lazyPreview: String?
+    @State private var lazyPreviewModifiedDate: Date?
+
+    init(note: NoteFile, snapshotRoot: URL? = nil) {
+        self.note = note
+        self.snapshotRoot = snapshotRoot
+    }
 
     private var displayedPreview: String {
         if !note.preview.isEmpty { return note.preview }
+        guard lazyPreviewModifiedDate == note.modifiedDate else { return "" }
         return lazyPreview ?? ""
     }
 
@@ -716,10 +659,21 @@ struct NoteCard: View {
         }
         .mobileCard()
         .onAppear {
+            if !note.preview.isEmpty {
+                NotePreviewCache.shared.store(note.preview, for: note.url, modifiedDate: note.modifiedDate)
+                lazyPreview = nil
+                lazyPreviewModifiedDate = nil
+                return
+            }
+            if lazyPreviewModifiedDate != note.modifiedDate {
+                lazyPreview = nil
+                lazyPreviewModifiedDate = nil
+            }
             // Hot path: cache hit returns the preview immediately without
             // hitting the filesystem.
             if lazyPreview == nil {
-                lazyPreview = NotePreviewCache.shared.preview(for: note.url)
+                lazyPreview = NotePreviewCache.shared.preview(for: note.url, modifiedDate: note.modifiedDate)
+                lazyPreviewModifiedDate = lazyPreview == nil ? nil : note.modifiedDate
             }
         }
         // Include modifiedDate in task id so the task re-fires after the file
@@ -727,7 +681,9 @@ struct NoteCard: View {
         // → list reloads → new NoteFile struct → task id changes → re-runs).
         .task(id: "\(note.url.absoluteString)#\(note.modifiedDate.timeIntervalSinceReferenceDate)") {
             if !note.preview.isEmpty { return }
-            if lazyPreview != nil { return }
+            if lazyPreviewModifiedDate == note.modifiedDate, lazyPreview != nil { return }
+            lazyPreview = nil
+            lazyPreviewModifiedDate = nil
             let url = note.url
             // .low priority: 40+ cards can fire tasks simultaneously on
             // tab switch. Each runs ~10 regex passes in previewTextSync.
@@ -738,8 +694,12 @@ struct NoteCard: View {
                 NoteFileStore.previewIfDownloaded(for: url) ?? ""
             }.value
             guard !preview.isEmpty else { return }
-            NotePreviewCache.shared.store(preview, for: url)
+            NotePreviewCache.shared.store(preview, for: url, modifiedDate: note.modifiedDate)
+            if let snapshotRoot {
+                RecentNotesCache.shared.storePreview(preview, for: note, root: snapshotRoot)
+            }
             lazyPreview = preview
+            lazyPreviewModifiedDate = note.modifiedDate
         }
     }
 
@@ -896,37 +856,22 @@ extension UIViewController {
 
 // MARK: - Empty / loading states
 
-private struct MobileResolvingLibraryView: View {
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            SkeletonLine(width: 220, height: 30)
-            SkeletonLine(width: 160, height: 18)
-            Spacer().frame(height: 8)
-            SkeletonNoteList()
-            Spacer()
-        }
-        .padding(.horizontal, MobileTheme.pagePadding)
-        .padding(.top, 36)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .mobilePaperBackground()
-    }
-}
-
 private struct MobileEmptyLibraryView: View {
+    let isCheckingCloud: Bool
     let openPicker: () -> Void
     @ObservedObject private var syncManager = CloudSyncManager.shared
 
     var body: some View {
         VStack(spacing: 22) {
             Spacer()
-            Image(systemName: syncManager.iCloudAvailable ? "icloud.and.arrow.down" : "folder")
+            Image(systemName: iconName)
                 .font(.system(size: 58, weight: .light))
                 .foregroundStyle(MobileTheme.accent)
             VStack(spacing: 8) {
-                Text(syncManager.iCloudAvailable ? "iCloud Drive is ready" : "Choose your notes folder")
+                Text(title)
                     .font(MobileTheme.editorialFont(.title2, weight: .semibold))
                     .foregroundStyle(MobileTheme.ink)
-                Text(syncManager.iCloudAvailable ? "MiaoYan will read your Markdown notes from iCloud Drive." : "Pick the folder that stores your Markdown notes.")
+                Text(message)
                     .font(MobileTheme.font(.body))
                     .foregroundStyle(MobileTheme.secondaryInk)
                     .multilineTextAlignment(.center)
@@ -951,6 +896,27 @@ private struct MobileEmptyLibraryView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .mobilePaperBackground()
+    }
+
+    private var iconName: String {
+        syncManager.iCloudAvailable ? "icloud.and.arrow.down" : "folder"
+    }
+
+    private var title: LocalizedStringKey {
+        if syncManager.iCloudAvailable {
+            return "iCloud Drive is ready"
+        }
+        return "Choose your notes folder"
+    }
+
+    private var message: LocalizedStringKey {
+        if syncManager.iCloudAvailable {
+            return "MiaoYan will read your Markdown notes from iCloud Drive."
+        }
+        if isCheckingCloud {
+            return "Checking iCloud Drive. You can choose a folder now."
+        }
+        return "Pick the folder that stores your Markdown notes."
     }
 }
 
@@ -1118,25 +1084,6 @@ struct MobileSyncingLibraryView: View {
 }
 
 // MARK: - Skeleton placeholders
-
-struct SkeletonNoteList: View {
-    var body: some View {
-        VStack(spacing: 14) {
-            ForEach(0..<4, id: \.self) { _ in
-                VStack(alignment: .leading, spacing: 10) {
-                    SkeletonLine(width: 200, height: 16)
-                    SkeletonLine(width: .infinity, height: 12)
-                    SkeletonLine(width: 260, height: 12)
-                    HStack(spacing: 8) {
-                        SkeletonLine(width: 70, height: 10)
-                        SkeletonLine(width: 50, height: 10)
-                    }
-                }
-                .mobileCard()
-            }
-        }
-    }
-}
 
 struct SkeletonFolderList: View {
     var body: some View {

@@ -5,7 +5,6 @@ struct NotesListView: View {
     @State private var notes: [NoteFile] = []
     @State private var hasLoadedOnce = false
     @State private var showNewNote = false
-    @State private var pendingDeletion: NoteFile?
     @State private var loadTask: Task<Void, Never>?
     @State private var isReloading = false
     @State private var pendingReload = false
@@ -45,20 +44,14 @@ struct NotesListView: View {
                     if !pinned.isEmpty {
                         NoteSectionHeader(title: "Pinned")
                         ForEach(pinned) { note in
-                            NoteCardLink(
-                                note: note,
-                                onTogglePin: { togglePin(note) },
-                                onTrash: { pendingDeletion = note })
+                            NoteCardLink(note: note)
                         }
                         if !others.isEmpty {
                             NoteSectionHeader(title: "Notes")
                         }
                     }
                     ForEach(others) { note in
-                        NoteCardLink(
-                            note: note,
-                            onTogglePin: { togglePin(note) },
-                            onTrash: { pendingDeletion = note })
+                        NoteCardLink(note: note)
                     }
                 }
             }
@@ -80,29 +73,6 @@ struct NotesListView: View {
         }
         .sheet(isPresented: $showNewNote, onDismiss: { triggerLoad() }) {
             NewNoteView(folder: folder)
-        }
-        .alert(
-            "Move note to Trash?",
-            isPresented: Binding(
-                get: { pendingDeletion != nil },
-                set: { if !$0 { pendingDeletion = nil } }
-            ),
-            presenting: pendingDeletion
-        ) { note in
-            Button("Cancel", role: .cancel) { pendingDeletion = nil }
-            Button("Move to Trash", role: .destructive) {
-                Task {
-                    do {
-                        try await NoteFileStore.trash(note)
-                        Haptics.success()
-                        triggerLoad()
-                    } catch {
-                        Haptics.error()
-                    }
-                }
-            }
-        } message: { note in
-            Text("You can recover \u{201C}\(note.title)\u{201D} from Trash.")
         }
         .onAppear { triggerLoad() }
         .onDisappear { loadTask?.cancel() }
@@ -139,17 +109,4 @@ struct NotesListView: View {
         hasLoadedOnce = true
     }
 
-    /// Toggle pin state, then reload so the list re-reads the pin xattr and
-    /// re-sorts. See RecentNotesView.togglePin for the rationale.
-    private func togglePin(_ note: NoteFile) {
-        Task {
-            do {
-                try await NoteFileStore.setPinned(!note.isPinned, for: note)
-                Haptics.success()
-                triggerLoad()
-            } catch {
-                Haptics.error()
-            }
-        }
-    }
 }

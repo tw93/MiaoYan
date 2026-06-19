@@ -18,7 +18,6 @@ struct PadContentColumn: View {
     @State private var isSearching = false
     @State private var searchTask: Task<Void, Never>?
 
-    @State private var pendingDeletion: NoteFile?
     @State private var showNewNote = false
     /// Bumped on every load request. A load only commits its result if its
     /// captured generation still matches — so a stale folder's in-flight
@@ -77,19 +76,6 @@ struct PadContentColumn: View {
         }
         .sheet(isPresented: $showNewNote, onDismiss: { triggerLoad() }) {
             NewNoteView(folder: currentFolder)
-        }
-        .alert(
-            "Move note to Trash?",
-            isPresented: Binding(
-                get: { pendingDeletion != nil },
-                set: { if !$0 { pendingDeletion = nil } }
-            ),
-            presenting: pendingDeletion
-        ) { note in
-            Button("Cancel", role: .cancel) { pendingDeletion = nil }
-            Button("Move to Trash", role: .destructive) { trash(note) }
-        } message: { note in
-            Text("You can recover \u{201C}\(note.title)\u{201D} from Trash.")
         }
         .onAppear { triggerLoad() }
         .onChange(of: sidebarSelection) {
@@ -176,7 +162,11 @@ struct PadContentColumn: View {
     }
 
     private func noteRow(_ note: NoteFile) -> some View {
-        NoteCard(note: note)
+        let snapshotRoot: URL? = {
+            if case .recent = sidebarSelection { return root }
+            return nil
+        }()
+        return NoteCard(note: note, snapshotRoot: snapshotRoot)
             .overlay {
                 if selectedNote?.id == note.id {
                     RoundedRectangle(cornerRadius: MobileTheme.cardRadius, style: .continuous)
@@ -191,41 +181,6 @@ struct PadContentColumn: View {
                     top: 6, leading: MobileTheme.pagePadding,
                     bottom: 6, trailing: MobileTheme.pagePadding)
             )
-            .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                Button {
-                    Haptics.tap()
-                    togglePin(note)
-                } label: {
-                    Label(
-                        note.isPinned ? "Unpin" : "Pin",
-                        systemImage: note.isPinned ? "pin.slash" : "pin")
-                }
-                .tint(MobileTheme.warmAccent)
-            }
-            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                Button(role: .destructive) {
-                    Haptics.warning()
-                    pendingDeletion = note
-                } label: {
-                    Label("Trash", systemImage: "trash")
-                }
-            }
-            .contextMenu {
-                Button {
-                    Haptics.tap()
-                    togglePin(note)
-                } label: {
-                    Label(
-                        note.isPinned ? "Unpin" : "Pin",
-                        systemImage: note.isPinned ? "pin.slash" : "pin")
-                }
-                Button(role: .destructive) {
-                    Haptics.warning()
-                    pendingDeletion = note
-                } label: {
-                    Label("Move to Trash", systemImage: "trash")
-                }
-            }
     }
 
     // MARK: - Selection
@@ -311,6 +266,9 @@ struct PadContentColumn: View {
             guard generation == loadGeneration else { return }
             notes = loaded
             hasLoadedOnce = true
+            if case .recent = selection, !loaded.isEmpty {
+                RecentNotesCache.shared.save(loaded, for: root)
+            }
             resolveSelectionIfNeeded()
         }
     }
@@ -318,7 +276,8 @@ struct PadContentColumn: View {
     private func fetchNotes(for selection: SidebarItem) async -> [NoteFile] {
         switch selection {
         case .recent:
-            return await NoteFileStore.recentNotes(in: root)
+            let loaded = await NoteFileStore.recentNotes(in: root)
+            return RecentNotesCache.shared.hydratePreviews(loaded, for: root)
         default:
             return await NoteFileStore.notes(
                 in: scopeURL(for: selection), recursive: isRecursive(selection))
@@ -347,33 +306,6 @@ struct PadContentColumn: View {
 
     // MARK: - Actions
 
-    private func togglePin(_ note: NoteFile) {
-        Task {
-            do {
-                try await NoteFileStore.setPinned(!note.isPinned, for: note)
-                Haptics.success()
-                triggerLoad()
-            } catch {
-                Haptics.error()
-            }
-        }
-    }
-
-    private func trash(_ note: NoteFile) {
-        Task {
-            do {
-                try await NoteFileStore.trash(note)
-                Haptics.success()
-                if selectedNote?.id == note.id {
-                    selectedNote = nil
-                    selectedNoteID = ""
-                }
-                triggerLoad()
-            } catch {
-                Haptics.error()
-            }
-        }
-    }
 }
 
 extension View {

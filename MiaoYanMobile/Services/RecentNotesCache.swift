@@ -6,9 +6,9 @@ import Foundation
 /// instantly on cold start instead of waiting for NSMetadataQuery to
 /// re-gather the iCloud catalog and `recentNotes` to re-enumerate.
 ///
-/// We intentionally store only fields needed to render the card chrome
-/// (title + modified date). Preview text stays lazy via NotePreviewCache
-/// — adding it here would multiply disk usage with limited UX gain.
+/// Stores the card fields needed for the Notes tab's first frame. Preview
+/// text is included because the list can otherwise render title/date instantly
+/// but leave a visually empty detail band until each iCloud file is re-read.
 struct RecentNotesSnapshot: Codable {
     let rootURLString: String
     let savedAt: Date
@@ -22,15 +22,17 @@ struct RecentNotesSnapshot: Codable {
         let path: String
         let title: String
         let modifiedDate: Date
+        let preview: String
         /// Pin state captured at snapshot time so the cold-start
         /// `NoteFile(snapshotEntry:)` path can sort pinned notes without
         /// a disk read.
         let isPinned: Bool
 
-        init(path: String, title: String, modifiedDate: Date, isPinned: Bool) {
+        init(path: String, title: String, modifiedDate: Date, preview: String, isPinned: Bool) {
             self.path = path
             self.title = title
             self.modifiedDate = modifiedDate
+            self.preview = preview
             self.isPinned = isPinned
         }
 
@@ -39,6 +41,9 @@ struct RecentNotesSnapshot: Codable {
             path = try container.decode(String.self, forKey: .path)
             title = try container.decode(String.self, forKey: .title)
             modifiedDate = try container.decode(Date.self, forKey: .modifiedDate)
+            // Older snapshots did not persist preview text. They decode as
+            // empty and will be backfilled as cards lazily load previews.
+            preview = try container.decodeIfPresent(String.self, forKey: .preview) ?? ""
             // Snapshots written before the pin field existed decode as
             // unpinned; the next background reload corrects them.
             isPinned = try container.decodeIfPresent(Bool.self, forKey: .isPinned) ?? false
@@ -60,6 +65,7 @@ final class RecentNotesCache {
     /// re-evaluation during cold start (the hot path this lookup guards),
     /// because a miss was never memoized. Cleared in `save(_:for:)`.
     private var knownMissing: Set<String> = []
+    private var pendingWrites: [String: Task<Void, Never>] = [:]
 
     private init() {}
 
@@ -92,14 +98,24 @@ final class RecentNotesCache {
     /// the same session see the fresh data; disk write is dispatched
     /// to a background task to keep the main thread free.
     func save(_ notes: [NoteFile], for root: URL) {
+        let previousByPath =
+            snapshot(for: root)?.notes.reduce(into: [String: RecentNotesSnapshot.Entry]()) { result, entry in
+                result[entry.path] = entry
+            } ?? [:]
         let snapshot = RecentNotesSnapshot(
             rootURLString: root.absoluteString,
             savedAt: Date(),
             notes: notes.map {
-                RecentNotesSnapshot.Entry(
+                let previous = previousByPath[$0.url.path]
+                let cachedPreview =
+                    NotePreviewCache.shared.preview(for: $0.url, modifiedDate: $0.modifiedDate)
+                    ?? (previous?.modifiedDate == $0.modifiedDate ? previous?.preview : nil)
+                    ?? ""
+                return RecentNotesSnapshot.Entry(
                     path: $0.url.path,
                     title: $0.title,
                     modifiedDate: $0.modifiedDate,
+                    preview: $0.preview.isEmpty ? cachedPreview : $0.preview,
                     isPinned: $0.isPinned
                 )
             }
@@ -107,9 +123,60 @@ final class RecentNotesCache {
         let key = cacheKey(for: root)
         memoryCache[key] = snapshot
         knownMissing.remove(key)
-        Task.detached(priority: .background) {
-            Self.writeToDisk(snapshot, key: key)
+        scheduleWrite(snapshot, key: key, delay: .zero)
+    }
+
+    /// Apply cached preview strings to freshly-enumerated notes without
+    /// trusting stale content. A preview is reused only when path and modified
+    /// date both match the snapshot entry.
+    func hydratePreviews(_ notes: [NoteFile], for root: URL) -> [NoteFile] {
+        guard let snapshot = snapshot(for: root) else { return notes }
+        let entriesByPath = snapshot.notes.reduce(into: [String: RecentNotesSnapshot.Entry]()) { result, entry in
+            result[entry.path] = entry
         }
+
+        return notes.map { note in
+            guard note.preview.isEmpty,
+                let entry = entriesByPath[note.url.path],
+                entry.modifiedDate == note.modifiedDate,
+                !entry.preview.isEmpty
+            else { return note }
+            var copy = note
+            copy.preview = entry.preview
+            NotePreviewCache.shared.store(entry.preview, for: note.url, modifiedDate: note.modifiedDate)
+            return copy
+        }
+    }
+
+    /// Backfill the snapshot as visible cards finish lazy preview reads. This
+    /// makes the next cold start render title, date and preview together.
+    func storePreview(_ preview: String, for note: NoteFile, root: URL) {
+        guard !preview.isEmpty, var snapshot = snapshot(for: root) else { return }
+        var didChange = false
+        let entries = snapshot.notes.map { entry -> RecentNotesSnapshot.Entry in
+            guard entry.path == note.url.path,
+                entry.modifiedDate == note.modifiedDate,
+                entry.preview != preview
+            else { return entry }
+            didChange = true
+            return RecentNotesSnapshot.Entry(
+                path: entry.path,
+                title: entry.title,
+                modifiedDate: entry.modifiedDate,
+                preview: preview,
+                isPinned: entry.isPinned
+            )
+        }
+        guard didChange else { return }
+        snapshot = RecentNotesSnapshot(
+            rootURLString: snapshot.rootURLString,
+            savedAt: Date(),
+            notes: entries
+        )
+        let key = cacheKey(for: root)
+        memoryCache[key] = snapshot
+        knownMissing.remove(key)
+        scheduleWrite(snapshot, key: key, delay: .milliseconds(300))
     }
 
     // MARK: - Disk
@@ -153,5 +220,21 @@ final class RecentNotesCache {
         let path = dir.appendingPathComponent("recent-\(key).json")
         guard let data = try? JSONEncoder().encode(snapshot) else { return }
         try? data.write(to: path, options: .atomic)
+    }
+
+    private func scheduleWrite(_ snapshot: RecentNotesSnapshot, key: String, delay: Duration) {
+        pendingWrites[key]?.cancel()
+        pendingWrites[key] = Task { [weak self] in
+            if delay != .zero {
+                do { try await Task.sleep(for: delay) } catch { return }
+            }
+            guard !Task.isCancelled else { return }
+            await Task.detached(priority: .background) {
+                Self.writeToDisk(snapshot, key: key)
+            }.value
+            await MainActor.run {
+                self?.pendingWrites[key] = nil
+            }
+        }
     }
 }
