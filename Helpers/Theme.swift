@@ -255,7 +255,11 @@ enum Theme {
 
     static var splitDividerColor: Color {
         if usesModernSystemChrome {
-            return noteSeparatorColor
+            // Use the 0.10 hairline tier rather than the notes list's 0.07.
+            // A single vertical column divider reads fainter than the field of
+            // stacked horizontal row separators, so it needs one tier up to
+            // look as present as the note separators do.
+            return hairlineColor
         }
 
         return dividerColor

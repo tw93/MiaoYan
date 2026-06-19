@@ -8,10 +8,6 @@ class SidebarSplitView: ThemedSplitView {
         isDividerHidden ? .clear : Theme.splitDividerColor
     }
 
-    override var dividerThickness: CGFloat {
-        isDividerHidden ? 0 : super.dividerThickness
-    }
-
     private var isDividerHidden: Bool {
         let sidebarWidth = subviews.first?.frame.width ?? 0
         let isSidebarHidden = subviews.first?.isHidden == true
