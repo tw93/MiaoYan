@@ -140,11 +140,18 @@ final class ToastManager {
 
         if !toast.subviews.contains(where: { $0.identifier?.rawValue == "ToastBackgroundView" }) {
             let backgroundView: NSView
-            if Theme.usesModernSystemChrome {
+            // Use the translucent system material only in dark mode, where the
+            // .hudWindow glass renders as a rich dark frost over the dark
+            // editor. In light mode the same material blends the bright window
+            // content through .withinWindow and washes out to a flat gray (even
+            // when pinned dark), so the fixed white label looks muddy. Fall back
+            // to the solid dark pill there for a clean, consistent toast.
+            if Theme.usesModernSystemChrome && view.effectiveAppearance.isDark {
                 let effectView = NSVisualEffectView()
                 effectView.material = .hudWindow
                 effectView.blendingMode = .withinWindow
                 effectView.state = .active
+                effectView.appearance = NSAppearance(named: .darkAqua)
                 effectView.wantsLayer = true
                 backgroundView = effectView
             } else {
@@ -159,7 +166,13 @@ final class ToastManager {
             backgroundView.translatesAutoresizingMaskIntoConstraints = false
             backgroundView.layer?.cornerRadius = configuration.cornerRadius
             backgroundView.layer?.borderWidth = Theme.usesModernSystemChrome ? 0.5 : 0
-            backgroundView.layer?.borderColor = Theme.panelHairlineColor.resolvedColor(for: view.effectiveAppearance).cgColor
+            // The toast surface is always dark (pinned dark glass above, fixed
+            // dark fill below), so resolve the hairline against a dark
+            // appearance too. Otherwise the light-mode window appearance makes
+            // the border fade out and the toast loses the subtle edge it has in
+            // dark mode.
+            let toastBorderAppearance = NSAppearance(named: .darkAqua) ?? view.effectiveAppearance
+            backgroundView.layer?.borderColor = Theme.panelHairlineColor.resolvedColor(for: toastBorderAppearance).cgColor
 
             toast.addSubview(backgroundView, positioned: .below, relativeTo: nil)
             NSLayoutConstraint.activate([
