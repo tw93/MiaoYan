@@ -106,6 +106,12 @@ public class Project: Equatable {
             "showInSidebar": showInSidebar,
         ]
 
+        // iCloud key-value store is only entitled in the App Store / iOS builds
+        // (ICLOUD_KVS). Other builds (local Debug, direct-download) have no KVS
+        // entitlement, so calling it just floods the console with "Unable to
+        // find entitlement for KVS store" and silently drops the settings.
+        // Fall back to UserDefaults there so settings actually persist.
+        #if ICLOUD_KVS
         if let relativePath = getRelativePath() {
             let keyStore = NSUbiquitousKeyValueStore()
             let key = relativePath.isEmpty ? "root-directory" : relativePath
@@ -113,11 +119,13 @@ public class Project: Equatable {
             keyStore.synchronize()
             return
         }
+        #endif
 
         UserDefaults.standard.set(data, forKey: url.path)
     }
 
     public func loadSettings() {
+        #if ICLOUD_KVS
         if let relativePath = getRelativePath() {
             let keyStore = NSUbiquitousKeyValueStore()
             let key = relativePath.isEmpty ? "root-directory" : relativePath
@@ -149,6 +157,7 @@ public class Project: Equatable {
             }
             return
         }
+        #endif
 
         if let settings = UserDefaults.standard.object(forKey: url.path) as? NSObject {
             if let common = settings.value(forKey: "showInCommon") as? Bool {

@@ -1598,6 +1598,7 @@
 				);
 				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
 				INFOPLIST_FILE = Info.plist;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ICLOUD_KVS";
 				INFOPLIST_KEY_CFBundleDisplayName = MiaoYan;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1679,6 +1680,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.miaoyan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ICLOUD_KVS";
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
