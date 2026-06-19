@@ -19,11 +19,25 @@ class BasePrefsViewController: NSViewController {
     override func loadView() {
         setupBaseView()
         setupUI()
+        // Size the stack to its content right after the rows are added. The
+        // stack is frame-based (translatesAutoresizingMaskIntoConstraints), so
+        // a leftover zero frame makes AppKit synthesize width==0 / height==0
+        // autoresizing constraints that fight the rows' intrinsic widths and
+        // flood the console with "Unable to simultaneously satisfy constraints"
+        // on the first layout pass.
+        layoutPreferencesStack()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupValues()
+    }
+
+    override func viewWillLayout() {
+        super.viewWillLayout()
+        // Set the frame before the layout pass evaluates constraints, not after
+        // (viewDidLayout is one pass too late to prevent the transient conflict).
+        layoutPreferencesStack()
     }
 
     override func viewDidLayout() {
@@ -58,9 +72,14 @@ class BasePrefsViewController: NSViewController {
         guard let stackView = preferencesStackView else { return }
 
         let insets = PrefsFormMetrics.pageInsets
-        let availableWidth = max(0, view.bounds.width - insets.left - insets.right)
         let fittingSize = stackView.fittingSize
-        let width = min(max(fittingSize.width, 420), availableWidth)
+        // Always give the form its content width (the rows hard-require >=420).
+        // Clamping to the view's current width clipped the stack narrower than
+        // its rows during early layout passes (e.g. a 323pt transient bounds),
+        // which is what produced the constraint conflicts. The form is
+        // left-aligned at a fixed width; extra window width is just trailing
+        // space, so there is nothing to clamp against.
+        let width = max(fittingSize.width, 420)
 
         stackView.frame = NSRect(
             x: insets.left,
