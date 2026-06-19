@@ -167,6 +167,7 @@ private struct RecentNotesView: View {
     @State private var showNewNote = false
     @State private var showSettings = false
     @State private var loadTask: Task<Void, Never>?
+    @State private var previewPrefetchTask: Task<Void, Never>?
     @State private var isReloading = false
     @State private var pendingReload = false
 
@@ -251,13 +252,17 @@ private struct RecentNotesView: View {
             {
                 notes = snap.notes.map { NoteFile(snapshotEntry: $0) }
                 hasLoadedOnce = true
+                prefetchInitialPreviews(for: notes)
             }
             triggerLoad()
             // Warm a WKWebView in the background while the list renders so the
             // first note tap doesn't pay process-spawn cost during navigation.
             readerWebViewStore.warmUp()
         }
-        .onDisappear { loadTask?.cancel() }
+        .onDisappear {
+            loadTask?.cancel()
+            previewPrefetchTask?.cancel()
+        }
         .onChange(of: syncManager.revision) { triggerLoad() }
     }
 
@@ -298,14 +303,38 @@ private struct RecentNotesView: View {
         // hiccup, etc.) doesn't wipe a known-good cache.
         if !hydrated.isEmpty {
             RecentNotesCache.shared.save(hydrated, for: root)
+            prefetchInitialPreviews(for: hydrated)
         }
     }
 
     private func refreshNotes() {
         Haptics.tap()
+        previewPrefetchTask?.cancel()
         NotePreviewCache.shared.clearAll()
         triggerLoad()
         syncManager.notifyExternalChange()
+    }
+
+    private func prefetchInitialPreviews(for loaded: [NoteFile]) {
+        previewPrefetchTask?.cancel()
+        let candidates = NotePreviewPrefetcher.candidates(from: loaded)
+        guard !candidates.isEmpty else { return }
+
+        previewPrefetchTask = Task {
+            for note in candidates {
+                guard !Task.isCancelled else { return }
+                guard let preview = await NotePreviewPrefetcher.preview(for: note) else { continue }
+                guard !Task.isCancelled else { return }
+                RecentNotesCache.shared.storePreview(preview, for: note, root: root)
+                guard
+                    let index = notes.firstIndex(where: {
+                        $0.id == note.id && $0.modifiedDate == note.modifiedDate
+                    }),
+                    notes[index].preview.isEmpty
+                else { continue }
+                notes[index].preview = preview
+            }
+        }
     }
 
 }
@@ -601,6 +630,28 @@ final class NotePreviewCache {
     }
 
     func clearAll() { cache.removeAll() }
+}
+
+@MainActor
+enum NotePreviewPrefetcher {
+    private static let initialLimit = 8
+
+    static func candidates(from notes: [NoteFile]) -> [NoteFile] {
+        Array(notes.prefix(initialLimit).filter(\.preview.isEmpty))
+    }
+
+    static func preview(for note: NoteFile) async -> String? {
+        if let cached = NotePreviewCache.shared.preview(for: note.url, modifiedDate: note.modifiedDate) {
+            return cached
+        }
+        let url = note.url
+        let preview = await Task.detached(priority: .low) {
+            NoteFileStore.previewIfDownloaded(for: url) ?? ""
+        }.value
+        guard !preview.isEmpty else { return nil }
+        NotePreviewCache.shared.store(preview, for: note.url, modifiedDate: note.modifiedDate)
+        return preview
+    }
 }
 
 struct NoteCard: View {

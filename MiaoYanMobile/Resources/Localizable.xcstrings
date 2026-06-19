@@ -69,6 +69,16 @@
         }
       }
     },
+    "About" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关于"
+          }
+        }
+      }
+    },
     "All Notes" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -86,6 +96,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "其他设备在你保存前修改了这篇笔记。"
+          }
+        }
+      }
+    },
+    "Appearance" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "外观"
           }
         }
       }
@@ -118,6 +138,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "选择文件夹"
+          }
+        }
+      }
+    },
+    "Choose Folder…" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择文件夹…"
           }
         }
       }
@@ -286,6 +316,16 @@
         }
       }
     },
+    "Library" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "笔记库"
+          }
+        }
+      }
+    },
     "Medium" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -304,6 +344,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "妙言"
+          }
+        }
+      }
+    },
+    "MiaoYan reads Markdown notes from this folder. Pick an iCloud Drive folder to keep notes synced with Mac." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MiaoYan 会从这个文件夹读取 Markdown 笔记。选择 iCloud Drive 文件夹可与 Mac 保持同步。"
           }
         }
       }
@@ -352,7 +402,6 @@
       }
     },
     "New note" : {
-      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -456,6 +505,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "好"
+          }
+        }
+      }
+    },
+    "Pick a note from the list to start reading." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从列表中选择一篇笔记开始阅读。"
           }
         }
       }
@@ -591,12 +650,32 @@
         }
       }
     },
+    "Select a note" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择笔记"
+          }
+        }
+      }
+    },
     "Setting up your library" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在准备你的笔记库"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "设置"
           }
         }
       }

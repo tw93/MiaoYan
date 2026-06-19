@@ -12,6 +12,7 @@ struct PadContentColumn: View {
     @State private var notes: [NoteFile] = []
     @State private var hasLoadedOnce = false
     @State private var loadTask: Task<Void, Never>?
+    @State private var previewPrefetchTask: Task<Void, Never>?
 
     @State private var searchQuery = ""
     @State private var searchResults: [NoteFile] = []
@@ -72,6 +73,9 @@ struct PadContentColumn: View {
             guard selection == sidebarSelection else { return }
             notes = loaded
             hasLoadedOnce = true
+            if case .recent = selection {
+                prefetchInitialPreviews(for: loaded)
+            }
             resolveSelectionIfNeeded()
         }
         .sheet(isPresented: $showNewNote, onDismiss: { triggerLoad() }) {
@@ -86,6 +90,7 @@ struct PadContentColumn: View {
             isSearching = false
             notes = []
             hasLoadedOnce = false
+            previewPrefetchTask?.cancel()
             // Drop the previous folder's selection so the detail column
             // doesn't keep rendering a note that isn't in the new folder.
             selectedNote = nil
@@ -96,6 +101,7 @@ struct PadContentColumn: View {
         .onChange(of: syncManager.revision) { triggerLoad() }
         .onDisappear {
             loadTask?.cancel()
+            previewPrefetchTask?.cancel()
             searchTask?.cancel()
         }
     }
@@ -268,6 +274,7 @@ struct PadContentColumn: View {
             hasLoadedOnce = true
             if case .recent = selection, !loaded.isEmpty {
                 RecentNotesCache.shared.save(loaded, for: root)
+                prefetchInitialPreviews(for: loaded)
             }
             resolveSelectionIfNeeded()
         }
@@ -281,6 +288,28 @@ struct PadContentColumn: View {
         default:
             return await NoteFileStore.notes(
                 in: scopeURL(for: selection), recursive: isRecursive(selection))
+        }
+    }
+
+    private func prefetchInitialPreviews(for loaded: [NoteFile]) {
+        previewPrefetchTask?.cancel()
+        let candidates = NotePreviewPrefetcher.candidates(from: loaded)
+        guard !candidates.isEmpty else { return }
+
+        previewPrefetchTask = Task {
+            for note in candidates {
+                guard !Task.isCancelled else { return }
+                guard let preview = await NotePreviewPrefetcher.preview(for: note) else { continue }
+                guard !Task.isCancelled else { return }
+                RecentNotesCache.shared.storePreview(preview, for: note, root: root)
+                guard
+                    let index = notes.firstIndex(where: {
+                        $0.id == note.id && $0.modifiedDate == note.modifiedDate
+                    }),
+                    notes[index].preview.isEmpty
+                else { continue }
+                notes[index].preview = preview
+            }
         }
     }
 
