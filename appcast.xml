@@ -3,6 +3,33 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>4.0.0</title>
+      <link>https://github.com/tw93/MiaoYan/releases</link>
+      <description><![CDATA[
+  <h3>Valstrax 🚀</h3>
+  <ol>
+    <li>iPhone and iPad are rolling out to the App Store, one purchase covers both</li>
+    <li>iPad brings a real three-column layout for folders, notes, and reading</li>
+    <li>First iOS version supports iCloud libraries, folders, pinned notes, and editing</li>
+    <li>New TOC menu and cmd+5 shortcut on macOS for faster long-note navigation</li>
+    <li>Fixes Sparkle signing and version drift, plus collapse and selection polish</li>
+    <li>Improves save, delete, version history, Finder-open, and iCloud sync</li>
+  </ol>
+  <h3>Valstrax 🚀</h3>
+  <ol>
+    <li>iPhone 和 iPad 版本正在上架 App Store，一次购买覆盖双端，敬请期待</li>
+    <li>iPad 提供三栏布局，文件夹、笔记列表和阅读详情可同时展开</li>
+    <li>iOS 首版支持 iCloud 笔记库、外部文件夹、置顶笔记和新建编辑</li>
+    <li>macOS 新增目录菜单和 cmd+5 快捷键，长文导航跳转更直接</li>
+    <li>修复 Sparkle 签名和版本号漂移，优化折叠、选中态和分割线</li>
+    <li>改进保存、删除、版本历史、Finder 打开和 iCloud 同步场景</li>
+  </ol>
+          ]]>      </description>
+      <pubDate>Fri, 19 Jun 2026 05:03:24 +0000</pubDate>
+      <enclosure url="https://github.com/tw93/MiaoYan/releases/download/V4.0.0/MiaoYan_V4.0.0.zip" sparkle:shortVersionString="4.0.0" sparkle:version="4.0.0" sparkle:edSignature="2ydncovI30jSG8xSni9/MxKJdZN28DVqqFzY0IPqQsoNQNFj4i+Zr7bPk9nvmXzYdBQc0Qfl7y2WyWu6E9oSBg==" length="24450368" type="application/octet-stream"/>
+      <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>3.5.1</title>
       <link>https://github.com/tw93/MiaoYan/releases</link>
       <description><![CDATA[
