@@ -41,7 +41,15 @@
 
 3. **GitHub Releases**: download the latest DMG from [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) (macOS 11.5+)
 
-All three options share the same codebase and receive the same updates. After installing, create a `MiaoYan` folder in iCloud Drive or your preferred location, open Preferences (⌘,), and set the storage path.
+All three options share the same codebase and receive the same updates. After installing, create a `MiaoYan` folder in iCloud Drive, a desktop cloud-drive folder, or your preferred location, open Preferences (⌘,), and set the storage path.
+
+## Sync with Nutstore or Other Cloud Drives
+
+MiaoYan is local-first and does not sign in to WebDAV or cloud-drive accounts. It reads and writes the Markdown folder you choose. iCloud Drive, Nutstore, Dropbox, or another cloud-drive client handles cross-device sync.
+
+- **Mac**: Create a `MiaoYan` folder inside the local folder synced by the Nutstore desktop client, then point MiaoYan's storage location to it in Preferences.
+- **iPhone**: Pick the same cloud-drive folder from the system Files app. If a provider does not expose a writable folder in Files, use iCloud Drive or make the folder available offline in that provider app before choosing it.
+- **Folder check**: MiaoYan verifies read and write access before switching folders. If the folder is unavailable, the current storage path stays unchanged.
 
 ## CLI
 

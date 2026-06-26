@@ -17,13 +17,13 @@ struct FolderListView: View {
 
     var body: some View {
         ZStack {
-            // Gate to TabView opens when EITHER iCloud finished gathering
-            // OR a persisted snapshot exists for this root. The cache
-            // path lets returning users skip the syncing screen entirely
-            // — the snapshot renders cards instantly inside RecentNotesView
-            // while the real reload runs in the background.
+            // External folders are ready as soon as the bookmark is active.
+            // iCloud roots still wait for metadata gathering, unless a
+            // persisted snapshot can render cards while the real reload
+            // runs in the background.
             if let root = appState.rootURL,
-                syncManager.hasFinishedInitialGathering
+                appState.isUsingExternalFolder
+                    || syncManager.hasFinishedInitialGathering
                     || RecentNotesCache.shared.hasSnapshot(for: root)
             {
                 // iPad at regular width gets the three-column split view;
@@ -40,7 +40,7 @@ struct FolderListView: View {
                         .environmentObject(appState)
                         .transition(.opacity)
                 }
-            } else if appState.rootURL != nil && !syncManager.hasFinishedInitialGathering {
+            } else if appState.rootURL != nil && !appState.isUsingExternalFolder && !syncManager.hasFinishedInitialGathering {
                 // Have a folder bookmark but iCloud catalog is still gathering.
                 // Show a calm full-screen syncing view at the top level — no
                 // ScrollView/refreshable underneath — so iPad doesn't show
@@ -69,7 +69,7 @@ struct FolderListView: View {
                 folderPickerError = nil
             }
         } message: {
-            Text(folderPickerError ?? "Try choosing the folder again.")
+            Text(LocalizedStringKey(folderPickerError ?? "Try choosing the folder again."))
         }
         .onAppear {
             resolveInitialLibrary()
@@ -98,7 +98,19 @@ struct FolderListView: View {
     private func openFolderPicker() {
         FolderPickerService.shared.present(
             onSelect: { url in
-                appState.selectRootFolder(url)
+                Task {
+                    do {
+                        try await MobileFolderAccessValidator.validateWritableDirectory(url)
+                        await MainActor.run {
+                            appState.selectRootFolder(url)
+                            syncManager.notifyExternalChange()
+                        }
+                    } catch {
+                        await MainActor.run {
+                            folderPickerError = error.localizedDescription
+                        }
+                    }
+                }
             },
             onError: { error in
                 folderPickerError = error.localizedDescription
@@ -861,6 +873,66 @@ private enum FolderPickerError: LocalizedError {
     }
 }
 
+private enum MobileFolderAccessValidator {
+    static func validateWritableDirectory(_ url: URL) async throws {
+        try await Task.detached(priority: .utility) {
+            let didStartAccessing = url.startAccessingSecurityScopedResource()
+            defer {
+                if didStartAccessing {
+                    url.stopAccessingSecurityScopedResource()
+                }
+            }
+
+            let values: URLResourceValues
+            do {
+                values = try url.resourceValues(forKeys: [.isDirectoryKey])
+            } catch {
+                throw MobileFolderAccessError.cannotRead
+            }
+            guard values.isDirectory == true else {
+                throw MobileFolderAccessError.notDirectory
+            }
+
+            let fm = FileManager.default
+            do {
+                _ = try fm.contentsOfDirectory(
+                    at: url,
+                    includingPropertiesForKeys: [.isDirectoryKey],
+                    options: [.skipsHiddenFiles]
+                )
+            } catch {
+                throw MobileFolderAccessError.cannotRead
+            }
+
+            let checkURL = url.appendingPathComponent(".miaoyan-folder-check-\(UUID().uuidString)", isDirectory: false)
+            do {
+                try Data("MiaoYan folder check\n".utf8).write(to: checkURL, options: .atomic)
+                try fm.removeItem(at: checkURL)
+            } catch {
+                try? fm.removeItem(at: checkURL)
+                throw MobileFolderAccessError.cannotWrite
+            }
+        }.value
+    }
+}
+
+private enum MobileFolderAccessError: LocalizedError {
+    case notDirectory
+    case cannotRead
+    case cannotWrite
+
+    var errorDescription: String? {
+        switch self {
+        case .notDirectory:
+            return "The selected item is not a folder."
+        case .cannotRead:
+            return "MiaoYan can't read this folder. Open Files and confirm the cloud provider exposes it."
+        case .cannotWrite:
+            return "MiaoYan can't write to this folder. Pick a writable folder or enable offline access in the cloud app."
+        }
+    }
+}
+
 @MainActor
 extension UIApplication {
     fileprivate var topMostViewController: UIViewController? {
@@ -954,18 +1026,15 @@ private struct MobileEmptyLibraryView: View {
     }
 
     private var title: LocalizedStringKey {
-        if syncManager.iCloudAvailable {
-            return "iCloud Drive is ready"
-        }
         return "Choose your notes folder"
     }
 
     private var message: LocalizedStringKey {
         if syncManager.iCloudAvailable {
-            return "MiaoYan will read your Markdown notes from iCloud Drive."
+            return "Use the default iCloud Drive folder, or choose another cloud drive folder from Files."
         }
         if isCheckingCloud {
-            return "Checking iCloud Drive. You can choose a folder now."
+            return "Checking iCloud Drive. You can choose a notes folder now."
         }
         return "Pick the folder that stores your Markdown notes."
     }

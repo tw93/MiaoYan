@@ -59,10 +59,10 @@ struct SettingsView: View {
 
     private var librarySection: some View {
         Section {
-            settingRow(label: "iCloud", value: syncStatusLabel)
+            settingRow(label: String(localized: "Cloud Folder"), value: folderStatusLabel)
             settingRow(
-                label: "Folder",
-                value: appState.rootURL?.lastPathComponent ?? "Not set")
+                label: String(localized: "Folder"),
+                value: appState.rootURL?.lastPathComponent ?? String(localized: "Not set"))
             Button {
                 Haptics.tap()
                 onChooseFolder()
@@ -73,7 +73,7 @@ struct SettingsView: View {
         } header: {
             Text("Library")
         } footer: {
-            Text("MiaoYan reads Markdown notes from this folder. Pick an iCloud Drive folder to keep notes synced with Mac.")
+            Text("MiaoYan reads and writes Markdown files in this folder. iCloud Drive or your cloud drive app keeps it in sync with Mac.")
         }
     }
 
@@ -120,12 +120,15 @@ struct SettingsView: View {
 
     // MARK: - Values
 
-    private var syncStatusLabel: String {
+    private var folderStatusLabel: String {
+        guard appState.rootURL != nil else { return String(localized: "Not set") }
+        guard !appState.isUsingExternalFolder else { return String(localized: "External folder") }
+
         switch syncManager.status {
-        case .syncing: return "Syncing"
-        case .synced: return "Synced"
-        case .offline: return "Offline"
-        case .error: return "Sync issue"
+        case .syncing: return String(localized: "Syncing")
+        case .synced: return String(localized: "Synced")
+        case .offline: return String(localized: "Offline")
+        case .error: return String(localized: "Sync issue")
         }
     }
 

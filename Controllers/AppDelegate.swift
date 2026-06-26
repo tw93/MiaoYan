@@ -236,6 +236,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
                 guard let url = panel.url else {
                     return
                 }
+                do {
+                    try StorageLocationValidator.validateWritableDirectory(url)
+                } catch {
+                    self.showStorageDirectoryError(error) {
+                        self.requestStorageDirectory()
+                    }
+                    return
+                }
                 UserDefaultsManagement.storagePath = url.path
                 do {
                     let bookmarkData = try url.bookmarkData(
@@ -250,6 +258,23 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
             } else {
                 exit(EXIT_SUCCESS)
             }
+        }
+    }
+
+    private func showStorageDirectoryError(_ error: Error, completion: @escaping () -> Void) {
+        let message: String
+        if let validationError = error as? StorageLocationValidationError {
+            message = validationError.localizedMessage
+        } else {
+            message = error.localizedDescription
+        }
+        MiaoYanAlert.show(
+            message: I18n.str("Could not use this folder"),
+            informativeText: message,
+            style: .warning,
+            for: NSApp.keyWindow ?? NSApp.mainWindow
+        ) { _ in
+            completion()
         }
     }
 

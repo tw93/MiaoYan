@@ -250,6 +250,10 @@
 "Duplicate note name" = "筆記名稱重複";
 "Note \"%@\" already exists" = "筆記 \"%@\" 已存在";
 "Please select default storage directory" = "請選擇預設儲存目錄";
+"Could not use this folder" = "無法使用這個檔案夾";
+"Selected storage folder is not a folder." = "所選儲存位置不是檔案夾。";
+"MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder." = "妙言無法讀取這個檔案夾。如果這是雲端硬碟目錄，請開啟雲端硬碟 App，確認該檔案夾已在 Finder 中可見。";
+"MiaoYan cannot write to this folder. Choose a writable folder or enable offline access in the cloud drive app." = "妙言無法寫入這個檔案夾。請選擇可寫入的檔案夾，或在雲端硬碟 App 中開啟離線存取。";
 
 /* Reload Note */
 "Reload Note" = "重新載入";

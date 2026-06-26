@@ -5,6 +5,7 @@ import SwiftUI
 final class AppState: ObservableObject {
     @Published var rootURL: URL?
     @Published private(set) var isResolvingInitialRoot = true
+    @Published private(set) var isUsingExternalFolder = false
 
     private var securityScopedURL: URL?
 
@@ -60,12 +61,14 @@ final class AppState: ObservableObject {
             }
         }
         rootURL = url
+        isUsingExternalFolder = isExternalFolder
         isResolvingInitialRoot = false
     }
 
     private func deactivate() {
         securityScopedURL?.stopAccessingSecurityScopedResource()
         securityScopedURL = nil
+        isUsingExternalFolder = false
     }
 
     /// Persist a bookmark for the chosen root.

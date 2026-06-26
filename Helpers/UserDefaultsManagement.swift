@@ -32,6 +32,53 @@ enum AppIdentifier {
     static let cloudPinsKey = "\(legacyBundleID).pins.shared"
 }
 
+enum StorageLocationValidator {
+    static func validateWritableDirectory(_ url: URL) throws {
+        let fm = FileManager.default
+        var isDirectory: ObjCBool = false
+        guard fm.fileExists(atPath: url.path, isDirectory: &isDirectory), isDirectory.boolValue else {
+            throw StorageLocationValidationError.notDirectory
+        }
+
+        do {
+            _ = try fm.contentsOfDirectory(
+                at: url,
+                includingPropertiesForKeys: [.isDirectoryKey],
+                options: [.skipsHiddenFiles]
+            )
+        } catch {
+            throw StorageLocationValidationError.cannotRead
+        }
+
+        let checkURL = url.appendingPathComponent(".miaoyan-folder-check-\(UUID().uuidString)", isDirectory: false)
+        do {
+            try Data("MiaoYan folder check\n".utf8).write(to: checkURL, options: .atomic)
+            try fm.removeItem(at: checkURL)
+        } catch {
+            try? fm.removeItem(at: checkURL)
+            throw StorageLocationValidationError.cannotWrite
+        }
+    }
+}
+
+enum StorageLocationValidationError: Error {
+    case notDirectory
+    case cannotRead
+    case cannotWrite
+
+    @MainActor
+    var localizedMessage: String {
+        switch self {
+        case .notDirectory:
+            return I18n.str("Selected storage folder is not a folder.")
+        case .cannotRead:
+            return I18n.str("MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder.")
+        case .cannotWrite:
+            return I18n.str("MiaoYan cannot write to this folder. Choose a writable folder or enable offline access in the cloud drive app.")
+        }
+    }
+}
+
 @MainActor
 public enum UserDefaultsManagement {
     typealias Color = NSColor

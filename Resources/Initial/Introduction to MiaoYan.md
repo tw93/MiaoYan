@@ -15,7 +15,7 @@
 ## Getting Started
 
 1. MiaoYan supports macOS 11.5 and later. On first launch, review your default storage location in Settings.
-2. Create a `MiaoYan` folder in iCloud or preferred location, then set it as default storage in Settings
+2. Create a `MiaoYan` folder in iCloud, a desktop cloud-drive folder, or your preferred location, then set it as default storage in Settings
 3. Click the new folder icon in the upper left to create document categories
 4. Customize the default font in Settings if needed
 

@@ -273,6 +273,10 @@
 "Duplicate note name" = "ノート名が重複しています";
 "Note \"%@\" already exists" = "ノート \"%@\" は既に存在します";
 "Please select default storage directory" = "デフォルトの保存先ディレクトリを選択してください";
+"Could not use this folder" = "このフォルダを使用できません";
+"Selected storage folder is not a folder." = "選択した保存先はフォルダではありません。";
+"MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder." = "MiaoYan はこのフォルダを読み取れません。クラウドドライブの場合は、提供元アプリを開き、Finder にフォルダが表示されていることを確認してください。";
+"MiaoYan cannot write to this folder. Choose a writable folder or enable offline access in the cloud drive app." = "MiaoYan はこのフォルダに書き込めません。書き込み可能なフォルダを選ぶか、クラウドドライブアプリでオフラインアクセスを有効にしてください。";
 
 /* Reload Note */
 "Reload Note" = "再読み込み";

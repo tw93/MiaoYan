@@ -196,6 +196,13 @@ final class GeneralPrefsViewController: BasePrefsViewController {
 
         let handleResult: (NSApplication.ModalResponse) -> Void = { result in
             if result == .OK, let url = openPanel.url {
+                do {
+                    try StorageLocationValidator.validateWritableDirectory(url)
+                } catch {
+                    self.showStorageLocationError(error)
+                    return
+                }
+
                 // Save old values for rollback if user cancels restart
                 let oldPath = self.settings.storagePath
                 let oldBookmark = UserDefaultsManagement.storageBookmark
@@ -233,6 +240,21 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         } else {
             openPanel.begin(completionHandler: handleResult)
         }
+    }
+
+    private func showStorageLocationError(_ error: Error) {
+        let message: String
+        if let validationError = error as? StorageLocationValidationError {
+            message = validationError.localizedMessage
+        } else {
+            message = error.localizedDescription
+        }
+        MiaoYanAlert.show(
+            message: I18n.str("Could not use this folder"),
+            informativeText: message,
+            style: .warning,
+            for: view.window
+        )
     }
 
     @objc private func buttonShowChanged(_ sender: PrefsSegmentedControl) {

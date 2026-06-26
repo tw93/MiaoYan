@@ -132,6 +132,16 @@
         }
       }
     },
+    "Checking iCloud Drive. You can choose a notes folder now." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在检查 iCloud Drive，你也可以现在选择笔记文件夹。"
+          }
+        }
+      }
+    },
     "Choose folder" : {
       "localizations" : {
         "zh-Hans" : {
@@ -159,6 +169,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "选择你的笔记文件夹"
+          }
+        }
+      }
+    },
+    "Cloud Folder" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "云盘文件夹"
           }
         }
       }
@@ -228,6 +248,16 @@
         }
       }
     },
+    "External folder" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "外部文件夹"
+          }
+        }
+      }
+    },
     "Edit" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -257,6 +287,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "首次启动需要从 iCloud 下载笔记，下次启动就会瞬间打开。"
+          }
+        }
+      }
+    },
+    "Folder" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文件夹"
           }
         }
       }
@@ -354,6 +394,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "MiaoYan 会从这个文件夹读取 Markdown 笔记。选择 iCloud Drive 文件夹可与 Mac 保持同步。"
+          }
+        }
+      }
+    },
+    "MiaoYan can't read this folder. Open Files and confirm the cloud provider exposes it." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "妙言无法读取这个文件夹。请打开文件 App，确认云盘应用已暴露该文件夹。"
+          }
+        }
+      }
+    },
+    "MiaoYan can't write to this folder. Pick a writable folder or enable offline access in the cloud app." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "妙言无法写入这个文件夹。请选择可写文件夹，或在云盘应用中开启离线访问。"
+          }
+        }
+      }
+    },
+    "MiaoYan reads and writes Markdown files in this folder. iCloud Drive or your cloud drive app keeps it in sync with Mac." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "妙言会读写这个文件夹里的 Markdown 文件。iCloud Drive 或你的云盘应用负责与 Mac 同步。"
           }
         }
       }
@@ -472,6 +542,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "笔记"
+          }
+        }
+      }
+    },
+    "Not set" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未设置"
           }
         }
       }
@@ -680,6 +760,16 @@
         }
       }
     },
+    "The selected item is not a folder." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所选项目不是文件夹。"
+          }
+        }
+      }
+    },
     "Share" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -797,6 +887,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "请重新选择文件夹。"
+          }
+        }
+      }
+    },
+    "Use the default iCloud Drive folder, or choose another cloud drive folder from Files." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可使用默认 iCloud Drive 文件夹，也可以从文件 App 选择其他云盘文件夹。"
           }
         }
       }

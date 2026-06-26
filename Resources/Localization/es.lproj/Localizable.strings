@@ -271,6 +271,10 @@
 "Duplicate note name" = "Nombre de nota duplicado";
 "Note \"%@\" already exists" = "La nota \"%@\" ya existe";
 "Please select default storage directory" = "Por favor, selecciona el directorio de almacenamiento por defecto";
+"Could not use this folder" = "No se pudo usar esta carpeta";
+"Selected storage folder is not a folder." = "La ubicación seleccionada no es una carpeta.";
+"MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder." = "MiaoYan no puede leer esta carpeta. Si es una unidad en la nube, abre la app del proveedor y confirma que la carpeta aparece en Finder.";
+"MiaoYan cannot write to this folder. Choose a writable folder or enable offline access in the cloud drive app." = "MiaoYan no puede escribir en esta carpeta. Elige una carpeta editable o activa el acceso sin conexión en la app de la nube.";
 
 /* Reload Note */
 "Reload Note" = "Recargar Nota";
