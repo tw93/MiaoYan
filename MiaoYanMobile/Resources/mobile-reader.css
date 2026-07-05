@@ -67,8 +67,28 @@ body {
   letter-spacing: 0.015em;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  /* overflow-wrap alone handles run-away tokens (URLs, long identifiers).
+     The old `word-break: break-word` companion also changed min-content
+     sizing and encouraged mid-word breaks in mixed CJK/Latin lines. */
   overflow-wrap: break-word;
-  word-break: break-word;
+}
+
+/* Mixed CJK/Latin body text: justify so a long Latin word wrapping to the
+   next line doesn't leave a ragged gap at the right edge, which read as
+   the line "breaking early". Headings and table cells stay left-aligned. */
+p,
+li,
+dd,
+blockquote {
+  text-align: justify;
+}
+
+/* Safari 18.4+: classic CJK typesetting — automatic spacing between
+   ideographs and Latin/digits. No-op on older WebKit. */
+@supports (text-autospace: normal) {
+  body {
+    text-autospace: normal;
+  }
 }
 
 /* Reset letter-spacing on inline tokens whose width should follow the glyph
