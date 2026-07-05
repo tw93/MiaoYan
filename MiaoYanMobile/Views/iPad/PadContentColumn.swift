@@ -15,7 +15,7 @@ struct PadContentColumn: View {
     @State private var previewPrefetchTask: Task<Void, Never>?
 
     @State private var searchQuery = ""
-    @State private var searchResults: [NoteFile] = []
+    @State private var searchResults: [(NoteFile, String)] = []
     @State private var isSearching = false
     @State private var searchTask: Task<Void, Never>?
 
@@ -32,10 +32,6 @@ struct PadContentColumn: View {
 
     private var isSearchingActive: Bool {
         !searchQuery.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-    }
-
-    private var visibleNotes: [NoteFile] {
-        isSearchingActive ? searchResults : notes
     }
 
     var body: some View {
@@ -155,7 +151,9 @@ struct PadContentColumn: View {
                 message: "Nothing matched \u{201C}\(searchQuery)\u{201D}.")
         } else {
             Section {
-                ForEach(searchResults) { noteRow($0) }
+                ForEach(searchResults, id: \.0.id) { note, snippet in
+                    searchRow(note, snippet: snippet)
+                }
             }
         }
     }
@@ -190,6 +188,35 @@ struct PadContentColumn: View {
                 selectedNoteID = note.id
             }
             .tag(note.id)
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
+            .listRowInsets(
+                EdgeInsets(
+                    top: 6, leading: MobileTheme.pagePadding,
+                    bottom: 6, trailing: MobileTheme.pagePadding)
+            )
+    }
+
+    /// Search hits use the shared SearchResultCard (fixed height, query
+    /// highlighting) instead of NoteCard, mirroring the iPhone search tab.
+    private func searchRow(_ note: NoteFile, snippet: String) -> some View {
+        let isSelected = selectedNote?.id == note.id
+        return SearchResultCard(note: note, snippet: snippet, query: searchQuery)
+            .padding(2)
+            .background(
+                RoundedRectangle(cornerRadius: MobileTheme.cardRadius + 5, style: .continuous)
+                    .fill(isSelected ? MobileTheme.accent.opacity(0.08) : .clear)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: MobileTheme.cardRadius + 5, style: .continuous)
+                    .strokeBorder(isSelected ? MobileTheme.accent.opacity(0.24) : .clear, lineWidth: 1)
+            )
+            .contentShape(RoundedRectangle(cornerRadius: MobileTheme.cardRadius + 5, style: .continuous))
+            .onTapGesture {
+                Haptics.tap()
+                selectedNote = note
+                selectedNoteID = note.id
+            }
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
             .listRowInsets(
@@ -323,7 +350,7 @@ struct PadContentColumn: View {
             guard !Task.isCancelled else { return }
             let outcome = await NoteFileStore.search(query: trimmed, in: scope)
             guard !Task.isCancelled else { return }
-            searchResults = outcome.hits.map { $0.0 }
+            searchResults = outcome.hits
             isSearching = false
         }
     }

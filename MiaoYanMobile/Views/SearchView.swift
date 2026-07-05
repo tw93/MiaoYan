@@ -71,7 +71,7 @@ struct SearchView: View {
                 NavigationLink {
                     NoteDetailView(note: note)
                 } label: {
-                    SearchResultCard(note: note, snippet: snippet)
+                    SearchResultCard(note: note, snippet: snippet, query: query)
                 }
                 .buttonStyle(.plain)
                 .padding(.horizontal, MobileTheme.pagePadding)
@@ -128,22 +128,49 @@ struct SearchView: View {
     }
 }
 
-private struct SearchResultCard: View {
+/// Shared by the iPhone search tab and the iPad content-column search so
+/// both surfaces get the same fixed-height, query-highlighted result rows.
+struct SearchResultCard: View {
     let note: NoteFile
     let snippet: String
+    let query: String
 
     var body: some View {
         VStack(alignment: .leading, spacing: 9) {
             Text(note.title)
                 .font(MobileTheme.editorialFont(.headline, weight: .semibold))
                 .foregroundStyle(MobileTheme.ink)
-                .lineLimit(2)
-            Text(snippet)
+                .lineLimit(1)
+            // reservesSpace keeps every card the same height whether the
+            // snippet fills one line or two — variable-height cards made
+            // the results list read as misaligned.
+            Text(highlightedSnippet)
                 .font(MobileTheme.font(.subheadline))
                 .foregroundStyle(MobileTheme.secondaryInk)
                 .lineSpacing(2)
-                .lineLimit(3)
+                .lineLimit(2, reservesSpace: true)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .mobileCard()
+    }
+
+    /// Emphasise every query match inside the snippet so the eye lands on
+    /// why this note is a hit.
+    private var highlightedSnippet: AttributedString {
+        var attributed = AttributedString(snippet)
+        let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return attributed }
+
+        var searchRange = snippet.startIndex..<snippet.endIndex
+        while let match = snippet.range(
+            of: trimmed, options: [.caseInsensitive, .diacriticInsensitive], range: searchRange)
+        {
+            if let attributedRange = Range(match, in: attributed) {
+                attributed[attributedRange].font = MobileTheme.font(.subheadline, weight: .semibold)
+                attributed[attributedRange].foregroundColor = MobileTheme.ink
+            }
+            searchRange = match.upperBound..<snippet.endIndex
+        }
+        return attributed
     }
 }
