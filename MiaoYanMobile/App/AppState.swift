@@ -13,23 +13,25 @@ final class AppState: ObservableObject {
     private static let bookmarkUsesSecurityScopeKey = "MiaoYanMobile.RootBookmarkSecurityScoped"
 
     init() {
-        if let resolved = loadBookmarkedURL() {
-            // Use the persisted scope flag rather than re-deriving via
-            // CloudSyncManager — at this point in app launch the iCloud
-            // container URL may not yet be resolved, which would misclassify
-            // a real external folder as the iCloud container and leave the
-            // security-scoped resource unstarted on relaunch.
+        // Use the persisted scope flag rather than re-deriving via
+        // CloudSyncManager — at this point in app launch the iCloud
+        // container URL may not yet be resolved, which would misclassify
+        // a real external folder as the iCloud container and leave the
+        // security-scoped resource unstarted on relaunch.
+        if let resolved = loadBookmarkedURL(),
             activate(resolved.url, isExternalFolder: resolved.securityScoped)
-        } else {
-            useDefaultCloudFolderIfAvailable()
+        {
+            return
         }
+        useDefaultCloudFolderIfAvailable()
     }
 
     func selectRootFolder(_ url: URL) {
         deactivate()
         // User-picked folders from Files require security-scoped access.
-        activate(url, isExternalFolder: true)
-        saveBookmark(for: url, securityScoped: true)
+        if activate(url, isExternalFolder: true) {
+            saveBookmark(for: url, securityScoped: true)
+        }
     }
 
     @discardableResult
@@ -52,17 +54,36 @@ final class AppState: ObservableObject {
         isResolvingInitialRoot = false
     }
 
-    private func activate(_ url: URL, isExternalFolder: Bool) {
+    @discardableResult
+    private func activate(_ url: URL, isExternalFolder: Bool) -> Bool {
         if isExternalFolder {
             // Only call security-scoped access for user-picked folders;
             // the iCloud container is read/write without it.
             if url.startAccessingSecurityScopedResource() {
                 securityScopedURL = url
+            } else {
+                // The sandbox refused the scope grant (provider deleted the
+                // folder, revoked access, or the bookmark lost its scope).
+                // Proceeding would present an unreadable library; clear the
+                // stored bookmark so the folder chooser shows instead.
+                clearBookmark()
+                isUsingExternalFolder = false
+                isResolvingInitialRoot = false
+                return false
             }
         }
         rootURL = url
         isUsingExternalFolder = isExternalFolder
         isResolvingInitialRoot = false
+        // The reader's asset scheme handler only serves files inside the
+        // active library; keep it pointed at the current root.
+        LocalAssetSchemeHandler.allowedRoot = url
+        return true
+    }
+
+    private func clearBookmark() {
+        UserDefaults.standard.removeObject(forKey: Self.bookmarkKey)
+        UserDefaults.standard.removeObject(forKey: Self.bookmarkUsesSecurityScopeKey)
     }
 
     private func deactivate() {

@@ -2,15 +2,22 @@ import CMarkGFM
 import Foundation
 
 enum MobileHtmlRenderer {
-    static func render(markdown: String, title: String?, fontSize: Int = 17) -> String {
-        let body = markdownToHTML(markdown)
+    static func render(
+        markdown: String,
+        title: String?,
+        fontSize: Int = 17,
+        fontCSS: String? = nil,
+        assetRoot: URL? = nil
+    ) -> String {
+        let body = rewriteLocalAssetPaths(in: markdownToHTML(markdown), assetRoot: assetRoot)
         let hero = heroTitleHTML(noteTitle: title, markdown: markdown)
-        // Critical: the dynamic --font-size override MUST come after
-        // bundledCSS, not before. mobile-reader.css declares its own default
-        // `--font-size: 17px` on :root; same selector + same property means
-        // whichever rule appears later wins. Putting the inline override
-        // before bundledCSS silently lost the font-size selection — tap
+        // Critical: the dynamic --font-size / --font overrides MUST come
+        // after bundledCSS, not before. mobile-reader.css declares its own
+        // defaults on :root; same selector + same property means whichever
+        // rule appears later wins. Putting the inline override before
+        // bundledCSS silently lost the font-size selection — tap
         // Small/Medium/Large produced no visible change.
+        let fontOverride = fontCSS.map { ":root { --font: \($0); --heading-font: \($0); }" } ?? ""
         return """
             <!DOCTYPE html>
             <html>
@@ -22,6 +29,7 @@ enum MobileHtmlRenderer {
             <style>
             \(bundledCSS)
             :root { --font-size: \(fontSize)px; }
+            \(fontOverride)
             </style>
             </head>
             <body>
@@ -51,6 +59,31 @@ enum MobileHtmlRenderer {
         let html = String(cString: cString)
         free(cString)
         return html
+    }
+
+    // MARK: - Local asset rewriting
+
+    private static let imgSrcRegex = try? NSRegularExpression(
+        pattern: "(<img[^>]*?\\ssrc=\")([^\"]+)(\")", options: [.caseInsensitive])
+
+    /// Rewrite local image references to the custom `miaoyan-asset` scheme.
+    /// The reader loads via `loadHTMLString`, which grants no local-file
+    /// read access, so `file://`-relative images never render; the scheme
+    /// handler (`LocalAssetSchemeHandler`) serves them from disk instead.
+    ///
+    /// Path semantics mirror the macOS app (`Note.getImageUrl`): `/i/...`
+    /// and plain relative paths both resolve against the note's folder.
+    private static func rewriteLocalAssetPaths(in html: String, assetRoot: URL?) -> String {
+        guard let assetRoot, let regex = imgSrcRegex, html.contains("<img") else { return html }
+        let mutable = NSMutableString(string: html)
+        let matches = regex.matches(in: html, range: NSRange(location: 0, length: mutable.length))
+        for match in matches.reversed() where match.numberOfRanges == 4 {
+            let src = mutable.substring(with: match.range(at: 2))
+            guard let rewritten = LocalAssetURL.absoluteString(forMarkdownSrc: src, noteFolder: assetRoot)
+            else { continue }
+            mutable.replaceCharacters(in: match.range(at: 2), with: rewritten)
+        }
+        return mutable as String
     }
 
     // MARK: - Hero title

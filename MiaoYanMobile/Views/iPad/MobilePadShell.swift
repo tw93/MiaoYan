@@ -47,7 +47,7 @@ struct MobilePadShell: View {
                 // .id forces NoteDetailView to rebuild per note so its
                 // onAppear→loadContent / onDisappear→flushSave lifecycle
                 // runs cleanly for each selection.
-                NoteDetailView(note: note)
+                NoteDetailView(note: note, onDeleted: { selectedNote = nil })
                     .id(note.id)
             } else {
                 PadDetailPlaceholder()

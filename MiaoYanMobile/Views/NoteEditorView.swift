@@ -1,72 +1,39 @@
 import SwiftUI
+import UIKit
 
-struct NoteEditorView: View {
+/// Full-screen editing layer hosted inside NoteDetailView (replaced the old
+/// modal sheet). Owns only the chrome — title header and save pill; the
+/// text editing itself lives in MarkdownEditorView.
+struct NoteEditView: View {
     let note: NoteFile
     @Binding var content: String
     let saveState: NoteSaveState
-    let onDone: () -> Void
-    @FocusState private var isFocused: Bool
-    @State private var focusTask: Task<Void, Never>?
-
-    /// Wait for the sheet present transition to settle before requesting
-    /// keyboard focus. Triggering the keyboard during the transition makes
-    /// SwiftUI co-schedule four heavy things in the same frame: sheet
-    /// animation, TextEditor (UITextView) first init, content layout, and
-    /// keyboard / IME spin-up. Splitting them shaves visible jank on first
-    /// open of large notes.
-    private static let focusDelay: Duration = .milliseconds(350)
+    let bodyFont: UIFont
 
     var body: some View {
-        NavigationStack {
-            VStack(alignment: .leading, spacing: 0) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(note.title)
-                        .font(MobileTheme.editorialFont(.title2, weight: .semibold))
-                        .foregroundStyle(MobileTheme.ink)
-                        .lineLimit(2)
-                    SaveStatusPill(state: saveState)
-                }
-                .padding(.horizontal, MobileTheme.pagePadding)
-                .padding(.top, 18)
-                .padding(.bottom, 14)
-
-                Rectangle()
-                    .fill(MobileTheme.hairline)
-                    .frame(height: 1)
-
-                TextEditor(text: $content)
-                    .font(MobileTheme.editorialFont(size: 17))
+        VStack(alignment: .leading, spacing: 0) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(note.title)
+                    .font(MobileTheme.editorialFont(.title3, weight: .semibold))
                     .foregroundStyle(MobileTheme.ink)
-                    .scrollContentBackground(.hidden)
-                    .focused($isFocused)
-                    .padding(.horizontal, MobileTheme.pagePadding - 4)
-                    .padding(.vertical, 12)
+                    .lineLimit(1)
+                SaveStatusPill(state: saveState)
             }
-            .background(MobileTheme.paper)
-            .navigationTitle("Edit")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(MobileTheme.paper, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done", action: onDone)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(MobileTheme.accent)
-                }
-            }
+            .padding(.horizontal, MobileTheme.pagePadding)
+            .padding(.top, 12)
+            .padding(.bottom, 12)
+
+            Rectangle()
+                .fill(MobileTheme.hairline)
+                .frame(height: 1)
+
+            MarkdownEditorView(
+                text: $content,
+                bodyFont: bodyFont,
+                noteFolderURL: note.url.deletingLastPathComponent()
+            )
         }
-        .presentationBackground(MobileTheme.paper)
-        .onAppear {
-            focusTask?.cancel()
-            focusTask = Task { @MainActor in
-                do { try await Task.sleep(for: Self.focusDelay) } catch { return }
-                guard !Task.isCancelled else { return }
-                isFocused = true
-            }
-        }
-        .onDisappear {
-            focusTask?.cancel()
-        }
+        .background(MobileTheme.paper.ignoresSafeArea())
     }
 }
 

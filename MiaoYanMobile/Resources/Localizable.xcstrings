@@ -1,9 +1,7 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "·" : {
-
-    },
+    "·" : {},
     "%@ iCloud notes still downloading; results will improve as they sync." : {
       "localizations" : {
         "zh-Hans" : {
@@ -110,6 +108,17 @@
         }
       }
     },
+    "Bold" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "粗体"
+          }
+        }
+      }
+    },
     "Cancel" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -138,6 +147,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在检查 iCloud Drive，你也可以现在选择笔记文件夹。"
+          }
+        }
+      }
+    },
+    "Checklist" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "待办"
           }
         }
       }
@@ -312,6 +332,28 @@
         }
       }
     },
+    "Font" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "字体"
+          }
+        }
+      }
+    },
+    "Font settings apply to both editing and reading." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "字体设置同时作用于编辑和阅读。"
+          }
+        }
+      }
+    },
     "Font size" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -323,6 +365,17 @@
         }
       }
     },
+    "Heading" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "标题"
+          }
+        }
+      }
+    },
     "iCloud Drive is ready" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -330,6 +383,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "iCloud Drive 已就绪"
+          }
+        }
+      }
+    },
+    "Insert Photo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "插入图片"
           }
         }
       }
@@ -362,6 +426,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "笔记库"
+          }
+        }
+      }
+    },
+    "List" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "列表"
           }
         }
       }
@@ -643,6 +718,28 @@
         }
       }
     },
+    "Rounded" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "圆体"
+          }
+        }
+      }
+    },
+    "Sans Serif" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "黑体"
+          }
+        }
+      }
+    },
     "Save" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -736,6 +833,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "选择笔记"
+          }
+        }
+      }
+    },
+    "Serif" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "衬线"
           }
         }
       }

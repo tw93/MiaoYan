@@ -466,10 +466,50 @@ enum NoteFileStore {
     }
 
     @MainActor
-    static func trash(_ note: NoteFile) async throws {
+    static func trash(_ note: NoteFile, libraryRoot: URL? = nil) async throws {
         try await Task.detached(priority: .userInitiated) {
-            try FileManager.default.trashItem(at: note.url, resultingItemURL: nil)
+            do {
+                try FileManager.default.trashItem(at: note.url, resultingItemURL: nil)
+            } catch {
+                // File-provider volumes (WebDAV drives picked via Files,
+                // e.g. Nutstore) have no system trash and trashItem throws.
+                // Fall back to the library's own Trash folder — the same
+                // convention the macOS app and the folder list already use,
+                // so the note stays recoverable on every device.
+                guard let libraryRoot else { throw error }
+                try moveToLibraryTrashSync(note.url, root: libraryRoot)
+            }
         }.value
+    }
+
+    nonisolated private static func moveToLibraryTrashSync(_ url: URL, root: URL) throws {
+        let trashDir = root.appendingPathComponent("Trash", isDirectory: true)
+        try? FileManager.default.createDirectory(at: trashDir, withIntermediateDirectories: true)
+
+        let base = url.deletingPathExtension().lastPathComponent
+        let ext = url.pathExtension
+        var destination = trashDir.appendingPathComponent(url.lastPathComponent)
+        var index = 1
+        while FileManager.default.fileExists(atPath: destination.path) {
+            destination = trashDir.appendingPathComponent("\(base) \(index)").appendingPathExtension(ext)
+            index += 1
+        }
+
+        var coordinationError: NSError?
+        var moveError: Error?
+        NSFileCoordinator().coordinate(
+            writingItemAt: url, options: .forMoving,
+            writingItemAt: destination, options: .forReplacing,
+            error: &coordinationError
+        ) { from, to in
+            do {
+                try FileManager.default.moveItem(at: from, to: to)
+            } catch {
+                moveError = error
+            }
+        }
+        if let coordinationError { throw coordinationError }
+        if let moveError { throw moveError }
     }
 
     /// Pin or unpin a note. Writes the pin extended attribute under
@@ -740,7 +780,10 @@ enum NoteFileStore {
         var writeError: Error?
         let coordinator = NSFileCoordinator()
 
-        coordinator.coordinate(writingItemAt: url, options: [], error: &coordinationError) { writeURL in
+        // .forReplacing matches the atomic whole-file write below and tells
+        // file providers (iCloud, WebDAV drives) to treat this as a full
+        // replacement rather than an in-place mutation.
+        coordinator.coordinate(writingItemAt: url, options: .forReplacing, error: &coordinationError) { writeURL in
             do {
                 try content.write(to: writeURL, atomically: true, encoding: .utf8)
             } catch {

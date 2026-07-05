@@ -935,7 +935,9 @@ private enum MobileFolderAccessError: LocalizedError {
 
 @MainActor
 extension UIApplication {
-    fileprivate var topMostViewController: UIViewController? {
+    /// Internal (not fileprivate): the markdown editor's photo picker also
+    /// needs a presenter, and this walk is the single shared implementation.
+    var topMostViewController: UIViewController? {
         connectedScenes
             .compactMap { $0 as? UIWindowScene }
             .first { $0.activationState == .foregroundActive }?
@@ -947,7 +949,7 @@ extension UIApplication {
 }
 
 extension UIViewController {
-    fileprivate var topMostPresentedViewController: UIViewController {
+    var topMostPresentedViewController: UIViewController {
         if let navigationController = self as? UINavigationController,
             let visibleViewController = navigationController.visibleViewController
         {

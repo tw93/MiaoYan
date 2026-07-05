@@ -13,9 +13,10 @@ struct SettingsView: View {
     @ObservedObject private var syncManager = CloudSyncManager.shared
     @Environment(\.dismiss) private var dismiss
 
-    /// Reuses the exact key the reader / editor already bind to, so the
-    /// picker here and the in-reader font menu stay in sync automatically.
+    /// Reuses the exact keys the reader / editor already bind to, so the
+    /// pickers here and the in-reader font menu stay in sync automatically.
     @AppStorage("MiaoYanMobile.FontSize") private var fontSizeRaw = ReaderFontSize.medium.rawValue
+    @AppStorage("MiaoYanMobile.FontFamily") private var fontFamilyRaw = ReaderFontFamily.serif.rawValue
 
     private static let repoURL = URL(string: "https://github.com/tw93/MiaoYan")
     private static let issuesURL = URL(string: "https://github.com/tw93/MiaoYan/issues/new")
@@ -47,13 +48,20 @@ struct SettingsView: View {
 
     private var appearanceSection: some View {
         Section {
-            Picker("Reading font size", selection: $fontSizeRaw) {
+            Picker("Font", selection: $fontFamilyRaw) {
+                ForEach(ReaderFontFamily.allCases, id: \.rawValue) { family in
+                    Text(family.label).tag(family.rawValue)
+                }
+            }
+            Picker("Font size", selection: $fontSizeRaw) {
                 ForEach(ReaderFontSize.allCases, id: \.rawValue) { size in
                     Text(size.label).tag(size.rawValue)
                 }
             }
         } header: {
             Text("Appearance")
+        } footer: {
+            Text("Font settings apply to both editing and reading.")
         }
     }
 

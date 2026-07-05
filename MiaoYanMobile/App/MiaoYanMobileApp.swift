@@ -31,18 +31,32 @@ enum MobileTheme {
         })
     /// Reduced from previous (0.91, 0.90, 0.86) to (0.84, 0.82, 0.78);
     /// the original value was uncomfortably bright for long reading sessions.
-    static let ink = Color(
-        uiColor: UIColor { traits in
-            traits.userInterfaceStyle == .dark
-                ? UIColor(red: 0.84, green: 0.82, blue: 0.78, alpha: 1)
-                : UIColor(red: 0.15, green: 0.14, blue: 0.12, alpha: 1)
-        })
-    static let secondaryInk = Color(
-        uiColor: UIColor { traits in
-            traits.userInterfaceStyle == .dark
-                ? UIColor(red: 0.62, green: 0.61, blue: 0.56, alpha: 1)
-                : UIColor(red: 0.42, green: 0.39, blue: 0.33, alpha: 1)
-        })
+    static let inkUIColor = UIColor { traits in
+        traits.userInterfaceStyle == .dark
+            ? UIColor(red: 0.84, green: 0.82, blue: 0.78, alpha: 1)
+            : UIColor(red: 0.15, green: 0.14, blue: 0.12, alpha: 1)
+    }
+    static let secondaryInkUIColor = UIColor { traits in
+        traits.userInterfaceStyle == .dark
+            ? UIColor(red: 0.62, green: 0.61, blue: 0.56, alpha: 1)
+            : UIColor(red: 0.42, green: 0.39, blue: 0.33, alpha: 1)
+    }
+    /// UIKit twin of `accent`, but with a lifted dark-mode variant (matches
+    /// the reader CSS `--link` pair) — the light-mode green sinks into the
+    /// dark paper background.
+    static let accentUIColor = UIColor { traits in
+        traits.userInterfaceStyle == .dark
+            ? UIColor(red: 0.50, green: 0.79, blue: 0.56, alpha: 1)
+            : UIColor(red: 0.16, green: 0.42, blue: 0.27, alpha: 1)
+    }
+    /// Subtle inline-code chip, mirroring the reader CSS `--code-bg`.
+    static let codeBackgroundUIColor = UIColor { traits in
+        traits.userInterfaceStyle == .dark
+            ? UIColor.white.withAlphaComponent(0.08)
+            : UIColor.black.withAlphaComponent(0.06)
+    }
+    static let ink = Color(uiColor: inkUIColor)
+    static let secondaryInk = Color(uiColor: secondaryInkUIColor)
     static let hairline = Color(
         uiColor: UIColor { traits in
             traits.userInterfaceStyle == .dark

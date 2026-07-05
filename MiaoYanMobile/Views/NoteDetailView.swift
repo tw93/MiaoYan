@@ -23,11 +23,13 @@ private struct ReaderHTMLCacheKey: Hashable {
     let path: String
     let modifiedAt: TimeInterval
     let fontSize: Int
+    let fontFamily: String
 
-    init(noteURL: URL, modifiedDate: Date, fontSize: Int) {
+    init(noteURL: URL, modifiedDate: Date, fontSize: Int, fontFamily: String) {
         self.path = noteURL.standardizedFileURL.path
         self.modifiedAt = modifiedDate.timeIntervalSinceReferenceDate
         self.fontSize = fontSize
+        self.fontFamily = fontFamily
     }
 }
 
@@ -107,12 +109,19 @@ private actor ReaderHTMLCache {
 
 struct NoteDetailView: View {
     let note: NoteFile
+    /// Invoked after the note is moved to Trash. `dismiss()` only pops a
+    /// pushed/presented detail (iPhone); inside the iPad split view the
+    /// detail column stays mounted, so the pad shell uses this to clear its
+    /// selection instead of keeping a deleted note on screen.
+    var onDeleted: (() -> Void)?
 
     @AppStorage("MiaoYanMobile.FontSize") private var fontSizeRaw = ReaderFontSize.medium.rawValue
+    @AppStorage("MiaoYanMobile.FontFamily") private var fontFamilyRaw = ReaderFontFamily.serif.rawValue
     @Environment(\.dismiss) private var dismiss
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @EnvironmentObject private var readerWebViewStore: ReaderWebViewStore
+    @EnvironmentObject private var appState: AppState
     @State private var content = ""
     @State private var saveState: NoteSaveState = .saved
     @State private var hasLoadedContent = false
@@ -125,7 +134,7 @@ struct NoteDetailView: View {
     @State private var showSkeleton = false
     @State private var isApplyingLoadedContent = false
     @State private var chromeVisible = true
-    @State private var showEditor = false
+    @State private var isEditing = false
     @State private var showDeleteAlert = false
     @State private var showConflictAlert = false
     @State private var toastMessage: String?
@@ -142,6 +151,10 @@ struct NoteDetailView: View {
 
     private var fontSize: ReaderFontSize {
         ReaderFontSize(rawValue: fontSizeRaw) ?? .medium
+    }
+
+    private var fontFamily: ReaderFontFamily {
+        ReaderFontFamily(rawValue: fontFamilyRaw) ?? .serif
     }
 
     private var isPinned: Bool {
@@ -164,13 +177,23 @@ struct NoteDetailView: View {
                 onTap: toggleChrome
             )
             .ignoresSafeArea(edges: .bottom)
-            .opacity(renderedHTML == nil ? 0 : 1)
+            .opacity(renderedHTML == nil || isEditing ? 0 : 1)
             .animation(.easeOut(duration: 0.18), value: renderedHTML == nil)
 
-            if renderedHTML == nil {
+            if renderedHTML == nil && !isEditing {
                 NoteDetailLoadingView()
                     .opacity(showSkeleton ? 1 : 0)
                     .animation(.easeOut(duration: 0.18), value: showSkeleton)
+            }
+
+            if isEditing {
+                NoteEditView(
+                    note: note,
+                    content: $content,
+                    saveState: saveState,
+                    bodyFont: fontFamily.uiFont(size: fontSize.points)
+                )
+                .transition(.opacity)
             }
 
             if let toastMessage {
@@ -214,62 +237,65 @@ struct NoteDetailView: View {
                 // mixing accent+ink here looked fragmented in practice (see
                 // discussion 2026-05).
                 HStack(spacing: 12) {
-                    Button {
-                        Haptics.tap()
-                        showEditor = true
-                    } label: {
-                        Image(systemName: "square.and.pencil")
-                    }
-
-                    // Menu intentionally carries secondary reader and note
-                    // management actions. ShareLink used to live here but its eager
-                    // evaluation (serialising content + scanning available
-                    // share targets + LinkPresentation metadata) made the
-                    // first ellipsis tap visibly stutter. iOS already exposes
-                    // file-level sharing via the Files app long-press, so an
-                    // in-app Share button was redundant.
-                    Menu {
-                        Picker("Font size", selection: $fontSizeRaw) {
-                            ForEach(ReaderFontSize.allCases, id: \.rawValue) { size in
-                                Text(size.label).tag(size.rawValue)
-                            }
-                        }
-
-                        Divider()
+                    if isEditing {
                         Button {
                             Haptics.tap()
-                            togglePin()
+                            finishEditing()
                         } label: {
-                            Label(
-                                isPinned ? "Unpin" : "Pin",
-                                systemImage: isPinned ? "pin.slash" : "pin")
+                            Text("Done")
+                                .fontWeight(.semibold)
                         }
-                        Button(role: .destructive) {
-                            Haptics.warning()
-                            showDeleteAlert = true
+                        .foregroundStyle(MobileTheme.accent)
+                    } else {
+                        Button {
+                            Haptics.tap()
+                            beginEditing()
                         } label: {
-                            Text("Move to Trash")
+                            Image(systemName: "square.and.pencil")
                         }
-                    } label: {
-                        Image(systemName: "ellipsis.circle")
+
+                        // Menu intentionally carries secondary reader and note
+                        // management actions. ShareLink used to live here but its eager
+                        // evaluation (serialising content + scanning available
+                        // share targets + LinkPresentation metadata) made the
+                        // first ellipsis tap visibly stutter. iOS already exposes
+                        // file-level sharing via the Files app long-press, so an
+                        // in-app Share button was redundant.
+                        Menu {
+                            Picker("Font", selection: $fontFamilyRaw) {
+                                ForEach(ReaderFontFamily.allCases, id: \.rawValue) { family in
+                                    Text(family.label).tag(family.rawValue)
+                                }
+                            }
+                            Picker("Font size", selection: $fontSizeRaw) {
+                                ForEach(ReaderFontSize.allCases, id: \.rawValue) { size in
+                                    Text(size.label).tag(size.rawValue)
+                                }
+                            }
+
+                            Divider()
+                            Button {
+                                Haptics.tap()
+                                togglePin()
+                            } label: {
+                                Label(
+                                    isPinned ? "Unpin" : "Pin",
+                                    systemImage: isPinned ? "pin.slash" : "pin")
+                            }
+                            Button(role: .destructive) {
+                                Haptics.warning()
+                                showDeleteAlert = true
+                            } label: {
+                                Text("Move to Trash")
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis.circle")
+                        }
+                        .accessibilityLabel(Text("Note actions"))
                     }
-                    .accessibilityLabel(Text("Note actions"))
                 }
                 .foregroundStyle(MobileTheme.ink)
             }
-        }
-        .sheet(isPresented: $showEditor) {
-            NoteEditorView(
-                note: note,
-                content: $content,
-                saveState: saveState,
-                onDone: {
-                    Haptics.tap()
-                    flushSave()
-                    showEditor = false
-                    renderContent()
-                }
-            )
         }
         .alert("Move note to Trash?", isPresented: $showDeleteAlert) {
             Button("Cancel", role: .cancel) {}
@@ -296,18 +322,13 @@ struct NoteDetailView: View {
         .onChange(of: fontSizeRaw) {
             renderContent()
         }
+        .onChange(of: fontFamilyRaw) {
+            renderContent()
+        }
         .onChange(of: content) {
             guard hasLoadedContent, !isApplyingLoadedContent else { return }
             scheduleAutosave()
-            if !showEditor {
-                renderContent()
-            }
-        }
-        .onChange(of: showEditor) { _, isShowing in
-            if !isShowing {
-                // Catch swipe-to-dismiss as well as the explicit Done button:
-                // make sure any pending edits land on disk before re-rendering.
-                flushSave()
+            if !isEditing {
                 renderContent()
             }
         }
@@ -330,6 +351,7 @@ struct NoteDetailView: View {
 
         let note = note
         let fontSize = fontSize.cssPoints
+        let fontFamily = fontFamily
         let title = note.title
 
         loadTask = Task { @MainActor in
@@ -343,7 +365,8 @@ struct NoteDetailView: View {
             let cacheKey = ReaderHTMLCacheKey(
                 noteURL: note.url,
                 modifiedDate: resolvedModifiedDate,
-                fontSize: fontSize
+                fontSize: fontSize,
+                fontFamily: fontFamily.rawValue
             )
 
             // Cache hit: install HTML immediately, content arrives in
@@ -381,7 +404,9 @@ struct NoteDetailView: View {
                 return
             }
             let html = await Task.detached(priority: .userInitiated) {
-                MobileHtmlRenderer.render(markdown: resolvedContent, title: title, fontSize: fontSize)
+                MobileHtmlRenderer.render(
+                    markdown: resolvedContent, title: title, fontSize: fontSize,
+                    fontCSS: fontFamily.cssStack, assetRoot: note.url.deletingLastPathComponent())
             }.value
             await ReaderHTMLCache.shared.store(html, for: cacheKey)
 
@@ -401,16 +426,21 @@ struct NoteDetailView: View {
 
         let markdown = content
         let fontSize = fontSize.cssPoints
+        let fontFamily = fontFamily
         let title = note.title
+        let assetRoot = note.url.deletingLastPathComponent()
         let cacheKey = ReaderHTMLCacheKey(
             noteURL: note.url,
             modifiedDate: lastKnownModifiedDate,
-            fontSize: fontSize
+            fontSize: fontSize,
+            fontFamily: fontFamily.rawValue
         )
 
         renderTask = Task { @MainActor in
             let html = await Task.detached(priority: .userInitiated) {
-                MobileHtmlRenderer.render(markdown: markdown, title: title, fontSize: fontSize)
+                MobileHtmlRenderer.render(
+                    markdown: markdown, title: title, fontSize: fontSize,
+                    fontCSS: fontFamily.cssStack, assetRoot: assetRoot)
             }.value
             await ReaderHTMLCache.shared.store(html, for: cacheKey)
 
@@ -514,11 +544,12 @@ struct NoteDetailView: View {
     private func deleteNote() {
         Task { @MainActor in
             do {
-                try await NoteFileStore.trash(note)
+                try await NoteFileStore.trash(note, libraryRoot: appState.rootURL)
                 Haptics.success()
                 // Refresh list views (the iPad content column stays mounted
                 // behind this detail and has no other reload trigger).
                 CloudSyncManager.shared.notifyExternalChange()
+                onDeleted?()
                 dismiss()
             } catch {
                 saveState = .failed(error.localizedDescription)
@@ -543,6 +574,25 @@ struct NoteDetailView: View {
                 Haptics.error()
             }
         }
+    }
+
+    // MARK: - Edit mode
+
+    private func beginEditing() {
+        // Editing needs the nav bar (it hosts Done); make sure a previous
+        // tap-to-hide state doesn't leave the user without an exit.
+        setChromeVisible(true, duration: 0.18)
+        withAnimation(.easeInOut(duration: 0.18)) {
+            isEditing = true
+        }
+    }
+
+    private func finishEditing() {
+        flushSave()
+        withAnimation(.easeInOut(duration: 0.18)) {
+            isEditing = false
+        }
+        renderContent()
     }
 
     // MARK: - Chrome visibility

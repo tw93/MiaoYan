@@ -114,6 +114,8 @@
 		9A4658B9B745E08FC4DB8577 /* CMarkGFM in Frameworks */ = {isa = PBXBuildFile; productRef = CBD4E726D8FB3B404AC19059 /* CMarkGFM */; };
 		A090A42DDDB5B3599F6B47E6 /* MobileHtmlRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DADE53B7E8BD46549942E2B /* MobileHtmlRenderer.swift */; };
 		A5729D50AA284578BBE88E50 /* NoteEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 754FE5B86E5A41BFB19B421E /* NoteEditorView.swift */; };
+		6E01AA0F885D42989822EE01 /* MarkdownEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E01AA0F885D42989822EE01 /* MarkdownEditorView.swift */; };
+		6E01AA0F885D42989822EE02 /* MarkdownHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E01AA0F885D42989822EE02 /* MarkdownHighlighter.swift */; };
 		AA001001AA001001AA001001 /* NoteVersionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA001000AA001000AA001000 /* NoteVersionManager.swift */; };
 		AA002001AA002001AA002001 /* VersionHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA002000AA002000AA002000 /* VersionHistoryViewController.swift */; };
 		AD1A58D367BB6D65BED591E9 /* NoteReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D788C8F47BFF1191612E9D13 /* NoteReaderView.swift */; };
@@ -289,6 +291,8 @@
 		6F13BB2A20FEDE230005E120 /* URL+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+.swift"; sourceTree = "<group>"; };
 		6F13BB3820FEDE230005E120 /* UserDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataService.swift; sourceTree = "<group>"; };
 		754FE5B86E5A41BFB19B421E /* NoteEditorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NoteEditorView.swift; path = MiaoYanMobile/Views/NoteEditorView.swift; sourceTree = SOURCE_ROOT; };
+		7E01AA0F885D42989822EE01 /* MarkdownEditorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MarkdownEditorView.swift; path = MiaoYanMobile/Views/MarkdownEditorView.swift; sourceTree = SOURCE_ROOT; };
+		7E01AA0F885D42989822EE02 /* MarkdownHighlighter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MarkdownHighlighter.swift; path = MiaoYanMobile/Services/MarkdownHighlighter.swift; sourceTree = SOURCE_ROOT; };
 		799BE3B629AEB2051AF69AB2 /* NotesListView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NotesListView.swift; path = MiaoYanMobile/Views/NotesListView.swift; sourceTree = SOURCE_ROOT; };
 		79ED9A0265AF40869D66861F /* ViewController+Export.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Export.swift"; sourceTree = "<group>"; };
 		7CEDD077A416C0F4BA0EC980 /* Helpers/UIDelay.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Helpers/UIDelay.swift; sourceTree = SOURCE_ROOT; };
@@ -505,6 +509,7 @@
 				CD3B40DC2D5EDC92F599928F /* FolderListView.swift */,
 				799BE3B629AEB2051AF69AB2 /* NotesListView.swift */,
 				754FE5B86E5A41BFB19B421E /* NoteEditorView.swift */,
+				7E01AA0F885D42989822EE01 /* MarkdownEditorView.swift */,
 				ABD610C0BFC74068B993BC2C /* NoteDetailView.swift */,
 				A6E21F00885D42989822E5FF /* NewNoteView.swift */,
 				D788C8F47BFF1191612E9D13 /* NoteReaderView.swift */,
@@ -538,6 +543,7 @@
 			children = (
 				FFF5878451919D13759B1D46 /* FileReader.swift */,
 				0DADE53B7E8BD46549942E2B /* MobileHtmlRenderer.swift */,
+				7E01AA0F885D42989822EE02 /* MarkdownHighlighter.swift */,
 				95B671C2C7154C33A6BDC59A /* CloudSyncManager.swift */,
 				95B671C2C7154C33A6BDCAAA /* RecentNotesCache.swift */,
 				95B671C2C7154C33A6BDCBBB /* PinService.swift */,
@@ -945,6 +951,8 @@
 				8B143F56BB019B808CC4386A /* AppState.swift in Sources */,
 				5EA2FE92CBA734EDEFE7E309 /* FolderListView.swift in Sources */,
 				A5729D50AA284578BBE88E50 /* NoteEditorView.swift in Sources */,
+				6E01AA0F885D42989822EE01 /* MarkdownEditorView.swift in Sources */,
+				6E01AA0F885D42989822EE02 /* MarkdownHighlighter.swift in Sources */,
 				CB24CEF08026448580C9CFBB /* NoteDetailView.swift in Sources */,
 				29A0687A7FD54D1AB241774F /* NewNoteView.swift in Sources */,
 				6EB32CA84A9FE302AB9534A0 /* NotesListView.swift in Sources */,
