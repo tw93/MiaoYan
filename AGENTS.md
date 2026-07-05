@@ -47,6 +47,7 @@ MiaoYan is a lightweight Markdown editor built with Swift. The main app is macOS
 xcodebuild -project MiaoYan.xcodeproj -scheme MiaoYan -configuration Debug build
 xcodebuild clean
 xcodebuild test -project MiaoYan.xcodeproj -scheme MiaoYan -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO
+xcodebuild -project MiaoYan.xcodeproj -scheme MiaoYanMobile -configuration Debug -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
 swiftlint lint --strict
 swift-format lint --recursive .
 bash scripts/build.sh
@@ -56,6 +57,13 @@ ruby scripts/wire_helper_files.rb    # only when re-wiring orphan Diagnostics/UI
 ```
 
 Use the narrowest relevant command first. Full app builds are the default verification for Swift or project changes.
+
+The Xcode project uses classic pbxproj groups (no filesystem-synchronized
+groups). Adding a new source file requires manual registration at 4 sites in
+`MiaoYan.xcodeproj/project.pbxproj`: a `PBXBuildFile` entry, a
+`PBXFileReference` entry, the owning group's `children` list, and the target's
+`PBXSourcesBuildPhase` files list. Mimic an existing sibling entry and use a
+fresh unique 24-hex ID for each new object.
 
 ## Testing
 
@@ -158,6 +166,8 @@ Avoid broad scans of `build/`, `.build/`, `dist/`, and bundled web assets unless
 - Mermaid and PDF export span `Business/HtmlManager.swift`, `Helpers/PdfExportController.swift`, and `Extensions/MPreviewView+Export.swift`. Wait for images and Mermaid rendering before capture.
 - Async note/image/file loading is intentional. Do not reintroduce blocking reads on the main thread for large notes or previews.
 - Directory symlinks are supported by storage scanning. Avoid recursion loops and duplicate notes when following symlinked directories.
+- The iOS editor is `MiaoYanMobile/Views/MarkdownEditorView.swift` + `Services/MarkdownHighlighter.swift`: plain-markdown UITextView with regex highlighting. Never mutate `textStorage` attributes while `markedTextRange != nil` (breaks CJK IME composition), and keep `lineBreakStrategy = []` (re-enabling push-out reintroduces premature CJK line wraps).
+- Note attachments follow the shared `i/` convention: images live in an `i/` folder next to the note, referenced as `![](/i/<name>)` on both platforms. The iOS reader cannot load `file://` subresources (`loadHTMLString`), so `MobileHtmlRenderer` rewrites local srcs to the `miaoyan-asset://` scheme served by `LocalAssetSchemeHandler`, which only serves files under the current library root (`allowedRoot`). Keep that root restriction when touching the handler.
 - Image upload posts to a local PicGo/PicList HTTP endpoint at `127.0.0.1:36677` (`Helpers/ClipboardManager.swift`). The macOS `Info.plist` ATS permits this via `NSAllowsLocalNetworking`; do not widen it back to `NSAllowsArbitraryLoads`. The markdown preview loads through `loadFileURL` (file://), not a local web server, so ATS does not gate preview rendering.
 - iOS user-facing strings live in `MiaoYanMobile/Resources/Localizable.xcstrings` and ship `en` + `zh-Hans` only (the macOS app ships five languages). Add a `zh-Hans` value for every new iOS string, or Chinese users fall back to English.
 
