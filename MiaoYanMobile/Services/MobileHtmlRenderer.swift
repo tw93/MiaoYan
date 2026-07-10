@@ -9,8 +9,10 @@ enum MobileHtmlRenderer {
         fontCSS: String? = nil,
         assetRoot: URL? = nil
     ) -> String {
-        let body = rewriteLocalAssetPaths(in: markdownToHTML(markdown), assetRoot: assetRoot)
+        let body = rewriteWikilinks(
+            in: rewriteLocalAssetPaths(in: markdownToHTML(markdown), assetRoot: assetRoot))
         let hero = heroTitleHTML(noteTitle: title, markdown: markdown)
+        let scripts = readerScripts(for: body)
         // Critical: the dynamic --font-size / --font overrides MUST come
         // after bundledCSS, not before. mobile-reader.css declares its own
         // defaults on :root; same selector + same property means whichever
@@ -36,6 +38,7 @@ enum MobileHtmlRenderer {
             <main id="write" class="reader markdown-body heti">
             \(hero)\(body)
             </main>
+            \(scripts)
             </body>
             </html>
             """
@@ -84,6 +87,116 @@ enum MobileHtmlRenderer {
             mutable.replaceCharacters(in: match.range(at: 2), with: rewritten)
         }
         return mutable as String
+    }
+
+    // MARK: - Wikilinks
+
+    private static let wikilinkPattern = try? NSRegularExpression(
+        pattern: "\\[\\[([^\\[\\]|]+)(?:\\|([^\\[\\]]+))?\\]\\]")
+    private static let codeRegionPattern = try? NSRegularExpression(
+        pattern: "<pre[\\s\\S]*?</pre>|<code[\\s\\S]*?</code>", options: [.caseInsensitive])
+
+    /// Rewrite `[[target]]` / `[[target|label]]` into anchors on the
+    /// `miaoyan-wiki` scheme so the reader can navigate between notes.
+    /// cmark leaves wikilinks as literal text, so this runs on the HTML —
+    /// skipping `<pre>`/`<code>` regions where the syntax must stay verbatim.
+    private static func rewriteWikilinks(in html: String) -> String {
+        guard html.contains("[["), let codeRegex = codeRegionPattern else { return html }
+        let source = html as NSString
+        let fullRange = NSRange(location: 0, length: source.length)
+        let codeRanges = codeRegex.matches(in: html, range: fullRange).map(\.range)
+
+        var result = ""
+        result.reserveCapacity(html.count)
+        var cursor = 0
+        for codeRange in codeRanges {
+            if codeRange.location > cursor {
+                let prose = source.substring(
+                    with: NSRange(location: cursor, length: codeRange.location - cursor))
+                result += rewriteWikilinkSegment(prose)
+            }
+            result += source.substring(with: codeRange)
+            cursor = codeRange.location + codeRange.length
+        }
+        if cursor < source.length {
+            let prose = source.substring(with: NSRange(location: cursor, length: source.length - cursor))
+            result += rewriteWikilinkSegment(prose)
+        }
+        return result
+    }
+
+    private static func rewriteWikilinkSegment(_ segment: String) -> String {
+        guard segment.contains("[["), let regex = wikilinkPattern else { return segment }
+        let mutable = NSMutableString(string: segment)
+        let matches = regex.matches(in: segment, range: NSRange(location: 0, length: mutable.length))
+        for match in matches.reversed() {
+            let rawTarget = mutable.substring(with: match.range(at: 1))
+            let label =
+                match.range(at: 2).location != NSNotFound
+                ? mutable.substring(with: match.range(at: 2))
+                : rawTarget
+            // cmark already entity-escaped this text; decode before building
+            // the URL so the resolver sees the real title.
+            let target = unescapeHTML(rawTarget).trimmingCharacters(in: .whitespaces)
+            guard !target.isEmpty,
+                let href = WikilinkURL.absoluteString(forTitle: target)
+            else { continue }
+            // `label` stays as-is: it is already HTML-escaped output.
+            mutable.replaceCharacters(
+                in: match.range,
+                with: "<a class=\"wikilink\" href=\"\(escapeHTML(href))\">\(label)</a>")
+        }
+        return mutable as String
+    }
+
+    private static func unescapeHTML(_ s: String) -> String {
+        s.replacingOccurrences(of: "&lt;", with: "<")
+            .replacingOccurrences(of: "&gt;", with: ">")
+            .replacingOccurrences(of: "&quot;", with: "\"")
+            .replacingOccurrences(of: "&#39;", with: "'")
+            .replacingOccurrences(of: "&amp;", with: "&")
+    }
+
+    // MARK: - Reader scripts
+
+    /// Conditionally reference the bundled scripts a note actually needs.
+    /// Scripts load through the `miaoyan-bundle` scheme handler, so the
+    /// rendered HTML string (and the reader's HTML cache) stays small.
+    private static func readerScripts(for body: String) -> String {
+        let hasCodeBlock = body.contains("<pre><code")
+        let hasMermaid = body.contains("language-mermaid")
+        var out = ""
+        if hasMermaid {
+            // Convert mermaid fences to divs BEFORE hljs runs, then let
+            // mermaid pick its theme from the current appearance. The HTML
+            // is cached independent of appearance, so the theme decision
+            // must happen in the page at load time, not at render time.
+            out += """
+                <script src="miaoyan-bundle:///mermaid.min.js"></script>
+                <script>
+                document.querySelectorAll("pre code.language-mermaid").forEach(function (code) {
+                  var div = document.createElement("div");
+                  div.className = "mermaid";
+                  div.textContent = code.textContent;
+                  code.closest("pre").replaceWith(div);
+                });
+                var miaoyanDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+                mermaid.initialize({ startOnLoad: true, theme: miaoyanDark ? "dark" : "neutral" });
+                </script>
+                """
+        }
+        if hasCodeBlock {
+            out += """
+                <script src="miaoyan-bundle:///highlight.min.js"></script>
+                <script>
+                document.querySelectorAll("pre code").forEach(function (el) {
+                  if (el.classList.contains("language-mermaid")) { return; }
+                  hljs.highlightElement(el);
+                });
+                </script>
+                """
+        }
+        return out
     }
 
     // MARK: - Hero title

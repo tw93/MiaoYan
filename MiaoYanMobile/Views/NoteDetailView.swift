@@ -114,6 +114,11 @@ struct NoteDetailView: View {
     /// detail column stays mounted, so the pad shell uses this to clear its
     /// selection instead of keeping a deleted note on screen.
     var onDeleted: (() -> Void)?
+    /// Open another note in place of this one. The iPad shell swaps its
+    /// detail selection; when nil (iPhone push navigation) the view pushes
+    /// via `wikilinkTarget` instead. Also used after rename/move so the
+    /// note stays open at its new URL on iPad.
+    var onOpenNote: ((NoteFile) -> Void)?
 
     @AppStorage("MiaoYanMobile.FontSize") private var fontSizeRaw = ReaderFontSize.medium.rawValue
     @AppStorage("MiaoYanMobile.FontFamily") private var fontFamilyRaw = ReaderFontFamily.serif.rawValue
@@ -137,6 +142,11 @@ struct NoteDetailView: View {
     @State private var isEditing = false
     @State private var showDeleteAlert = false
     @State private var showConflictAlert = false
+    @State private var showRenameAlert = false
+    @State private var renameTitle = ""
+    @State private var moveTargets: [URL] = []
+    /// iPhone-only wikilink push target; iPad routes through `onOpenNote`.
+    @State private var wikilinkTarget: NoteFile?
     @State private var toastMessage: String?
     /// Pin state edited from this view. `nil` until the user toggles it,
     /// at which point it overrides the immutable `note.isPinned`.
@@ -174,7 +184,8 @@ struct NoteDetailView: View {
                 baseURL: note.url.deletingLastPathComponent(),
                 webViewStore: readerWebViewStore,
                 onChromeIntent: handleChromeIntent,
-                onTap: toggleChrome
+                onTap: toggleChrome,
+                onWikilink: handleWikilink
             )
             .ignoresSafeArea(edges: .bottom)
             .opacity(renderedHTML == nil || isEditing ? 0 : 1)
@@ -255,39 +266,13 @@ struct NoteDetailView: View {
                         }
 
                         // Menu intentionally carries secondary reader and note
-                        // management actions. ShareLink used to live here but its eager
-                        // evaluation (serialising content + scanning available
-                        // share targets + LinkPresentation metadata) made the
-                        // first ellipsis tap visibly stutter. iOS already exposes
-                        // file-level sharing via the Files app long-press, so an
-                        // in-app Share button was redundant.
+                        // management actions. ShareLink used to live in the bar
+                        // but its eager evaluation (serialising content +
+                        // scanning available share targets + LinkPresentation
+                        // metadata) made the first ellipsis tap visibly
+                        // stutter; inside the menu the cost is deferred.
                         Menu {
-                            Picker("Font", selection: $fontFamilyRaw) {
-                                ForEach(ReaderFontFamily.allCases, id: \.rawValue) { family in
-                                    Text(family.label).tag(family.rawValue)
-                                }
-                            }
-                            Picker("Font size", selection: $fontSizeRaw) {
-                                ForEach(ReaderFontSize.allCases, id: \.rawValue) { size in
-                                    Text(size.label).tag(size.rawValue)
-                                }
-                            }
-
-                            Divider()
-                            Button {
-                                Haptics.tap()
-                                togglePin()
-                            } label: {
-                                Label(
-                                    isPinned ? "Unpin" : "Pin",
-                                    systemImage: isPinned ? "pin.slash" : "pin")
-                            }
-                            Button(role: .destructive) {
-                                Haptics.warning()
-                                showDeleteAlert = true
-                            } label: {
-                                Text("Move to Trash")
-                            }
+                            noteActionsMenuContent
                         } label: {
                             Image(systemName: "ellipsis.circle")
                         }
@@ -308,6 +293,17 @@ struct NoteDetailView: View {
             Button("Keep Mine") { flushSave(force: true) }
         } message: {
             Text("Another device updated this file before your edits were saved.")
+        }
+        .alert("Rename note", isPresented: $showRenameAlert) {
+            TextField("Title", text: $renameTitle)
+            Button("Cancel", role: .cancel) {}
+            Button("Rename") { performRename() }
+        }
+        .navigationDestination(item: $wikilinkTarget) { target in
+            NoteDetailView(note: target)
+        }
+        .task {
+            await loadMoveTargets()
         }
         .onAppear {
             loadContent()
@@ -336,6 +332,63 @@ struct NoteDetailView: View {
             if phase == .active {
                 checkForRemoteChange()
             }
+        }
+    }
+
+    // MARK: - Actions menu
+
+    @ViewBuilder
+    private var noteActionsMenuContent: some View {
+        Picker("Font", selection: $fontFamilyRaw) {
+            ForEach(ReaderFontFamily.allCases, id: \.rawValue) { family in
+                Text(family.label).tag(family.rawValue)
+            }
+        }
+        Picker("Font size", selection: $fontSizeRaw) {
+            ForEach(ReaderFontSize.allCases, id: \.rawValue) { size in
+                Text(size.label).tag(size.rawValue)
+            }
+        }
+
+        Divider()
+        Button {
+            Haptics.tap()
+            togglePin()
+        } label: {
+            Label(
+                isPinned ? "Unpin" : "Pin",
+                systemImage: isPinned ? "pin.slash" : "pin")
+        }
+        Button {
+            Haptics.tap()
+            renameTitle = note.title
+            showRenameAlert = true
+        } label: {
+            Label("Rename", systemImage: "pencil")
+        }
+        if !moveTargets.isEmpty {
+            Menu {
+                ForEach(moveTargets, id: \.absoluteString) { target in
+                    Button {
+                        Haptics.tap()
+                        performMove(to: target)
+                    } label: {
+                        Label(moveTargetLabel(for: target), systemImage: "folder")
+                    }
+                }
+            } label: {
+                Label("Move to Folder", systemImage: "folder")
+            }
+        }
+        ShareLink(item: note.url, preview: SharePreview(note.title)) {
+            Label("Share", systemImage: "square.and.arrow.up")
+        }
+        Divider()
+        Button(role: .destructive) {
+            Haptics.warning()
+            showDeleteAlert = true
+        } label: {
+            Text("Move to Trash")
         }
     }
 
@@ -555,6 +608,85 @@ struct NoteDetailView: View {
                 saveState = .failed(error.localizedDescription)
                 showToast("Move failed")
                 Haptics.error()
+            }
+        }
+    }
+
+    // MARK: - Rename / move / wikilink
+
+    private func loadMoveTargets() async {
+        guard let root = appState.rootURL else { return }
+        let targets = await NoteFileStore.moveTargetURLs(in: root)
+        // The note's own folder is not a destination.
+        let currentFolder = note.url.deletingLastPathComponent().standardizedFileURL.path
+        moveTargets = targets.filter { $0.standardizedFileURL.path != currentFolder }
+    }
+
+    private func moveTargetLabel(for target: URL) -> String {
+        let root = appState.rootURL?.standardizedFileURL.path
+        return target.standardizedFileURL.path == root
+            ? String(localized: "All Notes")
+            : target.lastPathComponent
+    }
+
+    private func performRename() {
+        let newTitle = renameTitle.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !newTitle.isEmpty, newTitle != note.title else { return }
+        Task { @MainActor in
+            do {
+                // Any in-flight autosave targets the old URL; NSFileCoordinator
+                // serializes the write against the move, so ordering is safe.
+                let newURL = try await NoteFileStore.rename(note, to: newTitle)
+                Haptics.success()
+                CloudSyncManager.shared.notifyExternalChange()
+                reopen(at: newURL)
+            } catch {
+                showToast("Rename failed")
+                Haptics.error()
+            }
+        }
+    }
+
+    private func performMove(to folder: URL) {
+        Task { @MainActor in
+            do {
+                let newURL = try await NoteFileStore.move(note, to: folder)
+                Haptics.success()
+                CloudSyncManager.shared.notifyExternalChange()
+                reopen(at: newURL)
+            } catch {
+                showToast("Move failed")
+                Haptics.error()
+            }
+        }
+    }
+
+    /// After a rename/move the note's URL changed and this view's state
+    /// (autosave target, cache keys) is stale. On iPad, swap the detail
+    /// selection to the new URL so the note stays open; on iPhone, pop
+    /// back to the list, which reflects the change on its next reload.
+    private func reopen(at newURL: URL) {
+        if let onOpenNote {
+            onOpenNote(NoteFile(url: newURL))
+        } else {
+            onDeleted?()
+            dismiss()
+        }
+    }
+
+    private func handleWikilink(_ title: String) {
+        guard let root = appState.rootURL else { return }
+        Task { @MainActor in
+            guard let target = await NoteFileStore.findNote(titled: title, in: root) else {
+                showToast("Note not found")
+                Haptics.warning()
+                return
+            }
+            Haptics.tap()
+            if let onOpenNote {
+                onOpenNote(target)
+            } else {
+                wikilinkTarget = target
             }
         }
     }

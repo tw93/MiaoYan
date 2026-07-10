@@ -121,6 +121,8 @@
 		AD1A58D367BB6D65BED591E9 /* NoteReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D788C8F47BFF1191612E9D13 /* NoteReaderView.swift */; };
 		BAE809BB946B47E89F92E155 /* MiaoYanTests/StorageInitContentDecisionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B738F144215845899083B5C4 /* MiaoYanTests/StorageInitContentDecisionTests.swift */; };
 		BD629B775B7BA6BE009109A9 /* mobile-reader.css in Resources */ = {isa = PBXBuildFile; fileRef = 0C6D1E9F6DF428F005279AD6 /* mobile-reader.css */; };
+		3F8A21C4D0E14B26A9375C03 /* highlight.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 3F8A21C4D0E14B26A9375C01 /* highlight.min.js */; };
+		3F8A21C4D0E14B26A9375C04 /* mermaid.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 3F8A21C4D0E14B26A9375C02 /* mermaid.min.js */; };
 		C75DC26EE3FF48E896528611 /* MiaoYanTests/ClipboardManagerUTF16Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B975C5A10CFD43A88A5126AC /* MiaoYanTests/ClipboardManagerUTF16Tests.swift */; };
 		CB24CEF08026448580C9CFBB /* NoteDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD610C0BFC74068B993BC2C /* NoteDetailView.swift */; };
 		D66760150F65F7A76FB578AD /* MiaoYanTests/WikilinkIndexTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95948F99423D28CB53271964 /* MiaoYanTests/WikilinkIndexTests.swift */; };
@@ -211,6 +213,8 @@
 
 /* Begin PBXFileReference section */
 		0C6D1E9F6DF428F005279AD6 /* mobile-reader.css */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.css; name = "mobile-reader.css"; path = "MiaoYanMobile/Resources/mobile-reader.css"; sourceTree = SOURCE_ROOT; };
+		3F8A21C4D0E14B26A9375C01 /* highlight.min.js */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.javascript; name = "highlight.min.js"; path = "Resources/DownView.bundle/js/highlight.min.js"; sourceTree = SOURCE_ROOT; };
+		3F8A21C4D0E14B26A9375C02 /* mermaid.min.js */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.javascript; name = "mermaid.min.js"; path = "Resources/DownView.bundle/js/mermaid.min.js"; sourceTree = SOURCE_ROOT; };
 		0DADE53B7E8BD46549942E2B /* MobileHtmlRenderer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MobileHtmlRenderer.swift; path = MiaoYanMobile/Services/MobileHtmlRenderer.swift; sourceTree = SOURCE_ROOT; };
 		17D270682FE43740B52C6C24 /* MiaoYanTests/Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = MiaoYanTests/Info.plist; sourceTree = SOURCE_ROOT; };
 		22D3FBA9ED5365B3869702E8 /* AppState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppState.swift; path = MiaoYanMobile/App/AppState.swift; sourceTree = SOURCE_ROOT; };
@@ -528,6 +532,8 @@
 			isa = PBXGroup;
 			children = (
 				0C6D1E9F6DF428F005279AD6 /* mobile-reader.css */,
+				3F8A21C4D0E14B26A9375C01 /* highlight.min.js */,
+				3F8A21C4D0E14B26A9375C02 /* mermaid.min.js */,
 				27EAA59F2EA93D8800D13871 /* MobileAssets.xcassets */,
 				A4E99034F3562EF94A115552 /* Info.plist */,
 				27D000A32EAB000000D13871 /* InfoPlist.xcstrings */,
@@ -893,6 +899,8 @@
 				4D5CD5E8152C42BE97383DAA /* app.icon in Resources */,
 				27EAA5A02EA93D8800D13871 /* MobileAssets.xcassets in Resources */,
 				BD629B775B7BA6BE009109A9 /* mobile-reader.css in Resources */,
+				3F8A21C4D0E14B26A9375C03 /* highlight.min.js in Resources */,
+				3F8A21C4D0E14B26A9375C04 /* mermaid.min.js in Resources */,
 				27D000A22EAB000000D13871 /* Localizable.xcstrings in Resources */,
 				27D000A42EAB000000D13871 /* InfoPlist.xcstrings in Resources */,
 				27D000A62EAB000000D13871 /* PrivacyInfo.xcprivacy in Resources */,

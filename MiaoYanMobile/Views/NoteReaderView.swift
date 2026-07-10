@@ -160,6 +160,97 @@ enum LocalAssetURL {
     }
 }
 
+// MARK: - Wikilink scheme
+
+/// URL mapping for `[[wikilink]]` anchors in rendered notes. The renderer
+/// rewrites wikilinks to this scheme; the reader's navigation delegate
+/// intercepts taps and resolves the title to a note.
+enum WikilinkURL {
+    static let scheme = "miaoyan-wiki"
+
+    static func absoluteString(forTitle title: String) -> String? {
+        var components = URLComponents()
+        components.scheme = scheme
+        components.host = "open"
+        components.queryItems = [URLQueryItem(name: "title", value: title)]
+        return components.url?.absoluteString
+    }
+
+    static func title(from url: URL) -> String? {
+        guard url.scheme == scheme else { return nil }
+        return URLComponents(url: url, resolvingAgainstBaseURL: false)?
+            .queryItems?
+            .first { $0.name == "title" }?
+            .value
+    }
+}
+
+// MARK: - Bundled script scheme
+
+/// Serves a whitelisted set of bundled JS files (syntax highlight, mermaid)
+/// to the reader as `miaoyan-bundle:///<name>`. `loadHTMLString` grants no
+/// file:// access, and inlining mermaid (~3MB) into every rendered HTML
+/// string would bloat the reader HTML cache, so scripts load through this
+/// handler instead. The whitelist matters: the reader renders untrusted
+/// markdown (raw HTML passes through cmark's UNSAFE mode), so no
+/// open-ended bundle access.
+@MainActor
+final class BundleAssetSchemeHandler: NSObject, WKURLSchemeHandler {
+    static let scheme = "miaoyan-bundle"
+    private static let allowedResources: Set<String> = ["highlight.min.js", "mermaid.min.js"]
+
+    private var activeTasks = Set<ObjectIdentifier>()
+
+    func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
+        let taskID = ObjectIdentifier(urlSchemeTask)
+        activeTasks.insert(taskID)
+
+        let name = (urlSchemeTask.request.url?.path as NSString?)?.lastPathComponent
+        guard
+            let name, Self.allowedResources.contains(name),
+            let fileURL = Bundle.main.url(forResource: name, withExtension: nil)
+        else {
+            finish(urlSchemeTask, taskID: taskID) { task in
+                task.didFailWithError(CocoaError(.fileReadNoSuchFile))
+            }
+            return
+        }
+
+        Task { [weak self] in
+            let data = await Task.detached(priority: .userInitiated) {
+                try? Data(contentsOf: fileURL)
+            }.value
+            guard let self else { return }
+            self.finish(urlSchemeTask, taskID: taskID) { task in
+                guard let data else {
+                    task.didFailWithError(CocoaError(.fileReadNoSuchFile))
+                    return
+                }
+                let response = URLResponse(
+                    url: fileURL,
+                    mimeType: "application/javascript",
+                    expectedContentLength: data.count,
+                    textEncodingName: "utf-8"
+                )
+                task.didReceive(response)
+                task.didReceive(data)
+                task.didFinish()
+            }
+        }
+    }
+
+    func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
+        activeTasks.remove(ObjectIdentifier(urlSchemeTask))
+    }
+
+    private func finish(
+        _ task: WKURLSchemeTask, taskID: ObjectIdentifier, _ body: (WKURLSchemeTask) -> Void
+    ) {
+        guard activeTasks.remove(taskID) != nil else { return }
+        body(task)
+    }
+}
+
 /// Serves `miaoyan-asset://` subresource requests from disk. Registered on
 /// every reader WKWebView configuration. WKURLSchemeHandler callbacks
 /// arrive on the main thread.
@@ -264,6 +355,8 @@ enum ReaderWebViewFactory {
         // Local note attachments (images pasted on macOS/iOS) are served
         // through this handler; loadHTMLString grants no file:// access.
         config.setURLSchemeHandler(LocalAssetSchemeHandler(), forURLScheme: LocalAssetURL.scheme)
+        // Bundled reader scripts (syntax highlight, mermaid).
+        config.setURLSchemeHandler(BundleAssetSchemeHandler(), forURLScheme: BundleAssetSchemeHandler.scheme)
         // Suppress incremental rendering so WebView waits for the full
         // HTML + CSS to be parsed before painting. Without this, the
         // first frame shows a white/light background before dark-mode
@@ -327,10 +420,12 @@ struct WebReaderView: UIViewRepresentable {
     let webViewStore: ReaderWebViewStore
     var onChromeIntent: (ReaderChromeIntent) -> Void
     var onTap: () -> Void
+    var onWikilink: (String) -> Void = { _ in }
 
     func makeUIView(context: Context) -> WKWebView {
         let webView = webViewStore.checkoutWebView()
         webView.scrollView.delegate = context.coordinator
+        webView.navigationDelegate = context.coordinator
 
         let tap = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleTap))
         tap.delegate = context.coordinator
@@ -343,6 +438,7 @@ struct WebReaderView: UIViewRepresentable {
     func updateUIView(_ webView: WKWebView, context: Context) {
         context.coordinator.onChromeIntent = onChromeIntent
         context.coordinator.onTap = onTap
+        context.coordinator.onWikilink = onWikilink
         // Empty html is the "warm but no content yet" state used while cmark
         // is still rendering. Skip loadHTMLString so the webview stays in its
         // prewarmed configuration; the next call with real HTML will drive
@@ -363,18 +459,22 @@ struct WebReaderView: UIViewRepresentable {
         if uiView.scrollView.delegate === coordinator {
             uiView.scrollView.delegate = nil
         }
+        if uiView.navigationDelegate === coordinator {
+            uiView.navigationDelegate = nil
+        }
         if let tap = coordinator.tapRecognizer {
             uiView.removeGestureRecognizer(tap)
         }
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(onChromeIntent: onChromeIntent, onTap: onTap)
+        Coordinator(onChromeIntent: onChromeIntent, onTap: onTap, onWikilink: onWikilink)
     }
 
-    final class Coordinator: NSObject, UIScrollViewDelegate, UIGestureRecognizerDelegate {
+    final class Coordinator: NSObject, UIScrollViewDelegate, UIGestureRecognizerDelegate, WKNavigationDelegate {
         var onChromeIntent: (ReaderChromeIntent) -> Void
         var onTap: () -> Void
+        var onWikilink: (String) -> Void
         var lastHTML = ""
         var lastBaseURL: URL?
         weak var tapRecognizer: UITapGestureRecognizer?
@@ -386,9 +486,40 @@ struct WebReaderView: UIViewRepresentable {
         private var accumulatedDown: CGFloat = 0
         private var accumulatedUp: CGFloat = 0
 
-        init(onChromeIntent: @escaping (ReaderChromeIntent) -> Void, onTap: @escaping () -> Void) {
+        init(
+            onChromeIntent: @escaping (ReaderChromeIntent) -> Void,
+            onTap: @escaping () -> Void,
+            onWikilink: @escaping (String) -> Void
+        ) {
             self.onChromeIntent = onChromeIntent
             self.onTap = onTap
+            self.onWikilink = onWikilink
+        }
+
+        // MARK: - Navigation policy
+
+        /// The reader is a single-document view: wikilinks route back into
+        /// the app, external links open in the system browser, and only the
+        /// initial loadHTMLString (`.other`) may navigate the webview itself.
+        func webView(
+            _ webView: WKWebView,
+            decidePolicyFor navigationAction: WKNavigationAction
+        ) async -> WKNavigationActionPolicy {
+            guard let url = navigationAction.request.url else { return .allow }
+            if url.scheme == WikilinkURL.scheme {
+                if let title = WikilinkURL.title(from: url) {
+                    onWikilink(title)
+                }
+                return .cancel
+            }
+            if navigationAction.navigationType == .linkActivated {
+                let scheme = url.scheme?.lowercased() ?? ""
+                if ["http", "https", "mailto"].contains(scheme) {
+                    _ = await UIApplication.shared.open(url)
+                }
+                return .cancel
+            }
+            return .allow
         }
 
         func scrollViewDidScroll(_ scrollView: UIScrollView) {

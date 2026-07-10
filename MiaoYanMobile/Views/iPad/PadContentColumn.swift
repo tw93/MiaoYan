@@ -20,6 +20,8 @@ struct PadContentColumn: View {
     @State private var searchTask: Task<Void, Never>?
 
     @State private var showNewNote = false
+    @State private var showEmptyTrashAlert = false
+    @State private var actionError: String?
     /// Bumped on every load request. A load only commits its result if its
     /// captured generation still matches — so a stale folder's in-flight
     /// load can't overwrite a newer selection, and a burst of iCloud
@@ -62,6 +64,34 @@ struct PadContentColumn: View {
                     .accessibilityLabel(Text("New note"))
                 }
             }
+            if isTrash {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        Haptics.warning()
+                        showEmptyTrashAlert = true
+                    } label: {
+                        Text("Empty Trash")
+                    }
+                    .disabled(notes.isEmpty)
+                }
+            }
+        }
+        .alert("Empty Trash?", isPresented: $showEmptyTrashAlert) {
+            Button("Cancel", role: .cancel) {}
+            Button("Empty Trash", role: .destructive) { emptyTrash() }
+        } message: {
+            Text("This permanently deletes all notes in Trash.")
+        }
+        .alert(
+            "Something went wrong",
+            isPresented: Binding(
+                get: { actionError != nil },
+                set: { if !$0 { actionError = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) { actionError = nil }
+        } message: {
+            Text(actionError ?? "")
         }
         .refreshable {
             let selection = sidebarSelection
@@ -187,6 +217,15 @@ struct PadContentColumn: View {
                 selectedNote = note
                 selectedNoteID = note.id
             }
+            .contextMenu {
+                if isTrash {
+                    Button {
+                        restore(note)
+                    } label: {
+                        Label("Restore", systemImage: "arrow.uturn.backward")
+                    }
+                }
+            }
             .tag(note.id)
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
@@ -238,8 +277,12 @@ struct PadContentColumn: View {
     // MARK: - Scope
 
     private var canCreateNote: Bool {
-        if case .trash = sidebarSelection { return false }
-        return true
+        !isTrash
+    }
+
+    private var isTrash: Bool {
+        if case .trash = sidebarSelection { return true }
+        return false
     }
 
     private func scopeURL(for selection: SidebarItem) -> URL {
@@ -357,6 +400,39 @@ struct PadContentColumn: View {
 
     // MARK: - Actions
 
+    private func restore(_ note: NoteFile) {
+        Task { @MainActor in
+            do {
+                _ = try await NoteFileStore.restore(note, libraryRoot: root)
+                Haptics.success()
+                if selectedNote?.id == note.id {
+                    selectedNote = nil
+                    selectedNoteID = ""
+                }
+                CloudSyncManager.shared.notifyExternalChange()
+                triggerLoad()
+            } catch {
+                actionError = error.localizedDescription
+                Haptics.error()
+            }
+        }
+    }
+
+    private func emptyTrash() {
+        Task { @MainActor in
+            do {
+                try await NoteFileStore.emptyTrash(root: root)
+                Haptics.success()
+                selectedNote = nil
+                selectedNoteID = ""
+                CloudSyncManager.shared.notifyExternalChange()
+                triggerLoad()
+            } catch {
+                actionError = error.localizedDescription
+                Haptics.error()
+            }
+        }
+    }
 }
 
 extension View {

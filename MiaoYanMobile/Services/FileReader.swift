@@ -1,6 +1,6 @@
 import Foundation
 
-struct NoteFile: Identifiable, Equatable, Sendable {
+struct NoteFile: Identifiable, Hashable, Sendable {
     let id: String
     let url: URL
     let title: String
@@ -62,6 +62,12 @@ struct NoteFile: Identifiable, Equatable, Sendable {
         lhs.url == rhs.url
             && lhs.modifiedDate == rhs.modifiedDate
             && lhs.preview == rhs.preview
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(url)
+        hasher.combine(modifiedDate)
+        hasher.combine(preview)
     }
 }
 
@@ -485,16 +491,174 @@ enum NoteFileStore {
     nonisolated private static func moveToLibraryTrashSync(_ url: URL, root: URL) throws {
         let trashDir = root.appendingPathComponent("Trash", isDirectory: true)
         try? FileManager.default.createDirectory(at: trashDir, withIntermediateDirectories: true)
+        let destination = deduplicatedDestination(
+            for: url.deletingPathExtension().lastPathComponent,
+            ext: url.pathExtension, in: trashDir)
+        try coordinatedMoveSync(from: url, to: destination)
+    }
 
-        let base = url.deletingPathExtension().lastPathComponent
-        let ext = url.pathExtension
-        var destination = trashDir.appendingPathComponent(url.lastPathComponent)
+    // MARK: - Rename / move / restore
+
+    /// Rename a note in place, keeping its folder and extension.
+    /// Returns the new URL (a no-op returns the original URL).
+    @MainActor
+    static func rename(_ note: NoteFile, to newTitle: String) async throws -> URL {
+        let baseName = sanitizedFileName(newTitle)
+        let source = note.url
+        let folder = source.deletingLastPathComponent()
+        let ext = source.pathExtension.isEmpty ? "md" : source.pathExtension
+        return try await Task.detached(priority: .userInitiated) { () -> URL in
+            let plain = folder.appendingPathComponent(baseName).appendingPathExtension(ext)
+            guard plain.path != source.path else { return source }
+            let destination = deduplicatedDestination(for: baseName, ext: ext, in: folder)
+            try coordinatedMoveSync(from: source, to: destination)
+            return destination
+        }.value
+    }
+
+    /// Move a note into another folder, de-duplicating the file name on
+    /// collision. Returns the new URL (same-folder moves are a no-op).
+    @MainActor
+    static func move(_ note: NoteFile, to folder: URL) async throws -> URL {
+        let source = note.url
+        return try await Task.detached(priority: .userInitiated) { () -> URL in
+            guard folder.standardizedFileURL.path != source.deletingLastPathComponent().standardizedFileURL.path
+            else { return source }
+            let destination = deduplicatedDestination(
+                for: source.deletingPathExtension().lastPathComponent,
+                ext: source.pathExtension, in: folder)
+            try coordinatedMoveSync(from: source, to: destination)
+            return destination
+        }.value
+    }
+
+    /// Restore a note from the library Trash back into the library root.
+    /// The shared macOS/iOS Trash convention doesn't record the original
+    /// folder, so the root is the one predictable destination.
+    @MainActor
+    static func restore(_ note: NoteFile, libraryRoot: URL) async throws -> URL {
+        let source = note.url
+        return try await Task.detached(priority: .userInitiated) { () -> URL in
+            let destination = deduplicatedDestination(
+                for: source.deletingPathExtension().lastPathComponent,
+                ext: source.pathExtension, in: libraryRoot)
+            try coordinatedMoveSync(from: source, to: destination)
+            return destination
+        }.value
+    }
+
+    /// Permanently delete everything inside the library Trash folder.
+    @MainActor
+    static func emptyTrash(root: URL) async throws {
+        try await Task.detached(priority: .userInitiated) {
+            let trashDir = root.appendingPathComponent("Trash", isDirectory: true)
+            let items =
+                (try? FileManager.default.contentsOfDirectory(
+                    at: trashDir, includingPropertiesForKeys: nil, options: [])) ?? []
+            var firstError: Error?
+            for item in items {
+                do {
+                    try coordinatedDeleteSync(item)
+                } catch {
+                    firstError = firstError ?? error
+                }
+            }
+            if let firstError { throw firstError }
+        }.value
+    }
+
+    // MARK: - Folder management
+
+    enum FolderCreationError: LocalizedError {
+        case reservedName
+        case alreadyExists
+
+        var errorDescription: String? {
+            switch self {
+            case .reservedName:
+                return String(localized: "This name is reserved. Choose another folder name.")
+            case .alreadyExists:
+                return String(localized: "A folder with this name already exists.")
+            }
+        }
+    }
+
+    /// Create a top-level folder in the library.
+    @MainActor
+    static func createFolder(named name: String, in root: URL) async throws {
+        let folderName = sanitizedFileName(name)
+        // Names the note lists skip (attachment dirs, trash, dotfiles)
+        // would create an invisible folder — reject them up front.
+        guard !ignoredFolderNames.contains(folderName), !folderName.hasPrefix("."),
+            !folderName.localizedCaseInsensitiveContains("Trash")
+        else { throw FolderCreationError.reservedName }
+        try await Task.detached(priority: .userInitiated) {
+            let destination = root.appendingPathComponent(folderName, isDirectory: true)
+            guard !FileManager.default.fileExists(atPath: destination.path) else {
+                throw FolderCreationError.alreadyExists
+            }
+            try FileManager.default.createDirectory(at: destination, withIntermediateDirectories: false)
+        }.value
+    }
+
+    /// Lightweight list of folders a note can move into: the library root
+    /// plus its direct subfolders. One directory listing, no note counts —
+    /// `folders(in:)` would enumerate the whole library just to badge the
+    /// menu rows.
+    static func moveTargetURLs(in root: URL) async -> [URL] {
+        await Task.detached(priority: .userInitiated) { () -> [URL] in
+            let items =
+                (try? FileManager.default.contentsOfDirectory(
+                    at: root,
+                    includingPropertiesForKeys: [.isDirectoryKey],
+                    options: [.skipsHiddenFiles]
+                )) ?? []
+            let dirs =
+                items
+                .filter { isDirectory($0) }
+                .filter { !ignoredFolderNames.contains($0.lastPathComponent) }
+                .filter { !$0.lastPathComponent.localizedCaseInsensitiveContains("Trash") }
+                .filter { !$0.lastPathComponent.hasPrefix(".") }
+                .sorted {
+                    $0.lastPathComponent.localizedCaseInsensitiveCompare($1.lastPathComponent) == .orderedAscending
+                }
+            return [root] + dirs
+        }.value
+    }
+
+    /// Locate a note by wikilink target anywhere in the library.
+    /// `[[folder/name]]` matches on the last path component, mirroring the
+    /// macOS resolver's title-based lookup.
+    static func findNote(titled rawTitle: String, in root: URL) async -> NoteFile? {
+        let title = (rawTitle as NSString).lastPathComponent
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !title.isEmpty else { return nil }
+        let cloudURLs = await CloudSyncManager.shared.cloudNoteURLs(under: root)
+        return await Task.detached(priority: .userInitiated) { () -> NoteFile? in
+            let urls = cloudURLs.isEmpty ? recursiveNoteURLsSync(in: root) : cloudURLs
+            let match = urls.first {
+                $0.deletingPathExtension().lastPathComponent
+                    .compare(title, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame
+            }
+            return match.map { NoteFile(url: $0) }
+        }.value
+    }
+
+    // MARK: - Coordinated file primitives
+
+    nonisolated private static func deduplicatedDestination(
+        for base: String, ext: String, in folder: URL
+    ) -> URL {
+        var destination = folder.appendingPathComponent(base).appendingPathExtension(ext)
         var index = 1
         while FileManager.default.fileExists(atPath: destination.path) {
-            destination = trashDir.appendingPathComponent("\(base) \(index)").appendingPathExtension(ext)
+            destination = folder.appendingPathComponent("\(base) \(index)").appendingPathExtension(ext)
             index += 1
         }
+        return destination
+    }
 
+    nonisolated private static func coordinatedMoveSync(from url: URL, to destination: URL) throws {
         var coordinationError: NSError?
         var moveError: Error?
         NSFileCoordinator().coordinate(
@@ -510,6 +674,22 @@ enum NoteFileStore {
         }
         if let coordinationError { throw coordinationError }
         if let moveError { throw moveError }
+    }
+
+    nonisolated private static func coordinatedDeleteSync(_ url: URL) throws {
+        var coordinationError: NSError?
+        var deleteError: Error?
+        NSFileCoordinator().coordinate(
+            writingItemAt: url, options: .forDeleting, error: &coordinationError
+        ) { deleteURL in
+            do {
+                try FileManager.default.removeItem(at: deleteURL)
+            } catch {
+                deleteError = error
+            }
+        }
+        if let coordinationError { throw coordinationError }
+        if let deleteError { throw deleteError }
     }
 
     /// Pin or unpin a note. Writes the pin extended attribute under

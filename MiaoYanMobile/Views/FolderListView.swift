@@ -202,6 +202,7 @@ private struct RecentNotesView: View {
                         Haptics.tap()
                         showNewNote = true
                     },
+                    newFolderAction: nil,
                     openPicker: openPicker,
                     settingsAction: {
                         Haptics.tap()
@@ -361,6 +362,9 @@ private struct FoldersHomeView: View {
     @ObservedObject private var syncManager = CloudSyncManager.shared
     @State private var folders: [FolderItem] = []
     @State private var hasLoadedOnce = false
+    @State private var showNewFolderAlert = false
+    @State private var newFolderName = ""
+    @State private var newFolderError: String?
     @State private var loadTask: Task<Void, Never>?
     @State private var isReloading = false
     @State private var pendingReload = false
@@ -374,6 +378,11 @@ private struct FoldersHomeView: View {
                     title: "Folders",
                     refreshAction: refreshFolders,
                     newNoteAction: nil,
+                    newFolderAction: {
+                        Haptics.tap()
+                        newFolderName = ""
+                        showNewFolderAlert = true
+                    },
                     openPicker: openPicker,
                     settingsAction: nil
                 )
@@ -393,12 +402,44 @@ private struct FoldersHomeView: View {
         .refreshable { await reload() }
         .background(MobileTheme.paper)
         .toolbar(.hidden, for: .navigationBar)
+        .alert("New folder", isPresented: $showNewFolderAlert) {
+            TextField("Folder name", text: $newFolderName)
+            Button("Cancel", role: .cancel) {}
+            Button("Create") { createFolder() }
+        }
+        .alert(
+            "Could not create folder",
+            isPresented: Binding(
+                get: { newFolderError != nil },
+                set: { if !$0 { newFolderError = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) { newFolderError = nil }
+        } message: {
+            Text(newFolderError ?? "")
+        }
         .onAppear {
             triggerLoad()
             readerWebViewStore.warmUp()
         }
         .onDisappear { loadTask?.cancel() }
         .onChange(of: syncManager.revision) { triggerLoad() }
+    }
+
+    private func createFolder() {
+        let name = newFolderName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty else { return }
+        Task { @MainActor in
+            do {
+                try await NoteFileStore.createFolder(named: name, in: root)
+                Haptics.success()
+                CloudSyncManager.shared.notifyExternalChange()
+                triggerLoad()
+            } catch {
+                newFolderError = error.localizedDescription
+                Haptics.error()
+            }
+        }
     }
 
     /// Same coalesce pattern as RecentNotesView — see that comment.
@@ -441,6 +482,7 @@ private struct MobileLibraryHeader: View {
     let title: String
     let refreshAction: () -> Void
     let newNoteAction: (() -> Void)?
+    let newFolderAction: (() -> Void)?
     let openPicker: () -> Void
     let settingsAction: (() -> Void)?
 
@@ -468,6 +510,15 @@ private struct MobileLibraryHeader: View {
                         accessibilityLabel: "New note",
                         tint: MobileTheme.ink,
                         action: newNoteAction
+                    )
+                }
+
+                if let newFolderAction {
+                    MobileHeaderIconButton(
+                        systemName: "folder.badge.plus",
+                        accessibilityLabel: "New folder",
+                        tint: MobileTheme.ink,
+                        action: newFolderAction
                     )
                 }
 

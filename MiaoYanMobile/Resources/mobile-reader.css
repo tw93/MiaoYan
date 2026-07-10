@@ -363,3 +363,99 @@ li.task-list-item input[type="checkbox"] {
 .reader-title + h3 {
   margin-top: 0;
 }
+
+/* Wikilinks — rewritten by MobileHtmlRenderer to miaoyan-wiki:// anchors.
+   Dashed underline distinguishes in-library jumps from external links. */
+a.wikilink {
+  color: var(--link);
+  text-decoration: underline dashed;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+/* Mermaid diagrams — fences are converted to .mermaid divs at load time.
+   Never allow horizontal page scroll: wide diagrams scroll inside the box. */
+.mermaid {
+  display: flex;
+  justify-content: center;
+  margin: 1.1em 0;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Syntax highlight (highlight.js) — a restrained palette tuned to the
+   paper theme instead of a stock hljs stylesheet. Colors only; block
+   layout stays with the `pre` rules above. */
+:root {
+  --code-keyword: #2f744c;
+  --code-string: #8a5a2e;
+  --code-title: #3e648a;
+  --code-number: #9a4f3f;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --code-keyword: #7fca8e;
+    --code-string: #d8b07e;
+    --code-title: #8fb3d9;
+    --code-number: #d99a8a;
+  }
+}
+
+.hljs {
+  color: var(--ink);
+  background: transparent;
+}
+
+.hljs-comment,
+.hljs-quote {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-doctag,
+.hljs-meta {
+  color: var(--code-keyword);
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-attribute {
+  color: var(--code-string);
+}
+
+.hljs-title,
+.hljs-name,
+.hljs-section,
+.hljs-built_in,
+.hljs-class .hljs-title,
+.hljs-function .hljs-title {
+  color: var(--code-title);
+}
+
+.hljs-number,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-deletion,
+.hljs-attr {
+  color: var(--code-number);
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: 600;
+}

@@ -10,6 +10,9 @@ struct PadSidebarView: View {
 
     @ObservedObject private var syncManager = CloudSyncManager.shared
     @State private var folders: [FolderItem] = []
+    @State private var showNewFolderAlert = false
+    @State private var newFolderName = ""
+    @State private var newFolderError: String?
     @State private var loadTask: Task<Void, Never>?
 
     var body: some View {
@@ -46,6 +49,16 @@ struct PadSidebarView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     Haptics.tap()
+                    newFolderName = ""
+                    showNewFolderAlert = true
+                } label: {
+                    Image(systemName: "folder.badge.plus")
+                }
+                .accessibilityLabel(Text("New folder"))
+            }
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    Haptics.tap()
                     openPicker()
                 } label: {
                     Image(systemName: "folder.badge.gearshape")
@@ -58,6 +71,22 @@ struct PadSidebarView: View {
                 }
                 .accessibilityLabel(Text("Settings"))
             }
+        }
+        .alert("New folder", isPresented: $showNewFolderAlert) {
+            TextField("Folder name", text: $newFolderName)
+            Button("Cancel", role: .cancel) {}
+            Button("Create") { createFolder() }
+        }
+        .alert(
+            "Could not create folder",
+            isPresented: Binding(
+                get: { newFolderError != nil },
+                set: { if !$0 { newFolderError = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) { newFolderError = nil }
+        } message: {
+            Text(newFolderError ?? "")
         }
         .onAppear { load() }
         .onChange(of: syncManager.revision) { load() }
@@ -78,6 +107,22 @@ struct PadSidebarView: View {
             let loaded = await NoteFileStore.folders(in: root)
             guard !Task.isCancelled else { return }
             folders = loaded
+        }
+    }
+
+    private func createFolder() {
+        let name = newFolderName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty else { return }
+        Task { @MainActor in
+            do {
+                try await NoteFileStore.createFolder(named: name, in: root)
+                Haptics.success()
+                CloudSyncManager.shared.notifyExternalChange()
+                load()
+            } catch {
+                newFolderError = error.localizedDescription
+                Haptics.error()
+            }
         }
     }
 }
