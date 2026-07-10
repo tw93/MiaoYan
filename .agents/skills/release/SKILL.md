@@ -1,7 +1,7 @@
 ---
 name: release
 description: Prepare, validate, and publish a MiaoYan direct-download GitHub Release. Not for App Store builds.
-version: 1.4.0
+version: 1.5.0
 allowed-tools:
   - Bash
   - Read
@@ -23,6 +23,13 @@ Use this skill only when the maintainer explicitly asks for a GitHub Release.
 - Release notes should be prepared before tagging.
 - Signing, notarization, and Sparkle credentials are maintainer-managed. Do not commit credential paths, private key filenames, passwords, or secret values.
 - Sparkle signing must use the MiaoYan release key. Do not rely on the default Sparkle Keychain account because it may belong to another app.
+
+## Release Notes Format
+
+- Before drafting, read the previous published release and treat it as the hard format template: `gh release view $(gh release list --limit 1 --json tagName --jq '.[0].tagName')`. Do not rebuild the shape from memory.
+- Title is `V{x.y.z} {Codename} {emoji}`, e.g. `V4.0.0 Valstrax 🚀`. The codename follows the monster-name-plus-emoji convention used by `scripts/release-ci/generate_release_content.sh`.
+- Source of truth is `.github/RELEASE_NOTES.md`: `# V{x.y.z} {Codename} {emoji}` heading, Chinese numbered list, `---` separator, English numbered list, items mapped one-to-one. `scripts/release-ci/render_release_body.sh` renders it into the HTML release body (centered logo block + tagline, `<h3>Changelog</h3>` English list, `<h3>更新日志</h3>` Chinese list, closing star ask + repo blockquote).
+- Keep 3 to 6 items per language, one sentence each, engineer-facing.
 
 ## Preflight
 
@@ -60,6 +67,16 @@ gh run list --limit 5
 
 After publication, confirm that the release assets exist, the appcast points at the intended ZIP, and the Sparkle signature metadata matches the published ZIP.
 Use `scripts/release-ci/verify_sparkle_signature.sh --zip <zip> --signature <signature>` to verify the appcast signature against the ZIP bytes and the app's embedded `SUPublicEDKey` before pushing appcast changes.
+
+Reactions are part of publish completion. After the release is live, add the six positive reactions and read them back to confirm:
+
+```bash
+rid=$(gh api repos/tw93/MiaoYan/releases/tags/V<x.y.z> --jq .id)
+for r in +1 laugh heart hooray rocket eyes; do gh api -X POST repos/tw93/MiaoYan/releases/$rid/reactions -f content="$r"; done
+gh api repos/tw93/MiaoYan/releases/$rid/reactions --jq '.[].content'
+```
+
+Never add `-1` or `confused`; a negative reaction on our own release reads as self-deprecation.
 
 ## Safety Rules
 

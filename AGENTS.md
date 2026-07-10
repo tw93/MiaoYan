@@ -171,11 +171,26 @@ Avoid broad scans of `build/`, `.build/`, `dist/`, and bundled web assets unless
 - Image upload posts to a local PicGo/PicList HTTP endpoint at `127.0.0.1:36677` (`Helpers/ClipboardManager.swift`). The macOS `Info.plist` ATS permits this via `NSAllowsLocalNetworking`; do not widen it back to `NSAllowsArbitraryLoads`. The markdown preview loads through `loadFileURL` (file://), not a local web server, so ATS does not gate preview rendering.
 - iOS user-facing strings live in `MiaoYanMobile/Resources/Localizable.xcstrings` and ship `en` + `zh-Hans` only (the macOS app ships five languages). Add a `zh-Hans` value for every new iOS string, or Chinese users fall back to English.
 
+## Release Channels
+
+MiaoYan ships through two independent channels. Publishing one never updates the other: one version means two separate publishes, and release readiness must be reported per channel.
+
+| | Direct download (GitHub) | Mac App Store |
+|---|---|---|
+| Build | `scripts/build.sh`, Developer ID + notarization, Sparkle included | `scripts/build-appstore.sh`, App Store entitlements, no Sparkle |
+| Publish surface | GitHub Release assets + `miaoyan.app/Release/` ZIP + appcast entry | App Store Connect submission + review |
+| How users update | Sparkle in-app update via `https://miaoyan.app/appcast.xml` | App Store update after review approval |
+
+- `appcast.xml` lives on the miaoyan.app site, not in this repository. `scripts/release-ci/update_appcast.sh` produces the entry and `scripts/build.sh` prints the enclosure line.
+- App Store users never see the appcast. After a direct-download release, the App Store version stays old until a separate submission passes review; do not report a version as "released" without naming which channel it reached.
+
 ## Release Notes
 
 - Tag format is uppercase `Vx.y.z`.
 - Version changes must keep both `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in `MiaoYan.xcodeproj/project.pbxproj` aligned with the release tag. Sparkle compares `sparkle:version` in appcast.xml against `CFBundleVersion` (mapped from `CURRENT_PROJECT_VERSION`), not `CFBundleShortVersionString`. If the two diverge, users get an infinite update prompt loop (V3.5.1 incident, #524).
 - `.github/RELEASE_NOTES.md` is the public release note source. Release scripts under `scripts/release-ci/` render it for GitHub release and appcast content, including the current sectionless format.
+- Release titles follow `V{x.y.z} {Codename} {emoji}` (e.g. `V4.0.0 Valstrax 🚀`). Before drafting notes, `gh release view` the previous release and mirror its exact body shape instead of rebuilding it from memory; the full format and reaction ritual live in `.claude/skills/release`.
+- Publishing ends with the six positive reactions (`+1`, `laugh`, `heart`, `hooray`, `rocket`, `eyes`) added via `gh api` and read back to confirm. Never add `-1` or `confused`.
 - Direct-download Sparkle signing must use the MiaoYan release key, not the default Sparkle Keychain account. Before pushing appcast changes, verify the signature against the published ZIP and the app's embedded `SUPublicEDKey` with `scripts/release-ci/verify_sparkle_signature.sh`; a signature-only appcast fix is valid only when ZIP bytes and length are unchanged.
 - Direct-download release builds use repository scripts. The tracked GitHub workflows currently maintain sponsor assets, not release packaging.
 - Release automation depends on maintainer-managed signing, notarization, and Sparkle credentials. Do not document or commit local credential paths, private key filenames, or secret values.
@@ -183,6 +198,7 @@ Avoid broad scans of `build/`, `.build/`, `dist/`, and bundled web assets unless
 ## Verification
 
 - Swift changes: run the Debug `xcodebuild` command above.
+- UI or interaction fixes: launch the built app and exercise the changed flow before reporting done; a green build is not visual proof. If the first fix attempt does not hold, stop guessing and add `#if DEBUG` runtime logging to capture evidence before the next code change.
 - Lint or formatting changes: run SwiftLint and swift-format checks.
 - iOS changes: inspect `MiaoYanMobile/` target membership and run the narrowest relevant Xcode build or project check available.
 - Release or signing changes: verify version alignment and inspect the relevant repository script; do not assume a tracked `release.yml` exists.
