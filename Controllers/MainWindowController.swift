@@ -134,9 +134,13 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         guard let vc = AppContext.shared.viewController else { return }
         vc.editArea.updateTextContainerInset()
 
-        // Update WebView frame if in preview mode
+        // Update WebView frame if in preview mode. The markdown view lives in
+        // previewScrollView; editAreaScroll is only a fallback for the legacy
+        // overlay layout. Sizing against editAreaScroll here collapsed the
+        // preview to the editor pane's 0-width bounds on window reopen in
+        // preview-only mode (#541).
         if let markdownView = vc.editArea.markdownView, !markdownView.isHidden {
-            let newFrame = vc.editAreaScroll.bounds
+            let newFrame = (vc.previewScrollView ?? vc.editAreaScroll).bounds
             if markdownView.frame.size != newFrame.size {
                 markdownView.frame = newFrame
             }
