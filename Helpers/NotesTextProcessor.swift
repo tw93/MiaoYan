@@ -361,7 +361,7 @@ public class NotesTextProcessor {
     /*
      Head
      ======
-    
+
      Subhead
      -------
      */
@@ -386,7 +386,7 @@ public class NotesTextProcessor {
 
     /*
      # Head
-    
+
      ## Subhead ##
      */
 
@@ -609,7 +609,7 @@ public class NotesTextProcessor {
      ```
      Code
      ```
-    
+
      Code
      */
     public static let _codeQuoteBlockPattern = [
