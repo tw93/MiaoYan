@@ -132,6 +132,15 @@ class ClipboardManager {
         let textView: EditTextView
         let note: Note
         let viewController: ViewController
+        let placeholder: String
+    }
+
+    /// Placeholder inserted while an upload is in flight. Must be unique per
+    /// upload: a shared literal made concurrent uploads (or a stale
+    /// placeholder saved in another note) match the wrong buffer, and the
+    /// follow-up whole-buffer save then wrote note X's text into note Y (#543).
+    static func makeUploadPlaceholder() -> String {
+        "![](uploading-\(UUID().uuidString.prefix(8))...)"
     }
 
     private func saveClipboard(data: Data, note: Note, ext: String? = nil, url: URL? = nil) {
@@ -166,13 +175,25 @@ class ClipboardManager {
                                 vc?.toastUpload(status: false)
                             }
                         }
-                        textView?.breakUndoCoalescing()
-                        textView?.insertText(finalImage, replacementRange: textView?.selectedRange() ?? NSRange(location: 0, length: 0))
+                        if let textView, textView.storageNote === note {
+                            textView.breakUndoCoalescing()
+                            textView.insertText(finalImage, replacementRange: textView.selectedRange())
+                        } else {
+                            // The editor moved to another note while the upload
+                            // was in flight. Inserting at the current cursor
+                            // would drop the link into the wrong note (#543);
+                            // append it to the note the paste happened in.
+                            let raw = note.content.string
+                            let prefix = raw.isEmpty || raw.hasSuffix("\n") ? "" : "\n"
+                            note.content.append(NSAttributedString(string: prefix + finalImage.string))
+                            note.save()
+                        }
                     }
                 }
             } else if picType == "uPic" || picType == "Picsee" {
                 // Restore uPic/Picsee support via Shell Command
-                let uploadingPlaceholder = NSAttributedString(string: "![](uploading...)")
+                let placeholderText = Self.makeUploadPlaceholder()
+                let uploadingPlaceholder = NSAttributedString(string: placeholderText)
                 textView.breakUndoCoalescing()
                 textView.insertText(uploadingPlaceholder, replacementRange: textView.selectedRange())
 
@@ -182,7 +203,8 @@ class ClipboardManager {
                     picType: picType,
                     textView: textView,
                     note: note,
-                    viewController: vc
+                    viewController: vc,
+                    placeholder: placeholderText
                 )
                 uploadToCloudAsync(parameters: uploadParams)
             } else {
@@ -283,6 +305,7 @@ class ClipboardManager {
         let picType = parameters.picType
         let textView = parameters.textView
         let note = parameters.note
+        let placeholder = parameters.placeholder
 
         DispatchQueue.global(qos: .userInitiated).async {
             let executablePath = "/Applications/\(picType).app/Contents/MacOS/\(picType)"
@@ -302,7 +325,7 @@ class ClipboardManager {
                 guard let self = self else { return }
                 if let validURL = uploadedURL {
                     self.replacePlaceholderWithURL(
-                        placeholder: "![](uploading...)",
+                        placeholder: placeholder,
                         cloudURL: validURL,
                         textView: textView,
                         note: note
@@ -313,7 +336,7 @@ class ClipboardManager {
                     }
                 } else {
                     self.replacePlaceholderWithURL(
-                        placeholder: "![](uploading...)",
+                        placeholder: placeholder,
                         cloudURL: originalPath,
                         textView: textView,
                         note: note
@@ -394,11 +417,17 @@ class ClipboardManager {
         guard let regex = try? NSRegularExpression(pattern: placeholderPattern) else { return }
 
         // Primary path: placeholder is still raw text in textStorage.
+        // Only valid while the storage still belongs to the note the upload
+        // started in; after a note switch the buffer holds another note's
+        // text and editing it here (plus the whole-buffer save below) would
+        // cross-write content between files (#543).
         // NSRegularExpression works in UTF-16 space, so the search range must use
         // the NSString length, not String.count, or a non-ASCII prefix (emoji,
         // CJK surrogate pairs) would shrink the range and miss the placeholder.
         let storageContent = storage.string
-        if let match = regex.firstMatch(in: storageContent, range: NSRange(location: 0, length: (storageContent as NSString).length)) {
+        if textView.storageNote === note,
+            let match = regex.firstMatch(in: storageContent, range: NSRange(location: 0, length: (storageContent as NSString).length))
+        {
             storage.replaceCharacters(in: match.range, with: replacement)
             textView.saveTextStorageContent(to: note)
             note.save()

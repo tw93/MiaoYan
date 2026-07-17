@@ -937,7 +937,10 @@ extension ViewController {
             )
             return
         }
-        guard let note = notesTableView.getSelectedNote() else { return }
+        // The rewrite below runs against the editor buffer, so the target note
+        // must be the buffer's owner. The table selection can already point at
+        // a different note while an async fill is still loading it (#543).
+        guard let note = EditTextView.note, editArea.storageNote === note else { return }
         saveTitleSafely()
 
         let content = editArea.textStorage?.string ?? note.content.string

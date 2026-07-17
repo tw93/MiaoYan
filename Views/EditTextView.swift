@@ -43,6 +43,13 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         static let fadeDuration: TimeInterval = 0.08
     }
     public static var note: Note?
+    /// Owner of the bytes currently in `textStorage`. In preview, presentation,
+    /// and PPT modes `EditTextView.note` follows the list selection while the
+    /// storage keeps the last edited note's content (fill() returns before the
+    /// editor branch runs), so the two legitimately diverge. Whole-buffer
+    /// persists must validate against this owner, never against
+    /// `EditTextView.note` alone (#543).
+    private(set) var storageNote: Note?
     public static var shouldForceRescan: Bool = false
     public static var lastRemoved: String?
     public var viewDelegate: ViewController?
@@ -657,9 +664,9 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         if note.isMarkdown(), let content = note.content.mutableCopy() as? NSMutableAttributedString {
             NotesTextProcessor.checkPerformanceLevel(attributedString: content, note: note)
             EditTextView.shouldForceRescan = true
-            storage.setAttributedString(content)
+            publishStorage(content, owner: note)
         } else {
-            storage.setAttributedString(note.content)
+            publishStorage(note.content, owner: note)
         }
         if options.highlight {
             let search = getSearchText()
@@ -744,7 +751,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         hideSearchBar()
         splitViewUpdateTimer?.invalidate()
         splitViewUpdateTimer = nil
-        textStorage?.setAttributedString(NSAttributedString())
+        publishStorage(NSAttributedString(), owner: nil)
         markdownView?.isHidden = true
         imagePreviewManager?.hideImagePreview()
         isEditable = false
@@ -971,8 +978,31 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
     }
 
+    /// Single point that replaces the storage bytes wholesale and records
+    /// which note they belong to. Every full-storage assignment must go
+    /// through here so `storageNote` can never drift from the actual bytes.
+    func publishStorage(_ content: NSAttributedString, owner: Note?) {
+        textStorage?.setAttributedString(content)
+        storageNote = owner
+    }
+
     func saveTextStorageContent(to note: Note) {
         guard let storage = textStorage else { return }
+        // Refuse cross-note writes: when the buffer belongs to a different
+        // note than the requested target (preview-family modes after a list
+        // switch, see `storageNote` doc), copying it over would replace the
+        // target note's entire content with another file's text (#543).
+        guard let owner = storageNote, owner.isEqualURL(url: note.url) else {
+            let mismatch = NSError(
+                domain: "com.tw93.miaoyan.race",
+                code: 3,
+                userInfo: [
+                    NSLocalizedDescriptionKey:
+                        "textStorage owner (\(storageNote?.url.lastPathComponent ?? "nil")) != save target (\(note.url.lastPathComponent))"
+                ])
+            AppDelegate.trackError(mismatch, context: "EditTextView.saveTextStorageContent.ownerGuard")
+            return
+        }
         let string = storage.attributedSubstring(from: NSRange(0..<storage.length))
         note.content =
             NSMutableAttributedString(attributedString: string)
@@ -1470,7 +1500,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         if let note = EditTextView.note {
             note.ensureContentLoaded()
             if let storage = textStorage, storage.length == 0, note.content.length > 0 {
-                storage.setAttributedString(note.content)
+                publishStorage(note.content, owner: note)
             }
         }
         let barAlreadyVisible = editorSearchBar != nil

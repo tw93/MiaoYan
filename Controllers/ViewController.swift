@@ -1258,16 +1258,17 @@ class ViewController:
             textView == editArea
         else { return }
 
-        // Tripwire: after the fill() epoch fix, EditTextView.note and textStorage
-        // are always in sync at this point. If a future refactor reintroduces a
-        // stale-pointer path the guard fires and we skip the save instead of
-        // writing the wrong note's bytes to disk.
-        guard EditTextView.note?.isEqualURL(url: note.url) == true else {
+        // Tripwire: the buffer being edited must belong to the note we are
+        // about to persist. The pre-#543 version of this guard compared
+        // EditTextView.note against itself and could never fire; comparing
+        // against the storage owner catches a real desync (preview-family
+        // modes move EditTextView.note without refilling textStorage).
+        guard textView.storageNote === note else {
             let mismatch = NSError(
                 domain: "com.tw93.miaoyan.race",
                 code: 1,
-                userInfo: [NSLocalizedDescriptionKey: "EditTextView.note URL drift in textDidChange"])
-            AppDelegate.trackError(mismatch, context: "ViewController.textDidChange.urlGuard")
+                userInfo: [NSLocalizedDescriptionKey: "textStorage owner drift in textDidChange"])
+            AppDelegate.trackError(mismatch, context: "ViewController.textDidChange.ownerGuard")
             return
         }
 
