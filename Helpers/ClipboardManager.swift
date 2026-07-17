@@ -44,18 +44,28 @@ class ClipboardManager {
     func handlePaste(in note: Note) -> Bool {
         guard let textView = textView else { return false }
 
-        if let clipboard = NSPasteboard.general.string(forType: NSPasteboard.PasteboardType.string),
-            NSPasteboard.general.string(forType: NSPasteboard.PasteboardType.fileURL) == nil
-        {
+        let pasteboard = NSPasteboard.general
+        if pasteboard.string(forType: NSPasteboard.PasteboardType.fileURL) == nil {
+            // Rich text copied from a browser (AI answers, docs pages) arrives as
+            // HTML; convert to markdown when it carries block structure. Editor
+            // syntax-highlight HTML has no such tags, so code paste stays plain.
+            var content = pasteboard.string(forType: NSPasteboard.PasteboardType.string)
+            if let html = pasteboard.string(forType: NSPasteboard.PasteboardType.html),
+                let markdown = HtmlToMarkdown.convertIfStructured(html)
+            {
+                content = markdown
+            }
 
-            EditTextView.shouldForceRescan = true
-            let currentRange = textView.selectedRange()
-            textView.breakUndoCoalescing()
-            textView.insertText(clipboard, replacementRange: currentRange)
-            textView.saveTextStorageContent(to: note)
-            note.save()
-            textView.fillHighlightLinks()
-            return true
+            if let content = content {
+                EditTextView.shouldForceRescan = true
+                let currentRange = textView.selectedRange()
+                textView.breakUndoCoalescing()
+                textView.insertText(content, replacementRange: currentRange)
+                textView.saveTextStorageContent(to: note)
+                note.save()
+                textView.fillHighlightLinks()
+                return true
+            }
         }
 
         return pasteImageFromClipboard(in: note)

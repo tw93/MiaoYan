@@ -449,41 +449,36 @@ public class Note: NSObject {
         }
     }
 
-    // Compile-time literal; if a future edit breaks the pattern, the
-    // precondition fails at first use instead of crashing later from a
-    // less actionable site.
-    private static let metaTitleRegex: NSRegularExpression = {
-        let pattern = "title: (.*?)"
-        guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else {
-            preconditionFailure("Note.metaTitleRegex literal is invalid: \(pattern)")
-        }
-        return regex
-    }()
-
+    /// Strips a leading YAML-style frontmatter block (`---\n…\n---`) for preview,
+    /// export, and word count. Mirrors `MobileHtmlRenderer.stripFrontmatter` so the
+    /// macOS preview and the iOS reader hide the same block. Documents that don't
+    /// open with a `---` fence are untouched; three dashes alone stay a horizontal rule.
     func cleanMetaData(content: String) -> String {
-        guard content.hasPrefix("---\n") else { return content }
+        guard content.hasPrefix("---\n") || content.hasPrefix("---\r\n") else { return content }
 
-        // Find the closing --- of the front matter section (only at the start)
-        guard let endRange = content.range(of: "\n---\n", range: content.index(content.startIndex, offsetBy: 4)..<content.endIndex) else {
+        // "---\n" and "---\r\n" are both 4 Characters: \r\n is a single grapheme.
+        let afterOpening = content.index(content.startIndex, offsetBy: 4)
+        // Grapheme-aware search never matches the "\n" inside a "\r\n" cluster,
+        // so CRLF documents need their own needle.
+        guard
+            let closingRange = content.range(of: "\n---", range: afterOpening..<content.endIndex)
+                ?? content.range(of: "\r\n---", range: afterOpening..<content.endIndex)
+        else {
             return content
         }
 
-        let frontMatterStart = content.index(content.startIndex, offsetBy: 4)  // After "---\n"
-        let frontMatter = content[frontMatterStart..<endRange.lowerBound]
-        let headerList = frontMatter.components(separatedBy: "\n")
-
-        for header in headerList {
-            let nsHeader = header as NSString
-            let matches = Note.metaTitleRegex.matches(in: String(nsHeader), options: [], range: NSRange(location: 0, length: nsHeader.length))
-
-            if matches.first != nil {
-                // Return content after the front matter closing ---\n
-                let remainingStart = endRange.upperBound
-                return String(content[remainingStart...])
-            }
+        // Closing fence must be its own line: end-of-string or followed by a newline
+        // (which is the "\r\n" grapheme in CRLF documents).
+        let afterClose = closingRange.upperBound
+        if afterClose == content.endIndex {
+            return ""
         }
-
-        return content
+        let nextChar = content[afterClose]
+        guard nextChar == "\n" || nextChar == "\r" || nextChar == "\r\n" else {
+            return content
+        }
+        let bodyStart = content.index(after: afterClose)
+        return String(content[bodyStart...])
     }
 
     func getPrettifiedContent() -> String {

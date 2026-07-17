@@ -884,26 +884,7 @@ extension ViewController {
             newContent = restoredContent.removeLastNewLine()
         }
 
-        if let storage = editArea.textStorage {
-            let originalLength = storage.length
-            storage.beginEditing()
-            storage.replaceCharacters(in: NSRange(0..<originalLength), with: newContent)
-            NotesTextProcessor.checkPerformanceLevel(attributedString: storage, note: note)
-            if NotesTextProcessor.shouldUseSimplifiedHighlighting {
-                NotesTextProcessor.highlightBasicMarkdown(attributedString: storage, note: note)
-            } else {
-                NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
-                NotesTextProcessor.highlightFencedAndIndentCodeBlocks(attributedString: storage)
-            }
-            storage.updateParagraphStyle()
-            let fullRange = NSRange(location: 0, length: storage.length)
-            let linkProcessor = NotesTextProcessor(storage: storage, range: fullRange)
-            linkProcessor.highlightLinks()
-            storage.applyEditorLetterSpacing()
-            storage.endEditing()
-        } else {
-            editArea.string = newContent
-        }
+        replaceEditorStorage(with: newContent, note: note)
 
         let adjustedCursorOffset = HtmlManager.adjustCursorAfterRestore(originalOffset: output.cursorOffset, protected: output.protectedContent, restored: newContent)
         editArea.setSelectedRange(NSRange(location: adjustedCursorOffset, length: 0))
@@ -921,6 +902,69 @@ extension ViewController {
         isFormatting = false
         updateFormatButtonState(isFormatting: false)
         formatTask = nil
+    }
+
+    private func replaceEditorStorage(with newContent: String, note: Note) {
+        guard let storage = editArea.textStorage else {
+            editArea.string = newContent
+            return
+        }
+        let originalLength = storage.length
+        storage.beginEditing()
+        storage.replaceCharacters(in: NSRange(0..<originalLength), with: newContent)
+        NotesTextProcessor.checkPerformanceLevel(attributedString: storage, note: note)
+        if NotesTextProcessor.shouldUseSimplifiedHighlighting {
+            NotesTextProcessor.highlightBasicMarkdown(attributedString: storage, note: note)
+        } else {
+            NotesTextProcessor.highlightMarkdown(attributedString: storage, note: note)
+            NotesTextProcessor.highlightFencedAndIndentCodeBlocks(attributedString: storage)
+        }
+        storage.updateParagraphStyle()
+        let fullRange = NSRange(location: 0, length: storage.length)
+        let linkProcessor = NotesTextProcessor(storage: storage, range: fullRange)
+        linkProcessor.highlightLinks()
+        storage.applyEditorLetterSpacing()
+        storage.endEditing()
+    }
+
+    /// CJK typography cleanup for the whole document: pangu spacing, punctuation
+    /// width, stray em dashes, ASCII ellipsis, and blank-line runs. Pure local
+    /// string work, so unlike `formatText` it applies synchronously.
+    @IBAction func cleanTypography(_ sender: Any?) {
+        if sessionPreviewMode {
+            toast(
+                message: I18n.str("Format is only possible after exiting preview mode~"), style: .failure
+            )
+            return
+        }
+        guard let note = notesTableView.getSelectedNote() else { return }
+        saveTitleSafely()
+
+        let content = editArea.textStorage?.string ?? note.content.string
+        let cleaned = TypographyCleaner.clean(content)
+        guard cleaned != content else {
+            toast(message: I18n.str("Typography is already clean~"))
+            return
+        }
+
+        let cursor = editArea.selectedRanges[0].rangeValue.location
+        let top = editAreaScroll.contentView.bounds.origin.y
+
+        // Insert through the text-view editing path (not direct storage mutation)
+        // so the whole-document rewrite lands in the undo stack.
+        EditTextView.shouldForceRescan = true
+        editArea.breakUndoCoalescing()
+        editArea.insertText(cleaned, replacementRange: NSRange(location: 0, length: (editArea.string as NSString).length))
+        editArea.saveTextStorageContent(to: note)
+        note.save()
+        editArea.setSelectedRange(NSRange(location: min(cursor, (cleaned as NSString).length), length: 0))
+        formatContent = cleaned
+        restoreEditorScrollPosition(top)
+        toast(message: I18n.str("Typography cleaned up~"), style: .success)
+
+        if sessionSplitMode, let previewView = editArea.markdownView {
+            previewView.updateContent(note: note)
+        }
     }
 
     private func updateFormatButtonState(isFormatting: Bool) {

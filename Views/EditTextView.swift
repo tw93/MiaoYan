@@ -379,6 +379,10 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         menuManager?.formatText()
     }
 
+    @IBAction func cleanTypography(_ sender: Any) {
+        menuManager?.cleanTypography()
+    }
+
     @IBAction func togglePresentation(_ sender: Any) {
         menuManager?.togglePresentation()
     }
@@ -1834,17 +1838,16 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             markdownView = nil
         }
 
-        // Recreate preview view if in preview mode
+        // Recreate preview view if in preview mode. Attach through
+        // preparePreviewContainer so the view lands in previewScrollView with
+        // the pane's bounds; sizing against editAreaScroll (collapsed to zero
+        // width in preview-only mode) blanked the preview, same family as #541.
         if isPreviewModeActive || isMagicPPTModeActive || isPresentationModeActive,
             let currentNote = EditTextView.note
         {
-            let frame = viewController.editAreaScroll.bounds
+            let frame = viewController.previewScrollView?.bounds ?? viewController.editAreaScroll.bounds
             markdownView = MPreviewView(frame: frame, note: currentNote, closure: {})
-            if let newView = markdownView {
-                viewController.editAreaScroll.addSubview(newView)
-                newView.isHidden = false
-                newView.alphaValue = 1.0
-            }
+            viewController.preparePreviewContainer(hidden: false)
         }
     }
 

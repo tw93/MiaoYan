@@ -135,6 +135,8 @@
 
 /* Toast messages without emoji prefix */
 "Automatic typesetting succeeded~" = "自动化排版完成~";
+"Typography cleaned up~" = "排版净化完成~";
+"Typography is already clean~" = "排版已经很干净了~";
 "Press ESC key to exit~" = "按 ESC 键退出演示~";
 "Format is only possible after exiting preview mode~" = "文档排版需要退出预览模式才可使用~";
 "Saved to Downloads folder~" = "已导出到下载目录~";
@@ -273,6 +275,8 @@
 "Duplicate note name" = "笔记名称重复";
 "Note \"%@\" already exists" = "笔记 \"%@\" 已存在";
 "Please select default storage directory" = "请选择默认存储目录";
+"Select Markdown files or folders to import" = "选择要导入的 Markdown 文件或文件夹";
+"No importable Markdown files found~" = "没有找到可导入的 Markdown 文件~";
 "Could not use this folder" = "无法使用这个文件夹";
 "Selected storage folder is not a folder." = "所选存储位置不是文件夹。";
 "MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder." = "妙言无法读取这个文件夹。如果这是云盘目录，请打开云盘应用，确认该文件夹已在访达中可见。";

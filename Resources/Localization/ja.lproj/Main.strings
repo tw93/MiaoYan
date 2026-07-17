@@ -336,6 +336,9 @@
 /* Class = "NSMenuItem"; title = "Single mode"; ObjectID = "O8Z-cg-XnH"; */
 "O8Z-cg-XnH.title" = "開く";
 
+/* Class = "NSMenuItem"; title = "Import"; ObjectID = "imP-fl-mn1"; */
+"imP-fl-mn1.title" = "読み込む";
+
 /* Class = "NSTextFieldCell"; placeholderString = "输入标题"; ObjectID = "O9K-a1-3eu"; */
 "O9K-a1-3eu.placeholderString" = "タイトルを入力してください。";
 
@@ -550,6 +553,9 @@
 
 /* Class = "NSMenuItem"; title = "Format"; ObjectID = "ieJ-a6-SUU"; */
 "ieJ-a6-SUU.title" = "フォーマット";
+
+/* Class = "NSMenuItem"; title = "Clean Typography"; ObjectID = "tyC-le-mn1"; */
+"tyC-le-mn1.title" = "組版クリーンアップ";
 
 /* Class = "NSMenuItem"; title = "Pin/unpin"; ObjectID = "jFN-Dp-LON"; */
 "jFN-Dp-LON.title" = "ピン/トップから外す";

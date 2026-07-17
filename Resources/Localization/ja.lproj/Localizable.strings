@@ -186,6 +186,8 @@
 
 /* Toast messages without emoji prefix */
 "Automatic typesetting succeeded~" = "自動組版完了しました。";
+"Typography cleaned up~" = "組版をクリーンアップしました。";
+"Typography is already clean~" = "組版はすでにきれいです。";
 "Press ESC key to exit~" = "ESC キーを押して終了します。";
 "Format is only possible after exiting preview mode~" = "フォーマットの為に、プレビューモードを終了してください。";
 "Saved to Downloads folder~" = "ダウンロードフォルダに保存されました。";
@@ -273,6 +275,8 @@
 "Duplicate note name" = "ノート名が重複しています";
 "Note \"%@\" already exists" = "ノート \"%@\" は既に存在します";
 "Please select default storage directory" = "デフォルトの保存先ディレクトリを選択してください";
+"Select Markdown files or folders to import" = "読み込む Markdown ファイルまたはフォルダを選択してください";
+"No importable Markdown files found~" = "読み込める Markdown ファイルが見つかりませんでした。";
 "Could not use this folder" = "このフォルダを使用できません";
 "Selected storage folder is not a folder." = "選択した保存先はフォルダではありません。";
 "MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder." = "MiaoYan はこのフォルダを読み取れません。クラウドドライブの場合は、提供元アプリを開き、Finder にフォルダが表示されていることを確認してください。";

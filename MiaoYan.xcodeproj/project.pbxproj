@@ -95,6 +95,13 @@
 		4C5E0C6B57054F9C9A0C7A9C /* CloudSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B671C2C7154C33A6BDC59A /* CloudSyncManager.swift */; };
 		4D5CD5E8152C42BE97383DAA /* app.icon in Resources */ = {isa = PBXBuildFile; fileRef = 27EAA5992EA8C76500D13871 /* app.icon */; };
 		4E240503121F054AEB3DDDCC /* MiaoYanTests/ImageLinkParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D372825902F0E2A6F8CCF40 /* MiaoYanTests/ImageLinkParserTests.swift */; };
+		452D621FD0BD8D78F323777C /* MiaoYanTests/GitHubAlertsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */; };
+		F51B4048259C36431AF78CA5 /* MiaoYanTests/NoteFrontmatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */; };
+		242C434908DBCF06A33ADC23 /* MiaoYanTests/TypographyCleanerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70CD1D46A31EA0A827EF0C05 /* MiaoYanTests/TypographyCleanerTests.swift */; };
+		35A6E701A92EF12264DB2B6D /* Helpers/TypographyCleaner.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED58CF253E8AA0C439EC9C28 /* Helpers/TypographyCleaner.swift */; };
+		A9484E9B356771637D57157F /* Helpers/HtmlToMarkdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0736438569674343BEEB0299 /* Helpers/HtmlToMarkdown.swift */; };
+		EAAF710A6DC7C6BC33A032EA /* MiaoYanTests/HtmlToMarkdownTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51058B752985D9BF24D44FEA /* MiaoYanTests/HtmlToMarkdownTests.swift */; };
+		7AB1664FC5A60FE3EBF3D219 /* MiaoYanTests/ImportScanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B2BB9795EE5AC72B1423FF8 /* MiaoYanTests/ImportScanTests.swift */; };
 		5E77A0F1885D42989822E5CC /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E21F00885D42989822E5CC /* SettingsView.swift */; };
 		5EA2FE92CBA734EDEFE7E309 /* FolderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3B40DC2D5EDC92F599928F /* FolderListView.swift */; };
 		63F4C8DCD1C90B42E40F8C74 /* MiaoYanTests/StringExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B6B5476B1CDFF39BDE0E63 /* MiaoYanTests/StringExtensionsTests.swift */; };
@@ -305,6 +312,13 @@
 		85B6B5476B1CDFF39BDE0E63 /* MiaoYanTests/StringExtensionsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/StringExtensionsTests.swift; sourceTree = SOURCE_ROOT; };
 		862CEAF6F6034A969D40B0D4 /* MiaoYanMobileApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MiaoYanMobileApp.swift; path = MiaoYanMobile/App/MiaoYanMobileApp.swift; sourceTree = SOURCE_ROOT; };
 		8D372825902F0E2A6F8CCF40 /* MiaoYanTests/ImageLinkParserTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/ImageLinkParserTests.swift; sourceTree = SOURCE_ROOT; };
+		C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/GitHubAlertsTests.swift; sourceTree = SOURCE_ROOT; };
+		7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/NoteFrontmatterTests.swift; sourceTree = SOURCE_ROOT; };
+		70CD1D46A31EA0A827EF0C05 /* MiaoYanTests/TypographyCleanerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/TypographyCleanerTests.swift; sourceTree = SOURCE_ROOT; };
+		ED58CF253E8AA0C439EC9C28 /* Helpers/TypographyCleaner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Helpers/TypographyCleaner.swift; sourceTree = SOURCE_ROOT; };
+		0736438569674343BEEB0299 /* Helpers/HtmlToMarkdown.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Helpers/HtmlToMarkdown.swift; sourceTree = SOURCE_ROOT; };
+		51058B752985D9BF24D44FEA /* MiaoYanTests/HtmlToMarkdownTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/HtmlToMarkdownTests.swift; sourceTree = SOURCE_ROOT; };
+		0B2BB9795EE5AC72B1423FF8 /* MiaoYanTests/ImportScanTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/ImportScanTests.swift; sourceTree = SOURCE_ROOT; };
 		8F7136ED23490CBF004DFA6E /* Markdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Markdown.swift; sourceTree = "<group>"; };
 		8FD4E9A039653D603B5A7868 /* Helpers/Diagnostics.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Helpers/Diagnostics.swift; sourceTree = SOURCE_ROOT; };
 		919F545BD00240BFACE54736 /* PreviewSearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewSearchBar.swift; sourceTree = "<group>"; };
@@ -481,6 +495,11 @@
 				B975C5A10CFD43A88A5126AC /* MiaoYanTests/ClipboardManagerUTF16Tests.swift */,
 				4B42684E4812440381B81D4A /* MiaoYanTests/NoteSaveDebounceTests.swift */,
 				B738F144215845899083B5C4 /* MiaoYanTests/StorageInitContentDecisionTests.swift */,
+				C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */,
+				7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */,
+				70CD1D46A31EA0A827EF0C05 /* MiaoYanTests/TypographyCleanerTests.swift */,
+				51058B752985D9BF24D44FEA /* MiaoYanTests/HtmlToMarkdownTests.swift */,
+				0B2BB9795EE5AC72B1423FF8 /* MiaoYanTests/ImportScanTests.swift */,
 				17D270682FE43740B52C6C24 /* MiaoYanTests/Info.plist */,
 			);
 			path = MiaoYanTests;
@@ -735,6 +754,8 @@
 				27C34C0D28928D0B007369E5 /* Emoji.swift */,
 				8FD4E9A039653D603B5A7868 /* Helpers/Diagnostics.swift */,
 				7CEDD077A416C0F4BA0EC980 /* Helpers/UIDelay.swift */,
+				ED58CF253E8AA0C439EC9C28 /* Helpers/TypographyCleaner.swift */,
+				0736438569674343BEEB0299 /* Helpers/HtmlToMarkdown.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -989,6 +1010,11 @@
 				C75DC26EE3FF48E896528611 /* MiaoYanTests/ClipboardManagerUTF16Tests.swift in Sources */,
 				DED88A40FE6B4D8A8A6C1573 /* MiaoYanTests/NoteSaveDebounceTests.swift in Sources */,
 				BAE809BB946B47E89F92E155 /* MiaoYanTests/StorageInitContentDecisionTests.swift in Sources */,
+				452D621FD0BD8D78F323777C /* MiaoYanTests/GitHubAlertsTests.swift in Sources */,
+				F51B4048259C36431AF78CA5 /* MiaoYanTests/NoteFrontmatterTests.swift in Sources */,
+				242C434908DBCF06A33ADC23 /* MiaoYanTests/TypographyCleanerTests.swift in Sources */,
+				EAAF710A6DC7C6BC33A032EA /* MiaoYanTests/HtmlToMarkdownTests.swift in Sources */,
+				7AB1664FC5A60FE3EBF3D219 /* MiaoYanTests/ImportScanTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1099,6 +1125,8 @@
 				3680D573468EA822F427197E /* NSTextField+.swift in Sources */,
 				68D7221402016BFCFB4EBFC7 /* Helpers/Diagnostics.swift in Sources */,
 				272B1F8F5FB78A7F647D931A /* Helpers/UIDelay.swift in Sources */,
+				35A6E701A92EF12264DB2B6D /* Helpers/TypographyCleaner.swift in Sources */,
+				A9484E9B356771637D57157F /* Helpers/HtmlToMarkdown.swift in Sources */,
 				7328EA4137FF1DA9090A281E /* Business/AppEnvironment.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1222,7 +1250,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 4.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.miaoyan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1316,7 +1343,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -1386,7 +1413,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -1662,7 +1689,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 4.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.miaoyan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1691,7 +1717,6 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 4.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tw93.miaoyan;
 				PRODUCT_NAME = "$(TARGET_NAME)";

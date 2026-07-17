@@ -59,6 +59,31 @@
   border-left-color: var(--blockquote-border-color);
 }
 
+.darkmode .heti .markdown-alert-note {
+  --alert-color: #4493f8;
+}
+
+.darkmode .heti .markdown-alert-tip {
+  --alert-color: #3fb950;
+}
+
+.darkmode .heti .markdown-alert-important {
+  --alert-color: #ab7df8;
+}
+
+.darkmode .heti .markdown-alert-warning {
+  --alert-color: #d29922;
+}
+
+.darkmode .heti .markdown-alert-caution {
+  --alert-color: #f85149;
+}
+
+/* .darkmode * forces --text-color on every element; restate the title color */
+.darkmode .heti .markdown-alert .markdown-alert-title {
+  color: var(--alert-color);
+}
+
 .darkmode .heti hr {
   background-color: var(--border-color);
 }

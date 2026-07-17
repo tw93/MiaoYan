@@ -73,11 +73,15 @@ verified by manual smoke after build, not by XCUITest.
 
 Add a new test:
 
-1. Create `MiaoYanTests/<Subject>Tests.swift` (XCTest, `@MainActor` if it
-   touches a `@MainActor`-isolated singleton).
-2. If `MiaoYanTests` target is already in the project, drag the file into the
-   target in Xcode. Otherwise run `ruby scripts/add_tests_target.rb` which
-   picks up every `MiaoYanTests/*.swift` it sees.
+1. Create `MiaoYanTests/<Subject>Tests.swift` (XCTest, `@MainActor` on the
+   test methods if they touch `@MainActor`-isolated types; `setUp()` overrides
+   cannot be `@MainActor`, construct isolated objects inside the tests).
+2. Register the file manually at the same 4 pbxproj sites as an app source,
+   but into the `MiaoYanTests` group and the `MiaoYanTests` target's
+   `PBXSourcesBuildPhase`. Mimic the `NoteFrontmatterTests.swift` sibling
+   entries. `scripts/add_tests_target.rb` is a no-op once the target exists
+   (it only bootstraps the target after a pbxproj reset), and the `xcodeproj`
+   gem it needs is not installed on this machine anyway.
 3. Run `xcodebuild test ...` locally, then push.
 
 `CODE_SIGNING_ALLOWED=NO` is required on the local test command because
@@ -170,6 +174,10 @@ Avoid broad scans of `build/`, `.build/`, `dist/`, and bundled web assets unless
 - Note attachments follow the shared `i/` convention: images live in an `i/` folder next to the note, referenced as `![](/i/<name>)` on both platforms. The iOS reader cannot load `file://` subresources (`loadHTMLString`), so `MobileHtmlRenderer` rewrites local srcs to the `miaoyan-asset://` scheme served by `LocalAssetSchemeHandler`, which only serves files under the current library root (`allowedRoot`). Keep that root restriction when touching the handler.
 - Image upload posts to a local PicGo/PicList HTTP endpoint at `127.0.0.1:36677` (`Helpers/ClipboardManager.swift`). The macOS `Info.plist` ATS permits this via `NSAllowsLocalNetworking`; do not widen it back to `NSAllowsArbitraryLoads`. The markdown preview loads through `loadFileURL` (file://), not a local web server, so ATS does not gate preview rendering.
 - iOS user-facing strings live in `MiaoYanMobile/Resources/Localizable.xcstrings` and ship `en` + `zh-Hans` only (the macOS app ships five languages). Add a `zh-Hans` value for every new iOS string, or Chinese users fall back to English.
+- `renderMarkdownHTML` in `Business/Markdown.swift` is the single markdown-to-HTML funnel for preview, split view, export, PPT, and actions. Post-render transforms (the GitHub Alerts callout rewrite lives there) belong at the end of that function, never in individual call sites. Alert styling lives in `DownView.bundle/css/typography.css` with dark overrides in `theme-dark.css` (the `.darkmode *` color rule forces explicit dark restatements).
+- Frontmatter stripping is deliberately duplicated per platform: `Note.cleanMetaData` (macOS) and `MobileHtmlRenderer.stripFrontmatter` (iOS) must keep identical semantics; change both in the same commit. CRLF gotcha both share: `"\r\n"` is one Swift grapheme, so `range(of: "\n---")` never matches inside it; search both `"\n---"` and `"\r\n---"`.
+- `Helpers/TypographyCleaner.swift` (Edit → Clean Typography) must never rewrite protected regions: fenced/inline code, math, link targets, wikilinks, bare URLs, frontmatter. Extend the segment parser, don't bypass it. `Helpers/HtmlToMarkdown.swift` converts pasted HTML only when block-structure tags are present, so plain-text paste stays authoritative for code copied from editors; keep that gate.
+- New macOS menu items need the storyboard entry plus an ObjectID-keyed `.title` line in all four `Main.strings` (es/ja/zh-Hans/zh-Hant); new toasts need the English text as key in all four `Localizable.strings` (Base has no Localizable.strings, English falls back to the key itself). Missing a file silently ships English to that locale.
 
 ## Release Channels
 

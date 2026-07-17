@@ -124,6 +124,76 @@ extension ViewController {
         }
     }
 
+    @IBAction func importFiles(_ sender: NSMenuItem) {
+        let panel = NSOpenPanel()
+        panel.allowsMultipleSelection = true
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = true
+        panel.canCreateDirectories = false
+        panel.message = I18n.str("Select Markdown files or folders to import")
+        panel.begin { result in
+            guard result == NSApplication.ModalResponse.OK else { return }
+            let extensions = AppEnvironment.current.storage.allowedExtensions
+            let files = ViewController.collectImportableFiles(from: panel.urls, allowedExtensions: extensions)
+            guard !files.isEmpty else {
+                ViewController.shared()?.toast(message: I18n.str("No importable Markdown files found~"), style: .failure)
+                return
+            }
+            guard let appDelegate = NSApplication.shared.delegate as? AppDelegate else { return }
+            appDelegate.importNotes(urls: files)
+        }
+    }
+
+    /// Expands the open-panel selection into importable note files. Folders are
+    /// scanned recursively; attachment folders (`i/`, `files/`), the in-storage
+    /// `.Trash`, and hidden entries are skipped. Symlinked directories are not
+    /// followed, which keeps the scan loop-free.
+    static func collectImportableFiles(from urls: [URL], allowedExtensions: [String]) -> [URL] {
+        let skippedDirectories: Set<String> = [".Trash", "i", "files"]
+        var collected: [URL] = []
+        // Dedupe on the symlink-resolved path: a folder pick plus a file pick
+        // inside it can yield /var vs /private/var forms of the same file.
+        var seenPaths = Set<String>()
+
+        func collect(_ url: URL) {
+            let canonical = url.resolvingSymlinksInPath().path
+            if seenPaths.insert(canonical).inserted {
+                collected.append(url)
+            }
+        }
+
+        for url in urls {
+            var isDirectory: ObjCBool = false
+            guard FileManager.default.fileExists(atPath: url.path, isDirectory: &isDirectory) else { continue }
+
+            if !isDirectory.boolValue {
+                if allowedExtensions.contains(url.pathExtension.lowercased()) {
+                    collect(url)
+                }
+                continue
+            }
+
+            guard
+                let enumerator = FileManager.default.enumerator(
+                    at: url, includingPropertiesForKeys: [.isDirectoryKey], options: [.skipsHiddenFiles])
+            else { continue }
+
+            while let item = enumerator.nextObject() as? URL {
+                let values = try? item.resourceValues(forKeys: [.isDirectoryKey])
+                if values?.isDirectory == true {
+                    if skippedDirectories.contains(item.lastPathComponent) {
+                        enumerator.skipDescendants()
+                    }
+                    continue
+                }
+                if allowedExtensions.contains(item.pathExtension.lowercased()) {
+                    collect(item)
+                }
+            }
+        }
+        return collected.sorted { $0.path < $1.path }
+    }
+
     @IBAction func moveMenu(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
         if vc.notesTableView.selectedRow >= 0 {

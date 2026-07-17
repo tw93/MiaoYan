@@ -270,6 +270,59 @@ blockquote blockquote {
   padding-right: 0;
 }
 
+/* GitHub Alerts (> [!NOTE] etc.) */
+.heti .markdown-alert {
+  margin-block-start: 0.8em;
+  margin-block-end: 1.6em;
+  padding: 0 15px;
+  border-radius: 8px;
+  border-left: 4px solid var(--alert-color, var(--blockquote-border-color, #d0d0d0));
+  overflow: hidden;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.heti .markdown-alert p {
+  margin-block-end: 0.4em;
+  margin-block-start: 0.4em;
+  line-height: 1.74;
+}
+
+.heti .markdown-alert .markdown-alert-title {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: var(--alert-color);
+}
+
+.heti .markdown-alert .markdown-alert-icon {
+  width: 1em;
+  height: 1em;
+  margin-right: 8px;
+  flex-shrink: 0;
+  fill: currentColor;
+}
+
+.heti .markdown-alert-note {
+  --alert-color: #0969da;
+}
+
+.heti .markdown-alert-tip {
+  --alert-color: #1a7f37;
+}
+
+.heti .markdown-alert-important {
+  --alert-color: #8250df;
+}
+
+.heti .markdown-alert-warning {
+  --alert-color: #9a6700;
+}
+
+.heti .markdown-alert-caution {
+  --alert-color: #cf222e;
+}
+
 /* Tables */
 .heti table {
   box-sizing: border-box;

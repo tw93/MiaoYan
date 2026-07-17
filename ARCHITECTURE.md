@@ -114,6 +114,8 @@ Performance ceilings live in `Helpers/NotesTextProcessor.swift`:
 ```
 Note.content (NSMutableAttributedString)
   → swift-cmark-gfm → HTML string
+     ↳ post-render transforms in renderMarkdownHTML (math <br> cleanup,
+       GitHub Alerts blockquote → callout rewrite)
   → MPreviewView (WKWebView)
      ↳ loads Resources/DownView.bundle/index.html one-shot
      ↳ postReadyCallbacks fire when WKWebView didFinish navigation lands

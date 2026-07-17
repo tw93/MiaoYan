@@ -142,6 +142,11 @@ class EditorMenuManager {
         vc.formatText()
     }
 
+    func cleanTypography() {
+        guard let vc = ViewController.shared() else { return }
+        vc.cleanTypography(nil)
+    }
+
     func togglePresentation() {
         guard let vc = ViewController.shared() else { return }
         vc.togglePresentation()

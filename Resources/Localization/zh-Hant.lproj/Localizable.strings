@@ -7,6 +7,8 @@
 
 /* Toast messages without emoji prefix */
 "Automatic typesetting succeeded~" = "自動排版完成～";
+"Typography cleaned up~" = "排版淨化完成～";
+"Typography is already clean~" = "排版已經很乾淨了～";
 "Press ESC key to exit~" = "按 ESC 鍵結束簡報模式～";
 "Format is only possible after exiting preview mode~" = "文件排版得結束預覽模式才能使用～";
 "Saved to Downloads folder~" = "已經輸出到下載目錄～";
@@ -250,6 +252,8 @@
 "Duplicate note name" = "筆記名稱重複";
 "Note \"%@\" already exists" = "筆記 \"%@\" 已存在";
 "Please select default storage directory" = "請選擇預設儲存目錄";
+"Select Markdown files or folders to import" = "選擇要匯入的 Markdown 檔案或資料夾";
+"No importable Markdown files found~" = "沒有找到可匯入的 Markdown 檔案～";
 "Could not use this folder" = "無法使用這個檔案夾";
 "Selected storage folder is not a folder." = "所選儲存位置不是檔案夾。";
 "MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder." = "妙言無法讀取這個檔案夾。如果這是雲端硬碟目錄，請開啟雲端硬碟 App，確認該檔案夾已在 Finder 中可見。";

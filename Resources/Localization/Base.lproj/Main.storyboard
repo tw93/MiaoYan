@@ -91,6 +91,11 @@ CA
                                                 <action selector="singleOpen:" target="L4m-js-agn" id="48w-4H-ICT"/>
                                             </connections>
                                         </menuItem>
+                                        <menuItem title="Import" identifier="fileMenu.import" id="imP-fl-mn1">
+                                            <connections>
+                                                <action selector="importFiles:" target="L4m-js-agn" id="imP-fl-ac1"/>
+                                            </connections>
+                                        </menuItem>
                                         <menuItem isSeparatorItem="YES" id="NDw-wG-Jov"/>
                                         <menuItem title="Search" keyEquivalent="/" identifier="fileMenu.searchAndCreate" id="hPY-aY-QOE">
                                             <connections>
@@ -415,6 +420,11 @@ CA
                                         <menuItem title="Format" keyEquivalent="L" id="ieJ-a6-SUU">
                                             <connections>
                                                 <action selector="formatText:" target="N0L-g4-qwj" id="ReZ-85-j4f"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Clean Typography" id="tyC-le-mn1">
+                                            <connections>
+                                                <action selector="cleanTypography:" target="N0L-g4-qwj" id="tyC-le-ac1"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="Rxo-kf-s7K"/>
