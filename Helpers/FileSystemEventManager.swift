@@ -263,7 +263,12 @@ class FileSystemEventManager {
         // in-progress text is not silently destroyed by an external sync /
         // editor.
         if EditTextView.note == note,
-            let editArea = delegate?.editArea
+            let editArea = delegate?.editArea,
+            // In preview-family modes the buffer may still hold another
+            // note's text (#543); only treat it as this note's local copy
+            // when the storage owner matches, or the backup would contain
+            // the wrong note's content.
+            editArea.storageNote === note
         {
             let editorString = editArea.string
             if editorString != fsContent.string {

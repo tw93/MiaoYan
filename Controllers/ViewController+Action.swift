@@ -134,13 +134,22 @@ extension ViewController {
         panel.begin { result in
             guard result == NSApplication.ModalResponse.OK else { return }
             let extensions = AppEnvironment.current.storage.allowedExtensions
-            let files = ViewController.collectImportableFiles(from: panel.urls, allowedExtensions: extensions)
-            guard !files.isEmpty else {
-                ViewController.shared()?.toast(message: I18n.str("No importable Markdown files found~"), style: .failure)
-                return
+            let pickedUrls = panel.urls
+            // The recursive scan is unbounded (a picked folder can be huge);
+            // keep it off the main thread. The md copies in importNotes stay
+            // on main: they are bounded by the scan result and entangled with
+            // the FS watcher's focusOnImport timing.
+            DispatchQueue.global(qos: .userInitiated).async {
+                let files = ViewController.collectImportableFiles(from: pickedUrls, allowedExtensions: extensions)
+                DispatchQueue.main.async {
+                    guard !files.isEmpty else {
+                        ViewController.shared()?.toast(message: I18n.str("No importable Markdown files found~"), style: .failure)
+                        return
+                    }
+                    guard let appDelegate = NSApplication.shared.delegate as? AppDelegate else { return }
+                    appDelegate.importNotes(urls: files)
+                }
             }
-            guard let appDelegate = NSApplication.shared.delegate as? AppDelegate else { return }
-            appDelegate.importNotes(urls: files)
         }
     }
 
@@ -148,7 +157,7 @@ extension ViewController {
     /// scanned recursively; attachment folders (`i/`, `files/`), the in-storage
     /// `.Trash`, and hidden entries are skipped. Symlinked directories are not
     /// followed, which keeps the scan loop-free.
-    static func collectImportableFiles(from urls: [URL], allowedExtensions: [String]) -> [URL] {
+    nonisolated static func collectImportableFiles(from urls: [URL], allowedExtensions: [String]) -> [URL] {
         let skippedDirectories: Set<String> = [".Trash", "i", "files"]
         var collected: [URL] = []
         // Dedupe on the symlink-resolved path: a folder pick plus a file pick
@@ -929,8 +938,12 @@ extension ViewController {
         // Prepare for new note creation - ensure clean state
         prepareForNoteCreation()
 
-        // Set new note content
-        editArea.string = text
+        // Set new note content through publishStorage so the buffer owner
+        // moves together with EditTextView.note. A keystroke can land before
+        // the async fill() republishes ownership; with a stale owner the
+        // textDidChange guard would refuse the save and the fill overwrite
+        // would silently drop the typed input.
+        editArea.publishStorage(NSAttributedString(string: text), owner: note)
         EditTextView.note = note
 
         if sessionSplitMode {

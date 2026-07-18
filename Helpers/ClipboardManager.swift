@@ -178,11 +178,13 @@ class ClipboardManager {
                         if let textView, textView.storageNote === note {
                             textView.breakUndoCoalescing()
                             textView.insertText(finalImage, replacementRange: textView.selectedRange())
-                        } else {
+                        } else if AppEnvironment.current.storage.getBy(url: note.url) != nil {
                             // The editor moved to another note while the upload
                             // was in flight. Inserting at the current cursor
                             // would drop the link into the wrong note (#543);
-                            // append it to the note the paste happened in.
+                            // append it to the note the paste happened in. The
+                            // storage lookup skips notes deleted meanwhile, so
+                            // the save cannot resurrect a removed file.
                             let raw = note.content.string
                             let prefix = raw.isEmpty || raw.hasSuffix("\n") ? "" : "\n"
                             note.content.append(NSAttributedString(string: prefix + finalImage.string))

@@ -819,6 +819,11 @@ extension ViewController {
         }
 
         if let note = notesTableView.getSelectedNote() {
+            // Same ownership rule as cleanTypography: the buffer being
+            // formatted must belong to the selected note (#543). The apply
+            // path writes via note.save(attributed:), which does not pass
+            // through saveTextStorageContent's owner guard.
+            guard editArea.storageNote === note else { return }
             isFormatting = true
             updateFormatButtonState(isFormatting: true)
             formatRequestID += 1
@@ -868,7 +873,9 @@ extension ViewController {
             return
         }
 
-        guard let note = notesTableView.getSelectedNote(), note.url == noteURL else {
+        guard let note = notesTableView.getSelectedNote(), note.url == noteURL,
+            editArea.storageNote === note
+        else {
             isFormatting = false
             updateFormatButtonState(isFormatting: false)
             formatTask = nil
