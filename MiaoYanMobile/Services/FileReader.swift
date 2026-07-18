@@ -445,7 +445,20 @@ enum NoteFileStore {
 
     static func readContent(of note: NoteFile) async throws -> String {
         try await Task.detached(priority: .userInitiated) {
-            try coordinatedReadString(at: note.url)
+            // Fast path: a plain read succeeds for any materialized file and
+            // skips the file-coordination round-trip, which under active
+            // iCloud sync can queue for hundreds of milliseconds and is the
+            // dominant cost of opening a note. Not-yet-downloaded iCloud
+            // items fail the plain read; the coordinated read below
+            // transparently triggers the download. If a newer version is
+            // mid-sync the plain read can surface the older local copy for
+            // a moment; the mtime-based conflict/reload machinery already
+            // covers that window, same tradeoff the search and card-preview
+            // read paths accepted.
+            if let content = try? String(contentsOf: note.url, encoding: .utf8) {
+                return content
+            }
+            return try coordinatedReadString(at: note.url)
         }.value
     }
 
