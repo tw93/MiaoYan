@@ -7,7 +7,11 @@ struct NewNoteView: View {
     @State private var content = ""
     @State private var errorMessage: String?
     @State private var isSaving = false
-    @FocusState private var titleFocused: Bool
+
+    private enum Field {
+        case title, body
+    }
+    @FocusState private var focusedField: Field?
 
     var body: some View {
         NavigationStack {
@@ -15,12 +19,16 @@ struct NewNoteView: View {
                 TextField("Title", text: $title)
                     .font(MobileTheme.editorialFont(.title2, weight: .semibold))
                     .foregroundStyle(MobileTheme.ink)
-                    .focused($titleFocused)
+                    .focused($focusedField, equals: .title)
                     .padding(.horizontal, MobileTheme.pagePadding)
                     .padding(.top, 18)
                     .padding(.bottom, 12)
                     .submitLabel(.next)
-                    .onSubmit { titleFocused = false }
+                    // Hand focus straight to the body. The old behavior
+                    // (just dropping title focus) dismissed the keyboard and
+                    // left the user to re-tap, and switching fields with an
+                    // uncommitted IME composition could discard the title.
+                    .onSubmit { focusedField = .body }
                     .onChange(of: title) { errorMessage = nil }
 
                 Rectangle()
@@ -28,6 +36,7 @@ struct NewNoteView: View {
                     .frame(height: 1)
 
                 TextEditor(text: $content)
+                    .focused($focusedField, equals: .body)
                     .font(MobileTheme.editorialFont(size: 17))
                     .foregroundStyle(MobileTheme.ink)
                     .scrollContentBackground(.hidden)
@@ -87,7 +96,7 @@ struct NewNoteView: View {
         }
         .presentationBackground(MobileTheme.paper)
         .onAppear {
-            titleFocused = true
+            focusedField = .title
         }
     }
 

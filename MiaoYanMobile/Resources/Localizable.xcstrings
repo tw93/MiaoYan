@@ -121,17 +121,6 @@
         }
       }
     },
-    "Bold" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "粗体"
-          }
-        }
-      }
-    },
     "Cancel" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -161,17 +150,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "正在检查 iCloud Drive，你也可以现在选择笔记文件夹。"
-          }
-        }
-      }
-    },
-    "Checklist" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "待办"
           }
         }
       }
@@ -435,17 +413,6 @@
         }
       }
     },
-    "Heading" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "标题"
-          }
-        }
-      }
-    },
     "iCloud Drive is ready" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -453,17 +420,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "iCloud Drive 已就绪"
-          }
-        }
-      }
-    },
-    "Insert Photo" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "插入图片"
           }
         }
       }
@@ -496,17 +452,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "笔记库"
-          }
-        }
-      }
-    },
-    "List" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "列表"
           }
         }
       }

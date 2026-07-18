@@ -1,4 +1,3 @@
-import PhotosUI
 import SwiftUI
 import UIKit
 import UniformTypeIdentifiers
@@ -114,130 +113,12 @@ final class MarkdownUITextView: UITextView {
         }
     }
 
-    // MARK: Markdown line/selection helpers (toolbar actions)
-
-    /// Replace an NSRange through the UITextInput API so the edit lands in
-    /// the undo stack and flows through the delegate like typed text.
-    private func replaceCharacters(in nsRange: NSRange, with string: String) {
-        guard
-            let start = position(from: beginningOfDocument, offset: nsRange.location),
-            let end = position(from: start, offset: nsRange.length),
-            let range = textRange(from: start, to: end)
-        else { return }
-        replace(range, withText: string)
-    }
-
-    private var clampedCaret: NSRange {
-        let length = (text as NSString).length
-        let location = min(selectedRange.location, length)
-        return NSRange(location: location, length: min(selectedRange.length, length - location))
-    }
-
-    func wrapSelection(with marker: String) {
-        guard let range = selectedTextRange else { return }
-        let selected = text(in: range) ?? ""
-        if selected.isEmpty {
-            let caretStart = range.start
-            replace(range, withText: marker + marker)
-            if let caret = position(from: caretStart, offset: marker.count) {
-                selectedTextRange = textRange(from: caret, to: caret)
-            }
-        } else {
-            replace(range, withText: marker + selected + marker)
-        }
-    }
-
-    func cycleHeadingAtCaret() {
-        let ns = text as NSString
-        let line = ns.paragraphRange(for: NSRange(location: clampedCaret.location, length: 0))
-        let lineText = ns.substring(with: line)
-        let replacement: String
-        if lineText.hasPrefix("### ") {
-            replacement = String(lineText.dropFirst(4))
-        } else if lineText.hasPrefix("## ") || lineText.hasPrefix("# ") {
-            replacement = "#" + lineText
-        } else {
-            replacement = "# " + lineText
-        }
-        replaceCharacters(in: line, with: replacement)
-    }
-
-    func toggleLinePrefix(_ prefix: String) {
-        let ns = text as NSString
-        let block = ns.paragraphRange(for: clampedCaret)
-        let lines = ns.substring(with: block).components(separatedBy: "\n")
-        let content = lines.filter { !$0.isEmpty }
-        let allPrefixed = !content.isEmpty && content.allSatisfy { $0.hasPrefix(prefix) }
-        let mapped = lines.map { line -> String in
-            if line.isEmpty { return line }
-            if allPrefixed { return String(line.dropFirst(prefix.count)) }
-            if line.hasPrefix(prefix) { return line }
-            return prefix + line
-        }
-        replaceCharacters(in: block, with: mapped.joined(separator: "\n"))
-    }
-}
-
-// MARK: - Photo picker bridge
-
-@MainActor
-private final class PhotoPickerPresenter: NSObject, PHPickerViewControllerDelegate {
-    /// Global-actor-isolated function types are Sendable, which lets the
-    /// handler hop out of the provider's background completion queues.
-    typealias PickedImageHandler = @MainActor (Data, String) -> Void
-
-    private var completion: PickedImageHandler?
-
-    func present(completion: @escaping PickedImageHandler) {
-        guard let presenter = UIApplication.shared.topMostViewController else { return }
-        self.completion = completion
-        var configuration = PHPickerConfiguration()
-        configuration.filter = .images
-        configuration.selectionLimit = 1
-        let picker = PHPickerViewController(configuration: configuration)
-        picker.delegate = self
-        presenter.present(picker, animated: true)
-    }
-
-    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        picker.dismiss(animated: true)
-        guard let provider = results.first?.itemProvider else {
-            completion = nil
-            return
-        }
-        let done = completion
-        completion = nil
-
-        var candidates: [(String, String)] = [
-            (UTType.png.identifier, "png"),
-            (UTType.jpeg.identifier, "jpg"),
-            (UTType.gif.identifier, "gif"),
-        ]
-        if let heic = UTType("public.heic") {
-            candidates.append((heic.identifier, "heic"))
-        }
-        for (identifier, ext) in candidates where provider.hasItemConformingToTypeIdentifier(identifier) {
-            provider.loadDataRepresentation(forTypeIdentifier: identifier) { data, _ in
-                guard let data else { return }
-                Task { @MainActor in done?(data, ext) }
-            }
-            return
-        }
-        // Unknown source type: fall back to a UIImage round-trip.
-        guard provider.canLoadObject(ofClass: UIImage.self) else { return }
-        provider.loadObject(ofClass: UIImage.self) { object, _ in
-            guard let image = object as? UIImage,
-                let data = image.jpegData(compressionQuality: 0.92)
-            else { return }
-            Task { @MainActor in done?(data, "jpg") }
-        }
-    }
 }
 
 // MARK: - SwiftUI wrapper
 
 /// UITextView-backed markdown editor: plain markdown text with lightweight
-/// syntax highlighting, image paste, and a markdown accessory toolbar.
+/// syntax highlighting and image paste.
 /// SwiftUI's TextEditor can neither disable the system push-out line-break
 /// strategy (premature CJK wraps) nor intercept paste, hence UIKit.
 struct MarkdownEditorView: UIViewRepresentable {
@@ -262,7 +143,6 @@ struct MarkdownEditorView: UIViewRepresentable {
         textView.smartDashesType = .no
         textView.smartQuotesType = .no
         textView.noteFolderURL = noteFolderURL
-        textView.inputAccessoryView = context.coordinator.makeToolbar(for: textView)
         context.coordinator.install(text: text, font: bodyFont, in: textView)
         // Ask for keyboard focus only after the reader→editor crossfade
         // settles, so the transition and IME spin-up don't share a frame.
@@ -275,9 +155,11 @@ struct MarkdownEditorView: UIViewRepresentable {
     func updateUIView(_ textView: MarkdownUITextView, context: Context) {
         context.coordinator.parent = self
         textView.noteFolderURL = noteFolderURL
-        if context.coordinator.appliedFont != bodyFont {
-            context.coordinator.install(text: text, font: bodyFont, in: textView)
-        } else if textView.text != text {
+        // Never rebuild the buffer while an IME composition (Chinese,
+        // Japanese, ...) is in flight: replacing attributedText ends the
+        // marked-text session and silently discards what the user typed.
+        guard textView.markedTextRange == nil else { return }
+        if context.coordinator.appliedFont != bodyFont || textView.text != text {
             context.coordinator.install(text: text, font: bodyFont, in: textView)
         }
     }
@@ -288,8 +170,6 @@ struct MarkdownEditorView: UIViewRepresentable {
         private(set) var appliedFont: UIFont?
         private var theme: MarkdownEditorTheme?
         private var pendingEditRange: NSRange?
-        private weak var toolbarTarget: MarkdownUITextView?
-        private let photoPicker = PhotoPickerPresenter()
 
         init(_ parent: MarkdownEditorView) {
             self.parent = parent
@@ -329,11 +209,15 @@ struct MarkdownEditorView: UIViewRepresentable {
 
         func textViewDidChange(_ textView: UITextView) {
             guard let textView = textView as? MarkdownUITextView else { return }
+            // While an IME composition (Chinese, Japanese, ...) is in flight,
+            // neither publish the half-composed text to the binding (autosave
+            // would persist raw pinyin) nor touch attributes (mutating
+            // textStorage ends the marked-text session and breaks the input
+            // method). Committing the composition fires didChange again with
+            // markedTextRange nil, so the binding catches up then.
+            guard textView.markedTextRange == nil else { return }
             parent.text = textView.text
-            // Never touch attributes while an IME composition (Chinese,
-            // Japanese, ...) is in flight — mutating textStorage ends the
-            // marked-text session and breaks the input method.
-            guard textView.markedTextRange == nil, let theme else { return }
+            guard let theme else { return }
             rehighlight(textView, theme: theme)
         }
 
@@ -360,61 +244,6 @@ struct MarkdownEditorView: UIViewRepresentable {
                 storage.endEditing()
             }
             textView.typingAttributes = theme.baseAttributes
-        }
-
-        // MARK: Accessory toolbar
-
-        func makeToolbar(for textView: MarkdownUITextView) -> UIToolbar {
-            toolbarTarget = textView
-            let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 320, height: 44))
-            toolbar.tintColor = MobileTheme.inkUIColor
-
-            func item(_ systemImage: String, _ label: String, _ action: Selector) -> UIBarButtonItem {
-                let item = UIBarButtonItem(
-                    image: UIImage(systemName: systemImage), style: .plain, target: self, action: action)
-                item.accessibilityLabel = label
-                return item
-            }
-
-            toolbar.items = [
-                item("number", String(localized: "Heading"), #selector(tapHeading)),
-                .flexibleSpace(),
-                item("bold", String(localized: "Bold"), #selector(tapBold)),
-                .flexibleSpace(),
-                item("list.bullet", String(localized: "List"), #selector(tapList)),
-                .flexibleSpace(),
-                item("checklist", String(localized: "Checklist"), #selector(tapChecklist)),
-                .flexibleSpace(),
-                item("photo", String(localized: "Insert Photo"), #selector(tapPhoto)),
-            ]
-            return toolbar
-        }
-
-        @objc private func tapHeading() {
-            Haptics.tap()
-            toolbarTarget?.cycleHeadingAtCaret()
-        }
-
-        @objc private func tapBold() {
-            Haptics.tap()
-            toolbarTarget?.wrapSelection(with: "**")
-        }
-
-        @objc private func tapList() {
-            Haptics.tap()
-            toolbarTarget?.toggleLinePrefix("- ")
-        }
-
-        @objc private func tapChecklist() {
-            Haptics.tap()
-            toolbarTarget?.toggleLinePrefix("- [ ] ")
-        }
-
-        @objc private func tapPhoto() {
-            Haptics.tap()
-            photoPicker.present { [weak self] data, ext in
-                self?.toolbarTarget?.insertImage(data: data, ext: ext)
-            }
         }
     }
 }

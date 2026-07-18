@@ -264,6 +264,11 @@ struct NoteDetailView: View {
                         } label: {
                             Image(systemName: "square.and.pencil")
                         }
+                        // Editing an unloaded note is how typed text gets
+                        // clobbered: the editor opens on the empty binding,
+                        // then the async disk read lands and replaces
+                        // `content`, erasing everything typed meanwhile.
+                        .disabled(!hasLoadedContent)
 
                         // Menu intentionally carries secondary reader and note
                         // management actions. ShareLink used to live in the bar
@@ -586,8 +591,14 @@ struct NoteDetailView: View {
             }
             switch saveState {
             case .saved:
-                // No pending edits: silently pull the newest version.
-                reloadFromDisk()
+                // No pending edits: silently pull the newest version, but
+                // never underneath an open editor, where the reload window
+                // would race with fresh keystrokes and clobber them. With the
+                // editor open, the next autosave's own disk-date check
+                // surfaces the conflict instead.
+                if !isEditing {
+                    reloadFromDisk()
+                }
             case .unsaved, .saving, .failed, .conflict:
                 showConflictAlert = true
             }
@@ -711,6 +722,9 @@ struct NoteDetailView: View {
     // MARK: - Edit mode
 
     private func beginEditing() {
+        // Same invariant as the disabled edit button: never mount the editor
+        // before the disk content is in `content`.
+        guard hasLoadedContent else { return }
         // Editing needs the nav bar (it hosts Done); make sure a previous
         // tap-to-hide state doesn't leave the user without an exit.
         setChromeVisible(true, duration: 0.18)
