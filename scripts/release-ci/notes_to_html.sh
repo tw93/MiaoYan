@@ -36,7 +36,9 @@ if grep -q "^## Changelog" "$NOTES_FILE" || grep -q "^## 更新日志" "$NOTES_F
   emit_section() {
     local section_header="$1"
     local in_section=0
-    echo "  <h3>${MONSTER}</h3>"
+    # Label each list by language instead of repeating the codename twice;
+    # the codename already appears in the release title.
+    echo "  <h3>${section_header}</h3>"
     echo "  <ol>"
     while IFS= read -r line; do
       if [[ "$line" =~ ^##[[:space:]]+"$section_header" ]]; then
@@ -54,9 +56,12 @@ else
   # Block before "---" and block after "---"; emit after-block first (English), then before-block (Chinese).
   emit_block() {
     local target="$1"  # "before" or "after"
+    local heading="$2"
     local in_target=0
     local past_sep=0
-    echo "  <h3>${MONSTER}</h3>"
+    # Label each list by language instead of repeating the codename twice;
+    # the codename already appears in the release title.
+    echo "  <h3>${heading}</h3>"
     echo "  <ol>"
     while IFS= read -r line; do
       if [[ "$line" == "---" ]]; then
@@ -70,6 +75,6 @@ else
     done <"$NOTES_FILE"
     echo "  </ol>"
   }
-  emit_block "after"
-  emit_block "before"
+  emit_block "after" "Changelog"
+  emit_block "before" "更新日志"
 fi
