@@ -9,9 +9,14 @@ enum MobileHtmlRenderer {
         fontCSS: String? = nil,
         assetRoot: URL? = nil
     ) -> String {
+        // Frontmatter is metadata, not prose: hide it from the reader the
+        // same way macOS `Note.cleanMetaData` hides it from preview/export.
+        // Without this the fenced block renders as a stray rule + key:value
+        // lines at the top of every note that carries one.
+        let cleanedMarkdown = String(stripFrontmatter(markdown))
         let body = rewriteWikilinks(
-            in: rewriteLocalAssetPaths(in: markdownToHTML(markdown), assetRoot: assetRoot))
-        let hero = heroTitleHTML(noteTitle: title, markdown: markdown)
+            in: rewriteLocalAssetPaths(in: markdownToHTML(cleanedMarkdown), assetRoot: assetRoot))
+        let hero = heroTitleHTML(noteTitle: title, markdown: cleanedMarkdown)
         let scripts = readerScripts(for: body)
         // Critical: the dynamic --font-size / --font overrides MUST come
         // after bundledCSS, not before. mobile-reader.css declares its own
