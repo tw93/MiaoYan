@@ -3,6 +3,10 @@ name: CI
 on:
   push:
     branches: [main]
+    # Without the tags trigger no run is ever created for tag pushes, so the
+    # version-consistency job (gated on refs/tags/V*) was dead code and the
+    # V3.5.1-class drift guard never actually ran.
+    tags: ["V*"]
   pull_request:
     branches: [main]
 
