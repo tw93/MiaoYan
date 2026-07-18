@@ -16,6 +16,7 @@ enum TypographyCleaner {
         var fenceMarker: Character = "`"
         var fenceLength = 0
         var inFrontmatter = false
+        var inBlockMath = false
         var blankRun = 0
         var previousWasIndentedCode = false
 
@@ -42,6 +43,26 @@ enum TypographyCleaner {
                     inFence = false
                 }
                 blankRun = 0
+                continue
+            }
+
+            // $$ display math: delimiter lines and everything between them are
+            // formulas, where punctuation/em-dash rewrites would corrupt TeX.
+            // An odd number of $$ on a line toggles the block; even counts are
+            // single-line $$x$$, which the inline scanner already protects.
+            if inBlockMath {
+                output.append(line)
+                if doubleDollarCount(unquoted(trimmed)) % 2 == 1 {
+                    inBlockMath = false
+                }
+                blankRun = 0
+                continue
+            }
+            if unquoted(trimmed).hasPrefix("$$"), doubleDollarCount(unquoted(trimmed)) % 2 == 1 {
+                inBlockMath = true
+                output.append(line)
+                blankRun = 0
+                previousWasIndentedCode = false
                 continue
             }
 
@@ -76,6 +97,16 @@ enum TypographyCleaner {
                         output.append(line)
                     }
                 }
+                continue
+            }
+
+            // Reference-style link and footnote definitions ("[ref]: target",
+            // "[^1]: note") are link plumbing: pangu spacing or punctuation
+            // width changes in the target break the link.
+            if isReferenceDefinition(unquoted(trimmed)) {
+                output.append(line)
+                blankRun = 0
+                previousWasIndentedCode = false
                 continue
             }
 
@@ -115,6 +146,35 @@ enum TypographyCleaner {
         let run = trimmed.prefix(while: { $0 == first })
         guard run.count >= 3 else { return nil }
         return Fence(marker: first, length: run.count)
+    }
+
+    /// Non-overlapping count of "$$" occurrences in a line.
+    private static func doubleDollarCount(_ s: String) -> Int {
+        var count = 0
+        var previousWasDollar = false
+        for ch in s {
+            if ch == "$" {
+                if previousWasDollar {
+                    count += 1
+                    previousWasDollar = false
+                } else {
+                    previousWasDollar = true
+                }
+            } else {
+                previousWasDollar = false
+            }
+        }
+        return count
+    }
+
+    /// "[label]: ..." at line start (after any blockquote markers): a
+    /// reference-style link or footnote definition line.
+    private static func isReferenceDefinition(_ trimmed: String) -> Bool {
+        guard trimmed.first == "[" else { return false }
+        guard let close = trimmed.firstIndex(of: "]") else { return false }
+        let after = trimmed.index(after: close)
+        guard after < trimmed.endIndex else { return false }
+        return trimmed[after] == ":"
     }
 
     private static func isFenceLine(_ trimmed: String, marker: Character, minLength: Int, closing: Bool) -> Bool {

@@ -171,6 +171,48 @@ final class TypographyCleanerTests: XCTestCase {
         XCTAssertEqual(TypographyCleaner.clean("正文abc\n"), "正文 abc\n")
     }
 
+    // MARK: - Reference definitions
+
+    func testReferenceLinkDefinitionUntouched() {
+        let input = "[ref]: ./说明doc.md"
+        XCTAssertEqual(TypographyCleaner.clean(input), input)
+    }
+
+    func testReferenceDefinitionCommaTargetUntouched() {
+        let input = "[ref]: /a/中,文.md"
+        XCTAssertEqual(TypographyCleaner.clean(input), input)
+    }
+
+    func testFootnoteDefinitionUntouched() {
+        let input = "[^1]: 脚注target1说明"
+        XCTAssertEqual(TypographyCleaner.clean(input), input)
+    }
+
+    func testReferenceUsageInProseStillCleaned() {
+        XCTAssertEqual(TypographyCleaner.clean("见[说明][ref]和正文abc"), "见[说明][ref]和正文 abc")
+    }
+
+    // MARK: - Display math
+
+    func testBlockMathUntouched() {
+        let input = "$$\n\\text{中,文}\u{2014}x\n$$"
+        XCTAssertEqual(TypographyCleaner.clean(input), input)
+    }
+
+    func testBlockMathClosingOnContentLine() {
+        let input = "$$\na + b = c$$"
+        XCTAssertEqual(TypographyCleaner.clean(input), input)
+    }
+
+    func testTextAfterBlockMathStillCleaned() {
+        let input = "$$\nx=1\n$$\n正文abc"
+        XCTAssertEqual(TypographyCleaner.clean(input), "$$\nx=1\n$$\n正文 abc")
+    }
+
+    func testSingleLineDollarDollarStillInlineProtected() {
+        XCTAssertEqual(TypographyCleaner.clean("$$x,y$$后面正文abc"), "$$x,y$$后面正文 abc")
+    }
+
     // MARK: - Idempotency
 
     func testCleaningTwiceIsStable() {
