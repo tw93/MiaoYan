@@ -32,6 +32,10 @@ img {
   color-rendering: optimizeQuality;
   image-rendering: -webkit-optimize-contrast;
   -webkit-color-correction: default;
+  /* iPhone photos carry an HDR gain map that WebKit tone-boosts by
+     default, making them glow against the page. Clamp to SDR; older
+     WebKit ignores the property. */
+  dynamic-range-limit: standard;
 }
 
 /* ==================== Typography ==================== */

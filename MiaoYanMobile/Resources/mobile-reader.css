@@ -269,6 +269,10 @@ img {
   border-radius: 14px;
   outline: 1px solid var(--image-outline);
   outline-offset: -1px;
+  /* iPhone photos carry an HDR gain map that WebKit tone-boosts by
+     default, making them glow against the page. Clamp to SDR; older
+     WebKit ignores the property. */
+  dynamic-range-limit: standard;
 }
 
 figure img {
