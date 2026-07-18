@@ -236,7 +236,7 @@ struct MarkdownEditorView: UIViewRepresentable {
             storage.endEditing()
 
             // Fences span paragraphs; a paragraph-scoped pass cannot see
-            // them, so re-sweep the whole document — but only when fences
+            // them, so re-sweep the whole document, but only when fences
             // exist at all (single regex pass, cheap for typical notes).
             if ns.contains("```") {
                 storage.beginEditing()

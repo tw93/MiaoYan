@@ -22,7 +22,7 @@ enum MobileHtmlRenderer {
         // after bundledCSS, not before. mobile-reader.css declares its own
         // defaults on :root; same selector + same property means whichever
         // rule appears later wins. Putting the inline override before
-        // bundledCSS silently lost the font-size selection — tap
+        // bundledCSS silently lost the font-size selection, tap
         // Small/Medium/Large produced no visible change.
         let fontOverride = fontCSS.map { ":root { --font: \($0); --heading-font: \($0); }" } ?? ""
         return """
@@ -103,7 +103,7 @@ enum MobileHtmlRenderer {
 
     /// Rewrite `[[target]]` / `[[target|label]]` into anchors on the
     /// `miaoyan-wiki` scheme so the reader can navigate between notes.
-    /// cmark leaves wikilinks as literal text, so this runs on the HTML —
+    /// cmark leaves wikilinks as literal text, so this runs on the HTML,
     /// skipping `<pre>`/`<code>` regions where the syntax must stay verbatim.
     private static func rewriteWikilinks(in html: String) -> String {
         guard html.contains("[["), let codeRegex = codeRegionPattern else { return html }
@@ -212,7 +212,7 @@ enum MobileHtmlRenderer {
     /// Rules (see plan): only inject when we have a non-empty filename AND the
     /// document does not already begin with an H1. If the document opens with
     /// an H1 we always defer to the author, regardless of whether the H1 text
-    /// matches the filename — same-text means redundant; different-text means
+    /// matches the filename, same-text means redundant; different-text means
     /// the author is making an intentional editorial choice.
     private static func heroTitleHTML(noteTitle: String?, markdown: String) -> String {
         guard let raw = noteTitle else { return "" }
@@ -245,7 +245,7 @@ enum MobileHtmlRenderer {
 
     /// Strip a leading YAML-style frontmatter block (`---\n…\n---`).
     /// If the document doesn't start with `---` followed by a newline, return
-    /// the original markdown unchanged — three dashes alone are a horizontal
+    /// the original markdown unchanged, three dashes alone are a horizontal
     /// rule in CommonMark and we don't want to swallow them.
     private static func stripFrontmatter(_ markdown: String) -> Substring {
         guard markdown.hasPrefix("---\n") || markdown.hasPrefix("---\r\n") else {

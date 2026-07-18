@@ -189,7 +189,7 @@ enum NoteFileStore {
         if let re = inlineCodeRegex {
             s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "$1")
         }
-        // Whitespace collapse is intentionally NOT done here — newlines
+        // Whitespace collapse is intentionally NOT done here, newlines
         // must survive so downstream stripMarkdownMarkers can anchor
         // `^` to real line starts. Callers that need single-line output
         // collapse whitespace after the full pipeline finishes.
@@ -245,7 +245,7 @@ enum NoteFileStore {
     ///    the actual IO cost for 16KB reads
     ///  - the caller has already verified the file is local (not an
     ///    iCloud placeholder)
-    /// Do NOT use this for content the user opens — those still go
+    /// Do NOT use this for content the user opens, those still go
     /// through `coordinatedReadString` for write-conflict safety.
     nonisolated static func readFirstBytes(at url: URL, maxBytes: Int) -> String? {
         guard let handle = try? FileHandle(forReadingFrom: url) else { return nil }
@@ -333,8 +333,8 @@ enum NoteFileStore {
     ///
     /// iCloud-aware path: on cold start NSMetadataQuery already has the
     /// catalog in memory while `FileManager.enumerator` over the
-    /// just-attached ubiquity container can return zero results — or
-    /// block for seconds — until iCloud finishes placing local
+    /// just-attached ubiquity container can return zero results, or
+    /// block for seconds, until iCloud finishes placing local
     /// placeholder files. So when the cloud catalog has anything for
     /// this folder we return it directly and skip the disk enumeration
     /// entirely; subsequent revision-driven reloads (after files
@@ -362,7 +362,7 @@ enum NoteFileStore {
 
     /// Off-main; returns notes WITHOUT preview text. The previous
     /// implementation eagerly read 900 bytes from each file via FileHandle to
-    /// build preview strings — that pattern blocked indefinitely under iCloud
+    /// build preview strings, that pattern blocked indefinitely under iCloud
     /// because opening a non-resident file triggers a synchronous on-demand
     /// download. With ~50 notes that meant the list was empty for minutes.
     /// Preview is now lazy-loaded per visible card (see NoteCard / NotePreviewCache).
@@ -376,10 +376,10 @@ enum NoteFileStore {
 
     /// Lazy preview helper for the card layer.
     ///
-    /// Fast path: `previewTextSync` reads via plain `FileHandle` — if
+    /// Fast path: `previewTextSync` reads via plain `FileHandle`, if
     /// the file is already on disk this takes microseconds.
     ///
-    /// Slow path: if `FileHandle` fails (iCloud placeholder — the real
+    /// Slow path: if `FileHandle` fails (iCloud placeholder, the real
     /// file lives at `.filename.icloud`), we fall back to
     /// `coordinatedReadString` which transparently triggers an iCloud
     /// on-demand download. This is slower (~100-500ms per file) but
@@ -492,7 +492,7 @@ enum NoteFileStore {
             } catch {
                 // File-provider volumes (WebDAV drives picked via Files,
                 // e.g. Nutstore) have no system trash and trashItem throws.
-                // Fall back to the library's own Trash folder — the same
+                // Fall back to the library's own Trash folder, the same
                 // convention the macOS app and the folder list already use,
                 // so the note stays recoverable on every device.
                 guard let libraryRoot else { throw error }
@@ -601,7 +601,7 @@ enum NoteFileStore {
     static func createFolder(named name: String, in root: URL) async throws {
         let folderName = sanitizedFileName(name)
         // Names the note lists skip (attachment dirs, trash, dotfiles)
-        // would create an invisible folder — reject them up front.
+        // would create an invisible folder, reject them up front.
         guard !ignoredFolderNames.contains(folderName), !folderName.hasPrefix("."),
             !folderName.localizedCaseInsensitiveContains("Trash")
         else { throw FolderCreationError.reservedName }
@@ -615,7 +615,7 @@ enum NoteFileStore {
     }
 
     /// Lightweight list of folders a note can move into: the library root
-    /// plus its direct subfolders. One directory listing, no note counts —
+    /// plus its direct subfolders. One directory listing, no note counts,
     /// `folders(in:)` would enumerate the whole library just to badge the
     /// menu rows.
     static func moveTargetURLs(in root: URL) async -> [URL] {
@@ -756,7 +756,7 @@ enum NoteFileStore {
         let hits: [(NoteFile, String)]
         /// Number of iCloud files skipped because they haven't downloaded yet.
         /// Surface this in UI so users know why a recently-added note might
-        /// not show up — they can wait for iCloud or pull-to-refresh.
+        /// not show up, they can wait for iCloud or pull-to-refresh.
         let skippedDownloadingCount: Int
     }
 
@@ -768,7 +768,7 @@ enum NoteFileStore {
     ///  1. URL source is cloud-aware: NSMetadataQuery's in-memory catalog
     ///     is the primary source on iCloud, with FileManager enumeration
     ///     as a fallback for non-iCloud roots. Same rationale as
-    ///     `recentNotes` — `FileManager.enumerator` over a freshly
+    ///     `recentNotes`, `FileManager.enumerator` over a freshly
     ///     attached ubiquity container can hang for seconds.
     ///  2. Skip iCloud files whose data isn't local. Reading them would
     ///     block while iCloud downloads each file, freezing the UI for
@@ -844,7 +844,7 @@ enum NoteFileStore {
     ) -> SearchHitResult {
         // Skip files that aren't downloaded yet. nil status = non-iCloud
         // (always proceed). Anything other than `.current` means the file
-        // body isn't local — opening it would trigger a blocking download.
+        // body isn't local, opening it would trigger a blocking download.
         let downloadStatus =
             (try? url.resourceValues(forKeys: [.ubiquitousItemDownloadingStatusKey])
                 .ubiquitousItemDownloadingStatus)
@@ -857,7 +857,7 @@ enum NoteFileStore {
 
         // Read only the head of the file (16KB by default) and bypass
         // NSFileCoordinator. The body scan only needs enough text for
-        // matching + snippet — full reads via coordinator dominate the
+        // matching + snippet, full reads via coordinator dominate the
         // search latency for large libraries. See `readFirstBytes` doc.
         guard let head = readFirstBytes(at: url, maxBytes: searchReadByteLimit) else {
             return .noMatch
@@ -870,7 +870,7 @@ enum NoteFileStore {
 
         // `extractSnippet` re-finds the match in the cleaned text, so
         // passing `knownRange` (which referred to the raw `head`) would
-        // be misleading — drop it.
+        // be misleading, drop it.
         let snippet = extractSnippet(from: head, query: query)
         return .hit(NoteFile(url: url, preview: ""), snippet: snippet)
     }
@@ -923,7 +923,7 @@ enum NoteFileStore {
 
     /// Pure regex-pipeline preview: strip every non-prose element, then
     /// take the first two content lines after the title. No line-level
-    /// if/else logic — just successive regex passes that delete
+    /// if/else logic, just successive regex passes that delete
     /// structural markup and leave clean text.
     nonisolated static func previewTextSync(for url: URL) -> String {
         guard let handle = try? FileHandle(forReadingFrom: url) else { return "" }
@@ -1008,7 +1008,7 @@ enum NoteFileStore {
 
     /// Extract a 140-ish-character window around a match. If `knownRange` is
     /// supplied (caller already located the match), skip the redundant
-    /// `range(of:)` rescan — that doubles search cost for every hit.
+    /// `range(of:)` rescan, that doubles search cost for every hit.
     /// `knownRange` is intentionally ignored now: it referred to the raw
     /// body text, but we always operate on `stripPreviewNoise(content)`
     /// which has different offsets. Re-finding the query in the cleaned
@@ -1022,7 +1022,7 @@ enum NoteFileStore {
         cleaned = stripPreviewNoise(cleaned)
         cleaned = stripEmphasisMarkers(cleaned)
         guard let range = cleaned.range(of: query, options: opts) else {
-            // Title-only match (no body hit) — fall back to a clean
+            // Title-only match (no body hit), fall back to a clean
             // opening snippet rather than echoing raw markdown.
             return String(cleaned.prefix(140))
         }

@@ -83,7 +83,7 @@ blockquote {
   text-align: justify;
 }
 
-/* Safari 18.4+: classic CJK typesetting — automatic spacing between
+/* Safari 18.4+: classic CJK typesetting, automatic spacing between
    ideographs and Latin/digits. No-op on older WebKit. */
 @supports (text-autospace: normal) {
   body {
@@ -342,7 +342,7 @@ li.task-list-item input[type="checkbox"] {
   accent-color: var(--quote-bar);
 }
 
-/* Reader hero title — injected by MobileHtmlRenderer when the document does
+/* Reader hero title, injected by MobileHtmlRenderer when the document does
    not already begin with an H1, so the page has a clear, large title even
    though the navigation bar shows only a small inline title. */
 .reader-title {
@@ -368,7 +368,7 @@ li.task-list-item input[type="checkbox"] {
   margin-top: 0;
 }
 
-/* Wikilinks — rewritten by MobileHtmlRenderer to miaoyan-wiki:// anchors.
+/* Wikilinks, rewritten by MobileHtmlRenderer to miaoyan-wiki:// anchors.
    Dashed underline distinguishes in-library jumps from external links. */
 a.wikilink {
   color: var(--link);
@@ -377,7 +377,7 @@ a.wikilink {
   text-underline-offset: 3px;
 }
 
-/* Mermaid diagrams — fences are converted to .mermaid divs at load time.
+/* Mermaid diagrams, fences are converted to .mermaid divs at load time.
    Never allow horizontal page scroll: wide diagrams scroll inside the box. */
 .mermaid {
   display: flex;
@@ -392,7 +392,7 @@ a.wikilink {
   height: auto;
 }
 
-/* Syntax highlight (highlight.js) — a restrained palette tuned to the
+/* Syntax highlight (highlight.js), a restrained palette tuned to the
    paper theme instead of a stock hljs stylesheet. Colors only; block
    layout stays with the `pre` rules above. */
 :root {

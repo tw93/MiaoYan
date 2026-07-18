@@ -238,7 +238,7 @@ struct NoteDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(chromeVisible ? .visible : .hidden, for: .navigationBar)
         // Hide the tab bar only on iPhone (compact width) where it sits at
-        // the bottom and competes for reading space — Apple Notes / Bear
+        // the bottom and competes for reading space, Apple Notes / Bear
         // do the same. On iPad (regular width) iPadOS 26's floating tab
         // bar lives at the very top as a small pill; hiding it would
         // play a fade-in animation on pop back that reads as a "flash"
@@ -250,7 +250,7 @@ struct NoteDetailView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 // Both icons share the same ink colour so the trailing toolbar
                 // reads as one cohesive action cluster. The edit button being
-                // primary is conveyed by its position and weight, not hue —
+                // primary is conveyed by its position and weight, not hue,
                 // mixing accent+ink here looked fragmented in practice (see
                 // discussion 2026-05).
                 HStack(spacing: 12) {
