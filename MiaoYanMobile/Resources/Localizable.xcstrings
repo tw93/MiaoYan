@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "·" : {
+
+    },
     "%@ iCloud notes still downloading; results will improve as they sync." : {
       "localizations" : {
         "zh-Hans" : {
@@ -67,6 +70,7 @@
       }
     },
     "A folder with this name already exists." : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -172,22 +176,22 @@
         }
       }
     },
-    "Choose Folder…" : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "选择文件夹…"
-          }
-        }
-      }
-    },
     "Choose folder" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "选择文件夹"
+          }
+        }
+      }
+    },
+    "Choose Folder…" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择文件夹…"
           }
         }
       }
@@ -215,6 +219,7 @@
       }
     },
     "Could not create folder" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -247,6 +252,7 @@
       }
     },
     "Create" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -320,6 +326,7 @@
       }
     },
     "Empty Trash?" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -374,6 +381,7 @@
       }
     },
     "Folder name" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -434,6 +442,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "标题"
+          }
+        }
+      }
+    },
+    "iCloud Drive is ready" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud Drive 已就绪"
           }
         }
       }
@@ -536,6 +555,16 @@
         }
       }
     },
+    "MiaoYan reads and writes Markdown files in this folder. iCloud Drive or your cloud drive app keeps it in sync with Mac." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "妙言会读写这个文件夹里的 Markdown 文件。iCloud Drive 或你的云盘应用负责与 Mac 同步。"
+          }
+        }
+      }
+    },
     "MiaoYan reads Markdown notes from this folder. Pick an iCloud Drive folder to keep notes synced with Mac." : {
       "extractionState" : "stale",
       "localizations" : {
@@ -543,16 +572,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "MiaoYan 会从这个文件夹读取 Markdown 笔记。选择 iCloud Drive 文件夹可与 Mac 保持同步。"
-          }
-        }
-      }
-    },
-    "MiaoYan reads and writes Markdown files in this folder. iCloud Drive or your cloud drive app keeps it in sync with Mac." : {
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "妙言会读写这个文件夹里的 Markdown 文件。iCloud Drive 或你的云盘应用负责与 Mac 同步。"
           }
         }
       }
@@ -591,6 +610,7 @@
       }
     },
     "Move to Folder" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -696,6 +716,7 @@
       }
     },
     "Note not found" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -727,17 +748,6 @@
         }
       }
     },
-    "OK" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "好"
-          }
-        }
-      }
-    },
     "Offline" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -745,6 +755,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "离线"
+          }
+        }
+      }
+    },
+    "OK" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "好"
           }
         }
       }
@@ -815,6 +836,7 @@
       }
     },
     "Rename" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -825,6 +847,7 @@
       }
     },
     "Rename failed" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -835,6 +858,7 @@
       }
     },
     "Rename note" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -845,6 +869,7 @@
       }
     },
     "Restore" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1027,6 +1052,7 @@
       }
     },
     "Something went wrong" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1092,6 +1118,7 @@
       }
     },
     "This name is reserved. Choose another folder name." : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1219,19 +1246,7 @@
           }
         }
       }
-    },
-    "iCloud Drive is ready" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "iCloud Drive 已就绪"
-          }
-        }
-      }
-    },
-    "·" : {}
+    }
   },
   "version" : "1.0"
 }
