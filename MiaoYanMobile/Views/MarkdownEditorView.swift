@@ -89,20 +89,28 @@ final class MarkdownUITextView: UITextView {
 
     func insertImage(data: Data, ext: String) {
         guard let noteFolderURL else { return }
-        do {
-            let markdownPath = try MobileImageWriter.write(data: data, ext: ext, into: noteFolderURL)
-            let caret = selectedRange.location
-            let needsLeadingNewline: Bool
-            if caret > 0, caret <= (text as NSString).length {
-                let previous = (text as NSString).substring(with: NSRange(location: caret - 1, length: 1))
-                needsLeadingNewline = previous != "\n"
-            } else {
-                needsLeadingNewline = false
+        // The coordinated write can block for a provider round-trip on
+        // iCloud/external folders; keep it off the main thread like every
+        // other write path, then insert the markdown once the file exists.
+        Task { [weak self] in
+            do {
+                let markdownPath = try await Task.detached(priority: .userInitiated) {
+                    try MobileImageWriter.write(data: data, ext: ext, into: noteFolderURL)
+                }.value
+                guard let self else { return }
+                let caret = self.selectedRange.location
+                let needsLeadingNewline: Bool
+                if caret > 0, caret <= (self.text as NSString).length {
+                    let previous = (self.text as NSString).substring(with: NSRange(location: caret - 1, length: 1))
+                    needsLeadingNewline = previous != "\n"
+                } else {
+                    needsLeadingNewline = false
+                }
+                self.insertText("\(needsLeadingNewline ? "\n" : "")![](\(markdownPath))\n")
+                Haptics.success()
+            } catch {
+                Haptics.error()
             }
-            insertText("\(needsLeadingNewline ? "\n" : "")![](\(markdownPath))\n")
-            Haptics.success()
-        } catch {
-            Haptics.error()
         }
     }
 

@@ -781,6 +781,17 @@
         }
       }
     },
+    "Pin failed" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "置顶失败"
+          }
+        }
+      }
+    },
     "Refresh library" : {
       "extractionState" : "stale",
       "localizations" : {

@@ -754,13 +754,17 @@ struct NoteDetailView: View {
     // MARK: - Toast
 
     private func showToast(_ message: String) {
+        // Call sites pass raw literals; resolve them through the string
+        // catalog here so zh-Hans users do not see English toasts. Missing
+        // keys fall back to the literal itself.
+        let localized = String(localized: String.LocalizationValue(message))
         withAnimation(.easeOut(duration: 0.18)) {
-            toastMessage = message
+            toastMessage = localized
         }
         Task {
             do { try await Task.sleep(for: .seconds(2)) } catch { return }
             await MainActor.run {
-                guard toastMessage == message else { return }
+                guard toastMessage == localized else { return }
                 withAnimation(.easeIn(duration: 0.18)) {
                     toastMessage = nil
                 }
