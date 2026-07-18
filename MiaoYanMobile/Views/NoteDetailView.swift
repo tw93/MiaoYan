@@ -136,6 +136,11 @@ struct NoteDetailView: View {
     @State private var renderTask: Task<Void, Never>?
     @State private var skeletonTask: Task<Void, Never>?
     @State private var renderedHTML: String?
+    /// True once the webview has actually finished loading the current
+    /// note's HTML. `renderedHTML` alone only means the string exists;
+    /// WKWebView parse/layout still runs after that, and the skeleton
+    /// must cover the whole gap or the user stares at blank paper.
+    @State private var readerReady = false
     @State private var showSkeleton = false
     @State private var isApplyingLoadedContent = false
     @State private var chromeVisible = true
@@ -157,7 +162,7 @@ struct NoteDetailView: View {
     /// How long to wait before showing the loading skeleton; cache hits typically
     /// complete well under this, so the user sees a clean paper background flash
     /// instead of a skeleton fade-in.
-    private static let skeletonRevealDelay: Duration = .milliseconds(200)
+    private static let skeletonRevealDelay: Duration = .milliseconds(150)
 
     private var fontSize: ReaderFontSize {
         ReaderFontSize(rawValue: fontSizeRaw) ?? .medium
@@ -185,13 +190,14 @@ struct NoteDetailView: View {
                 webViewStore: readerWebViewStore,
                 onChromeIntent: handleChromeIntent,
                 onTap: toggleChrome,
-                onWikilink: handleWikilink
+                onWikilink: handleWikilink,
+                onContentReady: readerDidBecomeReady
             )
             .ignoresSafeArea(edges: .bottom)
-            .opacity(renderedHTML == nil || isEditing ? 0 : 1)
-            .animation(.easeOut(duration: 0.18), value: renderedHTML == nil)
+            .opacity(!readerReady || isEditing ? 0 : 1)
+            .animation(.easeOut(duration: 0.18), value: readerReady)
 
-            if renderedHTML == nil && !isEditing {
+            if !readerReady && !isEditing {
                 NoteDetailLoadingView()
                     .opacity(showSkeleton ? 1 : 0)
                     .animation(.easeOut(duration: 0.18), value: showSkeleton)
@@ -402,6 +408,7 @@ struct NoteDetailView: View {
     private func loadContent() {
         hasLoadedContent = false
         renderedHTML = nil
+        readerReady = false
         isApplyingLoadedContent = true
         loadTask?.cancel()
         renderTask?.cancel()
@@ -508,21 +515,29 @@ struct NoteDetailView: View {
     }
 
     private func installRenderedHTML(_ html: String) {
+        // Keep the skeleton up: the webview still has to parse and lay out
+        // this HTML. `readerDidBecomeReady` (driven by the webview's
+        // navigation delegate) is what takes it down.
+        renderedHTML = html
+    }
+
+    private func readerDidBecomeReady() {
         skeletonTask?.cancel()
         showSkeleton = false
-        renderedHTML = html
+        readerReady = true
     }
 
     /// Most cache hits resolve in well under `skeletonRevealDelay`, so the
     /// skeleton stays hidden and the user sees a brief paper-coloured background
-    /// instead of a flickering placeholder. Cache misses (cmark render) fade
-    /// the skeleton in so the wait isn't visually empty.
+    /// instead of a flickering placeholder. Slower opens (iCloud read, cmark
+    /// render, webview layout) fade the skeleton in so the wait isn't
+    /// visually empty.
     private func scheduleSkeletonReveal() {
         skeletonTask?.cancel()
         showSkeleton = false
         skeletonTask = Task { @MainActor in
             do { try await Task.sleep(for: Self.skeletonRevealDelay) } catch { return }
-            guard !Task.isCancelled, renderedHTML == nil else { return }
+            guard !Task.isCancelled, !readerReady else { return }
             showSkeleton = true
         }
     }

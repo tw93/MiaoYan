@@ -421,6 +421,12 @@ struct WebReaderView: UIViewRepresentable {
     var onChromeIntent: (ReaderChromeIntent) -> Void
     var onTap: () -> Void
     var onWikilink: (String) -> Void = { _ in }
+    /// Fires when the loaded HTML has actually finished loading in the
+    /// webview, i.e. the page is paintable. `renderedHTML` being set only
+    /// means the string exists; WKWebView parse/layout (held back further by
+    /// `suppressesIncrementalRendering`) still runs after that, and loading
+    /// chrome should stay up until this fires.
+    var onContentReady: () -> Void = {}
 
     func makeUIView(context: Context) -> WKWebView {
         let webView = webViewStore.checkoutWebView()
@@ -439,6 +445,7 @@ struct WebReaderView: UIViewRepresentable {
         context.coordinator.onChromeIntent = onChromeIntent
         context.coordinator.onTap = onTap
         context.coordinator.onWikilink = onWikilink
+        context.coordinator.onContentReady = onContentReady
         // Empty html is the "warm but no content yet" state used while cmark
         // is still rendering. Skip loadHTMLString so the webview stays in its
         // prewarmed configuration; the next call with real HTML will drive
@@ -450,7 +457,9 @@ struct WebReaderView: UIViewRepresentable {
             context.coordinator.resetScrollTracking()
             webView.stopLoading()
             webView.scrollView.setContentOffset(.zero, animated: false)
-            webView.loadHTMLString(html, baseURL: baseURL)
+            // Track this specific navigation so didFinish/didFail from the
+            // cancelled warmup load can't be mistaken for content readiness.
+            context.coordinator.pendingNavigation = webView.loadHTMLString(html, baseURL: baseURL)
         }
     }
 
@@ -475,8 +484,10 @@ struct WebReaderView: UIViewRepresentable {
         var onChromeIntent: (ReaderChromeIntent) -> Void
         var onTap: () -> Void
         var onWikilink: (String) -> Void
+        var onContentReady: () -> Void = {}
         var lastHTML = ""
         var lastBaseURL: URL?
+        var pendingNavigation: WKNavigation?
         weak var tapRecognizer: UITapGestureRecognizer?
         private let hideDistance: CGFloat = 48
         private let showDistance: CGFloat = 28
@@ -569,6 +580,28 @@ struct WebReaderView: UIViewRepresentable {
                     onChromeIntent(.show)
                 }
             }
+        }
+
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            finishPendingNavigation(navigation)
+        }
+
+        /// Failures also count as "ready": showing whatever the webview has
+        /// beats leaving the skeleton up forever.
+        func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+            finishPendingNavigation(navigation)
+        }
+
+        func webView(
+            _ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error
+        ) {
+            finishPendingNavigation(navigation)
+        }
+
+        private func finishPendingNavigation(_ navigation: WKNavigation?) {
+            guard let pendingNavigation, navigation === pendingNavigation else { return }
+            self.pendingNavigation = nil
+            onContentReady()
         }
 
         @objc func handleTap() {
