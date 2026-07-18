@@ -1,17 +1,17 @@
-# V4.0.0 Valstrax 🚀
+# V4.1.0 Aegis 🛡️
 
-1. iPhone 和 iPad 版本正在上架 App Store，一次购买覆盖双端，敬请期待
-2. iPad 提供三栏布局，文件夹、笔记列表和阅读详情可同时展开
-3. iOS 首版支持 iCloud 笔记库、外部文件夹、置顶笔记和新建编辑
-4. macOS 新增目录菜单和 cmd+5 快捷键，长文导航跳转更直接
-5. 修复 Sparkle 签名和版本号漂移，优化折叠、选中态和分割线
-6. 改进保存、删除、版本历史、Finder 打开和 iCloud 同步场景
+1. 修复切换笔记时内容可能被另一篇覆盖的问题，保存前增加内容归属校验
+2. 预览支持 GitHub 风格提示卡片，NOTE、TIP、WARNING 等五类适配亮暗主题
+3. 新增排版净化，一键规范中英文空格和标点，代码、链接、公式保持原样
+4. 从网页或 AI 工具复制的内容粘贴时自动转成 Markdown，表格和列表不走样
+5. 支持批量导入 Markdown 文件和文件夹，整理旧笔记更方便
+6. iOS 编辑器支持语法高亮和图片粘贴，新增外部云文件夹和阅读细节优化
 
 ---
 
-1. iPhone and iPad are rolling out to the App Store, one purchase covers both
-2. iPad brings a real three-column layout for folders, notes, and reading
-3. First iOS version supports iCloud libraries, folders, pinned notes, and editing
-4. New TOC menu and cmd+5 shortcut on macOS for faster long-note navigation
-5. Fixes Sparkle signing and version drift, plus collapse and selection polish
-6. Improves save, delete, version history, Finder-open, and iCloud sync
+1. Fixes a rare case where switching notes could overwrite one note with another
+2. Preview renders GitHub-style alert cards, all five kinds themed for light and dark
+3. New Clean Typography command normalizes mixed CJK and Latin spacing and punctuation
+4. Pasting from web pages or AI tools converts rich content to clean Markdown
+5. Batch import Markdown files and folders to bring old notes into MiaoYan
+6. iOS editor gains syntax highlight and image paste, plus external cloud folders
