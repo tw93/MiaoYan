@@ -6,7 +6,7 @@
       <title>4.1.0</title>
       <link>https://github.com/tw93/MiaoYan/releases</link>
       <description><![CDATA[
-  <h3>Aegis 🛡️</h3>
+  <h3>Changelog</h3>
   <ol>
     <li>Fixes a rare case where switching notes could overwrite one note with another</li>
     <li>Preview renders GitHub-style alert cards, all five kinds themed for light and dark</li>
@@ -15,7 +15,7 @@
     <li>Batch import Markdown files and folders to bring old notes into MiaoYan</li>
     <li>iOS editor gains syntax highlight and image paste, plus external cloud folders</li>
   </ol>
-  <h3>Aegis 🛡️</h3>
+  <h3>更新日志</h3>
   <ol>
     <li>修复切换笔记时内容可能被另一篇覆盖的问题，保存前增加内容归属校验</li>
     <li>预览支持 GitHub 风格提示卡片，NOTE、TIP、WARNING 等五类适配亮暗主题</li>
@@ -25,7 +25,7 @@
     <li>iOS 编辑器支持语法高亮和图片粘贴，新增外部云文件夹和阅读细节优化</li>
   </ol>
           ]]>      </description>
-      <pubDate>Sat, 18 Jul 2026 12:50:28 +0000</pubDate>
+      <pubDate>Sat, 18 Jul 2026 12:49:15 +0000</pubDate>
       <enclosure url="https://github.com/tw93/MiaoYan/releases/download/V4.1.0/MiaoYan_V4.1.0.zip" sparkle:shortVersionString="4.1.0" sparkle:version="4.1.0" sparkle:edSignature="E6nckfRMHeE2U+gfsIc/1653mvP7xLBr6htSR9iXQNuRxFDlnfVCcozk3/+VAfCqNDYo5xwfMf4X8aSpoNX6AA==" length="24547255" type="application/octet-stream"/>
       <sparkle:minimumSystemVersion>11.5</sparkle:minimumSystemVersion>
     </item>
