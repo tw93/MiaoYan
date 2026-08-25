@@ -113,7 +113,7 @@ body {
 }
 
 [lang='en'] .i18n-description {
-  width: 105%;
+  width: 100%;
 }
 
 .i18n-download:before {
@@ -168,10 +168,10 @@ body {
   content: 'Fast';
 }
 .i18n-kuai-desc:before {
-  content: '1. 使用 Swift5 开发，原生极致性能\a 2. 对多文件做了特别的性能优化，确保不卡顿\a 3. 相比当前市面上套壳 Web 的方式轻巧很多';
+  content: '1. 使用 Swift 6 开发，原生极致性能\a 2. 对多文件做了特别的性能优化，确保不卡顿\a 3. 相比当前市面上套壳 Web 的方式轻巧很多';
 }
 [lang='en'] .i18n-kuai-desc:before {
-  content: '1. Developed in Swift5 for the ultimate in native performance.\a 2. Specially optimized for multi-file performance to ensure no lag.\a 3. Much lighter than any electron app on the market.';
+  content: '1. Developed in Swift 6 for native performance.\a 2. Specially optimized for multi-file performance.\a 3. Much lighter than an Electron app.';
 }
 
 .i18n-jian:before {
@@ -198,4 +198,33 @@ body {
 }
 [lang='en'] .i18n-footer-desc:before {
   content: 'Share MiaoYan with your friends~';
+}
+
+/* Keep product copy in real HTML so it remains useful without JavaScript or CSS. */
+.copy-en {
+  display: none;
+}
+
+[lang='en'] .copy-zh {
+  display: none;
+}
+
+[lang='en'] .copy-en {
+  display: inline;
+}
+
+.i18n-title:before,
+.i18n-description:before,
+.i18n-feature:before,
+.i18n-miao:before,
+.i18n-miao-desc:before,
+.i18n-mei:before,
+.i18n-mei-desc:before,
+.i18n-kuai:before,
+.i18n-kuai-desc:before,
+.i18n-jian:before,
+.i18n-jian-desc:before,
+.i18n-footer-title:before,
+.i18n-footer-desc:before {
+  content: none !important;
 }

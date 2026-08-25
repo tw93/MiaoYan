@@ -1,0 +1,39 @@
+# MiaoYan (妙言)
+
+> A lightweight, local-first Markdown note-taking app for macOS, built natively with Swift 6.
+
+Official website: https://miaoyan.app/
+Source code: https://github.com/tw93/MiaoYan
+Latest release: https://github.com/tw93/MiaoYan/releases/latest
+Mac App Store: https://apps.apple.com/cn/app/miaoyan/id6759252269
+Product facts: https://yobi.tw93.fun/projects/miaoyan
+Author: Tw93, https://tw93.fun/
+
+## Who it is for
+
+MiaoYan is for people who want a focused, native Mac writing app that keeps ordinary Markdown files in a folder they choose. It does not collect note data. iCloud Drive, Nutstore, Dropbox, or another file-sync client can sync that folder when needed.
+
+## Key capabilities
+
+- Pure Markdown editing with a separate real-time preview
+- Split editor and preview with 60fps bidirectional scroll sync
+- Wikilinks and backlinks
+- LaTeX and Mermaid diagrams
+- Version history, auto-formatting, keyboard shortcuts, and dark mode
+- Markdown presentation mode and a command-line interface
+- Native Swift 6 app with no Electron runtime
+- Requires macOS 11.5 or later
+
+## Installation
+
+- Mac App Store: paid purchase with automatic updates
+- Homebrew: `brew install --cask miaoyan`
+- GitHub Releases: download the latest DMG
+
+All three options use the same codebase and receive the same updates.
+
+## Comparisons
+
+Compared with Typora, MiaoYan does not use a WYSIWYG editor. It keeps the Markdown source and preview separate for people who want direct control of the file.
+
+Compared with Obsidian, MiaoYan has no Electron runtime and is not centered on a plugin ecosystem. It favors a smaller set of built-in writing features and local Markdown files.

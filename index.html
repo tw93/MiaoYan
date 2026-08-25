@@ -1,29 +1,31 @@
 <!DOCTYPE html>
-<html lang="ch">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta name="theme-color" content="#36563C" />
     <meta
       name="viewport"
-      content="width=device-width,initial-scale=1,minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
     <!-- Primary Meta Tags -->
-    <title>妙言</title>
-    <meta name="title" content="妙言" />
+    <title>妙言 MiaoYan - 本地优先的 Mac Markdown 笔记应用</title>
+    <meta name="title" content="妙言 MiaoYan - 本地优先的 Mac Markdown 笔记应用" />
     <meta
       name="description"
       itemprop="description"
-      content="轻灵的 Markdown 笔记本伴你写出妙言~"
+      content="妙言是原生 Swift 开发的轻量 Mac Markdown 笔记应用，文件保存在你选择的本地文件夹，支持分栏编辑预览、双向链接、LaTeX 与 Mermaid。"
     />
+    <link rel="canonical" href="https://miaoyan.app/" />
+    <link rel="alternate" type="text/plain" href="https://miaoyan.app/llms.txt" title="MiaoYan product facts" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://miaoyan.app" />
-    <meta property="og:title" content="妙言" />
+    <meta property="og:url" content="https://miaoyan.app/" />
+    <meta property="og:title" content="妙言 MiaoYan - 本地优先的 Mac Markdown 笔记应用" />
     <meta
       property="og:description"
-      content="轻灵的 Markdown 笔记本伴你写出妙言~"
+      content="原生 Swift 开发，文件保存在你选择的本地文件夹，支持分栏编辑预览、双向链接、LaTeX 与 Mermaid。"
     />
     <meta
       property="og:image"
@@ -34,11 +36,11 @@
     <meta name="twitter:creator" content="HiTw93" />
     <meta name="twitter:site" content="https://miaoyan.app" />
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://miaoyan.app" />
-    <meta property="twitter:title" content="妙言" />
+    <meta property="twitter:url" content="https://miaoyan.app/" />
+    <meta property="twitter:title" content="妙言 MiaoYan - 本地优先的 Mac Markdown 笔记应用" />
     <meta
       property="twitter:description"
-      content="轻灵的 Markdown 笔记本伴你写出妙言~"
+      content="原生 Swift 开发，文件保存在你选择的本地文件夹，支持分栏编辑预览、双向链接、LaTeX 与 Mermaid。"
     />
     <meta
       property="twitter:image"
@@ -61,6 +63,40 @@
       href="https://gw.alipayobjects.com/os/k/jinkai/style.css"
     />
     <link rel="stylesheet" href="./build.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "@id": "https://miaoyan.app/#software",
+        "name": "MiaoYan",
+        "alternateName": "妙言",
+        "url": "https://miaoyan.app/",
+        "downloadUrl": "https://github.com/tw93/MiaoYan/releases/latest",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "macOS 11.5 or later",
+        "description": "A lightweight, local-first Markdown note-taking app for macOS, built with native Swift.",
+        "softwareRequirements": "macOS 11.5 or later",
+        "featureList": [
+          "Local-first Markdown files",
+          "Split editor and preview with bidirectional scroll sync",
+          "Wikilink backlinks",
+          "LaTeX and Mermaid",
+          "Version history and automatic formatting",
+          "Command-line interface"
+        ],
+        "author": {
+          "@type": "Person",
+          "@id": "https://tw93.fun/#person",
+          "name": "Tw93",
+          "url": "https://tw93.fun/"
+        },
+        "sameAs": [
+          "https://github.com/tw93/MiaoYan",
+          "https://apps.apple.com/cn/app/miaoyan/id6759252269",
+          "https://yobi.tw93.fun/projects/miaoyan"
+        ]
+      }
+    </script>
   </head>
   <body class="leading-normal text-white gradient font-letter">
     <a
@@ -79,20 +115,20 @@
         <div
           class="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left"
         >
-          <img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138 />
+          <img src="https://gw.alipayobjects.com/zos/k/t0/43.png" width="138" alt="妙言 MiaoYan app icon" />
           <h1
             class="i18n-title my-4 lg:text-8xl text-7xl tracking-widest"
-          ></h1>
+          ><span class="copy-zh">妙言</span><span class="copy-en">MiaoYan</span></h1>
           <div class="flex flex-row md:w-2/5 text-xm">
             <div
               class="lg:px-3 px-2 py-0.5 rounded-lg border border-yellow-100 border-solid text-white lg:mr-4 mr-3"
             >
-              Swift5
+              Swift 6
             </div>
             <div
               class="lg:px-3 px-2 py-0.5 rounded-lg border border-yellow-100 border-solid text-white lg:mr-4 mr-3"
             >
-              MacOS
+              macOS
             </div>
             <div
               class="lg:px-3 px-2 py-0.5 rounded-lg border border-yellow-100 border-solid text-white lg:mr-4 mr-3"
@@ -102,12 +138,12 @@
             <div
               class="lg:px-3 px-2 py-0.5 rounded-lg border border-yellow-100 border-solid text-white"
             >
-              Free
+              Local-first
             </div>
           </div>
-          <h1
+          <p
             class="i18n-description my-4 lg:text-3xl text-2xl xl:w-max text-left leading-tight"
-          ></h1>
+          ><span class="copy-zh">轻灵、本地优先的 Markdown 笔记应用</span><span class="copy-en">A lightweight, local-first Markdown note-taking app</span></p>
 
           <div class="flex flex-row items-center">
             <a
@@ -138,6 +174,7 @@
             <img
               src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
               class="miaoyan-app-gif w-full z-50 shadow-sm rounded-md"
+              alt="MiaoYan split Markdown editor and preview"
             />
           </div>
         </div>
@@ -185,9 +222,9 @@
       <div
         class="lg:w-full xl:max-w-7xl xl:px-0 lg:px-12 md:px-6 px-2 mx-auto my-4"
       >
-        <h1
+        <h2
           class="i18n-feature w-full my-2 lg:text-6xl text-5xl text-center text-gray-700"
-        ></h1>
+        ><span class="copy-zh">为什么选择妙言</span><span class="copy-en">Why MiaoYan</span></h2>
         <div class="w-full mb-4">
           <div
             class="h-1 mx-auto gradient w-64 opacity-25 my-0 py-0 rounded-t"
@@ -195,17 +232,18 @@
         </div>
         <div class="flex flex-wrap mt-12">
           <div class="w-full sm:w-2/3 p-6">
-            <h1
+            <h2
               class="i18n-miao lg:text-6xl text-5xl text-gray-700 leading-none mb-3"
-            ></h1>
+            ><span class="copy-zh">本地</span><span class="copy-en">Local-first</span></h2>
             <p
               class="i18n-miao-desc text-gray-600 mb-8 mt-8 lg:text-2xl text-xl whitespace-pre-wrap"
-            ></p>
+            ><span class="copy-zh">Markdown 文件保存在你选择的本地文件夹，不收集笔记数据。需要跨设备时，可交给 iCloud Drive、坚果云或你熟悉的文件同步工具。</span><span class="copy-en">Your Markdown files stay in a folder you choose. MiaoYan does not collect note data; iCloud Drive, Nutstore, or another file-sync client can handle cross-device sync.</span></p>
           </div>
           <div class="w-full sm:w-1/3 p-4 lg:-mt-8 sm:mt-8">
             <img
               class="w-4/5 mx-auto"
               src="https://gw.alipayobjects.com/zos/k/43/undraw_happy_music_g6wc.svg"
+              alt="Local Markdown files illustration"
             />
           </div>
         </div>
@@ -214,30 +252,32 @@
             <img
               src="https://gw.alipayobjects.com/zos/k/gg/undraw_preparation_re_t0ce.svg"
               class="w-4/5 mx-auto"
+              alt="Focused writing illustration"
             />
           </div>
           <div class="i18n-mei-view w-full sm:w-2/3 p-6 lg:pl-48">
-            <h1
+            <h2
               class="i18n-mei lg:text-6xl text-5xl text-gray-700 leading-none mb-3"
-            ></h1>
+            ><span class="copy-zh">专注</span><span class="copy-en">Focused</span></h2>
             <p
               class="i18n-mei-desc text-gray-600 mb-8 lg:text-2xl text-xl mt-8 whitespace-pre-wrap"
-            ></p>
+            ><span class="copy-zh">文件夹、笔记列表与编辑器组成清楚的三栏布局。支持深色模式、无干扰写作和常用快捷键，不需要维护插件系统。</span><span class="copy-en">A clear three-column layout keeps folders, notes, and writing together. Dark mode, distraction-free writing, and keyboard shortcuts are built in without a plugin system to maintain.</span></p>
           </div>
         </div>
         <div class="flex flex-wrap mt-12">
           <div class="w-full sm:w-2/3 p-6">
-            <h1
+            <h2
               class="i18n-kuai lg:text-6xl text-5xl text-gray-700 leading-none mb-3"
-            ></h1>
+            ><span class="copy-zh">原生</span><span class="copy-en">Native</span></h2>
             <p
               class="i18n-kuai-desc text-gray-600 mb-8 mt-8 lg:text-2xl text-xl whitespace-pre-wrap"
-            ></p>
+            ><span class="copy-zh">使用 Swift 6 原生开发，不依赖 Electron。分栏模式提供实时预览与 60fps 双向滚动同步，适合专注处理纯 Markdown。</span><span class="copy-en">Built natively with Swift 6 instead of Electron. Split mode pairs real-time preview with 60fps bidirectional scroll sync for focused Markdown editing.</span></p>
           </div>
           <div class="w-full sm:w-1/3 p-4 lg:-mt-8 sm:mt-0">
             <img
               src="https://gw.alipayobjects.com/zos/k/kb/undraw_outer_space_re_u9vd.svg"
               class="w-4/5 mx-auto"
+              alt="Native Swift performance illustration"
             />
           </div>
         </div>
@@ -246,16 +286,37 @@
             <img
               src="https://gw.alipayobjects.com/zos/k/gp/undraw_learning_sketching_nd4f.svg"
               class="w-4/5 mx-auto"
+              alt="Markdown features illustration"
             />
           </div>
           <div class="i18n-jian-view w-full sm:w-2/3 p-6 lg:pl-48">
-            <h1
+            <h2
               class="i18n-jian lg:text-6xl text-5xl text-gray-700 leading-none mb-3"
-            ></h1>
+            ><span class="copy-zh">够用</span><span class="copy-en">Capable</span></h2>
             <p
               class="i18n-jian-desc text-gray-600 mb-8 lg:text-2xl text-xl mt-8 whitespace-pre-wrap"
-            ></p>
+            ><span class="copy-zh">支持双向链接与反向链接、LaTeX、Mermaid、版本历史、自动排版和命令行操作，也能用 PPT 模式演示 Markdown。</span><span class="copy-en">Wikilinks and backlinks, LaTeX, Mermaid, version history, auto-formatting, a CLI, and Markdown presentations cover the work around writing.</span></p>
           </div>
+        </div>
+      </div>
+    </section>
+    <section class="bg-slate-50 border-b py-12 text-gray-700">
+      <div class="max-w-5xl mx-auto px-6">
+        <h2 class="text-4xl lg:text-5xl text-center mb-10"><span class="copy-zh">妙言适合谁</span><span class="copy-en">Who MiaoYan is for</span></h2>
+        <div class="grid md:grid-cols-2 gap-6 text-lg leading-relaxed">
+          <article class="bg-white rounded-xl p-6 shadow-sm">
+            <h3 class="text-2xl mb-3"><span class="copy-zh">和 Typora 相比</span><span class="copy-en">Compared with Typora</span></h3>
+            <p><span class="copy-zh">妙言不做所见即所得编辑，而是保留纯 Markdown 编辑与独立预览。它更适合希望直接掌控源文件，又需要即时预览的人。</span><span class="copy-en">MiaoYan keeps pure Markdown editing and a separate preview instead of WYSIWYG. It fits people who want direct control of source files with immediate visual feedback.</span></p>
+          </article>
+          <article class="bg-white rounded-xl p-6 shadow-sm">
+            <h3 class="text-2xl mb-3"><span class="copy-zh">和 Obsidian 相比</span><span class="copy-en">Compared with Obsidian</span></h3>
+            <p><span class="copy-zh">妙言没有 Electron 运行时，也不以插件生态为中心。它更适合想要原生、轻量、本地文件和少量内置能力的人。</span><span class="copy-en">MiaoYan has no Electron runtime and is not centered on a plugin ecosystem. It fits people who prefer a native, lightweight app with local files and focused built-in features.</span></p>
+          </article>
+        </div>
+        <div class="text-center mt-10 text-lg">
+          <p><span class="copy-zh">支持 macOS 11.5 及以上，可从 Mac App Store、Homebrew 或 GitHub Releases 安装。</span><span class="copy-en">Requires macOS 11.5 or later. Install from the Mac App Store, Homebrew, or GitHub Releases.</span></p>
+          <p class="mt-4"><code class="bg-white rounded px-3 py-2">brew install --cask miaoyan</code></p>
+          <p class="mt-6"><a class="underline" href="https://github.com/tw93/MiaoYan/releases/latest">GitHub Releases</a> · <a class="underline" href="https://yobi.tw93.fun/projects/miaoyan">MiaoYan product facts</a></p>
         </div>
       </div>
     </section>
@@ -295,16 +356,16 @@
       </g>
     </svg>
     <section class="container mx-auto text-center py-6 mb-6">
-      <h1
+      <h2
         class="i18n-footer-title w-full my-2 lg:text-6xl text-5xl text-center text-white"
-      ></h1>
+      ><span class="copy-zh">觉得不错？</span><span class="copy-en">Like MiaoYan?</span></h2>
       <div class="w-full mb-4">
         <div
           class="h-1 mx-auto bg-white w-64 opacity-25 my-0 py-0 rounded-t"
         ></div>
       </div>
 
-      <h3 class="i18n-footer-desc my-8 lg:text-3xl text-2xl leading-tight"></h3>
+      <h3 class="i18n-footer-desc my-8 lg:text-3xl text-2xl leading-tight"><span class="copy-zh">把妙言分享给同样喜欢纯 Markdown 的朋友</span><span class="copy-en">Share it with a friend who likes plain Markdown</span></h3>
       <a
         href="https://twitter.com/intent/tweet?text=%E5%A6%99%E8%A8%80%20-%20%E4%B8%80%E4%B8%AA%E7%AE%80%E6%B4%81%E5%A5%BD%E7%9C%8B%E7%9A%84%E5%BC%80%E6%BA%90%E7%9A%84%20Mac%20%20Markdown%20%E7%BC%96%E8%BE%91%E5%99%A8%EF%BC%8C%E6%B2%A1%E6%9C%89%E4%BB%BB%E4%BD%95%E5%A4%9A%E4%BD%99%E7%9A%84%E5%8A%9F%E8%83%BD%EF%BC%8C%E4%BD%BF%E7%94%A8%E5%8E%9F%E7%94%9F%20Swift%20%E5%BC%80%E5%8F%91%EF%BC%8C%E8%BD%BB%E9%87%8F%E6%80%A7%E8%83%BD%E9%AB%98%EF%BC%8C%E5%AE%89%E5%85%A8%E7%BA%AF%E6%9C%AC%E5%9C%B0%E4%BD%BF%E7%94%A8%EF%BC%8C%E5%85%B7%E5%A4%87%E8%AF%AD%E6%B3%95%E9%AB%98%E4%BA%AE%E3%80%81%E9%BB%91%E6%9A%97%E6%A8%A1%E5%BC%8F%E3%80%81%E8%87%AA%E5%8A%A8%E6%A0%BC%E5%BC%8F%E5%8C%96%E3%80%81%E5%8D%95%E7%8B%AC%E7%BC%96%E8%BE%91%E3%80%81%E6%BC%94%E7%A4%BA%E6%A8%A1%E5%BC%8F%E3%80%81%E5%9B%BE%E5%BA%8A%E7%AD%89%E5%8A%9F%E8%83%BD%E3%80%82&url=https://miaoyan.app&via=HiTw93"
         target="_blank"
@@ -322,7 +383,6 @@
       </div>
     </section>
     <script>
-      const ua = window.navigator.userAgent.toLowerCase();
       const langStorage = localStorage.getItem('miaoyanLang');
       const $gif = document.querySelector('.miaoyan-app-gif');
       const $html = document.querySelector('html');
@@ -334,12 +394,12 @@
           $html.setAttribute('lang', lang);
           localStorage.setItem('miaoyanLang', lang);
           if (lang === 'en') {
-            document.title = 'MiaoYan';
+            document.title = 'MiaoYan - Local-first Markdown notes for Mac';
             document
               .querySelector('meta[name="description"]')
               .setAttribute(
                 'content',
-                'Lightweight Markdown app to help you write great sentences.',
+                'A lightweight, local-first Markdown note-taking app for macOS, built natively with Swift 6.',
               );
 
             $gif.setAttribute(
@@ -351,10 +411,10 @@
               'https://twitter.com/intent/tweet?text=%23%E5%A6%99%E8%A8%80%20MiaoYan%20-%20a%20simple%20and%20good-looking%20open-source%20mac%20markdown%20editor,%20without%20any%20redundant%20functions,%20is%20developed%20using%20swift,%20pure%20local%20use,%20has%20functions%20such%20as%20syntax%20highlighting,%20automatic%20formatting,%20presentation%20mode%20etc.&url=https://miaoyan.app',
             );
           } else {
-            document.title = '妙言';
+            document.title = '妙言 MiaoYan - 本地优先的 Mac Markdown 笔记应用';
             document
               .querySelector('meta[name="description"]')
-              .setAttribute('content', '轻灵的 Markdown 笔记本伴你写出妙言~');
+              .setAttribute('content', '妙言是原生 Swift 开发的轻量 Mac Markdown 笔记应用，文件保存在你选择的本地文件夹。');
 
             $gif.setAttribute(
               'src',
@@ -369,14 +429,16 @@
         $langSwitch.onclick = () => {
           const $html = document.querySelector('html');
           const lang = $html.getAttribute('lang');
-          setLang(lang == 'ch' ? 'en' : 'ch');
+          setLang(lang === 'zh-CN' ? 'en' : 'zh-CN');
         };
 
-        if (['en', 'ch'].indexOf(langStorage) > -1) {
+        if (langStorage === 'ch') {
+          setLang('zh-CN');
+        } else if (['en', 'zh-CN'].indexOf(langStorage) > -1) {
           setLang(langStorage);
         } else {
           if (navigator.language === 'zh-CN') {
-            setLang('ch');
+            setLang('zh-CN');
           } else {
             setLang('en');
           }
