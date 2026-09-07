@@ -6,7 +6,6 @@ Official website: https://miaoyan.app/
 Source code: https://github.com/tw93/MiaoYan
 Latest release: https://github.com/tw93/MiaoYan/releases/latest
 Mac App Store: https://apps.apple.com/cn/app/miaoyan/id6759252269
-Product facts: https://yobi.tw93.fun/projects/miaoyan
 Author: Tw93, https://tw93.fun/
 
 ## Who it is for
