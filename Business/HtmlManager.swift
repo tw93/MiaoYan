@@ -73,6 +73,18 @@ class HtmlManager {
                     --pdf-code-bg: #f6f2ea;
                     --pdf-quote-bg: #f3f7f2;
                 }
+                /* The PDF path captures the live preview's DOM as-is, so a
+                   dark-theme export still carries `.darkmode * { color:
+                   var(--text-color) }`, which paints every element. The rules
+                   below outrank it only on the selectors they name, so list
+                   items, emphasis and KaTeX spans kept the dark theme's
+                   #E7E9EA on white paper (#559). Repointing the variable
+                   catches all of them at once, and the page is always white
+                   here, so there is nothing a light value could be right for. */
+                :root, .darkmode {
+                    --text-color: var(--pdf-ink) !important;
+                    --bg-color: #ffffff !important;
+                }
                 html, body {
                     margin: 0 !important;
                     padding: 0 !important;
