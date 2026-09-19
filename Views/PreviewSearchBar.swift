@@ -373,12 +373,21 @@ extension PreviewSearchBar: NSSearchFieldDelegate {
 }
 
 extension PreviewSearchBar {
+    /// Perceived brightness of `color`, or nil when it cannot be resolved.
+    fileprivate static func luminance(of color: NSColor) -> CGFloat? {
+        guard let rgb = color.usingColorSpace(.sRGB) else { return nil }
+        return 0.2126 * rgb.redComponent + 0.7152 * rgb.greenComponent + 0.0722 * rgb.blueComponent
+    }
+
+    fileprivate static func isDarkPanel(_ color: NSColor) -> Bool {
+        (luminance(of: color) ?? 1) < 0.5
+    }
+
     fileprivate static func panelBackgroundColor(base: NSColor) -> NSColor {
         guard let rgb = base.usingColorSpace(.sRGB) else {
             return base
         }
-        let luminance = 0.2126 * rgb.redComponent + 0.7152 * rgb.greenComponent + 0.0722 * rgb.blueComponent
-        if luminance < 0.5 {
+        if isDarkPanel(rgb) {
             // Dark mode: deepen the tone slightly for clearer separation
             return (rgb.shadow(withLevel: 0.18) ?? rgb)
         } else {
@@ -392,14 +401,22 @@ extension PreviewSearchBar {
         let panelColor = PreviewSearchBar.panelBackgroundColor(base: panelBaseColor)
         layer?.backgroundColor = panelColor.cgColor
 
+        // The fill is a computed colour, but the search field, the match count
+        // and every SF Symbol glyph render against the view's own appearance,
+        // which is the window's. On a dark panel inside a light window that
+        // left near-black chevrons and a close button on a near-black bar,
+        // and a bright search field beside them (#557). Pin the appearance to
+        // the panel so all of them follow the surface they sit on, the way
+        // Toast pins its hairline to the dark pill it draws.
+        appearance = NSAppearance(named: PreviewSearchBar.isDarkPanel(panelColor) ? .darkAqua : .aqua)
+
         updateShadowAppearance(for: panelColor)
         applyCornerMask()
     }
 
     fileprivate func updateShadowAppearance(for color: NSColor) {
-        guard wantsLayer, let rgb = color.usingColorSpace(.sRGB) else { return }
-        let luminance = 0.2126 * rgb.redComponent + 0.7152 * rgb.greenComponent + 0.0722 * rgb.blueComponent
-        if luminance < 0.5 {
+        guard wantsLayer, PreviewSearchBar.luminance(of: color) != nil else { return }
+        if PreviewSearchBar.isDarkPanel(color) {
             layer?.shadowColor = NSColor.black.cgColor
             layer?.shadowOpacity = 0.45
             layer?.shadowRadius = 12
