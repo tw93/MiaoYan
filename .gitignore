@@ -108,7 +108,7 @@ fonts/
 # only the per-user overrides and private skills stay local.
 CLAUDE.local.md
 AGENTS.override.md
-.claude/
+.claude/settings.local.json
 .agents/settings.local.json
 
 # Local AI Assistant files
