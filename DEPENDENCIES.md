@@ -1,8 +1,8 @@
 # MiaoYan Dependencies
 
-This document is the source of truth for runtime dependencies. It is verified
-against `Package.swift` in CI (see `.github/workflows/ci.yml`); divergence
-fails the build.
+This document is the source of truth for runtime dependencies. Nothing
+enforces it, so keep the table below aligned with `Package.swift` by hand, in
+the same commit. Removals matter as much as additions.
 
 ## Swift Package Manager
 
@@ -45,8 +45,8 @@ they are documented in a separate manifest:
 ## Working with Dependencies
 
 Add a new SPM dependency via Xcode (File > Add Package Dependencies...) and
-**also** add a line to `Package.swift` in the same commit. CI fails if the
-two diverge.
+**also** add a line to `Package.swift` and a row to the table above in the
+same commit.
 
 Updating versions:
 

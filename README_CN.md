@@ -100,7 +100,6 @@ miao update             # 更新 CLI
 - [stackotter/swift-cmark-gfm](https://github.com/stackotter/swift-cmark-gfm) - Swift Markdown 解析器
 - [simonbs/Prettier](https://github.com/simonbs/Prettier) - Markdown 格式化工具
 - [raspu/Highlightr](https://github.com/raspu/Highlightr) - 语法高亮支持
-- [仓耳字库](https://tsanger.cn/product) - 仓耳今楷字体(默认字体)
 - [hakimel/reveal.js](https://github.com/hakimel/reveal.js) - PPT 演示框架
 ## 协议
 
