@@ -14,6 +14,10 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+# Nothing here writes to the repo: build, lint and render release notes only.
+permissions:
+  contents: read
+
 jobs:
   build-mac:
     name: macOS build
