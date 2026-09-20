@@ -10,6 +10,7 @@ class MiaoYanApp {
   initialize() {
     // Use common module for interactive checkboxes
     if (window.MiaoYanCommon) {
+      MiaoYanCommon.wrapWideTables();
       MiaoYanCommon.setupInteractiveCheckboxes();
     }
   }

@@ -635,9 +635,14 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 """)
         }
 
-        // Always re-initialize lazy loading after content update
+        // Always re-initialize lazy loading after content update. The table
+        // wrappers go back on here too: the innerHTML assignment above replaces
+        // every table, so the one app.js added at load time is gone by now.
         initScripts.append(
             """
+                if (window.MiaoYanCommon && typeof window.MiaoYanCommon.wrapWideTables === 'function') {
+                    window.MiaoYanCommon.wrapWideTables();
+                }
                 if (window.MiaoYanCommon && typeof window.MiaoYanCommon.optimizeImages === 'function') {
                     window.MiaoYanCommon.optimizeImages();
                 }

@@ -137,6 +137,17 @@ class HtmlManager {
                 .miaoyan-mermaid, .md-diagram-panel {
                     page-break-inside: avoid;
                 }
+                /* Paper cannot scroll, so the on-screen table wrapper gives way
+                   here and the table goes back to fitting the page, which is
+                   what it did before the wrapper existed (#560). */
+                .table-scroll {
+                    overflow: visible !important;
+                }
+                .heti table {
+                    min-width: 0 !important;
+                    width: 100% !important;
+                    table-layout: fixed !important;
+                }
                 p {
                     color: var(--pdf-ink) !important;
                 }
@@ -201,6 +212,7 @@ class HtmlManager {
                 .heti ul, .heti ol,
                 .heti blockquote,
                 .heti table,
+                .heti .table-scroll,
                 .heti pre,
                 .heti hr,
                 .heti figure {

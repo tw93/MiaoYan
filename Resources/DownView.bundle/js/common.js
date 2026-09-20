@@ -50,6 +50,20 @@ const MiaoYanCommon = {
     });
   },
 
+  // Give every rendered table a scroll container. Doing it here rather than in
+  // the Markdown renderer keeps the generated HTML plain, and a table whose
+  // content cannot shrink (a KaTeX formula, an unbreakable token) then scrolls
+  // instead of disappearing under #write's `overflow-x: hidden` (#560).
+  wrapWideTables() {
+    document.querySelectorAll('#write table').forEach((table) => {
+      if (table.parentElement?.classList.contains('table-scroll')) return;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'table-scroll';
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+  },
+
   setupInteractiveCheckboxes() {
     this.setupCheckboxes();
 

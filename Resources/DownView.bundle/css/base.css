@@ -85,13 +85,36 @@ pre code {
 }
 
 /* ==================== Tables ==================== */
+/* Tables keep their own layout box so print, borders and cell backgrounds all
+   behave; the scroll lives on a wrapper that app.js puts around each table.
+   `min-width: 100%` makes an ordinary table span the column as it always did,
+   while a table with content that cannot shrink (a formula, a long token) grows
+   past the wrapper and the wrapper scrolls. `table-layout: fixed` is gone: it
+   forced equal columns, and combined with `overflow-x: hidden` on #write it put
+   the overflow permanently out of reach (#560). */
 .heti table {
   border-color: var(--border-color);
   color: var(--text-color);
-  display: block;
+  min-width: 100%;
+  box-sizing: border-box;
+}
+
+/* The block margins move from the table to the wrapper. `overflow-x` makes the
+   wrapper a block formatting context, so a margin left on the table can no
+   longer collapse with the paragraph next to it: keeping them there adds 36px
+   around every table, and puts the first/last-child margin resets on the wrapper
+   instead of on the table they were written for. */
+.heti .table-scroll {
   overflow-x: auto;
   max-width: 100%;
-  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+  margin-block-start: 0.8em;
+  margin-block-end: 1.6em;
+}
+
+.heti .table-scroll > table {
+  margin-block-start: 0;
+  margin-block-end: 0;
 }
 
 .heti th,
