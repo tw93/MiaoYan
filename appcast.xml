@@ -5,8 +5,7 @@
     <item>
       <title>4.3.0</title>
       <link>https://github.com/tw93/MiaoYan/releases</link>
-      <description><![CDATA[
-  <h3>Changelog</h3>
+      <description xml:lang="en"><![CDATA[
   <ol>
     <li>The minimum requirement moves to macOS 12; 4.2.0 is the last release for macOS 11</li>
     <li>Wide tables scroll horizontally, columns size to their content, and cells no longer break words mid-token</li>
@@ -17,7 +16,8 @@
     <li>The bundled commercial font is replaced by system typography, with saved selections migrated and custom faces untouched</li>
     <li>Reopening the window restores the preview mode that was in use instead of falling back to the default</li>
   </ol>
-  <h3>更新日志</h3>
+          ]]>      </description>
+      <description xml:lang="zh-Hans"><![CDATA[
   <ol>
     <li>最低系统要求提升到 macOS 12，macOS 11 的最后一个版本是 4.2.0</li>
     <li>宽表格现在可以横向滚动，列宽按内容分配，单元格不再从单词中间断开</li>
