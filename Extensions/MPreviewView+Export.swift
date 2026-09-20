@@ -256,6 +256,9 @@ extension MPreviewView {
                    }
             """
             : ""
+        // A snapshot cannot scroll, so the preview's table wrapper gives way here
+        // the same way it does on paper: the table goes back to fitting the
+        // column, which is what the PNG captured before the wrapper existed.
         let exportLayoutCSS = """
                \(layoutCSS)
                .toc-hover-trigger,
@@ -263,6 +266,14 @@ extension MPreviewView {
                .toc-nav {
                    display: none !important;
                    pointer-events: none !important;
+               }
+               .table-scroll {
+                   overflow: visible !important;
+               }
+               .heti table {
+                   min-width: 0 !important;
+                   width: 100% !important;
+                   table-layout: fixed !important;
                }
             """
         // Remove trailing whitespace and closing brace from mediaCSS to insert exportLayoutCSS inside the media query
