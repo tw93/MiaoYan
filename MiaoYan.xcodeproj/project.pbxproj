@@ -93,6 +93,7 @@
 		4E240503121F054AEB3DDDCC /* MiaoYanTests/ImageLinkParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D372825902F0E2A6F8CCF40 /* MiaoYanTests/ImageLinkParserTests.swift */; };
 		548A1B2C3D4E5F60718293A4 /* MiaoYanTests/MermaidExportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 548B1B2C3D4E5F60718293A4 /* MiaoYanTests/MermaidExportTests.swift */; };
 		A4CADB8809D34E1C9C3267F5 /* MiaoYanTests/HtmlManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E4FEFFB4E4C108508945B /* MiaoYanTests/HtmlManagerTests.swift */; };
+		5E50D8CD9B09BE3DDE5F7A2A /* MiaoYanTests/FontCatalogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE67FEBD522A792BEACDDC75 /* MiaoYanTests/FontCatalogTests.swift */; };
 		33F1E2FF1B56462C8C96769E /* MiaoYanTests/PrefsWindowControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D206592CF7404E1D9AF623FD /* MiaoYanTests/PrefsWindowControllerTests.swift */; };
 		452D621FD0BD8D78F323777C /* MiaoYanTests/GitHubAlertsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */; };
 		F51B4048259C36431AF78CA5 /* MiaoYanTests/NoteFrontmatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */; };
@@ -113,6 +114,7 @@
 		6E47052AE52C4762B0C8640F /* WikilinkIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5045CD50BB4556AAB3F390 /* WikilinkIndex.swift */; };
 		6EB32CA84A9FE302AB9534A0 /* NotesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799BE3B629AEB2051AF69AB2 /* NotesListView.swift */; };
 		6ebaaf6024d941179530c9dc966d60c6 /* FontConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = b2384ca08b9b4d1389a7bf4e0ae47758 /* FontConfiguration.swift */; };
+		3b5e801ceb5d752d31b64f0f18d8ff60 /* FontCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96abbc94aea8fefa85d6bd3fb488f38a /* FontCatalog.swift */; };
 		7328EA4137FF1DA9090A281E /* Business/AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E38D0BC1B6A40BDD6D98E4F5 /* Business/AppEnvironment.swift */; };
 		7A1F0C6B57054F9C9A0C7BBB /* PinService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95B671C2C7154C33A6BDCBBB /* PinService.swift */; };
 		8A77E867900A4918AFD5B168 /* MPreviewView+Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE6142E8B5D4BB380FC2B38 /* MPreviewView+Search.swift */; };
@@ -314,6 +316,7 @@
 		862CEAF6F6034A969D40B0D4 /* MiaoYanMobileApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MiaoYanMobileApp.swift; path = MiaoYanMobile/App/MiaoYanMobileApp.swift; sourceTree = SOURCE_ROOT; };
 		8D372825902F0E2A6F8CCF40 /* MiaoYanTests/ImageLinkParserTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/ImageLinkParserTests.swift; sourceTree = SOURCE_ROOT; };
 		8B8E4FEFFB4E4C108508945B /* MiaoYanTests/HtmlManagerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/HtmlManagerTests.swift; sourceTree = SOURCE_ROOT; };
+		CE67FEBD522A792BEACDDC75 /* MiaoYanTests/FontCatalogTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/FontCatalogTests.swift; sourceTree = SOURCE_ROOT; };
 		D206592CF7404E1D9AF623FD /* MiaoYanTests/PrefsWindowControllerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/PrefsWindowControllerTests.swift; sourceTree = SOURCE_ROOT; };
 		C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/GitHubAlertsTests.swift; sourceTree = SOURCE_ROOT; };
 		7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/NoteFrontmatterTests.swift; sourceTree = SOURCE_ROOT; };
@@ -398,6 +401,7 @@
 		E781F9F37C5B57FD7F09C19D /* MiaoYanMobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiaoYanMobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFF5878451919D13759B1D46 /* FileReader.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileReader.swift; path = MiaoYanMobile/Services/FileReader.swift; sourceTree = SOURCE_ROOT; };
 		b2384ca08b9b4d1389a7bf4e0ae47758 /* FontConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontConfiguration.swift; sourceTree = "<group>"; };
+		96abbc94aea8fefa85d6bd3fb488f38a /* FontCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontCatalog.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -489,6 +493,7 @@
 			children = (
 				8D372825902F0E2A6F8CCF40 /* MiaoYanTests/ImageLinkParserTests.swift */,
 				8B8E4FEFFB4E4C108508945B /* MiaoYanTests/HtmlManagerTests.swift */,
+				CE67FEBD522A792BEACDDC75 /* MiaoYanTests/FontCatalogTests.swift */,
 				D206592CF7404E1D9AF623FD /* MiaoYanTests/PrefsWindowControllerTests.swift */,
 				85B6B5476B1CDFF39BDE0E63 /* MiaoYanTests/StringExtensionsTests.swift */,
 				95948F99423D28CB53271964 /* MiaoYanTests/WikilinkIndexTests.swift */,
@@ -615,6 +620,7 @@
 			isa = PBXGroup;
 			children = (
 				b2384ca08b9b4d1389a7bf4e0ae47758 /* FontConfiguration.swift */,
+				96abbc94aea8fefa85d6bd3fb488f38a /* FontCatalog.swift */,
 				278160912E75551F00F3D54B /* PrefsModel.swift */,
 				D7038E2520FB24E000A54E69 /* NoteAttachment.swift */,
 				D7B6E599207912E300FE0E20 /* Project.swift */,
@@ -1004,6 +1010,7 @@
 			files = (
 				4E240503121F054AEB3DDDCC /* MiaoYanTests/ImageLinkParserTests.swift in Sources */,
 				A4CADB8809D34E1C9C3267F5 /* MiaoYanTests/HtmlManagerTests.swift in Sources */,
+				5E50D8CD9B09BE3DDE5F7A2A /* MiaoYanTests/FontCatalogTests.swift in Sources */,
 				33F1E2FF1B56462C8C96769E /* MiaoYanTests/PrefsWindowControllerTests.swift in Sources */,
 				63F4C8DCD1C90B42E40F8C74 /* MiaoYanTests/StringExtensionsTests.swift in Sources */,
 				D66760150F65F7A76FB578AD /* MiaoYanTests/WikilinkIndexTests.swift in Sources */,
@@ -1093,6 +1100,7 @@
 				27C34C0E28928D0B007369E5 /* Emoji.swift in Sources */,
 				D7CE196C1FA4BA5E004BF8EE /* PreviewTextField.swift in Sources */,
 				6ebaaf6024d941179530c9dc966d60c6 /* FontConfiguration.swift in Sources */,
+				3b5e801ceb5d752d31b64f0f18d8ff60 /* FontCatalog.swift in Sources */,
 				278160922E75551F00F3D54B /* PrefsModel.swift in Sources */,
 				D7A415141F2FBDA00099B82C /* NotesTableView.swift in Sources */,
 				D7315ECF215ECF3000AB49D4 /* EditorView.swift in Sources */,

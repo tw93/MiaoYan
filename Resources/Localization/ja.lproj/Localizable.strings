@@ -301,3 +301,9 @@
 "Created" = "作成";
 "Backlinks" = "バックリンク";
 "Project name" = "フォルダ名";
+"Recommended" = "おすすめ";
+"All Fonts" = "すべてのフォント";
+"Not installed" = "未インストール";
+"Install the font first" = "先にフォントをインストールしてください";
+"MiaoYan no longer ships this font. Download and install it from the foundry, then pick it here." = "MiaoYan はこのフォントを同梱しなくなりました。配布元からダウンロードしてインストールすると、ここで選べます。";
+"Open Download Page" = "ダウンロードページを開く";

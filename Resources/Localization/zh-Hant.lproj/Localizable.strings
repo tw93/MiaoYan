@@ -278,3 +278,9 @@
 "Created" = "建立";
 "Backlinks" = "反向連結";
 "Project name" = "資料夾名稱";
+"Recommended" = "推薦";
+"All Fonts" = "全部字體";
+"Not installed" = "未安裝";
+"Install the font first" = "需要先安裝字型";
+"MiaoYan no longer ships this font. Download and install it from the foundry, then pick it here." = "妙言不再內建這個字型，去字庫官網下載安裝之後，回到這裡就能選。";
+"Open Download Page" = "開啟下載頁";

@@ -53,11 +53,11 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         fontPopUp.action = fontAction
         // Initialize with the correct current font for this row
         if fontAction == #selector(editorFontChanged(_:)) {
-            setupFontPopUp(fontPopUp, currentName: settings.editorFontName)
+            setupFontPopUp(fontPopUp, kind: .text, currentName: settings.editorFontName)
         } else if fontAction == #selector(previewFontChanged(_:)) {
-            setupFontPopUp(fontPopUp, currentName: settings.previewFontName)
+            setupFontPopUp(fontPopUp, kind: .text, currentName: settings.previewFontName)
         } else {
-            setupFontPopUp(fontPopUp, currentName: nil)
+            setupFontPopUp(fontPopUp, kind: .text, currentName: nil)
         }
 
         let sizePopUp = NSPopUpButton()
@@ -80,11 +80,11 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         popUp.action = action
 
         if action == #selector(codeFontChanged(_:)) {
-            setupFontPopUp(popUp, currentName: settings.codeFontName)
+            setupFontPopUp(popUp, kind: .code, currentName: settings.codeFontName)
         } else if action == #selector(windowFontChanged(_:)) {
-            setupFontPopUp(popUp, currentName: settings.windowFontName)
+            setupFontPopUp(popUp, kind: .text, currentName: settings.windowFontName)
         } else {
-            setupFontPopUp(popUp, currentName: nil)
+            setupFontPopUp(popUp, kind: .text, currentName: nil)
         }
 
         return makePreferencesRow(labelText: label, control: popUp)
@@ -100,22 +100,76 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         return makePreferencesRow(labelText: label, control: popUp, controlWidth: PrefsFormMetrics.compactControlWidth)
     }
 
-    private func setupFontPopUp(_ popUp: NSPopUpButton, currentName: String?) {
+    private func setupFontPopUp(_ popUp: NSPopUpButton, kind: FontListKind, currentName: String?) {
         popUp.removeAllItems()
+        guard let menu = popUp.menu else { return }
 
-        for family in NSFontManager.shared.availableFontFamilies.sorted() {
-            popUp.addItem(withTitle: family)
+        let recommended = FontCatalog.installedRecommendations(for: kind)
+        let missingRetired =
+            kind == .text && !FontCatalog.isInstalled(family: FontCatalog.retiredBundledFamily)
+            ? FontCatalog.retiredBundledFamily : nil
+
+        if !recommended.isEmpty || missingRetired != nil {
+            menu.addItem(sectionHeader(I18n.str("Recommended")))
+            for family in recommended { menu.addItem(fontItem(title: family)) }
+            if let missing = missingRetired {
+                let item = fontItem(title: "\(missing) (\(I18n.str("Not installed")))")
+                item.representedObject = Self.retiredFontMarker
+                menu.addItem(item)
+            }
+            menu.addItem(.separator())
+            menu.addItem(sectionHeader(I18n.str("All Fonts")))
         }
 
-        // Add current value if not in the list and select it
-        if let name = currentName, !name.isEmpty, !popUp.itemTitles.contains(name) {
-            popUp.addItem(withTitle: name)
-        }
+        let rest = FontCatalog.families(for: kind).filter { !recommended.contains($0) }
+        for family in rest { menu.addItem(fontItem(title: family)) }
 
-        // Select the current font after all items are added
-        if let name = currentName, !name.isEmpty {
-            popUp.selectItem(withTitle: name)
+        // A stored value can be a PostScript name, or a face this popup filters
+        // out, or one that is no longer installed. Resolve it to a family, then
+        // keep it as its own row when it still is not here, so the popup shows
+        // what is in effect rather than silently selecting something else.
+        guard let name = currentName, !name.isEmpty else { return }
+        let family = FontCatalog.familyName(forStored: name)
+        if !popUp.itemTitles.contains(family) {
+            menu.addItem(.separator())
+            menu.addItem(fontItem(title: family))
         }
+        popUp.selectItem(withTitle: family)
+    }
+
+    private static let retiredFontMarker = "retired-bundled-font"
+
+    private func sectionHeader(_ title: String) -> NSMenuItem {
+        let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
+        item.isEnabled = false
+        return item
+    }
+
+    private func fontItem(title: String) -> NSMenuItem {
+        NSMenuItem(title: title, action: nil, keyEquivalent: "")
+    }
+
+    /// Returns the family to store, or nil when the row was the retired face and
+    /// the popup should bounce back to what it had.
+    private func resolveSelection(_ sender: NSPopUpButton, previous: String) -> String? {
+        guard let item = sender.selectedItem else { return nil }
+        guard item.representedObject as? String == Self.retiredFontMarker else { return item.title }
+        sender.selectItem(withTitle: FontCatalog.familyName(forStored: previous))
+        presentRetiredFontGuidance()
+        return nil
+    }
+
+    private func presentRetiredFontGuidance() {
+        let alert = NSAlert()
+        alert.messageText = I18n.str("Install the font first")
+        alert.informativeText = I18n.str(
+            "MiaoYan no longer ships this font. Download and install it from the foundry, then pick it here.")
+        alert.addButton(withTitle: I18n.str("Open Download Page"))
+        alert.addButton(withTitle: I18n.str("Cancel"))
+        guard alert.runModal() == .alertFirstButtonReturn,
+            let url = URL(string: FontCatalog.retiredBundledDownloadURL)
+        else { return }
+        NSWorkspace.shared.open(url)
     }
 
     private func setupFontSizePopUp(_ popUp: NSPopUpButton) {
@@ -158,8 +212,7 @@ final class TypographyPrefsViewController: BasePrefsViewController {
 
     // MARK: - Actions
     @objc private func editorFontChanged(_ sender: NSPopUpButton) {
-        guard let item = sender.selectedItem else { return }
-        let actualFontName = item.title
+        guard let actualFontName = resolveSelection(sender, previous: settings.editorFontName) else { return }
         settings.editorFontName = actualFontName
         settings.applyChanges()
     }
@@ -171,8 +224,7 @@ final class TypographyPrefsViewController: BasePrefsViewController {
     }
 
     @objc private func windowFontChanged(_ sender: NSPopUpButton) {
-        guard let item = sender.selectedItem else { return }
-        let actualFontName = item.title
+        guard let actualFontName = resolveSelection(sender, previous: settings.windowFontName) else { return }
         if settings.windowFontName == actualFontName { return }
         settings.windowFontName = actualFontName
         // Live-apply interface font without restart
@@ -182,8 +234,7 @@ final class TypographyPrefsViewController: BasePrefsViewController {
     }
 
     @objc private func previewFontChanged(_ sender: NSPopUpButton) {
-        guard let item = sender.selectedItem else { return }
-        let actualFontName = item.title
+        guard let actualFontName = resolveSelection(sender, previous: settings.previewFontName) else { return }
         settings.previewFontName = actualFontName
         settings.applyChanges()
     }
@@ -195,8 +246,7 @@ final class TypographyPrefsViewController: BasePrefsViewController {
     }
 
     @objc private func codeFontChanged(_ sender: NSPopUpButton) {
-        guard let item = sender.selectedItem else { return }
-        let actualFontName = item.title
+        guard let actualFontName = resolveSelection(sender, previous: settings.codeFontName) else { return }
         settings.codeFontName = actualFontName
         NotesTextProcessor.codeFont = NSFont(name: settings.codeFontName, size: CGFloat(settings.editorFontSize))
         settings.applyChanges()

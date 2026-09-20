@@ -299,3 +299,9 @@
 "Created" = "Creado";
 "Backlinks" = "Enlaces inversos";
 "Project name" = "Nombre de carpeta";
+"Recommended" = "Recomendadas";
+"All Fonts" = "Todas las fuentes";
+"Not installed" = "No instalada";
+"Install the font first" = "Instala la fuente primero";
+"MiaoYan no longer ships this font. Download and install it from the foundry, then pick it here." = "MiaoYan ya no incluye esta fuente. Descárgala e instálala desde la fundición tipográfica y vuelve aquí para elegirla.";
+"Open Download Page" = "Abrir la página de descarga";

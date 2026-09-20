@@ -301,3 +301,9 @@
 "Created" = "创建";
 "Backlinks" = "反向链接";
 "Project name" = "文件夹名称";
+"Recommended" = "推荐";
+"All Fonts" = "全部字体";
+"Not installed" = "未安装";
+"Install the font first" = "需要先安装字体";
+"MiaoYan no longer ships this font. Download and install it from the foundry, then pick it here." = "妙言不再内置这个字体，去字库官网下载安装之后，回到这里就能选。";
+"Open Download Page" = "打开下载页";
