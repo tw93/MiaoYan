@@ -336,7 +336,6 @@ blockquote blockquote {
   border-width: 1px;
   border-style: solid;
   border-color: var(--border-color);
-  word-break: break-word;
 }
 
 .heti th,
