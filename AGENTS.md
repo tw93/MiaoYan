@@ -202,6 +202,7 @@ MiaoYan ships through two independent channels. Publishing one never updates the
 ## Release Notes
 
 - Tag format is uppercase `Vx.y.z`.
+- One release per batch. Shipping cadence here is roughly monthly (V4.0.0 to V4.1.0 to V4.2.0 were 29 and 28 days apart); once a version is out, further work waits for the next one. Only a regression that version introduced, or a fix users cannot otherwise obtain, justifies a follow-up tag. V4.3.0 and V4.3.1 went out 1.4 hours apart because a batch of font work landed right after a release and was tagged on the spot instead of being held, which prompted every Sparkle user to update twice in one afternoon.
 - Version changes must keep both `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in `MiaoYan.xcodeproj/project.pbxproj` aligned with the release tag. Sparkle compares `sparkle:version` in appcast.xml against `CFBundleVersion` (mapped from `CURRENT_PROJECT_VERSION`), not `CFBundleShortVersionString`. If the two diverge, users get an infinite update prompt loop (V3.5.1 incident, #524).
 - `.github/RELEASE_NOTES.md` is the public release note source. Release scripts under `scripts/release-ci/` render it for GitHub release and appcast content, including the current sectionless format.
 - Release titles follow `V{x.y.z} {Codename} {emoji}` (e.g. `V4.0.0 Valstrax 🚀`). Before drafting notes, `gh release view` the previous release and mirror its exact body shape instead of rebuilding it from memory; the full format and reaction ritual live in `.agents/skills/release/SKILL.md`.
