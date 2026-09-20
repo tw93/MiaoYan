@@ -49,6 +49,54 @@ final class FontCatalogTests: XCTestCase {
         XCTAssertEqual(FontCatalog.familyName(forStored: ""), "")
     }
 
+    @MainActor
+    func testPreviewStyleCarriesTheBoldFaceOnlyWhenThereIsOne() throws {
+        let defaults = UserDefaults.standard
+        let key = "previewFontName"
+        let original = defaults.string(forKey: key)
+        defer { defaults.set(original, forKey: key) }
+
+        // A family that resolves its own bold must not get the override, or the
+        // stylesheet would pin a face the system was already choosing correctly.
+        defaults.set("PingFang SC", forKey: key)
+        let resolved = HtmlManager.previewStyle()
+        XCTAssertFalse(resolved.contains("--text-font-bold"))
+        XCTAssertFalse(resolved.contains("--text-font-synthesis"))
+
+        // A family that does not gets both variables, because naming a face
+        // without disabling synthesis would smear that face in turn.
+        let retired = "TsangerJinKai02-W04"
+        guard FontCatalog.boldFace(forStored: retired) != nil else {
+            throw XCTSkip("No family on this machine needs the override")
+        }
+        defaults.set(retired, forKey: key)
+        let overridden = HtmlManager.previewStyle()
+        XCTAssertTrue(overridden.contains("--text-font-bold: \"TsangerJinKai02-W05\""), overridden)
+        XCTAssertTrue(overridden.contains("--text-font-synthesis: none"))
+    }
+
+    func testBoldFaceStaysOutOfTheWayWhenTheSystemCanResolveBold() {
+        // These ship with macOS and declare real bold faces, so naming one here
+        // would override the system for no reason.
+        for family in ["PingFang SC", "Songti SC", "Hiragino Sans GB", "Helvetica Neue"] {
+            guard NSFontManager.shared.availableFontFamilies.contains(family) else { continue }
+            XCTAssertNil(FontCatalog.boldFace(forStored: family), "\(family) already resolves its own bold")
+        }
+        XCTAssertNil(FontCatalog.boldFace(forStored: "No Such Font"))
+    }
+
+    func testAnyBoldFaceNamedIsAnotherMemberOfTheSameFamily() {
+        // Whatever the naming heuristic picks has to be a real face of the same
+        // family and not the one already in use, on any machine's font library.
+        let manager = NSFontManager.shared
+        for family in manager.availableFontFamilies {
+            guard let bold = FontCatalog.boldFace(forStored: family) else { continue }
+            XCTAssertNotNil(NSFont(name: bold, size: 16), "\(bold) is not a loadable face")
+            XCTAssertEqual(NSFont(name: bold, size: 16)?.familyName, family)
+            XCTAssertNotEqual(bold, NSFont(name: family, size: 16)?.fontName)
+        }
+    }
+
     func testTextPopupSeparatesChineseFromLatin() {
         let sections = FontCatalog.sections(for: .text)
         XCTAssertEqual(sections.map(\.title), ["zh", "latin"])

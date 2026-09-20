@@ -293,7 +293,18 @@ class HtmlManager {
     static func previewStyle() -> String {
         // Add font configuration
         let codeFontName = UserDefaultsManagement.codeFontName
-        let fontConfig = ":root { --text-font: \"\(UserDefaultsManagement.previewFontName)\", \(fontStack); --code-text-font: \"\(codeFontName)\", \(codeFontStack); }"
+        let previewFontName = UserDefaultsManagement.previewFontName
+        // Families whose bold the system cannot resolve get one named here, so
+        // headings and strong text use a real weight instead of a smeared
+        // outline. Empty for every family that resolves its own bold.
+        // The synthesis switch travels with the face: turning synthesis off
+        // without naming a real bold would leave those families with no visible
+        // emphasis at all.
+        let boldFont =
+            FontCatalog.boldFace(forStored: previewFontName)
+            .map { " --text-font-bold: \"\($0)\"; --text-font-synthesis: none;" } ?? ""
+        let fontConfig =
+            ":root { --text-font: \"\(previewFontName)\", \(fontStack); --code-text-font: \"\(codeFontName)\", \(codeFontStack);\(boldFont) }"
 
         if UserDefaultsManagement.magicPPT {
             return "\(fontConfig) :root { --r-main-font: \"\(UserDefaultsManagement.previewFontName)\", sans-serif;}"

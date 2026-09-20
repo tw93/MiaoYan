@@ -84,6 +84,26 @@ pre code {
   word-break: break-word;
 }
 
+/* ==================== Bold ==================== */
+/* A family with no bold face leaves the renderer to smear the outline outward,
+   which closes the counters and merges strokes on a Chinese face. The app names
+   a real heavier face in --text-font-bold when it can identify one, and only
+   then turns synthesis off; without it both variables are absent and this falls
+   back to exactly what it did before. */
+.heti h1,
+.heti h2,
+.heti h3,
+.heti h4,
+.heti h5,
+.heti h6,
+.heti b,
+.heti strong,
+.heti em,
+.heti dfn {
+  font-family: var(--text-font-bold, var(--text-font));
+  font-synthesis-weight: var(--text-font-synthesis, auto);
+}
+
 /* ==================== Tables ==================== */
 /* Tables keep their own layout box so print, borders and cell backgrounds all
    behave; the scroll lives on a wrapper that app.js puts around each table.
