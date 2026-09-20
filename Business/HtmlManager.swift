@@ -8,7 +8,6 @@ private struct ImageLocation {
 }
 
 class HtmlManager {
-    private static let fontStack = "-apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Helvetica, Arial, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif"
     private static let codeFontStack = "SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", \"Courier New\", monospace"
 
     static func lightModeExportCSS() -> String {
@@ -304,7 +303,7 @@ class HtmlManager {
             FontCatalog.boldFace(forStored: previewFontName)
             .map { " --text-font-bold: \"\($0)\"; --text-font-synthesis: none;" } ?? ""
         let fontConfig =
-            ":root { --text-font: \"\(previewFontName)\", \(fontStack); --code-text-font: \"\(codeFontName)\", \(codeFontStack);\(boldFont) }"
+            ":root { --text-font: \(FontCatalog.fontStack(forStored: previewFontName)); --code-text-font: \"\(codeFontName)\", \(codeFontStack);\(boldFont) }"
 
         if UserDefaultsManagement.magicPPT {
             return "\(fontConfig) :root { --r-main-font: \"\(UserDefaultsManagement.previewFontName)\", sans-serif;}"

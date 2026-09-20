@@ -9,7 +9,11 @@ html {
   color: var(--text-color);
   background: var(--bg-color);
   font-family: var(--text-font);
-  -webkit-font-smoothing: subpixel-antialiased;
+  /* Claude's and Cursor's desktop apps both render everything antialiased and
+     never use subpixel; on this codebase the headings and strong runs were
+     already antialiased while body text was not, so the two sat side by side
+     at different stroke weights. */
+  -webkit-font-smoothing: antialiased;
   overscroll-behavior: none;
   overflow-x: hidden;
 }

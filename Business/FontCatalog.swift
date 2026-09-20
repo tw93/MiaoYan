@@ -88,6 +88,32 @@ enum FontCatalog {
         NSFontManager.shared.localizedName(forFamily: family, face: nil)
     }
 
+    /// The `font-family` stack for a chosen face.
+    ///
+    /// A Chinese face carries Latin glyphs of its own, and PingFang's are wider
+    /// and looser than the system's, so putting the chosen face first hands it
+    /// every English word too and a line of prose comes out slack. Claude's and
+    /// Cursor's desktop apps both order the stack the other way, letting
+    /// `ui-sans-serif, system-ui, -apple-system` take Latin and naming PingFang
+    /// only as the CJK fallback, which is what this does.
+    ///
+    /// A Latin face stays in front: someone who picks Georgia picked it for the
+    /// English, and the CJK fallback covers the Chinese behind it.
+    static func fontStack(forStored stored: String) -> String {
+        let quoted = "\"\(stored)\""
+        let system = "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont"
+        let cjkFallback = "\"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\""
+        guard let font = NSFont(name: stored, size: 16) ?? NSFont(name: familyName(forStored: stored), size: 16)
+        else {
+            return "\(quoted), \(system), \(cjkFallback), sans-serif"
+        }
+        let covered = font.coveredCharacterSet
+        let isCJK = cjkProbe.unicodeScalars.allSatisfy { covered.contains($0) }
+        return isCJK
+            ? "\(system), \(quoted), \(cjkFallback), sans-serif"
+            : "\(quoted), \(system), \(cjkFallback), sans-serif"
+    }
+
     /// The face to use where the stylesheet asks for bold, or nil when the
     /// system can already find a real one.
     ///

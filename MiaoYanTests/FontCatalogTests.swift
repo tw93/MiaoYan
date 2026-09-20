@@ -49,6 +49,35 @@ final class FontCatalogTests: XCTestCase {
         XCTAssertEqual(FontCatalog.familyName(forStored: ""), "")
     }
 
+    func testChineseFacesYieldLatinToTheSystemStack() {
+        // A Chinese face has Latin glyphs of its own and they are not the ones to
+        // set English in, so the system stack has to come first and the chosen
+        // face has to still be there for the Chinese.
+        let stack = FontCatalog.fontStack(forStored: "PingFang SC")
+        let systemAt = try? XCTUnwrap(stack.range(of: "ui-sans-serif"))
+        let chosenAt = try? XCTUnwrap(stack.range(of: "\"PingFang SC\""))
+        XCTAssertNotNil(systemAt)
+        XCTAssertNotNil(chosenAt)
+        if let s = systemAt, let c = chosenAt { XCTAssertTrue(s.lowerBound < c.lowerBound) }
+    }
+
+    func testLatinFacesKeepTheFrontOfTheStack() {
+        // Someone who picks Georgia picked it for the English, so it leads and
+        // the CJK fallback sits behind it.
+        guard NSFontManager.shared.availableFontFamilies.contains("Georgia") else { return }
+        let stack = FontCatalog.fontStack(forStored: "Georgia")
+        XCTAssertTrue(stack.hasPrefix("\"Georgia\""), stack)
+        XCTAssertTrue(stack.contains("PingFang SC"), stack)
+    }
+
+    func testEveryStackEndsInAGenericFamily() {
+        // Without the generic tail a face missing a glyph falls through to the
+        // renderer's last resort rather than to a sans-serif.
+        for name in ["PingFang SC", "Georgia", "Menlo", "No Such Font", "TsangerJinKai02-W04"] {
+            XCTAssertTrue(FontCatalog.fontStack(forStored: name).hasSuffix("sans-serif"), name)
+        }
+    }
+
     @MainActor
     func testPreviewStyleCarriesTheBoldFaceOnlyWhenThereIsOne() throws {
         let defaults = UserDefaults.standard
