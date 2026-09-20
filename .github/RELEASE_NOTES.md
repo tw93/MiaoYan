@@ -1,19 +1,19 @@
-# V4.2.0 Zinogre 🍝
+# V4.3.0 Velkhana ❄️
 
-1. 修复已删除笔记被延迟保存重新创建的问题，切换侧栏或重启后不会再次出现
-2. 修复复杂 LaTeX 公式渲染，下标、绝对值和自适应括号现在可在预览与 PPT 中正确组合
-3. 修复删除笔记后侧边栏可能横向偏移的问题，文件夹列表会始终贴齐窗口宽度
-4. 改进 PDF 导出，Mermaid 图表不再重复渲染，标题也会沿用当前笔记字体
-5. 修复 PPT 本地图片丢失，以及窗口置顶时偏好设置被遮挡的问题
-6. 改进 HDR 照片在 Markdown 预览中的显示效果，画面不再异常过曝
-7. 新增官方 MiaoYan Agent Skill，让 Agent 能按妙言的语法、附件、PPT 与 CLI 规范处理笔记
+1. 宽表格现在可以横向滚动，列宽按内容分配，单元格不再从单词中间断开
+2. 深色主题导出 PDF 时正文、公式和表格都用墨色印在白纸上，高亮填充也恢复正常
+3. 预览搜索框跟着自己的底色走，深色主题下输入框、计数和图标不再是黑底黑字
+4. 修复以数字开头的行内公式吞掉后面段落和列表的问题
+5. iOS 搜索现在覆盖长笔记的全文，之前只搜到开头一部分
+6. 内置商业字体换成系统排版，原先的字体选择会自动迁移，自定义字体不受影响
+7. 重新打开窗口时会恢复上次使用的预览模式，不再退回默认
 
 ---
 
-1. Prevents deleted notes from being recreated by delayed saves after switching sections or restarting
-2. Complex LaTeX formulas now render correctly in preview and PPT when subscripts, absolute values, and adaptive delimiters are combined
-3. Sidebar folders remain horizontally aligned after deleting notes, reloading, or resizing the window
-4. PDF exports no longer rerender Mermaid diagrams, and headings use the current note font
-5. PPT keeps local images, and Preferences stays visible when windows are kept on top
-6. HDR photos display with balanced tones instead of appearing overexposed in Markdown preview
-7. New official MiaoYan Agent Skill teaches agents the app's Markdown, attachment, PPT, and CLI conventions
+1. Wide tables scroll horizontally, columns size to their content, and cells no longer break words mid-token
+2. Dark-theme PDF exports print body text, formulas and table cells in ink on white paper, with highlights restored
+3. The preview search bar follows its own panel colour, so its field, counter and icons stay visible in dark mode
+4. Inline math starting with a number no longer swallows the paragraphs and lists that follow it
+5. iOS search covers the whole of a long note instead of stopping partway through
+6. The bundled commercial font is replaced by system typography, with saved selections migrated and custom faces untouched
+7. Reopening the window restores the preview mode that was in use instead of falling back to the default
