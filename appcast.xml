@@ -3,6 +3,25 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>4.3.2</title>
+      <link>https://github.com/tw93/MiaoYan/releases</link>
+      <description xml:lang="en"><![CDATA[
+  <ol>
+    <li>A chosen font sets the whole line again, including the English, which 4.3.1 had handed to the system face</li>
+    <li>The Recommended, Chinese and Latin headings in the font pickers can no longer be picked as if they were fonts</li>
+  </ol>
+          ]]>      </description>
+      <description xml:lang="zh-Hans"><![CDATA[
+  <ol>
+    <li>修复 4.3.1 里选中的字体只作用于中文的问题，英文重新跟着你选的那个字体走</li>
+    <li>修复字体设置里「推荐」「中文」「西文」这几个分组标题可以被当成字体选中的问题</li>
+  </ol>
+          ]]>      </description>
+      <pubDate>Sun, 20 Sep 2026 08:31:01 +0000</pubDate>
+      <enclosure url="https://github.com/tw93/MiaoYan/releases/download/V4.3.2/MiaoYan_V4.3.2.zip" sparkle:shortVersionString="4.3.2" sparkle:version="4.3.2" sparkle:edSignature="vZijGDSi2hS9xs2X4lykgJ03EnNiKVxZSWBT5FrxBVwK4M6PkhX7geVEn3yvHQ2Wg/Di1pO6ui/6wbZhC29aDg==" length="10708436" type="application/octet-stream"/>
+      <sparkle:minimumSystemVersion>12.0</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>4.3.1</title>
       <link>https://github.com/tw93/MiaoYan/releases</link>
       <description xml:lang="en"><![CDATA[
