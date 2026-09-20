@@ -1,4 +1,5 @@
 import AppKit
+import WebKit
 import XCTest
 
 @testable import MiaoYan
@@ -136,7 +137,7 @@ final class FontCatalogTests: XCTestCase {
         defaults.set(retired, forKey: key)
         let overridden = HtmlManager.previewStyle()
         XCTAssertTrue(overridden.contains("--text-font-bold: \"TsangerJinKai02-W05\""), overridden)
-        XCTAssertTrue(overridden.contains("--text-font-synthesis: none"))
+        XCTAssertTrue(overridden.contains("--text-font-synthesis: style"))
     }
 
     func testBoldFaceStaysOutOfTheWayWhenTheSystemCanResolveBold() {
@@ -228,4 +229,62 @@ final class FontCatalogTests: XCTestCase {
         XCTAssertTrue(FontCatalog.installedRecommendations(for: .text).contains("PingFang SC"))
         XCTAssertTrue(FontCatalog.installedRecommendations(for: .code).contains("Menlo"))
     }
+
+    @MainActor
+    func testRealBoldOverridePreservesRenderedItalics() async throws {
+        let family = "TsangerJinKai02-W04"
+        guard FontCatalog.boldFace(forStored: family) != nil else {
+            throw XCTSkip("The optional numbered-weight font is not installed")
+        }
+        let defaults = UserDefaults.standard
+        let original = defaults.object(forKey: "previewFontName")
+        defaults.set(family, forKey: "previewFontName")
+        defer { defaults.set(original, forKey: "previewFontName") }
+
+        let bundle = try XCTUnwrap(Bundle.main.url(forResource: "DownView", withExtension: "bundle"))
+        let css = try ["typography.css", "base.css"].map {
+            try String(contentsOf: bundle.appendingPathComponent("css/\($0)"), encoding: .utf8)
+        }.joined(separator: "\n")
+        let web = WKWebView(frame: NSRect(x: 0, y: 0, width: 600, height: 140))
+        let window = NSWindow(contentRect: web.frame, styleMask: [.titled], backing: .buffered, defer: false)
+        window.contentView = web
+        window.orderFront(nil)
+        defer { window.orderOut(nil) }
+        web.loadHTMLString(
+            """
+            <html><head><style>\(css) \(HtmlManager.previewStyle())
+            body { margin: 0; padding: 20px; background: white; }
+            .heti { font-size: 32px; color: black; }
+            </style></head><body><div class="heti"><em id="sample">Italic English abcdef</em></div></body></html>
+            """, baseURL: nil)
+        var loaded = false
+        for _ in 0..<250 {
+            if (try? await web.evaluateJavaScript("document.readyState === 'complete' && !!document.getElementById('sample')")) as? Bool == true {
+                loaded = true
+                break
+            }
+            try await Task.sleep(nanoseconds: 20_000_000)
+        }
+        XCTAssertTrue(loaded, "The font rendering fixture must load")
+        guard loaded else { return }
+
+        let italic = try await fontSnapshotPixels(web)
+        _ = try await web.evaluateJavaScript("document.getElementById('sample').style.fontStyle = 'normal'")
+        let upright = try await fontSnapshotPixels(web)
+        XCTAssertNotEqual(italic, upright, "Italic markup must visibly differ from upright text when a real bold face is selected")
+        let weight = try await web.evaluateJavaScript("getComputedStyle(document.getElementById('sample')).fontSynthesis")
+        XCTAssertEqual(weight as? String, "style", "Keep italic synthesis without adding fake bold")
+    }
+
+    @MainActor
+    private func fontSnapshotPixels(_ web: WKWebView) async throws -> Data {
+        let configuration = WKSnapshotConfiguration()
+        configuration.afterScreenUpdates = true
+        let image = try await web.takeSnapshot(configuration: configuration)
+        let tiff = try XCTUnwrap(image.tiffRepresentation)
+        let bitmap = try XCTUnwrap(NSBitmapImageRep(data: tiff))
+        let pixels = try XCTUnwrap(bitmap.bitmapData)
+        return Data(bytes: pixels, count: bitmap.bytesPerRow * bitmap.pixelsHigh)
+    }
+
 }

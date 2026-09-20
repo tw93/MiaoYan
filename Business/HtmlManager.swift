@@ -296,12 +296,12 @@ class HtmlManager {
         // Families whose bold the system cannot resolve get one named here, so
         // headings and strong text use a real weight instead of a smeared
         // outline. Empty for every family that resolves its own bold.
-        // The synthesis switch travels with the face: turning synthesis off
+        // The weight synthesis switch travels with the face: turning it off
         // without naming a real bold would leave those families with no visible
         // emphasis at all.
         let boldFont =
             FontCatalog.boldFontStack(forStored: previewFontName)
-            .map { " --text-font-bold: \($0); --text-font-synthesis: none;" } ?? ""
+            .map { " --text-font-bold: \($0); --text-font-synthesis: style;" } ?? ""
         let fontConfig =
             ":root { --text-font: \(FontCatalog.fontStack(forStored: previewFontName)); --code-text-font: \"\(codeFontName)\", \(codeFontStack);\(boldFont) }"
 
