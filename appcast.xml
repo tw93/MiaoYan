@@ -3,6 +3,37 @@
   <channel>
     <title>妙言 / MiaoYan</title>
     <item>
+      <title>4.3.0</title>
+      <link>https://github.com/tw93/MiaoYan/releases</link>
+      <description><![CDATA[
+  <h3>Changelog</h3>
+  <ol>
+    <li>The minimum requirement moves to macOS 12; 4.2.0 is the last release for macOS 11</li>
+    <li>Wide tables scroll horizontally, columns size to their content, and cells no longer break words mid-token</li>
+    <li>Dark-theme PDF exports print body text, formulas and table cells in ink on white paper, with highlights restored</li>
+    <li>The preview search bar follows its own panel colour, so its field, counter and icons stay visible in dark mode</li>
+    <li>Inline math starting with a number no longer swallows the paragraphs and lists that follow it</li>
+    <li>iOS search covers the whole of a long note instead of stopping partway through</li>
+    <li>The bundled commercial font is replaced by system typography, with saved selections migrated and custom faces untouched</li>
+    <li>Reopening the window restores the preview mode that was in use instead of falling back to the default</li>
+  </ol>
+  <h3>更新日志</h3>
+  <ol>
+    <li>最低系统要求提升到 macOS 12，macOS 11 的最后一个版本是 4.2.0</li>
+    <li>宽表格现在可以横向滚动，列宽按内容分配，单元格不再从单词中间断开</li>
+    <li>深色主题导出 PDF 时正文、公式和表格都用墨色印在白纸上，高亮填充也恢复正常</li>
+    <li>预览搜索框跟着自己的底色走，深色主题下输入框、计数和图标不再是黑底黑字</li>
+    <li>修复以数字开头的行内公式吞掉后面段落和列表的问题</li>
+    <li>iOS 搜索现在覆盖长笔记的全文，之前只搜到开头一部分</li>
+    <li>内置商业字体换成系统排版，原先的字体选择会自动迁移，自定义字体不受影响</li>
+    <li>重新打开窗口时会恢复上次使用的预览模式，不再退回默认</li>
+  </ol>
+          ]]>      </description>
+      <pubDate>Sun, 20 Sep 2026 06:32:04 +0000</pubDate>
+      <enclosure url="https://github.com/tw93/MiaoYan/releases/download/V4.3.0/MiaoYan_V4.3.0.zip" sparkle:shortVersionString="4.3.0" sparkle:version="4.3.0" sparkle:edSignature="AenYQhutH+BMmzdPowR382any/ZblliUjwuflkwAU4Y2WVxFF0Rs0v6/6iLSeOwGCt6NOWgJA+cLMISl5KZJCw==" length="10677930" type="application/octet-stream"/>
+      <sparkle:minimumSystemVersion>12.0</sparkle:minimumSystemVersion>
+    </item>
+    <item>
       <title>4.2.0</title>
       <link>https://github.com/tw93/MiaoYan/releases</link>
       <description><![CDATA[
