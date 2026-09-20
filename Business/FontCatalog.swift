@@ -25,7 +25,9 @@ enum FontCatalog {
     /// someone who liked it has no way back from inside the app; the popup
     /// keeps a row for it and points at the foundry.
     static let retiredBundledFamily = "TsangerJinKai02"
-    static let retiredBundledDownloadURL = "https://tsanger.cn"
+    /// The exact weight MiaoYan bundled, not the foundry's front page, so the
+    /// download lands on the face the preference names.
+    static let retiredBundledDownloadURL = "https://tsanger.cn/product/33"
 
     /// A family qualifies as a text face when it can draw these. Three common
     /// hanzi are enough to separate a CJK face from a Latin-only one without
@@ -48,6 +50,22 @@ enum FontCatalog {
 
     static func isInstalled(family: String) -> Bool {
         NSFontManager.shared.availableFontFamilies.contains(family)
+    }
+
+    /// What to show for a family. macOS carries localized names in the font's own
+    /// name table, so a Chinese user reads 苹方-简 and 宋体-简 rather than
+    /// PingFang SC and Songti SC, and this works for third-party faces too
+    /// (TsangerJinKai02 comes back as 仓耳今楷02). Faces with no localized name,
+    /// Menlo among them, keep the name they already had. The family name stays
+    /// the stored value; only the label changes.
+    static func displayName(for family: String) -> String {
+        NSFontManager.shared.localizedName(forFamily: family, face: nil)
+    }
+
+    /// Families ordered the way their labels read, so a localized list is not
+    /// sorted by an English name the user cannot see.
+    static func sortedByDisplayName(_ families: [String]) -> [String] {
+        families.sorted { displayName(for: $0).localizedStandardCompare(displayName(for: $1)) == .orderedAscending }
     }
 
     /// The family name for a stored preference.
@@ -89,8 +107,8 @@ enum FontCatalog {
                     let covered = font.coveredCharacterSet
                     if probe.allSatisfy({ covered.contains($0) }) { textFamilies.append(family) }
                 }
-                text = textFamilies.sorted()
-                code = codeFamilies.sorted()
+                text = sortedByDisplayName(textFamilies)
+                code = sortedByDisplayName(codeFamilies)
             }
             return kind == .text ? text : code
         }

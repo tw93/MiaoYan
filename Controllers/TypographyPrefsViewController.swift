@@ -111,10 +111,12 @@ final class TypographyPrefsViewController: BasePrefsViewController {
 
         if !recommended.isEmpty || missingRetired != nil {
             menu.addItem(sectionHeader(I18n.str("Recommended")))
-            for family in recommended { menu.addItem(fontItem(title: family)) }
+            for family in recommended { menu.addItem(fontItem(family: family)) }
             if let missing = missingRetired {
-                let item = fontItem(title: "\(missing) (\(I18n.str("Not installed")))")
-                item.representedObject = Self.retiredFontMarker
+                let item = NSMenuItem(
+                    title: "\(FontCatalog.displayName(for: missing)) (\(I18n.str("Not installed")))",
+                    action: nil, keyEquivalent: "")
+                item.tag = Self.retiredFontTag
                 menu.addItem(item)
             }
             menu.addItem(.separator())
@@ -122,7 +124,7 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         }
 
         let rest = FontCatalog.families(for: kind).filter { !recommended.contains($0) }
-        for family in rest { menu.addItem(fontItem(title: family)) }
+        for family in rest { menu.addItem(fontItem(family: family)) }
 
         // A stored value can be a PostScript name, or a face this popup filters
         // out, or one that is no longer installed. Resolve it to a family, then
@@ -130,14 +132,18 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         // what is in effect rather than silently selecting something else.
         guard let name = currentName, !name.isEmpty else { return }
         let family = FontCatalog.familyName(forStored: name)
-        if !popUp.itemTitles.contains(family) {
+        if item(in: menu, family: family) == nil {
             menu.addItem(.separator())
-            menu.addItem(fontItem(title: family))
+            menu.addItem(fontItem(family: family))
         }
-        popUp.selectItem(withTitle: family)
+        if let match = item(in: menu, family: family) { popUp.select(match) }
     }
 
-    private static let retiredFontMarker = "retired-bundled-font"
+    private static let retiredFontTag = 9001
+
+    private func item(in menu: NSMenu, family: String) -> NSMenuItem? {
+        menu.items.first { $0.representedObject as? String == family }
+    }
 
     private func sectionHeader(_ title: String) -> NSMenuItem {
         let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
@@ -145,25 +151,36 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         return item
     }
 
-    private func fontItem(title: String) -> NSMenuItem {
-        NSMenuItem(title: title, action: nil, keyEquivalent: "")
+    /// The row reads as the localized name while the family stays on
+    /// `representedObject`, because that is what gets stored and matched.
+    private func fontItem(family: String) -> NSMenuItem {
+        let item = NSMenuItem(title: FontCatalog.displayName(for: family), action: nil, keyEquivalent: "")
+        item.representedObject = family
+        return item
     }
 
     /// Returns the family to store, or nil when the row was the retired face and
     /// the popup should bounce back to what it had.
     private func resolveSelection(_ sender: NSPopUpButton, previous: String) -> String? {
         guard let item = sender.selectedItem else { return nil }
-        guard item.representedObject as? String == Self.retiredFontMarker else { return item.title }
-        sender.selectItem(withTitle: FontCatalog.familyName(forStored: previous))
-        presentRetiredFontGuidance()
-        return nil
+        if item.tag == Self.retiredFontTag {
+            if let menu = sender.menu,
+                let match = self.item(in: menu, family: FontCatalog.familyName(forStored: previous))
+            {
+                sender.select(match)
+            }
+            presentRetiredFontGuidance()
+            return nil
+        }
+        return item.representedObject as? String ?? item.title
     }
 
     private func presentRetiredFontGuidance() {
         let alert = NSAlert()
         alert.messageText = I18n.str("Install the font first")
         alert.informativeText = I18n.str(
-            "MiaoYan no longer ships this font. Download and install it from the foundry, then pick it here.")
+            "MiaoYan no longer bundles this font. Personal non-commercial use is free; commercial work needs a separate licence."
+        )
         alert.addButton(withTitle: I18n.str("Open Download Page"))
         alert.addButton(withTitle: I18n.str("Cancel"))
         guard alert.runModal() == .alertFirstButtonReturn,

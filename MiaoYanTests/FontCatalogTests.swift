@@ -49,6 +49,31 @@ final class FontCatalogTests: XCTestCase {
         XCTAssertEqual(FontCatalog.familyName(forStored: ""), "")
     }
 
+    func testDisplayNameNeverReplacesTheStoredFamily() {
+        // The popup label is the localized name while the stored value stays the
+        // family, so these two must not be conflated. On an English runner they
+        // are equal for most faces; what has to hold everywhere is that a
+        // display name is never empty and never leaks back as a stored value.
+        for family in FontCatalog.families(for: .text).prefix(40) {
+            let shown = FontCatalog.displayName(for: family)
+            XCTAssertFalse(shown.isEmpty, "\(family) has no display name")
+            XCTAssertEqual(FontCatalog.familyName(forStored: family), family)
+        }
+        // Menlo carries no localized name in any language, so it is the stable
+        // case: label and family stay the same string.
+        XCTAssertEqual(FontCatalog.displayName(for: "Menlo"), "Menlo")
+    }
+
+    func testListsAreOrderedByWhatTheUserReads() {
+        // Sorting by family name would scatter a localized list, because the user
+        // never sees the name it was sorted by.
+        for kind in [FontListKind.text, .code] {
+            let shown = FontCatalog.families(for: kind).map { FontCatalog.displayName(for: $0) }
+            let ordered = shown.sorted { $0.localizedStandardCompare($1) == .orderedAscending }
+            XCTAssertEqual(shown, ordered, "\(kind) is not ordered by its labels")
+        }
+    }
+
     func testRecommendationsAreOfferedOnlyWhenInstalled() {
         let installed = Set(NSFontManager.shared.availableFontFamilies)
         for kind in [FontListKind.text, .code] {
