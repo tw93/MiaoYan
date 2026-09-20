@@ -1,11 +1,33 @@
 #!/usr/bin/env bash
 # Convert .github/RELEASE_NOTES.md to appcast <description> inner HTML.
-# Usage: notes_to_html.sh [path-to-RELEASE_NOTES.md]
+# Usage: notes_to_html.sh [--lang en|zh] [path-to-RELEASE_NOTES.md]
 # Output: HTML fragment suitable for CDATA in appcast.xml
+#
+# Without --lang both lists are emitted under their own <h3>, which is the
+# shape a single untagged <description> needs. With --lang only that language's
+# <ol> comes out and the heading is dropped, because a per-language
+# <description xml:lang="..."> is already labelled by Sparkle.
 
 set -euo pipefail
 
-NOTES_FILE="${1:-.github/RELEASE_NOTES.md}"
+LANG_FILTER=""
+NOTES_FILE=".github/RELEASE_NOTES.md"
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --lang)
+      LANG_FILTER="${2:-}"
+      case "$LANG_FILTER" in
+        en|zh) ;;
+        *) echo "Error: --lang takes en or zh" >&2; exit 1 ;;
+      esac
+      shift 2
+      ;;
+    *)
+      NOTES_FILE="$1"
+      shift
+      ;;
+  esac
+done
 
 if [[ ! -f "$NOTES_FILE" ]]; then
   echo "Error: $NOTES_FILE not found" >&2
@@ -38,7 +60,7 @@ if grep -q "^## Changelog" "$NOTES_FILE" || grep -q "^## 更新日志" "$NOTES_F
     local in_section=0
     # Label each list by language instead of repeating the codename twice;
     # the codename already appears in the release title.
-    echo "  <h3>${section_header}</h3>"
+    [[ -z "$LANG_FILTER" ]] && echo "  <h3>${section_header}</h3>"
     echo "  <ol>"
     while IFS= read -r line; do
       if [[ "$line" =~ ^##[[:space:]]+"$section_header" ]]; then
@@ -49,8 +71,11 @@ if grep -q "^## Changelog" "$NOTES_FILE" || grep -q "^## 更新日志" "$NOTES_F
     done <"$NOTES_FILE"
     echo "  </ol>"
   }
-  emit_section "Changelog"
-  emit_section "更新日志"
+  case "$LANG_FILTER" in
+    en) emit_section "Changelog" ;;
+    zh) emit_section "更新日志" ;;
+    *) emit_section "Changelog"; emit_section "更新日志" ;;
+  esac
 else
   # Sectionless format: two blocks separated by "^---$"
   # Block before "---" and block after "---"; emit after-block first (English), then before-block (Chinese).
@@ -61,7 +86,7 @@ else
     local past_sep=0
     # Label each list by language instead of repeating the codename twice;
     # the codename already appears in the release title.
-    echo "  <h3>${heading}</h3>"
+    [[ -z "$LANG_FILTER" ]] && echo "  <h3>${heading}</h3>"
     echo "  <ol>"
     while IFS= read -r line; do
       if [[ "$line" == "---" ]]; then
@@ -75,6 +100,9 @@ else
     done <"$NOTES_FILE"
     echo "  </ol>"
   }
-  emit_block "after" "Changelog"
-  emit_block "before" "更新日志"
+  case "$LANG_FILTER" in
+    en) emit_block "after" "Changelog" ;;
+    zh) emit_block "before" "更新日志" ;;
+    *) emit_block "after" "Changelog"; emit_block "before" "更新日志" ;;
+  esac
 fi

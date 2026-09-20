@@ -11,13 +11,22 @@ Usage:
     --pub-date "Wed, 04 Mar 2026 10:00:00 +0000" \
     --signature "<sparkle signature>" \
     --length 12345 \
-    --zip-url "https://miaoyan.app/Release/MiaoYan_V2.8.0.zip"
+    --zip-url "https://github.com/tw93/MiaoYan/releases/download/V2.8.0/MiaoYan_V2.8.0.zip" \
+    --description-en en.html \
+    --description-zh zh.html
+
+Sparkle picks the <description> whose xml:lang matches the running system,
+so pass both and each user reads the release notes in one language instead
+of a stacked bilingual list. --description-html-file still takes a single
+untagged block for the old shape.
 EOF
 }
 
 APPCAST=""
 NOTES=""
 DESCRIPTION_HTML_FILE=""
+DESCRIPTION_EN_FILE=""
+DESCRIPTION_ZH_FILE=""
 VERSION=""
 PUB_DATE=""
 SIGNATURE=""
@@ -37,6 +46,14 @@ while [[ $# -gt 0 ]]; do
       ;;
     --description-html-file)
       DESCRIPTION_HTML_FILE="$2"
+      shift 2
+      ;;
+    --description-en)
+      DESCRIPTION_EN_FILE="$2"
+      shift 2
+      ;;
+    --description-zh)
+      DESCRIPTION_ZH_FILE="$2"
       shift 2
       ;;
     --version)
@@ -84,11 +101,28 @@ sanitize_cdata() {
   printf '%s' "$1" | sed 's/]]>/]]]]><![CDATA[>/g'
 }
 
-description_body=""
-if [[ -n "$DESCRIPTION_HTML_FILE" && -f "$DESCRIPTION_HTML_FILE" ]]; then
-  description_body="$(cat "$DESCRIPTION_HTML_FILE")"
-else
-  description_body="$(printf '      <p>妙言 4.0 新增 iPhone 和 iPad 版本,同时继续提供 GitHub 下载和 Sparkle 更新。你可以选择 App Store 自动更新,也可以继续使用 direct-download 版本。</p>\n      <p>MiaoYan 4.0 adds iPhone and iPad support while keeping GitHub downloads and Sparkle updates available. You can use App Store automatic updates or stay on the direct-download build.</p>\n      <p><a href=\"https://apps.apple.com/app/id6759252269\">Mac App Store</a> · <a href=\"https://github.com/tw93/MiaoYan/releases\">GitHub Releases</a></p>')"
+# The previous fallback here was a hardcoded 4.0 paragraph, so any release that
+# forgot to pass notes silently shipped the 4.0 text to every updater. Refuse
+# instead: an appcast entry with the wrong notes is worse than a failed run.
+emit_description() {
+  local lang="$1" file="$2"
+  if [[ -n "$lang" ]]; then
+    echo "      <description xml:lang=\"${lang}\"><![CDATA["
+  else
+    echo "      <description><![CDATA["
+  fi
+  sanitize_cdata "$(cat "$file")"
+  printf '\n'
+  echo "          ]]>      </description>"
+}
+
+if [[ -n "$DESCRIPTION_EN_FILE" || -n "$DESCRIPTION_ZH_FILE" ]]; then
+  for f in "$DESCRIPTION_EN_FILE" "$DESCRIPTION_ZH_FILE"; do
+    [[ -n "$f" && ! -f "$f" ]] && { echo "Error: description file not found: $f" >&2; exit 1; }
+  done
+elif [[ -z "$DESCRIPTION_HTML_FILE" || ! -f "$DESCRIPTION_HTML_FILE" ]]; then
+  echo "Error: pass --description-en/--description-zh or --description-html-file" >&2
+  exit 1
 fi
 
 item_file="$(mktemp)"
@@ -96,9 +130,12 @@ item_file="$(mktemp)"
   echo "    <item>"
   echo "      <title>${VERSION}</title>"
   echo "      <link>https://github.com/tw93/MiaoYan/releases</link>"
-  echo "      <description><![CDATA["
-  printf '%s\n' "$description_body"
-  echo "          ]]>      </description>"
+  if [[ -n "$DESCRIPTION_EN_FILE" || -n "$DESCRIPTION_ZH_FILE" ]]; then
+    [[ -n "$DESCRIPTION_EN_FILE" ]] && emit_description "en" "$DESCRIPTION_EN_FILE"
+    [[ -n "$DESCRIPTION_ZH_FILE" ]] && emit_description "zh-Hans" "$DESCRIPTION_ZH_FILE"
+  else
+    emit_description "" "$DESCRIPTION_HTML_FILE"
+  fi
   echo "      <pubDate>${PUB_DATE}</pubDate>"
   echo "      <enclosure url=\"${ZIP_URL}\" sparkle:shortVersionString=\"${VERSION}\" sparkle:version=\"${VERSION}\" sparkle:edSignature=\"${SIGNATURE}\" length=\"${LENGTH}\" type=\"application/octet-stream\"/>"
   echo "      <sparkle:minimumSystemVersion>${MIN_SYSTEM_VERSION}</sparkle:minimumSystemVersion>"
