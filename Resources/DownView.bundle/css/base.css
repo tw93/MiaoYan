@@ -93,7 +93,13 @@ pre code {
    which closes the counters and merges strokes on a Chinese face. The app names
    a real heavier face in --text-font-bold when it can identify one, and only
    then turns synthesis off; without it both variables are absent and this falls
-   back to exactly what it did before. */
+   back to exactly what it did before.
+   Both spellings are needed. `font-synthesis-weight` only reaches WebKit from
+   Safari 16.4 (macOS 13.3), and this app runs on 12.0, where it would be dropped
+   while the font-family above still applied, stacking a synthesized bold on top
+   of the real one. The shorthand has no `auto` keyword, so on every engine the
+   fallback is an invalid declaration that is discarded and leaves synthesis at
+   its initial value, which is exactly the old behaviour. */
 .heti h1,
 .heti h2,
 .heti h3,
@@ -103,8 +109,11 @@ pre code {
 .heti b,
 .heti strong,
 .heti em,
-.heti dfn {
+.heti dfn,
+.heti th,
+.heti .markdown-alert-title {
   font-family: var(--text-font-bold, var(--text-font));
+  font-synthesis: var(--text-font-synthesis, auto);
   font-synthesis-weight: var(--text-font-synthesis, auto);
 }
 

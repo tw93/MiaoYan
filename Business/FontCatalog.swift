@@ -102,12 +102,26 @@ enum FontCatalog {
     /// the CJK fallback, the way Claude's and Cursor's desktop apps order it.
     /// Main-actor bound because it reads the shipped default from
     /// `FontConfiguration`; its only caller is `previewStyle()`, already there.
+    /// The stack for the bold surfaces: the heavier face in front, then the same
+    /// tail as the body stack. Naming the face alone leaves a glyph it lacks
+    /// with nowhere to go.
+    @MainActor
+    static func boldFontStack(forStored stored: String) -> String? {
+        guard let bold = boldFace(forStored: stored) else { return nil }
+        return "\"\(bold)\", \(fontStack(forStored: stored))"
+    }
+
     @MainActor
     static func fontStack(forStored stored: String) -> String {
         let quoted = "\"\(stored)\""
         let system = "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont"
         let cjkFallback = "\"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\""
-        let untouched = stored == FontConfiguration.defaultPreviewFont
+        // Compare families, not the raw strings. The shipped default is a
+        // PostScript name while every value the popup writes is a family name,
+        // so picking 苹方-简 from the list, the row already shown as selected,
+        // used to make this false and hand Latin back to PingFang for good,
+        // with the two states indistinguishable in the UI.
+        let untouched = familyName(forStored: stored) == familyName(forStored: FontConfiguration.defaultPreviewFont)
         return untouched
             ? "\(system), \(quoted), \(cjkFallback), sans-serif"
             : "\(quoted), \(system), \(cjkFallback), sans-serif"

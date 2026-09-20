@@ -50,6 +50,35 @@ final class FontCatalogTests: XCTestCase {
     }
 
     @MainActor
+    func testTheDefaultFamilyYieldsLatinHoweverItWasStored() {
+        // The shipped value is a PostScript name and the popup writes family
+        // names, so both spellings have to be recognised as the default. Picking
+        // 苹方-简 from the list, which is the row already shown as selected, used
+        // to store "PingFang SC" and silently hand Latin back to PingFang with no
+        // way to undo it from the UI.
+        for stored in ["PingFangSC-Regular", "PingFang SC"] {
+            let stack = FontCatalog.fontStack(forStored: stored)
+            XCTAssertTrue(stack.hasPrefix("ui-sans-serif"), "\(stored) -> \(stack)")
+            XCTAssertTrue(stack.contains("\"\(stored)\""), "\(stored) -> \(stack)")
+        }
+    }
+
+    @MainActor
+    func testBoldStackKeepsTheFallbackTail() throws {
+        // Naming the heavier face alone leaves a glyph it lacks with nowhere to
+        // go, so the bold stack carries the same tail as the body stack.
+        let retired = "TsangerJinKai02-W04"
+        guard let bold = FontCatalog.boldFontStack(forStored: retired) else {
+            throw XCTSkip("No face on this machine needs a bold override")
+        }
+        XCTAssertTrue(bold.hasPrefix("\"TsangerJinKai02-W05\""), bold)
+        XCTAssertTrue(bold.hasSuffix("sans-serif"), bold)
+        XCTAssertTrue(bold.contains("\"PingFang SC\""), bold)
+        // A family that resolves its own bold gets no override at all.
+        XCTAssertNil(FontCatalog.boldFontStack(forStored: "Songti SC"))
+    }
+
+    @MainActor
     func testTheShippedDefaultYieldsLatinToTheSystemStack() {
         // Nobody chose PingFang for the English; it is what the app starts with,
         // and its Latin is drawn for interface labels. So the default, and only

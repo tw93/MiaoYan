@@ -300,13 +300,18 @@ class HtmlManager {
         // without naming a real bold would leave those families with no visible
         // emphasis at all.
         let boldFont =
-            FontCatalog.boldFace(forStored: previewFontName)
-            .map { " --text-font-bold: \"\($0)\"; --text-font-synthesis: none;" } ?? ""
+            FontCatalog.boldFontStack(forStored: previewFontName)
+            .map { " --text-font-bold: \($0); --text-font-synthesis: none;" } ?? ""
         let fontConfig =
             ":root { --text-font: \(FontCatalog.fontStack(forStored: previewFontName)); --code-text-font: \"\(codeFontName)\", \(codeFontStack);\(boldFont) }"
 
         if UserDefaultsManagement.magicPPT {
-            return "\(fontConfig) :root { --r-main-font: \"\(UserDefaultsManagement.previewFontName)\", sans-serif;}"
+            // ppt.html loads reveal's stylesheets, not base.css, so none of the
+            // variables above have a consumer there. `--r-main-font` is the one
+            // reveal reads, and it gets the same stack the preview uses rather
+            // than the bare stored name, which had no Latin ordering in front of
+            // it and no CJK fallback behind it.
+            return "\(fontConfig) :root { --r-main-font: \(FontCatalog.fontStack(forStored: previewFontName));}"
         }
 
         if UserDefaultsManagement.presentation {
