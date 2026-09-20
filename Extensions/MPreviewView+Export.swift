@@ -1,72 +1,9 @@
 import AppKit
 import Carbon.HIToolbox
-import CryptoKit
 import ObjectiveC.runtime
 import PDFKit
 import UniformTypeIdentifiers
 import WebKit
-
-// MARK: - Export Cache Manager
-@MainActor
-class ExportCache {
-    static let shared = ExportCache()
-    private var cache: [String: ExportData] = [:]
-    private let maxCacheSize = 50
-
-    struct ExportData {
-        let contentHash: String
-        let contentHeight: CGFloat
-        let contentWidth: CGFloat
-        let processedHTML: String
-        let timestamp: Date
-        let isImageLoaded: Bool
-
-        var isValid: Bool {
-            Date().timeIntervalSince(timestamp) < 300  // 5 minutes cache
-        }
-    }
-
-    private init() {}
-
-    func getCachedData(for note: Note) -> ExportData? {
-        let key = getCacheKey(for: note)
-        guard let data = cache[key], data.isValid else {
-            cache.removeValue(forKey: key)
-            return nil
-        }
-        return data
-    }
-
-    func setCachedData(_ data: ExportData, for note: Note) {
-        let key = getCacheKey(for: note)
-        cache[key] = data
-        cleanupCacheIfNeeded()
-    }
-
-    func invalidateCache(for note: Note) {
-        let key = getCacheKey(for: note)
-        cache.removeValue(forKey: key)
-    }
-
-    private func getCacheKey(for note: Note) -> String {
-        let content = note.getPrettifiedContent()
-        let appearanceKey = UserDataService.instance.isDark ? "dark" : "light"
-        let settingsKey = "\(UserDefaultsManagement.previewFontSize)_\(UserDefaultsManagement.previewFontName)"
-        let combinedString = "\(content)_\(appearanceKey)_\(settingsKey)"
-        let combinedData = Data(combinedString.utf8)
-        return SHA256.hash(data: combinedData).compactMap { String(format: "%02x", $0) }.joined()
-    }
-
-    private func cleanupCacheIfNeeded() {
-        if cache.count > maxCacheSize {
-            let sortedCache = cache.sorted { $0.value.timestamp < $1.value.timestamp }
-            let itemsToRemove = sortedCache.prefix(cache.count - maxCacheSize)
-            for (key, _) in itemsToRemove {
-                cache.removeValue(forKey: key)
-            }
-        }
-    }
-}
 
 // MARK: - Export Extensions
 @MainActor
@@ -76,24 +13,10 @@ extension MPreviewView {
     private static var exportStartTime: Date?
     private static let exportTimeout: TimeInterval = 30.0
 
-    // MARK: - Export Data Creation Helper
-    private func createExportData(note: Note, height: CGFloat = 0, width: CGFloat = 0, processedHTML: String? = nil) -> ExportCache.ExportData {
-        return ExportCache.ExportData(
-            contentHash: "",
-            contentHeight: height,
-            contentWidth: width == 0 ? self.bounds.width : width,
-            processedHTML: processedHTML ?? note.getPrettifiedContent(),
-            timestamp: Date(),
-            isImageLoaded: true
-        )
-    }
-
-    // MARK: - Unified Export Base Method
-    private func performExport(
-        note: Note,
+    // MARK: - Image Export Preparation
+    func performExport(
         viewController: ViewController,
-        needsDimensions: Bool,
-        exportAction: @escaping (ExportCache.ExportData, @escaping () -> Void) -> Void
+        exportAction: @escaping (@escaping () -> Void) -> Void
     ) {
         // Check if already exporting
         if Self.isExporting {
@@ -134,17 +57,8 @@ extension MPreviewView {
             self?.hasPreparedPPTExport = false
         }
 
-        // Check cache first
-        if let cachedData = ExportCache.shared.getCachedData(for: note),
-            cachedData.isImageLoaded
-        {
-            DispatchQueue.main.async {
-                exportAction(cachedData, resetExportFlag)
-            }
-            return
-        }
-
-        // Need fresh export
+        // A PNG snapshots the live DOM. Every export must prepare it again:
+        // cleanup removes export styles, even when the note has not changed.
         viewController.toastUpdate(message: "\(I18n.str("Exporting...")) 10%")
         waitForWebViewReady { [weak self] ready in
             guard ready, let self else {
@@ -156,7 +70,6 @@ extension MPreviewView {
 
             viewController.toastUpdate(message: "\(I18n.str("Exporting...")) 20%")
             self.injectPrintStylesIfNeeded(
-                needsDimensions: needsDimensions,
                 adjustLayout: false,
                 forceLightMode: false
             ) { [weak self] in
@@ -182,7 +95,7 @@ extension MPreviewView {
 
                         viewController.toastUpdate(message: "\(I18n.str("Exporting...")) 85%")
                         self.evaluateJavaScript("document.documentElement.outerHTML.toString()") { htmlResult, _ in
-                            let renderedHTML = htmlResult as? String ?? note.getPrettifiedContent()
+                            let renderedHTML = htmlResult as? String ?? ""
 
                             if renderedHTML.count < 50 {
                                 print("Export Error: Rendered HTML is too short/invalid")
@@ -193,23 +106,15 @@ extension MPreviewView {
                             }
                             viewController.toastUpdate(message: "\(I18n.str("Exporting...")) 95%")
 
-                            if !needsDimensions {
-                                let exportData = self.createExportData(note: note, processedHTML: renderedHTML)
-                                ExportCache.shared.setCachedData(exportData, for: note)
-                                exportAction(exportData, resetExportFlag)
-                            } else {
-                                self.getContentDimensions { height, width in
-                                    guard height > 0 && width > 0 else {
-                                        print("Export Error: Invalid dimensions h:\(height) w:\(width)")
-                                        resetExportFlag()
-                                        viewController.toastExport(status: false)
-                                        return
-                                    }
-
-                                    let exportData = self.createExportData(note: note, height: height, width: width, processedHTML: renderedHTML)
-                                    ExportCache.shared.setCachedData(exportData, for: note)
-                                    exportAction(exportData, resetExportFlag)
+                            self.getContentDimensions { height, width in
+                                guard height > 0 && width > 0 else {
+                                    print("Export Error: Invalid dimensions h:\(height) w:\(width)")
+                                    resetExportFlag()
+                                    viewController.toastExport(status: false)
+                                    return
                                 }
+
+                                exportAction(resetExportFlag)
                             }
                         }
                     }
@@ -220,7 +125,6 @@ extension MPreviewView {
 
     // MARK: - Style Injection
     private func injectPrintStylesIfNeeded(
-        needsDimensions: Bool,
         applyToScreen: Bool = true,
         adjustLayout: Bool = true,
         forceLightMode: Bool = true,
@@ -439,7 +343,6 @@ extension MPreviewView {
         vc.toastUpdate(message: "\(I18n.str("Exporting...")) 10%")
 
         self.injectPrintStylesIfNeeded(
-            needsDimensions: true,
             applyToScreen: false
         ) { [weak self] in
             guard let self else {
@@ -532,7 +435,7 @@ extension MPreviewView {
             let note = vc.notesTableView.getSelectedNote()
         else { return }
 
-        performExport(note: note, viewController: vc, needsDimensions: true) { [weak self] _, cleanup in
+        performExport(viewController: vc) { [weak self] cleanup in
             guard let self else {
                 cleanup()
                 vc.toastExport(status: false)
@@ -685,12 +588,11 @@ extension MPreviewView {
         Self.isExporting = true
         Self.exportStartTime = Date()
 
-        let exportData = self.createExportData(note: note)
-        self.generateHtmlDirectly(note: note, viewController: vc, exportData: exportData)
+        self.generateHtmlDirectly(note: note, viewController: vc)
     }
 
     // MARK: - Export Helper Methods
-    private func generateHtmlDirectly(note: Note, viewController: ViewController, exportData: ExportCache.ExportData) {
+    private func generateHtmlDirectly(note: Note, viewController: ViewController) {
         let currentName = viewController.titleLabel.stringValue
 
         Task { [weak self] in
