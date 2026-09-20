@@ -23,7 +23,7 @@ PUB_DATE=""
 SIGNATURE=""
 LENGTH=""
 ZIP_URL=""
-MIN_SYSTEM_VERSION="11.5"
+MIN_SYSTEM_VERSION="12.0"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in

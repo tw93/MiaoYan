@@ -57,7 +57,7 @@ class HtmlManager {
 
     // Print-only pagination rules injected into the offscreen WKWebView that hosts PDF export.
     // Paper size and page margins come from NSPrintInfo; macOS WebKit below 15.2 ignores
-    // `@page { size; margin }`, so this stylesheet sticks to properties that work on 11.5+.
+    // `@page { size; margin }`, so this stylesheet sticks to properties that work on 12.0+.
     //
     // The compact spacing overrides fight `.heti` typography defaults, which are tuned for
     // on-screen reading (1.74 line-height, 1.6em paragraph gutters). Print rendering gets
