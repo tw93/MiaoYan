@@ -195,9 +195,17 @@ MiaoYan ships through two independent channels. Publishing one never updates the
 | Publish surface | GitHub Release assets + `miaoyan.app/Release/` ZIP + appcast entry | App Store Connect submission + review |
 | How users update | Sparkle in-app update via `https://miaoyan.app/appcast.xml` | App Store update after review approval |
 
-- `appcast.xml` lives on the miaoyan.app site, not in this repository. `scripts/release-ci/update_appcast.sh` produces the entry and `scripts/build.sh` prints the enclosure line.
+- `appcast.xml` lives on the miaoyan.app site, not in this repository. `scripts/release-ci/update_appcast.sh` produces the entry and `scripts/build.sh` prints the enclosure line. The enclosure URL it prints defaults to `miaoyan.app/Release/`, which only holds 2.5.2, 2.7.0 and 3.1.0; every live entry points at the GitHub release asset instead, so replace that URL rather than copying the printed line.
+- Both install paths fetch release assets, never the tag tarball: homebrew-cask's `url` is `releases/download/V4.3.0/MiaoYan_V4.3.0.zip` and the appcast enclosure is the same shape. Nothing pins a hash of `archive/refs/tags/*.tar.gz`, so a tag that has no release yet can be deleted and recut without breaking a consumer. Deleting a tag that does have a release breaks `brew install --cask miaoyan` immediately, because the cask names that asset.
 - App Store users never see the appcast. After a direct-download release, the App Store version stays old until a separate submission passes review; do not report a version as "released" without naming which channel it reached.
 - When an App Store build is prepared, deliver ready-to-paste submission copy with it: Promotional Text (170-char limit) and What's New, in en and zh-Hans, derived from `.github/RELEASE_NOTES.md`. Do not wait for the maintainer to ask from the Connect submission page.
+
+## Fonts And Preview Rendering
+
+- Font preferences hold two different spellings. The shipped defaults in `Business/FontConfiguration.swift` are PostScript names (`PingFangSC-Regular`), while every value the font popups write is a family name (`PingFang SC`), because the popups are built from `availableFontFamilies`. Anything comparing a stored value against a default, or matching it to a popup row, has to resolve both sides through `FontCatalog.familyName(forStored:)` first. Comparing the raw strings made the preview's Latin ordering unreachable the moment the user opened the popup, with both states rendering the same selected row.
+- `FontCatalog.fontStack(forStored:)` decides who sets Latin, and the test is whether the user picked the face, not whether it is a CJK face. PingFang's Latin is drawn for interface labels and yields to `ui-sans-serif, system-ui, -apple-system`; a face someone chose leads its own stack and sets the whole line, because TsangerJinKai02 and its like draw Latin to match their Chinese.
+- A CSS property's minimum version has to clear `MACOSX_DEPLOYMENT_TARGET`, currently 12.0. `font-synthesis-weight` needs Safari 16.4 (macOS 13.3), so it ships beside the `font-synthesis` shorthand; where a rule mixes support levels, keep the older spelling and check that the absent-variable fallback is the pre-existing behaviour on both engines.
+- `ppt.html` loads reveal's stylesheets, not `base.css` or `typography.css`, so none of the `--text-font*` variables reach it. `--r-main-font` is the only one reveal reads. A preview font change is not done until the PPT branch of `previewStyle()` has been checked too.
 
 ## Release Notes
 
