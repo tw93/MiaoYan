@@ -128,7 +128,7 @@ string is the only breadcrumb the maintainer has when triaging.
 ## 产品偏好
 
 - **付费用户视角**: 默认按 App Store 付费版的精致度做。每次视觉 / 交互改动思考"对得起付费用户吗"。能精致一分就精致一分。
-- **Markdown 预览里图片 / 视频 / iframe / 表格必须 `max-width: 100%`**, 禁止横向滚动。任何引入 raw HTML 渲染的改动都要复查这一条。
+- Preview images, videos and iframes must stay within `max-width: 100%`. Wide tables may scroll inside `.table-scroll`, but must not widen the page. PDF and PNG exports must fit tables to the output width because exported content cannot scroll. Recheck these bounds when adding raw HTML rendering; verify initial rendering, incremental updates and repeated exports when changing table layout.
 - **设计参考**: UI / CSS 抄不出来时去看 `~/www/weekly` 和 `~/www/tw93.github.io`, 那里有维护者已经满意的样式。不要凭空发挥。
 - **目标视觉风格**: macOS 26 风格的 sidebar (玻璃态、透明、SF Symbols 最新一代) 是长期方向, 不是经典 Big Sur 风格。
 - **不要再提议整套 macOS 26 / Liquid Glass 重设计**。一次实机改造 (侧栏换原生 `.sidebar` 半透明材质 + 选中态改强调色玻璃 pill + 图标整体迁 SF Symbols + 自绘 pill `ChromeToolbarButton`) 已被维护者否决, 原话"还不如之前好看, 不强求这个"。要打磨侧栏 / 按钮就在现有不透明设计上做小步增量: 间距、对齐、hover、focus、字重。不要整体换材质或换图标体系, 除非维护者在当前回合明确要求。
@@ -173,6 +173,7 @@ Avoid broad scans of `build/`, `.build/`, `dist/`, and bundled web assets unless
 - Trash handling spans `Business/Storage.swift`, `Business/Note.swift`, sidebar drag/drop, attachment cleanup, and system Trash fallback.
 - A successfully removed note must retire its `Note` instance before any watcher, editor, lifecycle flush, or upload callback can save it again. Existing-note writes must fail closed if the file disappears, and UI rows may be removed only for filesystem operations that succeeded.
 - Version history lives in `Business/NoteVersionManager.swift` and `Controllers/VersionHistoryViewController.swift`; keep file IO off the main thread and UI updates on the main thread.
+- PNG export must prepare the current DOM, inject export styles and wait for media on every invocation. Cleanup removes those styles, so cached note content never proves a subsequent export is ready.
 - Mermaid and PDF export span `Business/HtmlManager.swift`, `Helpers/PdfExportController.swift`, and `Extensions/MPreviewView+Export.swift`. Wait for images and Mermaid rendering before capture.
 - Async note/image/file loading is intentional. Do not reintroduce blocking reads on the main thread for large notes or previews.
 - Directory symlinks are supported by storage scanning. Avoid recursion loops and duplicate notes when following symlinked directories.
@@ -192,19 +193,20 @@ MiaoYan ships through two independent channels. Publishing one never updates the
 | | Direct download (GitHub) | Mac App Store |
 |---|---|---|
 | Build | `scripts/build.sh`, Developer ID + notarization, Sparkle included | `scripts/build-appstore.sh`, App Store entitlements, no Sparkle |
-| Publish surface | GitHub Release assets + `miaoyan.app/Release/` ZIP + appcast entry | App Store Connect submission + review |
+| Publish surface | GitHub Release assets + appcast entry | App Store Connect submission + review |
 | How users update | Sparkle in-app update via `https://miaoyan.app/appcast.xml` | App Store update after review approval |
 
-- `appcast.xml` lives on the miaoyan.app site, not in this repository. `scripts/release-ci/update_appcast.sh` produces the entry and `scripts/build.sh` prints the enclosure line. The enclosure URL it prints defaults to `miaoyan.app/Release/`, which only holds 2.5.2, 2.7.0 and 3.1.0; every live entry points at the GitHub release asset instead, so replace that URL rather than copying the printed line.
+- `appcast.xml` lives on the miaoyan.app site, not in this repository. `scripts/release-ci/update_appcast.sh` produces the entry and `scripts/build.sh` prints the enclosure line. The enclosure URL printed by `scripts/build.sh` defaults to `miaoyan.app/Release/`; new entries must instead point to the published GitHub release asset. Historical entries retain their original URLs.
 - Both install paths fetch release assets, never the tag tarball: homebrew-cask's `url` is `releases/download/V4.3.0/MiaoYan_V4.3.0.zip` and the appcast enclosure is the same shape. Nothing pins a hash of `archive/refs/tags/*.tar.gz`, so a tag that has no release yet can be deleted and recut without breaking a consumer. Deleting a tag that does have a release breaks `brew install --cask miaoyan` immediately, because the cask names that asset.
 - App Store users never see the appcast. After a direct-download release, the App Store version stays old until a separate submission passes review; do not report a version as "released" without naming which channel it reached.
 - When an App Store build is prepared, deliver ready-to-paste submission copy with it: Promotional Text (170-char limit) and What's New, in en and zh-Hans, derived from `.github/RELEASE_NOTES.md`. Do not wait for the maintainer to ask from the Connect submission page.
 
 ## Fonts And Preview Rendering
 
+- Font menus refresh when opened because the preferences controller is reused. Cache classification by the installed family set, not its count, and preserve the selected stored family when rebuilding a menu.
 - Font preferences hold two different spellings. The shipped defaults in `Business/FontConfiguration.swift` are PostScript names (`PingFangSC-Regular`), while every value the font popups write is a family name (`PingFang SC`), because the popups are built from `availableFontFamilies`. Anything comparing a stored value against a default, or matching it to a popup row, has to resolve both sides through `FontCatalog.familyName(forStored:)` first. Comparing the raw strings made the preview's Latin ordering unreachable the moment the user opened the popup, with both states rendering the same selected row.
 - `FontCatalog.fontStack(forStored:)` decides who sets Latin, and the test is whether the user picked the face, not whether it is a CJK face. PingFang's Latin is drawn for interface labels and yields to `ui-sans-serif, system-ui, -apple-system`; a face someone chose leads its own stack and sets the whole line, because TsangerJinKai02 and its like draw Latin to match their Chinese.
-- A CSS property's minimum version has to clear `MACOSX_DEPLOYMENT_TARGET`, currently 12.0. `font-synthesis-weight` needs Safari 16.4 (macOS 13.3), so it ships beside the `font-synthesis` shorthand; where a rule mixes support levels, keep the older spelling and check that the absent-variable fallback is the pre-existing behaviour on both engines.
+- A CSS property's minimum version has to clear `MACOSX_DEPLOYMENT_TARGET`, currently 12.0. Use the supported `font-synthesis` shorthand: a real heavier face disables only weight synthesis (`style`), while ordinary families keep `weight style`. Do not use `none`, which also removes synthetic italics. When declarations have different minimum versions, retain a supported fallback and verify the absent-variable behavior on both engines.
 - `ppt.html` loads reveal's stylesheets, not `base.css` or `typography.css`, so none of the `--text-font*` variables reach it. `--r-main-font` is the only one reveal reads. A preview font change is not done until the PPT branch of `previewStyle()` has been checked too.
 
 ## Release Notes
