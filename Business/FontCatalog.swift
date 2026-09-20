@@ -90,26 +90,25 @@ enum FontCatalog {
 
     /// The `font-family` stack for a chosen face.
     ///
-    /// A Chinese face carries Latin glyphs of its own, and PingFang's are wider
-    /// and looser than the system's, so putting the chosen face first hands it
-    /// every English word too and a line of prose comes out slack. Claude's and
-    /// Cursor's desktop apps both order the stack the other way, letting
-    /// `ui-sans-serif, system-ui, -apple-system` take Latin and naming PingFang
-    /// only as the CJK fallback, which is what this does.
+    /// A face the user picked leads the stack and sets everything, Latin
+    /// included. That is the whole point of picking it: TsangerJinKai02 draws
+    /// its Latin to go with the楷书 it draws, single-storey a and g, and handing
+    /// those words to the system face pulls the two halves of a line apart.
     ///
-    /// A Latin face stays in front: someone who picks Georgia picked it for the
-    /// English, and the CJK fallback covers the Chinese behind it.
+    /// The default is the one exception. PingFang's Latin is drawn for interface
+    /// labels, wider and looser than the system's, and nobody chose it for the
+    /// English; it is simply what the app starts with. So when the face is still
+    /// the shipped default, the system takes Latin and PingFang is named only as
+    /// the CJK fallback, the way Claude's and Cursor's desktop apps order it.
+    /// Main-actor bound because it reads the shipped default from
+    /// `FontConfiguration`; its only caller is `previewStyle()`, already there.
+    @MainActor
     static func fontStack(forStored stored: String) -> String {
         let quoted = "\"\(stored)\""
         let system = "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont"
         let cjkFallback = "\"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\""
-        guard let font = NSFont(name: stored, size: 16) ?? NSFont(name: familyName(forStored: stored), size: 16)
-        else {
-            return "\(quoted), \(system), \(cjkFallback), sans-serif"
-        }
-        let covered = font.coveredCharacterSet
-        let isCJK = cjkProbe.unicodeScalars.allSatisfy { covered.contains($0) }
-        return isCJK
+        let untouched = stored == FontConfiguration.defaultPreviewFont
+        return untouched
             ? "\(system), \(quoted), \(cjkFallback), sans-serif"
             : "\(quoted), \(system), \(cjkFallback), sans-serif"
     }

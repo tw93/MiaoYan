@@ -49,27 +49,33 @@ final class FontCatalogTests: XCTestCase {
         XCTAssertEqual(FontCatalog.familyName(forStored: ""), "")
     }
 
-    func testChineseFacesYieldLatinToTheSystemStack() {
-        // A Chinese face has Latin glyphs of its own and they are not the ones to
-        // set English in, so the system stack has to come first and the chosen
-        // face has to still be there for the Chinese.
-        let stack = FontCatalog.fontStack(forStored: "PingFang SC")
-        let systemAt = try? XCTUnwrap(stack.range(of: "ui-sans-serif"))
-        let chosenAt = try? XCTUnwrap(stack.range(of: "\"PingFang SC\""))
+    @MainActor
+    func testTheShippedDefaultYieldsLatinToTheSystemStack() {
+        // Nobody chose PingFang for the English; it is what the app starts with,
+        // and its Latin is drawn for interface labels. So the default, and only
+        // the default, lets the system take Latin while staying on as the CJK
+        // fallback.
+        let stack = FontCatalog.fontStack(forStored: FontConfiguration.defaultPreviewFont)
+        let systemAt = stack.range(of: "ui-sans-serif")
+        let chosenAt = stack.range(of: "\"\(FontConfiguration.defaultPreviewFont)\"")
         XCTAssertNotNil(systemAt)
         XCTAssertNotNil(chosenAt)
-        if let s = systemAt, let c = chosenAt { XCTAssertTrue(s.lowerBound < c.lowerBound) }
+        if let s = systemAt, let c = chosenAt { XCTAssertTrue(s.lowerBound < c.lowerBound, stack) }
     }
 
-    func testLatinFacesKeepTheFrontOfTheStack() {
-        // Someone who picks Georgia picked it for the English, so it leads and
-        // the CJK fallback sits behind it.
-        guard NSFontManager.shared.availableFontFamilies.contains("Georgia") else { return }
-        let stack = FontCatalog.fontStack(forStored: "Georgia")
-        XCTAssertTrue(stack.hasPrefix("\"Georgia\""), stack)
-        XCTAssertTrue(stack.contains("PingFang SC"), stack)
+    @MainActor
+    func testAChosenFaceLeadsTheStackWhateverScriptItIs() {
+        // Picking a face means picking it for the whole line. TsangerJinKai02
+        // draws its Latin to match its Chinese, and handing those words to the
+        // system face splits the line into two typefaces.
+        for family in ["TsangerJinKai02-W04", "Georgia", "Songti SC", "Menlo"] {
+            let stack = FontCatalog.fontStack(forStored: family)
+            XCTAssertTrue(stack.hasPrefix("\"\(family)\""), stack)
+            XCTAssertTrue(stack.contains("PingFang SC"), stack)
+        }
     }
 
+    @MainActor
     func testEveryStackEndsInAGenericFamily() {
         // Without the generic tail a face missing a glyph falls through to the
         // renderer's last resort rather than to a sans-serif.
