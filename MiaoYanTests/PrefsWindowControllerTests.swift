@@ -5,6 +5,38 @@ import XCTest
 
 final class PrefsWindowControllerTests: XCTestCase {
     @MainActor
+    func testFontMenusRefreshInstalledFamiliesWithoutChangingSelection() throws {
+        let controller = TypographyPrefsViewController()
+        func popups(in view: NSView) -> [NSPopUpButton] {
+            view.subviews.flatMap { child in
+                if let popup = child as? NSPopUpButton { return [popup] }
+                return popups(in: child)
+            }
+        }
+        let fontPopups = popups(in: controller.view).filter { popup in
+            popup.itemArray.contains { $0.representedObject is String }
+        }
+        XCTAssertEqual(fontPopups.count, 4)
+        for popup in fontPopups {
+            let menu = try XCTUnwrap(popup.menu)
+            let selected = try XCTUnwrap(popup.selectedItem?.representedObject as? String)
+            let existing = Set(menu.items.compactMap { $0.representedObject as? String })
+            let missing = try XCTUnwrap(
+                menu.items.first { item in
+                    guard let family = item.representedObject as? String else { return false }
+                    return family != selected
+                })
+            // Model a menu built before an installed face became available.
+            // Opening that same menu must refresh it, without rebuilding the
+            // preferences controller or changing the user's chosen family.
+            menu.removeItem(missing)
+            menu.delegate?.menuNeedsUpdate?(menu)
+            XCTAssertEqual(Set(menu.items.compactMap { $0.representedObject as? String }), existing)
+            XCTAssertEqual(popup.selectedItem?.representedObject as? String, selected)
+        }
+    }
+
+    @MainActor
     func testFontMigrationPreservesCustomFaces() throws {
         let defaults = UserDefaults.standard
         let keys = ["fontName", "windowFontName", "previewFontName", "codeFont", "hasMigratedSystemFonts_v1", "hasMigratedCodeFontDefault_v1", "hasMigratedFontDefaults_v2"]

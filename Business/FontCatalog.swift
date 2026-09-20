@@ -182,11 +182,11 @@ enum FontCatalog {
     /// Classification walks every installed family and asks each one for its
     /// character set, which costs about 110ms for the text list. One shared
     /// cache keeps the four popups on a single pass, and a change in the
-    /// installed-family count invalidates it so a newly installed face appears
-    /// the next time Preferences opens.
+    /// installed-family set invalidates it so installed or removed faces appear
+    /// the next time a font menu opens, including replacements at the same count.
     private final class Cache: @unchecked Sendable {
         private let lock = NSLock()
-        private var stamp = -1
+        private var installedFamilies: Set<String> = []
         private var text: [String] = []
         private var code: [String] = []
         private var latin: [String] = []
@@ -207,8 +207,9 @@ enum FontCatalog {
 
         private func rebuildIfNeeded() {
             let all = NSFontManager.shared.availableFontFamilies
-            guard all.count != stamp else { return }
-            stamp = all.count
+            let installed = Set(all)
+            guard installed != installedFamilies else { return }
+            installedFamilies = installed
             var textFamilies: [String] = []
             var codeFamilies: [String] = []
             var latinFamilies: [String] = []

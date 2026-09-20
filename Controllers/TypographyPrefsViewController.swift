@@ -1,9 +1,10 @@
 import Cocoa
 
 @MainActor
-final class TypographyPrefsViewController: BasePrefsViewController {
+final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelegate {
     private var settings = EditorSettings()
     private var fontStackView: NSStackView!
+    private var fontPopUps: [NSPopUpButton] = []
 
     override func setupUI() {
         setupFontSection(in: installPreferencesStack())
@@ -51,6 +52,7 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         fontPopUp.translatesAutoresizingMaskIntoConstraints = false
         fontPopUp.target = self
         fontPopUp.action = fontAction
+        fontPopUps.append(fontPopUp)
         // Initialize with the correct current font for this row
         if fontAction == #selector(editorFontChanged(_:)) {
             setupFontPopUp(fontPopUp, kind: .text, currentName: settings.editorFontName)
@@ -78,6 +80,7 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         popUp.translatesAutoresizingMaskIntoConstraints = false
         popUp.target = self
         popUp.action = action
+        fontPopUps.append(popUp)
 
         if action == #selector(codeFontChanged(_:)) {
             setupFontPopUp(popUp, kind: .code, currentName: settings.codeFontName)
@@ -107,6 +110,7 @@ final class TypographyPrefsViewController: BasePrefsViewController {
         // they were fonts.
         popUp.autoenablesItems = false
         guard let menu = popUp.menu else { return }
+        menu.delegate = self
 
         let recommended = FontCatalog.installedRecommendations(for: kind)
         let missingRetired =
@@ -147,6 +151,20 @@ final class TypographyPrefsViewController: BasePrefsViewController {
     }
 
     private static let retiredFontTag = 9001
+
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        guard let popup = fontPopUps.first(where: { $0.menu === menu }) else { return }
+        let currentName: String
+        switch popup.action {
+        case #selector(editorFontChanged(_:)): currentName = settings.editorFontName
+        case #selector(previewFontChanged(_:)): currentName = settings.previewFontName
+        case #selector(windowFontChanged(_:)): currentName = settings.windowFontName
+        case #selector(codeFontChanged(_:)): currentName = settings.codeFontName
+        default: return
+        }
+        let kind: FontListKind = popup.action == #selector(codeFontChanged(_:)) ? .code : .text
+        setupFontPopUp(popup, kind: kind, currentName: currentName)
+    }
 
     private func sectionTitle(_ key: String) -> String {
         switch key {
