@@ -37,8 +37,10 @@ final class FontCatalogTests: XCTestCase {
         // The shipped defaults are PostScript names while the popup lists family
         // names, so without this mapping the default matched no row and was
         // appended below the alphabetical list as its own entry.
+        // PingFang SC is the only face safe to assert on: it ships with macOS, so
+        // this holds on a CI runner too. A third-party face would make the test
+        // report the machine's font library rather than this mapping.
         XCTAssertEqual(FontCatalog.familyName(forStored: "PingFangSC-Regular"), "PingFang SC")
-        XCTAssertEqual(FontCatalog.familyName(forStored: "TsangerJinKai02-W04"), "TsangerJinKai02")
 
         // A value that already is a family name, or that names nothing at all,
         // has to survive untouched.
@@ -59,12 +61,5 @@ final class FontCatalogTests: XCTestCase {
         // has to be there; if it ever is not, the popup loses its default row.
         XCTAssertTrue(FontCatalog.installedRecommendations(for: .text).contains("PingFang SC"))
         XCTAssertTrue(FontCatalog.installedRecommendations(for: .code).contains("Menlo"))
-    }
-
-    func testRetiredBundledFaceIsNamedByItsFamilyNotItsPostScriptName() {
-        // The popup looks the retired face up by family, so this constant has to
-        // be the family name; the stored preference was the PostScript one.
-        XCTAssertEqual(FontCatalog.retiredBundledFamily, "TsangerJinKai02")
-        XCTAssertEqual(FontCatalog.familyName(forStored: "TsangerJinKai02-W04"), FontCatalog.retiredBundledFamily)
     }
 }
