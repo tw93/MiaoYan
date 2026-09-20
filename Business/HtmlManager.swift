@@ -78,12 +78,17 @@ class HtmlManager {
                    var(--text-color) }`, which paints every element. The rules
                    below outrank it only on the selectors they name, so list
                    items, emphasis and KaTeX spans kept the dark theme's
-                   #E7E9EA on white paper (#559). Repointing the variable
-                   catches all of them at once, and the page is always white
-                   here, so there is nothing a light value could be right for. */
+                   #E7E9EA on white paper (#559). Repointing the variables
+                   catches all of them at once, and the page is always white here,
+                   so no dark value can be right. --code-bg has to move with
+                   --text-color: theme-dark paints `table`, `td` and inline `code`
+                   with it while the print sheet names only `th` and `pre`, so
+                   pinning the ink alone left table cells at contrast 1.21 instead
+                   of 5.32 (measured against the real stylesheet order). */
                 :root, .darkmode {
                     --text-color: var(--pdf-ink) !important;
                     --bg-color: #ffffff !important;
+                    --code-bg: var(--pdf-code-bg) !important;
                 }
                 html, body {
                     margin: 0 !important;
