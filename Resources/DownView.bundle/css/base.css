@@ -88,9 +88,9 @@ pre code {
 .heti table {
   border-color: var(--border-color);
   color: var(--text-color);
-  width: 100%;
+  display: block;
+  overflow-x: auto;
   max-width: 100%;
-  table-layout: fixed;
   box-sizing: border-box;
 }
 

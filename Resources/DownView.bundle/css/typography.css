@@ -325,8 +325,10 @@ blockquote blockquote {
 
 /* Tables */
 .heti table {
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
   box-sizing: border-box;
-  table-layout: fixed;
   margin-block-start: 0.8em;
   margin-block-end: 1.6em;
   margin-inline-start: auto;
