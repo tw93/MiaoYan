@@ -14,7 +14,7 @@
       <img alt="GitHub 提交活跃度" src="https://img.shields.io/github/commit-activity/m/tw93/MiaoYan?style=flat-square"></a>
     <a href="https://github.com/tw93/MiaoYan/issues?q=is%3Aissue+is%3Aclosed" target="_blank">
       <img alt="GitHub 已关闭议题" src="https://img.shields.io/github/issues-closed/tw93/MiaoYan.svg?style=flat-square"></a>
-    <img alt="macOS 11.5+" src="https://img.shields.io/badge/macOS-11.5%2B-orange?style=flat-square">
+    <img alt="macOS 12.0+" src="https://img.shields.io/badge/macOS-12.0%2B-orange?style=flat-square">
   </div>
   <div align="center">轻灵的 Markdown 笔记本伴你写出妙言</div>
 </p>
@@ -39,7 +39,7 @@
    brew install --cask miaoyan
    ```
 
-3. **GitHub Releases**: 从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) 下载最新 DMG(macOS 11.5+)
+3. **GitHub Releases**: 从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) 下载最新 DMG(macOS 12.0+)
 
 三种方式共享同一份代码,功能完全一致,同步更新。安装后在 iCloud 云盘、坚果云桌面同步目录或其他位置创建 `MiaoYan` 文件夹,打开设置 (⌘,) 指定存储位置,就可以开始写了。
 
