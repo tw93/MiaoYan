@@ -179,6 +179,15 @@ class HtmlManager {
                     background: var(--pdf-code-bg) !important;
                     font-weight: 650 !important;
                 }
+                /* The dark theme paints ==mark== with a hardcoded olive fill in
+                   two places, neither through a variable, so pinning the ink
+                   turned a highlight from light-on-dark into dark-on-dark. Put
+                   back the product's own light-theme highlight instead of
+                   inventing a print colour. */
+                mark {
+                    background-color: rgba(255, 247, 0, 0.88) !important;
+                    color: var(--pdf-ink) !important;
+                }
                 a {
                     color: inherit !important;
                     text-decoration: none !important;
