@@ -120,11 +120,14 @@ final class TypographyPrefsViewController: BasePrefsViewController {
                 menu.addItem(item)
             }
             menu.addItem(.separator())
-            menu.addItem(sectionHeader(I18n.str("All Fonts")))
         }
 
-        let rest = FontCatalog.families(for: kind).filter { !recommended.contains($0) }
-        for family in rest { menu.addItem(fontItem(family: family)) }
+        for section in FontCatalog.sections(for: kind) {
+            let families = section.families.filter { !recommended.contains($0) }
+            guard !families.isEmpty else { continue }
+            menu.addItem(sectionHeader(sectionTitle(section.title)))
+            for family in families { menu.addItem(fontItem(family: family)) }
+        }
 
         // A stored value can be a PostScript name, or a face this popup filters
         // out, or one that is no longer installed. Resolve it to a family, then
@@ -140,6 +143,14 @@ final class TypographyPrefsViewController: BasePrefsViewController {
     }
 
     private static let retiredFontTag = 9001
+
+    private func sectionTitle(_ key: String) -> String {
+        switch key {
+        case "zh": return I18n.str("Chinese")
+        case "latin": return I18n.str("Latin")
+        default: return I18n.str("All Fonts")
+        }
+    }
 
     private func item(in menu: NSMenu, family: String) -> NSMenuItem? {
         menu.items.first { $0.representedObject as? String == family }

@@ -49,6 +49,35 @@ final class FontCatalogTests: XCTestCase {
         XCTAssertEqual(FontCatalog.familyName(forStored: ""), "")
     }
 
+    func testTextPopupSeparatesChineseFromLatin() {
+        let sections = FontCatalog.sections(for: .text)
+        XCTAssertEqual(sections.map(\.title), ["zh", "latin"])
+
+        let chinese = Set(sections[0].families)
+        let latin = Set(sections[1].families)
+        XCTAssertFalse(chinese.isEmpty)
+        XCTAssertFalse(latin.isEmpty)
+        // A family belongs to one section or the other, never both.
+        XCTAssertTrue(chinese.isDisjoint(with: latin))
+
+        // The Latin section exists so someone writing English can find the
+        // obvious faces; a rule that drops these is too aggressive no matter how
+        // clean it looks, since they are the ones people go looking for.
+        for family in ["Georgia", "Helvetica Neue", "Arial", "Times New Roman", "Verdana"] {
+            guard NSFontManager.shared.availableFontFamilies.contains(family) else { continue }
+            XCTAssertTrue(latin.contains(family), "\(family) is missing from the Latin section")
+        }
+        for family in latin {
+            XCTAssertFalse(NSFont(name: family, size: 12)?.coveredCharacterSet.contains("永") ?? false)
+        }
+    }
+
+    func testCodePopupHasASingleSection() {
+        let sections = FontCatalog.sections(for: .code)
+        XCTAssertEqual(sections.count, 1)
+        XCTAssertEqual(sections[0].families, FontCatalog.families(for: .code))
+    }
+
     func testDisplayNameNeverReplacesTheStoredFamily() {
         // The popup label is the localized name while the stored value stays the
         // family, so these two must not be conflated. On an English runner they
