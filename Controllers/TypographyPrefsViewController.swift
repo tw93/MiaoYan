@@ -102,6 +102,10 @@ final class TypographyPrefsViewController: BasePrefsViewController {
 
     private func setupFontPopUp(_ popUp: NSPopUpButton, kind: FontListKind, currentName: String?) {
         popUp.removeAllItems()
+        // NSPopUpButton enables its items on its own by default, which overrode
+        // the section headings' `isEnabled = false` and let them be picked as if
+        // they were fonts.
+        popUp.autoenablesItems = false
         guard let menu = popUp.menu else { return }
 
         let recommended = FontCatalog.installedRecommendations(for: kind)
