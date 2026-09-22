@@ -8,7 +8,7 @@
 > - 全局规则: `~/.claude/CLAUDE.md`
 > - Swift 通用规则: `~/.claude/rules/swift.md` (项目级补充 `.claude/rules/swift.md`)
 > - 项目 skills 的 tracked canonical source: `.agents/skills/` - `release`, `appstore`, `lint`, `code-review`, `github-ops`
-> - `.claude/skills/` 是 gitignored 的本机兼容镜像；只编辑 `.agents/skills/`，再运行 `bash scripts/sync-agent-skills.sh --write` 和 `--check`
+> - `.claude/skills/` 是 gitignored 的本机兼容镜像，可使用指向对应 canonical 目录的软链或文件拷贝；只编辑 `.agents/skills/`，再运行 `bash scripts/sync-agent-skills.sh --write` 和 `--check`
 
 ## Project
 
@@ -226,7 +226,7 @@ MiaoYan ships through two independent channels. Publishing one never updates the
 - Swift changes: run the Debug `xcodebuild` command above.
 - UI or interaction fixes: launch the built app and exercise the changed flow before reporting done; a green build is not visual proof. If the first fix attempt does not hold, stop guessing and add `#if DEBUG` runtime logging to capture evidence before the next code change.
 - Lint or formatting changes: run SwiftLint and swift-format checks.
-- Project Skill changes: edit `.agents/skills/` only, then run `bash scripts/sync-agent-skills.sh --write` followed by `bash scripts/sync-agent-skills.sh --check`. The checker compares canonical files while allowing unrelated private Claude skills to remain local.
+- Project Skill changes: edit `.agents/skills/` only, then run `bash scripts/sync-agent-skills.sh --write` followed by `bash scripts/sync-agent-skills.sh --check`. The checker accepts links only to the corresponding canonical skill directory and compares copied files while preserving unrelated private Claude skills. For sync-script changes, run `python3 scripts/test-sync-agent-skills.py`.
 - iOS changes: verification bar equals macOS. Inspect `MiaoYanMobile/` target membership, build, then run the affected flow in the Simulator (for example the new-note title flow or preview first frame) before reporting done; a green build alone is not done. Performance complaints need a measurable budget in the fix (for example: detail-page first frame past the budget shows a skeleton instead of blocking).
 - Release or signing changes: verify version alignment and inspect the relevant repository script; do not assume a tracked `release.yml` exists.
 - Release note changes: inspect `.github/RELEASE_NOTES.md` and the affected `scripts/release-ci/` renderer.

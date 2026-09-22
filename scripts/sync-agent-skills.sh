@@ -79,6 +79,22 @@ for relative in "${canonical_files[@]}"; do
   source="${canonical_root}/${relative}"
   mirror="${mirror_root}/${relative}"
   reject_symlink_components "${source}"
+  mirror_directory="$(dirname "${mirror}")"
+  if [[ -L "${mirror_directory}" ]]; then
+    # A compatibility link is valid only for this exact canonical skill.
+    # Validate its parent before following it, and never write through the link.
+    reject_symlink_components "$(dirname "${mirror_directory}")"
+    resolved_directory="$(cd "${mirror_directory}" 2>/dev/null && pwd -P)" || resolved_directory=""
+    if [[ "${resolved_directory}" != "$(dirname "${source}")" ]]; then
+      echo "ERROR: Claude skill link does not target its canonical directory: ${mirror_directory}" >&2
+      exit 1
+    fi
+    if [[ ! -f "${source}" ]]; then
+      echo "ERROR: missing canonical project skill file: .agents/skills/${relative}" >&2
+      exit 1
+    fi
+    continue
+  fi
   reject_symlink_components "${mirror}"
 
   if [[ ! -f "${source}" ]]; then
