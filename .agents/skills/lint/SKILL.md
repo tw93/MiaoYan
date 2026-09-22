@@ -23,7 +23,7 @@ swiftlint lint --strict
 swiftlint --fix
 
 # Check specific file
-swiftlint lint --path Controllers/ViewController.swift
+swiftlint lint Controllers/ViewController.swift
 ```
 
 Config: `.swiftlint.yml` at project root.

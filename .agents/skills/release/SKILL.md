@@ -29,7 +29,7 @@ Use this skill only when the maintainer explicitly asks for a GitHub Release.
 - Before drafting, read the previous published release and treat it as the hard format template: `gh release view $(gh release list --limit 1 --json tagName --jq '.[0].tagName')`. Do not rebuild the shape from memory.
 - Title is `V{x.y.z} {Codename} {emoji}`, e.g. `V4.0.0 Valstrax 🚀`. The codename follows the monster-name-plus-emoji convention used by `scripts/release-ci/generate_release_content.sh`.
 - Source of truth is `.github/RELEASE_NOTES.md`: `# V{x.y.z} {Codename} {emoji}` heading, Chinese numbered list, `---` separator, English numbered list, items mapped one-to-one. `scripts/release-ci/render_release_body.sh` renders it into the HTML release body (centered logo block + tagline, `<h3>Changelog</h3>` English list, `<h3>更新日志</h3>` Chinese list, closing star ask + repo blockquote).
-- Keep 3 to 6 items per language, one sentence each, engineer-facing.
+- Use one item per distinct user-visible outcome, one sentence each, with matching English and Chinese lists. Do not impose an item-count quota.
 
 ## Preflight
 
