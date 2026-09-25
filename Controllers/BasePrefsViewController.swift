@@ -2,19 +2,52 @@ import Cocoa
 
 @MainActor
 enum PrefsFormMetrics {
-    static let pageInsets = NSEdgeInsets(top: 72, left: 28, bottom: 24, right: 28)
+    static let pageInsets = NSEdgeInsets(top: 72, left: 28, bottom: 44, right: 28)
     static let rowSpacing: CGFloat = 14
     static let groupSpacing: CGFloat = 20
+    /// Starting width of the label column. The window replaces it with the
+    /// widest label across all pages, so the column is as wide as the current
+    /// language needs rather than a guess that leaves Chinese labels adrift
+    /// and cuts Spanish ones.
     static let labelWidth: CGFloat = 164
     static let controlSpacing: CGFloat = 16
     static let rowHeight: CGFloat = 30
-    static let controlWidth: CGFloat = 220
-    static let compactControlWidth: CGFloat = 96
+    /// Every control column ends on the same right edge; a row holding two
+    /// controls splits this width rather than adding to it.
+    static let controlWidth: CGFloat = 320
+    static let sizeControlWidth: CGFloat = 64
+}
+
+extension NSLayoutConstraint.Priority {
+    fileprivate static let preferredWidth = NSLayoutConstraint.Priority(999)
 }
 
 @MainActor
 class BasePrefsViewController: NSViewController {
     private weak var preferencesStackView: NSStackView?
+    private var labels: [NSTextField] = []
+    private var labelWidthConstraints: [NSLayoutConstraint] = []
+    private var formWidthConstraints: [NSLayoutConstraint] = []
+    private var separatorInsetConstraints: [NSLayoutConstraint] = []
+    private var labelColumnWidth = PrefsFormMetrics.labelWidth
+
+    private var formWidth: CGFloat {
+        labelColumnWidth + PrefsFormMetrics.controlSpacing + PrefsFormMetrics.controlWidth
+    }
+
+    /// The width this page's longest label needs.
+    var widestLabel: CGFloat {
+        labels.map { ceil($0.intrinsicContentSize.width) }.max() ?? PrefsFormMetrics.labelWidth
+    }
+
+    /// Shared by every page so switching pages never moves the control column.
+    func applyLabelColumnWidth(_ width: CGFloat) {
+        labelColumnWidth = width
+        labelWidthConstraints.forEach { $0.constant = width }
+        formWidthConstraints.forEach { $0.constant = formWidth }
+        separatorInsetConstraints.forEach { $0.constant = width + PrefsFormMetrics.controlSpacing }
+        view.needsLayout = true
+    }
 
     override func loadView() {
         setupBaseView()
@@ -68,21 +101,43 @@ class BasePrefsViewController: NSViewController {
         return stackView
     }
 
+    /// The page height the window sizes itself to, so a short page does not
+    /// sit on a tall empty window.
+    var preferredContentHeight: CGFloat {
+        guard let stackView = preferencesStackView else { return 0 }
+        let insets = PrefsFormMetrics.pageInsets
+        return insets.top + stackView.fittingSize.height + insets.bottom
+    }
+
+    /// Adds rows in groups, with a hairline and the wider group spacing
+    /// between one group and the next.
+    func addPreferencesGroups(_ groups: [[NSView]], to stackView: NSStackView) {
+        for (index, group) in groups.enumerated() {
+            if index > 0, let previous = stackView.arrangedSubviews.last {
+                let separator = makePreferencesSeparator()
+                stackView.addArrangedSubview(separator)
+                stackView.setCustomSpacing(PrefsFormMetrics.groupSpacing, after: previous)
+                stackView.setCustomSpacing(PrefsFormMetrics.groupSpacing, after: separator)
+            }
+            group.forEach { stackView.addArrangedSubview($0) }
+        }
+    }
+
     private func layoutPreferencesStack() {
         guard let stackView = preferencesStackView else { return }
 
         let insets = PrefsFormMetrics.pageInsets
         let fittingSize = stackView.fittingSize
-        // Always give the form its content width (the rows hard-require >=420).
-        // Clamping to the view's current width clipped the stack narrower than
-        // its rows during early layout passes (e.g. a 323pt transient bounds),
-        // which is what produced the constraint conflicts. The form is
-        // left-aligned at a fixed width; extra window width is just trailing
-        // space, so there is nothing to clamp against.
-        let width = max(fittingSize.width, 420)
+        // Always give the form its content width. Clamping to the view's
+        // current width clipped the stack narrower than its rows during early
+        // layout passes (e.g. a 323pt transient bounds), which is what produced
+        // the constraint conflicts. The form is centred in whatever width the
+        // page has and never starts left of the page inset.
+        let width = max(fittingSize.width, formWidth)
+        let x = max(insets.left, ((view.bounds.width - width) / 2).rounded())
 
         stackView.frame = NSRect(
-            x: insets.left,
+            x: x,
             y: insets.top,
             width: width,
             height: fittingSize.height
@@ -109,7 +164,6 @@ class BasePrefsViewController: NSViewController {
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: rowView.leadingAnchor),
             label.centerYAnchor.constraint(equalTo: rowView.centerYAnchor),
-            label.widthAnchor.constraint(equalToConstant: PrefsFormMetrics.labelWidth),
 
             control.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: PrefsFormMetrics.controlSpacing),
             control.centerYAnchor.constraint(equalTo: rowView.centerYAnchor),
@@ -117,9 +171,21 @@ class BasePrefsViewController: NSViewController {
             rowView.heightAnchor.constraint(greaterThanOrEqualToConstant: PrefsFormMetrics.rowHeight),
         ])
 
+        let labelWidth = label.widthAnchor.constraint(equalToConstant: labelColumnWidth)
+        labelWidth.isActive = true
+        labels.append(label)
+        labelWidthConstraints.append(labelWidth)
+
+        let rowWidth = rowView.widthAnchor.constraint(equalToConstant: formWidth)
+        rowWidth.priority = .preferredWidth
+        rowWidth.isActive = true
+        formWidthConstraints.append(rowWidth)
+
+        // Above the controls' own compression resistance, so a popup whose
+        // longest item is wider cannot push its row past the shared edge.
         if let controlWidth {
             let width = control.widthAnchor.constraint(equalToConstant: controlWidth)
-            width.priority = .defaultHigh
+            width.priority = .preferredWidth
             width.isActive = true
         }
 
@@ -135,14 +201,18 @@ class BasePrefsViewController: NSViewController {
         line.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(line)
 
+        let inset = line.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: labelColumnWidth + PrefsFormMetrics.controlSpacing)
+        separatorInsetConstraints.append(inset)
         NSLayoutConstraint.activate([
-            line.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: PrefsFormMetrics.labelWidth + PrefsFormMetrics.controlSpacing),
+            inset,
             line.trailingAnchor.constraint(equalTo: container.trailingAnchor),
             line.centerYAnchor.constraint(equalTo: container.centerYAnchor),
             line.heightAnchor.constraint(equalToConstant: 1),
         ])
 
-        container.widthAnchor.constraint(greaterThanOrEqualToConstant: 420).isActive = true
+        let width = container.widthAnchor.constraint(equalToConstant: formWidth)
+        width.isActive = true
+        formWidthConstraints.append(width)
         return container
     }
 

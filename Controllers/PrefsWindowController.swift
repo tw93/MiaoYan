@@ -17,6 +17,9 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
     private enum Metrics {
         static let windowSize = NSSize(width: 800, height: 520)
         static let sidebarWidth: CGFloat = 176
+        /// Keeps the sidebar list comfortably clear of the bottom edge on the
+        /// shortest page.
+        static let minimumHeight: CGFloat = 300
     }
 
     convenience init() {
@@ -66,6 +69,7 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         setupSplitView()
         setupSidebar()
         setupContent()
+        alignLabelColumns()
         showCategory(.general)
         applyWindowAppearance()
 
@@ -160,6 +164,30 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         ])
 
         sidebarView?.selectCategory(category)
+        fitWindow(to: newVC, animate: window?.isVisible == true)
+    }
+
+    /// Sizes the window to the page, keeping its top edge where it is, so a
+    /// four-row page does not sit on the tallest page's empty space.
+    private func fitWindow(to viewController: NSViewController, animate: Bool) {
+        guard let window, let page = viewController as? BasePrefsViewController else { return }
+        let height = max(Metrics.minimumHeight, page.preferredContentHeight.rounded(.up))
+        let size = NSSize(width: Metrics.windowSize.width, height: height)
+        var frame = window.frameRect(forContentRect: NSRect(origin: .zero, size: size))
+        guard frame.size != window.frame.size else { return }
+        frame.origin = NSPoint(x: window.frame.minX, y: window.frame.maxY - frame.height)
+        window.minSize = frame.size
+        window.maxSize = frame.size
+        window.setFrame(frame, display: true, animate: animate)
+    }
+
+    /// Every page gets the label column its widest label needs, measured
+    /// across all pages, so the controls stay put when switching pages.
+    private func alignLabelColumns() {
+        let pages: [BasePrefsViewController] = [generalPrefsVC, editorPrefsVC, typographyPrefsVC]
+        pages.forEach { _ = $0.view }
+        guard let width = pages.map(\.widestLabel).max() else { return }
+        pages.forEach { $0.applyLabelColumnWidth(width) }
     }
 
     private func viewController(for category: PreferencesCategory) -> NSViewController {
@@ -333,7 +361,9 @@ extension PrefsWindowController {
         window.contentView?.layoutSubtreeIfNeeded()
 
         if !hasPreparedWindowForDisplay {
-            window.setContentSize(Metrics.windowSize)
+            if let page = prefsContentViewController.children.first {
+                fitWindow(to: page, animate: false)
+            }
             window.center()
             hasPreparedWindowForDisplay = true
         }

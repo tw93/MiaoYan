@@ -10,7 +10,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
     private var storagePathControl: NSPathControl!
     private var storageChangeButton: NSButton!
     private var buttonShowSegmented: PrefsSegmentedControl!
-    private var alwaysOnTopCheckbox: NSButton!
+    private var alwaysOnTopSwitch: NSSwitch!
     private var activateShortcutRecorder: ThemeAwareShortcutRecorderView!
 
     // Editor settings controls
@@ -32,8 +32,8 @@ final class GeneralPrefsViewController: BasePrefsViewController {
     }
 
     @objc private func handleAlwaysOnTopChanged() {
-        guard let alwaysOnTopCheckbox = alwaysOnTopCheckbox else { return }
-        alwaysOnTopCheckbox.state = UserDefaultsManagement.alwaysOnTop ? .on : .off
+        guard let alwaysOnTopSwitch = alwaysOnTopSwitch else { return }
+        alwaysOnTopSwitch.state = UserDefaultsManagement.alwaysOnTop ? .on : .off
     }
 
     override func setupUI() {
@@ -42,7 +42,6 @@ final class GeneralPrefsViewController: BasePrefsViewController {
 
     private func setupAppearanceSection(in stackView: NSStackView) {
         let storageRow = createStorageRow()
-        let storageSeparator = makePreferencesSeparator()
 
         appearancePopUp = NSPopUpButton()
         appearancePopUp.translatesAutoresizingMaskIntoConstraints = false
@@ -75,15 +74,17 @@ final class GeneralPrefsViewController: BasePrefsViewController {
             }
         }
 
-        alwaysOnTopCheckbox = NSButton(checkboxWithTitle: "", target: self, action: #selector(alwaysOnTopChanged(_:)))
-        alwaysOnTopCheckbox.translatesAutoresizingMaskIntoConstraints = false
+        alwaysOnTopSwitch = NSSwitch()
+        alwaysOnTopSwitch.target = self
+        alwaysOnTopSwitch.action = #selector(alwaysOnTopChanged(_:))
+        alwaysOnTopSwitch.translatesAutoresizingMaskIntoConstraints = false
 
         activateShortcutRecorder = ThemeAwareShortcutRecorderView(for: .activateWindow)
         activateShortcutRecorder.translatesAutoresizingMaskIntoConstraints = false
         let appearanceRow = makePreferencesRow(labelText: I18n.str("Appearance:"), control: appearancePopUp)
         let languageRow = makePreferencesRow(labelText: I18n.str("Language:"), control: languagePopUp)
         let buttonRow = makePreferencesRow(labelText: I18n.str("Button Display:"), control: buttonShowSegmented)
-        let alwaysRow = makePreferencesRow(labelText: I18n.str("Always On Top:"), control: alwaysOnTopCheckbox, controlWidth: nil)
+        let alwaysRow = makePreferencesRow(labelText: I18n.str("Always On Top:"), control: alwaysOnTopSwitch, controlWidth: nil)
         let shortcutRow = makePreferencesRow(labelText: I18n.str("Activate Shortcut:"), control: activateShortcutRecorder)
 
         editorModeSegmented = makeSegmentedControl(
@@ -93,17 +94,12 @@ final class GeneralPrefsViewController: BasePrefsViewController {
 
         let editorModeRow = makePreferencesRow(labelText: I18n.str("Editor Mode:"), control: editorModeSegmented)
 
-        [
-            storageRow,
-            storageSeparator,
-            editorModeRow,
-            appearanceRow,
-            languageRow,
-            buttonRow,
-            alwaysRow,
-            shortcutRow,
-        ].forEach { stackView.addArrangedSubview($0) }
-        stackView.setCustomSpacing(PrefsFormMetrics.groupSpacing, after: storageSeparator)
+        addPreferencesGroups(
+            [
+                [storageRow],
+                [editorModeRow, appearanceRow, languageRow, buttonRow],
+                [alwaysRow, shortcutRow],
+            ], to: stackView)
     }
 
     private func createStorageRow() -> NSView {
@@ -111,14 +107,18 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         storagePathControl.translatesAutoresizingMaskIntoConstraints = false
         storagePathControl.pathStyle = .standard
         storagePathControl.lineBreakMode = .byTruncatingMiddle
-        storagePathControl.widthAnchor.constraint(equalToConstant: 270).isActive = true
+        storagePathControl.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        storagePathControl.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
         storageChangeButton = NSButton(title: I18n.str("Change"), target: self, action: #selector(changeStorageLocation(_:)))
         storageChangeButton.translatesAutoresizingMaskIntoConstraints = false
-        storageChangeButton.widthAnchor.constraint(equalToConstant: 82).isActive = true
+        storageChangeButton.setContentHuggingPriority(.required, for: .horizontal)
+        storageChangeButton.setContentCompressionResistancePriority(.required, for: .horizontal)
 
+        // The path takes whatever the button leaves, so the row ends on the
+        // same edge as every control below it.
         let controls = makeControlStack([storagePathControl, storageChangeButton], spacing: 12)
-        return makePreferencesRow(labelText: "\(I18n.str("Note Location")):", control: controls, controlWidth: nil)
+        return makePreferencesRow(labelText: "\(I18n.str("Note Location")):", control: controls)
     }
 
     override func setupValues() {
@@ -131,7 +131,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         }
 
         buttonShowSegmented.selectedSegment = rawButtonShow(from: localizedButtonShow(settings.buttonShow)) == "Hover" ? 1 : 0
-        alwaysOnTopCheckbox.state = UserDefaultsManagement.alwaysOnTop ? .on : .off
+        alwaysOnTopSwitch.state = UserDefaultsManagement.alwaysOnTop ? .on : .off
 
         // Editor settings values
         editorModeSegmented.selectedSegment = UserDefaultsManagement.splitViewMode ? 1 : 0
@@ -265,7 +265,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         }
     }
 
-    @objc private func alwaysOnTopChanged(_ sender: NSButton) {
+    @objc private func alwaysOnTopChanged(_ sender: NSSwitch) {
         let enabled = sender.state == .on
         UserDefaultsManagement.alwaysOnTop = enabled
         NotificationCenter.default.post(name: .alwaysOnTopChanged, object: nil)
@@ -374,13 +374,16 @@ private final class ThemeAwareShortcutRecorderView: NSView {
     private func commonInit() {
         translatesAutoresizingMaskIntoConstraints = false
         wantsLayer = true
-        layer?.cornerRadius = 6
+        layer?.cornerRadius = 7
         layer?.borderWidth = 1
         layer?.masksToBounds = true
         setContentHuggingPriority(.defaultLow, for: .horizontal)
         setContentHuggingPriority(.defaultLow, for: .vertical)
         setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+
+        // Same height as the segmented controls it sits under.
+        heightAnchor.constraint(equalToConstant: 28).isActive = true
 
         addSubview(recorder)
         recorder.translatesAutoresizingMaskIntoConstraints = false
@@ -419,14 +422,12 @@ private final class ThemeAwareShortcutRecorderView: NSView {
     private func updateAppearance() {
         guard let layer else { return }
         let appearance = window?.effectiveAppearance ?? effectiveAppearance
-        let backgroundColor = Theme.settingsContentBackgroundColor.resolvedColor(for: appearance)
-        let borderColor: NSColor
-
-        if isRecording {
-            borderColor = Theme.accentColor.resolvedColor(for: appearance)
-        } else {
-            borderColor = Theme.dividerColor.resolvedColor(for: appearance)
-        }
+        // Idle it reads as the same filled track as the segmented controls
+        // above it; only recording draws an outline.
+        let backgroundColor =
+            (appearance.isDark) ? NSColor.white.withAlphaComponent(0.07) : NSColor.black.withAlphaComponent(0.06)
+        let borderColor =
+            isRecording ? Theme.accentColor.resolvedColor(for: appearance) : NSColor.clear
 
         layer.backgroundColor = backgroundColor.cgColor
         layer.borderColor = borderColor.cgColor

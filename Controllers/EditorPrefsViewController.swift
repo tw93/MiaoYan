@@ -3,44 +3,46 @@ import Cocoa
 @MainActor
 final class EditorPrefsViewController: BasePrefsViewController {
     private var settings = EditorSettings()
-    private var settingsStackView: NSStackView!
+    private var lineBreakPopUp: NSPopUpButton!
+    private var uploadPopUp: NSPopUpButton!
+    private var previewLocationPopUp: NSPopUpButton!
+    private var previewWidthPopUp: NSPopUpButton!
 
     override func setupUI() {
         setupEditorSettingsSection(in: installPreferencesStack())
     }
 
     private func setupEditorSettingsSection(in stackView: NSStackView) {
-        settingsStackView = stackView
-
-        let lineBreakRow = createSettingRow(
-            label: I18n.str("Line Break:"),
+        lineBreakPopUp = makePopUp(
             options: [localizedLineBreak("MiaoYan"), localizedLineBreak("Github")],
             action: #selector(lineBreakChanged(_:))
         )
-        settingsStackView.addArrangedSubview(lineBreakRow)
-
-        let uploadRow = createSettingRow(
-            label: I18n.str("Upload Service:"),
+        uploadPopUp = makePopUp(
             options: [I18n.str("None"), "uPic", "PicGo", "Picsee", "PicList"],
             action: #selector(uploadServiceChanged(_:))
         )
-        settingsStackView.addArrangedSubview(uploadRow)
-
-        let locationRow = createSettingRow(
-            label: I18n.str("Preview Location:"),
+        previewLocationPopUp = makePopUp(
             options: [localizedPreviewLocation("Begin"), localizedPreviewLocation("Editing")],
             action: #selector(previewLocationChanged(_:))
         )
-        settingsStackView.addArrangedSubview(locationRow)
-
-        let widthRow = createSettingRow(
-            label: I18n.str("Preview Width:"),
+        previewWidthPopUp = makePopUp(
             options: [
                 localizedPreviewWidth("600px"), localizedPreviewWidth("800px"), localizedPreviewWidth("1000px"), localizedPreviewWidth("1200px"), localizedPreviewWidth("1400px"), localizedPreviewWidth(UserDefaultsManagement.FullWidthValue),
             ],
             action: #selector(previewWidthChanged(_:))
         )
-        settingsStackView.addArrangedSubview(widthRow)
+
+        addPreferencesGroups(
+            [
+                [
+                    makePreferencesRow(labelText: I18n.str("Line Break:"), control: lineBreakPopUp),
+                    makePreferencesRow(labelText: I18n.str("Upload Service:"), control: uploadPopUp),
+                ],
+                [
+                    makePreferencesRow(labelText: I18n.str("Preview Location:"), control: previewLocationPopUp),
+                    makePreferencesRow(labelText: I18n.str("Preview Width:"), control: previewWidthPopUp),
+                ],
+            ], to: stackView)
     }
 
     private func createSectionView(in parentView: NSView, topAnchor: NSLayoutAnchor<NSLayoutYAxisAnchor>, topConstant: CGFloat, title: String? = nil) -> (container: NSView, titleLabel: NSTextField?) {
@@ -77,7 +79,7 @@ final class EditorPrefsViewController: BasePrefsViewController {
         return (containerView, titleLabel)
     }
 
-    private func createSettingRow(label: String, options: [String], action: Selector) -> NSView {
+    private func makePopUp(options: [String], action: Selector) -> NSPopUpButton {
         let popUp = NSPopUpButton()
         popUp.translatesAutoresizingMaskIntoConstraints = false
         popUp.target = self
@@ -87,7 +89,7 @@ final class EditorPrefsViewController: BasePrefsViewController {
             popUp.addItem(withTitle: option)
         }
 
-        return makePreferencesRow(labelText: label, control: popUp)
+        return popUp
     }
 
     override func setupValues() {
@@ -98,35 +100,19 @@ final class EditorPrefsViewController: BasePrefsViewController {
     }
 
     private func selectLineBreakOption(_ value: String) {
-        guard !settingsStackView.arrangedSubviews.isEmpty,
-            let popUp = settingsStackView.arrangedSubviews[0].subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton
-        else { return }
-        popUp.selectItem(withTitle: localizedLineBreak(value))
+        lineBreakPopUp.selectItem(withTitle: localizedLineBreak(value))
     }
 
     private func selectPreviewLocationOption(_ value: String) {
-        guard settingsStackView.arrangedSubviews.count > 2,
-            let popUp = settingsStackView.arrangedSubviews[2].subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton
-        else { return }
-        popUp.selectItem(withTitle: localizedPreviewLocation(value))
+        previewLocationPopUp.selectItem(withTitle: localizedPreviewLocation(value))
     }
 
     private func selectPreviewWidthOption(_ value: String) {
-        guard settingsStackView.arrangedSubviews.count > 3,
-            let popUp = settingsStackView.arrangedSubviews[3].subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton
-        else { return }
-        popUp.selectItem(withTitle: localizedPreviewWidth(value))
+        previewWidthPopUp.selectItem(withTitle: localizedPreviewWidth(value))
     }
 
     private func selectUploadServiceOption(_ value: String) {
-        guard settingsStackView.arrangedSubviews.count > 1,
-            let popUp = settingsStackView.arrangedSubviews[1].subviews.first(where: { $0 is NSPopUpButton }) as? NSPopUpButton
-        else { return }
-        if value == "None" {
-            popUp.selectItem(withTitle: I18n.str("None"))
-        } else {
-            popUp.selectItem(withTitle: value)
-        }
+        uploadPopUp.selectItem(withTitle: value == "None" ? I18n.str("None") : value)
     }
 
     // MARK: - Actions

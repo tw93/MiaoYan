@@ -9,9 +9,9 @@ enum PrefsSection: CaseIterable, Sendable {
     @MainActor
     var title: String {
         switch self {
-        case .general: return I18n.str("Interface")
-        case .editor: return I18n.str("Experience")
-        case .typography: return I18n.str("Typography")
+        case .general: return I18n.str("General")
+        case .editor: return I18n.str("Editor")
+        case .typography: return I18n.str("Fonts")
         }
     }
 
