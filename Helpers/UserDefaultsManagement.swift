@@ -158,10 +158,14 @@ public enum UserDefaultsManagement {
         static let EditorModeKey = "editorMode"
     }
 
+    /// The stored choice, even when that face is not installed right now. A
+    /// font manager that activates late or a font the user has yet to install
+    /// used to get the choice overwritten with the default for good; renderers
+    /// fall back on their own, and the choice takes effect once the face
+    /// appears.
     private static func resolvedFontName(forKey key: String) -> String {
         if let stored = UserDefaults.standard.string(forKey: key)?.trimmingCharacters(in: .whitespacesAndNewlines),
-            !stored.isEmpty,
-            (key == Constants.CodeFontNameKey && stored == FontConfiguration.followTextFont) || NSFont(name: stored, size: 12) != nil
+            !stored.isEmpty
         {
             return stored
         }
@@ -316,16 +320,12 @@ public enum UserDefaultsManagement {
     }
 
     static func migrateFontDefaultsIfNeeded() {
-        // Only migrate the retired bundled face, preserving other user choices.
+        // TsangerJinKai02 is the default again, so a stored text face is left
+        // exactly as it is, whatever version wrote it. Only the code font moves
+        // off it, to following the text font, which renders the same.
         if !UserDefaults.standard.bool(forKey: "hasMigratedSystemFonts_v1") {
-            let replacements = [
-                Constants.FontName: FontConfiguration.defaultEditorFont,
-                Constants.WindowFontName: FontConfiguration.defaultInterfaceFont,
-                Constants.PreviewFontName: FontConfiguration.defaultPreviewFont,
-                Constants.CodeFontNameKey: FontConfiguration.defaultCodeFont,
-            ]
-            for (key, font) in replacements where UserDefaults.standard.string(forKey: key) == "TsangerJinKai02-W04" {
-                UserDefaults.standard.set(font, forKey: key)
+            if UserDefaults.standard.string(forKey: Constants.CodeFontNameKey) == "TsangerJinKai02-W04" {
+                UserDefaults.standard.set(FontConfiguration.defaultCodeFont, forKey: Constants.CodeFontNameKey)
             }
             UserDefaults.standard.set(true, forKey: "hasMigratedSystemFonts_v1")
         }
@@ -600,6 +600,12 @@ public enum UserDefaultsManagement {
     static var codeFontName: String {
         get { resolvedFontName(forKey: Constants.CodeFontNameKey) }
         set { UserDefaults.standard.set(newValue, forKey: Constants.CodeFontNameKey) }
+    }
+    /// The faces the user has chosen, for noticing when a missing one is
+    /// installed.
+    static var chosenFontNames: [String] {
+        let code = codeFollowsText ? [] : [codeFontName]
+        return [fontName, previewFontName, windowFontName] + code
     }
     static var codeFollowsText: Bool {
         codeFontName == FontConfiguration.followTextFont

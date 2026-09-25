@@ -282,8 +282,8 @@
 "All Fonts" = "全部字體";
 "Not installed" = "未安裝";
 "Install the font first" = "需要先安裝字型";
-"MiaoYan no longer bundles this font. Personal non-commercial use is free; commercial work needs a separate licence." = "妙言不再內建這個字型。個人非商業使用免費，商用需要另外購買授權。";
-"Open Download Page" = "開啟下載頁";
+"MiaoYan uses this font by default but no longer bundles it. Double-click the downloaded file to install it, and MiaoYan switches to it on its own. Personal non-commercial use is free; commercial work needs a licence from Tsanger." = "妙言預設使用這個字型，但不再內建，下載後按兩下檔案安裝，裝好之後會自動換上，個人非商業使用免費，商用需要向倉耳另外購買授權。";
+"Download Font" = "下載字型";
 "Chinese" = "中文";
 "Latin" = "西文";
 "Same as Text" = "跟隨正文";

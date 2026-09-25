@@ -130,6 +130,9 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
                     title: "\(FontCatalog.displayName(for: missing)) (\(I18n.str("Not installed")))",
                     action: nil, keyEquivalent: "")
                 item.tag = Self.retiredFontTag
+                // Carries the name the default stores, so a preference still
+                // waiting for the face selects this row instead of an orphan.
+                item.representedObject = FontConfiguration.defaultPreviewFont
                 menu.addItem(item)
             }
             menu.addItem(.separator())
@@ -197,18 +200,12 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
         return item
     }
 
-    /// Returns the family to store, or nil when the row was the retired face and
-    /// the popup should bounce back to what it had.
+    /// Returns the name to store. Picking the default face before it is
+    /// installed keeps the choice, and the face takes over once installed.
     private func resolveSelection(_ sender: NSPopUpButton, previous: String) -> String? {
         guard let item = sender.selectedItem else { return nil }
         if item.tag == Self.retiredFontTag {
-            if let menu = sender.menu,
-                let match = self.item(in: menu, family: FontCatalog.familyName(forStored: previous))
-            {
-                sender.select(match)
-            }
             presentRetiredFontGuidance()
-            return nil
         }
         return item.representedObject as? String ?? item.title
     }
@@ -216,10 +213,13 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
     private func presentRetiredFontGuidance() {
         let alert = NSAlert()
         alert.messageText = I18n.str("Install the font first")
-        alert.informativeText = I18n.str(
-            "MiaoYan no longer bundles this font. Personal non-commercial use is free; commercial work needs a separate licence."
-        )
-        alert.addButton(withTitle: I18n.str("Open Download Page"))
+        // Joined at runtime into the exact key the strings files use.
+        let guidance =
+            "MiaoYan uses this font by default but no longer bundles it. "
+            + "Double-click the downloaded file to install it, and MiaoYan switches to it on its own. "
+            + "Personal non-commercial use is free; commercial work needs a licence from Tsanger."
+        alert.informativeText = I18n.str(guidance)
+        alert.addButton(withTitle: I18n.str("Download Font"))
         alert.addButton(withTitle: I18n.str("Cancel"))
         guard alert.runModal() == .alertFirstButtonReturn,
             let url = URL(string: FontCatalog.retiredBundledDownloadURL)

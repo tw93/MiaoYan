@@ -24,14 +24,14 @@ enum FontCatalog {
     ]
     static let recommendedCode = ["Menlo", "JetBrains Mono", "Monaco"]
 
-    /// The face MiaoYan shipped until 4.3.0, when redistributing it stopped
-    /// being an option. Selections were migrated to the system default, so
-    /// someone who liked it has no way back from inside the app; the popup
-    /// keeps a row for it and points at the foundry.
+    /// The default text face, bundled until 4.3.0, when redistributing it
+    /// stopped being an option. It is still the default by name; while it is
+    /// missing the popup keeps a row for it that points at the foundry.
     static let retiredBundledFamily = "TsangerJinKai02"
-    /// The exact weight MiaoYan bundled, not the foundry's front page, so the
-    /// download lands on the face the preference names.
-    static let retiredBundledDownloadURL = "https://tsanger.cn/product/33"
+    /// The foundry's own file for the weight the default names (the same 18.9MB
+    /// file MiaoYan used to bundle), so one click downloads it instead of
+    /// landing on a product page. MiaoYan never hosts or redistributes it.
+    static let retiredBundledDownloadURL = "https://tsanger.cn/download/%E4%BB%93%E8%80%B3%E4%BB%8A%E6%A5%B702-W04.ttf"
 
     /// A family qualifies as a text face when it can draw these. Three common
     /// hanzi are enough to separate a CJK face from a Latin-only one without
@@ -95,24 +95,24 @@ enum FontCatalog {
     /// its Latin to go with the楷书 it draws, single-storey a and g, and handing
     /// those words to the system face pulls the two halves of a line apart.
     ///
-    /// The default is the one exception. PingFang's Latin is drawn for interface
-    /// labels, wider and looser than the system's, and nobody chose it for the
-    /// English; it is simply what the app starts with. So when the face is still
-    /// the shipped default, the system takes Latin and PingFang is named only as
-    /// the CJK fallback, the way Claude's and Cursor's desktop apps order it.
-    /// Main-actor bound because it reads the shipped default from
-    /// `FontConfiguration`; its only caller is `previewStyle()`, already there.
+    /// PingFang is the one exception. Its Latin is drawn for interface labels,
+    /// wider and looser than the system's, and it is the fallback rather than a
+    /// face anyone picked for English. So for PingFang the system takes Latin
+    /// and PingFang is named only as the CJK fallback, the way Claude's and
+    /// Cursor's desktop apps order it.
+    /// Main-actor bound because it reads the fallback from `FontConfiguration`;
+    /// its only caller is `previewStyle()`, already there.
     @MainActor
     static func fontStack(forStored stored: String) -> String {
         let quoted = "\"\(stored)\""
         let system = "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont"
         let cjkFallback = "\"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\""
-        // Compare families, not the raw strings. The shipped default is a
+        // Compare families, not the raw strings. The fallback is stored as a
         // PostScript name while every value the popup writes is a family name,
         // so picking 苹方-简 from the list, the row already shown as selected,
         // used to make this false and hand Latin back to PingFang for good,
         // with the two states indistinguishable in the UI.
-        let untouched = familyName(forStored: stored) == familyName(forStored: FontConfiguration.defaultPreviewFont)
+        let untouched = familyName(forStored: stored) == familyName(forStored: FontConfiguration.fallbackFont)
         return untouched
             ? "\(system), \(quoted), \(cjkFallback), sans-serif"
             : "\(quoted), \(system), \(cjkFallback), sans-serif"

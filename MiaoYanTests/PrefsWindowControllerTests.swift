@@ -57,11 +57,55 @@ final class PrefsWindowControllerTests: XCTestCase {
 
         UserDefaultsManagement.migrateFontDefaultsIfNeeded()
 
-        XCTAssertEqual(UserDefaultsManagement.fontName, FontConfiguration.defaultEditorFont)
-        XCTAssertEqual(UserDefaultsManagement.windowFontName, FontConfiguration.defaultInterfaceFont)
+        // Stored text faces are left alone whichever version wrote them.
+        XCTAssertEqual(UserDefaults.standard.string(forKey: "fontName"), "TsangerJinKai02-W04")
+        XCTAssertEqual(UserDefaults.standard.string(forKey: "windowFontName"), "TsangerJinKai02-W04")
         XCTAssertEqual(UserDefaultsManagement.previewFontName, "Helvetica")
         XCTAssertEqual(UserDefaultsManagement.codeFontName, "Menlo")
-        XCTAssertNotNil(NSFont(name: FontConfiguration.defaultEditorFont, size: 16))
+    }
+
+    @MainActor
+    func testAMissingChosenFaceIsKeptAndRendersTheFallback() {
+        let defaults = UserDefaults.standard
+        let original = defaults.object(forKey: "fontName")
+        defer {
+            if let original { defaults.set(original, forKey: "fontName") } else { defaults.removeObject(forKey: "fontName") }
+        }
+
+        // Absent right now, as a face is before it is installed or while a font
+        // manager has yet to activate it. The choice must survive being read.
+        defaults.set("NoSuchFace-Regular", forKey: "fontName")
+        XCTAssertEqual(UserDefaultsManagement.fontName, "NoSuchFace-Regular")
+        XCTAssertEqual(defaults.string(forKey: "fontName"), "NoSuchFace-Regular")
+        XCTAssertEqual(UserDefaultsManagement.noteFont.fontName, FontConfiguration.fallbackFont)
+
+        // A fresh install starts on the default face by name.
+        defaults.removeObject(forKey: "fontName")
+        XCTAssertEqual(UserDefaultsManagement.fontName, FontConfiguration.defaultEditorFont)
+    }
+
+    @MainActor
+    func testTheDefaultFaceWaitingToBeInstalledSelectsItsRow() throws {
+        guard !FontCatalog.isInstalled(family: FontCatalog.retiredBundledFamily) else {
+            throw XCTSkip("TsangerJinKai02 is installed here, so there is no waiting row")
+        }
+        let defaults = UserDefaults.standard
+        let original = defaults.object(forKey: "previewFontName")
+        defaults.set(FontConfiguration.defaultPreviewFont, forKey: "previewFontName")
+        defer {
+            if let original { defaults.set(original, forKey: "previewFontName") } else { defaults.removeObject(forKey: "previewFontName") }
+        }
+
+        let controller = TypographyPrefsViewController()
+        func popups(in view: NSView) -> [NSPopUpButton] {
+            view.subviews.flatMap { child in
+                if let popup = child as? NSPopUpButton { return [popup] }
+                return popups(in: child)
+            }
+        }
+        let preview = try XCTUnwrap(popups(in: controller.view).first { $0.action == NSSelectorFromString("previewFontChanged:") })
+        XCTAssertEqual(preview.selectedItem?.tag, 9001, "The not-installed row, not an orphan copy of the name")
+        XCTAssertEqual(preview.itemArray.filter { $0.representedObject as? String == FontConfiguration.defaultPreviewFont }.count, 1)
     }
 
     @MainActor

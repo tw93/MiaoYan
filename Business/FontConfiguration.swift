@@ -4,15 +4,18 @@ import Cocoa
 /// All default fonts are defined here for easy maintenance
 @MainActor
 enum FontConfiguration {
-    /// Use installed system fonts without redistributing font files.
-    static let defaultEditorFont = "PingFangSC-Regular"
+    /// TsangerJinKai02 is the face MiaoYan is designed around. It is not
+    /// bundled (redistribution needs a licence), so the default names it and
+    /// everything renders in `fallbackFont` until the user installs it; the
+    /// stored choice is never rewritten while the face is missing.
+    static let defaultEditorFont = "TsangerJinKai02-W04"
     static let fallbackFont = "PingFangSC-Regular"
 
     /// Default interface font name
-    static let defaultInterfaceFont = "PingFangSC-Regular"
+    static let defaultInterfaceFont = "TsangerJinKai02-W04"
 
     /// Default preview font name
-    static let defaultPreviewFont = "PingFangSC-Regular"
+    static let defaultPreviewFont = "TsangerJinKai02-W04"
 
     /// Stored as the code font when code blocks use the text font, the editor
     /// font in the editor and the preview font in the preview. It names no

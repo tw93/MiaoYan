@@ -65,17 +65,24 @@ final class FontCatalogTests: XCTestCase {
     }
 
     @MainActor
-    func testTheShippedDefaultYieldsLatinToTheSystemStack() {
-        // Nobody chose PingFang for the English; it is what the app starts with,
-        // and its Latin is drawn for interface labels. So the default, and only
-        // the default, lets the system take Latin while staying on as the CJK
-        // fallback.
-        let stack = FontCatalog.fontStack(forStored: FontConfiguration.defaultPreviewFont)
+    func testTheFallbackYieldsLatinToTheSystemStack() {
+        // Nobody chose PingFang for the English; it is the fallback, and its
+        // Latin is drawn for interface labels. So PingFang, and only PingFang,
+        // lets the system take Latin while staying on as the CJK fallback.
+        let stack = FontCatalog.fontStack(forStored: FontConfiguration.fallbackFont)
         let systemAt = stack.range(of: "ui-sans-serif")
-        let chosenAt = stack.range(of: "\"\(FontConfiguration.defaultPreviewFont)\"")
+        let chosenAt = stack.range(of: "\"\(FontConfiguration.fallbackFont)\"")
         XCTAssertNotNil(systemAt)
         XCTAssertNotNil(chosenAt)
         if let s = systemAt, let c = chosenAt { XCTAssertTrue(s.lowerBound < c.lowerBound, stack) }
+    }
+
+    @MainActor
+    func testTheDefaultFaceLeadsItsOwnStack() {
+        // TsangerJinKai02 draws Latin to match its 楷书, so as the default it
+        // leads the stack rather than yielding English to the system.
+        let stack = FontCatalog.fontStack(forStored: FontConfiguration.defaultPreviewFont)
+        XCTAssertTrue(stack.hasPrefix("\"\(FontConfiguration.defaultPreviewFont)\""), stack)
     }
 
     @MainActor

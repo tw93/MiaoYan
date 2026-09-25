@@ -45,6 +45,8 @@ class ViewController:
     var shouldRestorePreviewAfterExport: Bool = false
     var shouldDisablePPTAfterExport: Bool = false
     private var disablePreviewWorkItem: DispatchWorkItem?
+    nonisolated(unsafe) private var fontSetObserver: NSObjectProtocol?
+    private var missingChosenFonts: Set<String> = []
     nonisolated(unsafe) var liveResizeObserver: NSObjectProtocol?
     var needsPreviewLayoutAfterLiveResize = false
     var isHandlingScrollEvent = false
@@ -341,10 +343,38 @@ class ViewController:
         if let observer = liveResizeObserver {
             NotificationCenter.default.removeObserver(observer)
         }
+        if let observer = fontSetObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
+
+    /// A chosen face that was missing (the default before anyone installs it)
+    /// takes over as soon as it is installed, without a restart or picking it
+    /// again. Unrelated font installs change nothing and redraw nothing.
+    private func observeChosenFontInstalls() {
+        missingChosenFonts = Self.missingFonts()
+        fontSetObserver = NotificationCenter.default.addObserver(
+            forName: NSFont.fontSetChangedNotification, object: nil, queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated {
+                guard let self else { return }
+                let missing = Self.missingFonts()
+                let appeared = !self.missingChosenFonts.subtracting(missing).isEmpty
+                self.missingChosenFonts = missing
+                guard appeared else { return }
+                EditorSettings().applyChanges()
+                self.applyInterfacePreferences()
+            }
+        }
+    }
+
+    private static func missingFonts() -> Set<String> {
+        Set(UserDefaultsManagement.chosenFontNames.filter { NSFont(name: $0, size: 12) == nil && !FontCatalog.isInstalled(family: $0) })
     }
 
     override func viewDidLoad() {
         UserDefaultsManagement.migrateFontDefaultsIfNeeded()
+        observeChosenFontInstalls()
         appContext.bind(viewController: self)
         // Hide empty state UI (no longer used)
         emptyEditAreaView.isHidden = true
