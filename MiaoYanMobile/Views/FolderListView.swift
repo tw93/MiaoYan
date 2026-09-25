@@ -659,7 +659,7 @@ struct NoteCardLink: View {
 
 /// Lightweight section label for the pinned / other note groups.
 struct NoteSectionHeader: View {
-    let title: String
+    let title: LocalizedStringKey
 
     var body: some View {
         Text(title)
@@ -837,7 +837,7 @@ private struct FolderCard: View {
             .frame(width: 46, height: 46)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(folder.name)
+                Text(folder.displayName)
                     .font(MobileTheme.editorialFont(.headline, weight: .semibold))
                     .foregroundStyle(MobileTheme.ink)
                 Text("\(folder.noteCount) notes")
@@ -1095,8 +1095,8 @@ private struct MobileEmptyLibraryView: View {
 
 struct MobileEmptyContentView: View {
     let systemImage: String
-    let title: String
-    let message: String
+    let title: LocalizedStringKey
+    let message: LocalizedStringKey
 
     var body: some View {
         VStack(spacing: 12) {
@@ -1122,7 +1122,7 @@ struct MobileEmptyContentView: View {
 /// be remounted here — see that view's docs) but still gives a clear
 /// signal in the empty card area.
 struct InlineLoadingHint: View {
-    let text: String
+    let text: LocalizedStringKey
 
     var body: some View {
         VStack(spacing: 14) {
@@ -1244,7 +1244,7 @@ struct MobileSyncingLibraryView: View {
         .mobilePaperBackground()
     }
 
-    private var countText: String {
+    private var countText: LocalizedStringKey {
         let count = syncManager.discoveredItemCount
         if count == 0 {
             return "Connecting to iCloud…"

@@ -208,9 +208,10 @@ blockquote p {
   margin: 0.34em 0;
 }
 
+/* The code font belongs to code blocks only, as on macOS: inline code and
+   anything quoted stay in the text face. */
 code {
-  font-family: var(--code-font);
-  font-size: 0.86em;
+  font-family: inherit;
   background: var(--code-bg);
   padding: 0.16em 0.38em;
   border-radius: 6px;
@@ -228,11 +229,18 @@ pre {
 
 pre code {
   display: block;
+  font-family: var(--code-font);
+  font-size: 0.86em;
   padding: 0;
   background: transparent;
   border-radius: 0;
   line-height: 1.55;
   white-space: pre;
+}
+
+blockquote pre code {
+  font-family: inherit;
+  font-size: 1em;
 }
 
 table {

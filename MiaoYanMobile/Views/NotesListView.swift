@@ -24,7 +24,7 @@ struct NotesListView: View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 14) {
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(folder.name)
+                    Text(folder.displayName)
                         .font(MobileTheme.editorialFont(size: 32, weight: .semibold))
                         .foregroundStyle(MobileTheme.ink)
                     Text("\(notes.count) notes")

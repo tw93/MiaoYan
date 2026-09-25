@@ -247,7 +247,7 @@ enum MobileHtmlRenderer {
     /// If the document doesn't start with `---` followed by a newline, return
     /// the original markdown unchanged, three dashes alone are a horizontal
     /// rule in CommonMark and we don't want to swallow them.
-    private static func stripFrontmatter(_ markdown: String) -> Substring {
+    static func stripFrontmatter(_ markdown: String) -> Substring {
         guard markdown.hasPrefix("---\n") || markdown.hasPrefix("---\r\n") else {
             return Substring(markdown)
         }

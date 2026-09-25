@@ -87,15 +87,15 @@ struct SettingsView: View {
 
     private var aboutSection: some View {
         Section {
-            settingRow(label: "Version", value: versionString)
+            settingRow(label: String(localized: "Version"), value: versionString)
             if let url = Self.repoURL {
                 Link(destination: url) {
-                    linkRow("Project on GitHub", systemImage: "chevron.left.forwardslash.chevron.right")
+                    linkRow(String(localized: "Project on GitHub"), systemImage: "chevron.left.forwardslash.chevron.right")
                 }
             }
             if let url = Self.issuesURL {
                 Link(destination: url) {
-                    linkRow("Report an Issue", systemImage: "exclamationmark.bubble")
+                    linkRow(String(localized: "Report an Issue"), systemImage: "exclamationmark.bubble")
                 }
             }
         } header: {

@@ -128,6 +128,11 @@ struct NoteDetailView: View {
     @EnvironmentObject private var readerWebViewStore: ReaderWebViewStore
     @EnvironmentObject private var appState: AppState
     @State private var content = ""
+    /// The text the file holds, as last read or written. Loaded text reaches
+    /// `onChange(of: content)` a runloop after `isApplyingLoadedContent` has
+    /// cleared, so the flag alone let every open schedule a save that
+    /// rewrote the file unchanged, bumping its date and re-uploading it.
+    @State private var persistedContent = ""
     @State private var saveState: NoteSaveState = .saved
     @State private var hasLoadedContent = false
     @State private var lastKnownModifiedDate = Date.distantPast
@@ -142,6 +147,7 @@ struct NoteDetailView: View {
     /// must cover the whole gap or the user stares at blank paper.
     @State private var readerReady = false
     @State private var showSkeleton = false
+    @State private var loadFailed = false
     @State private var isApplyingLoadedContent = false
     @State private var chromeVisible = true
     @State private var isEditing = false
@@ -197,7 +203,13 @@ struct NoteDetailView: View {
             .opacity(!readerReady || isEditing ? 0 : 1)
             .animation(.easeOut(duration: 0.18), value: readerReady)
 
-            if !readerReady && !isEditing {
+            if loadFailed && !isEditing {
+                MobileEmptyContentView(
+                    systemImage: "doc.questionmark",
+                    title: "Can't Open This Note",
+                    message: "MiaoYan opens plain-text notes, and this file couldn't be read as text."
+                )
+            } else if !readerReady && !isEditing {
                 NoteDetailLoadingView()
                     .opacity(showSkeleton ? 1 : 0)
                     .animation(.easeOut(duration: 0.18), value: showSkeleton)
@@ -334,6 +346,11 @@ struct NoteDetailView: View {
         }
         .onChange(of: content) {
             guard hasLoadedContent, !isApplyingLoadedContent else { return }
+            guard content != persistedContent else {
+                saveTask?.cancel()
+                if saveState == .unsaved { saveState = .saved }
+                return
+            }
             scheduleAutosave()
             if !isEditing {
                 renderContent()
@@ -409,6 +426,7 @@ struct NoteDetailView: View {
         hasLoadedContent = false
         renderedHTML = nil
         readerReady = false
+        loadFailed = false
         isApplyingLoadedContent = true
         loadTask?.cancel()
         renderTask?.cancel()
@@ -445,10 +463,12 @@ struct NoteDetailView: View {
                     guard !Task.isCancelled else { return }
                     saveState = .failed(error.localizedDescription)
                     isApplyingLoadedContent = false
-                    showToast("Reload")
+                    skeletonTask?.cancel()
+                    loadFailed = true
                     return
                 }
                 guard !Task.isCancelled else { return }
+                persistedContent = resolvedContent
                 content = resolvedContent
                 lastKnownModifiedDate = resolvedModifiedDate
                 saveState = .saved
@@ -465,7 +485,8 @@ struct NoteDetailView: View {
                 guard !Task.isCancelled else { return }
                 saveState = .failed(error.localizedDescription)
                 isApplyingLoadedContent = false
-                showToast("Reload")
+                skeletonTask?.cancel()
+                loadFailed = true
                 return
             }
             let html = await Task.detached(priority: .userInitiated) {
@@ -476,6 +497,7 @@ struct NoteDetailView: View {
             await ReaderHTMLCache.shared.store(html, for: cacheKey)
 
             guard !Task.isCancelled else { return }
+            persistedContent = resolvedContent
             content = resolvedContent
             lastKnownModifiedDate = resolvedModifiedDate
             saveState = .saved
@@ -576,6 +598,7 @@ struct NoteDetailView: View {
             saveState = .saving
             do {
                 try await NoteFileStore.write(content: snapshot, to: url)
+                persistedContent = snapshot
                 let updatedDate = await NoteFileStore.modificationDateOffMain(for: url)
                 lastKnownModifiedDate = updatedDate
                 saveState = .saved

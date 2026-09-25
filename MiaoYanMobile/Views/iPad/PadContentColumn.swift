@@ -188,7 +188,7 @@ struct PadContentColumn: View {
         }
     }
 
-    private func emptyState(systemImage: String, title: String, message: String) -> some View {
+    private func emptyState(systemImage: String, title: LocalizedStringKey, message: LocalizedStringKey) -> some View {
         MobileEmptyContentView(systemImage: systemImage, title: title, message: message)
             .padding(.horizontal, MobileTheme.pagePadding)
             .padding(.top, 12)
@@ -302,9 +302,9 @@ struct PadContentColumn: View {
 
     private var title: String {
         switch sidebarSelection {
-        case .recent: return "Notes"
-        case .allNotes: return "All Notes"
-        case .trash: return "Trash"
+        case .recent: return String(localized: "Notes")
+        case .allNotes: return String(localized: "All Notes")
+        case .trash: return String(localized: "Trash")
         case .folder(let url): return url.lastPathComponent
         }
     }

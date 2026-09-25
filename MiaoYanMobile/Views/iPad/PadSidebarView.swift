@@ -27,7 +27,7 @@ struct PadSidebarView: View {
             if !subfolders.isEmpty {
                 Section("Folders") {
                     ForEach(subfolders, id: \.id) { folder in
-                        Label(folder.name, systemImage: "folder")
+                        Label(folder.displayName, systemImage: "folder")
                             .tag(SidebarItem.folder(url: folder.url))
                     }
                 }

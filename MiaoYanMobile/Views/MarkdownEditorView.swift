@@ -170,6 +170,7 @@ struct MarkdownEditorView: UIViewRepresentable {
         private(set) var appliedFont: UIFont?
         private var theme: MarkdownEditorTheme?
         private var pendingEditRange: NSRange?
+        private var sweptFences = true
 
         init(_ parent: MarkdownEditorView) {
             self.parent = parent
@@ -238,11 +239,15 @@ struct MarkdownEditorView: UIViewRepresentable {
             // Fences span paragraphs; a paragraph-scoped pass cannot see
             // them, so re-sweep the whole document, but only when fences
             // exist at all (single regex pass, cheap for typical notes).
-            if ns.contains("```") {
+            // One more sweep after the last fence goes, so the block it closed
+            // drops the code font instead of keeping it until the next open.
+            let hasFences = ns.contains("```")
+            if hasFences || sweptFences {
                 storage.beginEditing()
                 MarkdownHighlighter.highlightCodeFences(storage, theme: theme)
                 storage.endEditing()
             }
+            sweptFences = hasFences
             textView.typingAttributes = theme.baseAttributes
         }
     }

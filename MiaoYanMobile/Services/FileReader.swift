@@ -39,7 +39,9 @@ struct NoteFile: Identifiable, Hashable, Sendable {
             .creationDateKey,
             .fileSizeKey,
         ])
-        let fallbackAttributes = try? FileManager.default.attributesOfItem(atPath: url.path)
+        // Only stat again when the resource values failed; doing both for
+        // every note doubled the file-system calls behind every list.
+        let fallbackAttributes = values == nil ? try? FileManager.default.attributesOfItem(atPath: url.path) : nil
 
         self.id = url.absoluteString
         self.url = url
@@ -79,6 +81,14 @@ struct FolderItem: Identifiable, Sendable {
     let isTrash: Bool
     let isVirtualAll: Bool
 
+    /// The two built-in entries carry English names as data; real folders keep
+    /// their name on disk.
+    var displayName: String {
+        if isVirtualAll { return String(localized: "All Notes") }
+        if isTrash { return String(localized: "Trash") }
+        return name
+    }
+
     init(url: URL, name: String, noteCount: Int, isTrash: Bool = false, isVirtualAll: Bool = false) {
         self.id = url.absoluteString + (isVirtualAll ? "#all" : "")
         self.url = url
@@ -93,6 +103,7 @@ enum NoteFileStore {
     private static let allowedExtensions: Set<String> = ["md", "markdown", "txt"]
     private static let ignoredFolderNames: Set<String> = ["i", "files", ".Trash", "Trash"]
     private static let previewByteLimit = 900
+    private static let previewFrontmatterLimit = 16 * 1024
     private static let recentNoteLimit = 40
 
     // MARK: - Preview noise stripping
@@ -111,10 +122,6 @@ enum NoteFileStore {
         pattern: "`([^`]+)`", options: [])
     private static let whitespaceRunRegex = try? NSRegularExpression(
         pattern: "\\s+", options: [])
-    private static let frontmatterDashRegex = try? NSRegularExpression(
-        pattern: "\\A---.*?---\\n?", options: [.dotMatchesLineSeparators])
-    private static let frontmatterPlusRegex = try? NSRegularExpression(
-        pattern: "\\A\\+\\+\\+.*?\\+\\+\\+\\n?", options: [.dotMatchesLineSeparators])
     private static let codeBlockRegex = try? NSRegularExpression(
         pattern: "```.*?```", options: [.dotMatchesLineSeparators])
     private static let mdMarkerRegex = try? NSRegularExpression(
@@ -190,18 +197,18 @@ enum NoteFileStore {
         return s
     }
 
-    /// Strip YAML/TOML frontmatter fenced by `---` or `+++` at the
-    /// start of the file.
+    /// Frontmatter goes by the reader's rule, which matches `Note.cleanMetaData`
+    /// on macOS (CRLF included), so cards, snippets and the reader agree on
+    /// where a note's body starts. The regex this replaced also closed on a
+    /// `---` mid-line and stripped `+++` blocks the reader shows.
     nonisolated private static func stripFrontmatter(_ input: String) -> String {
-        var s = input
-        let full = { (str: String) in NSRange(location: 0, length: (str as NSString).length) }
-        if let re = frontmatterDashRegex {
-            s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "")
-        }
-        if let re = frontmatterPlusRegex {
-            s = re.stringByReplacingMatches(in: s, range: full(s), withTemplate: "")
-        }
-        return s
+        String(MobileHtmlRenderer.stripFrontmatter(input))
+    }
+
+    /// True when the text opens a frontmatter block that the text does not
+    /// close, as happens when a card reads only the first bytes of a note.
+    nonisolated private static func hasOpenFrontmatter(_ text: String) -> Bool {
+        (text.hasPrefix("---\n") || text.hasPrefix("---\r\n")) && stripFrontmatter(text) == text
     }
 
     /// Strip fenced code blocks (``` ... ```).
@@ -313,7 +320,8 @@ enum NoteFileStore {
     /// empty (non-iCloud root, or query not yet started) do we fall back
     /// to disk enumeration.
     static func notes(in folder: URL, recursive: Bool = false) async -> [NoteFile] {
-        let cloudURLs = await CloudSyncManager.shared.cloudNoteURLs(under: folder)
+        let cloudURLs = withoutIgnoredFolders(
+            await CloudSyncManager.shared.cloudNoteURLs(under: folder), under: folder)
         let scopedCloud =
             recursive
             ? cloudURLs
@@ -362,24 +370,16 @@ enum NoteFileStore {
     /// Callers must use `.low` task priority so 40+ concurrent probes
     /// don't saturate the CPU with regex work.
     nonisolated static func previewIfDownloaded(for url: URL) -> String? {
-        // Fast path: file already on disk.
-        let fast = previewTextSync(for: url)
-        if !fast.isEmpty { return fast }
+        // Fast path: file already on disk. A readable note with no prose
+        // (only images, say) has an empty preview and stays that way,
+        // rather than paying a full coordinated read on every scroll.
+        if let fast = previewTextSync(for: url) { return fast }
 
         // Slow path: iCloud placeholder. NSFileCoordinator triggers the
         // download transparently and hands us the bytes once ready.
         guard let body = try? coordinatedReadString(at: url) else { return nil }
-        let head = String(body.prefix(900))
-        var s = head
-        s = stripFrontmatter(s)
-        s = stripCodeBlocks(s)
-        s = stripMarkdownMarkers(s)
-        s = stripPreviewNoise(s)
-        s = stripEmphasisMarkers(s)
-        let lines = s.components(separatedBy: .newlines)
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .filter { !$0.isEmpty }
-        let result = lines.prefix(2).joined(separator: " ")
+        let body900 = String(stripFrontmatter(body).prefix(900))
+        let result = cardText(from: body900)
         return result.isEmpty ? nil : result
     }
 
@@ -390,7 +390,8 @@ enum NoteFileStore {
         // placeholders synced; now we read directly from the in-memory
         // NSMetadataQuery catalog and only touch disk when there is no
         // cloud catalog at all.
-        let cloudURLs = await CloudSyncManager.shared.cloudNoteURLs(under: root)
+        let cloudURLs = withoutIgnoredFolders(
+            await CloudSyncManager.shared.cloudNoteURLs(under: root), under: root)
         if !cloudURLs.isEmpty {
             return await Task.detached(priority: .userInitiated) {
                 Array(
@@ -426,7 +427,7 @@ enum NoteFileStore {
             // a moment; the mtime-based conflict/reload machinery already
             // covers that window, same tradeoff the search and card-preview
             // read paths accepted.
-            if let content = try? String(contentsOf: note.url, encoding: .utf8) {
+            if let data = try? Data(contentsOf: note.url), let content = decodeNoteText(data) {
                 return content
             }
             return try coordinatedReadString(at: note.url)
@@ -617,7 +618,8 @@ enum NoteFileStore {
         let title = (rawTitle as NSString).lastPathComponent
             .trimmingCharacters(in: .whitespacesAndNewlines)
         guard !title.isEmpty else { return nil }
-        let cloudURLs = await CloudSyncManager.shared.cloudNoteURLs(under: root)
+        let cloudURLs = withoutIgnoredFolders(
+            await CloudSyncManager.shared.cloudNoteURLs(under: root), under: root)
         return await Task.detached(priority: .userInitiated) { () -> NoteFile? in
             let urls = cloudURLs.isEmpty ? recursiveNoteURLsSync(in: root) : cloudURLs
             let match = urls.first {
@@ -756,7 +758,8 @@ enum NoteFileStore {
 
         // Primary URL source: NSMetadataQuery catalog (cloud + downloaded).
         // Fallback: disk enumeration (non-iCloud roots, or pre-init).
-        let cloudURLs = await CloudSyncManager.shared.cloudNoteURLs(under: root)
+        let cloudURLs = withoutIgnoredFolders(
+            await CloudSyncManager.shared.cloudNoteURLs(under: root), under: root)
 
         let worker = Task.detached(priority: .userInitiated) { () -> SearchOutcome in
             guard !Task.isCancelled else { return SearchOutcome(hits: [], skippedDownloadingCount: 0) }
@@ -886,6 +889,20 @@ enum NoteFileStore {
         return urls
     }
 
+    /// The disk walk skips `ignoredFolderNames` and hidden folders, but the
+    /// iCloud catalog has no such rule, so notes in the library's Trash showed
+    /// up in Recent, All Notes, search and wikilink lookups whenever the
+    /// catalog answered. Only folders below `root` count, so browsing the
+    /// Trash folder itself still lists its notes.
+    nonisolated private static func withoutIgnoredFolders(_ urls: [URL], under root: URL) -> [URL] {
+        let depth = root.resolvingSymlinksInPath().pathComponents.count
+        return urls.filter { url in
+            !url.pathComponents.dropFirst(depth).dropLast().contains {
+                ignoredFolderNames.contains($0) || $0.hasPrefix(".")
+            }
+        }
+    }
+
     nonisolated private static func isDirectory(_ url: URL) -> Bool {
         (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) == true
     }
@@ -900,14 +917,39 @@ enum NoteFileStore {
     /// take the first two content lines after the title. No line-level
     /// if/else logic, just successive regex passes that delete
     /// structural markup and leave clean text.
-    nonisolated static func previewTextSync(for url: URL) -> String {
-        guard let handle = try? FileHandle(forReadingFrom: url) else { return "" }
+    /// The card text, or nil when the file could not be read here (an iCloud
+    /// placeholder), which is the only case worth a coordinated full read.
+    nonisolated static func previewTextSync(for url: URL) -> String? {
+        guard let handle = try? FileHandle(forReadingFrom: url) else { return nil }
         defer { try? handle.close() }
 
         guard let data = try? handle.read(upToCount: previewByteLimit),
-            let head = String(data: data, encoding: .utf8)
-        else { return "" }
+            var head = decodeUTF8Prefix(data)
+        else { return nil }
+        // Long frontmatter runs past the first bytes; read on to its end
+        // rather than showing its keys as the preview.
+        if hasOpenFrontmatter(head),
+            let more = try? handle.read(upToCount: previewFrontmatterLimit),
+            let rest = decodeUTF8Prefix(data + more)
+        {
+            head = rest
+        }
+        if hasOpenFrontmatter(head) { return "" }
 
+        return cardText(from: head)
+    }
+
+    /// A byte-limited read usually ends inside a multi-byte character, and a
+    /// strict UTF-8 decode then fails, which sent the card to a full
+    /// coordinated read of the file. Dropping the partial tail fixes that.
+    nonisolated private static func decodeUTF8Prefix(_ data: Data) -> String? {
+        for trim in 0...3 where trim < data.count || trim == 0 {
+            if let text = String(data: data.dropLast(trim), encoding: .utf8) { return text }
+        }
+        return nil
+    }
+
+    nonisolated private static func cardText(from head: String) -> String {
         var s = head
         s = stripFrontmatter(s)
         s = stripCodeBlocks(s)
@@ -924,6 +966,16 @@ enum NoteFileStore {
         return lines.prefix(2).joined(separator: " ")
     }
 
+    /// UTF-8 first, then GB18030, which covers the GBK and GB2312 notes older
+    /// Chinese editors wrote. A UTF-8-only read left those notes on the
+    /// loading skeleton for good. Saving writes UTF-8, as every MiaoYan note is.
+    nonisolated static func decodeNoteText(_ data: Data) -> String? {
+        if let text = String(data: data, encoding: .utf8) { return text }
+        let gb18030 = String.Encoding(
+            rawValue: CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue)))
+        return String(data: data, encoding: gb18030)
+    }
+
     nonisolated static func coordinatedReadString(at url: URL) throws -> String {
         var coordinationError: NSError?
         var readError: Error?
@@ -932,7 +984,10 @@ enum NoteFileStore {
 
         coordinator.coordinate(readingItemAt: url, options: [], error: &coordinationError) { readURL in
             do {
-                content = try String(contentsOf: readURL, encoding: .utf8)
+                guard let text = decodeNoteText(try Data(contentsOf: readURL)) else {
+                    throw CocoaError(.fileReadInapplicableStringEncoding)
+                }
+                content = text
             } catch {
                 readError = error
             }
@@ -986,7 +1041,21 @@ enum NoteFileStore {
         from content: String, query: String
     ) -> String {
         let opts: String.CompareOptions = [.caseInsensitive, .diacriticInsensitive]
-        var cleaned = stripMarkdownMarkers(content)
+        // Clean only a window around the first raw hit. Cleaning the whole
+        // body ran about fourteen regex passes over every matching note, and
+        // frontmatter used to surface as the snippet of blog-style notes.
+        let body = stripFrontmatter(content)
+        let window: Substring
+        if let hit = body.range(of: query, options: opts) {
+            let lower = body.index(hit.lowerBound, offsetBy: -240, limitedBy: body.startIndex) ?? body.startIndex
+            let upper = body.index(hit.upperBound, offsetBy: 240, limitedBy: body.endIndex) ?? body.endIndex
+            window = body[lower..<upper]
+        } else {
+            window = body.prefix(600)
+        }
+        let cutBefore = window.startIndex > body.startIndex
+        let cutAfter = window.endIndex < body.endIndex
+        var cleaned = stripMarkdownMarkers(String(window))
         cleaned = stripPreviewNoise(cleaned)
         cleaned = stripEmphasisMarkers(cleaned)
         if let whitespaceRunRegex {
@@ -996,7 +1065,7 @@ enum NoteFileStore {
         guard let range = cleaned.range(of: query, options: opts) else {
             // Title-only match (no body hit), fall back to a clean
             // opening snippet rather than echoing raw markdown.
-            return String(cleaned.prefix(140))
+            return String(cleaned.trimmingCharacters(in: .whitespaces).prefix(140))
         }
         let startDistance = cleaned.distance(from: cleaned.startIndex, to: range.lowerBound)
         // Keep the match visible within the card's two-line summary, including CJK.
@@ -1004,8 +1073,8 @@ enum NoteFileStore {
         let startIndex = cleaned.index(cleaned.startIndex, offsetBy: prefixStart)
         let endDistance = min(cleaned.count, startDistance + query.count + 96)
         let endIndex = cleaned.index(cleaned.startIndex, offsetBy: endDistance)
-        let prefix = prefixStart > 0 ? "…" : ""
-        let suffix = endDistance < cleaned.count ? "…" : ""
+        let prefix = prefixStart > 0 || cutBefore ? "…" : ""
+        let suffix = endDistance < cleaned.count || cutAfter ? "…" : ""
         return prefix + String(cleaned[startIndex..<endIndex]) + suffix
     }
 }

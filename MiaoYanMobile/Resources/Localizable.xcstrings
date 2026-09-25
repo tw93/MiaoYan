@@ -1191,6 +1191,164 @@
           }
         }
       }
+    },
+    "Pinned" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "置顶"
+          }
+        }
+      }
+    },
+    "Loading notes…" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在加载笔记…"
+          }
+        }
+      }
+    },
+    "Loading your notes…" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在加载你的笔记…"
+          }
+        }
+      }
+    },
+    "Notes in this location will appear here." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这个位置的笔记会显示在这里。"
+          }
+        }
+      }
+    },
+    "Nothing matched “%@”." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "没有匹配 “%@” 的内容。"
+          }
+        }
+      }
+    },
+    "Version" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "版本"
+          }
+        }
+      }
+    },
+    "Project on GitHub" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub 项目"
+          }
+        }
+      }
+    },
+    "Report an Issue" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "反馈问题"
+          }
+        }
+      }
+    },
+    "Connecting to iCloud…" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在连接 iCloud…"
+          }
+        }
+      }
+    },
+    "Found 1 note…" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已找到 1 篇笔记…"
+          }
+        }
+      }
+    },
+    "Found %lld notes…" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已找到 %lld 篇笔记…"
+          }
+        }
+      }
+    },
+    "%lld iCloud notes still downloading; results will improve as they sync." : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld iCloud note still downloading; results will improve as it syncs."
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld iCloud notes still downloading; results will improve as they sync."
+                }
+              }
+            }
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "还有 %lld 篇 iCloud 笔记在下载，同步完成后结果会更完整。"
+          }
+        }
+      }
+    },
+    "Can't Open This Note" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打不开这篇笔记"
+          }
+        }
+      }
+    },
+    "MiaoYan opens plain-text notes, and this file couldn't be read as text." : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "妙言只能打开纯文本笔记，这个文件没能按文字读出来。"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

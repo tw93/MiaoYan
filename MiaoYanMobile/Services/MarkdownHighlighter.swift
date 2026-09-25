@@ -113,8 +113,9 @@ enum MarkdownHighlighter {
         apply(wikilinkRegex, to: text, in: range) { match in
             storage.addAttribute(.foregroundColor, value: theme.accent, range: match.range)
         }
+        // Inline code keeps the text face, as in the reader and on macOS;
+        // only fenced blocks switch to the code font.
         apply(inlineCodeRegex, to: text, in: range) { match in
-            storage.addAttribute(.font, value: theme.codeFont, range: match.range)
             storage.addAttribute(.backgroundColor, value: theme.codeBackground, range: match.range)
         }
     }
@@ -124,6 +125,14 @@ enum MarkdownHighlighter {
     /// cheap regex sweep the editor runs only when the text contains "```".
     static func highlightCodeFences(_ storage: NSMutableAttributedString, theme: MarkdownEditorTheme) {
         let full = NSRange(location: 0, length: storage.length)
+        // Only fenced blocks use the code font, so any run still in it is left
+        // over from a block that has since lost a fence and goes back to body
+        // text before the current blocks are painted.
+        storage.enumerateAttribute(.font, in: full) { value, range, _ in
+            guard let font = value as? UIFont, font == theme.codeFont else { return }
+            storage.addAttribute(.font, value: theme.bodyFont, range: range)
+            storage.addAttribute(.foregroundColor, value: theme.ink, range: range)
+        }
         apply(fenceRegex, to: storage.string as NSString, in: full) { match in
             storage.addAttribute(.font, value: theme.codeFont, range: match.range)
             storage.addAttribute(.foregroundColor, value: theme.ink, range: match.range)
