@@ -22,6 +22,76 @@ private struct UpdateContext {
     let completion: () -> Void
 }
 
+/// A note as the background matcher sees it: plain values only, so reading and
+/// lowercasing bodies can leave the main thread without touching `Note`.
+struct NoteSearchCandidate: Sendable {
+    let index: Int
+    /// Lowercased file name without the extension, so `.` or `md` no longer
+    /// matches every note through `.md`.
+    let title: String
+    let url: URL
+    /// The in-memory text of a loaded note, which can be newer than the file.
+    /// Nil means read the file.
+    let loadedText: String?
+}
+
+enum NoteContentMatcher {
+    /// Matching candidates in their original order with a priority, stopping
+    /// after `limit`. Runs off the main thread.
+    nonisolated static func match(
+        _ candidates: [NoteSearchCandidate],
+        terms: [String],
+        limit: Int,
+        isCancelled: () -> Bool
+    ) -> [(index: Int, priority: Int)] {
+        var matches: [(index: Int, priority: Int)] = []
+        for candidate in candidates {
+            if isCancelled() { return [] }
+            let body = {
+                candidate.loadedText ?? (try? String(contentsOf: candidate.url, encoding: .utf8)) ?? ""
+            }
+            guard let priority = priority(title: candidate.title, body: body, terms: terms) else { continue }
+            matches.append((candidate.index, priority))
+            if matches.count >= limit { break }
+        }
+        return matches
+    }
+
+    /// 4 when every term is in the title, then 3, 2, 1 as more of the match
+    /// comes from the body; nil when some term is in neither. `body` is only
+    /// read when the title alone does not settle it.
+    nonisolated static func priority(title: String, body: () -> String, terms: [String]) -> Int? {
+        guard !terms.isEmpty else { return 0 }
+
+        let titleMatches = terms.filter { title.contains($0) }.count
+        if titleMatches == terms.count { return 4 }
+
+        let content = body().lowercased()
+        var contentMatches = 0
+        for term in terms where !title.contains(term) {
+            guard content.contains(term) else { return nil }
+            contentMatches += 1
+        }
+
+        if titleMatches > contentMatches { return 3 }
+        return titleMatches > 0 ? 2 : 1
+    }
+}
+
+extension Note {
+    fileprivate var searchTitle: String {
+        (title.isEmpty ? url.deletingPathExtension().lastPathComponent : title).lowercased()
+    }
+}
+
+/// Lets the background matcher poll the search operation's cancellation.
+/// `Operation.isCancelled` is documented as thread-safe.
+private struct SearchCancellation: @unchecked Sendable {
+    private let operation: Operation
+    init(_ operation: Operation) { self.operation = operation }
+    var isCancelled: Bool { operation.isCancelled }
+}
+
 private final class AsyncSearchOperation: Operation, @unchecked Sendable {
     var task: ((@escaping () -> Void) -> Void)?
 
@@ -221,13 +291,52 @@ extension ViewController {
             }
         }
 
-        let notesWithPriority = filterNotes(
-            searchParams: searchParams,
-            isSearch: isSearch,
-            operation: operation,
-            completion: completion
-        )
+        // The folder check is cheap and rules out most of the library, so it
+        // runs before any text is compared.
+        let scoped = storage.noteList.filter {
+            isInScope(note: $0, projects: searchParams.projects, type: searchParams.type)
+        }
+        let terms = searchParams.filter.split(separator: " ").map { $0.lowercased() }
 
+        guard !terms.isEmpty else {
+            let results = scoped.map { NoteSearchResult(note: $0, priority: 0, modifiedAt: $0.modifiedLocalAt) }
+            finishSearch(results: results, searchParams: searchParams, isSearch: isSearch, operation: operation, completion: completion)
+            return
+        }
+
+        // Only a note whose title leaves the query open needs its body, and
+        // only a loaded one hands over its in-memory text; the rest are read
+        // from disk by the background matcher.
+        let candidates = scoped.enumerated().map { index, note in
+            let title = note.searchTitle
+            let needsBody = !terms.allSatisfy { title.contains($0) }
+            return NoteSearchCandidate(
+                index: index,
+                title: title,
+                url: note.url,
+                loadedText: needsBody && note.isContentLoaded ? note.content.string : nil
+            )
+        }
+        let limit = isSearch ? 100 : Int.max
+        let cancellation = SearchCancellation(operation)
+
+        Task { @MainActor [weak self] in
+            let matches = await Task.detached(priority: .userInitiated) {
+                NoteContentMatcher.match(candidates, terms: terms, limit: limit, isCancelled: { cancellation.isCancelled })
+            }.value
+
+            guard let self, !operation.isCancelled else {
+                completion()
+                return
+            }
+            let results = matches.map {
+                NoteSearchResult(note: scoped[$0.index], priority: $0.priority, modifiedAt: scoped[$0.index].modifiedLocalAt)
+            }
+            self.finishSearch(results: results, searchParams: searchParams, isSearch: isSearch, operation: operation, completion: completion)
+        }
+    }
+
+    private func finishSearch(results notesWithPriority: [NoteSearchResult], searchParams: SearchParameters, isSearch: Bool, operation: Operation, completion: @escaping () -> Void) {
         guard !operation.isCancelled else {
             completion()
             return
@@ -269,40 +378,6 @@ extension ViewController {
                 completion: completion
             )
         )
-    }
-
-    private func filterNotes(searchParams: SearchParameters, isSearch: Bool, operation: Operation, completion: @escaping () -> Void) -> [NoteSearchResult] {
-        let terms = searchParams.filter.split(separator: " ")
-        let source = storage.noteList
-        var notes: [NoteSearchResult] = []
-        let maxResults = isSearch ? 100 : Int.max
-
-        for note in source {
-            if operation.isCancelled {
-                completion()
-                return []
-            }
-
-            if isFit(
-                note: note,
-                filter: searchParams.filter,
-                terms: terms,
-                projects: searchParams.projects,
-                type: searchParams.type,
-                sidebarName: searchParams.sidebarName
-            ) {
-                let matchResult = isMatched(note: note, terms: terms)
-                if matchResult.matched {
-                    notes.append(NoteSearchResult(note: note, priority: matchResult.priority, modifiedAt: note.modifiedLocalAt))
-
-                    if isSearch && notes.count >= maxResults {
-                        break
-                    }
-                }
-            }
-        }
-
-        return notes
     }
 
     private func updateTableViewWithResults(notes: [Note], orderedNotesList: [Note], context: UpdateContext) {
@@ -480,58 +555,12 @@ extension ViewController {
         }
     }
 
-    private func isMatched(note: Note, terms: [Substring]) -> (matched: Bool, priority: Int) {
-        guard !terms.isEmpty else {
-            return (true, 0)
-        }
-
-        // Pre-lowercase all search terms once to avoid repeated conversions
-        let lowercaseTerms = terms.map { $0.lowercased() }
-        let lowercaseTitle = note.name.lowercased()
-
-        var titleMatchCount = 0
-
-        // First pass: check title only (fast path)
-        for term in lowercaseTerms where lowercaseTitle.contains(term) {
-            titleMatchCount += 1
-        }
-
-        // If all terms match in title, highest priority - skip content search
-        if titleMatchCount == terms.count {
-            return (true, 4)
-        }
-
-        // Second pass: check content for unmatched terms
-        note.ensureContentLoaded()
-        let lowercaseContent = note.content.string.lowercased()
-        var contentMatchCount = 0
-
-        for term in lowercaseTerms {
-            // Skip if already matched in title
-            if lowercaseTitle.contains(term) {
-                continue
-            }
-            // Check content
-            if lowercaseContent.contains(term) {
-                contentMatchCount += 1
-            } else {
-                // Term not found in either title or content
-                return (false, 0)
-            }
-        }
-
-        // Calculate priority based on match distribution
-        // Priority: 4=all in title, 3=mostly title, 2=mixed, 1=mostly content
-        let priority: Int
-        if titleMatchCount > contentMatchCount {
-            priority = 3
-        } else if titleMatchCount > 0 {
-            priority = 2
-        } else {
-            priority = 1
-        }
-
-        return (true, priority)
+    private func isInScope(note: Note, projects: [Project]?, type: SidebarItemType?) -> Bool {
+        guard !note.name.isEmpty else { return false }
+        guard type == .Trash ? note.isTrash() : !note.isTrash() else { return false }
+        if type == .Trash { return true }
+        if projects?.contains(where: { note.project.isDescendant(of: $0) }) ?? false { return true }
+        return type == .All && note.project.showInCommon
     }
 
     public func isFit(note: Note, filter: String = "", terms: [Substring]? = nil, shouldLoadMain: Bool = false, projects: [Project]? = nil, type: SidebarItemType? = nil, sidebarName: String? = nil) -> Bool {
@@ -546,24 +575,17 @@ extension ViewController {
             terms = search.stringValue.split(separator: " ")
         }
 
-        let matchesScopedProjects = projects?.contains(where: { note.project.isDescendant(of: $0) }) ?? false
-        let matchesSidebar: Bool
+        guard isInScope(note: note, projects: projects, type: type) else { return false }
+        guard !filter.isEmpty, let terms, !terms.isEmpty else { return true }
 
-        if type == .Trash {
-            matchesSidebar = true
-        } else if matchesScopedProjects {
-            matchesSidebar = true
-        } else if type == .All {
-            matchesSidebar = note.project.showInCommon
-        } else {
-            matchesSidebar = false
-        }
-
-        return !note.name.isEmpty
-            && (filter.isEmpty || isMatched(note: note, terms: terms!).matched)
-            && matchesSidebar
-            && (type == .Trash && note.isTrash()
-                || type != .Trash && !note.isTrash())
+        return NoteContentMatcher.priority(
+            title: note.searchTitle,
+            body: {
+                note.ensureContentLoaded()
+                return note.content.string
+            },
+            terms: terms.map { $0.lowercased() }
+        ) != nil
     }
 
     func cleanSearchAndRestoreSelection() {

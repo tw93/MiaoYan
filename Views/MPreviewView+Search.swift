@@ -290,13 +290,15 @@ extension MPreviewView {
     }
 
     private func countMatches(_ text: String, sequence: Int, resetIndex: Bool) {
-        let escapedText = text.replacingOccurrences(of: "\\", with: "\\\\")
-            .replacingOccurrences(of: "'", with: "\\'")
+        // The query is literal text: a JSON string is a safe JS literal, and the
+        // pattern escape keeps `.` from counting every character and `(` from
+        // throwing, which left the counter at its previous value.
+        let literal = (try? String(data: JSONEncoder().encode(text), encoding: .utf8)) ?? "\"\""
 
         let script = """
             (function() {
-                const text = '\(escapedText)';
-                const regex = new RegExp(text, 'gi');
+                const text = \(literal);
+                const regex = new RegExp(text.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&'), 'gi');
                 const bodyText = document.body.innerText || document.body.textContent;
                 const matches = bodyText.match(regex);
                 return matches ? matches.length : 0;
