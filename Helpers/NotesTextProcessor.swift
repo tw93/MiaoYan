@@ -33,7 +33,7 @@ public class NotesTextProcessor {
     public static var underlineColor: NSColor { Theme.underlineColor }
     open var quoteIndentation: CGFloat = 20
 
-    @MainActor public static var codeFont = NSFont(name: UserDefaultsManagement.codeFontName, size: CGFloat(UserDefaultsManagement.fontSize))
+    @MainActor public static var codeFont: NSFont? = UserDefaultsManagement.codeFont
     @MainActor public static var georgiaFont = NSFont(name: "Georgia", size: CGFloat(UserDefaultsManagement.fontSize))
     @MainActor public static var publicFont = NSFont(name: "Helvetica Neue", size: CGFloat(UserDefaultsManagement.fontSize))
     @MainActor public static var monacoFont = NSFont(name: "Monaco", size: CGFloat(UserDefaultsManagement.fontSize))
@@ -41,7 +41,7 @@ public class NotesTextProcessor {
 
     @MainActor public static func refreshFonts() {
         let size = CGFloat(UserDefaultsManagement.fontSize)
-        codeFont = NSFont(name: UserDefaultsManagement.codeFontName, size: size)
+        codeFont = UserDefaultsManagement.codeFont
         georgiaFont = NSFont(name: "Georgia", size: size)
         publicFont = NSFont(name: "Helvetica Neue", size: size)
         monacoFont = NSFont(name: "Monaco", size: size)

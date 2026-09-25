@@ -112,6 +112,13 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
         guard let menu = popUp.menu else { return }
         menu.delegate = self
 
+        if kind == .code {
+            let follow = NSMenuItem(title: I18n.str("Same as Text"), action: nil, keyEquivalent: "")
+            follow.representedObject = FontConfiguration.followTextFont
+            menu.addItem(follow)
+            menu.addItem(.separator())
+        }
+
         let recommended = FontCatalog.installedRecommendations(for: kind)
         let missingRetired =
             kind == .text && !FontCatalog.isInstalled(family: FontCatalog.retiredBundledFamily)
@@ -298,7 +305,6 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
     @objc private func codeFontChanged(_ sender: NSPopUpButton) {
         guard let actualFontName = resolveSelection(sender, previous: settings.codeFontName) else { return }
         settings.codeFontName = actualFontName
-        NotesTextProcessor.codeFont = NSFont(name: settings.codeFontName, size: CGFloat(settings.editorFontSize))
         settings.applyChanges()
     }
 

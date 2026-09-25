@@ -9,11 +9,7 @@ html {
   color: var(--text-color);
   background: var(--bg-color);
   font-family: var(--text-font);
-  /* Claude's and Cursor's desktop apps both render everything antialiased and
-     never use subpixel; on this codebase the headings and strong runs were
-     already antialiased while body text was not, so the two sat side by side
-     at different stroke weights. */
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: subpixel-antialiased;
   overscroll-behavior: none;
   overflow-x: hidden;
 }
@@ -61,10 +57,13 @@ a {
 }
 
 /* ==================== Code Styles ==================== */
+/* The code font belongs to code blocks only. Inline code and anything quoted
+   stay in the surrounding text face, where a second face mid-line reads as a
+   mistake rather than as code. */
 .heti p > code,
 .heti li > code,
 code {
-  font-family: var(--code-text-font);
+  font-family: inherit;
   background-color: var(--code-bg);
   padding: 2px 6px;
   border-radius: var(--border-radius-sm);
@@ -88,29 +87,9 @@ pre code {
   word-break: break-word;
 }
 
-/* ==================== Bold ==================== */
-/* A family with no bold face leaves the renderer to smear the outline outward,
-   which closes the counters and merges strokes on a Chinese face. The app names
-   a real heavier face in --text-font-bold when it can identify one, and only
-   then turns synthetic weight off; without it both variables are absent and this falls
-   back to exactly what it did before.
-   The shorthand works on the minimum supported WebKit. Keep style synthesis
-   enabled so a family without an italic face still renders emphasis in italics;
-   only synthetic weight must be disabled when a real heavier face is named. */
-.heti h1,
-.heti h2,
-.heti h3,
-.heti h4,
-.heti h5,
-.heti h6,
-.heti b,
-.heti strong,
-.heti em,
-.heti dfn,
-.heti th,
-.heti .markdown-alert-title {
-  font-family: var(--text-font-bold, var(--text-font));
-  font-synthesis: var(--text-font-synthesis, weight style);
+.heti blockquote pre,
+.heti blockquote pre code {
+  font-family: inherit;
 }
 
 /* ==================== Tables ==================== */

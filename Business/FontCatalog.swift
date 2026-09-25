@@ -102,15 +102,6 @@ enum FontCatalog {
     /// the CJK fallback, the way Claude's and Cursor's desktop apps order it.
     /// Main-actor bound because it reads the shipped default from
     /// `FontConfiguration`; its only caller is `previewStyle()`, already there.
-    /// The stack for the bold surfaces: the heavier face in front, then the same
-    /// tail as the body stack. Naming the face alone leaves a glyph it lacks
-    /// with nowhere to go.
-    @MainActor
-    static func boldFontStack(forStored stored: String) -> String? {
-        guard let bold = boldFace(forStored: stored) else { return nil }
-        return "\"\(bold)\", \(fontStack(forStored: stored))"
-    }
-
     @MainActor
     static func fontStack(forStored stored: String) -> String {
         let quoted = "\"\(stored)\""
@@ -125,39 +116,6 @@ enum FontCatalog {
         return untouched
             ? "\(system), \(quoted), \(cjkFallback), sans-serif"
             : "\(quoted), \(system), \(cjkFallback), sans-serif"
-    }
-
-    /// The face to use where the stylesheet asks for bold, or nil when the
-    /// system can already find a real one.
-    ///
-    /// `font-weight: bold` on a family with no bold face makes the renderer
-    /// smear the outline outward, which on a Chinese face closes the counters
-    /// and merges strokes. Most families avoid this because their weights are
-    /// declared: PingFang SC resolves to Semibold, Songti SC to Bold. Some do
-    /// not. TsangerJinKai02 ships W04 and W05 and declares both as weight 5,
-    /// with a CoreText weight trait of 0.0 for each, so nothing in the metadata
-    /// says which is heavier and every heading came out as a fake bold.
-    ///
-    /// The only signal left is the naming, so this reads it, and only where it
-    /// is unambiguous: every face in the family is a bare number or a W-number,
-    /// and one of them ranks above the one in use. Anything else returns nil and
-    /// leaves the system behaviour alone.
-    static func boldFace(forStored stored: String) -> String? {
-        let family = familyName(forStored: stored)
-        guard let base = NSFont(name: stored, size: 16) ?? NSFont(name: family, size: 16) else { return nil }
-        let manager = NSFontManager.shared
-        if manager.convert(base, toHaveTrait: .boldFontMask).fontName != base.fontName { return nil }
-        guard let members = manager.availableMembers(ofFontFamily: family), members.count > 1 else { return nil }
-
-        var ranked: [(rank: Int, postScriptName: String)] = []
-        for member in members {
-            guard let postScriptName = member[0] as? String, let face = member[1] as? String else { return nil }
-            let digits = face.hasPrefix("W") ? String(face.dropFirst()) : face
-            guard let rank = Int(digits) else { return nil }
-            ranked.append((rank, postScriptName))
-        }
-        let current = ranked.first { $0.postScriptName == base.fontName }?.rank ?? Int.min
-        return ranked.filter { $0.rank > current }.min { $0.rank < $1.rank }?.postScriptName
     }
 
     /// Families ordered the way their labels read, so a localized list is not

@@ -363,16 +363,10 @@ public class TextFormatter {
 
         if selectedRange.length > 0 {
             let text = storage.attributedSubstring(from: selectedRange).string
-            let string = "`\(text)`"
-
-            if let codeFont = UserDefaultsManagement.codeFont {
-                let mutableString = NSMutableAttributedString(string: string)
-                mutableString.addAttribute(.font, value: codeFont, range: NSRange(0..<string.count))
-
-                EditTextView.shouldForceRescan = true
-                insertText(mutableString, replacementRange: selectedRange)
-                return
-            }
+            // Inline code stays in the text font, like the highlighter draws it.
+            EditTextView.shouldForceRescan = true
+            insertText("`\(text)`", replacementRange: selectedRange)
+            return
         }
 
         insertText("``")

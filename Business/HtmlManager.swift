@@ -291,19 +291,12 @@ class HtmlManager {
     @MainActor
     static func previewStyle() -> String {
         // Add font configuration
-        let codeFontName = UserDefaultsManagement.codeFontName
         let previewFontName = UserDefaultsManagement.previewFontName
-        // Families whose bold the system cannot resolve get one named here, so
-        // headings and strong text use a real weight instead of a smeared
-        // outline. Empty for every family that resolves its own bold.
-        // The weight synthesis switch travels with the face: turning it off
-        // without naming a real bold would leave those families with no visible
-        // emphasis at all.
-        let boldFont =
-            FontCatalog.boldFontStack(forStored: previewFontName)
-            .map { " --text-font-bold: \($0); --text-font-synthesis: style;" } ?? ""
-        let fontConfig =
-            ":root { --text-font: \(FontCatalog.fontStack(forStored: previewFontName)); --code-text-font: \"\(codeFontName)\", \(codeFontStack);\(boldFont) }"
+        let textStack = FontCatalog.fontStack(forStored: previewFontName)
+        let codeStack =
+            UserDefaultsManagement.codeFollowsText
+            ? textStack : "\"\(UserDefaultsManagement.codeFontName)\", \(codeFontStack)"
+        let fontConfig = ":root { --text-font: \(textStack); --code-text-font: \(codeStack); }"
 
         if UserDefaultsManagement.magicPPT {
             // ppt.html loads reveal's stylesheets, not base.css, so none of the
@@ -311,7 +304,7 @@ class HtmlManager {
             // reveal reads, and it gets the same stack the preview uses rather
             // than the bare stored name, which had no Latin ordering in front of
             // it and no CJK fallback behind it.
-            return "\(fontConfig) :root { --r-main-font: \(FontCatalog.fontStack(forStored: previewFontName));}"
+            return "\(fontConfig) :root { --r-main-font: \(textStack);}"
         }
 
         if UserDefaultsManagement.presentation {

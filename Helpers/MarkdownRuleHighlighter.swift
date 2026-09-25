@@ -374,13 +374,13 @@ enum MarkdownRuleHighlighter {
         NotesTextProcessor.htmlRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range else { return }
             attributedString.fixAttributes(in: range)
-            NotesTextProcessor.highlightCode(attributedString: attributedString, range: range, language: "html")
+            CodeBlockHighlighter.highlightInlineHTML(attributedString: attributedString, range: range)
         }
 
         NotesTextProcessor.imageHtmlRegex.matches(string, range: paragraphRange) { result in
             guard let range = result?.range else { return }
             attributedString.fixAttributes(in: range)
-            NotesTextProcessor.highlightCode(attributedString: attributedString, range: range, language: "html")
+            CodeBlockHighlighter.highlightInlineHTML(attributedString: attributedString, range: range)
         }
 
         NotesTextProcessor.emojiRegex.matches(string, range: paragraphRange) { result in

@@ -65,21 +65,6 @@ final class FontCatalogTests: XCTestCase {
     }
 
     @MainActor
-    func testBoldStackKeepsTheFallbackTail() throws {
-        // Naming the heavier face alone leaves a glyph it lacks with nowhere to
-        // go, so the bold stack carries the same tail as the body stack.
-        let retired = "TsangerJinKai02-W04"
-        guard let bold = FontCatalog.boldFontStack(forStored: retired) else {
-            throw XCTSkip("No face on this machine needs a bold override")
-        }
-        XCTAssertTrue(bold.hasPrefix("\"TsangerJinKai02-W05\""), bold)
-        XCTAssertTrue(bold.hasSuffix("sans-serif"), bold)
-        XCTAssertTrue(bold.contains("\"PingFang SC\""), bold)
-        // A family that resolves its own bold gets no override at all.
-        XCTAssertNil(FontCatalog.boldFontStack(forStored: "Songti SC"))
-    }
-
-    @MainActor
     func testTheShippedDefaultYieldsLatinToTheSystemStack() {
         // Nobody chose PingFang for the English; it is what the app starts with,
         // and its Latin is drawn for interface labels. So the default, and only
@@ -111,54 +96,6 @@ final class FontCatalogTests: XCTestCase {
         // renderer's last resort rather than to a sans-serif.
         for name in ["PingFang SC", "Georgia", "Menlo", "No Such Font", "TsangerJinKai02-W04"] {
             XCTAssertTrue(FontCatalog.fontStack(forStored: name).hasSuffix("sans-serif"), name)
-        }
-    }
-
-    @MainActor
-    func testPreviewStyleCarriesTheBoldFaceOnlyWhenThereIsOne() throws {
-        let defaults = UserDefaults.standard
-        let key = "previewFontName"
-        let original = defaults.string(forKey: key)
-        defer { defaults.set(original, forKey: key) }
-
-        // A family that resolves its own bold must not get the override, or the
-        // stylesheet would pin a face the system was already choosing correctly.
-        defaults.set("PingFang SC", forKey: key)
-        let resolved = HtmlManager.previewStyle()
-        XCTAssertFalse(resolved.contains("--text-font-bold"))
-        XCTAssertFalse(resolved.contains("--text-font-synthesis"))
-
-        // A family that does not gets both variables, because naming a face
-        // without disabling synthesis would smear that face in turn.
-        let retired = "TsangerJinKai02-W04"
-        guard FontCatalog.boldFace(forStored: retired) != nil else {
-            throw XCTSkip("No family on this machine needs the override")
-        }
-        defaults.set(retired, forKey: key)
-        let overridden = HtmlManager.previewStyle()
-        XCTAssertTrue(overridden.contains("--text-font-bold: \"TsangerJinKai02-W05\""), overridden)
-        XCTAssertTrue(overridden.contains("--text-font-synthesis: style"))
-    }
-
-    func testBoldFaceStaysOutOfTheWayWhenTheSystemCanResolveBold() {
-        // These ship with macOS and declare real bold faces, so naming one here
-        // would override the system for no reason.
-        for family in ["PingFang SC", "Songti SC", "Hiragino Sans GB", "Helvetica Neue"] {
-            guard NSFontManager.shared.availableFontFamilies.contains(family) else { continue }
-            XCTAssertNil(FontCatalog.boldFace(forStored: family), "\(family) already resolves its own bold")
-        }
-        XCTAssertNil(FontCatalog.boldFace(forStored: "No Such Font"))
-    }
-
-    func testAnyBoldFaceNamedIsAnotherMemberOfTheSameFamily() {
-        // Whatever the naming heuristic picks has to be a real face of the same
-        // family and not the one already in use, on any machine's font library.
-        let manager = NSFontManager.shared
-        for family in manager.availableFontFamilies {
-            guard let bold = FontCatalog.boldFace(forStored: family) else { continue }
-            XCTAssertNotNil(NSFont(name: bold, size: 16), "\(bold) is not a loadable face")
-            XCTAssertEqual(NSFont(name: bold, size: 16)?.familyName, family)
-            XCTAssertNotEqual(bold, NSFont(name: family, size: 16)?.fontName)
         }
     }
 
@@ -231,60 +168,75 @@ final class FontCatalogTests: XCTestCase {
     }
 
     @MainActor
-    func testRealBoldOverridePreservesRenderedItalics() async throws {
-        let family = "TsangerJinKai02-W04"
-        guard FontCatalog.boldFace(forStored: family) != nil else {
-            throw XCTSkip("The optional numbered-weight font is not installed")
-        }
+    func testPreviewNamesNoSeparateBoldFace() {
+        // TsangerJinKai02 keeps W04 for its bold, the way it rendered before the
+        // font batch, and no family gets a heavier face swapped in.
         let defaults = UserDefaults.standard
         let original = defaults.object(forKey: "previewFontName")
-        defaults.set(family, forKey: "previewFontName")
         defer { defaults.set(original, forKey: "previewFontName") }
+        for family in ["TsangerJinKai02-W04", "PingFang SC"] {
+            defaults.set(family, forKey: "previewFontName")
+            XCTAssertFalse(HtmlManager.previewStyle().contains("--text-font-bold"), family)
+        }
+    }
+
+    @MainActor
+    func testCodeFontFollowsTheTextStackUntilOneIsChosen() {
+        let defaults = UserDefaults.standard
+        let original = defaults.object(forKey: "codeFont")
+        defer { defaults.set(original, forKey: "codeFont") }
+
+        defaults.set(FontConfiguration.followTextFont, forKey: "codeFont")
+        let textStack = FontCatalog.fontStack(forStored: UserDefaultsManagement.previewFontName)
+        XCTAssertTrue(HtmlManager.previewStyle().contains("--code-text-font: \(textStack);"))
+        XCTAssertEqual(UserDefaultsManagement.codeFont.fontName, UserDefaultsManagement.noteFont.fontName)
+
+        defaults.set("Menlo", forKey: "codeFont")
+        XCTAssertTrue(HtmlManager.previewStyle().contains("--code-text-font: \"Menlo\","))
+        XCTAssertEqual(UserDefaultsManagement.codeFont.familyName, "Menlo")
+    }
+
+    @MainActor
+    func testCodeFontReachesOnlyTopLevelCodeBlocks() async throws {
+        let defaults = UserDefaults.standard
+        let original = defaults.object(forKey: "codeFont")
+        defaults.set("Menlo", forKey: "codeFont")
+        defer { defaults.set(original, forKey: "codeFont") }
 
         let bundle = try XCTUnwrap(Bundle.main.url(forResource: "DownView", withExtension: "bundle"))
         let css = try ["typography.css", "base.css"].map {
             try String(contentsOf: bundle.appendingPathComponent("css/\($0)"), encoding: .utf8)
         }.joined(separator: "\n")
-        let web = WKWebView(frame: NSRect(x: 0, y: 0, width: 600, height: 140))
-        let window = NSWindow(contentRect: web.frame, styleMask: [.titled], backing: .buffered, defer: false)
-        window.contentView = web
-        window.orderFront(nil)
-        defer { window.orderOut(nil) }
+        let web = WKWebView(frame: NSRect(x: 0, y: 0, width: 600, height: 400))
         web.loadHTMLString(
             """
-            <html><head><style>\(css) \(HtmlManager.previewStyle())
-            body { margin: 0; padding: 20px; background: white; }
-            .heti { font-size: 32px; color: black; }
-            </style></head><body><div class="heti"><em id="sample">Italic English abcdef</em></div></body></html>
+            <html><head><style>\(css) \(HtmlManager.previewStyle())</style></head><body><div class="heti">
+            <p id="text">text <code id="inline">inline</code></p>
+            <blockquote id="quote"><p><code id="quoteInline">q</code></p><pre><code id="quoteBlock">q</code></pre></blockquote>
+            <pre><code id="block">block</code></pre>
+            </div></body></html>
             """, baseURL: nil)
         var loaded = false
         for _ in 0..<250 {
-            if (try? await web.evaluateJavaScript("document.readyState === 'complete' && !!document.getElementById('sample')")) as? Bool == true {
+            if (try? await web.evaluateJavaScript("document.readyState === 'complete' && !!document.getElementById('block')")) as? Bool == true {
                 loaded = true
                 break
             }
             try await Task.sleep(nanoseconds: 20_000_000)
         }
-        XCTAssertTrue(loaded, "The font rendering fixture must load")
+        XCTAssertTrue(loaded, "The font fixture must load")
         guard loaded else { return }
 
-        let italic = try await fontSnapshotPixels(web)
-        _ = try await web.evaluateJavaScript("document.getElementById('sample').style.fontStyle = 'normal'")
-        let upright = try await fontSnapshotPixels(web)
-        XCTAssertNotEqual(italic, upright, "Italic markup must visibly differ from upright text when a real bold face is selected")
-        let weight = try await web.evaluateJavaScript("getComputedStyle(document.getElementById('sample')).fontSynthesis")
-        XCTAssertEqual(weight as? String, "style", "Keep italic synthesis without adding fake bold")
-    }
-
-    @MainActor
-    private func fontSnapshotPixels(_ web: WKWebView) async throws -> Data {
-        let configuration = WKSnapshotConfiguration()
-        configuration.afterScreenUpdates = true
-        let image = try await web.takeSnapshot(configuration: configuration)
-        let tiff = try XCTUnwrap(image.tiffRepresentation)
-        let bitmap = try XCTUnwrap(NSBitmapImageRep(data: tiff))
-        let pixels = try XCTUnwrap(bitmap.bitmapData)
-        return Data(bytes: pixels, count: bitmap.bytesPerRow * bitmap.pixelsHigh)
+        let ids = ["text", "inline", "quote", "quoteInline", "quoteBlock", "block"]
+        let script = "JSON.stringify([\(ids.map { "'\($0)'" }.joined(separator: ","))].map(id => getComputedStyle(document.getElementById(id)).fontFamily))"
+        let result = try await web.evaluateJavaScript(script)
+        let json = try XCTUnwrap(result as? String)
+        let families = try XCTUnwrap(try JSONSerialization.jsonObject(with: Data(json.utf8)) as? [String])
+        let family = Dictionary(uniqueKeysWithValues: zip(ids, families))
+        XCTAssertTrue(family["block"]?.hasPrefix("Menlo") == true, family.description)
+        XCTAssertEqual(family["inline"], family["text"])
+        XCTAssertEqual(family["quoteInline"], family["quote"])
+        XCTAssertEqual(family["quoteBlock"], family["quote"])
     }
 
 }

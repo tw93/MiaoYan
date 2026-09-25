@@ -14,8 +14,13 @@ enum FontConfiguration {
     /// Default preview font name
     static let defaultPreviewFont = "PingFangSC-Regular"
 
+    /// Stored as the code font when code blocks use the text font, the editor
+    /// font in the editor and the preview font in the preview. It names no
+    /// installed face, so it is checked before any font lookup.
+    static let followTextFont = "FollowText"
+
     /// Default code font name
-    static let defaultCodeFont = "Menlo"
+    static let defaultCodeFont = followTextFont
 
     /// Returns the actual NSFont for editor use
     static func editorFont(size: CGFloat) -> NSFont {

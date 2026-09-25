@@ -84,6 +84,30 @@ enum CodeBlockHighlighter {
         attributedString.fixAttributes(in: range)
     }
 
+    /// Colors an HTML tag written in the text the way the html grammar does,
+    /// leaving its font and paragraph alone. Going through `highlightCode`
+    /// gave an `<img>` line the code font and the code-block mark, and the
+    /// mark then made the next keystroke re-highlight the whole paragraph as
+    /// code.
+    static func highlightInlineHTML(attributedString: NSMutableAttributedString, range: NSRange) {
+        guard range.length > 0, range.upperBound <= attributedString.length else { return }
+
+        let source = attributedString.mutableString.substring(with: range)
+        guard !NotesTextProcessor.shouldSkipCodeHighlighting,
+            let highlighter = NotesTextProcessor.getHighlighter(),
+            let code = highlighter.highlight(source, as: "html"),
+            code.string == source
+        else {
+            attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.htmlColor, range: range)
+            return
+        }
+
+        code.enumerateAttribute(.foregroundColor, in: NSRange(location: 0, length: code.length)) { value, local, _ in
+            guard let color = value else { return }
+            attributedString.addAttribute(.foregroundColor, value: color, range: NSRange(location: range.location + local.location, length: local.length))
+        }
+    }
+
     static func highlightFencedAndIndentCodeBlocks(attributedString: NSMutableAttributedString, pattern: String) {
         let range = NSRange(0..<attributedString.length)
         guard range.length > 0 else { return }

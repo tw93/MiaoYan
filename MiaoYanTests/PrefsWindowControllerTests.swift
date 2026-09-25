@@ -39,7 +39,7 @@ final class PrefsWindowControllerTests: XCTestCase {
     @MainActor
     func testFontMigrationPreservesCustomFaces() throws {
         let defaults = UserDefaults.standard
-        let keys = ["fontName", "windowFontName", "previewFontName", "codeFont", "hasMigratedSystemFonts_v1", "hasMigratedCodeFontDefault_v1", "hasMigratedFontDefaults_v2"]
+        let keys = ["fontName", "windowFontName", "previewFontName", "codeFont", "hasMigratedSystemFonts_v1", "hasMigratedCodeFontDefault_v1", "hasMigratedCodeFontToText_v1", "hasMigratedFontDefaults_v2"]
         let saved = keys.map { defaults.object(forKey: $0) }
         defer {
             for (key, value) in zip(keys, saved) {
@@ -48,6 +48,7 @@ final class PrefsWindowControllerTests: XCTestCase {
         }
         defaults.set(false, forKey: "hasMigratedSystemFonts_v1")
         defaults.set(true, forKey: "hasMigratedCodeFontDefault_v1")
+        defaults.set(true, forKey: "hasMigratedCodeFontToText_v1")
         defaults.set(true, forKey: "hasMigratedFontDefaults_v2")
         defaults.set("TsangerJinKai02-W04", forKey: "fontName")
         defaults.set("TsangerJinKai02-W04", forKey: "windowFontName")
@@ -61,6 +62,34 @@ final class PrefsWindowControllerTests: XCTestCase {
         XCTAssertEqual(UserDefaultsManagement.previewFontName, "Helvetica")
         XCTAssertEqual(UserDefaultsManagement.codeFontName, "Menlo")
         XCTAssertNotNil(NSFont(name: FontConfiguration.defaultEditorFont, size: 16))
+    }
+
+    @MainActor
+    func testShippedMenloCodeFontMovesToFollowText() {
+        let defaults = UserDefaults.standard
+        let keys = ["codeFont", "hasMigratedSystemFonts_v1", "hasMigratedCodeFontDefault_v1", "hasMigratedCodeFontToText_v1", "hasMigratedFontDefaults_v2"]
+        let saved = keys.map { defaults.object(forKey: $0) }
+        defer {
+            for (key, value) in zip(keys, saved) {
+                if let value { defaults.set(value, forKey: key) } else { defaults.removeObject(forKey: key) }
+            }
+        }
+        for key in ["hasMigratedSystemFonts_v1", "hasMigratedCodeFontDefault_v1", "hasMigratedFontDefaults_v2"] {
+            defaults.set(true, forKey: key)
+        }
+
+        // Menlo was written by an earlier migration, so it is not a choice.
+        defaults.set(false, forKey: "hasMigratedCodeFontToText_v1")
+        defaults.set("Menlo", forKey: "codeFont")
+        UserDefaultsManagement.migrateFontDefaultsIfNeeded()
+        XCTAssertEqual(UserDefaultsManagement.codeFontName, FontConfiguration.followTextFont)
+        XCTAssertTrue(UserDefaultsManagement.codeFollowsText)
+
+        // Any other face was picked by someone and stays.
+        defaults.set(false, forKey: "hasMigratedCodeFontToText_v1")
+        defaults.set("Monaco", forKey: "codeFont")
+        UserDefaultsManagement.migrateFontDefaultsIfNeeded()
+        XCTAssertEqual(UserDefaultsManagement.codeFontName, "Monaco")
     }
 
     func testWindowAppearanceDoesNotOverwriteTheSavedPreviewMode() throws {

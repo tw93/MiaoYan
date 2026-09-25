@@ -161,7 +161,7 @@ public enum UserDefaultsManagement {
     private static func resolvedFontName(forKey key: String) -> String {
         if let stored = UserDefaults.standard.string(forKey: key)?.trimmingCharacters(in: .whitespacesAndNewlines),
             !stored.isEmpty,
-            NSFont(name: stored, size: 12) != nil
+            (key == Constants.CodeFontNameKey && stored == FontConfiguration.followTextFont) || NSFont(name: stored, size: 12) != nil
         {
             return stored
         }
@@ -310,6 +310,11 @@ public enum UserDefaultsManagement {
         set { UserDefaults.standard.set(newValue, forKey: "hasMigratedCodeFontDefault_v1") }
     }
 
+    static var hasMigratedCodeFontToText: Bool {
+        get { UserDefaults.standard.bool(forKey: "hasMigratedCodeFontToText_v1") }
+        set { UserDefaults.standard.set(newValue, forKey: "hasMigratedCodeFontToText_v1") }
+    }
+
     static func migrateFontDefaultsIfNeeded() {
         // Only migrate the retired bundled face, preserving other user choices.
         if !UserDefaults.standard.bool(forKey: "hasMigratedSystemFonts_v1") {
@@ -329,6 +334,14 @@ public enum UserDefaultsManagement {
             let storedCode = UserDefaults.standard.string(forKey: Constants.CodeFontNameKey) ?? ""
             if storedCode.isEmpty || storedCode == "TsangerJinKai02-W04" {
                 UserDefaults.standard.set(FontConfiguration.defaultCodeFont, forKey: Constants.CodeFontNameKey)
+            }
+        }
+        // Menlo was the shipped default, and the migration above wrote it into
+        // almost every install, so a stored Menlo says nothing about a choice.
+        if !hasMigratedCodeFontToText {
+            hasMigratedCodeFontToText = true
+            if UserDefaults.standard.string(forKey: Constants.CodeFontNameKey) == "Menlo" {
+                UserDefaults.standard.set(FontConfiguration.followTextFont, forKey: Constants.CodeFontNameKey)
             }
         }
 
@@ -588,8 +601,12 @@ public enum UserDefaultsManagement {
         get { resolvedFontName(forKey: Constants.CodeFontNameKey) }
         set { UserDefaults.standard.set(newValue, forKey: Constants.CodeFontNameKey) }
     }
+    static var codeFollowsText: Bool {
+        codeFontName == FontConfiguration.followTextFont
+    }
     static var codeFont: Font! {
         get {
+            if codeFollowsText { return noteFont }
             if let font = Font(name: codeFontName, size: CGFloat(fontSize)) {
                 return font
             }

@@ -35,6 +35,28 @@ final class EditorStorageOwnershipTests: XCTestCase {
     }
 
     @MainActor
+    func testHTMLTagKeepsTheTextFontAndIsNotACodeBlock() {
+        let defaults = UserDefaults.standard
+        let original = defaults.object(forKey: "codeFont")
+        defaults.set("Menlo", forKey: "codeFont")
+        NotesTextProcessor.refreshFonts()
+        defer {
+            defaults.set(original, forKey: "codeFont")
+            NotesTextProcessor.refreshFonts()
+        }
+
+        let body = "before <img src=\"a.png\" width=\"300\"> after"
+        let note = makeNote("html.md", body: body)
+        let storage = NSMutableAttributedString(string: body)
+        MarkdownRuleHighlighter.highlightMarkdown(attributedString: storage, note: note)
+
+        let tag = (body as NSString).range(of: "<img")
+        XCTAssertNil(storage.attribute(.codeBlock, at: tag.location, effectiveRange: nil))
+        let font = storage.attribute(.font, at: tag.location, effectiveRange: nil) as? NSFont
+        XCTAssertNotEqual(font?.familyName, "Menlo")
+    }
+
+    @MainActor
     func testRefusesCrossNoteWholeBufferSave() {
         let noteA = makeNote("a.md", body: "AAA original")
         let noteB = makeNote("b.md", body: "BBB original")
