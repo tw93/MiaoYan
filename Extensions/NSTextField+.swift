@@ -5,7 +5,8 @@ extension NSTextField {
         if let string = attributedStringValue.mutableCopy() as? NSMutableAttributedString {
             let labelText = stringValue
             let range = NSRange(location: 0, length: labelText.count - 1)
-            string.addAttribute(.kern, value: UserDefaultsManagement.windowLetterSpacing, range: range)
+            let spacing = (font?.pointSize ?? NSFont.systemFontSize) * UserDefaultsManagement.letterSpacingEm
+            string.addAttribute(.kern, value: spacing, range: range)
             string.fixAttributes(in: range)
             attributedStringValue = string
         }

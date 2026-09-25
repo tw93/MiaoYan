@@ -22,7 +22,8 @@ a {
 .heti {
   font-weight: 400;
   line-height: 1.74;
-  letter-spacing: 0.04em;
+  /* Shared with the editor and interface through letterSpacingEm. */
+  letter-spacing: 0.02em;
   overflow-wrap: break-word;
   word-wrap: break-word;
   hyphens: auto;

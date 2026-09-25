@@ -97,8 +97,12 @@ public enum UserDefaultsManagement {
     static var isWillFullScreen = false
     static var editorLineSpacing = 3.0
     static var editorLineHeight = 1.3
-    static var editorLetterSpacing = 0.5
-    static var windowLetterSpacing = 0.6
+    /// Tracking as a share of the font size, the same figure the preview uses
+    /// in typography.css. The fixed 0.5pt and 0.6pt it replaces, and the
+    /// preview's 0.04em, were tuned in 2022 around LXGW WenKai, a tight face;
+    /// on PingFang, and on Latin in any face, they spread the text apart.
+    static let letterSpacingEm = 0.02
+    static var editorLetterSpacing: Double { Double(fontSize) * letterSpacingEm }
     static var titleFontSize = 20
     static var emptyEditTitleFontSize = 36
     static var nameFontSize = 14
