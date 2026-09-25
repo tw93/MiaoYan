@@ -7,8 +7,7 @@
 > Claude-specific assets:
 > - 全局规则: `~/.claude/CLAUDE.md`
 > - Swift 通用规则: `~/.claude/rules/swift.md` (项目级补充 `.claude/rules/swift.md`)
-> - 项目 skills 的 tracked canonical source: `.agents/skills/` - `release`, `appstore`, `lint`, `code-review`, `github-ops`
-> - `.claude/skills/` 是 gitignored 的本机兼容镜像，可使用指向对应 canonical 目录的软链或文件拷贝；只编辑 `.agents/skills/`，再运行 `bash scripts/sync-agent-skills.sh --write` 和 `--check`
+> - 本仓库没有项目 skill；release、App Store、review、lint 的项目事实都在本文件
 
 ## Project
 
@@ -50,7 +49,6 @@ xcodebuild test -project MiaoYan.xcodeproj -scheme MiaoYan -destination 'platfor
 xcodebuild -project MiaoYan.xcodeproj -scheme MiaoYanMobile -configuration Debug -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
 swiftlint lint --strict
 swift-format lint --recursive . --strict   # --strict is what CI runs; without it a local pass can still fail CI
-bash scripts/sync-agent-skills.sh --check  # compare the gitignored local Claude mirror; use --write first if absent
 bash scripts/build.sh
 bash scripts/build-appstore.sh
 ruby scripts/add_tests_target.rb     # only when re-wiring MiaoYanTests after pbxproj reset
@@ -175,6 +173,7 @@ Avoid broad scans of `build/`, `.build/`, `dist/`, and bundled web assets unless
 - Version history lives in `Business/NoteVersionManager.swift` and `Controllers/VersionHistoryViewController.swift`; keep file IO off the main thread and UI updates on the main thread.
 - PNG export must prepare the current DOM, inject export styles and wait for media on every invocation. Cleanup removes those styles, so cached note content never proves a subsequent export is ready.
 - Mermaid and PDF export span `Business/HtmlManager.swift`, `Helpers/PdfExportController.swift`, and `Extensions/MPreviewView+Export.swift`. Wait for images and Mermaid rendering before capture.
+- Note-list search (`ViewController+Data.swift`) filters by folder scope first, then hands plain `NoteSearchCandidate` values to `NoteContentMatcher` in a detached task, which reads unloaded bodies from disk; the main thread only snapshots and applies results. Never load or lowercase note bodies on the main thread for search, and match titles without the `.md` extension.
 - Async note/image/file loading is intentional. Do not reintroduce blocking reads on the main thread for large notes or previews.
 - Directory symlinks are supported by storage scanning. Avoid recursion loops and duplicate notes when following symlinked directories.
 - The iOS editor is `MiaoYanMobile/Views/MarkdownEditorView.swift` + `Services/MarkdownHighlighter.swift`: plain-markdown UITextView with regex highlighting. Never mutate `textStorage` attributes while `markedTextRange != nil` (breaks CJK IME composition), and keep `lineBreakStrategy = []` (re-enabling push-out reintroduces premature CJK line wraps).
@@ -200,13 +199,16 @@ MiaoYan ships through two independent channels. Publishing one never updates the
 - Both install paths fetch release assets, never the tag tarball: homebrew-cask's `url` is `releases/download/V4.3.0/MiaoYan_V4.3.0.zip` and the appcast enclosure is the same shape. Nothing pins a hash of `archive/refs/tags/*.tar.gz`, so a tag that has no release yet can be deleted and recut without breaking a consumer. Deleting a tag that does have a release breaks `brew install --cask miaoyan` immediately, because the cask names that asset.
 - App Store users never see the appcast. After a direct-download release, the App Store version stays old until a separate submission passes review; do not report a version as "released" without naming which channel it reached.
 - When an App Store build is prepared, deliver ready-to-paste submission copy with it: Promotional Text (170-char limit) and What's New, in en and zh-Hans, derived from `.github/RELEASE_NOTES.md`. Do not wait for the maintainer to ask from the Connect submission page.
+- Validate an App Store build before any upload: `xcrun altool --validate-app -f build/AppStore/Export/MiaoYan.app -t macos --apiKey <KEY_ID> --apiIssuer <ISSUER_ID>`; Xcode Organizer is an acceptable upload path when the CLI upload is riskier. Upload to App Store Connect only on explicit maintainer confirmation.
 
 ## Fonts And Preview Rendering
 
 - Font menus refresh when opened because the preferences controller is reused. Cache classification by the installed family set, not its count, and preserve the selected stored family when rebuilding a menu.
 - Font preferences hold two different spellings. The shipped defaults in `Business/FontConfiguration.swift` are PostScript names (`PingFangSC-Regular`), while every value the font popups write is a family name (`PingFang SC`), because the popups are built from `availableFontFamilies`. Anything comparing a stored value against a default, or matching it to a popup row, has to resolve both sides through `FontCatalog.familyName(forStored:)` first. Comparing the raw strings made the preview's Latin ordering unreachable the moment the user opened the popup, with both states rendering the same selected row.
 - `FontCatalog.fontStack(forStored:)` decides who sets Latin, and the test is whether the user picked the face, not whether it is a CJK face. PingFang's Latin is drawn for interface labels and yields to `ui-sans-serif, system-ui, -apple-system`; a face someone chose leads its own stack and sets the whole line, because TsangerJinKai02 and its like draw Latin to match their Chinese.
-- A CSS property's minimum version has to clear `MACOSX_DEPLOYMENT_TARGET`, currently 12.0. Use the supported `font-synthesis` shorthand: a real heavier face disables only weight synthesis (`style`), while ordinary families keep `weight style`. Do not use `none`, which also removes synthetic italics. When declarations have different minimum versions, retain a supported fallback and verify the absent-variable behavior on both engines.
+- A CSS property's minimum version has to clear `MACOSX_DEPLOYMENT_TARGET`, currently 12.0. When declarations have different minimum versions, retain a supported fallback and verify the absent-variable behavior on both engines.
+- The preview keeps the chosen face for bold. Swapping TsangerJinKai02 W05 in for headings and strong text (V4.3.1) made them visibly lighter than the W04 synthetic bold people were used to, and the maintainer asked for W04 back; do not reintroduce a heavier-face substitution. Body text uses `-webkit-font-smoothing: subpixel-antialiased`; `antialiased` on `html` thinned every paragraph in the same release.
+- The code font reaches fenced code blocks only (`pre code`, and not inside `blockquote`). Inline code and quoted code inherit the surrounding text face. The stored default is `FontConfiguration.followTextFont`, which means the editor font in the editor and the preview stack in the preview; check `UserDefaultsManagement.codeFollowsText` before treating `codeFontName` as a face. Raw HTML tags in the editor are colored through `CodeBlockHighlighter.highlightInlineHTML`, never `highlightCode`, which would give them the code font and the `.codeBlock` mark.
 - `ppt.html` loads reveal's stylesheets, not `base.css` or `typography.css`, so none of the `--text-font*` variables reach it. `--r-main-font` is the only one reveal reads. A preview font change is not done until the PPT branch of `previewStyle()` has been checked too.
 
 ## Release Notes
@@ -214,10 +216,10 @@ MiaoYan ships through two independent channels. Publishing one never updates the
 - Tag format is uppercase `Vx.y.z`.
 - One release per batch. Shipping cadence here is roughly monthly (V4.0.0 to V4.1.0 to V4.2.0 were 29 and 28 days apart); once a version is out, further work waits for the next one. Only a regression that version introduced, or a fix users cannot otherwise obtain, justifies a follow-up tag. V4.3.0 and V4.3.1 went out 1.4 hours apart because a batch of font work landed right after a release and was tagged on the spot instead of being held, which prompted every Sparkle user to update twice in one afternoon.
 - Version changes must keep both `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` in `MiaoYan.xcodeproj/project.pbxproj` aligned with the release tag. Sparkle compares `sparkle:version` in appcast.xml against `CFBundleVersion` (mapped from `CURRENT_PROJECT_VERSION`), not `CFBundleShortVersionString`. If the two diverge, users get an infinite update prompt loop (V3.5.1 incident, #524).
-- `.github/RELEASE_NOTES.md` is the public release note source. Release scripts under `scripts/release-ci/` render it for GitHub release and appcast content, including the current sectionless format.
-- Release titles follow `V{x.y.z} {Codename} {emoji}` (e.g. `V4.0.0 Valstrax 🚀`). Before drafting notes, `gh release view` the previous release and mirror its exact body shape instead of rebuilding it from memory; the full format and reaction ritual live in `.agents/skills/release/SKILL.md`.
+- `.github/RELEASE_NOTES.md` is the public release note source: a `# V{x.y.z} {Codename} {emoji}` heading, a Chinese numbered list, a `---` separator, then an English numbered list mapped one-to-one. `scripts/release-ci/render_release_body.sh` renders it into the GitHub release body and appcast content; codenames follow the list in `scripts/release-ci/generate_release_content.sh`.
+- Release titles follow `V{x.y.z} {Codename} {emoji}` (e.g. `V4.0.0 Valstrax 🚀`). Before drafting notes, `gh release view` the previous release and mirror its exact body shape instead of rebuilding it from memory.
 - Publishing ends with the six positive reactions (`+1`, `laugh`, `heart`, `hooray`, `rocket`, `eyes`) added via `gh api` and read back to confirm. Never add `-1` or `confused`.
-- Direct-download Sparkle signing must use the MiaoYan release key, not the default Sparkle Keychain account. Before pushing appcast changes, verify the signature against the published ZIP and the app's embedded `SUPublicEDKey` with `scripts/release-ci/verify_sparkle_signature.sh`; a signature-only appcast fix is valid only when ZIP bytes and length are unchanged.
+- Direct-download Sparkle signing must use the MiaoYan release key, not the default Sparkle Keychain account. Before pushing appcast changes, verify the signature against the published ZIP and the app's embedded `SUPublicEDKey` with `scripts/release-ci/verify_sparkle_signature.sh`; a signature-only appcast fix is valid only when ZIP bytes and length are unchanged. The DMG, ZIP, and Sparkle metadata carry the same version, and the ZIP the appcast points at is the exact file that was signed, never a re-zipped copy.
 - Direct-download release builds use repository scripts; no tracked workflow packages a release.
 - Release automation depends on maintainer-managed signing, notarization, and Sparkle credentials. Do not document or commit local credential paths, private key filenames, or secret values.
 
@@ -226,8 +228,7 @@ MiaoYan ships through two independent channels. Publishing one never updates the
 - Swift changes: run the Debug `xcodebuild` command above.
 - UI or interaction fixes: launch the built app and exercise the changed flow before reporting done; a green build is not visual proof. If the first fix attempt does not hold, stop guessing and add `#if DEBUG` runtime logging to capture evidence before the next code change.
 - Lint or formatting changes: run SwiftLint and swift-format checks.
-- Project Skill changes: edit `.agents/skills/` only, then run `bash scripts/sync-agent-skills.sh --write` followed by `bash scripts/sync-agent-skills.sh --check`. The checker accepts links only to the corresponding canonical skill directory and compares copied files while preserving unrelated private Claude skills. For sync-script changes, run `python3 scripts/test-sync-agent-skills.py`.
-- iOS changes: verification bar equals macOS. Inspect `MiaoYanMobile/` target membership, build, then run the affected flow in the Simulator (for example the new-note title flow or preview first frame) before reporting done; a green build alone is not done. Performance complaints need a measurable budget in the fix (for example: detail-page first frame past the budget shows a skeleton instead of blocking).
+- iOS changes: verification bar equals macOS. Inspect `MiaoYanMobile/` target membership, sync behavior, and mobile resource paths, build, then run the affected flow in the Simulator (for example the new-note title flow or preview first frame) before reporting done; a green build alone is not done. Performance complaints need a measurable budget in the fix (for example: detail-page first frame past the budget shows a skeleton instead of blocking).
 - Release or signing changes: verify version alignment and inspect the relevant repository script; do not assume a tracked `release.yml` exists.
 - Release note changes: inspect `.github/RELEASE_NOTES.md` and the affected `scripts/release-ci/` renderer.
 - Export changes: verify Mermaid, images, PDF pagination, and async readiness behavior together.
