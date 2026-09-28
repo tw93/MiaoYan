@@ -3,6 +3,7 @@ included:
 
 excluded:
   - .build
+  - Packages/*/.build
   - .vscode
 
 disabled_rules:

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A26090600000000000000003 /* NoteContentMatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26090600000000000000005 /* NoteContentMatcherTests.swift */; };
+		C0DE0000000000000000A004 /* MiaoYanCore in Frameworks */ = {isa = PBXBuildFile; productRef = C0DE0000000000000000A002 /* MiaoYanCore */; };
 		088B43D4653C47ECBC4A20E9 /* ViewController+Export.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79ED9A0265AF40869D66861F /* ViewController+Export.swift */; };
 		1E70061177F82690A432E49A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A8826B3473027DC8DE62A8 /* Cocoa.framework */; };
 		27159CF52F34C9EE0081E876 /* ThemedSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27159CF42F34C9EE0081E876 /* ThemedSplitView.swift */; };
@@ -188,7 +188,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		A26090600000000000000005 /* NoteContentMatcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NoteContentMatcherTests.swift; path = MiaoYanTests/NoteContentMatcherTests.swift; sourceTree = SOURCE_ROOT; };
 		17D270682FE43740B52C6C24 /* MiaoYanTests/Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = MiaoYanTests/Info.plist; sourceTree = SOURCE_ROOT; };
 		27159CF42F34C9EE0081E876 /* ThemedSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemedSplitView.swift; sourceTree = "<group>"; };
 		27159CF62F34CA000081E876 /* ThemedTableRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemedTableRowView.swift; sourceTree = "<group>"; };
@@ -344,6 +343,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				27A0773A2E714AB1008A5483 /* CMarkGFM in Frameworks */,
+				C0DE0000000000000000A004 /* MiaoYanCore in Frameworks */,
 				27A077482E714AFE008A5483 /* Highlightr in Frameworks */,
 				27977FF42E7126C40016D57D /* CMarkGFM in Frameworks */,
 				2732D2FF2E70450B00F00158 /* Prettier in Frameworks */,
@@ -426,7 +426,6 @@
 				B738F144215845899083B5C4 /* MiaoYanTests/StorageInitContentDecisionTests.swift */,
 				C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */,
 				7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */,
-				A26090600000000000000005 /* NoteContentMatcherTests.swift */,
 				B22C5159360D47542BF89DB7 /* MiaoYanTests/EditorStorageOwnershipTests.swift */,
 				A5B6C7D8E9F0123456789ABC /* MiaoYanTests/SidebarProjectViewTests.swift */,
 				70CD1D46A31EA0A827EF0C05 /* MiaoYanTests/TypographyCleanerTests.swift */,
@@ -655,6 +654,7 @@
 			);
 			name = MiaoYan;
 			packageProductDependencies = (
+				C0DE0000000000000000A002 /* MiaoYanCore */,
 				27977FF32E7126C40016D57D /* CMarkGFM */,
 				27A077472E714AFE008A5483 /* Highlightr */,
 				27A077532E7152C9008A5483 /* KeyboardShortcuts */,
@@ -718,6 +718,7 @@
 			);
 			mainGroup = D7793C661F211C6000CA39B7;
 			packageReferences = (
+				C0DE0000000000000000A001 /* XCLocalSwiftPackageReference "Packages/MiaoYanCore" */,
 				27A077382E714AB1008A5483 /* XCRemoteSwiftPackageReference "swift-cmark-gfm" */,
 				27A0773E2E714ACC008A5483 /* XCRemoteSwiftPackageReference "Prettier" */,
 				27A077462E714AFE008A5483 /* XCRemoteSwiftPackageReference "Highlightr" */,
@@ -778,7 +779,6 @@
 				BAE809BB946B47E89F92E155 /* MiaoYanTests/StorageInitContentDecisionTests.swift in Sources */,
 				452D621FD0BD8D78F323777C /* MiaoYanTests/GitHubAlertsTests.swift in Sources */,
 				F51B4048259C36431AF78CA5 /* MiaoYanTests/NoteFrontmatterTests.swift in Sources */,
-				A26090600000000000000003 /* NoteContentMatcherTests.swift in Sources */,
 				A11B4048259C36431AF78CA6 /* MiaoYanTests/EditorStorageOwnershipTests.swift in Sources */,
 				F4B5C6D7E8F90123456789AB /* MiaoYanTests/SidebarProjectViewTests.swift in Sources */,
 				242C434908DBCF06A33ADC23 /* MiaoYanTests/TypographyCleanerTests.swift in Sources */,
@@ -1280,6 +1280,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		C0DE0000000000000000A001 /* XCLocalSwiftPackageReference "Packages/MiaoYanCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/MiaoYanCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		2732D2FD2E70450B00F00158 /* XCRemoteSwiftPackageReference "Prettier" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -1356,6 +1363,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C0DE0000000000000000A002 /* MiaoYanCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C0DE0000000000000000A001 /* XCLocalSwiftPackageReference "Packages/MiaoYanCore" */;
+			productName = MiaoYanCore;
+		};
 		2732D2FE2E70450B00F00158 /* Prettier */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2732D2FD2E70450B00F00158 /* XCRemoteSwiftPackageReference "Prettier" */;

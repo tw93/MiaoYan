@@ -72,6 +72,9 @@ jobs:
             -destination 'platform=macOS' \
             CODE_SIGNING_ALLOWED=NO
 
+      - name: Run MiaoYanCore package tests
+        run: swift test --package-path Packages/MiaoYanCore
+
   lint:
     name: Lint
     runs-on: macos-15

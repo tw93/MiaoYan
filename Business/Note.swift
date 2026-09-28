@@ -2,6 +2,7 @@ import Cocoa
 import Darwin
 import Foundation
 import LocalAuthentication
+import MiaoYanCore
 
 @MainActor
 public class Note: NSObject {
@@ -475,36 +476,10 @@ public class Note: NSObject {
         }
     }
 
-    /// Strips a leading YAML-style frontmatter block (`---\n…\n---`) for preview,
-    /// export, and word count. Mirrors `MobileHtmlRenderer.stripFrontmatter` so the
-    /// macOS preview and the iOS reader hide the same block. Documents that don't
-    /// open with a `---` fence are untouched; three dashes alone stay a horizontal rule.
+    /// Preview, export and word count hide leading frontmatter by the same
+    /// rule as the iPhone reader, which lives in `MiaoYanCore.Frontmatter`.
     func cleanMetaData(content: String) -> String {
-        guard content.hasPrefix("---\n") || content.hasPrefix("---\r\n") else { return content }
-
-        // "---\n" and "---\r\n" are both 4 Characters: \r\n is a single grapheme.
-        let afterOpening = content.index(content.startIndex, offsetBy: 4)
-        // Grapheme-aware search never matches the "\n" inside a "\r\n" cluster,
-        // so CRLF documents need their own needle.
-        guard
-            let closingRange = content.range(of: "\n---", range: afterOpening..<content.endIndex)
-                ?? content.range(of: "\r\n---", range: afterOpening..<content.endIndex)
-        else {
-            return content
-        }
-
-        // Closing fence must be its own line: end-of-string or followed by a newline
-        // (which is the "\r\n" grapheme in CRLF documents).
-        let afterClose = closingRange.upperBound
-        if afterClose == content.endIndex {
-            return ""
-        }
-        let nextChar = content[afterClose]
-        guard nextChar == "\n" || nextChar == "\r" || nextChar == "\r\n" else {
-            return content
-        }
-        let bodyStart = content.index(after: afterClose)
-        return String(content[bodyStart...])
+        String(Frontmatter.body(of: content))
     }
 
     func getPrettifiedContent() -> String {

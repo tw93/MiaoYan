@@ -4,7 +4,7 @@ import XCTest
 
 /// `Note.cleanMetaData` must hide any leading YAML frontmatter fence from the
 /// preview, not only blocks that contain a `title:` key, and must stay in sync
-/// with the iOS reader's `MobileHtmlRenderer.stripFrontmatter` semantics.
+/// with the iOS reader, which both go through `MiaoYanCore.Frontmatter`.
 final class NoteFrontmatterTests: XCTestCase {
 
     private var tempDir: URL!
