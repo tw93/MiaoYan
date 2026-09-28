@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5E1100000000000000000015 /* ShellPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1100000000000000000005 /* ShellPalette.swift */; };
+		5E1100000000000000000014 /* ShellEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1100000000000000000004 /* ShellEditor.swift */; };
+		5E1100000000000000000011 /* ShellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1100000000000000000001 /* ShellModel.swift */; };
+		5E1100000000000000000012 /* ShellRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1100000000000000000002 /* ShellRootView.swift */; };
+		5E1100000000000000000013 /* ShellWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1100000000000000000003 /* ShellWindowController.swift */; };
 		C0DE0000000000000000A004 /* MiaoYanCore in Frameworks */ = {isa = PBXBuildFile; productRef = C0DE0000000000000000A002 /* MiaoYanCore */; };
 		088B43D4653C47ECBC4A20E9 /* ViewController+Export.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79ED9A0265AF40869D66861F /* ViewController+Export.swift */; };
 		1E70061177F82690A432E49A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A8826B3473027DC8DE62A8 /* Cocoa.framework */; };
@@ -188,6 +193,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5E1100000000000000000005 /* ShellPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellPalette.swift; sourceTree = "<group>"; };
+		5E1100000000000000000004 /* ShellEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellEditor.swift; sourceTree = "<group>"; };
+		5E1100000000000000000001 /* ShellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellModel.swift; sourceTree = "<group>"; };
+		5E1100000000000000000002 /* ShellRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellRootView.swift; sourceTree = "<group>"; };
+		5E1100000000000000000003 /* ShellWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShellWindowController.swift; sourceTree = "<group>"; };
 		17D270682FE43740B52C6C24 /* MiaoYanTests/Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = MiaoYanTests/Info.plist; sourceTree = SOURCE_ROOT; };
 		27159CF42F34C9EE0081E876 /* ThemedSplitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemedSplitView.swift; sourceTree = "<group>"; };
 		27159CF62F34CA000081E876 /* ThemedTableRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemedTableRowView.swift; sourceTree = "<group>"; };
@@ -370,6 +380,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5E11000000000000000000A0 /* Shell */ = {
+			isa = PBXGroup;
+			children = (
+				5E1100000000000000000001 /* ShellModel.swift */,
+				5E1100000000000000000002 /* ShellRootView.swift */,
+				5E1100000000000000000003 /* ShellWindowController.swift */,
+				5E1100000000000000000004 /* ShellEditor.swift */,
+				5E1100000000000000000005 /* ShellPalette.swift */,
+			);
+			path = Shell;
+			sourceTree = "<group>";
+		};
 		1397F546295AE8616C6DCB4C /* OS X */ = {
 			isa = PBXGroup;
 			children = (
@@ -458,6 +480,7 @@
 				D7B6E59C20794B4C00FE0E20 /* Business */,
 				D7E6D9D520808652003ECAFC /* Helpers */,
 				D7E6D9D2208085BB003ECAFC /* Views */,
+				5E11000000000000000000A0 /* Shell */,
 				D7793C7B1F211C6000CA39B7 /* Info.plist */,
 			);
 			name = MiaoYan;
@@ -792,6 +815,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E1100000000000000000015 /* ShellPalette.swift in Sources */,
+				5E1100000000000000000014 /* ShellEditor.swift in Sources */,
+				5E1100000000000000000011 /* ShellModel.swift in Sources */,
+				5E1100000000000000000012 /* ShellRootView.swift in Sources */,
+				5E1100000000000000000013 /* ShellWindowController.swift in Sources */,
 				27F1C0312F40000400AAA001 /* BacktickAndFontNormalizer.swift in Sources */,
 				27F1C0212F40000300AAA001 /* MarkdownRuleHighlighter.swift in Sources */,
 				27F1C0112F40000200AAA001 /* CodeBlockHighlighter.swift in Sources */,

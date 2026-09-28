@@ -7,6 +7,9 @@ import os.log
 @MainActor
 class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemValidation {
     var mainWindowController: MainWindowController?
+    /// The SwiftUI main window, opened instead of the storyboard one only
+    /// under `-MiaoYanShell YES`.
+    var shellWindowController: NSWindowController?
     var prefsWindowController: PrefsWindowController?
     var aboutWindowController: AboutWindowController?
     var statusItem: NSStatusItem?
@@ -99,6 +102,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
             requestStorageDirectory()
             return
         }
+        if #available(macOS 14, *), ShellWindowController.isRequested {
+            let shell = ShellWindowController()
+            shell.showWindow(nil)
+            shellWindowController = shell
+            return
+        }
         let storyboard = NSStoryboard(name: "Main", bundle: nil)
         guard let mainWC = storyboard.instantiateController(withIdentifier: "MainWindowController") as? MainWindowController else {
             let alert = NSAlert()
@@ -166,6 +175,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         if !flag {
             applyAppearance()
             mainWindowController?.makeNew()
+            shellWindowController?.showWindow(nil)
         }
         return true
     }

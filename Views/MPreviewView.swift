@@ -817,9 +817,11 @@ class MPreviewView: WKWebView, WKUIDelegate {
             }
 
             do {
-                guard let vc = AppContext.shared.viewController else { return }
+                // The SwiftUI shell has no title label; the note's own title is
+                // what that label shows.
+                let currentName = AppContext.shared.viewController?.titleLabel.stringValue ?? note.getTitleWithoutLabel()
                 let pageHTMLString = try HtmlManager.htmlFromTemplate(
-                    rendered.processedHtml, css: css, currentName: vc.titleLabel.stringValue)
+                    rendered.processedHtml, css: css, currentName: currentName)
                 guard let indexURL = HtmlManager.createTemporaryBundle(pageHTMLString: pageHTMLString) else {
                     throw PreviewError.temporaryBundleCreationFailed
                 }

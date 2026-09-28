@@ -53,6 +53,10 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     public static var shouldForceRescan: Bool = false
     public static var lastRemoved: String?
     public var viewDelegate: ViewController?
+    /// True when the SwiftUI shell hosts this editor. It has no
+    /// `ViewController`, keeps the preview in its own pane and switches
+    /// modes itself, so the editor always behaves as the plain edit view.
+    var isShellHosted = false
     nonisolated(unsafe) private var linkHighlightTimer: Timer?
     private weak var cachedViewController: ViewController?
     var isHighlighted: Bool = false
@@ -85,19 +89,19 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     private var isPreviewModeActive: Bool {
-        runtimeState?.preview ?? UserDefaultsManagement.preview
+        !isShellHosted && (runtimeState?.preview ?? UserDefaultsManagement.preview)
     }
 
     private var isPresentationModeActive: Bool {
-        runtimeState?.presentation ?? UserDefaultsManagement.presentation
+        !isShellHosted && (runtimeState?.presentation ?? UserDefaultsManagement.presentation)
     }
 
     private var isMagicPPTModeActive: Bool {
-        runtimeState?.magicPPT ?? UserDefaultsManagement.magicPPT
+        !isShellHosted && (runtimeState?.magicPPT ?? UserDefaultsManagement.magicPPT)
     }
 
     private var isSplitModeActive: Bool {
-        runtimeState?.splitViewMode ?? UserDefaultsManagement.splitViewMode
+        !isShellHosted && (runtimeState?.splitViewMode ?? UserDefaultsManagement.splitViewMode)
     }
 
     public var isSearchBarVisible: Bool { editorSearchBar != nil }
@@ -120,19 +124,25 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         super.awakeFromNib()
 
         MainActor.assumeIsolated { [self] in
-            EditTextView.imagesLoaderQueue.maxConcurrentOperationCount = 3
-            EditTextView.imagesLoaderQueue.qualityOfService = .userInteractive
-            imagePreviewManager = ImagePreviewManager(textView: self)
-            clipboardManager = ClipboardManager(textView: self)
-            menuManager = EditorMenuManager(textView: self)
-            defaultVerticalInset = textContainerInset.height
-            hasCapturedDefaultVerticalInset = true
-            bottomPadding = 0
-
-            isContinuousSpellCheckingEnabled = false
-            isAutomaticSpellingCorrectionEnabled = false
-            isGrammarCheckingEnabled = false
+            configureOnLoad()
         }
+    }
+
+    /// What the storyboard editor sets up in `awakeFromNib`; the shell runs
+    /// it for the editor it creates in code.
+    func configureOnLoad() {
+        EditTextView.imagesLoaderQueue.maxConcurrentOperationCount = 3
+        EditTextView.imagesLoaderQueue.qualityOfService = .userInteractive
+        imagePreviewManager = ImagePreviewManager(textView: self)
+        clipboardManager = ClipboardManager(textView: self)
+        menuManager = EditorMenuManager(textView: self)
+        defaultVerticalInset = textContainerInset.height
+        hasCapturedDefaultVerticalInset = true
+        bottomPadding = 0
+
+        isContinuousSpellCheckingEnabled = false
+        isAutomaticSpellingCorrectionEnabled = false
+        isGrammarCheckingEnabled = false
     }
 
     deinit {
@@ -482,7 +492,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     // New fill method using configuration object
     func fill(note: Note, options: FillOptions = .default) {
-        guard let viewController = getViewController() else {
+        let viewController = getViewController()
+        guard viewController != nil || isShellHosted else {
             return
         }
 
@@ -530,8 +541,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         }
     }
 
-    private func applyNoteContent(note: Note, options: FillOptions, viewController: ViewController) {
-        if !isMagicPPTModeActive {
+    private func applyNoteContent(note: Note, options: FillOptions, viewController: ViewController?) {
+        if !isMagicPPTModeActive, let viewController {
             viewController.titleBarView.isHidden = false
             viewController.titleLabel.isHidden = false
             viewController.titleBarView.alphaValue = 1
@@ -543,7 +554,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             viewController.checkTitlebarTopConstraint()
         }
         UserDefaultsManagement.lastSelectedURL = note.url
-        viewController.updateTitle(newTitle: note.getTitleWithoutLabel())
+        viewController?.updateTitle(newTitle: note.getTitleWithoutLabel())
         // Each Note carries its own UndoManager (Business/Note.swift:18), so
         // simply swapping the active manager preserves the outgoing note's
         // undo history. The earlier removeAllActions(withTarget: self) ran
@@ -573,7 +584,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
         if shouldRenderPreview {
             EditTextView.note = note
-            let frame = viewController.previewScrollView?.bounds ?? viewController.editAreaScroll.bounds
+            let frame = viewController?.previewScrollView?.bounds ?? viewController?.editAreaScroll.bounds ?? bounds
             let allowPreviewTransition =
                 options.animatePreview
                 && !isPreviewModeActive
@@ -596,10 +607,10 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                 previewView.autoresizingMask = [.width, .height]
                 markdownView = previewView
             }
-            if let previewScroll = viewController.previewScrollView,
+            if let previewScroll = viewController?.previewScrollView,
                 let previewView = markdownView
             {
-                viewController.preparePreviewContainer(hidden: false)
+                viewController?.preparePreviewContainer(hidden: false)
                 let newFrame = previewScroll.bounds
                 if previewView.frame.size != newFrame.size {
                     previewView.frame = newFrame
@@ -618,7 +629,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
                     useIncremental: shouldUseIncrementalPreviewUpdate
                 )
             } else if let previewView = markdownView,
-                let fallbackContainer = viewController.editAreaScroll
+                let fallbackContainer = viewController?.editAreaScroll
             {
                 if previewView.superview !== fallbackContainer {
                     previewView.removeFromSuperview()
