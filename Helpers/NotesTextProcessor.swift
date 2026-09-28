@@ -7,7 +7,7 @@ public class NotesTextProcessor {
     typealias Image = NSImage
     typealias Font = NSFont
 
-    public static var fontColor: NSColor { Theme.textColor }
+    public static var fontColor: NSColor { Theme.editorTextColor }
 
     public static var highlightColor: NSColor { Theme.linkColor }
 
@@ -20,7 +20,20 @@ public class NotesTextProcessor {
     public static var linkColor: NSColor { Theme.linkColor }
 
     // MARK: Syntax highlight customisation
-    @MainActor public static var syntaxColor = fontColor
+    @MainActor public static var syntaxColor: NSColor { Theme.editorMarkupColor }
+
+    /// Markdown punctuation and HTML tags are set in the system face, which
+    /// draws `<`, `>`, `*` and `"` light and small where TsangerJinKai draws
+    /// them wide and heavy. Tags go one size further down so an `<img>` line
+    /// reads as a quiet note beside the prose. Neither is the code font: a
+    /// tag is not code, and giving it the code font made it a code block.
+    public static var markupFont: NSFont {
+        NSFont.systemFont(ofSize: CGFloat(UserDefaultsManagement.fontSize) - 1)
+    }
+
+    public static var htmlTagFont: NSFont {
+        NSFont.systemFont(ofSize: CGFloat(UserDefaultsManagement.fontSize) - 2)
+    }
 
     public static var font: NSFont {
         UserDefaultsManagement.noteFont
@@ -708,6 +721,10 @@ public class NotesTextProcessor {
     @MainActor public static let italicRegex = MarklightRegex(pattern: italicPattern, options: [.allowCommentsAndWhitespace, .anchorsMatchLines])
 
     fileprivate static let autolinkPrefixPattern = "((https?|ftp)://)"
+
+    /// `<https://…>`: only its angle brackets are markup.
+    @MainActor public static let autolinkBracketRegex = MarklightRegex(
+        pattern: "<(?:https?|ftp|mailto):[^\\s<>]+>", options: [])
 
     @MainActor public static let autolinkPrefixRegex = MarklightRegex(pattern: autolinkPrefixPattern, options: [.allowCommentsAndWhitespace, .dotMatchesLineSeparators])
 

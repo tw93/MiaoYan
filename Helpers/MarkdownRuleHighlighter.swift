@@ -76,6 +76,25 @@ enum MarkdownRuleHighlighter {
             attributedString.addAttributes(hiddenAttributes, range: range())
         }
 
+        // Markdown's own punctuation (`#`, `**`, `>`, `-`, brackets) in the
+        // quiet markup colour and the system face a size down: TsangerJinKai
+        // draws `<`, `>`, `*` and `"` wide and heavy, and they stood out
+        // against the text they wrap.
+        let markupAttributes: [NSAttributedString.Key: Any] = [
+            .font: NotesTextProcessor.markupFont,
+            .foregroundColor: NotesTextProcessor.syntaxColor,
+        ]
+        func markSyntax(_ range: NSRange) {
+            guard range.length > 0, range.upperBound <= attributedString.length else { return }
+            attributedString.addAttributes(markupAttributes, range: range)
+        }
+        /// The same `length` characters at both ends of a delimited span.
+        func markDelimiters(of range: NSRange, length: Int) {
+            guard length > 0, range.length >= length * 2 else { return }
+            markSyntax(NSRange(location: range.location, length: length))
+            markSyntax(NSRange(location: range.upperBound - length, length: length))
+        }
+
         attributedString.enumerateAttribute(.link, in: paragraphRange) { value, range, _ in
             guard value != nil,
                 range.upperBound <= attributedString.length,
@@ -114,6 +133,7 @@ enum MarkdownRuleHighlighter {
             }
             attributedString.fixAttributes(in: range)
             attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.titleColor, range: range)
+            markDelimiters(of: range, length: result?.range(at: 1).length ?? 0)
         }
 
         NotesTextProcessor.boldRegex.matches(string, range: paragraphRange) { result in
@@ -124,6 +144,7 @@ enum MarkdownRuleHighlighter {
             }
             attributedString.fixAttributes(in: range)
             attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.htmlColor, range: range)
+            markDelimiters(of: range, length: result?.range(at: 1).length ?? 0)
         }
 
         NotesTextProcessor.strikeRegex.matches(string, range: paragraphRange) { result in
@@ -134,6 +155,7 @@ enum MarkdownRuleHighlighter {
             }
             attributedString.fixAttributes(in: range)
             attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.htmlColor, range: range)
+            markDelimiters(of: range, length: result?.range(at: 1).length ?? 0)
         }
 
         NotesTextProcessor.codeLineRegex.matches(string, range: paragraphRange) { result in
@@ -144,6 +166,7 @@ enum MarkdownRuleHighlighter {
             }
             attributedString.fixAttributes(in: range)
             attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.htmlColor, range: range)
+            markDelimiters(of: range, length: result?.range(at: 1).length ?? 0)
         }
 
         NotesTextProcessor.headersSetextRegex.matches(string, range: paragraphRange) { result in
@@ -160,7 +183,7 @@ enum MarkdownRuleHighlighter {
                 else {
                     return
                 }
-                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                markSyntax(innerRange)
                 hideSyntaxIfNecessary(range: NSRange(location: innerRange.location, length: innerRange.length))
             }
         }
@@ -180,7 +203,7 @@ enum MarkdownRuleHighlighter {
                 else {
                     return
                 }
-                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.titleColor, range: innerRange)
+                markSyntax(innerRange)
                 let syntaxRange = NSRange(location: innerRange.location, length: innerRange.length + 1)
                 guard syntaxRange.upperBound <= attributedString.length else { return }
                 hideSyntaxIfNecessary(range: syntaxRange)
@@ -192,7 +215,7 @@ enum MarkdownRuleHighlighter {
                 else {
                     return
                 }
-                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.titleColor, range: innerRange)
+                markSyntax(innerRange)
                 hideSyntaxIfNecessary(range: innerRange)
             }
         }
@@ -219,7 +242,7 @@ enum MarkdownRuleHighlighter {
                 else {
                     return
                 }
-                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.listColor, range: innerRange)
+                markSyntax(innerRange)
             }
         }
 
@@ -228,15 +251,16 @@ enum MarkdownRuleHighlighter {
             attributedString.fixAttributes(in: range)
             NotesTextProcessor.openingSquareRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
-                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                markSyntax(innerRange)
             }
             NotesTextProcessor.closingSquareRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
-                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                markSyntax(innerRange)
             }
             NotesTextProcessor.parenRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
                 attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                markDelimiters(of: innerRange, length: 1)
                 let initialSyntaxRange = NSRange(location: innerRange.location, length: 1)
                 let finalSyntaxRange = NSRange(location: innerRange.location + innerRange.length - 1, length: 1)
                 hideSyntaxIfNecessary(range: initialSyntaxRange)
@@ -253,6 +277,7 @@ enum MarkdownRuleHighlighter {
             NotesTextProcessor.coupleRoundRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
                 attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                markDelimiters(of: innerRange, length: 1)
 
                 guard let linkRange = result?.range(at: 3), linkRange.length > 0 else { return }
 
@@ -272,13 +297,13 @@ enum MarkdownRuleHighlighter {
 
             NotesTextProcessor.openingSquareRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
-                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                markSyntax(innerRange)
                 hideSyntaxIfNecessary(range: innerRange)
             }
 
             NotesTextProcessor.closingSquareRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
-                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                markSyntax(innerRange)
                 hideSyntaxIfNecessary(range: innerRange)
             }
 
@@ -340,7 +365,7 @@ enum MarkdownRuleHighlighter {
             attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.listColor, range: range)
             NotesTextProcessor.blockQuoteOpeningRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
-                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.listColor, range: innerRange)
+                markSyntax(innerRange)
                 hideSyntaxIfNecessary(range: innerRange)
             }
         }
@@ -359,15 +384,16 @@ enum MarkdownRuleHighlighter {
 
             NotesTextProcessor.imageOpeningSquareRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
-                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                markSyntax(innerRange)
             }
             NotesTextProcessor.imageClosingSquareRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
-                attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                markSyntax(innerRange)
             }
             NotesTextProcessor.parenRegex.matches(string, range: range) { innerResult in
                 guard let innerRange = innerResult?.range else { return }
                 attributedString.addAttribute(.foregroundColor, value: NotesTextProcessor.syntaxColor, range: innerRange)
+                markDelimiters(of: innerRange, length: 1)
             }
         }
 
@@ -381,6 +407,11 @@ enum MarkdownRuleHighlighter {
             guard let range = result?.range else { return }
             attributedString.fixAttributes(in: range)
             CodeBlockHighlighter.highlightInlineHTML(attributedString: attributedString, range: range)
+        }
+
+        NotesTextProcessor.autolinkBracketRegex.matches(string, range: paragraphRange) { result in
+            guard let range = result?.range else { return }
+            markDelimiters(of: range, length: 1)
         }
 
         NotesTextProcessor.emojiRegex.matches(string, range: paragraphRange) { result in

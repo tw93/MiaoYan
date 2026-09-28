@@ -194,6 +194,28 @@ enum Theme {
         return dividerColor
     }
 
+    private static func warm(_ light: UInt32, _ dark: UInt32) -> Color {
+        Color(name: nil) { appearance in
+            let hex = appearance.isDark ? dark : light
+            return Color(
+                srgbRed: CGFloat((hex >> 16) & 0xFF) / 255, green: CGFloat((hex >> 8) & 0xFF) / 255,
+                blue: CGFloat(hex & 0xFF) / 255, alpha: 1)
+        }
+    }
+
+    /// The editor's body text and its quiet markup colour, Kaku's text and
+    /// muted values (kaku/src/kaku_theme.rs). The highlight roles in the asset
+    /// catalogue (`title`, `link`, `html`, `list`, `highlight`) carry Kaku's
+    /// purple, teal and gold for the same reason: one palette across Kaku,
+    /// Mole and MiaoYan. A custom theme keeps its own text colour.
+    static var editorTextColor: Color {
+        UserDefaultsManagement.appearanceType == .Custom ? textColor : warm(0x403E3C, 0xD5D4D6)
+    }
+
+    static var editorMarkupColor: Color {
+        UserDefaultsManagement.appearanceType == .Custom ? textColor : warm(0x7A7872, 0x8E8B83)
+    }
+
     static var titleColor: Color {
         NSColor(named: "title") ?? textColor
     }
