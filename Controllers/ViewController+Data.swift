@@ -737,39 +737,6 @@ extension ViewController {
     }
 
     // MARK: - CloudKit Data Sync
-    #if CLOUDKIT
-        func registerKeyValueObserver() {
-            let keyStore = NSUbiquitousKeyValueStore()
-
-            NotificationCenter.default.addObserver(self, selector: #selector(ViewController.ubiquitousKeyValueStoreDidChange), name: NSUbiquitousKeyValueStore.didChangeExternallyNotification, object: keyStore)
-
-            keyStore.synchronize()
-        }
-
-        @objc func ubiquitousKeyValueStoreDidChange(notification: NSNotification) {
-            if let keys = notification.userInfo?[NSUbiquitousKeyValueStoreChangedKeysKey] as? [String] {
-                for key in keys where key == AppIdentifier.cloudPinsKey {
-                    let changedNotes = storage.restoreCloudPins()
-
-                    if let notes = changedNotes.added {
-                        for note in notes {
-                            if let i = notesTableView.getIndex(note) {
-                                moveNoteToTop(note: i)
-                            }
-                        }
-                    }
-
-                    if let notes = changedNotes.removed {
-                        for note in notes {
-                            if let i = notesTableView.getIndex(note) {
-                                notesTableView.reloadData(forRowIndexes: [i], columnIndexes: [0])
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    #endif
 
     // MARK: - Utility Methods
     public func contains(tag name: String, in tags: [String]) -> Bool {

@@ -1,8 +1,6 @@
 import Cocoa
 import KeyboardShortcuts
-#if !APPSTORE
-    import Sparkle
-#endif
+import Sparkle
 import os.log
 
 @main
@@ -17,9 +15,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
     public var newName: String?
     public var newContent: String?
     let appContext = AppContext.shared
-    #if !APPSTORE
-        private var updaterController: SPUStandardUpdaterController?
-    #endif
+    private var updaterController: SPUStandardUpdaterController?
 
     private func resolveViewController() -> ViewController? {
         if let cached = appContext.viewController {
@@ -84,12 +80,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
     }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        #if !APPSTORE
-            updaterController = SPUStandardUpdaterController(
-                startingUpdater: true,
-                updaterDelegate: nil,
-                userDriverDelegate: nil)
-        #endif
+        updaterController = SPUStandardUpdaterController(
+            startingUpdater: true,
+            updaterDelegate: nil,
+            userDriverDelegate: nil)
 
         NSApp.mainMenu?.applyMenuIcons()
 
@@ -101,17 +95,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         applyAppearance()
 
         addGlobalKeyboardMonitor()
-        #if CLOUDKIT
-            if let iCloudDocumentsURL = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents").resolvingSymlinksInPath() {
-                if !FileManager.default.fileExists(atPath: iCloudDocumentsURL.path, isDirectory: nil) {
-                    do {
-                        try FileManager.default.createDirectory(at: iCloudDocumentsURL, withIntermediateDirectories: true, attributes: nil)
-                    } catch {
-                        print("Error creating iCloud directory: \(error)")
-                    }
-                }
-            }
-        #endif
         if UserDefaultsManagement.storagePath == nil {
             requestStorageDirectory()
             return
@@ -318,13 +301,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         mainWindowController?.makeNew()
     }
     @IBAction func checkForUpdates(_ sender: Any?) {
-        #if APPSTORE
-            if let updatesUrl = URL(string: "macappstore://showUpdatesPage") {
-                NSWorkspace.shared.open(updatesUrl)
-            }
-        #else
-            updaterController?.checkForUpdates(sender)
-        #endif
+        updaterController?.checkForUpdates(sender)
     }
     @IBAction func openPreferences(_ sender: Any?) {
         if prefsWindowController == nil {

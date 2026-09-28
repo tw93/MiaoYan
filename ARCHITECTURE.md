@@ -13,9 +13,8 @@
 ├── Helpers/         # Utilities and services (highlighting, formatting, theming, diagnostics)
 ├── Extensions/      # Swift extensions on Foundation / AppKit types
 ├── Resources/       # Bundled assets, including DownView.bundle (HTML/CSS/JS for preview)
-├── MiaoYanMobile/   # iOS SwiftUI target (App/Services/Views/Resources)
 ├── MiaoYanTests/    # Unit tests for pure-logic surfaces
-└── scripts/         # Local build, App Store, release helpers, target wiring (Ruby + bash)
+└── scripts/         # Local build, release helpers, target wiring (Ruby + bash)
 ```
 
 ## Process Model
@@ -30,9 +29,9 @@ A single macOS application process owns:
 - One `WKWebView` instance per editor pane that loads
   `Resources/DownView.bundle/index.html` for live preview.
 
-The iOS target (`MiaoYanMobile/`) is a separate executable with its own models,
-storage services, renderer, and SwiftUI entry point (`MiaoYanMobileApp.swift`).
-The apps share filesystem conventions, not the macOS `Business/` compile pool.
+The App Store edition and the iPhone and iPad app live in the private
+`tw93/MiaoYan-Pro` repository. They read the same note folders and follow the
+same filesystem conventions, but no code is shared with this repository.
 
 ## Singleton & Facade Inventory
 
@@ -138,20 +137,10 @@ Bundled JS used by the preview is vendored under
 - Diagnostics log: `~/Library/Logs/MiaoYan/diagnostics.log` (ring buffer,
   50 lines, JSON per line). See `Helpers/Diagnostics.swift`.
 
-## iOS Target Boundary
-
-`MiaoYanMobile/` builds as a separate target in `MiaoYan.xcodeproj`. Its
-models and services live inside `MiaoYanMobile/`. SwiftUI lives there; AppKit
-lives only outside. There is no shared UI layer. The iOS target reads notes
-through `MiaoYanMobile/Services/FileReader.swift`, which is a parallel
-implementation to the macOS storage flow. `NoteSearchReader` reads complete
-local bodies in cancellable chunks and is also compiled into the macOS test
-bundle for platform-independent regression tests.
-
 ## Release & Update Path
 
-- Mac App Store builds: signed and uploaded by the maintainer; `Sparkle` is
-  excluded via `#if !APPSTORE`.
+- Mac App Store builds come from the private `tw93/MiaoYan-Pro`, not from
+  this repository.
 - Direct downloads: `bash scripts/build.sh` produces a zipped `.app`. The
   Sparkle `appcast.xml` is updated by `scripts/release-ci/update_appcast.sh`
   (needs the Sparkle EdDSA private key).

@@ -416,9 +416,6 @@ class ViewController:
         updateSortMenuState()
         checkSidebarConstraint()
         checkTitlebarTopConstraint()
-        #if CLOUDKIT
-            registerKeyValueObserver()
-        #endif
         searchQueue.maxConcurrentOperationCount = 1
         notesTableView.loadingQueue.maxConcurrentOperationCount = 1
         notesTableView.loadingQueue.qualityOfService = QualityOfService.userInteractive

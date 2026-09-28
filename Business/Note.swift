@@ -176,17 +176,14 @@ public class Note: NSObject {
         loadModifiedLocalAt()
         creationDate = (try? url.resourceValues(forKeys: [.creationDateKey]))?.creationDate
 
-        #if CLOUDKIT
-        #else
-            let pinData =
-                (try? url.extendedAttribute(forName: AppIdentifier.pinKey))
-                ?? (try? url.extendedAttribute(forName: AppIdentifier.legacyPinKey))
-            if let data = pinData {
-                isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
-                    ptr.load(as: Bool.self)
-                }
+        let pinData =
+            (try? url.extendedAttribute(forName: AppIdentifier.pinKey))
+            ?? (try? url.extendedAttribute(forName: AppIdentifier.legacyPinKey))
+        if let data = pinData {
+            isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
+                ptr.load(as: Bool.self)
             }
-        #endif
+        }
     }
 
     public func getExtensionForContainer() -> String {

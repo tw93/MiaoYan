@@ -7,11 +7,11 @@
 > Claude-specific assets:
 > - 全局规则: `~/.claude/CLAUDE.md`
 > - Swift 通用规则: `~/.claude/rules/swift.md` (项目级补充 `.claude/rules/swift.md`)
-> - 本仓库没有项目 skill；release、App Store、review、lint 的项目事实都在本文件
+> - 本仓库没有项目 skill；release、review、lint 的项目事实都在本文件
 
 ## Project
 
-MiaoYan is a lightweight Markdown editor built with Swift. The main app is macOS/AppKit, and the repository also contains an iOS target under `MiaoYanMobile/`.
+MiaoYan is a lightweight Markdown editor built with Swift, a macOS/AppKit app shipped for direct download (GitHub Release, Sparkle, Homebrew). Since 2026-09-28 this open-source repository is in maintenance: it takes serious fixes only. The App Store edition, the iPhone and iPad app and all new feature and interface work live in the private `tw93/MiaoYan-Pro`; nothing from that repository is pushed here, and a fix both need is ported here by hand as its own commit.
 
 ## Tech Stack
 
@@ -21,7 +21,6 @@ MiaoYan is a lightweight Markdown editor built with Swift. The main app is macOS
 - **Slide mode**: based on Reveal.js. `---` separators delimit slides.
 - **Note storage**: filesystem-backed with folder nesting, file-system watch, auto-save, and version history.
 - **Editor**: live preview, syntax highlight, keyboard shortcuts, Prettier-integrated auto-format.
-- **iOS target**: SwiftUI under `MiaoYanMobile/`, using its own models and services; both apps share filesystem conventions.
 
 ## Repository Map
 
@@ -31,10 +30,9 @@ MiaoYan is a lightweight Markdown editor built with Swift. The main app is macOS
 - `Helpers/` - utilities and services.
 - `Extensions/` - Swift extensions.
 - `Resources/` - bundled resources.
-- `MiaoYanMobile/` - iOS app target, SwiftUI views, mobile services, and mobile resources.
 - `MiaoYan.xcodeproj/` - Xcode project and version settings.
 - `Package.swift` - Swift package dependency declarations and supported platforms.
-- `scripts/` - local build, App Store, release, and project maintenance scripts.
+- `scripts/` - local build, release, and project maintenance scripts.
 - `scripts/release-ci/` - release note rendering, appcast, notarization, and package helpers.
 - `skills/miaoyan/` - published Agent Skill (tracked) describing MiaoYan's Markdown, PPT, and `miao` CLI surfaces to outside agents; it restates product syntax, so it drifts when those surfaces change.
 - `.github/RELEASE_NOTES.md` - public release note source for GitHub release and appcast body generation.
@@ -46,11 +44,9 @@ MiaoYan is a lightweight Markdown editor built with Swift. The main app is macOS
 xcodebuild -project MiaoYan.xcodeproj -scheme MiaoYan -configuration Debug build
 xcodebuild clean
 xcodebuild test -project MiaoYan.xcodeproj -scheme MiaoYan -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO
-xcodebuild -project MiaoYan.xcodeproj -scheme MiaoYanMobile -configuration Debug -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
 swiftlint lint --strict
 swift-format lint --recursive . --strict   # --strict is what CI runs; without it a local pass can still fail CI
 bash scripts/build.sh
-bash scripts/build-appstore.sh
 ruby scripts/add_tests_target.rb     # only when re-wiring MiaoYanTests after pbxproj reset
 ```
 
@@ -94,9 +90,6 @@ local-only workaround.
 `.github/workflows/ci.yml` runs on every PR and push to `main`:
 
 - macOS Debug build, then `xcodebuild test` for the unit suite (no signing required)
-- iOS Debug build for `MiaoYanMobile`. This job pins `runs-on: macos-26` while
-  every other job is `macos-15`; if that runner is unavailable, wait for it
-  rather than downgrading the iOS code
 - SwiftLint and swift-format, both `--strict`, so any warning is a merge gate
 - Release-notes rendering smoke (`scripts/release-ci/notes_to_html.sh` and
   `render_release_body.sh`) so a broken `.github/RELEASE_NOTES.md` is caught
@@ -105,7 +98,7 @@ local-only workaround.
   (`MARKETING_VERSION == CURRENT_PROJECT_VERSION == tag`) to prevent the
   V3.5.1 / #524 incident recurrence
 
-CI does NOT run the App Store packaging or notarization scripts; those need
+CI does NOT run the notarization or Sparkle signing scripts; those need
 maintainer-managed signing keys and run only on the maintainer's machine.
 
 ## Error Reporting
@@ -142,7 +135,7 @@ string is the only breadcrumb the maintainer has when triaging.
   to a merge gate. Existing call sites are grandfathered.
 - Keep file writes scoped to user documents or app-controlled locations.
 - Do not add network calls, shell execution, or broad file access without clear user need.
-- Keep the macOS editor core, preview pipeline, and existing storyboard scenes on AppKit. A new self-contained panel may host SwiftUI through `NSHostingView`; that is not licence to push SwiftUI into `EditTextView` / `MPreviewView` / `ViewController`. `MiaoYanMobile/` is SwiftUI throughout, and UI layers are not shared across the two targets.
+- Keep the macOS editor core, preview pipeline, and existing storyboard scenes on AppKit. A new self-contained panel may host SwiftUI through `NSHostingView`; that is not licence to push SwiftUI into `EditTextView` / `MPreviewView` / `ViewController`.
 - Preserve recoverability for delete flows. Notes and attachments should move through the app Trash or system Trash path that matches the current context, not disappear through direct deletion.
 - The app Trash may resolve to the same directory as the volume's system Trash. Calling `FileManager.trashItem` on an item already there renames it in place and makes it reappear. Mark it with `AppIdentifier.removedFromTrashKey` and exclude that marker only inside Trash projects, so Finder recovery into a normal project remains visible.
 - Treat iCloud sync and symlinked directories as file-system-sensitive surfaces; resolve paths deliberately and avoid loops or duplicate indexing.
@@ -155,9 +148,8 @@ When scope is incomplete, start with:
 2. `Controllers/AppDelegate.swift`
 3. `Controllers/MainWindowController.swift`
 4. `Controllers/ViewController.swift`
-5. `MiaoYanMobile/` when the task touches iOS, sync, mobile reading, or mobile editing behavior
-6. Narrow related files under `Helpers/`, `Views/`, `Business/`, or `Extensions/`
-7. Relevant Xcode project settings only when build, signing, target membership, or version behavior is involved
+5. Narrow related files under `Helpers/`, `Views/`, `Business/`, or `Extensions/`
+6. Relevant Xcode project settings only when build, signing, target membership, or version behavior is involved
 
 Avoid broad scans of `build/`, `.build/`, `dist/`, and bundled web assets unless the task targets them.
 
@@ -166,8 +158,7 @@ Avoid broad scans of `build/`, `.build/`, `dist/`, and bundled web assets unless
 - Editor buffer ownership (#543): in preview/presentation/PPT modes `EditTextView.note` follows the list selection while `textStorage` keeps the last edited note, so the two legitimately diverge. `EditTextView.storageNote` records which note the buffer belongs to; every wholesale storage assignment must go through `publishStorage(_:owner:)`, and every whole-buffer persist through `saveTextStorageContent(to:)`, which refuses cross-note targets. Never persist the buffer based on `EditTextView.note` or the table selection alone, and never compare `EditTextView.note` against itself as a guard (that tautology is how the V4.0.0 content-swap shipped).
 - Sidebar horizontal layout is owned by `SidebarProjectView.tile()`: after reloads and resizes, the outline frame and first column must match the clip-view width and the clip-view horizontal origin must stay at zero. Do not replace this invariant with event-specific width resets.
 - Wikilinks and backlinks depend on `Business/WikilinkIndex.swift`, note loading, search, and sidebar refresh behavior. Keep `[[note]]` parsing, recursive search, and Trash exclusions consistent.
-- iCloud sync spans macOS storage, `Business/CloudSyncManager.swift`, and `MiaoYanMobile/Services/CloudSyncManager.swift`. Verify fallback behavior when iCloud is unavailable.
-- `MiaoYanMobile/` is a real iOS target, not sample code. Keep SwiftUI, file reading, mobile rendering, and target membership aligned.
+- iCloud sync lives in macOS storage and `Business/CloudSyncManager.swift`. Verify fallback behavior when iCloud is unavailable.
 - Trash handling spans `Business/Storage.swift`, `Business/Note.swift`, sidebar drag/drop, attachment cleanup, and system Trash fallback.
 - A successfully removed note must retire its `Note` instance before any watcher, editor, lifecycle flush, or upload callback can save it again. Existing-note writes must fail closed if the file disappears, and UI rows may be removed only for filesystem operations that succeeded.
 - Version history lives in `Business/NoteVersionManager.swift` and `Controllers/VersionHistoryViewController.swift`; keep file IO off the main thread and UI updates on the main thread.
@@ -176,30 +167,19 @@ Avoid broad scans of `build/`, `.build/`, `dist/`, and bundled web assets unless
 - Note-list search (`ViewController+Data.swift`) filters by folder scope first, then hands plain `NoteSearchCandidate` values to `NoteContentMatcher` in a detached task, which reads unloaded bodies from disk; the main thread only snapshots and applies results. Never load or lowercase note bodies on the main thread for search, and match titles without the `.md` extension.
 - Async note/image/file loading is intentional. Do not reintroduce blocking reads on the main thread for large notes or previews.
 - Directory symlinks are supported by storage scanning. Avoid recursion loops and duplicate notes when following symlinked directories.
-- The iOS editor is `MiaoYanMobile/Views/MarkdownEditorView.swift` + `Services/MarkdownHighlighter.swift`: plain-markdown UITextView with regex highlighting. Never mutate `textStorage` attributes while `markedTextRange != nil` (breaks CJK IME composition), and keep `lineBreakStrategy = []` (re-enabling push-out reintroduces premature CJK line wraps).
-- Note attachments follow the shared `i/` convention: images live in an `i/` folder next to the note, referenced as `![](/i/<name>)` on both platforms. The iOS reader cannot load `file://` subresources (`loadHTMLString`), so `MobileHtmlRenderer` rewrites local srcs to the `miaoyan-asset://` scheme served by `LocalAssetSchemeHandler`, which only serves files under the current library root (`allowedRoot`). Keep that root restriction when touching the handler.
+- Note attachments follow the shared `i/` convention: images live in an `i/` folder next to the note, referenced as `![](/i/<name>)`; the App Store iPhone app reads the same convention, so keep it stable.
 - Image upload posts to a local PicGo/PicList HTTP endpoint at `127.0.0.1:36677` (`Helpers/ClipboardManager.swift`). The macOS `Info.plist` ATS permits this via `NSAllowsLocalNetworking`; do not widen it back to `NSAllowsArbitraryLoads`. The markdown preview loads through `loadFileURL` (file://), not a local web server, so ATS does not gate preview rendering.
-- iOS user-facing strings live in `MiaoYanMobile/Resources/Localizable.xcstrings` and ship `en` + `zh-Hans` only (the macOS app ships five languages). Add a `zh-Hans` value for every new iOS string, or Chinese users fall back to English.
 - `renderMarkdownHTML` in `Business/Markdown.swift` is the single markdown-to-HTML funnel for preview, split view, export, PPT, and actions. Post-render transforms (the GitHub Alerts callout rewrite lives there) belong at the end of that function, never in individual call sites. Alert styling lives in `DownView.bundle/css/typography.css` with dark overrides in `theme-dark.css` (the `.darkmode *` color rule forces explicit dark restatements).
-- Frontmatter stripping is a per-surface invariant, not a two-file rule: every surface that outputs note or markdown content (macOS preview/export, iOS preview, appcast/release-notes rendering, any future export) must strip leading YAML frontmatter, and a new rendering surface adds its stripping in the same commit (`---date/image---` has leaked verbatim through both the appcast body and the iOS preview). The copies are deliberately duplicated per platform: `Note.cleanMetaData` (macOS), `MobileHtmlRenderer.stripFrontmatter` (iOS preview) and the private `stripFrontmatter` in `MiaoYanMobile/Services/FileReader.swift` must keep identical semantics; change all three in the same commit. CRLF gotcha all copies share: `"\r\n"` is one Swift grapheme, so `range(of: "\n---")` never matches inside it; search both `"\n---"` and `"\r\n---"`.
+- Frontmatter stripping is a per-surface invariant, not a two-file rule: every surface that outputs note or markdown content (macOS preview/export, appcast/release-notes rendering, any future export) must strip leading YAML frontmatter, and a new rendering surface adds its stripping in the same commit (`---date/image---` has leaked verbatim through the appcast body). `Note.cleanMetaData` is the rule; MiaoYan-Pro keeps iPhone copies with the same semantics, so a change here is ported there. CRLF gotcha: `"\r\n"` is one Swift grapheme, so `range(of: "\n---")` never matches inside it; search both `"\n---"` and `"\r\n---"`.
 - `Helpers/TypographyCleaner.swift` (Edit → Clean Typography) must never rewrite protected regions: fenced/inline code, math, link targets, wikilinks, bare URLs, frontmatter. Extend the segment parser, don't bypass it. `Helpers/HtmlToMarkdown.swift` converts pasted HTML only when block-structure tags are present, so plain-text paste stays authoritative for code copied from editors; keep that gate.
 - New macOS menu items need the storyboard entry plus an ObjectID-keyed `.title` line in all four `Main.strings` (es/ja/zh-Hans/zh-Hant); new toasts need the English text as key in all four `Localizable.strings` (Base has no Localizable.strings, English falls back to the key itself). Missing a file silently ships English to that locale.
 
 ## Release Channels
 
-MiaoYan ships through two independent channels. Publishing one never updates the other: one version means two separate publishes, and release readiness must be reported per channel.
-
-| | Direct download (GitHub) | Mac App Store |
-|---|---|---|
-| Build | `scripts/build.sh`, Developer ID + notarization, Sparkle included | `scripts/build-appstore.sh`, App Store entitlements, no Sparkle |
-| Publish surface | GitHub Release assets + appcast entry | App Store Connect submission + review |
-| How users update | Sparkle in-app update via `https://miaoyan.app/appcast.xml` | App Store update after review approval |
+This repository ships only the direct-download app: GitHub Release assets plus an appcast entry, updated in place by Sparkle from `https://miaoyan.app/appcast.xml`, and picked up by Homebrew. Build with `scripts/build.sh` (Developer ID, notarization, Sparkle). App Store builds for Mac and iPhone come only from the private `tw93/MiaoYan-Pro`, so App Store users never see this channel's versions or its appcast.
 
 - `appcast.xml` lives on the miaoyan.app site, not in this repository. `scripts/release-ci/update_appcast.sh` produces the entry and `scripts/build.sh` prints the enclosure line. The enclosure URL printed by `scripts/build.sh` defaults to `miaoyan.app/Release/`; new entries must instead point to the published GitHub release asset. Historical entries retain their original URLs.
 - Both install paths fetch release assets, never the tag tarball: homebrew-cask's `url` is `releases/download/V4.3.0/MiaoYan_V4.3.0.zip` and the appcast enclosure is the same shape. Nothing pins a hash of `archive/refs/tags/*.tar.gz`, so a tag that has no release yet can be deleted and recut without breaking a consumer. Deleting a tag that does have a release breaks `brew install --cask miaoyan` immediately, because the cask names that asset.
-- App Store users never see the appcast. After a direct-download release, the App Store version stays old until a separate submission passes review; do not report a version as "released" without naming which channel it reached.
-- When an App Store build is prepared, deliver ready-to-paste submission copy with it: Promotional Text (170-char limit) and What's New, in en and zh-Hans, derived from `.github/RELEASE_NOTES.md`. Do not wait for the maintainer to ask from the Connect submission page.
-- Validate an App Store build before any upload: `xcrun altool --validate-app -f build/AppStore/Export/MiaoYan.app -t macos --apiKey <KEY_ID> --apiIssuer <ISSUER_ID>`; Xcode Organizer is an acceptable upload path when the CLI upload is riskier. Upload to App Store Connect only on explicit maintainer confirmation.
 
 ## Fonts And Preview Rendering
 
@@ -230,7 +210,6 @@ MiaoYan ships through two independent channels. Publishing one never updates the
 - Swift changes: run the Debug `xcodebuild` command above.
 - UI or interaction fixes: launch the built app and exercise the changed flow before reporting done; a green build is not visual proof. If the first fix attempt does not hold, stop guessing and add `#if DEBUG` runtime logging to capture evidence before the next code change.
 - Lint or formatting changes: run SwiftLint and swift-format checks.
-- iOS changes: verification bar equals macOS. Inspect `MiaoYanMobile/` target membership, sync behavior, and mobile resource paths, build, then run the affected flow in the Simulator (for example the new-note title flow or preview first frame) before reporting done; a green build alone is not done. Performance complaints need a measurable budget in the fix (for example: detail-page first frame past the budget shows a skeleton instead of blocking).
 - Release or signing changes: verify version alignment and inspect the relevant repository script; do not assume a tracked `release.yml` exists.
 - Release note changes: inspect `.github/RELEASE_NOTES.md` and the affected `scripts/release-ci/` renderer.
 - Export changes: verify Mermaid, images, PDF pagination, and async readiness behavior together.

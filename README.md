@@ -30,7 +30,7 @@
 
 ## Installation
 
-1. **Mac App Store** (paid, automatic updates):
+1. **Mac App Store** (paid, automatic updates, includes the iPhone and iPad app):
 
    <a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
 
@@ -41,7 +41,7 @@
 
 3. **GitHub Releases**: download the latest DMG from [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) (macOS 12.0+)
 
-All three options share the same codebase and receive the same updates. After installing, create a `MiaoYan` folder in iCloud Drive, a desktop cloud-drive folder, or your preferred location, open Preferences (⌘,), and set the storage path.
+Homebrew and GitHub Releases install this open-source app, which now receives fixes only. The App Store edition is developed separately, includes the iPhone and iPad app, and is where new features land. After installing, create a `MiaoYan` folder in iCloud Drive, a desktop cloud-drive folder, or your preferred location, open Preferences (⌘,), and set the storage path.
 
 ## Sync with Nutstore or Other Cloud Drives
 

@@ -548,19 +548,16 @@ class Storage {
             note.creationDate = document.creationDate
             note.project = item
 
-            #if CLOUDKIT
-            #else
-                let pinData =
-                    (try? note.url.extendedAttribute(forName: AppIdentifier.pinKey))
-                    ?? (try? note.url.extendedAttribute(forName: AppIdentifier.legacyPinKey))
-                if let data = pinData {
-                    let isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
-                        ptr.load(as: Bool.self)
-                    }
-
-                    note.isPinned = isPinned
+            let pinData =
+                (try? note.url.extendedAttribute(forName: AppIdentifier.pinKey))
+                ?? (try? note.url.extendedAttribute(forName: AppIdentifier.legacyPinKey))
+            if let data = pinData {
+                let isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
+                    ptr.load(as: Bool.self)
                 }
-            #endif
+
+                note.isPinned = isPinned
+            }
 
             if loadContent {
                 note.load()
@@ -631,18 +628,15 @@ class Storage {
             note.creationDate = document.creationDate
             note.project = project
 
-            #if CLOUDKIT
-            #else
-                let pinData =
-                    (try? note.url.extendedAttribute(forName: AppIdentifier.pinKey))
-                    ?? (try? note.url.extendedAttribute(forName: AppIdentifier.legacyPinKey))
-                if let data = pinData {
-                    let isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
-                        ptr.load(as: Bool.self)
-                    }
-                    note.isPinned = isPinned
+            let pinData =
+                (try? note.url.extendedAttribute(forName: AppIdentifier.pinKey))
+                ?? (try? note.url.extendedAttribute(forName: AppIdentifier.legacyPinKey))
+            if let data = pinData {
+                let isPinned = data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> Bool in
+                    ptr.load(as: Bool.self)
                 }
-            #endif
+                note.isPinned = isPinned
+            }
 
             if note.isPinned {
                 pinned += 1

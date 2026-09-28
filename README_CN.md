@@ -30,7 +30,7 @@
 
 ## 安装使用
 
-1. **Mac App Store**(付费,自动更新):
+1. **Mac App Store**(付费,自动更新,含 iPhone 和 iPad 版):
 
    <a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
 
@@ -41,7 +41,7 @@
 
 3. **GitHub Releases**: 从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) 下载最新 DMG(macOS 12.0+)
 
-三种方式共享同一份代码,功能完全一致,同步更新。安装后在 iCloud 云盘、坚果云桌面同步目录或其他位置创建 `MiaoYan` 文件夹,打开设置 (⌘,) 指定存储位置,就可以开始写了。
+Homebrew 和 GitHub Releases 装的是这个开源版本,现在只修问题。App Store 版另外开发,带 iPhone 和 iPad 版,新功能都在那边。安装后在 iCloud 云盘、坚果云桌面同步目录或其他位置创建 `MiaoYan` 文件夹,打开设置 (⌘,) 指定存储位置,就可以开始写了。
 
 ## 用坚果云或其他云盘同步妙言
 

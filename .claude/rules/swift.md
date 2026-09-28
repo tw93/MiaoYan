@@ -6,7 +6,6 @@
 
 - macOS 主 app 的编辑器核心、预览管线、既有窗口和 storyboard 场景保持 AppKit + NSViewController/NSWindowController,不要重写。
 - **新增的独立面板**(版本 diff 视图、quick-open、大纲侧栏这类自包含 UI)允许用 `NSHostingView` 挂 SwiftUI,这是维护者 2026-07 定下的下一代方向边界;不要以此为由把 SwiftUI 渗进 EditTextView / MPreviewView / ViewController 热路径。
-- `MiaoYanMobile/` 是 iOS target,一律 SwiftUI。它有自己的 models 和 services,不编译 `Business/`;两端只共享文件系统约定,UI 层同样不跨 target 共享。
 
 ## Threading
 
