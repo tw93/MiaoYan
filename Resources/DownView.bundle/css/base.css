@@ -395,12 +395,12 @@ img.border {
 /* ==================== Media Queries ==================== */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-color: #23282D;
+    --bg-color: #1E1D1B;
     --text-color: #E7E9EA;
     --link-color: #1D9BF0;
-    --border-color: #454545;
-    --code-bg: #282e33;
-    --diagram-bg: #282e33;
+    --border-color: #3A3936;
+    --code-bg: #282724;
+    --diagram-bg: #282724;
     --blockquote-border-color: #545454;
   }
 

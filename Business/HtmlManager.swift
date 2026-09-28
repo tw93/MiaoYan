@@ -33,15 +33,15 @@ class HtmlManager {
         return """
             @media print, screen {
                :root {
-                   --bg-color: #23282D !important;
+                   --bg-color: #1E1D1B !important;
                    --text-color: #E7E9EA !important;
-                   --code-bg: #282e33 !important;
-                   --side-bar-bg-color: #23282D !important;
+                   --code-bg: #282724 !important;
+                   --side-bar-bg-color: #1E1D1B !important;
                    --control-text-color: #999 !important;
                    --primary-color: #fd8258 !important;
                }
                html, body {
-                   background-color: #23282D !important;
+                   background-color: #1E1D1B !important;
                    color: #E7E9EA !important;
                }
             }

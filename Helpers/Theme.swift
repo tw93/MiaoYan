@@ -104,10 +104,10 @@ enum Theme {
 
         return Color(name: nil) { appearance in
             if appearance.isDark {
-                return Color(srgbRed: 0x42 / 255.0, green: 0x4A / 255.0, blue: 0x54 / 255.0, alpha: 1.0)
+                return Color(srgbRed: 0x30 / 255.0, green: 0x2F / 255.0, blue: 0x2D / 255.0, alpha: 1.0)
             }
 
-            return Color(srgbRed: 0xCC / 255.0, green: 0xCC / 255.0, blue: 0xCC / 255.0, alpha: 0.96)
+            return Color(srgbRed: 0xE8 / 255.0, green: 0xE6 / 255.0, blue: 0xDC / 255.0, alpha: 1.0)
         }
     }
 
@@ -288,7 +288,7 @@ enum Theme {
     }
 
     static var previewDarkBackgroundColor: Color {
-        NSColor(srgbRed: 0x23 / 255.0, green: 0x28 / 255.0, blue: 0x2D / 255.0, alpha: 1.0)
+        NSColor(srgbRed: 0x1E / 255.0, green: 0x1D / 255.0, blue: 0x1B / 255.0, alpha: 1.0)
     }
 
     static func configureChromeIconButton(_ button: NSButton?) {

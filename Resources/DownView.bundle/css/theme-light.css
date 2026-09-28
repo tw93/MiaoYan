@@ -8,13 +8,13 @@
   --primary-light: rgba(28, 93, 51, 0.12);
 
   /* Base Colors */
-  --bg-color: #FFFFFF;
+  --bg-color: #FDFCF9;
   --text-color: #262626;
   --text-secondary: #777;
   --link-color: #0C6ADA;
-  --border-color: #e6e6e6;
-  --code-bg: #f7f7f7;
-  --diagram-bg: #f7f7f7;
+  --border-color: #E8E6DC;
+  --code-bg: #F5F4ED;
+  --diagram-bg: #F5F4ED;
   --blockquote-border-color: #d0d0d0;
 
   /* Syntax Highlight - Light */

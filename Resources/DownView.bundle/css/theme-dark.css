@@ -4,19 +4,19 @@
 
 .darkmode {
   /* Base Colors */
-  --bg-color: #23282D;
+  --bg-color: #1E1D1B;
   --text-color: #E7E9EA;
   --text-secondary: #ABB2BF;
   --link-color: #1D9BF0;
-  --border-color: #454545;
-  --code-bg: #282e33;
-  --diagram-bg: #282e33;
+  --border-color: #3A3936;
+  --code-bg: #282724;
+  --diagram-bg: #282724;
   --blockquote-border-color: #545454;
 
   /* Mermaid Diagram */
-  --mermaid-node-bg: #2f353d;
+  --mermaid-node-bg: #2B2A27;
   --mermaid-text-color: #E7E9EA;
-  --mermaid-border-color: #49515a;
+  --mermaid-border-color: #45433F;
   --mermaid-line-color: #54C59F;
   --mermaid-edge-label-bg: transparent;
 

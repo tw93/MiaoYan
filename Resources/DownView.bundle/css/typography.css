@@ -676,7 +676,7 @@ code.language-mermaid .edgeLabel{
 
 .heti pre.mermaid-image-container {
   padding: 0;
-  background: #f7f7f7;
+  background: var(--diagram-bg);
 }
 
 .heti pre.markmap-image-container {
