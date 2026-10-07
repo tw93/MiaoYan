@@ -232,9 +232,11 @@ miao new <title> [text]
 miao update
 ```
 
-Use `miao list .` to include notes stored at the library root. Use an exact title or explicit path when duplicate note titles could exist.
+Use `miao list .` to include notes stored at the library root. When note titles repeat, inspect the candidate paths and use an explicit path; an exact title still resolves to the first match.
 
 Use `miao cat` to inspect a note and `miao open` to show it in the app. Use `miao new` only for new notes. The CLI does not provide an edit-existing command, so do not invent `miao edit`, `miao append`, or similar commands.
+
+`miao update` replaces the installed CLI. Run it only when the user asks to update the CLI, not while inspecting or editing notes.
 
 If the CLI cannot detect the library, use the user's configured MiaoYan folder through `MIAOYAN_PATH` for that command. Never guess a private folder or write outside the user-approved library.
 
