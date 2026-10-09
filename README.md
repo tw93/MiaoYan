@@ -16,7 +16,7 @@
       <img alt="GitHub Closed Issues" src="https://img.shields.io/github/issues-closed/tw93/MiaoYan.svg?style=flat-square"></a>
     <img alt="macOS 12.0+" src="https://img.shields.io/badge/macOS-12.0%2B-orange?style=flat-square">
   </div>
-  <div align="center">Lightweight Markdown note-taking app for macOS</div>
+  <div align="center">A quiet, distraction-free writing app for macOS</div>
 </p>
 
 <img src="https://raw.githubusercontent.com/tw93/static/main/miaoyan/miaoyan.gif" width="900px" />
