@@ -23,10 +23,10 @@
 
 ## Features
 
-- **Fantastic**: Local-first, no data collection, split editor & preview, wikilink backlinks, LaTeX, Mermaid
-- **Beautiful**: Minimalist design, three-column layout, dark mode, macOS 26 glass, distraction-free
-- **Fast**: Swift 6 native, better performance than Electron-based apps
-- **Simple**: Lightweight, version history, keyboard shortcuts, auto-formatting
+- **Local-first**: Your notes stay on your Mac. No cloud by default, no tracking.
+- **Focused**: A clean three-column view with dark mode, free from plugin fatigue.
+- **Native**: Native Swift is lighter and faster than web wrappers, with smooth split preview.
+- **Capable**: Wikilinks, math, charts, and slide decks—ready when you need them.
 
 ## Installation
 
