@@ -2,7 +2,7 @@
   <a href="https://miaoyan.app/" target="_blank"><img src="https://gw.alipayobjects.com/zos/k/t0/43.png" width="138" /></a>
   <h1>妙言</h1>
   <p><b>轻灵纯粹的笔记本，伴你写出妙言</b></p>
-  <p><a href="README.md">English</a> · 中文</p>
+  <p><a href="README.md">English</a> · 中文 · <a href="README_TW.md">繁體</a> · <a href="README_JA.md">日本語</a> · <a href="README_KR.md">한국어</a> · <a href="README_DE.md">Deutsch</a> · <a href="README_FR.md">Français</a></p>
   <a href="https://twitter.com/HiTw93" target="_blank"><img alt="Twitter 关注" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=Twitter"></a>
   <a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank"><img alt="Telegram 群组" src="https://img.shields.io/badge/chat-Telegram-blueviolet?style=flat-square&logo=Telegram"></a>
   <a href="https://github.com/tw93/MiaoYan/releases" target="_blank"><img alt="GitHub 下载量" src="https://img.shields.io/github/downloads/tw93/MiaoYan/total.svg?style=flat-square"></a>
@@ -15,10 +15,10 @@
 
 ## 特点
 
-- **纯本地**：笔记只存在自己电脑里，不上云，不收数据。
-- **三栏专注**：界面干净清爽，自带深色模式，不用折腾插件。
-- **原生轻巧**：原生开发比网页套壳更轻，性能更好更流畅。
-- **日常够用**：双链、数学公式、图表到幻灯片，日常全够用。
+- **纯本地**：笔记只存在自己电脑里，不上云，不收数据
+- **三栏专注**：界面干净清爽，自带深色模式，不用折腾插件
+- **原生轻巧**：原生开发比网页套壳更轻，性能更好更流畅
+- **日常够用**：双链、数学公式、图表到幻灯片，日常全够用
 
 ## 安装使用
 
@@ -81,10 +81,10 @@ miao update             # 更新 CLI
 
 ## 支持
 
-1. 购买我做的 Mac 清理应用 [Mole for Mac](https://mole.fit)，是对我最直接的支持。
-2. 如果你喜欢妙言，欢迎给它一个 Star，也欢迎推荐给身边喜欢纯文本的朋友。
-3. 可以关注我的 [Twitter](https://twitter.com/HiTw93) 获取最新的更新消息，也欢迎加入 [Telegram](https://t.me/+9f9gf4ZrFSQ2OWVl) 聊天群。
-4. 我有两只猫：汤圆、可乐，若妙言让你开心，<a href="https://cats.tw93.fun" target="_blank">请她们吃罐头 🥩</a>。
+1. 购买我做的 Mac 清理应用 [Mole for Mac](https://mole.fit)，是对我最直接的支持
+2. 如果你喜欢妙言，欢迎给它一个 Star，也欢迎推荐给身边喜欢纯文本的朋友
+3. 可以关注我的 [Twitter](https://twitter.com/HiTw93) 获取最新的更新消息，也欢迎加入 [Telegram](https://t.me/+9f9gf4ZrFSQ2OWVl) 聊天群
+4. 我有两只猫：汤圆、可乐，若妙言让你开心，<a href="https://cats.tw93.fun" target="_blank">请她们吃罐头 🥩</a>
 
 ## 致谢
 
@@ -93,6 +93,7 @@ miao update             # 更新 CLI
 - [simonbs/Prettier](https://github.com/simonbs/Prettier) - Markdown 格式化工具
 - [raspu/Highlightr](https://github.com/raspu/Highlightr) - 语法高亮支持
 - [hakimel/reveal.js](https://github.com/hakimel/reveal.js) - PPT 演示框架
+
 ## 协议
 
 MIT License - 欢迎自由使用与贡献
