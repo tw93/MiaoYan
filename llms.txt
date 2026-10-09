@@ -21,15 +21,15 @@ MiaoYan is for people who want a focused, native Mac writing app that keeps ordi
 - Version history, auto-formatting, keyboard shortcuts, and dark mode
 - Markdown presentation mode and a command-line interface
 - Native Swift 6 app with no Electron runtime
-- Requires macOS 11.5 or later
+- Requires macOS 12.0 or later
 
 ## Installation
 
-- Mac App Store: paid purchase with automatic updates
+- Mac App Store: paid purchase with automatic updates, includes iPhone and iPad apps
 - Homebrew: `brew install --cask miaoyan`
 - GitHub Releases: download the latest DMG
 
-All three options use the same codebase and receive the same updates.
+The open-source edition (Homebrew and GitHub Releases) receives maintenance fixes. The Mac App Store edition is developed separately with iPhone and iPad companion apps.
 
 ## Comparisons
 
