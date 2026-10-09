@@ -16,7 +16,7 @@
       <img alt="GitHub 已关闭议题" src="https://img.shields.io/github/issues-closed/tw93/MiaoYan.svg?style=flat-square"></a>
     <img alt="macOS 12.0+" src="https://img.shields.io/badge/macOS-12.0%2B-orange?style=flat-square">
   </div>
-  <div align="center">轻灵纯粹的写字本，伴你写出妙言</div>
+  <div align="center">轻灵纯粹的笔记本，伴你写出妙言</div>
 </p>
 
 <img src="https://raw.githubusercontent.com/tw93/static/master/miaoyan/newmiaoyan.gif" width="900px" />
