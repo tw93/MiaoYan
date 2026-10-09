@@ -74,7 +74,7 @@ Edit and preview side by side with real-time preview and 60fps bidirectional scr
 
 **Quick Toggle**: Press `⌘\` to instantly toggle split view mode, or enable it in Preferences → Interface → Edit Mode → Split Mode.
 
-Why not WYSIWYG like Typora? We prioritize pure Markdown editing experience, and implementing WYSIWYG in native Swift is overly complex with reliability concerns. Split mode maintains clean editing while providing instant visual feedback.
+Why not WYSIWYG like Typora? Pure Markdown editing is the whole point. Native WYSIWYG in Swift is heavy and fragile; split mode keeps writing focused while giving you instant, synchronized visual feedback.
 
 <img src="https://gw.alipayobjects.com/zos/k/eg/jV8Gra.png" width="100%" alt="Split Editor & Preview Mode" />
 
@@ -90,7 +90,7 @@ Install the official skill with `npx skills add tw93/MiaoYan/skills/miaoyan -g`.
 
 - The most direct way to support me is getting [Mole for Mac](https://mole.fit), my paid Mac cleanup app.
 - If MiaoYan helped you, give it a star, [share it](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20A%20fast%2C%20elegant%20Markdown%20editor%20for%20Mac.), or open an issue or PR.
-- I have two cats, TangYuan and Coke. If you think MiaoYan delights your life, you can feed them <a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">canned food 🥩</a>.
+- I have two cats, TangYuan and Coke. If MiaoYan brings you joy, you can feed them <a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">canned food 🥩</a>.
 
 <details>
 <summary>These lovely people already did 🐱</summary>
