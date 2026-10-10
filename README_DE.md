@@ -15,7 +15,7 @@
 
 ## Funktionen
 
-- **Lokal zuerst**: Notizen sind Markdown-Dateien in einem Ordner deiner Wahl, ohne Datenerfassung, den Abgleich zwischen Geräten übernehmen iCloud Drive oder Nutstore
+- **Lokal zuerst**: Notizen sind Markdown-Dateien in einem Ordner deiner Wahl, ohne Datenerfassung; den Abgleich zwischen Geräten übernimmt iCloud Drive oder Nutstore
 - **Fokussiert**: Ordner, Notizen und Editor in drei Spalten, mit Dark Mode und ohne Plugin-System, das gepflegt werden muss
 - **Nativ**: Mit Swift 6 gebaut, leichter als Web-Wrapper, geteilte Vorschau mit 60fps-Bildlaufsynchronisation
 - **Gut ausgestattet**: Wikilinks, LaTeX, Mermaid, Versionsverlauf, automatische Formatierung und PPT-Präsentationen integriert
@@ -81,7 +81,7 @@ Installiere den offiziellen Skill mit `npx skills add tw93/MiaoYan/skills/miaoya
 ## Unterstützung
 
 - Die direkteste Unterstützung ist der Kauf von [Mole for Mac](https://mole.fit), meiner Bereinigungs-App für macOS.
-- Wenn dir MiaoYan gefällt, vergib einen Stern, [teile es](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20A%20fast%2C%20elegant%20Markdown%20editor%20for%20Mac.) oder eröffne ein Issue oder einen PR.
+- Wenn dir MiaoYan gefällt, vergib einen Stern, [teile es](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20Eine%20native%20Mac-App%20f%C3%BCr%20lokale%20Markdown-Notizen) oder eröffne ein Issue oder einen PR.
 - Ich habe zwei Katzen, TangYuan und Coke. Wenn dir MiaoYan Freude bereitet, kannst du ihnen etwas <a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">Dosenfutter 🥩</a> spendieren.
 
 <details>
