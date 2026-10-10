@@ -1,7 +1,7 @@
 <div align="center">
   <a href="https://miaoyan.app/" target="_blank"><img src="https://gw.alipayobjects.com/zos/k/t0/43.png" width="138" /></a>
   <h1>MiaoYan</h1>
-  <p><b>집중을 방해하지 않는 깔끔한 macOS 마크다운 노트 앱</b></p>
+  <p><b>macOS용 조용한 마크다운 노트 앱</b></p>
   <p><a href="README.md">English</a> · <a href="README_CN.md">中文</a> · <a href="README_TW.md">繁體</a> · <a href="README_JA.md">日本語</a> · 한국어 · <a href="README_DE.md">Deutsch</a> · <a href="README_FR.md">Français</a></p>
   <a href="https://twitter.com/HiTw93" target="_blank"><img alt="Twitter Follow" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=Twitter"></a>
   <a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank"><img alt="Telegram" src="https://img.shields.io/badge/chat-Telegram-blueviolet?style=flat-square&logo=Telegram"></a>
@@ -15,10 +15,10 @@
 
 ## 특징
 
-- **로컬 우선**: 노트는 사용자 Mac에만 저장되며, 클라우드 전송이나 추적이 없습니다
-- **3단 집중 뷰**: 다크 모드를 지원하는 간결한 인터페이스로 플러그인 스트레스가 없습니다
-- **네이티브 성능**: 웹 래퍼보다 가볍고 빠른 Swift 네이티브 앱으로 부드러운 미리보기를 제공합니다
-- **풍부한 기능**: 양방향 링크, 수식, 차트, 슬라이드 발표까지 완벽 지원
+- **로컬 우선**: 노트는 직접 고른 폴더 안의 마크다운 파일, 데이터 수집 없음, 기기 간 동기화는 iCloud Drive나 Nutstore로
+- **집중**: 폴더, 노트 목록, 편집기로 나뉜 3단 구성, 다크 모드 지원, 관리할 플러그인 시스템 없음
+- **네이티브**: Swift 6으로 만들어 웹 래퍼보다 가볍고, 분할 미리보기는 60fps 양방향 스크롤 동기화
+- **충분한 기능**: 양방향 링크, LaTeX 수식, Mermaid 다이어그램, 버전 기록, 자동 서식, PPT 프레젠테이션 내장
 
 ## 설치
 
@@ -39,9 +39,9 @@ Homebrew 및 GitHub Releases는 버그 수정만 제공되는 오픈소스 버�
 
 MiaoYan은 로컬 우선 앱으로 WebDAV나 클라우드 계정에 직접 로그인하지 않습니다. 지정된 마크다운 폴더만 읽고 쓰며, 기기 간 동기화는 iCloud Drive, Nutstore, Dropbox 등의 클라우드 클라이언트가 담당합니다.
 
-- **Mac**: 클라우드 동기화 폴더 안에 `MiaoYan` 폴더를 만들고 환경설정에서 해당 경로를 저장 위치로 지정
-- **iPhone**: 시스템 파일 앱에서 동일한 클라우드 드라이브 폴더 선택. 쓰기 가능한 폴더를 지원하지 않는 경우 iCloud Drive를 사용하거나 해당 앱에서 오프라인 사용 가능으로 설정 후 선택
-- **경로 확인**: MiaoYan은 폴더 전환 전 읽기/쓰기 권한을 확인합니다. 접근할 수 없는 경우 기존 경로를 유지하며 오류를 앱 자체 동기화 실패로 표시하지 않습니다
+- **Mac**: 클라우드 동기화 폴더 안에 `MiaoYan` 폴더를 만들고 환경설정에서 해당 경로를 저장 위치로 지정.
+- **iPhone**: 시스템 파일 앱에서 동일한 클라우드 드라이브 폴더 선택. 쓰기 가능한 폴더를 지원하지 않는 경우 iCloud Drive를 사용하거나 해당 앱에서 오프라인 사용 가능으로 설정 후 선택.
+- **경로 확인**: MiaoYan은 폴더 전환 전 읽기/쓰기 권한을 확인합니다. 접근할 수 없는 경우 기존 경로를 유지하며 오류를 앱 자체 동기화 실패로 표시하지 않습니다.
 
 ## CLI 도구
 
@@ -64,7 +64,7 @@ miao update              # CLI 업데이트
 
 편집 영역과 미리보기를 나란히 배치하고 60fps 양방향 스크롤 동기화로 실시간 미리보기를 제공합니다.
 
-**빠른 전환**: `⌘\` 키로 분할 모드를 전환하거나 환경설정 → 인터페이스 → 편집 모드 → 분할 모드에서 활성화할 수 있습니다.
+**빠른 전환**: `⌘\` 키로 분할 모드를 전환하거나 환경설정의 General에서 Editor Mode를 Split Mode로 설정할 수 있습니다.
 
 Typora 스타일의 실시간 인라인 렌더링을 하지 않는 이유: 순수한 마크다운 편집이 핵심 가치이기 때문입니다. Swift 기반의 네이티브 WYSIWYG는 무겁고 불안정해지기 쉽습니다. 분할 모드는 작성에 대한 집중을 유지하면서 매끄러운 실시간 시각적 피드백을 제공합니다.
 
@@ -80,9 +80,9 @@ Typora 스타일의 실시간 인라인 렌더링을 하지 않는 이유: 순�
 
 ## 후원
 
-- 개발자를 지원하는 가장 직접적인 방법은 유료 Mac 정리 앱인 [Mole for Mac](https://mole.fit)을 이용해 주시는 것입니다
-- MiaoYan이 유용했다면 Star를 누르거나, [공유](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20A%20fast%2C%20elegant%20Markdown%20editor%20for%20Mac.)하거나, 이슈 및 PR을 남겨주세요
-- 탕위안(TangYuan)과 콜라(Coke)라는 두 마리의 고양이를 키우고 있습니다. MiaoYan이 즐거움을 주었다면 <a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">캔 간식 🥩</a>을 후원해 주세요
+- 개발자를 지원하는 가장 직접적인 방법은 유료 Mac 정리 앱인 [Mole for Mac](https://mole.fit)을 이용해 주시는 것입니다.
+- MiaoYan이 유용했다면 Star를 누르거나, [공유](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20A%20fast%2C%20elegant%20Markdown%20editor%20for%20Mac.)하거나, 이슈 및 PR을 남겨주세요.
+- 탕위안(TangYuan)과 콜라(Coke)라는 두 마리의 고양이를 키우고 있습니다. MiaoYan이 즐거움을 주었다면 <a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">캔 간식 🥩</a>을 후원해 주세요.
 
 <details>
 <summary>후원해 주신 분들 🐱</summary>

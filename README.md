@@ -1,7 +1,7 @@
 <div align="center">
   <a href="https://miaoyan.app/" target="_blank"><img src="https://gw.alipayobjects.com/zos/k/t0/43.png" width="138" /></a>
   <h1>MiaoYan</h1>
-  <p><b>A quiet, distraction-free writing app for macOS</b></p>
+  <p><b>A quiet Markdown notes app for macOS</b></p>
   <p>English · <a href="README_CN.md">中文</a> · <a href="README_TW.md">繁體</a> · <a href="README_JA.md">日本語</a> · <a href="README_KR.md">한국어</a> · <a href="README_DE.md">Deutsch</a> · <a href="README_FR.md">Français</a></p>
   <a href="https://twitter.com/HiTw93" target="_blank"><img alt="Twitter Follow" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=Twitter"></a>
   <a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank"><img alt="Telegram" src="https://img.shields.io/badge/chat-Telegram-blueviolet?style=flat-square&logo=Telegram"></a>
@@ -15,10 +15,10 @@
 
 ## Features
 
-- **Local-first**: Your notes stay on your Mac. No cloud by default, no tracking.
-- **Focused**: A clean three-column view with dark mode, free from plugin fatigue.
-- **Native**: Native Swift is lighter and faster than web wrappers, with smooth split preview.
-- **Capable**: Wikilinks, math, charts, and slide decks—ready when you need them.
+- **Local-first**: Notes are Markdown files in a folder you choose, with no data collection, and iCloud Drive or Nutstore can sync them across devices
+- **Focused**: Folders, notes, and editor in three columns, with dark mode and no plugin system to maintain
+- **Native**: Built with Swift 6, lighter than web wrappers, with 60fps scroll sync in split preview
+- **Capable**: Wikilinks, LaTeX, Mermaid, version history, auto-formatting, and PPT presentations built in
 
 ## Installation
 
@@ -64,7 +64,7 @@ miao update               # Update CLI
 
 Edit and preview side by side with real-time preview and 60fps bidirectional scroll sync.
 
-**Quick Toggle**: Press `⌘\` to instantly toggle split view mode, or enable it in Preferences → Interface → Edit Mode → Split Mode.
+**Quick Toggle**: Press `⌘\` to instantly toggle split view mode, or open Preferences, go to General, and set Editor Mode to Split Mode.
 
 Why not WYSIWYG like Typora? Pure Markdown editing is the whole point. Native WYSIWYG in Swift is heavy and fragile; split mode keeps writing focused while giving you instant, synchronized visual feedback.
 

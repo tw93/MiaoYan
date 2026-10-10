@@ -1,7 +1,7 @@
 <div align="center">
   <a href="https://miaoyan.app/" target="_blank"><img src="https://gw.alipayobjects.com/zos/k/t0/43.png" width="138" /></a>
   <h1>MiaoYan</h1>
-  <p><b>Une application d'écriture sobre et sans distraction pour macOS</b></p>
+  <p><b>Une application de notes Markdown sobre pour macOS</b></p>
   <p><a href="README.md">English</a> · <a href="README_CN.md">中文</a> · <a href="README_TW.md">繁體</a> · <a href="README_JA.md">日本語</a> · <a href="README_KR.md">한국어</a> · <a href="README_DE.md">Deutsch</a> · Français</p>
   <a href="https://twitter.com/HiTw93" target="_blank"><img alt="Twitter Follow" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=Twitter"></a>
   <a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank"><img alt="Telegram" src="https://img.shields.io/badge/chat-Telegram-blueviolet?style=flat-square&logo=Telegram"></a>
@@ -15,10 +15,10 @@
 
 ## Fonctionnalités
 
-- **Local d'abord** : vos notes restent sur votre Mac, sans cloud obligatoire ni traçage.
-- **Concentration sur 3 colonnes** : interface épurée avec mode sombre, sans la lourdeur des extensions.
-- **Natif et léger** : le Swift natif est plus léger et plus rapide qu'un wrapper web, avec un aperçu fluide.
-- **Complet au quotidien** : liens bidirectionnels, formules mathématiques, graphiques et présentations.
+- **Local d'abord** : les notes sont des fichiers Markdown dans le dossier de votre choix, sans collecte de données, et iCloud Drive ou Nutstore assure la synchronisation entre appareils
+- **Concentré** : dossiers, notes et éditeur sur trois colonnes, avec mode sombre et sans système d'extensions à maintenir
+- **Natif** : écrit en Swift 6, plus léger qu'un wrapper web, avec un défilement synchronisé à 60 fps dans l'aperçu divisé
+- **Bien équipé** : wikilinks, LaTeX, Mermaid, historique des versions, mise en forme automatique et présentations PPT intégrés
 
 ## Installation
 
@@ -55,7 +55,7 @@ curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/main/scripts/install.s
 miao open <titre|chemin>   # Ouvrir une note ou un dossier
 miao new <titre> [texte]   # Créer une nouvelle note
 miao search <terme>        # Rechercher des notes dans le terminal
-miao list [dossier]        # Lister les dossiers ou les fichiers Markdown
+miao list [dossier]        # Lister les dossiers de premier niveau ou les fichiers Markdown d'un dossier
 miao cat <titre|chemin>    # Afficher le contenu d'une note
 miao update                # Mettre à jour le CLI
 ```
@@ -64,7 +64,7 @@ miao update                # Mettre à jour le CLI
 
 Édition et aperçu côte à côte avec synchronisation bidirectionnelle du défilement à 60 fps.
 
-**Bascule rapide** : appuyez sur `⌘\` pour basculer instantanément en mode divisé, ou activez-le dans Préférences → Interface → Mode d'édition → Mode divisé.
+**Bascule rapide** : appuyez sur `⌘\` pour basculer instantanément en mode divisé, ou ouvrez les Préférences, section General, et réglez Editor Mode sur Split Mode.
 
 Pourquoi pas de WYSIWYG comme Typora ? L'écriture en Markdown pur est au cœur du projet. Un WYSIWYG natif en Swift est lourd et fragile ; le mode divisé garantit une écriture concentrée tout en offrant un retour visuel instantané et fluide.
 
@@ -85,7 +85,7 @@ Installez le skill officiel avec `npx skills add tw93/MiaoYan/skills/miaoyan -g`
 - J'ai deux chats, TangYuan et Coke. Si MiaoYan vous apporte satisfaction, vous pouvez leur offrir de la <a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">pâtée 🥩</a>.
 
 <details>
-<summary>Contributeurs et soutiens 🐱</summary>
+<summary>Ces personnes l'ont déjà fait 🐱</summary>
 <br/>
 <a href="https://cats.tw93.fun?name=MiaoYan"><img src="https://cdn.jsdelivr.net/gh/tw93/sponsors@main/assets/sponsors.svg" width="1000" loading="lazy" /></a>
 </details>

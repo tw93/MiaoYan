@@ -1,7 +1,7 @@
 <div align="center">
   <a href="https://miaoyan.app/" target="_blank"><img src="https://gw.alipayobjects.com/zos/k/t0/43.png" width="138" /></a>
   <h1>MiaoYan</h1>
-  <p><b>静かで集中できる、macOS 向け Markdown ノートアプリ</b></p>
+  <p><b>macOS 向けの静かな Markdown ノートアプリ</b></p>
   <p><a href="README.md">English</a> · <a href="README_CN.md">中文</a> · <a href="README_TW.md">繁體</a> · 日本語 · <a href="README_KR.md">한국어</a> · <a href="README_DE.md">Deutsch</a> · <a href="README_FR.md">Français</a></p>
   <a href="https://twitter.com/HiTw93" target="_blank"><img alt="Twitter Follow" src="https://img.shields.io/badge/follow-Tw93-red?style=flat-square&logo=Twitter"></a>
   <a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank"><img alt="Telegram" src="https://img.shields.io/badge/chat-Telegram-blueviolet?style=flat-square&logo=Telegram"></a>
@@ -15,10 +15,10 @@
 
 ## 特徴
 
-- **ローカルファースト**: ノートは Mac 内だけに保存、クラウド送信やトラッキングなし
-- **3ペイン集中**: クリーンなインターフェースとダークモード、プラグインの煩わしさなし
-- **ネイティブの軽快さ**: Web ラッパーよりも軽量・高速な Swift ネイティブ、滑らかなプレビュー
-- **充実の機能**: 双方向リンク、数式、チャート、スライド発表まで完備
+- **ローカルファースト**: ノートは選んだフォルダ内の Markdown ファイル、データ収集なし、デバイス間の同期は iCloud Drive や Nutstore で
+- **集中**: フォルダ、ノート一覧、エディタの3ペイン構成、ダークモード対応、管理が必要なプラグインシステムなし
+- **ネイティブ**: Swift 6 製で Web ラッパーより軽量、2ペインプレビューは 60fps の双方向スクロール同期
+- **必要十分**: 双方向リンク、LaTeX 数式、Mermaid 図、バージョン履歴、自動整形、PPT プレゼンテーションを内蔵
 
 ## インストール
 
@@ -33,15 +33,15 @@
 
 3. **GitHub Releases**: [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) から最新 DMG をダウンロード（macOS 12.0+）
 
-Homebrew と GitHub Releases でインストールされるオープンソース版は、現在バグ修正のみ受け付けています。新機能や iPhone / iPad 版を含むバージョンは Mac App Store 版として別途開発されています。インストール後、iCloud Drive やローカル同期フォルダに `MiaoYan` フォルダを作成し、設定（⌘,）で保存先を指定してください。
+Homebrew と GitHub Releases でインストールされるオープンソース版は、現在バグ修正のみ行っています。新機能や iPhone / iPad 版を含むバージョンは Mac App Store 版として別途開発されています。インストール後、iCloud Drive やローカル同期フォルダに `MiaoYan` フォルダを作成し、設定（⌘,）で保存先を指定してください。
 
 ## Nutstore や他のクラウドストレージとの同期
 
 MiaoYan はローカルファーストであり、WebDAV やクラウドストレージのアカウントに直接ログインしません。指定された Markdown フォルダの読み書きのみを行い、デバイス間の同期は iCloud Drive、Nutstore、Dropbox などのクライアントに任せます。
 
-- **Mac**: クラウド同期ディレクトリ内に `MiaoYan` フォルダを作成し、MiaoYan の設定で保存先を指定
-- **iPhone**: システムの「ファイル」アプリで同じフォルダを選択。クラウドアプリが書き込み可能なフォルダを提供していない場合は、iCloud Drive を使用するか、そのアプリ内でオフライン利用可能にしてから選択
-- **フォルダ検証**: MiaoYan は切り替え前に読み書き権限を確認します。利用できない場合は保存先を変更せず、アプリ側の同期エラーとして誤認させません
+- **Mac**: クラウド同期ディレクトリ内に `MiaoYan` フォルダを作成し、MiaoYan の設定で保存先を指定。
+- **iPhone**: システムの「ファイル」アプリで同じフォルダを選択。クラウドアプリが書き込み可能なフォルダを提供していない場合は、iCloud Drive を使用するか、そのアプリ内でオフライン利用可能にしてから選択。
+- **フォルダ検証**: MiaoYan は切り替え前に読み書き権限を確認します。利用できない場合は保存先を変更せず、アプリ側の同期エラーとして誤認させません。
 
 ## CLI ツール
 
@@ -64,7 +64,7 @@ miao update                 # CLI をアップデート
 
 編集ペインとプレビューペインを並べて表示し、60fps の双方向スクロール同期によるリアルタイムプレビューに対応しています。
 
-**クイック切り替え**: `⌘\` を押して瞬時に切り替えるか、設定 → インターフェース → 編集モード → 2ペインモードで有効化できます。
+**クイック切り替え**: `⌘\` を押して瞬時に切り替えるか、設定の「一般」でエディタモードを「分割モード」にすると有効になります。
 
 Typora のようなインライン WYSIWYG にしない理由: 純粋な Markdown 編集こそが本質です。Swift によるネイティブ WYSIWYG は肥大化し壊れやすくなります。2ペイン分割により、集中した執筆と滑らかなリアルタイム視覚フィードバックの両立を実現しています。
 
@@ -80,9 +80,9 @@ Typora のようなインライン WYSIWYG にしない理由: 純粋な Markdow
 
 ## サポート
 
-- 開発者を直接支援する方法として、Mac クリーナーアプリ [Mole for Mac](https://mole.fit) の購入をご検討ください
-- MiaoYan が役に立ったら、Star を付けたり、[共有](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20A%20fast%2C%20elegant%20Markdown%20editor%20for%20Mac.)したり、Issue や PR をお寄せください
-- 私にはタンユエン（湯円）とコーラ（可楽）という2匹の猫がいます。もし MiaoYan を気に入っていただけたら、<a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">缶詰 🥩</a> をプレゼントしていただけると嬉しいです
+- 開発者を直接支援する方法として、Mac クリーナーアプリ [Mole for Mac](https://mole.fit) の購入をご検討ください。
+- MiaoYan が役に立ったら、Star を付けたり、[共有](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20A%20fast%2C%20elegant%20Markdown%20editor%20for%20Mac.)したり、Issue や PR をお寄せください。
+- 私にはタンユエン（湯円）とコーラ（可楽）という2匹の猫がいます。もし MiaoYan を気に入っていただけたら、<a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">缶詰 🥩</a> をプレゼントしていただけると嬉しいです。
 
 <details>
 <summary>支援してくださった方々 🐱</summary>
