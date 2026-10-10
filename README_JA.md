@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://miaoyan.app/" target="_blank"><img src="https://gw.alipayobjects.com/zos/k/t0/43.png" width="138" /></a>
+  <a href="https://miaoyan.app/" target="_blank"><img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/Resources/app.icon/Assets/43.png" width="138" /></a>
   <h1>MiaoYan</h1>
   <p><b>ローカルの Markdown ノートのためのネイティブ Mac アプリ</b></p>
   <p><a href="README.md">English</a> · <a href="README_CN.md">中文</a> · <a href="README_TW.md">繁體</a> · 日本語 · <a href="README_KR.md">한국어</a> · <a href="README_DE.md">Deutsch</a> · <a href="README_FR.md">Français</a></p>
@@ -68,7 +68,7 @@ miao update                 # CLI をアップデート
 
 Typora のようなインライン WYSIWYG にしない理由: 純粋な Markdown 編集こそが本質です。Swift によるネイティブ WYSIWYG は肥大化し壊れやすくなります。2ペイン分割により、集中した執筆と滑らかなリアルタイム視覚フィードバックの両立を実現しています。
 
-<img src="https://gw.alipayobjects.com/zos/k/eg/jV8Gra.png" width="100%" alt="2ペイン編集・プレビューモード" />
+<img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview.png" width="100%" alt="2ペイン編集・プレビューモード" />
 
 ## ドキュメント
 

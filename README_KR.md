@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://miaoyan.app/" target="_blank"><img src="https://gw.alipayobjects.com/zos/k/t0/43.png" width="138" /></a>
+  <a href="https://miaoyan.app/" target="_blank"><img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/Resources/app.icon/Assets/43.png" width="138" /></a>
   <h1>MiaoYan</h1>
   <p><b>로컬 마크다운 노트를 위한 네이티브 Mac 앱</b></p>
   <p><a href="README.md">English</a> · <a href="README_CN.md">中文</a> · <a href="README_TW.md">繁體</a> · <a href="README_JA.md">日本語</a> · 한국어 · <a href="README_DE.md">Deutsch</a> · <a href="README_FR.md">Français</a></p>
@@ -68,7 +68,7 @@ miao update              # CLI 업데이트
 
 Typora 스타일의 실시간 인라인 렌더링을 하지 않는 이유: 순수한 마크다운 편집이 핵심 가치이기 때문입니다. Swift 기반의 네이티브 WYSIWYG는 무겁고 불안정해지기 쉽습니다. 분할 모드는 작성에 대한 집중을 유지하면서 매끄러운 실시간 시각적 피드백을 제공합니다.
 
-<img src="https://gw.alipayobjects.com/zos/k/eg/jV8Gra.png" width="100%" alt="분할 편집 및 미리보기 모드" />
+<img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview.png" width="100%" alt="분할 편집 및 미리보기 모드" />
 
 ## 문서
 

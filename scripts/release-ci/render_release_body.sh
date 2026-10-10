@@ -27,7 +27,7 @@ format_item() {
 cat <<EOF
 <p align="center">
   <a href="https://miaoyan.app/" target="_blank">
-    <img src="https://gw.alipayobjects.com/zos/k/t0/43.png" width="110" />
+    <img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/Resources/app.icon/Assets/43.png" width="110" />
   </a>
   <h1 align="center">MiaoYan ${TITLE}</h1>
   <div align="center">A native Markdown editor for engineers.</div>
