@@ -24,7 +24,7 @@
 
 1. **Mac App Store** (payant, mises à jour automatiques, inclut l'application iPhone et iPad) :
 
-   <a href="https://apps.apple.com/cn/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Télécharger sur le Mac App Store" /></a>
+   <a href="https://apps.apple.com/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Télécharger sur le Mac App Store" /></a>
 
 2. **Homebrew** :
    ```bash
