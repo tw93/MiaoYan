@@ -33,19 +33,16 @@
 
 3. **GitHub Releases**：從 [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) 下載最新 DMG（macOS 12.0+）
 
-Homebrew 和 GitHub Releases 裝的是開源版本，目前只修問題。App Store 版另外開發，含 iPhone 與 iPad 版，新功能都在那邊。安裝後在 iCloud 雲碟、堅果雲桌面同步目錄或其他位置建立 `MiaoYan` 資料夾，開啟設定（⌘,）指定儲存位置，就可以開始寫了。
+Homebrew 和 GitHub Releases 裝的是開源版本，目前只修問題，App Store 版另外開發，新功能都在那邊。
 
 ## 用堅果雲或其他雲端硬碟同步妙言
 
-妙言保持本機優先，不會登入 WebDAV 或雲端硬碟帳號。它只讀寫你指定的 Markdown 資料夾，跨裝置同步由 iCloud 雲碟、堅果雲、Dropbox 等雲端硬碟用戶端負責。
+妙言不會登入 WebDAV 或雲端硬碟帳號，只讀寫你指定的 Markdown 資料夾，跨裝置同步交給 iCloud 雲碟、堅果雲、Dropbox 等雲端硬碟用戶端。安裝後在 iCloud 雲碟、堅果雲桌面用戶端的同步目錄或其他位置建立 `MiaoYan` 資料夾，開啟設定（⌘,）將儲存位置指向它，就可以開始寫了。
 
-- **Mac**：在堅果雲桌面用戶端的同步目錄中建立 `MiaoYan` 資料夾，然後在妙言設定中將儲存位置指向它。
-- **iPhone**：在系統「檔案」App 中選擇同一個雲端硬碟資料夾。若某個雲端硬碟 App 沒有提供可寫入資料夾，建議使用 iCloud 雲碟，或先在雲端硬碟 App 中讓該資料夾可離線存取後再選擇。
-- **目錄檢查**：妙言會在切換目錄前確認資料夾可讀取、可寫入。無法使用時不會儲存新路徑，也不會將問題誤報為妙言自己的雲端同步失敗。
+- **iPhone**：在系統「檔案」App 中選擇同一個雲端硬碟資料夾，雲端硬碟 App 沒有提供可寫入資料夾的話，就用 iCloud 雲碟，或先在雲端硬碟 App 裡把該資料夾設為可離線存取再選
+- **目錄檢查**：妙言會在切換目錄前確認資料夾可讀寫，無法使用時保留原路徑，也不會將問題誤報為妙言自己的雲端同步失敗
 
 ## 命令列工具
-
-妙言提供命令列工具，方便在終端機中快速操作筆記。
 
 ```bash
 # 安裝
@@ -62,18 +59,14 @@ miao update             # 更新 CLI
 
 ## 分欄編輯預覽模式
 
-編輯區與預覽區並排顯示，支援 60fps 雙向捲動同步，即時預覽編輯效果。
-
-**快速切換**：按 `⌘\` 即可快速切換分欄模式，或在設定的通用頁將編輯模式設為分欄模式。
-
-為什麼不做 Typora 式所見即所得？我想讓你一直看著 Markdown 原文寫，用原生 Swift 做所見即所得很重，也難保證穩定，分欄模式能專心寫字，旁邊就是即時預覽。
+編輯區與預覽區並排顯示，按 `⌘\` 切換分欄模式，或在設定的通用頁將編輯模式設為分欄模式。為什麼不做 Typora 式所見即所得？我想讓你一直看著 Markdown 原文寫，用原生 Swift 做所見即所得很重，也難保證穩定，分欄模式能專心寫字，旁邊就是即時預覽。
 
 <img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview.png" width="100%" alt="分欄編輯預覽模式" />
 
 ## 使用指南
 
-- [介紹妙言](Resources/Initial/介绍妙言.md) - 完整使用指南，包含快捷鍵等
-- [Markdown 語法指南](Resources/Initial/妙言%20Markdown%20语法指南.md) - 完整語法示範，數學公式、圖表等
+- [介紹妙言](Resources/Initial/介绍妙言.md) - 使用說明和快捷鍵
+- [Markdown 語法指南](Resources/Initial/妙言%20Markdown%20语法指南.md) - 語法示範，含數學公式和圖表
 - [PPT 簡報模式](Resources/Initial/妙言%20PPT.md) - 使用 `---` 分隔投影片的簡報指南
 - [妙言 Agent Skill](skills/miaoyan) - 讓 Agent 掌握妙言語法、附件、PPT 與 CLI 使用方式
 
@@ -81,10 +74,15 @@ miao update             # 更新 CLI
 
 ## 支持
 
-1. 購買我製作的 Mac 清理工具 [Mole for Mac](https://mole.fit)，是對我最直接的支持。
-2. 如果你喜歡妙言，歡迎給它一個 Star，也歡迎推薦給身邊喜歡純文字的朋友。
-3. 可以追蹤我的 [Twitter](https://twitter.com/HiTw93) 取得最新動態，也歡迎加入 [Telegram](https://t.me/+9f9gf4ZrFSQ2OWVl) 群組。
-4. 我有兩隻貓：湯圓、可樂，若妙言讓你開心，<a href="https://cats.tw93.fun" target="_blank">請牠們吃罐頭 🥩</a>。
+- 購買我製作的 Mac 清理工具 [Mole for Mac](https://mole.fit)，是對我最直接的支持
+- 如果你喜歡妙言，歡迎給它一個 Star，推薦給身邊喜歡純文字的朋友，[分享出去](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=%E5%A6%99%E8%A8%80%20-%20%E8%BC%95%E9%9D%88%E7%9A%84%20Markdown%20%E7%AD%86%E8%A8%98%E6%9C%AC%EF%BC%8C%E4%BC%B4%E4%BD%A0%E5%AF%AB%E5%87%BA%E5%A6%99%E8%A8%80)，或者提 issue 和 PR
+- 我有兩隻貓，湯圓和可樂，若妙言讓你開心，可以<a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">請她們吃罐頭 🥩</a>
+
+<details>
+<summary>這些可愛的朋友已經餵過了 🐱</summary>
+<br/>
+<a href="https://cats.tw93.fun?name=MiaoYan"><img src="https://cdn.jsdelivr.net/gh/tw93/sponsors@main/assets/sponsors.svg" width="1000" loading="lazy" /></a>
+</details>
 
 ## 致謝
 
@@ -96,4 +94,4 @@ miao update             # 更新 CLI
 
 ## 授權
 
-MIT License - 歡迎自由使用與貢獻
+MIT License

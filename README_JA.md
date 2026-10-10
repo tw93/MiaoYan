@@ -33,19 +33,16 @@
 
 3. **GitHub Releases**: [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) から最新 DMG をダウンロード（macOS 12.0+）
 
-Homebrew と GitHub Releases でインストールされるオープンソース版は、現在バグ修正のみ行っています。新機能や iPhone / iPad 版を含むバージョンは Mac App Store 版として別途開発されています。インストール後、iCloud Drive やローカル同期フォルダに `MiaoYan` フォルダを作成し、設定（⌘,）で保存先を指定してください。
+Homebrew と GitHub Releases でインストールされるオープンソース版は、現在バグ修正のみ行っています。Mac App Store 版は別途開発されており、新機能はそちらに追加されます。
 
 ## Nutstore や他のクラウドストレージとの同期
 
-MiaoYan はローカルファーストであり、WebDAV やクラウドストレージのアカウントに直接ログインしません。指定された Markdown フォルダの読み書きのみを行い、デバイス間の同期は iCloud Drive、Nutstore、Dropbox などのクライアントに任せます。
+MiaoYan は WebDAV やクラウドストレージのアカウントにログインせず、指定された Markdown フォルダの読み書きのみを行います。インストール後、iCloud Drive、Nutstore デスクトップクライアントの同期フォルダ、または任意の場所に `MiaoYan` フォルダを作成し、設定（⌘,）で保存先に指定すれば書き始められます。デバイス間の同期は iCloud Drive、Nutstore、Dropbox などのクライアントに任せます。
 
-- **Mac**: クラウド同期ディレクトリ内に `MiaoYan` フォルダを作成し、MiaoYan の設定で保存先を指定。
-- **iPhone**: システムの「ファイル」アプリで同じフォルダを選択。クラウドアプリが書き込み可能なフォルダを提供していない場合は、iCloud Drive を使用するか、そのアプリ内でオフライン利用可能にしてから選択。
-- **フォルダ検証**: MiaoYan は切り替え前に読み書き権限を確認します。利用できない場合は保存先を変更せず、アプリ側の同期エラーとして誤認させません。
+- **iPhone**: システムの「ファイル」アプリで同じフォルダを選択し、クラウドアプリが書き込み可能なフォルダを提供していない場合は iCloud Drive を使うか、そのアプリ内でオフライン利用可能にしてから選択
+- **フォルダ検証**: 切り替え前に読み書き権限を確認し、利用できない場合は保存先を変更せず、アプリ側の同期エラーとして誤認させない
 
 ## CLI ツール
-
-ターミナルから素早くノートを操作できるコマンドラインツールを提供しています。
 
 ```bash
 # インストール
@@ -62,17 +59,14 @@ miao update                 # CLI をアップデート
 
 ## 2ペイン編集・プレビューモード
 
-編集ペインとプレビューペインを並べて表示し、60fps の双方向スクロール同期によるリアルタイムプレビューに対応しています。
-
-**クイック切り替え**: `⌘\` を押して瞬時に切り替えるか、設定の「一般」でエディタモードを「分割モード」にすると有効になります。
-
-Typora のようなインライン WYSIWYG にしない理由: 純粋な Markdown 編集こそが本質です。Swift によるネイティブ WYSIWYG は肥大化し壊れやすくなります。2ペイン分割により、集中した執筆と滑らかなリアルタイム視覚フィードバックの両立を実現しています。
+編集ペインとプレビューペインを並べて表示します。`⌘\` で切り替えるか、設定の「一般」でエディタモードを「分割モード」にすると有効になります。Typora のようなインライン WYSIWYG にしない理由: 純粋な Markdown 編集こそが本質です。Swift によるネイティブ WYSIWYG は肥大化し壊れやすくなります。2ペイン分割により、集中した執筆と滑らかなリアルタイム視覚フィードバックの両立を実現しています。
 
 <img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview.png" width="100%" alt="2ペイン編集・プレビューモード" />
 
 ## ドキュメント
 
-- [Markdown 構文ガイド](Resources/Initial/MiaoYan%20Markdown%20Syntax%20Guide.md) - 高度な機能を含む構文リファレンス
+- [MiaoYan の紹介](Resources/Initial/Introduction%20to%20MiaoYan.md) - 使い方とキーボードショートカット
+- [Markdown 構文ガイド](Resources/Initial/MiaoYan%20Markdown%20Syntax%20Guide.md) - 数式や図を含む構文リファレンス
 - [PPT プレゼンテーションモード](Resources/Initial/MiaoYan%20PPT.md) - `---` スライド区切りを使ったプレゼンテーションガイド
 - [MiaoYan Agent Skill](skills/miaoyan) - MiaoYan の構文、添付ファイル、PPT、CLI ワークフローをエージェントに学習させる
 
@@ -80,9 +74,9 @@ Typora のようなインライン WYSIWYG にしない理由: 純粋な Markdow
 
 ## サポート
 
-- 開発者を直接支援する方法として、Mac クリーナーアプリ [Mole for Mac](https://mole.fit) の購入をご検討ください。
-- MiaoYan が役に立ったら、Star を付けたり、[共有](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%AB%E3%81%AE%20Markdown%20%E3%83%8E%E3%83%BC%E3%83%88%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AE%E3%83%8D%E3%82%A4%E3%83%86%E3%82%A3%E3%83%96%20Mac%20%E3%82%A2%E3%83%97%E3%83%AA)したり、Issue や PR をお寄せください。
-- 私にはタンユエン（湯円）とコーラ（可楽）という2匹の猫がいます。もし MiaoYan を気に入っていただけたら、<a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">缶詰 🥩</a> をプレゼントしていただけると嬉しいです。
+- 開発者を直接支援する方法として、Mac クリーナーアプリ [Mole for Mac](https://mole.fit) の購入をご検討ください
+- MiaoYan が役に立ったら、Star を付けたり、[共有](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%AB%E3%81%AE%20Markdown%20%E3%83%8E%E3%83%BC%E3%83%88%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AE%E3%83%8D%E3%82%A4%E3%83%86%E3%82%A3%E3%83%96%20Mac%20%E3%82%A2%E3%83%97%E3%83%AA)したり、Issue や PR をお寄せください
+- 私にはタンユエン（湯円）とコーラ（可楽）という2匹の猫がいます。もし MiaoYan を気に入っていただけたら、<a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">缶詰 🥩</a> をプレゼントしていただけると嬉しいです
 
 <details>
 <summary>支援してくださった方々 🐱</summary>
@@ -100,4 +94,4 @@ Typora のようなインライン WYSIWYG にしない理由: 純粋な Markdow
 
 ## ライセンス
 
-MIT License - 自由にご利用・貢献してください
+MIT License

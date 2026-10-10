@@ -33,19 +33,16 @@
 
 3. **GitHub Releases**: download the latest DMG from [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) (macOS 12.0+)
 
-Homebrew and GitHub Releases install this open-source app, which now receives fixes only. The App Store edition is developed separately, includes the iPhone and iPad app, and is where new features land. After installing, create a `MiaoYan` folder in iCloud Drive, a desktop cloud-drive folder, or your preferred location, open Preferences (⌘,), and set the storage path.
+Homebrew and GitHub Releases install this open-source app, which now receives fixes only. The App Store edition is developed separately and is where new features land.
 
 ## Sync with Nutstore or Other Cloud Drives
 
-MiaoYan is local-first and does not sign in to WebDAV or cloud-drive accounts. It reads and writes the Markdown folder you choose. iCloud Drive, Nutstore, Dropbox, or another cloud-drive client handles cross-device sync.
+MiaoYan does not sign in to WebDAV or cloud-drive accounts and only reads and writes the Markdown folder you choose. After installing, create a `MiaoYan` folder in iCloud Drive, the local folder synced by the Nutstore desktop client, or any other location, then open Preferences (⌘,) and set it as the storage path. iCloud Drive, Nutstore, Dropbox, or another cloud-drive client handles cross-device sync.
 
-- **Mac**: Create a `MiaoYan` folder inside the local folder synced by the Nutstore desktop client, then point MiaoYan's storage location to it in Preferences.
-- **iPhone**: Pick the same cloud-drive folder from the system Files app. If a provider does not expose a writable folder in Files, use iCloud Drive or make the folder available offline in that provider app before choosing it.
-- **Folder check**: MiaoYan verifies read and write access before switching folders. If the folder is unavailable, the current storage path stays unchanged.
+- **iPhone**: Pick the same cloud-drive folder in the system Files app, and if a provider does not offer a writable folder there, use iCloud Drive or make the folder available offline in that provider app first
+- **Folder check**: MiaoYan verifies read and write access before switching folders and keeps the current storage path if the folder is unavailable, without reporting the problem as a MiaoYan sync failure
 
 ## CLI
-
-MiaoYan provides a command-line interface for quick note operations.
 
 ```bash
 # Install
@@ -62,17 +59,14 @@ miao update               # Update CLI
 
 ## Split Editor & Preview Mode
 
-Edit and preview side by side with real-time preview and 60fps bidirectional scroll sync.
-
-**Quick Toggle**: Press `⌘\` to instantly toggle split view mode, or open Preferences, go to General, and set Editor Mode to Split Mode.
-
-Why not WYSIWYG like Typora? Pure Markdown editing is the whole point. Native WYSIWYG in Swift is heavy and fragile; split mode keeps writing focused while giving you instant, synchronized visual feedback.
+Edit and preview sit side by side. Press `⌘\` to toggle split mode, or open Preferences, go to General, and set Editor Mode to Split Mode. Why not WYSIWYG like Typora? Pure Markdown editing is the whole point. Native WYSIWYG in Swift is heavy and fragile; split mode keeps writing focused while giving you instant, synchronized visual feedback.
 
 <img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview.png" width="100%" alt="Split Editor & Preview Mode" />
 
 ## Documentation
 
-- [Markdown Syntax Guide](Resources/Initial/MiaoYan%20Markdown%20Syntax%20Guide.md) - Complete syntax reference with advanced features
+- [Introduction to MiaoYan](Resources/Initial/Introduction%20to%20MiaoYan.md) - Usage guide and keyboard shortcuts
+- [Markdown Syntax Guide](Resources/Initial/MiaoYan%20Markdown%20Syntax%20Guide.md) - Syntax reference with math and diagrams
 - [PPT Presentation Mode](Resources/Initial/MiaoYan%20PPT.md) - Guide to creating presentations with `---` slide separators
 - [MiaoYan Agent Skill](skills/miaoyan) - Teach your agent MiaoYan syntax, attachments, PPT patterns, and CLI workflows
 
@@ -80,9 +74,9 @@ Install the official skill with `npx skills add tw93/MiaoYan/skills/miaoyan -g`.
 
 ## Support
 
-- The most direct way to support me is getting [Mole for Mac](https://mole.fit), my paid Mac cleanup app.
-- If MiaoYan helped you, give it a star, [share it](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20A%20native%20Mac%20app%20for%20local%20Markdown%20notes), or open an issue or PR.
-- I have two cats, TangYuan and Coke. If MiaoYan brings you joy, you can feed them <a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">canned food 🥩</a>.
+- The most direct way to support me is getting [Mole for Mac](https://mole.fit), my paid Mac cleanup app
+- If MiaoYan helped you, give it a star, [share it](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20A%20native%20Mac%20app%20for%20local%20Markdown%20notes), or open an issue or PR
+- I have two cats, TangYuan and Coke. If MiaoYan brings you joy, you can feed them <a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">canned food 🥩</a>
 
 <details>
 <summary>These lovely people already did 🐱</summary>
@@ -100,4 +94,4 @@ Install the official skill with `npx skills add tw93/MiaoYan/skills/miaoyan -g`.
 
 ## License
 
-MIT License - Feel free to use and contribute.
+MIT License

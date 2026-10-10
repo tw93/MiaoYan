@@ -33,19 +33,16 @@
 
 3. **GitHub Releases**：从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) 下载最新 DMG（macOS 12.0+）
 
-Homebrew 和 GitHub Releases 装的是开源版本，目前只修问题。App Store 版另外开发，带 iPhone 和 iPad 版，新功能都在那边。安装后在 iCloud 云盘、坚果云桌面同步目录或其他位置创建 `MiaoYan` 文件夹，打开设置（⌘,）指定存储位置，就可以开始写了。
+Homebrew 和 GitHub Releases 装的是开源版本，目前只修问题，App Store 版另外开发，新功能都在那边。
 
 ## 用坚果云或其他云盘同步妙言
 
-妙言保持本地优先，不会登录 WebDAV 或网盘账号。它只读写你指定的 Markdown 文件夹，跨设备同步由 iCloud 云盘、坚果云、Dropbox 等云盘客户端负责。
+妙言不会登录 WebDAV 或网盘账号，只读写你指定的 Markdown 文件夹，跨设备同步交给 iCloud 云盘、坚果云、Dropbox 等云盘客户端。安装后在 iCloud 云盘、坚果云桌面客户端的同步目录或其他位置创建 `MiaoYan` 文件夹，打开设置（⌘,）把存储位置指向它，就可以开始写了。
 
-- **Mac**：在坚果云桌面客户端的同步目录中创建 `MiaoYan` 文件夹，然后在妙言设置中把存储位置指向它。
-- **iPhone**：在系统“文件”App 中选择同一个云盘文件夹。若某个云盘 App 没有暴露可写文件夹，建议使用 iCloud 云盘，或先在云盘 App 中让该文件夹可离线访问后再选择。
-- **目录检查**：妙言会在切换目录前确认文件夹可读取、可写入。不可用时不会保存新路径，也不会把问题误报成妙言自己的云同步失败。
+- **iPhone**：在系统“文件”App 中选择同一个云盘文件夹，云盘 App 没有提供可写文件夹的话，就用 iCloud 云盘，或先在云盘 App 里把该文件夹设为离线可用再选
+- **目录检查**：妙言会在切换目录前确认文件夹可读写，不可用时保留原路径，也不会把问题误报成妙言自己的云同步失败
 
 ## 命令行工具
-
-妙言提供命令行工具，方便在终端中快速操作笔记。
 
 ```bash
 # 安装
@@ -62,18 +59,14 @@ miao update             # 更新 CLI
 
 ## 分栏编辑预览模式
 
-编辑区和预览区并排显示，支持 60fps 双向滚动同步，实时预览编辑效果。
-
-**快速切换**：按 `⌘\` 即可快速切换分栏模式，或在设置的通用页把编辑模式设为分栏模式。
-
-为什么不做 Typora 式所见即所得？我想让你一直看着 Markdown 原文写，用原生 Swift 做所见即所得很重，也难保证稳定，分栏模式能专心写字，旁边就是实时预览。
+编辑区和预览区并排显示，按 `⌘\` 切换分栏模式，或在设置的通用页把编辑模式设为分栏模式。为什么不做 Typora 式所见即所得？我想让你一直看着 Markdown 原文写，用原生 Swift 做所见即所得很重，也难保证稳定，分栏模式能专心写字，旁边就是实时预览。
 
 <img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview.png" width="100%" alt="分栏编辑预览模式" />
 
 ## 使用指南
 
-- [介绍妙言](Resources/Initial/介绍妙言.md) - 完整使用指南，包含快捷键等
-- [Markdown 语法指南](Resources/Initial/妙言%20Markdown%20语法指南.md) - 完整语法演示，数学公式、图表等
+- [介绍妙言](Resources/Initial/介绍妙言.md) - 使用说明和快捷键
+- [Markdown 语法指南](Resources/Initial/妙言%20Markdown%20语法指南.md) - 语法演示，含数学公式和图表
 - [PPT 演示模式](Resources/Initial/妙言%20PPT.md) - 使用 `---` 分隔幻灯片的演示指南
 - [妙言 Agent Skill](skills/miaoyan) - 让 Agent 掌握妙言语法、附件、PPT 与 CLI 使用方式
 
@@ -81,10 +74,15 @@ miao update             # 更新 CLI
 
 ## 支持
 
-1. 购买我做的 Mac 清理应用 [Mole for Mac](https://mole.fit)，是对我最直接的支持。
-2. 如果你喜欢妙言，欢迎给它一个 Star，也欢迎推荐给身边喜欢纯文本的朋友。
-3. 可以关注我的 [Twitter](https://twitter.com/HiTw93) 获取最新的更新消息，也欢迎加入 [Telegram](https://t.me/+9f9gf4ZrFSQ2OWVl) 聊天群。
-4. 我有两只猫：汤圆、可乐，若妙言让你开心，<a href="https://cats.tw93.fun" target="_blank">请她们吃罐头 🥩</a>。
+- 购买我做的 Mac 清理应用 [Mole for Mac](https://mole.fit)，是对我最直接的支持
+- 如果你喜欢妙言，欢迎给它一个 Star，推荐给身边喜欢纯文本的朋友，[分享出去](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=%E5%A6%99%E8%A8%80%20-%20%E8%BD%BB%E7%81%B5%E7%9A%84%20Markdown%20%E7%AC%94%E8%AE%B0%E6%9C%AC%EF%BC%8C%E4%BC%B4%E4%BD%A0%E5%86%99%E5%87%BA%E5%A6%99%E8%A8%80)，或者提 issue 和 PR
+- 我有两只猫，汤圆和可乐，若妙言让你开心，可以<a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">请她们吃罐头 🥩</a>
+
+<details>
+<summary>这些可爱的朋友已经投喂过了 🐱</summary>
+<br/>
+<a href="https://cats.tw93.fun?name=MiaoYan"><img src="https://cdn.jsdelivr.net/gh/tw93/sponsors@main/assets/sponsors.svg" width="1000" loading="lazy" /></a>
+</details>
 
 ## 致谢
 
@@ -96,4 +94,4 @@ miao update             # 更新 CLI
 
 ## 协议
 
-MIT License - 欢迎自由使用与贡献
+MIT License

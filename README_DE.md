@@ -33,19 +33,16 @@
 
 3. **GitHub Releases**: Neueste DMG von [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) herunterladen (macOS 12.0+)
 
-Homebrew und GitHub Releases installieren die Open-Source-Version, die ausschließlich Fehlerbehebungen erhält. Die Mac-App-Store-Version wird separat entwickelt, enthält die Apps für iPhone und iPad und bietet neue Funktionen. Erstelle nach der Installation einen `MiaoYan`-Ordner in iCloud Drive, einem lokalen Cloud-Sync-Ordner oder an einem beliebigen Ort und lege den Speicherpfad in den Einstellungen (⌘,) fest.
+Homebrew und GitHub Releases installieren die Open-Source-Version, die ausschließlich Fehlerbehebungen erhält. Die Mac-App-Store-Version wird separat entwickelt und bekommt die neuen Funktionen.
 
 ## Synchronisation mit Nutstore oder anderen Cloud-Diensten
 
-MiaoYan folgt dem Local-First-Prinzip und meldet sich nicht bei WebDAV oder Cloud-Diensten an. Die App liest und schreibt ausschließlich im ausgewählten Markdown-Ordner; die Synchronisation zwischen Geräten übernehmen iCloud Drive, Nutstore, Dropbox oder andere Clients.
+MiaoYan meldet sich nicht bei WebDAV oder Cloud-Diensten an; es liest und schreibt ausschließlich im ausgewählten Markdown-Ordner. Erstelle nach der Installation einen `MiaoYan`-Ordner in iCloud Drive, im vom Nutstore-Desktop-Client synchronisierten Verzeichnis oder an einem beliebigen Ort und lege ihn in den Einstellungen (⌘,) als Speicherpfad fest. Die Synchronisation zwischen Geräten übernehmen iCloud Drive, Nutstore, Dropbox oder andere Clients.
 
-- **Mac**: Erstelle einen `MiaoYan`-Ordner im vom Desktop-Client synchronisierten Verzeichnis und verweise in den Einstellungen darauf.
-- **iPhone**: Wähle denselben Ordner in der Dateien-App aus. Falls ein Anbieter keinen beschreibbaren Ordner bereitstellt, nutze iCloud Drive oder lade den Ordner vorher für den Offline-Zugriff herunter.
-- **Ordnerprüfung**: MiaoYan prüft vor dem Wechsel die Lese- und Schreibberechtigung. Ist der Ordner nicht verfügbar, bleibt der bestehende Pfad unverändert.
+- **iPhone**: Wähle denselben Ordner in der Dateien-App aus, und falls ein Anbieter dort keinen beschreibbaren Ordner bereitstellt, nutze iCloud Drive oder lade den Ordner vorher für den Offline-Zugriff herunter
+- **Ordnerprüfung**: MiaoYan prüft vor dem Wechsel die Lese- und Schreibberechtigung und behält den bestehenden Pfad, wenn der Ordner nicht verfügbar ist, ohne das Problem als Synchronisationsfehler von MiaoYan zu melden
 
 ## Befehlszeilenwerkzeug (CLI)
-
-MiaoYan enthält ein CLI für schnelle Aktionen direkt im Terminal.
 
 ```bash
 # Installation
@@ -62,17 +59,14 @@ miao update               # CLI aktualisieren
 
 ## Geteilte Ansicht (Editor & Vorschau)
 
-Bearbeiten und Vorschau nebeneinander mit Echtzeitvorschau und synchronem 60fps-Bildlauf in beide Richtungen.
-
-**Schnellwechsel**: Drücke `⌘\`, um die geteilte Ansicht umzuschalten, oder stelle in den Einstellungen unter General den Editor Mode auf Split Mode.
-
-Warum kein Typora-ähnliches WYSIWYG? Reines Markdown-Schreiben ist das Kernprinzip. Ein natives Swift-WYSIWYG wäre schwerfällig und instabil. Die geteilte Ansicht ermöglicht ablenkungsfreies Schreiben bei sofortigem visuellem Feedback.
+Editor und Vorschau stehen nebeneinander. Drücke `⌘\`, um die geteilte Ansicht umzuschalten, oder stelle in den Einstellungen unter General den Editor Mode auf Split Mode. Warum kein Typora-ähnliches WYSIWYG? Reines Markdown-Schreiben ist das Kernprinzip. Ein natives Swift-WYSIWYG wäre schwerfällig und instabil. Die geteilte Ansicht ermöglicht ablenkungsfreies Schreiben bei sofortigem visuellem Feedback.
 
 <img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview.png" width="100%" alt="Geteilte Ansicht (Editor & Vorschau)" />
 
 ## Dokumentation
 
-- [Markdown-Syntaxanleitung](Resources/Initial/MiaoYan%20Markdown%20Syntax%20Guide.md) - Vollständige Syntaxübersicht mit erweiterten Funktionen
+- [Einführung in MiaoYan](Resources/Initial/Introduction%20to%20MiaoYan.md) - Bedienungsanleitung und Tastenkürzel
+- [Markdown-Syntaxanleitung](Resources/Initial/MiaoYan%20Markdown%20Syntax%20Guide.md) - Syntaxübersicht mit Formeln und Diagrammen
 - [PPT-Präsentationsmodus](Resources/Initial/MiaoYan%20PPT.md) - Anleitung zur Folienerstellung mit `---`-Trennlinien
 - [MiaoYan Agent Skill](skills/miaoyan) - Bringt KI-Agenten MiaoYan-Syntax, Anhänge, PPT-Strukturen und CLI-Abläufe bei
 
@@ -80,9 +74,9 @@ Installiere den offiziellen Skill mit `npx skills add tw93/MiaoYan/skills/miaoya
 
 ## Unterstützung
 
-- Die direkteste Unterstützung ist der Kauf von [Mole for Mac](https://mole.fit), meiner Bereinigungs-App für macOS.
-- Wenn dir MiaoYan gefällt, vergib einen Stern, [teile es](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20Eine%20native%20Mac-App%20f%C3%BCr%20lokale%20Markdown-Notizen) oder eröffne ein Issue oder einen PR.
-- Ich habe zwei Katzen, TangYuan und Coke. Wenn dir MiaoYan Freude bereitet, kannst du ihnen etwas <a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">Dosenfutter 🥩</a> spendieren.
+- Die direkteste Unterstützung ist der Kauf von [Mole for Mac](https://mole.fit), meiner Bereinigungs-App für macOS
+- Wenn dir MiaoYan gefällt, vergib einen Stern, [teile es](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20Eine%20native%20Mac-App%20f%C3%BCr%20lokale%20Markdown-Notizen) oder eröffne ein Issue oder einen PR
+- Ich habe zwei Katzen, TangYuan und Coke. Wenn dir MiaoYan Freude bereitet, kannst du ihnen etwas <a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">Dosenfutter 🥩</a> spendieren
 
 <details>
 <summary>Unterstützer 🐱</summary>
@@ -100,4 +94,4 @@ Installiere den offiziellen Skill mit `npx skills add tw93/MiaoYan/skills/miaoya
 
 ## Lizenz
 
-MIT License - Freie Nutzung und Mitwirkung willkommen.
+MIT License

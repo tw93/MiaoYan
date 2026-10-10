@@ -33,19 +33,16 @@
 
 3. **GitHub Releases**: [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest)에서 최신 DMG 다운로드 (macOS 12.0+)
 
-Homebrew 및 GitHub Releases는 버그 수정만 제공되는 오픈소스 버전을 설치합니다. iPhone 및 iPad 앱을 포함한 신기능 버전은 Mac App Store 에디션으로 별도 개발됩니다. 설치 후 iCloud Drive나 로컬 동기화 폴더에 `MiaoYan` 폴더를 생성하고 환경설정(⌘,)에서 저장 위치를 지정하세요.
+Homebrew 및 GitHub Releases는 버그 수정만 제공되는 오픈소스 버전을 설치합니다. Mac App Store 에디션은 별도로 개발되며 신기능은 그쪽에 추가됩니다.
 
 ## Nutstore 및 기타 클라우드 드라이브 동기화
 
-MiaoYan은 로컬 우선 앱으로 WebDAV나 클라우드 계정에 직접 로그인하지 않습니다. 지정된 마크다운 폴더만 읽고 쓰며, 기기 간 동기화는 iCloud Drive, Nutstore, Dropbox 등의 클라우드 클라이언트가 담당합니다.
+MiaoYan은 WebDAV나 클라우드 계정에 로그인하지 않고 지정된 마크다운 폴더만 읽고 씁니다. 설치 후 iCloud Drive, Nutstore 데스크톱 클라이언트의 동기화 폴더 또는 원하는 위치에 `MiaoYan` 폴더를 만들고 환경설정(⌘,)에서 저장 위치로 지정하면 바로 쓸 수 있습니다. 기기 간 동기화는 iCloud Drive, Nutstore, Dropbox 등의 클라우드 클라이언트가 담당합니다.
 
-- **Mac**: 클라우드 동기화 폴더 안에 `MiaoYan` 폴더를 만들고 환경설정에서 해당 경로를 저장 위치로 지정.
-- **iPhone**: 시스템 파일 앱에서 동일한 클라우드 드라이브 폴더 선택. 쓰기 가능한 폴더를 지원하지 않는 경우 iCloud Drive를 사용하거나 해당 앱에서 오프라인 사용 가능으로 설정 후 선택.
-- **경로 확인**: MiaoYan은 폴더 전환 전 읽기/쓰기 권한을 확인합니다. 접근할 수 없는 경우 기존 경로를 유지하며 오류를 앱 자체 동기화 실패로 표시하지 않습니다.
+- **iPhone**: 시스템 파일 앱에서 동일한 클라우드 드라이브 폴더를 선택하고, 쓰기 가능한 폴더를 지원하지 않는 경우 iCloud Drive를 사용하거나 해당 앱에서 오프라인 사용 가능으로 설정 후 선택
+- **경로 확인**: 폴더 전환 전 읽기/쓰기 권한을 확인하고, 접근할 수 없으면 기존 경로를 유지하며 오류를 앱 자체 동기화 실패로 표시하지 않음
 
 ## CLI 도구
-
-터미널에서 노트를 빠르게 조작할 수 있는 커맨드라인 도구를 제공합니다.
 
 ```bash
 # 설치
@@ -62,17 +59,14 @@ miao update              # CLI 업데이트
 
 ## 분할 편집 및 미리보기 모드
 
-편집 영역과 미리보기를 나란히 배치하고 60fps 양방향 스크롤 동기화로 실시간 미리보기를 제공합니다.
-
-**빠른 전환**: `⌘\` 키로 분할 모드를 전환하거나 환경설정의 General에서 Editor Mode를 Split Mode로 설정할 수 있습니다.
-
-Typora 스타일의 실시간 인라인 렌더링을 하지 않는 이유: 순수한 마크다운 편집이 핵심 가치이기 때문입니다. Swift 기반의 네이티브 WYSIWYG는 무겁고 불안정해지기 쉽습니다. 분할 모드는 작성에 대한 집중을 유지하면서 매끄러운 실시간 시각적 피드백을 제공합니다.
+편집 영역과 미리보기를 나란히 배치합니다. `⌘\` 키로 분할 모드를 전환하거나 환경설정의 General에서 Editor Mode를 Split Mode로 설정할 수 있습니다. Typora 스타일의 실시간 인라인 렌더링을 하지 않는 이유: 순수한 마크다운 편집이 핵심 가치이기 때문입니다. Swift 기반의 네이티브 WYSIWYG는 무겁고 불안정해지기 쉽습니다. 분할 모드는 작성에 대한 집중을 유지하면서 매끄러운 실시간 시각적 피드백을 제공합니다.
 
 <img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview.png" width="100%" alt="분할 편집 및 미리보기 모드" />
 
 ## 문서
 
-- [마크다운 문법 가이드](Resources/Initial/MiaoYan%20Markdown%20Syntax%20Guide.md) - 고급 기능을 포함한 전체 문법 레퍼런스
+- [MiaoYan 소개](Resources/Initial/Introduction%20to%20MiaoYan.md) - 사용 가이드와 단축키
+- [마크다운 문법 가이드](Resources/Initial/MiaoYan%20Markdown%20Syntax%20Guide.md) - 수식과 다이어그램을 포함한 문법 레퍼런스
 - [PPT 프레젠테이션 모드](Resources/Initial/MiaoYan%20PPT.md) - `---` 슬라이드 구분선을 활용한 발표 가이드
 - [MiaoYan Agent Skill](skills/miaoyan) - 에이전트에게 MiaoYan 문법, 첨부파일, PPT 및 CLI 워크플로 학습
 
@@ -80,9 +74,9 @@ Typora 스타일의 실시간 인라인 렌더링을 하지 않는 이유: 순�
 
 ## 후원
 
-- 개발자를 지원하는 가장 직접적인 방법은 유료 Mac 정리 앱인 [Mole for Mac](https://mole.fit)을 이용해 주시는 것입니다.
-- MiaoYan이 유용했다면 Star를 누르거나, [공유](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20%EB%A1%9C%EC%BB%AC%20%EB%A7%88%ED%81%AC%EB%8B%A4%EC%9A%B4%20%EB%85%B8%ED%8A%B8%EB%A5%BC%20%EC%9C%84%ED%95%9C%20%EB%84%A4%EC%9D%B4%ED%8B%B0%EB%B8%8C%20Mac%20%EC%95%B1)하거나, 이슈 및 PR을 남겨주세요.
-- 탕위안(TangYuan)과 콜라(Coke)라는 두 마리의 고양이를 키우고 있습니다. MiaoYan이 즐거움을 주었다면 <a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">캔 간식 🥩</a>을 후원해 주세요.
+- 개발자를 지원하는 가장 직접적인 방법은 유료 Mac 정리 앱인 [Mole for Mac](https://mole.fit)을 이용해 주시는 것입니다
+- MiaoYan이 유용했다면 Star를 누르거나, [공유](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20%EB%A1%9C%EC%BB%AC%20%EB%A7%88%ED%81%AC%EB%8B%A4%EC%9A%B4%20%EB%85%B8%ED%8A%B8%EB%A5%BC%20%EC%9C%84%ED%95%9C%20%EB%84%A4%EC%9D%B4%ED%8B%B0%EB%B8%8C%20Mac%20%EC%95%B1)하거나, 이슈 및 PR을 남겨주세요
+- 탕위안(TangYuan)과 콜라(Coke)라는 두 마리의 고양이를 키우고 있습니다. MiaoYan이 즐거움을 주었다면 <a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">캔 간식 🥩</a>을 후원해 주세요
 
 <details>
 <summary>후원해 주신 분들 🐱</summary>
@@ -100,4 +94,4 @@ Typora 스타일의 실시간 인라인 렌더링을 하지 않는 이유: 순�
 
 ## 라이선스
 
-MIT License - 자유롭게 사용 및 기여 가능
+MIT License
