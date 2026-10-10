@@ -24,9 +24,9 @@ slideNumber: c/t
 ```
 
 - 配置键与 [Reveal.js 官方文档](https://revealjs.com/config/) 完全一致
-- 嵌套字段用点号表示,例如 `highlight.lineNumbers`
+- 嵌套字段用点号表示，例如 `highlight.lineNumbers`
 - 自动识别布尔、数字、`null`、列表 `[a, b]` 和字符串
-- 注释在渲染前会被移除,不影响幻灯片内容
+- 注释在渲染前会被移除，不影响幻灯片内容
 
 ---
 
@@ -34,11 +34,10 @@ slideNumber: c/t
 
 - 方法一：在文档中按 `Command + Option + P`
 - 方法二：右键点击文档选择「妙言 PPT」
-- 方法三：从菜单栏选择演示模式
 - 带有 `---` 分隔符的文档会自动识别
 - 按「回车」键预览幻灯片大纲
 
-基于 [Reveal.js](https://revealjs.com/markdown/) 构建,支持高级功能
+基于 [Reveal.js](https://revealjs.com/markdown/) 构建，支持高级功能
 
 ---
 

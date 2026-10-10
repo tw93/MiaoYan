@@ -345,7 +345,7 @@ Alice's emotional journey through Wonderland:
 
 ---
 
-*"It's no use going back to yesterday, because I was a different person then."* — Alice
+*"It's no use going back to yesterday, because I was a different person then."* (Alice)
 
 **End of Markdown Demonstration**
 

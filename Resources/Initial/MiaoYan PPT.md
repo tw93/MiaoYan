@@ -42,7 +42,6 @@ slideNumber: c/t
 
 - Method 1: Press `Command + Option + P` in any document
 - Method 2: Right-click document and select "MiaoYan PPT"
-- Method 3: Select presentation mode from menu bar
 - Documents with `---` separators are automatically recognized
 - Press Enter to preview slide outline
 
