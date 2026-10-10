@@ -244,6 +244,7 @@
 "No orphan attachments found" = "未使用の添付ファイルは見つかりませんでした";
 "Removed %d unused attachment(s)" = "%d件の未使用の添付ファイルを削除しました";
 "Some attachments could not be removed" = "一部の添付ファイルを削除できませんでした";
+"Some notes could not be read, so no attachments were cleaned" = "一部のノートを読み込めなかったため、添付ファイルは整理しませんでした";
 "Clean" = "整理";
 
 /* Export Messages */

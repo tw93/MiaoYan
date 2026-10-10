@@ -864,14 +864,15 @@ public class Note: NSObject {
         return res
     }
 
-    public func getReferencedAttachmentPaths() -> Set<String> {
+    /// `text` stands in for a body that is not loaded.
+    public func getReferencedAttachmentPaths(in text: String? = nil) -> Set<String> {
         var referenced = Set<String>()
 
-        for image in getAllImages() {
+        for image in getAllImages(content: text.map { NSMutableAttributedString(string: $0) }) {
             referenced.insert(image.url.path)
         }
 
-        let noteString = content.string
+        let noteString = text ?? content.string
         guard !noteString.isEmpty else { return referenced }
 
         let nsString = noteString as NSString

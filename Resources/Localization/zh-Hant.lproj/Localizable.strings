@@ -221,6 +221,7 @@
 "No orphan attachments found" = "沒有檢測到孤立附件";
 "Removed %d unused attachment(s)" = "已清理%d個無引用附件";
 "Some attachments could not be removed" = "部分附件無法清理";
+"Some notes could not be read, so no attachments were cleaned" = "部分筆記讀取失敗，這次沒有清理附件";
 "Clean" = "清理";
 
 /* Export Messages */

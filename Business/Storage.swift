@@ -1114,16 +1114,45 @@ class Storage {
         }
     }
 
-    public func findOrphanAttachments(completion: @escaping @MainActor ([URL]) -> Void) {
-        let referenced = collectReferencedAttachmentPaths()
+    /// Attachments no note refers to. Most bodies are not loaded, so those
+    /// are read from disk first; if any note cannot be read the result is
+    /// nil, because its images would otherwise count as unused.
+    public func findOrphanAttachments(completion: @escaping @MainActor ([URL]?) -> Void) {
+        var referenced = Set<String>()
+        var unloaded: [Note] = []
+        for note in noteList {
+            if note.isContentLoaded {
+                referenced.formUnion(note.getReferencedAttachmentPaths())
+            } else {
+                unloaded.append(note)
+            }
+        }
+        let urls = unloaded.map { $0.getURL() }
         let attachmentFolders = collectAttachmentFolders()
 
-        DispatchQueue.global(qos: .userInitiated).async {
-            let orphaned = Storage.scanOrphanAttachments(folders: attachmentFolders, referenced: referenced)
-
-            DispatchQueue.main.async {
-                completion(orphaned)
+        Task { @MainActor in
+            let texts = await Task.detached(priority: .userInitiated) {
+                urls.map { url -> String? in
+                    if let text = try? String(contentsOf: url, encoding: .utf8) { return text }
+                    guard let data = try? Data(contentsOf: url) else { return nil }
+                    let encoding = NSString.stringEncoding(for: data, encodingOptions: nil, convertedString: nil, usedLossyConversion: nil)
+                    return encoding == 0 ? nil : String(data: data, encoding: String.Encoding(rawValue: encoding))
+                }
+            }.value
+            for (note, text) in zip(unloaded, texts) {
+                guard let text else {
+                    let error = CocoaError(.fileReadUnknown, userInfo: [NSFilePathErrorKey: note.url.path])
+                    AppDelegate.trackError(error, context: "Storage.findOrphanAttachments.read")
+                    completion(nil)
+                    return
+                }
+                referenced.formUnion(note.getReferencedAttachmentPaths(in: text))
             }
+            let paths = referenced
+            let orphaned = await Task.detached(priority: .userInitiated) {
+                Storage.scanOrphanAttachments(folders: attachmentFolders, referenced: paths)
+            }.value
+            completion(orphaned)
         }
     }
 
@@ -1190,16 +1219,6 @@ class Storage {
         }
 
         return (removed, failed)
-    }
-
-    private func collectReferencedAttachmentPaths() -> Set<String> {
-        var referenced = Set<String>()
-
-        for note in noteList {
-            referenced.formUnion(note.getReferencedAttachmentPaths())
-        }
-
-        return referenced
     }
 
     nonisolated private static func shouldSkipAttachmentCandidate(_ url: URL) -> Bool {

@@ -242,6 +242,7 @@
 "No orphan attachments found" = "No se encontraron archivos adjuntos huérfanos";
 "Removed %d unused attachment(s)" = "Se eliminaron %d archivo(s) adjunto(s) sin usar";
 "Some attachments could not be removed" = "Algunos archivos adjuntos no pudieron ser eliminados";
+"Some notes could not be read, so no attachments were cleaned" = "No se pudieron leer algunas notas, así que no se limpió ningún adjunto";
 "Clean" = "Limpiar";
 
 /* Export Messages */

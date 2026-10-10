@@ -126,6 +126,7 @@
 "No orphan attachments found" = "没有检测到孤立附件";
 "Removed %d unused attachment(s)" = "已清理%d个无引用附件";
 "Some attachments could not be removed" = "部分附件无法清理";
+"Some notes could not be read, so no attachments were cleaned" = "部分笔记读取失败，这次没有清理附件";
 "Clean" = "清理";
 
 

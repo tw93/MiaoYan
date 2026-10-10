@@ -487,6 +487,10 @@ extension ViewController {
         storage.findOrphanAttachments { [weak self, weak vc] orphanAttachments in
             guard let self = self, let vc = vc else { return }
 
+            guard let orphanAttachments else {
+                vc.toast(message: I18n.str("Some notes could not be read, so no attachments were cleaned"), style: .failure)
+                return
+            }
             if orphanAttachments.isEmpty {
                 vc.toast(message: I18n.str("No orphan attachments found"))
                 return
