@@ -845,10 +845,16 @@ class MPreviewView: WKWebView, WKUIDelegate {
             let imagesStorage = note.project.url
             let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
 
-            // Phase 1: Render Markdown only (fast, ~20ms) — inject immediately so text is visible
-            let htmlString = await Task.detached {
-                renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak)
+            // Phase 1: render, and resolve image paths in the same pass when the
+            // note has images. Injecting the raw cmark HTML first showed every
+            // local image broken (relative to the cache page) and restored the
+            // scroll on that collapsed layout before phase 2 patched the srcs.
+            let rendered = await Task.detached { () -> (html: String, imagesResolved: Bool)? in
+                guard let html = renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak) else { return nil }
+                guard html.contains("<img") else { return (html, false) }
+                return (HtmlManager.processImages(in: html, imagesStorage: imagesStorage), true)
             }.value
+            let htmlString = rendered?.html
 
             guard let htmlString else {
                 AppDelegate.trackError(
@@ -912,6 +918,14 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 return
             }
             self.note = note
+
+            // Images were resolved before injection; processing that output
+            // again would read the lazy placeholders as missing local files.
+            if rendered?.imagesResolved == true {
+                self.isUpdatingContent = false
+                self.contentUpdateWorkItem = nil
+                return
+            }
 
             let processedHtml = await Task.detached {
                 HtmlManager.processImages(in: htmlString, imagesStorage: imagesStorage)
