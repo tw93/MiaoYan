@@ -30,10 +30,9 @@
 <link rel="icon" href="/Release/img/logo.png" type="image/png">
 <link rel="apple-touch-icon" href="/Release/img/logo.png">
 <link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-semibold.woff2" crossorigin>
 <link rel="preload" as="image" href="/assets/shots/zh-edit-1400.webp" imagesrcset="/assets/shots/zh-edit-1400.webp 1400w, /assets/shots/zh-edit-2400.webp 2400w" imagesizes="(max-width: 1248px) 100vw, 1120px">
 <link rel="stylesheet" href="/site.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "MiaoYan", "alternateName": "妙言", "url": "https://miaoyan.app/zh/", "inLanguage": "zh-CN", "downloadUrl": "https://apps.apple.com/app/id6759252269", "applicationCategory": "ProductivityApplication", "operatingSystem": "macOS 12.0 or later, iOS 18.0 or later", "description": "妙言是原生的 Markdown 笔记应用，笔记就是你选定文件夹里的 Markdown 文件，Mac、iPhone 和 iPad 都能打开。", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "sameAs": ["https://github.com/tw93/MiaoYan", "https://apps.apple.com/app/id6759252269"]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "MiaoYan", "alternateName": "妙言", "url": "https://miaoyan.app/zh/", "inLanguage": "zh-CN", "downloadUrl": "https://apps.apple.com/app/id6759252269", "applicationCategory": "ProductivityApplication", "operatingSystem": "macOS 12.0 or later, iOS 18.0 or later", "description": "妙言是原生的 Markdown 笔记应用，笔记就是你选定文件夹里的 Markdown 文件，Mac、iPhone 和 iPad 都能打开。", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "sameAs": ["https://github.com/tw93/MiaoYan", "https://apps.apple.com/app/id6759252269"], "offers": {"@type": "Offer", "price": "14.99", "priceCurrency": "USD", "url": "https://apps.apple.com/app/id6759252269"}}</script>
 </head>
 <body>
 <div class="wrap">
@@ -68,7 +67,7 @@
     <div class="gallery-frame"><img src="/assets/shots/zh-edit-1400.webp" srcset="/assets/shots/zh-edit-1400.webp 1400w, /assets/shots/zh-edit-2400.webp 2400w" sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1660" alt="妙言编辑一篇 Markdown 笔记，左侧是文件夹和笔记列表" data-shot="edit" fetchpriority="high"><img src="/assets/shots/zh-preview-1400.webp" srcset="/assets/shots/zh-preview-1400.webp 1400w, /assets/shots/zh-preview-2400.webp 2400w" sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1660" alt="妙言预览一期周刊，带封面图和链接" data-shot="preview" loading="lazy" hidden><img src="/assets/shots/zh-split-1400.webp" srcset="/assets/shots/zh-split-1400.webp 1400w, /assets/shots/zh-split-2400.webp 2400w" sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1660" alt="妙言分栏模式，左边是 Markdown，右边是渲染好的流程图" data-shot="split" loading="lazy" hidden><img src="/assets/shots/zh-ppt-1400.webp" srcset="/assets/shots/zh-ppt-1400.webp 1400w, /assets/shots/zh-ppt-2400.webp 2400w" sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1506" alt="妙言把一篇笔记展示成幻灯片" data-shot="ppt" loading="lazy" hidden><img src="/assets/shots/zh-dark-1400.webp" srcset="/assets/shots/zh-dark-1400.webp 1400w, /assets/shots/zh-dark-2400.webp 2400w" sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1660" alt="妙言深色模式下编辑 Swift 代码" data-shot="dark" loading="lazy" hidden></div>
     <div class="gallery-bar">
       <p class="gallery-caption" aria-live="polite">纯 Markdown 编辑，标题、链接与代码各有色彩，层次分明</p>
-      <div class="tabs" role="tablist"><button type="button" role="tab" data-shot="edit" aria-selected="true">编辑</button><button type="button" role="tab" data-shot="preview" aria-selected="false">预览</button><button type="button" role="tab" data-shot="split" aria-selected="false">分栏</button><button type="button" role="tab" data-shot="ppt" aria-selected="false">演示</button><button type="button" role="tab" data-shot="dark" aria-selected="false">深色</button></div>
+      <div class="tabs"><button type="button" data-shot="edit" aria-pressed="true">编辑</button><button type="button" data-shot="preview" aria-pressed="false">预览</button><button type="button" data-shot="split" aria-pressed="false">分栏</button><button type="button" data-shot="ppt" aria-pressed="false">演示</button><button type="button" data-shot="dark" aria-pressed="false">深色</button></div>
     </div>
   </section>
 
@@ -118,7 +117,7 @@
   document.querySelectorAll('.tabs button').forEach(function (tab) {
     tab.addEventListener('click', function () {
       var shot = tab.dataset.shot;
-      document.querySelectorAll('.tabs button').forEach(function (t) { t.setAttribute('aria-selected', t === tab ? 'true' : 'false'); });
+      document.querySelectorAll('.tabs button').forEach(function (t) { t.setAttribute('aria-pressed', t === tab ? 'true' : 'false'); });
       frame.querySelectorAll('img').forEach(function (img) { img.hidden = img.dataset.shot !== shot; });
       caption.textContent = captions[shot];
     });
@@ -157,6 +156,6 @@
 })();
 </script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
 </body>
 </html>

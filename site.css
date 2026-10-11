@@ -172,7 +172,7 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
 }
 .lang-menu a:hover { color: var(--ink); background: color-mix(in srgb, var(--accent-tint) 50%, transparent); }
 .lang-menu a.active { color: var(--ink); font-weight: 600; background: color-mix(in srgb, var(--accent-tint) 70%, transparent); }
-.lang-trigger:focus-visible, .lang-menu a:focus-visible { outline: 2px solid color-mix(in srgb, var(--accent) 38%, transparent); outline-offset: 3px; }
+.lang-trigger:focus-visible, .lang-menu a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 /* Hero */
 .hero { padding-bottom: 36px; border-bottom: 1px solid var(--line); margin-bottom: var(--gap); }
@@ -225,7 +225,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { 
   border: 0; padding: 6px 13px; border-radius: 999px; cursor: pointer;
 }
 .tabs button:hover { background: var(--sand); color: var(--ink); }
-.tabs button[aria-selected="true"] { background: var(--accent); color: #fff; }
+.tabs button[aria-pressed="true"] { background: var(--accent); color: #fff; }
 
 /* iPhone and iPad */
 /* Apple's product bezels, shown as is and at their real relative size:
@@ -263,7 +263,7 @@ footer { background: var(--night); color: var(--night-dim); padding: 60px 0 32px
 .foot-col-title { margin: 0 0 4px; font-size: 13px; font-weight: 600; color: #fff; }
 .foot-col a { color: color-mix(in srgb, var(--night-ink) 68%, transparent); text-decoration: none; line-height: 1.35; }
 .foot-col a:hover { color: #fff; }
-.copy { margin-top: 40px; font-size: 13px; color: color-mix(in srgb, var(--night-ink) 45%, transparent); }
+.copy { margin-top: 40px; font-size: 13px; color: color-mix(in srgb, var(--night-ink) 55%, transparent); }
 
 @media (max-width: 999px) {
   .nav-links { display: none; }

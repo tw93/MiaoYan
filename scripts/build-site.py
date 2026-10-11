@@ -271,7 +271,7 @@ COPY = {
         "h1": "MiaoYan",
         "tagline": "Mac, iPhone, iPad에서 쓰는 로컬 마크다운 노트",
         "lede": "MiaoYan은 중국어 妙言에서 온 이름으로, 말을 넘어선 말이라는 뜻입니다.",
-        "trust": ["한 번 구매로 3종 기기 지원", "로컬 마크다운 파일", "GitHub 오픈 소스", "macOS 12 / iOS 18 이상"],
+        "trust": ["한 번 구매로 Mac·iPhone·iPad", "로컬 마크다운 파일", "GitHub 오픈 소스", "macOS 12 / iOS 18 이상"],
         "cta": ("App Store에서 받기", "GitHub에서 보기"),
         "gallery_title": "쓰고, 읽고, 발표하기",
         "gallery_lede": "순수 마크다운으로 쓰고, 미리보기로 조판을 확인하고, 분할 화면에서 나란히 작업하거나, 노트를 그대로 슬라이드로 바꿀 수 있습니다.",
@@ -528,7 +528,7 @@ def page(key):
     )
     trust = "".join(f"<li>{esc(t(x))}</li>" for x in c["trust"])
     tabs = "".join(
-        f'<button type="button" role="tab" data-shot="{s}" aria-selected="{"true" if i == 0 else "false"}">{esc(c["tabs"][s])}</button>'
+        f'<button type="button" data-shot="{s}" aria-pressed="{"true" if i == 0 else "false"}">{esc(c["tabs"][s])}</button>'
         for i, s in enumerate(SHOTS)
     )
     shots = "".join(
@@ -565,6 +565,7 @@ def page(key):
             "description": c["description"],
             "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"},
             "sameAs": [GITHUB, APP_STORE],
+            "offers": {"@type": "Offer", "price": "14.99", "priceCurrency": "USD", "url": APP_STORE},
         },
         ensure_ascii=False,
     )
@@ -584,7 +585,9 @@ def page(key):
     font_preload = (
         "".join(
             f'<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-{script}-{w}.woff2" crossorigin>\n'
-            for w in ("regular", "semibold")
+            # Only the regular cut: a preload downloads even when the visitor has
+            # the face installed, and the semibold one serves headings alone.
+            for w in ("regular",)
         )
         if script
         else ""
@@ -650,7 +653,7 @@ def page(key):
     <div class="gallery-frame">{shots}</div>
     <div class="gallery-bar">
       <p class="gallery-caption" aria-live="polite">{esc(t(c['captions']['edit']))}</p>
-      <div class="tabs" role="tablist">{tabs}</div>
+      <div class="tabs">{tabs}</div>
     </div>
   </section>
 
@@ -700,7 +703,7 @@ def page(key):
   document.querySelectorAll('.tabs button').forEach(function (tab) {{
     tab.addEventListener('click', function () {{
       var shot = tab.dataset.shot;
-      document.querySelectorAll('.tabs button').forEach(function (t) {{ t.setAttribute('aria-selected', t === tab ? 'true' : 'false'); }});
+      document.querySelectorAll('.tabs button').forEach(function (t) {{ t.setAttribute('aria-pressed', t === tab ? 'true' : 'false'); }});
       frame.querySelectorAll('img').forEach(function (img) {{ img.hidden = img.dataset.shot !== shot; }});
       caption.textContent = captions[shot];
     }});
@@ -739,7 +742,7 @@ def page(key):
 }})();
 </script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments)}}gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments)}}gtag('consent','default',{{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'}});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
 </body>
 </html>
 """

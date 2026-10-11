@@ -31,7 +31,7 @@
 <link rel="apple-touch-icon" href="/Release/img/logo.png">
 <link rel="preload" as="image" href="/assets/shots/en-edit-1400.webp" imagesrcset="/assets/shots/en-edit-1400.webp 1400w, /assets/shots/en-edit-2400.webp 2400w" imagesizes="(max-width: 1248px) 100vw, 1120px">
 <link rel="stylesheet" href="/site.css">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "MiaoYan", "alternateName": "妙言", "url": "https://miaoyan.app/es/", "inLanguage": "es", "downloadUrl": "https://apps.apple.com/app/id6759252269", "applicationCategory": "ProductivityApplication", "operatingSystem": "macOS 12.0 or later, iOS 18.0 or later", "description": "MiaoYan es una app nativa de notas Markdown para Mac, iPhone y iPad. Tus notas son archivos Markdown normales en la carpeta que elijas.", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "sameAs": ["https://github.com/tw93/MiaoYan", "https://apps.apple.com/app/id6759252269"]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "MiaoYan", "alternateName": "妙言", "url": "https://miaoyan.app/es/", "inLanguage": "es", "downloadUrl": "https://apps.apple.com/app/id6759252269", "applicationCategory": "ProductivityApplication", "operatingSystem": "macOS 12.0 or later, iOS 18.0 or later", "description": "MiaoYan es una app nativa de notas Markdown para Mac, iPhone y iPad. Tus notas son archivos Markdown normales en la carpeta que elijas.", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "sameAs": ["https://github.com/tw93/MiaoYan", "https://apps.apple.com/app/id6759252269"], "offers": {"@type": "Offer", "price": "14.99", "priceCurrency": "USD", "url": "https://apps.apple.com/app/id6759252269"}}</script>
 </head>
 <body>
 <div class="wrap">
@@ -66,7 +66,7 @@
     <div class="gallery-frame"><img src="/assets/shots/en-edit-1400.webp" srcset="/assets/shots/en-edit-1400.webp 1400w, /assets/shots/en-edit-2400.webp 2400w" sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1660" alt="MiaoYan editando una nota Markdown con carpetas, lista de notas y resaltado de sintaxis" data-shot="edit" fetchpriority="high"><img src="/assets/shots/en-preview-1400.webp" srcset="/assets/shots/en-preview-1400.webp 1400w, /assets/shots/en-preview-2400.webp 2400w" sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1660" alt="MiaoYan mostrando la vista previa de una nota con una tabla y una lista de tareas" data-shot="preview" loading="lazy" hidden><img src="/assets/shots/en-split-1400.webp" srcset="/assets/shots/en-split-1400.webp 1400w, /assets/shots/en-split-2400.webp 2400w" sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1660" alt="MiaoYan en vista dividida con Markdown a la izquierda y un diagrama Mermaid renderizado a la derecha" data-shot="split" loading="lazy" hidden><img src="/assets/shots/en-ppt-1400.webp" srcset="/assets/shots/en-ppt-1400.webp 1400w, /assets/shots/en-ppt-2400.webp 2400w" sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1506" alt="Una nota de MiaoYan mostrada como diapositiva" data-shot="ppt" loading="lazy" hidden><img src="/assets/shots/en-dark-1400.webp" srcset="/assets/shots/en-dark-1400.webp 1400w, /assets/shots/en-dark-2400.webp 2400w" sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="1660" alt="MiaoYan en modo oscuro editando código Swift" data-shot="dark" loading="lazy" hidden></div>
     <div class="gallery-bar">
       <p class="gallery-caption" aria-live="polite">Markdown puro con resaltado de sintaxis, para que títulos, enlaces y código se distingan</p>
-      <div class="tabs" role="tablist"><button type="button" role="tab" data-shot="edit" aria-selected="true">Editar</button><button type="button" role="tab" data-shot="preview" aria-selected="false">Vista previa</button><button type="button" role="tab" data-shot="split" aria-selected="false">Dividida</button><button type="button" role="tab" data-shot="ppt" aria-selected="false">Presentar</button><button type="button" role="tab" data-shot="dark" aria-selected="false">Oscuro</button></div>
+      <div class="tabs"><button type="button" data-shot="edit" aria-pressed="true">Editar</button><button type="button" data-shot="preview" aria-pressed="false">Vista previa</button><button type="button" data-shot="split" aria-pressed="false">Dividida</button><button type="button" data-shot="ppt" aria-pressed="false">Presentar</button><button type="button" data-shot="dark" aria-pressed="false">Oscuro</button></div>
     </div>
   </section>
 
@@ -116,7 +116,7 @@
   document.querySelectorAll('.tabs button').forEach(function (tab) {
     tab.addEventListener('click', function () {
       var shot = tab.dataset.shot;
-      document.querySelectorAll('.tabs button').forEach(function (t) { t.setAttribute('aria-selected', t === tab ? 'true' : 'false'); });
+      document.querySelectorAll('.tabs button').forEach(function (t) { t.setAttribute('aria-pressed', t === tab ? 'true' : 'false'); });
       frame.querySelectorAll('img').forEach(function (img) { img.hidden = img.dataset.shot !== shot; });
       caption.textContent = captions[shot];
     });
@@ -155,6 +155,6 @@
 })();
 </script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
 </body>
 </html>

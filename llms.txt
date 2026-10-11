@@ -9,7 +9,7 @@ Author: Tw93, https://tw93.fun/
 
 ## Who it is for
 
-MiaoYan is for people who want a focused, native Mac writing app that keeps ordinary Markdown files in a folder they choose. It does not collect note data. iCloud Drive, Nutstore, Dropbox, or another file-sync client can sync that folder when needed.
+MiaoYan is for people who want a focused, native writing app on Mac, iPhone and iPad that keeps ordinary Markdown files in a folder they choose. It does not collect note data. iCloud Drive, Nutstore, Dropbox, or another file-sync client can sync that folder when needed.
 
 ## Key capabilities
 
