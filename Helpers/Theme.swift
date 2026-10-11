@@ -31,8 +31,8 @@ enum Theme {
         static let sidebarStandardIconOffsetY: CGFloat = 0
         static let sidebarLabelOffsetY: CGFloat = 0
         static let sidebarStandardLabelVerticalNudge: CGFloat = 1.5
-        static let sidebarBrandLabelVerticalNudge: CGFloat = 3.5
-        static let sidebarBrandIconOffsetY: CGFloat = 0
+        static let sidebarBrandLabelVerticalNudge: CGFloat = 1.5
+        static let sidebarBrandIconOffsetY: CGFloat = -3.5
         /// Right-side gutter so long note titles truncate before the pane edge.
         /// The visible gutter inside the selection pill varies by title because
         /// truncation snaps to whole glyphs (CJK chars are ~14pt), so this is

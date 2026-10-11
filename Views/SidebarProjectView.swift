@@ -4,7 +4,7 @@ import Foundation
 
 @MainActor
 private enum UIConstants {
-    static let allItemRowHeight: CGFloat = 40
+    static let allItemRowHeight: CGFloat = 52
     static let defaultRowHeight: CGFloat = 32
 }
 
@@ -543,12 +543,13 @@ class SidebarProjectView: NSOutlineView,
     }
 
     private func configureForSidebarItemType(_ cell: SidebarCellView, sidebarItem: SidebarItem, baseFont: NSFont, accentColor: NSColor) {
-        // The "妙言" header lockup keeps its pre-macOS-26 sizing: the modern
-        // chrome compaction (icon 24->20, font +2->+1) made it read noticeably
-        // smaller, which the maintainer rejected. Icon, spacing, leading and
-        // font weight stay at the larger legacy values on every OS.
-        let accentIconSize: CGFloat = 24
-        let accentSpacing: CGFloat = 4
+        // The brand lockup (maintainer, 2026-10-11): the bird slanted to
+        // follow a Charter Bold Italic wordmark, in a 52pt row so the space
+        // above and below it is even and wider than the gap between folders.
+        // A smaller lockup (icon 20, font +1) was rejected earlier as reading
+        // too small; keep it at least this size on every OS.
+        let accentIconSize: CGFloat = 26
+        let accentSpacing: CGFloat = 6
         let accentIconLeading: CGFloat = -2
         let accentFont = createAccentFont(from: baseFont)
 
@@ -591,7 +592,13 @@ class SidebarProjectView: NSOutlineView,
         }
     }
 
+    /// The wordmark face: Charter Bold Italic, which ships with macOS, a few
+    /// points above the folder labels. The semibold label face stands in if
+    /// Charter is ever missing.
     private func createAccentFont(from baseFont: NSFont) -> NSFont {
+        if let charter = NSFont(name: "Charter-BoldItalic", size: baseFont.pointSize + 3) {
+            return charter
+        }
         let accentFontDescriptor = baseFont.fontDescriptor.addingAttributes([
             NSFontDescriptor.AttributeName.traits: [
                 NSFontDescriptor.TraitKey.weight: NSNumber(value: Double(NSFont.Weight.semibold.rawValue))
