@@ -63,6 +63,38 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertFalse(note.needsSave)
     }
 
+    /// A note whose file exists but cannot be read opens as an empty buffer.
+    /// Switching away used to save that empty buffer over the real file.
+    @MainActor
+    func testUnreadableNoteIsNeverOverwrittenByItsEmptyBuffer() throws {
+        let url = tempDir.appendingPathComponent("unreadable.md")
+        try "the real body".write(to: url, atomically: true, encoding: .utf8)
+        try FileManager.default.setAttributes([.posixPermissions: 0o000], ofItemAtPath: url.path)
+        defer { try? FileManager.default.setAttributes([.posixPermissions: 0o644], ofItemAtPath: url.path) }
+
+        let project = Project(url: tempDir, label: "test", isRoot: true)
+        let note = Note(url: url, with: project)
+        note.load()
+        XCTAssertTrue(note.loadFailed, "an existing file that cannot be read is a failed load")
+
+        // The file becomes reachable again (back online), so only the guard
+        // stands between the empty buffer and the real text.
+        try FileManager.default.setAttributes([.posixPermissions: 0o644], ofItemAtPath: url.path)
+        note.save(content: NSMutableAttributedString(string: ""))
+        _ = note.flushPendingSave(globalStorage: false)
+
+        XCTAssertEqual(try String(contentsOf: url, encoding: .utf8), "the real body")
+    }
+
+    @MainActor
+    func testMissingFileIsNotAFailedLoad() {
+        let url = tempDir.appendingPathComponent("not-yet-written.md")
+        let project = Project(url: tempDir, label: "test", isRoot: true)
+        let note = Note(url: url, with: project)
+        note.load()
+        XCTAssertFalse(note.loadFailed, "a note whose file does not exist yet must stay writable")
+    }
+
     @MainActor
     func testExternallyRemovedNoteCannotBeRecreatedByPendingSave() async throws {
         let url = tempDir.appendingPathComponent("externally-removed.md")

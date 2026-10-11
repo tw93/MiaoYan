@@ -315,3 +315,4 @@
 "Rename" = "重命名";
 "Unpin Note" = "取消置顶";
 "Image" = "图片";
+"This note could not be read, so it was left as it is" = "这篇笔记读取失败，已经保持原样没有改动";

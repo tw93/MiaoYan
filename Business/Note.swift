@@ -28,6 +28,11 @@ public class Note: NSObject {
     public var imageUrl: [URL]?
     public var isParsed = false
     private(set) var isContentLoaded = false
+    /// True when the file exists but could not be read (an iCloud placeholder
+    /// opened offline, a permission or provider error). The buffer then holds
+    /// nothing of the real text, so every write is refused until a read
+    /// succeeds; saving it would replace the file with an empty note.
+    private(set) var loadFailed = false
 
     // Debounce for save operations
     private var saveWorkItem: DispatchWorkItem?
@@ -118,18 +123,30 @@ public class Note: NSObject {
         if let attributedString = getContent() {
             content = NSMutableAttributedString(attributedString: attributedString)
             isContentLoaded = true
+            loadFailed = false
             return
         }
-        isContentLoaded = false
+        markLoadFailure(context: "Note.load")
     }
 
     func loadAsync() async {
         if let attributedString = await getContentAsync() {
             content = NSMutableAttributedString(attributedString: attributedString)
             isContentLoaded = true
+            loadFailed = false
             return
         }
+        markLoadFailure(context: "Note.loadAsync")
+    }
+
+    /// A missing file is a new or deleted note, not a failed read; only a
+    /// file that exists and still could not be read blocks saving.
+    private func markLoadFailure(context: String) {
         isContentLoaded = false
+        guard FileManager.default.fileExists(atPath: url.path) else { return }
+        loadFailed = true
+        let error = CocoaError(.fileReadUnknown, userInfo: [NSFilePathErrorKey: url.path])
+        AppDelegate.trackError(error, context: context)
     }
 
     func reload() -> Bool {
@@ -141,8 +158,9 @@ public class Note: NSObject {
             if let attributedString = getContent() {
                 content = NSMutableAttributedString(attributedString: attributedString)
                 isContentLoaded = true
+                loadFailed = false
             } else {
-                isContentLoaded = false
+                markLoadFailure(context: "Note.reload")
             }
             loadModifiedLocalAt()
             return true
@@ -155,9 +173,10 @@ public class Note: NSObject {
         if let attributedString = getContent() {
             content = NSMutableAttributedString(attributedString: attributedString)
             isContentLoaded = true
+            loadFailed = false
             return
         }
-        isContentLoaded = false
+        markLoadFailure(context: "Note.forceReload")
     }
 
     func loadModifiedLocalAt() {
@@ -597,6 +616,12 @@ public class Note: NSObject {
     @discardableResult
     private func executeSave(attributedString: NSAttributedString, globalStorage: Bool = true) -> Bool {
         guard !isRetired else { return false }
+        guard !loadFailed else {
+            saveWorkItem?.cancel()
+            let error = CocoaError(.fileWriteNoPermission, userInfo: [NSFilePathErrorKey: url.path])
+            AppDelegate.trackError(error, context: "Note.saveRefusedAfterFailedLoad")
+            return false
+        }
         // Cancel pending debounce if we are saving immediately
         saveWorkItem?.cancel()
 
