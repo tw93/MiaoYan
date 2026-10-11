@@ -75,6 +75,11 @@ const MiaoYanCommon = {
 
       checkbox.disabled = false;
       checkbox.dataset.checkbox = i;
+      // The source line of the task item lets the app edit that exact line;
+      // counting checkboxes cannot tell them apart from task-like text in
+      // code blocks or from `* [ ]` and numbered tasks.
+      const item = checkbox.closest('li[data-sourcepos]');
+      if (item) checkbox.dataset.line = item.dataset.sourcepos.split(':')[0];
 
       checkbox.addEventListener('click', (event) => {
         this.handleCheckboxClick(event.target);
@@ -88,13 +93,15 @@ const MiaoYanCommon = {
     }
 
     const id = element.dataset.checkbox;
+    const line = element.dataset.line;
     if (window.webkit?.messageHandlers.checkbox) {
-      window.webkit.messageHandlers.checkbox.postMessage(id);
+      window.webkit.messageHandlers.checkbox.postMessage(line ? `line:${line}` : id);
     }
 
     const input = document.createElement('input');
     input.type = 'checkbox';
     input.dataset.checkbox = id;
+    if (line) input.dataset.line = line;
 
     if (!element.hasAttribute('checked')) {
       input.defaultChecked = true;
