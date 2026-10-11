@@ -40,6 +40,13 @@ enum ShellStyle {
         size * UserDefaultsManagement.letterSpacingEm
     }
 
+    /// The brand wordmark, Charter Bold Italic as in the storyboard window's
+    /// sidebar, falling back to the interface face set bold.
+    static func brandWordmark(_ size: CGFloat) -> SwiftUI.Font {
+        if let charter = NSFont(name: "Charter-BoldItalic", size: size) { return SwiftUI.Font(charter) }
+        return interface(size, weight: .semibold)
+    }
+
     /// Spacing that sets multi-line text at 1.45em. `lineSpacing` adds to the
     /// face's own line height, which is 1.23em for TsangerJinKai02 and 1.38em
     /// for PingFang, so a fixed figure reads tight in one and loose in the other.
@@ -181,11 +188,11 @@ private struct ShellSidebarRow: View {
                 .renderingMode(.template)
                 .resizable()
                 .scaledToFit()
-                .frame(width: isBrand ? 20 : 15, height: isBrand ? 20 : 15)
+                .frame(width: isBrand ? 24 : 15, height: isBrand ? 24 : 15)
                 .foregroundStyle(isBrand ? brandTint : ShellStyle.icon)
             Group {
                 if isBrand {
-                    ShellBoldText(string: row.title, size: fontSize)
+                    Text(row.title).font(ShellStyle.brandWordmark(fontSize + 2))
                 } else {
                     Text(row.title)
                         .font(ShellStyle.interface(fontSize))
