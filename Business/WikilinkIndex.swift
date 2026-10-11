@@ -1,4 +1,5 @@
 import Foundation
+import MiaoYanCore
 
 @MainActor
 final class WikilinkIndex: ObservableObject {
@@ -9,8 +10,24 @@ final class WikilinkIndex: ObservableObject {
 
     private init() {}
 
-    func rebuild(notes: [Note]) {
-        rebuild(entries: notes.map { ($0.title, $0.content.string) })
+    private var rebuildTask: Task<Void, Never>?
+
+    /// Backlinks cover every note, not only the listed ones, and most bodies
+    /// are not loaded, so those are read from disk off the main thread.
+    /// Saves keep the index current through updateNote afterwards.
+    func rebuildFromAllNotes(in storage: Storage) {
+        rebuildTask?.cancel()
+        let notes = storage.noteList.filter { !$0.isTrash() }
+        let titles = notes.map(\.title)
+        let urls = notes.map(\.url)
+        let loaded = notes.map { $0.isContentLoaded ? $0.content.string : nil }
+        rebuildTask = Task {
+            let texts = await Task.detached(priority: .utility) {
+                zip(urls, loaded).map { url, text in text ?? (try? Data(contentsOf: url)).flatMap(NoteText.decode) ?? "" }
+            }.value
+            guard !Task.isCancelled else { return }
+            rebuild(entries: Array(zip(titles, texts)))
+        }
     }
 
     /// Titles with their text, for callers that read bodies from disk.

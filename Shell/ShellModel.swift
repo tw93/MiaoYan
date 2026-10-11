@@ -164,23 +164,9 @@ final class ShellModel {
         editor.onContentChange = { [weak self] in self?.scheduleContentRevision() }
     }
 
-    @ObservationIgnored private var linkIndexTask: Task<Void, Never>?
-
-    /// Backlinks cover every note, not only the listed ones, so bodies that
-    /// are not loaded are read from disk; saves keep the index current.
+    /// Backlinks cover every note; the index reads unloaded bodies itself.
     private func rebuildLinkIndex() {
-        linkIndexTask?.cancel()
-        let notes = storage.noteList.filter { !$0.isTrash() }
-        let titles = notes.map(\.title)
-        let urls = notes.map(\.url)
-        let loaded = notes.map { $0.isContentLoaded ? $0.content.string : nil }
-        linkIndexTask = Task {
-            let texts = await Task.detached(priority: .utility) {
-                zip(urls, loaded).map { url, text in text ?? (try? Data(contentsOf: url)).flatMap(NoteText.decode) ?? "" }
-            }.value
-            guard !Task.isCancelled else { return }
-            AppEnvironment.current.wikilinkIndex.rebuild(entries: Array(zip(titles, texts)))
-        }
+        AppEnvironment.current.wikilinkIndex.rebuildFromAllNotes(in: storage)
     }
 
     /// The preview re-renders at most this often while typing, by the same

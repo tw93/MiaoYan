@@ -77,4 +77,28 @@ final class WikilinkIndexTests: XCTestCase {
 
         XCTAssertEqual(index.getOutlinks(for: "A"), ["B"])
     }
+
+    /// Show Info read backlinks from the listed notes' loaded text, which is
+    /// empty for every note not opened yet. The rebuild reads them from disk.
+    func testBacklinksComeFromNotesThatWereNeverOpened() async throws {
+        resetIndex()
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanLinks-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: dir) }
+        try "See [[B]] for details.".write(to: dir.appendingPathComponent("A.md"), atomically: true, encoding: .utf8)
+        let storage = Storage(loadsLibrary: false)
+        let project = Project(url: dir, label: "links")
+        let note = Note(url: dir.appendingPathComponent("A.md"), with: project)
+        note.title = "A"
+        storage.add(note)
+        XCTAssertFalse(note.isContentLoaded)
+
+        index.rebuildFromAllNotes(in: storage)
+        for _ in 0..<100 where index.getBacklinks(for: "B").isEmpty {
+            try await Task.sleep(nanoseconds: 20_000_000)
+        }
+
+        XCTAssertEqual(index.getBacklinks(for: "B"), ["A"])
+        resetIndex()
+    }
 }

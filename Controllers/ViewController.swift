@@ -401,6 +401,7 @@ class ViewController:
         }
         fsManager = FileSystemEventManager(storage: storage, delegate: self)
         fsManager?.start()
+        WikilinkIndex.shared.rebuildFromAllNotes(in: storage)
         loadMoveMenu()
         cacheMenuItems()
 

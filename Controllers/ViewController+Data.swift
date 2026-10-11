@@ -338,7 +338,6 @@ extension ViewController {
 
         filteredNoteList = notes
         notesTableView.noteList = orderedNotesList
-        WikilinkIndex.shared.rebuild(notes: orderedNotesList)
 
         guard !context.operation.isCancelled else {
             context.completion()
