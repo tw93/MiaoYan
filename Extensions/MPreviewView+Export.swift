@@ -10,7 +10,7 @@ import WebKit
 /// to undo after a PPT export. The storyboard window and the SwiftUI shell
 /// both answer.
 @MainActor
-protocol ExportHost: AnyObject, Sendable {
+protocol ExportHost: AnyObject {
     var exportNote: Note? { get }
     var exportTitle: String { get }
     func toastPersistent(message: String)
@@ -724,36 +724,41 @@ extension MPreviewView {
     static func saveToDownloadsWithFilename(data: Data, extension: String, filename: String, viewController: Any) {
         guard let vc = viewController as? ExportHost else { return }
 
-        // Perform file save on background queue
-        DispatchQueue.global(qos: .utility).async {
-            guard let downloadsURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first else {
-                DispatchQueue.main.async {
-                    vc.toastExport(status: false)
+        // The write runs off the main thread and hands back only its outcome,
+        // so the host never leaves the main actor.
+        Task {
+            let saved = await Task.detached(priority: .utility) { () -> Bool? in
+                guard let downloadsURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first else {
+                    return nil
                 }
-                return
-            }
 
-            var fileURL = downloadsURL.appendingPathComponent(filename + "." + `extension`)
+                var fileURL = downloadsURL.appendingPathComponent(filename + "." + `extension`)
 
-            // Check if file exists and create unique name if needed
-            if FileManager.default.fileExists(atPath: fileURL.path) {
-                let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
-                let timestamp = formatter.string(from: Date())
-                let uniqueFilename = "\(filename)_\(timestamp)"
-                fileURL = downloadsURL.appendingPathComponent(uniqueFilename + "." + `extension`)
-            }
-
-            do {
-                try data.write(to: fileURL, options: .atomic)
-                DispatchQueue.main.async {
-                    vc.toastExport(status: true)
+                // Check if file exists and create unique name if needed
+                if FileManager.default.fileExists(atPath: fileURL.path) {
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
+                    let timestamp = formatter.string(from: Date())
+                    let uniqueFilename = "\(filename)_\(timestamp)"
+                    fileURL = downloadsURL.appendingPathComponent(uniqueFilename + "." + `extension`)
                 }
-            } catch {
+
+                do {
+                    try data.write(to: fileURL, options: .atomic)
+                    return true
+                } catch {
+                    return false
+                }
+            }.value
+
+            switch saved {
+            case nil:
+                vc.toastExport(status: false)
+            case true:
+                vc.toastExport(status: true)
+            case false:
                 // Fallback: use save panel for sandboxed environments (e.g., App Store)
-                DispatchQueue.main.async {
-                    Self.presentSavePanel(data: data, filename: filename, extension: `extension`, viewController: vc)
-                }
+                Self.presentSavePanel(data: data, filename: filename, extension: `extension`, viewController: vc)
             }
         }
     }
