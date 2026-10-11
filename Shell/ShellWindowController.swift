@@ -156,17 +156,18 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             guard result == .OK else { return }
             let picked = panel.urls
             let extensions = AppEnvironment.current.storage.allowedExtensions
-            // A picked folder can be huge; scan it off the main thread.
-            Task.detached(priority: .userInitiated) {
-                let files = ViewController.collectImportableFiles(from: picked, allowedExtensions: extensions)
-                await MainActor.run {
-                    guard let self else { return }
-                    guard !files.isEmpty else {
-                        self.model.host?.toast(message: I18n.str("No importable Markdown files found~"), style: .failure)
-                        return
-                    }
-                    self.model.importNotes(files)
+            // A picked folder can be huge; scan it off the main thread. Only the
+            // scan leaves it, so self never crosses into the detached task.
+            Task { @MainActor [weak self] in
+                let files = await Task.detached(priority: .userInitiated) {
+                    ViewController.collectImportableFiles(from: picked, allowedExtensions: extensions)
+                }.value
+                guard let self else { return }
+                guard !files.isEmpty else {
+                    self.model.host?.toast(message: I18n.str("No importable Markdown files found~"), style: .failure)
+                    return
                 }
+                self.model.importNotes(files)
             }
         }
     }
