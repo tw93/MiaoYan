@@ -309,6 +309,29 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
     // MARK: IBActions
     @IBAction func openMainWindow(_ sender: Any) {
         mainWindowController?.makeNew()
+        shellWindowController?.showWindow(nil)
+    }
+
+    /// Quit and Active Window in the SwiftUI shell. Their storyboard items
+    /// target a stand-in `ViewController`; the shell points them at the first
+    /// responder, and the app delegate is the one link of that chain that is
+    /// there whichever window is in front.
+    @IBAction func quiteApp(_ sender: Any?) {
+        guard UserDefaultsManagement.isSingleMode else {
+            NSApp.terminate(sender)
+            return
+        }
+        UserDefaultsManagement.clearSingleMode()
+        UserDefaultsManagement.isFirstLaunch = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + UIDelay.short) {
+            NSApp.terminate(nil)
+        }
+    }
+
+    @IBAction func activeWindow(_ sender: Any?) {
+        if #available(macOS 14, *), let shell = shellWindowController as? ShellWindowController {
+            shell.toggleFrontmost()
+        }
     }
     @IBAction func checkForUpdates(_ sender: Any?) {
         updaterController?.checkForUpdates(sender)
@@ -394,9 +417,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
 
         NotificationCenter.default.post(name: .alwaysOnTopChanged, object: nil)
 
+        let message = newValue ? I18n.str("Window stays on top") : I18n.str("Window normal mode")
         if let vc = resolveViewController() {
-            let message = newValue ? I18n.str("Window stays on top") : I18n.str("Window normal mode")
             vc.toast(message: message)
+        } else if #available(macOS 14, *), let shell = shellWindowController as? ShellWindowController {
+            shell.model.host?.toast(message: message)
         }
     }
 

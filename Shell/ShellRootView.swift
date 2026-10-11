@@ -39,6 +39,46 @@ enum ShellStyle {
     static func tracking(_ size: CGFloat) -> CGFloat {
         size * UserDefaultsManagement.letterSpacingEm
     }
+
+    /// Spacing that sets multi-line text at 1.45em. `lineSpacing` adds to the
+    /// face's own line height, which is 1.23em for TsangerJinKai02 and 1.38em
+    /// for PingFang, so a fixed figure reads tight in one and loose in the other.
+    static func lineSpacing(_ size: CGFloat) -> CGFloat {
+        let font = FontConfiguration.interfaceFont(size: size)
+        return max(0, size * 1.45 - NSLayoutManager().defaultLineHeight(for: font))
+    }
+
+    /// Whether the interface face has a bold of its own. TsangerJinKai02 ships
+    /// W04 alone, and `.weight` or `.bold()` leave it at W04.
+    static var interfaceHasBold: Bool {
+        let font = FontConfiguration.interfaceFont(size: 13)
+        return NSFontManager.shared.convert(font, toHaveTrait: .boldFontMask).fontName != font.fontName
+    }
+}
+
+/// Bold for the brand row and the section headings. A face with a bold uses
+/// it; one without is drawn twice a device pixel apart with each advance a
+/// pixel wider, which is how WebKit synthesises weight 600 and what the
+/// preview already shows.
+@available(macOS 14, *)
+private struct ShellBoldText: View {
+    let string: String
+    let size: CGFloat
+    @Environment(\.displayScale) private var displayScale
+
+    var body: some View {
+        if ShellStyle.interfaceHasBold {
+            Text(string)
+                .font(ShellStyle.interface(size, weight: .semibold))
+                .kerning(ShellStyle.tracking(size))
+        } else {
+            let pixel = 1 / displayScale
+            let text = Text(string)
+                .font(ShellStyle.interface(size))
+                .kerning(ShellStyle.tracking(size) + pixel)
+            text.overlay(alignment: .leading) { text.offset(x: pixel) }
+        }
+    }
 }
 
 /// A toolbar glyph: an asset template or an SF Symbol, drawn light and
@@ -143,12 +183,18 @@ private struct ShellSidebarRow: View {
                 .scaledToFit()
                 .frame(width: isBrand ? 20 : 15, height: isBrand ? 20 : 15)
                 .foregroundStyle(isBrand ? brandTint : ShellStyle.icon)
-            Text(row.title)
-                .font(ShellStyle.interface(fontSize, weight: isBrand ? .semibold : .regular))
-                .kerning(ShellStyle.tracking(fontSize))
-                .foregroundStyle(isBrand ? brandTint : ShellStyle.text)
-                .lineLimit(1)
-                .truncationMode(.tail)
+            Group {
+                if isBrand {
+                    ShellBoldText(string: row.title, size: fontSize)
+                } else {
+                    Text(row.title)
+                        .font(ShellStyle.interface(fontSize))
+                        .kerning(ShellStyle.tracking(fontSize))
+                }
+            }
+            .foregroundStyle(isBrand ? brandTint : ShellStyle.text)
+            .lineLimit(1)
+            .truncationMode(.tail)
             Spacer(minLength: 0)
         }
         .padding(.leading, isBrand ? 8 : 11)
@@ -277,9 +323,7 @@ private struct ShellSectionHeader: View {
 
     var body: some View {
         let size = CGFloat(UserDefaultsManagement.dateFontSize) + 1
-        Text(title)
-            .font(ShellStyle.interface(size, weight: .semibold))
-            .kerning(ShellStyle.tracking(size))
+        ShellBoldText(string: title, size: size)
             .foregroundStyle(ShellStyle.tertiaryText)
             .padding(.horizontal, 20)
             .padding(.top, 16)
@@ -324,7 +368,7 @@ private struct ShellNoteRow: View {
                     .kerning(ShellStyle.tracking(bodySize))
                     .foregroundStyle(ShellStyle.secondaryText)
                     .lineLimit(2)
-                    .lineSpacing(2)
+                    .lineSpacing(ShellStyle.lineSpacing(bodySize))
                     .fixedSize(horizontal: false, vertical: true)
             }
             Text(date)

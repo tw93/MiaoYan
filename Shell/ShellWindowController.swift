@@ -1,4 +1,5 @@
 import AppKit
+import KeyboardShortcuts
 import SwiftUI
 
 /// Hosts the SwiftUI shell in a window of its own. Until it reaches parity
@@ -43,12 +44,42 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate {
             window.center()
         }
         window.setFrameAutosaveName("MiaoYanShellWindow")
+        applyWindowLevel()
+        windowLevelObserver = NotificationCenter.default.addObserver(
+            forName: .alwaysOnTopChanged, object: nil, queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in self?.applyWindowLevel() }
+        }
+        KeyboardShortcuts.onKeyUp(for: .activateWindow) { [weak self] in
+            self?.toggleFrontmost()
+        }
         observePresentation()
     }
 
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - Window level and activation
+
+    private var windowLevelObserver: NSObjectProtocol?
+
+    /// View ▸ Always on Top, applied the way `MainWindowController` does.
+    private func applyWindowLevel() {
+        window?.level = UserDefaultsManagement.alwaysOnTop ? .floating : .normal
+    }
+
+    /// The activate shortcut and Window ▸ Active Window: hide MiaoYan when it
+    /// is already in front, otherwise bring this window forward.
+    func toggleFrontmost() {
+        guard let window else { return }
+        if NSApp.isActive, !NSApp.isHidden, !window.isMiniaturized {
+            NSApp.hide(nil)
+            return
+        }
+        NSApp.activate(ignoringOtherApps: true)
+        window.makeKeyAndOrderFront(nil)
     }
 
     // MARK: - Presentation
