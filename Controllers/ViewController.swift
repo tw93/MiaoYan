@@ -142,11 +142,7 @@ class ViewController:
     var isNormalizingNotelistWidth = false
     @IBOutlet var search: SearchTextField!
     @IBOutlet var notesTableView: NotesTableView!
-    @IBOutlet var noteMenu: NSMenu! {
-        didSet {
-            noteMenu.setMenuItemIdentifier("noteMenu.export", forTitle: I18n.str("Export"))
-        }
-    }
+    @IBOutlet var noteMenu: NSMenu!
     @IBOutlet var storageOutlineView: SidebarProjectView!
     @IBOutlet var sidebarSplitView: NSSplitView!
     @IBOutlet var notesListCustomView: NSView!

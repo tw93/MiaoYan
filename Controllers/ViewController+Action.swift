@@ -221,8 +221,10 @@ extension ViewController {
     @IBAction func exportMenu(_ sender: Any) {
         guard let vc = ViewController.shared() else { return }
         if vc.notesTableView.selectedRow >= 0 {
-            let exportTitle = I18n.str("Export")
-            let exportMenu = vc.noteMenu.item(withTitle: exportTitle)
+            // Found by identifier: the menu's title is translated in Main.strings
+            // and did not match the Localizable "Export" in Japanese and
+            // Traditional Chinese, so a title lookup came back empty.
+            let exportMenu = vc.noteMenu.items.first { $0.identifier?.rawValue == "noteMenu.export" }
             let view = vc.notesTableView.rect(ofRow: vc.notesTableView.selectedRow)
             let x = vc.splitView.subviews[0].frame.width + 5
             let general = exportMenu?.submenu?.item(at: 0)

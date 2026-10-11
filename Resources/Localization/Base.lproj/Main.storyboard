@@ -1122,7 +1122,7 @@ CA
                                 <action selector="deleteNote:" target="XfG-lQ-9wD" id="3m0-Tl-QCc"/>
                             </connections>
                         </menuItem>
-                        <menuItem title="Export" id="8LY-2s-GJ7">
+                        <menuItem title="Export" identifier="noteMenu.export" id="8LY-2s-GJ7">
                             <modifierMask key="keyEquivalentModifierMask"/>
                             <menu key="submenu" title="Export" id="LoU-Gc-oM3">
                                 <items>

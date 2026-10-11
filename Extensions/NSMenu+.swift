@@ -19,10 +19,6 @@ extension NSMenu {
             }
         }
     }
-
-    func setMenuItemIdentifier(_ identifier: String, forTitle title: String) {
-        item(withTitle: title)?.identifier = NSUserInterfaceItemIdentifier(identifier)
-    }
 }
 
 extension NSMenuItem {
