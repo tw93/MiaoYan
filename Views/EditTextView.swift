@@ -1579,6 +1579,12 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     func hideSearchBar(restoreFocus: Bool = true) {
         let hadBar = editorSearchBar != nil || !editorSearchRanges.isEmpty
+        // Closed by Escape in the find field: its keyUp then reaches this view
+        // and would move focus to the note list, where the next key typed
+        // selected a note instead of editing.
+        if hadBar, let event = NSApp.currentEvent, event.type == .keyDown, event.keyCode == kVK_Escape {
+            shouldIgnoreEscapeNavigation = true
+        }
         clearEditorSearchHighlights()
         editorSearchRanges.removeAll()
         editorCurrentMatchIndex = 0
