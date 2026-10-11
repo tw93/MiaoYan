@@ -53,4 +53,61 @@ final class AttachmentCleanupTests: XCTestCase {
         XCTAssertFalse(names.contains("used.png"), "an image a note references is not unused, loaded or not")
         XCTAssertTrue(names.contains("unused.png"), "an image nothing references is still found")
     }
+
+    // MARK: - Moving a note carries its images
+
+    private struct Folders {
+        let from: Project
+        let to: Project
+        let noteURL: URL
+    }
+
+    @MainActor
+    private func makeFolders() throws -> Folders {
+        let manager = FileManager.default
+        let from = tempDir.appendingPathComponent("From", isDirectory: true)
+        let to = tempDir.appendingPathComponent("To", isDirectory: true)
+        try manager.createDirectory(at: from.appendingPathComponent("i"), withIntermediateDirectories: true)
+        try manager.createDirectory(at: to, withIntermediateDirectories: true)
+        try Data([1, 2, 3]).write(to: from.appendingPathComponent("i/Shot 1.png"))
+        let noteURL = from.appendingPathComponent("trip.md")
+        try "# Trip\n\n![](/i/Shot%201.png)\n".write(to: noteURL, atomically: true, encoding: .utf8)
+        return Folders(from: Project(url: from, label: "From"), to: Project(url: to, label: "To"), noteURL: noteURL)
+    }
+
+    @MainActor
+    func testMovingAnUnopenedNoteCopiesItsImagesUnderTheirOwnNames() throws {
+        let folders = try makeFolders()
+        let (from, to) = (folders.from, folders.to)
+        let note = Note(url: folders.noteURL, with: from)
+        XCTAssertFalse(note.isContentLoaded, "the note was never opened")
+
+        note.move(toProject: to)
+
+        let moved = to.url.appendingPathComponent("i/Shot 1.png")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: moved.path), "the image travels with the note, name unchanged")
+        XCTAssertTrue(
+            FileManager.default.fileExists(atPath: from.url.appendingPathComponent("i/Shot 1.png").path),
+            "the original stays for any other note that shares it")
+        let text = try String(contentsOf: to.url.appendingPathComponent("trip.md"), encoding: .utf8)
+        XCTAssertTrue(text.contains("](/i/Shot%201.png)"), "the link still points at the copy")
+    }
+
+    @MainActor
+    func testAClashingImageNameGetsANewNameAndTheLinkFollows() throws {
+        let folders = try makeFolders()
+        let (from, to, noteURL) = (folders.from, folders.to, folders.noteURL)
+        try FileManager.default.createDirectory(at: to.url.appendingPathComponent("i"), withIntermediateDirectories: true)
+        try Data([9, 9]).write(to: to.url.appendingPathComponent("i/Shot 1.png"))
+        let note = Note(url: noteURL, with: from)
+
+        note.move(toProject: to)
+
+        let text = try String(contentsOf: to.url.appendingPathComponent("trip.md"), encoding: .utf8)
+        XCTAssertFalse(text.contains("](/i/Shot%201.png)"), "the clashing file in the destination is not the note's image")
+        let link = try XCTUnwrap(text.range(of: #"\]\((/i/[^)]+)\)"#, options: .regularExpression)).lowerBound
+        let path = String(text[link...].dropFirst(2).prefix { $0 != ")" }).removingPercentEncoding ?? ""
+        let copied = to.url.appendingPathComponent(path)
+        XCTAssertEqual(try Data(contentsOf: copied), Data([1, 2, 3]), "the renamed copy holds the note's own image")
+    }
 }

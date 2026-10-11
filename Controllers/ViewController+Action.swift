@@ -571,7 +571,7 @@ extension ViewController {
                 if note.type == .markdown, note.container == .none {
                     let images = note.getAllImages()
                     for image in images {
-                        noteDupe.relocateAttachment(from: image.url, imagePath: image.path, to: note.project, copy: true)
+                        noteDupe.relocateAttachment(from: image.url, imagePath: image.path, to: note.project)
                     }
                 }
 

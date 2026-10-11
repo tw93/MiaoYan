@@ -1168,6 +1168,9 @@ public class Note: NSObject {
         let destination = project.url.appendingPathComponent(name)
 
         if type == .markdown, container == .none {
+            // A multi-select move or a drag carries notes that were never
+            // opened; without their text there is no list of images to carry.
+            ensureContentLoaded()
             let imagesMeta = getAllImages()
             for imageMeta in imagesMeta {
                 relocateAttachment(from: imageMeta.url, imagePath: imageMeta.path, to: project)
@@ -1181,46 +1184,45 @@ public class Note: NSObject {
         _ = move(to: destination, project: project)
     }
 
-    /// Moves (or copies) one attachment into `project`'s attachment folder; on
-    /// a name clash the file gets a fresh name and the note's links follow.
-    func relocateAttachment(from imageURL: URL, imagePath: String, to project: Project, copy: Bool = false) {
+    /// Copies one attachment into `project`'s attachment folder under its own
+    /// name. Moving a note copies rather than moves, because another note may
+    /// share the image; the original is left for Clean Unused Attachments. On a
+    /// name clash with a different file the copy gets a fresh name and the
+    /// note's links, written encoded or not, follow it.
+    func relocateAttachment(from imageURL: URL, imagePath: String, to project: Project) {
+        let manager = FileManager.default
         let dstPrefix = NotesTextProcessor.getAttachPrefix(url: imageURL)
-        let dest = project.url.appendingPathComponent(dstPrefix)
+        let folder = project.url.appendingPathComponent(dstPrefix)
+        guard manager.fileExists(atPath: imageURL.path) else { return }
 
-        if !FileManager.default.fileExists(atPath: dest.path) {
-            try? FileManager.default.createDirectory(at: dest, withIntermediateDirectories: false, attributes: nil)
+        if !manager.fileExists(atPath: folder.path) {
+            try? manager.createDirectory(at: folder, withIntermediateDirectories: true, attributes: nil)
+        }
+
+        var target = folder.appendingPathComponent(imageURL.lastPathComponent)
+        if target.standardizedFileURL.path == imageURL.standardizedFileURL.path { return }
+        if manager.fileExists(atPath: target.path) {
+            if manager.contentsEqual(atPath: target.path, andPath: imageURL.path) { return }
+            guard let fileName = ImagesProcessor.getFileName(from: imageURL, to: folder, ext: imageURL.pathExtension) else { return }
+            target = folder.appendingPathComponent(fileName)
         }
 
         do {
-            if copy {
-                try FileManager.default.copyItem(at: imageURL, to: dest)
-            } else {
-                try FileManager.default.moveItem(at: imageURL, to: dest)
-            }
+            try manager.copyItem(at: imageURL, to: target)
         } catch {
-            if let fileName = ImagesProcessor.getFileName(from: imageURL, to: dest, ext: imageURL.pathExtension) {
-                let dest = dest.appendingPathComponent(fileName)
+            AppDelegate.trackError(error, context: "Note.relocateAttachment")
+            return
+        }
 
-                if copy {
-                    try? FileManager.default.copyItem(at: imageURL, to: dest)
-                } else {
-                    try? FileManager.default.moveItem(at: imageURL, to: dest)
-                }
-
-                let prefix = "]("
-                let postfix = ")"
-
-                let find = prefix + imagePath + postfix
-                let replace = prefix + dstPrefix + fileName + postfix
-
-                guard find != replace else {
-                    return
-                }
-
-                while content.mutableString.contains(find) {
-                    let range = content.mutableString.range(of: find)
-                    content.replaceCharacters(in: range, with: replace)
-                }
+        let newName = target.lastPathComponent
+        guard newName != imageURL.lastPathComponent else { return }
+        let encode = { (path: String) in path.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? path }
+        let oldForms = Set([imagePath, encode(imagePath)])
+        let replacement = "](" + encode(dstPrefix + newName) + ")"
+        for old in oldForms {
+            let find = "](" + old + ")"
+            while content.mutableString.contains(find) {
+                content.replaceCharacters(in: content.mutableString.range(of: find), with: replacement)
             }
         }
     }

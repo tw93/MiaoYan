@@ -806,7 +806,7 @@ final class ShellModel {
         copy.content = NSMutableAttributedString(attributedString: note.content)
         if note.type == .markdown, note.container == .none {
             for image in note.getAllImages() {
-                copy.relocateAttachment(from: image.url, imagePath: image.path, to: note.project, copy: true)
+                copy.relocateAttachment(from: image.url, imagePath: image.path, to: note.project)
             }
         }
         copy.save()
