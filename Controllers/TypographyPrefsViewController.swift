@@ -283,13 +283,13 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
     }
 
     @objc private func presentationFontSizeChanged(_ sender: NSPopUpButton) {
-        guard let vc = ViewController.shared() else { return }
         guard let item = sender.selectedItem else { return }
         settings.presentationFontSize = Int(item.title) ?? UserDefaultsManagement.DefaultPresentationFontSize
-        if !vc.isMiaoYanPPT(needToast: false) {
-            vc.disablePresentation()
-            vc.enablePresentation()
-        }
+        // Only a running presentation needs redrawing at the new size; outside
+        // it the value is just stored, and opening a presentation picks it up.
+        guard let vc = ViewController.shared(), vc.sessionPresentationMode else { return }
+        vc.disablePresentation()
+        vc.enablePresentation()
     }
 
 }
