@@ -79,9 +79,26 @@ final class NoteContentMatcherTests: XCTestCase {
         XCTAssertTrue(edited.isEmpty)
     }
 
-    func testLimitKeepsTheFirstMatchesAndCancellationReturnsNothing() {
-        let all = (0..<5).map { candidate($0, title: "note \($0)") }
+    func testLimitCapsBodyMatchesAndCancellationReturnsNothing() {
+        let all = (0..<5).map { candidate($0, title: "entry \($0)", loaded: "a note") }
         XCTAssertEqual(NoteContentMatcher.match(all, terms: ["note"], limit: 2, isCancelled: { false }).map(\.index), [0, 1])
         XCTAssertTrue(NoteContentMatcher.match(all, terms: ["note"], limit: .max, isCancelled: { true }).isEmpty)
+    }
+
+    func testATitleMatchIsNeverCutByEarlierBodyMatches() {
+        let bodies = (0..<150).map { candidate($0, title: "entry \($0)", loaded: "mentions plan") }
+        let exact = candidate(150, title: "plan")
+        let found = NoteContentMatcher.match(bodies + [exact], terms: ["plan"], limit: 100, isCancelled: { false })
+        XCTAssertTrue(found.contains { $0.index == 150 && $0.priority == 4 }, "the note titled exactly as the query is kept")
+        XCTAssertEqual(found.count, 100)
+    }
+
+    func testUnopenedGBKNotesMatchOnTheirBody() throws {
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: url) }
+        let gb18030 = String.Encoding(rawValue: CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue)))
+        try XCTUnwrap("旧笔记里的周报".data(using: gb18030)).write(to: url)
+        let found = NoteContentMatcher.match([candidate(0, title: "legacy", url: url)], terms: ["周报"], limit: 100, isCancelled: { false })
+        XCTAssertEqual(found.map(\.index), [0])
     }
 }

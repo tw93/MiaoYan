@@ -22,25 +22,35 @@ public struct NoteSearchCandidate: Sendable {
 }
 
 public enum NoteContentMatcher {
-    /// Matching candidates in their original order with a priority, stopping
-    /// after `limit`. Runs off the main thread.
+    /// Matching candidates in their original order with a priority. Every
+    /// note whose title holds all the terms is kept, since those rank first
+    /// and cost no file read; body matches then fill up to `limit`. Stopping
+    /// at `limit` in list order used to drop an exact title match that sat
+    /// after a hundred body matches. Runs off the main thread.
     public static func match(
         _ candidates: [NoteSearchCandidate],
         terms: [String],
         limit: Int,
         isCancelled: () -> Bool
     ) -> [(index: Int, priority: Int)] {
+        guard !terms.isEmpty else { return candidates.map { ($0.index, 0) } }
         var matches: [(index: Int, priority: Int)] = []
-        for candidate in candidates {
+        var titleMatched = Set<Int>()
+        for candidate in candidates where terms.allSatisfy({ candidate.title.contains($0) }) {
+            if isCancelled() { return [] }
+            matches.append((candidate.index, 4))
+            titleMatched.insert(candidate.index)
+        }
+        for candidate in candidates where !titleMatched.contains(candidate.index) {
+            if matches.count >= limit { break }
             if isCancelled() { return [] }
             let body = {
-                candidate.loadedText ?? (try? String(contentsOf: candidate.url, encoding: .utf8)) ?? ""
+                candidate.loadedText ?? (try? Data(contentsOf: candidate.url)).flatMap(NoteText.decode) ?? ""
             }
             guard let priority = priority(title: candidate.title, body: body, terms: terms) else { continue }
             matches.append((candidate.index, priority))
-            if matches.count >= limit { break }
         }
-        return matches
+        return matches.sorted { $0.index < $1.index }
     }
 
     /// 4 when every term is in the title, then 3, 2, 1 as more of the match
