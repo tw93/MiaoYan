@@ -21,7 +21,13 @@ class ClipboardManager {
         guard let textView = textView else { return false }
 
         if textView.selectedRanges.count > 1 {
-            let combined = String()
+            // Option-drag column selections: one line per selected range.
+            let text = textView.string as NSString
+            let combined = textView.selectedRanges
+                .map(\.rangeValue)
+                .filter { $0.length > 0 && NSMaxRange($0) <= text.length }
+                .map { text.substring(with: $0) }
+                .joined(separator: "\n")
             let pasteboard = NSPasteboard.general
             pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
             pasteboard.setString(combined.trim().removeLastNewLine(), forType: NSPasteboard.PasteboardType.string)
