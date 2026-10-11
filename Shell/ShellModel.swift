@@ -117,6 +117,13 @@ final class ShellModel {
     private static let layoutKey = "ShellLayout"
 
     private func storedScope() -> Scope {
+        // First shell launch: start on the folder the storyboard window left.
+        if UserDefaults.standard.string(forKey: Self.scopeKey) == nil,
+            let path = UserDefaultsManagement.lastProjectPath,
+            let project = storage.getProjects().first(where: { $0.url.path == path })
+        {
+            return .project(project.url)
+        }
         switch UserDefaults.standard.string(forKey: Self.scopeKey) {
         case "trash": return .trash
         case let path? where path != "all":

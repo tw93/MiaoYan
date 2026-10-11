@@ -47,7 +47,9 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         appearanceObservation = window.observe(\.effectiveAppearance, options: [.new]) { [weak self] _, _ in
             MainActor.assumeIsolated { self?.appearanceDidChange() }
         }
-        if !window.setFrameUsingName("MiaoYanShellWindow") {
+        // First shell launch: take the storyboard window's frame, so switching
+        // windows does not move or resize MiaoYan.
+        if !window.setFrameUsingName("MiaoYanShellWindow"), !window.setFrameUsingName("myMainWindow") {
             window.center()
         }
         window.setFrameAutosaveName("MiaoYanShellWindow")
