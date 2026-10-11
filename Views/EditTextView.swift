@@ -902,15 +902,25 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         super.insertCompletion(word, forPartialWordRange: charRange, movement: movement, isFinal: final)
     }
 
+    /// Called on every key and click, arrow keys included, so the xattr write
+    /// (and the file-event pause it needs) waits until the cursor rests.
     func saveCursorPosition() {
-        guard let note = EditTextView.note, let range = selectedRanges[0] as? NSRange, UserDefaultsManagement.restoreCursorPosition else {
+        guard let note = EditTextView.note, let range = selectedRanges.first as? NSRange, UserDefaultsManagement.restoreCursorPosition else {
             return
         }
-        viewDelegate?.blockFSUpdates()
-        var length = range.lowerBound
-        let data = Data(bytes: &length, count: MemoryLayout.size(ofValue: length))
-        try? note.url.setExtendedAttribute(data: data, forName: AppIdentifier.cursorKey)
+        let url = note.url
+        let location = range.lowerBound
+        cursorSaveWork?.cancel()
+        let work = DispatchWorkItem { [weak self] in
+            self?.viewDelegate?.blockFSUpdates()
+            var length = location
+            let data = Data(bytes: &length, count: MemoryLayout.size(ofValue: length))
+            try? url.setExtendedAttribute(data: data, forName: AppIdentifier.cursorKey)
+        }
+        cursorSaveWork = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: work)
     }
+    private var cursorSaveWork: DispatchWorkItem?
 
     // MARK: - Link Highlighting Performance Optimization
     private func shouldTriggerLinkHighlight(for event: NSEvent) -> Bool {
@@ -1008,11 +1018,10 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             AppDelegate.trackError(mismatch, context: "EditTextView.saveTextStorageContent.ownerGuard")
             return
         }
-        let string = storage.attributedSubstring(from: NSRange(0..<storage.length))
-        note.content =
-            NSMutableAttributedString(attributedString: string)
-            .unLoadImages()
-            .unLoadCheckboxes()
+        // Runs on every keystroke. Both unload passes copy and walk the whole
+        // buffer, and plain Markdown has no attachments for them to undo.
+        let copy = NSMutableAttributedString(attributedString: storage)
+        note.content = copy.containsAttachments ? copy.unLoadImages().unLoadCheckboxes() : copy
     }
 
     func setEditorTextColor(_ color: NSColor) {
