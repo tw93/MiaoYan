@@ -751,14 +751,11 @@ extension MPreviewView {
                 }
             }.value
 
-            switch saved {
-            case nil:
-                vc.toastExport(status: false)
-            case true:
-                vc.toastExport(status: true)
-            case false:
+            if saved == false {
                 // Fallback: use save panel for sandboxed environments (e.g., App Store)
                 Self.presentSavePanel(data: data, filename: filename, extension: `extension`, viewController: vc)
+            } else {
+                vc.toastExport(status: saved == true)
             }
         }
     }
