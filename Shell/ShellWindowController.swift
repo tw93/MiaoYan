@@ -8,6 +8,7 @@ import SwiftUI
 /// untouched.
 @available(macOS 14, *)
 final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuItemValidation {
+    private var appearanceObservation: NSKeyValueObservation?
     static var isRequested: Bool {
         UserDefaults.standard.bool(forKey: "MiaoYanShell")
     }
@@ -40,6 +41,12 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         // shrinks the window to its minimum; restore the default first.
         window.setContentSize(NSSize(width: 1100, height: 700))
         window.delegate = self
+        // A live light/dark switch, from the system or from Settings, has to
+        // reach the editor's highlight colours and the preview's CSS too; the
+        // storyboard window does this from MainWindowController.
+        appearanceObservation = window.observe(\.effectiveAppearance, options: [.new]) { [weak self] _, _ in
+            MainActor.assumeIsolated { self?.appearanceDidChange() }
+        }
         if !window.setFrameUsingName("MiaoYanShellWindow") {
             window.center()
         }
@@ -530,6 +537,17 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
 
     func windowDidResignKey(_ notification: Notification) {
         flushEdits()
+    }
+
+    private func appearanceDidChange() {
+        guard let window else { return }
+        AppEnvironment.current.userData.isDark = window.effectiveAppearance.isDark
+        NotesTextProcessor.hl = nil
+        if let note = model.editor.textView.storageNote {
+            NotesTextProcessor.highlight(note: note)
+            model.editor.reload(note)
+        }
+        model.preview?.updateAppearance()
     }
 
     /// Writes the editor's text and every debounced save now. A save waits
