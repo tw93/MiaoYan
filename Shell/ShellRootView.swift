@@ -40,11 +40,11 @@ enum ShellStyle {
         size * UserDefaultsManagement.letterSpacingEm
     }
 
-    /// The brand wordmark, Charter Bold Italic as in the storyboard window's
-    /// sidebar, falling back to the interface face set bold.
+    /// The brand wordmark, upright Charter at regular weight as in the
+    /// storyboard window's sidebar, falling back to the interface face.
     static func brandWordmark(_ size: CGFloat) -> SwiftUI.Font {
-        if let charter = NSFont(name: "Charter-BoldItalic", size: size) { return SwiftUI.Font(charter) }
-        return interface(size, weight: .semibold)
+        if let charter = NSFont(name: "Charter-Roman", size: size) { return SwiftUI.Font(charter) }
+        return interface(size)
     }
 
     /// Spacing that sets multi-line text at 1.45em. `lineSpacing` adds to the
@@ -204,12 +204,12 @@ private struct ShellSidebarRow: View {
     private var fontSize: CGFloat { CGFloat(UserDefaultsManagement.nameFontSize) + (isBrand ? 1 : 0) }
 
     var body: some View {
-        HStack(spacing: isBrand ? 6 : 9) {
+        HStack(spacing: isBrand ? 5 : 9) {
             SwiftUI.Image(nsImage: icon)
                 .renderingMode(.template)
                 .resizable()
                 .scaledToFit()
-                .frame(width: isBrand ? 24 : 15, height: isBrand ? 24 : 15)
+                .frame(width: isBrand ? 22 : 15, height: isBrand ? 22 : 15)
                 .foregroundStyle(isBrand ? brandTint : ShellStyle.icon)
             if let folder, model.renamingFolderURL == folder.url {
                 TextField("", text: $draft)
@@ -228,7 +228,7 @@ private struct ShellSidebarRow: View {
             } else {
                 Group {
                     if isBrand {
-                        Text(row.title).font(ShellStyle.brandWordmark(fontSize + 2))
+                        Text(row.title).font(ShellStyle.brandWordmark(fontSize + 1))
                     } else {
                         Text(row.title)
                             .font(ShellStyle.interface(fontSize))

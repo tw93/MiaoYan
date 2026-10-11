@@ -543,13 +543,14 @@ class SidebarProjectView: NSOutlineView,
     }
 
     private func configureForSidebarItemType(_ cell: SidebarCellView, sidebarItem: SidebarItem, baseFont: NSFont, accentColor: NSColor) {
-        // The brand lockup (maintainer, 2026-10-11): the bird slanted to
-        // follow a Charter Bold Italic wordmark, in a 52pt row so the space
-        // above and below it is even and wider than the gap between folders.
-        // A smaller lockup (icon 20, font +1) was rejected earlier as reading
-        // too small; keep it at least this size on every OS.
-        let accentIconSize: CGFloat = 26
-        let accentSpacing: CGFloat = 6
+        // The brand lockup (maintainer, 2026-10-11): an upright Charter
+        // wordmark at regular weight, two points above the folder labels with a 22pt bird, in a
+        // 52pt row so the space above and below it is even and wider than the
+        // gap between folders. The italic wordmark with a slanted 26pt bird
+        // leaned against the upright folder names and read too large; a
+        // lockup of icon 20 and font +1 was rejected earlier as too small.
+        let accentIconSize: CGFloat = 22
+        let accentSpacing: CGFloat = 5
         let accentIconLeading: CGFloat = -2
         let accentFont = createAccentFont(from: baseFont)
 
@@ -592,23 +593,14 @@ class SidebarProjectView: NSOutlineView,
         }
     }
 
-    /// The wordmark face: Charter Bold Italic, which ships with macOS, a few
-    /// points above the folder labels. The semibold label face stands in if
-    /// Charter is ever missing.
+    /// The wordmark face: Charter at regular weight, which ships with macOS,
+    /// two points above the folder labels; the bold cut read heavy beside the
+    /// folder names. The label face stands in if Charter is ever missing.
     private func createAccentFont(from baseFont: NSFont) -> NSFont {
-        if let charter = NSFont(name: "Charter-BoldItalic", size: baseFont.pointSize + 3) {
+        if let charter = NSFont(name: "Charter-Roman", size: baseFont.pointSize + 2) {
             return charter
         }
-        let accentFontDescriptor = baseFont.fontDescriptor.addingAttributes([
-            NSFontDescriptor.AttributeName.traits: [
-                NSFontDescriptor.TraitKey.weight: NSNumber(value: Double(NSFont.Weight.semibold.rawValue))
-            ]
-        ])
-        let accentFontSize = baseFont.pointSize + 2
-        return NSFont(
-            descriptor: accentFontDescriptor,
-            size: accentFontSize
-        ) ?? NSFont.systemFont(ofSize: accentFontSize, weight: .semibold)
+        return NSFont(descriptor: baseFont.fontDescriptor, size: baseFont.pointSize + 2) ?? baseFont
     }
 
     private func applyFinalStyling(_ cell: SidebarCellView, sidebarItem: SidebarItem, accentColor: NSColor) {
