@@ -703,6 +703,14 @@ class ViewController:
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         // Early return if outlets not yet initialized (prevents crash during app launch/accessibility checks)
         guard notesTableView != nil, storageOutlineView != nil, editArea != nil else {
+            // Most main-menu items target the stand-in ViewController in the
+            // storyboard's Application scene, whose outlets are always nil, so
+            // this guard used to enable every one of them: Command-N during a
+            // presentation, Rename and Delete with nothing selected. The window's
+            // own controller decides instead.
+            if let main = ViewController.shared(), main !== self, main.notesTableView != nil {
+                return main.validateMenuItem(menuItem)
+            }
             return true
         }
 
