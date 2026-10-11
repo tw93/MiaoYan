@@ -8,10 +8,23 @@ class EditorMenuManager {
         self.textView = textView
     }
 
+    /// The editor of the storyboard window. Replaced in tests.
+    static var windowEditor: () -> EditTextView? = { ViewController.shared()?.editArea }
+
+    /// The editor a command acts on. The storyboard's Format menu targets a
+    /// stand-in EditTextView in the Application scene, which sits in no window
+    /// and never has focus, so its commands go to the window's editor; the
+    /// shell's editor is in a window and acts on itself.
+    private var editor: EditTextView? {
+        guard let textView else { return nil }
+        if textView.window == nil, let windowEditor = Self.windowEditor() {
+            return windowEditor
+        }
+        return textView
+    }
+
     func performFormattingAction(_ action: FormattingAction) {
-        // The editor itself, not ViewController.shared(): the SwiftUI shell
-        // has no ViewController, and there every Format command did nothing.
-        guard let editArea = textView,
+        guard let editArea = editor,
             let note = editArea.storageNote ?? EditTextView.note,
             editArea.hasFocus()
         else { return }
@@ -44,7 +57,7 @@ class EditorMenuManager {
     }
 
     func insertCodeBlock() {
-        guard let textView = textView else { return }
+        guard let textView = editor else { return }
 
         let currentRange = textView.selectedRange()
 
@@ -75,7 +88,7 @@ class EditorMenuManager {
     }
 
     func insertCodeSpan() {
-        guard let textView = textView else { return }
+        guard let textView = editor else { return }
 
         let currentRange = textView.selectedRange()
 
@@ -113,7 +126,7 @@ class EditorMenuManager {
     }
 
     private func handleFileSelection(urls: [URL], note: Note) {
-        guard let textView = textView else { return }
+        guard let textView = editor else { return }
 
         let clipboardManager = ClipboardManager(textView: textView)
         let last = urls.last
