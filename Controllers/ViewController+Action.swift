@@ -1041,9 +1041,13 @@ extension ViewController {
     }
 
     func pin(_ selectedRows: IndexSet) {
-        guard !selectedRows.isEmpty, let notes = filteredNoteList, var state = filteredNoteList else {
+        guard !selectedRows.isEmpty, let notes = filteredNoteList else {
             return
         }
+        // Row moves are computed against what the table shows. filteredNoteList
+        // keeps storage order when the filter is empty, so its indexes are not
+        // table rows and unpinning animated the wrong row.
+        var state = notesTableView.noteList
 
         var updatedNotes = [(Int, Note)]()
         for row in selectedRows {
@@ -1099,9 +1103,11 @@ extension ViewController {
         }
 
         notesTableView.noteList = resorted
-        notesTableView.reloadData(forRowIndexes: newIndexes, columnIndexes: [0])
-        notesTableView.selectRowIndexes(newIndexes, byExtendingSelection: false)
         notesTableView.endUpdates()
+        // Every row redrawn from the new order, so a click always opens the
+        // note the row shows.
+        notesTableView.reloadData()
+        notesTableView.selectRowIndexes(newIndexes, byExtendingSelection: false)
         filteredNoteList = resorted
     }
 
