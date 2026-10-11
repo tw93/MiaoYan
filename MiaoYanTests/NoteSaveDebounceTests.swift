@@ -120,6 +120,29 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertEqual(note.content.string, "typed here")
     }
 
+    /// Reload from Disk must not be undone by the save that was still
+    /// waiting when it ran.
+    @MainActor
+    func testReloadDropsTheSaveThatWasStillWaiting() async throws {
+        let url = tempDir.appendingPathComponent("reload.md")
+        try "on disk".write(to: url, atomically: true, encoding: .utf8)
+        let project = Project(url: tempDir, label: "test", isRoot: true)
+        let note = Note(url: url, with: project)
+        note.load()
+        note.save(content: NSMutableAttributedString(string: "stale buffer"))
+        XCTAssertTrue(note.needsSave)
+
+        note.discardPendingSave()
+        note.forceReload()
+        // Let the debounce timer fire on its own: it holds the text from when
+        // it was queued, so a flush (which writes current content) hides it.
+        try await Task.sleep(nanoseconds: 2_000_000_000)
+
+        XCTAssertFalse(note.needsSave)
+        XCTAssertEqual(try String(contentsOf: url, encoding: .utf8), "on disk")
+        XCTAssertEqual(note.content.string, "on disk")
+    }
+
     @MainActor
     func testMissingFileIsNotAFailedLoad() {
         let url = tempDir.appendingPathComponent("not-yet-written.md")

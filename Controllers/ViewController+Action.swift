@@ -353,11 +353,9 @@ extension ViewController {
         // Ensure content is loaded before comparison
         note.ensureContentLoaded()
 
-        // Check if editor has unsaved changes
-        let editorContent = vc.editArea.string
-        let noteContent = note.content.string
-
-        if editorContent != noteContent {
+        // Edits not yet on disk. Comparing the editor with note.content could
+        // never differ: textDidChange copies one into the other on every key.
+        if note.needsSave {
             vc.showReloadConfirmation(note: note)
             return
         }
@@ -381,7 +379,8 @@ extension ViewController {
     private func reloadNoteFromDisk(_ note: Note) {
         let oldContent = editArea.string
 
-        // Force reload from disk
+        // Force reload from disk, dropping the save still waiting to run
+        note.discardPendingSave()
         note.forceReload()
         note.loadModifiedLocalAt()
 

@@ -47,6 +47,14 @@ public class Note: NSObject {
         !isRetired && hasUnpersistedChanges
     }
 
+    /// Drops edits not yet written, for Reload from Disk: otherwise the
+    /// debounced save fired after the reload and wrote the old text back.
+    func discardPendingSave() {
+        saveWorkItem?.cancel()
+        saveWorkItem = nil
+        hasUnpersistedChanges = false
+    }
+
     private var decryptedTemporarySrc: URL?
     public var ciphertextWriter = OperationQueue()
 

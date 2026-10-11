@@ -833,6 +833,7 @@ final class ShellModel {
         note.ensureContentLoaded()
         let reload = { [weak self] in
             guard let self else { return }
+            note.discardPendingSave()
             note.forceReload()
             note.loadModifiedLocalAt()
             if self.editor.textView.storageNote === note {
@@ -841,7 +842,7 @@ final class ShellModel {
             self.noteChangedOnDisk(note)
             self.host?.toast(message: I18n.str("Note reloaded~"), style: .success)
         }
-        let editorHasOther = editor.textView.storageNote === note && editor.textView.string != note.content.string
+        let editorHasOther = note.needsSave
         guard editorHasOther, let window = host?.view.window else {
             reload()
             return
