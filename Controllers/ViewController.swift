@@ -789,6 +789,19 @@ class ViewController:
         formatButton.toolTip = I18n.str("Format")
         previewButton.toolTip = I18n.str("Toggle Preview")
         presentationButton.toolTip = I18n.str("Presentation")
+        // Image-only buttons: VoiceOver read each of them as just "button".
+        formatButton.setAccessibilityLabel(formatButton.toolTip)
+        previewButton.setAccessibilityLabel(previewButton.toolTip)
+        presentationButton.setAccessibilityLabel(presentationButton.toolTip)
+        toggleListButton?.setAccessibilityLabel(I18n.str("Toggle Note List"))
+        toggleSplitButton?.setAccessibilityLabel(I18n.str("Toggle Split View"))
+        addProjectButton?.setAccessibilityLabel(I18n.str("New Folder"))
+        if let newNoteButton = search?.superview?.subviews.compactMap({ $0 as? NSButton })
+            .first(where: { $0.action == #selector(fileMenuNewNote(_:)) })
+        {
+            newNoteButton.toolTip = I18n.str("New")
+            newNoteButton.setAccessibilityLabel(I18n.str("New"))
+        }
 
         // Unify button sizes and let newer systems render their own chrome.
         let toolbarButtons = [formatButton, previewButton, presentationButton, toggleListButton, toggleSplitButton].compactMap { $0 }

@@ -108,6 +108,8 @@ private struct ChromeButton: View {
         }
         .buttonStyle(.plain)
         .help(I18n.str(help))
+        // An image-only button is read as "button" without a label.
+        .accessibilityLabel(I18n.str(help))
     }
 
     @ViewBuilder private var glyph: some View {
