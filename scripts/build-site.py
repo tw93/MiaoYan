@@ -541,7 +541,7 @@ def page(key):
         f'<div class="foot-col"><p class="foot-col-title">{esc(col_help)}</p>'
         f'<a href="#faq">{esc(faq_label)}</a><a href="/privacy.html">{esc(privacy_label)}</a></div>'
         f'<div class="foot-col"><p class="foot-col-title">{esc(col_connect)}</p>'
-        f'<a href="https://twitter.com/HiTw93"{ext}>Twitter</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl"{ext}>Telegram</a></div>'
+        f'<a href="https://x.com/HiTw93"{ext}>X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl"{ext}>Telegram</a></div>'
     )
     ld = json.dumps(
         {
@@ -667,7 +667,7 @@ def page(key):
   <div class="wrap">
     <div class="foot">
       <div class="foot-mark">
-        <a class="brand" href="{path}"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+        <a class="brand" href="{path}"><img src="/assets/bird-night.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
         <p>{esc(c['about'])}</p>
       </div>
       <nav class="foot-cols" aria-label="Footer">{foot}</nav>
