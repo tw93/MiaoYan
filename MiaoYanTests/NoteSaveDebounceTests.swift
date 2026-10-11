@@ -168,6 +168,23 @@ final class NoteSaveDebounceTests: XCTestCase {
         manager.waitForPendingWork()
     }
 
+    /// Legacy notes decode to their own text, never to a lossy guess that
+    /// the next save would write back as UTF-8 mojibake.
+    func testLegacyEncodingsDecodeToTheirOwnText() throws {
+        func encoding(_ cf: CFStringEncodings) -> String.Encoding {
+            String.Encoding(rawValue: CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(cf.rawValue)))
+        }
+        let samples: [(String, String.Encoding)] = [
+            ("这是一篇旧的周报，记录了本周的工作。", encoding(.GB_18030_2000)),
+            ("這是一篇舊的週報，記錄了本週的工作。", encoding(.big5)),
+            ("plain café 中文", .utf8),
+        ]
+        for (text, encoding) in samples {
+            let data = try XCTUnwrap(text.data(using: encoding))
+            XCTAssertEqual(Note.decodeLegacy(data), text)
+        }
+    }
+
     @MainActor
     func testMissingFileIsNotAFailedLoad() {
         let url = tempDir.appendingPathComponent("not-yet-written.md")

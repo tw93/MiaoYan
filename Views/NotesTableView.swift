@@ -396,8 +396,13 @@ class NotesTableView: NSTableView {
                 // the outgoing note. The pre-#543 version compared
                 // EditTextView.note against itself and could never fire.
                 if vc.editArea.storageNote === currentNote {
-                    vc.editArea.saveTextStorageContent(to: currentNote)
-                    currentNote.save(content: currentNote.content)
+                    // Only a buffer that differs is written: an untouched note
+                    // would otherwise be rewritten on every switch, re-encoding
+                    // legacy files and bumping their dates for nothing.
+                    if vc.editArea.string != currentNote.content.string || currentNote.needsSave {
+                        vc.editArea.saveTextStorageContent(to: currentNote)
+                        currentNote.save(content: currentNote.content)
+                    }
                 } else {
                     let mismatch = NSError(
                         domain: "com.tw93.miaoyan.race",

@@ -452,32 +452,35 @@ public class Note: NSObject {
 
             return try NSAttributedString(url: url, options: options, documentAttributes: nil)
         } catch {
-            if let data = try? Data(contentsOf: url) {
-                let encoding = NSString.stringEncoding(for: data, encodingOptions: nil, convertedString: nil, usedLossyConversion: nil)
-
-                let options = getDocOptions(with: String.Encoding(rawValue: encoding))
-                return try? NSAttributedString(url: url, options: options, documentAttributes: nil)
+            if let data = try? Data(contentsOf: url), let text = Self.decodeLegacy(data) {
+                return NSAttributedString(string: text)
             }
         }
 
         return nil
     }
 
+    /// A note that is not UTF-8: the system's guess only when it decodes
+    /// without loss, then GB18030 for old Chinese notes. Accepting a lossy
+    /// guess turned GBK or Big5 notes into mojibake that the next save wrote
+    /// back as UTF-8.
+    nonisolated static func decodeLegacy(_ data: Data) -> String? {
+        if let text = String(data: data, encoding: .utf8) { return text }
+        var converted: NSString?
+        var lossy: ObjCBool = false
+        let encoding = NSString.stringEncoding(
+            for: data, encodingOptions: [.allowLossyKey: false], convertedString: &converted, usedLossyConversion: &lossy)
+        if encoding != 0, !lossy.boolValue, let text = converted as String? {
+            return text
+        }
+        return NoteText.decode(data)
+    }
+
     func getContentAsync() async -> NSAttributedString? {
         guard let url = getContentFileURL() else { return nil }
 
         let stringContent = await Task.detached(priority: .userInitiated) { () -> String? in
-            do {
-                return try String(contentsOf: url, encoding: .utf8)
-            } catch {
-                if let data = try? Data(contentsOf: url) {
-                    let encoding = NSString.stringEncoding(for: data, encodingOptions: nil, convertedString: nil, usedLossyConversion: nil)
-                    if let fallbackString = try? String(contentsOf: url, encoding: String.Encoding(rawValue: encoding)) {
-                        return fallbackString
-                    }
-                }
-            }
-            return nil
+            (try? Data(contentsOf: url)).flatMap(Note.decodeLegacy)
         }.value
 
         guard let string = stringContent else { return nil }
