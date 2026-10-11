@@ -115,6 +115,17 @@ jobs:
           test -s /tmp/description.html
           test -s /tmp/release-body.html
 
+      # The two lists map one to one; a missing translation used to pass
+      # because only non-empty output was checked.
+      - name: Chinese and English lists have the same number of items
+        run: |
+          awk '/^---$/ { part = 2; next } /^[0-9]+\. / { if (part == 2) en++; else zh++ } END { printf "zh=%d en=%d\n", zh, en; exit (zh == en && zh > 0) ? 0 : 1 }' .github/RELEASE_NOTES.md
+
+      - name: Check shell scripts
+        run: |
+          for f in scripts/*.sh scripts/release-ci/*.sh scripts/miaoyan; do bash -n "$f"; done
+          shellcheck -S error scripts/*.sh scripts/release-ci/*.sh scripts/miaoyan
+
   version-consistency:
     name: Version consistency
     runs-on: ubuntu-latest

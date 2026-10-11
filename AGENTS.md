@@ -105,6 +105,11 @@ local-only workaround.
 - Release-notes rendering smoke (`scripts/release-ci/notes_to_html.sh` and
   `render_release_body.sh`) so a broken `.github/RELEASE_NOTES.md` is caught
   before release time, not during it
+- The same job checks that the Chinese and English release-note lists have
+  the same number of items, and runs `bash -n` plus `shellcheck -S error` on
+  `scripts/*.sh`, `scripts/release-ci/*.sh` and `scripts/miaoyan`. ShellCheck
+  does not flag a helper called before its definition (the install.sh `warn`
+  bug), so keep script helpers at the top.
 - On tag pushes (`V*`): version-triplet consistency check
   (`MARKETING_VERSION == CURRENT_PROJECT_VERSION == tag`) to prevent the
   V3.5.1 / #524 incident recurrence
