@@ -696,6 +696,8 @@ class Storage {
 
         let result = readDirectoryWithStatus(project.url)
         let documents = result.items
+        // One set instead of scanning the whole list for every file.
+        let loadedURLs = Set(noteList.map(\.url))
 
         for document in documents {
             let url = document.url
@@ -703,7 +705,7 @@ class Storage {
             guard !Self.shouldHideRemovedTrashItem(at: url, in: project) else { continue }
 
             // Check if note is already loaded to avoid duplicates
-            if noteList.contains(where: { $0.url == url }) {
+            if loadedURLs.contains(url) {
                 continue
             }
 
@@ -959,8 +961,15 @@ class Storage {
             return nil
         }
 
-        let resolvedPath = url.resolvingSymlinksInPath().path.lowercased()
+        // Every file event lands here. Matching the path as given costs no
+        // system calls; resolving symlinks for every note, on every event, made
+        // a git pull touching hundreds of files stall the main thread.
+        let path = url.path.lowercased()
+        if let note = noteList.first(where: { $0.url.path.lowercased() == path }) {
+            return note
+        }
 
+        let resolvedPath = url.resolvingSymlinksInPath().path.lowercased()
         return
             noteList.first(where: {
                 $0.url.resolvingSymlinksInPath().path.lowercased() == resolvedPath
