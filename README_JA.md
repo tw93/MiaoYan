@@ -52,14 +52,14 @@ curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/main/scripts/install.s
 miao open <タイトル|パス>    # ノートまたはフォルダを開く
 miao new <タイトル> [内容]   # 新規ノート作成
 miao search <キーワード>     # ターミナルでノート検索
-miao list [folder]          # 最上位フォルダ、または指定フォルダの Markdown を一覧表示
+miao list [フォルダ]       # 最上位フォルダ、または指定フォルダの Markdown を一覧表示
 miao cat <タイトル|パス>     # ノート内容を表示
 miao update                 # CLI をアップデート
 ```
 
 ## 2ペイン編集・プレビューモード
 
-編集ペインとプレビューペインを並べて表示します。`⌘\` で切り替えるか、設定の「一般」でエディタモードを「分割モード」にすると有効になります。Typora のようなインライン WYSIWYG にしない理由: 純粋な Markdown 編集こそが本質です。Swift によるネイティブ WYSIWYG は肥大化し壊れやすくなります。2ペイン分割により、集中した執筆と滑らかなリアルタイム視覚フィードバックの両立を実現しています。
+編集ペインとプレビューペインを並べて表示します。`⌘\` で切り替えるか、設定の「一般」でエディタモードを「分割モード」にすると有効になります。なぜ Typora のような WYSIWYG にしないのか。Markdown の原文を見ながら書いてほしいからで、Swift でネイティブの WYSIWYG を作ると重く、安定させるのも難しくなります。分割モードなら書くことに集中でき、すぐ隣にリアルタイムのプレビューがあります。
 
 <img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview.png" width="100%" alt="2ペイン編集・プレビューモード" />
 
@@ -74,7 +74,7 @@ miao update                 # CLI をアップデート
 
 ## サポート
 
-- 開発者を直接支援する方法として、Mac クリーナーアプリ [Mole for Mac](https://mole.fit) の購入をご検討ください
+- 私が作った有料の Mac クリーナー [Mole for Mac](https://mole.fit) を使っていただくのが、いちばん直接的な支援になります
 - MiaoYan が役に立ったら、Star を付けたり、[共有](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%AB%E3%81%AE%20Markdown%20%E3%83%8E%E3%83%BC%E3%83%88%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AE%E3%83%8D%E3%82%A4%E3%83%86%E3%82%A3%E3%83%96%20Mac%20%E3%82%A2%E3%83%97%E3%83%AA)したり、Issue や PR をお寄せください
 - 私にはタンユエン（湯円）とコーラ（可楽）という2匹の猫がいます。もし MiaoYan を気に入っていただけたら、<a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">缶詰 🥩</a> をプレゼントしていただけると嬉しいです
 

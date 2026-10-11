@@ -39,7 +39,7 @@ Homebrew 和 GitHub Releases 裝的是開源版本，目前只修問題，App St
 
 妙言不會登入 WebDAV 或雲端硬碟帳號，只讀寫你指定的 Markdown 資料夾，跨裝置同步交給 iCloud 雲碟、堅果雲、Dropbox 等雲端硬碟用戶端。安裝後在 iCloud 雲碟、堅果雲桌面用戶端的同步目錄或其他位置建立 `MiaoYan` 資料夾，開啟設定（⌘,）將儲存位置指向它，就可以開始寫了。
 
-- **iPhone**：在系統「檔案」App 中選擇同一個雲端硬碟資料夾，雲端硬碟 App 沒有提供可寫入資料夾的話，就用 iCloud 雲碟，或先在雲端硬碟 App 裡把該資料夾設為可離線存取再選
+- **iPhone**：在系統「檔案」App 中選擇同一個雲端硬碟資料夾，雲端硬碟 App 沒有提供可寫入資料夾的話，就用 iCloud 雲碟，或先在雲端硬碟 App 裡把這個資料夾設為可離線存取再選
 - **目錄檢查**：妙言會在切換目錄前確認資料夾可讀寫，無法使用時保留原路徑，也不會將問題誤報為妙言自己的雲端同步失敗
 
 ## 命令列工具
@@ -52,7 +52,7 @@ curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/main/scripts/install.s
 miao open <標題|路徑>    # 開啟筆記或資料夾
 miao new <標題> [內容]   # 建立新筆記
 miao search <關鍵字>     # 在終端機搜尋筆記
-miao list [folder]      # 列出一級目錄，或列出指定目錄下的 Markdown
+miao list [資料夾]      # 列出一級目錄，或列出指定目錄下的 Markdown
 miao cat <標題|路徑>     # 輸出筆記內容
 miao update             # 更新 CLI
 ```
@@ -76,7 +76,7 @@ miao update             # 更新 CLI
 
 - 購買我製作的 Mac 清理工具 [Mole for Mac](https://mole.fit)，是對我最直接的支持
 - 如果你喜歡妙言，歡迎給它一個 Star，推薦給身邊喜歡純文字的朋友，[分享出去](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=%E5%A6%99%E8%A8%80%20-%20%E8%BC%95%E9%9D%88%E7%9A%84%20Markdown%20%E7%AD%86%E8%A8%98%E6%9C%AC%EF%BC%8C%E4%BC%B4%E4%BD%A0%E5%AF%AB%E5%87%BA%E5%A6%99%E8%A8%80)，或者提 issue 和 PR
-- 我有兩隻貓，湯圓和可樂，若妙言讓你開心，可以<a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">請她們吃罐頭 🥩</a>
+- 我有兩隻貓，湯圓和可樂，如果妙言讓你開心，可以<a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">請她們吃罐頭 🥩</a>
 
 <details>
 <summary>這些可愛的朋友已經餵過了 🐱</summary>

@@ -52,14 +52,14 @@ curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/main/scripts/install.s
 miao open <제목|경로>     # 노트 또는 폴더 열기
 miao new <제목> [내용]    # 새 노트 생성
 miao search <검색어>      # 터미널에서 노트 검색
-miao list [folder]       # 최상위 폴더 또는 폴더 내 마크다운 목록
+miao list [폴더]        # 최상위 폴더 또는 폴더 내 마크다운 목록
 miao cat <제목|경로>      # 노트 내용 출력
 miao update              # CLI 업데이트
 ```
 
 ## 분할 편집 및 미리보기 모드
 
-편집 영역과 미리보기를 나란히 배치합니다. `⌘\` 키로 분할 모드를 전환하거나 환경설정의 General에서 Editor Mode를 Split Mode로 설정할 수 있습니다. Typora 스타일의 실시간 인라인 렌더링을 하지 않는 이유: 순수한 마크다운 편집이 핵심 가치이기 때문입니다. Swift 기반의 네이티브 WYSIWYG는 무겁고 불안정해지기 쉽습니다. 분할 모드는 작성에 대한 집중을 유지하면서 매끄러운 실시간 시각적 피드백을 제공합니다.
+편집 영역과 미리보기를 나란히 배치합니다. `⌘\` 키로 분할 모드를 전환하거나 환경설정의 General에서 Editor Mode를 Split Mode로 설정할 수 있습니다. 왜 Typora처럼 WYSIWYG로 만들지 않았을까요? 마크다운 원문을 보면서 쓰기를 바라기 때문입니다. Swift로 네이티브 WYSIWYG를 만들면 무겁고 안정적으로 유지하기도 어렵습니다. 분할 모드에서는 글쓰기에 집중하면서 바로 옆에서 실시간 미리보기를 볼 수 있습니다.
 
 <img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview.png" width="100%" alt="분할 편집 및 미리보기 모드" />
 
@@ -74,7 +74,7 @@ miao update              # CLI 업데이트
 
 ## 후원
 
-- 개발자를 지원하는 가장 직접적인 방법은 유료 Mac 정리 앱인 [Mole for Mac](https://mole.fit)을 이용해 주시는 것입니다
+- 제가 만든 유료 Mac 정리 앱 [Mole for Mac](https://mole.fit)을 이용해 주시는 것이 가장 직접적인 후원입니다
 - MiaoYan이 유용했다면 Star를 누르거나, [공유](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=MiaoYan%20-%20%EB%A1%9C%EC%BB%AC%20%EB%A7%88%ED%81%AC%EB%8B%A4%EC%9A%B4%20%EB%85%B8%ED%8A%B8%EB%A5%BC%20%EC%9C%84%ED%95%9C%20%EB%84%A4%EC%9D%B4%ED%8B%B0%EB%B8%8C%20Mac%20%EC%95%B1)하거나, 이슈 및 PR을 남겨주세요
 - 탕위안(TangYuan)과 콜라(Coke)라는 두 마리의 고양이를 키우고 있습니다. MiaoYan이 즐거움을 주었다면 <a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">캔 간식 🥩</a>을 후원해 주세요
 

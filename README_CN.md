@@ -39,7 +39,7 @@ Homebrew 和 GitHub Releases 装的是开源版本，目前只修问题，App St
 
 妙言不会登录 WebDAV 或网盘账号，只读写你指定的 Markdown 文件夹，跨设备同步交给 iCloud 云盘、坚果云、Dropbox 等云盘客户端。安装后在 iCloud 云盘、坚果云桌面客户端的同步目录或其他位置创建 `MiaoYan` 文件夹，打开设置（⌘,）把存储位置指向它，就可以开始写了。
 
-- **iPhone**：在系统“文件”App 中选择同一个云盘文件夹，云盘 App 没有提供可写文件夹的话，就用 iCloud 云盘，或先在云盘 App 里把该文件夹设为离线可用再选
+- **iPhone**：在系统“文件”App 中选择同一个云盘文件夹，云盘 App 没有提供可写文件夹的话，就用 iCloud 云盘，或先在云盘 App 里把这个文件夹设为离线可用再选
 - **目录检查**：妙言会在切换目录前确认文件夹可读写，不可用时保留原路径，也不会把问题误报成妙言自己的云同步失败
 
 ## 命令行工具
@@ -52,7 +52,7 @@ curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/main/scripts/install.s
 miao open <标题|路径>    # 打开笔记或文件夹
 miao new <标题> [内容]   # 创建新笔记
 miao search <关键词>     # 在终端搜索笔记
-miao list [folder]      # 列出一级目录，或列出指定目录下的 Markdown
+miao list [目录]       # 列出一级目录，或列出指定目录下的 Markdown
 miao cat <标题|路径>     # 输出笔记内容
 miao update             # 更新 CLI
 ```
@@ -76,7 +76,7 @@ miao update             # 更新 CLI
 
 - 购买我做的 Mac 清理应用 [Mole for Mac](https://mole.fit)，是对我最直接的支持
 - 如果你喜欢妙言，欢迎给它一个 Star，推荐给身边喜欢纯文本的朋友，[分享出去](https://twitter.com/intent/tweet?url=https://github.com/tw93/MiaoYan&text=%E5%A6%99%E8%A8%80%20-%20%E8%BD%BB%E7%81%B5%E7%9A%84%20Markdown%20%E7%AC%94%E8%AE%B0%E6%9C%AC%EF%BC%8C%E4%BC%B4%E4%BD%A0%E5%86%99%E5%87%BA%E5%A6%99%E8%A8%80)，或者提 issue 和 PR
-- 我有两只猫，汤圆和可乐，若妙言让你开心，可以<a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">请她们吃罐头 🥩</a>
+- 我有两只猫，汤圆和可乐，如果妙言让你开心，可以<a href="https://cats.tw93.fun?name=MiaoYan" target="_blank">请她们吃罐头 🥩</a>
 
 <details>
 <summary>这些可爱的朋友已经投喂过了 🐱</summary>
