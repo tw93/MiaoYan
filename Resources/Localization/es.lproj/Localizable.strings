@@ -305,7 +305,7 @@
 "All Fonts" = "Todas las fuentes";
 "Not installed" = "No instalada";
 "Install the font first" = "Instala la fuente primero";
-"MiaoYan uses this font by default but no longer bundles it. Double-click the downloaded file to install it, and MiaoYan switches to it on its own. Personal non-commercial use is free; commercial work needs a licence from Tsanger." = "MiaoYan usa esta fuente por defecto, pero ya no la incluye. Haz doble clic en el archivo descargado para instalarla y MiaoYan la aplicará sola. El uso personal no comercial es gratuito; el uso comercial requiere una licencia de Tsanger.";
+"MiaoYan does not bundle this font. Double-click the downloaded file to install it, and MiaoYan switches to it on its own. Personal non-commercial use is free; commercial work needs a licence from Tsanger." = "MiaoYan no incluye esta fuente. Haz doble clic en el archivo descargado para instalarla y MiaoYan la aplicará sola. El uso personal no comercial es gratuito; el uso comercial requiere una licencia de Tsanger.";
 "Download Font" = "Descargar la fuente";
 "Chinese" = "Chino";
 "Latin" = "Latina";

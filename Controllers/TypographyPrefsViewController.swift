@@ -200,7 +200,7 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
         return item
     }
 
-    /// Returns the name to store. Picking the default face before it is
+    /// Returns the name to store. Picking TsangerJinKai02 before it is
     /// installed keeps the choice, and the face takes over once installed.
     private func resolveSelection(_ sender: NSPopUpButton, previous: String) -> String? {
         guard let item = sender.selectedItem else { return nil }
@@ -215,7 +215,7 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
         alert.messageText = I18n.str("Install the font first")
         // Joined at runtime into the exact key the strings files use.
         let guidance =
-            "MiaoYan uses this font by default but no longer bundles it. "
+            "MiaoYan does not bundle this font. "
             + "Double-click the downloaded file to install it, and MiaoYan switches to it on its own. "
             + "Personal non-commercial use is free; commercial work needs a licence from Tsanger."
         alert.informativeText = I18n.str(guidance)

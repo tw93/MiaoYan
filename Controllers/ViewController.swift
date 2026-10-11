@@ -344,8 +344,8 @@ class ViewController:
         }
     }
 
-    /// A chosen face that was missing (the default before anyone installs it)
-    /// takes over as soon as it is installed, without a restart or picking it
+    /// A chosen face that was missing (TsangerJinKai02 picked before it is
+    /// installed) takes over as soon as it is installed, without a restart or picking it
     /// again. Unrelated font installs change nothing and redraw nothing.
     private func observeChosenFontInstalls() {
         missingChosenFonts = Self.missingFonts()

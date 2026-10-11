@@ -307,7 +307,7 @@
 "All Fonts" = "すべてのフォント";
 "Not installed" = "未インストール";
 "Install the font first" = "先にフォントをインストールしてください";
-"MiaoYan uses this font by default but no longer bundles it. Double-click the downloaded file to install it, and MiaoYan switches to it on its own. Personal non-commercial use is free; commercial work needs a licence from Tsanger." = "MiaoYan はこのフォントを既定にしていますが同梱はしていません。ダウンロードしたファイルをダブルクリックしてインストールすると、自動で切り替わります。個人の非商用利用は無償、商用利用には倉耳のライセンスが必要です。";
+"MiaoYan does not bundle this font. Double-click the downloaded file to install it, and MiaoYan switches to it on its own. Personal non-commercial use is free; commercial work needs a licence from Tsanger." = "MiaoYan はこのフォントを同梱していません。ダウンロードしたファイルをダブルクリックしてインストールすると、自動で切り替わります。個人の非商用利用は無償、商用利用には倉耳のライセンスが必要です。";
 "Download Font" = "フォントをダウンロード";
 "Chinese" = "中国語";
 "Latin" = "欧文";
