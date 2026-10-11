@@ -28,4 +28,19 @@ final class NotePreviewTests: XCTestCase {
         try "---\n\(keys)\n---\nBody line".write(to: url, atomically: true, encoding: .utf8)
         XCTAssertEqual(NotePreview.text(at: url), "Body line")
     }
+    func testTextSkipsAnOpeningHeadingThatRepeatsTheTitle() throws {
+        // Cards print the title above the preview, so a note that opens with
+        // its own name as an H1 showed it twice ("发布流程 发布流程 打包").
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let same = dir.appendingPathComponent("发布流程.md")
+        try "# 发布流程\n\n打包签名\n公证".write(to: same, atomically: true, encoding: .utf8)
+        XCTAssertEqual(NotePreview.text(at: same), "打包签名 公证")
+
+        // A heading that differs from the file name is content, not a repeat.
+        let other = dir.appendingPathComponent("notes.md")
+        try "# Meeting\n\nAgenda".write(to: other, atomically: true, encoding: .utf8)
+        XCTAssertEqual(NotePreview.text(at: other), "Meeting Agenda")
+    }
 }

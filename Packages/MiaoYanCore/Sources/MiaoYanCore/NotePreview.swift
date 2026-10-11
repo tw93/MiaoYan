@@ -100,6 +100,25 @@ public enum NotePreview {
         (text.hasPrefix("---\n") || text.hasPrefix("---\r\n")) && String(Frontmatter.body(of: text)) == text
     }
 
+    /// Remove the first non-empty line when it is a level-one heading whose
+    /// text matches `title`.
+    static func dropRepeatedTitle(_ input: String, title: String) -> String {
+        let want = title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard !want.isEmpty else { return input }
+        var lines = input.components(separatedBy: "\n")
+        guard let first = lines.firstIndex(where: { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }) else {
+            return input
+        }
+        let line = lines[first].trimmingCharacters(in: .whitespacesAndNewlines)
+        guard line.hasPrefix("# ") else { return input }
+        var heading = String(line.dropFirst(2))
+        while heading.hasSuffix("#") { heading.removeLast() }
+        heading = stripEmphasisMarkers(stripNoise(heading)).trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard heading == want else { return input }
+        lines.remove(at: first)
+        return lines.joined(separator: "\n")
+    }
+
     /// Strip fenced code blocks (``` ... ```).
     static func stripCodeBlocks(_ input: String) -> String {
         guard let re = codeBlockRegex else { return input }
@@ -152,7 +171,7 @@ public enum NotePreview {
         }
         if hasOpenFrontmatter(head) { return "" }
 
-        return cardText(from: head)
+        return cardText(from: head, title: url.deletingPathExtension().lastPathComponent)
     }
 
     /// A byte-limited read usually ends inside a multi-byte character, and a
@@ -165,10 +184,14 @@ public enum NotePreview {
         return nil
     }
 
-    public static func cardText(from head: String) -> String {
+    /// `title` is the note's name as the row or card already prints it. An
+    /// opening `# heading` that only repeats it is dropped, or the card read
+    /// "发布流程 发布流程 打包"; a heading that says something else stays.
+    public static func cardText(from head: String, title: String? = nil) -> String {
         var s = head
         s = String(Frontmatter.body(of: s))
         s = stripCodeBlocks(s)
+        if let title { s = dropRepeatedTitle(s, title: title) }
         // Markers BEFORE noise: stripMarkdownMarkers uses ^ anchors that
         // need real newlines. stripNoise no longer collapses
         // whitespace, so newlines survive into this step.
