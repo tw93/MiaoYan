@@ -2,19 +2,6 @@ import Carbon.HIToolbox
 import QuartzCore
 import WebKit
 
-private final class WeakScriptMessageHandler: NSObject, WKScriptMessageHandler {
-    private weak var handler: WKScriptMessageHandler?
-
-    init(_ handler: WKScriptMessageHandler) {
-        self.handler = handler
-        super.init()
-    }
-
-    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        handler?.userContentController(userContentController, didReceive: message)
-    }
-}
-
 public typealias MPreviewViewClosure = () -> Void
 
 // MARK: - Protocol Definition
@@ -576,11 +563,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
         }
     }
 
-    // MARK: - Helper Methods
-    func resetTemplateState() {
-        hasLoadedTemplate = false
-    }
-
     func resetPreviewStateForReuse() {
         contentUpdateVersion &+= 1
         contentUpdateWorkItem?.cancel()
@@ -712,23 +694,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
             self?.evaluateJavaScript("Reveal.slide(\(index));", completionHandler: nil)
         }
     }
-    public func scrollToPosition(pre: CGFloat) {
-        let clamped = Double(max(min(pre, 1), 0))
-        let script = """
-                (function() {
-                    const doc = document.scrollingElement || document.documentElement || document.body;
-                    const maxScroll = Math.max(0, (doc.scrollHeight || document.body.scrollHeight) - window.innerHeight);
-                    const target = maxScroll * \(clamped);
-                    window.scrollTo(0, target);
-                })();
-            """
-        self.evaluateJavaScript(script) { _, error in
-            #if DEBUG
-                if let error = error { print("[ScrollSync] scrollToPosition error: \(error.localizedDescription)") }
-            #endif
-        }
-    }
-
     public func scrollToLine(_ line: CGFloat, fallbackRatio: CGFloat? = nil) {
         let clampedFallback = fallbackRatio.map { Double(max(min($0, 1), 0)) }
         let fallback = clampedFallback.map { String($0) } ?? "null"
@@ -1041,26 +1006,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
             """
     }
 
-    private func getTemplate(css: String) -> String? {
-        guard let bundle = HtmlManager.getDownViewBundle(),
-            let baseURL = HtmlManager.getBaseURL(bundle: bundle)
-        else {
-            return nil
-        }
-        guard var template = try? String(contentsOf: baseURL, encoding: .utf8) else {
-            return nil
-        }
-        template = template.replacingOccurrences(of: "DOWN_CSS", with: css)
-        if UserDefaultsManagement.magicPPT {
-            // For PPT mode, also replace the theme placeholder
-            let pptTheme = HtmlManager.getPPTTheme()
-            template = template.replacingOccurrences(of: "DOWN_THEME", with: pptTheme)
-        }
-
-        // Theme handling is now done via CSS imports in HtmlManager.previewStyle()
-        return template
-    }
-
     private func isFootNotes(url: URL) -> Bool {
         let webkitPreviewDir = HtmlManager.previewBundleURL().absoluteString
 
@@ -1101,40 +1046,6 @@ class MPreviewView: WKWebView, WKUIDelegate {
         }
     }
 
-    func loadHTMLView(_ markdownString: String, css: String, imagesStorage: URL? = nil) throws {
-        let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
-        guard let htmlString = renderMarkdownHTML(markdown: markdownString, useGithubLineBreak: useGithubLineBreak) else {
-            throw PreviewError.markdownRenderFailed
-        }
-
-        let processedHtmlString: String
-        if let imagesStorage {
-            processedHtmlString = loadImages(imagesStorage: imagesStorage, html: htmlString)
-        } else {
-            processedHtmlString = htmlString
-        }
-
-        guard let vc = AppContext.shared.viewController else {
-            throw PreviewError.viewControllerUnavailable
-        }
-
-        let pageHTMLString: String
-        if UserDefaultsManagement.magicPPT {
-            // Process images in markdown for PPT mode
-            let processedMarkdown = imagesStorage.map { HtmlManager.processImagesInMarkdown(markdownString, imagesStorage: $0) } ?? markdownString
-            pageHTMLString = try HtmlManager.htmlFromTemplate(processedMarkdown, css: css, currentName: vc.titleLabel.stringValue)
-        } else {
-            pageHTMLString = try HtmlManager.htmlFromTemplate(processedHtmlString, css: css, currentName: vc.titleLabel.stringValue)
-        }
-
-        guard let indexURL = HtmlManager.createTemporaryBundle(pageHTMLString: pageHTMLString) else {
-            throw PreviewError.temporaryBundleCreationFailed
-        }
-
-        // Allow access to root directory to support absolute path images
-        let accessURL = URL(fileURLWithPath: "/")
-        loadFileURL(indexURL, allowingReadAccessTo: accessURL)
-    }
     private static func ensureBundlePreinitialized() {
         Task { @MainActor in
             guard !bundleInitialized else { return }

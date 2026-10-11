@@ -340,33 +340,6 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         super.paste(sender)
     }
 
-    public func saveImages() {
-        guard let storage = textStorage else { return }
-        storage.enumerateAttribute(.attachment, in: NSRange(location: 0, length: storage.length)) { value, range, _ in
-            guard let textAttachment = value as? NSTextAttachment,
-                storage.attribute(.todo, at: range.location, effectiveRange: nil) == nil
-            else {
-                return
-            }
-            let filePathKey = NSAttributedString.Key(rawValue: AppIdentifier.imagePathKey)
-            if (storage.attribute(filePathKey, at: range.location, effectiveRange: nil) as? String) != nil {
-                return
-            }
-            if let url = NSURL(from: NSPasteboard.general), let ext = url.pathExtension {
-                let excludedExtensions = ["app", "xcodeproj", "screenflow", "xcworkspace", "bundle", "lproj"]
-                if !url.isFileURL || excludedExtensions.contains(ext) {
-                    return
-                }
-            }
-            if let note = EditTextView.note,
-                let imageData = textAttachment.fileWrapper?.regularFileContents,
-                let path = ImagesProcessor.writeFile(data: imageData, note: note)
-            {
-                storage.addAttribute(filePathKey, value: path, range: range)
-            }
-        }
-    }
-
     @IBAction func boldMenu(_ sender: Any) {
         menuManager?.performFormattingAction(.bold)
     }

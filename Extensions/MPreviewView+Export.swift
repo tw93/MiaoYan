@@ -870,20 +870,6 @@ extension MPreviewView {
         }
     }
 
-    private func combinePDFs(pdfDatas: [Data]) -> Data? {
-        let pdfDocument = PDFDocument()
-        for pdfData in pdfDatas {
-            if let dataDocument = PDFDocument(data: pdfData) {
-                for pageIndex in 0..<dataDocument.pageCount {
-                    if let page = dataDocument.page(at: pageIndex) {
-                        pdfDocument.insert(page, at: pdfDocument.pageCount)
-                    }
-                }
-            }
-        }
-        return pdfDocument.dataRepresentation()
-    }
-
     // MARK: - PDF Outline (heading bookmarks)
 
     struct PdfHeading {
