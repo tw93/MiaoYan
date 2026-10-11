@@ -114,6 +114,18 @@ class FileSystemEventManager {
     }
 
     private func handleFileRemoval(url: URL) throws {
+        // FSEvents folds removal, creation and rename into one event when a
+        // file is replaced (git checkout, sync clients, editors that unlink and
+        // rewrite). A file that is still there was replaced, not deleted:
+        // removing it retired the note and dropped its last debounced edits.
+        if FileManager.default.fileExists(atPath: url.path) {
+            if storage.getBy(url: url) != nil {
+                try handleFileChange(url: url)
+            } else {
+                try handleFileCreation(url: url)
+            }
+            return
+        }
         guard let note = storage.getBy(url: url) else {
             throw FileSystemError.noteNotFound(url)
         }
