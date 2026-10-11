@@ -17,6 +17,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
     public var searchQuery: String?
     public var newName: String?
     public var newContent: String?
+    /// A miaoyan://goto that arrived before the window, as the CLI's
+    /// `miao open` sends when it launches the app.
+    public var pendingGoto: URL?
     let appContext = AppContext.shared
     private var updaterController: SPUStandardUpdaterController?
 
@@ -123,6 +126,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
                 shell.model.createNote(name: newName ?? "", content: newContent ?? "")
                 newName = nil
                 newContent = nil
+            } else if let goto = pendingGoto {
+                pendingGoto = nil
+                RouteMiaoYanGoto(goto)
             }
             return
         }

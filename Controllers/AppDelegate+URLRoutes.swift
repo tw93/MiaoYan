@@ -138,7 +138,10 @@ extension AppDelegate {
             shell.model.openNote(titled: query)
             return
         }
-        guard let vc = ViewController.shared() else { return }
+        guard let vc = ViewController.shared() else {
+            pendingGoto = url
+            return
+        }
         let notes = vc.storage.noteList.filter { $0.title == query }
         if notes.count > 1 {
             vc.updateTable {
@@ -280,6 +283,11 @@ extension AppDelegate {
         }
         if let tagsParam = url["tags"] {
             body = body.appending("\n\nnvALT tags: \(tagsParam)")
+        }
+        guard ViewController.shared() != nil || shellWindowController != nil else {
+            newName = title
+            newContent = body
+            return
         }
         create(name: title, content: body)
     }

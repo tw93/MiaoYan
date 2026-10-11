@@ -506,6 +506,10 @@ class ViewController:
         if sessionFullScreenMode {
             view.window?.toggleFullScreen(nil)
         }
+        // A link that launched the app runs once, after the normal restore:
+        // the request is cleared as it is taken, so reopening the window
+        // (Command-W, then the Dock) no longer repeats it.
+        var pendingLink: (() -> Void)?
         if let appDelegate = NSApplication.shared.delegate as? AppDelegate {
             if let urls = appDelegate.urls {
                 appDelegate.urls = nil
@@ -513,13 +517,17 @@ class ViewController:
                 return
             }
             if let query = appDelegate.searchQuery {
-                appDelegate.search(query: query)
-                return
-            }
-            if appDelegate.newName != nil || appDelegate.newContent != nil {
+                appDelegate.searchQuery = nil
+                pendingLink = { appDelegate.search(query: query) }
+            } else if appDelegate.newName != nil || appDelegate.newContent != nil {
                 let name = appDelegate.newName ?? ""
                 let content = appDelegate.newContent ?? ""
-                appDelegate.create(name: name, content: content)
+                appDelegate.newName = nil
+                appDelegate.newContent = nil
+                pendingLink = { appDelegate.create(name: name, content: content) }
+            } else if let goto = appDelegate.pendingGoto {
+                appDelegate.pendingGoto = nil
+                pendingLink = { appDelegate.RouteMiaoYanGoto(goto) }
             }
         }
         handleForAppMode()
@@ -529,6 +537,7 @@ class ViewController:
             needRestorePreview = false
             enablePreview()
         }
+        pendingLink?()
 
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
