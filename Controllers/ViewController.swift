@@ -762,8 +762,10 @@ class ViewController:
                     return false
                 }
             case "findMenu":
+                // Not gated on canUseMenu: Command-F searches the preview during
+                // a presentation, so the menu items stay usable there too.
                 if ["findMenu.find", "findMenu.findAndReplace", "findMenu.next", "findMenu.prev"].contains(menuItem.identifier?.rawValue), notesTableView.selectedRow > -1 {
-                    return canUseMenu
+                    return true
                 }
                 let isPreviewSearchVisible = editArea.markdownView?.isSearchBarVisible ?? false
                 return editArea.isSearchBarVisible || isPreviewSearchVisible || editArea.hasFocus()
