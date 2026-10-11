@@ -143,6 +143,31 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertEqual(note.content.string, "on disk")
     }
 
+    /// History is filed by path; a rename or move must take it along.
+    @MainActor
+    func testVersionHistoryFollowsTheNoteToItsNewPath() async throws {
+        let oldURL = tempDir.appendingPathComponent("before-\(UUID().uuidString).md")
+        let newURL = tempDir.appendingPathComponent("after-\(UUID().uuidString).md")
+        try "first draft".write(to: oldURL, atomically: true, encoding: .utf8)
+        let project = Project(url: tempDir, label: "test", isRoot: true)
+        let note = Note(url: oldURL, with: project)
+        note.load()
+        let manager = NoteVersionManager.shared
+        manager.saveVersionIfNeeded(for: note, force: true)
+        manager.waitForPendingWork()
+        XCTAssertTrue(manager.hasVersions(for: note))
+
+        try FileManager.default.moveItem(at: oldURL, to: newURL)
+        note.overwrite(url: newURL)
+        manager.waitForPendingWork()
+
+        XCTAssertTrue(manager.hasVersions(for: note), "the history moved with the note")
+        let stale = Note(url: oldURL, with: project)
+        XCTAssertFalse(manager.hasVersions(for: stale), "nothing is left under the old path")
+        manager.removeVersions(for: note)
+        manager.waitForPendingWork()
+    }
+
     @MainActor
     func testMissingFileIsNotAFailedLoad() {
         let url = tempDir.appendingPathComponent("not-yet-written.md")

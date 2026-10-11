@@ -90,6 +90,39 @@ final class NoteVersionManager: @unchecked Sendable {
         }
     }
 
+    /// Versions are filed by path, so a rename, move or trip to the Trash
+    /// has to carry them along: otherwise the history vanished from the UI,
+    /// a new note at the old path inherited it, and deleting from the Trash
+    /// looked under the Trash path and never removed the real directory.
+    func moveVersions(from oldURL: URL, to newURL: URL) {
+        let oldKey = versionKey(for: oldURL)
+        let newKey = versionKey(for: newURL)
+        guard oldKey != newKey else { return }
+        let source = versionsRoot.appendingPathComponent(oldKey)
+        let target = versionsRoot.appendingPathComponent(newKey)
+        queue.async { [weak self] in
+            let manager = FileManager.default
+            guard manager.fileExists(atPath: source.path) else { return }
+            if !manager.fileExists(atPath: target.path) {
+                try? manager.moveItem(at: source, to: target)
+            } else {
+                for file in (try? manager.contentsOfDirectory(at: source, includingPropertiesForKeys: nil)) ?? [] {
+                    try? manager.moveItem(at: file, to: target.appendingPathComponent(file.lastPathComponent))
+                }
+                try? manager.removeItem(at: source)
+                self?.prune(dir: target)
+            }
+            if let last = self?.lastSaved.removeValue(forKey: oldKey) {
+                self?.lastSaved[newKey] = last
+            }
+        }
+    }
+
+    /// Runs after queued version work, for tests and callers that need it done.
+    func waitForPendingWork() {
+        queue.sync {}
+    }
+
     private func versionKey(for url: URL) -> String {
         var hash: UInt64 = 5381
         for byte in url.path.utf8 { hash = hash &* 31 &+ UInt64(byte) }

@@ -258,7 +258,9 @@ class Storage {
         project.label = newURL.lastPathComponent
         for note in noteList {
             guard let path = moved(note.url.path) else { continue }
-            note.url = URL(fileURLWithPath: path)
+            let newNoteURL = URL(fileURLWithPath: path)
+            NoteVersionManager.shared.moveVersions(from: note.url, to: newNoteURL)
+            note.url = newNoteURL
         }
     }
 

@@ -531,7 +531,11 @@ public class Note: NSObject {
     }
 
     public func overwrite(url: URL) {
+        let previousURL = self.url
         self.url = url
+        if previousURL != url {
+            NoteVersionManager.shared.moveVersions(from: previousURL, to: url)
+        }
 
         parseURL()
     }
