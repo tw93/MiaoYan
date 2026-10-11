@@ -102,6 +102,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
             requestStorageDirectory()
             return
         }
+        // Option-Command-M brings the window forward unless someone set
+        // another key; both windows need it, so it is set before either opens.
+        if KeyboardShortcuts.getShortcut(for: .activateWindow) == nil {
+            KeyboardShortcuts.setShortcut(.init(.m, modifiers: [.command, .option]), for: .activateWindow)
+        }
         if #available(macOS 14, *), ShellWindowController.isRequested {
             let shell = ShellWindowController()
             shell.showWindow(nil)
@@ -151,10 +156,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         // Failsafe: Ensure window reveals after 3 seconds even if list loading hangs or fails
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             mainWC.revealWindowWhenReady()
-        }
-
-        if KeyboardShortcuts.getShortcut(for: .activateWindow) == nil {
-            KeyboardShortcuts.setShortcut(.init(.m, modifiers: [.command, .option]), for: .activateWindow)
         }
 
     }
@@ -452,6 +453,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
                     vc.pin(vc.notesTableView.selectedRowIndexes)
                     return nil
                 }
+                if #available(macOS 14, *), let shell = self.shellWindowController as? ShellWindowController,
+                    let note = shell.model.selectedNote
+                {
+                    shell.model.togglePin(note)
+                    return nil
+                }
             }
 
             if event.keyCode == 35 || key == "p",  // kVK_ANSI_P
@@ -459,6 +466,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
             {
                 if let vc = self.resolveViewController() {
                     vc.toggleMagicPPT(self)
+                    return nil
+                }
+                if #available(macOS 14, *), let shell = self.shellWindowController as? ShellWindowController {
+                    let model = shell.model
+                    model.setPresenting(!(model.isPresenting && model.isPPT), ppt: true)
                     return nil
                 }
             }
