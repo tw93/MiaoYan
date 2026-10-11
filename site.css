@@ -181,9 +181,9 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
   font-size: 96px; line-height: 1.02; letter-spacing: -1.4px; margin: 0 0 28px;
 }
 html:is([lang="zh-CN"], [lang="zh-Hant"]) .hero h1 { letter-spacing: 2px; }
-.tagline { font-family: var(--serif); font-size: 22px; line-height: 1.45; color: var(--ink); margin: 0 0 10px; max-width: 760px; text-wrap: balance; }
+.tagline { font-family: var(--serif); font-size: 22px; line-height: 1.45; color: var(--ink); margin: 0 0 10px; text-wrap: balance; }
 html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { line-height: 1.6; word-break: keep-all; }
-.lede { font-size: 17px; color: var(--olive); margin: 0 0 18px; max-width: 720px; }
+.lede { font-size: 17px; color: var(--olive); margin: 0 0 18px; }
 .trust { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 0 0 32px; padding: 0; list-style: none; }
 .trust li {
   display: inline-flex; align-items: center;
@@ -209,7 +209,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { l
 /* Sections */
 section { margin-bottom: var(--gap); scroll-margin-top: 100px; }
 .section-title { font-family: var(--serif); font-weight: 500; color: var(--ink); font-size: 32px; line-height: 1.25; margin: 0 0 12px; }
-.section-lede { font-size: 17px; color: var(--olive); margin: 0 0 24px; max-width: 760px; }
+.section-lede { font-size: 17px; color: var(--olive); margin: 0 0 24px; }
 html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { text-wrap: pretty; line-break: strict; }
 .section-title + .cards, .section-title + details { margin-top: 24px; }
 
@@ -250,7 +250,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { 
 .faq summary::-webkit-details-marker { display: none; }
 .faq summary::after { content: "+"; color: var(--stone); }
 .faq details[open] summary::after { content: "−"; }
-.faq p { margin: 10px 0 0; color: var(--body); max-width: 820px; }
+.faq p { margin: 10px 0 0; color: var(--body); }
 
 /* Footer: the app's dark paper, the brand block beside three link columns. */
 footer { background: var(--night); color: var(--night-dim); padding: 60px 0 32px; font-size: 14px; }
