@@ -86,6 +86,40 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertEqual(try String(contentsOf: url, encoding: .utf8), "the real body")
     }
 
+    /// File events are paused while typing, so a sync that lands then never
+    /// reaches a resident note. Opening it must pick the new text up.
+    @MainActor
+    func testResidentNoteRereadsAFileChangedElsewhere() throws {
+        let url = tempDir.appendingPathComponent("synced.md")
+        try "old".write(to: url, atomically: true, encoding: .utf8)
+        let project = Project(url: tempDir, label: "test", isRoot: true)
+        let note = Note(url: url, with: project)
+        note.load()
+        note.loadModifiedLocalAt()
+
+        try "from the other Mac".write(to: url, atomically: true, encoding: .utf8)
+        try FileManager.default.setAttributes([.modificationDate: Date().addingTimeInterval(60)], ofItemAtPath: url.path)
+
+        XCTAssertTrue(note.reloadIfChangedOnDisk())
+        XCTAssertEqual(note.content.string, "from the other Mac")
+    }
+
+    @MainActor
+    func testLocalEditsWinOverAReloadUntilSaved() throws {
+        let url = tempDir.appendingPathComponent("editing.md")
+        try "old".write(to: url, atomically: true, encoding: .utf8)
+        let project = Project(url: tempDir, label: "test", isRoot: true)
+        let note = Note(url: url, with: project)
+        note.load()
+        note.loadModifiedLocalAt()
+        note.save(content: NSMutableAttributedString(string: "typed here"))
+
+        try FileManager.default.setAttributes([.modificationDate: Date().addingTimeInterval(60)], ofItemAtPath: url.path)
+
+        XCTAssertFalse(note.reloadIfChangedOnDisk(), "a pending local edit is never replaced by a silent reload")
+        XCTAssertEqual(note.content.string, "typed here")
+    }
+
     @MainActor
     func testMissingFileIsNotAFailedLoad() {
         let url = tempDir.appendingPathComponent("not-yet-written.md")

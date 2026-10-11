@@ -179,6 +179,21 @@ public class Note: NSObject {
         markLoadFailure(context: "Note.forceReload")
     }
 
+    /// Re-reads a resident note whose file changed on disk since this app
+    /// last read or wrote it, when there are no local edits waiting. File
+    /// events are paused while typing, so a sync that lands then is never
+    /// delivered; without this the stale text is shown and saved back over
+    /// the synced version on the next switch.
+    @discardableResult
+    func reloadIfChangedOnDisk() -> Bool {
+        guard isContentLoaded, !hasUnpersistedChanges, !hasPendingSave,
+            let modifiedAt = getFileModifiedDate(), modifiedAt > modifiedLocalAt
+        else { return false }
+        forceReload()
+        loadModifiedLocalAt()
+        return true
+    }
+
     func loadModifiedLocalAt() {
         guard let modifiedAt = getFileModifiedDate() else {
             modifiedLocalAt = Date()
