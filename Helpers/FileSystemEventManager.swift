@@ -50,7 +50,7 @@ class FileSystemEventManager {
                 throw FileSystemError.invalidPath(event.path)
             }
 
-            guard isValidFileType(url) else { return }
+            guard !Self.isConflictBackup(url), isValidFileType(url) else { return }
 
             let processedURL = url
 
@@ -329,14 +329,20 @@ class FileSystemEventManager {
         }
     }
 
+    static let conflictsFolderName = ".miaoyan-conflicts"
+
+    /// A backup written by writeConflictBackup. Reporting it as a missing
+    /// note filled the diagnostics log, which keeps only 50 entries.
+    static func isConflictBackup(_ url: URL) -> Bool {
+        url.pathComponents.contains(conflictsFolderName)
+    }
+
     private func writeConflictBackup(for note: Note, editorContent: String) {
-        // Conflicts must NOT live under the note's project directory:
-        // the project is in `observedFolders` so FSEvents would re-fire for
-        // our own write and import the backup as a brand-new note (with a
-        // hideous .myNote-conflict-2026-... title cluttering the sidebar).
-        // Instead route every project's conflicts to a single hidden
-        // sibling of the storage root, which is never registered as a
-        // project and therefore never observed.
+        // Conflicts must NOT live in a note's folder, or they would be listed
+        // as notes. They go to one hidden folder inside the storage root:
+        // storage scanning skips hidden folders, and the watcher, which does
+        // see writes there, ignores them through isConflictBackup. The root's
+        // parent is not used because a sandboxed app may not write there.
         guard let storageRoot = UserDefaultsManagement.storageUrl else {
             let err = NSError(
                 domain: "com.tw93.miaoyan.conflict",
@@ -346,7 +352,7 @@ class FileSystemEventManager {
             return
         }
 
-        let conflictsRoot = storageRoot.appendingPathComponent(".miaoyan-conflicts", isDirectory: true)
+        let conflictsRoot = storageRoot.appendingPathComponent(Self.conflictsFolderName, isDirectory: true)
         do {
             try FileManager.default.createDirectory(at: conflictsRoot, withIntermediateDirectories: true)
         } catch {

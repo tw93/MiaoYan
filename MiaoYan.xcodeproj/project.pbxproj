@@ -88,6 +88,7 @@
 		33F1E2FF1B56462C8C96769E /* MiaoYanTests/PrefsWindowControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D206592CF7404E1D9AF623FD /* MiaoYanTests/PrefsWindowControllerTests.swift */; };
 		452D621FD0BD8D78F323777C /* MiaoYanTests/GitHubAlertsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */; };
 		F51B4048259C36431AF78CA5 /* MiaoYanTests/NoteFrontmatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */; };
+		FDB06D96D28FCCD7E8008048 /* MiaoYanTests/ConflictBackupPathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90264F9B678B774307403426 /* MiaoYanTests/ConflictBackupPathTests.swift */; };
 		4D622B20D7A8935A9CA84294 /* MiaoYanTests/EditorMenuRoutingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9880FD63356E90A59E9ECB15 /* MiaoYanTests/EditorMenuRoutingTests.swift */; };
 		DEEA4E29F1F475084B5F13A5 /* MiaoYanTests/NotesTableReloadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D850FFA857162CFDC58FD691 /* MiaoYanTests/NotesTableReloadTests.swift */; };
 		4C24DBFE74DA90CA7C1226C5 /* MiaoYanTests/StorageRelocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E08B471339557753C8350EE /* MiaoYanTests/StorageRelocationTests.swift */; };
@@ -280,6 +281,7 @@
 		D206592CF7404E1D9AF623FD /* MiaoYanTests/PrefsWindowControllerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/PrefsWindowControllerTests.swift; sourceTree = SOURCE_ROOT; };
 		C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/GitHubAlertsTests.swift; sourceTree = SOURCE_ROOT; };
 		7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/NoteFrontmatterTests.swift; sourceTree = SOURCE_ROOT; };
+		90264F9B678B774307403426 /* MiaoYanTests/ConflictBackupPathTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/ConflictBackupPathTests.swift; sourceTree = SOURCE_ROOT; };
 		9880FD63356E90A59E9ECB15 /* MiaoYanTests/EditorMenuRoutingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/EditorMenuRoutingTests.swift; sourceTree = SOURCE_ROOT; };
 		D850FFA857162CFDC58FD691 /* MiaoYanTests/NotesTableReloadTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/NotesTableReloadTests.swift; sourceTree = SOURCE_ROOT; };
 		9E08B471339557753C8350EE /* MiaoYanTests/StorageRelocationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MiaoYanTests/StorageRelocationTests.swift; sourceTree = SOURCE_ROOT; };
@@ -458,6 +460,7 @@
 				B738F144215845899083B5C4 /* MiaoYanTests/StorageInitContentDecisionTests.swift */,
 				C7D4BC0BCD2C364D59E53FA6 /* MiaoYanTests/GitHubAlertsTests.swift */,
 				7657AFD4D24AA71B9A256741 /* MiaoYanTests/NoteFrontmatterTests.swift */,
+				90264F9B678B774307403426 /* MiaoYanTests/ConflictBackupPathTests.swift */,
 				9880FD63356E90A59E9ECB15 /* MiaoYanTests/EditorMenuRoutingTests.swift */,
 				D850FFA857162CFDC58FD691 /* MiaoYanTests/NotesTableReloadTests.swift */,
 				9E08B471339557753C8350EE /* MiaoYanTests/StorageRelocationTests.swift */,
@@ -817,6 +820,7 @@
 				BAE809BB946B47E89F92E155 /* MiaoYanTests/StorageInitContentDecisionTests.swift in Sources */,
 				452D621FD0BD8D78F323777C /* MiaoYanTests/GitHubAlertsTests.swift in Sources */,
 				F51B4048259C36431AF78CA5 /* MiaoYanTests/NoteFrontmatterTests.swift in Sources */,
+				FDB06D96D28FCCD7E8008048 /* MiaoYanTests/ConflictBackupPathTests.swift in Sources */,
 				4D622B20D7A8935A9CA84294 /* MiaoYanTests/EditorMenuRoutingTests.swift in Sources */,
 				DEEA4E29F1F475084B5F13A5 /* MiaoYanTests/NotesTableReloadTests.swift in Sources */,
 				4C24DBFE74DA90CA7C1226C5 /* MiaoYanTests/StorageRelocationTests.swift in Sources */,
