@@ -424,7 +424,12 @@ class NotesTableView: NSTableView {
             // producing a row-0 flash for one frame before the right row lands.
             guard !suppressSelectionSideEffects else { return }
             if !noteList.isEmpty {
-                vc.ensureNoteSelection()
+                // Prefer the note that was open (lastSelectedURL follows every
+                // fill). A list reload that clears the selection otherwise
+                // jumped to the first row, which is how launch lost the note
+                // it had just restored; a folder without that note still
+                // falls back to its first row.
+                vc.ensureNoteSelection(preferLastSelected: true)
             } else {
                 vc.editArea.clear()
             }
