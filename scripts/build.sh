@@ -223,13 +223,21 @@ echo "[5/6] Signing..."
 SIGN_UPDATE=$(ls -t ~/Library/Developer/Xcode/DerivedData/MiaoYan-*/SourcePackages/artifacts/sparkle/Sparkle/bin/sign_update 2>/dev/null | head -1)
 
 if [ -n "$SIGN_UPDATE" ] && [ -x "$SIGN_UPDATE" ]; then
+	# Only the MiaoYan release key: the Keychain's default Sparkle account is
+	# another key, and updates signed with it are refused by installed apps.
 	if [ -n "$KEY_PATH" ] && [ -f "$KEY_PATH" ]; then
 		SPARKLE_OUTPUT=$("$SIGN_UPDATE" -f "$KEY_PATH" "./build/$ZIP_NAME" 2>&1)
+		SIGNATURE=$(echo "$SPARKLE_OUTPUT" | grep "sparkle:edSignature" | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
+		if [ -n "$SIGNATURE" ]; then
+			bash "$(dirname "$0")/release-ci/verify_sparkle_signature.sh" --zip "./build/$ZIP_NAME" --signature "$SIGNATURE" || {
+				echo -e "${RED}ERROR: Sparkle signature does not verify against the ZIP and the app's SUPublicEDKey${NC}"
+				exit 1
+			}
+		fi
 	else
-		# Use key from Keychain (default for Sparkle 2)
-		SPARKLE_OUTPUT=$("$SIGN_UPDATE" "./build/$ZIP_NAME" 2>&1)
+		echo -e "${YELLOW}SPARKLE_PRIVATE_KEY not set, skipping the Sparkle signature${NC}"
+		SIGNATURE=""
 	fi
-	SIGNATURE=$(echo "$SPARKLE_OUTPUT" | grep "sparkle:edSignature" | sed 's/.*sparkle:edSignature="\([^"]*\)".*/\1/')
 	ZIP_SIZE=$(stat -f%z "./build/$ZIP_NAME")
 else
 	echo -e "${YELLOW}sign_update not found${NC}"
@@ -249,6 +257,6 @@ echo "  ZIP: $DOWNLOADS/$ZIP_NAME"
 if [ -n "$SIGNATURE" ]; then
 	echo ""
 	echo "appcast.xml:"
-	echo "<enclosure url=\"https://miaoyan.app/Release/$ZIP_NAME\" sparkle:shortVersionString=\"$VERSION\" sparkle:version=\"$VERSION\" sparkle:edSignature=\"$SIGNATURE\" length=\"$ZIP_SIZE\" type=\"application/octet-stream\"/>"
+	echo "<enclosure url=\"https://github.com/tw93/MiaoYan/releases/download/V$VERSION/$ZIP_NAME\" sparkle:shortVersionString=\"$VERSION\" sparkle:version=\"$VERSION\" sparkle:edSignature=\"$SIGNATURE\" length=\"$ZIP_SIZE\" type=\"application/octet-stream\"/>"
 fi
 echo ""
