@@ -14,6 +14,17 @@ INSTALL_DIR="${MIAOYAN_INSTALL_DIR:-$HOME/.local/bin}"
 SCRIPT_NAME="miao"
 ALIAS_NAME="miaoyan"
 
+# Defined before first use: the release lookup below warns on failure.
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+info() { echo -e "${GREEN}▸${NC} $1"; }
+warn() { echo -e "${YELLOW}▸${NC} $1"; }
+error() { echo -e "${RED}▸${NC} $1" >&2; exit 1; }
+
 # Source ref for the `miao` script. Defaults to the latest GitHub release tag
 # so a bad push to main cannot break new installs. Set MIAOYAN_INSTALL_REF to
 # override (e.g. `MIAOYAN_INSTALL_REF=main` for local development).
@@ -28,15 +39,6 @@ if [[ -z "$INSTALL_REF" ]]; then
     fi
 fi
 
-# Colors
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m'
-
-info() { echo -e "${GREEN}▸${NC} $1"; }
-warn() { echo -e "${YELLOW}▸${NC} $1"; }
-error() { echo -e "${RED}▸${NC} $1" >&2; exit 1; }
 
 # Check macOS
 [[ "$(uname)" != "Darwin" ]] && error "MiaoYan CLI is macOS only."
