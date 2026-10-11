@@ -29,9 +29,16 @@ A single macOS application process owns:
 - One `WKWebView` instance per editor pane that loads
   `Resources/DownView.bundle/index.html` for live preview.
 
-The App Store edition and the iPhone and iPad app live in the private
-`tw93/MiaoYan-Pro` repository. They read the same note folders and follow the
-same filesystem conventions, but no code is shared with this repository.
+A SwiftUI main window under `Shell/` (`ShellWindowController`, `ShellModel`,
+`ShellRootView`) opens instead of the storyboard window when the app is
+launched with `-MiaoYanShell YES`. It hosts the same `EditTextView` and
+`MPreviewView` and stays behind the flag until it reaches parity.
+
+Logic the Mac app shares with the iPhone app (frontmatter, search matching,
+note text decoding, list previews) lives in the local package
+`Packages/MiaoYanCore`. The iPhone and iPad app and the App Store packaging
+live in the private `tw93/MiaoYan-Pro`, which merges this repository's `main`;
+this repository is the only Mac codebase.
 
 ## Singleton & Facade Inventory
 
@@ -139,8 +146,8 @@ Bundled JS used by the preview is vendored under
 
 ## Release & Update Path
 
-- Mac App Store builds come from the private `tw93/MiaoYan-Pro`, not from
-  this repository.
+- Mac App Store builds come from the private `tw93/MiaoYan-Pro` after it
+  merges this repository's `main`.
 - Direct downloads: `bash scripts/build.sh` produces a zipped `.app`. The
   Sparkle `appcast.xml` is updated by `scripts/release-ci/update_appcast.sh`
   (needs the Sparkle EdDSA private key).
