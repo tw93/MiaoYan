@@ -517,7 +517,8 @@ CA
                                                 <action selector="performZoom:" target="Ady-hI-5gd" id="Wrc-W7-8lh"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Main Window" state="on" keyEquivalent="\" id="qZf-Xp-kDW">
+                                        <menuItem title="Main Window" state="on" keyEquivalent="0" id="qZf-Xp-kDW">
+                                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                                             <connections>
                                                 <action selector="openMainWindow:" target="Voe-Tx-rLC" id="wG8-zv-K7f"/>
                                             </connections>
