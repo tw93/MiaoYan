@@ -261,6 +261,8 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
         // Live-apply interface font without restart
         if let vc = ViewController.shared() {
             vc.applyInterfacePreferences()
+        } else {
+            NotificationCenter.default.post(name: .editorSettingsChanged, object: nil)
         }
     }
 

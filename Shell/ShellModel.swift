@@ -756,11 +756,28 @@ final class ShellModel {
     private(set) var previewStyleRevision = 0
 
     /// Editor and preview fonts changed: re-render both with the new sizes.
+    /// Bumped when the interface font changes, which the sidebar and list
+    /// read straight from UserDefaults; they rebuild on it. Other settings
+    /// leave it alone, since a rebuild also resets the list's scroll.
+    var interfaceRevision = 0
+    @ObservationIgnored private var interfaceFont = UserDefaultsManagement.windowFontName
+
     func applyEditorSettings() {
         if let note = EditTextView.note, editor.textView.storageNote === note {
             editor.reload(note)
         }
         previewStyleRevision &+= 1
+        if UserDefaultsManagement.windowFontName != interfaceFont {
+            interfaceFont = UserDefaultsManagement.windowFontName
+            interfaceRevision &+= 1
+        }
+        // Settings writes splitViewMode directly when there is no
+        // ViewController; follow it, or the next mode toggle overwrote it.
+        if UserDefaultsManagement.splitViewMode, editorMode == .edit {
+            editorMode = .split
+        } else if !UserDefaultsManagement.splitViewMode, editorMode == .split {
+            editorMode = .edit
+        }
     }
 
     /// ⌘+ / ⌘- / ⌘0, the storyboard window's zoom: editor and preview move

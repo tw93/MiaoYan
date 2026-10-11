@@ -159,6 +159,7 @@ struct ShellSidebar: View {
             }
             .scrollContentBackground(.hidden)
         }
+        .id(model.interfaceRevision)
         .background(ShellStyle.background.ignoresSafeArea())
         .ignoresSafeArea(.container, edges: .top)
         .focusable()
@@ -360,6 +361,7 @@ struct ShellNoteList: View {
                 return .handled
             }
         }
+        .id(model.interfaceRevision)
         .background(ShellStyle.background.ignoresSafeArea())
         .ignoresSafeArea(.container, edges: .top)
     }

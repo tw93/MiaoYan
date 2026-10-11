@@ -298,6 +298,7 @@ final class GeneralPrefsViewController: BasePrefsViewController {
             vc.applyEditorModePreferenceChange()
         } else {
             UserDefaultsManagement.splitViewMode = isSplit
+            NotificationCenter.default.post(name: .editorSettingsChanged, object: nil)
         }
     }
 
