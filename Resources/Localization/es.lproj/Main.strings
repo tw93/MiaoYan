@@ -694,3 +694,10 @@
 
 /* Class = "NSMenuItem"; title = "Reload Note"; ObjectID = "Rld-Nt-7Xm"; */
 "Rld-Nt-7Xm.title" = "Recargar Nota";
+
+"OiT-03-mnu.title" = "Abrir en Terminal";
+"OiT-01-iTm.title" = "Abrir en Terminal";
+"InC-Cd-Mnu.title" = "Código en línea";
+"CdB-Blk-Mnu.title" = "Bloque de código";
+"Yei-Or-qiI.toolTip" = "Nueva Carpeta";
+"CpP-01-iTm.title" = "Copiar ruta";

@@ -9,7 +9,7 @@ class AboutViewController: NSViewController {
         if let dictionary = Bundle.main.infoDictionary,
             let ver = dictionary["CFBundleShortVersionString"] as? String
         {
-            versionLabel.stringValue = "Version \(ver)"
+            versionLabel.stringValue = "\(I18n.str("Version")) \(ver)"
             versionLabel.isSelectable = true
         }
     }

@@ -316,3 +316,4 @@
 "Unpin Note" = "ノートのピン留めを解除";
 "Image" = "画像";
 "This note could not be read, so it was left as it is" = "このノートを読み込めなかったため、変更せずにそのままにしています";
+"Version" = "バージョン";

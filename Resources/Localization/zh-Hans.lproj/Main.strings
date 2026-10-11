@@ -609,3 +609,12 @@
 
 /* Class = "NSMenuItem"; title = "Reload Note"; ObjectID = "Rld-Nt-7Xm"; */
 "Rld-Nt-7Xm.title" = "重新加载";
+
+"pEY-cr-bnn.title" = "格式";
+"InC-Cd-Mnu.title" = "行内代码";
+"CdB-Blk-Mnu.title" = "代码块";
+"Yei-Or-qiI.toolTip" = "新建文件夹";
+"LoU-Gc-oM3.title" = "导出";
+"Ge6-vi-x3q.title" = "HTML";
+"UcZ-Ne-qv1.title" = "PDF";
+"YNW-vn-A3h.title" = "关于妙言";

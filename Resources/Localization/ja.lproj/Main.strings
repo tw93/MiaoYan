@@ -694,3 +694,10 @@
 
 /* Class = "NSMenuItem"; title = "Reload Note"; ObjectID = "Rld-Nt-7Xm"; */
 "Rld-Nt-7Xm.title" = "再読み込み";
+
+"OiT-03-mnu.title" = "ターミナルで開く";
+"OiT-01-iTm.title" = "ターミナルで開く";
+"InC-Cd-Mnu.title" = "インラインコード";
+"CdB-Blk-Mnu.title" = "コードブロック";
+"Yei-Or-qiI.toolTip" = "新規フォルダ";
+"CpP-01-iTm.title" = "パスをコピー";
