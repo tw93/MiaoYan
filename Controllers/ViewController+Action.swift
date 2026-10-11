@@ -308,6 +308,14 @@ extension ViewController {
     }
 
     @IBAction func finderMenu(_ sender: NSMenuItem) {
+        // File > Reveal in Finder and the folder menu's Show in Finder share
+        // Option-Command-R, and the File menu always wins the key; with the
+        // sidebar focused the shortcut means the folder, as the sidebar's own
+        // key handling intends.
+        if view.window?.firstResponder === storageOutlineView {
+            storageOutlineView.revealInFinder(sender)
+            return
+        }
         if let notes = notesTableView.getSelectedNotes() {
             var urls = [URL]()
             for note in notes {
