@@ -3,7 +3,54 @@
     "silent": true
   },
   "redirects": [
-    { "source": "/cats.html", "destination": "https://cats.tw93.fun", "permanent": true },
-    { "source": "/cats.html/(.*)", "destination": "https://cats.tw93.fun/$1", "permanent": true }
+    {
+      "source": "/cats.html",
+      "destination": "https://cats.tw93.fun",
+      "permanent": true
+    },
+    {
+      "source": "/cats.html/(.*)",
+      "destination": "https://cats.tw93.fun/$1",
+      "permanent": true
+    },
+    {
+      "source": "/Release/MiaoYan.dmg",
+      "destination": "https://apps.apple.com/app/id6759252269",
+      "permanent": false
+    },
+    {
+      "source": "/Release/MiaoYan_V3.1.0.zip",
+      "destination": "https://apps.apple.com/app/id6759252269",
+      "permanent": false
+    }
+  ],
+  "headers": [
+    {
+      "source": "/fonts/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/site.css",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, stale-while-revalidate=86400"
+        }
+      ]
+    }
   ]
 }
