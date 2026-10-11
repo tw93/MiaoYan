@@ -82,6 +82,13 @@ Add a new test:
    gem it needs is not installed on this machine anyway.
 3. Run `xcodebuild test ...` locally, then push.
 
+A green exit code does not prove a new test ran. Check that `Executed N tests`
+grew and that the new test's `Test Case ... passed` line is in the log: a
+method-level `-only-testing:` that matches nothing exits 0 having run zero
+tests, and a test appended to the end of a file holding two `XCTestCase`
+classes lands in the second one. For a regression test, red-run it once on
+the old code and see it fail.
+
 `CODE_SIGNING_ALLOWED=NO` is required on the local test command because
 the dev signing identity used for `MiaoYan.app` and the per-developer
 identity used for `MiaoYanTests.xctest` end up with different Team IDs,
@@ -172,6 +179,8 @@ Avoid broad scans of `build/`, `.build/`, `dist/`, and bundled web assets unless
 - Wikilinks and backlinks depend on `Business/WikilinkIndex.swift`, note loading, search, and sidebar refresh behavior. Keep `[[note]]` parsing, recursive search, and Trash exclusions consistent.
 - iCloud sync lives in macOS storage and `Business/CloudSyncManager.swift`. Verify fallback behavior when iCloud is unavailable.
 - Trash handling spans `Business/Storage.swift`, `Business/Note.swift`, sidebar drag/drop, attachment cleanup, and system Trash fallback.
+- `Note.loadFailed` marks a note whose file exists but could not be read (an iCloud placeholder offline, a permission error). Its buffer holds none of the real text, so `executeSave` refuses every write until a read succeeds and the editor stays read-only for it. Never clear the flag without a successful read: saving that buffer is how an unreadable note used to be replaced by an empty file.
+- ViewController's local key monitor runs `handleKeyDown` for every key and passes every key on (#491: swallowing them broke Command-C on macOS Tahoe), except Return pressed in the list or sidebar, which it consumes after moving focus so the newline never reaches the editor. Views must not call `handleKeyDown` again from their own `keyDown`, or list shortcuts fire twice.
 - A successfully removed note must retire its `Note` instance before any watcher, editor, lifecycle flush, or upload callback can save it again. Existing-note writes must fail closed if the file disappears, and UI rows may be removed only for filesystem operations that succeeded.
 - Note bodies load only when a note is opened (and for Trash), so `note.content` is empty for most notes. Anything deciding whether a note refers to something reads unloaded bodies from disk: Clean Unused Attachments trashed every image of an unopened note until `Storage.findOrphanAttachments` did, and it now returns nil, cleaning nothing, when any note cannot be read.
 - Version history lives in `Business/NoteVersionManager.swift` and `Controllers/VersionHistoryViewController.swift`; keep file IO off the main thread and UI updates on the main thread.
