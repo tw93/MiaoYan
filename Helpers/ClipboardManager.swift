@@ -137,7 +137,6 @@ class ClipboardManager {
         let picType: String
         let textView: EditTextView
         let note: Note
-        let viewController: ViewController
         let placeholder: String
     }
 
@@ -150,9 +149,11 @@ class ClipboardManager {
     }
 
     private func saveClipboard(data: Data, note: Note, ext: String? = nil, url: URL? = nil) {
-        guard let textView = textView,
-            let vc = AppContext.shared.viewController
-        else { return }
+        // Toasts go to whatever controller hosts the editor: the SwiftUI
+        // shell has no ViewController, and requiring one made every image
+        // paste there a silent no-op that still swallowed the paste.
+        guard let textView = textView else { return }
+        let host = textView.window?.contentViewController
 
         if let path = ImagesProcessor.writeFile(data: data, url: url, note: note, ext: ext) {
             let defaultImage = NSAttributedString(string: "![](\(path))")
@@ -162,39 +163,26 @@ class ClipboardManager {
 
             // Only Support PicGo and PicList via HTTP
             if picType == "PicGo" || picType == "PicList" {
-                vc.toastUpload(status: true)
-                let defaultImageString = "![](\(path))"
-                let serverURL = uploadServerURL
+                host?.toast(message: I18n.str("Image upload in progress~"))
+                // A placeholder holds the spot, as for uPic: inserting the link
+                // at the cursor when the upload finished dropped it wherever the
+                // cursor had moved, or over text selected meanwhile.
+                let placeholderText = Self.makeUploadPlaceholder()
+                textView.breakUndoCoalescing()
+                textView.insertText(NSAttributedString(string: placeholderText), replacementRange: textView.selectedRange())
 
-                postToPicGo(imagePath: imagePath, serverURL: serverURL) { [weak self, weak textView, weak vc] result, error in
+                postToPicGo(imagePath: imagePath, serverURL: uploadServerURL) { [weak self] result, error in
                     Task { @MainActor in
-                        let finalImage: NSAttributedString
+                        guard let self else { return }
                         if let resultString = result {
-                            finalImage = NSAttributedString(string: "![](\(resultString))")
-                            self?.deleteImage(tempPath: tempPath)
+                            self.replacePlaceholderWithURL(placeholder: placeholderText, cloudURL: resultString, textView: textView, note: note)
+                            self.deleteImage(tempPath: tempPath)
                         } else {
-                            finalImage = NSAttributedString(string: defaultImageString)
-                            if let error = error {
-                                vc?.toastUpload(status: false)
+                            self.replacePlaceholderWithURL(placeholder: placeholderText, cloudURL: path, textView: textView, note: note)
+                            if let error {
                                 AppDelegate.trackError(error, context: "ClipboardManager.uploadToCloudAsync")
-                            } else {
-                                vc?.toastUpload(status: false)
                             }
-                        }
-                        if let textView, textView.storageNote === note {
-                            textView.breakUndoCoalescing()
-                            textView.insertText(finalImage, replacementRange: textView.selectedRange())
-                        } else if AppEnvironment.current.storage.getBy(url: note.url) != nil {
-                            // The editor moved to another note while the upload
-                            // was in flight. Inserting at the current cursor
-                            // would drop the link into the wrong note (#543);
-                            // append it to the note the paste happened in. The
-                            // storage lookup skips notes deleted meanwhile, so
-                            // the save cannot resurrect a removed file.
-                            let raw = note.content.string
-                            let prefix = raw.isEmpty || raw.hasSuffix("\n") ? "" : "\n"
-                            note.content.append(NSAttributedString(string: prefix + finalImage.string))
-                            note.save()
+                            textView.window?.contentViewController?.toast(message: I18n.str("Image upload failed, Use local~"), style: .failure)
                         }
                     }
                 }
@@ -211,7 +199,6 @@ class ClipboardManager {
                     picType: picType,
                     textView: textView,
                     note: note,
-                    viewController: vc,
                     placeholder: placeholderText
                 )
                 uploadToCloudAsync(parameters: uploadParams)
