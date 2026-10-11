@@ -603,13 +603,17 @@ private struct ShellTitleField: View {
                     .onTapGesture(count: 2) { model.isRenaming = model.selectedNote != nil }
             }
         }
-        .onChange(of: model.selectedNoteURL) { _, _ in model.isRenaming = false }
+        .onChange(of: model.selectedNoteURL) { _, url in
+            // Selecting another note ends an edit; the selection that opens
+            // the field for this note does not.
+            if model.renamingNoteURL != url { model.renamingNoteURL = nil }
+        }
     }
 
     private func commit() {
-        guard model.isRenaming else { return }
-        model.isRenaming = false
-        guard let note = model.selectedNote else { return }
+        guard let url = model.renamingNoteURL else { return }
+        model.renamingNoteURL = nil
+        guard let note = AppEnvironment.current.storage.getBy(url: url) else { return }
         model.rename(note, to: draft)
     }
 }

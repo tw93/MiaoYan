@@ -386,8 +386,16 @@ final class ShellModel {
 
     /// The list's search field is open; menu search and new-note flows open it.
     var isSearchOpen = false
+    /// The note whose title is being edited. Tied to that note, not to a flag:
+    /// a flag was cleared by the selection change that new-note and the
+    /// context menu's Rename make just before opening the field, and the
+    /// commit then renamed whatever was selected by then.
+    var renamingNoteURL: URL?
     /// The note header's title is an editable field.
-    var isRenaming = false
+    var isRenaming: Bool {
+        get { renamingNoteURL != nil && renamingNoteURL == selectedNoteURL }
+        set { renamingNoteURL = newValue ? selectedNoteURL : nil }
+    }
     /// The preview currently on screen, for commands that act on it (TOC).
     @ObservationIgnored weak var preview: MPreviewView?
 
