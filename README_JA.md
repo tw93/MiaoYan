@@ -23,7 +23,7 @@
 
 ## インストール
 
-1. **Mac App Store**（有料、自動アップデート、iPhone / iPad 版を含む）:
+1. **App Store**（おすすめ、一度の購入で iPhone・iPad・Mac で使える、自動アップデート）:
 
    <a href="https://apps.apple.com/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
 
@@ -34,7 +34,7 @@
 
 3. **GitHub Releases**: [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) から最新 DMG をダウンロード（macOS 12.0+）
 
-Homebrew と GitHub Releases でインストールされるオープンソース版は、現在バグ修正のみ行っています。Mac App Store 版は別途開発されており、新機能はそちらに追加されます。
+Homebrew と GitHub Releases でインストールされるのは、同じ無料のオープンソース Mac 版で、開発も続いています。おすすめは App Store 版で、一度の購入で iPhone、iPad、Mac のすべてで使え、どれも同じ iCloud Drive フォルダを開き、自動でアップデートされます。
 
 ## Nutstore や他のクラウドストレージとの同期
 

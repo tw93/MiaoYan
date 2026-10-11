@@ -23,7 +23,7 @@
 
 ## Installation
 
-1. **Mac App Store** (payant, mises à jour automatiques, inclut l'application iPhone et iPad) :
+1. **App Store** (recommandé, un seul achat pour iPhone, iPad et Mac, mises à jour automatiques) :
 
    <a href="https://apps.apple.com/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Télécharger sur le Mac App Store" /></a>
 
@@ -34,7 +34,7 @@
 
 3. **GitHub Releases** : téléchargez le dernier DMG depuis [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) (macOS 12.0+)
 
-Homebrew et GitHub Releases installent la version open source, qui ne reçoit désormais que des correctifs. L'édition Mac App Store est développée séparément et accueille les nouvelles fonctionnalités.
+Homebrew et GitHub Releases installent la même application Mac gratuite et open source, qui continue d'évoluer. La version App Store est recommandée : un seul achat couvre l'iPhone, l'iPad et le Mac, qui ouvrent tous le même dossier iCloud Drive, avec des mises à jour automatiques.
 
 ## Synchronisation avec Nutstore ou d'autres services cloud
 

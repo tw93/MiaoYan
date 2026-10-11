@@ -22,7 +22,7 @@
 
 ## 安裝使用
 
-1. **Mac App Store**（付費，自動更新，含 iPhone 與 iPad 版）：
+1. **App Store**（推薦，一次購買 iPhone、iPad 和 Mac 都能用，自動更新）：
 
    <a href="https://apps.apple.com/app/miaoyan/id6759252269"><img src="https://cdn.tw93.fun/uPic/C3Renh.png" width="160" alt="Download on the Mac App Store" /></a>
 
@@ -33,7 +33,7 @@
 
 3. **GitHub Releases**：從 [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) 下載最新 DMG（macOS 12.0+）
 
-Homebrew 和 GitHub Releases 裝的是開源版本，目前只修問題，App Store 版另外開發，新功能都在那邊。
+Homebrew 和 GitHub Releases 裝的是同一個開源免費的 Mac 版，會一直更新，更推薦 App Store 版，買一次 iPhone、iPad 和 Mac 都能用，打開的是同一個 iCloud 雲碟資料夾，還能自動更新。
 
 ## 用堅果雲或其他雲端硬碟同步妙言
 
