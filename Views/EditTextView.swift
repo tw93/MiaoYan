@@ -227,7 +227,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     override func mouseMoved(with event: NSEvent) {
-        guard window?.contentViewController is ViewController else {
+        // The main window's editor, in either window: the shell hosts it too.
+        guard isShellHosted || window?.contentViewController is ViewController else {
             imagePreviewManager?.hideImagePreview()
             return
         }
