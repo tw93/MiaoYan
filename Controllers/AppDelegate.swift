@@ -170,6 +170,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
                 vc.editArea.saveTextStorageContent(to: activeNote)
             }
             vc.storage.flushPendingSaves()
+        } else if #available(macOS 14, *), let shell = shellWindowController as? ShellWindowController {
+            shell.flushEdits()
         }
         try? FileManager.default.removeItem(at: HtmlManager.previewBundleURL())
         var temporary = URL(fileURLWithPath: NSTemporaryDirectory())

@@ -525,6 +525,23 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
 
     func windowWillClose(_ notification: Notification) {
         model.setPresenting(false)
+        flushEdits()
+    }
+
+    func windowDidResignKey(_ notification: Notification) {
+        flushEdits()
+    }
+
+    /// Writes the editor's text and every debounced save now. A save waits
+    /// 1.5s after the last key, so quitting, closing the window or switching
+    /// apps inside that window would otherwise lose the last edits; the
+    /// storyboard window does the same through its ViewController.
+    func flushEdits() {
+        let editor = model.editor.textView
+        if let owner = editor.storageNote {
+            editor.saveTextStorageContent(to: owner)
+        }
+        AppEnvironment.current.storage.flushPendingSaves()
     }
 }
 
