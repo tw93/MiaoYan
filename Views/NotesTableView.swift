@@ -725,13 +725,10 @@ class NotesTableView: NSTableView {
             return
         }
 
-        if let vc = window?.contentViewController as? ViewController {
-            if !vc.handleKeyDown(with: event) {
-                super.keyDown(with: event)
-            }
-        } else {
-            super.keyDown(with: event)
-        }
+        // ViewController's local key monitor has already run handleKeyDown
+        // for this event; running it again here fired list shortcuts twice
+        // (Option-Command-I opened and closed the info popover at once).
+        super.keyDown(with: event)
     }
 
     public func reloadRow(note: Note) {

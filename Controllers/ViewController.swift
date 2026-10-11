@@ -1,3 +1,4 @@
+import Carbon
 import Cocoa
 import KeyboardShortcuts
 import LocalAuthentication
@@ -1226,9 +1227,18 @@ class ViewController:
         NSEvent.addLocalMonitorForEvents(matching: NSEvent.EventTypeMask.flagsChanged) {
             $0
         }
-        NSEvent.addLocalMonitorForEvents(matching: NSEvent.EventTypeMask.keyDown) {
-            _ = self.handleKeyDown(with: $0)
-            return $0
+        NSEvent.addLocalMonitorForEvents(matching: NSEvent.EventTypeMask.keyDown) { event in
+            let responder = NSApp.mainWindow?.firstResponder
+            let fromList = responder is NotesTableView || responder is SidebarProjectView
+            let passThrough = self.handleKeyDown(with: event)
+            // Handled keys still pass on (#491: swallowing them broke Command-C
+            // on macOS Tahoe). Return from the list or sidebar is the exception:
+            // it has just moved focus, and delivering it to the new first
+            // responder would type a newline into the note.
+            if !passThrough, event.keyCode == kVK_Return, fromList {
+                return nil
+            }
+            return event
         }
     }
 
