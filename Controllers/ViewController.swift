@@ -138,6 +138,9 @@ class ViewController:
     // re-walk the whole text storage on every scroll tick. Invalidated on edit.
     var editorLineStartsCache: [Int]?
     var editorLineStartsCacheLength: Int = -1
+    /// Lines the frontmatter takes in the editor; the preview drops them, so
+    /// its source lines start this much lower. Rebuilt with the line cache.
+    var editorFrontmatterLines = 0
     var needsEditorModeUpdateAfterPreview = false
     var isUnfoldingLayout = false
     var isNormalizingNotelistWidth = false

@@ -1,5 +1,6 @@
 import Cocoa
 import Foundation
+import MiaoYanCore
 import Prettier
 import PrettierMarkdown
 
@@ -1116,9 +1117,12 @@ extension ViewController {
         activeSplitScrollSource = .preview
         splitScrollSuppressionCount += 1
 
+        // The preview reports 1-based lines of the body without frontmatter;
+        // editorLineRect takes a 0-based line of the whole buffer.
         let lineInt = Int(line)
         let fraction = line - CGFloat(lineInt)
-        let rect = editorLineRect(forLine: lineInt)
+        if let storage = editArea.textStorage { _ = lineStarts(for: storage) }
+        let rect = editorLineRect(forLine: lineInt - 1 + editorFrontmatterLines)
         guard rect != .zero,
             let documentView = editAreaScroll.documentView
         else {
@@ -1196,7 +1200,8 @@ extension ViewController {
             let mid = (lo + hi + 1) / 2
             if starts[mid] <= clamped { lo = mid } else { hi = mid - 1 }
         }
-        return CGFloat(lo + 1)
+        // 1-based body line, the numbering the preview's data-sourcepos uses.
+        return CGFloat(max(lo + 1 - editorFrontmatterLines, 1))
     }
 
     // Lazily-populated, per-document cache of line-start character indices.
@@ -1219,6 +1224,9 @@ extension ViewController {
         }
         editorLineStartsCache = starts
         editorLineStartsCacheLength = storage.length
+        let text = storage.string
+        let body = Frontmatter.body(of: text)
+        editorFrontmatterLines = text[..<body.startIndex].reduce(0) { $1 == "\n" || $1 == "\r\n" ? $0 + 1 : $0 }
         return starts
     }
 
