@@ -627,6 +627,7 @@ class ViewController:
                 UserDefaultsManagement.lastProject = selectedRow
 
                 if let item = sidebar.item(atRow: selectedRow) as? SidebarItem {
+                    UserDefaultsManagement.lastProjectPath = item.type == .Category ? item.project?.url.path : nil
                     UserDataService.instance.lastType = item.type.rawValue
                     UserDataService.instance.lastProject = item.project?.url
                     UserDataService.instance.lastName = item.name
@@ -1150,6 +1151,17 @@ class ViewController:
             }
         }
 
+        // A folder is restored by path, expanding the folders above it, so a
+        // subfolder comes back and a reordered sidebar does not shift it.
+        if targetSidebarItem == nil, targetProject == nil, !UserDefaultsManagement.isSingleMode,
+            let path = UserDefaultsManagement.lastProjectPath,
+            let row = storageOutlineView.revealRow(forProjectPath: path),
+            let item = storageOutlineView.item(atRow: row) as? SidebarItem
+        {
+            targetSidebarItem = item
+            lastSidebarItem = row
+        }
+
         if targetSidebarItem == nil,
             targetProject == nil,
             let items = storageOutlineView.sidebarItems,
@@ -1166,8 +1178,7 @@ class ViewController:
         updateTable(sidebarItem: targetSidebarItem, projects: projects) {
             // Set sidebar selection after table update to properly trigger selection change
             if shouldSelectSidebarItem,
-                let items = self.storageOutlineView.sidebarItems,
-                items.indices.contains(lastSidebarItem)
+                (0..<self.storageOutlineView.numberOfRows).contains(lastSidebarItem)
             {
                 // Use a small delay to ensure table is fully loaded before selection
                 let capturedSidebarItem = lastSidebarItem

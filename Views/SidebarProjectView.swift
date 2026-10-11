@@ -654,6 +654,44 @@ class SidebarProjectView: NSOutlineView,
         return 24
     }
 
+    // MARK: - Restoring the folder tree
+
+    /// autosaveExpandedItems stores what this returns and asks for the item
+    /// back at launch; without the pair the expanded state was never saved.
+    func outlineView(_ outlineView: NSOutlineView, persistentObjectForItem item: Any?) -> Any? {
+        guard let item = item as? SidebarItem, item.type == .Category else { return nil }
+        return item.project?.url.path
+    }
+
+    func outlineView(_ outlineView: NSOutlineView, itemForPersistentObject object: Any) -> Any? {
+        guard let path = object as? String else { return nil }
+        return folderItem(forPath: path, expanding: false)
+    }
+
+    /// Expands the folders above `path` and returns the folder's row.
+    func revealRow(forProjectPath path: String) -> Int? {
+        guard let item = folderItem(forPath: path, expanding: true) else { return nil }
+        let row = row(forItem: item)
+        return row >= 0 ? row : nil
+    }
+
+    /// Walks down from the top-level folders to the one at `path`, creating
+    /// children lazily as the data source does.
+    private func folderItem(forPath path: String, expanding: Bool) -> SidebarItem? {
+        var level = sidebarItems?.compactMap { $0 as? SidebarItem }.filter { $0.type == .Category } ?? []
+        while true {
+            let candidates = level.filter { item in
+                guard let folder = item.project?.url.path else { return false }
+                return path == folder || path.hasPrefix(folder + "/")
+            }
+            guard let next = candidates.max(by: { ($0.project?.url.path.count ?? 0) < ($1.project?.url.path.count ?? 0) }) else { return nil }
+            if next.project?.url.path == path { return next }
+            if next.children == nil { next.children = getSubdirectories(for: next) }
+            if expanding { expandItem(next) }
+            level = next.children ?? []
+        }
+    }
+
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
         if let sidebarItem = item as? SidebarItem {
             if sidebarItem.type != .Category {
@@ -840,6 +878,7 @@ class SidebarProjectView: NSOutlineView,
 
                     // Save user's manual selection for restoration on next launch
                     UserDefaultsManagement.lastProject = i
+                    UserDefaultsManagement.lastProjectPath = item.type == .Category ? item.project?.url.path : nil
                 }
 
                 UserDataService.instance.lastType = item.type.rawValue

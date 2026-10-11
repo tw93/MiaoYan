@@ -133,6 +133,7 @@ public enum UserDefaultsManagement {
         static let ImportURLsKey = "ImportURLs"
         static let LastSelectedPath = "lastSelectedPath"
         static let LastProject = "lastProject"
+        static let LastProjectPath = "lastProjectPath"
         static let LineSpacingEditorKey = "lineSpacingEditor"
         static let LineWidthKey = "lineWidth"
         static let MarginSizeKey = "marginSize"
@@ -210,6 +211,18 @@ public enum UserDefaultsManagement {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Constants.LastProject)
+        }
+    }
+
+    /// The folder selected in the sidebar, by path: a row number points at a
+    /// different folder once others are expanded, added or removed. Nil for
+    /// rows that are not folders (All Notes, Trash), which keep lastProject.
+    static var lastProjectPath: String? {
+        get {
+            UserDefaults.standard.string(forKey: Constants.LastProjectPath)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Constants.LastProjectPath)
         }
     }
     static var defaultLanguage: Int {
