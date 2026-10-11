@@ -114,6 +114,15 @@ local-only workaround.
   (`MARKETING_VERSION == CURRENT_PROJECT_VERSION == tag`) to prevent the
   V3.5.1 / #524 incident recurrence
 
+CI builds with Xcode 16.3 (Swift 6.1), whose concurrency checks are stricter
+than the local Xcode 27: reading a main-actor static from a nonisolated
+override, sending `self` into `Task.detached`, or a test calling a helper of a
+type inferred `@MainActor` (anything conforming to `WKScriptMessageHandler`)
+builds locally and fails there. After every push, read the run's result with
+`gh run view`; CI failed unnoticed for a whole batch in 2026-10. A test of the
+1.5s save debounce must let the timer fire on its own: `flushPendingSave`
+writes current content and hides a queued stale write.
+
 CI does NOT run the notarization or Sparkle signing scripts; those need
 maintainer-managed signing keys and run only on the maintainer's machine.
 
