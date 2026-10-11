@@ -80,6 +80,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
 
     private lazy var navigationProxy = NavigationDelegateProxy(owner: self)
     private weak var note: Note?
+    private var loadEpoch = 0
     private var closure: MPreviewViewClosure?
     public static var template: String?
     private static var bundleInitialized = false
@@ -742,6 +743,11 @@ class MPreviewView: WKWebView, WKUIDelegate {
         if let pending = pendingPostLoadUpdateNote, pending !== note {
             pendingPostLoadUpdateNote = nil
         }
+        // Renders run off the main thread and a small note finishes before a
+        // large one; only the newest load may land, or arrowing quickly from
+        // a long note left the preview on it while the list showed another.
+        loadEpoch &+= 1
+        let epoch = loadEpoch
         Task { @MainActor [weak self, note] in
             guard let self else { return }
             let markdownString = note.getPrettifiedContent()
@@ -762,6 +768,7 @@ class MPreviewView: WKWebView, WKUIDelegate {
                 let processed = HtmlManager.processImages(in: html, imagesStorage: imagesStorage)
                 return (processed, nil)
             }.value
+            guard epoch == self.loadEpoch else { return }
 
             guard let rendered else {
                 self.hasLoadedTemplate = false

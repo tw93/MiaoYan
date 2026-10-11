@@ -696,7 +696,11 @@ struct ShellPreview: NSViewRepresentable {
             coordinator.revision = revision
             view.updateContent(note: note)
         } else if coordinator.loadedModifiedAt != note.modifiedLocalAt {
-            load(note, into: view, context: context)
+            // The note was written since the last render, by its own debounced
+            // save or by a sync. Refresh the content in place; a full template
+            // reload here repainted the whole preview after every typing pause.
+            coordinator.loadedModifiedAt = note.modifiedLocalAt
+            view.updateContent(note: note)
         }
     }
 
@@ -705,8 +709,11 @@ struct ShellPreview: NSViewRepresentable {
         context.coordinator.loadedModifiedAt = note.modifiedLocalAt
         context.coordinator.revision = revision
         context.coordinator.styleRevision = styleRevision
+        let coordinator = context.coordinator
         Task { @MainActor in
             await note.ensureContentLoadedAsync()
+            // Another note may have been selected while this one loaded.
+            guard coordinator.loadedURL == note.url else { return }
             view.load(note: note, force: true)
         }
     }
