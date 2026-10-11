@@ -1,6 +1,7 @@
 import Cocoa
 import CoreServices
 import Foundation
+import MiaoYanCore
 import UniformTypeIdentifiers
 
 struct DirectoryItem {
@@ -91,6 +92,36 @@ class Storage {
             $0.parent == project
         }
         .sorted(by: { $0.label.localizedCaseInsensitiveCompare($1.label) == .orderedAscending })
+    }
+
+    /// A folder's subfolders, read from disk and registered as projects the
+    /// first time they are seen. Attachment, cache and hidden folders, and
+    /// folders holding only attachments, are left out. Shared by both
+    /// sidebars.
+    public func subfolders(of project: Project) -> [Project] {
+        let options: FileManager.DirectoryEnumerationOptions = [.skipsHiddenFiles, .skipsPackageDescendants, .skipsSubdirectoryDescendants]
+        let keys: [URLResourceKey] = [.isDirectoryKey, .isPackageKey, .isHiddenKey, .localizedNameKey]
+        guard let enumerator = FileManager.default.enumerator(at: project.url, includingPropertiesForKeys: keys, options: options) else {
+            return []
+        }
+        let skipFolders: Set<String> = ["assets", ".cache", "i", ".Trash", "files"]
+        var found: [Project] = []
+        for case let url as URL in enumerator {
+            let name = url.lastPathComponent
+            guard !skipFolders.contains(name), !name.hasPrefix("."),
+                let values = try? url.resourceValues(forKeys: Set(keys)),
+                values.isDirectory == true, values.isPackage == false,
+                !isAttachmentOnlyFolder(url: url)
+            else { continue }
+            if let existing = projects.first(where: { $0.url == url }) {
+                found.append(existing)
+            } else {
+                let sub = Project(url: url, parent: project)
+                _ = add(project: sub)
+                found.append(sub)
+            }
+        }
+        return found.sorted { $0.label.localizedCaseInsensitiveCompare($1.label) == .orderedAscending }
     }
 
     public func getRootProject() -> Project? {
@@ -395,6 +426,33 @@ class Storage {
                 noteList.append(note)
             }
         }
+    }
+
+    /// Leaves single-file mode in place, back to the library the app
+    /// launched with. Call after `UserDefaultsManagement.clearSingleMode()`.
+    public func reconfigureForLibrary() {
+        guard !UserDefaultsManagement.isSingleMode, let url = UserDefaultsManagement.storageUrl else { return }
+
+        for url in scopedURLs {
+            url.stopAccessingSecurityScopedResource()
+        }
+        scopedURLs.removeAll()
+        startAccessingSecurityScopedResourceIfNeeded(url, bookmarkData: UserDefaultsManagement.storageBookmark)
+
+        projects.removeAll()
+        noteList.removeAll()
+        loadedProjectInfo.removeAll()
+        pinned = 0
+
+        var name = url.lastPathComponent
+        if let iCloudURL = getCloudDrive(), iCloudURL == url {
+            name = "iCloud Drive"
+        }
+        let project = Project(url: url, label: name, isRoot: true, isDefault: true)
+        _ = add(project: project)
+        checkTrashForVolume(url: project.url)
+        loadProjects()
+        loadDocuments {}
     }
 
     func loadDocuments(tryCount: Int = 0, completion: @escaping () -> Void) {
@@ -1127,17 +1185,12 @@ class Storage {
                 unloaded.append(note)
             }
         }
-        let urls = unloaded.map { $0.getURL() }
+        let urls = unloaded.map(\.url)
         let attachmentFolders = collectAttachmentFolders()
 
         Task { @MainActor in
             let texts = await Task.detached(priority: .userInitiated) {
-                urls.map { url -> String? in
-                    if let text = try? String(contentsOf: url, encoding: .utf8) { return text }
-                    guard let data = try? Data(contentsOf: url) else { return nil }
-                    let encoding = NSString.stringEncoding(for: data, encodingOptions: nil, convertedString: nil, usedLossyConversion: nil)
-                    return encoding == 0 ? nil : String(data: data, encoding: String.Encoding(rawValue: encoding))
-                }
+                urls.map { (try? Data(contentsOf: $0)).flatMap(NoteText.decode) }
             }.value
             for (note, text) in zip(unloaded, texts) {
                 guard let text else {

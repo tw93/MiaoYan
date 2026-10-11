@@ -1135,6 +1135,89 @@ public class Note: NSObject {
         isPinned
     }
 
+    /// Moves the note into `project`, taking its `i/` and `files/` attachments
+    /// along and rewriting links whose target name had to change. Callers
+    /// invalidate the note's cache once they are done with it.
+    func move(toProject project: Project) {
+        guard self.project != project else { return }
+        let destination = project.url.appendingPathComponent(name)
+
+        if type == .markdown, container == .none {
+            let imagesMeta = getAllImages()
+            for imageMeta in imagesMeta {
+                relocateAttachment(from: imageMeta.url, imagePath: imageMeta.path, to: project)
+            }
+
+            if !imagesMeta.isEmpty {
+                save()
+            }
+        }
+
+        _ = move(to: destination, project: project)
+    }
+
+    /// Moves (or copies) one attachment into `project`'s attachment folder; on
+    /// a name clash the file gets a fresh name and the note's links follow.
+    func relocateAttachment(from imageURL: URL, imagePath: String, to project: Project, copy: Bool = false) {
+        let dstPrefix = NotesTextProcessor.getAttachPrefix(url: imageURL)
+        let dest = project.url.appendingPathComponent(dstPrefix)
+
+        if !FileManager.default.fileExists(atPath: dest.path) {
+            try? FileManager.default.createDirectory(at: dest, withIntermediateDirectories: false, attributes: nil)
+        }
+
+        do {
+            if copy {
+                try FileManager.default.copyItem(at: imageURL, to: dest)
+            } else {
+                try FileManager.default.moveItem(at: imageURL, to: dest)
+            }
+        } catch {
+            if let fileName = ImagesProcessor.getFileName(from: imageURL, to: dest, ext: imageURL.pathExtension) {
+                let dest = dest.appendingPathComponent(fileName)
+
+                if copy {
+                    try? FileManager.default.copyItem(at: imageURL, to: dest)
+                } else {
+                    try? FileManager.default.moveItem(at: imageURL, to: dest)
+                }
+
+                let prefix = "]("
+                let postfix = ")"
+
+                let find = prefix + imagePath + postfix
+                let replace = prefix + dstPrefix + fileName + postfix
+
+                guard find != replace else {
+                    return
+                }
+
+                while content.mutableString.contains(find) {
+                    let range = content.mutableString.range(of: find)
+                    content.replaceCharacters(in: range, with: replace)
+                }
+            }
+        }
+    }
+
+    /// Renames the file after `title`, as the title bar does: `:` becomes
+    /// `-` and `/` becomes Finder's `:`, a case-only change is allowed, and a
+    /// name another file already has is refused. Returns false when the file
+    /// was not moved.
+    func renameFile(to title: String) -> Bool {
+        let fileName =
+            title
+            .trimmingCharacters(in: CharacterSet.whitespaces)
+            .replacingOccurrences(of: ":", with: "-")
+            .replacingOccurrences(of: "/", with: ":")
+        let current = getFileName()
+        let dst = project.url.appendingPathComponent(fileName).appendingPathExtension(url.pathExtension)
+        let isCaseChange = current.lowercased() == title.lowercased() && current != title
+        guard (!FileManager.default.fileExists(atPath: dst.path) || isCaseChange) && move(to: dst) else { return false }
+        self.title = title
+        return true
+    }
+
     public func getFileName() -> String {
         let fileName = url.deletingPathExtension().pathComponents.last!.replacingOccurrences(of: ":", with: "/")
         return fileName

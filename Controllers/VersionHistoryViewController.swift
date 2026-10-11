@@ -101,6 +101,10 @@ private final class VersionHistoryHairlineView: NSView {
 
 @MainActor
 final class VersionHistoryViewController: NSViewController {
+    /// Set by a window without a ViewController (the SwiftUI shell): after a
+    /// restore it reloads the note there and shows `message`. Unset, the
+    /// storyboard window is refreshed as before.
+    var onRestored: ((_ note: Note, _ message: String) -> Void)?
 
     private enum VersionEntry {
         case current
@@ -487,6 +491,14 @@ final class VersionHistoryViewController: NSViewController {
         else { return }
 
         NoteVersionManager.shared.saveVersionIfNeeded(for: note, force: true)
+        let timeStr = primaryLabel(for: .saved(date: date, url: url))
+        let message = String(format: I18n.str("Restored to version from %@"), timeStr)
+        if let onRestored {
+            note.save(content: NSMutableAttributedString(string: text))
+            dismiss(self)
+            onRestored(note, message)
+            return
+        }
         guard let vc = ViewController.shared() else { return }
 
         note.save(content: NSMutableAttributedString(string: text))
@@ -494,8 +506,7 @@ final class VersionHistoryViewController: NSViewController {
         dismiss(self)
         reselect()
 
-        let timeStr = primaryLabel(for: .saved(date: date, url: url))
-        vc.toast(message: String(format: I18n.str("Restored to version from %@"), timeStr), style: .success)
+        vc.toast(message: message, style: .success)
     }
 
     private func reselect() {

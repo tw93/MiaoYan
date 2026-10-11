@@ -132,8 +132,9 @@ struct ShellSidebar: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
+            HStack(spacing: 2) {
                 Spacer()
+                ChromeButton(image: "addProject", help: "New Folder") { model.promptNewFolder() }
                 ChromeButton(image: "icon_sidebar_left", help: "Toggle Note List") { model.cycleLayout() }
             }
             .padding(.horizontal, 10)
@@ -142,7 +143,7 @@ struct ShellSidebar: View {
             ScrollView {
                 LazyVStack(spacing: 1) {
                     ForEach(model.sidebarRows) { row in
-                        ShellSidebarRow(row: row, isSelected: model.scope == row.id)
+                        ShellSidebarRow(model: model, row: row, isSelected: model.scope == row.id)
                             .contentShape(Rectangle())
                             .onTapGesture {
                                 model.scope = row.id
@@ -171,13 +172,30 @@ struct ShellSidebar: View {
             model.selectNextScope(1)
             return .handled
         }
+        .onKeyPress(.rightArrow) {
+            model.setChosenFolderExpanded(true)
+            return .handled
+        }
+        .onKeyPress(.leftArrow) {
+            model.setChosenFolderExpanded(false)
+            return .handled
+        }
     }
 }
 
 @available(macOS 14, *)
 private struct ShellSidebarRow: View {
+    @Bindable var model: ShellModel
     let row: ShellModel.SidebarRow
     let isSelected: Bool
+    @State private var draft = ""
+    @State private var isDropTarget = false
+    @FocusState private var renaming: Bool
+
+    private var folder: Project? {
+        guard case .project(let url) = row.id else { return nil }
+        return AppEnvironment.current.storage.getProjects().first { $0.url == url }
+    }
 
     private var isBrand: Bool { row.kind == .All }
     private var fontSize: CGFloat { CGFloat(UserDefaultsManagement.nameFontSize) + (isBrand ? 1 : 0) }
@@ -190,27 +208,78 @@ private struct ShellSidebarRow: View {
                 .scaledToFit()
                 .frame(width: isBrand ? 24 : 15, height: isBrand ? 24 : 15)
                 .foregroundStyle(isBrand ? brandTint : ShellStyle.icon)
-            Group {
-                if isBrand {
-                    Text(row.title).font(ShellStyle.brandWordmark(fontSize + 2))
-                } else {
-                    Text(row.title)
-                        .font(ShellStyle.interface(fontSize))
-                        .kerning(ShellStyle.tracking(fontSize))
+            if let folder, model.renamingFolderURL == folder.url {
+                TextField("", text: $draft)
+                    .textFieldStyle(.plain)
+                    .font(ShellStyle.interface(fontSize))
+                    .focused($renaming)
+                    .onSubmit { model.renameFolder(folder, to: draft) }
+                    .onExitCommand { model.renamingFolderURL = nil }
+                    .onAppear {
+                        draft = folder.url.lastPathComponent
+                        renaming = true
+                    }
+                    .onChange(of: renaming) { _, focused in
+                        if !focused, model.renamingFolderURL == folder.url { model.renameFolder(folder, to: draft) }
+                    }
+            } else {
+                Group {
+                    if isBrand {
+                        Text(row.title).font(ShellStyle.brandWordmark(fontSize + 2))
+                    } else {
+                        Text(row.title)
+                            .font(ShellStyle.interface(fontSize))
+                            .kerning(ShellStyle.tracking(fontSize))
+                    }
                 }
+                .foregroundStyle(isBrand ? brandTint : ShellStyle.text)
+                .lineLimit(1)
+                .truncationMode(.tail)
             }
-            .foregroundStyle(isBrand ? brandTint : ShellStyle.text)
-            .lineLimit(1)
-            .truncationMode(.tail)
             Spacer(minLength: 0)
+            if row.hasChildren, let folder {
+                SwiftUI.Image(systemName: "chevron.right")
+                    .font(.system(size: 9, weight: .semibold))
+                    .foregroundStyle(ShellStyle.icon)
+                    .rotationEffect(.degrees(model.expandedFolders.contains(folder.url) ? 90 : 0))
+                    .frame(width: 18, height: 22)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        withAnimation(.easeOut(duration: 0.15)) { model.toggleExpanded(folder.url) }
+                    }
+            }
         }
-        .padding(.leading, isBrand ? 8 : 11)
+        .padding(.leading, (isBrand ? 8 : 11) + CGFloat(row.depth) * 16)
         .padding(.trailing, 8)
         .frame(height: isBrand ? 36 : 30)
         .background(
             RoundedRectangle(cornerRadius: 7, style: .continuous)
-                .fill(isSelected && !isBrand ? ShellStyle.sidebarSelection : .clear)
+                .fill((isSelected && !isBrand) || isDropTarget ? ShellStyle.sidebarSelection : .clear)
         )
+        .contextMenu {
+            if let folder {
+                Button(I18n.str("New Folder")) { model.promptNewFolder() }
+                Button(I18n.str("Rename Folder")) {
+                    model.scope = row.id
+                    model.renamingFolderURL = folder.url
+                }
+                Button(I18n.str("Show in Finder")) { NSWorkspace.shared.activateFileViewerSelecting([folder.url]) }
+                if !folder.isDefault && !folder.isRoot {
+                    Divider()
+                    Button(I18n.str("Delete Folder")) { model.confirmDeleteFolder(folder) }
+                }
+            }
+        }
+        .dropDestination(for: URL.self) { urls, _ in
+            guard let folder else { return false }
+            let storage = AppEnvironment.current.storage
+            let notes = urls.compactMap { storage.getBy(url: $0) }
+            guard !notes.isEmpty else { return false }
+            model.move(notes, to: folder)
+            return true
+        } isTargeted: { targeted in
+            isDropTarget = targeted && folder != nil
+        }
     }
 
     /// The brand row stands for all notes but is a logo, not a list item: it
@@ -238,7 +307,6 @@ struct ShellNoteList: View {
     @Bindable var model: ShellModel
     @FocusState private var listFocused: Bool
     @FocusState private var searchFocused: Bool
-    @State private var isSearchOpen = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -267,6 +335,8 @@ struct ShellNoteList: View {
                                     model.selectedNoteURL = note.url
                                     listFocused = true
                                 }
+                                .contextMenu { ShellNoteMenu(model: model, note: note) }
+                                .draggable(note.url)
                             }
                         }
                     }
@@ -304,10 +374,10 @@ struct ShellNoteList: View {
                 Spacer().frame(width: ShellStyle.trafficLightsInset - 16)
                 ChromeButton(image: "icon_sidebar_left", help: "Toggle Note List") { model.cycleLayout() }
             }
-            if isSearchOpen || !model.searchText.isEmpty {
+            if model.isSearchOpen || !model.searchText.isEmpty {
                 ShellSearchField(text: $model.searchText, focused: $searchFocused) {
                     model.searchText = ""
-                    isSearchOpen = false
+                    model.isSearchOpen = false
                 }
                 .onAppear { searchFocused = true }
             } else {
@@ -318,7 +388,7 @@ struct ShellNoteList: View {
                     .foregroundStyle(ShellStyle.text)
                     .lineLimit(1)
                 Spacer(minLength: 8)
-                ChromeButton(symbol: "magnifyingglass", help: "Search") { isSearchOpen = true }
+                ChromeButton(symbol: "magnifyingglass", help: "Search") { model.isSearchOpen = true }
             }
         }
     }
@@ -450,12 +520,12 @@ struct ShellDetail: View {
                 case .edit:
                     ShellEditorView(controller: model.editor, note: note)
                 case .preview:
-                    ShellPreview(note: note, revision: model.contentRevision)
+                    ShellPreview(note: note, revision: model.contentRevision, styleRevision: model.previewStyleRevision) { model.preview = $0 }
                 case .split:
                     HStack(spacing: 0) {
                         ShellEditorView(controller: model.editor, note: note)
                         Rectangle().fill(ShellStyle.hairline).frame(width: 1)
-                        ShellPreview(note: note, revision: model.contentRevision)
+                        ShellPreview(note: note, revision: model.contentRevision, styleRevision: model.previewStyleRevision) { model.preview = $0 }
                     }
                 }
             } else {
@@ -476,25 +546,118 @@ struct ShellDetail: View {
                 ChromeButton(image: "icon_sidebar_left", help: "Toggle Note List") { model.cycleLayout() }
                     .padding(.trailing, 6)
             }
-            Text(model.selectedNote?.getTitleWithoutLabel() ?? "")
-                .font(ShellStyle.interface(titleSize, weight: ShellStyle.titleWeight))
-                .kerning(ShellStyle.tracking(titleSize))
-                .foregroundStyle(ShellStyle.text)
-                .lineLimit(1)
-                .truncationMode(.middle)
+            ShellTitleField(model: model, size: titleSize)
             Spacer(minLength: 12)
-            ChromeButton(image: "icon_editor_split", help: "Toggle Split Mode", isActive: model.editorMode == .split) {
-                model.toggleSplit()
+            // The mode buttons act on a note; with none open they are gone.
+            if model.selectedNote != nil {
+                ChromeButton(image: "icon_editor_split", help: "Toggle Split Mode", isActive: model.editorMode == .split) {
+                    model.toggleSplit()
+                }
+                ChromeButton(image: "icon_format", help: "Format") { model.format() }
+                ChromeButton(image: "icon_preview", help: "Toggle Preview", isActive: model.editorMode == .preview) {
+                    model.togglePreview()
+                }
+                ChromeButton(image: "icon_presentation", help: "Presentation") { model.setPresenting(true) }
             }
-            ChromeButton(image: "icon_format", help: "Format") { model.format() }
-            ChromeButton(image: "icon_preview", help: "Toggle Preview", isActive: model.editorMode == .preview) {
-                model.togglePreview()
-            }
-            ChromeButton(image: "icon_presentation", help: "Presentation") { model.setPresenting(true) }
         }
         .padding(.leading, ShellStyle.noteTextInset)
         .padding(.trailing, 12)
         .frame(height: ShellStyle.headerHeight)
+    }
+}
+
+/// The note's title in the header. A double click, ⌘R, or a new note turns it
+/// into a field; Return renames the file, Escape leaves it as it was.
+@available(macOS 14, *)
+private struct ShellTitleField: View {
+    @Bindable var model: ShellModel
+    let size: CGFloat
+    @State private var draft = ""
+    @FocusState private var focused: Bool
+
+    var body: some View {
+        let font = ShellStyle.interface(size, weight: ShellStyle.titleWeight)
+        Group {
+            if model.isRenaming, model.selectedNote != nil {
+                TextField(I18n.str("Untitled Note"), text: $draft)
+                    .textFieldStyle(.plain)
+                    .font(font)
+                    .foregroundStyle(ShellStyle.text)
+                    .focused($focused)
+                    .onSubmit(commit)
+                    .onExitCommand { model.isRenaming = false }
+                    .onAppear {
+                        draft = model.selectedNote?.getTitleWithoutLabel() ?? ""
+                        focused = true
+                    }
+                    .onChange(of: focused) { _, isFocused in
+                        if !isFocused { commit() }
+                    }
+            } else {
+                Text(model.selectedNote?.getTitleWithoutLabel() ?? "")
+                    .font(font)
+                    .kerning(ShellStyle.tracking(size))
+                    .foregroundStyle(ShellStyle.text)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                    .onTapGesture(count: 2) { model.isRenaming = model.selectedNote != nil }
+            }
+        }
+        .onChange(of: model.selectedNoteURL) { _, _ in model.isRenaming = false }
+    }
+
+    private func commit() {
+        guard model.isRenaming else { return }
+        model.isRenaming = false
+        guard let note = model.selectedNote else { return }
+        model.rename(note, to: draft)
+    }
+}
+
+/// The note list's right-click menu, the storyboard note menu's everyday items.
+@available(macOS 14, *)
+private struct ShellNoteMenu: View {
+    let model: ShellModel
+    let note: Note
+
+    private func exportSelecting(_ format: ShellModel.ExportFormat) {
+        model.selectedNoteURL = note.url
+        model.export(format)
+    }
+
+    var body: some View {
+        Button(I18n.str(note.isPinned ? "Unpin Note" : "Pin Note")) { model.togglePin(note) }
+        Button(I18n.str("Rename")) {
+            model.selectedNoteURL = note.url
+            model.isRenaming = true
+        }
+        Button(I18n.str("Show in Finder")) { NSWorkspace.shared.activateFileViewerSelecting([note.url]) }
+        if !note.isTrash() {
+            Button(I18n.str("Version History")) {
+                model.selectedNoteURL = note.url
+                model.showVersionHistory()
+            }
+        }
+        if !note.isTrash() {
+            Menu(I18n.str("Move")) {
+                ForEach(model.folders.filter { $0 != note.project }, id: \.url) { folder in
+                    Button(folder.label) { model.move([note], to: folder) }
+                }
+            }
+        }
+        Menu(I18n.str("Export")) {
+            Button("PDF") { exportSelecting(.pdf) }
+            Button(I18n.str("Image")) { exportSelecting(.image) }
+            Button("HTML") { exportSelecting(.html) }
+            Button(I18n.str("MiaoYan PPT PDF")) { exportSelecting(.ppt) }
+        }
+        if !note.isTrash() {
+            Divider()
+            Button(I18n.str("Delete")) {
+                model.selectedNoteURL = note.url
+                model.deleteSelectedNote()
+            }
+        }
     }
 }
 
@@ -504,24 +667,30 @@ struct ShellPreview: NSViewRepresentable {
     let note: Note
     /// A change re-renders the open note in place, keeping its scroll.
     var revision = 0
+    /// A change reloads the page, for stylesheet changes (font size).
+    var styleRevision = 0
+    /// Hands the view to whoever runs commands on it (the TOC toggle).
+    var onMake: ((MPreviewView) -> Void)?
 
     final class Coordinator {
         var loadedURL: URL?
         var loadedModifiedAt: Date?
         var revision = 0
+        var styleRevision = 0
     }
 
     func makeCoordinator() -> Coordinator { Coordinator() }
 
     func makeNSView(context: Context) -> MPreviewView {
         let view = MPreviewView(frame: .zero, note: note, closure: nil)
+        onMake?(view)
         load(note, into: view, context: context)
         return view
     }
 
     func updateNSView(_ view: MPreviewView, context: Context) {
         let coordinator = context.coordinator
-        if coordinator.loadedURL != note.url {
+        if coordinator.loadedURL != note.url || coordinator.styleRevision != styleRevision {
             load(note, into: view, context: context)
         } else if coordinator.revision != revision {
             coordinator.revision = revision
@@ -535,6 +704,7 @@ struct ShellPreview: NSViewRepresentable {
         context.coordinator.loadedURL = note.url
         context.coordinator.loadedModifiedAt = note.modifiedLocalAt
         context.coordinator.revision = revision
+        context.coordinator.styleRevision = styleRevision
         Task { @MainActor in
             await note.ensureContentLoadedAsync()
             view.load(note: note, force: true)

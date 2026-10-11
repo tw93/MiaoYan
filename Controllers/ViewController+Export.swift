@@ -76,3 +76,14 @@ extension ViewController {
         }
     }
 }
+
+extension ViewController: ExportHost {
+    var exportNote: Note? { notesTableView.getSelectedNote() }
+    var exportTitle: String { titleLabel.stringValue }
+
+    func finishPPTExport() {
+        guard shouldDisablePPTAfterExport else { return }
+        disableMiaoYanPPT()
+        shouldDisablePPTAfterExport = false
+    }
+}

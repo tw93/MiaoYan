@@ -10,12 +10,16 @@ final class WikilinkIndex: ObservableObject {
     private init() {}
 
     func rebuild(notes: [Note]) {
+        rebuild(entries: notes.map { ($0.title, $0.content.string) })
+    }
+
+    /// Titles with their text, for callers that read bodies from disk.
+    func rebuild(entries: [(title: String, text: String)]) {
         outlinks.removeAll()
         inlinks.removeAll()
 
-        for note in notes {
-            let title = note.title
-            let links = extractWikilinks(from: note.content.string)
+        for (title, text) in entries {
+            let links = extractWikilinks(from: text)
 
             outlinks[title] = links
 

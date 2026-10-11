@@ -751,3 +751,52 @@ extension ViewController {
         }
     }
 }
+
+// MARK: - FileSystemEventHost
+
+/// The storyboard window's side of disk change handling, the same calls the
+/// event manager made on this controller before the protocol existed.
+extension ViewController: FileSystemEventHost {
+    func fsReloadList(selecting note: Note?, completion: (@MainActor @Sendable () -> Void)?) {
+        updateTable {
+            if let note {
+                self.notesTableView.setSelected(note: note)
+            }
+            completion?()
+        }
+    }
+
+    func fsInsert(_ note: Note) {
+        notesTableView.insertNew(note: note)
+    }
+
+    func fsReloadSidebar() {
+        reloadSideBar()
+    }
+
+    func fsSelectFirstNote() {
+        notesTableView.selectRow(0)
+    }
+
+    func fsRemove(_ notes: [Note]) {
+        guard notesTableView.numberOfRows > 0 else { return }
+        notesTableView.removeByNotes(notes: notes)
+    }
+
+    func fsReload(_ note: Note) {
+        notesTableView.reloadRow(note: note)
+    }
+
+    func fsRefillEditor() {
+        refillEditArea(suppressSave: true)
+    }
+
+    var fsEditorBuffer: (owner: Note?, text: String)? {
+        guard let editArea else { return nil }
+        return (editArea.storageNote, editArea.string)
+    }
+
+    func fsToast(_ message: String, style: ToastStyle) {
+        toast(message: message, style: style)
+    }
+}

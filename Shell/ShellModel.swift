@@ -19,6 +19,34 @@ final class ShellModel {
         let id: Scope
         let title: String
         let kind: SidebarItemType
+        /// How deep a subfolder sits under its top-level folder.
+        var depth = 0
+        var hasChildren = false
+    }
+
+    /// Folders showing their subfolders, as the storyboard outline keeps
+    /// rows expanded while the app runs.
+    private(set) var expandedFolders: Set<URL> = []
+
+    /// Collapsing a folder whose subfolder is chosen chooses the folder.
+    func toggleExpanded(_ url: URL) {
+        if expandedFolders.remove(url) != nil {
+            if case .project(let chosen) = scope, chosen.path.hasPrefix(url.path.hasSuffix("/") ? url.path : url.path + "/") {
+                scope = .project(url)
+            }
+        } else {
+            expandedFolders.insert(url)
+        }
+        reload()
+    }
+
+    /// Right and left arrows open and close the chosen folder.
+    func setChosenFolderExpanded(_ expanded: Bool) {
+        guard case .project(let url) = scope,
+            sidebarRows.first(where: { $0.id == scope })?.hasChildren == true,
+            expandedFolders.contains(url) != expanded
+        else { return }
+        toggleExpanded(url)
     }
 
     /// A run of notes under one date heading; `title` is nil for pinned
@@ -37,7 +65,7 @@ final class ShellModel {
 
     /// The old window's list button cycles through the same three layouts:
     /// hide the folders, then the list, then bring them back in reverse.
-    enum Layout {
+    enum Layout: String {
         case all
         case listAndNote
         case noteOnly
@@ -48,7 +76,13 @@ final class ShellModel {
     private(set) var sections: [NoteSection] = []
     /// Plain-text openings for list rows, read off the main thread on demand.
     private(set) var snippets: [URL: String] = [:]
-    private(set) var layout = Layout.all
+    private(set) var layout = Layout.all {
+        didSet {
+            // A presentation's note-only layout is not the user's.
+            guard !isPresenting else { return }
+            UserDefaults.standard.set(layout.rawValue, forKey: Self.layoutKey)
+        }
+    }
     /// What the note column shows: the editor, the preview, or both. Kept
     /// in the same preferences the storyboard window restores its mode from.
     private(set) var editorMode = EditorMode.edit {
@@ -72,7 +106,22 @@ final class ShellModel {
     var scope: Scope = .all {
         didSet {
             guard scope != oldValue else { return }
+            if !isSingleMode { UserDefaults.standard.set(scope.storedValue, forKey: Self.scopeKey) }
             refreshNotes(keepSelection: false)
+        }
+    }
+
+    /// The folder and layout come back at the next launch, as the storyboard
+    /// window's sidebar row and collapsed columns do.
+    private static let scopeKey = "ShellScope"
+    private static let layoutKey = "ShellLayout"
+
+    private func storedScope() -> Scope {
+        switch UserDefaults.standard.string(forKey: Self.scopeKey) {
+        case "trash": return .trash
+        case let path? where path != "all":
+            return storage.getProjects().first { $0.url.path == path }.map { .project($0.url) } ?? .all
+        default: return .all
         }
     }
 
@@ -100,6 +149,8 @@ final class ShellModel {
 
     init() {
         selectedNoteURL = UserDefaultsManagement.lastSelectedURL
+        scope = storedScope()
+        layout = UserDefaults.standard.string(forKey: Self.layoutKey).flatMap(Layout.init(rawValue:)) ?? .all
         if UserDefaultsManagement.preview {
             editorMode = .preview
         } else if UserDefaultsManagement.splitViewMode {
@@ -107,8 +158,29 @@ final class ShellModel {
         }
         // A presentation is never resumed at launch, as in the storyboard window.
         UserDefaultsManagement.presentation = false
+        UserDefaultsManagement.magicPPT = false
         reload()
+        rebuildLinkIndex()
         editor.onContentChange = { [weak self] in self?.scheduleContentRevision() }
+    }
+
+    @ObservationIgnored private var linkIndexTask: Task<Void, Never>?
+
+    /// Backlinks cover every note, not only the listed ones, so bodies that
+    /// are not loaded are read from disk; saves keep the index current.
+    private func rebuildLinkIndex() {
+        linkIndexTask?.cancel()
+        let notes = storage.noteList.filter { !$0.isTrash() }
+        let titles = notes.map(\.title)
+        let urls = notes.map(\.url)
+        let loaded = notes.map { $0.isContentLoaded ? $0.content.string : nil }
+        linkIndexTask = Task {
+            let texts = await Task.detached(priority: .utility) {
+                zip(urls, loaded).map { url, text in text ?? (try? Data(contentsOf: url)).flatMap(NoteText.decode) ?? "" }
+            }.value
+            guard !Task.isCancelled else { return }
+            AppEnvironment.current.wikilinkIndex.rebuild(entries: Array(zip(titles, texts)))
+        }
     }
 
     /// The preview re-renders at most this often while typing, by the same
@@ -125,18 +197,28 @@ final class ShellModel {
 
     /// Rebuilds the sidebar from storage, then the list.
     func reload() {
-        sidebarRows = Sidebar().getList().compactMap { item -> SidebarRow? in
-            guard let item = item as? SidebarItem else { return nil }
-            switch item.type {
-            case .All:
-                return SidebarRow(id: .all, title: item.getName(), kind: .All)
-            case .Trash:
-                return SidebarRow(id: .trash, title: item.getName(), kind: .Trash)
-            case .Category:
-                guard let project = item.project, project.showInSidebar else { return nil }
-                return SidebarRow(id: .project(project.url), title: item.getName(), kind: .Category)
+        var rows: [SidebarRow] = []
+        func addFolder(_ project: Project, title: String, depth: Int) {
+            let children = storage.subfolders(of: project)
+            rows.append(SidebarRow(id: .project(project.url), title: title, kind: .Category, depth: depth, hasChildren: !children.isEmpty))
+            guard expandedFolders.contains(project.url) else { return }
+            for child in children {
+                addFolder(child, title: child.label, depth: depth + 1)
             }
         }
+        for item in Sidebar().getList() {
+            guard let item = item as? SidebarItem else { continue }
+            switch item.type {
+            case .All:
+                rows.append(SidebarRow(id: .all, title: item.getName(), kind: .All))
+            case .Trash:
+                rows.append(SidebarRow(id: .trash, title: item.getName(), kind: .Trash))
+            case .Category:
+                guard let project = item.project, project.showInSidebar else { continue }
+                addFolder(project, title: item.getName(), depth: 0)
+            }
+        }
+        sidebarRows = rows
         if !sidebarRows.contains(where: { $0.id == scope }) {
             scope = .all
         }
@@ -163,6 +245,27 @@ final class ShellModel {
             layout = .listAndNote
             isUnfolding = true
         }
+    }
+
+    /// ⌘1: the folders column on or off.
+    func toggleSidebar() {
+        guard !isPresenting else { return }
+        layout = layout == .all ? .listAndNote : .all
+    }
+
+    /// ⌘2: the note list on or off; showing it again keeps the folders hidden.
+    func toggleNoteList() {
+        guard !isPresenting else { return }
+        layout = layout == .noteOnly ? .listAndNote : .noteOnly
+    }
+
+    func cleanTypography() {
+        guard let host else { return }
+        guard editorMode != .preview else {
+            host.toast(message: I18n.str("Format is only possible after exiting preview mode~"), style: .failure)
+            return
+        }
+        editor.cleanTypography(in: host)
     }
 
     /// The list's heading: the chosen folder's name.
@@ -230,22 +333,647 @@ final class ShellModel {
         editor.format(in: host)
     }
 
+    /// Whether the running presentation is a MiaoYan PPT deck.
+    private(set) var isPPT = false
+
     /// Presentation shows only the preview, full screen, at the presentation
-    /// font size; the window controller handles the full-screen half.
-    func setPresenting(_ presenting: Bool) {
+    /// font size; `ppt` renders the note as a Reveal.js deck split on `---`
+    /// instead. The window controller handles the full-screen half.
+    func setPresenting(_ presenting: Bool, ppt: Bool = false) {
         guard presenting != isPresenting, selectedNote != nil || !presenting else { return }
         if presenting {
+            if ppt {
+                guard let note = selectedNote else { return }
+                note.ensureContentLoaded()
+                guard note.content.string.contains("---") else {
+                    host?.toast(message: I18n.str("No delimiter --- identification, Cannot use MiaoYan PPT~"), style: .failure)
+                    return
+                }
+            }
             modeBeforePresenting = editorMode
             layoutBeforePresenting = layout
-            UserDefaultsManagement.presentation = true
+            // Preview, presentation and PPT are one stored mode, and switching
+            // the column to preview writes "preview"; set the presentation
+            // mode after it or the preview write replaces it.
             editorMode = .preview
-            layout = .noteOnly
+            if ppt {
+                UserDefaultsManagement.magicPPT = true
+            } else {
+                UserDefaultsManagement.presentation = true
+            }
+            isPPT = ppt
             isPresenting = true
+            layout = .noteOnly
+            // The stylesheet (presentation size, deck template) changed.
+            previewStyleRevision &+= 1
+            if ppt { openDeckAtCursor() }
         } else {
             UserDefaultsManagement.presentation = false
+            UserDefaultsManagement.magicPPT = false
             isPresenting = false
+            isPPT = false
             layout = layoutBeforePresenting
             editorMode = modeBeforePresenting
+            previewStyleRevision &+= 1
+        }
+    }
+
+    /// The storyboard window's PPT entry: when the preview follows the editing
+    /// position, open on the slide the cursor is in, and give the deck focus
+    /// so the arrow keys and space turn pages.
+    private func openDeckAtCursor() {
+        let text = editor.textView.string
+        let cursor = max(min(editor.textView.selectedRange().location, text.count) - 1, 0)
+        let slide = text.prefix(cursor).components(separatedBy: "---").count - 1
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            guard let preview = self?.preview else { return }
+            preview.runWhenPreviewReady {
+                if UserDefaultsManagement.previewLocation == "Editing", slide > 0 {
+                    preview.slideTo(index: slide)
+                }
+                preview.window?.makeFirstResponder(preview)
+            }
+        }
+    }
+
+    // MARK: - Note commands
+
+    /// The list's search field is open; menu search and new-note flows open it.
+    var isSearchOpen = false
+    /// The note header's title is an editable field.
+    var isRenaming = false
+    /// The preview currently on screen, for commands that act on it (TOC).
+    @ObservationIgnored weak var preview: MPreviewView?
+
+    /// The folder a new note goes into: the chosen folder, else the root.
+    private var targetProject: Project? {
+        if case .project(let url) = scope, let project = storage.getProjects().first(where: { $0.url == url }) {
+            return project
+        }
+        return storage.getRootProject() ?? storage.getProjects().first
+    }
+
+    /// A new empty note in the chosen folder, opened in the editor with its
+    /// title ready to type.
+    /// `miaoyan://make` passes a name and text; the title is then already set.
+    func createNote(name: String = "", content: String = "") {
+        if isPresenting, !name.isEmpty || !content.isEmpty { setPresenting(false) }
+        guard !isPresenting, let project = targetProject else { return }
+        let note = Note(name: name, project: project)
+        note.content = NSMutableAttributedString(string: content)
+        note.save()
+        searchText = ""
+        isSearchOpen = false
+        if scope == .trash { scope = .all }
+        if editorMode == .preview { editorMode = .edit }
+        selectedNoteURL = note.url
+        refreshNotes(keepSelection: true)
+        isRenaming = name.isEmpty
+    }
+
+    /// Attachments no note refers to, moved to the Trash after a confirm.
+    func cleanUnusedAttachments() {
+        storage.findOrphanAttachments { [weak self] orphans in
+            guard let self, let host = self.host else { return }
+            guard let orphans else {
+                host.toast(message: I18n.str("Some notes could not be read, so no attachments were cleaned"), style: .failure)
+                return
+            }
+            guard !orphans.isEmpty else {
+                host.toast(message: I18n.str("No orphan attachments found"))
+                return
+            }
+            MiaoYanAlert.confirm(
+                message: I18n.str("Clean Orphan Attachments"),
+                informativeText: String(format: I18n.str("Detected %d unused attachment(s). Move them to Trash?"), orphans.count),
+                confirmTitle: I18n.str("Clean"),
+                for: host.view.window
+            ) { confirmed in
+                guard confirmed else { return }
+                let result = self.storage.removeAttachments(urls: orphans)
+                if !result.removed.isEmpty {
+                    NSSound(named: "Pop")?.play()
+                    host.toast(message: String(format: I18n.str("Removed %d unused attachment(s)"), result.removed.count), style: .success)
+                }
+                if !result.failed.isEmpty {
+                    MiaoYanAlert.show(
+                        message: I18n.str("Some attachments could not be removed"),
+                        informativeText: I18n.str("Please try again"),
+                        style: .warning,
+                        for: host.view.window
+                    )
+                }
+            }
+        }
+    }
+
+    // MARK: - Links
+
+    /// A wikilink or `miaoyan://goto/<title>`: the note with that title. Two
+    /// or more are listed as search results; none is reported.
+    func openNote(titled title: String) {
+        let matches = storage.noteList.filter { $0.title == title && !$0.isTrash() }
+        guard matches.count == 1, let note = matches.first else {
+            if matches.isEmpty {
+                host?.toast(message: I18n.str("Please make sure your title exists~"), style: .failure)
+            } else {
+                search(for: title)
+                host?.toast(message: I18n.str("Found that there are multiple titles of this~"), style: .failure)
+            }
+            return
+        }
+        if isPresenting { setPresenting(false) }
+        searchText = ""
+        isSearchOpen = false
+        if !notes.contains(where: { $0 === note }) { scope = .all }
+        refreshNow(selecting: note.url)
+    }
+
+    /// `miaoyan://find/<query>`: the search field opened on that query.
+    func search(for query: String) {
+        if scope == .trash { scope = .all }
+        isSearchOpen = true
+        searchText = query
+    }
+
+    /// Moves the open note to the Trash, recoverable as everywhere else, and
+    /// opens its neighbour.
+    func deleteSelectedNote() {
+        guard !isPresenting, let note = selectedNote, !note.isTrash() else { return }
+        let index = notes.firstIndex { $0 === note } ?? 0
+        storage.removeNotes(
+            notes: [note],
+            partialFailure: { [weak self] count in
+                Task { @MainActor in
+                    self?.host?.toast(
+                        message: String(format: I18n.str("Failed to move %d note(s) to Trash~"), count), style: .failure)
+                }
+            }
+        ) { [weak self] _ in
+            Task { @MainActor in
+                guard let self else { return }
+                let remaining = self.notes.filter { $0 !== note }
+                self.selectedNoteURL = remaining.isEmpty ? nil : remaining[min(index, remaining.count - 1)].url
+                self.refreshNotes(keepSelection: true)
+            }
+        }
+    }
+
+    /// Renames the open note's file after `title`; false when that name is taken.
+    @discardableResult
+    func rename(_ note: Note, to title: String) -> Bool {
+        let title = title.trimmingCharacters(in: .newlines)
+        guard !title.isEmpty, title != note.getFileName() else { return true }
+        guard note.renameFile(to: title) else {
+            MiaoYanAlert.show(
+                message: I18n.str("Please change the title"),
+                informativeText: String(format: I18n.str("This %@ under this folder already exists!"), title),
+                for: host?.view.window)
+            return false
+        }
+        selectedNoteURL = note.url
+        refreshNotes(keepSelection: true)
+        return true
+    }
+
+    func togglePin(_ note: Note) {
+        note.togglePin()
+        refreshNotes(keepSelection: true)
+    }
+
+    func setSort(_ sort: SortBy) {
+        UserDefaultsManagement.sort = sort
+        refreshNotes(keepSelection: true)
+    }
+
+    func setSortDescending(_ descending: Bool) {
+        UserDefaultsManagement.sortDirection = descending
+        refreshNotes(keepSelection: true)
+    }
+
+    /// Re-reads the list, keeping the open note, and runs `completion` once
+    /// the new list is in place.
+    func refreshNow(selecting url: URL? = nil, completion: (() -> Void)? = nil) {
+        if let url { selectedNoteURL = url }
+        refreshTask?.cancel()
+        refreshTask = Task { [weak self] in
+            await self?.computeNotes(keepSelection: true)
+            completion?()
+        }
+    }
+
+    /// A note changed on disk: drop its cached opening and redraw.
+    func noteChangedOnDisk(_ note: Note) {
+        snippets[note.url] = nil
+        if selectedNoteURL == note.url {
+            contentRevision &+= 1
+        }
+    }
+
+    // MARK: - Import and single-file mode
+
+    /// Set while the window shows one opened file or folder instead of the
+    /// library.
+    private(set) var isSingleMode = false
+    /// The library note to come back to; the editor records every note it
+    /// opens as the last selected one, single-mode files included.
+    @ObservationIgnored private var librarySelection: URL?
+
+    /// Copies picked files into the main folder and opens the last one; a
+    /// file already in the library is opened instead. The copies are added
+    /// to storage here: an APFS clone reaches the file watcher as a change,
+    /// not a creation, so it would never list them.
+    func importNotes(_ urls: [URL]) {
+        var target: URL?
+        for url in urls {
+            if let note = storage.getBy(url: url) {
+                target = note.url
+                continue
+            }
+            let copy = ViewController.copyFile(url, into: storage.getMainProject())
+            guard storage.getBy(url: copy) == nil, let note = storage.initNote(url: copy) else { continue }
+            note.load()
+            note.loadModifiedLocalAt()
+            storage.add(note)
+            target = note.url
+        }
+        searchText = ""
+        isSearchOpen = false
+        scope = .all
+        refreshNow(selecting: target)
+    }
+
+    /// Shows only `url`: a file with the notes beside it, or a folder.
+    func openSingle(_ url: URL, siblingFiles: [URL]? = nil) {
+        if !isSingleMode { librarySelection = selectedNoteURL }
+        UserDefaultsManagement.beginSingleMode(for: url)
+        storage.reconfigureForSingleMode(originalFileURL: url, siblingFiles: siblingFiles)
+        isSingleMode = true
+        let file = FileManager.default.directoryExists(atUrl: url) ? nil : url.resolvingSymlinksInPath()
+        switchStorage(selecting: file)
+        host?.toast(message: I18n.str("In single open mode, Exit with Command+Shift+W ~"))
+    }
+
+    /// Back to the library, on the note that was open before.
+    func closeSingle() {
+        guard isSingleMode else { return }
+        UserDefaultsManagement.clearSingleMode()
+        storage.reconfigureForLibrary()
+        isSingleMode = false
+        switchStorage(selecting: librarySelection, scope: storedScope())
+    }
+
+    private func switchStorage(selecting url: URL?, scope newScope: Scope = .all) {
+        if isPresenting { setPresenting(false) }
+        searchText = ""
+        isSearchOpen = false
+        snippets.removeAll()
+        selectedNoteURL = url
+        scope = newScope
+        reload()
+        rebuildLinkIndex()
+        onFoldersChanged?()
+    }
+
+    // MARK: - Folders
+
+    /// The folder whose name is being edited in the sidebar.
+    var renamingFolderURL: URL?
+    /// Called after folders change on disk, so the file watcher can follow.
+    @ObservationIgnored var onFoldersChanged: (() -> Void)?
+
+    var folders: [Project] {
+        sidebarRows.compactMap { row in
+            guard case .project(let url) = row.id else { return nil }
+            return storage.getProjects().first { $0.url == url }
+        }
+    }
+
+    var selectedFolder: Project? {
+        guard case .project(let url) = scope else { return nil }
+        return storage.getProjects().first { $0.url == url }
+    }
+
+    /// The storyboard window's New Folder: a name sheet, then a folder under
+    /// the notes root.
+    func promptNewFolder() {
+        guard let window = host?.view.window else { return }
+        let field = NSTextField(frame: NSRect(x: 0, y: 0, width: 320, height: 26))
+        field.focusRingType = .none
+        field.placeholderString = I18n.str("Project name")
+        let alert = MiaoYanAlert.make(
+            message: I18n.str("New project"), style: .informational, buttons: [I18n.str("Add"), I18n.str("Cancel")])
+        alert.accessoryView = field
+        alert.window.initialFirstResponder = field
+        alert.beginSheetModal(for: window) { [weak self] response in
+            guard response == .alertFirstButtonReturn else { return }
+            self?.createFolder(named: field.stringValue)
+        }
+        DispatchQueue.main.async { field.becomeFirstResponder() }
+    }
+
+    func createFolder(named name: String) {
+        let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty else { return }
+        let parent = storage.getMainProject()
+        let url = parent.url.appendingPathComponent(name, isDirectory: true)
+        do {
+            try FileManager.default.createDirectory(at: url, withIntermediateDirectories: false)
+        } catch {
+            MiaoYanAlert.show(message: error.localizedDescription, style: .warning, for: host?.view.window)
+            return
+        }
+        _ = storage.add(project: Project(url: url, parent: parent))
+        onFoldersChanged?()
+        reload()
+        scope = .project(url)
+    }
+
+    /// Renames the folder on disk and moves its notes' URLs with it, as the
+    /// storyboard sidebar does.
+    func renameFolder(_ project: Project, to name: String) {
+        renamingFolderURL = nil
+        let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty, name != project.url.lastPathComponent else { return }
+        let oldURL = project.url
+        let newURL = oldURL.deletingLastPathComponent().appendingPathComponent(name)
+        do {
+            try FileManager.default.moveItem(at: oldURL, to: newURL)
+        } catch {
+            MiaoYanAlert.show(message: error.localizedDescription, style: .warning, for: host?.view.window)
+            return
+        }
+        project.url = newURL
+        project.label = newURL.lastPathComponent
+        for note in storage.noteList where note.project == project {
+            let relativePath = note.url.path.replacingOccurrences(of: oldURL.path, with: "")
+            note.url = URL(fileURLWithPath: newURL.path + relativePath)
+        }
+        storage.removeBy(project: project)
+        storage.loadLabel(project)
+        onFoldersChanged?()
+        let wasSelected = scope == .project(oldURL)
+        reload()
+        if wasSelected { scope = .project(newURL) }
+    }
+
+    /// Moves the folder and everything in it to the Trash after the same
+    /// confirmation the storyboard sidebar asks for.
+    func confirmDeleteFolder(_ project: Project) {
+        guard !project.isDefault, !project.isRoot, let window = host?.view.window else { return }
+        MiaoYanAlert.confirm(
+            message: String(format: I18n.str("Are you sure you want to remove project \"%@\" and all files inside?"), project.label),
+            informativeText: I18n.str("This action cannot be undone."),
+            confirmTitle: I18n.str("Remove"),
+            for: window
+        ) { [weak self] confirmed in
+            guard confirmed, let self, let trashURL = self.storage.trashItem(url: project.url) else { return }
+            do {
+                try FileManager.default.moveItem(at: project.url, to: trashURL)
+            } catch {
+                AppDelegate.trackError(error, context: "ShellModel.deleteFolder.moveItem")
+                return
+            }
+            self.storage.removeBy(project: project)
+            self.onFoldersChanged?()
+            if self.scope == .project(project.url) { self.scope = .all }
+            self.reload()
+        }
+    }
+
+    /// Moves notes into `project` with their attachments, the storyboard
+    /// window's Move command and drag onto a folder.
+    func move(_ moving: [Note], to project: Project) {
+        let open = selectedNote
+        for note in moving where note.project != project {
+            note.move(toProject: project)
+            note.invalidateCache()
+        }
+        if let open, moving.contains(where: { $0 === open }) {
+            selectedNoteURL = open.url
+        }
+        refreshNotes(keepSelection: true)
+    }
+
+    // MARK: - Note utilities
+
+    /// Bumped when the preview's stylesheet changes (font size, font face),
+    /// so the preview reloads instead of patching its content.
+    private(set) var previewStyleRevision = 0
+
+    /// Editor and preview fonts changed: re-render both with the new sizes.
+    func applyEditorSettings() {
+        if let note = EditTextView.note, editor.textView.storageNote === note {
+            editor.reload(note)
+        }
+        previewStyleRevision &+= 1
+    }
+
+    /// ⌘+ / ⌘- / ⌘0, the storyboard window's zoom: editor and preview move
+    /// together within 12...28 and the new size is announced.
+    func adjustFontSize(by delta: Int?) {
+        let range = 12...28
+        if let delta {
+            let size = min(max(UserDefaultsManagement.fontSize + delta, range.lowerBound), range.upperBound)
+            guard size != UserDefaultsManagement.fontSize else { return }
+            UserDefaultsManagement.fontSize = size
+            UserDefaultsManagement.previewFontSize = min(
+                max(UserDefaultsManagement.previewFontSize + delta, range.lowerBound), range.upperBound)
+        } else {
+            guard
+                UserDefaultsManagement.fontSize != UserDefaultsManagement.DefaultFontSize
+                    || UserDefaultsManagement.previewFontSize != UserDefaultsManagement.DefaultPreviewFontSize
+            else { return }
+            UserDefaultsManagement.fontSize = UserDefaultsManagement.DefaultFontSize
+            UserDefaultsManagement.previewFontSize = UserDefaultsManagement.DefaultPreviewFontSize
+        }
+        NotesTextProcessor.hl = nil
+        NotesTextProcessor.refreshFonts()
+        applyEditorSettings()
+        host?.toast(message: String(format: I18n.str("Font size: %d"), UserDefaultsManagement.fontSize), style: .info)
+    }
+
+    /// The storyboard window's Duplicate: the note's current text (unsaved
+    /// edits included) and its images, next to it under a free name.
+    func duplicateSelectedNote() {
+        guard let note = selectedNote, let name = note.getDupeName() else { return }
+        if note === EditTextView.note, editor.textView.storageNote === note {
+            editor.textView.saveTextStorageContent(to: note)
+        }
+        _ = note.flushPendingSave()
+        if !note.isContentLoaded { note.ensureContentLoaded() }
+        let copy = Note(name: name, project: note.project, type: note.type)
+        copy.content = NSMutableAttributedString(attributedString: note.content)
+        if note.type == .markdown, note.container == .none {
+            for image in note.getAllImages() {
+                copy.relocateAttachment(from: image.url, imagePath: image.path, to: note.project, copy: true)
+            }
+        }
+        copy.save()
+        storage.add(copy)
+        selectedNoteURL = copy.url
+        refreshNotes(keepSelection: true)
+    }
+
+    /// Reads the open note back from disk, asking first when the editor holds
+    /// changes the file does not have.
+    func reloadSelectedNote() {
+        guard let note = selectedNote else { return }
+        note.ensureContentLoaded()
+        let reload = { [weak self] in
+            guard let self else { return }
+            note.forceReload()
+            note.loadModifiedLocalAt()
+            if self.editor.textView.storageNote === note {
+                self.editor.reload(note)
+            }
+            self.noteChangedOnDisk(note)
+            self.host?.toast(message: I18n.str("Note reloaded~"), style: .success)
+        }
+        let editorHasOther = editor.textView.storageNote === note && editor.textView.string != note.content.string
+        guard editorHasOther, let window = host?.view.window else {
+            reload()
+            return
+        }
+        MiaoYanAlert.confirm(
+            message: I18n.str("Reload Note"),
+            informativeText: I18n.str("You have unsaved changes. Reload will discard them."),
+            confirmTitle: I18n.str("Reload"),
+            for: window
+        ) { confirmed in
+            if confirmed { reload() }
+        }
+    }
+
+    func copyNoteURL() {
+        guard let note = selectedNote, let title = note.title.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+        else { return }
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString("miaoyan://goto/\(title)", forType: .string)
+        host?.toast(message: I18n.str("URL is successfully copied, Use it anywhere~"), style: .success)
+    }
+
+    func copyNotePath() {
+        guard let note = selectedNote else { return }
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(note.url.path, forType: .string)
+        host?.toast(message: I18n.str("Path is successfully copied~"), style: .success)
+    }
+
+    // MARK: - Version history
+
+    /// Snapshots the open note if it changed, then shows its versions as a
+    /// sheet; a restore reloads the editor and preview here.
+    func showVersionHistory() {
+        guard let note = selectedNote, !note.isTrash(), let host else { return }
+        AppEnvironment.current.versionManager.saveVersionIfNeeded(for: note, force: false) { [weak self, weak host] in
+            let controller = VersionHistoryViewController(note: note)
+            controller.onRestored = { note, message in
+                guard let self else { return }
+                if self.editor.textView.storageNote === note {
+                    self.editor.reload(note)
+                }
+                self.noteChangedOnDisk(note)
+                self.contentRevision &+= 1
+                self.host?.toast(message: message, style: .success)
+            }
+            host?.presentAsSheet(controller)
+        }
+    }
+
+    // MARK: - Export
+
+    enum ExportFormat {
+        case pdf
+        case image
+        case html
+        /// The Reveal.js deck, one slide a page.
+        case ppt
+    }
+
+    private(set) var isExporting = false
+    @ObservationIgnored private var restoreEditAfterExport = false
+
+    /// Every format is produced by the preview view (PDF and image capture its
+    /// rendering), so an export from the editor shows the preview first and
+    /// returns to the editor after, as the storyboard window does.
+    func export(_ format: ExportFormat) {
+        guard !isExporting, selectedNote != nil else { return }
+        if format == .ppt {
+            exportDeck()
+            return
+        }
+        isExporting = true
+        let needsPreview = editorMode == .edit
+        if needsPreview {
+            restoreEditAfterExport = true
+            editorMode = .preview
+        }
+        let delay: TimeInterval = needsPreview || format != .html ? 1.0 : 0
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+            guard let self else { return }
+            guard let preview = self.preview else {
+                self.host?.toast(message: I18n.str("Export failed"), style: .failure)
+                self.finishExport()
+                return
+            }
+            switch format {
+            case .pdf: preview.exportPdf()
+            case .image: preview.exportImage()
+            case .html: preview.exportHtml()
+            case .ppt: break
+            }
+        }
+    }
+
+    @ObservationIgnored private var leavePPTAfterExport = false
+
+    /// The deck prints from PPT mode, as the storyboard window's export does:
+    /// the note opens as slides, is saved as a PDF, and closes again unless
+    /// it was already showing as slides.
+    private func exportDeck() {
+        let wasPPT = isPPT
+        guard wasPPT || !isPresenting else { return }
+        // ppt.html lays the deck out one slide a page only when it is rendered
+        // with this set; the export clears it once the PDF is made.
+        UserDefaultsManagement.isOnExportPPT = true
+        if wasPPT {
+            previewStyleRevision &+= 1
+        } else {
+            setPresenting(true, ppt: true)
+            // Without a --- separator setPresenting has said so and stayed put.
+            guard isPPT else {
+                UserDefaultsManagement.isOnExportPPT = false
+                return
+            }
+        }
+        isExporting = true
+        leavePPTAfterExport = !wasPPT
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { [weak self] in
+            guard let self else { return }
+            guard let preview = self.preview else {
+                UserDefaultsManagement.isOnExportPPT = false
+                self.host?.toast(message: I18n.str("Export failed"), style: .failure)
+                self.finishPPTExport()
+                self.finishExport()
+                return
+            }
+            preview.exportPPTOptimized()
+        }
+    }
+
+    /// Called once the deck is printed, before the file is written.
+    func finishPPTExport() {
+        guard leavePPTAfterExport else { return }
+        leavePPTAfterExport = false
+        setPresenting(false)
+    }
+
+    func finishExport() {
+        isExporting = false
+        if restoreEditAfterExport {
+            restoreEditAfterExport = false
+            editorMode = .edit
         }
     }
 
@@ -409,5 +1137,17 @@ final class ShellModel {
         if type == .Trash { return true }
         if projects.contains(where: { note.project.isDescendant(of: $0) }) { return true }
         return type == .All && note.project.showInCommon
+    }
+}
+
+@available(macOS 14, *)
+extension ShellModel.Scope {
+    /// "all", "trash" or a folder's path.
+    var storedValue: String {
+        switch self {
+        case .all: return "all"
+        case .trash: return "trash"
+        case .project(let url): return url.path
+        }
     }
 }

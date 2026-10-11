@@ -8,10 +8,15 @@ import SwiftUI
 @available(macOS 14, *)
 @MainActor
 final class ShellEditorController: NSObject, NSTextViewDelegate {
+    /// Holds the scroll view and, when open, the editor's find bar.
+    let container = NSView()
     let scrollView: ShellEditorScrollView
     let textView: EditTextView
     /// Called after an edit lands in the note, so a visible preview can follow.
     var onContentChange: (() -> Void)?
+    /// Called before an edit is saved, so disk events from the save itself
+    /// can be held off.
+    var onWillSave: (() -> Void)?
 
     private let formatWorker = MarkdownFormatWorker()
     private var formatTask: Task<Void, Never>?
@@ -56,6 +61,9 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
         textView.delegate = self
         scrollView.documentView = textView
         scrollView.editor = textView
+        scrollView.frame = container.bounds
+        scrollView.autoresizingMask = [.width, .height]
+        container.addSubview(scrollView)
     }
 
     /// Loads `note` unless the buffer already holds it.
@@ -63,6 +71,15 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
         guard textView.storageNote !== note else { return }
         textView.fill(note: note, options: .default)
         textView.updateTextContainerInset()
+    }
+
+    /// Reloads `note` into the buffer after it changed on disk, keeping the
+    /// scroll position.
+    func reload(_ note: Note) {
+        let top = scrollView.contentView.bounds.origin.y
+        textView.fill(note: note, options: FillOptions(highlight: false, saveTyping: false, force: true, needScrollToCursor: false))
+        scrollView.contentView.scroll(to: NSPoint(x: 0, y: top))
+        scrollView.reflectScrolledClipView(scrollView.contentView)
     }
 
     // MARK: - NSTextViewDelegate
@@ -80,6 +97,7 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
             AppDelegate.trackError(mismatch, context: "ShellEditorController.textDidChange.ownerGuard")
             return
         }
+        onWillSave?()
         textView.saveTextStorageContent(to: note)
         note.save(content: note.content)
         onContentChange?()
@@ -87,6 +105,32 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
 
     func undoManager(for view: NSTextView) -> UndoManager? {
         EditTextView.note?.undoManager
+    }
+
+    // MARK: - Clean typography
+
+    /// ViewController.cleanTypography: CJK spacing and punctuation fixes over
+    /// the whole buffer, written through the text view so one undo reverts it.
+    func cleanTypography(in host: NSViewController) {
+        guard let note = EditTextView.note, textView.storageNote === note else { return }
+        let content = textView.textStorage?.string ?? note.content.string
+        let cleaned = TypographyCleaner.clean(content)
+        guard cleaned != content else {
+            host.toast(message: I18n.str("Typography is already clean~"))
+            return
+        }
+        let cursor = textView.selectedRange().location
+        let top = scrollView.contentView.bounds.origin.y
+        EditTextView.shouldForceRescan = true
+        textView.breakUndoCoalescing()
+        textView.insertText(cleaned, replacementRange: NSRange(location: 0, length: (textView.string as NSString).length))
+        textView.saveTextStorageContent(to: note)
+        note.save()
+        textView.setSelectedRange(NSRange(location: min(cursor, (cleaned as NSString).length), length: 0))
+        scrollView.contentView.scroll(to: NSPoint(x: 0, y: top))
+        scrollView.reflectScrolledClipView(scrollView.contentView)
+        host.toast(message: I18n.str("Typography cleaned up~"), style: .success)
+        onContentChange?()
     }
 
     // MARK: - Format
@@ -178,12 +222,12 @@ struct ShellEditorView: NSViewRepresentable {
     let controller: ShellEditorController
     let note: Note
 
-    func makeNSView(context: Context) -> ShellEditorScrollView {
+    func makeNSView(context: Context) -> NSView {
         controller.show(note)
-        return controller.scrollView
+        return controller.container
     }
 
-    func updateNSView(_ view: ShellEditorScrollView, context: Context) {
+    func updateNSView(_ view: NSView, context: Context) {
         controller.show(note)
     }
 }

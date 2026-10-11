@@ -31,7 +31,9 @@ extension AppDelegate {
         }
         switch scheme {
         case HandledSchemes.file.rawValue:
-            if ViewController.shared() != nil {
+            if #available(macOS 14, *), let shell = shellWindowController as? ShellWindowController {
+                shell.model.openSingle(urls[0], siblingFiles: Self.siblingNoteFiles(of: urls[0]))
+            } else if ViewController.shared() != nil {
                 openNotes(urls: urls)
             } else {
                 self.urls = urls
@@ -58,23 +60,20 @@ extension AppDelegate {
             mwc.makeNew()
         }
 
-        // Pre-enumerate sibling files while sandbox implicit access is active.
-        // In the App Store build, the sandbox extension from application:open:
-        // grants access to the parent directory only during this call scope.
-        var siblingFiles: [URL]?
-        if !FileManager.default.directoryExists(atUrl: fileURL) {
-            let parentDir = fileURL.deletingLastPathComponent()
-            let extensions = Storage.sharedInstance().allowedExtensions
-            if let contents = try? FileManager.default.contentsOfDirectory(
-                at: parentDir,
-                includingPropertiesForKeys: [.contentModificationDateKey, .creationDateKey],
-                options: .skipsHiddenFiles)
-            {
-                siblingFiles = contents.filter { extensions.contains($0.pathExtension) }
-            }
-        }
+        vc.reloadForSingleMode(originalFileURL: fileURL, siblingFiles: Self.siblingNoteFiles(of: fileURL))
+    }
 
-        vc.reloadForSingleMode(originalFileURL: fileURL, siblingFiles: siblingFiles)
+    /// Notes beside an opened file, listed while the sandbox extension from
+    /// application:open: is active: in the App Store build it grants the
+    /// parent directory only during that call.
+    static func siblingNoteFiles(of fileURL: URL) -> [URL]? {
+        guard !FileManager.default.directoryExists(atUrl: fileURL) else { return nil }
+        let extensions = AppEnvironment.current.storage.allowedExtensions
+        let contents = try? FileManager.default.contentsOfDirectory(
+            at: fileURL.deletingLastPathComponent(),
+            includingPropertiesForKeys: [.contentModificationDateKey, .creationDateKey],
+            options: .skipsHiddenFiles)
+        return contents?.filter { extensions.contains($0.pathExtension) }
     }
 
     @MainActor
@@ -121,6 +120,10 @@ extension AppDelegate {
     @MainActor
     func RouteMiaoYanFind(_ url: URL) {
         let lastPath = url.lastPathComponent
+        if #available(macOS 14, *), let shell = shellWindowController as? ShellWindowController {
+            shell.model.search(for: lastPath)
+            return
+        }
         guard ViewController.shared() != nil else {
             searchQuery = lastPath
             return
@@ -131,6 +134,10 @@ extension AppDelegate {
     @MainActor
     func RouteMiaoYanGoto(_ url: URL) {
         let query = url.lastPathComponent.removingPercentEncoding ?? url.lastPathComponent
+        if #available(macOS 14, *), let shell = shellWindowController as? ShellWindowController {
+            shell.model.openNote(titled: query)
+            return
+        }
         guard let vc = ViewController.shared() else { return }
         let notes = vc.storage.noteList.filter { $0.title == query }
         if notes.count > 1 {
@@ -196,7 +203,7 @@ extension AppDelegate {
         } else if let htmlParam = url["html"] {
             body = htmlParam
         }
-        guard ViewController.shared() != nil else {
+        guard ViewController.shared() != nil || shellWindowController != nil else {
             newName = title
             newContent = body
             return
@@ -206,6 +213,10 @@ extension AppDelegate {
 
     @MainActor
     func create(name: String, content: String) {
+        if #available(macOS 14, *), let shell = shellWindowController as? ShellWindowController {
+            shell.model.createNote(name: name, content: content)
+            return
+        }
         guard let controller = ViewController.shared() else { return }
         controller.createNote(name: name, content: content)
     }
@@ -270,7 +281,6 @@ extension AppDelegate {
         if let tagsParam = url["tags"] {
             body = body.appending("\n\nnvALT tags: \(tagsParam)")
         }
-        guard let controller = ViewController.shared() else { return }
-        controller.createNote(name: title, content: body)
+        create(name: title, content: body)
     }
 }

@@ -4,6 +4,9 @@ import Foundation
 extension Notification.Name {
     static let editorModeChanged = Notification.Name("editorModeChanged")
     static let preferencesChanged = Notification.Name("PreferencesChanged")
+    /// Editor and preview fonts changed while no ViewController exists (the
+    /// SwiftUI shell), which re-renders on it.
+    static let editorSettingsChanged = Notification.Name("EditorSettingsChanged")
     static let splitViewModeChanged = Notification.Name("SplitViewModeChanged")
     static let alwaysOnTopChanged = Notification.Name("alwaysOnTopChanged")
 }

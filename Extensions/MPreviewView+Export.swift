@@ -5,6 +5,28 @@ import PDFKit
 import UniformTypeIdentifiers
 import WebKit
 
+/// The window an export reports to: the note it exports, the title the
+/// export files are named after, its progress and result toasts, and what
+/// to undo after a PPT export. The storyboard window and the SwiftUI shell
+/// both answer.
+@MainActor
+protocol ExportHost: AnyObject, Sendable {
+    var exportNote: Note? { get }
+    var exportTitle: String { get }
+    func toastPersistent(message: String)
+    func toastUpdate(message: String)
+    func toastDismiss()
+    func toastExport(status: Bool)
+    func finishPPTExport()
+}
+
+@MainActor
+enum ExportHosts {
+    /// Set by the SwiftUI shell, which has no ViewController.
+    static weak var shell: ExportHost?
+    static var current: ExportHost? { shell ?? ViewController.shared() }
+}
+
 // MARK: - Export Extensions
 @MainActor
 extension MPreviewView {
@@ -15,7 +37,7 @@ extension MPreviewView {
 
     // MARK: - Image Export Preparation
     func performExport(
-        viewController: ViewController,
+        viewController: ExportHost,
         exportAction: @escaping (@escaping () -> Void) -> Void
     ) {
         // Check if already exporting
@@ -255,8 +277,8 @@ extension MPreviewView {
     }
     // MARK: - Export Methods
     public func exportPdf() {
-        guard let vc = ViewController.shared(),
-            let note = vc.notesTableView.getSelectedNote()
+        guard let vc = ExportHosts.current,
+            let note = vc.exportNote
         else { return }
 
         // Reveal.js-backed PPT export stays on createPDF: slide pagination is provided by reveal,
@@ -271,7 +293,7 @@ extension MPreviewView {
         exportPdfViaPrintOperation(note: note, viewController: vc)
     }
 
-    private func exportPdfViaPrintOperation(note: Note, viewController vc: ViewController) {
+    private func exportPdfViaPrintOperation(note: Note, viewController vc: ExportHost) {
         Self.isExporting = true
         vc.toastUpdate(message: "\(I18n.str("Exporting...")) 20%")
 
@@ -294,7 +316,7 @@ extension MPreviewView {
             vc.toastUpdate(message: "\(I18n.str("Exporting...")) 40%")
 
             let baseURL = HtmlManager.previewBundleURL()
-            let controller = PdfExportController(note: note, html: renderedHTML, baseURL: baseURL, viewController: vc)
+            let controller = PdfExportController(note: note, html: renderedHTML, baseURL: baseURL, viewController: vc, preview: self)
 
             objc_setAssociatedObject(self, &AssociatedKeys.pdfExportController, controller, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 
@@ -337,7 +359,7 @@ extension MPreviewView {
         Self.isExporting = false
     }
 
-    private func exportPdfViaSnapshot(note: Note, viewController vc: ViewController) {
+    private func exportPdfViaSnapshot(note: Note, viewController vc: ExportHost) {
         self.preparePPTExportIfNeeded()
 
         vc.toastUpdate(message: "\(I18n.str("Exporting...")) 10%")
@@ -431,8 +453,8 @@ extension MPreviewView {
     }
 
     public func exportImage() {
-        guard let vc = ViewController.shared(),
-            let note = vc.notesTableView.getSelectedNote()
+        guard let vc = ExportHosts.current,
+            let note = vc.exportNote
         else { return }
 
         performExport(viewController: vc) { [weak self] cleanup in
@@ -505,8 +527,8 @@ extension MPreviewView {
     }
 
     public func exportPPTOptimized() {
-        guard let vc = ViewController.shared(),
-            let note = vc.notesTableView.getSelectedNote()
+        guard let vc = ExportHosts.current,
+            let note = vc.exportNote
         else { return }
 
         // Show progress toast immediately
@@ -522,10 +544,7 @@ extension MPreviewView {
             guard ready, let self = self else {
                 vc.toastDismiss()
                 vc.toastExport(status: false)
-                if vc.shouldDisablePPTAfterExport {
-                    vc.disableMiaoYanPPT()
-                    vc.shouldDisablePPTAfterExport = false
-                }
+                vc.finishPPTExport()
                 return
             }
 
@@ -550,10 +569,7 @@ extension MPreviewView {
                 self.restoreTOCTriggers()
                 vc.toastDismiss()
 
-                if vc.shouldDisablePPTAfterExport {
-                    vc.disableMiaoYanPPT()
-                    vc.shouldDisablePPTAfterExport = false
-                }
+                vc.finishPPTExport()
 
                 switch result {
                 case .success(let data):
@@ -567,8 +583,8 @@ extension MPreviewView {
     }
 
     public func exportHtml() {
-        guard let vc = ViewController.shared(),
-            let note = vc.notesTableView.getSelectedNote()
+        guard let vc = ExportHosts.current,
+            let note = vc.exportNote
         else { return }
 
         // HTML export does not depend on WebView layout; generate directly
@@ -592,8 +608,8 @@ extension MPreviewView {
     }
 
     // MARK: - Export Helper Methods
-    private func generateHtmlDirectly(note: Note, viewController: ViewController) {
-        let currentName = viewController.titleLabel.stringValue
+    private func generateHtmlDirectly(note: Note, viewController: ExportHost) {
+        let currentName = viewController.exportTitle
 
         Task { [weak self] in
             guard let self = self else {
@@ -631,7 +647,7 @@ extension MPreviewView {
         }
     }
 
-    private func handleImageExportSuccess(image: NSImage, note: Note, viewController: ViewController) {
+    private func handleImageExportSuccess(image: NSImage, note: Note, viewController: ExportHost) {
         guard let tiffData = image.tiffRepresentation,
             let bitmapImage = NSBitmapImageRep(data: tiffData),
             let imageData = bitmapImage.representation(using: .png, properties: [:])
@@ -743,10 +759,10 @@ extension MPreviewView {
     }
 
     private func saveToDownloads(data: Data, extension: String, viewController: Any) {
-        guard let vc = viewController as? ViewController else { return }
+        guard let vc = viewController as? ExportHost else { return }
 
         // Get the selected note on main thread first
-        let currentName = vc.notesTableView.getSelectedNote()?.getExportTitle() ?? "MiaoYan"
+        let currentName = vc.exportNote?.getExportTitle() ?? "MiaoYan"
 
         // Perform file save on background queue
         DispatchQueue.global(qos: .utility).async {
@@ -782,7 +798,7 @@ extension MPreviewView {
     }
 
     func saveToDownloadsWithFilename(data: Data, extension: String, filename: String, viewController: Any) {
-        guard let vc = viewController as? ViewController else { return }
+        guard let vc = viewController as? ExportHost else { return }
 
         // Perform file save on background queue
         DispatchQueue.global(qos: .utility).async {
@@ -818,7 +834,7 @@ extension MPreviewView {
         }
     }
 
-    private static func presentSavePanel(data: Data, filename: String, extension: String, viewController: ViewController) {
+    private static func presentSavePanel(data: Data, filename: String, extension: String, viewController: ExportHost) {
         let savePanel = NSSavePanel()
         savePanel.nameFieldStringValue = "\(filename).\(`extension`)"
         savePanel.allowedContentTypes = [UTType(filenameExtension: `extension`) ?? .data]

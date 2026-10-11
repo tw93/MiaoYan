@@ -106,6 +106,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
             let shell = ShellWindowController()
             shell.showWindow(nil)
             shellWindowController = shell
+            // A file double-clicked in Finder can arrive before the window.
+            // So can a link that arrived before it.
+            if let url = urls?.first {
+                urls = nil
+                shell.model.openSingle(url, siblingFiles: Self.siblingNoteFiles(of: url))
+            } else if let query = searchQuery {
+                searchQuery = nil
+                shell.model.search(for: query)
+            } else if newName != nil || newContent != nil {
+                shell.model.createNote(name: newName ?? "", content: newContent ?? "")
+                newName = nil
+                newContent = nil
+            }
             return
         }
         let storyboard = NSStoryboard(name: "Main", bundle: nil)

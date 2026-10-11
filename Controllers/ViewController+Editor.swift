@@ -1559,24 +1559,7 @@ extension ViewController {
     }
 
     private func attemptSave(note: Note, title: String, current: String) -> SaveResult {
-        let fileName = cleanFileName(title)
-        let dst = note.project.url.appendingPathComponent(fileName).appendingPathExtension(note.url.pathExtension)
-        let isCaseChange = current.lowercased() == title.lowercased() && current != title
-
-        if (!FileManager.default.fileExists(atPath: dst.path) || isCaseChange) && note.move(to: dst) {
-            note.title = title
-            return .success
-        } else {
-            return .exists
-        }
-    }
-
-    private func cleanFileName(_ name: String) -> String {
-        return
-            name
-            .trimmingCharacters(in: CharacterSet.whitespaces)
-            .replacingOccurrences(of: ":", with: "-")
-            .replacingOccurrences(of: "/", with: ":")
+        note.renameFile(to: title) ? .success : .exists
     }
 
     private func handleResult(_ result: SaveResult, title: String, note: Note) {

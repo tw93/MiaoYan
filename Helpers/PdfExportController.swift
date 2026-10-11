@@ -20,7 +20,9 @@ final class PdfExportController: NSObject {
     private let note: Note
     private let html: String
     private let baseURL: URL
-    private weak var viewController: ViewController?
+    private weak var viewController: ExportHost?
+    /// The preview that started the export; its save helper routes the file.
+    private weak var preview: MPreviewView?
 
     private var window: NSWindow?
     private var webView: WKWebView?
@@ -33,11 +35,12 @@ final class PdfExportController: NSObject {
     private static let mediaWaitMaxAttempts = 80  // 80 * 120ms ≈ 9.6s
     private static let pageSize = NSSize(width: 595.2, height: 841.8)  // A4 at 72dpi
 
-    init(note: Note, html: String, baseURL: URL, viewController: ViewController) {
+    init(note: Note, html: String, baseURL: URL, viewController: ExportHost, preview: MPreviewView?) {
         self.note = note
         self.html = html
         self.baseURL = baseURL
         self.viewController = viewController
+        self.preview = preview
         super.init()
     }
 
@@ -299,7 +302,7 @@ final class PdfExportController: NSObject {
 
         if let vc = viewController {
             // Reuse the live preview's save helper (requires an MPreviewView instance for routing).
-            if let preview = vc.editArea?.markdownView {
+            if let preview {
                 preview.saveToDownloadsWithFilename(
                     data: finalData,
                     extension: "pdf",
@@ -317,7 +320,7 @@ final class PdfExportController: NSObject {
         completion = nil
     }
 
-    private func saveFallback(data: Data, viewController vc: ViewController) {
+    private func saveFallback(data: Data, viewController vc: ExportHost) {
         guard let downloads = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first else {
             vc.toastExport(status: false)
             return

@@ -9,6 +9,9 @@ class ContentViewController: NSViewController, NSPopoverDelegate {
     private var backlinksListView: NSTextView!
     private var scrollView: NSScrollView!
     private var separatorView: NSView!
+    /// The note to describe; the storyboard window leaves it nil and the
+    /// list's selection is used.
+    var note: Note?
 
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -96,15 +99,14 @@ class ContentViewController: NSViewController, NSPopoverDelegate {
         super.viewDidAppear()
         updateAppearance()
 
-        guard let vc = ViewController.shared() else { return }
-        guard let note = vc.notesTableView.getSelectedNote() else { return }
+        guard let note = note ?? ViewController.shared()?.notesTableView.getSelectedNote() else { return }
 
         var words = note.getPrettifiedContent()
-        words = vc.replace(validateString: words, regex: "*+", content: "")
-        words = vc.replace(validateString: words, regex: "#+", content: "")
-        words = vc.replace(validateString: words, regex: "\\r\n", content: "")
-        words = vc.replace(validateString: words, regex: "\\n", content: "")
-        words = vc.replace(validateString: words, regex: "\\s", content: "")
+        words = ViewController.replace(validateString: words, regex: "*+", content: "")
+        words = ViewController.replace(validateString: words, regex: "#+", content: "")
+        words = ViewController.replace(validateString: words, regex: "\\r\n", content: "")
+        words = ViewController.replace(validateString: words, regex: "\\n", content: "")
+        words = ViewController.replace(validateString: words, regex: "\\s", content: "")
 
         wordCount.stringValue = "\(I18n.str("Words")): \(words.count)"
         updateTime.stringValue = "\(I18n.str("Modified")): \(note.getUpdateTime() ?? "")"

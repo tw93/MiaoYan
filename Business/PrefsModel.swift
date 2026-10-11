@@ -134,7 +134,13 @@ struct EditorSettings: SettingsConfigurable {
     }
 
     func applyChanges() {
-        guard let vc = ViewController.shared() else { return }
+        // The SwiftUI shell has no ViewController; it re-renders on this note.
+        guard let vc = ViewController.shared() else {
+            NotesTextProcessor.hl = nil
+            NotesTextProcessor.refreshFonts()
+            NotificationCenter.default.post(name: .editorSettingsChanged, object: nil)
+            return
+        }
         NotesTextProcessor.hl = nil
         NotesTextProcessor.refreshFonts()
 

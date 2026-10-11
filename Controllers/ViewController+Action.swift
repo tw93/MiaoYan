@@ -571,7 +571,7 @@ extension ViewController {
                 if note.type == .markdown, note.container == .none {
                     let images = note.getAllImages()
                     for image in images {
-                        move(note: noteDupe, from: image.url, imagePath: image.path, to: note.project, copy: true)
+                        noteDupe.relocateAttachment(from: image.url, imagePath: image.path, to: note.project, copy: true)
                     }
                 }
 
@@ -632,7 +632,7 @@ extension ViewController {
         try? process.run()
     }
 
-    private static func preferredTerminalBundleID() -> String {
+    static func preferredTerminalBundleID() -> String {
         let candidates = [
             "fun.tw93.kaku",  // Kaku
             "dev.warp.Warp-Stable",  // Warp
@@ -795,20 +795,7 @@ extension ViewController {
                 continue
             }
 
-            let destination = project.url.appendingPathComponent(note.name)
-
-            if note.type == .markdown, note.container == .none {
-                let imagesMeta = note.getAllImages()
-                for imageMeta in imagesMeta {
-                    move(note: note, from: imageMeta.url, imagePath: imageMeta.path, to: project)
-                }
-
-                if !imagesMeta.isEmpty {
-                    note.save()
-                }
-            }
-
-            _ = note.move(to: destination, project: project)
+            note.move(toProject: project)
 
             if !isFit(note: note, shouldLoadMain: true) {
                 notesTableView.removeByNotes(notes: [note])
@@ -826,48 +813,6 @@ extension ViewController {
         }
 
         editArea.clear()
-    }
-
-    private func move(note: Note, from imageURL: URL, imagePath: String, to project: Project, copy: Bool = false) {
-        let dstPrefix = NotesTextProcessor.getAttachPrefix(url: imageURL)
-        let dest = project.url.appendingPathComponent(dstPrefix)
-
-        if !FileManager.default.fileExists(atPath: dest.path) {
-            try? FileManager.default.createDirectory(at: dest, withIntermediateDirectories: false, attributes: nil)
-        }
-
-        do {
-            if copy {
-                try FileManager.default.copyItem(at: imageURL, to: dest)
-            } else {
-                try FileManager.default.moveItem(at: imageURL, to: dest)
-            }
-        } catch {
-            if let fileName = ImagesProcessor.getFileName(from: imageURL, to: dest, ext: imageURL.pathExtension) {
-                let dest = dest.appendingPathComponent(fileName)
-
-                if copy {
-                    try? FileManager.default.copyItem(at: imageURL, to: dest)
-                } else {
-                    try? FileManager.default.moveItem(at: imageURL, to: dest)
-                }
-
-                let prefix = "]("
-                let postfix = ")"
-
-                let find = prefix + imagePath + postfix
-                let replace = prefix + dstPrefix + fileName + postfix
-
-                guard find != replace else {
-                    return
-                }
-
-                while note.content.mutableString.contains(find) {
-                    let range = note.content.mutableString.range(of: find)
-                    note.content.replaceCharacters(in: range, with: replace)
-                }
-            }
-        }
     }
 
     func createNote(name: String = "", content: String = "", type: NoteType? = nil, project: Project? = nil, load: Bool = false) {
@@ -1165,6 +1110,12 @@ extension ViewController {
 
     // MARK: - File Operations
     public func copy(project: Project, url: URL) -> URL {
+        Self.copyFile(url, into: project)
+    }
+
+    /// Copies an imported file into `project`, naming it "Copy", "Copy 2"
+    /// and so on when the name is taken. Shared with the SwiftUI shell.
+    static func copyFile(_ url: URL, into project: Project) -> URL {
         let fileName = url.lastPathComponent
 
         do {
@@ -1332,6 +1283,10 @@ extension ViewController {
     }
 
     public func replace(validateString: String, regex: String, content: String) -> String {
+        Self.replace(validateString: validateString, regex: regex, content: content)
+    }
+
+    static func replace(validateString: String, regex: String, content: String) -> String {
         do {
             let RE = try NSRegularExpression(pattern: regex, options: .caseInsensitive)
             let modified = RE.stringByReplacingMatches(in: validateString, options: .reportProgress, range: NSRange(location: 0, length: validateString.count), withTemplate: content)

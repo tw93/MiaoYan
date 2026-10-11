@@ -1,15 +1,33 @@
 import Foundation
 
+/// What a window does when notes change on disk behind its back. The
+/// storyboard window and the SwiftUI shell both implement it, so external
+/// edits, imports, removals and conflict backups work the same in either.
+@MainActor
+protocol FileSystemEventHost: AnyObject {
+    /// Re-runs the list query, then selects `note` if given.
+    func fsReloadList(selecting note: Note?, completion: (@MainActor @Sendable () -> Void)?)
+    func fsInsert(_ note: Note)
+    func fsReloadSidebar()
+    func fsSelectFirstNote()
+    func fsRemove(_ notes: [Note])
+    func fsReload(_ note: Note)
+    func fsRefillEditor()
+    /// The note that owns the editor buffer, and the buffer's text.
+    var fsEditorBuffer: (owner: Note?, text: String)? { get }
+    func fsToast(_ message: String, style: ToastStyle)
+}
+
 @MainActor
 class FileSystemEventManager {
     private let storage: Storage
-    private weak var delegate: ViewController?
+    private weak var delegate: FileSystemEventHost?
     private var watcher: FileWatcher?
     private var observedFolders: [String] {
         storage.getProjectPaths()
     }
 
-    init(storage: Storage, delegate: ViewController) {
+    init(storage: Storage, delegate: FileSystemEventHost) {
         self.storage = storage
         self.delegate = delegate
     }
@@ -183,8 +201,7 @@ class FileSystemEventManager {
     private func handleExistingNote(_ note: Note) {
         guard note.url == UserDataService.instance.focusOnImport else { return }
 
-        delegate?.updateTable {
-            self.delegate?.notesTableView.setSelected(note: note)
+        delegate?.fsReloadList(selecting: note) {
             UserDataService.instance.focusOnImport = nil
         }
     }
@@ -194,33 +211,31 @@ class FileSystemEventManager {
         if let focusURL = UserDataService.instance.focusOnImport,
             let focusNote = storage.getBy(url: focusURL)
         {
-            delegate?.updateTable {
-                self.delegate?.notesTableView.setSelected(note: focusNote)
+            delegate?.fsReloadList(selecting: focusNote) {
                 UserDataService.instance.focusOnImport = nil
-                self.delegate?.reloadSideBar()
+                self.delegate?.fsReloadSidebar()
             }
         } else {
             if !note.isTrash() {
-                delegate?.notesTableView.insertNew(note: note)
+                delegate?.fsInsert(note)
             }
-            delegate?.reloadSideBar()
+            delegate?.fsReloadSidebar()
         }
     }
 
     @MainActor
     private func handleReadmeFile(_ note: Note) {
-        delegate?.updateTable {
-            self.delegate?.notesTableView.selectRow(0)
+        delegate?.fsReloadList(selecting: nil) {
+            self.delegate?.fsSelectFirstNote()
             note.addPin()
-            self.delegate?.reloadSideBar()
+            self.delegate?.fsReloadSidebar()
         }
     }
 
     @MainActor
     private func renameNote(note: Note) {
         if note.url == UserDataService.instance.focusOnImport {
-            delegate?.updateTable {
-                self.delegate?.notesTableView.setSelected(note: note)
+            delegate?.fsReloadList(selecting: note) {
                 UserDataService.instance.focusOnImport = nil
             }
         } else {
@@ -231,13 +246,7 @@ class FileSystemEventManager {
     private func removeNote(note: Note) {
         storage.removeNotes(notes: [note], fsRemove: false) { [weak self] _ in
             Task { @MainActor [weak self] in
-                guard let self = self,
-                    let delegate = self.delegate,
-                    delegate.notesTableView.numberOfRows > 0
-                else {
-                    return
-                }
-                delegate.notesTableView.removeByNotes(notes: [note])
+                self?.delegate?.fsRemove([note])
             }
         }
     }
@@ -269,20 +278,17 @@ class FileSystemEventManager {
         // in-progress text is not silently destroyed by an external sync /
         // editor.
         if EditTextView.note == note,
-            let editArea = delegate?.editArea,
+            let buffer = delegate?.fsEditorBuffer,
             // In preview-family modes the buffer may still hold another
             // note's text (#543); only treat it as this note's local copy
             // when the storage owner matches, or the backup would contain
             // the wrong note's content.
-            editArea.storageNote === note
+            buffer.owner === note
         {
-            let editorString = editArea.string
+            let editorString = buffer.text
             if editorString != fsContent.string {
                 writeConflictBackup(for: note, editorContent: editorString)
-                delegate?.toast(
-                    message: I18n.str("External change detected. Local copy backed up~"),
-                    style: .failure
-                )
+                delegate?.fsToast(I18n.str("External change detected. Local copy backed up~"), style: .failure)
             }
         }
 
@@ -295,10 +301,10 @@ class FileSystemEventManager {
         // would write it to disk, silently undoing the external change. Wipe
         // the manager so undo can only target edits made *after* the merge.
         note.undoManager.removeAllActions()
-        delegate?.notesTableView.reloadRow(note: note)
+        delegate?.fsReload(note)
 
         if EditTextView.note == note {
-            delegate?.refillEditArea(suppressSave: true)
+            delegate?.fsRefillEditor()
         }
     }
 

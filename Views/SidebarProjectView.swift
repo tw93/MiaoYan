@@ -1293,61 +1293,10 @@ class SidebarProjectView: NSOutlineView,
     }
     private func getSubdirectories(for sidebarItem: SidebarItem) -> [SidebarItem] {
         guard let project = sidebarItem.project, sidebarItem.type == .Category else { return [] }
-
-        let url = project.url
-        let options: FileManager.DirectoryEnumerationOptions = [.skipsHiddenFiles, .skipsPackageDescendants, .skipsSubdirectoryDescendants]
-        let keys: [URLResourceKey] = [.isDirectoryKey, .isPackageKey, .isHiddenKey, .localizedNameKey]
-
-        guard let fileEnumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: keys, options: options) else {
-            return []
+        let icon = NSImage(imageLiteralResourceName: "project")
+        return storage.subfolders(of: project).map {
+            SidebarItem(name: $0.label, project: $0, type: .Category, icon: icon)
         }
-
-        var subItems = [SidebarItem]()
-
-        // Common folders to skip
-        let skipFolders = Set(["assets", ".cache", "i", ".Trash", "files"])
-
-        for case let fileURL as URL in fileEnumerator {
-            // Skip common excluded folders
-            if skipFolders.contains(fileURL.lastPathComponent) { continue }
-
-            // Skip storage related folders
-            if fileURL.lastPathComponent.hasPrefix(".") { continue }
-
-            do {
-                let resourceValues = try fileURL.resourceValues(forKeys: Set(keys))
-
-                // Must be a directory and not a package
-                if let isDirectory = resourceValues.isDirectory, isDirectory,
-                    let isPackage = resourceValues.isPackage, !isPackage
-                {
-                    // Hide leaf folders that hold only inline attachments (images,
-                    // videos, etc.) with no notes inside, regardless of their name.
-                    if storage.isAttachmentOnlyFolder(url: fileURL) { continue }
-
-                    let subProject = Project(url: fileURL, parent: project)
-
-                    // Only add if not already in storage
-                    if !storage.projectExist(url: fileURL) {
-                        _ = storage.add(project: subProject)
-                    }
-
-                    let icon = NSImage(imageLiteralResourceName: "project")
-
-                    let subItem = SidebarItem(
-                        name: subProject.label,
-                        project: subProject,
-                        type: .Category,
-                        icon: icon
-                    )
-                    subItems.append(subItem)
-                }
-            } catch {
-                continue
-            }
-        }
-
-        return subItems.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
     }
 
     private func clearChildrenCache(for targetProject: Project, in items: [Any]) {

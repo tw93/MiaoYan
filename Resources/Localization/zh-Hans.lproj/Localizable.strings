@@ -127,6 +127,7 @@
 "Removed %d unused attachment(s)" = "已清理%d个无引用附件";
 "Some attachments could not be removed" = "部分附件无法清理";
 "Some notes could not be read, so no attachments were cleaned" = "部分笔记读取失败，这次没有清理附件";
+"MiaoYan PPT PDF" = "妙言 PPT PDF";
 "Clean" = "清理";
 
 
@@ -311,3 +312,6 @@
 "Chinese" = "中文";
 "Latin" = "西文";
 "Same as Text" = "跟随正文";
+"Rename" = "重命名";
+"Unpin Note" = "取消置顶";
+"Image" = "图片";

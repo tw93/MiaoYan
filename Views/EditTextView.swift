@@ -53,10 +53,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     public static var shouldForceRescan: Bool = false
     public static var lastRemoved: String?
     public var viewDelegate: ViewController?
-    /// True when the SwiftUI shell hosts this editor. It has no
-    /// `ViewController`, keeps the preview in its own pane and switches
-    /// modes itself, so the editor always behaves as the plain edit view.
-    var isShellHosted = false
+    /// True when the SwiftUI shell hosts this editor (no `ViewController`, its own preview and modes), so it behaves as the plain edit view. Set once before use; read off the actor.
+    nonisolated(unsafe) var isShellHosted = false
     nonisolated(unsafe) private var linkHighlightTimer: Timer?
     private weak var cachedViewController: ViewController?
     var isHighlighted: Bool = false
@@ -126,6 +124,19 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         MainActor.assumeIsolated { [self] in
             configureOnLoad()
         }
+    }
+
+    /// In the shell these mode commands belong to its window controller; declining them lets the menu's first-responder dispatch carry on up the chain.
+    private static let shellWindowActions: Set<Selector> = [
+        #selector(togglePreview(_:)), #selector(togglePresentation(_:)), #selector(toggleTOC(_:)),
+        #selector(formatText(_:)), #selector(cleanTypography(_:)),
+    ]
+
+    override func responds(to aSelector: Selector!) -> Bool {
+        if isShellHosted, let aSelector, Self.shellWindowActions.contains(aSelector) {
+            return false
+        }
+        return super.responds(to: aSelector)
     }
 
     /// What the storyboard editor sets up in `awakeFromNib`; the shell runs
@@ -472,6 +483,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     private func getViewController() -> ViewController? {
+        // A shell-hosted editor never talks to a ViewController, even another window's.
+        if isShellHosted { return nil }
         if let delegate = viewDelegate {
             return delegate
         }
@@ -1506,13 +1519,14 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     // MARK: - Editor Search
 
     func showSearchBar(prefilledText: String? = nil, mode: PreviewSearchBar.Mode = .find) {
+        let vc = getViewController()
+        // The shell has no ViewController; its editor sits one level above the scroll view.
         guard
-            let vc = getViewController(),
-            let scrollView = enclosingScrollView ?? vc.editAreaScroll
+            let scrollView = enclosingScrollView ?? vc?.editAreaScroll,
+            let containerView = isShellHosted ? scrollView.superview : vc?.view
         else {
             return
         }
-        let containerView = vc.view
 
         if let note = EditTextView.note {
             note.ensureContentLoaded()
@@ -1529,12 +1543,8 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
             bar.onSearch = { [weak self] text in
                 self?.handleSearchInput(text, jumpToFirstMatch: true)
             }
-            bar.onNext = { [weak self] in
-                self?.findNext()
-            }
-            bar.onPrevious = { [weak self] in
-                self?.findPrevious()
-            }
+            bar.onNext = { [weak self] in self?.findNext() }
+            bar.onPrevious = { [weak self] in self?.findPrevious() }
             bar.onReplace = { [weak self] replaceText in
                 self?.replaceNext(with: replaceText)
             }

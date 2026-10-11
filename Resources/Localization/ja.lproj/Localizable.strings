@@ -245,6 +245,7 @@
 "Removed %d unused attachment(s)" = "%d件の未使用の添付ファイルを削除しました";
 "Some attachments could not be removed" = "一部の添付ファイルを削除できませんでした";
 "Some notes could not be read, so no attachments were cleaned" = "一部のノートを読み込めなかったため、添付ファイルは整理しませんでした";
+"MiaoYan PPT PDF" = "妙言 スライド PDF";
 "Clean" = "整理";
 
 /* Export Messages */
@@ -311,3 +312,6 @@
 "Chinese" = "中国語";
 "Latin" = "欧文";
 "Same as Text" = "本文と同じ";
+"Rename" = "名前変更";
+"Unpin Note" = "ノートのピン留めを解除";
+"Image" = "画像";
