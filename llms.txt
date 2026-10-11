@@ -2,7 +2,7 @@
 
 > A lightweight, local-first Markdown note-taking app for Mac, iPhone and iPad, built natively with Swift 6.
 
-Official website: https://miaoyan.app/ (Chinese: https://miaoyan.app/zh/)
+Official website: https://miaoyan.app/ (also in Simplified Chinese /zh/, Traditional Chinese /tw/, Japanese /ja/, Korean /ko/, German /de/, French /fr/ and Spanish /es/)
 Source code: https://github.com/tw93/MiaoYan
 App Store (Mac, iPhone and iPad in one purchase): https://apps.apple.com/app/id6759252269
 Author: Tw93, https://tw93.fun/

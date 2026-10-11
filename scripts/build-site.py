@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Build the MiaoYan home pages: / (English) and /zh/ (Chinese).
+"""Build the MiaoYan home pages, one per language: / (English), /zh/, /tw/,
+/ja/, /ko/, /de/, /fr/ and /es/.
 
-One template and one copy table per language, so the two pages cannot
-drift apart. The output is committed; Vercel serves it as static files.
+One template and one copy table per language, so the pages cannot drift
+apart. The languages are the README's seven plus Spanish, which the Mac app
+ships. The output is committed; Vercel serves it as static files.
 
     python3 scripts/build-site.py
 """
@@ -21,14 +23,32 @@ MAC_APP_STORE = "macappstore://apps.apple.com/app/id6759252269"
 GITHUB = "https://github.com/tw93/MiaoYan"
 SHOTS = ["edit", "preview", "split", "ppt", "dark"]
 
+# key, path, html lang, menu name, short code (narrow nav), screenshot set
+LANGS = [
+    ("en", "/", "en", "English", "EN", "en"),
+    ("zh", "/zh/", "zh-CN", "简体中文", "中", "zh"),
+    ("tw", "/tw/", "zh-Hant", "繁體中文", "繁", "zh"),
+    ("ja", "/ja/", "ja", "日本語", "日", "en"),
+    ("ko", "/ko/", "ko", "한국어", "한", "en"),
+    ("de", "/de/", "de", "Deutsch", "DE", "en"),
+    ("fr", "/fr/", "fr", "Français", "FR", "en"),
+    ("es", "/es/", "es", "Español", "ES", "en"),
+]
+
+EN_ALTS = {
+    "edit": "MiaoYan editing a Markdown note with folders, a note list and syntax highlighting",
+    "preview": "MiaoYan previewing a note with a table and a checklist",
+    "split": "MiaoYan in split view with Markdown on the left and a rendered Mermaid diagram on the right",
+    "ppt": "A MiaoYan note shown as a slide",
+    "dark": "MiaoYan in dark mode editing Swift code",
+}
+
 COPY = {
     "en": {
-        "lang": "en",
-        "path": "/",
         "title": "MiaoYan, Markdown notes for Mac, iPhone and iPad",
         "description": "MiaoYan is a native Markdown note app for Mac, iPhone and iPad. Your notes are plain Markdown files in a folder you choose.",
-        "nav": [("#features", "Features"), ("#devices", "iPhone & iPad"), ("#faq", "FAQ"), (GITHUB, "GitHub")],
-        "switch": ("/zh/", "中文", "zh-CN"),
+        "nav": ["Features", "iPhone & iPad", "FAQ"],
+        "language": "Language",
         "nav_cta": "App Store",
         "h1": "MiaoYan",
         "tagline": "Local Markdown notes on Mac, iPhone and iPad",
@@ -45,13 +65,7 @@ COPY = {
             "ppt": "Split a note with --- and it becomes a slide deck",
             "dark": "Dark mode follows the system",
         },
-        "alts": {
-            "edit": "MiaoYan editing a Markdown note with folders, a note list and syntax highlighting",
-            "preview": "MiaoYan previewing a note with a table and a checklist",
-            "split": "MiaoYan in split view with Markdown on the left and a rendered Mermaid diagram on the right",
-            "ppt": "A MiaoYan note shown as a slide",
-            "dark": "MiaoYan in dark mode editing Swift code",
-        },
+        "alts": EN_ALTS,
         "devices_title": "On iPhone and iPad",
         "devices_lede": "The same App Store purchase runs on iPhone and iPad, opening the same iCloud Drive folder as your Mac.",
         "devices_cta": "Get it on the App Store",
@@ -77,15 +91,13 @@ COPY = {
             ("What do I need to run it?", "macOS 12 or later on the Mac, and iOS 18 or later on iPhone and iPad."),
         ],
         "about": "Tw93 designs, builds and maintains MiaoYan.",
-        "foot_links": [(APP_STORE, "App Store"), (GITHUB, "GitHub"), ("/privacy.html", "Privacy"), ("https://twitter.com/HiTw93", "Twitter"), ("https://t.me/+9f9gf4ZrFSQ2OWVl", "Telegram")],
+        "foot": (("Get", "Help", "Connect"), ("FAQ", "Privacy")),
     },
     "zh": {
-        "lang": "zh-CN",
-        "path": "/zh/",
         "title": "妙言 MiaoYan，Mac、iPhone 和 iPad 上的 Markdown 笔记",
         "description": "妙言是原生的 Markdown 笔记应用，笔记就是你选定文件夹里的 Markdown 文件，Mac、iPhone 和 iPad 都能打开。",
-        "nav": [("#features", "功能"), ("#devices", "iPhone 和 iPad"), ("#faq", "常见问题"), (GITHUB, "GitHub")],
-        "switch": ("/", "English", "en"),
+        "nav": ["功能", "iPhone 和 iPad", "常见问题"],
+        "language": "语言",
         "nav_cta": "App Store",
         "h1": "妙言",
         "tagline": "轻灵的 Markdown 笔记本，伴你写出妙言",
@@ -134,7 +146,337 @@ COPY = {
             ("需要什么系统？", "Mac 需要 macOS 12 及以上，iPhone 和 iPad 需要 iOS 18 及以上。"),
         ],
         "about": "Tw93，妙言的主理人，负责设计、开发和维护。",
-        "foot_links": [(APP_STORE, "App Store"), (GITHUB, "GitHub"), ("/privacy.html", "隐私政策"), ("https://twitter.com/HiTw93", "Twitter"), ("https://t.me/+9f9gf4ZrFSQ2OWVl", "Telegram")],
+        "foot": (("获取", "帮助", "联系"), ("常见问题", "隐私政策")),
+    },
+    "tw": {
+        "title": "妙言 MiaoYan，Mac、iPhone 和 iPad 上的 Markdown 筆記",
+        "description": "妙言是原生的 Markdown 筆記 App，筆記就是你選定資料夾裡的 Markdown 檔案，Mac、iPhone 和 iPad 都能打開。",
+        "nav": ["功能", "iPhone 和 iPad", "常見問題"],
+        "language": "語言",
+        "nav_cta": "App Store",
+        "h1": "妙言",
+        "tagline": "輕靈的 Markdown 筆記本，伴你寫出妙言",
+        "lede": "原生的 Mac App，筆記就是你自己資料夾裡的 Markdown 檔案，iPhone 和 iPad 打開的也是同一個資料夾。",
+        "trust": ["App Store 買一次，Mac、iPhone 和 iPad 都能用", "筆記是本地 Markdown 檔案", "Mac 版原始碼開放在 GitHub", "macOS 12、iOS 18 以上"],
+        "cta": ("在 App Store 取得", "在 GitHub 查看原始碼"),
+        "gallery_title": "寫、讀、簡報",
+        "gallery_lede": "純 Markdown 編輯，切到預覽看排版，分欄一邊寫一邊看，一篇筆記還能直接變成投影片。",
+        "tabs": {"edit": "編輯", "preview": "預覽", "split": "分欄", "ppt": "簡報", "dark": "深色"},
+        "captions": {
+            "edit": "純 Markdown 編輯，標題、連結和程式碼各有顏色，一眼分清",
+            "preview": "圖片、表格和程式碼按排版好的樣子呈現",
+            "split": "左邊寫，右邊即時預覽，Mermaid 流程圖直接畫出來",
+            "ppt": "用 --- 分頁，同一篇筆記直接變成投影片",
+            "dark": "深色模式跟著系統切換",
+        },
+        "alts": {
+            "edit": "妙言編輯一篇 Markdown 筆記，左側是資料夾和筆記列表",
+            "preview": "妙言預覽一期週刊，帶封面圖和連結",
+            "split": "妙言分欄模式，左邊是 Markdown，右邊是渲染好的流程圖",
+            "ppt": "妙言把一篇筆記展示成投影片",
+            "dark": "妙言深色模式下編輯 Swift 程式碼",
+        },
+        "devices_title": "iPhone 和 iPad",
+        "devices_lede": "同一次 App Store 購買在 iPhone 和 iPad 上也能用，打開的是和 Mac 同一個 iCloud 雲碟資料夾。",
+        "devices_cta": "在 App Store 取得",
+        "device_alts": ("妙言在 iPhone 上閱讀筆記", "妙言在 iPad 上顯示帶流程圖的筆記"),
+        "features_title": "為什麼選擇妙言",
+        "features": [
+            ("本地", "Markdown 檔案保存在你選擇的本地資料夾，不收集筆記資料。需要跨裝置時，可交給 iCloud 雲碟、堅果雲或你熟悉的檔案同步工具。"),
+            ("專注", "資料夾、筆記列表與編輯器組成清楚的三欄佈局。支援深色模式、無干擾寫作和常用快捷鍵，不需要維護外掛系統。"),
+            ("原生", "使用 Swift 6 原生開發，不依賴 Electron。分欄模式提供即時預覽與 60fps 雙向捲動同步，適合專注處理純 Markdown。"),
+            ("夠用", "支援雙向連結與反向連結、LaTeX、Mermaid、版本歷史、自動排版和命令列操作，也能用 PPT 模式簡報 Markdown。"),
+        ],
+        "compare_title": "妙言適合誰",
+        "compare": [
+            ("和 Typora 相比", "妙言不做所見即所得編輯，而是保留純 Markdown 編輯與獨立預覽。它更適合希望直接掌控原始檔，又需要即時預覽的人。"),
+            ("和 Obsidian 相比", "妙言沒有 Electron 執行環境，也不以外掛生態為中心。它更適合想要原生、輕量、本地檔案和少量內建能力的人。"),
+        ],
+        "faq_title": "常見問題",
+        "faq": [
+            ("該裝哪個版本？", "推薦 App Store 版，買一次 Mac、iPhone 和 iPad 都能用，打開的是同一個 iCloud 雲碟資料夾，更新也是自動的，Mac 版的原始碼開放在 GitHub。"),
+            ("筆記存在哪裡？", "就在你選定的資料夾裡，每篇都是普通的 .md 檔案，妙言不收集筆記資料，以後換工具時整個資料夾帶走就行。"),
+            ("Mac 和手機之間怎麼同步？", "把筆記資料夾放在 iCloud 雲碟裡，Mac、iPhone 和 iPad 打開的就是同一份筆記，Mac 上也可以用堅果雲等檔案同步工具。"),
+            ("支援哪些 Markdown 語法？", "GitHub 風格的 Markdown，加上 LaTeX 公式、Mermaid、PlantUML 和 Markmap 圖表、雙向連結，以及用 --- 分頁的簡報模式。"),
+            ("需要什麼系統？", "Mac 需要 macOS 12 以上，iPhone 和 iPad 需要 iOS 18 以上。"),
+        ],
+        "about": "Tw93，妙言的主理人，負責設計、開發和維護。",
+        "foot": (("取得", "說明", "聯絡"), ("常見問題", "隱私權政策")),
+    },
+    "ja": {
+        "title": "MiaoYan、Mac・iPhone・iPad のための Markdown ノート",
+        "description": "MiaoYan はネイティブの Markdown ノートアプリです。ノートは自分で選んだフォルダにある Markdown ファイルで、Mac、iPhone、iPad のどれからでも開けます。",
+        "nav": ["機能", "iPhone と iPad", "よくある質問"],
+        "language": "言語",
+        "nav_cta": "App Store",
+        "h1": "MiaoYan",
+        "tagline": "Mac、iPhone、iPad で使えるローカルの Markdown ノート",
+        "lede": "MiaoYan は中国語の妙言、言葉を超えた言葉という意味です。",
+        "trust": ["App Store で一度買えば Mac・iPhone・iPad で使える", "ノートは自分のフォルダにある Markdown ファイル", "Mac 版のソースコードは GitHub で公開", "macOS 12 以降、iOS 18 以降"],
+        "cta": ("App Store で入手", "GitHub で見る"),
+        "gallery_title": "書く、読む、プレゼンする",
+        "gallery_lede": "素の Markdown で書き、プレビューで組版を確かめ、2ペインで並べて作業し、ノートをそのままスライドにできます。",
+        "tabs": {"edit": "編集", "preview": "プレビュー", "split": "2ペイン", "ppt": "プレゼン", "dark": "ダーク"},
+        "captions": {
+            "edit": "シンタックスハイライト付きの素の Markdown で、見出し、リンク、コードがひと目で区別できます",
+            "preview": "画像、表、コードを読まれるときと同じ姿で表示します",
+            "split": "左で書いて右で確認、Mermaid の図もそのまま描画されます",
+            "ppt": "--- で区切ればノートがスライドになります",
+            "dark": "ダークモードはシステムに合わせて切り替わります",
+        },
+        "alts": {
+            "edit": "フォルダ、ノート一覧、シンタックスハイライトとともに Markdown ノートを編集する MiaoYan",
+            "preview": "表とチェックリストのあるノートをプレビューする MiaoYan",
+            "split": "左に Markdown、右に描画された Mermaid 図を並べた MiaoYan の2ペイン表示",
+            "ppt": "スライドとして表示した MiaoYan のノート",
+            "dark": "ダークモードで Swift のコードを編集する MiaoYan",
+        },
+        "devices_title": "iPhone と iPad",
+        "devices_lede": "同じ App Store の購入で iPhone と iPad でも使え、Mac と同じ iCloud Drive フォルダを開きます。",
+        "devices_cta": "App Store で入手",
+        "device_alts": ("iPhone でノートを読む MiaoYan", "iPad で図入りのノートを表示する MiaoYan"),
+        "features_title": "MiaoYan を選ぶ理由",
+        "features": [
+            ("ローカルファースト", "Markdown ファイルは自分で選んだフォルダに保存され、MiaoYan はノートのデータを集めません。デバイス間の同期は iCloud Drive や Nutstore などのファイル同期ツールに任せられます。"),
+            ("集中", "フォルダ、ノート一覧、エディタの3ペイン構成で、書くのに必要なものがひとつの画面に揃います。ダークモード、集中して書ける画面、キーボードショートカットを内蔵し、管理するプラグインはありません。"),
+            ("ネイティブ", "Electron ではなく Swift 6 でネイティブに開発しています。2ペインモードはリアルタイムプレビューと 60fps の双方向スクロール同期で、Markdown の編集に集中できます。"),
+            ("必要十分", "双方向リンクとバックリンク、LaTeX、Mermaid、バージョン履歴、自動整形、CLI、Markdown プレゼンテーションで、書くまわりの作業もこなせます。"),
+        ],
+        "compare_title": "MiaoYan が向いている人",
+        "compare": [
+            ("Typora と比べると", "MiaoYan は WYSIWYG ではなく、素の Markdown 編集と独立したプレビューを保っています。ソースファイルを直接扱いながら、すぐに見た目も確かめたい人に向いています。"),
+            ("Obsidian と比べると", "MiaoYan は Electron を使わず、プラグインのエコシステムを中心にもしていません。ローカルファイルと絞り込んだ内蔵機能で、ネイティブで軽いアプリを求める人に向いています。"),
+        ],
+        "faq_title": "よくある質問",
+        "faq": [
+            ("どのバージョンを入れればいいですか？", "App Store 版がおすすめです。一度の購入で Mac、iPhone、iPad のすべてで使え、どれも同じ iCloud Drive フォルダを開き、アップデートも自動です。Mac 版のソースコードは GitHub で公開しています。"),
+            ("ノートはどこに保存されますか？", "自分で選んだフォルダに、普通の .md ファイルとして保存されます。MiaoYan はノートのデータを集めず、ほかのツールに移るときもフォルダごと持っていけます。"),
+            ("Mac と iPhone の間でどう同期しますか？", "フォルダを iCloud Drive に置けば、Mac、iPhone、iPad が同じノートを開きます。Mac では Nutstore などのファイル同期ツールも使えます。"),
+            ("どんな Markdown に対応していますか？", "GitHub Flavored Markdown に加えて、LaTeX、Mermaid、PlantUML、Markmap、双方向リンクとバックリンク、--- で区切るスライドに対応しています。"),
+            ("動作環境は？", "Mac は macOS 12 以降、iPhone と iPad は iOS 18 以降が必要です。"),
+        ],
+        "about": "Tw93 が MiaoYan のデザイン、開発、メンテナンスをしています。",
+        "foot": (("入手", "サポート", "つながる"), ("よくある質問", "プライバシー")),
+    },
+    "ko": {
+        "title": "MiaoYan, Mac·iPhone·iPad를 위한 마크다운 노트",
+        "description": "MiaoYan은 네이티브 마크다운 노트 앱입니다. 노트는 직접 고른 폴더 안의 마크다운 파일이며, Mac, iPhone, iPad 어디서든 열 수 있습니다.",
+        "nav": ["기능", "iPhone과 iPad", "자주 묻는 질문"],
+        "language": "언어",
+        "nav_cta": "App Store",
+        "h1": "MiaoYan",
+        "tagline": "Mac, iPhone, iPad에서 쓰는 로컬 마크다운 노트",
+        "lede": "MiaoYan은 중국어 妙言에서 온 이름으로, 말을 넘어선 말이라는 뜻입니다.",
+        "trust": ["App Store 한 번 구매로 Mac, iPhone, iPad 모두 사용", "노트는 내 폴더 안의 마크다운 파일", "Mac 앱 소스 코드는 GitHub에 공개", "macOS 12 이상, iOS 18 이상"],
+        "cta": ("App Store에서 받기", "GitHub에서 보기"),
+        "gallery_title": "쓰고, 읽고, 발표하기",
+        "gallery_lede": "순수 마크다운으로 쓰고, 미리보기로 조판을 확인하고, 분할 화면에서 나란히 작업하거나, 노트를 그대로 슬라이드로 바꿀 수 있습니다.",
+        "tabs": {"edit": "편집", "preview": "미리보기", "split": "분할", "ppt": "발표", "dark": "다크"},
+        "captions": {
+            "edit": "구문 강조가 적용된 순수 마크다운으로 제목, 링크, 코드가 한눈에 구분됩니다",
+            "preview": "이미지, 표, 코드를 읽힐 모습 그대로 보여 줍니다",
+            "split": "왼쪽에서 쓰고 오른쪽에서 확인하며, Mermaid 다이어그램도 바로 그려집니다",
+            "ppt": "---로 나누면 노트가 슬라이드가 됩니다",
+            "dark": "다크 모드는 시스템 설정을 따릅니다",
+        },
+        "alts": {
+            "edit": "폴더, 노트 목록, 구문 강조와 함께 마크다운 노트를 편집하는 MiaoYan",
+            "preview": "표와 체크리스트가 있는 노트를 미리 보는 MiaoYan",
+            "split": "왼쪽에 마크다운, 오른쪽에 렌더링된 Mermaid 다이어그램이 있는 MiaoYan 분할 화면",
+            "ppt": "슬라이드로 표시된 MiaoYan 노트",
+            "dark": "다크 모드에서 Swift 코드를 편집하는 MiaoYan",
+        },
+        "devices_title": "iPhone과 iPad",
+        "devices_lede": "같은 App Store 구매로 iPhone과 iPad에서도 쓸 수 있고, Mac과 같은 iCloud Drive 폴더를 엽니다.",
+        "devices_cta": "App Store에서 받기",
+        "device_alts": ("iPhone에서 노트를 읽는 MiaoYan", "iPad에서 다이어그램이 있는 노트를 보여 주는 MiaoYan"),
+        "features_title": "MiaoYan을 쓰는 이유",
+        "features": [
+            ("로컬 우선", "마크다운 파일은 직접 고른 폴더에 저장되고, MiaoYan은 노트 데이터를 수집하지 않습니다. 기기 간 동기화는 iCloud Drive나 Nutstore 같은 파일 동기화 도구에 맡기면 됩니다."),
+            ("집중", "폴더, 노트 목록, 편집기로 이루어진 3단 구성으로 쓰는 데 필요한 것이 한 화면에 모입니다. 다크 모드, 방해 없는 글쓰기, 키보드 단축키가 들어 있고 관리할 플러그인은 없습니다."),
+            ("네이티브", "Electron이 아닌 Swift 6으로 만든 네이티브 앱입니다. 분할 모드는 실시간 미리보기와 60fps 양방향 스크롤 동기화로 마크다운 편집에 집중하게 해 줍니다."),
+            ("충분한 기능", "양방향 링크와 백링크, LaTeX, Mermaid, 버전 기록, 자동 서식, CLI, 마크다운 프레젠테이션으로 글쓰기 주변 작업까지 해결합니다."),
+        ],
+        "compare_title": "MiaoYan이 맞는 사람",
+        "compare": [
+            ("Typora와 비교하면", "MiaoYan은 WYSIWYG 대신 순수 마크다운 편집과 별도의 미리보기를 유지합니다. 원본 파일을 직접 다루면서 결과도 바로 보고 싶은 사람에게 맞습니다."),
+            ("Obsidian과 비교하면", "MiaoYan은 Electron을 쓰지 않고, 플러그인 생태계를 중심에 두지도 않습니다. 로컬 파일과 꼭 필요한 내장 기능을 갖춘 가벼운 네이티브 앱을 원하는 사람에게 맞습니다."),
+        ],
+        "faq_title": "자주 묻는 질문",
+        "faq": [
+            ("어떤 버전을 설치하면 되나요?", "App Store 버전을 추천합니다. 한 번 구매로 Mac, iPhone, iPad에서 모두 쓸 수 있고, 모두 같은 iCloud Drive 폴더를 열며 업데이트도 자동입니다. Mac 앱의 소스 코드는 GitHub에 공개되어 있습니다."),
+            ("노트는 어디에 저장되나요?", "직접 고른 폴더에 일반 .md 파일로 저장됩니다. MiaoYan은 노트 데이터를 수집하지 않으며, 다른 도구로 옮길 때도 폴더째 가져가면 됩니다."),
+            ("Mac과 iPhone 사이에서 어떻게 동기화하나요?", "폴더를 iCloud Drive에 두면 Mac, iPhone, iPad가 같은 노트를 엽니다. Mac에서는 Nutstore 같은 파일 동기화 도구도 쓸 수 있습니다."),
+            ("어떤 마크다운을 지원하나요?", "GitHub Flavored Markdown과 함께 LaTeX, Mermaid, PlantUML, Markmap, 양방향 링크와 백링크, ---로 나누는 슬라이드를 지원합니다."),
+            ("실행 환경은 어떻게 되나요?", "Mac은 macOS 12 이상, iPhone과 iPad는 iOS 18 이상이 필요합니다."),
+        ],
+        "about": "Tw93이 MiaoYan의 디자인, 개발, 유지 관리를 맡고 있습니다.",
+        "foot": (("받기", "도움말", "연락"), ("자주 묻는 질문", "개인정보 처리방침")),
+    },
+    "de": {
+        "title": "MiaoYan, Markdown-Notizen für Mac, iPhone und iPad",
+        "description": "MiaoYan ist eine native Markdown-Notiz-App für Mac, iPhone und iPad. Deine Notizen sind einfache Markdown-Dateien in einem Ordner deiner Wahl.",
+        "nav": ["Funktionen", "iPhone & iPad", "FAQ"],
+        "language": "Sprache",
+        "nav_cta": "App Store",
+        "h1": "MiaoYan",
+        "tagline": "Lokale Markdown-Notizen auf Mac, iPhone und iPad",
+        "lede": "MiaoYan ist das chinesische 妙言, Worte jenseits der Worte.",
+        "trust": ["Ein App-Store-Kauf für Mac, iPhone und iPad", "Einfache Markdown-Dateien in deinem eigenen Ordner", "Quellcode der Mac-App auf GitHub", "macOS 12 oder neuer, iOS 18 oder neuer"],
+        "cta": ("Im App Store laden", "Auf GitHub ansehen"),
+        "gallery_title": "Schreiben, lesen, präsentieren",
+        "gallery_lede": "Schreib reines Markdown, wechsle zur gesetzten Vorschau, arbeite Seite an Seite oder mach aus einer Notiz eine Präsentation.",
+        "tabs": {"edit": "Bearbeiten", "preview": "Vorschau", "split": "Geteilt", "ppt": "Präsentieren", "dark": "Dunkel"},
+        "captions": {
+            "edit": "Reines Markdown mit Syntaxhervorhebung, damit sich Überschriften, Links und Code abheben",
+            "preview": "Bilder, Tabellen und Code so dargestellt, wie sie gelesen werden",
+            "split": "Links schreiben, rechts sehen, Mermaid-Diagramme inklusive",
+            "ppt": "Teile eine Notiz mit --- und sie wird zur Präsentation",
+            "dark": "Der Dark Mode folgt dem System",
+        },
+        "alts": {
+            "edit": "MiaoYan beim Bearbeiten einer Markdown-Notiz mit Ordnern, Notizliste und Syntaxhervorhebung",
+            "preview": "MiaoYan zeigt die Vorschau einer Notiz mit Tabelle und Checkliste",
+            "split": "MiaoYan in der geteilten Ansicht mit Markdown links und gerendertem Mermaid-Diagramm rechts",
+            "ppt": "Eine MiaoYan-Notiz als Folie",
+            "dark": "MiaoYan im Dark Mode beim Bearbeiten von Swift-Code",
+        },
+        "devices_title": "Auf iPhone und iPad",
+        "devices_lede": "Derselbe App-Store-Kauf läuft auf iPhone und iPad und öffnet denselben iCloud-Drive-Ordner wie dein Mac.",
+        "devices_cta": "Im App Store laden",
+        "device_alts": ("MiaoYan auf dem iPhone beim Lesen einer Notiz", "MiaoYan auf dem iPad mit einer Notiz samt Diagramm"),
+        "features_title": "Warum MiaoYan",
+        "features": [
+            ("Lokal zuerst", "Deine Markdown-Dateien bleiben in einem Ordner deiner Wahl. MiaoYan erfasst keine Notizdaten; iCloud Drive, Nutstore oder ein anderer Sync-Client gleicht sie zwischen Geräten ab."),
+            ("Fokussiert", "Ordner, Notizen und Editor in drei klaren Spalten. Dark Mode, ablenkungsfreies Schreiben und Tastaturkürzel sind eingebaut, ohne Plugin-System, das gepflegt werden muss."),
+            ("Nativ", "Nativ mit Swift 6 statt Electron gebaut. Der geteilte Modus verbindet Echtzeitvorschau mit Bildlaufsynchronisation in beide Richtungen bei 60fps."),
+            ("Gut ausgestattet", "Wikilinks und Backlinks, LaTeX, Mermaid, Versionsverlauf, automatische Formatierung, eine CLI und Markdown-Präsentationen decken die Arbeit rund ums Schreiben ab."),
+        ],
+        "compare_title": "Für wen MiaoYan gedacht ist",
+        "compare": [
+            ("Im Vergleich zu Typora", "MiaoYan setzt auf reines Markdown mit separater Vorschau statt WYSIWYG. Das passt zu allen, die ihre Quelldateien direkt in der Hand behalten und das Ergebnis trotzdem sofort sehen wollen."),
+            ("Im Vergleich zu Obsidian", "MiaoYan läuft ohne Electron und dreht sich nicht um ein Plugin-Ökosystem. Das passt zu allen, die eine native, leichte App mit lokalen Dateien und wenigen eingebauten Funktionen bevorzugen."),
+        ],
+        "faq_title": "Fragen",
+        "faq": [
+            ("Welche Version soll ich nehmen?", "Die App-Store-Version. Ein Kauf gilt für Mac, iPhone und iPad, alle öffnen denselben iCloud-Drive-Ordner, und Updates kommen automatisch. Der Quellcode der Mac-App liegt offen auf GitHub."),
+            ("Wo werden meine Notizen gespeichert?", "In dem Ordner, den du wählst, als einfache .md-Dateien. MiaoYan erfasst keine Notizdaten, und wenn du das Werkzeug wechselst, nimmst du den Ordner einfach mit."),
+            ("Wie werden Notizen zwischen Mac und iPhone abgeglichen?", "Leg den Ordner in iCloud Drive, dann öffnen Mac, iPhone und iPad dieselben Notizen. Auf dem Mac funktioniert auch Nutstore oder ein anderer Sync-Client."),
+            ("Welches Markdown wird unterstützt?", "GitHub Flavored Markdown, dazu LaTeX, Mermaid, PlantUML und Markmap, Wikilinks mit Backlinks sowie Folien, die mit --- getrennt werden."),
+            ("Was brauche ich dafür?", "macOS 12 oder neuer auf dem Mac, iOS 18 oder neuer auf iPhone und iPad."),
+        ],
+        "about": "Tw93 gestaltet, entwickelt und pflegt MiaoYan.",
+        "foot": (("Laden", "Hilfe", "Kontakt"), ("FAQ", "Datenschutz")),
+    },
+    "fr": {
+        "title": "MiaoYan, des notes Markdown pour Mac, iPhone et iPad",
+        "description": "MiaoYan est une app native de notes Markdown pour Mac, iPhone et iPad. Vos notes sont de simples fichiers Markdown dans le dossier de votre choix.",
+        "nav": ["Fonctionnalités", "iPhone et iPad", "FAQ"],
+        "language": "Langue",
+        "nav_cta": "App Store",
+        "h1": "MiaoYan",
+        "tagline": "Des notes Markdown locales sur Mac, iPhone et iPad",
+        "lede": "MiaoYan vient du chinois 妙言, des mots au-delà des mots.",
+        "trust": ["Un seul achat App Store pour Mac, iPhone et iPad", "De simples fichiers Markdown dans votre dossier", "Code source de l'app Mac sur GitHub", "macOS 12 ou ultérieur, iOS 18 ou ultérieur"],
+        "cta": ("Télécharger sur l'App Store", "Voir sur GitHub"),
+        "gallery_title": "Écrire, lire, présenter",
+        "gallery_lede": "Écrivez en Markdown pur, passez à un aperçu mis en page, travaillez côte à côte ou transformez une note en diaporama.",
+        "tabs": {"edit": "Édition", "preview": "Aperçu", "split": "Côte à côte", "ppt": "Présentation", "dark": "Sombre"},
+        "captions": {
+            "edit": "Du Markdown pur avec coloration syntaxique, pour distinguer titres, liens et code",
+            "preview": "Images, tableaux et code rendus tels qu'ils seront lus",
+            "split": "Écrivez à gauche, voyez le résultat à droite, diagrammes Mermaid compris",
+            "ppt": "Séparez une note avec --- et elle devient un diaporama",
+            "dark": "Le mode sombre suit le système",
+        },
+        "alts": {
+            "edit": "MiaoYan éditant une note Markdown avec dossiers, liste de notes et coloration syntaxique",
+            "preview": "MiaoYan affichant l'aperçu d'une note avec un tableau et une liste de tâches",
+            "split": "MiaoYan en vue partagée, le Markdown à gauche et un diagramme Mermaid rendu à droite",
+            "ppt": "Une note MiaoYan affichée en diapositive",
+            "dark": "MiaoYan en mode sombre éditant du code Swift",
+        },
+        "devices_title": "Sur iPhone et iPad",
+        "devices_lede": "Le même achat App Store fonctionne sur iPhone et iPad et ouvre le même dossier iCloud Drive que votre Mac.",
+        "devices_cta": "Télécharger sur l'App Store",
+        "device_alts": ("MiaoYan sur iPhone affichant une note", "MiaoYan sur iPad affichant une note avec un diagramme"),
+        "features_title": "Pourquoi MiaoYan",
+        "features": [
+            ("Local d'abord", "Vos fichiers Markdown restent dans le dossier de votre choix. MiaoYan ne collecte aucune donnée de vos notes ; iCloud Drive, Nutstore ou un autre client de synchronisation s'occupe des autres appareils."),
+            ("Épuré", "Dossiers, notes et éditeur sur trois colonnes claires. Mode sombre, écriture sans distraction et raccourcis clavier sont intégrés, sans système d'extensions à entretenir."),
+            ("Natif", "Développé nativement en Swift 6 plutôt qu'avec Electron. Le mode partagé associe aperçu en temps réel et défilement synchronisé à 60 fps dans les deux sens."),
+            ("Bien équipé", "Wikilinks et rétroliens, LaTeX, Mermaid, historique des versions, mise en forme automatique, une CLI et des présentations Markdown couvrent tout ce qui entoure l'écriture."),
+        ],
+        "compare_title": "À qui s'adresse MiaoYan",
+        "compare": [
+            ("Par rapport à Typora", "MiaoYan garde l'édition en Markdown pur et un aperçu séparé plutôt que le WYSIWYG. Il convient à ceux qui veulent garder la main sur leurs fichiers source tout en voyant tout de suite le résultat."),
+            ("Par rapport à Obsidian", "MiaoYan n'utilise pas Electron et ne tourne pas autour d'un écosystème d'extensions. Il convient à ceux qui préfèrent une app native et légère, avec des fichiers locaux et quelques fonctions intégrées bien choisies."),
+        ],
+        "faq_title": "Questions",
+        "faq": [
+            ("Quelle version choisir ?", "La version App Store. Un seul achat couvre le Mac, l'iPhone et l'iPad, qui ouvrent tous le même dossier iCloud Drive, avec des mises à jour automatiques. Le code source de l'app Mac est ouvert sur GitHub."),
+            ("Où sont stockées mes notes ?", "Dans le dossier que vous choisissez, sous forme de simples fichiers .md. MiaoYan ne collecte aucune donnée de vos notes, et si vous changez d'outil, le dossier part avec vous."),
+            ("Comment les notes se synchronisent-elles entre le Mac et l'iPhone ?", "Placez le dossier dans iCloud Drive et le Mac, l'iPhone et l'iPad ouvrent les mêmes notes. Sur le Mac, Nutstore ou un autre client de synchronisation fonctionne aussi."),
+            ("Quel Markdown est pris en charge ?", "Le GitHub Flavored Markdown, plus LaTeX, Mermaid, PlantUML et Markmap, les wikilinks avec rétroliens, et des diapositives séparées par ---."),
+            ("De quoi ai-je besoin ?", "macOS 12 ou ultérieur sur le Mac, et iOS 18 ou ultérieur sur iPhone et iPad."),
+        ],
+        "about": "Tw93 conçoit, développe et maintient MiaoYan.",
+        "foot": (("Obtenir", "Aide", "Contact"), ("FAQ", "Confidentialité")),
+    },
+    "es": {
+        "title": "MiaoYan, notas Markdown para Mac, iPhone y iPad",
+        "description": "MiaoYan es una app nativa de notas Markdown para Mac, iPhone y iPad. Tus notas son archivos Markdown normales en la carpeta que elijas.",
+        "nav": ["Funciones", "iPhone y iPad", "Preguntas"],
+        "language": "Idioma",
+        "nav_cta": "App Store",
+        "h1": "MiaoYan",
+        "tagline": "Notas Markdown locales en Mac, iPhone y iPad",
+        "lede": "MiaoYan es 妙言 en chino, palabras más allá de las palabras.",
+        "trust": ["Una sola compra en el App Store para Mac, iPhone y iPad", "Archivos Markdown normales en tu propia carpeta", "Código fuente de la app de Mac en GitHub", "macOS 12 o posterior, iOS 18 o posterior"],
+        "cta": ("Descargar en el App Store", "Ver en GitHub"),
+        "gallery_title": "Escribe, lee y presenta",
+        "gallery_lede": "Escribe Markdown puro, cambia a una vista previa maquetada, trabaja en paralelo o convierte una nota en diapositivas.",
+        "tabs": {"edit": "Editar", "preview": "Vista previa", "split": "Dividida", "ppt": "Presentar", "dark": "Oscuro"},
+        "captions": {
+            "edit": "Markdown puro con resaltado de sintaxis, para que títulos, enlaces y código se distingan",
+            "preview": "Imágenes, tablas y código tal como se van a leer",
+            "split": "Escribe a la izquierda y míralo a la derecha, con diagramas Mermaid incluidos",
+            "ppt": "Divide una nota con --- y se convierte en una presentación",
+            "dark": "El modo oscuro sigue al sistema",
+        },
+        "alts": {
+            "edit": "MiaoYan editando una nota Markdown con carpetas, lista de notas y resaltado de sintaxis",
+            "preview": "MiaoYan mostrando la vista previa de una nota con una tabla y una lista de tareas",
+            "split": "MiaoYan en vista dividida con Markdown a la izquierda y un diagrama Mermaid renderizado a la derecha",
+            "ppt": "Una nota de MiaoYan mostrada como diapositiva",
+            "dark": "MiaoYan en modo oscuro editando código Swift",
+        },
+        "devices_title": "En iPhone y iPad",
+        "devices_lede": "La misma compra en el App Store funciona en iPhone y iPad y abre la misma carpeta de iCloud Drive que tu Mac.",
+        "devices_cta": "Descargar en el App Store",
+        "device_alts": ("MiaoYan en iPhone leyendo una nota", "MiaoYan en iPad mostrando una nota con un diagrama"),
+        "features_title": "Por qué MiaoYan",
+        "features": [
+            ("Local primero", "Tus archivos Markdown se quedan en la carpeta que elijas. MiaoYan no recopila datos de tus notas; iCloud Drive, Nutstore u otro cliente de sincronización se encarga del resto de dispositivos."),
+            ("Enfocado", "Carpetas, notas y editor en tres columnas claras. Modo oscuro, escritura sin distracciones y atajos de teclado integrados, sin un sistema de plugins que mantener."),
+            ("Nativo", "Hecho de forma nativa con Swift 6 en lugar de Electron. El modo dividido combina vista previa en tiempo real con desplazamiento sincronizado a 60 fps en ambos sentidos."),
+            ("Completo", "Wikilinks y backlinks, LaTeX, Mermaid, historial de versiones, formato automático, una CLI y presentaciones en Markdown cubren el trabajo alrededor de la escritura."),
+        ],
+        "compare_title": "Para quién es MiaoYan",
+        "compare": [
+            ("Frente a Typora", "MiaoYan mantiene la edición en Markdown puro y una vista previa aparte en lugar de WYSIWYG. Encaja con quien quiere controlar directamente sus archivos fuente y ver el resultado al momento."),
+            ("Frente a Obsidian", "MiaoYan no usa Electron ni gira en torno a un ecosistema de plugins. Encaja con quien prefiere una app nativa y ligera, con archivos locales y pocas funciones integradas bien elegidas."),
+        ],
+        "faq_title": "Preguntas",
+        "faq": [
+            ("¿Qué versión debo instalar?", "La del App Store. Una sola compra sirve para Mac, iPhone y iPad, todos abren la misma carpeta de iCloud Drive y las actualizaciones llegan solas. El código fuente de la app de Mac está abierto en GitHub."),
+            ("¿Dónde se guardan mis notas?", "En la carpeta que elijas, como archivos .md normales. MiaoYan no recopila datos de tus notas y, si algún día cambias de herramienta, la carpeta se va contigo."),
+            ("¿Cómo se sincronizan las notas entre el Mac y el iPhone?", "Guarda la carpeta en iCloud Drive y el Mac, el iPhone y el iPad abrirán las mismas notas. En el Mac también sirven Nutstore u otro cliente de sincronización."),
+            ("¿Qué Markdown admite?", "GitHub Flavored Markdown, además de LaTeX, Mermaid, PlantUML y Markmap, wikilinks con backlinks y diapositivas separadas con ---."),
+            ("¿Qué necesito para usarlo?", "macOS 12 o posterior en el Mac, e iOS 18 o posterior en iPhone y iPad."),
+        ],
+        "about": "Tw93 diseña, desarrolla y mantiene MiaoYan.",
+        "foot": (("Obtener", "Ayuda", "Contacto"), ("Preguntas", "Privacidad")),
     },
 }
 
@@ -142,39 +484,64 @@ APPLE = '<svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d
 
 GITHUB_MARK = '<svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>'
 
+GLOBE = '<svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>'
+
 
 def esc(s):
     return html.escape(s, quote=True)
 
 
+def french_spacing(s):
+    # French sets a no-break space before ? ! : ; so the mark never starts a line.
+    for mark in "?!:;":
+        s = s.replace(" " + mark, " " + mark)
+    return s
+
+
 def page(key):
     c = COPY[key]
-    lang = "zh" if key == "zh" else "en"
-    url = "https://miaoyan.app" + c["path"]
+    current = next(l for l in LANGS if l[0] == key)
+    _, path, lang_attr, _, _, shot = current
+    t = french_spacing if key == "fr" else (lambda s: s)
+    url = "https://miaoyan.app" + path
     store = APP_STORE_CN if key == "zh" else APP_STORE
+    og = "zh" if shot == "zh" else "en"
+    hrefs = [("#features", c["nav"][0]), ("#devices", c["nav"][1]), ("#faq", c["nav"][2]), (GITHUB, "GitHub")]
     nav = "".join(
-        f'<a href="{esc(href)}"{" target=\"_blank\" rel=\"noopener\"" if href.startswith("http") else ""}>{esc(label)}</a>'
-        for href, label in c["nav"]
+        f'<a href="{esc(h)}"{" target=\"_blank\" rel=\"noopener\"" if h.startswith("http") else ""}>{esc(label)}</a>'
+        for h, label in hrefs
     )
-    sw_href, sw_label, sw_lang = c["switch"]
-    trust = "".join(f"<li>{esc(t)}</li>" for t in c["trust"])
+    menu = "".join(
+        f'<a href="{p}" hreflang="{la}" lang="{la}" data-lang="{k}"{" class=\"active\" aria-current=\"page\"" if k == key else ""}>{esc(name)}</a>'
+        for k, p, la, name, _, _ in LANGS
+    )
+    alternates = "\n".join(
+        f'<link rel="alternate" hreflang="{la}" href="https://miaoyan.app{p}">' for _, p, la, _, _, _ in LANGS
+    )
+    trust = "".join(f"<li>{esc(t(x))}</li>" for x in c["trust"])
     tabs = "".join(
         f'<button type="button" role="tab" data-shot="{s}" aria-selected="{"true" if i == 0 else "false"}">{esc(c["tabs"][s])}</button>'
         for i, s in enumerate(SHOTS)
     )
     shots = "".join(
-        f'<img src="/assets/shots/{lang}-{s}-1400.webp" srcset="/assets/shots/{lang}-{s}-1400.webp 1400w, /assets/shots/{lang}-{s}-2400.webp 2400w" '
+        f'<img src="/assets/shots/{shot}-{s}-1400.webp" srcset="/assets/shots/{shot}-{s}-1400.webp 1400w, /assets/shots/{shot}-{s}-2400.webp 2400w" '
         f'sizes="(max-width: 1248px) 100vw, 1120px" width="2400" height="{1506 if s == "ppt" else 1660}" alt="{esc(c["alts"][s])}" data-shot="{s}"'
         f'{" fetchpriority=\"high\"" if i == 0 else " loading=\"lazy\" hidden"}>'
         for i, s in enumerate(SHOTS)
     )
-    captions = json.dumps(c["captions"], ensure_ascii=False)
-    cards = "".join(f'<div class="card"><h3>{esc(t)}</h3><p>{esc(d)}</p></div>' for t, d in c["features"])
-    compare = "".join(f'<div class="card"><h3>{esc(t)}</h3><p>{esc(d)}</p></div>' for t, d in c["compare"])
-    faq = "".join(f"<details><summary>{esc(q)}</summary><p>{a}</p></details>" for q, a in c["faq"])
-    foot = "".join(
-        f'<a href="{esc(store if h == APP_STORE else h)}"{" target=\"_blank\" rel=\"noopener\"" if h.startswith("http") else ""}{" data-store" if h == APP_STORE else ""}>{esc(t)}</a>'
-        for h, t in c["foot_links"]
+    captions = json.dumps({k: t(v) for k, v in c["captions"].items()}, ensure_ascii=False)
+    cards = "".join(f'<div class="card"><h3>{esc(a)}</h3><p>{esc(t(d))}</p></div>' for a, d in c["features"])
+    compare = "".join(f'<div class="card"><h3>{esc(a)}</h3><p>{esc(t(d))}</p></div>' for a, d in c["compare"])
+    faq = "".join(f"<details><summary>{esc(t(q))}</summary><p>{esc(t(a))}</p></details>" for q, a in c["faq"])
+    (col_get, col_help, col_connect), (faq_label, privacy_label) = c["foot"]
+    ext = ' target="_blank" rel="noopener"'
+    foot = (
+        f'<div class="foot-col"><p class="foot-col-title">{esc(col_get)}</p>'
+        f'<a href="{store}"{ext} data-store>App Store</a><a href="{GITHUB}"{ext}>GitHub</a></div>'
+        f'<div class="foot-col"><p class="foot-col-title">{esc(col_help)}</p>'
+        f'<a href="#faq">{esc(faq_label)}</a><a href="/privacy.html">{esc(privacy_label)}</a></div>'
+        f'<div class="foot-col"><p class="foot-col-title">{esc(col_connect)}</p>'
+        f'<a href="https://twitter.com/HiTw93"{ext}>Twitter</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl"{ext}>Telegram</a></div>'
     )
     ld = json.dumps(
         {
@@ -183,6 +550,7 @@ def page(key):
             "name": "MiaoYan",
             "alternateName": "妙言",
             "url": url,
+            "inLanguage": lang_attr,
             "downloadUrl": APP_STORE,
             "applicationCategory": "ProductivityApplication",
             "operatingSystem": "macOS 12.0 or later, iOS 18.0 or later",
@@ -192,50 +560,57 @@ def page(key):
         },
         ensure_ascii=False,
     )
-    # A first visit to / from a Chinese browser goes to /zh/; picking a
-    # language with the switch is remembered under the old site's key.
+    # A first visit to / goes to the page for the browser's language; picking
+    # a language in the menu is remembered and wins from then on. zh-CN is the
+    # value the two-language site stored for Chinese.
     redirect = (
-        "<script>try{var s=localStorage.getItem('miaoyanLang');"
-        "if(s==='zh-CN'||(!s&&/^zh/i.test(navigator.language||'')))location.replace('/zh/')}catch(e){}</script>"
+        "<script>try{var s=localStorage.getItem('miaoyanLang');if(s==='zh-CN')s='zh';"
+        "var p={zh:'/zh/',tw:'/tw/',ja:'/ja/',ko:'/ko/',de:'/de/',fr:'/fr/',es:'/es/'};"
+        "if(!s){var l=((navigator.languages&&navigator.languages[0])||navigator.language||'').toLowerCase();"
+        "s=/^zh-(tw|hk|mo|hant)/.test(l)?'tw':l.slice(0,2)}"
+        "if(p[s])location.replace(p[s])}catch(e){}</script>"
         if key == "en"
         else ""
     )
     return f"""<!DOCTYPE html>
-<html lang="{c['lang']}">
+<html lang="{lang_attr}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
 {redirect}
 <title>{esc(c['title'])}</title>
 <meta name="description" content="{esc(c['description'])}">
 <link rel="canonical" href="{url}">
-<link rel="alternate" hreflang="en" href="https://miaoyan.app/">
-<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/">
+{alternates}
 <link rel="alternate" hreflang="x-default" href="https://miaoyan.app/">
 <link rel="alternate" type="text/plain" href="https://miaoyan.app/llms.txt" title="MiaoYan product facts">
 <meta property="og:type" content="website">
 <meta property="og:url" content="{url}">
 <meta property="og:title" content="{esc(c['title'])}">
 <meta property="og:description" content="{esc(c['description'])}">
-<meta property="og:image" content="https://miaoyan.app/assets/shots/og-{lang}.jpg">
+<meta property="og:image" content="https://miaoyan.app/assets/shots/og-{og}.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
-<meta name="twitter:image" content="https://miaoyan.app/assets/shots/og-{lang}.jpg">
+<meta name="twitter:image" content="https://miaoyan.app/assets/shots/og-{og}.jpg">
 <link rel="icon" href="/Release/img/logo.png" type="image/png">
 <link rel="apple-touch-icon" href="/Release/img/logo.png">
-<link rel="preload" as="image" href="/assets/shots/{lang}-edit-1400.webp" imagesrcset="/assets/shots/{lang}-edit-1400.webp 1400w, /assets/shots/{lang}-edit-2400.webp 2400w" imagesizes="(max-width: 1248px) 100vw, 1120px">
+<link rel="preload" as="image" href="/assets/shots/{shot}-edit-1400.webp" imagesrcset="/assets/shots/{shot}-edit-1400.webp 1400w, /assets/shots/{shot}-edit-2400.webp 2400w" imagesizes="(max-width: 1248px) 100vw, 1120px">
 <link rel="stylesheet" href="/site.css">
 <script type="application/ld+json">{ld}</script>
 </head>
 <body>
 <div class="wrap">
 <header class="nav">
-  <nav class="nav-bar" aria-label="Main">
-    <a class="brand" href="{c['path']}"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+  <nav class="nav-bar hide-cta" aria-label="Main">
+    <a class="brand" href="{path}"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
     <div class="nav-links">{nav}</div>
     <div class="nav-end">
-      <a class="lang" href="{sw_href}" hreflang="{sw_lang}" data-lang="{sw_lang}">{esc(sw_label)}</a>
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="{esc(c['language'])}">{GLOBE}<span class="lang-name">{esc(current[3])}</span><span class="lang-code">{esc(current[4])}</span></button>
+        <div class="lang-menu" id="language-menu">{menu}</div>
+      </div>
       <a class="nav-cta" href="{store}" target="_blank" rel="noopener" data-store>{APPLE}{esc(c['nav_cta'])}</a>
     </div>
   </nav>
@@ -243,10 +618,10 @@ def page(key):
 <main>
   <div class="hero">
     <h1>{esc(c['h1'])}</h1>
-    <p class="tagline">{esc(c['tagline'])}</p>
-    <p class="lede">{esc(c['lede'])}</p>
+    <p class="tagline">{esc(t(c['tagline']))}</p>
+    <p class="lede">{esc(t(c['lede']))}</p>
     <ul class="trust">{trust}</ul>
-    <div class="cta">
+    <div class="cta hero-cta">
       <a class="btn btn-primary" href="{store}" target="_blank" rel="noopener" data-store>{APPLE}{esc(c['cta'][0])}</a>
       <a class="btn btn-ghost" href="{GITHUB}" target="_blank" rel="noopener">{GITHUB_MARK}{esc(c['cta'][1])}</a>
     </div>
@@ -254,20 +629,20 @@ def page(key):
 
   <section id="features" aria-labelledby="gallery-title">
     <h2 class="section-title" id="gallery-title">{esc(c['gallery_title'])}</h2>
-    <p class="section-lede">{esc(c['gallery_lede'])}</p>
+    <p class="section-lede">{esc(t(c['gallery_lede']))}</p>
     <div class="gallery-frame">{shots}</div>
     <div class="gallery-bar">
-      <p class="gallery-caption" aria-live="polite">{esc(c['captions']['edit'])}</p>
+      <p class="gallery-caption" aria-live="polite">{esc(t(c['captions']['edit']))}</p>
       <div class="tabs" role="tablist">{tabs}</div>
     </div>
   </section>
 
   <section id="devices" aria-labelledby="devices-title">
     <h2 class="section-title" id="devices-title">{esc(c['devices_title'])}</h2>
-    <p class="section-lede">{esc(c['devices_lede'])}</p>
+    <p class="section-lede">{esc(t(c['devices_lede']))}</p>
     <div class="devices">
-      <figure class="device phone"><img src="/assets/shots/{lang}-iphone.webp" width="700" height="1431" loading="lazy" alt="{esc(c['device_alts'][0])}"><figcaption>iPhone</figcaption></figure>
-      <figure class="device pad"><img src="/assets/shots/{lang}-ipad.webp" width="1400" height="1826" loading="lazy" alt="{esc(c['device_alts'][1])}"><figcaption>iPad</figcaption></figure>
+      <figure class="device phone"><img src="/assets/shots/{shot}-iphone.webp" width="700" height="1431" loading="lazy" alt="{esc(c['device_alts'][0])}"><figcaption>iPhone</figcaption></figure>
+      <figure class="device pad"><img src="/assets/shots/{shot}-ipad.webp" width="1400" height="1826" loading="lazy" alt="{esc(c['device_alts'][1])}"><figcaption>iPad</figcaption></figure>
     </div>
     <div class="cta devices-cta"><a class="btn btn-primary" href="{store}" target="_blank" rel="noopener" data-store>{APPLE}{esc(c['devices_cta'])}</a></div>
   </section>
@@ -291,11 +666,11 @@ def page(key):
 <footer>
   <div class="wrap">
     <div class="foot">
-      <div>
-        <a class="brand" href="{c['path']}"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+      <div class="foot-mark">
+        <a class="brand" href="{path}"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
         <p>{esc(c['about'])}</p>
       </div>
-      <div class="foot-links">{foot}</div>
+      <nav class="foot-cols" aria-label="Footer">{foot}</nav>
     </div>
     <div class="copy">© 2026 Tw93</div>
   </div>
@@ -322,7 +697,26 @@ def page(key):
     a.href = storeLink;
     a.removeAttribute('target');
   }});
-  document.querySelectorAll('[data-lang]').forEach(function (a) {{
+  // The nav's App Store button stays hidden while the hero's own is on screen.
+  var bar = document.querySelector('.nav-bar');
+  var heroCta = document.querySelector('.hero-cta');
+  if ('IntersectionObserver' in window) {{
+    new IntersectionObserver(function (entries) {{
+      bar.classList.toggle('hide-cta', entries[0].isIntersecting);
+    }}, {{ rootMargin: '-72px 0px 0px 0px' }}).observe(heroCta);
+  }} else {{
+    bar.classList.remove('hide-cta');
+  }}
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {{
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }}
+  trigger.addEventListener('click', function (e) {{ e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); }});
+  document.addEventListener('click', function (e) {{ if (!sw.contains(e.target)) setOpen(false); }});
+  document.addEventListener('keydown', function (e) {{ if (e.key === 'Escape') setOpen(false); }});
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {{
     a.addEventListener('click', function () {{ try {{ localStorage.setItem('miaoyanLang', a.dataset.lang); }} catch (e) {{}} }});
   }});
 }})();
@@ -335,10 +729,11 @@ def page(key):
 
 
 def main():
-    (ROOT / "index.html").write_text(page("en"))
-    (ROOT / "zh").mkdir(exist_ok=True)
-    (ROOT / "zh" / "index.html").write_text(page("zh"))
-    print("wrote index.html and zh/index.html")
+    for key, path, *_ in LANGS:
+        out = ROOT / "index.html" if path == "/" else ROOT / path.strip("/") / "index.html"
+        out.parent.mkdir(exist_ok=True)
+        out.write_text(page(key))
+    print("wrote", ", ".join(p for _, p, *_ in LANGS))
 
 
 if __name__ == "__main__":
