@@ -439,7 +439,7 @@ extension MPreviewView {
                                             pdfData: data,
                                             headings: extracted.items,
                                             totalHeight: extracted.totalHeight)
-                                        self.saveToDownloadsWithFilename(data: finalData, extension: "pdf", filename: note.getExportTitle(), viewController: vc)
+                                        Self.saveToDownloadsWithFilename(data: finalData, extension: "pdf", filename: note.getExportTitle(), viewController: vc)
                                     case .failure:
                                         vc.toastExport(status: false)
                                     }
@@ -574,7 +574,7 @@ extension MPreviewView {
                 switch result {
                 case .success(let data):
                     let filename = note.getExportTitle() + "_PPT"
-                    self.saveToDownloadsWithFilename(data: data, extension: "pdf", filename: filename, viewController: vc)
+                    Self.saveToDownloadsWithFilename(data: data, extension: "pdf", filename: filename, viewController: vc)
                 case .failure:
                     vc.toastExport(status: false)
                 }
@@ -582,69 +582,42 @@ extension MPreviewView {
         }
     }
 
-    public func exportHtml() {
+    /// HTML export renders the note directly and needs no preview view, so
+    /// it works right after a new note is created, before any preview exists.
+    public static func exportHtml() {
         guard let vc = ExportHosts.current,
             let note = vc.exportNote
         else { return }
 
-        // HTML export does not depend on WebView layout; generate directly
-        if Self.isExporting {
+        if isExporting {
             // Check if previous export is stuck
-            if let startTime = Self.exportStartTime,
-                Date().timeIntervalSince(startTime) > Self.exportTimeout
+            if let startTime = exportStartTime,
+                Date().timeIntervalSince(startTime) > exportTimeout
             {
-                Self.isExporting = false
-                Self.exportStartTime = nil
-                // Continue to perform export after reset
+                isExporting = false
+                exportStartTime = nil
             } else {
                 vc.toastExport(status: false)
                 return
             }
         }
-        Self.isExporting = true
-        Self.exportStartTime = Date()
+        isExporting = true
+        exportStartTime = Date()
 
-        self.generateHtmlDirectly(note: note, viewController: vc)
-    }
+        // The export flag must be on before the stylesheet is built, or the
+        // export layout (fixed width, padding, export CSS) is never chosen.
+        UserDefaultsManagement.isOnExportHtml = true
+        defer { UserDefaultsManagement.isOnExportHtml = false }
+        let markdown = note.getPrettifiedContent()
+        let css = HtmlManager.previewStyle()
+        let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
+        let rendered = renderMarkdownHTML(markdown: markdown, useGithubLineBreak: useGithubLineBreak) ?? markdown
+        let htmlBody = HtmlManager.embedLocalImages(in: rendered, imagesStorage: note.project.url)
+        let completeHtml = (try? HtmlManager.htmlFromTemplate(htmlBody, css: css, currentName: vc.exportTitle)) ?? htmlBody
 
-    // MARK: - Export Helper Methods
-    private func generateHtmlDirectly(note: Note, viewController: ExportHost) {
-        let currentName = viewController.exportTitle
-
-        Task { [weak self] in
-            guard let self = self else {
-                Self.isExporting = false
-                Self.exportStartTime = nil
-                viewController.toastExport(status: false)
-                return
-            }
-
-            let completeHtml = await MainActor.run {
-                // For HTML export, render Markdown to HTML first, then wrap with template
-                let markdown = note.getPrettifiedContent()
-                let css = HtmlManager.previewStyle()
-
-                // Set export flag to apply proper styling (fonts, width, CDN base)
-                UserDefaultsManagement.isOnExportHtml = true
-                defer { UserDefaultsManagement.isOnExportHtml = false }
-
-                let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
-                let htmlBody = renderMarkdownHTML(markdown: markdown, useGithubLineBreak: useGithubLineBreak) ?? markdown
-
-                do {
-                    return try HtmlManager.htmlFromTemplate(htmlBody, css: css, currentName: currentName)
-                } catch {
-                    // Fallback to simple HTML body if template fails
-                    return htmlBody
-                }
-            }
-
-            await MainActor.run {
-                Self.isExporting = false
-                Self.exportStartTime = nil
-                self.saveToDownloadsWithFilename(content: completeHtml, extension: "html", filename: note.getExportTitle(), viewController: viewController)
-            }
-        }
+        isExporting = false
+        exportStartTime = nil
+        saveToDownloadsWithFilename(data: Data(completeHtml.utf8), extension: "html", filename: note.getExportTitle(), viewController: vc)
     }
 
     private func handleImageExportSuccess(image: NSImage, note: Note, viewController: ExportHost) {
@@ -656,7 +629,7 @@ extension MPreviewView {
             return
         }
 
-        saveToDownloadsWithFilename(data: imageData, extension: "png", filename: note.getExportTitle(), viewController: viewController)
+        Self.saveToDownloadsWithFilename(data: imageData, extension: "png", filename: note.getExportTitle(), viewController: viewController)
     }
 
     // (obsolete) previously used helper methods removed after direct HTML export refactor
@@ -748,56 +721,7 @@ extension MPreviewView {
     // Removed old export result handlers - now integrated into unified export system
 
     // MARK: - File Save Methods
-    private func saveToDownloads(content: String, extension: String, viewController: Any) {
-        let data = content.data(using: .utf8) ?? Data()
-        saveToDownloads(data: data, extension: `extension`, viewController: viewController)
-    }
-
-    private func saveToDownloadsWithFilename(content: String, extension: String, filename: String, viewController: Any) {
-        let data = content.data(using: .utf8) ?? Data()
-        saveToDownloadsWithFilename(data: data, extension: `extension`, filename: filename, viewController: viewController)
-    }
-
-    private func saveToDownloads(data: Data, extension: String, viewController: Any) {
-        guard let vc = viewController as? ExportHost else { return }
-
-        // Get the selected note on main thread first
-        let currentName = vc.exportNote?.getExportTitle() ?? "MiaoYan"
-
-        // Perform file save on background queue
-        DispatchQueue.global(qos: .utility).async {
-            guard let downloadsURL = FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first else {
-                DispatchQueue.main.async {
-                    vc.toastExport(status: false)
-                }
-                return
-            }
-            var fileURL = downloadsURL.appendingPathComponent(currentName + "." + `extension`)
-
-            // Check if file exists and create unique name if needed
-            if FileManager.default.fileExists(atPath: fileURL.path) {
-                let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
-                let timestamp = formatter.string(from: Date())
-                let uniqueFilename = "\(currentName)_\(timestamp)"
-                fileURL = downloadsURL.appendingPathComponent(uniqueFilename + "." + `extension`)
-            }
-
-            do {
-                try data.write(to: fileURL, options: .atomic)
-                DispatchQueue.main.async {
-                    vc.toastExport(status: true)
-                }
-            } catch {
-                // Fallback: use save panel for sandboxed environments (e.g., App Store)
-                DispatchQueue.main.async {
-                    Self.presentSavePanel(data: data, filename: currentName, extension: `extension`, viewController: vc)
-                }
-            }
-        }
-    }
-
-    func saveToDownloadsWithFilename(data: Data, extension: String, filename: String, viewController: Any) {
+    static func saveToDownloadsWithFilename(data: Data, extension: String, filename: String, viewController: Any) {
         guard let vc = viewController as? ExportHost else { return }
 
         // Perform file save on background queue

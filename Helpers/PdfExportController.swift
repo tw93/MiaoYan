@@ -303,7 +303,7 @@ final class PdfExportController: NSObject {
         if let vc = viewController {
             // Reuse the live preview's save helper (requires an MPreviewView instance for routing).
             if let preview {
-                preview.saveToDownloadsWithFilename(
+                MPreviewView.saveToDownloadsWithFilename(
                     data: finalData,
                     extension: "pdf",
                     filename: note.getExportTitle(),

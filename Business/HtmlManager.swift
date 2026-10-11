@@ -328,7 +328,22 @@ class HtmlManager {
 
     // Theme CSS handling moved to HTML templates
 
+    /// cmark escapes `&` and `'` in attribute values, so a file named
+    /// `Tom's & Jerry.png` reaches us as `Tom&#x27;s &amp; Jerry.png`.
+    private static func decodeAttributeEntities(_ value: String) -> String {
+        guard value.contains("&") else { return value }
+        return
+            value
+            .replacingOccurrences(of: "&quot;", with: "\"")
+            .replacingOccurrences(of: "&#x27;", with: "'")
+            .replacingOccurrences(of: "&#39;", with: "'")
+            .replacingOccurrences(of: "&lt;", with: "<")
+            .replacingOccurrences(of: "&gt;", with: ">")
+            .replacingOccurrences(of: "&amp;", with: "&")
+    }
+
     private static func cleanImagePath(_ path: String) -> String {
+        let path = decodeAttributeEntities(path)
         var cleaned = path.removingPercentEncoding ?? path
         if cleaned.starts(with: "file://") {
             cleaned = String(cleaned.dropFirst(7))
@@ -396,6 +411,35 @@ class HtmlManager {
     // Transparent 1x1 GIF placeholder used by Swift-side lazy image injection
     // Matches the placeholder in common.js so JS can pick up data-src and load the real image
     static let lazyPlaceholder = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+
+    /// Exported HTML is opened away from the notes folder, so local images
+    /// travel inside it as data URIs; remote and data URLs are left alone.
+    static func embedLocalImages(in html: String, imagesStorage: URL) -> String {
+        guard let regex = imageRegex else { return html }
+        var result = html
+        let matches = regex.matches(in: html, range: NSRange(html.startIndex..., in: html))
+        for match in matches.reversed() {
+            guard let srcRange = Range(match.range(at: 1), in: html) else { continue }
+            let src = String(html[srcRange])
+            let lower = src.lowercased()
+            guard !lower.hasPrefix("http://"), !lower.hasPrefix("https://"), !lower.hasPrefix("data:") else { continue }
+            let clean = cleanImagePath(src)
+            let url = isAbsolutePath(clean) ? URL(fileURLWithPath: clean) : imagesStorage.appendingPathComponent(clean)
+            guard let data = try? Data(contentsOf: url) else { continue }
+            let mime: String
+            switch url.pathExtension.lowercased() {
+            case "jpg", "jpeg": mime = "image/jpeg"
+            case "gif": mime = "image/gif"
+            case "webp": mime = "image/webp"
+            case "svg": mime = "image/svg+xml"
+            case "heic": mime = "image/heic"
+            default: mime = "image/png"
+            }
+            guard let resultRange = Range(match.range(at: 1), in: result) else { continue }
+            result.replaceSubrange(resultRange, with: "data:\(mime);base64,\(data.base64EncodedString())")
+        }
+        return result
+    }
 
     static func processImages(in html: String, imagesStorage: URL) -> String {
         guard let regex = imageRegex else {

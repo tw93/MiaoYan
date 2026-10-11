@@ -920,7 +920,7 @@ final class ShellModel {
             switch format {
             case .pdf: preview.exportPdf()
             case .image: preview.exportImage()
-            case .html: preview.exportHtml()
+            case .html: MPreviewView.exportHtml()
             case .ppt: break
             }
         }

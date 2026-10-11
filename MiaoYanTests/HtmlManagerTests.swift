@@ -223,6 +223,30 @@ final class HtmlManagerTests: XCTestCase {
         XCTAssertFalse(prepared.contains(#"\text{top}_G"#))
         XCTAssertTrue(prepared.contains("&#36;&#36;"))
     }
+
+    func testExportedHtmlCarriesLocalImagesInside() throws {
+        let images = tempDirectory.appendingPathComponent("i", isDirectory: true)
+        try FileManager.default.createDirectory(at: images, withIntermediateDirectories: true)
+        try Data([0x89, 0x50, 0x4E, 0x47]).write(to: images.appendingPathComponent("Tom's & Jerry.png"))
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: "![](/i/Tom's%20&%20Jerry.png)\n\n![](https://example.com/a.png)", useGithubLineBreak: false))
+
+        let embedded = HtmlManager.embedLocalImages(in: html, imagesStorage: tempDirectory)
+
+        XCTAssertTrue(embedded.contains("src=\"data:image/png;base64,iVBORw==\""), "a local image travels inside the file")
+        XCTAssertTrue(embedded.contains("src=\"https://example.com/a.png\""), "remote images keep their URL")
+    }
+
+    func testPreviewFindsImagesWhoseNamesCmarkEscaped() throws {
+        let images = tempDirectory.appendingPathComponent("i", isDirectory: true)
+        try FileManager.default.createDirectory(at: images, withIntermediateDirectories: true)
+        try Data([1]).write(to: images.appendingPathComponent("Tom's & Jerry.png"))
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: "![](/i/Tom's%20&%20Jerry.png)", useGithubLineBreak: false))
+        XCTAssertTrue(html.contains("&amp;") || html.contains("&#x27;"), "cmark escapes the name, which is what this guards")
+
+        let processed = HtmlManager.processImages(in: html, imagesStorage: tempDirectory)
+
+        XCTAssertFalse(processed.contains("Image Not Found"), "the escaped name still resolves to the file")
+    }
 }
 
 @available(macOS 12.0, *)

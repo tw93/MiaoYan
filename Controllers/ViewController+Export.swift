@@ -9,7 +9,7 @@ extension ViewController {
         if type == "Html" {
             sessionIsExportingHTML = true
             // HTML export can be done immediately without preview
-            self.editArea.markdownView?.exportHtml()
+            MPreviewView.exportHtml()
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 self.sessionIsExporting = false
                 self.sessionIsExportingHTML = false
