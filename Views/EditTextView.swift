@@ -1961,7 +1961,9 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     // MARK: - Text Replacement Helper
     private func replaceText(_ text: String, in range: NSRange) {
-        guard let textStorage = textStorage else { return }
+        // shouldChangeText registers the undo for this edit; without it the
+        // typing undo kept the old range and Command-Z cut into the template.
+        guard let textStorage = textStorage, shouldChangeText(in: range, replacementString: text) else { return }
 
         // Preserve text attributes when replacing
         let attributes = typingAttributes
