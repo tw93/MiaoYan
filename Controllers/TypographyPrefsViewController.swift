@@ -130,9 +130,9 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
                     title: "\(FontCatalog.displayName(for: missing)) (\(I18n.str("Not installed")))",
                     action: nil, keyEquivalent: "")
                 item.tag = Self.retiredFontTag
-                // Carries the name the default stores, so a preference still
+                // Carries the name older installs store, so a preference still
                 // waiting for the face selects this row instead of an orphan.
-                item.representedObject = FontConfiguration.defaultPreviewFont
+                item.representedObject = FontCatalog.retiredBundledFace
                 menu.addItem(item)
             }
             menu.addItem(.separator())

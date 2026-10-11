@@ -77,7 +77,7 @@ final class PrefsWindowControllerTests: XCTestCase {
         defaults.set("NoSuchFace-Regular", forKey: "fontName")
         XCTAssertEqual(UserDefaultsManagement.fontName, "NoSuchFace-Regular")
         XCTAssertEqual(defaults.string(forKey: "fontName"), "NoSuchFace-Regular")
-        XCTAssertEqual(UserDefaultsManagement.noteFont.fontName, FontConfiguration.fallbackFont)
+        XCTAssertEqual(UserDefaultsManagement.noteFont.fontName, NSFont.systemFont(ofSize: CGFloat(UserDefaultsManagement.fontSize)).fontName)
 
         // A fresh install starts on the default face by name.
         defaults.removeObject(forKey: "fontName")
@@ -91,7 +91,7 @@ final class PrefsWindowControllerTests: XCTestCase {
         }
         let defaults = UserDefaults.standard
         let original = defaults.object(forKey: "previewFontName")
-        defaults.set(FontConfiguration.defaultPreviewFont, forKey: "previewFontName")
+        defaults.set(FontCatalog.retiredBundledFace, forKey: "previewFontName")
         defer {
             if let original { defaults.set(original, forKey: "previewFontName") } else { defaults.removeObject(forKey: "previewFontName") }
         }
@@ -105,7 +105,7 @@ final class PrefsWindowControllerTests: XCTestCase {
         }
         let preview = try XCTUnwrap(popups(in: controller.view).first { $0.action == NSSelectorFromString("previewFontChanged:") })
         XCTAssertEqual(preview.selectedItem?.tag, 9001, "The not-installed row, not an orphan copy of the name")
-        XCTAssertEqual(preview.itemArray.filter { $0.representedObject as? String == FontConfiguration.defaultPreviewFont }.count, 1)
+        XCTAssertEqual(preview.itemArray.filter { $0.representedObject as? String == FontCatalog.retiredBundledFace }.count, 1)
     }
 
     @MainActor

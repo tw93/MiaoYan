@@ -16,18 +16,22 @@ enum FontListKind {
 
 enum FontCatalog {
     /// Recommended faces, shown above the rest. Kept short on purpose: these are
-    /// the app's own defaults, the face MiaoYan used to bundle, and the few
-    /// Latin faces someone writing in English would reach for first.
+    /// the app's default, the face MiaoYan used to bundle and make its default,
+    /// and the few Latin faces someone writing in English would reach for first.
     static let recommendedText = [
         "PingFang SC", "TsangerJinKai02", "Songti SC", "Hiragino Sans GB",
         "Helvetica Neue", "Georgia", "Avenir Next",
     ]
     static let recommendedCode = ["Menlo", "JetBrains Mono", "Monaco"]
 
-    /// The default text face, bundled until 4.3.0, when redistributing it
-    /// stopped being an option. It is still the default by name; while it is
-    /// missing the popup keeps a row for it that points at the foundry.
+    /// The text face bundled until 4.3.0, when redistributing it stopped being
+    /// an option, and the default by name until the system pairing replaced it.
+    /// Installs from that time still store it; while it is missing the popup
+    /// keeps a row for it that points at the foundry.
     static let retiredBundledFamily = "TsangerJinKai02"
+    /// The value those installs store, so a preference waiting for the face
+    /// selects the not-installed row.
+    static let retiredBundledFace = "TsangerJinKai02-W04"
     /// The foundry's own file for the weight the default names (the same 18.9MB
     /// file MiaoYan used to bundle), so one click downloads it instead of
     /// landing on a product page. MiaoYan never hosts or redistributes it.
@@ -96,7 +100,7 @@ enum FontCatalog {
     /// those words to the system face pulls the two halves of a line apart.
     ///
     /// PingFang is the one exception. Its Latin is drawn for interface labels,
-    /// wider and looser than the system's, and it is the fallback rather than a
+    /// wider and looser than the system's, and it is the default rather than a
     /// face anyone picked for English. So for PingFang the system takes Latin
     /// and PingFang is named only as the CJK fallback, the way Claude's and
     /// Cursor's desktop apps order it.

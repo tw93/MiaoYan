@@ -324,9 +324,10 @@ public enum UserDefaultsManagement {
     }
 
     static func migrateFontDefaultsIfNeeded() {
-        // TsangerJinKai02 is the default again, so a stored text face is left
-        // exactly as it is, whatever version wrote it. Only the code font moves
-        // off it, to following the text font, which renders the same.
+        // A stored text face is left exactly as it is, whatever version wrote
+        // it; a TsangerJinKai02 that is not installed already renders in the
+        // system face. Only the code font moves off it, to following the text
+        // font, which renders the same.
         if !UserDefaults.standard.bool(forKey: "hasMigratedSystemFonts_v1") {
             if UserDefaults.standard.string(forKey: Constants.CodeFontNameKey) == "TsangerJinKai02-W04" {
                 UserDefaults.standard.set(FontConfiguration.defaultCodeFont, forKey: Constants.CodeFontNameKey)

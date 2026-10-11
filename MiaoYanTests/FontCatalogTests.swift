@@ -78,11 +78,34 @@ final class FontCatalogTests: XCTestCase {
     }
 
     @MainActor
-    func testTheDefaultFaceLeadsItsOwnStack() {
-        // TsangerJinKai02 draws Latin to match its 楷书, so as the default it
-        // leads the stack rather than yielding English to the system.
+    func testTheDefaultPreviewIsTheSystemPairing() {
+        // The default is SF for Latin with PingFang for CJK, in the preview as
+        // in the editor, so the system leads the stack.
         let stack = FontCatalog.fontStack(forStored: FontConfiguration.defaultPreviewFont)
-        XCTAssertTrue(stack.hasPrefix("\"\(FontConfiguration.defaultPreviewFont)\""), stack)
+        XCTAssertTrue(stack.hasPrefix("ui-sans-serif"), stack)
+        XCTAssertTrue(stack.contains("PingFang SC"), stack)
+    }
+
+    @MainActor
+    func testTheDefaultAndAMissingFaceRenderInTheSystemFace() {
+        let system = NSFont.systemFont(ofSize: 16).fontName
+        XCTAssertEqual(FontConfiguration.textFont(named: FontConfiguration.defaultEditorFont, size: 16).fontName, system)
+        XCTAssertEqual(FontConfiguration.textFont(named: "PingFang SC", size: 16).fontName, system)
+        XCTAssertEqual(FontConfiguration.textFont(named: "NoSuchFace-Regular", size: 16).fontName, system)
+        XCTAssertEqual(FontConfiguration.textFont(named: "Georgia", size: 16).familyName, "Georgia")
+    }
+
+    @MainActor
+    func testTheSystemFaceKeepsBoldAndItalicThroughItsFamily() throws {
+        // The editor rebuilds bold and italic from `noteFont.familyName` through
+        // NSFontManager. The system face's family is a hidden name, so this has
+        // to resolve or every **bold** span in the default font renders plain.
+        let font = FontConfiguration.textFont(named: FontConfiguration.defaultEditorFont, size: 16)
+        let family = try XCTUnwrap(font.familyName)
+        let bold = try XCTUnwrap(NSFontManager().font(withFamily: family, traits: .boldFontMask, weight: 5, size: 16))
+        XCTAssertTrue(bold.fontDescriptor.symbolicTraits.contains(.bold), bold.fontName)
+        let italic = try XCTUnwrap(NSFontManager().font(withFamily: family, traits: .italicFontMask, weight: 5, size: 16))
+        XCTAssertTrue(italic.fontDescriptor.symbolicTraits.contains(.italic), italic.fontName)
     }
 
     @MainActor
