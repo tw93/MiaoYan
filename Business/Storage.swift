@@ -42,8 +42,10 @@ class Storage {
     private var bookmarks = [URL]()
     private var scopedURLs = [URL]()
 
-    init() {
-        guard var url = UserDefaultsManagement.storageUrl else {
+    /// `loadsLibrary: false` gives an empty storage that never touches the
+    /// user's notes folder, for tests that build their own folders.
+    init(loadsLibrary: Bool = true) {
+        guard loadsLibrary, var url = UserDefaultsManagement.storageUrl else {
             return
         }
 
@@ -761,7 +763,7 @@ class Storage {
 
             let items =
                 directoryFiles.filter {
-                    allowedExtensions.contains($0.pathExtension)
+                    allowedExtensions.contains($0.pathExtension.lowercased())
                         && isValidUTI(url: $0)
                 }
                 .map { url in
@@ -1178,15 +1180,35 @@ class Storage {
     public func findOrphanAttachments(completion: @escaping @MainActor ([URL]?) -> Void) {
         var referenced = Set<String>()
         var unloaded: [Note] = []
+        // Images referenced from the Trash are kept by file name: those notes
+        // resolve /i/ against the Trash folder, but a restore puts them back
+        // next to the images they point at.
+        var trashNames = Set<String>()
+        var listed = Set<String>()
         for note in noteList {
+            listed.insert(note.url.standardizedFileURL.path)
+            if note.project.isTrash {
+                note.ensureContentLoaded()
+                trashNames.formUnion(note.getReferencedAttachmentPaths().map { ($0 as NSString).lastPathComponent })
+                continue
+            }
             if note.isContentLoaded {
                 referenced.formUnion(note.getReferencedAttachmentPaths())
             } else {
                 unloaded.append(note)
             }
         }
+        // A folder can be registered (the sidebar lists its subfolders) before
+        // its notes are loaded. Every folder whose attachments are scanned must
+        // also have every note in it counted, listed or not.
+        let attachmentProjects = projectsWithAttachmentFolders()
+        for project in attachmentProjects {
+            for url in noteFiles(in: project.url) where !listed.contains(url.standardizedFileURL.path) {
+                unloaded.append(Note(url: url, with: project))
+            }
+        }
         let urls = unloaded.map(\.url)
-        let attachmentFolders = collectAttachmentFolders()
+        let attachmentFolders = attachmentProjects.flatMap(attachmentFolders(in:))
 
         Task { @MainActor in
             let texts = await Task.detached(priority: .userInitiated) {
@@ -1202,34 +1224,42 @@ class Storage {
                 referenced.formUnion(note.getReferencedAttachmentPaths(in: text))
             }
             let paths = referenced
+            let names = trashNames
             let orphaned = await Task.detached(priority: .userInitiated) {
                 Storage.scanOrphanAttachments(folders: attachmentFolders, referenced: paths)
+                    .filter { !names.contains($0.lastPathComponent) }
             }.value
             completion(orphaned)
         }
     }
 
-    private func collectAttachmentFolders() -> [URL] {
-        var folders = [URL]()
-        let manager = FileManager.default
-
-        for project in projects where !project.isTrash {
-            for folderName in Storage.attachmentDirectoryNames {
-                let folderURL = project.url.appendingPathComponent(folderName)
-                var isDir = ObjCBool(false)
-
-                if manager.fileExists(atPath: folderURL.path, isDirectory: &isDir), isDir.boolValue {
-                    folders.append(folderURL)
-                }
-            }
+    private func attachmentFolders(in project: Project) -> [URL] {
+        Storage.attachmentDirectoryNames.compactMap { name in
+            let folderURL = project.url.appendingPathComponent(name)
+            var isDir = ObjCBool(false)
+            guard FileManager.default.fileExists(atPath: folderURL.path, isDirectory: &isDir), isDir.boolValue else { return nil }
+            return folderURL
         }
+    }
 
-        return folders
+    private func projectsWithAttachmentFolders() -> [Project] {
+        projects.filter { !$0.isTrash && !attachmentFolders(in: $0).isEmpty }
+    }
+
+    /// Note files directly inside a folder, as the folder's own scan finds
+    /// them, but matching the extension in any case so README.MD counts.
+    private func noteFiles(in folder: URL) -> [URL] {
+        let items = (try? FileManager.default.contentsOfDirectory(at: folder, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)) ?? []
+        return items.filter { allowedExtensions.contains($0.pathExtension.lowercased()) }
     }
 
     nonisolated private static func scanOrphanAttachments(folders: [URL], referenced: Set<String>) -> [URL] {
         var orphaned = [URL]()
         let manager = FileManager.default
+        // A note resolves /i/ against its folder as stored, while the folder
+        // walk returns the real path; a library behind a symlink (or /var vs
+        // /private/var) would otherwise make every image look unused.
+        let canonical = Set(referenced.map { ($0 as NSString).resolvingSymlinksInPath })
 
         for folderURL in folders {
             guard let enumerator = manager.enumerator(at: folderURL, includingPropertiesForKeys: [.isDirectoryKey], options: [.skipsHiddenFiles]) else {
@@ -1241,7 +1271,8 @@ class Storage {
                     continue
                 }
 
-                if !referenced.contains(fileURL.path) {
+                let path = fileURL.path
+                if !referenced.contains(path), !canonical.contains((path as NSString).resolvingSymlinksInPath) {
                     orphaned.append(fileURL)
                 }
             }
@@ -1261,13 +1292,10 @@ class Storage {
                 try manager.trashItem(at: url, resultingItemURL: &resultingItemUrl)
                 removed.append(url)
             } catch {
-                do {
-                    try manager.removeItem(at: url)
-                    removed.append(url)
-                } catch {
-                    failed.append(url)
-                    AppDelegate.trackError(error, context: "Storage.cleanOrphanAttachments")
-                }
+                // No permanent-delete fallback: a volume without a Trash keeps
+                // the file and reports it, so cleanup stays recoverable.
+                failed.append(url)
+                AppDelegate.trackError(error, context: "Storage.cleanOrphanAttachments")
             }
         }
 
