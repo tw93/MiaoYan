@@ -17,6 +17,13 @@ NOTARY_APPLE_ID="${MIAOYAN_NOTARY_APPLE_ID:-}"
 NOTARY_PASSWORD="${MIAOYAN_NOTARY_PASSWORD:-}"
 
 SPARKLE_PRIVATE_KEY_BASE64="${MIAOYAN_SPARKLE_PRIVATE_KEY_BASE64:-}"
+
+# The notary API key and the Sparkle private key are written under build/ for
+# the tools that need a file; remove them however the script ends.
+cleanup_secret_files() {
+  rm -f "$BUILD_DIR/AuthKey.p8" "$BUILD_DIR/sparkle_private.key"
+}
+trap cleanup_secret_files EXIT
 APP_NAME="MiaoYan"
 BACKGROUND_IMAGE_SOURCE="$PROJECT_DIR/Resources/dmg-background.png"
 BACKGROUND_IMAGE_NAME="$(basename "$BACKGROUND_IMAGE_SOURCE")"
