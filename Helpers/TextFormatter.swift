@@ -81,7 +81,6 @@ public class TextFormatter {
     }
 
     public func tab() {
-        guard let vc = ViewController.shared() else { return }
         guard let pRange = getParagraphRange() else { return }
         var padding = "  "
 
@@ -94,7 +93,7 @@ public class TextFormatter {
         guard range.length > 0 else {
             var text = storage.attributedSubstring(from: pRange).string
             if text.isNumberList() {
-                text = vc.replace(validateString: text, regex: "^[0-9-]+[.]", content: "1.")
+                text = ViewController.replace(validateString: text, regex: "^[0-9-]+[.]", content: "1.")
             }
             let location = textView.selectedRange().location
             textView.insertText(padding + text, replacementRange: pRange)
@@ -109,7 +108,7 @@ public class TextFormatter {
             var newLine = line
             if newLine.isNumberList() {
                 num += 1
-                newLine = vc.replace(validateString: newLine, regex: "^[0-9-]+[.]", content: "\(num).")
+                newLine = ViewController.replace(validateString: newLine, regex: "^[0-9-]+[.]", content: "\(num).")
             }
             lines.append(padding + newLine)
         }

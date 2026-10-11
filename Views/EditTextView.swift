@@ -776,14 +776,10 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
 
     // MARK: - Editor Utility Helpers
     func getParagraphRange() -> NSRange? {
-        guard let vc = getViewController(),
-            let editArea = vc.editArea,
-            let storage = editArea.textStorage
-        else {
-            return nil
-        }
-        let range = editArea.selectedRange()
-        return storage.mutableString.paragraphRange(for: range)
+        // This editor's own paragraph: in the storyboard window vc.editArea is
+        // this view, and in the shell there is no ViewController to ask.
+        guard let storage = textStorage else { return nil }
+        return storage.mutableString.paragraphRange(for: selectedRange())
     }
 
     func toggleBoldFont(font: NSFont) -> NSFont {

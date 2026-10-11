@@ -95,6 +95,7 @@ extension NSTextStorage {
 
     private struct AttachmentBox: @unchecked Sendable {
         weak var attachment: NSTextAttachment?
+        weak var storage: NSTextStorage?
     }
 
     @MainActor public func loadImage(attachment: NSTextAttachment, url: URL, range: NSRange) {
@@ -102,7 +103,7 @@ extension NSTextStorage {
 
         let size = attachment.bounds.size
         let retinaSize = CGSize(width: size.width * 2, height: size.height * 2)
-        let box = AttachmentBox(attachment: attachment)
+        let box = AttachmentBox(attachment: attachment, storage: self)
 
         EditTextView.imagesLoaderQueue.addOperation {
             let image = NoteAttachment.getImage(url: url, size: retinaSize)
@@ -116,7 +117,9 @@ extension NSTextStorage {
                 attachment.attachmentCell = cell
                 attachment.bounds = NSRect(x: 0, y: 0, width: size.width, height: size.height)
 
-                if let manager = ViewController.shared()?.editArea.layoutManager {
+                // This storage's own layout managers, so the shell's editor
+                // redraws too; ViewController.shared() is nil there.
+                for manager in box.storage?.layoutManagers ?? [] {
                     manager.invalidateDisplay(forCharacterRange: range)
                 }
             }

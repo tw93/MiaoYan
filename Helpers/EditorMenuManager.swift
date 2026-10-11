@@ -9,15 +9,17 @@ class EditorMenuManager {
     }
 
     func performFormattingAction(_ action: FormattingAction) {
-        guard textView != nil,
-            let vc = ViewController.shared(),
-            let editArea = vc.editArea,
-            let note = EditTextView.note,
-            !vc.sessionPreviewMode,
-            !vc.sessionPresentationMode,
-            !vc.sessionMagicPPTMode,
+        // The editor itself, not ViewController.shared(): the SwiftUI shell
+        // has no ViewController, and there every Format command did nothing.
+        guard let editArea = textView,
+            let note = editArea.storageNote ?? EditTextView.note,
             editArea.hasFocus()
         else { return }
+        if !editArea.isShellHosted, let vc = ViewController.shared(),
+            vc.sessionPreviewMode || vc.sessionPresentationMode || vc.sessionMagicPPTMode
+        {
+            return
+        }
 
         let formatter = TextFormatter(textView: editArea, note: note, shouldScanMarkdown: action.shouldScanMarkdown)
 
