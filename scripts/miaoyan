@@ -80,20 +80,28 @@ read_pref_path() {
 }
 
 detect_path() {
-    local pref_path
+    local pref_path domain
 
-    # MiaoYan 2.7+ setting key
-    pref_path=$(read_pref_path "com.tw93.miaoyan" "storageUrl")
-    if [[ -n "$pref_path" ]]; then
-        echo "$pref_path"
-        return
-    fi
-    
-    # Common default locations
-    for p in "$HOME/Documents/MiaoYan" "$HOME/Save/MiaoYan" "$HOME/MiaoYan"; do
+    # The folder chosen in Settings. `defaults read com.tw93.miaoyan` reads the
+    # sandbox container's copy whenever one exists, so both plists are read by
+    # path: the direct-download app's first, then the App Store app's.
+    for domain in \
+        "$HOME/Library/Preferences/com.tw93.miaoyan" \
+        "$HOME/Library/Containers/com.tw93.miaoyan/Data/Library/Preferences/com.tw93.miaoyan"; do
+        pref_path=$(read_pref_path "$domain" "storageUrl")
+        if [[ -n "$pref_path" ]]; then
+            echo "$pref_path"
+            return
+        fi
+    done
+
+    # With no folder chosen the app uses its iCloud Drive folder, then
+    # Documents/MiaoYan, and never writes storageUrl.
+    for p in "$HOME/Library/Mobile Documents/iCloud~com~tw93~miaoyan/Documents" \
+        "$HOME/Documents/MiaoYan" "$HOME/Save/MiaoYan" "$HOME/MiaoYan"; do
         [[ -d "$p" ]] && echo "$p" && return
     done
-    
+
     echo ""
 }
 
@@ -107,7 +115,9 @@ fi
 
 # URL encode helper
 urlencode() {
-    python3 -c "import urllib.parse; print(urllib.parse.quote('''$1''', safe=''))"
+    # The text goes in as an argument, never into the Python source, so quotes,
+    # backslashes and triple quotes in a title are just characters.
+    python3 -c 'import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=""))' "$1"
 }
 
 # Find note file by title (searches recursively, excludes Trash)
@@ -302,7 +312,15 @@ cmd_update() {
 
     printf "${GREEN}▸${NC} Checking for updates...\n"
 
-    if ! curl -fsSL "https://raw.githubusercontent.com/tw93/MiaoYan/main/scripts/miaoyan" -o "$tmp_file" 2>/dev/null; then
+    # Same source as install.sh: the latest release, so a bad push to main
+    # cannot break an update. MIAOYAN_INSTALL_REF overrides it.
+    local ref="${MIAOYAN_INSTALL_REF:-}"
+    if [[ -z "$ref" ]]; then
+        ref=$(curl -fsSL "https://api.github.com/repos/tw93/MiaoYan/releases/latest" 2>/dev/null | grep -m1 '"tag_name"' | cut -d'"' -f4)
+        [[ -z "$ref" ]] && ref="main"
+    fi
+
+    if ! curl -fsSL "https://raw.githubusercontent.com/tw93/MiaoYan/${ref}/scripts/miaoyan" -o "$tmp_file" 2>/dev/null; then
         rm -f "$tmp_file"
         echo "Error: Failed to download update." >&2
         exit 1
