@@ -756,8 +756,10 @@ public enum UserDefaultsManagement {
                 if FileManager.default.isWritableFile(atPath: storagePath) {
                     return storagePath
                 } else {
-                    let error = NSError(domain: "StorageError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Storage path not accessible, resetting to default"])
-                    AppDelegate.trackError(error, context: "UserDefaultsManagement.storagePath")
+                    let error = NSError(
+                        domain: "StorageError", code: 1,
+                        userInfo: [NSLocalizedDescriptionKey: "Storage path not accessible, showing the default notes folder instead"])
+                    reportOnce(error, context: "UserDefaultsManagement.storagePath", subject: storagePath)
                 }
             }
             if let iCloudDocumentsURL = iCloudDocumentsContainer {
@@ -778,6 +780,16 @@ public enum UserDefaultsManagement {
         }
     }
 
+    /// These getters run during menu validation, many times a second, so an
+    /// unplugged or deleted notes folder logged the same entry until it had
+    /// pushed every real incident out of the 50-entry diagnostics log.
+    nonisolated(unsafe) private static var reportedStorageProblems = Set<String>()
+
+    private static func reportOnce(_ error: Error, context: String, subject: String) {
+        guard reportedStorageProblems.insert(context + "|" + subject).inserted else { return }
+        AppDelegate.trackError(error, context: context)
+    }
+
     static var storageUrl: URL? {
         if let bookmarkData = storageBookmark {
             var isStale = false
@@ -795,12 +807,12 @@ public enum UserDefaultsManagement {
                             relativeTo: nil)
                         storageBookmark = newBookmark
                     } catch {
-                        AppDelegate.trackError(error, context: "UserDefaultsManagement.storageUrl.refreshStaleBookmark")
+                        reportOnce(error, context: "UserDefaultsManagement.storageUrl.refreshStaleBookmark", subject: url.path)
                     }
                 }
                 return url
             } catch {
-                AppDelegate.trackError(error, context: "UserDefaultsManagement.storageUrl.resolveBookmark")
+                reportOnce(error, context: "UserDefaultsManagement.storageUrl.resolveBookmark", subject: storagePath ?? "")
             }
         }
 

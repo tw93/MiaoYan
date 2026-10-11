@@ -50,7 +50,14 @@ final class NoteVersionManager: @unchecked Sendable {
             fmt.locale = Locale(identifier: "en_US_POSIX")
             let name = fmt.string(from: Date())
             let dest = dir.appendingPathComponent(name + ".md")
-            try? text.write(to: dest, atomically: true, encoding: .utf8)
+            do {
+                try text.write(to: dest, atomically: true, encoding: .utf8)
+            } catch {
+                // Not marked as saved, so the next save tries again instead of
+                // skipping the whole interval without a snapshot.
+                DispatchQueue.main.async { AppDelegate.trackError(error, context: "NoteVersionManager.saveVersion") }
+                return
+            }
 
             self.lastSaved[key] = Date()
             self.prune(dir: dir)
