@@ -23,13 +23,50 @@
   --inset: 64px;
   --gap: 84px;
 }
+/* The Chinese pages use one face for everything, a serif: Source Han Serif cut
+   to the characters on the page (scripts/build-fonts.py) and served from
+   /fonts/, ahead of Songti, so Android and Windows, which have no Chinese
+   serif, render the same text as a Mac or an iPhone. Latin stays with Charter,
+   or Georgia where Charter is missing. */
+@font-face {
+  font-family: "MiaoYan Serif SC";
+  src: local("Source Han Serif SC"), local("Noto Serif CJK SC"),
+       url("/fonts/miaoyan-serif-sc-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+}
+@font-face {
+  font-family: "MiaoYan Serif SC";
+  src: local("Source Han Serif SC SemiBold"), local("Noto Serif CJK SC SemiBold"),
+       url("/fonts/miaoyan-serif-sc-semibold.woff2") format("woff2");
+  font-weight: 500 700;
+  font-display: swap;
+  unicode-range: U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+}
+@font-face {
+  font-family: "MiaoYan Serif TC";
+  src: local("Source Han Serif TC"), local("Noto Serif CJK TC"),
+       url("/fonts/miaoyan-serif-tc-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+  unicode-range: U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+}
+@font-face {
+  font-family: "MiaoYan Serif TC";
+  src: local("Source Han Serif TC SemiBold"), local("Noto Serif CJK TC SemiBold"),
+       url("/fonts/miaoyan-serif-tc-semibold.woff2") format("woff2");
+  font-weight: 500 700;
+  font-display: swap;
+  unicode-range: U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+}
 html[lang="zh-CN"] {
-  --serif: Charter, Georgia, "Songti SC", "Source Han Serif SC", "Noto Serif CJK SC", serif;
-  --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  --serif: Charter, Georgia, "MiaoYan Serif SC", "Songti SC", serif;
+  --sans: var(--serif);
 }
 html[lang="zh-Hant"] {
-  --serif: Charter, Georgia, "Songti TC", "Source Han Serif TC", "Noto Serif CJK TC", serif;
-  --sans: -apple-system, BlinkMacSystemFont, "PingFang TC", "Hiragino Sans CNS", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  --serif: Charter, Georgia, "MiaoYan Serif TC", "Songti TC", serif;
+  --sans: var(--serif);
 }
 html[lang="ja"] {
   --serif: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif CJK JP", Georgia, serif;

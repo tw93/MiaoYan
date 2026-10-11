@@ -580,6 +580,15 @@ def page(key):
         if key == "en"
         else ""
     )
+    script = {"zh": "sc", "tw": "tc"}.get(key)
+    font_preload = (
+        "".join(
+            f'<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-{script}-{w}.woff2" crossorigin>\n'
+            for w in ("regular", "semibold")
+        )
+        if script
+        else ""
+    )
     return f"""<!DOCTYPE html>
 <html lang="{lang_attr}">
 <head>
@@ -604,7 +613,7 @@ def page(key):
 <meta name="twitter:image" content="https://miaoyan.app/assets/shots/og-{og}.jpg">
 <link rel="icon" href="/Release/img/logo.png" type="image/png">
 <link rel="apple-touch-icon" href="/Release/img/logo.png">
-<link rel="preload" as="image" href="/assets/shots/{shot}-edit-1400.webp" imagesrcset="/assets/shots/{shot}-edit-1400.webp 1400w, /assets/shots/{shot}-edit-2400.webp 2400w" imagesizes="(max-width: 1248px) 100vw, 1120px">
+{font_preload}<link rel="preload" as="image" href="/assets/shots/{shot}-edit-1400.webp" imagesrcset="/assets/shots/{shot}-edit-1400.webp 1400w, /assets/shots/{shot}-edit-2400.webp 2400w" imagesizes="(max-width: 1248px) 100vw, 1120px">
 <link rel="stylesheet" href="/site.css">
 <script type="application/ld+json">{ld}</script>
 </head>
@@ -742,6 +751,12 @@ def main():
         out.parent.mkdir(exist_ok=True)
         out.write_text(page(key))
     print("wrote", ", ".join(p for _, p, *_ in LANGS))
+    # A Chinese character missing from the font subset would fall back to the
+    # system face; fail loudly so the subsets get regenerated with the copy.
+    import subprocess, sys
+    checked = subprocess.run([sys.executable, "-I", str(ROOT / "scripts" / "build-fonts.py"), "--check"])
+    if checked.returncode:
+        sys.exit("font subsets are out of date: run python3 scripts/build-fonts.py")
 
 
 if __name__ == "__main__":

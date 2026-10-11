@@ -28,3 +28,4 @@ AGENTS.md
 CLAUDE.md
 dist/
 .agents/
+.fontcache
