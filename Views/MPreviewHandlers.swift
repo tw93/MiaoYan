@@ -44,7 +44,7 @@ class HandlerCheckbox: NSObject, WKScriptMessageHandler {
 
     /// The range of the space or x inside `[ ]` on the task item at
     /// `bodyLine` (1-based, counted after the frontmatter the preview drops).
-    static func taskMarkerRange(in text: String, bodyLine: Int) -> NSRange? {
+    nonisolated static func taskMarkerRange(in text: String, bodyLine: Int) -> NSRange? {
         let body = Frontmatter.body(of: text)
         let skippedLines = text[..<body.startIndex].reduce(0) { $1 == "\n" || $1 == "\r\n" ? $0 + 1 : $0 }
         let target = skippedLines + bodyLine - 1
@@ -63,7 +63,7 @@ class HandlerCheckbox: NSObject, WKScriptMessageHandler {
         return match.range(at: 1)
     }
 
-    private static let taskItemRegex = try! NSRegularExpression(pattern: #"^[ \t>]*(?:[-*+]|\d+[.)])[ \t]+\[([ xX])\]"#, options: [.anchorsMatchLines])
+    nonisolated private static let taskItemRegex = try! NSRegularExpression(pattern: #"^[ \t>]*(?:[-*+]|\d+[.)])[ \t]+\[([ xX])\]"#, options: [.anchorsMatchLines])
 
     private static func editor(in window: NSWindow) -> EditTextView? {
         var stack: [NSView] = window.contentView.map { [$0] } ?? []
