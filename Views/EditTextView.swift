@@ -704,13 +704,19 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         // Smooth transition: fade out -> load -> fade in (skip when animation is disabled)
         let needsTransition = allowTransition && !previewView.isHidden && previewView.alphaValue > 0
         if needsTransition {
+            // The load waits for the fade-out. A fill that lands in those
+            // 80ms loads its note at once; loading this one afterwards would
+            // put the previous note back, and split mode then showed one note
+            // in the editor beside another in the preview.
+            let epoch = fillEpoch
             NSAnimationContext.runAnimationGroup(
                 { context in
                     context.duration = 0.08
                     previewView.animator().alphaValue = 0
                 },
-                completionHandler: {
+                completionHandler: { [weak self] in
                     Task { @MainActor in
+                        guard let self, self.fillEpoch == epoch else { return }
                         previewView.load(note: note, force: options.force)
                         NSAnimationContext.runAnimationGroup({ context in
                             context.duration = 0.12
