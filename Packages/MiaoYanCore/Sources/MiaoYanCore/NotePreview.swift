@@ -97,7 +97,7 @@ public enum NotePreview {
     /// True when the text opens a frontmatter block that the text does not
     /// close, as happens when a card reads only the first bytes of a note.
     static func hasOpenFrontmatter(_ text: String) -> Bool {
-        (text.hasPrefix("---\n") || text.hasPrefix("---\r\n")) && String(Frontmatter.body(of: text)) == text
+        Frontmatter.opensUnclosedBlock(text)
     }
 
     /// Remove the first non-empty line when it is a level-one heading whose

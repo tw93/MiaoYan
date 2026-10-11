@@ -27,4 +27,25 @@ final class FrontmatterTests: XCTestCase {
     func testCRLFDocuments() {
         XCTAssertEqual(body("---\r\nkey: value\r\n---\r\nBody"), "Body")
     }
+
+    func testKeepsASlideDeckThatOpensWithARule() {
+        let deck = "---\n\n## niaho\n\n---\n\n## niha\n\n---\n"
+        XCTAssertEqual(body(deck), deck)
+        XCTAssertFalse(Frontmatter.opensUnclosedBlock(deck))
+    }
+
+    func testStripsYAMLWithListsAndComments() {
+        XCTAssertEqual(body("---\n# draft\ntags:\n  - ai\n- notes\ndate: 2026/10/12\n---\nBody"), "Body")
+    }
+
+    func testKeepsABlockWithoutKeys() {
+        XCTAssertEqual(body("---\nJust a sentence\n---\nBody"), "---\nJust a sentence\n---\nBody")
+        XCTAssertEqual(body("---\nsee https://example.com\n---\nBody"), "---\nsee https://example.com\n---\nBody")
+    }
+
+    func testOpensUnclosedBlock() {
+        XCTAssertTrue(Frontmatter.opensUnclosedBlock("---\ntitle: Long"))
+        XCTAssertFalse(Frontmatter.opensUnclosedBlock("---\ntitle: Long\n---\nBody"))
+        XCTAssertFalse(Frontmatter.opensUnclosedBlock("# Heading"))
+    }
 }
