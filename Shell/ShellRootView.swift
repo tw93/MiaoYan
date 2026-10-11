@@ -260,11 +260,16 @@ private struct ShellSidebarRow: View {
         .contextMenu {
             if let folder {
                 Button(I18n.str("New Folder")) { model.promptNewFolder() }
+                Button(I18n.str("New Subfolder")) { model.promptNewFolder(parent: folder) }
                 Button(I18n.str("Rename Folder")) {
                     model.scope = row.id
                     model.renamingFolderURL = folder.url
                 }
                 Button(I18n.str("Show in Finder")) { NSWorkspace.shared.activateFileViewerSelecting([folder.url]) }
+                Button(I18n.str("Open in Terminal")) {
+                    model.scope = row.id
+                    NSApp.sendAction(#selector(ShellWindowController.openInTerminal(_:)), to: nil, from: nil)
+                }
                 if !folder.isDefault && !folder.isRoot {
                     Divider()
                     Button(I18n.str("Delete Folder")) { model.confirmDeleteFolder(folder) }

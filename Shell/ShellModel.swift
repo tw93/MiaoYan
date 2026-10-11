@@ -648,9 +648,9 @@ final class ShellModel {
         return storage.getProjects().first { $0.url == url }
     }
 
-    /// The storyboard window's New Folder: a name sheet, then a folder under
-    /// the notes root.
-    func promptNewFolder() {
+    /// The storyboard window's New Folder and New Subfolder: a name sheet,
+    /// then a folder under `parent`, or under the notes root.
+    func promptNewFolder(parent: Project? = nil) {
         guard let window = host?.view.window else { return }
         let field = NSTextField(frame: NSRect(x: 0, y: 0, width: 320, height: 26))
         field.focusRingType = .none
@@ -661,15 +661,15 @@ final class ShellModel {
         alert.window.initialFirstResponder = field
         alert.beginSheetModal(for: window) { [weak self] response in
             guard response == .alertFirstButtonReturn else { return }
-            self?.createFolder(named: field.stringValue)
+            self?.createFolder(named: field.stringValue, parent: parent)
         }
         DispatchQueue.main.async { field.becomeFirstResponder() }
     }
 
-    func createFolder(named name: String) {
+    func createFolder(named name: String, parent: Project? = nil) {
         let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !name.isEmpty else { return }
-        let parent = storage.getMainProject()
+        let parent = parent ?? storage.getMainProject()
         let url = parent.url.appendingPathComponent(name, isDirectory: true)
         do {
             try FileManager.default.createDirectory(at: url, withIntermediateDirectories: false)
