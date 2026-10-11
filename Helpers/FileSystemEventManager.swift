@@ -277,6 +277,15 @@ class FileSystemEventManager {
             return
         }
 
+        // A note whose body was never read has nothing in memory to go stale:
+        // opening it reads the disk. Comparing its empty buffer with the file
+        // called every such note changed, so each iCloud touch loaded bodies
+        // and reloaded the list, which dropped the selection.
+        guard note.isContentLoaded else {
+            delegate?.fsReload(note)
+            return
+        }
+
         guard let fsContent = note.getContent() else { return }
 
         let memoryContent = note.content.attributedSubstring(from: NSRange(0..<note.content.length))

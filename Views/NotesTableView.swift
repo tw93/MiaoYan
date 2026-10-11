@@ -744,10 +744,10 @@ class NotesTableView: NSTableView {
             note.title = storedTitle
         }
 
-        guard let row = noteList.firstIndex(where: { $0 === note }) else {
-            reloadData()
-            return
-        }
+        // A note that is not listed has no row to refresh. Reloading the whole
+        // table for it dropped the selection whenever a note in another folder
+        // changed on disk.
+        guard let row = noteList.firstIndex(where: { $0 === note }) else { return }
 
         reloadData(forRowIndexes: IndexSet(integer: row), columnIndexes: IndexSet(integer: 0))
     }
