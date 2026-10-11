@@ -247,6 +247,16 @@ final class HtmlManagerTests: XCTestCase {
 
         XCTAssertFalse(processed.contains("Image Not Found"), "the escaped name still resolves to the file")
     }
+
+    func testTemplatePlaceholdersInsideNoteTextStayAsWritten() {
+        let template = "<style>DOWN_CSS</style><body class=\"CUSTOM_CSS\">DOWN_HTML</body>"
+        let replacements = ["DOWN_CSS": "p{}", "CUSTOM_CSS": "lightmode", "DOWN_HTML": "<p>write CUSTOM_CSS and DOWN_CSS here</p>"]
+        for _ in 0..<20 {
+            XCTAssertEqual(
+                HtmlManager.applyTemplateReplacements(template, replacements: replacements),
+                "<style>p{}</style><body class=\"lightmode\"><p>write CUSTOM_CSS and DOWN_CSS here</p></body>")
+        }
+    }
 }
 
 @available(macOS 12.0, *)

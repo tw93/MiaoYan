@@ -834,11 +834,21 @@ class HtmlManager {
 
     // MARK: - Template Processing
 
-    private static func applyTemplateReplacements(_ template: String, replacements: [String: String]) -> String {
-        var result = template
-        for (placeholder, value) in replacements {
-            result = result.replacingOccurrences(of: placeholder, with: value)
+    /// One pass over the template only. Replacing key by key in dictionary
+    /// order rescanned text already inserted, so a note containing CUSTOM_CSS
+    /// or DOWN_CSS had it substituted, differently from launch to launch.
+    static func applyTemplateReplacements(_ template: String, replacements: [String: String]) -> String {
+        let keys = replacements.keys.sorted { $0.count > $1.count }.map(NSRegularExpression.escapedPattern(for:))
+        guard !keys.isEmpty, let regex = try? NSRegularExpression(pattern: keys.joined(separator: "|")) else { return template }
+        let ns = template as NSString
+        var result = ""
+        var cursor = 0
+        for match in regex.matches(in: template, range: NSRange(location: 0, length: ns.length)) {
+            result += ns.substring(with: NSRange(location: cursor, length: match.range.location - cursor))
+            result += replacements[ns.substring(with: match.range)] ?? ""
+            cursor = NSMaxRange(match.range)
         }
+        result += ns.substring(from: cursor)
         return result
     }
 
