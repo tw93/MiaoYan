@@ -235,6 +235,33 @@ class Storage {
         projects.contains(where: { $0.url == url })
     }
 
+    /// After a folder moved on disk to `newURL`: rewrites the folder, every
+    /// registered subfolder and every note below it in place. Updating only
+    /// the folder and its direct notes left subfolders and their notes on
+    /// the old path, where every save failed; dropping and reloading the
+    /// folder also removed it from `projects` and gave the open note a twin.
+    public func relocateFolder(_ project: Project, to newURL: URL) {
+        let oldPath = project.url.path
+        let newPath = newURL.path
+        func moved(_ path: String) -> String? {
+            if path == oldPath { return newPath }
+            guard path.hasPrefix(oldPath + "/") else { return nil }
+            return newPath + path.dropFirst(oldPath.count)
+        }
+        for folder in projects {
+            guard let path = moved(folder.url.path) else { continue }
+            if let info = loadedProjectInfo.removeValue(forKey: folder.url.path) {
+                loadedProjectInfo[path] = info
+            }
+            folder.url = URL(fileURLWithPath: path, isDirectory: true)
+        }
+        project.label = newURL.lastPathComponent
+        for note in noteList {
+            guard let path = moved(note.url.path) else { continue }
+            note.url = URL(fileURLWithPath: path)
+        }
+    }
+
     public func removeBy(project: Project) {
         let list = noteList.filter {
             $0.project == project

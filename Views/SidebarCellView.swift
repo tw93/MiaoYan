@@ -146,17 +146,8 @@ class SidebarCellView: NSTableCellView {
         let newURL = project.url.deletingLastPathComponent().appendingPathComponent(sender.stringValue)
 
         do {
-            try FileManager.default.moveItem(at: project.url, to: newURL)
-            project.url = newURL
-            project.label = newURL.lastPathComponent
-
-            // Update all notes' URLs in this project to reflect the new folder path
-            for note in storage.noteList where note.project == project {
-                let relativePath = note.url.path.replacingOccurrences(of: oldURL.path, with: "")
-                let newNoteURL = URL(fileURLWithPath: newURL.path + relativePath)
-                note.url = newNoteURL
-            }
-
+            try FileManager.default.moveItem(at: oldURL, to: newURL)
+            storage.relocateFolder(project, to: newURL)
         } catch {
             sender.stringValue = project.url.lastPathComponent
             MiaoYanAlert.show(
@@ -167,8 +158,6 @@ class SidebarCellView: NSTableCellView {
         }
 
         guard let vc = window?.contentViewController as? ViewController else { return }
-        vc.storage.removeBy(project: project)
-        vc.storage.loadLabel(project)
         vc.updateTable()
     }
 

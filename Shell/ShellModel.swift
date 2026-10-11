@@ -704,14 +704,7 @@ final class ShellModel {
             MiaoYanAlert.show(message: error.localizedDescription, style: .warning, for: host?.view.window)
             return
         }
-        project.url = newURL
-        project.label = newURL.lastPathComponent
-        for note in storage.noteList where note.project == project {
-            let relativePath = note.url.path.replacingOccurrences(of: oldURL.path, with: "")
-            note.url = URL(fileURLWithPath: newURL.path + relativePath)
-        }
-        storage.removeBy(project: project)
-        storage.loadLabel(project)
+        storage.relocateFolder(project, to: newURL)
         onFoldersChanged?()
         let wasSelected = scope == .project(oldURL)
         reload()
