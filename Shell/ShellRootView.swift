@@ -335,12 +335,12 @@ struct ShellNoteList: View {
                                     note: note,
                                     snippet: model.snippet(for: note),
                                     date: ShellModel.rowDate(for: note),
-                                    isSelected: model.selectedNoteURL == note.url
+                                    isSelected: model.isSelected(note)
                                 )
                                 .id(note.url)
                                 .contentShape(Rectangle())
                                 .onTapGesture {
-                                    model.selectedNoteURL = note.url
+                                    model.clickNote(note, modifiers: NSEvent.modifierFlags)
                                     listFocused = true
                                 }
                                 .contextMenu { ShellNoteMenu(model: model, note: note) }
@@ -687,7 +687,7 @@ private struct ShellNoteMenu: View {
         if !note.isTrash() {
             Menu(I18n.str("Move")) {
                 ForEach(model.folders.filter { $0 != note.project }, id: \.url) { folder in
-                    Button(folder.label) { model.move([note], to: folder) }
+                    Button(folder.label) { model.move(model.notesForMenu(on: note), to: folder) }
                 }
             }
         }
@@ -700,7 +700,8 @@ private struct ShellNoteMenu: View {
         if !note.isTrash() {
             Divider()
             Button(I18n.str("Delete")) {
-                model.selectedNoteURL = note.url
+                // Part of the selection: delete all of it, keeping the selection.
+                if !model.isSelected(note) { model.selectedNoteURL = note.url }
                 model.deleteSelectedNote()
             }
         }

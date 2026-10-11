@@ -141,9 +141,61 @@ final class ShellModel {
 
     var selectedNoteURL: URL? {
         didSet {
+            // Moving the selection any other way (arrows, new note, a link)
+            // ends a multiple selection, as in the storyboard list.
+            if !isExtendingSelection, selectedNoteURL != oldValue { extraSelectedURLs = [] }
             guard let url = selectedNoteURL, url != oldValue else { return }
             UserDefaultsManagement.lastSelectedURL = url
         }
+    }
+
+    /// Notes selected besides the open one, by Command- or Shift-click. The
+    /// open note stays the one the editor and preview show.
+    private(set) var extraSelectedURLs: Set<URL> = []
+    @ObservationIgnored private var isExtendingSelection = false
+
+    func isSelected(_ note: Note) -> Bool {
+        note.url == selectedNoteURL || extraSelectedURLs.contains(note.url)
+    }
+
+    /// The open note plus any others selected with it, in list order.
+    var selectedNotes: [Note] {
+        notes.filter { isSelected($0) }
+    }
+
+    /// A click in the list: plain selects one note, Command adds or removes
+    /// it, Shift selects the run from the open note to it.
+    func clickNote(_ note: Note, modifiers: NSEvent.ModifierFlags) {
+        if modifiers.contains(.shift), let anchor = notes.firstIndex(where: { $0.url == selectedNoteURL }),
+            let target = notes.firstIndex(where: { $0 === note })
+        {
+            let run = notes[min(anchor, target)...max(anchor, target)].map(\.url)
+            extraSelectedURLs = Set(run).subtracting([selectedNoteURL].compactMap { $0 })
+            return
+        }
+        if modifiers.contains(.command), selectedNoteURL != nil {
+            if note.url == selectedNoteURL {
+                // Removing the open note opens another selected one instead.
+                guard let next = notes.first(where: { extraSelectedURLs.contains($0.url) }) else { return }
+                isExtendingSelection = true
+                selectedNoteURL = next.url
+                isExtendingSelection = false
+                extraSelectedURLs.remove(next.url)
+            } else if extraSelectedURLs.contains(note.url) {
+                extraSelectedURLs.remove(note.url)
+            } else {
+                extraSelectedURLs.insert(note.url)
+            }
+            return
+        }
+        selectedNoteURL = note.url
+        extraSelectedURLs = []
+    }
+
+    /// What a context-menu command acts on: the whole selection when the
+    /// clicked note is part of it, otherwise just that note.
+    func notesForMenu(on note: Note) -> [Note] {
+        isSelected(note) ? selectedNotes : [note]
     }
 
     var selectedNote: Note? {
@@ -502,8 +554,9 @@ final class ShellModel {
     func deleteSelectedNote() {
         guard !isPresenting, let note = selectedNote, !note.isTrash() else { return }
         let index = notes.firstIndex { $0 === note } ?? 0
+        let removing = selectedNotes.filter { !$0.isTrash() }
         storage.removeNotes(
-            notes: [note],
+            notes: removing,
             partialFailure: { [weak self] count in
                 Task { @MainActor in
                     self?.host?.toast(
@@ -513,7 +566,7 @@ final class ShellModel {
         ) { [weak self] _ in
             Task { @MainActor in
                 guard let self else { return }
-                let remaining = self.notes.filter { $0 !== note }
+                let remaining = self.notes.filter { candidate in !removing.contains { $0 === candidate } }
                 self.selectedNoteURL = remaining.isEmpty ? nil : remaining[min(index, remaining.count - 1)].url
                 self.refreshNotes(keepSelection: true)
             }
@@ -537,8 +590,14 @@ final class ShellModel {
         return true
     }
 
+    /// Pins or unpins the note, or every selected note when it is part of a
+    /// multiple selection, all to the clicked note's new state.
     func togglePin(_ note: Note) {
-        note.togglePin()
+        let group = notesForMenu(on: note)
+        let pin = !note.isPinned
+        for each in group where each.isPinned != pin {
+            each.togglePin()
+        }
         refreshNotes(keepSelection: true)
     }
 
