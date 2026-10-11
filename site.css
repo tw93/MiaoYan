@@ -1,0 +1,177 @@
+/* MiaoYan site. Tokens follow mole.fit so the two read as one family;
+   the accent is MiaoYan's own green and the footer its dark paper. */
+:root {
+  --parchment: #f5f4ed;
+  --ivory: #faf9f5;
+  --sand: #e8e6dc;
+  --accent: #1c5d33;
+  --accent-hover: #2a7a47;
+  --ink: #141413;
+  --body: #3d3d3a;
+  --olive: #504e49;
+  --stone: #6b6a64;
+  --line: #e4e1d6;
+  --night: #1e1d1b;
+  --night-ink: #f2f0ea;
+  --night-dim: #b5b1a7;
+  --serif: Charter, Georgia, "Songti SC", "Source Han Serif SC", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Helvetica Neue", Arial, sans-serif;
+  --page: 1120px;
+  --inset: 64px;
+  --gap: 84px;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--parchment); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--parchment);
+  color: var(--body);
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+html[lang="zh-CN"] body { font-family: var(--sans); line-height: 1.8; }
+a { color: inherit; }
+img { display: block; max-width: 100%; height: auto; }
+
+.wrap { max-width: calc(var(--page) + var(--inset) * 2); margin: 0 auto; padding: 0 var(--inset); }
+
+/* Nav: a translucent ivory pill, as on mole.fit. */
+.nav { position: sticky; top: 16px; z-index: 10; margin: 16px 0 56px; }
+/* Covers content scrolling under the sticky pill, as mole.fit does. */
+.nav::before {
+  content: ""; position: absolute; left: 50%; top: -16px; transform: translateX(-50%);
+  width: 100vw; height: calc(100% + 40px); z-index: -1; pointer-events: none;
+  background: linear-gradient(180deg, var(--parchment) 0%, var(--parchment) 70%, transparent 100%);
+}
+.nav-bar {
+  display: flex; align-items: center; gap: 20px;
+  padding: 10px 12px 10px 18px; border-radius: 999px;
+  background: color-mix(in srgb, var(--ivory) 82%, transparent);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 7px; text-decoration: none; color: var(--accent); flex: none; }
+.brand img { width: 24px; height: 24px; }
+.brand b { font-family: Charter, Georgia, serif; font-weight: 700; font-style: italic; font-size: 18px; letter-spacing: 0.2px; }
+.nav-links { display: flex; gap: 2px; margin-left: 8px; }
+.nav-links a {
+  font-family: var(--sans); font-size: 14px; color: var(--olive); text-decoration: none;
+  padding: 6px 12px; border-radius: 999px;
+}
+.nav-links a:hover { background: var(--sand); color: var(--ink); }
+.nav-end { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+.lang { font-family: var(--sans); font-size: 14px; color: var(--olive); text-decoration: none; padding: 6px 12px; border-radius: 999px; }
+.lang:hover { background: var(--sand); color: var(--ink); }
+.nav-cta {
+  font-family: var(--sans); font-size: 14px; font-weight: 600; color: #fff; background: var(--accent);
+  text-decoration: none; padding: 8px 16px; border-radius: 999px; white-space: nowrap;
+}
+.nav-cta { display: inline-flex; align-items: center; gap: 6px; }
+.nav-cta svg { width: 14px; height: 14px; flex: none; }
+.nav-cta:hover { background: var(--accent-hover); }
+
+/* Hero */
+.hero { padding-bottom: 36px; border-bottom: 1px solid var(--line); margin-bottom: var(--gap); }
+.hero h1 {
+  font-family: var(--serif); font-weight: 500; color: var(--ink);
+  font-size: 88px; line-height: 1; letter-spacing: -1.2px; margin: 0 0 22px;
+}
+html[lang="zh-CN"] .hero h1 { letter-spacing: 2px; }
+html[lang="zh-CN"] .tagline { word-break: keep-all; }
+.tagline { font-family: var(--serif); font-size: 22px; line-height: 1.5; color: var(--ink); margin: 0 0 10px; max-width: 760px; text-wrap: balance; }
+.lede { font-size: 17px; color: var(--olive); margin: 0 0 18px; max-width: 720px; }
+.trust { display: flex; flex-wrap: wrap; gap: 6px 14px; font-family: var(--sans); font-size: 13px; color: var(--stone); margin: 0 0 28px; padding: 0; list-style: none; }
+.trust li + li::before { content: "·"; margin-right: 14px; color: var(--line); }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 168px;
+  font-family: var(--sans); font-size: 15px; font-weight: 600; text-decoration: none;
+  padding: 13px 26px; border-radius: 999px; border: 1px solid var(--accent);
+}
+.btn svg { width: 16px; height: 16px; flex: none; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn-ghost { color: var(--accent); background: transparent; }
+.btn-ghost:hover { background: var(--ivory); }
+
+/* Sections */
+section { margin-bottom: var(--gap); scroll-margin-top: 100px; }
+.section-title { font-family: var(--serif); font-weight: 500; color: var(--ink); font-size: 32px; line-height: 1.25; margin: 0 0 10px; }
+.section-lede { font-size: 17px; color: var(--olive); margin: 0 0 28px; max-width: 760px; }
+.section-title + .cards, .section-title + details { margin-top: 24px; }
+
+/* Gallery: tabs under a framed screenshot. */
+.gallery-frame { border-radius: 14px; overflow: hidden; background: #d9d4c7; aspect-ratio: 3244 / 2244; }
+.gallery-frame img { width: 100%; height: 100%; object-fit: cover; }
+.gallery-frame img[hidden] { display: none; }
+.gallery-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 16px; flex-wrap: wrap; }
+.gallery-caption { font-size: 15px; color: var(--olive); margin: 0; min-height: 1.6em; }
+.tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.tabs button {
+  font-family: var(--sans); font-size: 13px; color: var(--olive); background: transparent;
+  border: 0; padding: 6px 13px; border-radius: 999px; cursor: pointer;
+}
+.tabs button:hover { background: var(--sand); color: var(--ink); }
+.tabs button[aria-selected="true"] { background: var(--accent); color: #fff; }
+
+/* iPhone and iPad */
+/* Apple's product bezels, shown as is and at their real relative size:
+   iPad Pro 13" is 281.6mm tall, iPhone 17 Pro 150.0mm. */
+.devices { display: flex; justify-content: center; align-items: flex-end; gap: 48px; }
+.device { margin: 0; }
+.device.phone { width: 204px; }
+.device.pad { width: 600px; }
+.devices-cta { justify-content: center; margin-top: 32px; }
+.device figcaption { font-family: var(--sans); font-size: 13px; color: var(--stone); margin-top: 12px; text-align: center; }
+
+/* Feature cards */
+.cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.card { background: var(--ivory); border: 1px solid var(--line); border-radius: 14px; padding: 24px 26px; }
+.card h3 { font-family: var(--serif); font-weight: 600; font-size: 19px; color: var(--ink); margin: 0 0 8px; }
+.card p { margin: 0; font-size: 15px; color: var(--body); }
+
+/* FAQ */
+.faq details { border-top: 1px solid var(--line); padding: 16px 0; }
+.faq details:last-child { border-bottom: 1px solid var(--line); }
+.faq summary { cursor: pointer; list-style: none; font-family: var(--serif); font-size: 17px; color: var(--ink); display: flex; justify-content: space-between; gap: 16px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; color: var(--stone); font-family: var(--sans); }
+.faq details[open] summary::after { content: "−"; }
+.faq p { margin: 10px 0 0; color: var(--body); max-width: 820px; }
+.faq code, .install code { font-family: "SF Mono", Menlo, monospace; font-size: 13px; background: var(--sand); padding: 2px 6px; border-radius: 6px; }
+
+/* Footer: the app's dark paper. */
+footer { background: var(--night); color: var(--night-dim); padding: 56px 0 40px; font-family: var(--sans); font-size: 14px; }
+.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 32px; }
+.foot .brand { color: #54c59f; }
+.foot .brand img { filter: invert(76%) sepia(18%) saturate(744%) hue-rotate(108deg) brightness(92%); }
+.foot p { margin: 12px 0 0; max-width: 360px; }
+.foot-links { display: grid; grid-template-columns: repeat(2, minmax(120px, auto)); gap: 8px 40px; }
+.foot-links a { color: var(--night-ink); text-decoration: none; }
+.foot-links a:hover { text-decoration: underline; }
+.copy { margin-top: 36px; font-size: 13px; color: #8e8b83; }
+
+@media (max-width: 999px) {
+  .nav-links { display: none; }
+}
+@media (max-width: 880px) {
+  :root { --inset: 20px; --gap: 64px; }
+  .hero h1 { font-size: 60px; }
+  .tagline { font-size: 20px; }
+  .devices { flex-direction: column; align-items: center; gap: 24px; }
+  .device.pad { width: min(600px, 100%); }
+  .device.phone { width: min(204px, 34%); }
+  .cards { grid-template-columns: 1fr; }
+  .trust { flex-direction: column; gap: 4px; }
+  .trust li + li::before { content: none; }
+}
+@media (max-width: 480px) {
+  .nav-bar { padding-left: 14px; gap: 10px; }
+  .lang { padding: 6px 8px; }
+  .nav-cta { padding: 8px 12px; }
+  .btn { width: 100%; }
+}
