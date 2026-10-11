@@ -294,3 +294,8 @@
 "Image" = "影像";
 "This note could not be read, so it was left as it is" = "這篇筆記讀取失敗，已經保持原樣沒有改動";
 "Version" = "版本";
+"Show Info" = "顯示資訊";
+"Copy URL" = "複製超連結";
+"Copy Path" = "複製路徑";
+"Duplicate" = "複製";
+"MiaoYan PPT" = "妙言 PPT";

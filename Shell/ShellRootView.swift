@@ -377,7 +377,15 @@ struct ShellNoteList: View {
                 ChromeButton(image: "icon_sidebar_left", help: "Toggle Note List") { model.cycleLayout() }
             }
             if model.isSearchOpen || !model.searchText.isEmpty {
-                ShellSearchField(text: $model.searchText, focused: $searchFocused) {
+                // Return makes a note named after the query, as the storyboard
+                // window's search field does.
+                ShellSearchField(
+                    text: $model.searchText, focused: $searchFocused,
+                    onSubmit: {
+                        let query = model.searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+                        model.createNote(name: query)
+                    }
+                ) {
                     model.searchText = ""
                     model.isSearchOpen = false
                 }
@@ -480,6 +488,7 @@ private struct ShellNoteRow: View {
 private struct ShellSearchField: View {
     @Binding var text: String
     var focused: FocusState<Bool>.Binding
+    var onSubmit: () -> Void = {}
     let onClose: () -> Void
 
     var body: some View {
@@ -492,6 +501,7 @@ private struct ShellSearchField: View {
                 .textFieldStyle(.plain)
                 .font(ShellStyle.interface(size))
                 .focused(focused)
+                .onSubmit(onSubmit)
                 .onExitCommand(perform: onClose)
             Button(action: onClose) {
                 SwiftUI.Image(systemName: "xmark.circle.fill")
@@ -638,6 +648,29 @@ private struct ShellNoteMenu: View {
             model.isRenaming = true
         }
         Button(I18n.str("Show in Finder")) { NSWorkspace.shared.activateFileViewerSelecting([note.url]) }
+        // The storyboard list's menu: info, links and copies of the note.
+        Button(I18n.str("Show Info")) {
+            model.selectedNoteURL = note.url
+            NSApp.sendAction(#selector(ShellWindowController.showInfo(_:)), to: nil, from: nil)
+        }
+        Button(I18n.str("Copy URL")) {
+            model.selectedNoteURL = note.url
+            model.copyNoteURL()
+        }
+        Button(I18n.str("Copy Path")) {
+            model.selectedNoteURL = note.url
+            model.copyNotePath()
+        }
+        if !note.isTrash() {
+            Button(I18n.str("Duplicate")) {
+                model.selectedNoteURL = note.url
+                model.duplicateSelectedNote()
+            }
+            Button(I18n.str("MiaoYan PPT")) {
+                model.selectedNoteURL = note.url
+                model.setPresenting(true, ppt: true)
+            }
+        }
         if !note.isTrash() {
             Button(I18n.str("Version History")) {
                 model.selectedNoteURL = note.url
