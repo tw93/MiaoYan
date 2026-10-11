@@ -127,7 +127,9 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     /// In the shell these mode commands belong to its window controller; declining them lets the menu's first-responder dispatch carry on up the chain.
-    private static let shellWindowActions: Set<Selector> = [
+    /// Nonisolated: responds(to:) is not main-actor isolated, and Swift 6.1
+    /// (CI's Xcode 16.3) refuses to read an isolated static from it.
+    nonisolated private static let shellWindowActions: Set<Selector> = [
         #selector(togglePreview(_:)), #selector(togglePresentation(_:)), #selector(toggleTOC(_:)),
         #selector(formatText(_:)), #selector(cleanTypography(_:)),
     ]
