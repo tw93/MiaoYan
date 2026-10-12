@@ -18,7 +18,7 @@
 - **纯本地**：笔记就是你选定文件夹里的 Markdown 文件，不收集数据，要跨设备就交给 iCloud 云盘或坚果云同步
 - **专注**：文件夹、笔记列表和编辑器分成三栏，带深色模式，不用维护插件
 - **原生**：Swift 6 开发，比网页套壳更轻，分栏预览支持 60fps 双向滚动同步
-- **够用**：双链、LaTeX 公式、Mermaid 图表、版本历史、自动排版和 PPT 演示都内置
+- **称手**：双链、LaTeX 公式、Mermaid 图表、版本历史、自动排版和 PPT 演示都内置
 
 ## 安装使用
 
@@ -33,7 +33,7 @@
 
 3. **GitHub Releases**：从 [GitHub Releases](https://github.com/tw93/MiaoYan/releases/latest) 下载最新 DMG（macOS 12.0+）
 
-Homebrew 和 GitHub Releases 装的是同一个开源免费的 Mac 版，会一直更新，更推荐 App Store 版，买一次 iPhone、iPad 和 Mac 都能用，打开的是同一个 iCloud 云盘文件夹，还能自动更新。
+Homebrew 与 GitHub Releases 分发的是同一个开源免费的 Mac 版本。更推荐购买 App Store 版：一次购买覆盖 iPhone、iPad 与 Mac，共享同一个 iCloud 云盘笔记目录，且支持自动更新。
 
 ## 用坚果云或其他云盘同步妙言
 

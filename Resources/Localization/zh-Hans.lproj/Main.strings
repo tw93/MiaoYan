@@ -20,10 +20,10 @@
 "v9A-ZO-AAb.title" = "妙言";
 
 /* Class = "NSMenuItem"; title = "Quick Input"; ObjectID = "xgO-jF-1ab"; */
-"xgO-jF-1ab.title" = "Tab快捷输入";
+"xgO-jF-1ab.title" = "Tab 快捷输入";
 
 /* Class = "NSMenu"; title = "Quick Input"; ObjectID = "1bu-5n-fpO"; */
-"1bu-5n-fpO.title" = "Tab快捷输入";
+"1bu-5n-fpO.title" = "Tab 快捷输入";
 
 /* Class = "NSMenuItem"; title = "/time - Current Time"; ObjectID = "fWx-6p-Qn4"; */
 "fWx-6p-Qn4.title" = "/time - 当前时间";
@@ -160,7 +160,7 @@
 "dRJ-4n-Yzg.title" = "撤销";
 
 /* Class = "NSMenuItem"; title = "Duplicate"; ObjectID = "E6I-n5-dsi"; */
-"E6I-n5-dsi.title" = "副本";
+"E6I-n5-dsi.title" = "制作副本";
 
 /* Class = "NSMenuItem"; title = "Show Info"; ObjectID = "IcI-sb-NY5"; */
 "IcI-sb-NY5.title" = "显示简介";
@@ -193,7 +193,7 @@
 "F2S-fz-NVQ.title" = "帮助";
 
 /* Class = "NSMenuItem"; title = "Show in Finder"; ObjectID = "F5A-zs-zwP"; */
-"F5A-zs-zwP.title" = "在Finder中显示";
+"F5A-zs-zwP.title" = "在 Finder 中显示";
 
 /* Class = "NSButtonCell"; title = "Hide preview"; ObjectID = "F6G-ua-MNX"; */
 "F6G-ua-MNX.title" = "隐藏预览";
@@ -227,7 +227,7 @@
 "GCG-C6-9cg.title" = "修改日期";
 
 /* Class = "NSMenuItem"; title = "Show in Finder"; ObjectID = "goN-LO-L7l"; */
-"goN-LO-L7l.title" = "在Finder中显示";
+"goN-LO-L7l.title" = "在 Finder 中显示";
 
 /* Class = "NSMenuItem"; title = "Open in Terminal"; ObjectID = "OiT-01-iTm"; */
 "OiT-01-iTm.title" = "在终端中打开";
@@ -239,7 +239,7 @@
 "gVA-U4-sdL.title" = "粘贴";
 
 /* Class = "NSMenuItem"; title = "Dark"; ObjectID = "gY8-zt-Iak"; */
-"gY8-zt-Iak.title" = "Dark";
+"gY8-zt-Iak.title" = "深色";
 
 /* Class = "NSMenuItem"; title = "View"; ObjectID = "H8h-7b-M4v"; */
 "H8h-7b-M4v.title" = "视图";
@@ -305,10 +305,10 @@
 "i2U-Vk-5TZ.title" = "/task -> 任务列表模板";
 
 /* Class = "NSMenuItem"; title = "Shift Right"; ObjectID = "Iba-Po-ajH"; */
-"Iba-Po-ajH.title" = "右移";
+"Iba-Po-ajH.title" = "左移";
 
 /* Class = "NSMenuItem"; title = "Shift Left"; ObjectID = "6f5-hD-IGa"; */
-"6f5-hD-IGa.title" = "左移";
+"6f5-hD-IGa.title" = "右移";
 
 /* Class = "NSTextFieldCell"; title = "Hint:"; ObjectID = "ioc-u5-XRA"; */
 "ioc-u5-XRA.title" = "提示：";
@@ -365,7 +365,7 @@
 "9ib-os-JZv.title" = "切换演示";
 
 /* Class = "NSMenuItem"; title = "Duplicate"; ObjectID = "pnm-dP-GKO"; */
-"pnm-dP-GKO.title" = "副本";
+"pnm-dP-GKO.title" = "制作副本";
 
 /* Class = "NSButtonCell"; title = "Creation date"; ObjectID = "PY8-lr-5qr"; */
 "PY8-lr-5qr.title" = "创建日期";
@@ -383,7 +383,7 @@
 "rbD-Rh-wIN.title" = "键入时检查拼写";
 
 /* Class = "NSMenuItem"; title = "Copy URL"; ObjectID = "Rg2-j1-Foz"; */
-"Rg2-j1-Foz.title" = "拷贝URL";
+"Rg2-j1-Foz.title" = "拷贝链接";
 
 /* Class = "NSMenuItem"; title = "Sort by"; ObjectID = "rHB-xF-GgG"; */
 "rHB-xF-GgG.title" = "排序方式";
@@ -401,7 +401,7 @@
 "RwR-P0-ycK.title" = "删除文件夹";
 
 /* Class = "NSMenuItem"; title = "Reveal in Finder"; ObjectID = "rXU-X3-UjC"; */
-"rXU-X3-UjC.title" = "在Finder中打开";
+"rXU-X3-UjC.title" = "在 Finder 中显示";
 
 /* Class = "NSMenuItem"; title = "Jump to Selection"; ObjectID = "S0p-oC-mLd"; */
 "S0p-oC-mLd.title" = "跳到所选内容";
@@ -443,7 +443,7 @@
 "uMZ-sI-7ja.title" = "文件";
 
 /* Class = "NSMenuItem"; title = "Copy URL"; ObjectID = "uQ1-ej-ufE"; */
-"uQ1-ej-ufE.title" = "拷贝URL";
+"uQ1-ej-ufE.title" = "拷贝链接";
 
 /* Class = "NSMenu"; title = "MiaoYan"; ObjectID = "uQy-DD-JDr"; */
 "uQy-DD-JDr.title" = "妙言";
@@ -452,7 +452,7 @@
 "uRl-iY-unG.title" = "剪切";
 
 /* Class = "NSMenuItem"; title = "Hide Others"; ObjectID = "Vdr-fp-XzO"; */
-"Vdr-fp-XzO.title" = "隐藏其它";
+"Vdr-fp-XzO.title" = "隐藏其他";
 
 /* Class = "NSMenu"; title = "Edit"; ObjectID = "W48-6f-4Dl"; */
 "W48-6f-4Dl.title" = "编辑";
@@ -470,13 +470,13 @@
 "XBB-Sr-T1D.title" = "重命名";
 
 /* Class = "NSMenuItem"; title = "Reveal in Finder"; ObjectID = "xSO-lW-k8f"; */
-"xSO-lW-k8f.title" = "在Finder中显示";
+"xSO-lW-k8f.title" = "在 Finder 中显示";
 
 /* Class = "NSMenuItem"; title = "Copy URL"; ObjectID = "9Fg-2C-7a5"; */
-"9Fg-2C-7a5.title" = "复制外链";
+"9Fg-2C-7a5.title" = "拷贝链接";
 
 /* Class = "NSMenuItem"; title = "Copy Path"; ObjectID = "CpP-01-iTm"; */
-"CpP-01-iTm.title" = "复制路径";
+"CpP-01-iTm.title" = "拷贝路径";
 
 /* Class = "NSMenuItem"; title = "MiaoYan PPT"; ObjectID = "uUS-sg-zGt"; */
 "uUS-sg-zGt.title" = "妙言 PPT";
@@ -539,7 +539,7 @@
 "AOs-Fb-J09.title" = "演示字号";
 
 /* Class = "NSMenuItem"; title = "System"; ObjectID = "fQA-b2-fKr"; */
-"fQA-b2-fKr.title" = "自动";
+"fQA-b2-fKr.title" = "跟随系统";
 
 /* Class = "NSMenuItem"; title = "Light"; ObjectID = "dx8-sq-a90"; */
 "dx8-sq-a90.title" = "浅色";
@@ -563,7 +563,7 @@
 "iNW-7A-WXP.title" = "版本记录";
 
 /* Class = "NSMenuItem"; title = "Follow Twitter"; ObjectID = "uXW-Mt-L5y"; */
-"uXW-Mt-L5y.title" = "关注 Twitter";
+"uXW-Mt-L5y.title" = "关注 X (Twitter)";
 
 /* Class = "NSButton"; ibShadowedToolTip = "Format"; ObjectID = "Adc-zl-sqX"; */
 "Adc-zl-sqX.ibShadowedToolTip" = "排版";
@@ -575,7 +575,7 @@
 "Bn7-FD-jzc.ibShadowedToolTip" = "预览";
 
 /* Class = "NSButton"; ibShadowedToolTip = "New Project"; ObjectID = "Yei-Or-qiI"; */
-"Yei-Or-qiI.ibShadowedToolTip" = "新建分类";
+"Yei-Or-qiI.ibShadowedToolTip" = "新建文件夹";
 
 /* Class = "NSMenuItem"; title = "Export"; ObjectID = "8LY-2s-GJ7"; */
 "8LY-2s-GJ7.title" = "导出";

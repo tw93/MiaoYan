@@ -8,13 +8,13 @@
 "Are you sure you want to move %d note(s) to the system Trash?" = "确定要将%d个笔记移入系统废纸篓？";
 
 /* No comment provided by engineer. */
-"Are you sure you want to remove project \"%@\" and all files inside?" = "您确定要删除项目\"%@\"和它下面的所有文件吗？";
+"Are you sure you want to remove project \"%@\" and all files inside?" = "确定要删除文件夹“%@”及其包含的所有文件吗？";
 
 /* Delete menu */
 "Cancel" = "取消";
 
 /* No comment provided by engineer. */
-"Copy HTML" = "拷贝HTML";
+"Copy HTML" = "拷贝 HTML";
 
 /* No comment provided by engineer. */
 "Copy Link" = "拷贝链接";
@@ -83,7 +83,7 @@
 "Rename Folder" = "重命名文件夹";
 
 /* No comment provided by engineer. */
-"Show in Finder" = "在Finder中显示";
+"Show in Finder" = "在 Finder 中显示";
 "Open in Terminal" = "在终端中打开";
 
 /* View menu */
@@ -102,7 +102,7 @@
 "Toggle Preview" = "预览";
 
 /* Sidebar label */
-"Trash" = "删除";
+"Trash" = "废纸篓";
 
 /* No comment provided by engineer. */
 "Underline" = "下划线";
@@ -111,7 +111,7 @@
 "Untitled Note" = "无标题";
 
 /* No comment provided by engineer. */
-"URL has been copied to clipboard" = "URL已复制到剪贴板";
+"URL has been copied to clipboard" = "链接已拷贝到剪贴板";
 
 /* Menu */
 "View" = "视图";
@@ -122,7 +122,7 @@
 
 /* Clean attachments */
 "Clean Orphan Attachments" = "清理孤立附件";
-"Detected %d unused attachment(s). Move them to Trash?" = "检测到%d个未被引用的附件，是否移动到垃圾桶？";
+"Detected %d unused attachment(s). Move them to Trash?" = "检测到 %d 个未被引用的附件，是否移入废纸篓？";
 "No orphan attachments found" = "没有检测到孤立附件";
 "Removed %d unused attachment(s)" = "已清理%d个无引用附件";
 "Some attachments could not be removed" = "部分附件无法清理";
@@ -143,23 +143,23 @@
 "Format is only possible after exiting preview mode~" = "文档排版需要退出预览模式才可使用~";
 "Saved to Downloads folder~" = "已导出到下载目录~";
 "Saved~" = "已保存~";
-"Click the title again to rename~" = "标题未保存,请再次点击标题后修改~";
-"External change detected. Local copy backed up~" = "检测到外部修改,本地内容已备份~";
+"Click the title again to rename~" = "标题未保存，请再次点击标题后修改";
+"External change detected. Local copy backed up~" = "检测到外部修改，本地内容已备份";
 "Switching notes is disabled during export~" = "导出过程中无法切换笔记~";
-"Failed to move %d note(s) to Trash~" = "%d 条笔记未能移入回收站,可能受权限或同步限制~";
+"Failed to move %d note(s) to Trash~" = "%d 篇笔记未能移入废纸篓，可能受权限或同步限制";
 "Image upload in progress~" = "图片上传中~";
-"Image upload failed, Use local~" = "图片上传失败，优先使用本地，可手动上传~";
-"Please make sure your Mac is installed %@ ~" = "请确保你的 Mac 已安装并配置好了 %@ ~";
-"In single open mode, Exit with Command+Shift+W ~" = "单独编辑器模式中，可 Command+Shift+W 退出~";
-"Please make sure your title exists~" = "请确定你填写的标题是否存在~";
-"Found that there are multiple titles of this~" = "发现这里有多个标题，使用搜索能力~";
-"URL is successfully copied, Use it anywhere~" = "外链成功复制，你可以在任何地方使用~";
-"Path is successfully copied~" = "路径成功复制~";
-"No delimiter --- identification, Cannot use MiaoYan PPT~" = "没有分隔符 --- 标识，无法使用妙言 PPT~";
+"Image upload failed, Use local~" = "图片上传失败，已保留本地路径";
+"Please make sure your Mac is installed %@ ~" = "请确保你的 Mac 已安装并配置好 %@";
+"In single open mode, Exit with Command+Shift+W ~" = "独立编辑模式下，可按 ⌘⇧W 退出";
+"Please make sure your title exists~" = "未找到对应标题的笔记，请核对后重试";
+"Found that there are multiple titles of this~" = "存在多篇同名笔记，已为你发起搜索";
+"URL is successfully copied, Use it anywhere~" = "笔记链接已拷贝到剪贴板";
+"Path is successfully copied~" = "文件路径已拷贝到剪贴板";
+"No delimiter --- identification, Cannot use MiaoYan PPT~" = "未检测到 --- 分页符，无法开启幻灯片演示";
 "Formatting failed, please try again" = "排版失败，请重试";
 "Formatting cancelled" = "已取消排版";
 
-"This %@ under this folder already exists!" = "此文件夹下 %@ 已经存在!";
+"This %@ under this folder already exists!" = "当前文件夹下已存在同名 %@！";
 "Please change the title" = "请换一个标题";
 
 "Edit Link…" = "编辑链接";
@@ -183,7 +183,7 @@
 "Interface Font:" = "界面字体:";
 "Preview Font:" = "预览字体:";
 "Code Font:" = "代码字体:";
-"Presentation Font Size:" = "演示大小:";
+"Presentation Font Size:" = "演示字号:";
 "Line Break:" = "换行方式:";
 "Code Background:" = "代码背景:";
 "Preview Location:" = "预览位置:";
@@ -230,7 +230,7 @@
 "Full Width" = "全宽";
 "MiaoYan" = "妙言";
 "Auto" = "自动";
-"Github" = "Github";
+"Github" = "GitHub";
 
 /* ClipboardManager Messages */
 "Image uploaded successfully" = "图片上传成功";
@@ -267,7 +267,7 @@
 
 /* Always On Top */
 "Window stays on top" = "窗口已置顶";
-"Window normal mode" = "窗口正常模式";
+"Window normal mode" = "窗口已取消置顶";
 
 /* Menu Items */
 "Always On Top" = "窗口置顶";
@@ -307,7 +307,7 @@
 "All Fonts" = "全部字体";
 "Not installed" = "未安装";
 "Install the font first" = "需要先安装字体";
-"MiaoYan does not bundle this font. Double-click the downloaded file to install it, and MiaoYan switches to it on its own. Personal non-commercial use is free; commercial work needs a licence from Tsanger." = "妙言不内置这个字体，下载后双击文件安装，装好之后会自动换上，个人非商业使用免费，商用需要向仓耳单独购买授权。";
+"MiaoYan does not bundle this font. Double-click the downloaded file to install it, and MiaoYan switches to it on its own. Personal non-commercial use is free; commercial work needs a licence from Tsanger." = "妙言未内置此字体。下载后双击文件安装即可自动生效。个人非商业使用免费，商用需向仓耳单独购买授权。";
 "Download Font" = "下载字体";
 "Chinese" = "中文";
 "Latin" = "西文";
@@ -315,11 +315,11 @@
 "Rename" = "重命名";
 "Unpin Note" = "取消置顶";
 "Image" = "图片";
-"This note could not be read, so it was left as it is" = "这篇笔记读取失败，已经保持原样没有改动";
+"This note could not be read, so it was left as it is" = "该笔记读取失败，已保持原样避免内容丢失";
 "Version" = "版本";
 "Show Info" = "显示简介";
-"Copy URL" = "复制外链";
-"Copy Path" = "复制路径";
-"Duplicate" = "副本";
+"Copy URL" = "拷贝链接";
+"Copy Path" = "拷贝路径";
+"Duplicate" = "制作副本";
 "MiaoYan PPT" = "妙言 PPT";
 "Toggle Split View" = "切换分栏";
