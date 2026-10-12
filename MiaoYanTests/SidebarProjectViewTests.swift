@@ -4,6 +4,104 @@ import XCTest
 @testable import MiaoYan
 
 final class SidebarProjectViewTests: XCTestCase {
+    private final class ReusingSidebar: SidebarProjectView {
+        var reusedCell: SidebarCellView?
+
+        override func makeView(withIdentifier identifier: NSUserInterfaceItemIdentifier, owner: Any?) -> NSView? {
+            reusedCell
+        }
+    }
+
+    @MainActor
+    private func makeFolderCell() -> SidebarCellView {
+        let cell = SidebarCellView(frame: NSRect(x: 0, y: 0, width: 200, height: 30))
+        let label = NSTextField(labelWithString: "Original")
+        label.frame = NSRect(x: 30, y: 3, width: 160, height: 24)
+        let icon = NSImageView(frame: .zero)
+        cell.addSubview(label)
+        cell.addSubview(icon)
+        cell.label = label
+        cell.textField = label
+        cell.icon = icon
+        label.cell?.sendsActionOnEndEditing = true
+        label.target = cell
+        label.action = #selector(SidebarCellView.projectName(_:))
+        cell.awakeFromNib()
+        return cell
+    }
+
+    @MainActor
+    func testCompletingFolderRenameReturnsNameToReadOnly() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanRename-\(UUID().uuidString)")
+        let original = root.appendingPathComponent("Original", isDirectory: true)
+        let renamed = root.appendingPathComponent("Renamed", isDirectory: true)
+        try FileManager.default.createDirectory(at: original, withIntermediateDirectories: true)
+        let project = Project(url: original, label: "Original")
+        let storage = AppEnvironment.current.storage
+        _ = storage.add(project: project)
+        defer {
+            storage.removeBy(project: project)
+            try? FileManager.default.removeItem(at: root)
+        }
+
+        let cell = makeFolderCell()
+        cell.objectValue = SidebarItem(name: "Original", project: project, type: .Category)
+        cell.label.isEditable = true
+        cell.label.isSelectable = true
+        XCTAssertTrue(cell.label.target === cell, "installing the label cell must preserve the storyboard action target")
+        XCTAssertEqual(cell.label.action, #selector(SidebarCellView.projectName(_:)))
+        let window = NSWindow(contentRect: cell.frame, styleMask: [], backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        window.contentView = cell
+        defer { window.close() }
+        XCTAssertTrue(window.makeFirstResponder(cell.label))
+        let editor = try XCTUnwrap(cell.label.currentEditor() as? NSTextView)
+        editor.string = "Renamed"
+
+        editor.insertNewline(nil)
+
+        XCTAssertTrue(FileManager.default.fileExists(atPath: renamed.path))
+        XCTAssertFalse(FileManager.default.fileExists(atPath: original.path))
+        XCTAssertEqual(project.url.path, renamed.resolvingSymlinksInPath().path)
+        XCTAssertFalse(cell.label.isEditable, "a completed rename must not leave the next click editing the folder name")
+        XCTAssertFalse(cell.label.isSelectable, "the name must return to a label, not a selectable text field")
+    }
+
+    @MainActor
+    func testCancellingFolderNameEditingReturnsNameToReadOnly() {
+        let cell = makeFolderCell()
+        cell.label.isEditable = true
+        cell.label.isSelectable = true
+
+        let handled =
+            cell.label.delegate?.control?(
+                cell.label,
+                textView: NSTextView(),
+                doCommandBy: #selector(NSResponder.cancelOperation(_:))
+            ) ?? false
+
+        XCTAssertTrue(handled)
+        XCTAssertFalse(cell.label.isEditable)
+        XCTAssertFalse(cell.label.isSelectable)
+    }
+
+    @MainActor
+    func testReusingFolderRowResetsNameEditingState() throws {
+        let cell = makeFolderCell()
+        cell.label.isEditable = true
+        cell.label.isSelectable = true
+        let outlineView = ReusingSidebar(frame: NSRect(x: 0, y: 0, width: 200, height: 300))
+        outlineView.reusedCell = cell
+        let item = SidebarItem(name: "Another folder", type: .Category)
+
+        let configuredCell = try XCTUnwrap(outlineView.outlineView(outlineView, viewFor: nil, item: item) as? SidebarCellView)
+
+        XCTAssertTrue(configuredCell === cell)
+        XCTAssertEqual(cell.label.stringValue, "Another folder")
+        XCTAssertFalse(cell.label.isEditable)
+        XCTAssertFalse(cell.label.isSelectable)
+    }
+
     @MainActor
     func testTileRestoresNonScrollableWidthAfterSidebarReload() {
         let scrollView = NSScrollView(frame: NSRect(x: 0, y: 0, width: 127, height: 300))

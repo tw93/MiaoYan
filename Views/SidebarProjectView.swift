@@ -720,6 +720,7 @@ class SidebarProjectView: NSOutlineView,
 
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         let cell = outlineView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "DataCell"), owner: self) as! SidebarCellView
+        cell.endRenaming()
 
         guard let sidebarItem = item as? SidebarItem else {
             return cell

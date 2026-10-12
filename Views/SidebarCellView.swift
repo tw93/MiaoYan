@@ -55,7 +55,7 @@ final class SidebarLabelCell: NSTextFieldCell {
 }
 
 @MainActor
-class SidebarCellView: NSTableCellView {
+class SidebarCellView: NSTableCellView, NSTextFieldDelegate {
     private enum LayoutConstants {
         static let trailingPadding: CGFloat = 6
     }
@@ -76,6 +76,7 @@ class SidebarCellView: NSTableCellView {
         MainActor.assumeIsolated { [self] in
             guard let label = label else { return }
 
+            label.delegate = self
             installSidebarLabelCellIfNeeded(label)
             label.lineBreakMode = .byTruncatingTail
             label.cell?.truncatesLastVisibleLine = true
@@ -92,6 +93,9 @@ class SidebarCellView: NSTableCellView {
         else { return }
 
         let labelCell = SidebarLabelCell(textCell: existingCell.stringValue)
+        // NSControl's target/action live on its cell, including the storyboard rename action.
+        labelCell.target = existingCell.target
+        labelCell.action = existingCell.action
         labelCell.font = existingCell.font
         labelCell.textColor = existingCell.textColor
         labelCell.alignment = existingCell.alignment
@@ -138,7 +142,22 @@ class SidebarCellView: NSTableCellView {
         }
     }
 
+    func endRenaming() {
+        label.isEditable = false
+        label.isSelectable = false
+    }
+
+    func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+        guard control === label, commandSelector == #selector(NSResponder.cancelOperation(_:)) else { return false }
+        // Cancelling does not send the rename action, so end editing here.
+        _ = label.abortEditing()
+        endRenaming()
+        return true
+    }
+
     @IBAction func projectName(_ sender: NSTextField) {
+        defer { endRenaming() }
+
         let cell = sender.superview as? SidebarCellView
         guard let si = cell?.objectValue as? SidebarItem, let project = si.project else { return }
 
