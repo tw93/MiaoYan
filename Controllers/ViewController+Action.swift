@@ -1312,6 +1312,21 @@ extension ViewController {
     }
 
     // MARK: - Keyboard Event Handling
+    func handleTitleReturn() -> Bool {
+        guard titleLabel.hasFocus() else { return true }
+        // The local key monitor runs before the input method. Let Return
+        // confirm marked text (including English typed through a CJK IME)
+        // without changing the field editor's focus.
+        if let fieldEditor = titleLabel.currentEditor() as? NSTextView, fieldEditor.hasMarkedText() {
+            return true
+        }
+        // Preserve the existing Return behavior for Japanese locales.
+        if UserDefaultsManagement.defaultLanguage != 0x02 {
+            focusEditArea()
+        }
+        return false
+    }
+
     // swiftlint:disable:next cyclomatic_complexity
     public func handleKeyDown(with event: NSEvent) -> Bool {
         guard let mw = MainWindowController.shared() else {
@@ -1472,13 +1487,7 @@ extension ViewController {
                         return false
                     }
 
-                    // Handle the different input behavior used in Japanese locales
-                    if titleLabel.hasFocus() {
-                        if UserDefaultsManagement.defaultLanguage != 0x02 {
-                            focusEditArea()
-                        }
-                        return false
-                    }
+                    return handleTitleReturn()
                 }
             }
 
