@@ -700,3 +700,6 @@
 "CdB-Blk-Mnu.title" = "程式碼區塊";
 "Yei-Or-qiI.toolTip" = "新建檔案夾";
 "CpP-01-iTm.title" = "複製路徑";
+
+/* Class = "NSMenuItem"; title = "Move to…"; ObjectID = "MvF-01-iTm"; */
+"MvF-01-iTm.title" = "移動到…";

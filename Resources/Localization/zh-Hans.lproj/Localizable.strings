@@ -323,3 +323,12 @@
 "Duplicate" = "制作副本";
 "MiaoYan PPT" = "妙言 PPT";
 "Toggle Split View" = "切换分栏";
+
+/* Folder moving */
+"Move to…" = "移动到…";
+"This folder cannot be moved." = "此文件夹无法移动。";
+"Choose a folder in the same library." = "选择同一个笔记库内的文件夹。";
+"A folder cannot be moved into itself or its subfolders." = "不能将文件夹移入自身或其子文件夹。";
+"A folder with this name already exists at the destination." = "目标位置已有同名文件夹。";
+"Save the pending changes before moving this folder." = "先保存未保存的内容，再移动文件夹。";
+"A folder is already being moved." = "已有文件夹正在移动。";

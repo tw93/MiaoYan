@@ -701,3 +701,6 @@
 "CdB-Blk-Mnu.title" = "コードブロック";
 "Yei-Or-qiI.toolTip" = "新規フォルダ";
 "CpP-01-iTm.title" = "パスをコピー";
+
+/* Class = "NSMenuItem"; title = "Move to…"; ObjectID = "MvF-01-iTm"; */
+"MvF-01-iTm.title" = "移動先…";

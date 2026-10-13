@@ -1173,6 +1173,11 @@ CA
                                 <action selector="renameMenu:" target="urA-eK-bWB" id="Jh4-4H-wc0"/>
                             </connections>
                         </menuItem>
+                        <menuItem title="Move to…" id="MvF-01-iTm">
+                            <connections>
+                                <action selector="moveFolderMenu:" target="urA-eK-bWB" id="MvF-02-act"/>
+                            </connections>
+                        </menuItem>
                         <menuItem title="Show in Finder" keyEquivalent="r" id="goN-LO-L7l">
                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                             <connections>

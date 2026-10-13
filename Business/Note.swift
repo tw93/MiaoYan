@@ -39,6 +39,8 @@ public class Note: NSObject {
     private var hasUnpersistedChanges = false
     private var isRetired = false
     private var allowsInitialFileCreation = false
+    /// The directory is between its old and new paths; retain edits until relocation finishes.
+    var isMovingWithFolder = false
     public var hasPendingSave: Bool {
         guard !isRetired else { return false }
         return saveWorkItem.map { !$0.isCancelled } == true
@@ -646,6 +648,7 @@ public class Note: NSObject {
     @discardableResult
     private func executeSave(attributedString: NSAttributedString, globalStorage: Bool = true) -> Bool {
         guard !isRetired else { return false }
+        guard !isMovingWithFolder else { return false }
         guard !loadFailed else {
             saveWorkItem?.cancel()
             let error = CocoaError(.fileWriteNoPermission, userInfo: [NSFilePathErrorKey: url.path])

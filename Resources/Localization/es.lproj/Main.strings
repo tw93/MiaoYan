@@ -701,3 +701,6 @@
 "CdB-Blk-Mnu.title" = "Bloque de código";
 "Yei-Or-qiI.toolTip" = "Nueva Carpeta";
 "CpP-01-iTm.title" = "Copiar ruta";
+
+/* Class = "NSMenuItem"; title = "Move to…"; ObjectID = "MvF-01-iTm"; */
+"MvF-01-iTm.title" = "Mover a…";

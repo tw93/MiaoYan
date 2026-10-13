@@ -1,5 +1,6 @@
 import Cocoa
 import CoreServices
+import Darwin
 import Foundation
 import MiaoYanCore
 import UniformTypeIdentifiers
@@ -35,12 +36,16 @@ class Storage {
         "md", "markdown",
         "txt",
     ]
-    private static let attachmentDirectoryNames = ["i", "files"]
+    nonisolated private static let attachmentDirectoryNames = ["i", "files"]
 
     var pinned: Int = 0
 
     private var bookmarks = [URL]()
     private var scopedURLs = [URL]()
+    private(set) var isMovingFolder = false
+    private var movingFolderPaths: (source: URL, target: URL)?
+    private var deferredMoveEvents: [(URL, (URL) -> Void)] = []
+    private var folderMoveCompletions: [() -> Void] = []
 
     /// `loadsLibrary: false` gives an empty storage that never touches the
     /// user's notes folder, for tests that build their own folders.
@@ -115,10 +120,11 @@ class Storage {
                 values.isDirectory == true, values.isPackage == false,
                 !isAttachmentOnlyFolder(url: url)
             else { continue }
-            if let existing = projects.first(where: { $0.url == url }) {
+            let resolvedURL = url.resolvingSymlinksInPath()
+            if let existing = projects.first(where: { $0.url.path == resolvedURL.path }) {
                 found.append(existing)
             } else {
-                let sub = Project(url: url, parent: project)
+                let sub = Project(url: resolvedURL, parent: project)
                 _ = add(project: sub)
                 found.append(sub)
             }
@@ -262,6 +268,150 @@ class Storage {
             NoteVersionManager.shared.moveVersions(from: note.url, to: newNoteURL)
             note.url = newNoteURL
         }
+    }
+
+    enum FolderMoveError: Error, LocalizedError, Equatable {
+        case protectedFolder, invalidDestination, descendant, conflict, unsavedChanges, busy
+
+        var errorDescription: String? {
+            switch self {
+            case .protectedFolder: return "This folder cannot be moved."
+            case .invalidDestination: return "Choose a folder in the same library."
+            case .descendant: return "A folder cannot be moved into itself or its subfolders."
+            case .conflict: return "A folder with this name already exists at the destination."
+            case .unsavedChanges: return "Save the pending changes before moving this folder."
+            case .busy: return "A folder is already being moved."
+            }
+        }
+    }
+
+    /// Moves within one library without replacing files or changing Note identities.
+    /// The watcher must ignore the intermediate paths until the model follows the disk.
+    func moveFolder(_ project: Project, to destination: URL) async throws {
+        guard !isMovingFolder else { throw FolderMoveError.busy }
+        let root = project.getParent()
+        guard !project.isRoot, !project.isDefault, !project.isTrash, root.isRoot,
+            projects.contains(where: { $0 === project })
+        else { throw FolderMoveError.protectedFolder }
+
+        isMovingFolder = true
+        defer {
+            isMovingFolder = false
+            let completions = folderMoveCompletions
+            folderMoveCompletions.removeAll()
+            for completion in completions { completion() }
+        }
+        let source = project.url
+        let rootURL = root.url
+        let target = try await Task.detached {
+            try Self.folderMoveTarget(source: source, destination: destination, root: rootURL)
+        }.value
+        guard target.path != source.path else { return }
+
+        let folders = projects.filter { $0.url.path == source.path || $0.url.path.hasPrefix(source.path + "/") }
+        let notes = noteList.filter { $0.url.path.hasPrefix(source.path + "/") }
+        for note in notes where note.needsSave {
+            guard note.flushPendingSave(globalStorage: false) else { throw FolderMoveError.unsavedChanges }
+        }
+        let settings = folders.map { ($0.url.path, UserDefaults.standard.object(forKey: $0.url.path)) }
+        movingFolderPaths = (source, target)
+        for note in notes { note.isMovingWithFolder = true }
+        var movedOnDisk = false
+        defer {
+            for note in notes {
+                note.isMovingWithFolder = false
+                if note.needsSave { _ = note.flushPendingSave(globalStorage: false) }
+            }
+            movingFolderPaths = nil
+            let events = deferredMoveEvents
+            deferredMoveEvents.removeAll()
+            for (url, handler) in events {
+                let path = url.path
+                if movedOnDisk, path == source.path || path.hasPrefix(source.path + "/") {
+                    handler(URL(fileURLWithPath: target.path + path.dropFirst(source.path.count)))
+                } else {
+                    handler(url)
+                }
+            }
+        }
+        try await Task.detached {
+            // An exclusive rename cannot overwrite a racing destination or
+            // fall back to a long, partially completed cross-volume copy.
+            let result = source.path.withCString { from in
+                target.path.withCString { to in renamex_np(from, to, UInt32(RENAME_EXCL)) }
+            }
+            guard result == 0 else { throw POSIXError(POSIXErrorCode(rawValue: errno) ?? .EIO) }
+        }.value
+        movedOnDisk = true
+
+        let parentURL = target.deletingLastPathComponent()
+        var parent = root
+        let components = parentURL.pathComponents.dropFirst(rootURL.pathComponents.count)
+        for component in components {
+            let url = parent.url.appendingPathComponent(component, isDirectory: true)
+            if let existing = projects.first(where: { $0.url.path == url.path }) {
+                parent = existing
+            } else {
+                let folder = Project(url: url, parent: parent)
+                _ = add(project: folder)
+                parent = folder
+            }
+        }
+        relocateFolder(project, to: target)
+        project.parent = parent
+        for (oldPath, value) in settings {
+            guard let value else { continue }
+            let newPath = target.path + oldPath.dropFirst(source.path.count)
+            UserDefaults.standard.set(value, forKey: newPath)
+            UserDefaults.standard.removeObject(forKey: oldPath)
+        }
+        if let url = UserDefaultsManagement.lastSelectedURL, url.path.hasPrefix(source.path + "/") {
+            UserDefaultsManagement.lastSelectedURL = URL(fileURLWithPath: target.path + url.path.dropFirst(source.path.count))
+        }
+        if let path = UserDefaultsManagement.lastProjectPath, path == source.path || path.hasPrefix(source.path + "/") {
+            UserDefaultsManagement.lastProjectPath = target.path + path.dropFirst(source.path.count)
+        }
+    }
+
+    /// Unrelated watcher events keep flowing; affected events are rechecked
+    /// against their final paths after a successful move, or their old paths on failure.
+    func deferDuringFolderMove(at url: URL, handler: @escaping (URL) -> Void) -> Bool {
+        let url = url.resolvingSymlinksInPath()
+        guard let paths = movingFolderPaths,
+            [paths.source, paths.target].contains(where: { url.path == $0.path || url.path.hasPrefix($0.path + "/") })
+        else { return false }
+        deferredMoveEvents.append((url, handler))
+        return true
+    }
+
+    func deferUntilFolderMoveFinishes(_ completion: @escaping () -> Void) -> Bool {
+        guard isMovingFolder else { return false }
+        folderMoveCompletions.append(completion)
+        return true
+    }
+
+    nonisolated private static func folderMoveTarget(source: URL, destination: URL, root: URL) throws -> URL {
+        let source = source.resolvingSymlinksInPath().standardizedFileURL
+        let parent = destination.resolvingSymlinksInPath().standardizedFileURL
+        let root = root.resolvingSymlinksInPath().standardizedFileURL
+        guard source.path.hasPrefix(root.path + "/"),
+            parent.path == root.path || parent.path.hasPrefix(root.path + "/")
+        else { throw FolderMoveError.invalidDestination }
+        guard parent.path != source.path, !parent.path.hasPrefix(source.path + "/") else { throw FolderMoveError.descendant }
+        var folder = parent
+        while folder.path != root.path {
+            let values = try folder.resourceValues(forKeys: [.isDirectoryKey, .isPackageKey, .isHiddenKey])
+            guard values.isDirectory == true, values.isPackage != true,
+                values.isHidden != true,
+                !folder.lastPathComponent.hasPrefix("."),
+                !attachmentDirectoryNames.contains(folder.lastPathComponent)
+            else { throw FolderMoveError.invalidDestination }
+            folder.deleteLastPathComponent()
+        }
+        let target = parent.appendingPathComponent(source.lastPathComponent, isDirectory: true)
+        guard target.path != source.path else { return source }
+        guard !FileManager.default.fileExists(atPath: target.path) else { throw FolderMoveError.conflict }
+        return target
     }
 
     public func removeBy(project: Project) {
@@ -697,19 +847,19 @@ class Storage {
         let result = readDirectoryWithStatus(project.url)
         let documents = result.items
         // One set instead of scanning the whole list for every file.
-        let loadedURLs = Set(noteList.map(\.url))
+        let loadedPaths = Set(noteList.map { $0.url.path })
 
         for document in documents {
-            let url = document.url
+            let url = document.url.resolvingSymlinksInPath()
 
             guard !Self.shouldHideRemovedTrashItem(at: url, in: project) else { continue }
 
             // Check if note is already loaded to avoid duplicates
-            if loadedURLs.contains(url) {
+            if loadedPaths.contains(url.path) {
                 continue
             }
 
-            let note = Note(url: url.resolvingSymlinksInPath(), with: project)
+            let note = Note(url: url, with: project)
 
             if url.pathComponents.isEmpty {
                 continue

@@ -95,6 +95,10 @@ class SidebarProjectView: NSOutlineView,
         case #selector(renameMenu(_:)):
             return validateRenameMenuItem(sidebarItem: sidebarItem, menuItem: menuItem)
 
+        case #selector(moveFolderMenu(_:)):
+            guard let project = sidebarItem.project else { return false }
+            return sidebarItem.type == .Category && !project.isRoot && !project.isDefault && !project.isTrash
+
         case #selector(deleteMenu(_:)):
             return validateDeleteMenuItem(sidebarItem: sidebarItem, menuItem: menuItem)
 
@@ -977,6 +981,38 @@ class SidebarProjectView: NSOutlineView,
 
         cell.label.isEditable = true
         cell.label.becomeFirstResponder()
+    }
+
+    @IBAction func moveFolderMenu(_ sender: Any) {
+        guard let project = getSidebarItem()?.project, let window,
+            !project.isRoot, !project.isDefault, !project.isTrash
+        else { return }
+        let panel = NSOpenPanel()
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = false
+        panel.allowsMultipleSelection = false
+        panel.directoryURL = project.getParent().url
+        panel.prompt = I18n.str("Move")
+        panel.beginSheetModal(for: window) { [weak self] response in
+            guard response == .OK, let destination = panel.url, let self else { return }
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                let note = self.viewDelegate?.notesTableView.getSelectedNote()
+                do {
+                    try await self.storage.moveFolder(project, to: destination)
+                    self.reloadSidebar()
+                    if let row = self.revealRow(forProjectPath: project.url.path) {
+                        self.selectRowIndexes([row], byExtendingSelection: false)
+                    }
+                    self.viewDelegate?.updateTable {
+                        if let note { self.viewDelegate?.notesTableView.setSelected(note: note) }
+                    }
+                } catch {
+                    AppDelegate.trackError(error, context: "SidebarProjectView.moveFolder")
+                    MiaoYanAlert.show(message: I18n.str(error.localizedDescription), style: .warning, for: window)
+                }
+            }
+        }
     }
 
     @IBAction func deleteMenu(_ sender: Any) {

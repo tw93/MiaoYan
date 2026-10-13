@@ -166,6 +166,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
 
     }
 
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        if AppEnvironment.current.storage.deferUntilFolderMoveFinishes({
+            sender.reply(toApplicationShouldTerminate: true)
+        }) {
+            return .terminateLater
+        }
+        return .terminateNow
+    }
+
     func applicationWillTerminate(_ aNotification: Notification) {
         UserDefaultsManagement.clearSingleMode()
         if let vc = resolveViewController() {

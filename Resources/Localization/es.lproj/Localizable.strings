@@ -323,3 +323,12 @@
 "Duplicate" = "Duplicar";
 "MiaoYan PPT" = "MiaoYan PPT";
 "Toggle Split View" = "Alternar Vista Dividida";
+
+/* Folder moving */
+"Move to…" = "Mover a…";
+"This folder cannot be moved." = "Esta carpeta no se puede mover.";
+"Choose a folder in the same library." = "Elige una carpeta de la misma biblioteca.";
+"A folder cannot be moved into itself or its subfolders." = "Una carpeta no se puede mover a sí misma ni a sus subcarpetas.";
+"A folder with this name already exists at the destination." = "Ya existe una carpeta con este nombre en el destino.";
+"Save the pending changes before moving this folder." = "Guarda los cambios pendientes antes de mover esta carpeta.";
+"A folder is already being moved." = "Ya se está moviendo una carpeta.";

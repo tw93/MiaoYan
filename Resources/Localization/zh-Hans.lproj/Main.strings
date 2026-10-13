@@ -618,3 +618,6 @@
 "Ge6-vi-x3q.title" = "HTML";
 "UcZ-Ne-qv1.title" = "PDF";
 "YNW-vn-A3h.title" = "关于妙言";
+
+/* Class = "NSMenuItem"; title = "Move to…"; ObjectID = "MvF-01-iTm"; */
+"MvF-01-iTm.title" = "移动到…";

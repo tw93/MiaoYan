@@ -749,6 +749,53 @@ final class ShellModel {
         scope = .project(url)
     }
 
+    func promptMoveFolder(_ project: Project) {
+        guard let window = host?.view.window, !project.isRoot, !project.isDefault, !project.isTrash else { return }
+        let panel = NSOpenPanel()
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = false
+        panel.allowsMultipleSelection = false
+        panel.directoryURL = project.getParent().url
+        panel.prompt = I18n.str("Move")
+        panel.beginSheetModal(for: window) { [weak self] response in
+            guard response == .OK, let destination = panel.url else { return }
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                do {
+                    try await self.moveFolder(project, to: destination)
+                } catch {
+                    AppDelegate.trackError(error, context: "ShellModel.moveFolder")
+                    MiaoYanAlert.show(message: I18n.str(error.localizedDescription), style: .warning, for: window)
+                }
+            }
+        }
+    }
+
+    func moveFolder(_ project: Project, to destination: URL) async throws {
+        let oldURL = project.url
+        let chosenFolder = selectedFolder
+        let selected = selectedNotes
+        let openNote = selectedNote
+        let expanded = expandedFolders
+        try await storage.moveFolder(project, to: destination)
+        func moved(_ url: URL) -> URL {
+            guard url.path == oldURL.path || url.path.hasPrefix(oldURL.path + "/") else { return url }
+            return URL(fileURLWithPath: project.url.path + url.path.dropFirst(oldURL.path.count))
+        }
+        expandedFolders = Set(expanded.map(moved))
+        var parent = project.parent
+        while let folder = parent, !folder.isRoot {
+            expandedFolders.insert(folder.url)
+            parent = folder.parent
+        }
+        snippets.removeAll()
+        if let chosenFolder { scope = .project(chosenFolder.url) }
+        reload()
+        selectedNoteURL = openNote?.url ?? selectedNoteURL.map(moved)
+        extraSelectedURLs = Set(selected.filter { $0 !== openNote }.map(\.url))
+        onFoldersChanged?()
+    }
+
     /// Renames the folder on disk and moves its notes' URLs with it, as the
     /// storyboard sidebar does.
     func renameFolder(_ project: Project, to name: String) {

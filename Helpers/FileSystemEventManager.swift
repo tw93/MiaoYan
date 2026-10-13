@@ -44,11 +44,18 @@ class FileSystemEventManager {
 
     private func handleFileSystemEvent(_ event: FileWatcherEvent) {
         do {
-            guard !UserDataService.instance.fsUpdatesDisabled else { return }
-
             guard let url = createURL(from: event.path) else {
                 throw FileSystemError.invalidPath(event.path)
             }
+            if storage.deferDuringFolderMove(
+                at: url,
+                handler: { [weak self] url in
+                    self?.recheckMovedPath(url)
+                })
+            {
+                return
+            }
+            guard !UserDataService.instance.fsUpdatesDisabled else { return }
 
             guard !Self.isConflictBackup(url), isValidFileType(url) else { return }
 
@@ -73,6 +80,19 @@ class FileSystemEventManager {
             }
         } catch {
             AppDelegate.trackError(error, context: "FileSystemEventManager.handleEvent")
+        }
+    }
+
+    private func recheckMovedPath(_ url: URL) {
+        guard !Self.isConflictBackup(url), storage.allowedExtensions.contains(url.pathExtension) else { return }
+        if let note = storage.getBy(url: url) {
+            if FileManager.default.fileExists(atPath: url.path) {
+                recheckNote(note)
+            } else {
+                removeNote(note: note)
+            }
+        } else if FileManager.default.fileExists(atPath: url.path) {
+            importNote(url)
         }
     }
 
@@ -246,6 +266,7 @@ class FileSystemEventManager {
 
     @MainActor
     private func renameNote(note: Note) {
+        if storage.deferDuringFolderMove(at: note.url, handler: { [weak self] url in self?.recheckMovedPath(url) }) { return }
         if note.url == UserDataService.instance.focusOnImport {
             delegate?.fsReloadList(selecting: note) {
                 UserDataService.instance.focusOnImport = nil
@@ -265,6 +286,7 @@ class FileSystemEventManager {
 
     @MainActor
     private func reloadNote(note: Note) {
+        if storage.deferDuringFolderMove(at: note.url, handler: { [weak self] url in self?.recheckMovedPath(url) }) { return }
         // Skip reload while a debounced save is pending: the disk content
         // we'd read might be from before our save lands. Re-check shortly
         // after the save fires so a real external change is not lost.

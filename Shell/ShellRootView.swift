@@ -267,6 +267,9 @@ private struct ShellSidebarRow: View {
                     model.scope = row.id
                     model.renamingFolderURL = folder.url
                 }
+                if !folder.isRoot && !folder.isDefault && !folder.isTrash {
+                    Button(I18n.str("Move to…")) { model.promptMoveFolder(folder) }
+                }
                 Button(I18n.str("Show in Finder")) { NSWorkspace.shared.activateFileViewerSelecting([folder.url]) }
                 Button(I18n.str("Open in Terminal")) {
                     model.scope = row.id

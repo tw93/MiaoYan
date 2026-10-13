@@ -56,7 +56,7 @@ public class Project: Equatable {
     }
 
     public static func == (lhs: Project, rhs: Project) -> Bool {
-        lhs.url == rhs.url
+        lhs.url.path == rhs.url.path
     }
 
     public func loadLabel(_ label: String? = nil) {

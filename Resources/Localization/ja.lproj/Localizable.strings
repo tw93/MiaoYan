@@ -323,3 +323,12 @@
 "Duplicate" = "複写する";
 "MiaoYan PPT" = "妙言 スライド";
 "Toggle Split View" = "分割表示を切り替え";
+
+/* Folder moving */
+"Move to…" = "移動先…";
+"This folder cannot be moved." = "このフォルダは移動できません。";
+"Choose a folder in the same library." = "同じライブラリ内のフォルダを選んでください。";
+"A folder cannot be moved into itself or its subfolders." = "フォルダを自身やそのサブフォルダへ移動することはできません。";
+"A folder with this name already exists at the destination." = "移動先に同じ名前のフォルダがあります。";
+"Save the pending changes before moving this folder." = "フォルダを移動する前に変更を保存してください。";
+"A folder is already being moved." = "別のフォルダを移動中です。";
