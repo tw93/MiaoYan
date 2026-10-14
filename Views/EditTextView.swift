@@ -519,7 +519,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         let epoch = fillEpoch
         currentFillTask?.cancel()
 
-        note.reloadIfChangedOnDisk()
+        note.invalidateIfChangedOnDisk()
         if note.isContentLoaded {
             applyNoteContent(note: note, options: options, viewController: viewController)
         } else {

@@ -274,39 +274,6 @@
 /* Class = "NSMenuItem"; title = "Todo"; ObjectID = "FxB-UV-FA4"; */
 "FxB-UV-FA4.title" = "待辦事項";
 
-/* Class = "NSMenuItem"; title = "Quick Input"; ObjectID = "xgO-jF-1ab"; */
-"xgO-jF-1ab.title" = "Tab快捷輸入";
-
-/* Class = "NSMenu"; title = "Quick Input"; ObjectID = "1bu-5n-fpO"; */
-"1bu-5n-fpO.title" = "Tab快捷輸入";
-
-/* Class = "NSMenuItem"; title = "/time -> Insert current time"; ObjectID = "fWx-6p-Qn4"; */
-"fWx-6p-Qn4.title" = "/time -> 插入當前時間";
-
-/* Class = "NSMenuItem"; title = "/table -> Markdown table template"; ObjectID = "DgV-s3-FTw"; */
-"DgV-s3-FTw.title" = "/table -> Markdown 表格模板";
-
-/* Class = "NSMenuItem"; title = "/img -> Image tag template"; ObjectID = "Mjr-9Q-R9p"; */
-"Mjr-9Q-R9p.title" = "/img -> 圖片標籤模板";
-
-/* Class = "NSMenuItem"; title = "/video -> Video block template"; ObjectID = "l86-r1-q1S"; */
-"l86-r1-q1S.title" = "/video -> 影片區塊模板";
-
-/* Class = "NSMenuItem"; title = "/markmap -> Markmap block template"; ObjectID = "nCA-V8-jEl"; */
-"nCA-V8-jEl.title" = "/markmap -> Markmap 區塊模板";
-
-/* Class = "NSMenuItem"; title = "/mermaid -> Mermaid block template"; ObjectID = "H7F-cn-DrH"; */
-"H7F-cn-DrH.title" = "/mermaid -> Mermaid 區塊模板";
-
-/* Class = "NSMenuItem"; title = "/plantuml -> PlantUML block template"; ObjectID = "raS-V6-70A"; */
-"raS-V6-70A.title" = "/plantuml -> PlantUML 區塊模板";
-
-/* Class = "NSMenuItem"; title = "/fold -> Foldable details block"; ObjectID = "YFF-9q-sOk"; */
-"YFF-9q-sOk.title" = "/fold -> 可摺疊詳細區塊";
-
-/* Class = "NSMenuItem"; title = "/task -> Task list template"; ObjectID = "i2U-Vk-5TZ"; */
-"i2U-Vk-5TZ.title" = "/task -> 任務列表模板";
-
 /* Class = "NSMenuItem"; title = "Rename Folder"; ObjectID = "fzU-ZR-Ubv"; */
 "fzU-ZR-Ubv.title" = "重新命名檔案夾";
 
@@ -427,7 +394,6 @@
 /* Class = "NSMenuItem"; title = "Yes"; ObjectID = "lra-33-O1F"; */
 "lra-33-O1F.title" = "Yes";
 
-
 /* Class = "NSMenuItem"; title = "Show All"; ObjectID = "M15-Xw-GpW"; */
 "M15-Xw-GpW.title" = "顯示全部";
 
@@ -512,7 +478,6 @@
 /* Class = "NSWindow"; title = "Window"; ObjectID = "qod-hp-9wd"; */
 "qod-hp-9wd.title" = "視窗";
 
-
 /* Class = "NSMenuItem"; title = "Main Window"; ObjectID = "qZf-Xp-kDW"; */
 "qZf-Xp-kDW.title" = "主視窗";
 
@@ -569,7 +534,6 @@
 
 /* Class = "NSMenuItem"; title = "Picsee"; ObjectID = "Tog-9P-3TK"; */
 "Tog-9P-3TK.title" = "Picsee";
-
 
 /* Class = "NSMenuItem"; title = "JetBrains Mono"; ObjectID = "U3E-6j-h9N"; */
 "U3E-6j-h9N.title" = "JetBrains Mono";

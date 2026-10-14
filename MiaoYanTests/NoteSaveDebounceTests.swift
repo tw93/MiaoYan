@@ -89,7 +89,7 @@ final class NoteSaveDebounceTests: XCTestCase {
     /// File events are paused while typing, so a sync that lands then never
     /// reaches a resident note. Opening it must pick the new text up.
     @MainActor
-    func testResidentNoteRereadsAFileChangedElsewhere() throws {
+    func testResidentNoteRereadsAFileChangedElsewhere() async throws {
         let url = tempDir.appendingPathComponent("synced.md")
         try "old".write(to: url, atomically: true, encoding: .utf8)
         let project = Project(url: tempDir, label: "test", isRoot: true)
@@ -100,8 +100,10 @@ final class NoteSaveDebounceTests: XCTestCase {
         try "from the other Mac".write(to: url, atomically: true, encoding: .utf8)
         try FileManager.default.setAttributes([.modificationDate: Date().addingTimeInterval(60)], ofItemAtPath: url.path)
 
-        XCTAssertTrue(note.reloadIfChangedOnDisk())
+        XCTAssertTrue(note.invalidateIfChangedOnDisk())
+        await note.ensureContentLoadedAsync()
         XCTAssertEqual(note.content.string, "from the other Mac")
+        XCTAssertFalse(note.invalidateIfChangedOnDisk(), "the reread records the new modification date")
     }
 
     @MainActor
@@ -116,7 +118,7 @@ final class NoteSaveDebounceTests: XCTestCase {
 
         try FileManager.default.setAttributes([.modificationDate: Date().addingTimeInterval(60)], ofItemAtPath: url.path)
 
-        XCTAssertFalse(note.reloadIfChangedOnDisk(), "a pending local edit is never replaced by a silent reload")
+        XCTAssertFalse(note.invalidateIfChangedOnDisk(), "a pending local edit is never replaced by a silent reload")
         XCTAssertEqual(note.content.string, "typed here")
     }
 
@@ -166,23 +168,6 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertFalse(manager.hasVersions(for: stale), "nothing is left under the old path")
         manager.removeVersions(for: note)
         manager.waitForPendingWork()
-    }
-
-    /// Legacy notes decode to their own text, never to a lossy guess that
-    /// the next save would write back as UTF-8 mojibake.
-    func testLegacyEncodingsDecodeToTheirOwnText() throws {
-        func encoding(_ cf: CFStringEncodings) -> String.Encoding {
-            String.Encoding(rawValue: CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(cf.rawValue)))
-        }
-        let samples: [(String, String.Encoding)] = [
-            ("这是一篇旧的周报，记录了本周的工作。", encoding(.GB_18030_2000)),
-            ("這是一篇舊的週報，記錄了本週的工作。", encoding(.big5)),
-            ("plain café 中文", .utf8),
-        ]
-        for (text, encoding) in samples {
-            let data = try XCTUnwrap(text.data(using: encoding))
-            XCTAssertEqual(Note.decodeLegacy(data), text)
-        }
     }
 
     @MainActor
@@ -405,5 +390,22 @@ final class NoteSaveDebounceTests: XCTestCase {
         note.save(attributed: NSAttributedString(string: "edit after failure"))
         note.flushPendingSave(globalStorage: false)
         XCTAssertEqual(try String(contentsOf: sourceURL, encoding: .utf8), "edit after failure")
+    }
+
+    @MainActor
+    func testCaseOnlyRenameKeepsTheNewNameAndOtherNotesBlockRenames() throws {
+        let project = Project(url: tempDir, label: "test", isRoot: true)
+        let url = tempDir.appendingPathComponent("weekly.md")
+        try "body".write(to: url, atomically: true, encoding: .utf8)
+        try "other".write(to: tempDir.appendingPathComponent("Other.md"), atomically: true, encoding: .utf8)
+        let note = Note(url: url, with: project)
+
+        XCTAssertTrue(note.renameFile(to: "Weekly"))
+        let names = try FileManager.default.contentsOfDirectory(atPath: tempDir.path).sorted()
+        XCTAssertEqual(names, ["Other.md", "Weekly.md"], "a case-only rename must not fall back to a unique name")
+        XCTAssertEqual(note.url.lastPathComponent, "Weekly.md")
+
+        XCTAssertFalse(note.renameFile(to: "Other"), "an existing note is never renamed over")
+        XCTAssertEqual(try String(contentsOf: tempDir.appendingPathComponent("Other.md"), encoding: .utf8), "other")
     }
 }

@@ -48,4 +48,10 @@ final class FrontmatterTests: XCTestCase {
         XCTAssertFalse(Frontmatter.opensUnclosedBlock("---\ntitle: Long\n---\nBody"))
         XCTAssertFalse(Frontmatter.opensUnclosedBlock("# Heading"))
     }
+
+    func testLineCountCoversTheBlockInBothLineEndings() {
+        XCTAssertEqual(Frontmatter.lineCount(of: "---\ntitle: A\ntags: b\n---\nBody"), 4)
+        XCTAssertEqual(Frontmatter.lineCount(of: "---\r\ntitle: A\r\n---\r\nBody"), 3)
+        XCTAssertEqual(Frontmatter.lineCount(of: "# No frontmatter\nBody"), 0)
+    }
 }

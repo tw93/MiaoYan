@@ -221,39 +221,6 @@
 /* Class = "NSMenuItem"; title = "Todo"; ObjectID = "FxB-UV-FA4"; */
 "FxB-UV-FA4.title" = "Todo";
 
-/* Class = "NSMenuItem"; title = "Quick Input"; ObjectID = "xgO-jF-1ab"; */
-"xgO-jF-1ab.title" = "Entrada Rápida";
-
-/* Class = "NSMenu"; title = "Quick Input"; ObjectID = "1bu-5n-fpO"; */
-"1bu-5n-fpO.title" = "Entrada Rápida";
-
-/* Class = "NSMenuItem"; title = "/time -> Insert current time"; ObjectID = "fWx-6p-Qn4"; */
-"fWx-6p-Qn4.title" = "/time -> Insertar hora actual";
-
-/* Class = "NSMenuItem"; title = "/table -> Markdown table template"; ObjectID = "DgV-s3-FTw"; */
-"DgV-s3-FTw.title" = "/table -> Plantilla de tabla Markdown";
-
-/* Class = "NSMenuItem"; title = "/img -> Image tag template"; ObjectID = "Mjr-9Q-R9p"; */
-"Mjr-9Q-R9p.title" = "/img -> Plantilla de etiqueta de imagen";
-
-/* Class = "NSMenuItem"; title = "/video -> Video block template"; ObjectID = "l86-r1-q1S"; */
-"l86-r1-q1S.title" = "/video -> Plantilla de bloque de video";
-
-/* Class = "NSMenuItem"; title = "/markmap -> Markmap block template"; ObjectID = "nCA-V8-jEl"; */
-"nCA-V8-jEl.title" = "/markmap -> Plantilla de bloque Markmap";
-
-/* Class = "NSMenuItem"; title = "/mermaid -> Mermaid block template"; ObjectID = "H7F-cn-DrH"; */
-"H7F-cn-DrH.title" = "/mermaid -> Plantilla de bloque Mermaid";
-
-/* Class = "NSMenuItem"; title = "/plantuml -> PlantUML block template"; ObjectID = "raS-V6-70A"; */
-"raS-V6-70A.title" = "/plantuml -> Plantilla de bloque PlantUML";
-
-/* Class = "NSMenuItem"; title = "/fold -> Foldable details block"; ObjectID = "YFF-9q-sOk"; */
-"YFF-9q-sOk.title" = "/fold -> Bloque de detalles plegable";
-
-/* Class = "NSMenuItem"; title = "/task -> Task list template"; ObjectID = "i2U-Vk-5TZ"; */
-"i2U-Vk-5TZ.title" = "/task -> Plantilla de lista de tareas";
-
 /* Class = "NSMenuItem"; title = "Clean Unused Attachments"; ObjectID = "G9H-Lg-TXE"; */
 "G9H-Lg-TXE.title" = "Limpiar Archivos Adjuntos Sin Usar";
 
@@ -304,7 +271,6 @@
 
 /* Class = "NSMenu"; title = "Export"; ObjectID = "LoU-Gc-oM3"; */
 "LoU-Gc-oM3.title" = "Exportar";
-
 
 /* Class = "NSMenuItem"; title = "Show All"; ObjectID = "M15-Xw-GpW"; */
 "M15-Xw-GpW.title" = "Mostrar Todo";
@@ -360,7 +326,6 @@
 /* Class = "NSMenuItem"; title = "13"; ObjectID = "Q3T-TQ-ewQ"; */
 "Q3T-TQ-ewQ.title" = "13";
 
-
 /* Class = "NSMenuItem"; title = "SF Pro Text"; ObjectID = "RSK-NX-AjP"; */
 "RSK-NX-AjP.title" = "SF Pro Text";
 
@@ -399,7 +364,6 @@
 
 /* Class = "NSMenuItem"; title = "Picsee"; ObjectID = "Tog-9P-3TK"; */
 "Tog-9P-3TK.title" = "Picsee";
-
 
 /* Class = "NSMenuItem"; title = "JetBrains Mono"; ObjectID = "U3E-6j-h9N"; */
 "U3E-6j-h9N.title" = "JetBrains Mono";

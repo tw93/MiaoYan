@@ -125,7 +125,7 @@ final class NoteVersionManager: @unchecked Sendable {
         }
     }
 
-    /// Runs after queued version work, for tests and callers that need it done.
+    /// Returns once queued version work has run; tests use it to read the result.
     func waitForPendingWork() {
         queue.sync {}
     }

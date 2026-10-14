@@ -379,4 +379,38 @@ final class StorageRelocationTests: XCTestCase {
         XCTAssertEqual(outside.url.path, base.appendingPathComponent("Workshop/c.md").path, "a sibling sharing the name prefix stays put")
         XCTAssertTrue(storage.getProjects().contains(work), "the renamed folder is still registered")
     }
+
+    @MainActor
+    func testRenamingAFolderKeepsItsSettingsAndRejectsBadNames() async throws {
+        try await withMoveLibrary { storage, _, source, _ in
+            let nested = try XCTUnwrap(storage.getChildProjects(project: source).first)
+            source.showInCommon = false
+            source.saveSettings()
+            let previousSelected = UserDefaultsManagement.lastSelectedURL
+            let previousProject = UserDefaultsManagement.lastProjectPath
+            defer {
+                UserDefaultsManagement.lastSelectedURL = previousSelected
+                UserDefaultsManagement.lastProjectPath = previousProject
+            }
+            let selected = nested.url.appendingPathComponent("note.md")
+            UserDefaultsManagement.lastSelectedURL = selected
+            UserDefaultsManagement.lastProjectPath = nested.url.path
+            let oldPath = source.url.path
+
+            XCTAssertNil(try storage.renameFolder(source, to: "  "))
+            XCTAssertNil(try storage.renameFolder(source, to: source.url.lastPathComponent))
+            XCTAssertNil(try storage.renameFolder(source, to: "Archive/Work"))
+            XCTAssertEqual(source.url.path, oldPath)
+
+            let renamed = try XCTUnwrap(try storage.renameFolder(source, to: " Jobs "))
+            XCTAssertEqual(renamed.lastPathComponent, "Jobs")
+            XCTAssertTrue(FileManager.default.fileExists(atPath: renamed.path))
+            XCTAssertNil(UserDefaults.standard.object(forKey: oldPath))
+            source.showInCommon = true
+            source.loadSettings()
+            XCTAssertFalse(source.showInCommon, "per-folder settings follow the new path")
+            XCTAssertEqual(UserDefaultsManagement.lastSelectedURL?.path, renamed.appendingPathComponent("Nested/note.md").path)
+            XCTAssertEqual(UserDefaultsManagement.lastProjectPath, renamed.appendingPathComponent("Nested").path)
+        }
+    }
 }

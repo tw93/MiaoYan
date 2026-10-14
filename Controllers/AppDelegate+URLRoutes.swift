@@ -73,7 +73,7 @@ extension AppDelegate {
             at: fileURL.deletingLastPathComponent(),
             includingPropertiesForKeys: [.contentModificationDateKey, .creationDateKey],
             options: .skipsHiddenFiles)
-        return contents?.filter { extensions.contains($0.pathExtension) }
+        return contents?.filter { extensions.contains($0.pathExtension.lowercased()) }
     }
 
     @MainActor

@@ -748,6 +748,9 @@ class MPreviewView: WKWebView, WKUIDelegate {
         // a long note left the preview on it while the list showed another.
         loadEpoch &+= 1
         let epoch = loadEpoch
+        // A content update already in flight was for the previous document;
+        // letting it finish would set `note` back to the note it started on.
+        contentUpdateVersion &+= 1
         Task { @MainActor [weak self, note] in
             guard let self else { return }
             let markdownString = note.getPrettifiedContent()

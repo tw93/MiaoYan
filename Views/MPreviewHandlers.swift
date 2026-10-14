@@ -29,10 +29,11 @@ class HandlerCheckbox: NSObject, WKScriptMessageHandler {
         let marker = (text as NSString).substring(with: range)
         let toggled = marker == " " ? "x" : " "
 
-        // An editor holding this note takes the edit itself, so the next
-        // keystroke cannot copy the old buffer back over the toggle.
-        if let editor = preview?.window.flatMap(HandlerCheckbox.editor(in:)), editor.storageNote === note,
-            editor.string == text
+        // An editable editor holding this note takes the edit itself, so the
+        // next keystroke cannot copy the old buffer back over the toggle. In
+        // preview mode the editor is read-only and would drop the insert.
+        if let editor = preview?.window.flatMap(HandlerCheckbox.editor(in:)), editor.isEditable,
+            editor.storageNote === note, editor.string == text
         {
             editor.insertText(toggled, replacementRange: range)
             return
@@ -45,9 +46,7 @@ class HandlerCheckbox: NSObject, WKScriptMessageHandler {
     /// The range of the space or x inside `[ ]` on the task item at
     /// `bodyLine` (1-based, counted after the frontmatter the preview drops).
     nonisolated static func taskMarkerRange(in text: String, bodyLine: Int) -> NSRange? {
-        let body = Frontmatter.body(of: text)
-        let skippedLines = text[..<body.startIndex].reduce(0) { $1 == "\n" || $1 == "\r\n" ? $0 + 1 : $0 }
-        let target = skippedLines + bodyLine - 1
+        let target = Frontmatter.lineCount(of: text) + bodyLine - 1
         let ns = text as NSString
         var lineStart = 0
         for _ in 0..<max(target, 0) {

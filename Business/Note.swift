@@ -134,6 +134,7 @@ public class Note: NSObject {
             content = NSMutableAttributedString(attributedString: attributedString)
             isContentLoaded = true
             loadFailed = false
+            loadModifiedLocalAt()
             return
         }
         markLoadFailure(context: "Note.load")
@@ -144,6 +145,7 @@ public class Note: NSObject {
             content = NSMutableAttributedString(attributedString: attributedString)
             isContentLoaded = true
             loadFailed = false
+            loadModifiedLocalAt()
             return
         }
         markLoadFailure(context: "Note.loadAsync")
@@ -193,14 +195,14 @@ public class Note: NSObject {
     /// last read or wrote it, when there are no local edits waiting. File
     /// events are paused while typing, so a sync that lands then is never
     /// delivered; without this the stale text is shown and saved back over
-    /// the synced version on the next switch.
+    /// the synced version on the next switch. Only marks the text stale, so
+    /// the caller's async load reads the file off the main thread.
     @discardableResult
-    func reloadIfChangedOnDisk() -> Bool {
+    func invalidateIfChangedOnDisk() -> Bool {
         guard isContentLoaded, !hasUnpersistedChanges, !hasPendingSave,
             let modifiedAt = getFileModifiedDate(), modifiedAt > modifiedLocalAt
         else { return false }
-        forceReload()
-        loadModifiedLocalAt()
+        isContentLoaded = false
         return true
     }
 
@@ -254,7 +256,9 @@ public class Note: NSObject {
         do {
             var destination = to
 
-            if FileManager.default.fileExists(atPath: to.path) {
+            // On a case-insensitive volume a case-only rename finds the note
+            // itself at the destination; that is not a clash to rename around.
+            if FileManager.default.fileExists(atPath: to.path), !Self.isSameFile(url, to) {
                 guard let project = project ?? sharedStorage.getProjectBy(url: to) else { return false }
 
                 let ext = getExtensionForContainer()
@@ -280,6 +284,14 @@ public class Note: NSObject {
         }
 
         return true
+    }
+
+    nonisolated static func isSameFile(_ a: URL, _ b: URL) -> Bool {
+        let key: Set<URLResourceKey> = [.fileResourceIdentifierKey]
+        guard let first = try? a.resourceValues(forKeys: key).fileResourceIdentifier,
+            let second = try? b.resourceValues(forKeys: key).fileResourceIdentifier
+        else { return false }
+        return first.isEqual(second)
     }
 
     func getNewURL(name: String) -> URL {
@@ -454,7 +466,7 @@ public class Note: NSObject {
 
             return try NSAttributedString(url: url, options: options, documentAttributes: nil)
         } catch {
-            if let data = try? Data(contentsOf: url), let text = Self.decodeLegacy(data) {
+            if let data = try? Data(contentsOf: url), let text = NoteText.decode(data) {
                 return NSAttributedString(string: text)
             }
         }
@@ -462,27 +474,11 @@ public class Note: NSObject {
         return nil
     }
 
-    /// A note that is not UTF-8: the system's guess only when it decodes
-    /// without loss, then GB18030 for old Chinese notes. Accepting a lossy
-    /// guess turned GBK or Big5 notes into mojibake that the next save wrote
-    /// back as UTF-8.
-    nonisolated static func decodeLegacy(_ data: Data) -> String? {
-        if let text = String(data: data, encoding: .utf8) { return text }
-        var converted: NSString?
-        var lossy: ObjCBool = false
-        let encoding = NSString.stringEncoding(
-            for: data, encodingOptions: [.allowLossyKey: false], convertedString: &converted, usedLossyConversion: &lossy)
-        if encoding != 0, !lossy.boolValue, let text = converted as String? {
-            return text
-        }
-        return NoteText.decode(data)
-    }
-
     func getContentAsync() async -> NSAttributedString? {
         guard let url = getContentFileURL() else { return nil }
 
         let stringContent = await Task.detached(priority: .userInitiated) { () -> String? in
-            (try? Data(contentsOf: url)).flatMap(Note.decodeLegacy)
+            (try? Data(contentsOf: url)).flatMap(NoteText.decode)
         }.value
 
         guard let string = stringContent else { return nil }

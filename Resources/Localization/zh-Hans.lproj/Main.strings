@@ -94,7 +94,6 @@
 /* Class = "NSMenuItem"; title = "Show All"; ObjectID = "M15-Xw-GpW"; */
 "M15-Xw-GpW.title" = "显示全部";
 
-
 /* Class = "NSMenu"; title = "Sort by"; ObjectID = "05n-RU-nOV"; */
 "05n-RU-nOV.title" = "排序方式";
 
@@ -103,7 +102,6 @@
 
 /* Class = "NSMenuItem"; title = "Redo"; ObjectID = "6dh-zS-Vam"; */
 "6dh-zS-Vam.title" = "重做";
-
 
 /* Class = "NSMenuItem"; title = "Minimize"; ObjectID = "A5V-Wm-if2"; */
 "A5V-Wm-if2.title" = "最小化";
@@ -207,7 +205,6 @@
 /* Class = "NSMenuItem"; title = "Delete"; ObjectID = "fHG-zk-g0k"; */
 "fHG-zk-g0k.title" = "删除";
 
-
 /* Class = "NSMenuItem"; title = "Zoom"; ObjectID = "FQV-5x-ffs"; */
 "FQV-5x-ffs.title" = "缩放";
 
@@ -271,39 +268,6 @@
 /* Class = "NSMenuItem"; title = "Todo"; ObjectID = "FxB-UV-FA4"; */
 "FxB-UV-FA4.title" = "待办";
 
-/* Class = "NSMenuItem"; title = "Quick Input"; ObjectID = "xgO-jF-1ab"; */
-"xgO-jF-1ab.title" = "Tab快捷输入";
-
-/* Class = "NSMenu"; title = "Quick Input"; ObjectID = "1bu-5n-fpO"; */
-"1bu-5n-fpO.title" = "Tab快捷输入";
-
-/* Class = "NSMenuItem"; title = "/time -> Insert current time"; ObjectID = "fWx-6p-Qn4"; */
-"fWx-6p-Qn4.title" = "/time -> 插入当前时间";
-
-/* Class = "NSMenuItem"; title = "/table -> Markdown table template"; ObjectID = "DgV-s3-FTw"; */
-"DgV-s3-FTw.title" = "/table -> Markdown 表格模板";
-
-/* Class = "NSMenuItem"; title = "/img -> Image tag template"; ObjectID = "Mjr-9Q-R9p"; */
-"Mjr-9Q-R9p.title" = "/img -> 图片标签模板";
-
-/* Class = "NSMenuItem"; title = "/video -> Video block template"; ObjectID = "l86-r1-q1S"; */
-"l86-r1-q1S.title" = "/video -> 视频块模板";
-
-/* Class = "NSMenuItem"; title = "/markmap -> Markmap block template"; ObjectID = "nCA-V8-jEl"; */
-"nCA-V8-jEl.title" = "/markmap -> Markmap 区块模板";
-
-/* Class = "NSMenuItem"; title = "/mermaid -> Mermaid block template"; ObjectID = "H7F-cn-DrH"; */
-"H7F-cn-DrH.title" = "/mermaid -> Mermaid 区块模板";
-
-/* Class = "NSMenuItem"; title = "/plantuml -> PlantUML block template"; ObjectID = "raS-V6-70A"; */
-"raS-V6-70A.title" = "/plantuml -> PlantUML 区块模板";
-
-/* Class = "NSMenuItem"; title = "/fold -> Foldable details block"; ObjectID = "YFF-9q-sOk"; */
-"YFF-9q-sOk.title" = "/fold -> 可折叠详情块";
-
-/* Class = "NSMenuItem"; title = "/task -> Task list template"; ObjectID = "i2U-Vk-5TZ"; */
-"i2U-Vk-5TZ.title" = "/task -> 任务列表模板";
-
 /* Class = "NSMenuItem"; title = "Shift Right"; ObjectID = "Iba-Po-ajH"; */
 "Iba-Po-ajH.title" = "左移";
 
@@ -312,9 +276,6 @@
 
 /* Class = "NSTextFieldCell"; title = "Hint:"; ObjectID = "ioc-u5-XRA"; */
 "ioc-u5-XRA.title" = "提示：";
-
-/* Class = "NSWindow"; title = "MiaoYan"; ObjectID = "IQv-IB-iLA"; */
-"IQv-IB-iLA.title" = "妙言";
 
 /* Class = "NSMenuItem"; title = "Pin/unPin"; ObjectID = "jFN-Dp-LON"; */
 "jFN-Dp-LON.title" = "置顶/取消置顶";

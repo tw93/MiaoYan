@@ -1225,8 +1225,7 @@ extension ViewController {
         editorLineStartsCache = starts
         editorLineStartsCacheLength = storage.length
         let text = storage.string
-        let body = Frontmatter.body(of: text)
-        editorFrontmatterLines = text[..<body.startIndex].reduce(0) { $1 == "\n" || $1 == "\r\n" ? $0 + 1 : $0 }
+        editorFrontmatterLines = Frontmatter.lineCount(of: text)
         return starts
     }
 

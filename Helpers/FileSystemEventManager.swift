@@ -84,7 +84,7 @@ class FileSystemEventManager {
     }
 
     private func recheckMovedPath(_ url: URL) {
-        guard !Self.isConflictBackup(url), storage.allowedExtensions.contains(url.pathExtension) else { return }
+        guard !Self.isConflictBackup(url), storage.allowedExtensions.contains(url.pathExtension.lowercased()) else { return }
         if let note = storage.getBy(url: url) {
             if FileManager.default.fileExists(atPath: url.path) {
                 recheckNote(note)
@@ -130,7 +130,7 @@ class FileSystemEventManager {
             return false
         }
 
-        return storage.allowedExtensions.contains(url.pathExtension) && storage.isValidUTI(url: url)
+        return storage.allowedExtensions.contains(url.pathExtension.lowercased()) && storage.isValidUTI(url: url)
     }
 
     private func handleFileRemoval(url: URL) throws {
@@ -196,7 +196,7 @@ class FileSystemEventManager {
         let parentPath = url.deletingLastPathComponent().resolvingSymlinksInPath().path
         let resolvedPathList = pathList.map { URL(fileURLWithPath: $0).resolvingSymlinksInPath().path }
         return FileManager.default.fileExists(atPath: url.path)
-            && storage.allowedExtensions.contains(url.pathExtension)
+            && storage.allowedExtensions.contains(url.pathExtension.lowercased())
             && storage.isValidUTI(url: url)
             && resolvedPathList.contains(parentPath)
     }

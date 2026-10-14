@@ -161,16 +161,15 @@ class SidebarCellView: NSTableCellView, NSTextFieldDelegate {
         let cell = sender.superview as? SidebarCellView
         guard let si = cell?.objectValue as? SidebarItem, let project = si.project else { return }
 
-        let oldURL = project.url
-        let newURL = project.url.deletingLastPathComponent().appendingPathComponent(sender.stringValue)
-
         do {
-            try FileManager.default.moveItem(at: oldURL, to: newURL)
-            storage.relocateFolder(project, to: newURL)
+            guard try storage.renameFolder(project, to: sender.stringValue) != nil else {
+                sender.stringValue = project.url.lastPathComponent
+                return
+            }
         } catch {
             sender.stringValue = project.url.lastPathComponent
             MiaoYanAlert.show(
-                message: error.localizedDescription,
+                message: I18n.str(error.localizedDescription),
                 style: .warning,
                 for: window
             )

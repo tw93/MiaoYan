@@ -20,6 +20,14 @@ final class NoteSearchReaderTests: XCTestCase {
         XCTAssertEqual(try NoteSearchReader.read(url), "")
     }
 
+    func testReadsGBKNoteForSearch() throws {
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: url) }
+        let text = "这是一篇旧的周报"
+        try XCTUnwrap(text.data(using: NoteTextTests.encoding(.GB_18030_2000))).write(to: url)
+        XCTAssertEqual(try NoteSearchReader.read(url), text)
+    }
+
     func testCancellationStopsBeforeOpeningFile() async {
         let task = Task {
             withUnsafeCurrentTask { $0?.cancel() }
@@ -33,6 +41,28 @@ final class NoteSearchReaderTests: XCTestCase {
             }
         }
         await task.value
+    }
+}
+
+final class NoteTextTests: XCTestCase {
+    static func encoding(_ cf: CFStringEncodings) -> String.Encoding {
+        String.Encoding(rawValue: CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(cf.rawValue)))
+    }
+
+    /// Legacy notes decode to their own text, never to a lossy guess that
+    /// the next save would write back as UTF-8 mojibake.
+    func testLegacyEncodingsDecodeToTheirOwnText() throws {
+        let samples: [(String, String.Encoding)] = [
+            ("这是一篇旧的周报，记录了本周的工作。", Self.encoding(.GB_18030_2000)),
+            ("這是一篇舊的週報，記錄了本週的工作。", Self.encoding(.big5)),
+            ("plain café 中文", .utf8),
+            ("UTF-16 note 中文", .utf16),
+            ("Windows note: café, naïve, résumé", .windowsCP1252),
+        ]
+        for (text, encoding) in samples {
+            let data = try XCTUnwrap(text.data(using: encoding))
+            XCTAssertEqual(NoteText.decode(data), text, "\(encoding)")
+        }
     }
 }
 

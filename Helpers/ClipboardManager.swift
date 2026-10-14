@@ -28,9 +28,12 @@ class ClipboardManager {
                 .filter { $0.length > 0 && NSMaxRange($0) <= text.length }
                 .map { text.substring(with: $0) }
                 .joined(separator: "\n")
+            // Empty carets copy nothing rather than clearing the clipboard,
+            // and leading indentation of the first range is part of the copy.
+            guard !combined.isEmpty else { return true }
             let pasteboard = NSPasteboard.general
             pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
-            pasteboard.setString(combined.trim().removeLastNewLine(), forType: NSPasteboard.PasteboardType.string)
+            pasteboard.setString(combined.removeLastNewLine(), forType: NSPasteboard.PasteboardType.string)
             return true
         }
 
@@ -164,12 +167,14 @@ class ClipboardManager {
             // Only Support PicGo and PicList via HTTP
             if picType == "PicGo" || picType == "PicList" {
                 host?.toast(message: I18n.str("Image upload in progress~"))
-                // A placeholder holds the spot, as for uPic: inserting the link
-                // at the cursor when the upload finished dropped it wherever the
-                // cursor had moved, or over text selected meanwhile.
-                let placeholderText = Self.makeUploadPlaceholder()
+                // The local link holds the spot until the upload finishes:
+                // inserting the link at the cursor afterwards dropped it wherever
+                // the cursor had moved. The file name is unique, and a quit or a
+                // failed upload leaves a working local image instead of a
+                // placeholder that also orphaned the file.
+                let placeholderText = defaultImage.string
                 textView.breakUndoCoalescing()
-                textView.insertText(NSAttributedString(string: placeholderText), replacementRange: textView.selectedRange())
+                textView.insertText(defaultImage, replacementRange: textView.selectedRange())
 
                 postToPicGo(imagePath: imagePath, serverURL: uploadServerURL) { [weak self] result, error in
                     Task { @MainActor in
@@ -178,7 +183,6 @@ class ClipboardManager {
                             self.replacePlaceholderWithURL(placeholder: placeholderText, cloudURL: resultString, textView: textView, note: note)
                             self.deleteImage(tempPath: tempPath)
                         } else {
-                            self.replacePlaceholderWithURL(placeholder: placeholderText, cloudURL: path, textView: textView, note: note)
                             if let error {
                                 AppDelegate.trackError(error, context: "ClipboardManager.uploadToCloudAsync")
                             }
@@ -423,7 +427,15 @@ class ClipboardManager {
         if textView.storageNote === note,
             let match = regex.firstMatch(in: storageContent, range: NSRange(location: 0, length: (storageContent as NSString).length))
         {
-            storage.replaceCharacters(in: match.range, with: replacement)
+            // Going through shouldChangeText registers the swap with undo, so
+            // Command-Z afterwards does not undo a stale range over the URL.
+            if textView.shouldChangeText(in: match.range, replacementString: replacement) {
+                storage.replaceCharacters(in: match.range, with: replacement)
+                textView.didChangeText()
+            } else {
+                storage.replaceCharacters(in: match.range, with: replacement)
+                textView.undoManager?.removeAllActions()
+            }
             textView.saveTextStorageContent(to: note)
             note.save()
             return
@@ -438,6 +450,10 @@ class ClipboardManager {
             note.save()
             if let vc = textView.window?.contentViewController as? ViewController {
                 vc.refillEditArea(suppressSave: true)
+            } else if textView.isShellHosted, textView.storageNote === note, #available(macOS 14, *),
+                let shell = (NSApp.delegate as? AppDelegate)?.shellWindowController as? ShellWindowController
+            {
+                shell.model.editor.reload(note)
             }
         }
     }

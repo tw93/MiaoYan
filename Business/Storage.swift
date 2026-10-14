@@ -40,7 +40,6 @@ class Storage {
 
     var pinned: Int = 0
 
-    private var bookmarks = [URL]()
     private var scopedURLs = [URL]()
     private(set) var isMovingFolder = false
     private var movingFolderPaths: (source: URL, target: URL)?
@@ -68,30 +67,19 @@ class Storage {
             }
         }
 
-        var name = url.lastPathComponent
+        checkTrashForVolume(url: addRootProject(url: url).url)
+    }
 
+    /// Registers the library root, named "iCloud Drive" when it is that.
+    @discardableResult
+    private func addRootProject(url: URL) -> Project {
+        var name = url.lastPathComponent
         if let iCloudURL = getCloudDrive(), iCloudURL == url {
             name = "iCloud Drive"
         }
-
         let project = Project(url: url, label: name, isRoot: true, isDefault: true)
-
         _ = add(project: project)
-
-        checkTrashForVolume(url: project.url)
-
-        for url in bookmarks {
-            if url.pathExtension == "css" {
-                continue
-            }
-
-            guard !projectExist(url: url) else {
-                continue
-            }
-
-            let project = Project(url: url, label: url.lastPathComponent, isRoot: true)
-            _ = add(project: project)
-        }
+        return project
     }
 
     public func getChildProjects(project: Project) -> [Project] {
@@ -120,11 +108,17 @@ class Storage {
                 values.isDirectory == true, values.isPackage == false,
                 !isAttachmentOnlyFolder(url: url)
             else { continue }
-            let resolvedURL = url.resolvingSymlinksInPath()
-            if let existing = projects.first(where: { $0.url.path == resolvedURL.path }) {
+            // The library scan registers folders under the path as listed; a
+            // moved folder is registered under its resolved path. Match either,
+            // and register new ones as listed, or a library reached through a
+            // symlink gets two folders for one directory.
+            let resolvedPath = url.resolvingSymlinksInPath().path
+            if let existing = projects.first(where: { $0.url.path == url.path })
+                ?? projects.first(where: { $0.url.path == resolvedPath })
+            {
                 found.append(existing)
             } else {
-                let sub = Project(url: resolvedURL, parent: project)
+                let sub = Project(url: url, parent: project)
                 _ = add(project: sub)
                 found.append(sub)
             }
@@ -259,7 +253,18 @@ class Storage {
             if let info = loadedProjectInfo.removeValue(forKey: folder.url.path) {
                 loadedProjectInfo[path] = info
             }
+            // Per-folder sort and display settings are keyed by path.
+            if let value = UserDefaults.standard.object(forKey: folder.url.path) {
+                UserDefaults.standard.set(value, forKey: path)
+                UserDefaults.standard.removeObject(forKey: folder.url.path)
+            }
             folder.url = URL(fileURLWithPath: path, isDirectory: true)
+        }
+        if let url = UserDefaultsManagement.lastSelectedURL, let path = moved(url.path) {
+            UserDefaultsManagement.lastSelectedURL = URL(fileURLWithPath: path)
+        }
+        if let path = UserDefaultsManagement.lastProjectPath, let movedPath = moved(path) {
+            UserDefaultsManagement.lastProjectPath = movedPath
         }
         project.label = newURL.lastPathComponent
         for note in noteList {
@@ -268,6 +273,19 @@ class Storage {
             NoteVersionManager.shared.moveVersions(from: note.url, to: newNoteURL)
             note.url = newNoteURL
         }
+    }
+
+    /// Renames a folder in place for both sidebars. Returns nil when the name
+    /// is empty, unchanged or would reach outside the parent folder.
+    func renameFolder(_ project: Project, to name: String) throws -> URL? {
+        let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty, name != project.url.lastPathComponent, !name.contains("/"), name != ".", name != ".."
+        else { return nil }
+        guard !isMovingFolder else { throw FolderMoveError.busy }
+        let newURL = project.url.deletingLastPathComponent().appendingPathComponent(name, isDirectory: true)
+        try FileManager.default.moveItem(at: project.url, to: newURL)
+        relocateFolder(project, to: newURL)
+        return newURL
     }
 
     enum FolderMoveError: Error, LocalizedError, Equatable {
@@ -308,12 +326,10 @@ class Storage {
         }.value
         guard target.path != source.path else { return }
 
-        let folders = projects.filter { $0.url.path == source.path || $0.url.path.hasPrefix(source.path + "/") }
         let notes = noteList.filter { $0.url.path.hasPrefix(source.path + "/") }
         for note in notes where note.needsSave {
             guard note.flushPendingSave(globalStorage: false) else { throw FolderMoveError.unsavedChanges }
         }
-        let settings = folders.map { ($0.url.path, UserDefaults.standard.object(forKey: $0.url.path)) }
         movingFolderPaths = (source, target)
         for note in notes { note.isMovingWithFolder = true }
         var movedOnDisk = false
@@ -359,18 +375,6 @@ class Storage {
         }
         relocateFolder(project, to: target)
         project.parent = parent
-        for (oldPath, value) in settings {
-            guard let value else { continue }
-            let newPath = target.path + oldPath.dropFirst(source.path.count)
-            UserDefaults.standard.set(value, forKey: newPath)
-            UserDefaults.standard.removeObject(forKey: oldPath)
-        }
-        if let url = UserDefaultsManagement.lastSelectedURL, url.path.hasPrefix(source.path + "/") {
-            UserDefaultsManagement.lastSelectedURL = URL(fileURLWithPath: target.path + url.path.dropFirst(source.path.count))
-        }
-        if let path = UserDefaultsManagement.lastProjectPath, path == source.path || path.hasPrefix(source.path + "/") {
-            UserDefaultsManagement.lastProjectPath = target.path + path.dropFirst(source.path.count)
-        }
     }
 
     /// Unrelated watcher events keep flowing; affected events are rechecked
@@ -492,10 +496,6 @@ class Storage {
             && (try? url.extendedAttribute(forName: AppIdentifier.removedFromTrashKey)) != nil
     }
 
-    public func getBookmarks() -> [URL] {
-        bookmarks
-    }
-
     public static func sharedInstance() -> Storage {
         guard let storage = instance else {
             instance = Storage()
@@ -574,12 +574,7 @@ class Storage {
         loadedProjectInfo.removeAll()
         pinned = 0
 
-        var name = rootUrl.lastPathComponent
-        if let iCloudURL = getCloudDrive(), iCloudURL == rootUrl {
-            name = "iCloud Drive"
-        }
-        let project = Project(url: rootUrl, label: name, isRoot: true, isDefault: true)
-        _ = add(project: project)
+        let project = addRootProject(url: rootUrl)
         loadProjects()
 
         // Sandbox fallback: in App Store builds the sandbox extension from
@@ -625,13 +620,7 @@ class Storage {
         loadedProjectInfo.removeAll()
         pinned = 0
 
-        var name = url.lastPathComponent
-        if let iCloudURL = getCloudDrive(), iCloudURL == url {
-            name = "iCloud Drive"
-        }
-        let project = Project(url: url, label: name, isRoot: true, isDefault: true)
-        _ = add(project: project)
-        checkTrashForVolume(url: project.url)
+        checkTrashForVolume(url: addRootProject(url: url).url)
         loadProjects()
         loadDocuments {}
     }
@@ -1119,10 +1108,15 @@ class Storage {
             return note
         }
 
+        // A miss (every new file a pull brings in) used to resolve every note
+        // too. Directory symlinks never change the file name, so only notes
+        // sharing it can be the same file.
+        let name = url.lastPathComponent.lowercased()
         let resolvedPath = url.resolvingSymlinksInPath().path.lowercased()
         return
             noteList.first(where: {
-                $0.url.resolvingSymlinksInPath().path.lowercased() == resolvedPath
+                $0.url.lastPathComponent.lowercased() == name
+                    && $0.url.resolvingSymlinksInPath().path.lowercased() == resolvedPath
             })
     }
 
@@ -1375,8 +1369,7 @@ class Storage {
         var listed = Set<String>()
         for note in noteList {
             listed.insert(note.url.standardizedFileURL.path)
-            if note.project.isTrash {
-                note.ensureContentLoaded()
+            if note.project.isTrash, note.isContentLoaded {
                 trashNames.formUnion(note.getReferencedAttachmentPaths().map { ($0 as NSString).lastPathComponent })
                 continue
             }
@@ -1386,19 +1379,25 @@ class Storage {
                 unloaded.append(note)
             }
         }
-        // A folder can be registered (the sidebar lists its subfolders) before
-        // its notes are loaded. Every folder whose attachments are scanned must
-        // also have every note in it counted, listed or not.
-        let attachmentProjects = projectsWithAttachmentFolders()
-        for project in attachmentProjects {
-            for url in noteFiles(in: project.url) where !listed.contains(url.standardizedFileURL.path) {
-                unloaded.append(Note(url: url, with: project))
-            }
-        }
-        let urls = unloaded.map(\.url)
-        let attachmentFolders = attachmentProjects.flatMap(attachmentFolders(in:))
+        let folders = projects.filter { !$0.isTrash }
+        let folderURLs = folders.map(\.url)
+        let extensions = allowedExtensions
 
         Task { @MainActor in
+            // A folder can be registered (the sidebar lists its subfolders)
+            // before its notes are loaded. Every folder whose attachments are
+            // scanned must also have every note in it counted, listed or not.
+            let listings = await Task.detached(priority: .userInitiated) {
+                folderURLs.map { Storage.attachmentListing(of: $0, extensions: extensions) }
+            }.value
+            var attachmentFolders: [URL] = []
+            for (project, listing) in zip(folders, listings) where !listing.attachmentFolders.isEmpty {
+                attachmentFolders += listing.attachmentFolders
+                for url in listing.noteFiles where !listed.contains(url.standardizedFileURL.path) {
+                    unloaded.append(Note(url: url, with: project))
+                }
+            }
+            let urls = unloaded.map(\.url)
             let texts = await Task.detached(priority: .userInitiated) {
                 urls.map { (try? Data(contentsOf: $0)).flatMap(NoteText.decode) }
             }.value
@@ -1409,7 +1408,12 @@ class Storage {
                     completion(nil)
                     return
                 }
-                referenced.formUnion(note.getReferencedAttachmentPaths(in: text))
+                let paths = note.getReferencedAttachmentPaths(in: text)
+                if note.project.isTrash {
+                    trashNames.formUnion(paths.map { ($0 as NSString).lastPathComponent })
+                } else {
+                    referenced.formUnion(paths)
+                }
             }
             let paths = referenced
             let names = trashNames
@@ -1421,24 +1425,18 @@ class Storage {
         }
     }
 
-    private func attachmentFolders(in project: Project) -> [URL] {
-        Storage.attachmentDirectoryNames.compactMap { name in
-            let folderURL = project.url.appendingPathComponent(name)
+    /// A folder's attachment folders and the note files directly inside it,
+    /// matching the extension in any case so README.MD counts.
+    nonisolated private static func attachmentListing(of folder: URL, extensions: [String]) -> (attachmentFolders: [URL], noteFiles: [URL]) {
+        let attachmentFolders = attachmentDirectoryNames.compactMap { name -> URL? in
+            let folderURL = folder.appendingPathComponent(name)
             var isDir = ObjCBool(false)
             guard FileManager.default.fileExists(atPath: folderURL.path, isDirectory: &isDir), isDir.boolValue else { return nil }
             return folderURL
         }
-    }
-
-    private func projectsWithAttachmentFolders() -> [Project] {
-        projects.filter { !$0.isTrash && !attachmentFolders(in: $0).isEmpty }
-    }
-
-    /// Note files directly inside a folder, as the folder's own scan finds
-    /// them, but matching the extension in any case so README.MD counts.
-    private func noteFiles(in folder: URL) -> [URL] {
+        guard !attachmentFolders.isEmpty else { return ([], []) }
         let items = (try? FileManager.default.contentsOfDirectory(at: folder, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)) ?? []
-        return items.filter { allowedExtensions.contains($0.pathExtension.lowercased()) }
+        return (attachmentFolders, items.filter { extensions.contains($0.pathExtension.lowercased()) })
     }
 
     nonisolated private static func scanOrphanAttachments(folders: [URL], referenced: Set<String>) -> [URL] {

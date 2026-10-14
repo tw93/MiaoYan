@@ -316,7 +316,7 @@ extension MPreviewView {
             vc.toastUpdate(message: "\(I18n.str("Exporting...")) 40%")
 
             let baseURL = HtmlManager.previewBundleURL()
-            let controller = PdfExportController(note: note, html: renderedHTML, baseURL: baseURL, viewController: vc, preview: self)
+            let controller = PdfExportController(note: note, html: renderedHTML, baseURL: baseURL, viewController: vc)
 
             objc_setAssociatedObject(self, &AssociatedKeys.pdfExportController, controller, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 
@@ -612,12 +612,20 @@ extension MPreviewView {
         let css = HtmlManager.previewStyle()
         let useGithubLineBreak = UserDefaultsManagement.editorLineBreak == "Github"
         let rendered = renderMarkdownHTML(markdown: markdown, useGithubLineBreak: useGithubLineBreak) ?? markdown
-        let htmlBody = HtmlManager.embedLocalImages(in: rendered, imagesStorage: note.project.url)
-        let completeHtml = (try? HtmlManager.htmlFromTemplate(htmlBody, css: css, currentName: vc.exportTitle)) ?? htmlBody
+        let page = (try? HtmlManager.htmlFromTemplate(rendered, css: css, currentName: vc.exportTitle)) ?? rendered
+        let imagesStorage = note.project.url
+        let filename = note.getExportTitle()
 
-        isExporting = false
-        exportStartTime = nil
-        saveToDownloadsWithFilename(data: Data(completeHtml.utf8), extension: "html", filename: note.getExportTitle(), viewController: vc)
+        // Reading and base64-encoding every local image blocked the main
+        // thread for image-heavy notes; the template itself holds no images.
+        Task { @MainActor in
+            let completeHtml = await Task.detached(priority: .userInitiated) {
+                HtmlManager.embedLocalImages(in: page, imagesStorage: imagesStorage)
+            }.value
+            isExporting = false
+            exportStartTime = nil
+            saveToDownloadsWithFilename(data: Data(completeHtml.utf8), extension: "html", filename: filename, viewController: vc)
+        }
     }
 
     private func handleImageExportSuccess(image: NSImage, note: Note, viewController: ExportHost) {
@@ -721,8 +729,7 @@ extension MPreviewView {
     // Removed old export result handlers - now integrated into unified export system
 
     // MARK: - File Save Methods
-    static func saveToDownloadsWithFilename(data: Data, extension: String, filename: String, viewController: Any) {
-        guard let vc = viewController as? ExportHost else { return }
+    static func saveToDownloadsWithFilename(data: Data, extension: String, filename: String, viewController vc: ExportHost) {
 
         // The write runs off the main thread and hands back only its outcome,
         // so the host never leaves the main actor.

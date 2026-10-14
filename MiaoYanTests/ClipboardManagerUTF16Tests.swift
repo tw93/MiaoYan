@@ -71,4 +71,20 @@ final class ClipboardManagerUTF16Tests: XCTestCase {
         XCTAssertEqual(body.count, (body as NSString).length)
         XCTAssertNotNil(regex.firstMatch(in: body, range: NSRange(location: 0, length: body.count)))
     }
+
+    /// Option-drag column copies keep the first line's indentation.
+    @MainActor
+    func testColumnCopyKeepsIndentation() {
+        let pasteboard = NSPasteboard.general
+        let saved = pasteboard.string(forType: .string)
+        defer {
+            pasteboard.clearContents()
+            if let saved { pasteboard.setString(saved, forType: .string) }
+        }
+        let editor = EditTextView(frame: .zero)
+        editor.string = "    let a = 1\n    let b = 2\n"
+        editor.selectedRanges = [NSValue(range: NSRange(location: 0, length: 13)), NSValue(range: NSRange(location: 14, length: 13))]
+        XCTAssertTrue(ClipboardManager(textView: editor).handleCopy())
+        XCTAssertEqual(pasteboard.string(forType: .string), "    let a = 1\n    let b = 2")
+    }
 }

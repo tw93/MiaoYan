@@ -41,6 +41,13 @@ public enum Frontmatter {
         return markdown[bodyStart..<markdown.endIndex]
     }
 
+    /// How many lines the frontmatter takes, so a body line number the
+    /// preview reports maps back to the full text.
+    public static func lineCount(of markdown: String) -> Int {
+        let body = body(of: markdown)
+        return markdown[..<body.startIndex].reduce(0) { $1 == "\n" || $1 == "\r\n" ? $0 + 1 : $0 }
+    }
+
     /// True when the text opens with `---` and no later line closes it, as
     /// happens when a card reads only the first bytes of a long note.
     public static func opensUnclosedBlock(_ markdown: String) -> Bool {
