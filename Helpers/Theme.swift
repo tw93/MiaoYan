@@ -194,12 +194,15 @@ enum Theme {
         return dividerColor
     }
 
-    private static func warm(_ light: UInt32, _ dark: UInt32) -> Color {
+    /// A colour that follows light and dark from two hex values, shared with
+    /// `ShellPalette`.
+    nonisolated static func dynamic(_ light: UInt32, _ dark: UInt32, lightAlpha: CGFloat = 1, darkAlpha: CGFloat = 1) -> Color {
         Color(name: nil) { appearance in
-            let hex = appearance.isDark ? dark : light
+            let isDark = appearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
+            let hex = isDark ? dark : light
             return Color(
                 srgbRed: CGFloat((hex >> 16) & 0xFF) / 255, green: CGFloat((hex >> 8) & 0xFF) / 255,
-                blue: CGFloat(hex & 0xFF) / 255, alpha: 1)
+                blue: CGFloat(hex & 0xFF) / 255, alpha: isDark ? darkAlpha : lightAlpha)
         }
     }
 
@@ -209,11 +212,11 @@ enum Theme {
     /// purple, teal and gold for the same reason: one palette across Kaku,
     /// Mole and MiaoYan. A custom theme keeps its own text colour.
     static var editorTextColor: Color {
-        UserDefaultsManagement.appearanceType == .Custom ? textColor : warm(0x403E3C, 0xD5D4D6)
+        UserDefaultsManagement.appearanceType == .Custom ? textColor : dynamic(0x403E3C, 0xD5D4D6)
     }
 
     static var editorMarkupColor: Color {
-        UserDefaultsManagement.appearanceType == .Custom ? textColor : warm(0x7A7872, 0x8E8B83)
+        UserDefaultsManagement.appearanceType == .Custom ? textColor : dynamic(0x7A7872, 0x8E8B83)
     }
 
     static var titleColor: Color {

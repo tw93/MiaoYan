@@ -4,10 +4,7 @@ import PackageDescription
 let package = Package(
     name: "MiaoYan",
     defaultLocalization: "en",
-    platforms: [
-        .macOS(.v11),
-        .iOS(.v18),
-    ],
+    platforms: [.macOS(.v12)],
     dependencies: [
         .package(url: "https://github.com/sparkle-project/Sparkle.git", from: "2.8.0"),
         .package(url: "https://github.com/raspu/Highlightr.git", from: "2.3.0"),

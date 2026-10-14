@@ -20,17 +20,6 @@ enum ShellPalette {
     static let field = pair(0x1F1E1C, 0xFFFFFF, lightAlpha: 0.045, darkAlpha: 0.06)
 
     private static func pair(_ light: UInt32, _ dark: UInt32, lightAlpha: CGFloat = 1, darkAlpha: CGFloat = 1) -> NSColor {
-        NSColor(name: nil) { appearance in
-            let isDark = appearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
-            return rgb(isDark ? dark : light, alpha: isDark ? darkAlpha : lightAlpha)
-        }
-    }
-
-    private static func rgb(_ hex: UInt32, alpha: CGFloat) -> NSColor {
-        NSColor(
-            srgbRed: CGFloat((hex >> 16) & 0xFF) / 255,
-            green: CGFloat((hex >> 8) & 0xFF) / 255,
-            blue: CGFloat(hex & 0xFF) / 255,
-            alpha: alpha)
+        Theme.dynamic(light, dark, lightAlpha: lightAlpha, darkAlpha: darkAlpha)
     }
 }

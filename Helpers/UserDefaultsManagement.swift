@@ -783,7 +783,7 @@ public enum UserDefaultsManagement {
     /// These getters run during menu validation, many times a second, so an
     /// unplugged or deleted notes folder logged the same entry until it had
     /// pushed every real incident out of the 50-entry diagnostics log.
-    nonisolated(unsafe) private static var reportedStorageProblems = Set<String>()
+    private static var reportedStorageProblems = Set<String>()
 
     private static func reportOnce(_ error: Error, context: String, subject: String) {
         guard reportedStorageProblems.insert(context + "|" + subject).inserted else { return }

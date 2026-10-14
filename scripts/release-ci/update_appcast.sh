@@ -23,7 +23,6 @@ EOF
 }
 
 APPCAST=""
-NOTES=""
 DESCRIPTION_HTML_FILE=""
 DESCRIPTION_EN_FILE=""
 DESCRIPTION_ZH_FILE=""
@@ -38,10 +37,6 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --appcast)
       APPCAST="$2"
-      shift 2
-      ;;
-    --notes)
-      NOTES="$2"
       shift 2
       ;;
     --description-html-file)

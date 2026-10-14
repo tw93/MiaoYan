@@ -13,7 +13,6 @@ if [[ ! -f "$NOTES_FILE" ]]; then
 fi
 
 HEADER="$(head -1 "$NOTES_FILE")"
-VERSION="$(printf '%s' "$HEADER" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+')"
 TITLE="$(printf '%s' "$HEADER" | sed -E 's/^#[[:space:]]*//')"
 
 format_item() {
