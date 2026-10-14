@@ -577,7 +577,7 @@ def page(key):
         "var p={zh:'/zh/',tw:'/tw/',ja:'/ja/',ko:'/ko/',de:'/de/',fr:'/fr/',es:'/es/'};"
         "if(!s){var l=((navigator.languages&&navigator.languages[0])||navigator.language||'').toLowerCase();"
         "s=/^zh-(tw|hk|mo|hant)/.test(l)?'tw':l.slice(0,2)}"
-        "if(p[s])location.replace(p[s])}catch(e){}</script>"
+        "if(p[s])location.replace(p[s]+location.search+location.hash)}catch(e){}</script>"
         if key == "en"
         else ""
     )
