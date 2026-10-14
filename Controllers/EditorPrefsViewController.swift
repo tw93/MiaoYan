@@ -139,8 +139,13 @@ final class EditorPrefsViewController: BasePrefsViewController {
         guard let item = sender.selectedItem else { return }
         let title = item.title
         UserDefaultsManagement.defaultPicUpload = (title == I18n.str("None")) ? "None" : title
-        if title != "None", let vc = ViewController.shared() {
+        guard title != I18n.str("None") else { return }
+        if let vc = ViewController.shared() {
             vc.toastImageSet(name: title)
+        } else if #available(macOS 14, *),
+            let shell = (NSApp.delegate as? AppDelegate)?.shellWindowController as? ShellWindowController
+        {
+            shell.model.host?.toast(message: String(format: I18n.str("Please make sure your Mac is installed %@ ~"), title), style: .failure)
         }
     }
 

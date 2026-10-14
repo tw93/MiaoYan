@@ -220,7 +220,32 @@ final class ShellModel {
         UserDefaultsManagement.magicPPT = false
         reload()
         rebuildLinkIndex()
-        editor.onContentChange = { [weak self] in self?.scheduleContentRevision() }
+        editor.onContentChange = { [weak self] in
+            self?.scheduleContentRevision()
+            self?.scheduleSavedNoteRefresh()
+        }
+    }
+
+    @ObservationIgnored private var savedRefreshTask: Task<Void, Never>?
+
+    /// The list row of a note edited here follows its save: a new opening,
+    /// a new date, and the place and date group the storyboard list moves
+    /// it to. Checked after the 1.5s save debounce, again while it waits.
+    private func scheduleSavedNoteRefresh() {
+        guard let url = EditTextView.note?.url else { return }
+        savedRefreshTask?.cancel()
+        savedRefreshTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(2))
+            guard !Task.isCancelled, let self else { return }
+            if let note = self.storage.getBy(url: url), note.needsSave {
+                self.scheduleSavedNoteRefresh()
+                return
+            }
+            self.snippets[url] = nil
+            self.pendingSnippets.remove(url)
+            // A search keeps its result order, as in the storyboard list.
+            if self.searchText.isEmpty { self.refreshNotes(keepSelection: true) }
+        }
     }
 
     /// Backlinks cover every note; the index reads unloaded bodies itself.
@@ -240,13 +265,28 @@ final class ShellModel {
         }
     }
 
-    /// Rebuilds the sidebar from storage, then the list.
+    /// Whether a collapsed folder has subfolders, from the last scan.
+    @ObservationIgnored private var hasChildrenCache: [URL: Bool] = [:]
+    @ObservationIgnored private var childScanTask: Task<Void, Never>?
+
+    /// Rebuilds the sidebar from storage, then the list. Only expanded
+    /// folders are listed on the main thread; whether a collapsed one has
+    /// subfolders is checked off it, since every disk event reloads.
     func reload() {
         var rows: [SidebarRow] = []
+        var collapsed: [URL] = []
         func addFolder(_ project: Project, title: String, depth: Int) {
+            guard expandedFolders.contains(project.url) else {
+                collapsed.append(project.url)
+                rows.append(
+                    SidebarRow(
+                        id: .project(project.url), title: title, kind: .Category, depth: depth,
+                        hasChildren: hasChildrenCache[project.url] ?? false))
+                return
+            }
             let children = storage.subfolders(of: project)
+            hasChildrenCache[project.url] = !children.isEmpty
             rows.append(SidebarRow(id: .project(project.url), title: title, kind: .Category, depth: depth, hasChildren: !children.isEmpty))
-            guard expandedFolders.contains(project.url) else { return }
             for child in children {
                 addFolder(child, title: child.label, depth: depth + 1)
             }
@@ -264,10 +304,71 @@ final class ShellModel {
             }
         }
         sidebarRows = rows
+        scanForSubfolders(collapsed)
         if !sidebarRows.contains(where: { $0.id == scope }) {
             scope = .all
         }
         refreshNotes(keepSelection: true)
+    }
+
+    /// Fills in the chevrons of collapsed folders once the disk is read.
+    private func scanForSubfolders(_ urls: [URL]) {
+        childScanTask?.cancel()
+        guard !urls.isEmpty else { return }
+        let extensions = storage.allowedExtensions
+        childScanTask = Task { [weak self] in
+            let flags = await Task.detached(priority: .utility) {
+                urls.reduce(into: [URL: Bool]()) { $0[$1] = ShellModel.hasSubfolder(at: $1, allowedExtensions: extensions) }
+            }.value
+            guard !Task.isCancelled, let self else { return }
+            self.hasChildrenCache.merge(flags) { $1 }
+            let updated = self.sidebarRows.map { row -> SidebarRow in
+                guard case .project(let url) = row.id, let flag = flags[url] else { return row }
+                var row = row
+                row.hasChildren = flag
+                return row
+            }
+            if updated != self.sidebarRows { self.sidebarRows = updated }
+        }
+    }
+
+    /// `Storage.subfolders(of:)`'s filter without creating projects, so it
+    /// can run off the main thread: a visible, non-package directory that is
+    /// not an attachment folder.
+    nonisolated private static func hasSubfolder(at url: URL, allowedExtensions: [String]) -> Bool {
+        let options: FileManager.DirectoryEnumerationOptions = [.skipsHiddenFiles, .skipsPackageDescendants, .skipsSubdirectoryDescendants]
+        let keys: [URLResourceKey] = [.isDirectoryKey, .isPackageKey]
+        guard let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: keys, options: options) else {
+            return false
+        }
+        let skipFolders: Set<String> = ["assets", ".cache", "i", ".Trash", "files"]
+        for case let child as URL in enumerator {
+            let name = child.lastPathComponent
+            guard !skipFolders.contains(name), !name.hasPrefix("."),
+                let values = try? child.resourceValues(forKeys: Set(keys)),
+                values.isDirectory == true, values.isPackage == false,
+                !isAttachmentOnlyFolder(child, allowedExtensions: allowedExtensions)
+            else { continue }
+            return true
+        }
+        return false
+    }
+
+    /// `Storage.isAttachmentOnlyFolder(url:)`, for the scan above.
+    nonisolated private static func isAttachmentOnlyFolder(_ url: URL, allowedExtensions: [String]) -> Bool {
+        let keys: [URLResourceKey] = [.isDirectoryKey, .isPackageKey]
+        let options: FileManager.DirectoryEnumerationOptions = [.skipsHiddenFiles, .skipsPackageDescendants, .skipsSubdirectoryDescendants]
+        guard let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: keys, options: options) else {
+            return false
+        }
+        var hasFile = false
+        for case let fileURL as URL in enumerator {
+            let values = try? fileURL.resourceValues(forKeys: Set(keys))
+            if values?.isDirectory == true { return false }
+            if allowedExtensions.contains(fileURL.pathExtension.lowercased()) { return false }
+            hasFile = true
+        }
+        return hasFile
     }
 
     func selectNext(_ offset: Int) {
@@ -427,9 +528,14 @@ final class ShellModel {
     /// position, open on the slide the cursor is in, and give the deck focus
     /// so the arrow keys and space turn pages.
     private func openDeckAtCursor() {
-        let text = editor.textView.string
-        let cursor = max(min(editor.textView.selectedRange().location, text.count) - 1, 0)
-        let slide = text.prefix(cursor).components(separatedBy: "---").count - 1
+        // The buffer may still hold another note (#543); its cursor says
+        // nothing about this deck.
+        var slide = 0
+        if let note = selectedNote, editor.textView.storageNote === note {
+            let text = editor.textView.string
+            let cursor = max(min(editor.textView.selectedRange().location, text.count) - 1, 0)
+            slide = text.prefix(cursor).components(separatedBy: "---").count - 1
+        }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
             guard let preview = self?.preview else { return }
             preview.runWhenPreviewReady {
@@ -457,6 +563,21 @@ final class ShellModel {
     }
     /// The preview currently on screen, for commands that act on it (TOC).
     @ObservationIgnored weak var preview: MPreviewView?
+
+    enum FocusTarget {
+        case sidebar
+        case list
+    }
+
+    /// A SwiftUI column keyboard commands move focus to; that column takes
+    /// focus and clears the request.
+    var focusRequest: FocusTarget?
+
+    /// Puts the cursor in the editor when it is on screen.
+    func focusEditor() {
+        guard editorMode != .preview, !isPresenting, let window = editor.textView.window else { return }
+        window.makeFirstResponder(editor.textView)
+    }
 
     /// The folder a new note goes into: the chosen folder, else the root.
     private var targetProject: Project? {
@@ -549,12 +670,37 @@ final class ShellModel {
         searchText = query
     }
 
-    /// Moves the open note to the Trash, recoverable as everywhere else, and
-    /// opens its neighbour.
+    /// Moves the selected notes to the Trash, recoverable as everywhere else,
+    /// and opens their neighbour. Inside the Trash it moves them on to the
+    /// system Trash after the storyboard window's confirmation.
     func deleteSelectedNote() {
-        guard !isPresenting, let note = selectedNote, !note.isTrash() else { return }
-        let index = notes.firstIndex { $0 === note } ?? 0
-        let removing = selectedNotes.filter { !$0.isTrash() }
+        guard !isPresenting, let note = selectedNote else { return }
+        let removing = selectedNotes
+        guard note.isTrash() else {
+            remove(removing.filter { !$0.isTrash() })
+            return
+        }
+        guard let window = host?.view.window else { return }
+        MiaoYanAlert.confirm(
+            message: String(format: I18n.str("Are you sure you want to move %d note(s) to the system Trash?"), removing.count),
+            informativeText: I18n.str("The note(s) will be moved to the system Trash and can be recovered."),
+            confirmTitle: I18n.str("Move to Trash"),
+            for: window
+        ) { [weak self] confirmed in
+            if confirmed { self?.remove(removing) }
+        }
+    }
+
+    /// Notes dropped on the Trash row.
+    func moveToTrash(_ moving: [Note]) {
+        guard !isPresenting else { return }
+        remove(moving.filter { !$0.isTrash() })
+    }
+
+    private func remove(_ removing: [Note]) {
+        guard !removing.isEmpty else { return }
+        let open = selectedNote
+        let index = notes.firstIndex { candidate in removing.contains { $0 === candidate } } ?? 0
         storage.removeNotes(
             notes: removing,
             partialFailure: { [weak self] count in
@@ -567,7 +713,10 @@ final class ShellModel {
             Task { @MainActor in
                 guard let self else { return }
                 let remaining = self.notes.filter { candidate in !removing.contains { $0 === candidate } }
-                self.selectedNoteURL = remaining.isEmpty ? nil : remaining[min(index, remaining.count - 1)].url
+                // A drop on the Trash can take notes other than the open one.
+                if let open, removing.contains(where: { $0 === open }) {
+                    self.selectedNoteURL = remaining.isEmpty ? nil : remaining[min(index, remaining.count - 1)].url
+                }
                 self.refreshNotes(keepSelection: true)
             }
         }
@@ -578,6 +727,9 @@ final class ShellModel {
     func rename(_ note: Note, to title: String) -> Bool {
         let title = title.trimmingCharacters(in: .newlines)
         guard !title.isEmpty, title != note.getFileName() else { return true }
+        // A rename committed because another note was clicked keeps that
+        // note selected.
+        let wasSelected = selectedNoteURL == note.url
         guard note.renameFile(to: title) else {
             MiaoYanAlert.show(
                 message: I18n.str("Please change the title"),
@@ -585,7 +737,7 @@ final class ShellModel {
                 for: host?.view.window)
             return false
         }
-        selectedNoteURL = note.url
+        if wasSelected { selectedNoteURL = note.url }
         refreshNotes(keepSelection: true)
         return true
     }
@@ -643,14 +795,14 @@ final class ShellModel {
     /// file already in the library is opened instead. The copies are added
     /// to storage here: an APFS clone reaches the file watcher as a change,
     /// not a creation, so it would never list them.
-    func importNotes(_ urls: [URL]) {
+    func importNotes(_ urls: [URL], into project: Project? = nil) {
         var target: URL?
         for url in urls {
             if let note = storage.getBy(url: url) {
                 target = note.url
                 continue
             }
-            let copy = ViewController.copyFile(url, into: storage.getMainProject())
+            let copy = ViewController.copyFile(url, into: project ?? storage.getMainProject())
             guard storage.getBy(url: copy) == nil, let note = storage.initNote(url: copy) else { continue }
             note.load()
             note.loadModifiedLocalAt()
@@ -659,12 +811,47 @@ final class ShellModel {
         }
         searchText = ""
         isSearchOpen = false
-        scope = .all
+        if let project {
+            scope = .project(project.url)
+        } else {
+            scope = .all
+        }
         refreshNow(selecting: target)
+    }
+
+    /// Finder files dropped on the list (into the chosen folder) or on a
+    /// folder row: the Markdown files, and those inside dropped folders,
+    /// imported as File ▸ Import does. Notes already in the library, such
+    /// as a row dragged out of this list, are left alone.
+    func importDropped(_ urls: [URL], into project: Project?) -> Bool {
+        let fresh = urls.filter { $0.isFileURL && storage.getBy(url: $0) == nil }
+        guard !isPresenting, !fresh.isEmpty else { return false }
+        let extensions = storage.allowedExtensions
+        // A dropped folder can be huge; only the scan leaves the main thread.
+        Task { [weak self] in
+            let files = await Task.detached(priority: .userInitiated) {
+                ViewController.collectImportableFiles(from: fresh, allowedExtensions: extensions)
+            }.value
+            guard let self else { return }
+            guard !files.isEmpty else {
+                self.host?.toast(message: I18n.str("No importable Markdown files found~"), style: .failure)
+                return
+            }
+            self.importNotes(files, into: project)
+        }
+        return true
+    }
+
+    /// The folder new and imported notes go into from the list.
+    var dropProject: Project? {
+        guard case .project = scope else { return nil }
+        return targetProject
     }
 
     /// Shows only `url`: a file with the notes beside it, or a folder.
     func openSingle(_ url: URL, siblingFiles: [URL]? = nil) {
+        // Storage is swapped out below; the open note's edits land first.
+        flushEdits()
         if !isSingleMode { librarySelection = selectedNoteURL }
         UserDefaultsManagement.beginSingleMode(for: url)
         storage.reconfigureForSingleMode(originalFileURL: url, siblingFiles: siblingFiles)
@@ -677,10 +864,23 @@ final class ShellModel {
     /// Back to the library, on the note that was open before.
     func closeSingle() {
         guard isSingleMode else { return }
+        flushEdits()
         UserDefaultsManagement.clearSingleMode()
         storage.reconfigureForLibrary()
         isSingleMode = false
         switchStorage(selecting: librarySelection, scope: storedScope())
+    }
+
+    /// Writes the editor's text and every debounced save now. A save waits
+    /// 1.5s after the last key, so quitting, closing the window, switching
+    /// apps or swapping storage inside that window would otherwise lose the
+    /// last edits; the storyboard window does the same through its
+    /// ViewController.
+    func flushEdits() {
+        if let owner = editor.textView.storageNote {
+            editor.textView.saveTextStorageContent(to: owner)
+        }
+        storage.flushPendingSaves()
     }
 
     private func switchStorage(selecting url: URL?, scope newScope: Scope = .all) {
@@ -800,21 +1000,17 @@ final class ShellModel {
     /// storyboard sidebar does.
     func renameFolder(_ project: Project, to name: String) {
         renamingFolderURL = nil
-        let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !name.isEmpty, name != project.url.lastPathComponent else { return }
         let oldURL = project.url
-        let newURL = oldURL.deletingLastPathComponent().appendingPathComponent(name)
+        let wasSelected = scope == .project(oldURL)
         do {
-            try FileManager.default.moveItem(at: oldURL, to: newURL)
+            guard try storage.renameFolder(project, to: name) != nil else { return }
         } catch {
-            MiaoYanAlert.show(message: error.localizedDescription, style: .warning, for: host?.view.window)
+            MiaoYanAlert.show(message: I18n.str(error.localizedDescription), style: .warning, for: host?.view.window)
             return
         }
-        storage.relocateFolder(project, to: newURL)
         onFoldersChanged?()
-        let wasSelected = scope == .project(oldURL)
         reload()
-        if wasSelected { scope = .project(newURL) }
+        if wasSelected { scope = .project(project.url) }
     }
 
     /// Moves the folder and everything in it to the Trash after the same
@@ -912,23 +1108,30 @@ final class ShellModel {
 
     /// The storyboard window's Duplicate: the note's current text (unsaved
     /// edits included) and its images, next to it under a free name.
-    func duplicateSelectedNote() {
-        guard let note = selectedNote, let name = note.getDupeName() else { return }
-        if note === EditTextView.note, editor.textView.storageNote === note {
-            editor.textView.saveTextStorageContent(to: note)
-        }
-        _ = note.flushPendingSave()
-        if !note.isContentLoaded { note.ensureContentLoaded() }
-        let copy = Note(name: name, project: note.project, type: note.type)
-        copy.content = NSMutableAttributedString(attributedString: note.content)
-        if note.type == .markdown, note.container == .none {
-            for image in note.getAllImages() {
-                copy.relocateAttachment(from: image.url, imagePath: image.path, to: note.project)
+    /// Every one of `notes`, as the storyboard window duplicates the whole
+    /// selection; the last copy opens.
+    func duplicate(_ originals: [Note]) {
+        var last: Note?
+        for note in originals where !note.isTrash() {
+            guard let name = note.getDupeName() else { continue }
+            if note === EditTextView.note, editor.textView.storageNote === note {
+                editor.textView.saveTextStorageContent(to: note)
             }
+            _ = note.flushPendingSave()
+            if !note.isContentLoaded { note.ensureContentLoaded() }
+            let copy = Note(name: name, project: note.project, type: note.type)
+            copy.content = NSMutableAttributedString(attributedString: note.content)
+            if note.type == .markdown, note.container == .none {
+                for image in note.getAllImages() {
+                    copy.relocateAttachment(from: image.url, imagePath: image.path, to: note.project)
+                }
+            }
+            // A successful save adds the copy to storage.
+            copy.save()
+            last = copy
         }
-        copy.save()
-        storage.add(copy)
-        selectedNoteURL = copy.url
+        guard let last else { return }
+        selectedNoteURL = last.url
         refreshNotes(keepSelection: true)
     }
 

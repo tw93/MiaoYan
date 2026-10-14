@@ -12,7 +12,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
     var shellWindowController: NSWindowController?
     var prefsWindowController: PrefsWindowController?
     var aboutWindowController: AboutWindowController?
-    var statusItem: NSStatusItem?
     public var urls: [URL]?
     public var searchQuery: String?
     public var newName: String?
@@ -343,10 +342,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         shellWindowController?.showWindow(nil)
     }
 
-    /// Quit and Active Window in the SwiftUI shell. Their storyboard items
-    /// target a stand-in `ViewController`; the shell points them at the first
-    /// responder, and the app delegate is the one link of that chain that is
-    /// there whichever window is in front.
+    /// Quit, for both windows. Active Window's storyboard item targets a
+    /// stand-in `ViewController`; the shell points it at the first responder,
+    /// and the app delegate is the one link of that chain that is there
+    /// whichever window is in front.
     @IBAction func quiteApp(_ sender: Any?) {
         guard UserDefaultsManagement.isSingleMode else {
             NSApp.terminate(sender)
@@ -469,7 +468,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
                     return nil
                 }
                 if #available(macOS 14, *), let shell = self.shellWindowController as? ShellWindowController,
-                    let note = shell.model.selectedNote
+                    !shell.model.isPresenting, let note = shell.model.selectedNote
                 {
                     shell.model.togglePin(note)
                     return nil

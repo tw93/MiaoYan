@@ -67,18 +67,6 @@ extension ViewController {
         }
     }
 
-    @IBAction func quiteApp(_ sender: Any) {
-        if UserDefaultsManagement.isSingleMode {
-            UserDefaultsManagement.clearSingleMode()
-            UserDefaultsManagement.isFirstLaunch = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + UIDelay.short) {
-                NSApplication.shared.terminate(self)
-            }
-        } else {
-            NSApplication.shared.terminate(self)
-        }
-    }
-
     @IBAction func makeNote(_ sender: SearchTextField) {
         guard let vc = ViewController.shared() else { return }
         if let type = vc.getSidebarType(), type == .Trash {

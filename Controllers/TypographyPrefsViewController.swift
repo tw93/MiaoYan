@@ -289,9 +289,15 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
         settings.presentationFontSize = Int(item.title) ?? UserDefaultsManagement.DefaultPresentationFontSize
         // Only a running presentation needs redrawing at the new size; outside
         // it the value is just stored, and opening a presentation picks it up.
-        guard let vc = ViewController.shared(), vc.sessionPresentationMode else { return }
-        vc.disablePresentation()
-        vc.enablePresentation()
+        if let vc = ViewController.shared(), vc.sessionPresentationMode {
+            vc.disablePresentation()
+            vc.enablePresentation()
+        } else if #available(macOS 14, *),
+            let shell = (NSApp.delegate as? AppDelegate)?.shellWindowController as? ShellWindowController,
+            shell.model.isPresenting
+        {
+            shell.model.applyEditorSettings()
+        }
     }
 
 }

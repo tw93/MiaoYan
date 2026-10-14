@@ -71,7 +71,7 @@ CA
                                         </menuItem>
                                         <menuItem title="Quit MiaoYan" keyEquivalent="q" id="4sb-4s-VLi">
                                             <connections>
-                                                <action selector="quiteApp:" target="L4m-js-agn" id="3eE-cX-iqp"/>
+                                                <action selector="quiteApp:" target="Voe-Tx-rLC" id="3eE-cX-iqp"/>
                                             </connections>
                                         </menuItem>
                                     </items>

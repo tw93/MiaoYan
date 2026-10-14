@@ -20,6 +20,9 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
 
     private let formatWorker = MarkdownFormatWorker()
     private var formatTask: Task<Void, Never>?
+    /// The text Format or Clean Typography left, so the Command-Z that
+    /// undoes it keeps the cursor where it is, as in the storyboard window.
+    private var formatContent = ""
 
     override init() {
         scrollView = ShellEditorScrollView()
@@ -126,6 +129,7 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
         textView.insertText(cleaned, replacementRange: NSRange(location: 0, length: (textView.string as NSString).length))
         textView.saveTextStorageContent(to: note)
         note.save()
+        formatContent = cleaned
         textView.setSelectedRange(NSRange(location: min(cursor, (cleaned as NSString).length), length: 0))
         scrollView.contentView.scroll(to: NSPoint(x: 0, y: top))
         scrollView.reflectScrolledClipView(scrollView.contentView)
@@ -196,9 +200,25 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
             originalOffset: output.cursorOffset, protected: output.protectedContent, restored: newContent)
         textView.setSelectedRange(NSRange(location: min(cursor, newContent.utf16.count), length: 0))
         note.save(attributed: textView.attributedString())
+        formatContent = newContent
         scrollView.contentView.scroll(to: NSPoint(x: 0, y: top))
         scrollView.reflectScrolledClipView(scrollView.contentView)
         onContentChange?()
+    }
+
+    /// Called as Command-Z reaches the editor: when it undoes the last
+    /// Format, put the cursor back where it was once the undo has run.
+    func keepCursorThroughFormatUndo() {
+        guard !formatContent.isEmpty, let note = EditTextView.note, textView.storageNote === note,
+            note.content.string == formatContent
+        else { return }
+        formatContent = ""
+        let cursor = textView.selectedRange().location
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            let length = (self.textView.string as NSString).length
+            self.textView.setSelectedRange(NSRange(location: min(cursor, length), length: 0))
+        }
     }
 }
 

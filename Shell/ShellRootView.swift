@@ -50,10 +50,18 @@ enum ShellStyle {
     /// Spacing that sets multi-line text at 1.45em. `lineSpacing` adds to the
     /// face's own line height, which is 1.23em for TsangerJinKai02 and 1.38em
     /// for PingFang, so a fixed figure reads tight in one and loose in the other.
+    /// Every list row asks on every render, so the figure is kept per face
+    /// and size rather than measured with a new layout manager each time.
     static func lineSpacing(_ size: CGFloat) -> CGFloat {
         let font = FontConfiguration.interfaceFont(size: size)
-        return max(0, size * 1.45 - NSLayoutManager().defaultLineHeight(for: font))
+        let key = "\(font.fontName) \(size)"
+        if let spacing = lineSpacingCache[key] { return spacing }
+        let spacing = max(0, size * 1.45 - NSLayoutManager().defaultLineHeight(for: font))
+        lineSpacingCache[key] = spacing
+        return spacing
     }
+
+    private static var lineSpacingCache: [String: CGFloat] = [:]
 
     /// Whether the interface face has a bold of its own. TsangerJinKai02 ships
     /// W04 alone, and `.weight` or `.bold()` leave it at W04.
@@ -183,6 +191,11 @@ struct ShellSidebar: View {
             model.setChosenFolderExpanded(false)
             return .handled
         }
+        .onChange(of: model.focusRequest) { _, request in
+            guard request == .sidebar else { return }
+            focused = true
+            model.focusRequest = nil
+        }
     }
 }
 
@@ -282,14 +295,27 @@ private struct ShellSidebarRow: View {
             }
         }
         .dropDestination(for: URL.self) { urls, _ in
-            guard let folder else { return false }
+            let isTrash = row.kind == .Trash
+            guard folder != nil || isTrash else { return false }
             let storage = AppEnvironment.current.storage
-            let notes = urls.compactMap { storage.getBy(url: $0) }
-            guard !notes.isEmpty else { return false }
-            model.move(notes, to: folder)
+            var notes = urls.compactMap { storage.getBy(url: $0) }
+            // A row drags only its own URL; one that is part of a multiple
+            // selection carries the whole selection, as the storyboard list does.
+            if notes.count == 1, let dragged = notes.first, model.isSelected(dragged) {
+                notes = model.selectedNotes
+            }
+            guard !notes.isEmpty else {
+                // Finder files are copied into the folder.
+                return folder.map { model.importDropped(urls, into: $0) } ?? false
+            }
+            if let folder {
+                model.move(notes, to: folder)
+            } else {
+                model.moveToTrash(notes)
+            }
             return true
         } isTargeted: { targeted in
-            isDropTarget = targeted && folder != nil
+            isDropTarget = targeted && (folder != nil || row.kind == .Trash)
         }
     }
 
@@ -369,6 +395,16 @@ struct ShellNoteList: View {
             .onKeyPress(.downArrow) {
                 model.selectNext(1)
                 return .handled
+            }
+            .onChange(of: model.focusRequest) { _, request in
+                guard request == .list else { return }
+                listFocused = true
+                model.focusRequest = nil
+            }
+            // Finder files dropped on the list are imported into the chosen
+            // folder, or the main folder from All Notes.
+            .dropDestination(for: URL.self) { urls, _ in
+                model.importDropped(urls, into: model.dropProject)
             }
         }
         .id(model.interfaceRevision)
@@ -595,6 +631,9 @@ private struct ShellTitleField: View {
     @Bindable var model: ShellModel
     let size: CGFloat
     @State private var draft = ""
+    /// The note `draft` was started for; a commit never applies one note's
+    /// draft to another.
+    @State private var draftURL: URL?
     @FocusState private var focused: Bool
 
     var body: some View {
@@ -606,10 +645,16 @@ private struct ShellTitleField: View {
                     .font(font)
                     .foregroundStyle(ShellStyle.text)
                     .focused($focused)
-                    .onSubmit(commit)
+                    .onSubmit {
+                        // Return goes on to the note's text, as in the storyboard
+                        // window, which keeps Japanese input's Return in place.
+                        commit()
+                        if UserDefaultsManagement.defaultLanguage != 0x02 { model.focusEditor() }
+                    }
                     .onExitCommand { model.isRenaming = false }
                     .onAppear {
                         draft = model.selectedNote?.getTitleWithoutLabel() ?? ""
+                        draftURL = model.renamingNoteURL
                         focused = true
                     }
                     .onChange(of: focused) { _, isFocused in
@@ -626,16 +671,19 @@ private struct ShellTitleField: View {
             }
         }
         .onChange(of: model.selectedNoteURL) { _, url in
-            // Selecting another note ends an edit; the selection that opens
-            // the field for this note does not.
-            if model.renamingNoteURL != url { model.renamingNoteURL = nil }
+            // Selecting another note ends an edit and keeps what was typed:
+            // the field leaves with the old selection, often before its
+            // focus-loss commit could run. The selection that opens the field
+            // for this note does not end it.
+            if model.renamingNoteURL != url { commit() }
         }
     }
 
     private func commit() {
         guard let url = model.renamingNoteURL else { return }
         model.renamingNoteURL = nil
-        guard let note = AppEnvironment.current.storage.getBy(url: url) else { return }
+        guard draftURL == url, let note = AppEnvironment.current.storage.getBy(url: url) else { return }
+        draftURL = nil
         model.rename(note, to: draft)
     }
 }
@@ -672,10 +720,7 @@ private struct ShellNoteMenu: View {
             model.copyNotePath()
         }
         if !note.isTrash() {
-            Button(I18n.str("Duplicate")) {
-                model.selectedNoteURL = note.url
-                model.duplicateSelectedNote()
-            }
+            Button(I18n.str("Duplicate")) { model.duplicate(model.notesForMenu(on: note)) }
             Button(I18n.str("MiaoYan PPT")) {
                 model.selectedNoteURL = note.url
                 model.setPresenting(true, ppt: true)
@@ -700,13 +745,12 @@ private struct ShellNoteMenu: View {
             Button("HTML") { exportSelecting(.html) }
             Button(I18n.str("MiaoYan PPT PDF")) { exportSelecting(.ppt) }
         }
-        if !note.isTrash() {
-            Divider()
-            Button(I18n.str("Delete")) {
-                // Part of the selection: delete all of it, keeping the selection.
-                if !model.isSelected(note) { model.selectedNoteURL = note.url }
-                model.deleteSelectedNote()
-            }
+        Divider()
+        Button(I18n.str("Delete")) {
+            // Part of the selection: delete all of it, keeping the selection.
+            // In the Trash this moves them on to the system Trash.
+            if !model.isSelected(note) { model.selectedNoteURL = note.url }
+            model.deleteSelectedNote()
         }
     }
 }
