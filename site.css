@@ -184,15 +184,10 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .hero h1 { letter-spacing: 2px; }
 .tagline { font-family: var(--serif); font-size: 22px; line-height: 1.45; color: var(--ink); margin: 0 0 10px; text-wrap: balance; }
 html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { line-height: 1.6; word-break: keep-all; }
 .lede { font-size: 17px; color: var(--olive); margin: 0 0 18px; }
-.trust { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 0 0 32px; padding: 0; list-style: none; }
-.trust li {
-  display: inline-flex; align-items: center;
-  font-size: 13px; font-weight: 500; line-height: 1.2;
-  color: var(--olive);
-  background: color-mix(in srgb, var(--ivory) 85%, transparent);
-  border: 1px solid var(--line);
-  padding: 5px 12px; border-radius: 999px; white-space: nowrap;
-}
+/* Plain facts in a quiet line, as on mole.fit: no pills, dots between them. */
+.trust { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 0; margin: 0 0 32px; padding: 0; list-style: none; }
+.trust li { font-size: 14px; line-height: 1.5; color: var(--stone); white-space: nowrap; }
+.trust li + li::before { content: "\00B7"; margin: 0 10px; color: var(--stone); opacity: 0.6; }
 .cta { display: flex; flex-wrap: wrap; gap: 12px 16px; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 158px;
@@ -203,8 +198,9 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { l
 .btn svg { width: 16px; height: 16px; flex: none; margin-top: -1px; }
 .btn-primary { background: var(--accent); color: #fff; font-weight: 600; }
 .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); transform: translateY(-1px); }
-.btn-ghost { color: var(--accent); background: transparent; font-weight: 500; }
-.btn-ghost:hover { background: var(--accent-tint); transform: translateY(-1px); }
+/* The secondary action is a plain link beside the button, not a second pill. */
+.btn-ghost { color: var(--accent); background: transparent; font-weight: 500; border-color: transparent; min-width: 0; padding-left: 12px; padding-right: 12px; }
+.btn-ghost:hover { text-decoration: underline; text-underline-offset: 4px; }
 
 /* Sections */
 section { margin-bottom: var(--gap); scroll-margin-top: 100px; }
@@ -228,12 +224,12 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { 
 .tabs button[aria-pressed="true"] { background: var(--accent); color: #fff; }
 
 /* iPhone and iPad */
-/* Apple's product bezels, shown as is and at their real relative size:
-   iPad Pro 13" is 281.6mm tall, iPhone 17 Pro 150.0mm. */
+/* Apple's product bezels, shown as is. The iPhone is drawn larger than its
+   real size next to the iPad so its text stays readable. */
 .devices { display: flex; justify-content: center; align-items: flex-end; gap: 48px; }
 .device { margin: 0; }
-.device.phone { width: 204px; }
-.device.pad { width: 600px; }
+.device.phone { width: 260px; }
+.device.pad { width: 520px; }
 .devices-cta { justify-content: center; margin-top: 32px; }
 .device figcaption { font-size: 13px; color: var(--stone); margin-top: 12px; text-align: center; }
 
@@ -279,19 +275,20 @@ footer { background: var(--night); color: var(--night-dim); padding: 60px 0 32px
   .hero h1 { font-size: 60px; letter-spacing: -0.8px; margin-bottom: 20px; }
   .tagline { font-size: 20px; }
   .devices { gap: 32px; }
-  .device.pad { width: min(520px, 68%); }
-  .device.phone { width: min(180px, 26%); }
+  .device.pad { width: min(460px, 62%); }
+  .device.phone { width: min(230px, 32%); }
   .foot { flex-direction: column; gap: 32px; }
   .foot-cols { gap: 12px 40px; }
 }
 @media (max-width: 680px) {
   :root { --inset: 18px; }
   .devices { flex-direction: column; align-items: center; gap: 24px; }
-  .device.pad { width: min(600px, 100%); }
-  .device.phone { width: min(220px, 60%); }
+  .device.pad { width: min(480px, 100%); }
+  .device.phone { width: min(260px, 70%); }
   .cards { grid-template-columns: 1fr; }
-  .trust { gap: 6px 8px; }
-  .trust li { font-size: 12px; padding: 4px 10px; }
+  .trust { gap: 2px 16px; }
+  .trust li { font-size: 13px; }
+  .trust li + li::before { content: none; }
 }
 @media (max-width: 560px) {
   .lang-name { display: none; }
