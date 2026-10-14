@@ -1,38 +1,30 @@
 {
   "fill" : {
-    "solid" : "extended-srgb:0.93725,0.93725,0.88627,1.00000"
+    "solid" : "display-p3:0.99512,0.99512,0.99512,1.00000"
   },
   "groups" : [
     {
       "layers" : [
         {
-          "glass-specializations" : [
-            {
-              "value" : false
-            },
-            {
-              "appearance" : "dark",
-              "value" : false
-            }
-          ],
-          "image-name-specializations" : [
-            {
-              "value" : "miaoyan-light.png"
-            },
-            {
-              "appearance" : "dark",
-              "value" : "miaoyan-dark.png"
-            }
-          ],
-          "name" : "miaoyan"
+          "glass" : false,
+          "hidden" : false,
+          "image-name" : "43.png",
+          "name" : "43",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
         }
       ],
       "shadow" : {
         "kind" : "neutral",
-        "opacity" : 0.35
+        "opacity" : 0.5
       },
       "translucency" : {
-        "enabled" : false,
+        "enabled" : true,
         "value" : 0.5
       }
     }

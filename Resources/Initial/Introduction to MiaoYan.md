@@ -1,5 +1,5 @@
 <p align="center">
-    <div align="center"><img src=https://raw.githubusercontent.com/tw93/MiaoYan/main/Resources/logo.png width=138  /></div>
+    <div align="center"><img src=https://gw.alipayobjects.com/zos/k/t0/43.png width=138  /></div>
     <h2 align="center">MiaoYan</h2>
     <div align="center">Lightweight Markdown note-taking app for macOS</div>
 
