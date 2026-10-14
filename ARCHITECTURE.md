@@ -13,7 +13,10 @@
 ├── Helpers/         # Utilities and services (highlighting, formatting, theming, diagnostics)
 ├── Extensions/      # Swift extensions on Foundation / AppKit types
 ├── Resources/       # Bundled assets, including DownView.bundle (HTML/CSS/JS for preview)
+├── Shell/           # SwiftUI main window behind -MiaoYanShell YES
+├── Packages/        # MiaoYanCore, logic shared with the iPhone app in MiaoYan-Pro
 ├── MiaoYanTests/    # Unit tests for pure-logic surfaces
+├── skills/          # Published Agent Skill for MiaoYan's Markdown, PPT and CLI
 └── scripts/         # Local build, release helpers, target wiring (Ruby + bash)
 ```
 
@@ -83,9 +86,9 @@ breaks the UI at runtime without a compile-time error:
 - `SidebarProjectView` is loaded as the storyboard's outline view subclass;
   its `awakeFromNib` is the construction entry point, not `init`.
 - `NotesTableView` cell views have `NSUserInterfaceItemIdentifier("NoteCellView")`
-  registered in the storyboard and dequeued at `Views/NotesTableView.swift:526`.
+  registered in the storyboard and dequeued at `Views/NotesTableView.swift:550`.
 - `SidebarProjectView` cell views use identifier `"DataCell"` similarly
-  (`Views/SidebarProjectView.swift:639`).
+  (`Views/SidebarProjectView.swift:726`).
 - The First Responder action chain is selector-based. `@IBAction` methods on
   `ViewController+Action.swift` must keep their exact ObjC selectors.
 
@@ -135,12 +138,13 @@ Bundled JS used by the preview is vendored under
   `UserDefaultsManagement.storageBookmark`).
 - Note attachments: `i/` (inline images) and `files/` (other attachments)
   subdirectories at the note's level.
-- Trash: a `.Trash` directory inside the storage root, plus a fallback to the
-  OS-level trash via `FileManager.default.trashItem(...)`.
+- Trash: the volume's system Trash (`Storage.getTrash`), or a `Trash` folder
+  in the default storage root when the volume has none.
 - Symlinked directories: supported but indexed in a way that avoids recursion
   loops (`Business/Storage.swift::checkSub`).
-- Version history: `Library/Application Support/MiaoYan/Versions/<note-id>/`
-  managed by `NoteVersionManager`.
+- Version history: `Library/Application Support/com.tw93.miaoyan/Versions/<path-hash>/`
+  managed by `NoteVersionManager`, keyed by the note's path and moved along
+  on rename, folder move and Trash.
 - Diagnostics log: `~/Library/Logs/MiaoYan/diagnostics.log` (ring buffer,
   50 lines, JSON per line). See `Helpers/Diagnostics.swift`.
 
@@ -148,7 +152,8 @@ Bundled JS used by the preview is vendored under
 
 - Mac App Store builds come from the private `tw93/MiaoYan-Pro` after it
   merges this repository's `main`.
-- Direct downloads: `bash scripts/build.sh` produces a zipped `.app`. The
+- Direct downloads: `bash scripts/build.sh` produces a zipped `.app`; when the
+  maintainer's private `~/.config/miaoyan/build.sh` exists it runs instead. The
   Sparkle `appcast.xml` is updated by `scripts/release-ci/update_appcast.sh`
   (needs the Sparkle EdDSA private key).
 - Version triplet (must stay aligned): git tag `Vx.y.z`, `MARKETING_VERSION`,
@@ -167,6 +172,6 @@ Bundled JS used by the preview is vendored under
 ## See Also
 
 - `AGENTS.md` - agent-facing repo guide (commands, hot files, current risk areas)
-- `CLAUDE.md` - project-level overrides for Claude Code
+- `CLAUDE.md` - symlink to `AGENTS.md`
 - `.claude/rules/swift.md` - project-level Swift conventions
 - `~/.claude/CLAUDE.md` - global rules (writing style, commit policy, git safety)

@@ -142,7 +142,7 @@ tags:
 ---
 ```
 
-MiaoYan hides leading frontmatter in rendered output. Do not move it into the body or add frontmatter unless the user needs metadata.
+MiaoYan hides leading frontmatter in rendered output when the block holds only `key: value` lines (with their continuations and comments); a `---` block without keys renders as content, and in a deck it is the first slide. Do not move it into the body or add frontmatter unless the user needs metadata.
 
 ## Create MiaoYan PPT presentations
 

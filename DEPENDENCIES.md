@@ -38,7 +38,6 @@ they are documented in a separate manifest:
 ## Platform Requirements
 
 - macOS host target: 12.0+ (Monterey)
-- iOS Mobile target: 18.0+
 - Swift toolchain: 6.0
 - Xcode: 16.0+ (matches the build setting in `MiaoYan.xcodeproj`)
 

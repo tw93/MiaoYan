@@ -27,6 +27,9 @@
 - `command + 2` - Toggle file list
 - `command + 3` - Toggle preview mode
 - `command + 4` - Toggle presentation mode
+- `command + 5` - Toggle table of contents
+- `command + \` - Toggle split view
+- `command + option + 0` - Show the main window
 - `command + option + m` - Show/hide MiaoYan globally
 
 #### Document Operations
@@ -48,7 +51,7 @@ Explore more shortcuts in the app.
 
 ### Preview Table of Contents
 
-- Switch to preview mode (`command + 3`) and hover over the slim handle near the top-right edge to reveal the table of contents panel.
+- Press `command + 5`, or switch to preview mode (`command + 3`) and hover over the slim handle near the top-right edge, to reveal the table of contents panel.
 - Notes with at least two headings generate the outline automatically. Click any heading to jump to that section in the preview.
 - Press `esc` or click outside the panel to close it; the handle fades out again when you stop using it.
 
