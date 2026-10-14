@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://miaoyan.app/" target="_blank"><img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/Resources/app.icon/Assets/43.png" width="138" /></a>
+  <a href="https://miaoyan.app/" target="_blank"><img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/Resources/logo.png" width="138" /></a>
   <h1>MiaoYan</h1>
   <p><b>ローカルの Markdown ノートのためのネイティブ Mac アプリ</b></p>
   <p>MiaoYan は中国語の妙言、言葉を超えた言葉という意味です。</p>

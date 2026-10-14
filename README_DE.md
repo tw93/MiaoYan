@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://miaoyan.app/" target="_blank"><img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/Resources/app.icon/Assets/43.png" width="138" /></a>
+  <a href="https://miaoyan.app/" target="_blank"><img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/Resources/logo.png" width="138" /></a>
   <h1>MiaoYan</h1>
   <p><b>Eine native Mac-App für lokale Markdown-Notizen</b></p>
   <p>MiaoYan ist das chinesische 妙言, Worte jenseits der Worte.</p>

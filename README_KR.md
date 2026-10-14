@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://miaoyan.app/" target="_blank"><img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/Resources/app.icon/Assets/43.png" width="138" /></a>
+  <a href="https://miaoyan.app/" target="_blank"><img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/Resources/logo.png" width="138" /></a>
   <h1>MiaoYan</h1>
   <p><b>로컬 마크다운 노트를 위한 네이티브 Mac 앱</b></p>
   <p>MiaoYan은 중국어 妙言에서 온 이름으로, 말을 넘어선 말이라는 뜻입니다.</p>
