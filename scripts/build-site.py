@@ -614,8 +614,9 @@ def page(key):
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
 <meta name="twitter:image" content="https://miaoyan.app/assets/shots/og-{og}.jpg">
-<link rel="icon" href="/Release/img/logo.png" type="image/png">
-<link rel="apple-touch-icon" href="/Release/img/logo.png">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
 {font_preload}<link rel="preload" as="image" href="/assets/shots/{shot}-edit-1400.webp" imagesrcset="/assets/shots/{shot}-edit-1400.webp 1400w, /assets/shots/{shot}-edit-2400.webp 2400w" imagesizes="(max-width: 1248px) 100vw, 1120px">
 <link rel="stylesheet" href="/site.css">
 <script type="application/ld+json">{ld}</script>
