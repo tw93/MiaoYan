@@ -34,4 +34,21 @@ final class CheckboxToggleTests: XCTestCase {
         let html = try XCTUnwrap(renderMarkdownHTML(markdown: "```\n- [ ] code\n```\n\n* [ ] real", useGithubLineBreak: false))
         XCTAssertTrue(html.contains(#"<li data-sourcepos="5:"#), "the rendered task item names line 5")
     }
+
+    /// An item that is only `[ ]` or `[x]` is drawn as a checkbox, as in
+    /// Obsidian; `[]` without the space and items with text keep the usual rules.
+    func testEmptyTaskItemsRenderAsCheckboxes() throws {
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: "- [ ]\n- [x]\n- []\n- [ ] milk", useGithubLineBreak: false))
+        XCTAssertTrue(html.contains(#"<li data-sourcepos="1:1-1:5"><input type="checkbox" disabled="" /></li>"#), html)
+        XCTAssertTrue(html.contains(#"<li data-sourcepos="2:1-2:5"><input type="checkbox" checked="" disabled="" /></li>"#), html)
+        XCTAssertTrue(html.contains(#">[]</li>"#), "no space inside the brackets stays text")
+        XCTAssertTrue(html.contains(#"<input type="checkbox" disabled="" /> milk</li>"#))
+        XCTAssertEqual(HandlerCheckbox.taskMarkerRange(in: "- [ ]\n- [x]", bodyLine: 2).map { ("- [ ]\n- [x]" as NSString).substring(with: $0) }, "x")
+    }
+
+    func testEmptyTaskItemInALooseListRendersAsCheckbox() throws {
+        let html = try XCTUnwrap(renderMarkdownHTML(markdown: "- [ ]\n\n- [x]\n", useGithubLineBreak: false))
+        XCTAssertFalse(html.contains("[ ]"), html)
+        XCTAssertFalse(html.contains("[x]"), html)
+    }
 }

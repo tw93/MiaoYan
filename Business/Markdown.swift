@@ -381,7 +381,33 @@ func renderMarkdownHTML(markdown: String, useGithubLineBreak: Bool) -> String? {
         newRes = newRes.replacingOccurrences(of: fullMatch, with: replaced)
     }
 
-    return transformGitHubAlerts(in: newRes)
+    return renderEmptyTaskItems(in: transformGitHubAlerts(in: newRes))
+}
+
+private let emptyTaskItemRegex = try? NSRegularExpression(
+    pattern: #"(<li\b[^>]*>)(\s*<p\b[^>]*>)?\[([ xX])\]\s*(</p>)?(?=\s*(?:</li>|<ul|<ol))"#)
+
+/// A list item that is only `[ ]` or `[x]` becomes a checkbox, as Obsidian
+/// draws it, so a task list can be laid out before its items are written.
+/// GitHub Flavored Markdown needs text after the brackets and left these as
+/// literal brackets (maintainer, 2026-10-15). `[]` without a space stays text.
+/// The `<li>` keeps its data-sourcepos, so a click still toggles that line.
+func renderEmptyTaskItems(in html: String) -> String {
+    guard html.contains("["), let regex = emptyTaskItemRegex else { return html }
+    let ns = html as NSString
+    var result = ""
+    var last = 0
+    for match in regex.matches(in: html, range: NSRange(location: 0, length: ns.length)) {
+        result += ns.substring(with: NSRange(location: last, length: match.range.location - last))
+        let item = ns.substring(with: match.range(at: 1))
+        let open = match.range(at: 2).location == NSNotFound ? "" : ns.substring(with: match.range(at: 2))
+        let close = match.range(at: 4).location == NSNotFound ? "" : ns.substring(with: match.range(at: 4))
+        let checked = ns.substring(with: match.range(at: 3)) == " " ? "" : "checked=\"\" "
+        result += "\(item)\(open)<input type=\"checkbox\" \(checked)disabled=\"\" />\(close)"
+        last = NSMaxRange(match.range)
+    }
+    result += ns.substring(from: last)
+    return result
 }
 
 // MARK: - GitHub Alerts
