@@ -520,23 +520,6 @@ extension ViewController {
         }
     }
 
-    @IBAction func openProjectViewSettings(_ sender: NSMenuItem) {
-        guard let vc = ViewController.shared() else {
-            return
-        }
-
-        if let controller = vc.storyboard?.instantiateController(withIdentifier: "ProjectSettingsViewController")
-            as? ProjectSettingsViewController
-        {
-            projectSettingsViewController = controller
-
-            if let project = vc.getSidebarProject() {
-                vc.presentAsSheet(controller)
-                controller.load(project: project)
-            }
-        }
-    }
-
     @IBAction func duplicate(_ sender: Any) {
         if let notes = notesTableView.getSelectedNotes() {
             for note in notes {

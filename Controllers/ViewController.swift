@@ -25,7 +25,6 @@ class ViewController:
     }
 
     public var fsManager: FileSystemEventManager?
-    var projectSettingsViewController: ProjectSettingsViewController?
     let appContext = AppContext.shared
     var storage: Storage { appContext.storage }
     var filteredNoteList: [Note]?

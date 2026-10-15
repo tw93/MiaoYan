@@ -1100,14 +1100,6 @@ class SidebarProjectView: NSOutlineView,
         }
     }
 
-    @IBAction func openSettings(_ sender: NSMenuItem) {
-        guard let vc = AppContext.shared.viewController else {
-            return
-        }
-
-        vc.openProjectViewSettings(sender)
-    }
-
     private func removeProject(project: Project) {
         storage.removeBy(project: project)
 
