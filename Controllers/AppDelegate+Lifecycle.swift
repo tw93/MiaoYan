@@ -10,9 +10,10 @@ extension AppDelegate {
         let task = Process()
         task.launchPath = "/bin/sh"
         let quotedAppPath = shellQuoted(appURL.path)
+        let intoShell = (NSApp.delegate as? AppDelegate)?.shellWindowController != nil
         task.arguments = [
             "-c",
-            "sleep 0.7; /usr/bin/open -n -a \(quotedAppPath)",
+            relaunchCommand(quotedAppPath: quotedAppPath, intoShell: intoShell),
         ]
 
         DispatchQueue.main.async {
@@ -31,5 +32,12 @@ extension AppDelegate {
                 NSApp.terminate(nil)
             }
         }
+    }
+
+    /// The shell opens only with `-MiaoYanShell YES` on the command line, so
+    /// a restart from it (note location, language) has to pass that again or
+    /// it comes back as the storyboard window.
+    nonisolated static func relaunchCommand(quotedAppPath: String, intoShell: Bool) -> String {
+        "sleep 0.7; /usr/bin/open -n -a \(quotedAppPath)" + (intoShell ? " --args -MiaoYanShell YES" : "")
     }
 }
