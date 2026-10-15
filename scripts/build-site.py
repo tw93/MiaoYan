@@ -565,7 +565,6 @@ def page(key):
             "description": c["description"],
             "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"},
             "sameAs": [GITHUB, APP_STORE],
-            "offers": {"@type": "Offer", "price": "14.99", "priceCurrency": "USD", "url": APP_STORE},
         },
         ensure_ascii=False,
     )
