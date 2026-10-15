@@ -55,6 +55,9 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     public var viewDelegate: ViewController?
     /// True when the SwiftUI shell hosts this editor (no `ViewController`, its own preview and modes), so it behaves as the plain edit view. Set once before use; read off the actor.
     nonisolated(unsafe) var isShellHosted = false
+    /// The shell's list search, whose keywords a note opened from it
+    /// highlights; the storyboard window reads its own search field instead.
+    var shellSearchText: (() -> String)?
     nonisolated(unsafe) private var linkHighlightTimer: Timer?
     private weak var cachedViewController: ViewController?
     var isHighlighted: Bool = false
@@ -1036,6 +1039,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
     }
 
     func getSearchText() -> String {
+        if isShellHosted { return shellSearchText?() ?? "" }
         guard let search = getViewController()?.search else { return "" }
         if let editor = search.currentEditor(), editor.selectedRange.length > 0 {
             let searchString = search.stringValue

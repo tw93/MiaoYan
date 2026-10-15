@@ -391,6 +391,20 @@ struct ShellNoteList: View {
                                     isSelected: model.isSelected(note)
                                 )
                                 .id(note.url)
+                                .background {
+                                    // File ▸ Export pops its menu at the open note's row.
+                                    if note.url == model.selectedNoteURL {
+                                        GeometryReader { proxy in
+                                            let frame = proxy.frame(in: .global)
+                                            SwiftUI.Color.clear
+                                                .onAppear { model.selectedRowFrame = frame }
+                                                .onChange(of: frame) { _, frame in model.selectedRowFrame = frame }
+                                                .onDisappear {
+                                                    if model.selectedRowFrame == frame { model.selectedRowFrame = nil }
+                                                }
+                                        }
+                                    }
+                                }
                                 .contentShape(Rectangle())
                                 .onTapGesture {
                                     model.clickNote(note, modifiers: NSEvent.modifierFlags)
@@ -607,13 +621,15 @@ struct ShellDetail: View {
                 case .edit:
                     ShellEditorView(controller: model.editor, note: note)
                 case .preview:
-                    ShellPreview(note: note, revision: model.contentRevision, styleRevision: model.previewStyleRevision) { model.preview = $0 }
+                    ShellPreview(
+                        note: note, revision: model.contentRevision, styleRevision: model.previewStyleRevision,
+                        onMake: { model.preview = $0 }, onLoad: { model.previewDidLoad($0) })
                 case .split:
-                    HStack(spacing: 0) {
-                        ShellEditorView(controller: model.editor, note: note)
-                        Rectangle().fill(ShellStyle.hairline).frame(width: 1)
-                        ShellPreview(note: note, revision: model.contentRevision, styleRevision: model.previewStyleRevision) { model.preview = $0 }
-                    }
+                    ShellEditorSplit(
+                        controller: model.editor, note: note,
+                        preview: ShellPreview(
+                            note: note, revision: model.contentRevision, styleRevision: model.previewStyleRevision,
+                            onMake: { model.preview = $0 }))
                 }
             } else {
                 SwiftUI.Color.clear
@@ -627,6 +643,9 @@ struct ShellDetail: View {
     /// light at the trailing edge.
     private var header: some View {
         let titleSize = CGFloat(UserDefaultsManagement.nameFontSize) + 3
+        // Button Display "On Hover" keeps them out of sight until the
+        // pointer is over the header, as the storyboard title bar does.
+        let showsButtons = !isButtonDisplayOnHover || isHoveringHeader
         return HStack(spacing: 4) {
             if model.layout == .noteOnly {
                 Spacer().frame(width: ShellStyle.trafficLightsInset - ShellStyle.noteTextInset)
@@ -637,39 +656,85 @@ struct ShellDetail: View {
             Spacer(minLength: 12)
             // The mode buttons act on a note; with none open they are gone.
             if model.selectedNote != nil {
-                ChromeButton(image: "icon_editor_split", help: "Toggle Split Mode", isActive: model.editorMode == .split) {
-                    model.toggleSplit()
+                HStack(spacing: 4) {
+                    ChromeButton(image: "icon_editor_split", help: "Toggle Split Mode", isActive: model.editorMode == .split) {
+                        model.toggleSplit()
+                    }
+                    ChromeButton(image: "icon_format", help: model.isFormatting ? "Formatting... click again to cancel" : "Format") {
+                        model.format()
+                    }
+                    .opacity(model.isFormatting ? 0.6 : 1)
+                    ChromeButton(image: "icon_preview", help: "Toggle Preview", isActive: model.editorMode == .preview) {
+                        model.togglePreview()
+                    }
+                    ChromeButton(image: "icon_presentation", help: "Presentation") { model.setPresenting(true) }
                 }
-                ChromeButton(image: "icon_format", help: "Format") { model.format() }
-                ChromeButton(image: "icon_preview", help: "Toggle Preview", isActive: model.editorMode == .preview) {
-                    model.togglePreview()
-                }
-                ChromeButton(image: "icon_presentation", help: "Presentation") { model.setPresenting(true) }
+                .opacity(showsButtons ? 1 : 0)
+                .animation(.easeOut(duration: 0.2), value: showsButtons)
             }
         }
         .padding(.leading, ShellStyle.noteTextInset)
         .padding(.trailing, 12)
         .frame(height: ShellStyle.headerHeight)
+        .background(ShellHoverTracker { isHoveringHeader = $0 })
+    }
+
+    @State private var isHoveringHeader = false
+
+    private var isButtonDisplayOnHover: Bool {
+        UserDefaultsManagement.buttonShow == "Hover"
     }
 }
 
-/// The note's title in the header. A double click, ⌘R, or a new note turns it
-/// into a field; Return renames the file, Escape leaves it as it was.
+/// Reports the pointer entering and leaving its area without taking clicks,
+/// so the header's empty space still drags the window.
+@available(macOS 14, *)
+private struct ShellHoverTracker: NSViewRepresentable {
+    let onChange: (Bool) -> Void
+
+    final class TrackingView: NSView {
+        var onChange: ((Bool) -> Void)?
+        private var area: NSTrackingArea?
+
+        override func hitTest(_ point: NSPoint) -> NSView? { nil }
+
+        override func updateTrackingAreas() {
+            super.updateTrackingAreas()
+            if let area { removeTrackingArea(area) }
+            let area = NSTrackingArea(
+                rect: .zero, options: [.mouseEnteredAndExited, .activeInActiveApp, .inVisibleRect], owner: self)
+            addTrackingArea(area)
+            self.area = area
+        }
+
+        override func mouseEntered(with event: NSEvent) { onChange?(true) }
+        override func mouseExited(with event: NSEvent) { onChange?(false) }
+    }
+
+    func makeNSView(context: Context) -> TrackingView {
+        let view = TrackingView()
+        view.onChange = onChange
+        return view
+    }
+
+    func updateNSView(_ view: TrackingView, context: Context) {
+        view.onChange = onChange
+    }
+}
+
+/// The note's title in the header. A click, ⌘R, or a new note turns it into
+/// a field; Return renames the file, Escape leaves it as it was.
 @available(macOS 14, *)
 private struct ShellTitleField: View {
     @Bindable var model: ShellModel
     let size: CGFloat
-    @State private var draft = ""
-    /// The note `draft` was started for; a commit never applies one note's
-    /// draft to another.
-    @State private var draftURL: URL?
     @FocusState private var focused: Bool
 
     var body: some View {
         let font = ShellStyle.interface(size, weight: ShellStyle.titleWeight)
         Group {
             if model.isRenaming, model.selectedNote != nil {
-                TextField(I18n.str("Untitled Note"), text: $draft)
+                TextField(I18n.str("Untitled Note"), text: $model.renameDraft)
                     .textFieldStyle(.plain)
                     .font(font)
                     .foregroundStyle(ShellStyle.text)
@@ -677,26 +742,31 @@ private struct ShellTitleField: View {
                     .onSubmit {
                         // Return goes on to the note's text, as in the storyboard
                         // window, which keeps Japanese input's Return in place.
-                        commit()
+                        model.commitPendingRename()
                         if UserDefaultsManagement.defaultLanguage != 0x02 { model.focusEditor() }
                     }
                     .onExitCommand { model.isRenaming = false }
                     .onAppear {
-                        draft = model.selectedNote?.getTitleWithoutLabel() ?? ""
-                        draftURL = model.renamingNoteURL
+                        model.beginRenameDraft()
                         focused = true
                     }
                     .onChange(of: focused) { _, isFocused in
-                        if !isFocused { commit() }
+                        if !isFocused { model.commitPendingRename() }
+                    }
+                    .onChange(of: model.renameDraft) { _, draft in
+                        let line = ShellModel.singleLineTitle(draft)
+                        if line != draft { model.renameDraft = line }
                     }
             } else {
+                // One click starts editing, as the storyboard window's title
+                // field does.
                 Text(model.selectedNote?.getTitleWithoutLabel() ?? "")
                     .font(font)
                     .kerning(ShellStyle.tracking(size))
                     .foregroundStyle(ShellStyle.text)
                     .lineLimit(1)
                     .truncationMode(.middle)
-                    .onTapGesture(count: 2) { model.isRenaming = model.selectedNote != nil }
+                    .onTapGesture { model.isRenaming = model.selectedNote != nil }
             }
         }
         .onChange(of: model.selectedNoteURL) { _, url in
@@ -704,16 +774,8 @@ private struct ShellTitleField: View {
             // the field leaves with the old selection, often before its
             // focus-loss commit could run. The selection that opens the field
             // for this note does not end it.
-            if model.renamingNoteURL != url { commit() }
+            if model.renamingNoteURL != url { model.commitPendingRename() }
         }
-    }
-
-    private func commit() {
-        guard let url = model.renamingNoteURL else { return }
-        model.renamingNoteURL = nil
-        guard draftURL == url, let note = AppEnvironment.current.storage.getBy(url: url) else { return }
-        draftURL = nil
-        model.rename(note, to: draft)
     }
 }
 
@@ -775,6 +837,8 @@ private struct ShellNoteMenu: View {
                 item("Image", "photo") { exportSelecting(.image) }
                 item("PDF", "doc.richtext") { exportSelecting(.pdf) }
                 item("MiaoYan PPT PDF", "wand.and.stars") { exportSelecting(.ppt) }
+                    // A deck needs a --- slide break; an unread note is let through.
+                    .disabled(note.isContentLoaded && !note.content.string.contains("---"))
             } label: {
                 Label(I18n.str("Export"), systemImage: "square.and.arrow.up")
             }
@@ -822,10 +886,11 @@ struct ShellPreview: NSViewRepresentable {
     var styleRevision = 0
     /// Hands the view to whoever runs commands on it (the TOC toggle).
     var onMake: ((MPreviewView) -> Void)?
+    /// Called once the note has started loading into the page.
+    var onLoad: ((MPreviewView) -> Void)?
 
     final class Coordinator {
         var loadedURL: URL?
-        var loadedModifiedAt: Date?
         var revision = 0
         var styleRevision = 0
     }
@@ -839,33 +904,32 @@ struct ShellPreview: NSViewRepresentable {
         return view
     }
 
+    /// Typing reaches the split preview from the editor controller, and a
+    /// change from outside bumps `revision`; a save alone renders nothing.
     func updateNSView(_ view: MPreviewView, context: Context) {
         let coordinator = context.coordinator
         if coordinator.loadedURL != note.url || coordinator.styleRevision != styleRevision {
+            // NotesTableView: switching notes closes the preview's find bar.
+            if coordinator.loadedURL != note.url, view.isSearchBarVisible { view.hideSearchBar() }
             load(note, into: view, context: context)
         } else if coordinator.revision != revision {
             coordinator.revision = revision
-            view.updateContent(note: note)
-        } else if coordinator.loadedModifiedAt != note.modifiedLocalAt {
-            // The note was written since the last render, by its own debounced
-            // save or by a sync. Refresh the content in place; a full template
-            // reload here repainted the whole preview after every typing pause.
-            coordinator.loadedModifiedAt = note.modifiedLocalAt
             view.updateContent(note: note)
         }
     }
 
     private func load(_ note: Note, into view: MPreviewView, context: Context) {
         context.coordinator.loadedURL = note.url
-        context.coordinator.loadedModifiedAt = note.modifiedLocalAt
         context.coordinator.revision = revision
         context.coordinator.styleRevision = styleRevision
         let coordinator = context.coordinator
+        let onLoad = onLoad
         Task { @MainActor in
             await note.ensureContentLoadedAsync()
             // Another note may have been selected while this one loaded.
             guard coordinator.loadedURL == note.url else { return }
             view.load(note: note, force: true)
+            onLoad?(view)
         }
     }
 }

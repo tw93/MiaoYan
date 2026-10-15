@@ -432,12 +432,24 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
     @IBAction func exportImage(_ sender: Any?) { model.export(.image) }
     @IBAction func exportHtml(_ sender: Any?) { model.export(.html) }
 
-    /// File ▸ Export: the three formats as a menu at the pointer, the way the
-    /// storyboard window pops its note menu's Export submenu.
+    /// File ▸ Export: the formats as a menu at the open note's row, the way
+    /// the storyboard window pops its note menu's Export submenu; at the
+    /// pointer when the list is hidden or the row is scrolled away.
     @IBAction func exportMenu(_ sender: Any?) {
         guard model.selectedNote != nil, let window, let view = window.contentView else { return }
+        let menu = Self.exportFormatsMenu()
+        if model.layout != .noteOnly, let row = model.selectedRowFrame,
+            let items = (window.contentViewController as? NSSplitViewController)?.splitViewItems, items.count == 3,
+            case let list = items[1].viewController.view,
+            list.bounds.insetBy(dx: 0, dy: -1).contains(NSPoint(x: row.midX, y: list.isFlipped ? row.midY : list.bounds.height - row.midY))
+        {
+            // SwiftUI frames run down from the hosting view's top edge.
+            let y = list.isFlipped ? row.minY + 8 : list.bounds.height - row.minY - 8
+            menu.popUp(positioning: menu.item(at: 0), at: NSPoint(x: row.minX + 20, y: y), in: list)
+            return
+        }
         let point = view.convert(window.mouseLocationOutsideOfEventStream, from: nil)
-        Self.exportFormatsMenu().popUp(positioning: nil, at: point, in: view)
+        menu.popUp(positioning: nil, at: point, in: view)
     }
 
     static func exportFormatsMenu() -> NSMenu {
@@ -445,6 +457,7 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         menu.addItem(withTitle: "PDF", action: #selector(exportPdf(_:)), keyEquivalent: "")
         menu.addItem(withTitle: I18n.str("Image"), action: #selector(exportImage(_:)), keyEquivalent: "")
         menu.addItem(withTitle: "HTML", action: #selector(exportHtml(_:)), keyEquivalent: "")
+        menu.addItem(withTitle: I18n.str("MiaoYan PPT PDF"), action: #selector(exportMiaoYanPPT(_:)), keyEquivalent: "")
         return menu
     }
 
@@ -475,13 +488,15 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             menuItem.state = model.editorMode == .split ? .on : .off
             return hasNote && !model.isPresenting
         case #selector(togglePresentation(_:)):
+            // Command-4 also leaves a PPT deck, as in the storyboard window.
             menuItem.state = model.isPresenting && !model.isPPT ? .on : .off
-            return hasNote && !model.isPPT
+            return hasNote
         case #selector(toggleMagicPPT(_:)):
             menuItem.state = model.isPPT ? .on : .off
             return hasNote && (!model.isPresenting || model.isPPT)
         case #selector(toggleTOC(_:)):
-            return hasNote && model.editorMode != .edit
+            // Reveal's deck has no table of contents.
+            return hasNote && model.editorMode != .edit && !model.isPPT
         case #selector(formatText(_:)), #selector(cleanTypography(_:)):
             return hasNote && model.editorMode != .preview && !model.isPresenting
         case #selector(deleteNote(_:)):
@@ -493,7 +508,7 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         case #selector(reloadCurrentNote(_:)), #selector(copyURL(_:)), #selector(copyPath(_:)):
             return hasNote
         case #selector(exportMiaoYanPPT(_:)):
-            return hasNote && !model.isExporting && (!model.isPresenting || model.isPPT)
+            return hasNote && !model.isExporting && (!model.isPresenting || model.isPPT) && model.selectedNoteHasSlides
         case #selector(showInfo(_:)):
             return hasNote && !model.isPresenting
         case #selector(showVersionHistory(_:)):
@@ -579,6 +594,15 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
 
         switch Int(event.keyCode) {
         case kVK_Escape:
+            // EditTextView closes the split preview's find bar through its
+            // own preview, which the shell's editor does not have.
+            if flags.isEmpty, responder === editor, !editor.hasMarkedText(), !editor.isSearchBarVisible,
+                model.editorMode == .split, let preview = model.preview, preview.isSearchBarVisible
+            {
+                preview.hideSearchBar()
+                escapeLeavesEditor = false
+                return nil
+            }
             escapeLeavesEditor =
                 flags.isEmpty && responder === editor && !editor.hasMarkedText() && !editor.isSearchBarVisible
             return event
@@ -598,6 +622,20 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         case kVK_ANSI_H where flags == [.control, .shift]:
             guard hasNote, !model.isExporting else { return event }
             model.export(.html)
+            return nil
+        // The storyboard list's export keys: PDF, image and the PPT deck.
+        // Text keeps them (Control-Shift-P extends a selection up).
+        case kVK_ANSI_P where flags == [.control, .shift]:
+            guard hasNote, !isText, !model.isExporting, !model.isPPT else { return event }
+            model.export(.pdf)
+            return nil
+        case kVK_ANSI_I where flags == [.control, .shift]:
+            guard hasNote, !isText, !model.isExporting, !model.isPPT else { return event }
+            model.export(.image)
+            return nil
+        case kVK_ANSI_P where flags == [.control, .option, .shift]:
+            guard hasNote, !isText, !model.isExporting, !model.isPPT else { return event }
+            model.export(.ppt)
             return nil
         case kVK_ANSI_I where flags == [.command, .option]:
             guard hasNote, !model.isPresenting else { return event }

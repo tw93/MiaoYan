@@ -142,10 +142,17 @@ final class ShellModel {
     private(set) var editorMode = EditorMode.edit {
         didSet {
             UserDefaultsManagement.preview = editorMode == .preview
-            UserDefaultsManagement.splitViewMode = editorMode == .split
+            // Preview leaves the split setting alone, so leaving it returns
+            // to split when split was on, as in the storyboard window.
+            if editorMode != .preview {
+                UserDefaultsManagement.splitViewMode = editorMode == .split
+            }
+            editor.attachSplitPreview(editorMode == .split ? preview : nil)
         }
     }
-    /// Bumped after each edit lands in the note; a visible preview follows it.
+    /// Bumped when the open note changed outside the editor (disk, version
+    /// restore); the preview re-renders in place. Typing reaches the split
+    /// preview through the editor controller.
     private(set) var contentRevision = 0
     private(set) var isPresenting = false
     @ObservationIgnored private var modeBeforePresenting = EditorMode.preview
@@ -153,7 +160,6 @@ final class ShellModel {
     @ObservationIgnored let editor = ShellEditorController()
     /// Where toasts appear; set by the window's split controller.
     @ObservationIgnored weak var host: NSViewController?
-    @ObservationIgnored private var previewTimer: Timer?
     @ObservationIgnored private var isUnfolding = false
     @ObservationIgnored private var pendingSnippets: Set<URL> = []
 
@@ -203,6 +209,15 @@ final class ShellModel {
 
     var selectedNoteURL: URL? {
         didSet {
+            // An export takes its file name and body from the open note, so
+            // the storyboard list refuses to switch until it is written.
+            if isExporting, selectedNoteURL != oldValue, !isRestoringSelection {
+                isRestoringSelection = true
+                selectedNoteURL = oldValue
+                isRestoringSelection = false
+                host?.toast(message: I18n.str("Switching notes is disabled during export~"), style: .failure)
+                return
+            }
             // Moving the selection any other way (arrows, new note, a link)
             // ends a multiple selection, as in the storyboard list.
             if !isExtendingSelection, selectedNoteURL != oldValue { extraSelectedURLs = [] }
@@ -215,6 +230,7 @@ final class ShellModel {
     /// open note stays the one the editor and preview show.
     private(set) var extraSelectedURLs: Set<URL> = []
     @ObservationIgnored private var isExtendingSelection = false
+    @ObservationIgnored private var isRestoringSelection = false
 
     func isSelected(_ note: Note) -> Bool {
         note.url == selectedNoteURL || extraSelectedURLs.contains(note.url)
@@ -284,8 +300,16 @@ final class ShellModel {
         reload()
         rebuildLinkIndex()
         editor.onContentChange = { [weak self] in
-            self?.scheduleContentRevision()
             self?.scheduleSavedNoteRefresh()
+        }
+        editor.onFormattingChange = { [weak self] formatting in
+            self?.isFormatting = formatting
+        }
+        editor.onShow = { [weak self] in
+            self?.editorDidAppear()
+        }
+        editor.searchQuery = { [weak self] in
+            self?.searchText ?? ""
         }
     }
 
@@ -314,18 +338,6 @@ final class ShellModel {
     /// Backlinks cover every note; the index reads unloaded bodies itself.
     private func rebuildLinkIndex() {
         AppEnvironment.current.wikilinkIndex.rebuildFromAllNotes(in: storage)
-    }
-
-    /// The preview re-renders at most this often while typing, by the same
-    /// document-length tiers the storyboard window uses.
-    private func scheduleContentRevision() {
-        previewTimer?.invalidate()
-        guard editorMode == .split, let note = EditTextView.note else { return }
-        let lines = note.content.string.utf8.reduce(1) { $1 == 10 ? $0 + 1 : $0 }
-        let delay: TimeInterval = lines < 500 ? 0.3 : lines < 1500 ? 0.6 : 1.0
-        previewTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
-            Task { @MainActor in self?.contentRevision &+= 1 }
-        }
     }
 
     /// Whether a collapsed folder has subfolders, from the last scan.
@@ -476,6 +488,7 @@ final class ShellModel {
             host.toast(message: I18n.str("Format is only possible after exiting preview mode~"), style: .failure)
             return
         }
+        commitPendingRename()
         editor.cleanTypography(in: host)
     }
 
@@ -525,15 +538,116 @@ final class ShellModel {
         return formatter
     }()
 
-    func togglePreview() {
-        guard !isPresenting else { return }
-        editorMode = editorMode == .preview ? .edit : .preview
+    /// Leaving preview returns to split when split was on.
+    private var modeAfterPreview: EditorMode {
+        UserDefaultsManagement.splitViewMode ? .split : .edit
     }
 
+    func togglePreview() {
+        guard !isPresenting else { return }
+        setMode(editorMode == .preview ? modeAfterPreview : .preview)
+    }
+
+    /// From preview, the storyboard window flips split and leaves preview
+    /// into whichever mode that gives.
     func toggleSplit() {
         guard !isPresenting else { return }
-        editorMode = editorMode == .split ? .edit : .split
+        if editorMode == .preview {
+            setMode(modeAfterPreview == .split ? .edit : .split)
+        } else {
+            setMode(editorMode == .split ? .edit : .split)
+        }
     }
+
+    /// What preview does once its page is ready: scroll to the line being
+    /// edited (with Preview Location "Editing") and take focus.
+    private struct PreviewEntry {
+        var line: CGFloat?
+        var ratio: CGFloat?
+    }
+
+    /// The editor's place when preview opened, put back when it closes on
+    /// the same note.
+    private struct EditorPlace {
+        let url: URL
+        let selection: NSRange
+        let ratio: CGFloat
+    }
+
+    @ObservationIgnored private var pendingPreviewEntry: PreviewEntry?
+    @ObservationIgnored private var editorPlaceBeforePreview: EditorPlace?
+    /// Run once the editor is back on screen after a mode change.
+    @ObservationIgnored private var editorAppearAction: (() -> Void)?
+
+    /// The storyboard window's enablePreview / disablePreview and split
+    /// toggles: find bars close, a title being typed is kept, and focus,
+    /// scroll and selection carry across.
+    private func setMode(_ mode: EditorMode) {
+        guard mode != editorMode else { return }
+        commitPendingRename()
+        closeFindBars()
+        let wasPreview = editorMode == .preview
+        if mode == .preview {
+            var entry = PreviewEntry()
+            if let note = selectedNote, editor.textView.storageNote === note, editor.textView.window != nil {
+                entry.line = editor.topBodyLine()
+                entry.ratio = editor.scrollRatio
+                editorPlaceBeforePreview = EditorPlace(url: note.url, selection: editor.textView.selectedRange(), ratio: editor.scrollRatio)
+            } else {
+                editorPlaceBeforePreview = nil
+            }
+            pendingPreviewEntry = entry
+            editorAppearAction = nil
+        } else {
+            let place = wasPreview ? editorPlaceBeforePreview : nil
+            editorPlaceBeforePreview = nil
+            pendingPreviewEntry = nil
+            editorAppearAction = { [weak self] in self?.restoreEditor(place, restoreCursor: wasPreview) }
+        }
+        editorMode = mode
+    }
+
+    private func restoreEditor(_ place: EditorPlace?, restoreCursor: Bool) {
+        guard editorMode != .preview, !isPresenting, let note = selectedNote else { return }
+        let textView = editor.textView
+        if let place, place.url == note.url, textView.storageNote === note {
+            let length = (textView.string as NSString).length
+            let location = min(max(place.selection.location, 0), length)
+            textView.setSelectedRange(NSRange(location: location, length: min(place.selection.length, length - location)))
+            editor.setScrollRatio(place.ratio)
+        } else if restoreCursor {
+            textView.restoreCursorPosition()
+        }
+        if !isRenaming { focusEditor() }
+    }
+
+    func editorDidAppear() {
+        guard let action = editorAppearAction else { return }
+        editorAppearAction = nil
+        action()
+    }
+
+    /// Called once a preview has started loading its note.
+    func previewDidLoad(_ view: MPreviewView) {
+        guard let entry = pendingPreviewEntry, view === preview, editorMode == .preview else { return }
+        pendingPreviewEntry = nil
+        let scrolls = UserDefaultsManagement.previewLocation == "Editing" && !isExporting
+        view.runWhenPreviewReady { [weak view] in
+            guard let view else { return }
+            if scrolls, let line = entry.line {
+                view.scrollToLine(line, fallbackRatio: entry.ratio)
+            }
+            view.window?.makeFirstResponder(view)
+        }
+    }
+
+    private func closeFindBars() {
+        if editor.textView.isSearchBarVisible { editor.textView.hideSearchBar(restoreFocus: false) }
+        if let preview, preview.isSearchBarVisible { preview.hideSearchBar() }
+    }
+
+    /// Whether Format is running; its button dims and a click cancels it.
+    private(set) var isFormatting = false
 
     func format() {
         guard let host else { return }
@@ -541,6 +655,7 @@ final class ShellModel {
             host.toast(message: I18n.str("Format is only possible after exiting preview mode~"), style: .failure)
             return
         }
+        commitPendingRename()
         editor.format(in: host)
     }
 
@@ -561,8 +676,12 @@ final class ShellModel {
                     return
                 }
             }
+            commitPendingRename()
+            closeFindBars()
             modeBeforePresenting = editorMode
             layoutBeforePresenting = layout
+            pendingPreviewEntry = nil
+            editorAppearAction = nil
             // Preview, presentation and PPT are one stored mode, and switching
             // the column to preview writes "preview"; set the presentation
             // mode after it or the preview write replaces it.
@@ -578,12 +697,27 @@ final class ShellModel {
             // The stylesheet (presentation size, deck template) changed.
             previewStyleRevision &+= 1
             if ppt { openDeckAtCursor() }
+            // A PPT export opens the deck only to print it.
+            if !UserDefaultsManagement.isOnExportPPT {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self] in
+                    guard let self, self.isPresenting else { return }
+                    self.host?.toast(message: I18n.str("Press ESC key to exit~"))
+                }
+            }
         } else {
+            closeFindBars()
             UserDefaultsManagement.presentation = false
             UserDefaultsManagement.magicPPT = false
             isPresenting = false
             isPPT = false
             layout = layoutBeforePresenting
+            // The keyboard goes back to the editor, or to the preview when
+            // that was the mode before.
+            if modeBeforePresenting == .preview {
+                pendingPreviewEntry = PreviewEntry()
+            } else {
+                editorAppearAction = { [weak self] in self?.restoreEditor(nil, restoreCursor: false) }
+            }
             editorMode = modeBeforePresenting
             previewStyleRevision &+= 1
         }
@@ -626,8 +760,42 @@ final class ShellModel {
         get { renamingNoteURL != nil && renamingNoteURL == selectedNoteURL }
         set { renamingNoteURL = newValue ? selectedNoteURL : nil }
     }
+    /// What the title field holds, and the note it was started for: a
+    /// commit never applies one note's draft to another.
+    var renameDraft = ""
+    @ObservationIgnored private var renameDraftURL: URL?
+
+    /// The title field opened: start from the note's title.
+    func beginRenameDraft() {
+        renameDraft = selectedNote?.getTitleWithoutLabel() ?? ""
+        renameDraftURL = renamingNoteURL
+    }
+
+    /// Renames the note after what the title field holds and closes it; the
+    /// storyboard window's saveTitleSafely, run before mode changes and
+    /// Format so a title being typed is not lost.
+    func commitPendingRename() {
+        guard let url = renamingNoteURL else { return }
+        renamingNoteURL = nil
+        guard renameDraftURL == url, let note = storage.getBy(url: url) else { return }
+        renameDraftURL = nil
+        rename(note, to: renameDraft)
+    }
+
+    /// A title is one line: pasted line breaks become spaces, as in the
+    /// storyboard window's title field.
+    nonisolated static func singleLineTitle(_ title: String) -> String {
+        guard title.contains(where: \.isNewline) else { return title }
+        return title.split(omittingEmptySubsequences: false, whereSeparator: \.isNewline).joined(separator: " ")
+    }
+
     /// The preview currently on screen, for commands that act on it (TOC).
-    @ObservationIgnored weak var preview: MPreviewView?
+    /// The split preview also scrolls with the editor.
+    @ObservationIgnored weak var preview: MPreviewView? {
+        didSet {
+            editor.attachSplitPreview(editorMode == .split ? preview : nil)
+        }
+    }
 
     enum FocusTarget {
         case sidebar
@@ -1503,9 +1671,17 @@ final class ShellModel {
     private(set) var isExporting = false
     @ObservationIgnored private var restoreEditAfterExport = false
 
-    /// Every format is produced by the preview view (PDF and image capture its
-    /// rendering), so an export from the editor shows the preview first and
-    /// returns to the editor after, as the storyboard window does.
+    /// Whether the open note can be shown as a deck: it has a `---` slide
+    /// break. A note whose text is not loaded yet is let through, and the
+    /// deck itself says so.
+    var selectedNoteHasSlides: Bool {
+        guard let note = selectedNote else { return false }
+        return !note.isContentLoaded || note.content.string.contains("---")
+    }
+
+    /// HTML is rendered straight from the note. PDF and image capture the
+    /// preview's rendering, so an export from the editor shows the preview
+    /// first and returns to the editor after, as the storyboard window does.
     func export(_ format: ExportFormat) {
         guard !isExporting, selectedNote != nil else { return }
         if format == .ppt {
@@ -1513,13 +1689,15 @@ final class ShellModel {
             return
         }
         isExporting = true
-        let needsPreview = editorMode == .edit
-        if needsPreview {
-            restoreEditAfterExport = true
-            editorMode = .preview
+        if format == .html {
+            MPreviewView.exportHtml()
+            return
         }
-        let delay: TimeInterval = needsPreview || format != .html ? 1.0 : 0
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+        if editorMode == .edit {
+            restoreEditAfterExport = true
+            setMode(.preview)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self else { return }
             guard let preview = self.preview else {
                 self.host?.toast(message: I18n.str("Export failed"), style: .failure)
@@ -1529,8 +1707,7 @@ final class ShellModel {
             switch format {
             case .pdf: preview.exportPdf()
             case .image: preview.exportImage()
-            case .html: MPreviewView.exportHtml()
-            case .ppt: break
+            case .html, .ppt: break
             }
         }
     }
@@ -1582,9 +1759,13 @@ final class ShellModel {
         isExporting = false
         if restoreEditAfterExport {
             restoreEditAfterExport = false
-            editorMode = .edit
+            setMode(.edit)
         }
     }
+
+    /// Where the open note's row sits in the list, in the list's own
+    /// coordinates, for menus that pop at it.
+    @ObservationIgnored var selectedRowFrame: CGRect?
 
     func snippet(for note: Note) -> String? {
         if let text = snippets[note.url] { return text }
