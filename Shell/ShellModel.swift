@@ -336,8 +336,12 @@ final class ShellModel {
                 self.scheduleSavedNoteRefresh()
                 return
             }
-            self.snippets[url] = nil
-            self.pendingSnippets.remove(url)
+            // The new opening replaces the old one only when it differs.
+            // Clearing it first emptied the row and refilled it a moment
+            // later, so the list flickered while typing elsewhere in the note.
+            let text = await Task.detached(priority: .utility) { NotePreview.text(at: url) ?? "" }.value
+            guard !Task.isCancelled else { return }
+            if self.snippets[url] != text { self.snippets[url] = text }
             // A search keeps its result order, as in the storyboard list.
             if self.searchText.isEmpty { self.refreshNotes(keepSelection: true) }
         }
