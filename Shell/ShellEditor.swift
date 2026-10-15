@@ -168,6 +168,10 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
         // scroll left alone rather than moved to the saved cursor.
         textView.fill(note: note, options: .silent)
         textView.updateTextContainerInset()
+        // Another note starts at its top. The scroll offset of a longer note
+        // read before left a short one scrolled past its end, a blank pane.
+        scrollView.contentView.scroll(to: .zero)
+        scrollView.reflectScrolledClipView(scrollView.contentView)
         invalidateLineStarts()
     }
 

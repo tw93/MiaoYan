@@ -969,6 +969,9 @@ final class ShellModel {
                         MainActor.assumeIsolated { model.restoreDeleted(urls) }
                     }
                     self.notesUndoManager.setActionName(I18n.str("Delete"))
+                    // The storyboard list keeps focus after a delete, where
+                    // Command-Z brings the notes back.
+                    self.focusRequest = .list
                 }
             }
         }

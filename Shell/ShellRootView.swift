@@ -761,12 +761,17 @@ private struct ShellTitleField: View {
             } else {
                 // One click starts editing, as the storyboard window's title
                 // field does.
-                Text(model.selectedNote?.getTitleWithoutLabel() ?? "")
+                // A new note has no title yet; an empty Text had no width to
+                // click, so its title could not be edited at all.
+                let title = model.selectedNote?.getTitleWithoutLabel() ?? ""
+                Text(title.isEmpty && model.selectedNote != nil ? I18n.str("Untitled Note") : title)
                     .font(font)
                     .kerning(ShellStyle.tracking(size))
-                    .foregroundStyle(ShellStyle.text)
+                    .foregroundStyle(title.isEmpty ? ShellStyle.tertiaryText : ShellStyle.text)
                     .lineLimit(1)
                     .truncationMode(.middle)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
                     .onTapGesture { model.isRenaming = model.selectedNote != nil }
             }
         }

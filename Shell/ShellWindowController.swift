@@ -656,6 +656,12 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         case kVK_ANSI_Z where flags == [.command] && responder === editor:
             model.editor.keepCursorThroughFormatUndo()
             return event
+        // Outside text, Command-Z puts deleted notes back. Left to the
+        // responder chain it could stop at a SwiftUI view or the editor's
+        // per-note manager, and the undo did nothing.
+        case kVK_ANSI_Z where flags == [.command] && !isText && model.notesUndoManager.canUndo:
+            model.notesUndoManager.undo()
+            return nil
         case kVK_Delete where flags == [.command] && isText:
             // Text keeps Command-Delete: the editor deletes to the start of
             // the line, the title and search fields clear.

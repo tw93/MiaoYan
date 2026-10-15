@@ -103,14 +103,27 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
     }
 
     func show() {
-        if !hasPreparedWindowForDisplay {
-            window?.center()
+        if let window, !window.isVisible {
+            Self.place(window, over: NSApp.windows.first { $0 !== window && $0.isVisible && $0.canBecomeMain })
             hasPreparedWindowForDisplay = true
         }
         updateAlwaysOnTopState()
         showWindow(self)
         window?.makeKeyAndOrderFront(self)
         NSApp.activate(ignoringOtherApps: true)
+    }
+
+    /// Centred on the main window's content, or on the screen when there is
+    /// none; NSWindow.center() sits a third of the way down, which read as
+    /// placed too high. Kept inside the visible screen.
+    static func place(_ window: NSWindow, over main: NSWindow?) {
+        let size = window.frame.size
+        let area = (main?.screen ?? window.screen ?? NSScreen.main)?.visibleFrame ?? .zero
+        let target = main?.frame ?? area
+        var origin = NSPoint(x: target.midX - size.width / 2, y: target.midY - size.height / 2)
+        origin.x = min(max(origin.x, area.minX), area.maxX - size.width)
+        origin.y = min(max(origin.y, area.minY), area.maxY - size.height)
+        window.setFrameOrigin(origin)
     }
 
     @objc private func updateAlwaysOnTopState() {
