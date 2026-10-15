@@ -94,7 +94,6 @@ custom_rules:
       - "Controllers/EditorPrefsViewController.swift"
       - "Controllers/GeneralPrefsViewController.swift"
       - "Controllers/MainWindowController.swift"
-      - "Controllers/ProjectSettingsViewController.swift"
       - "Controllers/TypographyPrefsViewController.swift"
       - "Controllers/VersionHistoryViewController.swift"
       - "Controllers/ViewController.swift"

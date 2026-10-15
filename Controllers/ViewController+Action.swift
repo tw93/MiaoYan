@@ -600,7 +600,7 @@ extension ViewController {
         let path: String
         if let si = vc.getSidebarItem(), !si.isTrash(), let p = si.project {
             path = p.url.path
-        } else if let rootURL = UserDefaultsManagement.storageUrl {
+        } else if let rootURL = storage.getDefault()?.url ?? UserDefaultsManagement.storageUrl {
             path = rootURL.path
         } else {
             return

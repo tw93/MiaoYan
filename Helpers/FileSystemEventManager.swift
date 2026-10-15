@@ -365,7 +365,9 @@ class FileSystemEventManager {
         // storage scanning skips hidden folders, and the watcher, which does
         // see writes there, ignores them through isConflictBackup. The root's
         // parent is not used because a sandboxed app may not write there.
-        guard let storageRoot = UserDefaultsManagement.storageUrl else {
+        // The root loaded at launch, not the folder Settings may already
+        // point at for the next start.
+        guard let storageRoot = storage.getDefault()?.url ?? UserDefaultsManagement.storageUrl else {
             let err = NSError(
                 domain: "com.tw93.miaoyan.conflict",
                 code: 1,

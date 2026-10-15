@@ -226,7 +226,7 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         // A click must not make an unreadable note's placeholder buffer
         // editable; fill() keeps it read-only until a read succeeds.
         if !isPreviewModeActive {
-            isEditable = storageNote?.loadFailed != true
+            isEditable = storageNote.map { !$0.loadFailed } ?? false
         }
         if initRange.length > 0 {
             self.initRange = NSRange(location: 0, length: 0)

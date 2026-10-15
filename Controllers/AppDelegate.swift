@@ -267,7 +267,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
                     }
                     return
                 }
-                UserDefaultsManagement.storagePath = url.path
+                // Bookmark first: storageUrl prefers it, so a failed bookmark
+                // with a saved path would reopen the old folder.
                 do {
                     let bookmarkData = try url.bookmarkData(
                         options: .withSecurityScope,
@@ -276,7 +277,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
                     UserDefaultsManagement.storageBookmark = bookmarkData
                 } catch {
                     AppDelegate.trackError(error, context: "AppDelegate.requestStorageDirectory.bookmarkData")
+                    self.showStorageDirectoryError(error) {
+                        self.requestStorageDirectory()
+                    }
+                    return
                 }
+                UserDefaultsManagement.storagePath = url.path
                 self.restartApp()
             } else {
                 exit(EXIT_SUCCESS)

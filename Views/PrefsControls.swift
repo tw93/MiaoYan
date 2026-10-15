@@ -183,11 +183,14 @@ final class PrefsDropdown: NSPopUpButton {
         super.init(frame: .zero, pullsDown: false)
         translatesAutoresizingMaskIntoConstraints = false
         isBordered = false
-        focusRingType = .none
+        focusRingType = .exterior
         setContentHuggingPriority(.required, for: .horizontal)
         setContentCompressionResistancePriority(.required, for: .horizontal)
         heightAnchor.constraint(equalToConstant: PrefsMetrics.controlHeight).isActive = true
     }
+
+    override func drawFocusRingMask() { PrefsFocusRing.capsule(in: bounds) }
+    override var focusRingMaskBounds: NSRect { bounds }
 
     @available(*, unavailable)
     required init?(coder: NSCoder) {
@@ -305,7 +308,7 @@ final class PrefsPillButton: NSButton {
         self.action = action
         translatesAutoresizingMaskIntoConstraints = false
         isBordered = false
-        focusRingType = .none
+        focusRingType = .exterior
         setButtonType(.momentaryChange)
         setContentHuggingPriority(.required, for: .horizontal)
         setContentCompressionResistancePriority(.required, for: .horizontal)
@@ -316,6 +319,9 @@ final class PrefsPillButton: NSButton {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    override func drawFocusRingMask() { PrefsFocusRing.capsule(in: bounds) }
+    override var focusRingMaskBounds: NSRect { bounds }
 
     override var intrinsicContentSize: NSSize {
         NSSize(width: textWidth(title, font: PrefsMetrics.controlFont) + PrefsMetrics.pillHorizontalPadding * 2, height: PrefsMetrics.controlHeight)
@@ -349,6 +355,13 @@ final class PrefsPillButton: NSButton {
 /// A small switch in MiaoYan green. `NSSwitch` only follows the system
 /// accent, which would put a blue control in a green-accented window.
 @MainActor
+/// Keyboard focus on the capsule controls follows their own shape.
+enum PrefsFocusRing {
+    static func capsule(in bounds: NSRect) {
+        NSBezierPath(roundedRect: bounds, xRadius: bounds.height / 2, yRadius: bounds.height / 2).fill()
+    }
+}
+
 final class PrefsSwitch: NSControl {
     private let track = CALayer()
     private let knob = CALayer()
@@ -392,6 +405,9 @@ final class PrefsSwitch: NSControl {
     }
 
     override var intrinsicContentSize: NSSize { Self.size }
+
+    override var focusRingMaskBounds: NSRect { bounds }
+    override func drawFocusRingMask() { PrefsFocusRing.capsule(in: bounds) }
 
     override var acceptsFirstResponder: Bool { true }
 
@@ -515,7 +531,7 @@ private final class PrefsTabButton: NSButton {
         self.action = action
         translatesAutoresizingMaskIntoConstraints = false
         isBordered = false
-        focusRingType = .none
+        focusRingType = .exterior
         setButtonType(.momentaryChange)
         setAccessibilityRole(.radioButton)
         heightAnchor.constraint(equalToConstant: PrefsMetrics.tabHeight).isActive = true
@@ -525,6 +541,9 @@ private final class PrefsTabButton: NSButton {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    override func drawFocusRingMask() { PrefsFocusRing.capsule(in: bounds) }
+    override var focusRingMaskBounds: NSRect { bounds }
 
     override var intrinsicContentSize: NSSize {
         NSSize(width: textWidth(title, font: PrefsMetrics.tabFont) + PrefsMetrics.tabHorizontalPadding * 2, height: PrefsMetrics.tabHeight)

@@ -163,20 +163,23 @@ final class GeneralPrefsViewController: BasePrefsViewController {
                 return
             }
 
-            // 1. Save string path for legacy compatibility and display
-            self.settings.storagePath = url.path
-            self.showStoragePath(url.path)
-
-            // 2. Create and observe Security Scoped Bookmark for Sandbox persistence
+            // The bookmark comes first: storageUrl prefers it over the path,
+            // so saving the path alone left the next launch on the old folder
+            // while Settings showed the new one.
+            let bookmarkData: Data
             do {
-                let bookmarkData = try url.bookmarkData(
+                bookmarkData = try url.bookmarkData(
                     options: .withSecurityScope,
                     includingResourceValuesForKeys: nil,
                     relativeTo: nil)
-                UserDefaultsManagement.storageBookmark = bookmarkData
             } catch {
                 AppDelegate.trackError(error, context: "GeneralPrefsViewController.changeStorageLocation.bookmarkData")
+                self.showStorageLocationError(error)
+                return
             }
+            UserDefaultsManagement.storageBookmark = bookmarkData
+            self.settings.storagePath = url.path
+            self.showStoragePath(url.path)
 
             UserDefaults.standard.synchronize()
             // The library is opened at launch; the new folder is used from the
