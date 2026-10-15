@@ -683,7 +683,16 @@ public class Note: NSObject {
             } else {
                 try fileWrapper.write(to: dst, options: .atomic, originalContentsURL: nil)
             }
-            try FileManager.default.setAttributes(attributes, ofItemAtPath: dst.path)
+            // The text is on disk by now. Restoring the old dates and mode is
+            // best effort: the owner and group, which copyfile already carried
+            // where it could, need rights a user may not have (a folder whose
+            // group is wheel), and failing on them reported "Save Failed" for
+            // a save that had worked.
+            do {
+                try FileManager.default.setAttributes(Self.restorableAttributes(attributes), ofItemAtPath: dst.path)
+            } catch {
+                AppDelegate.trackError(error, context: "Note.restoreAttributes")
+            }
 
             modifiedLocalAt = Date()
             NoteVersionManager.shared.saveVersionIfNeeded(for: self)
@@ -790,6 +799,13 @@ public class Note: NSObject {
         fileWrapper.filename = name
 
         return fileWrapper
+    }
+
+    /// The attributes a save puts back after replacing the file: its dates
+    /// (creation date orders the list), mode and hidden extension.
+    nonisolated static func restorableAttributes(_ attributes: [FileAttributeKey: Any]) -> [FileAttributeKey: Any] {
+        let keys: [FileAttributeKey] = [.creationDate, .modificationDate, .posixPermissions, .extensionHidden]
+        return attributes.filter { keys.contains($0.key) }
     }
 
     func getFileAttributes() -> [FileAttributeKey: Any] {

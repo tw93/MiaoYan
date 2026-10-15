@@ -408,4 +408,30 @@ final class NoteSaveDebounceTests: XCTestCase {
         XCTAssertFalse(note.renameFile(to: "Other"), "an existing note is never renamed over")
         XCTAssertEqual(try String(contentsOf: tempDir.appendingPathComponent("Other.md"), encoding: .utf8), "other")
     }
+
+    /// A note in a folder whose group the user cannot set (wheel, as under
+    /// /private/tmp) saved its text and then reported "Save Failed" while
+    /// putting the old owner and group back.
+    @MainActor
+    func testSaveInAWheelGroupFolderSucceedsAndKeepsTheCreationDate() throws {
+        let dir = URL(fileURLWithPath: "/private/tmp/MiaoYanWheel-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let url = dir.appendingPathComponent("wheel.md")
+        try "old".write(to: url, atomically: false, encoding: .utf8)
+        let group = try FileManager.default.attributesOfItem(atPath: url.path)[.groupOwnerAccountName] as? String
+        try XCTSkipUnless(group == "wheel", "needs a file whose group is wheel")
+        let created = Date(timeIntervalSince1970: 1_700_000_000)
+        try FileManager.default.setAttributes([.creationDate: created], ofItemAtPath: url.path)
+
+        let project = Project(url: dir, label: "wheel", isRoot: true)
+        let note = Note(url: url, with: project)
+        note.load()
+        note.save(content: NSMutableAttributedString(string: "new"))
+        XCTAssertTrue(note.flushPendingSave(globalStorage: false))
+
+        XCTAssertEqual(try String(contentsOf: url, encoding: .utf8), "new")
+        let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
+        XCTAssertEqual(attributes[.creationDate] as? Date, created)
+    }
 }
