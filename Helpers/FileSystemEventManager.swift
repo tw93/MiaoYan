@@ -202,7 +202,9 @@ class FileSystemEventManager {
     }
 
     private func importNote(_ url: URL) {
-        let processedURL = url
+        // Imported under the path its folder is registered by, so the note
+        // and its project agree.
+        let processedURL = storage.projectContainingPathAsGiven(url) ? url : Storage.resolvingFolder(of: url)
 
         if let existingNote = storage.getBy(url: processedURL) {
             Task { @MainActor [weak self] in

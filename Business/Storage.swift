@@ -680,6 +680,26 @@ class Storage {
     }
 
     public func getProjectBy(url: URL) -> Project? {
+        if let project = projectContaining(url) { return project }
+        // File events report the path as the disk names it (/private/tmp,
+        // a symlinked library's target) while folders are registered by the
+        // resolved path; without this a note created there was never listed.
+        // The folder is resolved, not the file: resolution keeps /private on
+        // a path that does not exist (yet, or any more).
+        let resolved = Self.resolvingFolder(of: url)
+        guard resolved.path != url.path else { return nil }
+        return projectContaining(resolved)
+    }
+
+    static func resolvingFolder(of url: URL) -> URL {
+        url.deletingLastPathComponent().resolvingSymlinksInPath().appendingPathComponent(url.lastPathComponent)
+    }
+
+    func projectContainingPathAsGiven(_ url: URL) -> Bool {
+        projectContaining(url) != nil
+    }
+
+    private func projectContaining(_ url: URL) -> Project? {
         let projectURL = url.deletingLastPathComponent()
         let path = projectURL.path
 

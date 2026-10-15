@@ -413,4 +413,22 @@ final class StorageRelocationTests: XCTestCase {
             XCTAssertEqual(UserDefaultsManagement.lastProjectPath, renamed.appendingPathComponent("Nested").path)
         }
     }
+
+    /// File events name /private/var/... while folders are registered by the
+    /// resolved /var/... path; a note created there must still find its folder.
+    @MainActor
+    func testFolderLookupFollowsTheDiskPathOfAFileEvent() throws {
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanAlias-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let registered = dir.resolvingSymlinksInPath()
+        try XCTSkipUnless(registered.path.hasPrefix("/var/"), "needs the /var alias of the temporary directory")
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: registered, label: "alias", isRoot: true, isDefault: true)
+        _ = storage.add(project: root)
+        defer { storage.removeBy(project: root) }
+
+        let reported = URL(fileURLWithPath: "/private" + registered.path).appendingPathComponent("new.md")
+        XCTAssertTrue(storage.getProjectBy(url: reported) === root)
+    }
 }
