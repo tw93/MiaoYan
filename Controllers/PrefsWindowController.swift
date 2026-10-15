@@ -1,214 +1,113 @@
 import Cocoa
 
+/// The Settings window: General, Editor and Fonts as a centred tab group on
+/// the title bar's line, one fixed size for every tab, warm paper behind it.
 @MainActor
 final class PrefsWindowController: NSWindowController, NSWindowDelegate {
-    private var splitViewController: NSSplitViewController!
-    private var sidebarViewController: NSViewController!
-    private var prefsContentViewController: NSViewController!
-    private var sidebarView: PrefsSidebarView!
+    private let generalPrefsVC = GeneralPrefsViewController()
+    private let editorPrefsVC = EditorPrefsViewController()
+    private let typographyPrefsVC = TypographyPrefsViewController()
 
-    private lazy var generalPrefsVC = GeneralPrefsViewController()
-    private lazy var editorPrefsVC = EditorPrefsViewController()
-    private lazy var typographyPrefsVC = TypographyPrefsViewController()
-
-    private var currentCategory: PreferencesCategory = .general
+    private let tabBar = PrefsTabBar(titles: PrefsSection.allCases.map(\.title))
+    private let pageContainer = NSView()
+    private(set) var currentCategory: PrefsSection = .general
     private var hasPreparedWindowForDisplay = false
-
-    private enum Metrics {
-        static let windowSize = NSSize(width: 800, height: 520)
-        static let sidebarWidth: CGFloat = 176
-        /// Keeps the sidebar list comfortably clear of the bottom edge on the
-        /// shortest page.
-        static let minimumHeight: CGFloat = 300
-    }
 
     convenience init() {
         let window = NSWindow(
-            contentRect: NSRect(origin: .zero, size: Metrics.windowSize),
-            styleMask: [.titled, .closable],
+            contentRect: NSRect(x: 0, y: 0, width: PrefsMetrics.windowWidth, height: 400),
+            styleMask: [.titled, .closable, .fullSizeContentView],
             backing: .buffered,
             defer: false
         )
-
-        window.minSize = Metrics.windowSize
-        window.maxSize = Metrics.windowSize
-
-        window.styleMask.insert(.titled)
-        window.styleMask.insert(.closable)
-        window.styleMask.insert(.fullSizeContentView)
         window.isReleasedWhenClosed = false
+        window.titleVisibility = .hidden
+        window.titlebarAppearsTransparent = true
+        // An empty unified toolbar makes the title bar the 52pt band the
+        // tabs sit in, with the traffic lights centred on the same line.
+        window.toolbar = NSToolbar(identifier: "MiaoYanSettingsToolbar")
+        window.toolbarStyle = .unified
+        window.titlebarSeparatorStyle = .none
+        window.standardWindowButton(.miniaturizeButton)?.isHidden = true
+        window.standardWindowButton(.zoomButton)?.isHidden = true
 
         self.init(window: window)
+        window.delegate = self
+        setupContent()
+        applyWindowAppearance()
 
-        setupUIComponents()
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(updateAlwaysOnTopState),
-            name: .alwaysOnTopChanged,
-            object: nil
-        )
+        NotificationCenter.default.addObserver(self, selector: #selector(updateAlwaysOnTopState), name: .alwaysOnTopChanged, object: nil)
     }
 
     deinit {
         NotificationCenter.default.removeObserver(self, name: .alwaysOnTopChanged, object: nil)
     }
 
-    override func windowDidLoad() {
-        super.windowDidLoad()
-        if splitViewController == nil {
-            setupUIComponents()
-        }
-    }
-
-    private func setupUIComponents() {
-        guard window != nil else { return }
-
-        window?.delegate = self
-
-        setupWindow()
-        setupSplitView()
-        setupSidebar()
-        setupContent()
-        alignLabelColumns()
-        showCategory(.general)
-        applyWindowAppearance()
-
-        window?.titleVisibility = .hidden
-        window?.titlebarAppearsTransparent = true
-        window?.title = currentCategory.title
-        window?.toolbarStyle = .preference
-        window?.standardWindowButton(.miniaturizeButton)?.isHidden = true
-        window?.standardWindowButton(.zoomButton)?.isHidden = true
-    }
-
-    private func setupWindow() {
-        guard window != nil else {
-            fatalError("PrefsWindowController window should be initialized during init")
-        }
-    }
-
-    private func setupSplitView() {
-        splitViewController = NSSplitViewController()
-
-        // Replace default splitView with custom one
-        let customSplitView = PrefsSplitView()
-        customSplitView.isVertical = true
-        customSplitView.dividerStyle = .thin
-        customSplitView.autoresizesSubviews = false
-
-        splitViewController.splitView = customSplitView
-
-        splitViewController.splitViewItems.forEach { item in
-            item.canCollapse = false
-        }
-
-        window?.contentViewController = splitViewController
-    }
-
-    private func setupSidebar() {
-        sidebarView = PrefsSidebarView(frame: NSRect(x: 0, y: 0, width: Metrics.sidebarWidth, height: Metrics.windowSize.height))
-        sidebarView.delegate = self
-
-        sidebarViewController = NSViewController()
-        sidebarViewController.view = sidebarView
-
-        let sidebarItem = NSSplitViewItem(viewController: sidebarViewController)
-        sidebarItem.minimumThickness = Metrics.sidebarWidth
-        sidebarItem.maximumThickness = Metrics.sidebarWidth
-        sidebarItem.canCollapse = false
-
-        sidebarItem.allowsFullHeightLayout = true
-        sidebarItem.titlebarSeparatorStyle = .none
-
-        splitViewController.addSplitViewItem(sidebarItem)
+    private var pages: [NSViewController] {
+        PrefsSection.allCases.map(viewController(for:))
     }
 
     private func setupContent() {
-        prefsContentViewController = NSViewController()
-        let contentView = PrefsContentBackgroundView(
-            frame: NSRect(
-                x: 0,
-                y: 0,
-                width: Metrics.windowSize.width - Metrics.sidebarWidth,
-                height: Metrics.windowSize.height
-            ))
-        prefsContentViewController.view = contentView
+        guard let window else { return }
+        let root = PrefsRootView()
+        window.contentView = root
 
-        let contentItem = NSSplitViewItem(viewController: prefsContentViewController)
-        contentItem.canCollapse = false
-
-        splitViewController.addSplitViewItem(contentItem)
-    }
-
-    private func showCategory(_ category: PreferencesCategory) {
-        currentCategory = category
-
-        if let currentVC = prefsContentViewController.children.first {
-            currentVC.removeFromParent()
-            currentVC.view.removeFromSuperview()
+        root.addSubview(tabBar)
+        pageContainer.translatesAutoresizingMaskIntoConstraints = false
+        root.addSubview(pageContainer)
+        NSLayoutConstraint.activate([
+            tabBar.centerXAnchor.constraint(equalTo: root.centerXAnchor),
+            tabBar.centerYAnchor.constraint(equalTo: root.topAnchor, constant: PrefsMetrics.headerHeight / 2),
+            pageContainer.topAnchor.constraint(equalTo: root.topAnchor, constant: PrefsMetrics.headerHeight),
+            pageContainer.leadingAnchor.constraint(equalTo: root.leadingAnchor),
+            pageContainer.trailingAnchor.constraint(equalTo: root.trailingAnchor),
+            pageContainer.bottomAnchor.constraint(equalTo: root.bottomAnchor),
+        ])
+        tabBar.onSelect = { [weak self] index in
+            self?.showCategory(PrefsSection.allCases[index])
         }
 
-        let newVC = viewController(for: category)
+        // One height for every tab: the tallest tab's, so switching never
+        // resizes the window and a longer tab would scroll inside it.
+        let pageHeight = pages.compactMap { ($0 as? BasePrefsViewController)?.contentHeight }.max() ?? 360
+        window.setContentSize(NSSize(width: PrefsMetrics.windowWidth, height: PrefsMetrics.headerHeight + ceil(pageHeight)))
+        showCategory(.general)
+    }
+
+    private func showCategory(_ category: PrefsSection) {
+        currentCategory = category
+        let page = viewController(for: category)
+        for child in pageContainer.subviews where child !== page.view {
+            child.removeFromSuperview()
+        }
+        if page.view.superview !== pageContainer {
+            page.view.translatesAutoresizingMaskIntoConstraints = false
+            pageContainer.addSubview(page.view)
+            NSLayoutConstraint.activate([
+                page.view.leadingAnchor.constraint(equalTo: pageContainer.leadingAnchor),
+                page.view.trailingAnchor.constraint(equalTo: pageContainer.trailingAnchor),
+                page.view.topAnchor.constraint(equalTo: pageContainer.topAnchor),
+                page.view.bottomAnchor.constraint(equalTo: pageContainer.bottomAnchor),
+            ])
+        }
+        tabBar.select(index: PrefsSection.allCases.firstIndex(of: category) ?? 0)
         window?.title = category.title
-
-        prefsContentViewController.addChild(newVC)
-
-        newVC.view.translatesAutoresizingMaskIntoConstraints = false
-        prefsContentViewController.view.addSubview(newVC.view)
-
-        NSLayoutConstraint.activate([
-            newVC.view.leadingAnchor.constraint(equalTo: prefsContentViewController.view.leadingAnchor),
-            newVC.view.trailingAnchor.constraint(equalTo: prefsContentViewController.view.trailingAnchor),
-            newVC.view.topAnchor.constraint(equalTo: prefsContentViewController.view.topAnchor),
-            newVC.view.bottomAnchor.constraint(equalTo: prefsContentViewController.view.bottomAnchor),
-        ])
-
-        sidebarView?.selectCategory(category)
-        fitWindow(to: newVC, animate: window?.isVisible == true)
     }
 
-    /// Sizes the window to the page, keeping its top edge where it is, so a
-    /// four-row page does not sit on the tallest page's empty space.
-    private func fitWindow(to viewController: NSViewController, animate: Bool) {
-        guard let window, let page = viewController as? BasePrefsViewController else { return }
-        let height = max(Metrics.minimumHeight, page.preferredContentHeight.rounded(.up))
-        let size = NSSize(width: Metrics.windowSize.width, height: height)
-        var frame = window.frameRect(forContentRect: NSRect(origin: .zero, size: size))
-        guard frame.size != window.frame.size else { return }
-        frame.origin = NSPoint(x: window.frame.minX, y: window.frame.maxY - frame.height)
-        window.minSize = frame.size
-        window.maxSize = frame.size
-        window.setFrame(frame, display: true, animate: animate)
-    }
-
-    /// Every page gets the label column its widest label needs, measured
-    /// across all pages, so the controls stay put when switching pages.
-    private func alignLabelColumns() {
-        let pages: [BasePrefsViewController] = [generalPrefsVC, editorPrefsVC, typographyPrefsVC]
-        pages.forEach { _ = $0.view }
-        guard let width = pages.map(\.widestLabel).max() else { return }
-        pages.forEach { $0.applyLabelColumnWidth(width) }
-    }
-
-    private func viewController(for category: PreferencesCategory) -> NSViewController {
+    private func viewController(for category: PrefsSection) -> BasePrefsViewController {
         switch category {
-        case .general:
-            return generalPrefsVC
-        case .typography:
-            return typographyPrefsVC
-        case .editor:
-            return editorPrefsVC
+        case .general: return generalPrefsVC
+        case .editor: return editorPrefsVC
+        case .typography: return typographyPrefsVC
         }
     }
 
     func show() {
-        if !isWindowLoaded {
-            _ = window
+        if !hasPreparedWindowForDisplay {
+            window?.center()
+            hasPreparedWindowForDisplay = true
         }
-
-        prepareWindowForDisplayIfNeeded()
         updateAlwaysOnTopState()
-
         showWindow(self)
         window?.makeKeyAndOrderFront(self)
         NSApp.activate(ignoringOtherApps: true)
@@ -218,154 +117,38 @@ final class PrefsWindowController: NSWindowController, NSWindowDelegate {
         window?.level = UserDefaultsManagement.alwaysOnTop ? .floating : .normal
     }
 
-    func selectCategory(_ category: PreferencesCategory) {
-        showCategory(category)
-    }
-}
-
-extension PrefsWindowController: PrefsSidebarDelegate {
-    func sidebarDidSelectCategory(_ category: PreferencesCategory) {
-        guard category != currentCategory else { return }
+    func selectCategory(_ category: PrefsSection) {
         showCategory(category)
     }
 
+    /// Follows a change of the Appearance setting while the window is open.
     func refreshThemeAppearance() {
-        updateWindowBackgroundColors()
-        sidebarView?.refreshAppearance()
-    }
-}
-
-extension PrefsWindowController {
-    func windowShouldClose(_ sender: NSWindow) -> Bool {
-        window?.orderOut(self)
-        return false
-    }
-
-    func windowDidChangeEffectiveAppearance(_ notification: Notification) {
         applyWindowAppearance()
     }
-}
 
-extension PrefsWindowController {
-    fileprivate func applyWindowAppearance() {
+    private func applyWindowAppearance() {
         guard let window else { return }
-
-        let targetAppearance: NSAppearance? =
+        window.appearance =
             switch UserDefaultsManagement.appearanceType {
             case .Light: NSAppearance(named: .aqua)
             case .Dark: NSAppearance(named: .darkAqua)
             case .System, .Custom: nil
             }
-
-        window.appearance = targetAppearance
-        window.contentView?.appearance = targetAppearance
-
-        updateWindowBackgroundColors()
-
-        // Ensure subviews refresh their appearance
-        sidebarView?.refreshAppearance()
+        window.backgroundColor = Theme.Settings.background
     }
 
-    fileprivate func updateWindowBackgroundColors() {
-        guard let window else { return }
-
-        let effectiveAppearance = window.effectiveAppearance
-        var backgroundColor: NSColor = .windowBackgroundColor
-        effectiveAppearance.performAsCurrentDrawingAppearance {
-            backgroundColor = Theme.settingsWindowBackgroundColor
-        }
-
-        window.backgroundColor = backgroundColor
+    func windowShouldClose(_ sender: NSWindow) -> Bool {
+        window?.orderOut(self)
+        return false
     }
 }
 
-private final class PrefsContentBackgroundView: NSView {
+/// The window's opaque warm paper, title bar band included.
+private final class PrefsRootView: NSView {
     override var isFlipped: Bool { true }
 
-    override init(frame frameRect: NSRect) {
-        super.init(frame: frameRect)
-        commonInit()
-    }
-
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        commonInit()
-    }
-
-    private func commonInit() {
-        wantsLayer = true
-        updateColors()
-    }
-
-    override func viewDidMoveToWindow() {
-        super.viewDidMoveToWindow()
-        updateColors()
-    }
-
-    override func viewDidChangeEffectiveAppearance() {
-        super.viewDidChangeEffectiveAppearance()
-        updateColors()
-    }
-
-    private func updateColors() {
-        let appearance = window?.effectiveAppearance ?? effectiveAppearance
-        let resolvedColor = Theme.settingsContentBackgroundColor.resolvedColor(for: appearance)
-        layer?.backgroundColor = resolvedColor.cgColor
-    }
-}
-
-// MARK: - Custom SplitView for Preferences
-final class PrefsSplitView: NSSplitView {
-    override func drawDivider(in rect: NSRect) {
-        Theme.settingsDividerColor.resolvedColor(for: effectiveAppearance).setFill()
-
-        guard Theme.usesModernSystemChrome else {
-            rect.fill()
-            return
-        }
-
-        NSBezierPath(rect: hairlineRect(in: rect)).fill()
-    }
-
-    override func viewDidChangeEffectiveAppearance() {
-        super.viewDidChangeEffectiveAppearance()
-        needsDisplay = true
-    }
-
-    private func hairlineRect(in rect: NSRect) -> NSRect {
-        let scale = window?.backingScaleFactor ?? NSScreen.main?.backingScaleFactor ?? 2
-        let thickness = 1 / scale
-
-        if isVertical {
-            return NSRect(
-                x: rect.midX - thickness / 2,
-                y: rect.minY,
-                width: thickness,
-                height: rect.height
-            )
-        }
-
-        return NSRect(
-            x: rect.minX,
-            y: rect.midY - thickness / 2,
-            width: rect.width,
-            height: thickness
-        )
-    }
-}
-
-extension PrefsWindowController {
-    fileprivate func prepareWindowForDisplayIfNeeded() {
-        guard let window else { return }
-
-        window.contentView?.layoutSubtreeIfNeeded()
-
-        if !hasPreparedWindowForDisplay {
-            if let page = prefsContentViewController.children.first {
-                fitWindow(to: page, animate: false)
-            }
-            window.center()
-            hasPreparedWindowForDisplay = true
-        }
+    override func draw(_ dirtyRect: NSRect) {
+        Theme.Settings.background.setFill()
+        dirtyRect.fill()
     }
 }

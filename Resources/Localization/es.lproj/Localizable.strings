@@ -45,7 +45,7 @@
 "Appearance & Language" = "Apariencia e Idioma";
 "Interface & Upload" = "Interfaz y Subida";
 "Storage Location" = "Ubicación de Almacenamiento";
-"Note Location" = "Ubicación de Notas";
+"Note Location" = "Ubicación de las notas";
 "Interface" = "Interfaz";
 "Experience" = "Experiencia";
 "Typography" = "Tipografía";
@@ -53,27 +53,11 @@
 /* 設定 - ラベル */
 "Appearance" = "Apariencia";
 "Language" = "Idioma";
-"Change" = "Cambiar";
 "General" = "General";
 "Editor" = "Editor";
 "Fonts" = "Fuentes";
 "Editor Behavior" = "Comportamiento del Editor";
 "Preview" = "Vista Previa";
-"Editor Font:" = "Fuente del Editor:";
-"Preview Font:" = "Fuente de Vista Previa:";
-"Interface Font:" = "Fuente de la Interfaz:";
-"Code Font:" = "Fuente de Código:";
-"Presentation Font Size:" = "Tamaño de Fuente de Presentación:";
-"Preview Location:" = "Ubicación de Vista Previa:";
-"Preview Width:" = "Ancho de Vista Previa:";
-"Editor Mode:" = "Modo de Editor:";
-"Split Mode" = "Modo Dividido";
-"Pure Editing" = "Solo Edición";
-"Appearance:" = "Apariencia:";
-"Language:" = "Idioma:";
-"Button Display:" = "Visualización de Botones:";
-"Always On Top:" = "Siempre Visible:";
-"Activate Shortcut:" = "Activar Atajo:";
 "Yes" = "Sí";
 "No" = "No";
 
@@ -84,19 +68,15 @@
 "Always" = "Siempre";
 "On Hover" = "Al pasar el cursor";
 "Never" = "Nunca";
-"Image Upload" = "Subida de Imágenes";
-"Upload Service:" = "Servicio de Subida:";
+"Image Upload" = "Subida de imágenes";
 "None" = "Ninguno";
 
 /* エディタ設定 - オプション */
-"Begin" = "Inicio";
 "End" = "Fin";
 "Right" = "Derecha";
 "Bottom" = "Abajo";
 "Editing" = "Edición";
-"Full Width" = "Ancho Completo";
-"Line Break:" = "Salto de Línea:";
-"MiaoYan" = "MiaoYan";
+"Full Width" = "Ancho completo";
 "Auto" = "Auto";
 
 /* No comment provided by engineer. */
@@ -213,8 +193,6 @@
 "Edit Link…" = "Editar Enlace…";
 "Remove Link" = "Eliminar Enlace";
 
-"Restart to MiaoYan to take effect" = "Reinicia MiaoYan para que surta efecto";
-"Confirm" = "Confirmar";
 
 /* Font Names */
 
@@ -228,7 +206,6 @@
 /* Missing translations */
 "Preview Settings" = "Configuración de Vista Previa";
 "Code Background:" = "Fondo de Código:";
-"Github" = "Github";
 
 /* Preview Search Bar */
 "Previous" = "Anterior";
@@ -333,3 +310,39 @@
 "A folder with this name already exists at the destination." = "Ya existe una carpeta con este nombre en el destino.";
 "Save the pending changes before moving this folder." = "Guarda los cambios pendientes antes de mover esta carpeta.";
 "A folder is already being moved." = "Ya se está moviendo una carpeta.";
+
+/* Settings window */
+"Restart" = "Reiniciar";
+"Change…" = "Cambiar…";
+"Follow the system, or stay light or dark" = "Sigue al sistema o queda claro u oscuro";
+"Takes effect after MiaoYan restarts" = "Se aplica al reiniciar MiaoYan";
+"Button Display" = "Mostrar botones";
+"When the title bar buttons show" = "Cuándo aparecen los botones de la barra de título";
+"Keep MiaoYan above other windows" = "Mantiene MiaoYan sobre las demás ventanas";
+"Activate Shortcut" = "Atajo de activación";
+"Bring MiaoYan to the front from any app" = "Trae MiaoYan al frente desde cualquier app";
+"Default Mode" = "Modo predeterminado";
+"Write alone, or with the preview beside it" = "Solo el editor, o con la vista previa al lado";
+"Split" = "Dividido";
+"Send pasted images through an uploader app" = "Sube las imágenes pegadas con una app de subida";
+"Line Breaks" = "Saltos de línea";
+"Every Newline" = "Cada salto";
+"GitHub Style" = "Estilo GitHub";
+"Each newline starts a new line in the preview" = "Cada salto de línea crea otra línea en la vista previa";
+"A new line in the preview needs a blank line" = "La vista previa solo salta tras una línea en blanco";
+"Open Preview At" = "Abrir la vista previa en";
+"Top" = "Inicio";
+"Current Position" = "Posición actual";
+"Where the preview starts when you open it" = "Dónde empieza la vista previa al abrirla";
+"Preview Width" = "Ancho de la vista previa";
+"Maximum width of the text in the preview" = "Ancho máximo del texto en la vista previa";
+"Editor Font" = "Fuente del editor";
+"Typeface and size for writing" = "Tipo y tamaño para escribir";
+"Preview Font" = "Fuente de la vista previa";
+"Typeface and size for the preview" = "Tipo y tamaño de la vista previa";
+"Code Font" = "Fuente del código";
+"Used in fenced code blocks" = "Para los bloques de código";
+"Interface Font" = "Fuente de la interfaz";
+"Used in the sidebar and note list" = "Para la barra lateral y la lista de notas";
+"Presentation Font Size" = "Tamaño de fuente de presentación";
+"Used for MiaoYan PPT slides" = "Para las diapositivas de MiaoYan PPT";

@@ -115,31 +115,7 @@ enum Theme {
         return .clear
     }
 
-    static var settingsWindowBackgroundColor: Color {
-        if UserDefaultsManagement.appearanceType == .Custom {
-            return UserDefaultsManagement.bgColor
-        }
-
-        return usesModernSystemChrome ? .windowBackgroundColor : backgroundColor
-    }
-
-    static var settingsContentBackgroundColor: Color {
-        if UserDefaultsManagement.appearanceType == .Custom {
-            return UserDefaultsManagement.bgColor
-        }
-
-        return backgroundColor
-    }
-
-    static var settingsSidebarBackgroundColor: Color {
-        if UserDefaultsManagement.appearanceType == .Custom {
-            return UserDefaultsManagement.bgColor
-        }
-
-        return usesModernSystemChrome ? .clear : backgroundColor
-    }
-
-    /// Single faint hairline used by panel and settings dividers in modern
+    /// Single faint hairline used by panel dividers in modern
     /// chrome. Collapses the former 0.10 / 0.12 split into one value so the
     /// app has two divider tiers: this hairline and the stronger
     /// `dividerColor` (0.18). The notes list keeps its own ultra-faint
@@ -148,12 +124,24 @@ enum Theme {
         .separatorColor.withAlphaComponent(0.10)
     }
 
-    static var settingsDividerColor: Color {
-        if usesModernSystemChrome {
-            return hairlineColor
-        }
-
-        return dividerColor
+    /// The Settings window's colours: the shell's warm paper, Kami's warm
+    /// greys and sand, and MiaoYan green for switches and actions. Opaque on
+    /// purpose; a translucent settings surface reads like the rejected glass
+    /// sidebar.
+    @MainActor
+    enum Settings {
+        static let background = dynamic(0xFDFCF9, 0x1E1D1B)
+        static let primaryText = dynamic(0x141413, 0xF2F0EA)
+        static let secondaryText = dynamic(0x504E49, 0xB5B1A7)
+        static let tertiaryText = dynamic(0x6B6A64, 0x8E8B83)
+        static let tabSelection = dynamic(0xE8E6DC, 0xFFFFFF, darkAlpha: 0.08)
+        static let controlFill = dynamic(0x141413, 0xFFFFFF, lightAlpha: 0.06, darkAlpha: 0.07)
+        static let controlHoverFill = dynamic(0x141413, 0xFFFFFF, lightAlpha: 0.09, darkAlpha: 0.10)
+        static let switchOffFill = dynamic(0x141413, 0xFFFFFF, lightAlpha: 0.14, darkAlpha: 0.16)
+        /// Between sections, and the fainter one between rows of a section.
+        static let sectionHairline = dynamic(0x141413, 0xF2F0EA, lightAlpha: 0.12, darkAlpha: 0.12)
+        static let rowHairline = dynamic(0x141413, 0xF2F0EA, lightAlpha: 0.065, darkAlpha: 0.065)
+        static let accent = dynamic(0x1C5D33, 0x54C59F)
     }
 
     static var panelBackgroundColor: Color {

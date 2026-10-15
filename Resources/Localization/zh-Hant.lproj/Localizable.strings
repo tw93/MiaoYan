@@ -44,7 +44,6 @@
 "Cancel" = "取消";
 
 /* No comment provided by engineer. */
-"Confirm" = "確認";
 
 /* No comment provided by engineer. */
 "Copy HTML" = "拷貝 HTML";
@@ -92,27 +91,11 @@
 /* 偏好設定 - 通用標籤 */
 "Appearance" = "外觀";
 "Language" = "語言";
-"Change" = "更改";
 "General" = "通用";
 "Editor" = "編輯器";
 "Fonts" = "字體";
 "Editor Behavior" = "編輯器行為";
 "Preview" = "預覽";
-"Editor Font:" = "編輯字體:";
-"Preview Font:" = "預覽字體:";
-"Interface Font:" = "介面字體:";
-"Code Font:" = "程式碼字體:";
-"Presentation Font Size:" = "簡報大小:";
-"Preview Location:" = "預覽位置:";
-"Preview Width:" = "預覽寬度:";
-"Editor Mode:" = "編輯模式:";
-"Split Mode" = "分欄模式";
-"Pure Editing" = "純編輯";
-"Appearance:" = "外觀顏色:";
-"Language:" = "介面語言:";
-"Button Display:" = "按鈕顯示:";
-"Always On Top:" = "置頂顯示:";
-"Activate Shortcut:" = "快捷喚起:";
 "Yes" = "是";
 "No" = "否";
 
@@ -124,18 +107,14 @@
 "On Hover" = "懸停時";
 "Never" = "從不";
 "Image Upload" = "圖片上傳";
-"Upload Service:" = "上傳服務:";
 "None" = "無";
 
 /* 編輯器設定 - 選項 */
-"Begin" = "開頭";
 "End" = "結尾";
 "Right" = "右側";
 "Bottom" = "底部";
 "Editing" = "編輯";
 "Full Width" = "全寬";
-"Line Break:" = "換行:";
-"MiaoYan" = "妙言";
 "Auto" = "自動";
 
 /* Delete menu */
@@ -151,7 +130,6 @@
 "Rename Folder" = "重新命名檔案夾";
 
 /* No comment provided by engineer. */
-"Restart to MiaoYan to take effect" = "重新啟動妙言即可生效";
 
 /* No comment provided by engineer. */
 "Show in Finder" = "在 Finder 中顯示";
@@ -207,7 +185,6 @@
 "URL has been copied to clipboard" = "URL已複製到剪貼簿";
 "Preview Settings" = "預覽設定";
 "Code Background:" = "程式碼背景:";
-"Github" = "Github";
 
 /* Preview Search Bar */
 "Previous" = "上一個";
@@ -310,3 +287,39 @@
 "A folder with this name already exists at the destination." = "目標位置已有同名資料夾。";
 "Save the pending changes before moving this folder." = "先儲存未儲存的內容，再移動資料夾。";
 "A folder is already being moved." = "已有資料夾正在移動。";
+
+/* Settings window */
+"Restart" = "重新啟動";
+"Change…" = "更改…";
+"Follow the system, or stay light or dark" = "跟隨系統，或固定淺色、深色";
+"Takes effect after MiaoYan restarts" = "重新啟動妙言後生效";
+"Button Display" = "按鈕顯示";
+"When the title bar buttons show" = "標題列按鈕什麼時候出現";
+"Keep MiaoYan above other windows" = "妙言視窗始終在其他視窗之上";
+"Activate Shortcut" = "喚起快速鍵";
+"Bring MiaoYan to the front from any app" = "在任何 App 裡叫出妙言";
+"Default Mode" = "預設模式";
+"Write alone, or with the preview beside it" = "只顯示編輯區，或在旁邊並排預覽";
+"Split" = "分欄";
+"Send pasted images through an uploader app" = "貼上的圖片交給上傳工具處理";
+"Line Breaks" = "換行方式";
+"Every Newline" = "每次換行";
+"GitHub Style" = "GitHub 風格";
+"Each newline starts a new line in the preview" = "預覽中每次換行都會另起一行";
+"A new line in the preview needs a blank line" = "預覽中需要空一行才會換行";
+"Open Preview At" = "預覽開啟位置";
+"Top" = "頂部";
+"Current Position" = "目前位置";
+"Where the preview starts when you open it" = "開啟預覽時從哪裡開始顯示";
+"Preview Width" = "預覽寬度";
+"Maximum width of the text in the preview" = "預覽中正文的最大寬度";
+"Editor Font" = "編輯字體";
+"Typeface and size for writing" = "寫作時的字體和大小";
+"Preview Font" = "預覽字體";
+"Typeface and size for the preview" = "預覽時的字體和大小";
+"Code Font" = "程式碼字體";
+"Used in fenced code blocks" = "用於程式碼區塊";
+"Interface Font" = "介面字體";
+"Used in the sidebar and note list" = "用於側欄和筆記列表";
+"Presentation Font Size" = "簡報字體大小";
+"Used for MiaoYan PPT slides" = "用於妙言 PPT 投影片";

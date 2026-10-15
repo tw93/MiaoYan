@@ -3,189 +3,135 @@ import Cocoa
 @MainActor
 final class EditorPrefsViewController: BasePrefsViewController {
     private var settings = EditorSettings()
-    private var lineBreakPopUp: NSPopUpButton!
-    private var uploadPopUp: NSPopUpButton!
-    private var previewLocationPopUp: NSPopUpButton!
-    private var previewWidthPopUp: NSPopUpButton!
+    private var defaultModeDropdown: PrefsDropdown!
+    private var uploadDropdown: PrefsDropdown!
+    private var lineBreakDropdown: PrefsDropdown!
+    private var lineBreakRow: PrefsRowView!
+    private var previewLocationDropdown: PrefsDropdown!
+    private var previewWidthDropdown: PrefsDropdown!
+
+    private static let previewWidths = ["600px", "800px", "1000px", "1200px", "1400px"]
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(handleSplitViewModeChanged), name: .splitViewModeChanged, object: nil)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    @objc private func handleSplitViewModeChanged() {
+        defaultModeDropdown?.selectOption { $0 as? Bool == UserDefaultsManagement.splitViewMode }
+    }
 
     override func setupUI() {
-        setupEditorSettingsSection(in: installPreferencesStack())
-    }
+        defaultModeDropdown = makeDropdown(action: #selector(defaultModeChanged(_:)))
+        defaultModeDropdown.addOption(I18n.str("Editing"), value: false)
+        defaultModeDropdown.addOption(I18n.str("Split"), value: true)
 
-    private func setupEditorSettingsSection(in stackView: NSStackView) {
-        lineBreakPopUp = makePopUp(
-            options: [localizedLineBreak("MiaoYan"), localizedLineBreak("Github")],
-            action: #selector(lineBreakChanged(_:))
-        )
-        uploadPopUp = makePopUp(
-            options: [I18n.str("None"), "uPic", "PicGo", "Picsee", "PicList"],
-            action: #selector(uploadServiceChanged(_:))
-        )
-        previewLocationPopUp = makePopUp(
-            options: [localizedPreviewLocation("Begin"), localizedPreviewLocation("Editing")],
-            action: #selector(previewLocationChanged(_:))
-        )
-        previewWidthPopUp = makePopUp(
-            options: [
-                localizedPreviewWidth("600px"), localizedPreviewWidth("800px"), localizedPreviewWidth("1000px"), localizedPreviewWidth("1200px"), localizedPreviewWidth("1400px"), localizedPreviewWidth(UserDefaultsManagement.FullWidthValue),
-            ],
-            action: #selector(previewWidthChanged(_:))
-        )
+        uploadDropdown = makeDropdown(action: #selector(uploadServiceChanged(_:)))
+        uploadDropdown.addOption(I18n.str("None"), value: "None")
+        for service in ["uPic", "PicGo", "Picsee", "PicList"] {
+            uploadDropdown.addOption(service, value: service)
+        }
 
-        addPreferencesGroups(
+        lineBreakDropdown = makeDropdown(action: #selector(lineBreakChanged(_:)))
+        lineBreakDropdown.addOption(I18n.str("Every Newline"), value: "MiaoYan")
+        lineBreakDropdown.addOption(I18n.str("GitHub Style"), value: "Github")
+
+        previewLocationDropdown = makeDropdown(action: #selector(previewLocationChanged(_:)))
+        previewLocationDropdown.addOption(I18n.str("Top"), value: "Begin")
+        previewLocationDropdown.addOption(I18n.str("Current Position"), value: "Editing")
+
+        previewWidthDropdown = makeDropdown(action: #selector(previewWidthChanged(_:)))
+        for width in Self.previewWidths {
+            previewWidthDropdown.addOption(width, value: width)
+        }
+        previewWidthDropdown.addOption(I18n.str("Full Width"), value: UserDefaultsManagement.FullWidthValue)
+
+        lineBreakRow = PrefsRowView(title: I18n.str("Line Breaks"), detail: "", controls: [lineBreakDropdown])
+
+        addSections([
             [
-                [
-                    makePreferencesRow(labelText: I18n.str("Line Break:"), control: lineBreakPopUp),
-                    makePreferencesRow(labelText: I18n.str("Upload Service:"), control: uploadPopUp),
-                ],
-                [
-                    makePreferencesRow(labelText: I18n.str("Preview Location:"), control: previewLocationPopUp),
-                    makePreferencesRow(labelText: I18n.str("Preview Width:"), control: previewWidthPopUp),
-                ],
-            ], to: stackView)
-    }
-
-    private func createSectionView(in parentView: NSView, topAnchor: NSLayoutAnchor<NSLayoutYAxisAnchor>, topConstant: CGFloat, title: String? = nil) -> (container: NSView, titleLabel: NSTextField?) {
-        let containerView = NSView()
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-
-        containerView.wantsLayer = true
-        containerView.layer?.backgroundColor = NSColor.clear.cgColor
-        var titleLabel: NSTextField?
-        if let title = title {
-            let label = NSTextField(labelWithString: title)
-            label.translatesAutoresizingMaskIntoConstraints = false
-            label.font = NSFont.boldSystemFont(ofSize: 13)
-            label.textColor = Theme.textColor
-            containerView.addSubview(label)
-            titleLabel = label
-        }
-
-        parentView.addSubview(containerView)
-
-        NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: topAnchor, constant: topConstant),
-            containerView.leadingAnchor.constraint(equalTo: parentView.leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: parentView.trailingAnchor),
+                PrefsRowView(title: I18n.str("Default Mode"), detail: I18n.str("Write alone, or with the preview beside it"), controls: [defaultModeDropdown]),
+                PrefsRowView(title: I18n.str("Image Upload"), detail: I18n.str("Send pasted images through an uploader app"), controls: [uploadDropdown]),
+            ],
+            [
+                lineBreakRow,
+                PrefsRowView(title: I18n.str("Open Preview At"), detail: I18n.str("Where the preview starts when you open it"), controls: [previewLocationDropdown]),
+                PrefsRowView(title: I18n.str("Preview Width"), detail: I18n.str("Maximum width of the text in the preview"), controls: [previewWidthDropdown]),
+            ],
         ])
-
-        if let titleLabel {
-            NSLayoutConstraint.activate([
-                titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 12),
-                titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
-            ])
-        }
-
-        return (containerView, titleLabel)
     }
 
-    private func makePopUp(options: [String], action: Selector) -> NSPopUpButton {
-        let popUp = NSPopUpButton()
-        popUp.translatesAutoresizingMaskIntoConstraints = false
-        popUp.target = self
-        popUp.action = action
-
-        for option in options {
-            popUp.addItem(withTitle: option)
-        }
-
-        return popUp
+    private func makeDropdown(action: Selector) -> PrefsDropdown {
+        let dropdown = PrefsDropdown()
+        dropdown.target = self
+        dropdown.action = action
+        return dropdown
     }
 
     override func setupValues() {
-        selectLineBreakOption(settings.editorLineBreak)
-        selectUploadServiceOption(UserDefaultsManagement.defaultPicUpload)
-        selectPreviewLocationOption(settings.previewLocation)
-        selectPreviewWidthOption(settings.previewWidth)
+        defaultModeDropdown.selectOption { $0 as? Bool == UserDefaultsManagement.splitViewMode }
+        uploadDropdown.selectOption { $0 as? String == UserDefaultsManagement.defaultPicUpload }
+        lineBreakDropdown.selectOption { $0 as? String == settings.editorLineBreak }
+        previewLocationDropdown.selectOption { $0 as? String == settings.previewLocation }
+        previewWidthDropdown.selectOption { $0 as? String == settings.previewWidth }
+        updateLineBreakDetail()
     }
 
-    private func selectLineBreakOption(_ value: String) {
-        lineBreakPopUp.selectItem(withTitle: localizedLineBreak(value))
-    }
-
-    private func selectPreviewLocationOption(_ value: String) {
-        previewLocationPopUp.selectItem(withTitle: localizedPreviewLocation(value))
-    }
-
-    private func selectPreviewWidthOption(_ value: String) {
-        previewWidthPopUp.selectItem(withTitle: localizedPreviewWidth(value))
-    }
-
-    private func selectUploadServiceOption(_ value: String) {
-        uploadPopUp.selectItem(withTitle: value == "None" ? I18n.str("None") : value)
+    /// The detail says what the chosen value does, since the two names alone
+    /// do not tell a single newline's fate.
+    private func updateLineBreakDetail() {
+        lineBreakRow.detail =
+            settings.editorLineBreak == "Github"
+            ? I18n.str("A new line in the preview needs a blank line")
+            : I18n.str("Each newline starts a new line in the preview")
     }
 
     // MARK: - Actions
 
-    @objc private func lineBreakChanged(_ sender: NSPopUpButton) {
-        guard let item = sender.selectedItem else { return }
-        settings.editorLineBreak = rawLineBreak(from: item.title)
-        settings.applyChanges()
-    }
-
-    @objc private func previewLocationChanged(_ sender: NSPopUpButton) {
-        guard let item = sender.selectedItem else { return }
-        settings.previewLocation = rawPreviewLocation(from: item.title)
-        settings.applyChanges()
-    }
-
-    @objc private func previewWidthChanged(_ sender: NSPopUpButton) {
-        guard let item = sender.selectedItem else { return }
-        settings.previewWidth = rawPreviewWidth(from: item.title)
-        settings.applyChanges()
-    }
-
-    @objc private func uploadServiceChanged(_ sender: NSPopUpButton) {
-        guard let item = sender.selectedItem else { return }
-        let title = item.title
-        UserDefaultsManagement.defaultPicUpload = (title == I18n.str("None")) ? "None" : title
-        guard title != I18n.str("None") else { return }
+    @objc private func defaultModeChanged(_ sender: PrefsDropdown) {
+        guard let isSplit = sender.selectedItem?.representedObject as? Bool else { return }
         if let vc = ViewController.shared() {
-            vc.toastImageSet(name: title)
+            vc.sessionSplitMode = isSplit
+            vc.applyEditorModePreferenceChange()
+        } else {
+            UserDefaultsManagement.splitViewMode = isSplit
+            NotificationCenter.default.post(name: .editorSettingsChanged, object: nil)
+        }
+    }
+
+    @objc private func lineBreakChanged(_ sender: PrefsDropdown) {
+        guard let raw = sender.selectedItem?.representedObject as? String else { return }
+        settings.editorLineBreak = raw
+        updateLineBreakDetail()
+        settings.applyChanges()
+    }
+
+    @objc private func previewLocationChanged(_ sender: PrefsDropdown) {
+        guard let raw = sender.selectedItem?.representedObject as? String else { return }
+        settings.previewLocation = raw
+        settings.applyChanges()
+    }
+
+    @objc private func previewWidthChanged(_ sender: PrefsDropdown) {
+        guard let raw = sender.selectedItem?.representedObject as? String else { return }
+        settings.previewWidth = raw
+        settings.applyChanges()
+    }
+
+    @objc private func uploadServiceChanged(_ sender: PrefsDropdown) {
+        guard let service = sender.selectedItem?.representedObject as? String else { return }
+        UserDefaultsManagement.defaultPicUpload = service
+        guard service != "None" else { return }
+        if let vc = ViewController.shared() {
+            vc.toastImageSet(name: service)
         } else if #available(macOS 14, *),
             let shell = (NSApp.delegate as? AppDelegate)?.shellWindowController as? ShellWindowController
         {
-            shell.model.host?.toast(message: String(format: I18n.str("Please make sure your Mac is installed %@ ~"), title), style: .failure)
+            shell.model.host?.toast(message: String(format: I18n.str("Please make sure your Mac is installed %@ ~"), service), style: .failure)
         }
     }
-
-    // MARK: - Localization Helpers for raw/display mapping
-    private func localizedLineBreak(_ raw: String) -> String {
-        switch raw {
-        case "MiaoYan": return I18n.str("MiaoYan")
-        case "Github": return I18n.str("Github")
-        default: return raw
-        }
-    }
-
-    private func rawLineBreak(from display: String) -> String {
-        if display == I18n.str("MiaoYan") { return "MiaoYan" }
-        if display == I18n.str("Github") { return "Github" }
-        return display
-    }
-
-    private func localizedPreviewLocation(_ raw: String) -> String {
-        switch raw {
-        case "Begin": return I18n.str("Begin")
-        case "Editing": return I18n.str("Editing")
-        default: return raw
-        }
-    }
-
-    private func rawPreviewLocation(from display: String) -> String {
-        if display == I18n.str("Begin") { return "Begin" }
-        if display == I18n.str("Editing") { return "Editing" }
-        return display
-    }
-
-    private func localizedPreviewWidth(_ raw: String) -> String {
-        if raw == UserDefaultsManagement.FullWidthValue { return I18n.str("Full Width") }
-        return raw
-    }
-
-    private func rawPreviewWidth(from display: String) -> String {
-        if display == I18n.str("Full Width") { return UserDefaultsManagement.FullWidthValue }
-        return display
-    }
-
 }

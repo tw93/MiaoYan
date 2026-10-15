@@ -53,27 +53,11 @@
 /* 設定 - ラベル */
 "Appearance" = "外観";
 "Language" = "言語";
-"Change" = "変更";
 "General" = "一般";
 "Editor" = "エディタ";
 "Fonts" = "フォント";
 "Editor Behavior" = "エディタの動作";
 "Preview" = "プレビュー";
-"Editor Font:" = "編集フォント:";
-"Preview Font:" = "プレビューフォント:";
-"Interface Font:" = "インターフェースフォント:";
-"Code Font:" = "コードフォント:";
-"Presentation Font Size:" = "プレゼンサイズ:";
-"Preview Location:" = "プレビュー位置:";
-"Preview Width:" = "プレビュー幅:";
-"Editor Mode:" = "エディタモード:";
-"Split Mode" = "分割モード";
-"Pure Editing" = "純粋編集";
-"Appearance:" = "外観色:";
-"Language:" = "インターフェース言語:";
-"Button Display:" = "ボタン表示:";
-"Always On Top:" = "常に最前面:";
-"Activate Shortcut:" = "ショートカット起動:";
 "Yes" = "はい";
 "No" = "いいえ";
 
@@ -85,18 +69,14 @@
 "On Hover" = "ホバー時";
 "Never" = "しない";
 "Image Upload" = "画像アップロード";
-"Upload Service:" = "アップロードサービス:";
 "None" = "なし";
 
 /* エディタ設定 - オプション */
-"Begin" = "先頭";
 "End" = "末尾";
 "Right" = "右";
 "Bottom" = "下";
 "Editing" = "編集";
 "Full Width" = "全幅";
-"Line Break:" = "改行:";
-"MiaoYan" = "MiaoYan";
 "Auto" = "自動";
 
 /* No comment provided by engineer. */
@@ -215,8 +195,6 @@
 "Edit Link…" = "リンクを編集";
 "Remove Link" = "リンクを削除";
 
-"Restart to MiaoYan to take effect" = "妙言を再起動して有効にします。";
-"Confirm" = "確認";
 
 /* Font Names */
 
@@ -230,7 +208,6 @@
 /* Missing translations */
 "Preview Settings" = "プレビュー設定";
 "Code Background:" = "コード背景:";
-"Github" = "Github";
 
 /* Preview Search Bar */
 "Previous" = "前へ";
@@ -333,3 +310,39 @@
 "A folder with this name already exists at the destination." = "移動先に同じ名前のフォルダがあります。";
 "Save the pending changes before moving this folder." = "フォルダを移動する前に変更を保存してください。";
 "A folder is already being moved." = "別のフォルダを移動中です。";
+
+/* Settings window */
+"Restart" = "再起動";
+"Change…" = "変更…";
+"Follow the system, or stay light or dark" = "システムに合わせるか、ライトかダークに固定";
+"Takes effect after MiaoYan restarts" = "MiaoYan の再起動後に反映";
+"Button Display" = "ボタン表示";
+"When the title bar buttons show" = "タイトルバーのボタンを表示するタイミング";
+"Keep MiaoYan above other windows" = "MiaoYan をほかのウインドウより手前に表示";
+"Activate Shortcut" = "呼び出しショートカット";
+"Bring MiaoYan to the front from any app" = "どのアプリからでも MiaoYan を呼び出す";
+"Default Mode" = "標準のモード";
+"Write alone, or with the preview beside it" = "エディタのみ、またはプレビューを横に並べる";
+"Split" = "分割";
+"Send pasted images through an uploader app" = "貼り付けた画像をアップロードアプリで送信";
+"Line Breaks" = "改行";
+"Every Newline" = "改行ごと";
+"GitHub Style" = "GitHub 方式";
+"Each newline starts a new line in the preview" = "改行するたびにプレビューでも改行";
+"A new line in the preview needs a blank line" = "プレビューで改行するには空行が必要";
+"Open Preview At" = "プレビューの開始位置";
+"Top" = "先頭";
+"Current Position" = "現在の位置";
+"Where the preview starts when you open it" = "プレビューを開いたときの表示位置";
+"Preview Width" = "プレビューの幅";
+"Maximum width of the text in the preview" = "プレビューの本文の最大幅";
+"Editor Font" = "エディタのフォント";
+"Typeface and size for writing" = "書くときの書体とサイズ";
+"Preview Font" = "プレビューのフォント";
+"Typeface and size for the preview" = "プレビューの書体とサイズ";
+"Code Font" = "コードのフォント";
+"Used in fenced code blocks" = "コードブロックで使用";
+"Interface Font" = "インターフェイスのフォント";
+"Used in the sidebar and note list" = "サイドバーとノート一覧で使用";
+"Presentation Font Size" = "プレゼンテーションの文字サイズ";
+"Used for MiaoYan PPT slides" = "MiaoYan PPT のスライドで使用";

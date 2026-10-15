@@ -4,101 +4,50 @@ import Cocoa
 final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelegate {
     private var settings = EditorSettings()
     private var fontPopUps: [NSPopUpButton] = []
-    private var editorSizePopUp: NSPopUpButton!
-    private var previewSizePopUp: NSPopUpButton!
-    private var presentationSizePopUp: NSPopUpButton!
+    private var editorSizePopUp: PrefsDropdown!
+    private var previewSizePopUp: PrefsDropdown!
+    private var presentationSizePopUp: PrefsDropdown!
 
     override func setupUI() {
-        setupFontSection(in: installPreferencesStack())
-    }
+        let editorFont = makeFontDropdown(kind: .text, currentName: settings.editorFontName, action: #selector(editorFontChanged(_:)))
+        let previewFont = makeFontDropdown(kind: .text, currentName: settings.previewFontName, action: #selector(previewFontChanged(_:)))
+        let codeFont = makeFontDropdown(kind: .code, currentName: settings.codeFontName, action: #selector(codeFontChanged(_:)))
+        let windowFont = makeFontDropdown(kind: .text, currentName: settings.windowFontName, action: #selector(windowFontChanged(_:)))
+        editorSizePopUp = makeSizeDropdown(action: #selector(editorFontSizeChanged(_:)))
+        previewSizePopUp = makeSizeDropdown(action: #selector(previewFontSizeChanged(_:)))
+        presentationSizePopUp = makeSizeDropdown(action: #selector(presentationFontSizeChanged(_:)))
 
-    private func setupFontSection(in stackView: NSStackView) {
-        let (editorFontRow, editorSize) = createFontRow(
-            label: I18n.str("Editor Font:"),
-            fontAction: #selector(editorFontChanged(_:)),
-            sizeAction: #selector(editorFontSizeChanged(_:))
-        )
-        let (previewFontRow, previewSize) = createFontRow(
-            label: I18n.str("Preview Font:"),
-            fontAction: #selector(previewFontChanged(_:)),
-            sizeAction: #selector(previewFontSizeChanged(_:))
-        )
-        editorSizePopUp = editorSize
-        previewSizePopUp = previewSize
-
-        let windowFontRow = createSingleFontRow(
-            label: I18n.str("Interface Font:"),
-            action: #selector(windowFontChanged(_:))
-        )
-        let codeFontRow = createSingleFontRow(
-            label: I18n.str("Code Font:"),
-            action: #selector(codeFontChanged(_:))
-        )
-
-        presentationSizePopUp = NSPopUpButton()
-        presentationSizePopUp.translatesAutoresizingMaskIntoConstraints = false
-        presentationSizePopUp.target = self
-        presentationSizePopUp.action = #selector(presentationFontSizeChanged(_:))
-        setupFontSizePopUp(presentationSizePopUp)
-        let presentationSizeRow = makePreferencesRow(
-            labelText: I18n.str("Presentation Font Size:"),
-            control: presentationSizePopUp,
-            controlWidth: PrefsFormMetrics.sizeControlWidth
-        )
-
-        addPreferencesGroups(
+        addSections([
             [
-                [editorFontRow, previewFontRow, windowFontRow, codeFontRow],
-                [presentationSizeRow],
-            ], to: stackView)
+                PrefsRowView(title: I18n.str("Editor Font"), detail: I18n.str("Typeface and size for writing"), controls: [editorFont, editorSizePopUp]),
+                PrefsRowView(title: I18n.str("Preview Font"), detail: I18n.str("Typeface and size for the preview"), controls: [previewFont, previewSizePopUp]),
+                PrefsRowView(title: I18n.str("Code Font"), detail: I18n.str("Used in fenced code blocks"), controls: [codeFont]),
+                PrefsRowView(title: I18n.str("Interface Font"), detail: I18n.str("Used in the sidebar and note list"), controls: [windowFont]),
+            ],
+            [
+                PrefsRowView(title: I18n.str("Presentation Font Size"), detail: I18n.str("Used for MiaoYan PPT slides"), controls: [presentationSizePopUp])
+            ],
+        ])
     }
 
-    private func createFontRow(label: String, fontAction: Selector, sizeAction: Selector) -> (NSView, NSPopUpButton) {
-        let fontPopUp = NSPopUpButton()
-        fontPopUp.translatesAutoresizingMaskIntoConstraints = false
-        fontPopUp.target = self
-        fontPopUp.action = fontAction
-        fontPopUps.append(fontPopUp)
-        // Initialize with the correct current font for this row
-        if fontAction == #selector(editorFontChanged(_:)) {
-            setupFontPopUp(fontPopUp, kind: .text, currentName: settings.editorFontName)
-        } else if fontAction == #selector(previewFontChanged(_:)) {
-            setupFontPopUp(fontPopUp, kind: .text, currentName: settings.previewFontName)
-        } else {
-            setupFontPopUp(fontPopUp, kind: .text, currentName: nil)
-        }
-
-        let sizePopUp = NSPopUpButton()
-        sizePopUp.translatesAutoresizingMaskIntoConstraints = false
-        sizePopUp.target = self
-        sizePopUp.action = sizeAction
-        setupFontSizePopUp(sizePopUp)
-
-        let spacing: CGFloat = 12
-        let fontWidth = PrefsFormMetrics.controlWidth - spacing - PrefsFormMetrics.sizeControlWidth
-        fontPopUp.widthAnchor.constraint(equalToConstant: fontWidth).isActive = true
-        sizePopUp.widthAnchor.constraint(equalToConstant: PrefsFormMetrics.sizeControlWidth).isActive = true
-
-        let controls = makeControlStack([fontPopUp, sizePopUp], spacing: spacing)
-        return (makePreferencesRow(labelText: label, control: controls), sizePopUp)
-    }
-
-    private func createSingleFontRow(label: String, action: Selector) -> NSView {
-        let popUp = NSPopUpButton()
-        popUp.translatesAutoresizingMaskIntoConstraints = false
+    private func makeFontDropdown(kind: FontListKind, currentName: String, action: Selector) -> PrefsDropdown {
+        let popUp = PrefsDropdown(maximumWidth: PrefsMetrics.fontDropdownMaxWidth)
         popUp.target = self
         popUp.action = action
         fontPopUps.append(popUp)
+        setupFontPopUp(popUp, kind: kind, currentName: currentName)
+        return popUp
+    }
 
-        if action == #selector(codeFontChanged(_:)) {
-            setupFontPopUp(popUp, kind: .code, currentName: settings.codeFontName)
-        } else if action == #selector(windowFontChanged(_:)) {
-            setupFontPopUp(popUp, kind: .text, currentName: settings.windowFontName)
-        } else {
-            setupFontPopUp(popUp, kind: .text, currentName: nil)
+    private func makeSizeDropdown(action: Selector) -> PrefsDropdown {
+        let popUp = PrefsDropdown()
+        popUp.target = self
+        popUp.action = action
+        for size in [12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 24, 26, 28] {
+            popUp.addItem(withTitle: String(size))
+            popUp.lastItem?.tag = size
         }
-
-        return makePreferencesRow(labelText: label, control: popUp)
+        return popUp
     }
 
     private func setupFontPopUp(_ popUp: NSPopUpButton, kind: FontListKind, currentName: String?) {
@@ -227,18 +176,11 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
         NSWorkspace.shared.open(url)
     }
 
-    private func setupFontSizePopUp(_ popUp: NSPopUpButton) {
-        popUp.removeAllItems()
-        let sizes = [12, 13, 14, 15, 16, 17, 18, 19, 20, 22, 24, 26, 28]
-        for s in sizes { popUp.addItem(withTitle: String(s)) }
-    }
-
     override func setupValues() {
-        // Font selections are already handled in setupFontPopUp during createFontRow
-        // Only need to set size selections here to avoid double-setting font selections
-        editorSizePopUp.selectItem(withTitle: String(settings.editorFontSize))
-        previewSizePopUp.selectItem(withTitle: String(settings.previewFontSize))
-        presentationSizePopUp.selectItem(withTitle: String(settings.presentationFontSize))
+        // Font rows select their family while their menus are built.
+        _ = editorSizePopUp.selectItem(withTag: settings.editorFontSize)
+        _ = previewSizePopUp.selectItem(withTag: settings.previewFontSize)
+        _ = presentationSizePopUp.selectItem(withTag: settings.presentationFontSize)
     }
 
     // MARK: - Actions
@@ -250,7 +192,7 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
 
     @objc private func editorFontSizeChanged(_ sender: NSPopUpButton) {
         guard let item = sender.selectedItem else { return }
-        settings.editorFontSize = Int(item.title) ?? UserDefaultsManagement.DefaultFontSize
+        settings.editorFontSize = item.tag
         settings.applyChanges()
     }
 
@@ -274,7 +216,7 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
 
     @objc private func previewFontSizeChanged(_ sender: NSPopUpButton) {
         guard let item = sender.selectedItem else { return }
-        settings.previewFontSize = Int(item.title) ?? UserDefaultsManagement.DefaultPreviewFontSize
+        settings.previewFontSize = item.tag
         settings.applyChanges()
     }
 
@@ -286,7 +228,7 @@ final class TypographyPrefsViewController: BasePrefsViewController, NSMenuDelega
 
     @objc private func presentationFontSizeChanged(_ sender: NSPopUpButton) {
         guard let item = sender.selectedItem else { return }
-        settings.presentationFontSize = Int(item.title) ?? UserDefaultsManagement.DefaultPresentationFontSize
+        settings.presentationFontSize = item.tag
         // Only a running presentation needs redrawing at the new size; outside
         // it the value is just stored, and opening a presentation picks it up.
         if let vc = ViewController.shared(), vc.sessionPresentationMode {

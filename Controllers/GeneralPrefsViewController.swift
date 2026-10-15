@@ -5,20 +5,22 @@ import KeyboardShortcuts
 final class GeneralPrefsViewController: BasePrefsViewController {
     private var settings = GeneralSettings()
 
-    private var appearancePopUp: NSPopUpButton!
-    private var languagePopUp: NSPopUpButton!
-    private var storagePathControl: NSPathControl!
-    private var storageChangeButton: NSButton!
-    private var buttonShowSegmented: PrefsSegmentedControl!
-    private var alwaysOnTopSwitch: NSSwitch!
-    private var activateShortcutRecorder: ThemeAwareShortcutRecorderView!
+    private var storageRow: PrefsRowView!
+    private var storageRestartButton: PrefsPillButton!
+    private var appearanceDropdown: PrefsDropdown!
+    private var languageDropdown: PrefsDropdown!
+    private var languageRestartButton: PrefsPillButton!
+    private var buttonDisplayDropdown: PrefsDropdown!
+    private var alwaysOnTopSwitch: PrefsSwitch!
+    private var shortcutRecorder: PrefsShortcutRecorder!
 
-    // Editor settings controls
-    private var editorModeSegmented: PrefsSegmentedControl!
+    /// What the running app was launched with, so the Restart pill shows only
+    /// while a change is waiting for a relaunch.
+    private var launchLanguage = 0
+    private var launchStoragePath: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(handleSplitViewModeChanged), name: .splitViewModeChanged, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleAlwaysOnTopChanged), name: .alwaysOnTopChanged, object: nil)
     }
 
@@ -26,165 +28,123 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         NotificationCenter.default.removeObserver(self)
     }
 
-    @objc private func handleSplitViewModeChanged() {
-        guard let editorModeSegmented = editorModeSegmented else { return }
-        editorModeSegmented.selectedSegment = UserDefaultsManagement.splitViewMode ? 1 : 0
-    }
-
     @objc private func handleAlwaysOnTopChanged() {
-        guard let alwaysOnTopSwitch = alwaysOnTopSwitch else { return }
-        alwaysOnTopSwitch.state = UserDefaultsManagement.alwaysOnTop ? .on : .off
+        alwaysOnTopSwitch?.isOn = UserDefaultsManagement.alwaysOnTop
     }
 
     override func setupUI() {
-        setupAppearanceSection(in: installPreferencesStack())
-    }
+        let changeButton = PrefsPillButton(title: I18n.str("Change…"), target: self, action: #selector(changeStorageLocation(_:)))
+        storageRestartButton = makeRestartButton()
+        storageRow = PrefsRowView(
+            title: I18n.str("Note Location"), detail: "", controls: [storageRestartButton, changeButton], detailTruncation: .byTruncatingMiddle)
 
-    private func setupAppearanceSection(in stackView: NSStackView) {
-        let storageRow = createStorageRow()
+        appearanceDropdown = PrefsDropdown()
+        appearanceDropdown.target = self
+        appearanceDropdown.action = #selector(appearanceChanged(_:))
+        appearanceDropdown.addOption(I18n.str("System"), value: AppearanceType.System.rawValue)
+        appearanceDropdown.addOption(I18n.str("Light"), value: AppearanceType.Light.rawValue)
+        appearanceDropdown.addOption(I18n.str("Dark"), value: AppearanceType.Dark.rawValue)
 
-        appearancePopUp = NSPopUpButton()
-        appearancePopUp.translatesAutoresizingMaskIntoConstraints = false
-        appearancePopUp.target = self
-        appearancePopUp.action = #selector(appearanceChanged(_:))
-
-        appearancePopUp.addItem(withTitle: I18n.str("System"))
-        appearancePopUp.addItem(withTitle: I18n.str("Light"))
-        appearancePopUp.addItem(withTitle: I18n.str("Dark"))
-
-        buttonShowSegmented = makeSegmentedControl(
-            labels: [I18n.str("Always"), I18n.str("On Hover")],
-            action: #selector(buttonShowChanged(_:))
-        )
-
-        languagePopUp = NSPopUpButton()
-        languagePopUp.translatesAutoresizingMaskIntoConstraints = false
-        languagePopUp.target = self
-        languagePopUp.action = #selector(languageChanged(_:))
-
-        let languages = [
-            LanguageType(rawValue: 0x00),
-            LanguageType(rawValue: 0x01),
-            LanguageType(rawValue: 0x02),
-            LanguageType(rawValue: 0x03),
-        ]
-        for language in languages {
-            if let lang = language?.description {
-                languagePopUp.addItem(withTitle: lang)
-            }
+        languageDropdown = PrefsDropdown()
+        languageDropdown.target = self
+        languageDropdown.action = #selector(languageChanged(_:))
+        for language in [LanguageType.Chinese, .English, .Japanese, .ChineseTC] {
+            languageDropdown.addOption(language.description, value: language.rawValue)
         }
+        languageRestartButton = makeRestartButton()
 
-        alwaysOnTopSwitch = NSSwitch()
-        alwaysOnTopSwitch.target = self
-        alwaysOnTopSwitch.action = #selector(alwaysOnTopChanged(_:))
-        alwaysOnTopSwitch.translatesAutoresizingMaskIntoConstraints = false
+        buttonDisplayDropdown = PrefsDropdown()
+        buttonDisplayDropdown.target = self
+        buttonDisplayDropdown.action = #selector(buttonDisplayChanged(_:))
+        buttonDisplayDropdown.addOption(I18n.str("Always"), value: "Always")
+        buttonDisplayDropdown.addOption(I18n.str("On Hover"), value: "Hover")
 
-        activateShortcutRecorder = ThemeAwareShortcutRecorderView(for: .activateWindow)
-        activateShortcutRecorder.translatesAutoresizingMaskIntoConstraints = false
-        let appearanceRow = makePreferencesRow(labelText: I18n.str("Appearance:"), control: appearancePopUp)
-        let languageRow = makePreferencesRow(labelText: I18n.str("Language:"), control: languagePopUp)
-        let buttonRow = makePreferencesRow(labelText: I18n.str("Button Display:"), control: buttonShowSegmented)
-        let alwaysRow = makePreferencesRow(labelText: I18n.str("Always On Top:"), control: alwaysOnTopSwitch, controlWidth: nil)
-        let shortcutRow = makePreferencesRow(labelText: I18n.str("Activate Shortcut:"), control: activateShortcutRecorder)
+        alwaysOnTopSwitch = PrefsSwitch(target: self, action: #selector(alwaysOnTopChanged(_:)))
+        alwaysOnTopSwitch.setAccessibilityLabel(I18n.str("Always On Top"))
+        shortcutRecorder = PrefsShortcutRecorder(for: .activateWindow)
 
-        editorModeSegmented = makeSegmentedControl(
-            labels: [localizedEditorMode(false), localizedEditorMode(true)],
-            action: #selector(editorModeChanged(_:))
-        )
-
-        let editorModeRow = makePreferencesRow(labelText: I18n.str("Editor Mode:"), control: editorModeSegmented)
-
-        addPreferencesGroups(
+        addSections([
+            [storageRow],
             [
-                [storageRow],
-                [editorModeRow, appearanceRow, languageRow, buttonRow],
-                [alwaysRow, shortcutRow],
-            ], to: stackView)
-    }
-
-    private func createStorageRow() -> NSView {
-        storagePathControl = NSPathControl()
-        storagePathControl.translatesAutoresizingMaskIntoConstraints = false
-        storagePathControl.pathStyle = .standard
-        storagePathControl.lineBreakMode = .byTruncatingMiddle
-        storagePathControl.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        storagePathControl.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-
-        storageChangeButton = NSButton(title: I18n.str("Change"), target: self, action: #selector(changeStorageLocation(_:)))
-        storageChangeButton.translatesAutoresizingMaskIntoConstraints = false
-        storageChangeButton.setContentHuggingPriority(.required, for: .horizontal)
-        storageChangeButton.setContentCompressionResistancePriority(.required, for: .horizontal)
-
-        // The path takes whatever the button leaves, so the row ends on the
-        // same edge as every control below it.
-        let controls = makeControlStack([storagePathControl, storageChangeButton], spacing: 12)
-        return makePreferencesRow(labelText: "\(I18n.str("Note Location")):", control: controls)
+                PrefsRowView(title: I18n.str("Appearance"), detail: I18n.str("Follow the system, or stay light or dark"), controls: [appearanceDropdown]),
+                PrefsRowView(title: I18n.str("Language"), detail: I18n.str("Takes effect after MiaoYan restarts"), controls: [languageRestartButton, languageDropdown]),
+                PrefsRowView(title: I18n.str("Button Display"), detail: I18n.str("When the title bar buttons show"), controls: [buttonDisplayDropdown]),
+            ],
+            [
+                PrefsRowView(title: I18n.str("Always On Top"), detail: I18n.str("Keep MiaoYan above other windows"), controls: [alwaysOnTopSwitch]),
+                PrefsRowView(title: I18n.str("Activate Shortcut"), detail: I18n.str("Bring MiaoYan to the front from any app"), controls: [shortcutRecorder]),
+            ],
+        ])
     }
 
     override func setupValues() {
-        appearancePopUp.selectItem(at: settings.appearanceType.rawValue)
+        launchLanguage = settings.defaultLanguage
+        launchStoragePath = settings.storagePath
+        appearanceDropdown.selectOption { $0 as? Int == settings.appearanceType.rawValue }
+        languageDropdown.selectOption { $0 as? Int == settings.defaultLanguage }
+        // "On Hover" is what older versions stored for the same choice.
+        let buttonShow = ["Hover", "On Hover"].contains(settings.buttonShow) ? "Hover" : "Always"
+        buttonDisplayDropdown.selectOption { $0 as? String == buttonShow }
+        alwaysOnTopSwitch.isOn = UserDefaultsManagement.alwaysOnTop
+        showStoragePath(settings.storagePath)
+    }
 
-        languagePopUp.selectItem(at: settings.defaultLanguage)
-
-        if let storagePath = settings.storagePath {
-            storagePathControl.url = URL(fileURLWithPath: storagePath)
+    /// The folder as people know it, `~/Documents/Notes` rather than the full
+    /// path, with the middle truncated when it is still too long.
+    private func showStoragePath(_ path: String?) {
+        guard let path, !path.isEmpty else {
+            storageRow.detail = ""
+            return
         }
-
-        buttonShowSegmented.selectedSegment = rawButtonShow(from: localizedButtonShow(settings.buttonShow)) == "Hover" ? 1 : 0
-        alwaysOnTopSwitch.state = UserDefaultsManagement.alwaysOnTop ? .on : .off
-
-        // Editor settings values
-        editorModeSegmented.selectedSegment = UserDefaultsManagement.splitViewMode ? 1 : 0
-
+        let home = FileManager.default.homeDirectoryForCurrentUser.path
+        let realHome = getpwuid(getuid()).map { String(cString: $0.pointee.pw_dir) } ?? home
+        for prefix in [realHome, home] where path == prefix || path.hasPrefix(prefix + "/") {
+            storageRow.detail = "~" + path.dropFirst(prefix.count)
+            return
+        }
+        storageRow.detail = path
     }
 
     // MARK: - Actions
-    @objc private func appearanceChanged(_ sender: NSPopUpButton) {
-        if let appearanceType = AppearanceType(rawValue: sender.indexOfSelectedItem) {
-            settings.appearanceType = appearanceType
+    @objc private func appearanceChanged(_ sender: PrefsDropdown) {
+        guard let raw = sender.selectedItem?.representedObject as? Int, let appearanceType = AppearanceType(rawValue: raw) else { return }
+        settings.appearanceType = appearanceType
 
-            if let appDelegate = NSApp.delegate as? AppDelegate {
-                appDelegate.applyAppearance()
+        if let appDelegate = NSApp.delegate as? AppDelegate {
+            appDelegate.applyAppearance()
+            appDelegate.mainWindowController?.applyMiaoYanAppearance()
+        }
+
+        if let prefsWindow = view.window?.windowController as? PrefsWindowController {
+            prefsWindow.refreshThemeAppearance()
+        }
+
+        if let vc = ViewController.shared() {
+            vc.editArea.recreatePreviewView()
+
+            let sidebarSelectedRows = vc.storageOutlineView.selectedRowIndexes
+            let notesSelectedRows = vc.notesTableView.selectedRowIndexes
+
+            vc.storageOutlineView.reloadData()
+            vc.notesTableView.reloadData()
+
+            if !sidebarSelectedRows.isEmpty {
+                vc.storageOutlineView.selectRowIndexes(sidebarSelectedRows, byExtendingSelection: false)
             }
-
-            if let appDelegate = NSApp.delegate as? AppDelegate,
-                let mainWindowController = appDelegate.mainWindowController
-            {
-                mainWindowController.applyMiaoYanAppearance()
-            }
-
-            if let prefsWindow = view.window?.windowController as? PrefsWindowController {
-                prefsWindow.refreshThemeAppearance()
-            }
-            activateShortcutRecorder.refreshAppearance()
-
-            if let vc = ViewController.shared() {
-                vc.editArea.recreatePreviewView()
-
-                let sidebarSelectedRows = vc.storageOutlineView.selectedRowIndexes
-                let notesSelectedRows = vc.notesTableView.selectedRowIndexes
-
-                vc.storageOutlineView.reloadData()
-                vc.notesTableView.reloadData()
-
-                if !sidebarSelectedRows.isEmpty {
-                    vc.storageOutlineView.selectRowIndexes(sidebarSelectedRows, byExtendingSelection: false)
-                }
-                if !notesSelectedRows.isEmpty {
-                    vc.notesTableView.selectRowIndexes(notesSelectedRows, byExtendingSelection: false)
-                }
+            if !notesSelectedRows.isEmpty {
+                vc.notesTableView.selectRowIndexes(notesSelectedRows, byExtendingSelection: false)
             }
         }
     }
 
-    @objc private func languageChanged(_ sender: NSPopUpButton) {
-        let languageType = LanguageType.withName(rawValue: sender.title)
+    @objc private func languageChanged(_ sender: PrefsDropdown) {
+        guard let raw = sender.selectedItem?.representedObject as? Int, let languageType = LanguageType(rawValue: raw) else { return }
         if settings.defaultLanguage != languageType.rawValue {
             settings.defaultLanguage = languageType.rawValue
             UserDefaults.standard.set([languageType.code, "en"], forKey: "AppleLanguages")
             UserDefaults.standard.synchronize()
-            showRestartAlert()
         }
+        languageRestartButton.isHidden = settings.defaultLanguage == launchLanguage
     }
 
     @objc private func changeStorageLocation(_ sender: NSButton) {
@@ -195,44 +155,33 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         openPanel.canChooseFiles = false
 
         let handleResult: (NSApplication.ModalResponse) -> Void = { result in
-            if result == .OK, let url = openPanel.url {
-                do {
-                    try StorageLocationValidator.validateWritableDirectory(url)
-                } catch {
-                    self.showStorageLocationError(error)
-                    return
-                }
-
-                // Save old values for rollback if user cancels restart
-                let oldPath = self.settings.storagePath
-                let oldBookmark = UserDefaultsManagement.storageBookmark
-
-                // 1. Save string path for legacy compatibility and display
-                self.settings.storagePath = url.path
-                self.storagePathControl.url = url
-
-                // 2. Create and observe Security Scoped Bookmark for Sandbox persistence
-                do {
-                    let bookmarkData = try url.bookmarkData(
-                        options: .withSecurityScope,
-                        includingResourceValuesForKeys: nil,
-                        relativeTo: nil)
-                    UserDefaultsManagement.storageBookmark = bookmarkData
-                } catch {
-                    AppDelegate.trackError(error, context: "GeneralPrefsViewController.changeStorageLocation.bookmarkData")
-                }
-
-                UserDefaults.standard.synchronize()
-                self.showRestartAlert { userConfirmedRestart in
-                    if !userConfirmedRestart {
-                        // Rollback changes if user cancels restart
-                        self.settings.storagePath = oldPath
-                        self.storagePathControl.url = oldPath.map { URL(fileURLWithPath: $0) }
-                        UserDefaultsManagement.storageBookmark = oldBookmark
-                        UserDefaults.standard.synchronize()
-                    }
-                }
+            guard result == .OK, let url = openPanel.url else { return }
+            do {
+                try StorageLocationValidator.validateWritableDirectory(url)
+            } catch {
+                self.showStorageLocationError(error)
+                return
             }
+
+            // 1. Save string path for legacy compatibility and display
+            self.settings.storagePath = url.path
+            self.showStoragePath(url.path)
+
+            // 2. Create and observe Security Scoped Bookmark for Sandbox persistence
+            do {
+                let bookmarkData = try url.bookmarkData(
+                    options: .withSecurityScope,
+                    includingResourceValuesForKeys: nil,
+                    relativeTo: nil)
+                UserDefaultsManagement.storageBookmark = bookmarkData
+            } catch {
+                AppDelegate.trackError(error, context: "GeneralPrefsViewController.changeStorageLocation.bookmarkData")
+            }
+
+            UserDefaults.standard.synchronize()
+            // The library is opened at launch; the new folder is used from the
+            // next start, which the Restart pill offers right away.
+            self.storageRestartButton.isHidden = url.path == self.launchStoragePath
         }
 
         if let window = view.window {
@@ -257,196 +206,16 @@ final class GeneralPrefsViewController: BasePrefsViewController {
         )
     }
 
-    @objc private func buttonShowChanged(_ sender: PrefsSegmentedControl) {
-        let title = sender.label(forSegment: sender.selectedSegment) ?? I18n.str("Always")
-        settings.buttonShow = rawButtonShow(from: title)
+    @objc private func buttonDisplayChanged(_ sender: PrefsDropdown) {
+        guard let raw = sender.selectedItem?.representedObject as? String else { return }
+        settings.buttonShow = raw
         if let vc = ViewController.shared() {
             vc.applyButtonVisibilityPreference()
         }
     }
 
-    @objc private func alwaysOnTopChanged(_ sender: NSSwitch) {
-        let enabled = sender.state == .on
-        UserDefaultsManagement.alwaysOnTop = enabled
+    @objc private func alwaysOnTopChanged(_ sender: PrefsSwitch) {
+        UserDefaultsManagement.alwaysOnTop = sender.isOn
         NotificationCenter.default.post(name: .alwaysOnTopChanged, object: nil)
     }
-
-    // MARK: - Localization helpers for raw/display mapping
-    private func localizedButtonShow(_ raw: String) -> String {
-        switch raw {
-        case "Always":
-            return I18n.str("Always")
-        case "Hover", "On Hover":  // backward compatibility for previously saved value
-            return I18n.str("On Hover")
-        default:
-            return raw
-        }
-    }
-
-    private func rawButtonShow(from display: String) -> String {
-        if display == I18n.str("Always") { return "Always" }
-        if display == I18n.str("On Hover") { return "Hover" }
-        return display
-    }
-
-    // MARK: - Editor Settings Actions
-
-    @objc private func editorModeChanged(_ sender: PrefsSegmentedControl) {
-        let isSplit = sender.selectedSegment == 1
-        if let vc = ViewController.shared() {
-            vc.sessionSplitMode = isSplit
-            vc.applyEditorModePreferenceChange()
-        } else {
-            UserDefaultsManagement.splitViewMode = isSplit
-            NotificationCenter.default.post(name: .editorSettingsChanged, object: nil)
-        }
-    }
-
-    private func localizedEditorMode(_ isSplit: Bool) -> String {
-        if isSplit {
-            return I18n.str("Split Mode")
-        } else {
-            return I18n.str("Pure Editing")
-        }
-    }
-
-}
-
-private final class ThemeAwareShortcutRecorderView: NSView {
-    private let recorder: KeyboardShortcuts.RecorderCocoa
-    private var isRecording = false
-    private let contentInsets = NSEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
-
-    init(for name: KeyboardShortcuts.Name, onChange: ((KeyboardShortcuts.Shortcut?) -> Void)? = nil) {
-        recorder = KeyboardShortcuts.RecorderCocoa(for: name, onChange: onChange)
-        super.init(frame: .zero)
-        commonInit()
-    }
-
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
-    override func viewDidMoveToWindow() {
-        super.viewDidMoveToWindow()
-        updateAppearance()
-    }
-
-    override func viewDidChangeEffectiveAppearance() {
-        super.viewDidChangeEffectiveAppearance()
-        updateAppearance()
-    }
-
-    override var intrinsicContentSize: NSSize {
-        let baseSize = recorder.intrinsicContentSize
-        return NSSize(
-            width: baseSize.width + contentInsets.left + contentInsets.right,
-            height: baseSize.height + contentInsets.top + contentInsets.bottom
-        )
-    }
-
-    override func hitTest(_ point: NSPoint) -> NSView? {
-        let pointInRecorder = convert(point, to: recorder)
-        if recorder.bounds.contains(pointInRecorder) {
-            return recorder.hitTest(pointInRecorder)
-        }
-        return super.hitTest(point)
-    }
-
-    var recorderView: KeyboardShortcuts.RecorderCocoa {
-        recorder
-    }
-
-    func refreshAppearance() {
-        updateAppearance()
-    }
-
-    @objc private func handleRecorderActiveStatusChange(_ notification: Notification) {
-        guard let isActive = notification.userInfo?["isActive"] as? Bool else { return }
-        isRecording = isActive
-        updateAppearance()
-    }
-
-    private func commonInit() {
-        translatesAutoresizingMaskIntoConstraints = false
-        wantsLayer = true
-        layer?.cornerRadius = 7
-        layer?.borderWidth = 1
-        layer?.masksToBounds = true
-        setContentHuggingPriority(.defaultLow, for: .horizontal)
-        setContentHuggingPriority(.defaultLow, for: .vertical)
-        setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        setContentCompressionResistancePriority(.defaultLow, for: .vertical)
-
-        // Same height as the segmented controls it sits under.
-        heightAnchor.constraint(equalToConstant: 28).isActive = true
-
-        addSubview(recorder)
-        recorder.translatesAutoresizingMaskIntoConstraints = false
-        configureRecorder()
-
-        NotificationCenter.default.addObserver(self, selector: #selector(handleRecorderActiveStatusChange(_:)), name: .keyboardShortcutsRecorderActiveStatusDidChange, object: nil)
-
-        updateAppearance()
-    }
-
-    private func configureRecorder() {
-        recorder.focusRingType = .none
-        recorder.isBordered = false
-        recorder.isBezeled = false
-        recorder.drawsBackground = false
-        recorder.wantsLayer = false
-        recorder.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        recorder.setContentHuggingPriority(.defaultLow, for: .vertical)
-        recorder.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        recorder.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
-
-        if let searchCell = recorder.cell as? NSSearchFieldCell {
-            searchCell.drawsBackground = false
-            searchCell.backgroundColor = .clear
-            searchCell.focusRingType = .none
-        }
-
-        NSLayoutConstraint.activate([
-            recorder.leadingAnchor.constraint(equalTo: leadingAnchor, constant: contentInsets.left),
-            recorder.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -contentInsets.right),
-            recorder.topAnchor.constraint(equalTo: topAnchor, constant: contentInsets.top),
-            recorder.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -contentInsets.bottom),
-        ])
-    }
-
-    private func updateAppearance() {
-        guard let layer else { return }
-        let appearance = window?.effectiveAppearance ?? effectiveAppearance
-        // Idle it reads as the same filled track as the segmented controls
-        // above it; only recording draws an outline.
-        let backgroundColor =
-            (appearance.isDark) ? NSColor.white.withAlphaComponent(0.07) : NSColor.black.withAlphaComponent(0.06)
-        let borderColor =
-            isRecording ? Theme.accentColor.resolvedColor(for: appearance) : NSColor.clear
-
-        layer.backgroundColor = backgroundColor.cgColor
-        layer.borderColor = borderColor.cgColor
-
-        let resolvedTextColor = Theme.textColor.resolvedColor(for: appearance)
-        recorder.textColor = resolvedTextColor
-        if let searchCell = recorder.cell as? NSSearchFieldCell {
-            searchCell.textColor = resolvedTextColor
-            if let placeholder = searchCell.placeholderString {
-                let attributes: [NSAttributedString.Key: Any] = [
-                    .foregroundColor: resolvedTextColor.withAlphaComponent(0.6)
-                ]
-                searchCell.placeholderAttributedString = NSAttributedString(string: placeholder, attributes: attributes)
-            }
-        }
-    }
-}
-
-extension Notification.Name {
-    fileprivate static let keyboardShortcutsRecorderActiveStatusDidChange = Notification.Name("KeyboardShortcuts_recorderActiveStatusDidChange")
 }

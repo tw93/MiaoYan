@@ -166,8 +166,6 @@
 "Edit Link…" = "编辑链接";
 "Remove Link" = "移除链接";
 
-"Restart to MiaoYan to take effect" = "重新启动妙言后生效";
-"Confirm" = "确定";
 
 /* Font Names */
 
@@ -180,35 +178,18 @@
 "Editor Behavior" = "编辑器行为";
 "Preview Settings" = "预览设置";
 "Preview" = "预览";
-"Editor Font:" = "编辑字体:";
-"Interface Font:" = "界面字体:";
-"Preview Font:" = "预览字体:";
-"Code Font:" = "代码字体:";
-"Presentation Font Size:" = "演示字号:";
-"Line Break:" = "换行方式:";
 "Code Background:" = "代码背景:";
-"Preview Location:" = "预览位置:";
-"Preview Width:" = "预览宽度:";
-"Editor Mode:" = "编辑模式:";
-"Split Mode" = "分栏模式";
-"Pure Editing" = "纯编辑";
 
 /* Interface Settings */
 
-"Button Display:" = "按钮显示:";
 "Always" = "始终显示";
 "On Hover" = "悬停显示";
 "Never" = "从不显示";
 
 /* Image Upload Settings */
 "Image Upload" = "图片上传";
-"Upload Service:" = "上传服务:";
 
 /* General Settings Labels */
-"Appearance:" = "外观颜色:";
-"Language:" = "界面语言:";
-"Always On Top:" = "置顶显示:";
-"Activate Shortcut:" = "快捷唤起:";
 "Yes" = "是";
 "No" = "否";
 "Appearance & Language" = "外观与语言";
@@ -218,20 +199,16 @@
 "Experience" = "体验";
 "Typography" = "编辑";
 "Storage Location" = "存储位置";
-"Change" = "更改";
 "System" = "跟随系统";
 "Light" = "浅色";
 "Dark" = "深色";
 "None" = "无";
-"Begin" = "开头";
 "End" = "结尾";
 "Right" = "右侧";
 "Bottom" = "底部";
 "Editing" = "编辑";
 "Full Width" = "全宽";
-"MiaoYan" = "妙言";
 "Auto" = "自动";
-"Github" = "GitHub";
 
 /* ClipboardManager Messages */
 "Image uploaded successfully" = "图片上传成功";
@@ -333,3 +310,41 @@
 "A folder with this name already exists at the destination." = "目标位置已有同名文件夹。";
 "Save the pending changes before moving this folder." = "先保存未保存的内容，再移动文件夹。";
 "A folder is already being moved." = "已有文件夹正在移动。";
+
+/* Settings window */
+"Restart" = "重新启动";
+"Change…" = "更改…";
+"Appearance" = "外观";
+"Follow the system, or stay light or dark" = "跟随系统，或固定浅色、深色";
+"Language" = "语言";
+"Takes effect after MiaoYan restarts" = "重新启动妙言后生效";
+"Button Display" = "按钮显示";
+"When the title bar buttons show" = "标题栏按钮什么时候出现";
+"Keep MiaoYan above other windows" = "妙言窗口始终在其他窗口之上";
+"Activate Shortcut" = "唤起快捷键";
+"Bring MiaoYan to the front from any app" = "在任何应用里呼出妙言";
+"Default Mode" = "默认模式";
+"Write alone, or with the preview beside it" = "只显示编辑区，或在旁边并排预览";
+"Split" = "分栏";
+"Send pasted images through an uploader app" = "粘贴的图片交给上传工具处理";
+"Line Breaks" = "换行方式";
+"Every Newline" = "每次换行";
+"GitHub Style" = "GitHub 风格";
+"Each newline starts a new line in the preview" = "预览中每次换行都会另起一行";
+"A new line in the preview needs a blank line" = "预览中需要空一行才会换行";
+"Open Preview At" = "预览打开位置";
+"Top" = "顶部";
+"Current Position" = "当前位置";
+"Where the preview starts when you open it" = "打开预览时从哪里开始显示";
+"Preview Width" = "预览宽度";
+"Maximum width of the text in the preview" = "预览中正文的最大宽度";
+"Editor Font" = "编辑字体";
+"Typeface and size for writing" = "写作时的字体和字号";
+"Preview Font" = "预览字体";
+"Typeface and size for the preview" = "预览时的字体和字号";
+"Code Font" = "代码字体";
+"Used in fenced code blocks" = "用于代码块";
+"Interface Font" = "界面字体";
+"Used in the sidebar and note list" = "用于侧栏和笔记列表";
+"Presentation Font Size" = "演示字号";
+"Used for MiaoYan PPT slides" = "用于妙言 PPT 幻灯片";

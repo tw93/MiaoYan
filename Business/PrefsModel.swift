@@ -14,22 +14,6 @@ enum PrefsSection: CaseIterable, Sendable {
         case .typography: return I18n.str("Fonts")
         }
     }
-
-    var systemSymbolName: String {
-        switch self {
-        case .general: return "paintbrush"
-        case .editor: return "square.and.pencil"
-        case .typography: return "textformat.size"
-        }
-    }
-
-    var iconAssetName: String? {
-        switch self {
-        case .general: return "icon_interface"
-        case .editor: return "icon_experience"
-        case .typography: return "icon_typography"
-        }
-    }
 }
 
 // MARK: - Settings Configuration Protocol
