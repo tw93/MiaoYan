@@ -43,4 +43,12 @@ final class NotePreviewTests: XCTestCase {
         try "# Meeting\n\nAgenda".write(to: other, atomically: true, encoding: .utf8)
         XCTAssertEqual(NotePreview.text(at: other), "Meeting Agenda")
     }
+
+    func testCardReadsAGBKNote() throws {
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".md")
+        defer { try? FileManager.default.removeItem(at: url) }
+        let gbk = String.Encoding(rawValue: CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue)))
+        try XCTUnwrap("这是一篇旧的周报，记录了本周的工作。\n".data(using: gbk)).write(to: url)
+        XCTAssertEqual(NotePreview.text(at: url), "这是一篇旧的周报，记录了本周的工作。")
+    }
 }

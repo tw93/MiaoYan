@@ -177,9 +177,14 @@ public enum NotePreview {
     /// A byte-limited read usually ends inside a multi-byte character, and a
     /// strict UTF-8 decode then fails, which sent the card to a full
     /// coordinated read of the file. Dropping the partial tail fixes that.
+    /// Notes in other encodings (GBK, Big5, UTF-16) go through the same
+    /// decoder as a full read; UTF-8 alone left their cards blank.
     static func decodeUTF8Prefix(_ data: Data) -> String? {
         for trim in 0...3 where trim < data.count || trim == 0 {
             if let text = String(data: data.dropLast(trim), encoding: .utf8) { return text }
+        }
+        for trim in 0...3 where trim < data.count || trim == 0 {
+            if let text = NoteText.decode(data.dropLast(trim)) { return text }
         }
         return nil
     }
