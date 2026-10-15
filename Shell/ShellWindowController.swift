@@ -393,7 +393,9 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             if FileManager.default.directoryExists(atUrl: url) { return url }
             return AppEnvironment.current.storage.getProjectBy(url: url)?.url ?? url.deletingLastPathComponent()
         }
-        return model.selectedFolder?.url ?? UserDefaultsManagement.storageUrl
+        // The library loaded at launch: a folder changed in Settings is only
+        // used after the restart.
+        return model.selectedFolder?.url ?? AppEnvironment.current.storage.getDefault()?.url ?? UserDefaultsManagement.storageUrl
     }
 
     @IBAction func cleanUnusedAttachments(_ sender: Any?) { model.cleanUnusedAttachments() }
@@ -623,18 +625,19 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             guard hasNote, !model.isExporting else { return event }
             model.export(.html)
             return nil
-        // The storyboard list's export keys: PDF, image and the PPT deck.
-        // Text keeps them (Control-Shift-P extends a selection up).
+        // The storyboard list's export keys: PDF, image and the PPT deck, from
+        // the list only, as in NotesTableView.keyUp. Text keeps them
+        // (Control-Shift-P extends a selection up).
         case kVK_ANSI_P where flags == [.control, .shift]:
-            guard hasNote, !isText, !model.isExporting, !model.isPPT else { return event }
+            guard hasNote, !isText, column == .list, !model.isExporting, !model.isPPT else { return event }
             model.export(.pdf)
             return nil
         case kVK_ANSI_I where flags == [.control, .shift]:
-            guard hasNote, !isText, !model.isExporting, !model.isPPT else { return event }
+            guard hasNote, !isText, column == .list, !model.isExporting, !model.isPPT else { return event }
             model.export(.image)
             return nil
         case kVK_ANSI_P where flags == [.control, .option, .shift]:
-            guard hasNote, !isText, !model.isExporting, !model.isPPT else { return event }
+            guard hasNote, !isText, column == .list, !model.isExporting, !model.isPPT else { return event }
             model.export(.ppt)
             return nil
         case kVK_ANSI_I where flags == [.command, .option]:
@@ -691,7 +694,9 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
                 return nil
             }
             guard flags.isEmpty else { return event }
-            if model.isRenaming, isText, responder !== editor, column == .detail {
+            if model.isRenaming, isText, responder !== editor, column == .detail,
+                (responder as? NSTextView)?.hasMarkedText() != true
+            {
                 leaveTitleField()
                 return nil
             }
@@ -751,6 +756,9 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         let sidebarShown = model.layout == .all
 
         if inSearch {
+            // An input method composing in the field gets Return, the arrows
+            // and Tab first, as SearchTextField does through doCommandBy.
+            if (window?.firstResponder as? NSTextView)?.hasMarkedText() == true { return false }
             switch key {
             case kVK_Return, kVK_ANSI_KeypadEnter:
                 if flags == [.command] {
@@ -769,6 +777,7 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
                 model.focusRequest = .sidebar
                 return true
             case kVK_Tab where flags.isEmpty:
+                guard model.editorMode != .preview else { return false }
                 model.focusEditor()
                 return true
             default:
@@ -783,6 +792,8 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
                 model.focusRequest = .sidebar
                 return true
             case kVK_RightArrow where flags.isEmpty, kVK_Tab where flags.isEmpty:
+                // The preview has no editor to take focus; keep the key.
+                guard model.editorMode != .preview else { return false }
                 if model.selectedNote == nil { model.selectNext(1) }
                 model.focusEditor()
                 return true
@@ -820,21 +831,37 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         if flags.isDisjoint(with: [.command, .control]), let typed = event.characters, !typed.isEmpty,
             CharacterSet(charactersIn: typed).isSubset(of: .alphanumerics), model.layout != .noteOnly
         {
-            jumpToSearch(typing: typed)
+            jumpToSearch(with: event)
             return true
         }
         return false
     }
 
-    /// The search field takes the typed letter; its caret goes after it, not
-    /// selecting it, so the next key adds to the query.
-    private func jumpToSearch(typing text: String) {
-        model.searchText = text
+    /// Keys typed before the search field has focus, replayed into it.
+    private var pendingSearchKeys: [NSEvent] = []
+
+    /// The search field takes the typed key through its input method, as the
+    /// storyboard window hands the field the same event: assigning the
+    /// character skipped the input method, so pinyin started with a stray
+    /// Latin letter. The field's old query is replaced, not appended to.
+    private func jumpToSearch(with event: NSEvent) {
+        pendingSearchKeys.append(event)
+        guard pendingSearchKeys.count == 1 else { return }
         model.focusRequest = .search
         Task { @MainActor [weak self] in
-            try? await Task.sleep(for: .milliseconds(100))
-            guard let self, let field = self.window?.firstResponder as? NSTextView, self.column(of: field) == .list else { return }
-            field.setSelectedRange(NSRange(location: (field.string as NSString).length, length: 0))
+            // Replay as soon as the field has focus, so a key typed after that
+            // cannot land ahead of the ones still waiting here.
+            for _ in 0..<10 {
+                try? await Task.sleep(for: .milliseconds(20))
+                guard let self else { return }
+                if let field = self.window?.firstResponder as? NSTextView, self.column(of: field) == .list { break }
+            }
+            guard let self else { return }
+            let keys = self.pendingSearchKeys
+            self.pendingSearchKeys = []
+            guard let field = self.window?.firstResponder as? NSTextView, self.column(of: field) == .list else { return }
+            field.selectAll(nil)
+            field.interpretKeyEvents(keys)
         }
     }
 

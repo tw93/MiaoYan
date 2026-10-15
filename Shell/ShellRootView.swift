@@ -149,6 +149,10 @@ struct ShellSidebar: View {
             }
             .padding(.horizontal, 10)
             .frame(height: ShellStyle.headerHeight)
+            // Scrolled rows draw past the scroll view's top; an opaque header
+            // above them keeps them from showing through the title line.
+            .background(ShellStyle.background)
+            .zIndex(1)
 
             ScrollView {
                 LazyVStack(spacing: 1) {
@@ -181,10 +185,6 @@ struct ShellSidebar: View {
         }
         .onKeyPress(.downArrow) {
             model.selectNextScope(1)
-            return .handled
-        }
-        .onKeyPress(.rightArrow) {
-            model.setChosenFolderExpanded(true)
             return .handled
         }
         .onKeyPress(.leftArrow) {
@@ -375,6 +375,8 @@ struct ShellNoteList: View {
                 .padding(.leading, 16)
                 .padding(.trailing, 10)
                 .frame(height: ShellStyle.headerHeight)
+                .background(ShellStyle.background)
+                .zIndex(1)
 
             ScrollViewReader { proxy in
                 ScrollView {
@@ -472,8 +474,7 @@ struct ShellNoteList: View {
                 // named after the query, as the storyboard window's search
                 // field does; the window controller's key monitor takes both.
                 ShellSearchField(
-                    text: $model.searchText, focused: $searchFocused,
-                    onSubmit: { model.searchFieldReturn() }
+                    text: $model.searchText, focused: $searchFocused
                 ) {
                     model.searchText = ""
                     model.isSearchOpen = false
@@ -838,7 +839,7 @@ private struct ShellNoteMenu: View {
                 item("PDF", "doc.richtext") { exportSelecting(.pdf) }
                 item("MiaoYan PPT PDF", "wand.and.stars") { exportSelecting(.ppt) }
                     // A deck needs a --- slide break; an unread note is let through.
-                    .disabled(note.isContentLoaded && !note.content.string.contains("---"))
+                    .disabled(!model.hasSlides(note))
             } label: {
                 Label(I18n.str("Export"), systemImage: "square.and.arrow.up")
             }

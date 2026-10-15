@@ -55,6 +55,27 @@ final class ShellEditorParityTests: XCTestCase {
         XCTAssertEqual(note.content.string, "- [x] buy milk!")
     }
 
+    /// Command-S while the preview shows: the hidden editor still holds the
+    /// text from before a task was ticked there, and copying it back undid
+    /// the tick.
+    @available(macOS 14, *)
+    @MainActor
+    func testSaveNowInPreviewKeepsATickMadeThere() {
+        let previousNote = EditTextView.note
+        defer { EditTextView.note = previousNote }
+        EditTextView.note = nil
+        let note = makeLoadedNote("tick.md", body: "- [ ] buy milk")
+        defer { note.discardPendingSave() }
+        let model = ShellModel()
+        model.editor.show(note)
+        XCTAssertNil(model.editor.textView.window, "off screen, as in preview")
+
+        note.save(content: NSMutableAttributedString(string: "- [x] buy milk"))
+        model.saveNow()
+
+        XCTAssertEqual(note.content.string, "- [x] buy milk")
+    }
+
     @available(macOS 14, *)
     @MainActor
     func testShowLeavesAnUnchangedBufferAlone() {

@@ -392,8 +392,6 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
 
     // MARK: - Format
 
-    var isFormatting: Bool { formatTask != nil }
-
     /// ViewController.formatText: Prettier on a background actor, applied
     /// only if the same note still owns the buffer when it returns. A second
     /// click while it runs cancels it.
@@ -570,6 +568,17 @@ struct ShellEditorSplit<Preview: View>: NSViewRepresentable {
             let height = splitView.bounds.height
             splitView.subviews[0].frame = NSRect(x: 0, y: 0, width: left, height: height)
             splitView.subviews[1].frame = NSRect(x: left + thickness, y: 0, width: max(total - left, 0), height: height)
+            Self.fitEditor(in: splitView)
+        }
+
+        /// The editor container arrives from the edit-only view still sized to
+        /// the whole detail column; left alone it ran under the preview, cut
+        /// its lines off at the divider and took the preview's scroll events.
+        static func fitEditor(in splitView: NSSplitView) {
+            guard let pane = splitView.subviews.first else { return }
+            for view in pane.subviews where view.frame != pane.bounds {
+                view.frame = pane.bounds
+            }
         }
 
         func splitView(_ splitView: NSSplitView, constrainMinCoordinate proposed: CGFloat, ofSubviewAt index: Int) -> CGFloat {
@@ -583,6 +592,7 @@ struct ShellEditorSplit<Preview: View>: NSViewRepresentable {
         /// Only a divider drag carries a divider index; window resizes keep
         /// the ratio rather than saving whatever the clamp left.
         func splitViewDidResizeSubviews(_ notification: Notification) {
+            if let splitView = notification.object as? NSSplitView { Self.fitEditor(in: splitView) }
             guard notification.userInfo?["NSSplitViewDividerIndex"] != nil,
                 let splitView = notification.object as? NSSplitView, splitView.subviews.count == 2
             else { return }
@@ -613,9 +623,10 @@ struct ShellEditorSplit<Preview: View>: NSViewRepresentable {
 
     func updateNSView(_ split: ShellSplitView, context: Context) {
         if let editorPane = split.subviews.first, controller.container.superview !== editorPane {
-            controller.container.frame = editorPane.bounds
             editorPane.addSubview(controller.container)
         }
+        controller.container.autoresizingMask = [.width, .height]
+        Coordinator.fitEditor(in: split)
         (split.subviews.last as? NSHostingView<Preview>)?.rootView = preview
         controller.update(note)
     }

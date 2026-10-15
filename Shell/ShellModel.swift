@@ -166,6 +166,14 @@ final class ShellModel {
     var scope: Scope = .all {
         didSet {
             guard scope != oldValue else { return }
+            // A folder without the open note would close it under an export.
+            if isExporting, !isRestoringSelection {
+                isRestoringSelection = true
+                scope = oldValue
+                isRestoringSelection = false
+                host?.toast(message: I18n.str("Switching notes is disabled during export~"), style: .failure)
+                return
+            }
             if !isSingleMode {
                 UserDefaults.standard.set(scope.storedValue, forKey: Self.scopeKey)
                 // Shared with the storyboard window, which writes it the same way.
@@ -981,14 +989,15 @@ final class ShellModel {
     func restoreDeleted(_ urls: [URL: URL]) {
         var restored: URL?
         for (trashed, original) in urls {
-            if let note = storage.getBy(url: trashed) {
-                storage.removeBy(note: note)
-            }
             do {
                 try FileManager.default.moveItem(at: trashed, to: original)
             } catch {
+                // The note stays where it is, listed in the Trash.
                 AppDelegate.trackError(error, context: "ShellModel.restoreDeleted")
                 continue
+            }
+            if let note = storage.getBy(url: trashed) {
+                storage.removeBy(note: note)
             }
             if storage.getBy(url: original) == nil, let note = storage.initNote(url: original) {
                 note.load()
@@ -998,7 +1007,11 @@ final class ShellModel {
             restored = original
         }
         guard let restored else { return }
-        refreshNow(selecting: restored)
+        // Open it only where it is listed; elsewhere the detail would go blank.
+        refreshNow { [weak self] in
+            guard let self, self.notes.contains(where: { $0.url == restored }) else { return }
+            self.selectedNoteURL = restored
+        }
     }
 
     /// Renames the open note's file after `title`; false when that name is taken.
@@ -1198,10 +1211,18 @@ final class ShellModel {
     /// last edits; the storyboard window does the same through its
     /// ViewController.
     func flushEdits() {
-        if let owner = editor.textView.storageNote {
-            editor.textView.saveTextStorageContent(to: owner)
-        }
+        copyLiveEditorBuffer()
         storage.flushPendingSaves()
+    }
+
+    /// Writes the editor buffer back to its note only while the editor is on
+    /// screen. In preview it is off the window and may be older than the note:
+    /// a task ticked in the preview changes the note, not the buffer, and
+    /// copying the buffer back then undid the tick. Typing already saves on
+    /// every change, so a hidden editor has nothing newer to give.
+    private func copyLiveEditorBuffer() {
+        guard let owner = editor.textView.storageNote, editor.textView.window != nil else { return }
+        editor.textView.saveTextStorageContent(to: owner)
     }
 
     private func switchStorage(selecting url: URL?, scope newScope: Scope = .all) {
@@ -1461,8 +1482,8 @@ final class ShellModel {
         var last: Note?
         for note in originals where !note.isTrash() {
             guard let name = note.getDupeName() else { continue }
-            if note === EditTextView.note, editor.textView.storageNote === note {
-                editor.textView.saveTextStorageContent(to: note)
+            if note === EditTextView.note {
+                copyLiveEditorBuffer()
             }
             _ = note.flushPendingSave()
             if !note.isContentLoaded { note.ensureContentLoaded() }
@@ -1538,9 +1559,7 @@ final class ShellModel {
     /// with "Saved~" only when something was waiting, as the storyboard
     /// window's handler does.
     func saveNow() {
-        if let owner = editor.textView.storageNote {
-            editor.textView.saveTextStorageContent(to: owner)
-        }
+        copyLiveEditorBuffer()
         let hadUnsavedChanges = storage.noteList.contains { $0.needsSave }
         let allSaved = storage.flushPendingSaves()
         if hadUnsavedChanges, allSaved {
@@ -1675,8 +1694,11 @@ final class ShellModel {
     /// break. A note whose text is not loaded yet is let through, and the
     /// deck itself says so.
     var selectedNoteHasSlides: Bool {
-        guard let note = selectedNote else { return false }
-        return !note.isContentLoaded || note.content.string.contains("---")
+        selectedNote.map(hasSlides) ?? false
+    }
+
+    func hasSlides(_ note: Note) -> Bool {
+        !note.isContentLoaded || note.content.string.contains("---")
     }
 
     /// HTML is rendered straight from the note. PDF and image capture the
