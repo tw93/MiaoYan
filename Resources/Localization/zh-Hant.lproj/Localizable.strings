@@ -155,6 +155,7 @@
 
 /* No comment provided by engineer. */
 "Show in Finder" = "在 Finder 中顯示";
+"Reveal in Finder" = "在 Finder 中顯示";
 "Open in Terminal" = "在終端機中開啟";
 
 /* View menu */

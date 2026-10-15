@@ -24,13 +24,37 @@ final class ShellModel {
         var hasChildren = false
     }
 
-    /// Folders showing their subfolders, as the storyboard outline keeps
-    /// rows expanded while the app runs.
-    private(set) var expandedFolders: Set<URL> = []
+    /// Folders showing their subfolders, kept across launches as the
+    /// storyboard outline's autosaveExpandedItems keeps them.
+    private(set) var expandedFolders: Set<URL> = [] {
+        didSet {
+            guard expandedFolders != oldValue, !isSingleMode else { return }
+            UserDefaults.standard.set(expandedFolders.map(\.path).sorted(), forKey: Self.expandedKey)
+        }
+    }
+
+    private static let expandedKey = "ShellExpandedFolders"
+    /// Where the storyboard outline autosaves its expanded folder paths; the
+    /// first shell launch starts from it.
+    private static let storyboardExpandedKey = "NSOutlineView Items SidebarOutlineView"
+
+    private static func storedExpandedFolders() -> Set<URL> {
+        let defaults = UserDefaults.standard
+        let stored = defaults.array(forKey: expandedKey) ?? defaults.array(forKey: storyboardExpandedKey) ?? []
+        return Set(stored.compactMap { $0 as? String }.map { URL(fileURLWithPath: $0) })
+    }
+
+    /// Matched by path: restored URLs and storage's folder URLs can differ in
+    /// a trailing slash.
+    func isExpanded(_ url: URL) -> Bool {
+        expandedFolders.contains { $0.path == url.path }
+    }
 
     /// Collapsing a folder whose subfolder is chosen chooses the folder.
     func toggleExpanded(_ url: URL) {
-        if expandedFolders.remove(url) != nil {
+        let expanded = expandedFolders.filter { $0.path == url.path }
+        if !expanded.isEmpty {
+            expandedFolders.subtract(expanded)
             if case .project(let chosen) = scope, chosen.path.hasPrefix(url.path.hasSuffix("/") ? url.path : url.path + "/") {
                 scope = .project(url)
             }
@@ -44,9 +68,39 @@ final class ShellModel {
     func setChosenFolderExpanded(_ expanded: Bool) {
         guard case .project(let url) = scope,
             sidebarRows.first(where: { $0.id == scope })?.hasChildren == true,
-            expandedFolders.contains(url) != expanded
+            isExpanded(url) != expanded
         else { return }
         toggleExpanded(url)
+    }
+
+    /// Expands the folders above `path` and returns its folder, so a
+    /// remembered subfolder comes back as the storyboard sidebar's
+    /// `revealRow(forProjectPath:)` brings it back.
+    @discardableResult
+    func revealFolder(atPath path: String) -> Project? {
+        let topLevel = Sidebar().getList().compactMap { item -> Project? in
+            guard let item = item as? SidebarItem, item.type == .Category else { return nil }
+            return item.project
+        }
+        guard let chain = Self.folderChain(toPath: path, topLevel: topLevel, storage: storage) else { return nil }
+        for ancestor in chain.dropLast() where !isExpanded(ancestor.url) {
+            expandedFolders.insert(ancestor.url)
+        }
+        return chain.last
+    }
+
+    /// The folders from a top-level one down to the one at `path`, listing
+    /// subfolders as the sidebar does; nil when no folder has that path.
+    static func folderChain(toPath path: String, topLevel: [Project], storage: Storage) -> [Project]? {
+        var level = topLevel
+        var chain: [Project] = []
+        while true {
+            let candidates = level.filter { path == $0.url.path || path.hasPrefix($0.url.path + "/") }
+            guard let next = candidates.max(by: { $0.url.path.count < $1.url.path.count }) else { return nil }
+            chain.append(next)
+            if next.url.path == path { return chain }
+            level = storage.subfolders(of: next)
+        }
     }
 
     /// A run of notes under one date heading; `title` is nil for pinned
@@ -106,8 +160,19 @@ final class ShellModel {
     var scope: Scope = .all {
         didSet {
             guard scope != oldValue else { return }
-            if !isSingleMode { UserDefaults.standard.set(scope.storedValue, forKey: Self.scopeKey) }
-            refreshNotes(keepSelection: false)
+            if !isSingleMode {
+                UserDefaults.standard.set(scope.storedValue, forKey: Self.scopeKey)
+                // Shared with the storyboard window, which writes it the same way.
+                if case .project(let url) = scope {
+                    UserDefaultsManagement.lastProjectPath = url.path
+                } else {
+                    UserDefaultsManagement.lastProjectPath = nil
+                }
+            }
+            extraSelectedURLs = []
+            // The open note stays open when the new folder lists it
+            // (ensureNoteSelection(preferLastSelected:)); otherwise the first.
+            refreshNotes(keepSelection: true)
         }
     }
 
@@ -117,19 +182,16 @@ final class ShellModel {
     private static let layoutKey = "ShellLayout"
 
     private func storedScope() -> Scope {
-        // First shell launch: start on the folder the storyboard window left.
-        if UserDefaults.standard.string(forKey: Self.scopeKey) == nil,
-            let path = UserDefaultsManagement.lastProjectPath,
-            let project = storage.getProjects().first(where: { $0.url.path == path })
-        {
-            return .project(project.url)
-        }
+        let path: String?
         switch UserDefaults.standard.string(forKey: Self.scopeKey) {
         case "trash": return .trash
-        case let path? where path != "all":
-            return storage.getProjects().first { $0.url.path == path }.map { .project($0.url) } ?? .all
-        default: return .all
+        case "all": return .all
+        // First shell launch: start on the folder the storyboard window left.
+        case nil: path = UserDefaultsManagement.lastProjectPath
+        case let stored?: path = stored
         }
+        guard let path, let project = revealFolder(atPath: path) else { return .all }
+        return .project(project.url)
     }
 
     var searchText = "" {
@@ -208,6 +270,7 @@ final class ShellModel {
 
     init() {
         selectedNoteURL = UserDefaultsManagement.lastSelectedURL
+        expandedFolders = Self.storedExpandedFolders()
         scope = storedScope()
         layout = UserDefaults.standard.string(forKey: Self.layoutKey).flatMap(Layout.init(rawValue:)) ?? .all
         if UserDefaultsManagement.preview {
@@ -276,7 +339,7 @@ final class ShellModel {
         var rows: [SidebarRow] = []
         var collapsed: [URL] = []
         func addFolder(_ project: Project, title: String, depth: Int) {
-            guard expandedFolders.contains(project.url) else {
+            guard isExpanded(project.url) else {
                 collapsed.append(project.url)
                 rows.append(
                     SidebarRow(
@@ -299,7 +362,9 @@ final class ShellModel {
             case .Trash:
                 rows.append(SidebarRow(id: .trash, title: item.getName(), kind: .Trash))
             case .Category:
-                guard let project = item.project, project.showInSidebar else { continue }
+                // The storyboard sidebar lists every folder; the legacy
+                // showInSidebar flag is not honoured there either.
+                guard let project = item.project else { continue }
                 addFolder(project, title: item.getName(), depth: 0)
             }
         }
@@ -567,6 +632,8 @@ final class ShellModel {
     enum FocusTarget {
         case sidebar
         case list
+        /// The list's search field, opened if it is closed.
+        case search
     }
 
     /// A SwiftUI column keyboard commands move focus to; that column takes
@@ -677,7 +744,7 @@ final class ShellModel {
         guard !isPresenting, let note = selectedNote else { return }
         let removing = selectedNotes
         guard note.isTrash() else {
-            remove(removing.filter { !$0.isTrash() })
+            remove(removing.filter { !$0.isTrash() }, undoable: true)
             return
         }
         guard let window = host?.view.window else { return }
@@ -697,10 +764,16 @@ final class ShellModel {
         remove(moving.filter { !$0.isTrash() })
     }
 
-    private func remove(_ removing: [Note]) {
+    /// Undo for the list: Edit ▸ Undo after a delete puts the notes back, as
+    /// the storyboard window's `notesListUndoManager` does. The editor's own
+    /// undo comes from the note through the text view's delegate.
+    @ObservationIgnored let notesUndoManager = UndoManager()
+
+    private func remove(_ removing: [Note], undoable: Bool = false) {
         guard !removing.isEmpty else { return }
-        let open = selectedNote
-        let index = notes.firstIndex { candidate in removing.contains { $0 === candidate } } ?? 0
+        let listed = notes.map(\.url)
+        let open = selectedNoteURL
+        let removed = Set(removing.map(\.url))
         storage.removeNotes(
             notes: removing,
             partialFailure: { [weak self] count in
@@ -709,17 +782,55 @@ final class ShellModel {
                         message: String(format: I18n.str("Failed to move %d note(s) to Trash~"), count), style: .failure)
                 }
             }
-        ) { [weak self] _ in
+        ) { [weak self] urls in
             Task { @MainActor in
                 guard let self else { return }
-                let remaining = self.notes.filter { candidate in !removing.contains { $0 === candidate } }
                 // A drop on the Trash can take notes other than the open one.
-                if let open, removing.contains(where: { $0 === open }) {
-                    self.selectedNoteURL = remaining.isEmpty ? nil : remaining[min(index, remaining.count - 1)].url
-                }
+                self.selectedNoteURL = Self.selection(afterRemoving: removed, from: listed, selected: open)
                 self.refreshNotes(keepSelection: true)
+                if undoable, let urls, !urls.isEmpty {
+                    self.notesUndoManager.registerUndo(withTarget: self) { model in
+                        MainActor.assumeIsolated { model.restoreDeleted(urls) }
+                    }
+                    self.notesUndoManager.setActionName(I18n.str("Delete"))
+                }
             }
         }
+    }
+
+    /// The note to open once `removed` leave the list: the open one when it
+    /// stays, else the one now at the first removed row, as the storyboard
+    /// list reselects after a delete or a move out of the folder.
+    static func selection(afterRemoving removed: Set<URL>, from list: [URL], selected: URL?) -> URL? {
+        guard let selected, removed.contains(selected) else { return selected }
+        let index = list.firstIndex { removed.contains($0) } ?? 0
+        let remaining = list.filter { !removed.contains($0) }
+        return remaining.isEmpty ? nil : remaining[min(index, remaining.count - 1)]
+    }
+
+    /// Moves deleted notes back from the Trash (`NotesTableView.unDelete`).
+    /// They are listed here at once instead of waiting for the file watcher.
+    func restoreDeleted(_ urls: [URL: URL]) {
+        var restored: URL?
+        for (trashed, original) in urls {
+            if let note = storage.getBy(url: trashed) {
+                storage.removeBy(note: note)
+            }
+            do {
+                try FileManager.default.moveItem(at: trashed, to: original)
+            } catch {
+                AppDelegate.trackError(error, context: "ShellModel.restoreDeleted")
+                continue
+            }
+            if storage.getBy(url: original) == nil, let note = storage.initNote(url: original) {
+                note.load()
+                note.loadModifiedLocalAt()
+                storage.add(note)
+            }
+            restored = original
+        }
+        guard let restored else { return }
+        refreshNow(selecting: restored)
     }
 
     /// Renames the open note's file after `title`; false when that name is taken.
@@ -795,11 +906,15 @@ final class ShellModel {
     /// file already in the library is opened instead. The copies are added
     /// to storage here: an APFS clone reaches the file watcher as a change,
     /// not a creation, so it would never list them.
+    /// The folder stays as it is, as in the storyboard window's importNotes;
+    /// only a note already in the library takes the list to its folder.
     func importNotes(_ urls: [URL], into project: Project? = nil) {
         var target: URL?
+        var existing: Note?
         for url in urls {
             if let note = storage.getBy(url: url) {
                 target = note.url
+                existing = note
                 continue
             }
             let copy = ViewController.copyFile(url, into: project ?? storage.getMainProject())
@@ -808,13 +923,19 @@ final class ShellModel {
             note.loadModifiedLocalAt()
             storage.add(note)
             target = note.url
+            existing = nil
         }
         searchText = ""
         isSearchOpen = false
-        if let project {
-            scope = .project(project.url)
-        } else {
-            scope = .all
+        if let existing, existing.url == target, !notes.contains(where: { $0 === existing }) {
+            if existing.isTrash() {
+                scope = .trash
+            } else if !existing.project.isRoot, revealFolder(atPath: existing.project.url.path) != nil {
+                scope = .project(existing.project.url)
+                reload()
+            } else {
+                scope = .all
+            }
         }
         refreshNow(selecting: target)
     }
@@ -822,15 +943,31 @@ final class ShellModel {
     /// Finder files dropped on the list (into the chosen folder) or on a
     /// folder row: the Markdown files, and those inside dropped folders,
     /// imported as File ▸ Import does. Notes already in the library, such
-    /// as a row dragged out of this list, are left alone.
-    func importDropped(_ urls: [URL], into project: Project?) -> Bool {
-        let fresh = urls.filter { $0.isFileURL && storage.getBy(url: $0) == nil }
+    /// as a row dragged out of this list, are left alone, and so are the
+    /// library's own folders dragged from the sidebar. On a folder row
+    /// (`keepingFolders`) a dropped Finder folder becomes a subfolder of the
+    /// same name holding its files, as the storyboard sidebar's
+    /// handleDirectoryDrop does.
+    func importDropped(_ urls: [URL], into project: Project?, keepingFolders: Bool = false) -> Bool {
+        var fresh = urls.filter { url in
+            url.isFileURL && storage.getBy(url: url) == nil
+                && !storage.getProjects().contains { $0.url.path == url.resolvingSymlinksInPath().path }
+        }
         guard !isPresenting, !fresh.isEmpty else { return false }
+        if keepingFolders, let project {
+            let folders = fresh.filter { FileManager.default.directoryExists(atUrl: $0) }
+            for folder in folders {
+                importFolder(folder, into: project)
+            }
+            fresh.removeAll { url in folders.contains(url) }
+            guard !fresh.isEmpty else { return true }
+        }
         let extensions = storage.allowedExtensions
+        let dropped = fresh
         // A dropped folder can be huge; only the scan leaves the main thread.
         Task { [weak self] in
             let files = await Task.detached(priority: .userInitiated) {
-                ViewController.collectImportableFiles(from: fresh, allowedExtensions: extensions)
+                ViewController.collectImportableFiles(from: dropped, allowedExtensions: extensions)
             }.value
             guard let self else { return }
             guard !files.isEmpty else {
@@ -840,6 +977,22 @@ final class ShellModel {
             self.importNotes(files, into: project)
         }
         return true
+    }
+
+    private func importFolder(_ url: URL, into parent: Project) {
+        let folder = Project(url: parent.url.appendingPathComponent(url.lastPathComponent, isDirectory: true), parent: parent)
+        folder.create()
+        _ = storage.add(project: folder)
+        for item in storage.readDirectory(url) {
+            let copy = ViewController.copyFile(item.url, into: folder)
+            guard storage.getBy(url: copy) == nil, let note = storage.initNote(url: copy) else { continue }
+            note.load()
+            note.loadModifiedLocalAt()
+            storage.add(note)
+        }
+        hasChildrenCache[parent.url] = true
+        onFoldersChanged?()
+        reload()
     }
 
     /// The folder new and imported notes go into from the list.
@@ -932,10 +1085,14 @@ final class ShellModel {
         DispatchQueue.main.async { field.becomeFirstResponder() }
     }
 
-    func createFolder(named name: String, parent: Project? = nil) {
+    func createFolder(named name: String, parent chosenParent: Project? = nil) {
         let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !name.isEmpty else { return }
-        let parent = parent ?? storage.getMainProject()
+        let parent = chosenParent ?? storage.getMainProject()
+        // A new subfolder shows at once: a collapsed parent opens.
+        if chosenParent != nil, !parent.isRoot, !isExpanded(parent.url) {
+            expandedFolders.insert(parent.url)
+        }
         let url = parent.url.appendingPathComponent(name, isDirectory: true)
         do {
             try FileManager.default.createDirectory(at: url, withIntermediateDirectories: false)
@@ -1039,16 +1196,38 @@ final class ShellModel {
 
     /// Moves notes into `project` with their attachments, the storyboard
     /// window's Move command and drag onto a folder.
+    /// Notes that leave the list open their neighbour, as the storyboard's
+    /// `move(notes:project:)` reselects the row at the same index.
     func move(_ moving: [Note], to project: Project) {
-        let open = selectedNote
+        guard !isPresenting else { return }
+        let listed = notes.map(\.url)
+        let open = selectedNoteURL
+        let (projects, type) = scopeProjects()
+        var gone = Set<URL>()
+        var openAfter = open
         for note in moving where note.project != project {
+            let oldURL = note.url
             note.move(toProject: project)
             note.invalidateCache()
+            if oldURL == open { openAfter = note.url }
+            if !Self.isInScope(note, projects: projects, type: type) { gone.insert(oldURL) }
         }
-        if let open, moving.contains(where: { $0 === open }) {
-            selectedNoteURL = open.url
+        if let open, gone.contains(open) {
+            selectedNoteURL = Self.selection(afterRemoving: gone, from: listed, selected: open)
+        } else {
+            selectedNoteURL = openAfter
         }
         refreshNotes(keepSelection: true)
+    }
+
+    /// The storyboard's Move submenu: every folder storage knows, root and
+    /// unexpanded subfolders included, except the note's own and the Trash.
+    static func moveTargets(excluding current: Project, in projects: [Project]) -> [Project] {
+        projects.filter { $0 != current && !$0.isTrash }
+    }
+
+    func moveTargets(for note: Note) -> [Project] {
+        Self.moveTargets(excluding: note.project, in: storage.getProjects())
     }
 
     // MARK: - Note utilities
@@ -1174,11 +1353,120 @@ final class ShellModel {
         host?.toast(message: I18n.str("URL is successfully copied, Use it anywhere~"), style: .success)
     }
 
-    func copyNotePath() {
-        guard let note = selectedNote else { return }
+    /// One path a line, for every selected note, as the storyboard's copyPath.
+    func copyNotePaths(_ copying: [Note]) {
+        guard !copying.isEmpty else { return }
         NSPasteboard.general.clearContents()
-        NSPasteboard.general.setString(note.url.path, forType: .string)
+        NSPasteboard.general.setString(copying.map(\.url.path).joined(separator: "\n"), forType: .string)
         host?.toast(message: I18n.str("Path is successfully copied~"), style: .success)
+    }
+
+    func revealInFinder(_ revealing: [Note]) {
+        guard !revealing.isEmpty else { return }
+        NSWorkspace.shared.activateFileViewerSelecting(revealing.map(\.url))
+    }
+
+    /// Command-S: the editor's text and every debounced save written now,
+    /// with "Saved~" only when something was waiting, as the storyboard
+    /// window's handler does.
+    func saveNow() {
+        if let owner = editor.textView.storageNote {
+            editor.textView.saveTextStorageContent(to: owner)
+        }
+        let hadUnsavedChanges = storage.noteList.contains { $0.needsSave }
+        let allSaved = storage.flushPendingSaves()
+        if hadUnsavedChanges, allSaved {
+            host?.toast(message: I18n.str("Saved~"), style: .success)
+        }
+    }
+
+    /// Command-A in the list.
+    func selectAllNotes() {
+        guard let first = notes.first else { return }
+        if selectedNoteURL == nil { selectedNoteURL = first.url }
+        extraSelectedURLs = Set(notes.map(\.url)).subtracting([selectedNoteURL].compactMap { $0 })
+    }
+
+    // MARK: - Search field keys
+
+    /// Return in the search field opens the note in the editor when its
+    /// title starts with the query (SearchTextField's insertNewline).
+    func searchFieldReturn() {
+        let query = searchText.lowercased()
+        guard !query.isEmpty, let note = selectedNote, note.title.lowercased().starts(with: query) else { return }
+        focusEditor()
+    }
+
+    /// Command-Return makes a note named after the query.
+    func createNoteFromSearch() {
+        createNote(name: searchText.trimmingCharacters(in: .whitespacesAndNewlines))
+    }
+
+    /// A query also becomes the system find string, so Command-G finds it in
+    /// other apps and in the editor (SearchTextField.updatePasteboard).
+    private static func writeFindPasteboard(_ text: String) {
+        let pasteboard = NSPasteboard(name: .find)
+        pasteboard.declareTypes([.textFinderOptions, .string], owner: nil)
+        pasteboard.setString(text, forType: .string)
+    }
+
+    // MARK: - Folder order
+
+    /// Top-level folders, in the order the sidebar shows them.
+    private var topLevelFolderPaths: [String] {
+        sidebarRows.compactMap { row in
+            guard row.depth == 0, row.kind == .Category, case .project(let url) = row.id else { return nil }
+            return url.path
+        }
+    }
+
+    func isTopLevelFolder(_ url: URL) -> Bool {
+        topLevelFolderPaths.contains(url.resolvingSymlinksInPath().path)
+    }
+
+    /// A top-level folder dragged onto another takes its place, saved under
+    /// the storyboard sidebar's `SidebarProjectOrder` so both windows agree.
+    @discardableResult
+    func reorderFolder(_ source: URL, onto target: URL) -> Bool {
+        guard
+            let order = Self.reorderedFolders(
+                topLevelFolderPaths, moving: source.resolvingSymlinksInPath().path, onto: target.path)
+        else { return false }
+        UserDefaults.standard.set(order, forKey: "SidebarProjectOrder")
+        reload()
+        return true
+    }
+
+    static func reorderedFolders(_ paths: [String], moving source: String, onto target: String) -> [String]? {
+        guard source != target, let from = paths.firstIndex(of: source), let to = paths.firstIndex(of: target) else { return nil }
+        var order = paths
+        order.remove(at: from)
+        order.insert(source, at: to)
+        return order
+    }
+
+    // MARK: - Columns
+
+    /// A divider dragged until a column collapsed, or back open: the layout
+    /// follows, so the toggles and the next launch agree with what is shown.
+    /// Hiding the list hides the folders too, as in the storyboard window.
+    func syncLayout(sidebarCollapsed: Bool, listCollapsed: Bool) {
+        guard !isPresenting else { return }
+        let shown: Layout = listCollapsed ? .noteOnly : sidebarCollapsed ? .listAndNote : .all
+        if shown != layout { layout = shown }
+    }
+
+    /// A two-finger swipe left hides the folders, then the list; a swipe
+    /// right brings the list back, then the folders (ViewController's swipe).
+    func swipeColumns(left: Bool) {
+        guard !isPresenting else { return }
+        switch (left, layout) {
+        case (true, .all): layout = .listAndNote
+        case (true, .listAndNote): layout = .noteOnly
+        case (false, .noteOnly): layout = .listAndNote
+        case (false, .listAndNote): layout = .all
+        default: break
+        }
     }
 
     // MARK: - Version history
@@ -1324,8 +1612,9 @@ final class ShellModel {
         refreshTask?.cancel()
         refreshTask = Task { [weak self] in
             try? await Task.sleep(for: .milliseconds(120))
-            guard !Task.isCancelled else { return }
-            await self?.computeNotes(keepSelection: true)
+            guard !Task.isCancelled, let self else { return }
+            if !self.searchText.isEmpty { Self.writeFindPasteboard(self.searchText) }
+            await self.computeNotes(keepSelection: true)
         }
     }
 

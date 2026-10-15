@@ -26,7 +26,8 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         window.titleVisibility = .hidden
         window.titlebarAppearsTransparent = true
         window.isMovableByWindowBackground = true
-        window.minSize = NSSize(width: 720, height: 420)
+        // The storyboard window's minimum (AppDelegate.normalizeMainWindowFrame).
+        window.minSize = NSSize(width: 960, height: 600)
         window.backgroundColor = ShellPalette.background
         window.isReleasedWhenClosed = false
         // An empty unified toolbar gives the title bar Notes' 52pt height and
@@ -53,6 +54,7 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         if !window.setFrameUsingName("MiaoYanShellWindow"), !window.setFrameUsingName("myMainWindow") {
             window.center()
         }
+        Self.recentreIfLost(window)
         window.setFrameAutosaveName("MiaoYanShellWindow")
         applyWindowLevel()
         windowLevelObserver = NotificationCenter.default.addObserver(
@@ -82,6 +84,10 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             guard let self else { return event }
             return self.handleKeyUp(event)
         }
+        scrollMonitor = NSEvent.addLocalMonitorForEvents(matching: .scrollWheel) { [weak self] event in
+            guard let self else { return event }
+            return self.handleScroll(event)
+        }
         // Quitting mid-presentation must not leave preview as the stored
         // mode, or the next launch opens in preview.
         terminateObserver = NotificationCenter.default.addObserver(
@@ -93,7 +99,26 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
 
     private var keyDownMonitor: Any?
     private var keyUpMonitor: Any?
+    private var scrollMonitor: Any?
     private var terminateObserver: NSObjectProtocol?
+
+    /// The storyboard window's launch guard: a saved frame that is off every
+    /// screen or smaller than the layout needs comes back centred at the
+    /// preferred size.
+    private static func recentreIfLost(_ window: NSWindow) {
+        let saved = window.frame
+        let isOffScreen = NSScreen.screens.allSatisfy { !$0.visibleFrame.intersects(saved) }
+        let isTooSmall = saved.width < 1100 || saved.height < 680
+        guard isOffScreen || isTooSmall,
+            let visible = (isOffScreen ? nil : window.screen)?.visibleFrame ?? NSScreen.main?.visibleFrame
+        else { return }
+        let size = NSSize(
+            width: min(1280, max(900, visible.width - 40)),
+            height: min(760, max(620, visible.height - 40)))
+        window.setFrame(
+            NSRect(x: visible.midX - size.width / 2, y: visible.midY - size.height / 2, width: size.width, height: size.height),
+            display: true)
+    }
 
     @available(*, unavailable)
     required init?(coder: NSCoder) {
@@ -199,15 +224,23 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         model.confirmDeleteFolder(folder)
     }
 
-    /// File ▸ Move: the folders as a menu at the pointer.
+    /// File ▸ Move: the storyboard's Move submenu at the pointer, the Trash
+    /// first and then every folder but the open note's own.
     @IBAction func moveMenu(_ sender: Any?) {
-        let moving = model.selectedNotes
-        guard !moving.isEmpty, let window, let view = window.contentView else { return }
+        guard let note = model.selectedNote, let window, let view = window.contentView else { return }
         let menu = NSMenu()
-        for folder in model.folders where moving.contains(where: { $0.project != folder }) {
+        if !note.isTrash() {
+            let trash = NSMenuItem(title: I18n.str("Trash"), action: #selector(deleteNote(_:)), keyEquivalent: "")
+            trash.target = self
+            trash.image = NSImage(systemSymbolName: "trash", accessibilityDescription: nil)
+            menu.addItem(trash)
+            menu.addItem(.separator())
+        }
+        for folder in model.moveTargets(for: note) {
             let item = NSMenuItem(title: folder.label, action: #selector(moveToFolder(_:)), keyEquivalent: "")
             item.representedObject = folder
             item.target = self
+            item.image = NSImage(systemSymbolName: "folder", accessibilityDescription: nil)
             menu.addItem(item)
         }
         let point = view.convert(window.mouseLocationOutsideOfEventStream, from: nil)
@@ -250,9 +283,21 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         model.togglePin(note)
     }
 
+    /// Option-Command-R: the folder while the sidebar has focus, as the
+    /// storyboard's finderMenu decides, otherwise every selected note.
     @IBAction func finderMenu(_ sender: Any?) {
-        guard let note = model.selectedNote else { return }
-        NSWorkspace.shared.activateFileViewerSelecting([note.url])
+        if column(of: window?.firstResponder) == .sidebar {
+            guard let url = sidebarFolderURL else { return }
+            NSWorkspace.shared.activateFileViewerSelecting([url])
+            return
+        }
+        model.revealInFinder(model.selectedNotes)
+    }
+
+    /// The chosen folder, or the Trash folder while the Trash is shown.
+    private var sidebarFolderURL: URL? {
+        if model.scope == .trash { return AppEnvironment.current.storage.getDefaultTrash()?.url }
+        return model.selectedFolder?.url
     }
 
     /// Find, find and replace, next and previous, by the storyboard window's
@@ -327,10 +372,11 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         return popover
     }()
 
-    /// The chosen folder, or the library, in the preferred terminal.
+    /// The chosen folder, or the library, in the preferred terminal; in
+    /// single-file mode the folder holding the open file, which the
+    /// storyboard window selects in its sidebar there.
     @IBAction func openInTerminal(_ sender: Any?) {
-        let url = model.selectedFolder?.url ?? UserDefaultsManagement.storageUrl
-        guard let url else { return }
+        guard let url = terminalURL else { return }
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/open")
         process.arguments = ["-b", ViewController.preferredTerminalBundleID(), url.path]
@@ -341,6 +387,15 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         }
     }
 
+    private var terminalURL: URL? {
+        guard model.scope != .trash else { return nil }
+        if model.isSingleMode, let url = UserDefaultsManagement.singleModeURL {
+            if FileManager.default.directoryExists(atUrl: url) { return url }
+            return AppEnvironment.current.storage.getProjectBy(url: url)?.url ?? url.deletingLastPathComponent()
+        }
+        return model.selectedFolder?.url ?? UserDefaultsManagement.storageUrl
+    }
+
     @IBAction func cleanUnusedAttachments(_ sender: Any?) { model.cleanUnusedAttachments() }
     @IBAction func exportMiaoYanPPT(_ sender: Any?) { model.export(.ppt) }
     @IBAction func zoomInFontSize(_ sender: Any?) { model.adjustFontSize(by: 1) }
@@ -349,7 +404,7 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
     @IBAction func duplicate(_ sender: Any?) { model.duplicate(model.selectedNotes) }
     @IBAction func reloadCurrentNote(_ sender: Any?) { model.reloadSelectedNote() }
     @IBAction func copyURL(_ sender: Any?) { model.copyNoteURL() }
-    @IBAction func copyPath(_ sender: Any?) { model.copyNotePath() }
+    @IBAction func copyPath(_ sender: Any?) { model.copyNotePaths(model.selectedNotes) }
 
     /// Edit ▸ Copy is `noteCopy:`, which the storyboard window routes by
     /// focus: the editor copies its selection, the preview its selection,
@@ -455,10 +510,16 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             #selector(importFiles(_:)), #selector(newFolderMenu(_:)), #selector(cleanUnusedAttachments(_:)):
             return !model.isPresenting
         case #selector(moveMenu(_:)):
-            return hasNote && model.selectedNote?.isTrash() == false && !model.isPresenting
+            // Notes in the Trash can move back out by this menu too.
+            return hasNote && !model.isPresenting
         case #selector(exportPdf(_:)), #selector(exportImage(_:)), #selector(exportHtml(_:)), #selector(exportMenu(_:)):
             return hasNote && !model.isExporting
-        case #selector(renameMenu(_:)), #selector(pinMenu(_:)), #selector(finderMenu(_:)):
+        case #selector(finderMenu(_:)):
+            if column(of: window?.firstResponder) == .sidebar { return sidebarFolderURL != nil && !model.isPresenting }
+            return hasNote && !model.isPresenting
+        case #selector(openInTerminal(_:)):
+            return terminalURL != nil
+        case #selector(renameMenu(_:)), #selector(pinMenu(_:)):
             return hasNote && !model.isPresenting
         default:
             return true
@@ -506,12 +567,27 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         let editor = model.editor.textView
         let isText = responder is NSTextView
         let hasNote = model.selectedNote != nil
+        let column = column(of: responder)
+        // The only text field in the list column is its search field.
+        let inSearch = isText && column == .list
+        let inList = !isText && column == .list
+        let inSidebar = !isText && column == .sidebar
+
+        if handleColumnKey(event, flags: flags, inSearch: inSearch, inList: inList, inSidebar: inSidebar) {
+            return nil
+        }
 
         switch Int(event.keyCode) {
         case kVK_Escape:
             escapeLeavesEditor =
                 flags.isEmpty && responder === editor && !editor.hasMarkedText() && !editor.isSearchBarVisible
             return event
+        case kVK_ANSI_S where flags == [.command]:
+            // A title being edited is committed first, as the storyboard's
+            // Command-S does through fileName(_:).
+            if model.isRenaming, isText, responder !== editor, column == .detail { leaveTitleField() }
+            model.saveNow()
+            return nil
         case kVK_ANSI_W where flags == [.command, .shift] && model.isSingleMode:
             model.closeSingle()
             return nil
@@ -556,7 +632,6 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             }
             // Fields submit on Return; the editor types it.
             guard !isText else { return event }
-            let column = column(of: responder)
             if flags == [.command], column == .list, model.layout == .all {
                 model.focusRequest = .sidebar
                 return nil
@@ -578,14 +653,8 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
                 return nil
             }
             guard flags.isEmpty else { return event }
-            if !isText, column(of: responder) == .list { return nil }
-            if model.isRenaming, isText, responder !== editor, column(of: responder) == .detail {
-                // Leaving the title field commits it.
-                if model.editorMode == .preview {
-                    window.makeFirstResponder(nil)
-                } else {
-                    model.focusEditor()
-                }
+            if model.isRenaming, isText, responder !== editor, column == .detail {
+                leaveTitleField()
                 return nil
             }
             return event
@@ -621,6 +690,167 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             }
         }
         return event
+    }
+
+    /// Leaving the title field commits it, then the editor takes the keys.
+    private func leaveTitleField() {
+        if model.editorMode == .preview {
+            window?.makeFirstResponder(nil)
+        } else {
+            model.focusEditor()
+        }
+    }
+
+    // Keys the storyboard window's search field (SearchTextField), note list
+    // (NotesTableView.keyUp) and sidebar (SidebarProjectView.keyDown) take
+    // for themselves. True when the key was used.
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    private func handleColumnKey(
+        _ event: NSEvent, flags: NSEvent.ModifierFlags, inSearch: Bool, inList: Bool, inSidebar: Bool
+    ) -> Bool {
+        guard !model.isPresenting, inSearch || inList || inSidebar else { return false }
+        let key = Int(event.keyCode)
+        let sidebarShown = model.layout == .all
+
+        if inSearch {
+            switch key {
+            case kVK_Return, kVK_ANSI_KeypadEnter:
+                if flags == [.command] {
+                    model.createNoteFromSearch()
+                } else if flags.isEmpty {
+                    model.searchFieldReturn()
+                } else {
+                    return false
+                }
+                return true
+            case kVK_DownArrow where flags.isEmpty:
+                model.focusRequest = .list
+                model.selectNext(1)
+                return true
+            case kVK_LeftArrow where flags.isEmpty && model.searchText.isEmpty && sidebarShown:
+                model.focusRequest = .sidebar
+                return true
+            case kVK_Tab where flags.isEmpty:
+                model.focusEditor()
+                return true
+            default:
+                return false
+            }
+        }
+
+        if inList {
+            switch key {
+            case kVK_LeftArrow where flags.isEmpty, kVK_Escape where flags.isEmpty:
+                guard sidebarShown else { return false }
+                model.focusRequest = .sidebar
+                return true
+            case kVK_RightArrow where flags.isEmpty, kVK_Tab where flags.isEmpty:
+                if model.selectedNote == nil { model.selectNext(1) }
+                model.focusEditor()
+                return true
+            case kVK_ANSI_A where flags == [.command]:
+                model.selectAllNotes()
+                return true
+            default:
+                break
+            }
+        }
+
+        if inSidebar {
+            switch key {
+            case kVK_F6 where flags == [.shift]:
+                guard let folder = model.selectedFolder, !folder.isDefault, !folder.isRoot else { return true }
+                model.renamingFolderURL = folder.url
+                return true
+            case kVK_Delete where flags == [.command, .shift]:
+                if let folder = model.selectedFolder { model.confirmDeleteFolder(folder) }
+                return true
+            case kVK_Tab where flags.isEmpty:
+                model.focusRequest = .search
+                return true
+            case kVK_RightArrow where flags.isEmpty:
+                // The outline opens the folder and the list takes the keys.
+                model.setChosenFolderExpanded(true)
+                if model.layout != .noteOnly { model.focusRequest = .list }
+                return true
+            default:
+                break
+            }
+        }
+
+        // Typing a letter or digit in the list or sidebar starts a search with it.
+        if flags.isDisjoint(with: [.command, .control]), let typed = event.characters, !typed.isEmpty,
+            CharacterSet(charactersIn: typed).isSubset(of: .alphanumerics), model.layout != .noteOnly
+        {
+            jumpToSearch(typing: typed)
+            return true
+        }
+        return false
+    }
+
+    /// The search field takes the typed letter; its caret goes after it, not
+    /// selecting it, so the next key adds to the query.
+    private func jumpToSearch(typing text: String) {
+        model.searchText = text
+        model.focusRequest = .search
+        Task { @MainActor [weak self] in
+            try? await Task.sleep(for: .milliseconds(100))
+            guard let self, let field = self.window?.firstResponder as? NSTextView, self.column(of: field) == .list else { return }
+            field.setSelectedRange(NSRange(location: (field.string as NSString).length, length: 0))
+        }
+    }
+
+    // MARK: - Swipe
+
+    private var swipeDeltaX: CGFloat = 0
+    private var isTrackingSwipe = false
+    private var swipedLeft = false
+    private var swipedRight = false
+
+    /// ViewController+Layout's two-finger swipe: left hides the folders, then
+    /// the list; right brings them back. A swipe that starts over the
+    /// preview is left to it, since wide tables and code scroll sideways.
+    private func handleScroll(_ event: NSEvent) -> NSEvent? {
+        guard NSEvent.isSwipeTrackingFromScrollEventsEnabled, let window, event.window === window,
+            event.hasPreciseScrollingDeltas
+        else { return event }
+        switch event.phase {
+        case .began:
+            isTrackingSwipe = !isOverPreview(event)
+            swipedLeft = false
+            swipedRight = false
+            swipeDeltaX = 0
+        case .changed:
+            guard isTrackingSwipe, abs(event.scrollingDeltaX) > abs(event.scrollingDeltaY) else { break }
+            guard swipeDeltaX.sign == event.scrollingDeltaX.sign else {
+                swipeDeltaX = event.scrollingDeltaX
+                break
+            }
+            swipeDeltaX += event.scrollingDeltaX
+            guard abs(swipeDeltaX) > 50 else { break }
+            let left = swipeDeltaX < 0
+            if left, !swipedLeft {
+                swipedLeft = true
+                swipedRight = false
+            } else if !left, !swipedRight {
+                swipedRight = true
+                swipedLeft = false
+            } else {
+                break
+            }
+            model.swipeColumns(left: left)
+            return nil
+        case .ended, .cancelled, .mayBegin:
+            isTrackingSwipe = false
+        default:
+            break
+        }
+        return event
+    }
+
+    private func isOverPreview(_ event: NSEvent) -> Bool {
+        guard let preview = model.preview, preview.window === window, !preview.isHiddenOrHasHiddenAncestor else { return false }
+        return preview.bounds.contains(preview.convert(event.locationInWindow, from: nil))
     }
 
     private func handleKeyUp(_ event: NSEvent) -> NSEvent? {
@@ -735,8 +965,24 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         flushEdits()
     }
 
+    private var lastResignKeyFlushAt: TimeInterval = 0
+
+    /// Losing key can be the last moment before a kill, so the open note's
+    /// pending save is written now. Spotlight, open panels and permission
+    /// prompts take key too, so as in MainWindowController this runs at most
+    /// every two seconds and writes only the note being edited.
     func windowDidResignKey(_ notification: Notification) {
-        flushEdits()
+        let now = ProcessInfo.processInfo.systemUptime
+        guard now - lastResignKeyFlushAt >= 2 else { return }
+        lastResignKeyFlushAt = now
+        guard let note = model.editor.textView.storageNote ?? EditTextView.note, note.needsSave else { return }
+        note.flushPendingSave()
+    }
+
+    /// The list's undo (a delete) for everything but the editor, whose text
+    /// view asks its delegate for the note's own undo manager first.
+    func windowWillReturnUndoManager(_ window: NSWindow) -> UndoManager? {
+        model.notesUndoManager
     }
 
     private func appearanceDidChange() {
@@ -819,6 +1065,7 @@ final class ShellSplitViewController: NSSplitViewController {
 
         let sidebar = NSSplitViewItem(viewController: Self.host(ShellSidebar(model: model)))
         sidebar.minimumThickness = 150
+        // ViewController+Layout's LayoutConstants.maxSidebarWidth.
         sidebar.maximumThickness = 280
         sidebar.canCollapse = true
         sidebar.holdingPriority = NSLayoutConstraint.Priority(260)
@@ -841,6 +1088,7 @@ final class ShellSplitViewController: NSSplitViewController {
         model.host = self
         ExportHosts.shell = self
         observeLayout()
+        observeDividerDrags()
     }
 
     /// Collapses the folders and the list as the layout button cycles.
@@ -852,10 +1100,34 @@ final class ShellSplitViewController: NSSplitViewController {
         }
         let items = splitViewItems
         guard items.count == 3 else { return }
+        let sidebarCollapsed = layout != .all
+        let listCollapsed = layout == .noteOnly
+        guard items[0].isCollapsed != sidebarCollapsed || items[1].isCollapsed != listCollapsed else { return }
+        isApplyingLayout = true
         NSAnimationContext.runAnimationGroup { context in
             context.duration = 0.2
-            items[0].animator().isCollapsed = layout != .all
-            items[1].animator().isCollapsed = layout == .noteOnly
+            items[0].animator().isCollapsed = sidebarCollapsed
+            items[1].animator().isCollapsed = listCollapsed
+        } completionHandler: { [weak self] in
+            Task { @MainActor in self?.isApplyingLayout = false }
+        }
+    }
+
+    private var isApplyingLayout = false
+    private var resizeObserver: NSObjectProtocol?
+
+    /// A column dragged shut, or back open, moves `model.layout` with it, the
+    /// way ViewController+Layout keeps its visibility flags in step with the
+    /// dividers; the toggles then act from what is on screen.
+    private func observeDividerDrags() {
+        resizeObserver = NotificationCenter.default.addObserver(
+            forName: NSSplitView.didResizeSubviewsNotification, object: splitView, queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated {
+                guard let self, !self.isApplyingLayout, self.splitViewItems.count == 3 else { return }
+                let items = self.splitViewItems
+                self.model.syncLayout(sidebarCollapsed: items[0].isCollapsed, listCollapsed: items[1].isCollapsed)
+            }
         }
     }
 

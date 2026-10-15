@@ -257,7 +257,7 @@ private struct ShellSidebarRow: View {
                 SwiftUI.Image(systemName: "chevron.right")
                     .font(.system(size: 9, weight: .semibold))
                     .foregroundStyle(ShellStyle.icon)
-                    .rotationEffect(.degrees(model.expandedFolders.contains(folder.url) ? 90 : 0))
+                    .rotationEffect(.degrees(model.isExpanded(folder.url) ? 90 : 0))
                     .frame(width: 18, height: 22)
                     .contentShape(Rectangle())
                     .onTapGesture {
@@ -292,11 +292,19 @@ private struct ShellSidebarRow: View {
                     Divider()
                     Button(I18n.str("Delete Folder")) { model.confirmDeleteFolder(folder) }
                 }
+            } else if row.kind == .Trash, let trash = AppEnvironment.current.storage.getDefaultTrash() {
+                // The storyboard sidebar's Trash menu has only this item.
+                Button(I18n.str("Show in Finder")) { NSWorkspace.shared.activateFileViewerSelecting([trash.url]) }
             }
         }
+        .modifier(ShellFolderDrag(url: row.depth == 0 ? folder?.url : nil))
         .dropDestination(for: URL.self) { urls, _ in
             let isTrash = row.kind == .Trash
             guard folder != nil || isTrash else { return false }
+            // A top-level folder dragged onto another takes its place.
+            if let folder, row.depth == 0, urls.count == 1, let dragged = urls.first, model.isTopLevelFolder(dragged) {
+                return model.reorderFolder(dragged, onto: folder.url)
+            }
             let storage = AppEnvironment.current.storage
             var notes = urls.compactMap { storage.getBy(url: $0) }
             // A row drags only its own URL; one that is part of a multiple
@@ -305,8 +313,9 @@ private struct ShellSidebarRow: View {
                 notes = model.selectedNotes
             }
             guard !notes.isEmpty else {
-                // Finder files are copied into the folder.
-                return folder.map { model.importDropped(urls, into: $0) } ?? false
+                // Finder files are copied into the folder; a Finder folder
+                // becomes a subfolder of the same name.
+                return folder.map { model.importDropped(urls, into: $0, keepingFolders: true) } ?? false
             }
             if let folder {
                 model.move(notes, to: folder)
@@ -334,6 +343,21 @@ private struct ShellSidebarRow: View {
         case .Category: name = "project"
         }
         return NSImage(named: name) ?? NSImage()
+    }
+}
+
+/// Top-level folder rows can be dragged to reorder the sidebar, as in the
+/// storyboard sidebar; subfolders, All Notes and the Trash stay put.
+@available(macOS 14, *)
+private struct ShellFolderDrag: ViewModifier {
+    let url: URL?
+
+    func body(content: Content) -> some View {
+        if let url {
+            content.draggable(url)
+        } else {
+            content
+        }
     }
 }
 
@@ -397,8 +421,15 @@ struct ShellNoteList: View {
                 return .handled
             }
             .onChange(of: model.focusRequest) { _, request in
-                guard request == .list else { return }
-                listFocused = true
+                switch request {
+                case .list:
+                    listFocused = true
+                case .search:
+                    model.isSearchOpen = true
+                    searchFocused = true
+                default:
+                    return
+                }
                 model.focusRequest = nil
             }
             // Finder files dropped on the list are imported into the chosen
@@ -423,14 +454,12 @@ struct ShellNoteList: View {
                 ChromeButton(image: "icon_sidebar_left", help: "Toggle Note List") { model.cycleLayout() }
             }
             if model.isSearchOpen || !model.searchText.isEmpty {
-                // Return makes a note named after the query, as the storyboard
-                // window's search field does.
+                // Return opens the matching note and Command-Return makes one
+                // named after the query, as the storyboard window's search
+                // field does; the window controller's key monitor takes both.
                 ShellSearchField(
                     text: $model.searchText, focused: $searchFocused,
-                    onSubmit: {
-                        let query = model.searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-                        model.createNote(name: query)
-                    }
+                    onSubmit: { model.searchFieldReturn() }
                 ) {
                     model.searchText = ""
                     model.isSearchOpen = false
@@ -688,7 +717,10 @@ private struct ShellTitleField: View {
     }
 }
 
-/// The note list's right-click menu, the storyboard note menu's everyday items.
+/// The note list's right-click menu: the storyboard note menu's items in
+/// its order with its SF Symbols (Main.storyboard's note menu, the icons
+/// from `MenuIconRegistry`, Version History and Move appended as
+/// `loadMoveMenu` does), keeping a Pin or Unpin title for the clicked note.
 @available(macOS 14, *)
 private struct ShellNoteMenu: View {
     let model: ShellModel
@@ -699,59 +731,84 @@ private struct ShellNoteMenu: View {
         model.export(format)
     }
 
+    private func item(_ title: String, _ symbol: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label(I18n.str(title), systemImage: symbol)
+        }
+    }
+
     var body: some View {
-        Button(I18n.str(note.isPinned ? "Unpin Note" : "Pin Note")) { model.togglePin(note) }
-        Button(I18n.str("Rename")) {
-            model.selectedNoteURL = note.url
-            model.isRenaming = true
-        }
-        Button(I18n.str("Show in Finder")) { NSWorkspace.shared.activateFileViewerSelecting([note.url]) }
-        // The storyboard list's menu: info, links and copies of the note.
-        Button(I18n.str("Show Info")) {
-            model.selectedNoteURL = note.url
-            NSApp.sendAction(#selector(ShellWindowController.showInfo(_:)), to: nil, from: nil)
-        }
-        Button(I18n.str("Copy URL")) {
-            model.selectedNoteURL = note.url
-            model.copyNoteURL()
-        }
-        Button(I18n.str("Copy Path")) {
-            model.selectedNoteURL = note.url
-            model.copyNotePath()
-        }
-        if !note.isTrash() {
-            Button(I18n.str("Duplicate")) { model.duplicate(model.notesForMenu(on: note)) }
-            Button(I18n.str("MiaoYan PPT")) {
+        let group = model.notesForMenu(on: note)
+        Group {
+            item("Show Info", "info.circle") {
                 model.selectedNoteURL = note.url
-                model.setPresenting(true, ppt: true)
+                NSApp.sendAction(#selector(ShellWindowController.showInfo(_:)), to: nil, from: nil)
             }
-        }
-        if !note.isTrash() {
-            Button(I18n.str("Version History")) {
+            item("Reveal in Finder", "folder") { model.revealInFinder(group) }
+            item("Copy URL", "link") {
                 model.selectedNoteURL = note.url
-                model.showVersionHistory()
+                model.copyNoteURL()
             }
-        }
-        if !note.isTrash() {
-            Menu(I18n.str("Move")) {
-                ForEach(model.folders.filter { $0 != note.project }, id: \.url) { folder in
-                    Button(folder.label) { model.move(model.notesForMenu(on: note), to: folder) }
+            item("Copy Path", "doc.on.clipboard") { model.copyNotePaths(group) }
+            Divider()
+            if !note.isTrash() {
+                item("MiaoYan PPT", "sparkles") {
+                    model.selectedNoteURL = note.url
+                    model.setPresenting(true, ppt: true)
+                }
+                Divider()
+            }
+            item(note.isPinned ? "Unpin Note" : "Pin Note", "flag") { model.togglePin(note) }
+            if !note.isTrash() {
+                item("Duplicate", "plus.square.on.square") { model.duplicate(group) }
+            }
+            // The storyboard hides Rename for a multiple selection.
+            if group.count <= 1 {
+                item("Rename", "pencil") {
+                    model.selectedNoteURL = note.url
+                    model.isRenaming = true
                 }
             }
+            item("Delete", "trash") { delete() }
+            Menu {
+                item("HTML", "chevron.left.forwardslash.chevron.right") { exportSelecting(.html) }
+                item("Image", "photo") { exportSelecting(.image) }
+                item("PDF", "doc.richtext") { exportSelecting(.pdf) }
+                item("MiaoYan PPT PDF", "wand.and.stars") { exportSelecting(.ppt) }
+            } label: {
+                Label(I18n.str("Export"), systemImage: "square.and.arrow.up")
+            }
+            if !note.isTrash() {
+                item("Version History", "clock.arrow.circlepath") {
+                    model.selectedNoteURL = note.url
+                    model.showVersionHistory()
+                }
+            }
+            Menu {
+                // Notes already in the Trash move back out by these folders.
+                if !note.isTrash() {
+                    item("Trash", "trash") { delete() }
+                    Divider()
+                }
+                ForEach(model.moveTargets(for: note), id: \.url) { folder in
+                    Button {
+                        model.move(group, to: folder)
+                    } label: {
+                        Label(folder.label, systemImage: "folder")
+                    }
+                }
+            } label: {
+                Label(I18n.str("Move"), systemImage: "arrow.up.right.circle")
+            }
         }
-        Menu(I18n.str("Export")) {
-            Button("PDF") { exportSelecting(.pdf) }
-            Button(I18n.str("Image")) { exportSelecting(.image) }
-            Button("HTML") { exportSelecting(.html) }
-            Button(I18n.str("MiaoYan PPT PDF")) { exportSelecting(.ppt) }
-        }
-        Divider()
-        Button(I18n.str("Delete")) {
-            // Part of the selection: delete all of it, keeping the selection.
-            // In the Trash this moves them on to the system Trash.
-            if !model.isSelected(note) { model.selectedNoteURL = note.url }
-            model.deleteSelectedNote()
-        }
+        .labelStyle(.titleAndIcon)
+    }
+
+    /// Part of the selection: delete all of it, keeping the selection. In
+    /// the Trash this moves them on to the system Trash.
+    private func delete() {
+        if !model.isSelected(note) { model.selectedNoteURL = note.url }
+        model.deleteSelectedNote()
     }
 }
 

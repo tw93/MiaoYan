@@ -143,6 +143,7 @@
 
 /* No comment provided by engineer. */
 "Show in Finder" = "Finderに表示";
+"Reveal in Finder" = "Finderで表示";
 "Open in Terminal" = "ターミナルで開く";
 
 /* View menu */

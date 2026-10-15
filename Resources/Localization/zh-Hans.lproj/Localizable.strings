@@ -84,6 +84,7 @@
 
 /* No comment provided by engineer. */
 "Show in Finder" = "在 Finder 中显示";
+"Reveal in Finder" = "在 Finder 中显示";
 "Open in Terminal" = "在终端中打开";
 
 /* View menu */
