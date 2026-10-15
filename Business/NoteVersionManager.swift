@@ -10,8 +10,14 @@ final class NoteVersionManager: @unchecked Sendable {
     private let queue = DispatchQueue(label: "com.tw93.miaoyan.versions")
 
     private init() {
-        let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-        versionsRoot = base.appendingPathComponent("com.tw93.miaoyan/Versions")
+        // Unit tests run inside the app and used to file their fixture notes
+        // into the user's real history, hundreds of directories over time.
+        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil {
+            versionsRoot = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanTestVersions-\(ProcessInfo.processInfo.processIdentifier)")
+        } else {
+            let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+            versionsRoot = base.appendingPathComponent("com.tw93.miaoyan/Versions")
+        }
         try? FileManager.default.createDirectory(at: versionsRoot, withIntermediateDirectories: true)
     }
 
