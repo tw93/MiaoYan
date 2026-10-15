@@ -905,8 +905,10 @@ extension ShellSplitViewController: ExportHost {
         } else {
             toast(message: I18n.str("Export failed"), style: .failure)
         }
-        model.finishExport()
+        endExport()
     }
+
+    func endExport() { model.finishExport() }
 
     func finishPPTExport() { model.finishPPTExport() }
 }

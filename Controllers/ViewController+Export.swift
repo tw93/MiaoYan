@@ -45,7 +45,10 @@ extension ViewController {
         } else {
             toast(message: I18n.str("Export failed"), style: .failure)
         }
-        // After the export is completed, restore the original state.
+        endExport()
+    }
+
+    public func endExport() {
         sessionIsExporting = false
         sessionIsExportingPPT = false
         sessionIsExportingHTML = false

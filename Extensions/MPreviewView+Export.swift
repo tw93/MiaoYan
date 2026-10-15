@@ -17,6 +17,9 @@ protocol ExportHost: AnyObject {
     func toastUpdate(message: String)
     func toastDismiss()
     func toastExport(status: Bool)
+    /// Restores the state an export changed (busy flag, the mode it switched
+    /// into). `toastExport` calls it; a cancelled save panel calls it alone.
+    func endExport()
     func finishPPTExport()
 }
 
@@ -782,7 +785,10 @@ extension MPreviewView {
                     viewController.toastExport(status: false)
                 }
             } else if result == NSApplication.ModalResponse.cancel {
+                // Cancelling used to only hide the toast, leaving the export
+                // busy until relaunch: no further exports, no note switching.
                 viewController.toastDismiss()
+                viewController.endExport()
             } else {
                 viewController.toastExport(status: false)
             }

@@ -220,8 +220,10 @@ class EditTextView: NSTextView, @preconcurrency NSTextFinderClient {
         _ = manager.boundingRect(forGlyphRange: NSRange(location: index, length: 1), in: container)
         super.mouseDown(with: event)
         saveCursorPosition()
+        // A click must not make an unreadable note's placeholder buffer
+        // editable; fill() keeps it read-only until a read succeeds.
         if !isPreviewModeActive {
-            isEditable = true
+            isEditable = storageNote?.loadFailed != true
         }
         if initRange.length > 0 {
             self.initRange = NSRange(location: 0, length: 0)

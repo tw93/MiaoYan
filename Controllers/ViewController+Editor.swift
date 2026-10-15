@@ -1335,7 +1335,7 @@ extension ViewController {
         }
         if notesTableView.selectedRow > -1 {
             DispatchQueue.main.async {
-                self.editArea.isEditable = true
+                self.editArea.isEditable = self.editArea.storageNote?.loadFailed != true
                 // Only show title bar if not in PPT mode
                 if !self.sessionMagicPPTMode {
                     self.titleBarView.isHidden = false
