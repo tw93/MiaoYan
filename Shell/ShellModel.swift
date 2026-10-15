@@ -502,7 +502,9 @@ final class ShellModel {
 
     /// The list's heading: the chosen folder's name.
     var scopeTitle: String {
-        sidebarRows.first { $0.id == scope }?.title ?? ""
+        // The brand row already says MiaoYan beside the list.
+        if scope == .all { return I18n.str("All Notes") }
+        return sidebarRows.first { $0.id == scope }?.title ?? ""
     }
 
     /// Bear-style dates: today and yesterday by name with the time, this

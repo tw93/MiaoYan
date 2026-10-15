@@ -270,7 +270,7 @@ private struct ShellSidebarRow: View {
         .frame(height: isBrand ? 36 : 30)
         .background(
             RoundedRectangle(cornerRadius: 7, style: .continuous)
-                .fill((isSelected && !isBrand) || isDropTarget ? ShellStyle.sidebarSelection : .clear)
+                .fill(isSelected || isDropTarget ? ShellStyle.sidebarSelection : .clear)
         )
         .contextMenu {
             if let folder {

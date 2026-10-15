@@ -26,9 +26,9 @@ class SidebarTableRowView: ThemedTableRowView {
     }
 
     override func drawSelection(in dirtyRect: NSRect) {
-        // The brand row stands for all notes but never takes the plate: a
-        // plate behind the logo reads as odd (the SwiftUI shell does the same).
-        guard isSelected, !isBrandRow else { return }
+        // The brand row takes the plate too while all notes are shown, so the
+        // sidebar always marks what the list holds (maintainer, 2026-10-15).
+        guard isSelected else { return }
 
         let selectionRect = selectionRect()
         let radius = Theme.Metrics.selectionCornerRadius
@@ -45,13 +45,6 @@ class SidebarTableRowView: ThemedTableRowView {
         strokePath.lineWidth = strokeWidth
         Theme.sidebarSelectionStrokeColor.resolvedColor(for: effectiveAppearance).setStroke()
         strokePath.stroke()
-    }
-
-    private var isBrandRow: Bool {
-        guard let outlineView = superview as? NSOutlineView else { return false }
-        let rowIndex = outlineView.row(for: self)
-        guard rowIndex >= 0 else { return false }
-        return (outlineView.item(atRow: rowIndex) as? SidebarItem)?.type == .All
     }
 
     private func indentationOffset() -> CGFloat {
