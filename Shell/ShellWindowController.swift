@@ -985,8 +985,11 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         model.notesUndoManager
     }
 
+    /// MainWindowController's rule: a Custom appearance keeps its own colours
+    /// whatever the system switches to. Light and Dark only change through
+    /// Settings, which this follows.
     private func appearanceDidChange() {
-        guard let window else { return }
+        guard let window, UserDefaultsManagement.appearanceType != .Custom else { return }
         AppEnvironment.current.userData.isDark = window.effectiveAppearance.isDark
         NotesTextProcessor.hl = nil
         if let note = model.editor.textView.storageNote {
