@@ -619,12 +619,17 @@ class MPreviewView: WKWebView, WKUIDelegate {
         }
 
         // Always re-initialize lazy loading after content update. The table
-        // wrappers go back on here too: the innerHTML assignment above replaces
-        // every table, so the one app.js added at load time is gone by now.
+        // wrappers and task checkboxes go back on here too: the innerHTML
+        // assignment above replaces them, so what app.js set up at load time
+        // is gone by now. Without the checkbox pass a task list showed list
+        // bullets and its boxes no longer toggled.
         initScripts.append(
             """
                 if (window.MiaoYanCommon && typeof window.MiaoYanCommon.wrapWideTables === 'function') {
                     window.MiaoYanCommon.wrapWideTables();
+                }
+                if (window.MiaoYanCommon && typeof window.MiaoYanCommon.setupInteractiveCheckboxes === 'function') {
+                    window.MiaoYanCommon.setupInteractiveCheckboxes();
                 }
                 if (window.MiaoYanCommon && typeof window.MiaoYanCommon.optimizeImages === 'function') {
                     window.MiaoYanCommon.optimizeImages();
