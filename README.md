@@ -60,7 +60,7 @@ miao update               # Update CLI
 
 ## Split Editor & Preview Mode
 
-Edit and preview sit side by side. Press `⌘\` to toggle split mode, or open Preferences, go to General, and set Editor Mode to Split Mode. Why not WYSIWYG like Typora? Pure Markdown editing is the whole point. Native WYSIWYG in Swift is heavy and fragile; split mode keeps writing focused while giving you instant, synchronized visual feedback.
+Edit and preview sit side by side. Press `⌘\` to toggle split mode, or open Preferences, go to Editor, and set Default Mode to Split. Why not WYSIWYG like Typora? Pure Markdown editing is the whole point. Native WYSIWYG in Swift is heavy and fragile; split mode keeps writing focused while giving you instant, synchronized visual feedback.
 
 <img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview.png" width="100%" alt="Split Editor & Preview Mode" />
 

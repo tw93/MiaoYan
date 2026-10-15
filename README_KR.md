@@ -60,7 +60,7 @@ miao update              # CLI 업데이트
 
 ## 분할 편집 및 미리보기 모드
 
-편집 영역과 미리보기를 나란히 배치합니다. `⌘\` 키로 분할 모드를 전환하거나 환경설정의 General에서 Editor Mode를 Split Mode로 설정할 수 있습니다. 왜 Typora처럼 WYSIWYG로 만들지 않았을까요? 마크다운 원문을 보면서 쓰기를 바라기 때문입니다. Swift로 네이티브 WYSIWYG를 만들면 무겁고 안정적으로 유지하기도 어렵습니다. 분할 모드에서는 글쓰기에 집중하면서 바로 옆에서 실시간 미리보기를 볼 수 있습니다.
+편집 영역과 미리보기를 나란히 배치합니다. `⌘\` 키로 분할 모드를 전환하거나 환경설정의 Editor에서 Default Mode를 Split으로 설정할 수 있습니다. 왜 Typora처럼 WYSIWYG로 만들지 않았을까요? 마크다운 원문을 보면서 쓰기를 바라기 때문입니다. Swift로 네이티브 WYSIWYG를 만들면 무겁고 안정적으로 유지하기도 어렵습니다. 분할 모드에서는 글쓰기에 집중하면서 바로 옆에서 실시간 미리보기를 볼 수 있습니다.
 
 <img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview.png" width="100%" alt="분할 편집 및 미리보기 모드" />
 

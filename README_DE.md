@@ -60,7 +60,7 @@ miao update               # CLI aktualisieren
 
 ## Geteilte Ansicht (Editor & Vorschau)
 
-Editor und Vorschau stehen nebeneinander. Drücke `⌘\`, um die geteilte Ansicht umzuschalten, oder stelle in den Einstellungen unter General den Editor Mode auf Split Mode. Warum kein Typora-ähnliches WYSIWYG? Reines Markdown-Schreiben ist das Kernprinzip. Ein natives Swift-WYSIWYG wäre schwerfällig und instabil. Die geteilte Ansicht ermöglicht ablenkungsfreies Schreiben bei sofortigem visuellem Feedback.
+Editor und Vorschau stehen nebeneinander. Drücke `⌘\`, um die geteilte Ansicht umzuschalten, oder stelle in den Einstellungen unter Editor den Default Mode auf Split. Warum kein Typora-ähnliches WYSIWYG? Reines Markdown-Schreiben ist das Kernprinzip. Ein natives Swift-WYSIWYG wäre schwerfällig und instabil. Die geteilte Ansicht ermöglicht ablenkungsfreies Schreiben bei sofortigem visuellem Feedback.
 
 <img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview.png" width="100%" alt="Geteilte Ansicht (Editor & Vorschau)" />
 

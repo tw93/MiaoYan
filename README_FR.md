@@ -60,7 +60,7 @@ miao update                # Mettre à jour le CLI
 
 ## Mode Éditeur et Aperçu divisé
 
-Édition et aperçu s'affichent côte à côte. Appuyez sur `⌘\` pour basculer en mode divisé, ou ouvrez les Préférences, section General, et réglez Editor Mode sur Split Mode. Pourquoi pas de WYSIWYG comme Typora ? L'écriture en Markdown pur est au cœur du projet. Un WYSIWYG natif en Swift est lourd et fragile ; le mode divisé garantit une écriture concentrée tout en offrant un retour visuel instantané et fluide.
+Édition et aperçu s'affichent côte à côte. Appuyez sur `⌘\` pour basculer en mode divisé, ou ouvrez les Préférences, section Editor, et réglez Default Mode sur Split. Pourquoi pas de WYSIWYG comme Typora ? L'écriture en Markdown pur est au cœur du projet. Un WYSIWYG natif en Swift est lourd et fragile ; le mode divisé garantit une écriture concentrée tout en offrant un retour visuel instantané et fluide.
 
 <img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview.png" width="100%" alt="Mode Éditeur et Aperçu divisé" />
 

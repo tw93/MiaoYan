@@ -59,7 +59,7 @@ miao update             # 更新 CLI
 
 ## 分栏编辑预览模式
 
-编辑区和预览区并排显示，按 `⌘\` 切换分栏模式，或在设置的通用页把编辑模式设为分栏模式。为什么不做 Typora 式所见即所得？我想让你一直看着 Markdown 原文写，用原生 Swift 做所见即所得很重，也难保证稳定，分栏模式能专心写字，旁边就是实时预览。
+编辑区和预览区并排显示，按 `⌘\` 切换分栏模式，或在设置的编辑器页把默认模式设为分栏。为什么不做 Typora 式所见即所得？我想让你一直看着 Markdown 原文写，用原生 Swift 做所见即所得很重，也难保证稳定，分栏模式能专心写字，旁边就是实时预览。
 
 <img src="https://raw.githubusercontent.com/tw93/MiaoYan/main/assets/split-preview-zh.png" width="100%" alt="分栏编辑预览模式" />
 
