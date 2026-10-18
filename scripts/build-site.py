@@ -91,7 +91,7 @@ COPY = {
             ("What Markdown does it support?", "GitHub Flavored Markdown, plus LaTeX, Mermaid, PlantUML and Markmap, wikilinks with backlinks, and slides split with ---."),
             ("What do I need to run it?", "macOS 12 or later on the Mac, and iOS 18 or iPadOS 18 or later on iPhone and iPad."),
         ],
-        "about": "The Mac app is free and open source on GitHub; the iPhone and iPad apps are on the App Store.",
+        "about": "Local Markdown notes on Mac, iPhone and iPad",
         "foot": (("Get", "Help", "Connect"), ("FAQ", "Privacy")),
     },
     "zh": {
@@ -147,7 +147,7 @@ COPY = {
             ("支持哪些 Markdown 语法？", "GitHub 风格的 Markdown，加上 LaTeX 公式、Mermaid、PlantUML 和 Markmap 图表、双向链接，以及用 --- 分页的演示模式。"),
             ("需要什么系统？", "Mac 需要 macOS 12 及以上，iPhone 和 iPad 分别需要 iOS 18 与 iPadOS 18 及以上。"),
         ],
-        "about": "妙言的 Mac 版免费开源，可以在 GitHub 下载，iPhone 和 iPad 版在 App Store。",
+        "about": "Mac、iPhone 和 iPad 上的本地 Markdown 笔记",
         "foot": (("获取", "帮助", "联系"), ("常见问题", "隐私政策")),
     },
     "tw": {
@@ -203,7 +203,7 @@ COPY = {
             ("支援哪些 Markdown 語法？", "GitHub 風格的 Markdown，加上 LaTeX 公式、Mermaid、PlantUML 和 Markmap 圖表、雙向連結，以及用 --- 分頁的簡報模式。"),
             ("需要什麼系統？", "Mac 需要 macOS 12 以上，iPhone 和 iPad 分別需要 iOS 18 與 iPadOS 18 以上。"),
         ],
-        "about": "妙言的 Mac 版免費開源，可以在 GitHub 下載，iPhone 和 iPad 版在 App Store。",
+        "about": "Mac、iPhone 和 iPad 上的本機 Markdown 筆記",
         "foot": (("取得", "說明", "聯絡"), ("常見問題", "隱私權政策")),
     },
     "ja": {
@@ -259,7 +259,7 @@ COPY = {
             ("どんなMarkdownに対応していますか？", "GitHub Flavored Markdownに加えて、LaTeX、Mermaid、PlantUML、Markmap、双方向リンクとバックリンク、---で区切るスライドに対応しています。"),
             ("動作環境は？", "MacはmacOS 12以降、iPhoneとiPadはiOS 18またはiPadOS 18以降が必要です。"),
         ],
-        "about": "Mac版は無料のオープンソースでGitHubから入手でき、iPhone版とiPad版はApp Storeにあります。",
+        "about": "Mac、iPhone、iPadで使えるローカルのMarkdownノート",
         "foot": (("入手", "ヘルプ", "連絡先"), ("よくある質問", "プライバシー")),
     },
     "ko": {
@@ -315,7 +315,7 @@ COPY = {
             ("어떤 마크다운을 지원하나요?", "GitHub Flavored Markdown과 함께 LaTeX, Mermaid, PlantUML, Markmap, 양방향 링크와 백링크, ---로 나누는 슬라이드를 지원합니다."),
             ("실행 환경은 어떻게 되나요?", "Mac은 macOS 12 이상, iPhone과 iPad는 iOS 18 또는 iPadOS 18 이상이 필요합니다."),
         ],
-        "about": "Mac 버전은 무료 오픈 소스로 GitHub에서 받을 수 있고, iPhone과 iPad 버전은 App Store에 있습니다.",
+        "about": "Mac, iPhone, iPad에서 쓰는 로컬 마크다운 노트",
         "foot": (("받기", "도움말", "연락"), ("자주 묻는 질문", "개인정보 처리방침")),
     },
     "de": {
@@ -371,7 +371,7 @@ COPY = {
             ("Welches Markdown wird unterstützt?", "GitHub Flavored Markdown, dazu LaTeX, Mermaid, PlantUML und Markmap, Wikilinks mit Backlinks sowie Folien, die mit --- getrennt werden."),
             ("Was brauche ich dafür?", "macOS 12 oder neuer auf dem Mac sowie iOS 18 bzw. iPadOS 18 oder neuer auf iPhone und iPad."),
         ],
-        "about": "Die Mac-App ist kostenlos und Open Source auf GitHub, die Apps für iPhone und iPad gibt es im App Store.",
+        "about": "Lokale Markdown-Notizen auf Mac, iPhone und iPad",
         "foot": (("Laden", "Hilfe", "Kontakt"), ("FAQ", "Datenschutz")),
     },
     "fr": {
@@ -427,7 +427,7 @@ COPY = {
             ("Quel Markdown est pris en charge ?", "Le GitHub Flavored Markdown, plus LaTeX, Mermaid, PlantUML et Markmap, les wikilinks avec rétroliens, et des diapositives séparées par ---."),
             ("De quoi ai-je besoin ?", "macOS 12 ou version ultérieure sur le Mac, et iOS 18 et iPadOS 18 ou version ultérieure sur iPhone et iPad."),
         ],
-        "about": "L'app Mac est gratuite et open source sur GitHub, les apps iPhone et iPad sont sur l'App Store.",
+        "about": "Des notes Markdown locales sur Mac, iPhone et iPad",
         "foot": (("Obtenir", "Aide", "Contact"), ("FAQ", "Confidentialité")),
     },
     "es": {
@@ -483,7 +483,7 @@ COPY = {
             ("¿Qué Markdown admite?", "GitHub Flavored Markdown, además de LaTeX, Mermaid, PlantUML y Markmap, wikilinks con backlinks y diapositivas separadas con ---."),
             ("¿Qué necesito para usarlo?", "macOS 12 o posterior en el Mac, e iOS 18 o iPadOS 18 o posterior en iPhone y iPad."),
         ],
-        "about": "La app de Mac es gratis y de código abierto en GitHub, y las de iPhone y iPad están en el App Store.",
+        "about": "Notas Markdown locales en Mac, iPhone y iPad",
         "foot": (("Obtener", "Ayuda", "Contacto"), ("Preguntas", "Privacidad")),
     },
 }

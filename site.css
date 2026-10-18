@@ -297,12 +297,12 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { 
 footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62%, transparent); padding: 60px 0 48px; font-size: 14px; }
 .foot { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
 .foot-mark { max-width: 26em; }
-.foot-name { margin: 0 0 8px; color: #fff; font-family: var(--serif); font-size: 20px; font-weight: 500; line-height: 1.1; }
+.foot-name { margin: 0 0 8px; color: #fff; font-family: var(--serif); font-size: 22px; font-weight: 500; line-height: 1.1; }
 .foot-name .cn { font-family: "MiaoYan Mark", "MiaoYan Serif TC", "Songti TC", serif; font-weight: 400; }
-.foot-mark p.foot-about { margin: 12px 0 0; font-size: 13px; line-height: 1.55; color: color-mix(in srgb, var(--night-ink) 62%, transparent); }
+.foot-mark p.foot-about { margin: 10px 0 0; font-size: 14px; line-height: 1.5; color: color-mix(in srgb, var(--night-ink) 62%, transparent); }
 .foot-cols { display: flex; gap: 44px; }
 .foot-col { display: grid; gap: 12px; align-content: start; }
-.foot-col-title { margin: 0 0 2px; color: color-mix(in srgb, #fff 92%, transparent); font-size: 12px; font-weight: 600; letter-spacing: 0.2px; }
+.foot-col-title { margin: 0 0 2px; color: color-mix(in srgb, #fff 92%, transparent); font-size: 13px; font-weight: 600; letter-spacing: 0.2px; }
 .foot-col a { color: color-mix(in srgb, var(--night-ink) 68%, transparent); text-decoration: none; line-height: 1.35; }
 @media (hover: hover) { .foot-col a:hover { color: #fff; } }
 
