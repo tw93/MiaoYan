@@ -686,12 +686,11 @@ def page(key):
   <div class="wrap">
     <div class="foot">
       <div class="foot-mark">
-        <a class="brand" href="{path}"><img src="/assets/bird-night.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
-        <p>{esc(c['about'])}</p>
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">{esc(c['about'])}</p>
       </div>
       <nav class="foot-cols" aria-label="Footer">{foot}</nav>
     </div>
-    <div class="copy">© 2026 Tw93</div>
   </div>
 </footer>
 <script>
