@@ -184,6 +184,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) .hero h1 { letter-spacing: 2px; }
 .tagline { font-family: var(--serif); font-size: 22px; line-height: 1.45; color: var(--near-black); margin: 0 0 10px; text-wrap: balance; }
 html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { line-height: 1.6; word-break: keep-all; }
 .lede { font-size: 17px; color: var(--olive); margin: 0 0 18px; }
+.tagline + .trust { margin-top: 18px; }
 /* Plain facts in a quiet line, as on mole.fit: no pills, dots between them. */
 .trust { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 0; margin: 0 0 32px; padding: 0; list-style: none; }
 .trust li { font-size: 14px; line-height: 1.5; color: var(--stone); white-space: nowrap; }
