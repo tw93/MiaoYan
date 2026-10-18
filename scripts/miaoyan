@@ -312,17 +312,25 @@ cmd_update() {
 
     printf "${GREEN}▸${NC} Checking for updates...\n"
 
-    # Same source as install.sh: the latest release, so a bad push to main
-    # cannot break an update. MIAOYAN_INSTALL_REF overrides it.
+    # The latest release, so a bad push to main cannot break an update. The
+    # releases/latest page redirects to the tag and, unlike the API, has no
+    # hourly rate limit. A failed lookup stops here rather than quietly taking
+    # main. MIAOYAN_INSTALL_REF overrides it.
     local ref="${MIAOYAN_INSTALL_REF:-}"
     if [[ -z "$ref" ]]; then
-        ref=$(curl -fsSL "https://api.github.com/repos/tw93/MiaoYan/releases/latest" 2>/dev/null | grep -m1 '"tag_name"' | cut -d'"' -f4)
-        [[ -z "$ref" ]] && ref="main"
+        local latest_url
+        latest_url=$(curl -fsSLI -o /dev/null -w '%{url_effective}' "https://github.com/tw93/MiaoYan/releases/latest" 2>/dev/null || true)
+        [[ "$latest_url" == */releases/tag/* ]] && ref="${latest_url##*/releases/tag/}"
+        if [[ -z "$ref" ]]; then
+            rm -f "$tmp_file"
+            echo "Error: Could not find the latest MiaoYan release on GitHub. Check your network and try again." >&2
+            exit 1
+        fi
     fi
 
     if ! curl -fsSL "https://raw.githubusercontent.com/tw93/MiaoYan/${ref}/scripts/miaoyan" -o "$tmp_file" 2>/dev/null; then
         rm -f "$tmp_file"
-        echo "Error: Failed to download update." >&2
+        echo "Error: Failed to download miao from release ${ref}." >&2
         exit 1
     fi
 
