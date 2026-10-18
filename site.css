@@ -34,7 +34,7 @@
   font-weight: 400;
   font-style: normal;
   font-display: swap;
-  unicode-range: U+5999;
+  unicode-range: U+8A9E;
 }
 @font-face {
   font-family: "MiaoYan Serif SC";
@@ -195,25 +195,30 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
   font-weight: 400;
   letter-spacing: 0;
 }
-/* A thin caret waits beside 妙 and blinks slowly, at the same quiet scale as
-   mole.fit's orbiting dot. */
+/* One small dot circles 語, as mole.fit's does around 鼴; each family site
+   gets its own orbit (tilt, direction, pace) so the motion stays theirs. */
+@property --mark-orbit {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
 .hero h1 .cn-orbit::after {
   content: "";
   position: absolute;
-  right: -0.13em;
-  bottom: 0.1em;
-  width: 0.022em;
-  height: 0.24em;
-  border-radius: 1em;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 50%;
   background: var(--near-black);
-  opacity: 0.45;
-  animation: miaoyan-caret 2.6s ease-in-out infinite;
+  opacity: 0.4;
+  transform: rotate(0deg) translate(calc(cos(var(--mark-orbit)) * 0.68em), calc(sin(var(--mark-orbit)) * 0.68em));
+  animation: mark-orbit 16s linear infinite reverse;
   pointer-events: none;
 }
-@keyframes miaoyan-caret {
-  0%, 45% { opacity: 0.45; }
-  60%, 85% { opacity: 0; }
-  100% { opacity: 0.45; }
+@keyframes mark-orbit {
+  to { --mark-orbit: 360deg; }
 }
 .tagline { font-family: var(--serif); font-size: 22px; line-height: 1.45; color: var(--near-black); margin: 0 0 10px; text-wrap: balance; }
 html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { line-height: 1.6; word-break: keep-all; }

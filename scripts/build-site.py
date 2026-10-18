@@ -637,7 +637,7 @@ def page(key):
 </header>
 <main>
   <div class="hero">
-    <h1>{esc(c['h1'])}<span class="cn-orbit"><span class="cn" lang="zh-Hant">妙</span></span></h1>
+    <h1>{esc(c['h1'])}<span class="cn-orbit"><span class="cn" lang="zh-Hant">語</span></span></h1>
     <p class="tagline">{esc(t(c['tagline']))}</p>
 {f'    <p class="lede">{esc(t(c["lede"]))}</p>\n' if c['lede'] else ''}    <ul class="trust">{trust}</ul>
     <div class="cta hero-cta">

@@ -71,9 +71,9 @@ def subset_path(script, weight):
     return FONT_DIR / f"miaoyan-serif-{script}-{weight}.woff2"
 
 
-# The hero's 妙 is the only Chinese the other languages set. It gets a
+# The hero's 語 is the only Chinese the other languages set. It gets a
 # one-glyph file in the Traditional face, so those pages skip the subsets.
-MARK = "妙"
+MARK = "語"
 MARK_SOURCE = "SourceHanSerifTC-Regular.otf"
 MARK_FILE = FONT_DIR / "miaoyan-mark.woff2"
 
