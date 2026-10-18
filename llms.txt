@@ -16,7 +16,7 @@ MiaoYan is for people who want a focused, native writing app on Mac, iPhone and 
 - Pure Markdown editing with a separate real-time preview
 - Split editor and preview with 60fps bidirectional scroll sync
 - Wikilinks and backlinks
-- LaTeX and Mermaid diagrams
+- LaTeX math, plus Mermaid, PlantUML and Markmap diagrams
 - Version history, auto-formatting, keyboard shortcuts, and dark mode
 - Markdown presentation mode and a command-line interface
 - Native Swift 6 app with no Electron runtime

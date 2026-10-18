@@ -29,3 +29,4 @@ CLAUDE.md
 dist/
 .agents/
 .fontcache
+__pycache__/
