@@ -301,3 +301,14 @@ footer { background: var(--night); color: var(--night-dim); padding: 60px 0 32px
   .btn { width: 100%; }
   .foot-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* Readers who ask the system for less motion get state changes without the
+   slide, fade and lift. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
