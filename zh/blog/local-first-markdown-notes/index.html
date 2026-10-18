@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>本地优先的 Markdown 笔记怎么管 · 妙言博客</title>
+<meta name="description" content="为什么把笔记存成自己文件夹里的纯 Markdown 文件，要付出什么，以及妙言怎么读取你选的文件夹。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/local-first-markdown-notes/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/local-first-markdown-notes/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/local-first-markdown-notes/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/local-first-markdown-notes/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/local-first-markdown-notes/">
+<meta property="og:title" content="本地优先的 Markdown 笔记怎么管 · 妙言博客">
+<meta property="og:description" content="为什么把笔记存成自己文件夹里的纯 Markdown 文件，要付出什么，以及妙言怎么读取你选的文件夹。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/local-first-markdown-notes.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="笔记管理">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/local-first-markdown-notes.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "本地优先的 Markdown 笔记怎么管", "item": "https://miaoyan.app/zh/blog/local-first-markdown-notes/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/local-first-markdown-notes/#article", "headline": "本地优先的 Markdown 笔记怎么管", "description": "为什么把笔记存成自己文件夹里的纯 Markdown 文件，要付出什么，以及妙言怎么读取你选的文件夹。", "url": "https://miaoyan.app/zh/blog/local-first-markdown-notes/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/local-first-markdown-notes/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/local-first-markdown-notes.webp", "timeRequired": "PT5M", "articleSection": "笔记管理", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "已经有 Markdown 文件的文件夹可以直接用吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以，在「笔记位置」里指向它，现有的 .md、.markdown 和 .txt 文件会识别为笔记，对应的文件夹也会出现在侧边栏。"}}, {"@type": "Question", "name": "妙言把笔记存在数据库里吗？", "acceptedAnswer": {"@type": "Answer", "text": "笔记本身就是你文件夹里的文件，应用另外在自己的支持目录里保存版本快照，不会写入你的笔记文件夹。"}}, {"@type": "Question", "name": "妙言能打开哪些扩展名？", "acceptedAnswer": {"@type": "Answer", "text": "md、markdown 和 txt，来自应用允许读取的扩展名列表。"}}, {"@type": "Question", "name": "在访达里重命名或移动文件安全吗？", "acceptedAnswer": {"@type": "Answer", "text": "安全，文件系统监听会发现变化，只是文件名就是笔记标题，之前用旧名字写的 wikilink 将不再指向它。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/local-first-markdown-notes/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/local-first-markdown-notes/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">本地优先的 Markdown 笔记怎么管</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-notes">笔记管理</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 5 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/local-first-markdown-notes.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>把笔记存成你自己文件夹里的纯 Markdown 文件，意味着任何编辑器都能打开，任何备份工具都能复制，也不会有哪家公司的服务器来决定你还能不能读自己写的东西。代价是托管类笔记应用替你做的几件事要自己面对，比如服务端搜索、冲突编辑的自动合并和附件的整理，不过对于写得多、又希望文字比某个应用活得更久的人来说，这笔交换通常划算。</p>
+<h2 id="本地优先在笔记文件夹里是什么意思">本地优先在笔记文件夹里是什么意思</h2>
+<p>本地优先的笔记应用把磁盘上的文件当作唯一的真身，没有账号，也没有打不开的数据库。在妙言里，笔记库就是你选定的一个文件夹，里面每篇笔记都是一个扩展名为 <code>.md</code>、<code>.markdown</code> 或 <code>.txt</code> 的文件，标题就是去掉扩展名的文件名，所以 <code>项目计划.md</code> 在列表里显示为「项目计划」。</p>
+<p>格式就这么简单。Obsidian 的文档也是同样的说法，笔记是 vault 里的纯文本 Markdown 文件，而 vault 是「本地文件系统里的一个文件夹，包括其中的子文件夹」。格式通用，一个应用写出来的文件夹换另一个应用就能打开，<code>grep</code>、<code>git</code> 和 Spotlight 也都能直接用，不需要导出。</p>
+<h2 id="得到什么">得到什么</h2>
+<p><strong>可迁移。</strong> 换编辑器只是让它指向同一个文件夹，没有东西被锁在私有容器里，改主意的成本接近于零。</p>
+<p><strong>工具多。</strong> 凡是能读文本的工具都能读你的笔记，可以用 <code>rg</code> 搜，可以写脚本做每周回顾，也可以把文件夹交给编码 Agent。妙言自带一个 <code>miao</code> 命令行工具做这件事，在 <a href="/zh/blog/markdown-notes-from-terminal/">在终端里使用 Markdown 笔记</a> 里有详细说明。</p>
+<p><strong>好备份。</strong> 一堆小文本文件是最容易备份的东西，Time Machine、网盘和 git 仓库都把它当普通文件，恢复出来马上就能用。</p>
+<p><strong>不锁定，不收集数据。</strong> 应用只读写你选的那个文件夹里的文件，妙言的 README 写明笔记是你所选文件夹里的 Markdown 文件，并且不收集数据。</p>
+<h2 id="要付出什么">要付出什么</h2>
+<p>选这条路线之前，这几条值得先看清。</p>
+<p><strong>没有服务端搜索和索引。</strong> 搜索发生在你自己的设备上，妙言在搜索框里输入时会在笔记库里查找标题和正文，但没有网页搜索，也不能跨机器查询。</p>
+<p><strong>同步要交给别人。</strong> 应用本身不负责同步，同步由网盘完成，而网盘不懂 Markdown，所以两台设备同时改同一个文件，得到的是一份冲突副本而不是合并后的笔记，细节见 <a href="/zh/blog/sync-markdown-notes-across-devices/">跨设备同步 Markdown 笔记</a>。</p>
+<p><strong>附件只是文件。</strong> 图片和 PDF 放在笔记旁边，链接只是一个路径，只搬笔记而不搬附件文件夹，图片就会失效。</p>
+<p><strong>历史要自己拼。</strong> 托管应用常常自带完整的修订记录，纯文件的做法是把应用自己的快照、Time Machine 和可选的 git 拼起来，见 <a href="/zh/blog/markdown-note-version-history/">Markdown 笔记的版本历史</a>。</p>
+<h2 id="经得起时间的文件夹结构">经得起时间的文件夹结构</h2>
+<p>笔记库很少是因为应用不好用而失败，多半是文件夹变成了杂物抽屉。下面这种结构比较耐用：</p>
+<pre><code class="language-text">MiaoYan/
+  Inbox/
+  Projects/
+    Website redesign/
+      i/
+  Reference/
+  Journal/
+  Archive/
+</code></pre>
+<p>几条规则能让它一直好用：</p>
+<ul>
+<li><strong>顶层文件夹少，按用途命名。</strong> 按「要处理、要查、要归档」分，不要按主题分，因为主题会互相重叠，用途很少重叠。</li>
+<li><strong>标题要能凭记忆敲出来。</strong> 文件名就是标题，wikilink 指向的也是标题，所以好名字同时也是好链接目标，见 <a href="/zh/blog/wikilinks-and-backlinks/">Markdown 笔记里的 Wikilink 与反向链接</a>。</li>
+<li><strong>不同文件夹里不要重名。</strong> 两个文件夹里各有一个 <code>会议记录.md</code> 是合法的，但按标题建立的链接分不清它们。</li>
+<li><strong>附件放在笔记旁边。</strong> 妙言把行内图片放在笔记所在文件夹的 <code>i/</code> 子目录，其他文件放在 <code>files/</code>。</li>
+<li><strong>保持浅层。</strong> 子文件夹可以用，但搜索一步就到的时候，两层通常就够了。</li>
+</ul>
+<h2 id="妙言怎么读一个文件夹">妙言怎么读一个文件夹</h2>
+<p>这一节是机制，大部分意外都能在这里找到解释。</p>
+<p>文件夹在偏好设置（⌘,）的「笔记位置」里用「更改」按钮选择。妙言会先检查这个文件夹是不是可写的目录，检查失败就保留原位置，新文件夹要重启后才生效，所以接着会弹出「重新启动妙言后生效」的提示，取消的话仍然保留原位置。</p>
+<p>文件夹打开后，妙言把每个子文件夹列在侧边栏，把每个 <code>.md</code>、<code>.markdown</code> 或 <code>.txt</code> 文件列为笔记，会跳过以点开头的隐藏文件夹、附件文件夹 <code>i</code> 和 <code>files</code>、名为 <code>assets</code> 的文件夹，以及只有附件的文件夹。删除的笔记进入系统废纸篓，在没有废纸篓的卷上则进入笔记库里的 <code>Trash</code> 文件夹。</p>
+<p>妙言通过监听 macOS 文件系统事件和磁盘保持同步。别的程序改了正在编辑器里打开的笔记，妙言会从磁盘重新加载，如果你没保存的编辑内容和磁盘上的不同，它会先把你的版本写进笔记库根目录下隐藏的 <code>.miaoyan-conflicts</code> 文件夹，并提示「检测到外部修改，本地内容已备份~」，这些备份会保留 30 天，并且无论多久都至少保留最近的 100 份。</p>
+<p>本地图片用 <code>![name](/i/name.png)</code> 这种写法，妙言按笔记自己所在的文件夹去解析，这是妙言特有的约定，所以把同一个文件夹交给期望相对路径的工具时，要检查图片是否还能显示。</p>
+<h2 id="出问题时怎么查">出问题时怎么查</h2>
+<ul>
+<li><strong>列表里找不到某篇笔记。</strong> 确认扩展名是 <code>.md</code>、<code>.markdown</code> 或 <code>.txt</code>，并且所在文件夹不是隐藏文件夹，也不叫 <code>i</code>、<code>files</code> 或 <code>assets</code>。</li>
+<li><strong>文件夹被拒绝。</strong> 网盘目录有时没有作为真正的文件夹暴露出来，妙言的提示是打开网盘应用，确认该文件夹已在访达中可见，或者开启离线访问。</li>
+<li><strong>同一篇笔记有两份。</strong> 几乎都是同步冲突，找找有没有同步服务加了后缀的第二个文件。</li>
+<li><strong>两个应用同时改。</strong> 虽然妙言会从磁盘重新加载并备份你没保存的文字，但最稳的习惯还是一次只用一个编辑器。</li>
+</ul>
+<p>任何搬动之后都可以做个小检查，在访达里打开文件夹，确认文件在预期的位置，再搜一句你确定写在旧笔记里的话。</p>
+<h2 id="不适合的情况">不适合的情况</h2>
+<p>如果需要和别人实时协作、共享数据库，或者把网页剪藏进托管工作区，纯文件夹并不是合适的工具。想用同一批文件发布网站，纯文件夹是个好起点，但还得再加一个静态站点生成器。</p>
+<p>妙言是专为这种 Markdown 文件夹工作流做的 Mac 原生应用，内置分栏编辑预览、wikilink 和版本历史。源码在 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a>，<a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> 版本一次购买覆盖 Mac、iPhone 和 iPad。如果你从 Obsidian 过来，先看 <a href="/zh/blog/obsidian-alternative-mac/">Mac 上的 Obsidian 替代品</a>。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="已经有-markdown-文件的文件夹可以直接用吗">已经有 Markdown 文件的文件夹可以直接用吗？</h3>
+<p>可以，在「笔记位置」里指向它，现有的 <code>.md</code>、<code>.markdown</code> 和 <code>.txt</code> 文件会识别为笔记，对应的文件夹也会出现在侧边栏。</p>
+<h3 id="妙言把笔记存在数据库里吗">妙言把笔记存在数据库里吗？</h3>
+<p>笔记本身就是你文件夹里的文件，应用另外在自己的支持目录里保存版本快照，不会写入你的笔记文件夹。</p>
+<h3 id="妙言能打开哪些扩展名">妙言能打开哪些扩展名？</h3>
+<p><code>md</code>、<code>markdown</code> 和 <code>txt</code>，来自应用允许读取的扩展名列表。</p>
+<h3 id="在访达里重命名或移动文件安全吗">在访达里重命名或移动文件安全吗？</h3>
+<p>安全，文件系统监听会发现变化，只是文件名就是笔记标题，之前用旧名字写的 wikilink 将不再指向它。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/sync-markdown-notes-across-devices/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">跨设备同步 Markdown 笔记的几种做法</span><span class="blog-related-meta">约 4 分钟</span></a></li><li><a href="/zh/blog/wikilinks-and-backlinks/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">Markdown 笔记里的 Wikilink 与反向链接</span><span class="blog-related-meta">约 4 分钟</span></a></li><li><a href="/zh/blog/markdown-notes-from-terminal/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">在终端里使用 Markdown 笔记：miao 命令行</span><span class="blog-related-meta">约 4 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Mac 上的 Typora 替代品 · 妙言博客</title>
+<meta name="description" content="为什么有人离开 Typora，所见即所得与分栏预览的取舍，笔记、公式和图片能带走什么，以及两者各自强在哪里。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/typora-alternative-mac/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/typora-alternative-mac/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/typora-alternative-mac/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/typora-alternative-mac/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/typora-alternative-mac/">
+<meta property="og:title" content="Mac 上的 Typora 替代品 · 妙言博客">
+<meta property="og:description" content="为什么有人离开 Typora，所见即所得与分栏预览的取舍，笔记、公式和图片能带走什么，以及两者各自强在哪里。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/typora-alternative-mac.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Markdown 写作">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/typora-alternative-mac.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Mac 上的 Typora 替代品", "item": "https://miaoyan.app/zh/blog/typora-alternative-mac/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/typora-alternative-mac/#article", "headline": "Mac 上的 Typora 替代品", "description": "为什么有人离开 Typora，所见即所得与分栏预览的取舍，笔记、公式和图片能带走什么，以及两者各自强在哪里。", "url": "https://miaoyan.app/zh/blog/typora-alternative-mac/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/typora-alternative-mac/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/typora-alternative-mac.webp", "timeRequired": "PT4M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Typora 的笔记能在妙言里打开吗", "acceptedAnswer": {"@type": "Answer", "text": "可以，只要它们是文件夹里的 .md、.markdown 或 .txt 文件，把妙言的存储位置指向这个文件夹或它的拷贝就行。"}}, {"@type": "Question", "name": "妙言有所见即所得模式吗", "acceptedAnswer": {"@type": "Answer", "text": "没有，只有纯编辑、分栏和纯预览三种视图。"}}, {"@type": "Question", "name": "妙言比 Typora 好吗", "acceptedAnswer": {"@type": "Answer", "text": "取决于你想不想看到源码，两者对应的是不同的偏好，拿一份笔记拷贝把两个都跑一遍最直接。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/typora-alternative-mac/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/typora-alternative-mac/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">Mac 上的 Typora 替代品</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 4 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/typora-alternative-mac.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>在 Mac 上找 Typora 的替代品，先想清楚自己想改的是什么。想继续在同一个窗格里所见即所得地写，就去看别的所见即所得编辑器。想一边看 Markdown 源码、一边在旁边看实时预览，妙言这类分栏编辑器是最接近的替换，笔记本身就是普通的 <code>.md</code> 文件，所以可以直接带过去。主要的取舍是放弃在渲染后的文字上直接敲字，换来随时看到文件里到底写了什么。</p>
+<h2 id="为什么有人想换">为什么有人想换</h2>
+<p>Typora 官网自己写了它擅长什么，真正的实时预览，没有单独的预览窗口和模式切换，支持 MathJax 公式、Mermaid、flowchart.js 和时序图、自定义 CSS 主题以及多种导出格式，覆盖 macOS、Windows 和 Linux。人们换工具往往和好坏无关。</p>
+<ul>
+<li>想看到源码。所见即所得里原始语法是隐藏的，修一个坏掉的表格、一处多余的列表缩进或者一个转义错的字符就更费劲。</li>
+<li>想在 iPhone 和 iPad 上看同样的笔记。Typora 官网列出的只有桌面平台，妙言的 iPhone、iPad 和 Mac 版在 App Store 里是同一次购买，三端打开同一个笔记文件夹。</li>
+<li>想要只面向 Mac 的原生手感，以及文件夹、笔记列表、编辑器三栏的布局。</li>
+<li>想要把笔记直接当幻灯片演示的内置方式，妙言本身就支持，见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>。</li>
+<li>想要开源的 Mac 应用。妙言的 Mac 版是 MIT 协议，源码在 GitHub 公开，Typora 的授权和价格以它的官网为准。</li>
+</ul>
+<p>如果这些都不是你的需求，继续用 Typora 完全合理。</p>
+<h2 id="所见即所得和分栏预览">所见即所得和分栏预览</h2>
+<p>在 Typora 里你敲字，格式就地出现，窗格同时就是文档，只有一个地方可看。在妙言里你在编辑区写 Markdown，旁边是渲染后的笔记，两边滚动同步。按 <code>⌘\</code> 切换分栏，或者打开偏好设置（<code>⌘,</code>），在「通用」里把「编辑模式」设成「分栏模式」，<code>⌘3</code> 会切到整页预览。</p>
+<p>妙言的 README 直接解释过这个选择，用原生 Swift 做所见即所得很重也难保证稳定，所以应用保留纯 Markdown 编辑，用同步的视觉反馈来补。这是产品上的决定，而不是以后要修的缺陷，要看它合不合你的写作习惯。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Typora</th>
+<th>妙言</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>编辑界面</td>
+<td>就地渲染的文字</td>
+<td>Markdown 源码，旁边是预览</td>
+</tr>
+<tr>
+<td>公式</td>
+<td>MathJax，官网称支持大部分扩展</td>
+<td>KaTeX 0.16.0，随应用打包</td>
+</tr>
+<tr>
+<td>图表</td>
+<td>Mermaid、flowchart.js、时序图</td>
+<td>Mermaid、PlantUML（公共服务器）、Markmap</td>
+</tr>
+<tr>
+<td>平台</td>
+<td>macOS、Windows、Linux</td>
+<td>Mac、iPhone、iPad</td>
+</tr>
+<tr>
+<td>导出</td>
+<td>官网列出 PDF、DOCX、EPUB、LaTeX 等</td>
+<td>HTML、PDF、图片、PPT PDF</td>
+</tr>
+<tr>
+<td>扩展</td>
+<td>自定义 CSS 主题</td>
+<td>没有插件系统</td>
+</tr>
+</tbody>
+</table>
+<p>Typora 一列来自 typora.io，妙言一列来自应用源码和 README，核对日期都是 2026-10-18。公式引擎的细节见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>，图表的行为见 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>。</p>
+<h2 id="哪些东西能带过去">哪些东西能带过去</h2>
+<p>两个应用都围着文件转，所以迁移的大半工作就是让新应用指向你的文件夹。</p>
+<ol>
+<li><strong>笔记。</strong> 妙言读取你所选文件夹里的 <code>.md</code>、<code>.markdown</code> 和 <code>.txt</code> 文件，打开偏好设置（<code>⌘,</code>），把存储位置设成原来的 Typora 文件夹，或者它的一份拷贝。</li>
+<li><strong>图片。</strong> 妙言会按笔记所在的文件夹解析相对路径，所以笔记旁边的 <code>images/photo.png</code> 能用。它自己的约定是 <code>i/</code> 文件夹和写成 <code>/i/photo.png</code> 的链接，粘贴或拖入图片时用的就是这个，两种写法可以放在同一个文件夹里。</li>
+<li><strong>公式。</strong> <code>$...$</code> 和 <code>$$...$$</code> 可以直接带过去。KaTeX 支持的是 MathJax 的一个子集，有特殊宏的笔记要打开确认一下。</li>
+<li><strong>图表。</strong> 围栏的 <code>mermaid</code> 块可以带过去，Typora 的 flowchart.js 块不是 Mermaid，在妙言里不会渲染。</li>
+<li><strong>主题。</strong> Typora 的 CSS 主题带不过去。妙言有自己的外观设置，包括跟随系统、浅色、深色，以及字体、预览宽度和代码背景。</li>
+</ol>
+<p>迁移先在拷贝上做。挑三篇用了表格、图片和公式的笔记，和 Typora 里的效果并排对一下，再指向真正的文件夹。因为两个应用读的是同一个文件夹，需要的笔记还可以继续用 Typora 打开，只是不要两边同时改同一个文件。</p>
+<h2 id="它实际是怎么工作的">它实际是怎么工作的</h2>
+<p>Typora 把渲染后的视图当作编辑界面，保存时把 Markdown 写到磁盘。妙言把 Markdown 当作编辑界面，再从它渲染出第二个视图。渲染器是 cmark-gfm，带表格、脚注、删除线和任务列表扩展，解析后的 HTML 放进网页视图，由随应用打包的 KaTeX 和图表库去处理。磁盘上的文件就是编辑区里的文字，所以你在编辑区看到的就是保存下来的内容。</p>
+<p>不同的渲染器在边角情况上可能不一致，所以要拿自己的笔记去测，核心规则见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查</a>。妙言有一个默认值需要知道，「换行方式」默认是「妙言」，预览中每个换行都会另起一行，如果你的笔记靠空一行才断行，就改成「Github」。</p>
+<h2 id="出问题怎么办">出问题怎么办</h2>
+<ul>
+<li><strong>换行看起来不一样。</strong> 检查妙言的换行方式设置。</li>
+<li><strong>图片不见了。</strong> 相对路径和笔记所在的文件夹对不上了，通常是笔记搬了家，图片文件夹没跟着走。</li>
+<li><strong>某个公式失败。</strong> 它用了只有 MathJax 才有的功能，改成 KaTeX 支持的写法。</li>
+<li><strong>怀念在渲染文字上直接敲字。</strong> 这是这次替换的真实代价，先用一个星期分栏模式再决定，确定之前保留 Typora。</li>
+<li><strong>需要 DOCX 或 EPUB 输出。</strong> 妙言没有提供。</li>
+</ul>
+<h2 id="在哪里获取">在哪里获取</h2>
+<p>妙言在 <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> 上，买一次就覆盖 Mac、iPhone 和 iPad 三个应用，Mac 版源码在 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">github.com/tw93/MiaoYan</a>。更全面的编辑器对比见 <a href="/zh/blog/markdown-editor-for-mac/">Mac 上怎么选 Markdown 编辑器</a>。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="typora-的笔记能在妙言里打开吗">Typora 的笔记能在妙言里打开吗</h3>
+<p>可以，只要它们是文件夹里的 <code>.md</code>、<code>.markdown</code> 或 <code>.txt</code> 文件，把妙言的存储位置指向这个文件夹或它的拷贝就行。</p>
+<h3 id="妙言有所见即所得模式吗">妙言有所见即所得模式吗</h3>
+<p>没有，只有纯编辑、分栏和纯预览三种视图。</p>
+<h3 id="妙言比-typora-好吗">妙言比 Typora 好吗</h3>
+<p>取决于你想不想看到源码，两者对应的是不同的偏好，拿一份笔记拷贝把两个都跑一遍最直接。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/markdown-to-slides/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 转幻灯片：用 --- 分页</span><span class="blog-related-meta">约 4 分钟</span></a></li><li><a href="/zh/blog/mermaid-diagrams-in-markdown/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 里画 Mermaid 图</span><span class="blog-related-meta">约 4 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

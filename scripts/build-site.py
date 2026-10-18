@@ -506,25 +506,169 @@ def french_spacing(s):
     return s
 
 
-def page(key):
+SITE = "https://miaoyan.app"
+
+# The blog is written in English and Simplified Chinese. Every footer links to
+# it, Traditional Chinese to the Simplified one; only the two home pages whose
+# language the blog is written in put it in the top nav. scripts/build-blog.py
+# builds the blog pages from the helpers below, so the chrome stays one copy.
+BLOG_LABEL = {"en": "Blog", "zh": "博客", "tw": "部落格", "ja": "ブログ", "ko": "블로그", "de": "Blog", "fr": "Blog", "es": "Blog"}
+BLOG_NAV_LANGS = ("en", "zh")
+
+ICONS = (
+    '<link rel="icon" href="/favicon.ico" sizes="32x32">\n'
+    '<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">\n'
+    '<link rel="apple-touch-icon" href="/assets/icon-180.png">'
+)
+
+ANALYTICS = (
+    '<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>\n'
+    "<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',"
+    "{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});"
+    "gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>"
+)
+
+STORE_JS = """  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? '%s' : /Macintosh/.test(ua) ? '%s' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+""" % (APP_STORE, MAC_APP_STORE)
+
+HIDE_CTA_JS = """  // The nav's App Store button stays hidden while the hero's own is on screen.
+  var bar = document.querySelector('.nav-bar');
+  var heroCta = document.querySelector('.hero-cta');
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      bar.classList.toggle('hide-cta', entries[0].isIntersecting);
+    }, { rootMargin: '-72px 0px 0px 0px' }).observe(heroCta);
+  } else {
+    bar.classList.remove('hide-cta');
+  }
+"""
+
+LANG_JS = """  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+"""
+
+
+def lang_entry(key):
+    return next(l for l in LANGS if l[0] == key)
+
+
+def store_url(key):
+    return APP_STORE_CN if key == "zh" else APP_STORE
+
+
+def blog_path(key):
+    return "/zh/blog/" if key in ("zh", "tw") else "/blog/"
+
+
+def font_preload(key):
+    script = {"zh": "sc", "tw": "tc"}.get(key)
+    if not script:
+        return ""
+    return "".join(
+        f'<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-{script}-{w}.woff2" crossorigin>\n'
+        # Only the regular cut: a preload downloads even when the visitor has
+        # the face installed, and the semibold one serves headings alone.
+        for w in ("regular",)
+    )
+
+
+def header_html(key, *, home="", menu=None, hide_cta=False, blog_current=False):
+    """The sticky nav pill. `home` prefixes the section anchors: empty on the
+    home page itself, the home path elsewhere. `menu` is the language menu as
+    (language key, href) pairs and defaults to every home page."""
     c = COPY[key]
-    current = next(l for l in LANGS if l[0] == key)
-    _, path, lang_attr, _, _, shot = current
-    t = french_spacing if key == "fr" else (lambda s: s)
-    url = "https://miaoyan.app" + path
-    store = APP_STORE_CN if key == "zh" else APP_STORE
-    og = "zh" if shot == "zh" else "en"
-    hrefs = [("#features", c["nav"][0]), ("#devices", c["nav"][1]), ("#faq", c["nav"][2]), (GITHUB, "GitHub")]
+    current = lang_entry(key)
+    store = store_url(key)
+    hrefs = [(f"{home}#features", c["nav"][0]), (f"{home}#devices", c["nav"][1]), (f"{home}#faq", c["nav"][2])]
+    if key in BLOG_NAV_LANGS:
+        hrefs.append((blog_path(key), BLOG_LABEL[key]))
+    hrefs.append((GITHUB, "GitHub"))
     nav = "".join(
-        f'<a href="{esc(h)}"{" target=\"_blank\" rel=\"noopener\"" if h.startswith("http") else ""}>{esc(label)}</a>'
+        f'<a href="{esc(h)}"{" target=\"_blank\" rel=\"noopener\"" if h.startswith("http") else ""}'
+        f'{" aria-current=\"page\"" if blog_current and h == blog_path(key) else ""}>{esc(label)}</a>'
         for h, label in hrefs
     )
-    menu = "".join(
-        f'<a href="{p}" hreflang="{la}" lang="{la}" data-lang="{k}"{" class=\"active\" aria-current=\"page\"" if k == key else ""}>{esc(name)}</a>'
-        for k, p, la, name, _, _ in LANGS
+    if menu is None:
+        menu = [(l[0], l[1]) for l in LANGS]
+    menu_html = "".join(
+        f'<a href="{href}" hreflang="{lang_entry(k)[2]}" lang="{lang_entry(k)[2]}" data-lang="{k}"'
+        f'{" class=\"active\" aria-current=\"page\"" if k == key else ""}>{esc(lang_entry(k)[3])}</a>'
+        for k, href in menu
     )
+    return f"""<header class="nav">
+  <nav class="nav-bar{" hide-cta" if hide_cta else ""}" aria-label="Main">
+    <a class="brand" href="{current[1]}"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links">{nav}</div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="{esc(c['language'])}">{GLOBE}<span class="lang-name">{esc(current[3])}</span><span class="lang-code">{esc(current[4])}</span></button>
+        <div class="lang-menu" id="language-menu">{menu_html}</div>
+      </div>
+      <a class="nav-cta" href="{store}" target="_blank" rel="noopener" data-store>{APPLE}{esc(c['nav_cta'])}</a>
+    </div>
+  </nav>
+</header>"""
+
+
+def footer_html(key, *, faq_href="#faq"):
+    c = COPY[key]
+    store = store_url(key)
+    (col_get, col_help, col_connect), (faq_label, privacy_label) = c["foot"]
+    ext = ' target="_blank" rel="noopener"'
+    foot = (
+        f'<div class="foot-col"><p class="foot-col-title">{esc(col_get)}</p>'
+        f'<a href="{store}"{ext} data-store>App Store</a><a href="{GITHUB}"{ext}>GitHub</a></div>'
+        f'<div class="foot-col"><p class="foot-col-title">{esc(col_help)}</p>'
+        f'<a href="{faq_href}">{esc(faq_label)}</a><a href="{blog_path(key)}">{esc(BLOG_LABEL[key])}</a>'
+        f'<a href="/privacy.html">{esc(privacy_label)}</a></div>'
+        f'<div class="foot-col"><p class="foot-col-title">{esc(col_connect)}</p>'
+        f'<a href="https://x.com/HiTw93"{ext}>X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl"{ext}>Telegram</a></div>'
+    )
+    return f"""<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">{esc(c['about'])}</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer">{foot}</nav>
+    </div>
+  </div>
+</footer>"""
+
+
+def page_script(*parts):
+    return "<script>\n(function () {\n" + "".join(parts) + "})();\n</script>"
+
+
+def page(key):
+    c = COPY[key]
+    current = lang_entry(key)
+    _, path, lang_attr, _, _, shot = current
+    t = french_spacing if key == "fr" else (lambda s: s)
+    url = SITE + path
+    store = store_url(key)
+    og = "zh" if shot == "zh" else "en"
     alternates = "\n".join(
-        f'<link rel="alternate" hreflang="{la}" href="https://miaoyan.app{p}">' for _, p, la, _, _, _ in LANGS
+        f'<link rel="alternate" hreflang="{la}" href="{SITE}{p}">' for _, p, la, _, _, _ in LANGS
     )
     trust = "".join(f"<li>{esc(t(x))}</li>" for x in c["trust"])
     tabs = "".join(
@@ -538,19 +682,21 @@ def page(key):
         for i, s in enumerate(SHOTS)
     )
     captions = json.dumps({k: t(v) for k, v in c["captions"].items()}, ensure_ascii=False)
+    gallery_js = f"""  var captions = {captions};
+  var frame = document.querySelector('.gallery-frame');
+  var caption = document.querySelector('.gallery-caption');
+  document.querySelectorAll('.tabs button').forEach(function (tab) {{
+    tab.addEventListener('click', function () {{
+      var shot = tab.dataset.shot;
+      document.querySelectorAll('.tabs button').forEach(function (t) {{ t.setAttribute('aria-pressed', t === tab ? 'true' : 'false'); }});
+      frame.querySelectorAll('img').forEach(function (img) {{ img.hidden = img.dataset.shot !== shot; }});
+      caption.textContent = captions[shot];
+    }});
+  }});
+"""
     cards = "".join(f'<div class="card"><h3>{esc(a)}</h3><p>{esc(t(d))}</p></div>' for a, d in c["features"])
     compare = "".join(f'<div class="card"><h3>{esc(a)}</h3><p>{esc(t(d))}</p></div>' for a, d in c["compare"])
     faq = "".join(f"<details><summary>{esc(t(q))}</summary><p>{esc(t(a))}</p></details>" for q, a in c["faq"])
-    (col_get, col_help, col_connect), (faq_label, privacy_label) = c["foot"]
-    ext = ' target="_blank" rel="noopener"'
-    foot = (
-        f'<div class="foot-col"><p class="foot-col-title">{esc(col_get)}</p>'
-        f'<a href="{store}"{ext} data-store>App Store</a><a href="{GITHUB}"{ext}>GitHub</a></div>'
-        f'<div class="foot-col"><p class="foot-col-title">{esc(col_help)}</p>'
-        f'<a href="#faq">{esc(faq_label)}</a><a href="/privacy.html">{esc(privacy_label)}</a></div>'
-        f'<div class="foot-col"><p class="foot-col-title">{esc(col_connect)}</p>'
-        f'<a href="https://x.com/HiTw93"{ext}>X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl"{ext}>Telegram</a></div>'
-    )
     ld = json.dumps(
         {
             "@context": "https://schema.org",
@@ -580,17 +726,6 @@ def page(key):
         if key == "en"
         else ""
     )
-    script = {"zh": "sc", "tw": "tc"}.get(key)
-    font_preload = (
-        "".join(
-            f'<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-{script}-{w}.woff2" crossorigin>\n'
-            # Only the regular cut: a preload downloads even when the visitor has
-            # the face installed, and the semibold one serves headings alone.
-            for w in ("regular",)
-        )
-        if script
-        else ""
-    )
     return f"""<!DOCTYPE html>
 <html lang="{lang_attr}">
 <head>
@@ -603,38 +738,24 @@ def page(key):
 <meta name="description" content="{esc(c['description'])}">
 <link rel="canonical" href="{url}">
 {alternates}
-<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/">
-<link rel="alternate" type="text/plain" href="https://miaoyan.app/llms.txt" title="MiaoYan product facts">
+<link rel="alternate" hreflang="x-default" href="{SITE}/">
+<link rel="alternate" type="text/plain" href="{SITE}/llms.txt" title="MiaoYan product facts">
 <meta property="og:type" content="website">
 <meta property="og:url" content="{url}">
 <meta property="og:title" content="{esc(c['title'])}">
 <meta property="og:description" content="{esc(c['description'])}">
-<meta property="og:image" content="https://miaoyan.app/assets/shots/og-{og}.jpg">
+<meta property="og:image" content="{SITE}/assets/shots/og-{og}.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:creator" content="@HiTw93">
-<meta name="twitter:image" content="https://miaoyan.app/assets/shots/og-{og}.jpg">
-<link rel="icon" href="/favicon.ico" sizes="32x32">
-<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
-<link rel="apple-touch-icon" href="/assets/icon-180.png">
-{font_preload}<link rel="preload" as="image" href="/assets/shots/{shot}-edit-1400.webp" imagesrcset="/assets/shots/{shot}-edit-1400.webp 1400w, /assets/shots/{shot}-edit-2400.webp 2400w" imagesizes="(max-width: 1248px) 100vw, 1120px">
+<meta name="twitter:image" content="{SITE}/assets/shots/og-{og}.jpg">
+{ICONS}
+{font_preload(key)}<link rel="preload" as="image" href="/assets/shots/{shot}-edit-1400.webp" imagesrcset="/assets/shots/{shot}-edit-1400.webp 1400w, /assets/shots/{shot}-edit-2400.webp 2400w" imagesizes="(max-width: 1248px) 100vw, 1120px">
 <link rel="stylesheet" href="/site.css">
 <script type="application/ld+json">{ld}</script>
 </head>
 <body>
 <div class="wrap">
-<header class="nav">
-  <nav class="nav-bar hide-cta" aria-label="Main">
-    <a class="brand" href="{path}"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
-    <div class="nav-links">{nav}</div>
-    <div class="nav-end">
-      <div class="lang-switch">
-        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="{esc(c['language'])}">{GLOBE}<span class="lang-name">{esc(current[3])}</span><span class="lang-code">{esc(current[4])}</span></button>
-        <div class="lang-menu" id="language-menu">{menu}</div>
-      </div>
-      <a class="nav-cta" href="{store}" target="_blank" rel="noopener" data-store>{APPLE}{esc(c['nav_cta'])}</a>
-    </div>
-  </nav>
-</header>
+{header_html(key, hide_cta=True)}
 <main>
   <div class="hero">
     <h1>{esc(c['h1'])}<span class="cn-orbit"><span class="cn" lang="zh-Hant">語</span></span></h1>
@@ -682,65 +803,9 @@ def page(key):
   </section>
 </main>
 </div>
-<footer>
-  <div class="wrap">
-    <div class="foot">
-      <div class="foot-mark">
-        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
-        <p class="foot-about">{esc(c['about'])}</p>
-      </div>
-      <nav class="foot-cols" aria-label="Footer">{foot}</nav>
-    </div>
-  </div>
-</footer>
-<script>
-(function () {{
-  var captions = {captions};
-  var frame = document.querySelector('.gallery-frame');
-  var caption = document.querySelector('.gallery-caption');
-  document.querySelectorAll('.tabs button').forEach(function (tab) {{
-    tab.addEventListener('click', function () {{
-      var shot = tab.dataset.shot;
-      document.querySelectorAll('.tabs button').forEach(function (t) {{ t.setAttribute('aria-pressed', t === tab ? 'true' : 'false'); }});
-      frame.querySelectorAll('img').forEach(function (img) {{ img.hidden = img.dataset.shot !== shot; }});
-      caption.textContent = captions[shot];
-    }});
-  }});
-  // iPhone and iPad open the App Store app from the region-less link, and the
-  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
-  var ua = navigator.userAgent;
-  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
-  var storeLink = ios ? '{APP_STORE}' : /Macintosh/.test(ua) ? '{MAC_APP_STORE}' : '';
-  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {{
-    a.href = storeLink;
-    a.removeAttribute('target');
-  }});
-  // The nav's App Store button stays hidden while the hero's own is on screen.
-  var bar = document.querySelector('.nav-bar');
-  var heroCta = document.querySelector('.hero-cta');
-  if ('IntersectionObserver' in window) {{
-    new IntersectionObserver(function (entries) {{
-      bar.classList.toggle('hide-cta', entries[0].isIntersecting);
-    }}, {{ rootMargin: '-72px 0px 0px 0px' }}).observe(heroCta);
-  }} else {{
-    bar.classList.remove('hide-cta');
-  }}
-  var sw = document.querySelector('.lang-switch');
-  var trigger = sw.querySelector('.lang-trigger');
-  function setOpen(open) {{
-    sw.classList.toggle('is-open', open);
-    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
-  }}
-  trigger.addEventListener('click', function (e) {{ e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); }});
-  document.addEventListener('click', function (e) {{ if (!sw.contains(e.target)) setOpen(false); }});
-  document.addEventListener('keydown', function (e) {{ if (e.key === 'Escape') setOpen(false); }});
-  sw.querySelectorAll('[data-lang]').forEach(function (a) {{
-    a.addEventListener('click', function () {{ try {{ localStorage.setItem('miaoyanLang', a.dataset.lang); }} catch (e) {{}} }});
-  }});
-}})();
-</script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments)}}gtag('consent','default',{{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'}});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+{footer_html(key)}
+{page_script(gallery_js, STORE_JS, HIDE_CTA_JS, LANG_JS)}
+{ANALYTICS}
 </body>
 </html>
 """

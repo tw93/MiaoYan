@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Mac 上怎么选 Markdown 编辑器 · 妙言博客</title>
+<meta name="description" content="从纯文件、所见即所得、公式图表、同步和性能几方面比较 Typora、Obsidian、VS Code 与妙言。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/markdown-editor-for-mac/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-editor-for-mac/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-editor-for-mac/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-editor-for-mac/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/markdown-editor-for-mac/">
+<meta property="og:title" content="Mac 上怎么选 Markdown 编辑器 · 妙言博客">
+<meta property="og:description" content="从纯文件、所见即所得、公式图表、同步和性能几方面比较 Typora、Obsidian、VS Code 与妙言。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-editor-for-mac.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Markdown 写作">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-editor-for-mac.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Mac 上怎么选 Markdown 编辑器", "item": "https://miaoyan.app/zh/blog/markdown-editor-for-mac/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-editor-for-mac/#article", "headline": "Mac 上怎么选 Markdown 编辑器", "description": "从纯文件、所见即所得、公式图表、同步和性能几方面比较 Typora、Obsidian、VS Code 与妙言。", "url": "https://miaoyan.app/zh/blog/markdown-editor-for-mac/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-editor-for-mac/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-editor-for-mac.webp", "timeRequired": "PT5M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "各个编辑器里的 Markdown 一样吗", "acceptedAnswer": {"@type": "Answer", "text": "核心部分一样，标题、强调、列表、链接和代码遵循 CommonMark。表格、任务列表和删除线来自 GitHub Flavored Markdown，脚注、公式和图表则取决于编辑器，依赖它们之前先实测一下。"}}, {"@type": "Question", "name": "妙言能和 Obsidian 或 Typora 一起用吗", "acceptedAnswer": {"@type": "Answer", "text": "可以，它们都能读一个放着 .md 文件的文件夹。同一时间只让一个编辑器在写，避免同步冲突，图片路径先在副本上试一遍。"}}, {"@type": "Question", "name": "原生应用就一定更好吗", "acceptedAnswer": {"@type": "Answer", "text": "不一定。原生应用不用带一个浏览器引擎，但更该问的是它能不能渲染你写的语法、文件是不是一直在你手里。妙言没有插件系统，自带什么就是什么。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-editor-for-mac/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/markdown-editor-for-mac/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">Mac 上怎么选 Markdown 编辑器</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 5 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-editor-for-mac.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>好用的 Mac Markdown 编辑器，大致就是笔记以普通 <code>.md</code> 文件放在你自己指定的文件夹里，写的时候能顺手看到渲染结果，公式和图表这类常用的扩展也能正常显示，其余基本是口味问题。真正要选的是三种风格，Typora 这样的所见即所得，Obsidian 这样靠插件撑起来的笔记库，以及妙言或者带预览窗格的代码编辑器这样左边写源码右边看效果的做法。下面先讲怎么挑，再讲几个常见选项，最后说妙言适合什么、不适合什么。</p>
+<h2 id="挑编辑器看什么">挑编辑器看什么</h2>
+<h3 id="纯文件还是私有存储">纯文件还是私有存储</h3>
+<p>Markdown 本身就是纯文本，最稳的用法是每篇笔记就是普通文件夹里的一个 <code>.md</code> 文件，可以在访达里直接打开，用 Time Machine 备份，用 <code>grep</code> 搜索，哪天想换编辑器也只是换个应用打开同一个文件夹。Obsidian 官网写的是笔记以纯文本 Markdown 文件存在本地。Bear 官网没有说明笔记是数据库还是单个文件，所以如果打算长期用，先试一下它的导出流程再决定。这一条决定了以后迁移有多麻烦，建议放在第一位看。</p>
+<h3 id="所见即所得还是源码加预览">所见即所得还是源码加预览</h3>
+<p>所见即所得编辑器里格式边写边渲染，平时几乎看不到语法符号，Typora 官网的说法是真正的实时预览，没有单独的预览窗口和模式切换。源码加预览则是一边敲原始 Markdown，一边看渲染后的页面，前者写起来更顺眼，后者能让你清楚看到文件里到底是什么，贴表格、修坏掉的列表、查某个标题为什么没渲染出来的时候尤其有用。更详细的对比放在 <a href="/zh/blog/typora-alternative-mac/">Mac 上的 Typora 替代品</a> 里。</p>
+<h3 id="公式和图表">公式和图表</h3>
+<p>写技术笔记的话主要看三件事，<code>$...$</code> 公式能不能渲染，Mermaid 代码块能不能渲染，两者是否依赖网络。Typora 官网列出了 MathJax、Mermaid、flowchart.js 和时序图。VS Code 的 Markdown 文档说它内置预览用 KaTeX 渲染公式，也能渲染 <code>mermaid</code> 代码块。妙言的 KaTeX 和 Mermaid 文件都打包在应用里。细节见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a> 和 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>。</p>
+<h3 id="同步">同步</h3>
+<p>Mac 上多数 Markdown 编辑器自己不做同步，只读一个文件夹，文件交给网盘客户端去搬。iCloud 云盘、Dropbox、坚果云，只要能同步文件夹的都行，出了问题也是网盘的问题，能自己去查。也有应用卖自己的同步，比如 Obsidian Sync 提供端到端加密和一年的版本历史，Bear 的 iCloud 同步则被它列为 Pro 功能。要先想清楚自己要的是应用自带的服务，还是一个文件夹。</p>
+<h3 id="性能">性能</h3>
+<p>妙言是 Swift 原生应用，官网说明不带 Electron 运行时。各家编辑器的速度很难靠公开数字来比，最好自己试，把手上最大的一篇笔记在每个候选里打开，在中间敲字看是否流畅。</p>
+<h2 id="主要选项">主要选项</h2>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>风格</th>
+<th>笔记存放</th>
+<th>值得知道的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Typora</td>
+<td>所见即所得，单窗格</td>
+<td>文件</td>
+<td>公式用 MathJax，支持 Mermaid，导出格式多，覆盖 macOS、Windows 和 Linux</td>
+</tr>
+<tr>
+<td>Obsidian</td>
+<td>带插件的 Markdown 笔记库</td>
+<td>vault 里的本地 <code>.md</code></td>
+<td>插件很多，Sync 可选付费，官网写的是免费不限量（商用要看它的授权页）</td>
+</tr>
+<tr>
+<td>iA Writer</td>
+<td>纯文本加预览切换</td>
+<td>纯文本文件</td>
+<td>有专注模式，官网没有提到公式和图表</td>
+</tr>
+<tr>
+<td>Bear</td>
+<td>带样式的 Markdown 编辑器</td>
+<td>官网未说明</td>
+<td>Mac、iPhone、iPad，iCloud 同步在 Pro 里</td>
+</tr>
+<tr>
+<td>VS Code</td>
+<td>代码编辑器，并排预览</td>
+<td>文件</td>
+<td>内置预览，KaTeX 公式和 Mermaid，没有面向写作的界面</td>
+</tr>
+<tr>
+<td>妙言</td>
+<td>源码编辑加同步滚动预览</td>
+<td>你选定文件夹里的文件</td>
+<td>Swift 原生，KaTeX、Mermaid、PlantUML、Markmap，PPT 模式</td>
+</tr>
+</tbody>
+</table>
+<p>表里厂商的说法都来自各自官网，核对日期是 2026-10-18，价格会变，所以这里不写价格。</p>
+<p>想要最干净的所见即所得，并且会在 macOS、Windows 和 Linux 之间切换，选 Typora。想要一个互相链接的知识库，并且不介意自己维护插件，选 Obsidian。想要几乎没有界面的纯文字写作，不需要公式，选 iA Writer。日常就泡在 VS Code 里，笔记和代码放在一起，选 VS Code。</p>
+<h2 id="妙言适合什么">妙言适合什么</h2>
+<p>妙言是原生的 Mac 本地 Markdown 笔记应用，界面是文件夹、笔记列表和编辑器三栏，在偏好设置（<code>⌘,</code>）里指定存储位置，笔记就是这个文件夹里的 <code>.md</code>、<code>.markdown</code> 或 <code>.txt</code> 文件。分栏模式把编辑区和预览区并排放，按 <code>⌘\</code> 切换，也可以在偏好设置里把「编辑模式」设成「分栏模式」。README 解释过为什么不做所见即所得，原生 Swift 做这个很重也难保证稳定，分栏模式能让你一直对着 Markdown 原文写。</p>
+<p>内置的有 KaTeX 公式、Mermaid、PlantUML 和 Markmap 图表、带反链的 <code>[[双链]]</code>、每篇笔记的版本历史、自动排版（<code>⌘⇧L</code>）、HTML、PDF 和图片导出、<code>miao</code> 命令行工具，还有把带 <code>---</code> 分隔符的笔记变成幻灯片的演示模式（见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>）。没有插件系统，没有的功能没办法自己加。</p>
+<p>其他设备上，App Store 买一次就覆盖 Mac、iPhone 和 iPad，三端打开同一个笔记文件夹，比如放在 iCloud 云盘里的那个。Mac 版是 MIT 协议，源码在 GitHub 公开，可以从 <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store 页面</a> 获取，也可以直接看 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">github.com/tw93/MiaoYan</a> 上的代码。</p>
+<h2 id="妙言不适合什么">妙言不适合什么</h2>
+<ul>
+<li>你想要所见即所得，妙言给不了，Typora 可以。</li>
+<li>你想要插件生态、图谱定制或者看板，这是 Obsidian 的地盘。</li>
+<li>你需要 Windows 或 Linux，妙言只有 Mac、iPhone 和 iPad，Mac 上要求 macOS 12 及以上。</li>
+<li>你需要 DOCX 这类文字处理格式，Typora 官网列了 DOCX 和 EPUB，妙言的导出菜单是 HTML、PDF 和图片，另外还有演示文稿用的 PPT PDF。</li>
+<li>你需要完全离线的 PlantUML，妙言会把 PlantUML 文本发到公共的 plantuml.com 服务器去渲染，这点在图表那篇里有展开。</li>
+</ul>
+<h2 id="选之前怎么验证">选之前怎么验证</h2>
+<ol>
+<li>建三篇笔记，一篇有表格和任务列表，一篇有 <code>$$</code> 公式和 Mermaid 代码块，一篇有图片。</li>
+<li>在访达里打开这个文件夹，确认每篇都是能直接读的 <code>.md</code>，图片是旁边的普通文件。</li>
+<li>用第二个编辑器打开同一个文件夹，如果两边显示都对，就说明没有被锁住。</li>
+<li>把手上最大的一篇笔记粘进去，在中间敲几个字。</li>
+</ol>
+<p>四条都过了，不管选哪个编辑器，都可以放心当作笔记的默认入口。在不同工具之间真正能带走的是语法，所以手边放一份 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查</a> 是值得的。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="各个编辑器里的-markdown-一样吗">各个编辑器里的 Markdown 一样吗</h3>
+<p>核心部分一样，标题、强调、列表、链接和代码遵循 CommonMark。表格、任务列表和删除线来自 GitHub Flavored Markdown，脚注、公式和图表则取决于编辑器，依赖它们之前先实测一下。</p>
+<h3 id="妙言能和-obsidian-或-typora-一起用吗">妙言能和 Obsidian 或 Typora 一起用吗</h3>
+<p>可以，它们都能读一个放着 <code>.md</code> 文件的文件夹。同一时间只让一个编辑器在写，避免同步冲突，图片路径先在副本上试一遍。</p>
+<h3 id="原生应用就一定更好吗">原生应用就一定更好吗</h3>
+<p>不一定。原生应用不用带一个浏览器引擎，但更该问的是它能不能渲染你写的语法、文件是不是一直在你手里。妙言没有插件系统，自带什么就是什么。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-cheat-sheet/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 语法速查与 GFM 差异</span><span class="blog-related-meta">约 4 分钟</span></a></li><li><a href="/zh/blog/latex-math-in-markdown/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 里写 LaTeX 公式</span><span class="blog-related-meta">约 4 分钟</span></a></li><li><a href="/zh/blog/mermaid-diagrams-in-markdown/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 里画 Mermaid 图</span><span class="blog-related-meta">约 4 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

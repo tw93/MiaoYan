@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>在终端里使用 Markdown 笔记：miao 命令行 · 妙言博客</title>
+<meta name="description" content="安装 miao，掌握 open、new、search、list、cat，写脚本，并配合 AI 编码 Agent 和妙言 skill 使用。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/markdown-notes-from-terminal/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-notes-from-terminal/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-notes-from-terminal/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-notes-from-terminal/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/markdown-notes-from-terminal/">
+<meta property="og:title" content="在终端里使用 Markdown 笔记：miao 命令行 · 妙言博客">
+<meta property="og:description" content="安装 miao，掌握 open、new、search、list、cat，写脚本，并配合 AI 编码 Agent 和妙言 skill 使用。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-notes-from-terminal.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="笔记管理">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-notes-from-terminal.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "在终端里使用 Markdown 笔记：miao 命令行", "item": "https://miaoyan.app/zh/blog/markdown-notes-from-terminal/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-notes-from-terminal/#article", "headline": "在终端里使用 Markdown 笔记：miao 命令行", "description": "安装 miao，掌握 open、new、search、list、cat，写脚本，并配合 AI 编码 Agent 和妙言 skill 使用。", "url": "https://miaoyan.app/zh/blog/markdown-notes-from-terminal/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-notes-from-terminal/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-notes-from-terminal.webp", "timeRequired": "PT4M", "articleSection": "笔记管理", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "CLI 能编辑或追加已有笔记吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，没有 edit 或 append 命令，用任何工具直接改文件，妙言会重新加载。"}}, {"@type": "Question", "name": "CLI 支持 App Store 版吗？", "acceptedAnswer": {"@type": "Answer", "text": "支持，命令用法一样。它通过 storageUrl 偏好设置或默认文件夹找笔记库，找错或找不到时，把 MIAOYAN_PATH 设成你在应用里选的文件夹。"}}, {"@type": "Question", "name": "能在 Linux 上用吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，脚本调用了只有 macOS 才有的工具，应用本身也是 Mac 应用。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-notes-from-terminal/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/markdown-notes-from-terminal/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">在终端里使用 Markdown 笔记：miao 命令行</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-notes">笔记管理</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 4 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-notes-from-terminal.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>妙言自带一个叫 <code>miao</code> 的小命令行工具，可以在终端里列出、搜索、打印、打开和新建笔记，一共六个命令（<code>open</code>、<code>new</code>、<code>search</code>、<code>list</code>、<code>cat</code>、<code>update</code>），不能编辑已有笔记。这是故意这样设计的，笔记本来就是纯 Markdown 文件，脚本或者 AI 编码 Agent 可以直接改文件，妙言会从磁盘读到变化。</p>
+<h2 id="安装和检查">安装和检查</h2>
+<p>安装脚本来自妙言仓库，只有一个文件：</p>
+<pre><code class="language-bash">curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/main/scripts/install.sh | bash
+</code></pre>
+<p>和所有管道安装一样，你可以先把脚本下载下来读一遍。它做四件事，解析最新的 GitHub release 标签，把该标签下的 <code>miaoyan</code> 脚本下载到 <code>~/.local/bin</code> 并命名为 <code>miao</code>，加上可执行权限，再在旁边建一个叫 <code>miaoyan</code> 的符号链接。如果 <code>~/.local/bin</code> 不在 <code>PATH</code> 里，它会把一行 <code>export PATH</code> 追加到 <code>~/.zshrc</code>、<code>~/.bashrc</code> 或 <code>~/.bash_profile</code>（取第一个存在的），并提醒你重新加载 shell。</p>
+<p>用 <code>miao help</code> 检查安装，它会打印命令列表。这个 CLI 是 Bash 脚本，只支持 macOS，<code>new</code> 和 <code>open</code> 会调用 macOS 的 <code>open</code> 命令，标题编码用到 <code>python3</code>，两者都需要可用。</p>
+<h2 id="各个命令">各个命令</h2>
+<pre><code class="language-bash">miao list [folder]        # 顶层文件夹，或某个文件夹里的 Markdown 文件
+miao search &lt;query&gt;       # 在终端里搜索笔记
+miao cat &lt;title|path&gt;     # 打印笔记
+miao open &lt;title|path&gt;    # 在妙言里打开笔记或文件夹
+miao new &lt;title&gt; [text]   # 新建笔记
+miao update               # 更新 CLI
+</code></pre>
+<p><strong><code>miao list</code></strong> 不带参数时，打印笔记库里含有 Markdown 笔记的顶层文件夹。<code>miao list Projects</code> 打印该文件夹下直接包含的 Markdown 文件，路径相对于笔记库根目录。放在笔记库根目录的笔记默认不显示，CLI 会提示用 <code>miao list .</code> 把它们列出来。</p>
+<p><strong><code>miao search</code></strong> 以 <code>路径:行号:内容</code> 的形式打印匹配，路径相对于笔记库根目录。如果装了 ripgrep（<code>rg</code>）就用它做固定字符串匹配，查询里的特殊字符不会被当成正则，没有 ripgrep 则退回 <code>grep</code>，<code>Trash</code> 文件夹里的文件会被排除。没有匹配时会向标准错误输出「No matches found」并以非零状态退出。</p>
+<p><strong><code>miao cat</code></strong> 把整个文件连同 front matter 一起打印到标准输出，参数可以是路径、相对笔记库的路径或标题。标题按去掉 <code>.md</code> 的文件名匹配，完全一致的标题会解析到找到的第一个。</p>
+<p><strong><code>miao open</code></strong> 在妙言里打开解析到的文件或文件夹。参数不是路径时，退回到 <code>miaoyan://goto/&lt;标题&gt;</code> 这个地址，wikilink 走的也是这条路（见 <a href="/zh/blog/wikilinks-and-backlinks/">Wikilink 与反向链接</a>）。</p>
+<p><strong><code>miao new</code></strong> 用标题和可选的正文拼出一个 <code>miaoyan://new/</code> 地址交给应用，所以要装有妙言。正文是第二个参数，记得加引号。</p>
+<p><strong><code>miao update</code></strong> 从妙言仓库 main 分支下载当前的 <code>miao</code> 脚本并替换已安装的，想更新 CLI 时再跑，不要把它当作脚本里的例行步骤。</p>
+<h2 id="它怎么找到你的笔记">它怎么找到你的笔记</h2>
+<p>CLI 不需要配置，但知道它怎么找笔记库，出问题时就好排查。</p>
+<ol>
+<li>如果设置了环境变量 <code>MIAOYAN_PATH</code>，就优先使用。</li>
+<li>否则通过 <code>defaults read com.tw93.miaoyan</code> 读取妙言在你选择文件夹时保存的 <code>storageUrl</code> 偏好设置。</li>
+<li>如果这样依然拿不到文件夹，再依次尝试 <code>~/Documents/MiaoYan</code>、<code>~/Save/MiaoYan</code> 和 <code>~/MiaoYan</code>。</li>
+</ol>
+<p>都不存在时，它会打印「Error: Notes directory not found.」并提示设置 <code>MIAOYAN_PATH</code>。笔记库放在不常见的位置时，包括 CLI 不会去找的妙言自己的 iCloud 云盘文件夹，可以写进 shell 配置：</p>
+<pre><code class="language-bash">export MIAOYAN_PATH=&quot;$HOME/Notes&quot;
+</code></pre>
+<h2 id="示例">示例</h2>
+<p>新建一篇带日期的日记，并写上第一行：</p>
+<pre><code class="language-bash">miao new &quot;Journal $(date +%F)&quot; &quot;Morning plan: finish the draft.&quot;
+</code></pre>
+<p>列出提到某个短语的文件，每篇笔记只出现一次：</p>
+<pre><code class="language-bash">miao search &quot;release checklist&quot; | cut -d: -f1 | sort -u
+</code></pre>
+<p>打印某个文件夹里的所有笔记，比如交给别的工具：</p>
+<pre><code class="language-bash">miao list Projects | while read -r f; do
+  echo &quot;## $f&quot;
+  miao cat &quot;$f&quot;
+done
+</code></pre>
+<p>统计一篇笔记的字数：</p>
+<pre><code class="language-bash">miao cat &quot;Project plan&quot; | wc -w
+</code></pre>
+<p>在应用里打开第一个搜索结果：</p>
+<pre><code class="language-bash">miao open &quot;$(miao search 'quarterly review' | head -1 | cut -d: -f1)&quot;
+</code></pre>
+<p>搜索输出的路径相对于笔记库根目录，<code>open</code> 和 <code>cat</code> 的路径形式也是相对它解析的，所以这些命令能拼在一起。</p>
+<h2 id="配合-ai-编码-agent">配合 AI 编码 Agent</h2>
+<p>笔记库是个文件夹，能读文件的 Agent 本来就能读你的笔记。CLI 的帮助在两处，<code>miao search</code> 和 <code>miao list</code> 让 Agent 不用遍历整棵目录树就能用很少的开销看清笔记库的结构，<code>miao open</code> 则把结果展示给你看。</p>
+<p>妙言还发布了一个 Agent skill，教 Agent 认识妙言的语法，包括按精确标题写的 wikilink、放在 <code>i/</code> 文件夹里以 <code>/i/&lt;文件名&gt;</code> 引用的本地图片、数学公式和图表围栏、PPT 的分页符，以及 CLI 命令。安装方式：</p>
+<pre><code class="language-bash">npx skills add tw93/MiaoYan/skills/miaoyan -g
+</code></pre>
+<p>这个 skill 要求 Agent 只用真实存在的命令，不要自己编出 <code>miao edit</code> 或 <code>miao append</code>，CLI 找不到笔记库时设置 <code>MIAOYAN_PATH</code>，并且不能猜私人文件夹的位置，也不能写到你批准的笔记库之外。</p>
+<p>编辑是文件层面的操作。如果 Agent 改了妙言里正打开的笔记，应用会从磁盘重新加载，要是编辑器里有不同的未保存文字，妙言会先把你的文字写进隐藏的 <code>.miaoyan-conflicts</code> 文件夹并提示你，不会悄悄丢掉。即便如此，让 Agent 改写某篇笔记之前，先切换到别的笔记，因为妙言在你离开一篇笔记时会为它保存一个历史版本，见 <a href="/zh/blog/markdown-note-version-history/">Markdown 笔记的版本历史</a>。</p>
+<h2 id="常见故障">常见故障</h2>
+<ul>
+<li><strong>「Notes directory not found.」</strong> 设置环境变量 <code>MIAOYAN_PATH</code>，或者先打开一次妙言，在偏好设置里选好文件夹。</li>
+<li><strong>两篇笔记同名。</strong> <code>miao cat</code> 和 <code>miao open</code> 会把完全一致的标题解析到最先匹配的文件，遇到标题重复时改用 <code>Projects/Plan</code> 这样的相对路径即可。</li>
+<li><strong><code>miao search</code> 结果太多或太少。</strong> 有 ripgrep 时是字面字符串匹配，没有时 <code>grep</code> 会把查询当成模式。</li>
+<li><strong><code>miao new</code> 好像没反应。</strong> 它是交给应用处理的，检查是否装了妙言并允许它打开。</li>
+<li><strong>command not found。</strong> 说明 <code>~/.local/bin</code> 不在当前 shell 的 <code>PATH</code> 里，重新打开一个终端窗口即可。</li>
+</ul>
+<p>CLI 只是文件夹之上的一层便利。想知道这种设计为什么站得住，看 <a href="/zh/blog/local-first-markdown-notes/">本地优先的 Markdown 笔记</a>。妙言 Mac 版在 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a> 开源，<a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> 版本覆盖 Mac、iPhone 和 iPad。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="cli-能编辑或追加已有笔记吗">CLI 能编辑或追加已有笔记吗？</h3>
+<p>不能，没有 edit 或 append 命令，用任何工具直接改文件，妙言会重新加载。</p>
+<h3 id="cli-支持-app-store-版吗">CLI 支持 App Store 版吗？</h3>
+<p>支持，命令用法一样。它通过 <code>storageUrl</code> 偏好设置或默认文件夹找笔记库，找错或找不到时，把 <code>MIAOYAN_PATH</code> 设成你在应用里选的文件夹。</p>
+<h3 id="能在-linux-上用吗">能在 Linux 上用吗？</h3>
+<p>不能，脚本调用了只有 macOS 才有的工具，应用本身也是 Mac 应用。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/local-first-markdown-notes/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">本地优先的 Markdown 笔记怎么管</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/wikilinks-and-backlinks/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">Markdown 笔记里的 Wikilink 与反向链接</span><span class="blog-related-meta">约 4 分钟</span></a></li><li><a href="/zh/blog/obsidian-alternative-mac/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">Mac 上更轻的 Obsidian 替代品</span><span class="blog-related-meta">约 4 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

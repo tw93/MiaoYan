@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown 里画 Mermaid 图 · 妙言博客</title>
+<meta name="description" content="用围栏代码块画流程图、时序图和甘特图，对比 PlantUML 与 Markmap，并说明妙言哪些图离线可用。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/mermaid-diagrams-in-markdown/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/mermaid-diagrams-in-markdown/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/mermaid-diagrams-in-markdown/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/mermaid-diagrams-in-markdown/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/mermaid-diagrams-in-markdown/">
+<meta property="og:title" content="Markdown 里画 Mermaid 图 · 妙言博客">
+<meta property="og:description" content="用围栏代码块画流程图、时序图和甘特图，对比 PlantUML 与 Markmap，并说明妙言哪些图离线可用。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/mermaid-diagrams-in-markdown.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Markdown 写作">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/mermaid-diagrams-in-markdown.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 里画 Mermaid 图", "item": "https://miaoyan.app/zh/blog/mermaid-diagrams-in-markdown/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/mermaid-diagrams-in-markdown/#article", "headline": "Markdown 里画 Mermaid 图", "description": "用围栏代码块画流程图、时序图和甘特图，对比 PlantUML 与 Markmap，并说明妙言哪些图离线可用。", "url": "https://miaoyan.app/zh/blog/mermaid-diagrams-in-markdown/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/mermaid-diagrams-in-markdown/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/mermaid-diagrams-in-markdown.webp", "timeRequired": "PT4M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "没有网络能画图吗", "acceptedAnswer": {"@type": "Answer", "text": "在妙言里用 Mermaid 或 Markmap 可以，PlantUML 需要公共服务器。"}}, {"@type": "Question", "name": "先学哪个", "acceptedAnswer": {"@type": "Answer", "text": "先学 Mermaid，覆盖面最广、语法最短，包括 VS Code 内置预览在内的很多 Markdown 工具都能渲染。"}}, {"@type": "Question", "name": "别的编辑器能渲染同样的围栏吗", "acceptedAnswer": {"@type": "Answer", "text": "大多都可以，Typora 官网列了 Mermaid、flowchart.js 和时序图，VS Code 内置预览能渲染 mermaid 块，PlantUML 和 Markmap 的支持各家不一，搬笔记之前先确认。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/mermaid-diagrams-in-markdown/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/mermaid-diagrams-in-markdown/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">Markdown 里画 Mermaid 图</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 4 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/mermaid-diagrams-in-markdown.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>在 Markdown 里画图，做法是把图的文字描述放进语言名为 <code>mermaid</code> 的围栏代码块，支持 Mermaid 的预览会把它渲染成 SVG 图片，PlantUML 和 Markmap 的思路一样，各自用自己的语言名。妙言里 Mermaid 和 Markmap 跑的是随应用打包的 JavaScript，所以离线也能用，PlantUML 不行，它会把图的文字发到公共的 plantuml.com 服务器去渲染，图如果是私密的，这一点要先想清楚。</p>
+<h2 id="流程图">流程图</h2>
+<pre><code class="language-markdown">```mermaid
+flowchart LR
+    Draft --&gt; Review{Approved?}
+    Review --&gt;|yes| Publish
+    Review --&gt;|no| Draft
+```
+</code></pre>
+<p>第一行指定图的类型和方向，<code>TD</code> 或 <code>TB</code> 是从上到下，<code>LR</code> 是从左到右，<code>BT</code> 和 <code>RL</code> 是反方向，<code>graph</code> 可以当 <code>flowchart</code> 的同义词。单独一个词就是一个方框节点，<code>Review{Approved?}</code> 会画成菱形，圆角框、圆形、圆柱等其他形状各有括号写法，列在 Mermaid 的流程图文档里，<code>--&gt;|yes|</code> 是给连线加标签。</p>
+<p>用 <code>subgraph</code> 块把节点分组，以 <code>end</code> 结尾。</p>
+<pre><code class="language-markdown">```mermaid
+flowchart TD
+    subgraph Editor
+        A[Write] --&gt; B[Preview]
+    end
+    B --&gt; C[Export]
+```
+</code></pre>
+<p>Mermaid 文档提醒，节点文字如果是小写的 <code>end</code> 会让整张图出错，要写成 <code>End</code> 或 <code>END</code>。</p>
+<h2 id="时序图">时序图</h2>
+<pre><code class="language-markdown">```mermaid
+sequenceDiagram
+    participant A as Alice
+    participant B as Bob
+    A-&gt;&gt;B: Hello Bob
+    Note right of A: Alice starts the chat
+    B--&gt;&gt;A: Hi Alice
+```
+</code></pre>
+<p><code>-&gt;&gt;</code> 是带箭头的实线，<code>--&gt;&gt;</code> 是带箭头的虚线，通常用来表示回复。<code>participant X as Name</code> 给简短的 id 配一个好读的名字，备注用 <code>Note right of</code>、<code>left of</code> 或 <code>over</code> 放置，写法见 Mermaid 的时序图文档。</p>
+<h2 id="甘特图">甘特图</h2>
+<pre><code class="language-markdown">```mermaid
+gantt
+    dateFormat YYYY-MM-DD
+    section Build
+    Design  :a1, 2026-11-02, 3d
+    Develop :after a1, 5d
+```
+</code></pre>
+<p><code>dateFormat</code> 说明任务行里日期的写法，Mermaid 文档给出的默认值是 <code>YYYY-MM-DD</code>，每个 <code>section</code> 把任务分组，任务行是标题、冒号，再接 id、起始日期或 <code>after &lt;id&gt;</code>、时长这样的元数据，示例里的日期只是示意。</p>
+<h2 id="plantuml-和-markmap-作为补充">PlantUML 和 Markmap 作为补充</h2>
+<p>Mermaid 覆盖流程图、时序图、甘特图、类图等，语法也更简短。PlantUML 在 UML 上历史更久，语法更啰嗦，手上已经有 PlantUML 源文件，或者需要 Mermaid 画不好的某种 UML 结构时选它。</p>
+<pre><code class="language-markdown">```plantuml
+@startuml
+participant A
+participant B
+A -&gt; B: message
+@enduml
+```
+</code></pre>
+<p>Markmap 不太一样，它把普通的 Markdown 大纲变成可交互的思维导图，标题和列表的层级就是分支。</p>
+<pre><code class="language-markdown">```markmap
+# Release plan
+- Design
+  - Wireframes
+- Build
+  - Editor
+  - Preview
+```
+</code></pre>
+<p>想梳理一棵树的时候用 Markmap，关心方框之间谁调用谁、谁接着谁的时候用 Mermaid。</p>
+<p>妙言里不用背这些围栏，输入 <code>/mermaid</code>、<code>/plantuml</code> 或 <code>/markmap</code> 再按 <code>Tab</code> 就会插入模板，也可以在菜单栏的格式里选 Tab快捷输入。</p>
+<h2 id="它实际是怎么工作的">它实际是怎么工作的</h2>
+<p>带语言名的围栏块对 Markdown 解析器来说只是文本，会输出一个带 <code>language-mermaid</code> 类名的 HTML code 元素。页面加载完以后，预览里的脚本去找这些类名，Mermaid 就调用打包的库把文本变成 SVG 并替换掉代码块，Markmap 用打包的 Markmap 和 d3 文件渲染在同一个位置，PlantUML 则是把文本编码进一个网址，作为图片地址指向 <code>https://www.plantuml.com/plantuml/svg/</code>，图片是从那台服务器取回来的。</p>
+<p>最后这一步是要特别留意的。文本是放在网址里传出去的，图里的任何内容，比如内部服务的名字，在预览渲染的时候都会离开你的 Mac。PlantUML 官方文档说可以自建服务器，但我在妙言的源码里看到公共地址是直接写在预览脚本里的，没有找到可以更改它的设置。私密的架构图就用 Mermaid。</p>
+<p>预览还会让图的配色跟随浅色或深色外观，并且按图的文本缓存渲染好的 Mermaid SVG。</p>
+<h2 id="出问题怎么查">出问题怎么查</h2>
+<ul>
+<li><strong>图一直显示成代码。</strong> Mermaid 的话多半是语法错误，妙言在渲染失败时会把原始围栏源码留在原位，不会往页面里塞错误信息，所以看着像普通代码的块就是信号，可以把源码贴到 Mermaid 在线编辑器里，或者对着文档检查。</li>
+<li><strong>流程图被某个节点搞坏。</strong> 检查有没有小写的 <code>end</code>、括号不配对，或者标签里有特殊字符，必要时给标签加引号，比如 <code>A["Cost (USD)"]</code>。</li>
+<li><strong>PlantUML 先显示 Failed to load diagram 然后显示代码。</strong> 服务器连不上或者处于离线状态时，妙言会退回显示源码文本。</li>
+<li><strong>Markmap 是空的。</strong> 块里至少要有一个标题或一个列表，根节点通常是第一个 <code>#</code> 标题。</li>
+<li><strong>大图看不清。</strong> 拆开，两张小图比一张四十个节点的图讲得更清楚。</li>
+</ul>
+<p>快速测试一下，输入 <code>/mermaid</code> 再按 <code>Tab</code>，按 <code>⌘3</code> 切到预览或按 <code>⌘\</code> 打开分栏，确认出现三个相连的方框，再断开 Wi-Fi 重新加载，确认 Mermaid 还在渲染而 PlantUML 不再渲染。</p>
+<h2 id="限制">限制</h2>
+<p>Mermaid 的效果取决于应用打包的版本，而版本号没有记录在应用的清单里，所以较新的图类型可能缺失，要用新类型之前先拿一个小例子试。PlantUML 需要网络。HTML、PDF 和图片导出都来自预览，图表重要的话导出后要核对一次。做演示文稿时三种图表在演示模式里都会初始化，见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>。</p>
+<p>相关阅读有讲围栏语法的 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查</a> 和讲公式的 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。妙言在 <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> 上，源码在 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">github.com/tw93/MiaoYan</a>。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="没有网络能画图吗">没有网络能画图吗</h3>
+<p>在妙言里用 Mermaid 或 Markmap 可以，PlantUML 需要公共服务器。</p>
+<h3 id="先学哪个">先学哪个</h3>
+<p>先学 Mermaid，覆盖面最广、语法最短，包括 VS Code 内置预览在内的很多 Markdown 工具都能渲染。</p>
+<h3 id="别的编辑器能渲染同样的围栏吗">别的编辑器能渲染同样的围栏吗</h3>
+<p>大多都可以，Typora 官网列了 Mermaid、flowchart.js 和时序图，VS Code 内置预览能渲染 <code>mermaid</code> 块，PlantUML 和 Markmap 的支持各家不一，搬笔记之前先确认。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/latex-math-in-markdown/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 里写 LaTeX 公式</span><span class="blog-related-meta">约 4 分钟</span></a></li><li><a href="/zh/blog/markdown-to-slides/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 转幻灯片：用 --- 分页</span><span class="blog-related-meta">约 4 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

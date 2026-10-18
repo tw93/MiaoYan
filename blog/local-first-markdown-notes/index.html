@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Local-first Markdown notes: keep them as plain files · MiaoYan Blog</title>
+<meta name="description" content="Why plain Markdown files in your own folder beat a locked-in notes app, what it costs, and how MiaoYan reads the folder you choose.">
+<link rel="canonical" href="https://miaoyan.app/blog/local-first-markdown-notes/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/local-first-markdown-notes/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/local-first-markdown-notes/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/local-first-markdown-notes/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/local-first-markdown-notes/">
+<meta property="og:title" content="Local-first Markdown notes: keep them as plain files · MiaoYan Blog">
+<meta property="og:description" content="Why plain Markdown files in your own folder beat a locked-in notes app, what it costs, and how MiaoYan reads the folder you choose.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/local-first-markdown-notes.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Managing notes">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/local-first-markdown-notes.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Local-first Markdown notes: keep them as plain files", "item": "https://miaoyan.app/blog/local-first-markdown-notes/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/local-first-markdown-notes/#article", "headline": "Local-first Markdown notes: keep them as plain files", "description": "Why plain Markdown files in your own folder beat a locked-in notes app, what it costs, and how MiaoYan reads the folder you choose.", "url": "https://miaoyan.app/blog/local-first-markdown-notes/", "mainEntityOfPage": "https://miaoyan.app/blog/local-first-markdown-notes/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/local-first-markdown-notes.webp", "timeRequired": "PT7M", "articleSection": "Managing notes", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can I use a folder that already contains Markdown files?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Point Note Location at it. Existing .md, .markdown and .txt files appear as notes, and their folders appear in the sidebar."}}, {"@type": "Question", "name": "Does MiaoYan store my notes in a database?", "acceptedAnswer": {"@type": "Answer", "text": "The notes themselves are files in your folder. The app keeps separate version snapshots in its own support folder, not inside your notes folder."}}, {"@type": "Question", "name": "Which file extensions does MiaoYan open?", "acceptedAnswer": {"@type": "Answer", "text": "md, markdown and txt, per the app's list of allowed extensions."}}, {"@type": "Question", "name": "Is it safe to rename or move files in Finder?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the watcher picks up the change. Remember that the file name is the note title, so wikilinks that used the old name will no longer resolve."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/local-first-markdown-notes/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/local-first-markdown-notes/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Local-first Markdown notes: keep them as plain files</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-notes">Managing notes</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>7 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/local-first-markdown-notes.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Keeping notes as plain Markdown files in a folder you own means any editor can open them, any backup tool can copy them, and no company's server decides whether you can read your own writing. The price is that you give up things a hosted app does for you: server-side search, automatic merging of conflicting edits, and tidy handling of attachments. For most people who write a lot of text and want it to outlive any single app, that trade is worth making.</p>
+<h2 id="what-local-first-means-for-a-notes-folder">What "local-first" means for a notes folder</h2>
+<p>A local-first notes app treats the files on your disk as the real copy. There is no account and no database you cannot open. In MiaoYan the library is a folder you pick, and every note is a file in it with the extension <code>.md</code>, <code>.markdown</code> or <code>.txt</code>. The note title is the file name without the extension, so <code>Project plan.md</code> shows up as "Project plan".</p>
+<p>That is the whole format. Obsidian takes the same view: its documentation says notes are plain text Markdown files in a vault, which is "a folder on your local file system, including any subfolders". Because the format is shared, a folder written in one app opens in another, and <code>grep</code>, <code>git</code> and Spotlight work on it without any export step.</p>
+<h2 id="what-you-gain">What you gain</h2>
+<p><strong>Portability.</strong> Moving to a different editor is a matter of pointing it at the same folder. Nothing is trapped in a proprietary container, so the cost of changing your mind is close to zero.</p>
+<p><strong>Tools.</strong> Anything that reads text can read your notes. You can search with <code>rg</code>, script a weekly review, or hand the folder to a coding agent. MiaoYan also ships a <code>miao</code> command line tool for this, covered in <a href="/blog/markdown-notes-from-terminal/">Markdown notes from the terminal</a>.</p>
+<p><strong>Backups.</strong> A folder of small text files is the easiest thing to back up. Time Machine, a cloud drive or a git repository all treat it as ordinary files, and a restored backup is immediately usable.</p>
+<p><strong>No lock-in, no data collection.</strong> MiaoYan reads and writes your notes in the folder you choose. Its README states that notes are Markdown files in a folder you choose, with no data collection.</p>
+<h2 id="what-it-costs">What it costs</h2>
+<p>Consider these tradeoffs before committing.</p>
+<p><strong>No server-side search or indexing.</strong> Search happens on your devices. MiaoYan searches note titles and note bodies inside the library when you type in the search field. There is no web search and no query across machines.</p>
+<p><strong>Sync is delegated.</strong> The app does not sync for you. A cloud drive does, and cloud drives know nothing about Markdown, so two edits to the same file on two devices become a conflict copy rather than a merged note. The details are in <a href="/blog/sync-markdown-notes-across-devices/">Sync Markdown notes across devices</a>.</p>
+<p><strong>Attachments are just files.</strong> Images and PDFs sit next to your notes, and a link to them is only a path. Move a note without its attachment folder and the image breaks.</p>
+<p><strong>History is your problem.</strong> A hosted app often keeps a full revision log. With plain files you assemble that from the app's own snapshots, Time Machine and optionally git, as described in <a href="/blog/markdown-note-version-history/">Markdown note version history</a>.</p>
+<h2 id="a-folder-structure-that-holds-up">A folder structure that holds up</h2>
+<p>Notes libraries rarely fail because of the app. They fail because the folder turns into a junk drawer. A structure that tends to survive:</p>
+<pre><code class="language-text">MiaoYan/
+  Inbox/
+  Projects/
+    Website redesign/
+      i/
+  Reference/
+  Journal/
+  Archive/
+</code></pre>
+<p>A few rules keep it working:</p>
+<ul>
+<li><strong>Few top-level folders, named by purpose.</strong> Group by what you do with a note (act on it, look it up, archive it), not by topic, because topics overlap and purposes rarely do.</li>
+<li><strong>Titles that you can type from memory.</strong> Because the file name is the title, and wikilinks point at titles, a clear name is also your link target. See <a href="/blog/wikilinks-and-backlinks/">Wikilinks and backlinks in Markdown notes</a>.</li>
+<li><strong>Avoid duplicate titles across folders.</strong> Two files called <code>Meeting notes.md</code> in different folders are legal, but a title-based link cannot tell them apart.</li>
+<li><strong>Keep attachments beside the notes.</strong> MiaoYan stores inline images in an <code>i/</code> subfolder and other files in <code>files/</code>, inside the note's folder.</li>
+<li><strong>Keep it shallow.</strong> Subfolders work, but two levels are usually enough when search is one keystroke away.</li>
+</ul>
+<h2 id="how-miaoyan-reads-a-folder">How MiaoYan reads a folder</h2>
+<p>This mechanism explains most surprises.</p>
+<p>You choose the folder in Preferences (⌘,) under "Note Location" with the "Change" button. MiaoYan checks that the folder is a writable directory before switching and keeps the old location if the check fails. The new folder takes effect after a restart. MiaoYan prompts you to restart, and keeps the old location if you cancel.</p>
+<p>Once the folder is open, MiaoYan lists each subfolder as a folder in the sidebar and each <code>.md</code>, <code>.markdown</code> or <code>.txt</code> file as a note. It skips hidden folders (names starting with a dot), the attachment folders <code>i</code> and <code>files</code>, folders named <code>assets</code>, and folders that contain only attachments. Trashed notes go to the system Trash, or to a <code>Trash</code> folder inside the library on a volume that has none.</p>
+<p>A file watcher based on macOS file system events keeps the app in step with the disk. When another program changes a note that is open in the editor, MiaoYan reloads the file from disk. If your unsaved editor text differs from what is now on disk, it first writes your version to a hidden <code>.miaoyan-conflicts</code> folder in the library root and shows "External change detected. Local copy backed up~". Those backups are kept for 30 days, with at least the 100 most recent preserved.</p>
+<p>Local images use the form <code>![name](/i/name.png)</code>, which MiaoYan resolves against the note's own folder. That convention is specific to MiaoYan, so if you open the same folder in a tool that expects relative paths, check that images still show.</p>
+<h2 id="what-goes-wrong-and-how-to-check">What goes wrong, and how to check</h2>
+<ul>
+<li><strong>A note is missing from the list.</strong> Confirm the extension is <code>.md</code>, <code>.markdown</code> or <code>.txt</code> and the folder is not hidden or named <code>i</code>, <code>files</code> or <code>assets</code>.</li>
+<li><strong>The folder is rejected.</strong> Cloud-drive folders sometimes are not exposed as real folders. MiaoYan's message says to open the provider app and make sure the folder is visible in Finder, or to enable offline access.</li>
+<li><strong>Two copies of one note.</strong> This is nearly always a sync conflict. Look for a second file with a suffix added by the sync service.</li>
+<li><strong>You edit in two apps at once.</strong> MiaoYan will reload from disk and back up your unsaved text, but the safest habit is one editor at a time.</li>
+</ul>
+<p>A quick sanity check after any move: open the folder in Finder, confirm the files are where you expect, then search for a phrase you know is in an old note.</p>
+<h2 id="when-this-is-not-the-right-choice">When this is not the right choice</h2>
+<p>If you need real-time collaboration with other people, shared databases, or web clipping into a hosted workspace, a plain folder is the wrong tool. If you want to publish a site from the same files, a plain folder is a good start, but you will need a static site generator.</p>
+<p>MiaoYan is a native Mac app for exactly this folder-of-Markdown workflow, with split editing and preview, wikilinks and version history built in. The source is on <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a>, and the <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> version covers Mac, iPhone and iPad with one purchase. If you are coming from Obsidian, read <a href="/blog/obsidian-alternative-mac/">an Obsidian alternative for Mac</a> first.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="can-i-use-a-folder-that-already-contains-markdown-files">Can I use a folder that already contains Markdown files?</h3>
+<p>Yes. Point Note Location at it. Existing <code>.md</code>, <code>.markdown</code> and <code>.txt</code> files appear as notes, and their folders appear in the sidebar.</p>
+<h3 id="does-miaoyan-store-my-notes-in-a-database">Does MiaoYan store my notes in a database?</h3>
+<p>The notes themselves are files in your folder. The app keeps separate version snapshots in its own support folder, not inside your notes folder.</p>
+<h3 id="which-file-extensions-does-miaoyan-open">Which file extensions does MiaoYan open?</h3>
+<p><code>md</code>, <code>markdown</code> and <code>txt</code>, per the app's list of allowed extensions.</p>
+<h3 id="is-it-safe-to-rename-or-move-files-in-finder">Is it safe to rename or move files in Finder?</h3>
+<p>Yes, the watcher picks up the change. Remember that the file name is the note title, so wikilinks that used the old name will no longer resolve.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/sync-markdown-notes-across-devices/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Sync Markdown notes across devices without a sync service</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/wikilinks-and-backlinks/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Wikilinks and backlinks in Markdown notes</span><span class="blog-related-meta">6 min read</span></a></li><li><a href="/blog/markdown-notes-from-terminal/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Markdown notes from the terminal with the miao CLI</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

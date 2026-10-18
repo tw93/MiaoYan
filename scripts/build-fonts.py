@@ -32,9 +32,12 @@ FONT_DIR = ROOT / "fonts"
 FONT_CACHE = ROOT / ".fontcache"
 
 # (script, weight, source font, pages). Weights 500 to 700 all map to SemiBold.
+# Pages are glob patterns: the Chinese blog (scripts/build-blog.py) sets the SC
+# face too, its index and every article.
+SC_PAGES = ["zh/index.html", "zh/blog/**/index.html"]
 SUBSETS = [
-    ("sc", "regular", "SourceHanSerifSC-Regular.otf", ["zh/index.html"]),
-    ("sc", "semibold", "SourceHanSerifSC-SemiBold.otf", ["zh/index.html"]),
+    ("sc", "regular", "SourceHanSerifSC-Regular.otf", SC_PAGES),
+    ("sc", "semibold", "SourceHanSerifSC-SemiBold.otf", SC_PAGES),
     ("tc", "regular", "SourceHanSerifTC-Regular.otf", ["tw/index.html"]),
     ("tc", "semibold", "SourceHanSerifTC-SemiBold.otf", ["tw/index.html"]),
 ]
@@ -57,8 +60,8 @@ def in_range(cp):
 
 def charset(pages):
     chars = set()
-    for page in pages:
-        text = (ROOT / page).read_text(encoding="utf-8")
+    for page in sorted({path for pattern in pages for path in ROOT.glob(pattern)}):
+        text = page.read_text(encoding="utf-8")
         painted = " ".join(PAINTED_ATTRS.findall(text))
         # Script bodies are kept: the gallery captions are written by script.
         text = re.sub(r"<style.*?</style>", " ", text, flags=re.S)

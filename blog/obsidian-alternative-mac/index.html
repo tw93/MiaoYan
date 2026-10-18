@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>A lighter Obsidian alternative for Mac · MiaoYan Blog</title>
+<meta name="description" content="What MiaoYan has and leaves out compared with Obsidian, how to open a vault, and which syntax carries over.">
+<link rel="canonical" href="https://miaoyan.app/blog/obsidian-alternative-mac/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/obsidian-alternative-mac/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/obsidian-alternative-mac/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/obsidian-alternative-mac/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/obsidian-alternative-mac/">
+<meta property="og:title" content="A lighter Obsidian alternative for Mac · MiaoYan Blog">
+<meta property="og:description" content="What MiaoYan has and leaves out compared with Obsidian, how to open a vault, and which syntax carries over.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/obsidian-alternative-mac.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Managing notes">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/obsidian-alternative-mac.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "A lighter Obsidian alternative for Mac", "item": "https://miaoyan.app/blog/obsidian-alternative-mac/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/obsidian-alternative-mac/#article", "headline": "A lighter Obsidian alternative for Mac", "description": "What MiaoYan has and leaves out compared with Obsidian, how to open a vault, and which syntax carries over.", "url": "https://miaoyan.app/blog/obsidian-alternative-mac/", "mainEntityOfPage": "https://miaoyan.app/blog/obsidian-alternative-mac/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/obsidian-alternative-mac.webp", "timeRequired": "PT6M", "articleSection": "Managing notes", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can I open my Obsidian vault in MiaoYan without converting it?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, for the notes themselves. The folder opens as is, and the .obsidian folder is ignored. Aliases, heading links and embeds will not resolve."}}, {"@type": "Question", "name": "Will MiaoYan change my vault files?", "acceptedAnswer": {"@type": "Answer", "text": "It saves an opened note when you switch to another note, even without edits. This updates its modification date and stores a non-UTF-8 note as UTF-8, so test on a copy first. It does not touch .obsidian, and if a conflict backup is ever needed it writes a hidden .miaoyan-conflicts folder in the library root."}}, {"@type": "Question", "name": "Does MiaoYan have tags or a graph?", "acceptedAnswer": {"@type": "Answer", "text": "Neither feature is present in the app. Notes are organized by folders and found with search, and links are shown as backlinks."}}, {"@type": "Question", "name": "Can I switch back?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The notes are still plain Markdown in the same folder."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/obsidian-alternative-mac/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/obsidian-alternative-mac/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">A lighter Obsidian alternative for Mac</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-notes">Managing notes</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>6 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/obsidian-alternative-mac.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>If Obsidian feels like more tool than your notes need, MiaoYan is a lighter Mac app that opens the same format, a folder of Markdown files. It provides a three-column library, split editor and preview, wikilinks with backlinks, version history and PPT mode, and it deliberately leaves out plugins, a graph view and the extra link syntax Obsidian adds. Plain notes and ordinary <code>[[Title]]</code> links move across without conversion, while aliases, heading links and embeds need a small cleanup.</p>
+<h2 id="why-people-look-for-something-lighter">Why people look for something lighter</h2>
+<p>Obsidian is a deep tool. Its documentation describes a vault with a hidden <code>.obsidian</code> folder that holds hotkeys, themes and community plugins, and a core Graph view plugin that visualizes the relationships between notes. That power is the reason many people use it. It is also why others stop. Every setting, plugin and theme is one more thing to maintain, and a vault can end up depending on plugins that only one app understands.</p>
+<p>MiaoYan takes the opposite position. It has no plugin system, and its site comparison notes that it favors a smaller set of built-in writing features and local Markdown files, without an Electron runtime. If you mostly write, link and find notes, fewer parts can mean less friction.</p>
+<h2 id="what-miaoyan-has">What MiaoYan has</h2>
+<ul>
+<li><strong>A folder of files.</strong> Notes are <code>.md</code>, <code>.markdown</code> or <code>.txt</code> files in a folder you choose. See <a href="/blog/local-first-markdown-notes/">Local-first Markdown notes</a>.</li>
+<li><strong>Split editor and preview.</strong> Press Command Backslash to toggle it. MiaoYan keeps Markdown source and preview separate and does not use a WYSIWYG editor.</li>
+<li><strong>Wikilinks and backlinks.</strong> <code>[[Title]]</code> links with a backlinks list in the document properties panel. See <a href="/blog/wikilinks-and-backlinks/">Wikilinks and backlinks</a>.</li>
+<li><strong>Built-in rendering.</strong> LaTeX math, Mermaid, PlantUML and Markmap diagrams, GitHub-style alerts such as <code>&gt; [!NOTE]</code>, task lists, footnotes and tables.</li>
+<li><strong>Version history.</strong> Snapshots per note, covered in <a href="/blog/markdown-note-version-history/">Markdown note version history</a>.</li>
+<li><strong>PPT mode.</strong> Turn a note into slides with <code>---</code> separators.</li>
+<li><strong>A command line tool.</strong> <code>miao</code> supports list, search, cat, open and new, covered in <a href="/blog/markdown-notes-from-terminal/">Markdown notes from the terminal</a>.</li>
+<li><strong>iPhone and iPad.</strong> The App Store purchase covers Mac, iPhone and iPad, all opening the same iCloud Drive folder.</li>
+</ul>
+<h2 id="what-miaoyan-does-not-have">What MiaoYan does not have</h2>
+<p>Consider these limitations before you migrate.</p>
+<ul>
+<li><strong>No plugins.</strong> There is no plugin or theme marketplace. Features either ship in the app or do not exist.</li>
+<li><strong>No graph view.</strong> The Mac app does not include graph visualization. Connections appear as backlinks in a list.</li>
+<li><strong>Title-only wikilinks.</strong> <code>[[Note|alias]]</code>, <code>[[Note#Heading]]</code> and block references are not implemented.</li>
+<li><strong>No embeds.</strong> Obsidian's <code>![[Note]]</code> and <code>![[image.png]]</code> embeds are not supported in MiaoYan.</li>
+<li><strong>No Obsidian-specific features that live in plugins or in <code>.obsidian</code>.</strong> Anything stored in hotkey, theme or plugin settings stays behind.</li>
+</ul>
+<p>If you rely on one of these, MiaoYan is not a drop-in replacement, and staying with Obsidian is the right call. The two can also coexist on one folder, which is covered below.</p>
+<h2 id="migrating-a-vault">Migrating a vault</h2>
+<p>An Obsidian vault is a folder, so migration mostly means pointing MiaoYan at it. Obsidian's documentation notes that notes are plain text Markdown files in the vault and settings live in <code>.obsidian</code>.</p>
+<ol>
+<li><strong>Copy first.</strong> Duplicate the vault folder in Finder. Work on the copy until you are satisfied. Notes are files, so this is the whole backup.</li>
+<li><strong>Point MiaoYan at it.</strong> Open Preferences with Command comma, click "Change" next to "Note Location", choose the copy, then click "Confirm" when MiaoYan asks to restart.</li>
+<li><strong>Check the library.</strong> Folders become sidebar folders and <code>.md</code> files become notes. The hidden <code>.obsidian</code> folder is ignored, because MiaoYan skips hidden folders.</li>
+</ol>
+<h3 id="what-carries-over">What carries over</h3>
+<ul>
+<li>Note text, headings, lists, tables, code, task lists and footnotes.</li>
+<li>Plain wikilinks such as <code>[[Project plan]]</code>, because MiaoYan links by file name, which is also how Obsidian resolves simple links.</li>
+<li>Leading YAML front matter. MiaoYan hides a leading block between two <code>---</code> lines in the rendered output and keeps it in the file. Obsidian stores properties in YAML at the top of the file, so these stay intact.</li>
+<li>Standard Markdown links and images.</li>
+<li>Callouts in the <code>&gt; [!note]</code> form. MiaoYan recognizes five markers (<code>NOTE</code>, <code>TIP</code>, <code>IMPORTANT</code>, <code>WARNING</code>, <code>CAUTION</code>) in upper or lower case. Other Obsidian types such as <code>[!faq]</code> are not recognized and render as a plain quote.</li>
+</ul>
+<h3 id="what-does-not-carry-over">What does not carry over</h3>
+<ul>
+<li><strong>Aliases, heading and block links.</strong> In MiaoYan the whole text between the brackets becomes the title to look up, so the link points at a note that does not exist. Find them with:</li>
+</ul>
+<pre><code class="language-bash">rg -n --glob '*.md' '\[\[[^]]*[|#^]' .
+</code></pre>
+<p>Replace each with a plain title link or a normal Markdown link.
+- <strong>Embeds.</strong> Find <code>![[...]]</code> with <code>rg -n --glob '*.md' '!\[\[' .</code> and replace them with a link or a standard image.
+- <strong>Images.</strong> MiaoYan expects images as <code>![name](/i/name.png)</code> with the files in an <code>i/</code> folder inside the note's folder. Obsidian-style image references need to be converted and the files moved.
+- <strong>Plugin content.</strong> Blocks written for community plugins render as ordinary code or text.
+- <strong>Notes with the same title in different folders.</strong> In MiaoYan a link to a duplicated title starts a search instead of opening one note, so rename duplicates.
+- <strong>Settings.</strong> Hotkeys, themes and plugin choices do not move.</p>
+<h3 id="keeping-both">Keeping both</h3>
+<p>Because both apps use the same files, you can keep Obsidian for the notes that need plugins and open the same folder in MiaoYan for fast reading and writing. Avoid editing the same note in both at once. If MiaoYan has the note open when another app changes it, MiaoYan reloads from disk and backs up your unsaved text to <code>.miaoyan-conflicts</code>, but it is cleaner not to rely on that.</p>
+<h2 id="a-fair-comparison">A fair comparison</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Obsidian</th>
+<th>MiaoYan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Storage</td>
+<td>Folder of Markdown files (vault)</td>
+<td>Folder of Markdown files</td>
+</tr>
+<tr>
+<td>Plugins</td>
+<td>Community plugins</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Graph view</td>
+<td>Core plugin</td>
+<td>Not in the Mac app</td>
+</tr>
+<tr>
+<td>Link syntax</td>
+<td>Wikilinks with aliases, headings, blocks</td>
+<td>Wikilinks by title</td>
+</tr>
+<tr>
+<td>Embeds</td>
+<td><code>![[note]]</code>, <code>![[image.png]]</code></td>
+<td>Not available</td>
+</tr>
+<tr>
+<td>Editing</td>
+<td>Not compared here</td>
+<td>Source editor with split preview</td>
+</tr>
+</tbody>
+</table>
+<p>Obsidian's cells come from its help pages checked on 2026-10-18, MiaoYan's from its README and source. Prices and licensing change, so check each vendor's page rather than a table.</p>
+<h2 id="when-to-stay-with-obsidian">When to stay with Obsidian</h2>
+<p>Stay if you use community plugins you cannot replace, if the graph view is central to how you organize notes, if you depend on embeds and block references, or if you work across platforms MiaoYan does not run on. Move if you want a native Mac app that stays out of the way and a library that is only ever files.</p>
+<p>The Mac app is open source on <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a>, and the <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> version covers Mac, iPhone and iPad with one purchase.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="can-i-open-my-obsidian-vault-in-miaoyan-without-converting-it">Can I open my Obsidian vault in MiaoYan without converting it?</h3>
+<p>Yes, for the notes themselves. The folder opens as is, and the <code>.obsidian</code> folder is ignored. Aliases, heading links and embeds will not resolve.</p>
+<h3 id="will-miaoyan-change-my-vault-files">Will MiaoYan change my vault files?</h3>
+<p>It saves an opened note when you switch to another note, even without edits. This updates its modification date and stores a non-UTF-8 note as UTF-8, so test on a copy first. It does not touch <code>.obsidian</code>, and if a conflict backup is ever needed it writes a hidden <code>.miaoyan-conflicts</code> folder in the library root.</p>
+<h3 id="does-miaoyan-have-tags-or-a-graph">Does MiaoYan have tags or a graph?</h3>
+<p>Neither feature is present in the app. Notes are organized by folders and found with search, and links are shown as backlinks.</p>
+<h3 id="can-i-switch-back">Can I switch back?</h3>
+<p>Yes. The notes are still plain Markdown in the same folder.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/local-first-markdown-notes/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Local-first Markdown notes: keep them as plain files</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-notes-from-terminal/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Markdown notes from the terminal with the miao CLI</span><span class="blog-related-meta">6 min read</span></a></li><li><a href="/blog/markdown-note-version-history/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Markdown note version history: MiaoYan, Time Machine, git</span><span class="blog-related-meta">7 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown 语法速查与 GFM 差异 · 妙言博客</title>
+<meta name="description" content="常用 Markdown 语法加示例，区分 CommonMark、GFM 与应用扩展，并说明妙言实际能渲染什么。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/markdown-cheat-sheet/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-cheat-sheet/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-cheat-sheet/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-cheat-sheet/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/markdown-cheat-sheet/">
+<meta property="og:title" content="Markdown 语法速查与 GFM 差异 · 妙言博客">
+<meta property="og:description" content="常用 Markdown 语法加示例，区分 CommonMark、GFM 与应用扩展，并说明妙言实际能渲染什么。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-cheat-sheet.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Markdown 写作">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-cheat-sheet.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 语法速查与 GFM 差异", "item": "https://miaoyan.app/zh/blog/markdown-cheat-sheet/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-cheat-sheet/#article", "headline": "Markdown 语法速查与 GFM 差异", "description": "常用 Markdown 语法加示例，区分 CommonMark、GFM 与应用扩展，并说明妙言实际能渲染什么。", "url": "https://miaoyan.app/zh/blog/markdown-cheat-sheet/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-cheat-sheet/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-cheat-sheet.webp", "timeRequired": "PT4M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "CommonMark 和 GFM 有什么区别", "acceptedAnswer": {"@type": "Answer", "text": "CommonMark 是对核心语法的精确规范，GFM 是它的超集，加了表格、任务列表、删除线、自动链接，以及对原生 HTML 的一条限制规则。"}}, {"@type": "Question", "name": "行尾一定要加两个空格吗", "acceptedAnswer": {"@type": "Answer", "text": "只有应用严格遵循 CommonMark、而你又想换行不分段的时候才需要。妙言默认的换行方式是每次换行都另起一行。"}}, {"@type": "Question", "name": "能把这份速查贴进妙言试一下吗", "acceptedAnswer": {"@type": "Answer", "text": "可以，应用自带的 Examples 文件夹里有一份妙言 Markdown 语法指南，覆盖了上面每一种写法，完整应用可以在 App Store 和 GitHub 找到。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-cheat-sheet/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/markdown-cheat-sheet/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">Markdown 语法速查与 GFM 差异</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 4 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-cheat-sheet.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>日常写 Markdown 用到的语法一屏就放得下，用 <code>#</code> 写标题，用 <code>*</code> 和 <code>**</code> 写强调，再加上列表、链接、图片、代码块、引用和表格。容易让人踩坑的是 Markdown 并不是单一标准，CommonMark 定义了核心部分，GitHub Flavored Markdown（GFM）在上面加了表格、任务列表、删除线和自动链接，脚注、公式、图表这些就要看各个应用自己怎么实现。这份速查按核心语法和扩展语法分开写，每条带示例，并标出妙言实际能渲染什么。</p>
+<h2 id="核心语法commonmark">核心语法（CommonMark）</h2>
+<h3 id="标题">标题</h3>
+<pre><code class="language-markdown"># 一级标题
+## 二级标题
+### 三级标题
+</code></pre>
+<p><code>#</code> 后面要留一个空格，一共六级，从 <code>#</code> 到 <code>######</code>。一篇笔记里最好只放一个 <code>#</code> 标题，其余层级用来分章节，大纲和目录都是靠它们生成的。妙言里有至少两个标题的笔记会自动生成目录，用 <code>⌘5</code> 打开。</p>
+<h3 id="强调和行内代码">强调和行内代码</h3>
+<pre><code class="language-markdown">*斜体* 或 _斜体_
+**粗体** 或 __粗体__
+***粗斜体***
+`行内代码`
+</code></pre>
+<p>命令、文件名、设置项这类读者要照着敲或照着找的东西，都放进反引号里。</p>
+<h3 id="列表">列表</h3>
+<pre><code class="language-markdown">- 无序项
+- 另一项
+  - 嵌套项，缩进两个空格
+
+1. 第一
+2. 第二
+3. 第三
+</code></pre>
+<p>嵌套项要和上一级文字的起始位置对齐，在妙言列表里按 <code>return</code> 会接着写下一项，连按两次 <code>return</code> 就退出列表。</p>
+<h3 id="链接和图片">链接和图片</h3>
+<pre><code class="language-markdown">[链接文字](https://example.com)
+![图片说明](/i/photo.png)
+</code></pre>
+<p>图片语法就是链接语法前面多一个 <code>!</code>。妙言把本地附件放在笔记旁边的 <code>i/</code> 文件夹里，写成 <code>/i/&lt;文件名&gt;</code>，所以整个目录搬走以后笔记照样能用。</p>
+<h3 id="代码块">代码块</h3>
+<pre><code class="language-markdown">```python
+print(&quot;hello&quot;)
+```
+</code></pre>
+<p>起始围栏后面的单词是语言名，决定语法高亮，图表工具也是靠同样的围栏拿到输入，语言名写成 <code>mermaid</code>、<code>plantuml</code> 或 <code>markmap</code> 即可。</p>
+<h3 id="引用和分隔线">引用和分隔线</h3>
+<pre><code class="language-markdown">&gt; 一行引用。
+&gt; 同一段引用里的另一行。
+
+---
+</code></pre>
+<p>单独一行三个短横线就是分隔线，妙言的演示模式里同样的 <code>---</code> 会开始新的一页，所以做幻灯片时一页里面不要再放分隔线，详见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>。</p>
+<h3 id="段落和换行">段落和换行</h3>
+<p>CommonMark 里段落中间的单个换行是软换行，渲染出来是一个空格，空一行才是新段落，想强制换行要在行尾加两个空格或一个反斜杠。各个应用在这里并不一致，妙言的设置里有一项换行方式，可以选「妙言」（默认，预览中每次换行都会另起一行）或「Github」（预览中需要空一行才会换行）。同一段文字在一个应用里连成一团、在另一个应用里却散开，多半就是这个原因。</p>
+<h3 id="转义">转义</h3>
+<p>在会被 Markdown 当作语法的字符前面加反斜杠，比如 <code>\*不是斜体\*</code> 或 <code>\# 不是标题</code>，行内代码和代码块里面不需要转义。</p>
+<h2 id="gfm-扩展">GFM 扩展</h2>
+<h3 id="表格">表格</h3>
+<pre><code class="language-markdown">| 品名 | 价格 | 有货 |
+|:-----|-----:|:----:|
+| 茶   | 2.50 | 是   |
+| 果酱 | 0.50 | 否   |
+</code></pre>
+<p>分隔行里的冒号决定对齐方式，分别是靠左、靠右、居中。源码里各列宽度不用对齐，不过对齐了文件更好读。妙言里输入 <code>/table</code> 再按 <code>Tab</code> 会插入模板，粘贴纯文本之后用「编辑 &gt; 文档排版」（<code>⌘⇧L</code>）可以整理格式。</p>
+<h3 id="任务列表">任务列表</h3>
+<pre><code class="language-markdown">- [x] 写完初稿
+- [ ] 补截图
+</code></pre>
+<p>妙言的预览模式里可以直接点复选框切换状态。</p>
+<h3 id="删除线">删除线</h3>
+<pre><code class="language-markdown">~~删掉的文字~~
+</code></pre>
+<h3 id="自动链接">自动链接</h3>
+<p>GFM 会把纯文本网址变成链接，不过妙言的解析器只打开了 table、footnotes、strikethrough 和 tasklist 这几个扩展，autolink 不在其中，重要的网址写成 <code>&lt;https://example.com&gt;</code> 或普通链接更稳妥。</p>
+<h2 id="gfm-之外">GFM 之外</h2>
+<h3 id="脚注">脚注</h3>
+<pre><code class="language-markdown">这个说法需要出处。[^1]
+
+[^1]: 出处在这里。
+</code></pre>
+<p>GFM 规范里没有脚注，所以把它当作应用自己的功能，妙言开启了脚注解析。</p>
+<h3 id="公式和图表">公式和图表</h3>
+<p>行内公式写 <code>$E = mc^2$</code>，块级公式写 <code>$$ ... $$</code>，图表用 <code>mermaid</code> 围栏代码块。这两样都属于渲染器的功能，见 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a> 和 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>。</p>
+<h3 id="提示块">提示块</h3>
+<pre><code class="language-markdown">&gt; [!NOTE]
+&gt; 补充说明。
+</code></pre>
+<p>妙言认得 <code>NOTE</code>、<code>TIP</code>、<code>IMPORTANT</code>、<code>WARNING</code> 和 <code>CAUTION</code>，别的应用里这些多半只显示成普通引用。</p>
+<h3 id="原生-html-和折叠区域">原生 HTML 和折叠区域</h3>
+<pre><code class="language-html">&lt;details&gt;
+&lt;summary&gt;展开&lt;/summary&gt;
+
+空一行之后里面可以继续写 Markdown。
+
+&lt;/details&gt;
+</code></pre>
+<p>妙言的预览会渲染原生 HTML，输入 <code>/fold</code> 再按 <code>Tab</code> 就能插入这段结构。</p>
+<h3 id="双链和-frontmatter">双链和 frontmatter</h3>
+<p><code>[[项目计划]]</code> 按标题原文链接到另一篇笔记，不带 <code>.md</code> 后缀，妙言会据此生成反链。笔记最开头夹在两行 <code>---</code> 之间的块会当作 frontmatter，在渲染预览里隐藏。</p>
+<h3 id="上下标">上下标</h3>
+<p>妙言自带的语法指南里写了 <code>H~2~O</code> 和 <code>26^th^</code>，但妙言并不渲染这种写法，平时不要依赖这种写法，需要的话用 <code>&lt;sub&gt;</code> 和 <code>&lt;sup&gt;</code> 这两个 HTML 标签。</p>
+<h2 id="这些东西怎么拼在一起">这些东西怎么拼在一起</h2>
+<p>Markdown 源码先经过解析器变成 HTML，CommonMark 规定核心语法怎么对应到 HTML，GFM 在上面再加一些规则。妙言的预览用的是 cmark-gfm 的 Swift 移植版，挂了 table、footnotes、strikethrough 和 tasklist 四个扩展，生成的 HTML 再装进网页视图，由 KaTeX 完成公式排版，由图表库把围栏代码块变成 SVG。大多数意外都能这样拆开看，在解析器这一步出问题说明语法写错或者不被支持，在后面出问题就是渲染器的事，比如公式有错误或者图表拼写有误。</p>
+<h2 id="常见错误">常见错误</h2>
+<ul>
+<li><code>#</code> 或 <code>-</code> 后面没有空格，这一行会保持纯文本。</li>
+<li>表格缺了分隔行，也会保持纯文本。</li>
+<li>嵌套列表一处用制表符、一处用空格缩进。</li>
+<li>代码围栏没有成对，会把后面整篇笔记都吞进去，数一数反引号行有几行。</li>
+<li>紧贴在文字下面的单独一个 <code>---</code>，有些解析器会把它当成标题下划线。</li>
+</ul>
+<p>检查一篇笔记时切到预览，看页面上有没有残留的语法字符，它们就是解析器没读懂的那几行。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="commonmark-和-gfm-有什么区别">CommonMark 和 GFM 有什么区别</h3>
+<p>CommonMark 是对核心语法的精确规范，GFM 是它的超集，加了表格、任务列表、删除线、自动链接，以及对原生 HTML 的一条限制规则。</p>
+<h3 id="行尾一定要加两个空格吗">行尾一定要加两个空格吗</h3>
+<p>只有应用严格遵循 CommonMark、而你又想换行不分段的时候才需要。妙言默认的换行方式是每次换行都另起一行。</p>
+<h3 id="能把这份速查贴进妙言试一下吗">能把这份速查贴进妙言试一下吗</h3>
+<p>可以，应用自带的 Examples 文件夹里有一份妙言 Markdown 语法指南，覆盖了上面每一种写法，完整应用可以在 <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> 和 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a> 找到。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/latex-math-in-markdown/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 里写 LaTeX 公式</span><span class="blog-related-meta">约 4 分钟</span></a></li><li><a href="/zh/blog/mermaid-diagrams-in-markdown/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 里画 Mermaid 图</span><span class="blog-related-meta">约 4 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>跨设备同步 Markdown 笔记的几种做法 · 妙言博客</title>
+<meta name="description" content="用 iCloud 云盘、坚果云、Dropbox 或 git 同步笔记文件夹，在妙言里设置笔记位置，并避开冲突副本。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/sync-markdown-notes-across-devices/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/sync-markdown-notes-across-devices/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/sync-markdown-notes-across-devices/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/sync-markdown-notes-across-devices/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/sync-markdown-notes-across-devices/">
+<meta property="og:title" content="跨设备同步 Markdown 笔记的几种做法 · 妙言博客">
+<meta property="og:description" content="用 iCloud 云盘、坚果云、Dropbox 或 git 同步笔记文件夹，在妙言里设置笔记位置，并避开冲突副本。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/sync-markdown-notes-across-devices.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="笔记管理">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/sync-markdown-notes-across-devices.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "跨设备同步 Markdown 笔记的几种做法", "item": "https://miaoyan.app/zh/blog/sync-markdown-notes-across-devices/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/sync-markdown-notes-across-devices/#article", "headline": "跨设备同步 Markdown 笔记的几种做法", "description": "用 iCloud 云盘、坚果云、Dropbox 或 git 同步笔记文件夹，在妙言里设置笔记位置，并避开冲突副本。", "url": "https://miaoyan.app/zh/blog/sync-markdown-notes-across-devices/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/sync-markdown-notes-across-devices/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/sync-markdown-notes-across-devices.webp", "timeRequired": "PT4M", "articleSection": "笔记管理", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言有自己的同步服务吗？", "acceptedAnswer": {"@type": "Answer", "text": "没有，它读写你选的文件夹，由 iCloud 云盘、坚果云、Dropbox 或别的客户端去同步这个文件夹。"}}, {"@type": "Question", "name": "可以配合坚果云使用吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以，在坚果云桌面客户端同步的本地文件夹里新建一个文件夹，设为笔记位置即可，妙言不直接连接坚果云或 WebDAV。"}}, {"@type": "Question", "name": "哪种方式最适合 iPhone？", "acceptedAnswer": {"@type": "Answer", "text": "iCloud 云盘，因为 README 写明了第三方网盘可能没有在系统的「文件」App 里提供可写的文件夹。"}}, {"@type": "Question", "name": "为什么改了文件夹没有生效？", "acceptedAnswer": {"@type": "Answer", "text": "笔记库是在启动时打开的，选了新的笔记位置之后需要重新启动妙言才会生效。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/sync-markdown-notes-across-devices/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/sync-markdown-notes-across-devices/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">跨设备同步 Markdown 笔记的几种做法</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-notes">笔记管理</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 4 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/sync-markdown-notes-across-devices.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>妙言自己不做同步，只读写你指定的 Markdown 文件夹，让这个文件夹在各台设备上保持一致的是 iCloud 云盘、坚果云、Dropbox 或者 git 仓库。每个文件夹只选一种同步方式，把它设为偏好设置里的「笔记位置」，剩下的交给文件同步，唯一的风险是两台设备在没同步完时改了同一篇笔记，结果会多出一份冲突副本。</p>
+<h2 id="怎么选同步方式">怎么选同步方式</h2>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>适合</th>
+<th>注意</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iCloud 云盘</td>
+<td>Mac、iPhone 和 iPad，登录即用</td>
+<td>被系统优化掉的文件需要先下载才能读取</td>
+</tr>
+<tr>
+<td>坚果云</td>
+<td>在国内、想用桌面客户端同步文件夹的人</td>
+<td>要用桌面客户端同步的本地文件夹，不是网页</td>
+</tr>
+<tr>
+<td>Dropbox</td>
+<td>Mac、Windows、Linux 混用</td>
+<td>冲突会变成「conflicted copy」文件</td>
+</tr>
+<tr>
+<td>git</td>
+<td>想要提交历史、能接受手动同步的人</td>
+<td>不会自动同步，提交、拉取和推送都要自己来</td>
+</tr>
+</tbody>
+</table>
+<p>如果只用苹果设备，iCloud 云盘最省事。妙言的 App Store 版本就是围绕它做的，没选文件夹并且 iCloud 可用时，应用会使用 iCloud 云盘里的一个文件夹，iPhone 和 iPad 版打开的是同一个。</p>
+<h2 id="文件同步到底怎么工作">文件同步到底怎么工作</h2>
+<p>网盘同步的是文件，不是笔记。每个服务都在监视文件夹，发现某个文件的内容或修改时间变了，就把整个文件上传，其他设备下载新版本替换旧版本。服务并不知道这是 Markdown，所以不能像懂文本的工具那样合并两处修改。</p>
+<p>冲突就是这么来的。比如 iPhone 离线时你在 Mac 上改了 <code>想法.md</code>，又在 iPhone 上改了同一篇，iPhone 联网后，服务手里有同一个文件的两个版本，却没有谁改了什么的共同记录，只好两份都留下。Dropbox 的帮助页把这叫作冲突副本，在「多人同时编辑同一个文件」或者有人离线编辑而另一个人也在编辑时产生，副本的文件名会加上编辑者的用户名、「conflicted copy」字样和日期。</p>
+<p>有一种情况看着像冲突，其实不是。还在下载中的文件可能被编辑器当成不存在，所以笔记文件夹需要保持离线可用，Obsidian 的同步指南也是这么说的，文件必须保持离线可用，否则可能被当作丢失。</p>
+<h2 id="在妙言里设置存储路径">在妙言里设置存储路径</h2>
+<ol>
+<li>在同步位置里新建一个文件夹，叫 <code>MiaoYan</code> 或别的名字都行，位置可以是 iCloud 云盘、坚果云桌面客户端同步的本地文件夹、Dropbox 文件夹，或者 git 仓库的工作目录。</li>
+<li>按 ⌘, 打开偏好设置，找到「笔记位置」。</li>
+<li>点「更改」，选择这个文件夹。</li>
+<li>在弹出的「重新启动妙言后生效」提示里点「确定」，因为妙言在启动时打开笔记库，新文件夹要到下次启动才会用上，取消的话仍然保留原来的文件夹。</li>
+</ol>
+<p>接受文件夹之前，妙言会检查能不能读写，检查不通过就保留当前位置，并提示「妙言无法读取这个文件夹。如果这是云盘目录，请打开云盘应用，确认该文件夹已在访达中可见。」README 还补充说，这种情况不会被当作妙言的同步故障，问题出在文件夹或网盘，不在应用。</p>
+<p>妙言不会登录 WebDAV 或网盘账号，它能看到的只有这个文件夹。</p>
+<h2 id="iphone-和-ipad">iPhone 和 iPad</h2>
+<p>iPhone 上用系统的「文件」App 选同一个网盘文件夹。README 写明了限制，如果某个网盘在「文件」里没有提供可写的文件夹，就改用 iCloud 云盘，或者先在那个网盘自己的 App 里把文件夹设为离线可用。实际结论是 iPhone 和 iPad 版用 iCloud 云盘最稳，第三方网盘取决于它的「文件」集成是否提供可写、可离线的访问。</p>
+<h2 id="各家服务自己怎么说">各家服务自己怎么说</h2>
+<ul>
+<li><strong>iCloud 云盘。</strong> 苹果的指南说明了「立即下载」可以把项目取到本地离线使用，「保留下载」则能让它留在 Mac 上，即使「优化 Mac 储存空间」把较旧的文稿移到 iCloud。笔记文件夹建议用「保留下载」，这样搜索和编辑器不会碰到占位文件。</li>
+<li><strong>Obsidian 的同步说明。</strong> Obsidian 在文档里记录了 iCloud 可以在苹果设备间同步 vault，提醒 Windows 上的 iCloud 云盘可能导致文件重复或损坏，并说文件必须保持离线可用，否则可能被当成不存在。任何笔记文件夹都一样，不管用哪个应用打开。</li>
+<li><strong>Git。</strong> Git 在你提交时记录快照，Obsidian 的指南指出同步不是自动的，推送和拉取要自己做。想要清晰可控的历史，这是优点，想要开箱即用，这是缺点。</li>
+</ul>
+<h2 id="出问题时怎么查怎么恢复">出问题时怎么查、怎么恢复</h2>
+<p><strong>出现了一篇笔记的两份副本。</strong> 两份都打开，把需要的内容复制到要保留的那份，删掉另一份。同步服务会给多出来的文件加标记，比如 Dropbox 的「conflicted copy」，搜这几个字就能找到。</p>
+<p><strong>妙言提示检测到外部修改。</strong> 同步服务拉下了你正打开的笔记的新版本时，妙言会从磁盘重新加载，如果你没保存的编辑内容和磁盘上的不同，它会先把你的文字存进笔记库顶层隐藏的 <code>.miaoyan-conflicts</code> 文件夹，并提示「检测到外部修改，本地内容已备份~」，备份至少保留最近的 100 份，以及 30 天以内的所有文件。怀疑文字丢了的时候，先看一下这个文件夹。</p>
+<p><strong>某篇笔记是空的。</strong> 文件可能还没下载完，在访达里打开文件夹，把文件设为离线可用，等同步结束。</p>
+<p><strong>版本历史不在云端。</strong> 妙言把快照存在自己的支持目录里，不在笔记文件夹中，所以不会同步，见 <a href="/zh/blog/markdown-note-version-history/">Markdown 笔记的版本历史</a>。</p>
+<p><strong>用 git 配合妙言。</strong> 在笔记库文件夹里提交，把 <code>.miaoyan-conflicts/</code> 加进 <code>.gitignore</code>，避免备份文件被提交，另外除非你清楚后果，不要在同一个文件夹上同时跑 git 和网盘同步。</p>
+<h2 id="能避免大多数冲突的习惯">能避免大多数冲突的习惯</h2>
+<ul>
+<li>换设备之前先等同步完成，大多数客户端都有进度或状态提示。</li>
+<li>不要在一分钟内在两台设备上修改同一篇笔记。</li>
+<li>一个文件夹只用一种同步机制。</li>
+<li>在同步工具之外再留一份副本，比如 Time Machine 备份，因为同步会把错误和成果一样忠实地复制过去。</li>
+</ul>
+<p>想知道纯文件夹为什么值得这些麻烦，看 <a href="/zh/blog/local-first-markdown-notes/">本地优先的 Markdown 笔记</a>，想对同步后的文件夹写脚本，看 <a href="/zh/blog/markdown-notes-from-terminal/">在终端里使用 Markdown 笔记</a>。</p>
+<p>妙言 Mac 版在 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a> 开源，<a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> 版本一次购买覆盖 Mac、iPhone 和 iPad。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="妙言有自己的同步服务吗">妙言有自己的同步服务吗？</h3>
+<p>没有，它读写你选的文件夹，由 iCloud 云盘、坚果云、Dropbox 或别的客户端去同步这个文件夹。</p>
+<h3 id="可以配合坚果云使用吗">可以配合坚果云使用吗？</h3>
+<p>可以，在坚果云桌面客户端同步的本地文件夹里新建一个文件夹，设为笔记位置即可，妙言不直接连接坚果云或 WebDAV。</p>
+<h3 id="哪种方式最适合-iphone">哪种方式最适合 iPhone？</h3>
+<p>iCloud 云盘，因为 README 写明了第三方网盘可能没有在系统的「文件」App 里提供可写的文件夹。</p>
+<h3 id="为什么改了文件夹没有生效">为什么改了文件夹没有生效？</h3>
+<p>笔记库是在启动时打开的，选了新的笔记位置之后需要重新启动妙言才会生效。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/local-first-markdown-notes/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">本地优先的 Markdown 笔记怎么管</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/wikilinks-and-backlinks/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">Markdown 笔记里的 Wikilink 与反向链接</span><span class="blog-related-meta">约 4 分钟</span></a></li><li><a href="/zh/blog/markdown-notes-from-terminal/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">在终端里使用 Markdown 笔记：miao 命令行</span><span class="blog-related-meta">约 4 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

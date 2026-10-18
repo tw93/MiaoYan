@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>LaTeX math in Markdown: syntax, KaTeX and pitfalls · MiaoYan Blog</title>
+<meta name="description" content="Write inline and block math in Markdown, use common LaTeX constructs, avoid dollar and underscore pitfalls, and see how MiaoYan renders KaTeX.">
+<link rel="canonical" href="https://miaoyan.app/blog/latex-math-in-markdown/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/latex-math-in-markdown/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/latex-math-in-markdown/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/latex-math-in-markdown/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/latex-math-in-markdown/">
+<meta property="og:title" content="LaTeX math in Markdown: syntax, KaTeX and pitfalls · MiaoYan Blog">
+<meta property="og:description" content="Write inline and block math in Markdown, use common LaTeX constructs, avoid dollar and underscore pitfalls, and see how MiaoYan renders KaTeX.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/latex-math-in-markdown.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Writing in Markdown">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/latex-math-in-markdown.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "LaTeX math in Markdown: syntax, KaTeX and pitfalls", "item": "https://miaoyan.app/blog/latex-math-in-markdown/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/latex-math-in-markdown/#article", "headline": "LaTeX math in Markdown: syntax, KaTeX and pitfalls", "description": "Write inline and block math in Markdown, use common LaTeX constructs, avoid dollar and underscore pitfalls, and see how MiaoYan renders KaTeX.", "url": "https://miaoyan.app/blog/latex-math-in-markdown/", "mainEntityOfPage": "https://miaoyan.app/blog/latex-math-in-markdown/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/latex-math-in-markdown.webp", "timeRequired": "PT5M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does MiaoYan need an internet connection for math?", "acceptedAnswer": {"@type": "Answer", "text": "No. KaTeX is bundled inside the app. The exception in this family of features is PlantUML, which is sent to a public server."}}, {"@type": "Question", "name": "KaTeX or MathJax, which should I pick?", "acceptedAnswer": {"@type": "Answer", "text": "If you need a specific MathJax-only extension, use an editor that offers it. For ordinary algebra, calculus, matrices and aligned equations, KaTeX is enough and renders quickly."}}, {"@type": "Question", "name": "How do I write a literal dollar sign?", "acceptedAnswer": {"@type": "Answer", "text": "Put a backslash before it, as in \\$5, or put it in inline code."}}, {"@type": "Question", "name": "Can I number equations?", "acceptedAnswer": {"@type": "Answer", "text": "Typora's site says it can auto-number equations when enabled. MiaoYan has no equation numbering setting. KaTeX supports \\tag{1} on lines in some environments, which gives you manual labels."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/latex-math-in-markdown/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/latex-math-in-markdown/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">LaTeX math in Markdown: syntax, KaTeX and pitfalls</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>5 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/latex-math-in-markdown.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Write inline math between single dollar signs, like <code>$E = mc^2$</code>, and block math between double dollar signs on their own lines. Markdown itself has no math syntax, so the app's renderer finds those delimiters and typesets the contents with a TeX engine, usually KaTeX or MathJax. In MiaoYan the engine is KaTeX 0.16.0, bundled inside the app, so formulas render without a network connection. The common failures are a dollar sign read as math, an environment that needs a wrapper, and an underscore eaten by Markdown before the engine sees it.</p>
+<h2 id="inline-and-block-math">Inline and block math</h2>
+<pre><code class="language-markdown">The energy is $E = mc^2$ in rest frame.
+
+$$
+\int_0^1 x^2 \, dx = \frac{1}{3}
+$$
+</code></pre>
+<p>Inline math sits in the sentence and uses compact layout. Block math is centered on its own line with full-size operators, so sums and integrals show their limits above and below. If a formula is part of a sentence, use inline. If it should stand on its own, use a block.</p>
+<p>MiaoYan accepts four delimiter pairs: <code>$...$</code>, <code>$$...$$</code>, <code>\(...\)</code> and <code>\[...\]</code>. The last two are the LaTeX-native forms. You can mix them, but picking one pair for inline and one for block makes notes easier to move between apps.</p>
+<h2 id="constructs-you-will-use-most">Constructs you will use most</h2>
+<table>
+<thead>
+<tr>
+<th>You want</th>
+<th>Write</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fraction</td>
+<td><code>\frac{a}{b}</code></td>
+</tr>
+<tr>
+<td>Square root, nth root</td>
+<td><code>\sqrt{x}</code>, <code>\sqrt[3]{x}</code></td>
+</tr>
+<tr>
+<td>Superscript, subscript</td>
+<td><code>x^2</code>, <code>x_i</code>, and braces for more than one character: <code>x^{10}</code>, <code>x_{ij}</code></td>
+</tr>
+<tr>
+<td>Sum with limits</td>
+<td><code>\sum_{i=1}^{n} x_i</code></td>
+</tr>
+<tr>
+<td>Integral</td>
+<td><code>\int_a^b f(x)\,dx</code></td>
+</tr>
+<tr>
+<td>Greek letters</td>
+<td><code>\alpha</code>, <code>\beta</code>, <code>\pi</code>, <code>\Omega</code></td>
+</tr>
+<tr>
+<td>Text inside math</td>
+<td><code>\text{if } x &gt; 0</code></td>
+</tr>
+<tr>
+<td>Limit</td>
+<td><code>\lim_{t \to \infty}</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>\frac</code>, <code>\sum</code>, <code>\int</code>, <code>\sqrt</code> and <code>\text</code> are all listed as supported in the KaTeX documentation. The <code>\,</code> before <code>dx</code> adds a thin space, which matches how integrals are usually typeset.</p>
+<h3 id="matrices-cases-and-aligned-equations">Matrices, cases and aligned equations</h3>
+<pre><code class="language-markdown">$$
+\begin{pmatrix} a &amp; b \\ c &amp; d \end{pmatrix}
+$$
+
+$$
+f(x) = \begin{cases} x^2 &amp; x \ge 0 \\ 0 &amp; x &lt; 0 \end{cases}
+$$
+
+$$
+\begin{aligned}
+a &amp;= b + c \\
+  &amp;= d
+\end{aligned}
+$$
+</code></pre>
+<p>Use <code>&amp;</code> to separate columns and <code>\\</code> to end a row. KaTeX lists <code>matrix</code>, <code>pmatrix</code>, <code>bmatrix</code>, <code>cases</code>, <code>align</code>, <code>aligned</code> and others as supported environments. In MiaoYan, wrap <code>aligned</code> inside <code>$$</code>. KaTeX's auto-render extension can pick up bare <code>\begin{align}</code> blocks by default, but MiaoYan's delimiter list has only the four pairs above, so a bare <code>\begin{align}</code> is not recognized as a math block. The wrapped form works across more tools anyway.</p>
+<h2 id="how-it-actually-works">How it actually works</h2>
+<p>A Markdown parser has no idea what a formula is. If it sees <code>a_b_c</code>, it may read the underscores as emphasis. If it sees <code>\\</code>, it may read one backslash as an escape. So an app has to protect the math before the Markdown pass, then hand the original text to the TeX engine afterwards.</p>
+<p>MiaoYan does this in two steps. First, a pre-pass finds math ranges outside code spans and fences, ignores escaped delimiters, and shields their contents from the parser. Second, the rendered HTML loads into a web view, where KaTeX's auto-render script scans the page for the four delimiter pairs and replaces them with typeset output. KaTeX's default ignored tags include <code>code</code> and <code>pre</code>, so math inside a code fence is never rendered.</p>
+<p>Engines also differ in speed and LaTeX coverage. KaTeX is fast and renders synchronously, but supports a subset of LaTeX. MathJax is the other common engine, and Typora's site says it supports most MathJax extensions, including mhchem and AMSmath. If your formulas come from a paper using exotic packages, test them in the editor before relying on them. MiaoYan's bundled KaTeX 0.16.0 runs entirely from files inside the app.</p>
+<h2 id="dollar-signs-and-prices">Dollar signs and prices</h2>
+<p>A single <code>$</code> is also a currency symbol, which is the most common pitfall. MiaoYan has a guard for it: a dollar sign followed by digits and then something that is not a math continuation is treated as currency. So <code>It costs $5 today</code> stays text, while <code>$2+2$</code> is still math, because a <code>+</code> after the digits counts as math. Other editors may not have this guard, so escape the dollar sign if the note has to look right everywhere:</p>
+<pre><code class="language-markdown">The ticket costs \$5, and the upgrade costs \$10.
+</code></pre>
+<p>A backslash before the dollar sign tells the renderer to leave it alone. MiaoYan enables escape processing for this, and its pre-pass skips escaped delimiters.</p>
+<h2 id="what-goes-wrong-and-how-to-check">What goes wrong and how to check</h2>
+<ol>
+<li><strong>Nothing renders and the dollars show.</strong> The closing delimiter is missing or crosses a code span. Math cannot start in a code span and end outside it.</li>
+<li><strong>The formula is cut after an underscore.</strong> The text was read as Markdown. In MiaoYan this is already protected, but in other apps use <code>\_</code> or switch to a block.</li>
+<li><strong>A block formula stays in a paragraph with stray line breaks.</strong> Put <code>$$</code> on its own lines with a blank line before and after. MiaoYan also cleans line breaks inside single-paragraph <code>$$</code> blocks.</li>
+<li><strong>Unbalanced braces.</strong> Every <code>{</code> needs a <code>}</code>. The engine will not typeset a formula with unbalanced braces.</li>
+<li><strong>A command does nothing.</strong> It may be outside KaTeX's supported list. Check the KaTeX "Supported Functions" page before assuming a bug.</li>
+</ol>
+<p>To test your setup, put these three lines in a new note and open the preview with <code>⌘3</code>, or split mode with <code>⌘\</code>:</p>
+<pre><code class="language-markdown">Inline: $\sqrt{2}$
+
+$$
+\sum_{i=1}^{n} i = \frac{n(n+1)}{2}
+$$
+
+Price: \$5
+</code></pre>
+<p>If you see a root sign, a sum with limits, and a literal <code>$5</code>, the engine and the escape both work. Math also works inside MiaoYan's presentation mode, covered in <a href="/blog/markdown-to-slides/">Markdown to slides</a>. For the rest of the syntax, see the <a href="/blog/markdown-cheat-sheet/">Markdown cheat sheet</a>.</p>
+<h2 id="limits-to-know">Limits to know</h2>
+<ul>
+<li>KaTeX covers most of what notes need, but not all of LaTeX. Packages and macros defined with <code>\newcommand</code> in a preamble are not part of a Markdown note.</li>
+<li>Math is rendered in the preview. The editor pane shows raw source.</li>
+<li>PDF, HTML and image exports are produced from the rendered preview. Check an exported file once to verify any formulas you care about.</li>
+</ul>
+<h2 id="faq">FAQ</h2>
+<h3 id="does-miaoyan-need-an-internet-connection-for-math">Does MiaoYan need an internet connection for math?</h3>
+<p>No. KaTeX is bundled inside the app. The exception in this family of features is PlantUML, which is sent to a public server.</p>
+<h3 id="katex-or-mathjax-which-should-i-pick">KaTeX or MathJax, which should I pick?</h3>
+<p>If you need a specific MathJax-only extension, use an editor that offers it. For ordinary algebra, calculus, matrices and aligned equations, KaTeX is enough and renders quickly.</p>
+<h3 id="how-do-i-write-a-literal-dollar-sign">How do I write a literal dollar sign?</h3>
+<p>Put a backslash before it, as in <code>\$5</code>, or put it in inline code.</p>
+<h3 id="can-i-number-equations">Can I number equations?</h3>
+<p>Typora's site says it can auto-number equations when enabled. MiaoYan has no equation numbering setting. KaTeX supports <code>\tag{1}</code> on lines in some environments, which gives you manual labels.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-cheat-sheet/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown cheat sheet: CommonMark, GFM and extensions</span><span class="blog-related-meta">5 min read</span></a></li><li><a href="/blog/mermaid-diagrams-in-markdown/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Mermaid diagrams in Markdown: flowchart, sequence, Gantt</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

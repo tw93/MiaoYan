@@ -34,3 +34,22 @@ The Mac app's source code is open on GitHub and keeps being developed. The iPhon
 Compared with Typora, MiaoYan does not use a WYSIWYG editor. It keeps the Markdown source and preview separate for people who want direct control of the file.
 
 Compared with Obsidian, MiaoYan has no Electron runtime and is not centered on a plugin ecosystem. It favors a smaller set of built-in writing features and local Markdown files.
+
+<!-- blog:start -->
+## Blog
+
+English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoyan.app/zh/blog/.
+
+- [Choosing a Markdown editor for Mac](https://miaoyan.app/blog/markdown-editor-for-mac/): What to check in a Mac Markdown editor: plain files, WYSIWYG or split preview, math, sync and speed, with Typora, Obsidian, VS Code and MiaoYan compared.
+- [Markdown cheat sheet: CommonMark, GFM and extensions](https://miaoyan.app/blog/markdown-cheat-sheet/): The Markdown syntax you actually use, with examples, what CommonMark and GFM each define, and what MiaoYan renders on top.
+- [LaTeX math in Markdown: syntax, KaTeX and pitfalls](https://miaoyan.app/blog/latex-math-in-markdown/): Write inline and block math in Markdown, use common LaTeX constructs, avoid dollar and underscore pitfalls, and see how MiaoYan renders KaTeX.
+- [Mermaid diagrams in Markdown: flowchart, sequence, Gantt](https://miaoyan.app/blog/mermaid-diagrams-in-markdown/): Draw flowcharts, sequence and Gantt diagrams with fenced Mermaid blocks, plus PlantUML and Markmap, and what MiaoYan renders offline.
+- [Markdown to slides: --- separators and MiaoYan PPT mode](https://miaoyan.app/blog/markdown-to-slides/): Turn a Markdown note into a slide deck with --- separators, configure reveal.js options, and compare Marp, reveal.js and Slidev.
+- [Typora alternative for Mac: split preview with MiaoYan](https://miaoyan.app/blog/typora-alternative-mac/): Why people leave Typora, WYSIWYG versus split preview, what carries over (files, math, images) and where each app is stronger.
+- [Local-first Markdown notes: keep them as plain files](https://miaoyan.app/blog/local-first-markdown-notes/): Why plain Markdown files in your own folder beat a locked-in notes app, what it costs, and how MiaoYan reads the folder you choose.
+- [Sync Markdown notes across devices without a sync service](https://miaoyan.app/blog/sync-markdown-notes-across-devices/): Use iCloud Drive, Nutstore, Dropbox or git to sync a Markdown notes folder, set MiaoYan's Note Location, and avoid conflict copies.
+- [Wikilinks and backlinks in Markdown notes](https://miaoyan.app/blog/wikilinks-and-backlinks/): How [[wikilinks]] differ from normal Markdown links, what MiaoYan supports, how backlinks are built, and the portability trade-offs.
+- [Markdown notes from the terminal with the miao CLI](https://miaoyan.app/blog/markdown-notes-from-terminal/): Install the miao CLI, learn open, new, search, list and cat, script them, and use them with AI coding agents and the MiaoYan skill.
+- [A lighter Obsidian alternative for Mac](https://miaoyan.app/blog/obsidian-alternative-mac/): What MiaoYan has and leaves out compared with Obsidian, how to open a vault, and which syntax carries over.
+- [Markdown note version history: MiaoYan, Time Machine, git](https://miaoyan.app/blog/markdown-note-version-history/): How MiaoYan saves and restores note versions, where they live, their limits, and how Time Machine and git cover what it does not.
+<!-- blog:end -->

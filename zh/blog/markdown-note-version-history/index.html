@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown 笔记的版本历史怎么用 · 妙言博客</title>
+<meta name="description" content="妙言如何保存和恢复笔记版本、存在哪里、有什么限制，以及 Time Machine 和 git 怎么补上它覆盖不到的部分。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/markdown-note-version-history/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-note-version-history/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-note-version-history/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-note-version-history/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/markdown-note-version-history/">
+<meta property="og:title" content="Markdown 笔记的版本历史怎么用 · 妙言博客">
+<meta property="og:description" content="妙言如何保存和恢复笔记版本、存在哪里、有什么限制，以及 Time Machine 和 git 怎么补上它覆盖不到的部分。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-note-version-history.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="笔记管理">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-note-version-history.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 笔记的版本历史怎么用", "item": "https://miaoyan.app/zh/blog/markdown-note-version-history/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-note-version-history/#article", "headline": "Markdown 笔记的版本历史怎么用", "description": "妙言如何保存和恢复笔记版本、存在哪里、有什么限制，以及 Time Machine 和 git 怎么补上它覆盖不到的部分。", "url": "https://miaoyan.app/zh/blog/markdown-note-version-history/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-note-version-history/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-note-version-history.webp", "timeRequired": "PT4M", "articleSection": "笔记管理", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言每次输入都会存一个版本吗？", "acceptedAnswer": {"@type": "Answer", "text": "不会，编辑时每篇笔记最多每五分钟保存一个，另外离开笔记时还会强制保存一个。"}}, {"@type": "Question", "name": "能关掉版本历史吗？", "acceptedAnswer": {"@type": "Answer", "text": "应用设置里没有提供这个开关，所以它一直开着。"}}, {"@type": "Question", "name": "版本存在我的笔记文件夹里吗？", "acceptedAnswer": {"@type": "Answer", "text": "不在，存在应用的支持目录里，所以不会出现在访达里你的笔记旁边，也不会跟着同步。"}}, {"@type": "Question", "name": "能找回我删掉的笔记吗？", "acceptedAnswer": {"@type": "Answer", "text": "放进废纸篓的笔记可以从废纸篓里恢复。历史窗口按路径查找版本，所以放进废纸篓之前的版本，要等笔记回到原来的路径才会重新出现。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-note-version-history/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/markdown-note-version-history/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">Markdown 笔记的版本历史怎么用</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-notes">笔记管理</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 4 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-note-version-history.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>妙言会为每篇笔记保留最多 20 个历史版本，编辑时自动保存，用 Command Shift H 可以浏览和恢复。这些快照保存在应用自己的支持目录里，不在笔记文件夹中，只是单台 Mac 上的安全网，不会跟着文件一起走。想要真正的保护，就配合 Time Machine 做整盘备份，需要的话再加上 git，得到一份由你掌控的历史。</p>
+<h2 id="打开并恢复一个版本">打开并恢复一个版本</h2>
+<ol>
+<li>选中一篇笔记，按 Command Shift H，或者使用笔记菜单里的「版本历史」。</li>
+<li>窗口顶部是「当前版本」，下面是保存下来的版本，显示时间和「2 小时前」这样的相对描述，点一个就能预览它的文字。</li>
+<li>点「恢复到此版本」，妙言会用那个版本替换笔记内容，并提示「已恢复到」加上那个版本的时间。</li>
+</ol>
+<p>如果这篇笔记还没有快照，窗口会显示「暂无历史版本」，并说明「编辑时每 5 分钟自动保存一个版本」。</p>
+<p>恢复本身也是可以撤回的。替换文字之前，妙言会先把你当前的文字保存成一个新快照，所以这次恢复会出现在同一个列表里，你随时可以回去。</p>
+<h2 id="它实际是怎么工作的">它实际是怎么工作的</h2>
+<p>下面是看源码梳理出来的实现逻辑，不是产品承诺。</p>
+<p><strong>什么时候保存快照。</strong> 笔记每次写入磁盘时都会考虑保存一次，写入发生在你停止输入的短暂停顿之后，只有距离这篇笔记上一个快照至少过了五分钟，才会真的保存。有两种情况会跳过这五分钟的等待，一种是切换到另一篇笔记（离开的那篇会保存快照），另一种是恢复版本（当前文字会被强制先保存）。打开历史窗口也会尝试保存一次，不过依然遵守五分钟的间隔限制。</p>
+<p><strong>哪些会被跳过。</strong> 空白笔记不会保存。如果一个快照和最新的已保存版本相比，逐行去掉首尾空白并忽略空行之后完全一样，也会被跳过，所以单纯的空格改动不会产生新条目。</p>
+<p><strong>文件放在哪。</strong> 每篇笔记在 <code>Library/Application Support/com.tw93.miaoyan/Versions/</code> 下有自己的文件夹，名字是笔记文件名加上完整路径的哈希，里面是按 UTC 时间戳命名的 <code>.md</code> 文件，比如 <code>2026-10-18T15-42-07Z.md</code>，本身就是普通文本，任何编辑器都能打开，历史窗口里显示的则是你本地时间的日期。</p>
+<p><strong>保留多少。</strong> 每篇最多 20 个，保存新版本时如果文件夹里超过 20 个，最旧的会被删除。</p>
+<p><strong>重命名、移动和删除。</strong> 版本是按路径归档的，重命名笔记、把它移到别的文件夹或者放进废纸篓都会让它换一个路径，之前的历史仍留在旧路径下，历史窗口会从新路径重新开始。</p>
+<p><strong>五分钟的计时只在本次运行内有效。</strong> 上一次保存快照的时间记录在内存里，所以退出再打开应用之后，一篇笔记的第一次保存可能立刻产生快照，前提是文字和最新的已保存版本不同。</p>
+<h2 id="它能覆盖什么不能覆盖什么">它能覆盖什么，不能覆盖什么</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>妙言版本历史</th>
+<th>Time Machine</th>
+<th>git</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>粒度</td>
+<td>编辑时大约每 5 分钟，加上切换笔记时</td>
+<td>每小时、每天、每周备份</td>
+<td>每次提交</td>
+</tr>
+<tr>
+<td>深度</td>
+<td>每篇 20 个版本</td>
+<td>苹果文档未说明</td>
+<td>提交多少就有多少</td>
+</tr>
+<tr>
+<td>存放位置</td>
+<td>这台 Mac 的应用支持目录</td>
+<td>备份磁盘，外加本地快照</td>
+<td>仓库</td>
+</tr>
+<tr>
+<td>同步到其他设备</td>
+<td>否</td>
+<td>否</td>
+<td>是，通过推送和拉取</td>
+</tr>
+<tr>
+<td>覆盖附件</td>
+<td>否，只有笔记文字</td>
+<td>是，磁盘上的文件</td>
+<td>是，你添加的文件</td>
+</tr>
+<tr>
+<td>Mac 丢了还在吗</td>
+<td>不在</td>
+<td>在，只要磁盘是单独的</td>
+<td>在，需要有远程仓库</td>
+</tr>
+</tbody>
+</table>
+<p>苹果的文档说，Time Machine 会备份不属于 macOS 安装的文件，开启后会做每小时、每天和每周的备份。在 APFS 磁盘上它还会保留每小时一次的本地快照，最长 24 小时，或者直到磁盘需要空间为止，苹果建议把备份放在内置磁盘以外的位置，比如外置硬盘或网络磁盘。</p>
+<p>Git 的文档把每次提交描述成项目的一个快照，可以回退或者以后拿来比较。笔记历史需要的正是这个特性，只是在你提交之前什么都不会记录。</p>
+<p>妙言的历史不覆盖这些：</p>
+<ul>
+<li><strong>超过 20 个版本的更早内容。</strong> 快照间隔五分钟，20 个版本大约能回溯 100 分钟的连续编辑，如果是断断续续地编辑会更长，更早的文字就会从列表里消失。</li>
+<li><strong>其他设备。</strong> 快照不在笔记文件夹里，同步服务不会带上它们，单台设备上保存的快照只会留在本机，见 <a href="/zh/blog/sync-markdown-notes-across-devices/">跨设备同步 Markdown 笔记</a>。</li>
+<li><strong>附件。</strong> <code>i/</code> 里的图片不做版本管理。</li>
+<li><strong>外部覆盖。</strong> 如果别的工具或者同步冲突替换了一篇笔记，妙言会把你没保存的编辑器文字写进笔记库根目录下隐藏的 <code>.miaoyan-conflicts</code> 文件夹，那是另一道独立的保险，保留最新的 100 个文件以及 30 天以内的所有文件。</li>
+</ul>
+<h2 id="一套实用的组合">一套实用的组合</h2>
+<ol>
+<li>保持妙言的历史开着，它不需要配置。</li>
+<li>搭配外置磁盘开启 Time Machine，能同时保护笔记文件夹和版本快照。</li>
+<li>长期重要的笔记再加上 git，在笔记库里运行 <code>git init</code>，每完成一部分工作就提交，并把 <code>.miaoyan-conflicts/</code> 加进 <code>.gitignore</code>，推送到私有远程仓库还能得到一份异地副本。</li>
+<li>如果用网盘同步，要记住同步不是备份，删除或损坏的文件会传播到每台设备，见 <a href="/zh/blog/local-first-markdown-notes/">本地优先的 Markdown 笔记</a>。</li>
+</ol>
+<h2 id="出问题时怎么查">出问题时怎么查</h2>
+<ul>
+<li><strong>窗口显示「暂无历史版本」。</strong> 这篇笔记是新的、空的，或者没有用不同的文字保存过两次，编辑一下，等一会儿，切到别的笔记再回来。</li>
+<li><strong>预期的版本不见了。</strong> 历史只保留最新的 20 个，而且内容基本一致的保存会被跳过，看看文字是不是只差了空白。</li>
+<li><strong>恢复后文件好像没变。</strong> 文字先在编辑器里替换，经过平常的短暂延迟才写进磁盘，重新打开笔记确认一下。</li>
+<li><strong>你移动过笔记库文件夹。</strong> 快照按笔记的完整路径归档，如果在访达里把整个笔记库搬走，或者重命名、移动笔记，路径都会发生变化，原路径下的历史版本就找不到了。</li>
+</ul>
+<p>妙言是面向纯 Markdown 文件夹的 Mac 应用，源码在 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a>，<a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> 版本覆盖 Mac、iPhone 和 iPad。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="妙言每次输入都会存一个版本吗">妙言每次输入都会存一个版本吗？</h3>
+<p>不会，编辑时每篇笔记最多每五分钟保存一个，另外离开笔记时还会强制保存一个。</p>
+<h3 id="能关掉版本历史吗">能关掉版本历史吗？</h3>
+<p>应用设置里没有提供这个开关，所以它一直开着。</p>
+<h3 id="版本存在我的笔记文件夹里吗">版本存在我的笔记文件夹里吗？</h3>
+<p>不在，存在应用的支持目录里，所以不会出现在访达里你的笔记旁边，也不会跟着同步。</p>
+<h3 id="能找回我删掉的笔记吗">能找回我删掉的笔记吗？</h3>
+<p>放进废纸篓的笔记可以从废纸篓里恢复。历史窗口按路径查找版本，所以放进废纸篓之前的版本，要等笔记回到原来的路径才会重新出现。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/local-first-markdown-notes/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">本地优先的 Markdown 笔记怎么管</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/obsidian-alternative-mac/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">Mac 上更轻的 Obsidian 替代品</span><span class="blog-related-meta">约 4 分钟</span></a></li><li><a href="/zh/blog/markdown-notes-from-terminal/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">在终端里使用 Markdown 笔记：miao 命令行</span><span class="blog-related-meta">约 4 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

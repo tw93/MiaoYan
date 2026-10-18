@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown 转幻灯片：用 --- 分页 · 妙言博客</title>
+<meta name="description" content="用 --- 把笔记分成幻灯片，配置 reveal.js 选项，并比较妙言 PPT 模式与 Marp、Slidev。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/markdown-to-slides/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-to-slides/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-to-slides/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-to-slides/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/markdown-to-slides/">
+<meta property="og:title" content="Markdown 转幻灯片：用 --- 分页 · 妙言博客">
+<meta property="og:description" content="用 --- 把笔记分成幻灯片，配置 reveal.js 选项，并比较妙言 PPT 模式与 Marp、Slidev。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-to-slides.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Markdown 写作">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-to-slides.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 转幻灯片：用 --- 分页", "item": "https://miaoyan.app/zh/blog/markdown-to-slides/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-to-slides/#article", "headline": "Markdown 转幻灯片：用 --- 分页", "description": "用 --- 把笔记分成幻灯片，配置 reveal.js 选项，并比较妙言 PPT 模式与 Marp、Slidev。", "url": "https://miaoyan.app/zh/blog/markdown-to-slides/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-to-slides/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-to-slides.webp", "timeRequired": "PT4M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "能导出成 PowerPoint 吗", "acceptedAnswer": {"@type": "Answer", "text": "妙言不支持，PPT 模式导出的是 PDF，Marp 列出了 PowerPoint 输出。"}}, {"@type": "Question", "name": "需要懂 reveal.js 吗", "acceptedAnswer": {"@type": "Answer", "text": "写基础演示稿不需要，不过了解它的属性注释对设置背景和逐步显示有帮助。"}}, {"@type": "Question", "name": "同一个文件能在别的工具里用吗", "acceptedAnswer": {"@type": "Answer", "text": "--- 分隔符可以带到 Marp 和 Slidev，但 <!-- .slide: --> 这类注释是 reveal.js 专用的。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-to-slides/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/markdown-to-slides/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">Markdown 转幻灯片：用 --- 分页</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 4 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-to-slides.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>把 Markdown 变成幻灯片，做法是在每两页之间单独写一行 <code>---</code>，再用支持这种分页的工具打开。在妙言里按 <code>Command + Option + P</code>，笔记里至少要有一行 <code>---</code>。reveal.js、Marp 和 Slidev 用的是同一个约定，给其中一个写的稿子大多能搬到另一个，区别在主题、导出格式，以及要装多少东西。</p>
+<h2 id="基本格式">基本格式</h2>
+<pre><code class="language-markdown"># 季度回顾
+
+团队同步
+
+---
+
+## 已经发布
+
+- 编辑器重写
+- 更快的预览
+
+---
+
+## 接下来
+
+1. 同步
+2. 导出
+</code></pre>
+<p>分隔符之间的每一块就是一页，第一块是开场页，所以一个一级标题加一行副标题就是封面。<code>---</code> 要独占一行，同一行不能有别的字符。妙言自带的 PPT 指南和 Agent skill 都写明，一页里面不能再放横线，因为同样的字符会被当作分页符。</p>
+<p>如果在没有 <code>---</code> 的笔记上按快捷键，妙言会提示没有检测到分页符，无法开启幻灯片演示。</p>
+<h2 id="在妙言里怎么用">在妙言里怎么用</h2>
+<ol>
+<li>打开或新建一篇笔记，在页与页之间加上 <code>---</code>。</li>
+<li>按 <code>Command + Option + P</code>。</li>
+<li>按 Enter 预览幻灯片大纲，按 ESC 退出，自带的 PPT 笔记里是这样写的。</li>
+<li>想要文件的话，用导出菜单里的妙言 PPT PDF。</li>
+</ol>
+<p>新用户安装后会有一篇带可运行示例的妙言 PPT 笔记，老用户可以自己建一篇同名笔记，把稿子贴进去。</p>
+<h3 id="用注释配置">用注释配置</h3>
+<p>在笔记最开头写一段由 <code>key: value</code> 行组成的 HTML 注释，如果有 YAML frontmatter 就放在它后面。</p>
+<pre><code class="language-markdown">&lt;!--
+transition: slide
+slideNumber: c/t
+controls: true
+progress: true
+--&gt;
+</code></pre>
+<p>这些键直接对应 reveal.js 的配置项，值会被识别成布尔值、数字、<code>null</code>、方括号列表或字符串，<code>highlight.lineNumbers</code> 这样带点的键会设置嵌套选项，渲染之前妙言会把这段注释去掉。默认值是滑动切换、显示控制按钮和进度条、用网址哈希导航、不显示页码、页面内容不垂直居中。</p>
+<h3 id="单页的额外设置">单页的额外设置</h3>
+<pre><code class="language-markdown">&lt;!-- .slide: data-background=&quot;#F8CB9E&quot; --&gt;
+## 自定义背景
+
+- 第一点 &lt;!-- .element: class=&quot;fragment&quot; data-fragment-index=&quot;1&quot; --&gt;
+- 第二点 &lt;!-- .element: class=&quot;fragment&quot; data-fragment-index=&quot;2&quot; --&gt;
+
+```swift [1|2-3]
+let a = 1
+let b = 2
+```
+</code></pre>
+<p><code>.slide:</code> 注释设置这一页的属性，比如背景色、渐变或图片。某一行末尾的 <code>.element:</code> 注释给那个元素加属性，<code>class="fragment"</code> 表示点一下再显示。语言围栏后面跟 <code>[1|2-3]</code> 会逐步高亮对应的行，这些都是 reveal.js 的功能，文档在 revealjs.com/markdown。</p>
+<p>幻灯片里可以用 <code>$...$</code> 和 <code>$$...$$</code> 写公式，Mermaid、PlantUML 和 Markmap 块在演示模式里同样会渲染。要做两栏，可以用带 <code>display: flex</code> 的原生 HTML，每个 <code>div</code> 里面留一个空行，这样里面的 Markdown 才会照常解析。</p>
+<p>写成 <code>/i/photo.png</code> 的本地图片会被改写成幻灯片能加载的路径，所以同一张图在普通笔记和演示稿里都能用。</p>
+<h2 id="它实际是怎么工作的">它实际是怎么工作的</h2>
+<p>妙言的 PPT 模式就是一个 reveal.js 页面。笔记正文放进一个 markdown 区段，由 reveal 的 Markdown 插件按分隔符拆开，默认的分隔写法是前后都有换行的 <code>---</code>。需要第二种分隔符的纵向幻灯片，在 reveal.js 里默认关闭，妙言的 PPT 页面也没有启用，所以得到的是一串平铺的横向页面。文本进入插件之前，妙言会先保护公式、转义反斜杠和美元符号，再改写图片路径，主题会跟随妙言的浅色或深色外观在 reveal 的 white 和 night 样式之间切换。</p>
+<p>既然是 reveal.js，演讲者备注也遵循它的约定，以 <code>Note:</code> 开头的行是这一页的备注。正式演讲之前，先把演讲者视图试一遍。</p>
+<h2 id="任何工具都适用的结构建议">任何工具都适用的结构建议</h2>
+<ul>
+<li>一页只讲一件事，一页需要滚动就拆开。</li>
+<li>用标题当页标题，普通页用 <code>##</code>，章节开头页用 <code>#</code>。</li>
+<li>要点控制在四五条，只有顺序重要时才把长列表做成逐条出现。</li>
+<li>结论放前面，第二页就说出答案，整套稿子更好跟。</li>
+<li>图片写上说明文字，并且放在同一个文件夹里，搬家时路径不会断。</li>
+<li>按实际演示的尺寸预览一次，代码和表格缩小后很容易看不清。</li>
+</ul>
+<h2 id="其他做幻灯片的办法">其他做幻灯片的办法</h2>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>怎么写</th>
+<th>输出</th>
+<th>需要什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>妙言 PPT 模式</td>
+<td>带 <code>---</code> 分隔符的笔记</td>
+<td>屏幕演示、PDF</td>
+<td>Mac 上的妙言</td>
+</tr>
+<tr>
+<td>reveal.js</td>
+<td>Markdown 或 HTML</td>
+<td>浏览器里的幻灯片，通过打印导出 PDF</td>
+<td>浏览器，页面要自己搭</td>
+</tr>
+<tr>
+<td>Marp</td>
+<td>带 <code>---</code> 的 Markdown，基于 CommonMark</td>
+<td>HTML、PDF、PowerPoint</td>
+<td>Marp for VS Code 或 Marp CLI，PDF 和 PowerPoint 导出要用 Chrome 或 Chromium</td>
+</tr>
+<tr>
+<td>Slidev</td>
+<td>带 <code>---</code> 和每页 YAML frontmatter 的 Markdown</td>
+<td>格式见 sli.dev</td>
+<td>安装步骤在它的 Getting Started 指南里</td>
+</tr>
+</tbody>
+</table>
+<p>表里的信息来自 marp.app、revealjs.com 和 sli.dev，核对日期是 2026-10-18。需要给别人一个 <code>.pptx</code> 文件，选 Marp。想在 YAML 里按页设置布局和背景，并且不介意搭它的工具链，选 Slidev。想完全掌控页面，直接用 reveal.js。演示稿只是平时笔记的副产品，想用一个快捷键就开讲，选妙言的这个模式。</p>
+<h2 id="常见问题排查">常见问题排查</h2>
+<ul>
+<li><strong>按快捷键只弹出一条提示。</strong> 笔记里没有 <code>---</code> 行，妙言会提示没有分隔符，无法使用妙言 PPT。</li>
+<li><strong>第一页不见了。</strong> 笔记如果以一行 <code>---</code> 开头，到下一行 <code>---</code> 为止的内容都会被当作 frontmatter 隐藏，所以演示稿要从标题开始写，不要以分隔符开头。</li>
+<li><strong>一页里想放横线。</strong> 换成标题或者留白。</li>
+<li><strong>图片不显示。</strong> 笔记里改用 <code>/i/&lt;文件名&gt;</code> 或 <code>https://</code> 地址，不要用 <code>file://</code> 路径。</li>
+<li><strong>需要 PowerPoint 文件。</strong> 妙言导出的是 PPT PDF，不是 <code>.pptx</code>。</li>
+</ul>
+<p>相关阅读可以看 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查</a> 和 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>，应用可以在 <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> 下载，源码托管在 <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">github.com/tw93/MiaoYan</a>。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="能导出成-powerpoint-吗">能导出成 PowerPoint 吗</h3>
+<p>妙言不支持，PPT 模式导出的是 PDF，Marp 列出了 PowerPoint 输出。</p>
+<h3 id="需要懂-revealjs-吗">需要懂 reveal.js 吗</h3>
+<p>写基础演示稿不需要，不过了解它的属性注释对设置背景和逐步显示有帮助。</p>
+<h3 id="同一个文件能在别的工具里用吗">同一个文件能在别的工具里用吗</h3>
+<p><code>---</code> 分隔符可以带到 Marp 和 Slidev，但 <code>&lt;!-- .slide: --&gt;</code> 这类注释是 reveal.js 专用的。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/mermaid-diagrams-in-markdown/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 里画 Mermaid 图</span><span class="blog-related-meta">约 4 分钟</span></a></li><li><a href="/zh/blog/typora-alternative-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上的 Typora 替代品</span><span class="blog-related-meta">约 4 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

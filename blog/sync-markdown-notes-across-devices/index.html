@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Sync Markdown notes across devices without a sync service · MiaoYan Blog</title>
+<meta name="description" content="Use iCloud Drive, Nutstore, Dropbox or git to sync a Markdown notes folder, set MiaoYan&#x27;s Note Location, and avoid conflict copies.">
+<link rel="canonical" href="https://miaoyan.app/blog/sync-markdown-notes-across-devices/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/sync-markdown-notes-across-devices/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/sync-markdown-notes-across-devices/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/sync-markdown-notes-across-devices/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/sync-markdown-notes-across-devices/">
+<meta property="og:title" content="Sync Markdown notes across devices without a sync service · MiaoYan Blog">
+<meta property="og:description" content="Use iCloud Drive, Nutstore, Dropbox or git to sync a Markdown notes folder, set MiaoYan&#x27;s Note Location, and avoid conflict copies.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/sync-markdown-notes-across-devices.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Managing notes">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/sync-markdown-notes-across-devices.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Sync Markdown notes across devices without a sync service", "item": "https://miaoyan.app/blog/sync-markdown-notes-across-devices/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/sync-markdown-notes-across-devices/#article", "headline": "Sync Markdown notes across devices without a sync service", "description": "Use iCloud Drive, Nutstore, Dropbox or git to sync a Markdown notes folder, set MiaoYan's Note Location, and avoid conflict copies.", "url": "https://miaoyan.app/blog/sync-markdown-notes-across-devices/", "mainEntityOfPage": "https://miaoyan.app/blog/sync-markdown-notes-across-devices/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/sync-markdown-notes-across-devices.webp", "timeRequired": "PT7M", "articleSection": "Managing notes", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does MiaoYan have its own sync service?", "acceptedAnswer": {"@type": "Answer", "text": "No. It reads and writes the folder you choose, and iCloud Drive, Nutstore, Dropbox or another client syncs that folder."}}, {"@type": "Question", "name": "Can I use Nutstore with MiaoYan?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Create a folder inside the local folder that the Nutstore desktop client syncs, and choose it as the Note Location. MiaoYan does not talk to Nutstore or WebDAV directly."}}, {"@type": "Question", "name": "Which option is best for iPhone?", "acceptedAnswer": {"@type": "Answer", "text": "iCloud Drive, because the README says third-party providers may not offer a writable folder in the Files app."}}, {"@type": "Question", "name": "Why did my folder change not take effect?", "acceptedAnswer": {"@type": "Answer", "text": "The library opens at launch. After you choose a new Note Location, restart MiaoYan."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/sync-markdown-notes-across-devices/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/sync-markdown-notes-across-devices/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Sync Markdown notes across devices without a sync service</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-notes">Managing notes</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>7 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/sync-markdown-notes-across-devices.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>MiaoYan does not sync anything itself. It reads and writes one folder of Markdown files, and whatever keeps that folder identical on your devices does the syncing: iCloud Drive, a Nutstore (坚果云) folder, Dropbox, or a git repository. Pick one tool per folder, set the folder as the Note Location in Preferences, and let the file sync run. The only real risk is editing the same note on two devices before changes sync, which produces a conflict copy.</p>
+<h2 id="choosing-a-sync-method">Choosing a sync method</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Best for</th>
+<th>Watch out for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iCloud Drive</td>
+<td>Mac, iPhone and iPad, no setup beyond signing in</td>
+<td>Files "optimized" away from the Mac need to be downloaded before they can be read</td>
+</tr>
+<tr>
+<td>Nutstore (坚果云)</td>
+<td>Users in mainland China who want a folder synced by its desktop client</td>
+<td>The folder must be the local one the desktop client syncs, not a web view</td>
+</tr>
+<tr>
+<td>Dropbox</td>
+<td>Mixed Mac, Windows and Linux machines</td>
+<td>Conflicts show up as "conflicted copy" files</td>
+</tr>
+<tr>
+<td>git</td>
+<td>People who want history and are fine syncing by hand</td>
+<td>Nothing is automatic: you commit, pull and push yourself</td>
+</tr>
+</tbody>
+</table>
+<p>If you use Apple devices only, iCloud Drive is the shortest path. MiaoYan's App Store version is built around it: with no folder chosen and iCloud available, the app uses a folder in iCloud Drive, and the iPhone and iPad apps open the same one.</p>
+<h2 id="how-file-sync-actually-works">How file sync actually works</h2>
+<p>Cloud drives sync files, not notes. Each service watches the folder, notices that a file's contents or modification time changed, and uploads the whole file. Other devices download the new version and replace the old one. The service has no idea that the file is Markdown, so it cannot merge two edits the way a text-aware tool would.</p>
+<p>That is where conflicts come from. Suppose you edit <code>Ideas.md</code> on the Mac while the iPhone is offline, and also edit it on the iPhone. When the iPhone reconnects, the service now holds two versions of one file with no common record of who changed what. It keeps both. Dropbox's help page describes this as a conflicted copy created when "multiple people edit the same file at the same time" or when someone edits a file offline while another person edits it. It names the copy with the editor's username, the words "conflicted copy" and the date.</p>
+<p>One situation looks like a conflict but is not. A file that is still downloading may be read as missing by an editor, which is why the notes folder needs to be available offline. Obsidian's sync guide notes the same issue, warning that files not kept offline can be treated as missing.</p>
+<h2 id="set-the-storage-path-in-miaoyan">Set the storage path in MiaoYan</h2>
+<ol>
+<li>Create a folder named <code>MiaoYan</code> (any name works) inside the synced location: iCloud Drive, the local folder your Nutstore desktop client syncs, your Dropbox folder, or the working copy of a git repository.</li>
+<li>Open Preferences with ⌘, and find "Note Location".</li>
+<li>Click "Change" and choose the folder.</li>
+<li>Confirm the restart prompt that appears. MiaoYan loads its library at launch, so the new folder takes effect on the next start, and cancelling the prompt keeps the old folder.</li>
+</ol>
+<p>Before it accepts the folder, MiaoYan checks that it can read and write there. If the check fails, it keeps your current location and shows a message such as "MiaoYan cannot read this folder. If this is a cloud drive, open the provider app and make sure the folder is exposed in Finder." The Chinese README adds that this is not reported as a MiaoYan sync failure, because the problem is the folder or the cloud drive, not the app.</p>
+<p>MiaoYan does not sign in to WebDAV or cloud-drive accounts. It only sees the folder.</p>
+<h2 id="iphone-and-ipad">iPhone and iPad</h2>
+<p>On iPhone, pick the same cloud-drive folder in the system Files app. The README notes the caveat: if a provider does not offer a writable folder in Files, use iCloud Drive, or make the folder available offline in that provider's own app first. In practice, iCloud Drive is the reliable choice for the iPhone and iPad apps, while third-party drives depend on whether their Files integration provides writable, offline access.</p>
+<h2 id="what-each-service-documents">What each service documents</h2>
+<ul>
+<li><strong>iCloud Drive.</strong> Apple's guide describes Download Now to fetch an item for offline use, and Keep Downloaded to keep it on the Mac even when Optimize Mac Storage moves older documents to iCloud. For a notes folder, use Keep Downloaded so search and the editor never encounter a placeholder file.</li>
+<li><strong>Obsidian's sync notes.</strong> Obsidian's documentation notes that iCloud can sync vaults between Apple devices, warns that iCloud Drive on Windows may cause duplication or corruption, and says files must stay available offline or may be treated as missing. The same applies to any folder of notes, whichever app opens it.</li>
+<li><strong>Git.</strong> Git records snapshots when you commit, and Obsidian's guide notes that syncing is not automatic: you push and pull yourself. That is a feature if you want deliberate history and a drawback if you want it to just work.</li>
+</ul>
+<h2 id="what-goes-wrong-and-how-to-recover">What goes wrong and how to recover</h2>
+<p><strong>You get two copies of a note.</strong> Open both, copy what you need into the one you want to keep, and delete the other. A sync service names the extra file, for example with "conflicted copy" for Dropbox, so searching for that text finds them.</p>
+<p><strong>MiaoYan says an external change was detected.</strong> If a sync brings in a newer version of a note you have open, MiaoYan reloads it from disk. When your unsaved editor text differs, it first saves your text into a hidden <code>.miaoyan-conflicts</code> folder at the root of the library and shows "External change detected. Local copy backed up~". The backups keep at least the 100 most recent files and anything younger than 30 days. Check that folder before assuming text was lost.</p>
+<p><strong>A note looks empty.</strong> The file may not have downloaded yet. Open the folder in Finder, make the files available offline, and let the sync finish.</p>
+<p><strong>Version history is not in the cloud.</strong> MiaoYan keeps its snapshots in its own support folder rather than in your notes folder, so they do not sync. See <a href="/blog/markdown-note-version-history/">Markdown note version history</a>.</p>
+<p><strong>Using git with MiaoYan.</strong> Commit from the library folder. Add <code>.miaoyan-conflicts/</code> to <code>.gitignore</code> so backup files are not committed. Do not run git and a cloud drive on the same folder unless you are comfortable with both touching the same files.</p>
+<h2 id="habits-that-prevent-most-conflicts">Habits that prevent most conflicts</h2>
+<ul>
+<li>Let the sync finish before you switch devices. Most clients show sync progress.</li>
+<li>Do not edit the same note on two devices in the same minute.</li>
+<li>Keep one sync mechanism per folder.</li>
+<li>Keep a second copy outside the sync tool, such as a Time Machine backup, because sync copies mistakes as faithfully as it copies work.</li>
+</ul>
+<p>For the bigger picture of why a plain folder is worth this trouble, read <a href="/blog/local-first-markdown-notes/">Local-first Markdown notes</a>. If you want to script against the synced folder, see <a href="/blog/markdown-notes-from-terminal/">Markdown notes from the terminal</a>.</p>
+<p>MiaoYan for Mac is open source on <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a>, and the <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> version covers Mac, iPhone and iPad with one purchase.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="does-miaoyan-have-its-own-sync-service">Does MiaoYan have its own sync service?</h3>
+<p>No. It reads and writes the folder you choose, and iCloud Drive, Nutstore, Dropbox or another client syncs that folder.</p>
+<h3 id="can-i-use-nutstore-with-miaoyan">Can I use Nutstore with MiaoYan?</h3>
+<p>Yes. Create a folder inside the local folder that the Nutstore desktop client syncs, and choose it as the Note Location. MiaoYan does not talk to Nutstore or WebDAV directly.</p>
+<h3 id="which-option-is-best-for-iphone">Which option is best for iPhone?</h3>
+<p>iCloud Drive, because the README says third-party providers may not offer a writable folder in the Files app.</p>
+<h3 id="why-did-my-folder-change-not-take-effect">Why did my folder change not take effect?</h3>
+<p>The library opens at launch. After you choose a new Note Location, restart MiaoYan.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/local-first-markdown-notes/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Local-first Markdown notes: keep them as plain files</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/wikilinks-and-backlinks/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Wikilinks and backlinks in Markdown notes</span><span class="blog-related-meta">6 min read</span></a></li><li><a href="/blog/markdown-notes-from-terminal/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Markdown notes from the terminal with the miao CLI</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

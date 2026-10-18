@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown note version history: MiaoYan, Time Machine, git · MiaoYan Blog</title>
+<meta name="description" content="How MiaoYan saves and restores note versions, where they live, their limits, and how Time Machine and git cover what it does not.">
+<link rel="canonical" href="https://miaoyan.app/blog/markdown-note-version-history/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-note-version-history/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-note-version-history/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-note-version-history/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/markdown-note-version-history/">
+<meta property="og:title" content="Markdown note version history: MiaoYan, Time Machine, git · MiaoYan Blog">
+<meta property="og:description" content="How MiaoYan saves and restores note versions, where they live, their limits, and how Time Machine and git cover what it does not.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-note-version-history.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Managing notes">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-note-version-history.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown note version history: MiaoYan, Time Machine, git", "item": "https://miaoyan.app/blog/markdown-note-version-history/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-note-version-history/#article", "headline": "Markdown note version history: MiaoYan, Time Machine, git", "description": "How MiaoYan saves and restores note versions, where they live, their limits, and how Time Machine and git cover what it does not.", "url": "https://miaoyan.app/blog/markdown-note-version-history/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-note-version-history/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-note-version-history.webp", "timeRequired": "PT7M", "articleSection": "Managing notes", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does MiaoYan save a version every time I type?", "acceptedAnswer": {"@type": "Answer", "text": "No. At most one every five minutes per note while editing, plus one when you leave the note."}}, {"@type": "Question", "name": "Can I turn version history off?", "acceptedAnswer": {"@type": "Answer", "text": "There is no setting for it in the app's preferences, so it is always on."}}, {"@type": "Question", "name": "Are versions stored in my notes folder?", "acceptedAnswer": {"@type": "Answer", "text": "No, in the app's support folder, so they do not appear in Finder next to your notes or sync with them."}}, {"@type": "Question", "name": "Can I recover a note I deleted?", "acceptedAnswer": {"@type": "Answer", "text": "Notes sent to the Trash can be recovered from the Trash. The history window looks the note up by its path, so the versions from before it was trashed only show again once the note is back at its original path."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-note-version-history/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/markdown-note-version-history/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Markdown note version history: MiaoYan, Time Machine, git</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-notes">Managing notes</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>7 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-note-version-history.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>MiaoYan keeps up to 20 earlier versions of each note, saved automatically while you edit, and you can browse and restore them with Command Shift H. The snapshots live in the app's own support folder, not in your notes folder, so they are a safety net on one Mac and do not travel with your files. For real protection, pair them with Time Machine for whole-disk backups and optionally git for a history you control.</p>
+<h2 id="open-and-restore-a-version">Open and restore a version</h2>
+<ol>
+<li>Select a note and press Command Shift H, or use the "Version History" item in the note menu.</li>
+<li>The window lists "Current Version" at the top, then saved versions with their time and a relative description such as "2 hours ago". Click one to preview its text.</li>
+<li>Click "Restore to This Version". MiaoYan replaces the note's text with that version and shows a confirmation, "Restored to version from" followed by that version's time.</li>
+</ol>
+<p>If the note has no snapshots yet, the window says "No Version History" and explains that "Versions are saved automatically every 5 minutes while editing".</p>
+<p>Restoring is itself recoverable. Before it replaces the text, MiaoYan saves your current text as a new snapshot, so the restore appears in the same list and you can go back.</p>
+<h2 id="how-it-actually-works">How it actually works</h2>
+<p>This is read from the app's source, so it describes behavior rather than promises.</p>
+<p><strong>When a snapshot is taken.</strong> A snapshot is considered whenever the note is written to disk, which happens after a short pause in typing. A new one is saved only if at least five minutes have passed since the previous snapshot of that note. Two events skip the five-minute wait: switching to another note (the one you leave is saved as a snapshot) and restoring a version (the current text is saved as a snapshot first). Opening the history window also tries a save, but a normal, throttled one that respects the interval.</p>
+<p><strong>What is skipped.</strong> Empty or whitespace-only notes are not saved. A snapshot is also skipped when it matches the newest saved version after comparing line by line with surrounding whitespace trimmed and blank lines removed, so a pure spacing change does not create an entry.</p>
+<p><strong>Where files go.</strong> Each note gets its own folder under <code>Library/Application Support/com.tw93.miaoyan/Versions/</code>, named with the note's file name plus a hash of its full path. Inside are plain <code>.md</code> files named by their UTC timestamp, for example <code>2026-10-18T15-42-07Z.md</code>. They are ordinary text, so you can open them in any editor. The history window shows the date in your local time.</p>
+<p><strong>How many.</strong> At most 20 per note. When a new one is saved and the folder holds more than 20, the oldest are deleted.</p>
+<p><strong>Renames, moves and deletion.</strong> Because versions are filed by path, renaming a note, moving it to another folder or sending it to the Trash gives it a new path, and its earlier history stays filed under the old one. The history window then starts again from the new path.</p>
+<p><strong>The five-minute timer is per session.</strong> The record of when the last snapshot happened lives in memory, so after you quit and reopen the app, the first save of a note can create a snapshot straight away, provided the text differs from the newest saved version.</p>
+<h2 id="what-this-covers-and-what-it-does-not">What this covers and what it does not</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>MiaoYan version history</th>
+<th>Time Machine</th>
+<th>git</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Granularity</td>
+<td>About every 5 minutes while editing, plus on note switch</td>
+<td>Hourly, daily, weekly backups</td>
+<td>Whenever you commit</td>
+</tr>
+<tr>
+<td>Depth</td>
+<td>20 versions per note</td>
+<td>Not stated on Apple's page</td>
+<td>As many commits as you make</td>
+</tr>
+<tr>
+<td>Where it lives</td>
+<td>App support folder on this Mac</td>
+<td>Backup disk, plus local snapshots</td>
+<td>The repository</td>
+</tr>
+<tr>
+<td>Syncs to other devices</td>
+<td>No</td>
+<td>No</td>
+<td>Yes, by push and pull</td>
+</tr>
+<tr>
+<td>Covers attachments</td>
+<td>No, note text only</td>
+<td>Yes, files on the disk</td>
+<td>Yes, files you add</td>
+</tr>
+<tr>
+<td>Survives losing the Mac</td>
+<td>No</td>
+<td>Yes, if the disk is separate</td>
+<td>Yes, with a remote</td>
+</tr>
+</tbody>
+</table>
+<p>Apple's documentation says Time Machine backs up files that were not part of the macOS installation and performs hourly, daily and weekly backups once it is on. On APFS disks it also keeps local snapshots, hourly, for up to 24 hours or until the disk needs the space. Apple recommends a backup location other than the internal disk, such as an external drive or network disk.</p>
+<p>Git's own documentation describes each commit as a snapshot of your project that you can revert to or compare with later. That is exactly the property a note history needs, but nothing is recorded until you commit.</p>
+<p>What MiaoYan's history does not cover:</p>
+<ul>
+<li><strong>Anything older than 20 versions.</strong> With five minutes between snapshots, 20 versions reach back about 100 minutes of continuous editing, longer if you edit in bursts, so earlier text drops off the list.</li>
+<li><strong>Other devices.</strong> The snapshots are not in the notes folder, so a sync service does not carry them. Snapshots taken on one device stay on that device. See <a href="/blog/sync-markdown-notes-across-devices/">Sync Markdown notes across devices</a>.</li>
+<li><strong>Attachments.</strong> Images in <code>i/</code> are not versioned.</li>
+<li><strong>External overwrites.</strong> If another tool or a sync conflict replaces a note, MiaoYan writes your unsaved editor text to a hidden <code>.miaoyan-conflicts</code> folder in the library root, which is a separate safety net, kept for the 100 newest files and anything under 30 days.</li>
+</ul>
+<h2 id="a-practical-setup">A practical setup</h2>
+<ol>
+<li>Leave MiaoYan's history on. It needs no configuration.</li>
+<li>Turn on Time Machine with an external disk. It protects the notes folder and the snapshots together.</li>
+<li>For notes you care about long term, add git. Run <code>git init</code> in the library, commit when you finish a piece of work, and add <code>.miaoyan-conflicts/</code> to <code>.gitignore</code>. Pushing to a private remote also gives you an offsite copy.</li>
+<li>If you use a cloud drive for sync, remember it is not a backup. Deleting or corrupting a file propagates to every device. See <a href="/blog/local-first-markdown-notes/">Local-first Markdown notes</a>.</li>
+</ol>
+<h2 id="what-goes-wrong-and-how-to-check">What goes wrong and how to check</h2>
+<ul>
+<li><strong>The window says "No Version History".</strong> The note is new, empty, or has not been saved twice with different text. Edit it, wait, switch to another note and come back.</li>
+<li><strong>A version you expected is missing.</strong> The newest 20 are kept, and near-identical saves are skipped. Check whether the text differs only by spacing.</li>
+<li><strong>Restore did not seem to change the file.</strong> The text is replaced in the editor and written to disk after the usual short delay. Re-open the note to confirm.</li>
+<li><strong>You moved the library folder.</strong> Snapshots are keyed by the note's full path. If you relocate the whole library in Finder, or rename or move a note, the paths change and the old history is no longer found for those notes.</li>
+</ul>
+<p>MiaoYan is a Mac app for plain Markdown folders. The source is on <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a>, and the <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> version covers Mac, iPhone and iPad.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="does-miaoyan-save-a-version-every-time-i-type">Does MiaoYan save a version every time I type?</h3>
+<p>No. At most one every five minutes per note while editing, plus one when you leave the note.</p>
+<h3 id="can-i-turn-version-history-off">Can I turn version history off?</h3>
+<p>There is no setting for it in the app's preferences, so it is always on.</p>
+<h3 id="are-versions-stored-in-my-notes-folder">Are versions stored in my notes folder?</h3>
+<p>No, in the app's support folder, so they do not appear in Finder next to your notes or sync with them.</p>
+<h3 id="can-i-recover-a-note-i-deleted">Can I recover a note I deleted?</h3>
+<p>Notes sent to the Trash can be recovered from the Trash. The history window looks the note up by its path, so the versions from before it was trashed only show again once the note is back at its original path.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/local-first-markdown-notes/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Local-first Markdown notes: keep them as plain files</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/obsidian-alternative-mac/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">A lighter Obsidian alternative for Mac</span><span class="blog-related-meta">6 min read</span></a></li><li><a href="/blog/markdown-notes-from-terminal/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Markdown notes from the terminal with the miao CLI</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

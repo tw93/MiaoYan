@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown notes from the terminal with the miao CLI · MiaoYan Blog</title>
+<meta name="description" content="Install the miao CLI, learn open, new, search, list and cat, script them, and use them with AI coding agents and the MiaoYan skill.">
+<link rel="canonical" href="https://miaoyan.app/blog/markdown-notes-from-terminal/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-notes-from-terminal/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-notes-from-terminal/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-notes-from-terminal/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/markdown-notes-from-terminal/">
+<meta property="og:title" content="Markdown notes from the terminal with the miao CLI · MiaoYan Blog">
+<meta property="og:description" content="Install the miao CLI, learn open, new, search, list and cat, script them, and use them with AI coding agents and the MiaoYan skill.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-notes-from-terminal.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Managing notes">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-notes-from-terminal.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown notes from the terminal with the miao CLI", "item": "https://miaoyan.app/blog/markdown-notes-from-terminal/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-notes-from-terminal/#article", "headline": "Markdown notes from the terminal with the miao CLI", "description": "Install the miao CLI, learn open, new, search, list and cat, script them, and use them with AI coding agents and the MiaoYan skill.", "url": "https://miaoyan.app/blog/markdown-notes-from-terminal/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-notes-from-terminal/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-notes-from-terminal.webp", "timeRequired": "PT6M", "articleSection": "Managing notes", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can the CLI edit or append to an existing note?", "acceptedAnswer": {"@type": "Answer", "text": "No. There is no edit or append command. Edit the file directly with any tool and MiaoYan reloads it."}}, {"@type": "Question", "name": "Does the CLI work with the App Store version?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the commands work the same way. It finds the library through the storageUrl preference or the default folders. If it picks the wrong folder or none at all, set MIAOYAN_PATH to the folder you chose in the app."}}, {"@type": "Question", "name": "Does it work on Linux?", "acceptedAnswer": {"@type": "Answer", "text": "No. The script calls macOS-only tools, and the app is a Mac app."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-notes-from-terminal/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/markdown-notes-from-terminal/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Markdown notes from the terminal with the miao CLI</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-notes">Managing notes</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>6 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-notes-from-terminal.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>MiaoYan ships a small command-line tool called <code>miao</code> that lists, searches, prints, opens and creates notes from the terminal. It has six commands (<code>open</code>, <code>new</code>, <code>search</code>, <code>list</code>, <code>cat</code>, <code>update</code>), and it does not edit existing notes. That is deliberate. Because your notes are plain Markdown files, a script or an AI coding agent can edit them directly, and MiaoYan picks the change up from disk.</p>
+<h2 id="install-and-check">Install and check</h2>
+<p>The installer is a single script from the MiaoYan repository:</p>
+<pre><code class="language-bash">curl -fsSL https://raw.githubusercontent.com/tw93/MiaoYan/main/scripts/install.sh | bash
+</code></pre>
+<p>As with any piped installer, you can download the script first and read it. It does four things: resolves the latest GitHub release tag, downloads the <code>miaoyan</code> script from that tag into <code>~/.local/bin</code> as <code>miao</code>, makes it executable, and creates a <code>miaoyan</code> symlink next to it. If <code>~/.local/bin</code> is not on your <code>PATH</code>, it appends an <code>export PATH</code> line to <code>~/.zshrc</code>, <code>~/.bashrc</code> or <code>~/.bash_profile</code> (the first that exists) and asks you to reload the shell.</p>
+<p>Check the install with <code>miao help</code>, which prints the command list. The CLI is a Bash script and runs only on macOS. The <code>new</code> and <code>open</code> commands call the macOS <code>open</code> command, and the encoding of titles uses <code>python3</code>, so both need to be available.</p>
+<h2 id="the-commands">The commands</h2>
+<pre><code class="language-bash">miao list [folder]        # top-level folders, or the Markdown files in a folder
+miao search &lt;query&gt;       # search notes in the terminal
+miao cat &lt;title|path&gt;     # print a note
+miao open &lt;title|path&gt;    # open a note or folder in MiaoYan
+miao new &lt;title&gt; [text]   # create a note
+miao update               # update the CLI
+</code></pre>
+<p><strong><code>miao list</code></strong> with no argument prints the top-level folders of your library that contain Markdown notes. <code>miao list Projects</code> prints the Markdown files directly inside that folder, as paths relative to the library root. Notes at the root of the library are hidden by default, and the CLI prints a tip to run <code>miao list .</code> to show them.</p>
+<p><strong><code>miao search</code></strong> prints matches as <code>path:line:text</code>, relative to the library root. If ripgrep (<code>rg</code>) is installed, it is used with a fixed-string match, so special characters in your query are not treated as a pattern. Without ripgrep, the CLI falls back to <code>grep</code>. Files under a <code>Trash</code> folder are excluded. When nothing matches, it prints "No matches found" to standard error and exits with a non-zero status.</p>
+<p><strong><code>miao cat</code></strong> prints the whole file, including front matter, to standard output. It accepts a path, a path relative to the library, or a title. A title is matched against file names, without the <code>.md</code> extension, and an exact title resolves to the first match found.</p>
+<p><strong><code>miao open</code></strong> opens a resolved file or folder in MiaoYan. If the argument is not a path, it falls back to the <code>miaoyan://goto/&lt;title&gt;</code> address, the same route that wikilinks use (see <a href="/blog/wikilinks-and-backlinks/">Wikilinks and backlinks</a>).</p>
+<p><strong><code>miao new</code></strong> builds a <code>miaoyan://new/</code> address with the title and the optional text, and hands it to the app, so MiaoYan has to be installed. The text is the second argument, so quote it.</p>
+<p><strong><code>miao update</code></strong> downloads the current <code>miao</code> script from the main branch of the MiaoYan repository and replaces the installed one. Run it when you want to update the CLI, not as a routine step in a script.</p>
+<h2 id="how-it-finds-your-notes">How it finds your notes</h2>
+<p>The CLI does not need configuration, but knowing how it finds the library helps when something does not work.</p>
+<ol>
+<li>If the <code>MIAOYAN_PATH</code> environment variable is set, it uses that.</li>
+<li>Otherwise it reads the <code>storageUrl</code> preference that MiaoYan saved when you picked a folder, with <code>defaults read com.tw93.miaoyan</code>.</li>
+<li>If that gives no folder, it tries <code>~/Documents/MiaoYan</code>, <code>~/Save/MiaoYan</code> and <code>~/MiaoYan</code>.</li>
+</ol>
+<p>If none of them exist, it prints "Error: Notes directory not found." and tells you to set <code>MIAOYAN_PATH</code>. Set it in your shell profile if you keep the library somewhere unusual, including MiaoYan's own iCloud Drive folder, which the CLI does not look for:</p>
+<pre><code class="language-bash">export MIAOYAN_PATH=&quot;$HOME/Notes&quot;
+</code></pre>
+<h2 id="examples">Examples</h2>
+<p>Create a dated journal note with a first line:</p>
+<pre><code class="language-bash">miao new &quot;Journal $(date +%F)&quot; &quot;Morning plan: finish the draft.&quot;
+</code></pre>
+<p>List files that mention a phrase, once each:</p>
+<pre><code class="language-bash">miao search &quot;release checklist&quot; | cut -d: -f1 | sort -u
+</code></pre>
+<p>Print every note in a folder, for example to hand to another tool:</p>
+<pre><code class="language-bash">miao list Projects | while read -r f; do
+  echo &quot;## $f&quot;
+  miao cat &quot;$f&quot;
+done
+</code></pre>
+<p>Count the words in one note:</p>
+<pre><code class="language-bash">miao cat &quot;Project plan&quot; | wc -w
+</code></pre>
+<p>Open the first search hit in the app:</p>
+<pre><code class="language-bash">miao open &quot;$(miao search 'quarterly review' | head -1 | cut -d: -f1)&quot;
+</code></pre>
+<p>Search output is relative to the library root, and the path forms of <code>open</code> and <code>cat</code> resolve against that same root, so the commands fit together.</p>
+<h2 id="using-it-with-ai-coding-agents">Using it with AI coding agents</h2>
+<p>Because the library is a folder, an agent that can read files can already read your notes. The CLI helps in two ways: <code>miao search</code> and <code>miao list</code> give an agent a cheap map of the library without crawling the whole tree, and <code>miao open</code> shows a result to you in the app.</p>
+<p>MiaoYan also publishes an agent skill that teaches an agent MiaoYan's syntax: wikilinks by exact title, local images as <code>/i/&lt;filename&gt;</code> in an <code>i/</code> folder, math and diagram fences, PPT slide separators, and the CLI commands. Install it with:</p>
+<pre><code class="language-bash">npx skills add tw93/MiaoYan/skills/miaoyan -g
+</code></pre>
+<p>The skill tells agents to use only the real commands, not to invent <code>miao edit</code> or <code>miao append</code>, and to set <code>MIAOYAN_PATH</code> when the CLI cannot find the library. It also instructs them never to guess a private folder or write outside the approved library.</p>
+<p>Editing is a file operation. If an agent changes a note that is open in MiaoYan, the app reloads it from disk. If you have unsaved text in the editor that differs, MiaoYan first writes your text to the hidden <code>.miaoyan-conflicts</code> folder and notifies you, so nothing is lost silently. Even so, switch to another note before letting an agent rewrite the current one, because MiaoYan snapshots a note's version history when you leave it. See <a href="/blog/markdown-note-version-history/">Markdown note version history</a>.</p>
+<h2 id="what-goes-wrong">What goes wrong</h2>
+<ul>
+<li><strong>"Notes directory not found."</strong> Set <code>MIAOYAN_PATH</code>, or open MiaoYan once and choose a folder in Preferences.</li>
+<li><strong>Two notes with the same title.</strong> <code>miao cat</code> and <code>miao open</code> resolve an exact title to the first match, so use a path such as <code>Projects/Plan</code> when titles repeat.</li>
+<li><strong><code>miao search</code> finds too much or too little.</strong> With ripgrep, it uses a fixed-string match. Without it, <code>grep</code> treats the query as a pattern.</li>
+<li><strong><code>miao new</code> seems to do nothing.</strong> It hands off to the app, so check that MiaoYan is installed and allowed to open.</li>
+<li><strong>Command not found.</strong> <code>~/.local/bin</code> is not on your <code>PATH</code> in the current shell. Start a new shell.</li>
+</ul>
+<p>The CLI is a convenience layer over a folder of files. For the rationale behind this design, read <a href="/blog/local-first-markdown-notes/">Local-first Markdown notes</a>. MiaoYan for Mac is open source on <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a>, and the <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> version covers Mac, iPhone and iPad.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="can-the-cli-edit-or-append-to-an-existing-note">Can the CLI edit or append to an existing note?</h3>
+<p>No. There is no edit or append command. Edit the file directly with any tool and MiaoYan reloads it.</p>
+<h3 id="does-the-cli-work-with-the-app-store-version">Does the CLI work with the App Store version?</h3>
+<p>Yes, the commands work the same way. It finds the library through the <code>storageUrl</code> preference or the default folders. If it picks the wrong folder or none at all, set <code>MIAOYAN_PATH</code> to the folder you chose in the app.</p>
+<h3 id="does-it-work-on-linux">Does it work on Linux?</h3>
+<p>No. The script calls macOS-only tools, and the app is a Mac app.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/local-first-markdown-notes/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Local-first Markdown notes: keep them as plain files</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/wikilinks-and-backlinks/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Wikilinks and backlinks in Markdown notes</span><span class="blog-related-meta">6 min read</span></a></li><li><a href="/blog/obsidian-alternative-mac/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">A lighter Obsidian alternative for Mac</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

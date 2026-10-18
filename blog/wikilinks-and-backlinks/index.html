@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Wikilinks and backlinks in Markdown notes · MiaoYan Blog</title>
+<meta name="description" content="How [[wikilinks]] differ from normal Markdown links, what MiaoYan supports, how backlinks are built, and the portability trade-offs.">
+<link rel="canonical" href="https://miaoyan.app/blog/wikilinks-and-backlinks/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/wikilinks-and-backlinks/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/wikilinks-and-backlinks/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/wikilinks-and-backlinks/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/wikilinks-and-backlinks/">
+<meta property="og:title" content="Wikilinks and backlinks in Markdown notes · MiaoYan Blog">
+<meta property="og:description" content="How [[wikilinks]] differ from normal Markdown links, what MiaoYan supports, how backlinks are built, and the portability trade-offs.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/wikilinks-and-backlinks.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Managing notes">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/wikilinks-and-backlinks.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Wikilinks and backlinks in Markdown notes", "item": "https://miaoyan.app/blog/wikilinks-and-backlinks/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/wikilinks-and-backlinks/#article", "headline": "Wikilinks and backlinks in Markdown notes", "description": "How [[wikilinks]] differ from normal Markdown links, what MiaoYan supports, how backlinks are built, and the portability trade-offs.", "url": "https://miaoyan.app/blog/wikilinks-and-backlinks/", "mainEntityOfPage": "https://miaoyan.app/blog/wikilinks-and-backlinks/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/wikilinks-and-backlinks.webp", "timeRequired": "PT6M", "articleSection": "Managing notes", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do MiaoYan wikilinks need the .md extension?", "acceptedAnswer": {"@type": "Answer", "text": "No. Use the title only, such as [[Project plan]]."}}, {"@type": "Question", "name": "Does MiaoYan support [[Note|alias]] or [[Note#Heading]]?", "acceptedAnswer": {"@type": "Answer", "text": "No. The whole text between the brackets is treated as the title, so those forms do not resolve."}}, {"@type": "Question", "name": "Do wikilinks work in code blocks?", "acceptedAnswer": {"@type": "Answer", "text": "They are left as plain text inside code spans and fenced code blocks."}}, {"@type": "Question", "name": "Is there a graph view?", "acceptedAnswer": {"@type": "Answer", "text": "No. The Mac app does not include a graph view. Backlinks appear as a list in the document properties panel."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/wikilinks-and-backlinks/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/wikilinks-and-backlinks/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Wikilinks and backlinks in Markdown notes</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-notes">Managing notes</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>6 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/wikilinks-and-backlinks.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>A wikilink is a link written as a note's title inside double square brackets, like <code>[[Project plan]]</code>. In MiaoYan, typing one links to the note whose file name exactly matches that title, and the linked note lists incoming references as backlinks. They keep links short and readable. The trade-off is that wikilinks are not part of standard Markdown. In MiaoYan, they match titles only, so renaming a note breaks existing links, and aliases or heading links are not supported.</p>
+<h2 id="wikilinks-versus-normal-markdown-links">Wikilinks versus normal Markdown links</h2>
+<p>A standard Markdown link carries a text label and a destination: <code>[Project plan](Projects/Project%20plan.md)</code>. The destination is a path, so it breaks when you move the file, and spaces have to be URL encoded. Every Markdown renderer understands it.</p>
+<p>A wikilink drops the path and the label: <code>[[Project plan]]</code>. You name the note and the app finds it. Obsidian, which popularized the style, describes the same split in its documentation: wikilinks use double brackets and are generated by default because they are more compact, while Markdown links need URL encoding and can be switched on by disabling "Use [[Wikilinks]]".</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Normal Markdown link</th>
+<th>Wikilink</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Syntax</td>
+<td><code>[text](path.md)</code></td>
+<td><code>[[Note title]]</code></td>
+</tr>
+<tr>
+<td>Points to</td>
+<td>A path</td>
+<td>A title</td>
+</tr>
+<tr>
+<td>Works in any Markdown viewer</td>
+<td>Yes</td>
+<td>No, the app must support it</td>
+</tr>
+<tr>
+<td>Survives moving the file</td>
+<td>No, the path changes</td>
+<td>Yes, if the title stays</td>
+</tr>
+<tr>
+<td>Survives renaming the file</td>
+<td>Only if the path is updated</td>
+<td>No, the title changes</td>
+</tr>
+<tr>
+<td>Custom link text</td>
+<td><code>[text](...)</code></td>
+<td>Not in MiaoYan</td>
+</tr>
+</tbody>
+</table>
+<p>Portability is the real cost. Open the same folder in a viewer that does not know wikilinks and <code>[[Project plan]]</code> shows up as literal text. If you publish notes to GitHub or a static site, expect to convert them.</p>
+<h2 id="how-to-write-them-in-miaoyan">How to write them in MiaoYan</h2>
+<p>Write the note title between double brackets, without the <code>.md</code> extension:</p>
+<pre><code class="language-markdown">See [[Project plan]] for next steps, and [[Meeting notes 2026-10]] for context.
+</code></pre>
+<p>The title is the file name without its extension, so <code>Project plan.md</code> is <code>[[Project plan]]</code>. The match is case-sensitive and exact, so extra characters break the link. MiaoYan's agent skill makes the same point: keep the target aligned with the note title and do not invent alias, heading or block-reference syntax.</p>
+<p>This differs from Obsidian. Obsidian documents <code>[[Example|Custom name]]</code> for display text, <code>[[Note#Heading]]</code> for headings and <code>#^block-id</code> for blocks. MiaoYan does not implement any of them. Its index reads everything between the brackets as the title, so <code>[[Project plan|plan]]</code> is a link to a note titled "Project plan|plan", which does not exist.</p>
+<h2 id="how-miaoyan-implements-them">How MiaoYan implements them</h2>
+<p>Here is how it works, read from the source.</p>
+<p><strong>Pattern matching.</strong> The editor and the index both look for <code>[[</code> followed by text and <code>]]</code>. The editor highlights the title as a link while you write. The index uses a separate pattern that takes any run of characters that is not a closing bracket, trims surrounding spaces, and treats the result as the target title.</p>
+<p><strong>The index.</strong> Each time the note list refreshes, MiaoYan rebuilds the index from the notes in that list and records for each title the set of titles it links to (outgoing links) and the set of titles that link to it (incoming links). It reads the text each note already has loaded. Notes not opened since launch have no loaded text yet, so their links only count once you open or save them. Saving a note updates its entry in the index.</p>
+<p><strong>Clicking a link.</strong> A wikilink becomes a <code>miaoyan://goto/&lt;title&gt;</code> address, the same URL scheme the <code>miao open</code> command uses. MiaoYan looks for a note with exactly that title. One match opens it. No match shows "Please make sure your title exists~" and creates nothing. Several matches, for example two folders that each contain <code>Meeting notes.md</code>, start a search for that title and show "Found that there are multiple titles of this~". So unique titles are not just tidy, they are what makes a link unambiguous.</p>
+<p><strong>Preview and export.</strong> For the rendered preview, MiaoYan rewrites each wikilink into an ordinary Markdown link of the form <code>[Title](miaoyan://goto/Title)</code> before rendering, and skips anything inside code spans and fenced code blocks, so an <code>[[example]]</code> in a code sample stays as text. The export path uses the same preparation, which means an exported file contains <code>miaoyan://</code> links that only work on a Mac with MiaoYan installed.</p>
+<p><strong>Copy URL.</strong> The "Copy URL" command places this same address on the clipboard, so you can paste a link to a note into another app.</p>
+<h2 id="backlinks">Backlinks</h2>
+<p>Backlinks show which notes link to the current note. MiaoYan displays them in the document properties panel, opened with Command Option I, next to the word count and the created and modified dates. The line reads "Backlinks:" followed by a count, then one title per line, or "None" when nothing links to the note.</p>
+<p>The list is plain text and the titles are not clickable, so use the search field to jump to a linked note.</p>
+<h2 id="what-goes-wrong-and-how-to-check">What goes wrong and how to check</h2>
+<ul>
+<li><strong>A link opens the wrong note or starts a search.</strong> Two notes share a title. Rename one, since MiaoYan uses the file name as the identity.</li>
+<li><strong>"Please make sure your title exists~".</strong> The target does not match any file name exactly. Check case, spaces and punctuation, and remember that <code>Project plan.md</code> is <code>Project plan</code>.</li>
+<li><strong>You renamed a note and links elsewhere stopped working.</strong> MiaoYan does not rewrite links in other notes when you rename a file. Search for the old title with the search field, which looks in both titles and bodies, and update the links.</li>
+<li><strong>Backlinks look incomplete.</strong> The index only counts links from notes in the current list whose text is loaded, meaning notes opened or saved since launch. Open the note that holds the link, or save it, and the backlink appears.</li>
+<li><strong>A link written for another app shows as text.</strong> Aliases, heading links and embeds such as <code>![[image.png]]</code> are Obsidian syntax and MiaoYan does not support them. Convert them to plain titles or standard Markdown.</li>
+</ul>
+<h2 id="when-to-use-plain-links-instead">When to use plain links instead</h2>
+<p>Use standard Markdown links when the notes will be read outside MiaoYan, such as a GitHub repository, a static site or a README. Use wikilinks for a personal knowledge base that lives in one app, where short titles make linking fast. Mixing both is fine, since MiaoYan renders both.</p>
+<p>Related reading: <a href="/blog/local-first-markdown-notes/">Local-first Markdown notes</a> covers title-as-filename and folder structure, <a href="/blog/markdown-notes-from-terminal/">Markdown notes from the terminal</a> shows <code>miao open</code> with titles, and <a href="/blog/obsidian-alternative-mac/">an Obsidian alternative for Mac</a> lists what carries over from a vault.</p>
+<p>MiaoYan for Mac is open source on <a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a>, and the <a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener">App Store</a> version covers Mac, iPhone and iPad.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="do-miaoyan-wikilinks-need-the-md-extension">Do MiaoYan wikilinks need the .md extension?</h3>
+<p>No. Use the title only, such as <code>[[Project plan]]</code>.</p>
+<h3 id="does-miaoyan-support-notealias-or-noteheading">Does MiaoYan support <code>[[Note|alias]]</code> or <code>[[Note#Heading]]</code>?</h3>
+<p>No. The whole text between the brackets is treated as the title, so those forms do not resolve.</p>
+<h3 id="do-wikilinks-work-in-code-blocks">Do wikilinks work in code blocks?</h3>
+<p>They are left as plain text inside code spans and fenced code blocks.</p>
+<h3 id="is-there-a-graph-view">Is there a graph view?</h3>
+<p>No. The Mac app does not include a graph view. Backlinks appear as a list in the document properties panel.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/local-first-markdown-notes/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Local-first Markdown notes: keep them as plain files</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/sync-markdown-notes-across-devices/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Sync Markdown notes across devices without a sync service</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-notes-from-terminal/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Markdown notes from the terminal with the miao CLI</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

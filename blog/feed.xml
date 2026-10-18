@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>MiaoYan Blog</title>
+    <link>https://miaoyan.app/blog/</link>
+    <atom:link href="https://miaoyan.app/blog/feed.xml" rel="self" type="application/rss+xml"/>
+    <description>Guides to writing in Markdown and keeping Markdown notes as local files on Mac, iPhone and iPad.</description>
+    <language>en</language>
+    <item>
+      <title>Choosing a Markdown editor for Mac</title>
+      <link>https://miaoyan.app/blog/markdown-editor-for-mac/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-editor-for-mac/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>What to check in a Mac Markdown editor: plain files, WYSIWYG or split preview, math, sync and speed, with Typora, Obsidian, VS Code and MiaoYan compared.</description>
+    </item>
+    <item>
+      <title>Markdown cheat sheet: CommonMark, GFM and extensions</title>
+      <link>https://miaoyan.app/blog/markdown-cheat-sheet/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-cheat-sheet/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>The Markdown syntax you actually use, with examples, what CommonMark and GFM each define, and what MiaoYan renders on top.</description>
+    </item>
+    <item>
+      <title>LaTeX math in Markdown: syntax, KaTeX and pitfalls</title>
+      <link>https://miaoyan.app/blog/latex-math-in-markdown/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/latex-math-in-markdown/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Write inline and block math in Markdown, use common LaTeX constructs, avoid dollar and underscore pitfalls, and see how MiaoYan renders KaTeX.</description>
+    </item>
+    <item>
+      <title>Mermaid diagrams in Markdown: flowchart, sequence, Gantt</title>
+      <link>https://miaoyan.app/blog/mermaid-diagrams-in-markdown/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/mermaid-diagrams-in-markdown/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Draw flowcharts, sequence and Gantt diagrams with fenced Mermaid blocks, plus PlantUML and Markmap, and what MiaoYan renders offline.</description>
+    </item>
+    <item>
+      <title>Markdown to slides: --- separators and MiaoYan PPT mode</title>
+      <link>https://miaoyan.app/blog/markdown-to-slides/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-to-slides/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Turn a Markdown note into a slide deck with --- separators, configure reveal.js options, and compare Marp, reveal.js and Slidev.</description>
+    </item>
+    <item>
+      <title>Typora alternative for Mac: split preview with MiaoYan</title>
+      <link>https://miaoyan.app/blog/typora-alternative-mac/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/typora-alternative-mac/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Why people leave Typora, WYSIWYG versus split preview, what carries over (files, math, images) and where each app is stronger.</description>
+    </item>
+    <item>
+      <title>Local-first Markdown notes: keep them as plain files</title>
+      <link>https://miaoyan.app/blog/local-first-markdown-notes/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/local-first-markdown-notes/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Why plain Markdown files in your own folder beat a locked-in notes app, what it costs, and how MiaoYan reads the folder you choose.</description>
+    </item>
+    <item>
+      <title>Sync Markdown notes across devices without a sync service</title>
+      <link>https://miaoyan.app/blog/sync-markdown-notes-across-devices/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/sync-markdown-notes-across-devices/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Use iCloud Drive, Nutstore, Dropbox or git to sync a Markdown notes folder, set MiaoYan&#x27;s Note Location, and avoid conflict copies.</description>
+    </item>
+    <item>
+      <title>Wikilinks and backlinks in Markdown notes</title>
+      <link>https://miaoyan.app/blog/wikilinks-and-backlinks/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/wikilinks-and-backlinks/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>How [[wikilinks]] differ from normal Markdown links, what MiaoYan supports, how backlinks are built, and the portability trade-offs.</description>
+    </item>
+    <item>
+      <title>Markdown notes from the terminal with the miao CLI</title>
+      <link>https://miaoyan.app/blog/markdown-notes-from-terminal/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-notes-from-terminal/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Install the miao CLI, learn open, new, search, list and cat, script them, and use them with AI coding agents and the MiaoYan skill.</description>
+    </item>
+    <item>
+      <title>A lighter Obsidian alternative for Mac</title>
+      <link>https://miaoyan.app/blog/obsidian-alternative-mac/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/obsidian-alternative-mac/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>What MiaoYan has and leaves out compared with Obsidian, how to open a vault, and which syntax carries over.</description>
+    </item>
+    <item>
+      <title>Markdown note version history: MiaoYan, Time Machine, git</title>
+      <link>https://miaoyan.app/blog/markdown-note-version-history/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-note-version-history/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>How MiaoYan saves and restores note versions, where they live, their limits, and how Time Machine and git cover what it does not.</description>
+    </item>
+  </channel>
+</rss>
