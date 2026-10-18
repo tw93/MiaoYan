@@ -292,7 +292,7 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { 
 footer { background: var(--night); color: var(--night-dim); padding: 60px 0 32px; font-size: 14px; }
 .foot { display: flex; align-items: flex-start; justify-content: space-between; gap: 56px; }
 .foot-mark { flex: 0 1 320px; min-width: 220px; }
-.foot .brand { color: #54c59f; }
+.foot .brand { color: #7abc93; }
 .foot-mark p { margin: 12px 0 0; line-height: 1.5; color: color-mix(in srgb, var(--night-ink) 62%, transparent); }
 .foot-cols { display: grid; grid-template-columns: repeat(3, minmax(110px, auto)); gap: 12px 56px; }
 .foot-col { display: flex; flex-direction: column; gap: 12px; }
