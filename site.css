@@ -3,12 +3,12 @@
 :root {
   --parchment: #f5f4ed;
   --ivory: #faf9f5;
-  --sand: #e8e6dc;
-  --accent: #1c5d33;
-  --accent-hover: #2a7a47;
-  --accent-tint: #e3ece4;
-  --ink: #141413;
-  --body: #3d3d3a;
+  --warm-sand: #e8e6dc;
+  --brand: #1c5d33;
+  --brand-light: #2a7a47;
+  --brand-tint: #e3ece4;
+  --near-black: #141413;
+  --dark-warm: #3d3d3a;
   --olive: #504e49;
   --stone: #6b6a64;
   --line: #e4e1d6;
@@ -82,7 +82,7 @@ html { background: var(--parchment); -webkit-text-size-adjust: 100%; text-size-a
 body {
   margin: 0;
   background: var(--parchment);
-  color: var(--body);
+  color: var(--dark-warm);
   font-family: var(--sans);
   font-size: 15px;
   line-height: 1.6;
@@ -111,7 +111,7 @@ img { display: block; max-width: 100%; height: auto; }
   -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
   border: 1px solid var(--line);
 }
-.brand { display: flex; align-items: center; gap: 7px; text-decoration: none; color: var(--accent); flex: none; }
+.brand { display: flex; align-items: center; gap: 7px; text-decoration: none; color: var(--brand); flex: none; }
 .brand img { width: 24px; height: 24px; }
 .brand b { font-family: Charter, Georgia, serif; font-weight: 700; font-style: italic; font-size: 18px; letter-spacing: 0.2px; }
 .nav-links { display: flex; gap: 2px; margin-left: 8px; }
@@ -119,16 +119,16 @@ img { display: block; max-width: 100%; height: auto; }
   font-size: 14px; font-weight: 500; line-height: 1; color: var(--olive); text-decoration: none;
   padding: 8px 11px; border-radius: 999px; white-space: nowrap;
 }
-.nav-links a:hover { background: var(--sand); color: var(--ink); }
+.nav-links a:hover { background: var(--warm-sand); color: var(--near-black); }
 .nav-end { margin-left: auto; display: flex; align-items: center; gap: 14px; flex: none; }
 .nav-cta {
   display: inline-flex; align-items: center; gap: 6px;
-  font-size: 13px; font-weight: 600; line-height: 1; color: #fff; background: var(--accent);
+  font-size: 13px; font-weight: 600; line-height: 1; color: #fff; background: var(--brand);
   text-decoration: none; padding: 9px 15px; border-radius: 999px; white-space: nowrap;
-  border: 1px solid var(--accent); transition: background 0.15s, border-color 0.15s;
+  border: 1px solid var(--brand); transition: background 0.15s, border-color 0.15s;
 }
 .nav-cta svg { width: 13px; height: 13px; flex: none; margin-top: -1px; }
-.nav-cta:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.nav-cta:hover { background: var(--brand-light); border-color: var(--brand-light); }
 /* While the hero's buttons are on screen the nav keeps only its links. */
 html.js .nav-bar.hide-cta .nav-cta { display: none; }
 
@@ -145,7 +145,7 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
   border-right: 1px solid currentColor; border-bottom: 1px solid currentColor;
   opacity: 0.55; transform: rotate(45deg); transition: transform 0.18s ease, margin 0.18s ease;
 }
-.lang-trigger:hover, .lang-switch.is-open .lang-trigger { color: var(--accent); }
+.lang-trigger:hover, .lang-switch.is-open .lang-trigger { color: var(--brand); }
 .lang-switch.is-open .lang-trigger::after { margin-top: 2px; transform: rotate(225deg); }
 .lang-code { display: none; }
 .lang-menu {
@@ -170,18 +170,18 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
   display: flex; align-items: center; min-height: 32px; padding: 6px 10px; border-radius: 6px;
   font-size: 13px; line-height: 1.35; color: var(--olive); text-decoration: none;
 }
-.lang-menu a:hover { color: var(--ink); background: color-mix(in srgb, var(--accent-tint) 50%, transparent); }
-.lang-menu a.active { color: var(--ink); font-weight: 600; background: color-mix(in srgb, var(--accent-tint) 70%, transparent); }
-.lang-trigger:focus-visible, .lang-menu a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.lang-menu a:hover { color: var(--near-black); background: color-mix(in srgb, var(--brand-tint) 50%, transparent); }
+.lang-menu a.active { color: var(--near-black); font-weight: 600; background: color-mix(in srgb, var(--brand-tint) 70%, transparent); }
+.lang-trigger:focus-visible, .lang-menu a:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
 
 /* Hero */
 .hero { padding-bottom: 36px; border-bottom: 1px solid var(--line); margin-bottom: var(--gap); }
 .hero h1 {
-  font-family: var(--serif); font-weight: 500; color: var(--ink);
+  font-family: var(--serif); font-weight: 500; color: var(--near-black);
   font-size: 96px; line-height: 1.02; letter-spacing: -1.4px; margin: 0 0 28px;
 }
 html:is([lang="zh-CN"], [lang="zh-Hant"]) .hero h1 { letter-spacing: 2px; }
-.tagline { font-family: var(--serif); font-size: 22px; line-height: 1.45; color: var(--ink); margin: 0 0 10px; text-wrap: balance; }
+.tagline { font-family: var(--serif); font-size: 22px; line-height: 1.45; color: var(--near-black); margin: 0 0 10px; text-wrap: balance; }
 html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { line-height: 1.6; word-break: keep-all; }
 .lede { font-size: 17px; color: var(--olive); margin: 0 0 18px; }
 /* Plain facts in a quiet line, as on mole.fit: no pills, dots between them. */
@@ -192,19 +192,19 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { l
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 158px;
   font-size: 15px; letter-spacing: 0.2px; text-decoration: none;
-  padding: 13px 28px; border-radius: 999px; border: 1.5px solid var(--accent);
+  padding: 13px 28px; border-radius: 999px; border: 1.5px solid var(--brand);
   transition: background 0.15s, border-color 0.15s, transform 0.15s;
 }
 .btn svg { width: 16px; height: 16px; flex: none; margin-top: -1px; }
-.btn-primary { background: var(--accent); color: #fff; font-weight: 600; }
-.btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); transform: translateY(-1px); }
+.btn-primary { background: var(--brand); color: #fff; font-weight: 600; }
+.btn-primary:hover { background: var(--brand-light); border-color: var(--brand-light); transform: translateY(-1px); }
 /* The secondary action is a plain link beside the button, not a second pill. */
-.btn-ghost { color: var(--accent); background: transparent; font-weight: 500; border-color: transparent; min-width: 0; padding-left: 12px; padding-right: 12px; }
+.btn-ghost { color: var(--brand); background: transparent; font-weight: 500; border-color: transparent; min-width: 0; padding-left: 12px; padding-right: 12px; }
 .btn-ghost:hover { text-decoration: underline; text-underline-offset: 4px; }
 
 /* Sections */
 section { margin-bottom: var(--gap); scroll-margin-top: 100px; }
-.section-title { font-family: var(--serif); font-weight: 500; color: var(--ink); font-size: 32px; line-height: 1.25; margin: 0 0 12px; }
+.section-title { font-family: var(--serif); font-weight: 500; color: var(--near-black); font-size: 32px; line-height: 1.25; margin: 0 0 12px; }
 .section-lede { font-size: 17px; color: var(--olive); margin: 0 0 24px; }
 html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { text-wrap: pretty; line-break: strict; }
 .section-title + .cards, .section-title + details { margin-top: 24px; }
@@ -220,8 +220,8 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { 
   font: inherit; font-size: 13px; line-height: 1.35; color: var(--olive); background: transparent;
   border: 0; padding: 6px 13px; border-radius: 999px; cursor: pointer;
 }
-.tabs button:hover { background: var(--sand); color: var(--ink); }
-.tabs button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+.tabs button:hover { background: var(--warm-sand); color: var(--near-black); }
+.tabs button[aria-pressed="true"] { background: var(--brand); color: #fff; }
 
 /* iPhone and iPad */
 /* Apple's product bezels, shown as is. The iPhone is drawn larger than its
@@ -236,17 +236,17 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { 
 /* Feature cards */
 .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
 .card { background: var(--ivory); border: 1px solid var(--line); border-radius: 14px; padding: 24px 26px; }
-.card h3 { font-weight: 600; font-size: 19px; color: var(--ink); margin: 0 0 8px; }
-.card p { margin: 0; font-size: 15px; color: var(--body); }
+.card h3 { font-weight: 600; font-size: 19px; color: var(--near-black); margin: 0 0 8px; }
+.card p { margin: 0; font-size: 15px; color: var(--dark-warm); }
 
 /* FAQ */
 .faq details { border-top: 1px solid var(--line); padding: 16px 0; }
 .faq details:last-child { border-bottom: 1px solid var(--line); }
-.faq summary { cursor: pointer; list-style: none; font-size: 17px; color: var(--ink); display: flex; justify-content: space-between; gap: 16px; }
+.faq summary { cursor: pointer; list-style: none; font-size: 17px; color: var(--near-black); display: flex; justify-content: space-between; gap: 16px; }
 .faq summary::-webkit-details-marker { display: none; }
 .faq summary::after { content: "+"; color: var(--stone); }
 .faq details[open] summary::after { content: "−"; }
-.faq p { margin: 10px 0 0; color: var(--body); }
+.faq p { margin: 10px 0 0; color: var(--dark-warm); }
 
 /* Footer: the app's dark paper, the brand block beside three link columns. */
 footer { background: var(--night); color: var(--night-dim); padding: 60px 0 32px; font-size: 14px; }
