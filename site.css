@@ -1,5 +1,5 @@
 /* MiaoYan site. Tokens and type follow mole.fit so the two read as one family;
-   the accent is MiaoYan's own green, and the footer is hina.day's ivory band. */
+   the accent is MiaoYan's own green and the footer its dark paper. */
 :root {
   --parchment: #f5f4ed;
   --ivory: #faf9f5;
@@ -89,7 +89,8 @@ html[lang="ko"] {
 }
 
 * { box-sizing: border-box; }
-html { background: var(--parchment); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+/* Below a short page's footer the canvas shows the footer's night, not parchment. */
+html { min-height: 100%; background: linear-gradient(var(--parchment) 50%, var(--night) 50%); -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body {
   margin: 0;
   background: var(--parchment);
@@ -291,19 +292,19 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { 
 .faq details[open] summary::after { content: "−"; }
 .faq p { margin: 10px 0 0; color: var(--dark-warm); }
 
-/* Footer: hina.day's ivory band closed off by a hairline, the name and one
-   product line on the left, small titled link columns on the right. */
-footer { background: var(--ivory); border-top: 1px solid var(--line-faint); color: var(--stone); padding: 40px 0 44px; font-size: 14px; }
+/* Footer: mole.fit's dark band in MiaoYan's night, the name and one product
+   line on the left, small titled link columns on the right, Mole's text steps. */
+footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62%, transparent); padding: 60px 0 48px; font-size: 14px; }
 .foot { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
 .foot-mark { max-width: 26em; }
-.foot-name { margin: 0 0 8px; color: var(--near-black); font-family: var(--serif); font-size: 20px; font-weight: 500; line-height: 1.1; }
+.foot-name { margin: 0 0 8px; color: #fff; font-family: var(--serif); font-size: 20px; font-weight: 500; line-height: 1.1; }
 .foot-name .cn { font-family: "MiaoYan Mark", "MiaoYan Serif TC", "Songti TC", serif; font-weight: 400; }
-.foot-mark p.foot-about { margin: 12px 0 0; font-size: 13px; line-height: 1.55; color: var(--stone); }
+.foot-mark p.foot-about { margin: 12px 0 0; font-size: 13px; line-height: 1.55; color: color-mix(in srgb, var(--night-ink) 62%, transparent); }
 .foot-cols { display: flex; gap: 44px; }
-.foot-col { display: grid; gap: 10px; align-content: start; }
-.foot-col-title { margin: 0 0 2px; color: var(--near-black); font-size: 12px; font-weight: 600; letter-spacing: 0.2px; }
-.foot-col a { color: var(--olive); text-decoration: none; line-height: 1.35; }
-@media (hover: hover) { .foot-col a:hover { color: var(--brand); } }
+.foot-col { display: grid; gap: 12px; align-content: start; }
+.foot-col-title { margin: 0 0 2px; color: color-mix(in srgb, #fff 92%, transparent); font-size: 12px; font-weight: 600; letter-spacing: 0.2px; }
+.foot-col a { color: color-mix(in srgb, var(--night-ink) 68%, transparent); text-decoration: none; line-height: 1.35; }
+@media (hover: hover) { .foot-col a:hover { color: #fff; } }
 
 @media (max-width: 999px) {
   .nav-links { display: none; }
