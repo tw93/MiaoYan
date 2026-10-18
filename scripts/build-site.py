@@ -100,7 +100,7 @@ COPY = {
         "nav": ["功能", "多端体验", "常见问题"],
         "language": "语言",
         "nav_cta": "App Store",
-        "h1": "妙言",
+        "h1": "MiaoYan",
         "tagline": "轻灵的原生 Markdown 笔记本，笔记就是本地文件，伴你写出妙言",
         "lede": "",
         "trust": ["一次购买覆盖三端", "纯本地 Markdown", "Mac 版免费开源", "macOS 12 / iOS 18+"],
@@ -156,7 +156,7 @@ COPY = {
         "nav": ["功能", "多端體驗", "常見問題"],
         "language": "語言",
         "nav_cta": "App Store",
-        "h1": "妙言",
+        "h1": "MiaoYan",
         "tagline": "輕靈的原生 Markdown 筆記本，筆記就是本機檔案，伴你寫出妙言",
         "lede": "",
         "trust": ["一次購買覆蓋三端", "純本地 Markdown", "Mac 版免費開源", "macOS 12 / iOS 18+"],
@@ -637,7 +637,7 @@ def page(key):
 </header>
 <main>
   <div class="hero">
-    <h1>{esc(c['h1'])}</h1>
+    <h1>{esc(c['h1'])}<span class="cn-orbit"><span class="cn" lang="zh-Hant">妙</span></span></h1>
     <p class="tagline">{esc(t(c['tagline']))}</p>
 {f'    <p class="lede">{esc(t(c["lede"]))}</p>\n' if c['lede'] else ''}    <ul class="trust">{trust}</ul>
     <div class="cta hero-cta">

@@ -71,6 +71,13 @@ def subset_path(script, weight):
     return FONT_DIR / f"miaoyan-serif-{script}-{weight}.woff2"
 
 
+# The hero's 妙 is the only Chinese the other languages set. It gets a
+# one-glyph file in the Traditional face, so those pages skip the subsets.
+MARK = "妙"
+MARK_SOURCE = "SourceHanSerifTC-Regular.otf"
+MARK_FILE = FONT_DIR / "miaoyan-mark.woff2"
+
+
 def regenerate():
     FONT_DIR.mkdir(exist_ok=True)
     for script, weight, source, pages in SUBSETS:
@@ -99,6 +106,14 @@ def regenerate():
         )
         text_file.unlink()
         print(f"  fonts/{out.name}  {len(chars)} glyphs  {out.stat().st_size / 1024:.0f} KB")
+    subprocess.run(
+        [
+            "pyftsubset", str(FONT_CACHE / MARK_SOURCE), f"--text={MARK}",
+            "--flavor=woff2", "--no-hinting", "--desubroutinize", f"--output-file={MARK_FILE}",
+        ],
+        check=True,
+    )
+    print(f"  fonts/{MARK_FILE.name}  1 glyph  {MARK_FILE.stat().st_size / 1024:.0f} KB")
     return 0
 
 
@@ -123,6 +138,9 @@ def check():
                 file=sys.stderr,
             )
             failed = True
+    if not MARK_FILE.exists():
+        print(f"missing font subset: fonts/{MARK_FILE.name}", file=sys.stderr)
+        failed = True
     if failed:
         return 1
     print("site-fonts-ok")

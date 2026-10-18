@@ -29,6 +29,14 @@
    serif, render the same text as a Mac or an iPhone. Latin stays with Charter,
    or Georgia where Charter is missing. */
 @font-face {
+  font-family: "MiaoYan Mark";
+  src: url("/fonts/miaoyan-mark.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+5999;
+}
+@font-face {
   font-family: "MiaoYan Serif SC";
   src: local("Source Han Serif SC"), local("Noto Serif CJK SC"),
        url("/fonts/miaoyan-serif-sc-regular.woff2") format("woff2");
@@ -180,7 +188,33 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
   font-family: var(--serif); font-weight: 500; color: var(--near-black);
   font-size: 96px; line-height: 1.02; letter-spacing: -1.4px; margin: 0 0 28px;
 }
-html:is([lang="zh-CN"], [lang="zh-Hant"]) .hero h1 { letter-spacing: 2px; }
+.hero h1 .cn-orbit { position: relative; display: inline-block; margin-left: 18px; }
+.hero h1 .cn {
+  display: inline-block;
+  font-family: "MiaoYan Mark", "MiaoYan Serif TC", "Songti TC", serif;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+/* A thin caret waits beside 妙 and blinks slowly, at the same quiet scale as
+   mole.fit's orbiting dot. */
+.hero h1 .cn-orbit::after {
+  content: "";
+  position: absolute;
+  right: -0.13em;
+  bottom: 0.1em;
+  width: 0.022em;
+  height: 0.24em;
+  border-radius: 1em;
+  background: var(--near-black);
+  opacity: 0.45;
+  animation: miaoyan-caret 2.6s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes miaoyan-caret {
+  0%, 45% { opacity: 0.45; }
+  60%, 85% { opacity: 0; }
+  100% { opacity: 0.45; }
+}
 .tagline { font-family: var(--serif); font-size: 22px; line-height: 1.45; color: var(--near-black); margin: 0 0 10px; text-wrap: balance; }
 html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { line-height: 1.6; word-break: keep-all; }
 .lede { font-size: 17px; color: var(--olive); margin: 0 0 18px; }
@@ -312,4 +346,5 @@ footer { background: var(--night); color: var(--night-dim); padding: 60px 0 32px
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
   }
+  .hero h1 .cn-orbit::after { animation: none; }
 }
