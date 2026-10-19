@@ -7,7 +7,7 @@
   --brand: #1a6840;
   --brand-light: #317b52;
   --brand-tint: #ecf4ee;
-  --near-black: #141413;
+  --near-black: #363433;
   --dark-warm: #3d3d3a;
   --olive: #504e49;
   --stone: #6b6a64;
@@ -123,7 +123,7 @@ img { display: block; max-width: 100%; height: auto; }
   -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
   border: 1px solid var(--line);
 }
-.brand { display: flex; align-items: center; gap: 7px; text-decoration: none; color: var(--brand); flex: none; }
+.brand { display: flex; align-items: center; gap: 7px; text-decoration: none; color: var(--near-black); flex: none; }
 .brand img { width: 24px; height: 24px; }
 .brand b { font-family: Charter, Georgia, serif; font-weight: 700; font-style: italic; font-size: 18px; letter-spacing: 0.2px; }
 .nav-links { display: flex; gap: 2px; margin-left: 8px; }
@@ -216,9 +216,9 @@ html.js .nav-bar.hide-cta .nav-cta { display: none; }
   height: 5px;
   margin: -2.5px 0 0 -2.5px;
   border-radius: 50%;
-  background: var(--near-black);
-  opacity: 0.4;
-  transform: rotate(0deg) translate(calc(cos(var(--mark-orbit)) * 0.68em), calc(sin(var(--mark-orbit)) * 0.68em));
+  background: var(--brand);
+  /* A figure eight, one continuous pen stroke across the character. */
+  transform: translate(calc(cos(var(--mark-orbit)) * 0.9em), calc(sin(var(--mark-orbit)) * cos(var(--mark-orbit)) * 0.9em));
   animation: mark-orbit 16s linear infinite reverse;
   pointer-events: none;
 }
