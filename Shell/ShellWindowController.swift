@@ -88,6 +88,10 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             guard let self else { return event }
             return self.handleScroll(event)
         }
+        menuClickMonitor = NSEvent.addLocalMonitorForEvents(matching: [.rightMouseDown, .leftMouseDown]) { [weak self] event in
+            guard let self else { return event }
+            return self.handleMenuClick(event)
+        }
         // Quitting mid-presentation must not leave preview as the stored
         // mode, or the next launch opens in preview.
         terminateObserver = NotificationCenter.default.addObserver(
@@ -100,6 +104,7 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
     private var keyDownMonitor: Any?
     private var keyUpMonitor: Any?
     private var scrollMonitor: Any?
+    private var menuClickMonitor: Any?
     private var terminateObserver: NSObjectProtocol?
 
     /// The storyboard window's launch guard: a saved frame that is off every
@@ -210,13 +215,16 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
 
     @IBAction func newFolderMenu(_ sender: Any?) { model.promptNewFolder() }
 
+    /// The name is edited in its row, so the folders must be showing, as the
+    /// storyboard sidebar needs a visible row to edit.
     @IBAction func renameFolderMenu(_ sender: Any?) {
+        guard model.layout == .all else { return }
         model.renamingFolderURL = model.selectedFolder?.url
     }
 
     @IBAction func revealFolderMenu(_ sender: Any?) {
-        guard let folder = model.selectedFolder else { return }
-        NSWorkspace.shared.activateFileViewerSelecting([folder.url])
+        guard let url = sidebarFolderURL else { return }
+        NSWorkspace.shared.activateFileViewerSelecting([url])
     }
 
     @IBAction func deleteFolderMenu(_ sender: Any?) {
@@ -387,8 +395,8 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         }
     }
 
+    /// The Trash opens the library, as in the storyboard window.
     private var terminalURL: URL? {
-        guard model.scope != .trash else { return nil }
         if model.isSingleMode, let url = UserDefaultsManagement.singleModeURL {
             if FileManager.default.directoryExists(atUrl: url) { return url }
             return AppEnvironment.current.storage.getProjectBy(url: url)?.url ?? url.deletingLastPathComponent()
@@ -517,8 +525,10 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             return hasNote && model.selectedNote?.isTrash() == false && !model.isPresenting
         case #selector(textFinder(_:)):
             return hasNote
-        case #selector(renameFolderMenu(_:)), #selector(revealFolderMenu(_:)):
-            return model.selectedFolder != nil && !model.isPresenting
+        case #selector(renameFolderMenu(_:)):
+            return model.selectedFolder != nil && model.layout == .all && !model.isPresenting
+        case #selector(revealFolderMenu(_:)):
+            return sidebarFolderURL != nil && !model.isPresenting
         case #selector(deleteFolderMenu(_:)):
             return (model.selectedFolder.map { !$0.isDefault && !$0.isRoot } ?? false) && !model.isPresenting
         // The storyboard window's canUseMenu: nothing that changes the
@@ -916,6 +926,21 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         default:
             break
         }
+        return event
+    }
+
+    /// A right-click or Control-click on a sidebar row chooses it before its
+    /// menu opens and the list follows, as the storyboard sidebar's
+    /// willOpenMenu selects the clicked row.
+    private func handleMenuClick(_ event: NSEvent) -> NSEvent? {
+        guard let window, event.window === window, window.attachedSheet == nil,
+            event.type == .rightMouseDown || event.modifierFlags.contains(.control),
+            let row = model.hoveredSidebarRow,
+            let sidebar = (window.contentViewController as? NSSplitViewController)?.splitViewItems.first?.viewController.view,
+            !sidebar.isHiddenOrHasHiddenAncestor,
+            sidebar.bounds.contains(sidebar.convert(event.locationInWindow, from: nil))
+        else { return event }
+        model.scope = row
         return event
     }
 

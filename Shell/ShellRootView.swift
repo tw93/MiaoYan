@@ -154,24 +154,34 @@ struct ShellSidebar: View {
             .background(ShellStyle.background)
             .zIndex(1)
 
-            ScrollView {
-                LazyVStack(spacing: 1) {
-                    ForEach(model.sidebarRows) { row in
-                        ShellSidebarRow(model: model, row: row, isSelected: model.scope == row.id)
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                model.scope = row.id
-                                focused = true
+            ScrollViewReader { proxy in
+                ScrollView {
+                    LazyVStack(spacing: 1) {
+                        ForEach(model.sidebarRows) { row in
+                            ShellSidebarRow(model: model, row: row, isSelected: model.scope == row.id)
+                                .id(row.id)
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    model.scope = row.id
+                                    focused = true
+                                }
+                                .accessibilityAction { model.scope = row.id }
+                            if row.kind == .All {
+                                SwiftUI.Color.clear.frame(height: 6)
                             }
-                        if row.kind == .All {
-                            SwiftUI.Color.clear.frame(height: 6)
                         }
                     }
+                    .padding(.horizontal, 8)
+                    .padding(.bottom, 10)
                 }
-                .padding(.horizontal, 8)
-                .padding(.bottom, 10)
+                .scrollContentBackground(.hidden)
+                // The chosen row stays in view, whether the arrows moved to it
+                // or it is a deep folder remembered from the last launch.
+                .onChange(of: model.scope) { _, scope in proxy.scrollTo(scope) }
+                .onAppear {
+                    Task { @MainActor in proxy.scrollTo(model.scope) }
+                }
             }
-            .scrollContentBackground(.hidden)
         }
         .id(model.interfaceRevision)
         .background(ShellStyle.background.ignoresSafeArea())
@@ -214,6 +224,10 @@ private struct ShellSidebarRow: View {
     }
 
     private var isBrand: Bool { row.kind == .All }
+    private var isRenaming: Bool {
+        guard case .project(let url) = row.id else { return false }
+        return model.renamingFolderURL == url
+    }
     private var fontSize: CGFloat { CGFloat(UserDefaultsManagement.nameFontSize) + (isBrand ? 1 : 0) }
 
     var body: some View {
@@ -251,6 +265,9 @@ private struct ShellSidebarRow: View {
                 .foregroundStyle(isBrand ? brandTint : ShellStyle.text)
                 .lineLimit(1)
                 .truncationMode(.tail)
+                // A long name cut short shows in full on hover, as the
+                // storyboard outline's expansion tooltips do.
+                .help(isBrand ? "" : row.title)
             }
             Spacer(minLength: 0)
             if row.hasChildren, let folder {
@@ -272,29 +289,44 @@ private struct ShellSidebarRow: View {
             RoundedRectangle(cornerRadius: 7, style: .continuous)
                 .fill(isSelected || isDropTarget ? ShellStyle.sidebarSelection : .clear)
         )
+        // VoiceOver reads a row as one button named after the folder.
+        // While renaming, its field stays reachable on its own.
+        .accessibilityElement(children: isRenaming ? .contain : .combine)
+        .accessibilityLabel(row.title)
+        .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
+        .onHover { inside in
+            if inside {
+                model.hoveredSidebarRow = row.id
+            } else if model.hoveredSidebarRow == row.id {
+                model.hoveredSidebarRow = nil
+            }
+        }
+        // The storyboard sidebar's menu, which shows per row only what
+        // applies: no New Folder on a folder, Open in Terminal on the brand
+        // row for the library, Show in Finder alone on the Trash.
         .contextMenu {
             if let folder {
-                Button(I18n.str("New Folder")) { model.promptNewFolder() }
-                Button(I18n.str("New Subfolder")) { model.promptNewFolder(parent: folder) }
-                Button(I18n.str("Rename Folder")) {
-                    model.scope = row.id
-                    model.renamingFolderURL = folder.url
+                item("New Subfolder", "folder.badge.plus") { model.promptNewFolder(parent: folder) }
+                if !folder.isRoot {
+                    item("Rename Folder", "pencil") {
+                        model.scope = row.id
+                        model.renamingFolderURL = folder.url
+                    }
+                    .disabled(folder.isDefault)
                 }
                 if !folder.isRoot && !folder.isDefault && !folder.isTrash {
-                    Button(I18n.str("Move to…")) { model.promptMoveFolder(folder) }
+                    item("Move to…", "arrow.up.right.circle") { model.promptMoveFolder(folder) }
                 }
-                Button(I18n.str("Show in Finder")) { NSWorkspace.shared.activateFileViewerSelecting([folder.url]) }
-                Button(I18n.str("Open in Terminal")) {
-                    model.scope = row.id
-                    NSApp.sendAction(#selector(ShellWindowController.openInTerminal(_:)), to: nil, from: nil)
-                }
+                item("Show in Finder", "folder") { NSWorkspace.shared.activateFileViewerSelecting([folder.url]) }
+                item("Open in Terminal", "terminal") { openInTerminal() }
                 if !folder.isDefault && !folder.isRoot {
                     Divider()
-                    Button(I18n.str("Delete Folder")) { model.confirmDeleteFolder(folder) }
+                    item("Delete Folder", "trash") { model.confirmDeleteFolder(folder) }
                 }
             } else if row.kind == .Trash, let trash = AppEnvironment.current.storage.getDefaultTrash() {
-                // The storyboard sidebar's Trash menu has only this item.
-                Button(I18n.str("Show in Finder")) { NSWorkspace.shared.activateFileViewerSelecting([trash.url]) }
+                item("Show in Finder", "folder") { NSWorkspace.shared.activateFileViewerSelecting([trash.url]) }
+            } else if row.kind == .All {
+                item("Open in Terminal", "terminal") { openInTerminal() }
             }
         }
         .modifier(ShellFolderDrag(url: row.depth == 0 ? folder?.url : nil))
@@ -328,11 +360,23 @@ private struct ShellSidebarRow: View {
         }
     }
 
-    /// The brand row stands for all notes but is a logo, not a list item: it
-    /// never takes the selection plate, and shows it is chosen by turning
-    /// green, falling back to grey while a folder is open.
+    /// The brand row stands for all notes: chosen, it takes the sand plate
+    /// like any folder and turns green, falling back to grey while a folder
+    /// is open.
     private var brandTint: SwiftUI.Color {
         isSelected ? ShellStyle.accent : ShellStyle.icon
+    }
+
+    private func item(_ title: String, _ symbol: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label(I18n.str(title), systemImage: symbol)
+        }
+    }
+
+    /// The row's folder, or the library from the brand row.
+    private func openInTerminal() {
+        model.scope = row.id
+        NSApp.sendAction(#selector(ShellWindowController.openInTerminal(_:)), to: nil, from: nil)
     }
 
     private var icon: NSImage {

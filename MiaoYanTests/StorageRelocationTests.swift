@@ -431,4 +431,45 @@ final class StorageRelocationTests: XCTestCase {
         let reported = URL(fileURLWithPath: "/private" + registered.path).appendingPathComponent("new.md")
         XCTAssertTrue(storage.getProjectBy(url: reported) === root)
     }
+
+    // MARK: - SwiftUI shell sidebar
+
+    /// Renaming a folder keeps its open subfolders and a chosen one; a
+    /// sibling that only shares the name's prefix is left alone.
+    @available(macOS 14, *)
+    @MainActor
+    func testShellRenameMovesExpandedAndChosenSubfoldersWithTheFolder() {
+        let old = "/Library/Work"
+        let new = "/Library/Jobs"
+        let paths = ["/Library/Work", "/Library/Work/Nested", "/Library/Work/Nested/Deep", "/Library/Workshop", "/Library/Archive"]
+
+        let moved = paths.map { ShellModel.relocated(URL(fileURLWithPath: $0, isDirectory: true), from: old, to: new).path }
+
+        XCTAssertEqual(moved, ["/Library/Jobs", "/Library/Jobs/Nested", "/Library/Jobs/Nested/Deep", "/Library/Workshop", "/Library/Archive"])
+    }
+
+    /// A top-level folder dragged from a library reached through a symlink
+    /// arrives resolved; it must still match its listed row, or the drop
+    /// falls through to import and copies the folder into itself.
+    @available(macOS 14, *)
+    @MainActor
+    func testShellFolderDragMatchesListedPathThroughLibrarySymlink() throws {
+        let base = FileManager.default.temporaryDirectory.appendingPathComponent("MiaoYanSymlinkOrder-\(UUID().uuidString)")
+        let real = base.appendingPathComponent("real/Library", isDirectory: true)
+        try FileManager.default.createDirectory(at: real.appendingPathComponent("Work"), withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: real.appendingPathComponent("Archive"), withIntermediateDirectories: true)
+        try FileManager.default.createSymbolicLink(at: base.appendingPathComponent("link"), withDestinationURL: base.appendingPathComponent("real"))
+        defer { try? FileManager.default.removeItem(at: base) }
+        let listed = base.appendingPathComponent("link/Library")
+        let paths = [listed.appendingPathComponent("Work").path, listed.appendingPathComponent("Archive").path]
+        let dragged = real.appendingPathComponent("Archive").resolvingSymlinksInPath()
+        XCTAssertNotEqual(dragged.path, paths[1], "the drag must arrive on the resolved side for this test to mean anything")
+
+        let source = try XCTUnwrap(ShellModel.listedPath(of: dragged, in: paths))
+        let target = try XCTUnwrap(ShellModel.listedPath(of: URL(fileURLWithPath: paths[0]), in: paths))
+
+        XCTAssertEqual(source, paths[1])
+        XCTAssertEqual(ShellModel.reorderedFolders(paths, moving: source, onto: target), [paths[1], paths[0]])
+        XCTAssertNil(ShellModel.listedPath(of: real.appendingPathComponent("Elsewhere"), in: paths))
+    }
 }

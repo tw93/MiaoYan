@@ -64,13 +64,22 @@ final class ShellModel {
         reload()
     }
 
-    /// Right and left arrows open and close the chosen folder.
+    /// Right and left arrows open and close the chosen folder; left on a
+    /// closed subfolder chooses its parent, as in the storyboard outline.
     func setChosenFolderExpanded(_ expanded: Bool) {
-        guard case .project(let url) = scope,
-            sidebarRows.first(where: { $0.id == scope })?.hasChildren == true,
-            isExpanded(url) != expanded
-        else { return }
-        toggleExpanded(url)
+        guard case .project(let url) = scope, let index = sidebarRows.firstIndex(where: { $0.id == scope }) else { return }
+        if sidebarRows[index].hasChildren, isExpanded(url) != expanded {
+            toggleExpanded(url)
+        } else if !expanded, let parent = Self.parentRow(of: index, in: sidebarRows) {
+            scope = parent.id
+        }
+    }
+
+    /// The row a subfolder's row sits under; nil for a top-level row.
+    static func parentRow(of index: Int, in rows: [SidebarRow]) -> SidebarRow? {
+        let depth = rows[index].depth
+        guard depth > 0 else { return nil }
+        return rows[..<index].last { $0.depth == depth - 1 }
     }
 
     /// Expands the folders above `path` and returns its folder, so a
@@ -970,7 +979,9 @@ final class ShellModel {
                 guard let self else { return }
                 // A drop on the Trash can take notes other than the open one.
                 self.selectedNoteURL = Self.selection(afterRemoving: removed, from: listed, selected: open)
-                self.refreshNotes(keepSelection: true)
+                // The Trash row comes and goes with its notes; once it is
+                // gone, All Notes is chosen, as in the storyboard sidebar.
+                self.reload()
                 if undoable, let urls, !urls.isEmpty {
                     self.notesUndoManager.registerUndo(withTarget: self) { model in
                         MainActor.assumeIsolated { model.restoreDeleted(urls) }
@@ -1144,7 +1155,9 @@ final class ShellModel {
     func importDropped(_ urls: [URL], into project: Project?, keepingFolders: Bool = false) -> Bool {
         var fresh = urls.filter { url in
             url.isFileURL && storage.getBy(url: url) == nil
-                && !storage.getProjects().contains { $0.url.path == url.resolvingSymlinksInPath().path }
+                && !storage.getProjects().contains {
+                    $0.url.resolvingSymlinksInPath().path == url.resolvingSymlinksInPath().path
+                }
         }
         guard !isPresenting, !fresh.isEmpty else { return false }
         if keepingFolders, let project {
@@ -1253,6 +1266,9 @@ final class ShellModel {
 
     /// The folder whose name is being edited in the sidebar.
     var renamingFolderURL: URL?
+    /// The sidebar row under the pointer, which a right-click chooses before
+    /// its menu opens, as the storyboard sidebar selects the clicked row.
+    @ObservationIgnored var hoveredSidebarRow: Scope?
     /// Called after folders change on disk, so the file watcher can follow.
     @ObservationIgnored var onFoldersChanged: (() -> Void)?
 

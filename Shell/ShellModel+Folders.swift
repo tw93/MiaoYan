@@ -84,10 +84,7 @@ extension ShellModel {
         let openNote = selectedNote
         let expanded = expandedFolders
         try await storage.moveFolder(project, to: destination)
-        func moved(_ url: URL) -> URL {
-            guard url.path == oldURL.path || url.path.hasPrefix(oldURL.path + "/") else { return url }
-            return URL(fileURLWithPath: project.url.path + url.path.dropFirst(oldURL.path.count))
-        }
+        let moved = { Self.relocated($0, from: oldURL.path, to: project.url.path) }
         expandedFolders = Set(expanded.map(moved))
         var parent = project.parent
         while let folder = parent, !folder.isRoot {
@@ -103,20 +100,35 @@ extension ShellModel {
     }
 
     /// Renames the folder on disk and moves its notes' URLs with it, as the
-    /// storyboard sidebar does.
+    /// storyboard sidebar does. Open subfolders stay open and a chosen one
+    /// stays chosen, as after a move.
     func renameFolder(_ project: Project, to name: String) {
         renamingFolderURL = nil
         let oldURL = project.url
-        let wasSelected = scope == .project(oldURL)
+        let chosenFolder = selectedFolder
+        let selected = selectedNotes
+        let openNote = selectedNote
+        let expanded = expandedFolders
         do {
             guard try storage.renameFolder(project, to: name) != nil else { return }
         } catch {
             MiaoYanAlert.show(message: I18n.str(error.localizedDescription), style: .warning, for: host?.view.window)
             return
         }
+        let moved = { Self.relocated($0, from: oldURL.path, to: project.url.path) }
+        expandedFolders = Set(expanded.map(moved))
+        if let chosenFolder { scope = .project(chosenFolder.url) }
         onFoldersChanged?()
         reload()
-        if wasSelected { scope = .project(project.url) }
+        selectedNoteURL = openNote?.url ?? selectedNoteURL.map(moved)
+        extraSelectedURLs = Set(selected.filter { $0 !== openNote }.map(\.url))
+    }
+
+    /// `url` under the folder's new path when it is the folder at `oldPath`
+    /// or inside it; any other URL as it is.
+    static func relocated(_ url: URL, from oldPath: String, to newPath: String) -> URL {
+        guard url.path == oldPath || url.path.hasPrefix(oldPath + "/") else { return url }
+        return URL(fileURLWithPath: newPath + url.path.dropFirst(oldPath.count))
     }
 
     /// Moves the folder and everything in it to the Trash after the same
@@ -138,6 +150,9 @@ extension ShellModel {
             }
             self.storage.removeBy(project: project)
             self.onFoldersChanged?()
+            // The storyboard sidebar clears the search with the folder.
+            self.searchText = ""
+            self.isSearchOpen = false
             if self.scope == .project(project.url) { self.scope = .all }
             self.reload()
         }
@@ -190,16 +205,24 @@ extension ShellModel {
     }
 
     func isTopLevelFolder(_ url: URL) -> Bool {
-        topLevelFolderPaths.contains(url.resolvingSymlinksInPath().path)
+        Self.listedPath(of: url, in: topLevelFolderPaths) != nil
+    }
+
+    /// The listed path `url` points at. A dragged folder arrives resolved
+    /// while a library reached through a symlink lists unresolved paths, so
+    /// both sides are resolved before they are compared.
+    static func listedPath(of url: URL, in paths: [String]) -> String? {
+        let resolved = url.resolvingSymlinksInPath().path
+        return paths.first { URL(fileURLWithPath: $0).resolvingSymlinksInPath().path == resolved }
     }
 
     /// A top-level folder dragged onto another takes its place, saved under
     /// the storyboard sidebar's `SidebarProjectOrder` so both windows agree.
     @discardableResult
     func reorderFolder(_ source: URL, onto target: URL) -> Bool {
-        guard
-            let order = Self.reorderedFolders(
-                topLevelFolderPaths, moving: source.resolvingSymlinksInPath().path, onto: target.path)
+        let paths = topLevelFolderPaths
+        guard let source = Self.listedPath(of: source, in: paths), let target = Self.listedPath(of: target, in: paths),
+            let order = Self.reorderedFolders(paths, moving: source, onto: target)
         else { return false }
         UserDefaults.standard.set(order, forKey: "SidebarProjectOrder")
         reload()

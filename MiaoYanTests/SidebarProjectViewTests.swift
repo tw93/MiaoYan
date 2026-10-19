@@ -163,4 +163,27 @@ final class SidebarProjectViewTests: XCTestCase {
         XCTAssertEqual(item.project?.url.path, yearPath)
         XCTAssertNil(outlineView.revealRow(forProjectPath: root.appendingPathComponent("Gone").path))
     }
+
+    /// Left arrow on a closed subfolder in the SwiftUI shell goes to the row
+    /// it sits under, as NSOutlineView does; a top-level row has none.
+    @available(macOS 14, *)
+    @MainActor
+    func testShellLeftArrowParentIsTheNearestShallowerRowAbove() {
+        func folder(_ path: String, depth: Int) -> ShellModel.SidebarRow {
+            ShellModel.SidebarRow(id: .project(URL(fileURLWithPath: path)), title: path, kind: .Category, depth: depth)
+        }
+        let rows = [
+            ShellModel.SidebarRow(id: .all, title: "MiaoYan", kind: .All),
+            folder("/Work", depth: 0),
+            folder("/Work/A", depth: 1),
+            folder("/Work/A/Deep", depth: 2),
+            folder("/Work/B", depth: 1),
+            folder("/Archive", depth: 0),
+        ]
+
+        XCTAssertEqual(ShellModel.parentRow(of: 3, in: rows)?.id, rows[2].id)
+        XCTAssertEqual(ShellModel.parentRow(of: 4, in: rows)?.id, rows[1].id)
+        XCTAssertNil(ShellModel.parentRow(of: 5, in: rows))
+        XCTAssertNil(ShellModel.parentRow(of: 0, in: rows))
+    }
 }
