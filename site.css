@@ -249,8 +249,9 @@ html:is([lang="zh-CN"], [lang="zh-Hant"], [lang="ja"], [lang="ko"]) .tagline { l
 
 /* Sections */
 section { margin-bottom: var(--gap); scroll-margin-top: 100px; }
-.section-title { font-family: var(--serif); font-weight: 500; color: var(--near-black); font-size: 32px; line-height: 1.25; margin: 0 0 12px; }
-.section-lede { font-size: 17px; color: var(--olive); margin: 0 0 24px; }
+/* The family's section head: 32px dark-warm title (26px under 880px), 16px olive lede 12px below. */
+.section-title { font-family: var(--serif); font-weight: 500; color: var(--dark-warm); font-size: 32px; line-height: 1.2; margin: 0 0 12px; }
+.section-lede { font-size: 16px; color: var(--olive); margin: 0 0 24px; }
 html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { text-wrap: pretty; line-break: strict; }
 .section-title + .cards, .section-title + details { margin-top: 24px; }
 
@@ -390,6 +391,7 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
   .nav { margin: 16px -6px 40px; }
   .hero h1 { font-size: 60px; letter-spacing: -0.8px; margin-bottom: 20px; }
   .tagline { font-size: 20px; }
+  .section-title { font-size: 26px; }
   .devices { gap: 32px; }
   .device.pad { width: min(460px, 62%); }
   .device.phone { width: min(230px, 32%); }
