@@ -21,15 +21,7 @@ class ThemedSplitView: NSSplitView, NSSplitViewDelegate {
     }
 
     override func drawDivider(in rect: NSRect) {
-        let dividerColor = resolvedDividerColor()
-        dividerColor.setFill()
-
-        guard Theme.usesModernSystemChrome else {
-            NSBezierPath(rect: rect).fill()
-            return
-        }
-
-        NSBezierPath(rect: hairlineRect(in: rect)).fill()
+        Theme.fillDivider(rect, color: currentDividerColor(), appearance: window?.effectiveAppearance ?? effectiveAppearance)
     }
 
     func currentDividerColor() -> NSColor {
@@ -45,25 +37,5 @@ class ThemedSplitView: NSSplitView, NSSplitViewDelegate {
         setValue(resolvedDividerColor(), forKey: "dividerColor")
         needsDisplay = true
         displayIfNeeded()
-    }
-
-    private func hairlineRect(in rect: NSRect) -> NSRect {
-        let thickness: CGFloat = 1
-
-        if isVertical {
-            return NSRect(
-                x: rect.midX - thickness / 2,
-                y: rect.minY,
-                width: thickness,
-                height: rect.height
-            )
-        }
-
-        return NSRect(
-            x: rect.minX,
-            y: rect.midY - thickness / 2,
-            width: rect.width,
-            height: thickness
-        )
     }
 }

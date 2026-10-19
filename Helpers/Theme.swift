@@ -115,13 +115,32 @@ enum Theme {
         return .clear
     }
 
-    /// Single faint hairline used by panel dividers in modern
-    /// chrome. Collapses the former 0.10 / 0.12 split into one value so the
-    /// app has two divider tiers: this hairline and the stronger
-    /// `dividerColor` (0.18). The notes list keeps its own ultra-faint
-    /// `noteSeparatorColor` (0.07) on purpose.
+    /// The faint outline of controls that sit on the page (the search
+    /// field, toasts). Lines that divide the window use `columnHairline`.
     static var hairlineColor: Color {
         .separatorColor.withAlphaComponent(0.10)
+    }
+
+    /// The one line that divides the window, in both windows: between
+    /// columns, between the editor and preview in split mode, and across
+    /// panels such as version history. Warm ink at 7% on the paper tone,
+    /// white at 7% in dark (maintainer, 2026-09-28). The system separator grey
+    /// it replaced read cool on paper and too bright in dark, and the note
+    /// list no longer draws lines between rows (2026-10-19).
+    nonisolated static let columnHairline = dynamic(0x1F1E1C, 0xFFFFFF, lightAlpha: 0.07, darkAlpha: 0.07)
+
+    /// Fills a divider: the paper first, then the hairline over it, so its
+    /// alpha reads the same over any backing. A clear colour (a hidden
+    /// divider) draws nothing.
+    static func fillDivider(_ rect: NSRect, color: NSColor, appearance: NSAppearance?) {
+        let line = color.resolvedColor(for: appearance)
+        guard line.alphaComponent > 0 else { return }
+        if line.alphaComponent < 1 {
+            backgroundColor.resolvedColor(for: appearance).setFill()
+            rect.fill()
+        }
+        line.setFill()
+        rect.fill(using: .sourceOver)
     }
 
     /// The Settings window's colours: the shell's warm paper, Kami's warm
@@ -166,20 +185,10 @@ enum Theme {
         }
     }
 
+    /// A Custom appearance paints its own background, so its lines keep the
+    /// opaque `divider` colour instead of the paper-tuned hairline.
     static var panelHairlineColor: Color {
-        if usesModernSystemChrome {
-            return hairlineColor
-        }
-
-        return dividerColor
-    }
-
-    static var noteSeparatorColor: Color {
-        if usesModernSystemChrome {
-            return .separatorColor.withAlphaComponent(0.07)
-        }
-
-        return dividerColor
+        UserDefaultsManagement.appearanceType == .Custom ? dividerColor : columnHairline
     }
 
     /// A colour that follows light and dark from two hex values, shared with
@@ -267,15 +276,7 @@ enum Theme {
     }
 
     static var splitDividerColor: Color {
-        if usesModernSystemChrome {
-            // Use the 0.10 hairline tier rather than the notes list's 0.07.
-            // A single vertical column divider reads fainter than the field of
-            // stacked horizontal row separators, so it needs one tier up to
-            // look as present as the note separators do.
-            return hairlineColor
-        }
-
-        return dividerColor
+        panelHairlineColor
     }
 
     static var previewDarkBackgroundColor: Color {

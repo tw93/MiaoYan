@@ -16,7 +16,7 @@ enum ShellPalette {
     static let sidebarSelection = pair(0xE8E6DC, 0xFFFFFF, darkAlpha: 0.08)
     static let listSelection = pair(0xEFEDE4, 0xFFFFFF, darkAlpha: 0.07)
     /// The only line, between columns.
-    static let hairline = pair(0x1F1E1C, 0xFFFFFF, lightAlpha: 0.07, darkAlpha: 0.07)
+    static let hairline = Theme.columnHairline
     static let field = pair(0x1F1E1C, 0xFFFFFF, lightAlpha: 0.045, darkAlpha: 0.06)
 
     private static func pair(_ light: UInt32, _ dark: UInt32, lightAlpha: CGFloat = 1, darkAlpha: CGFloat = 1) -> NSColor {

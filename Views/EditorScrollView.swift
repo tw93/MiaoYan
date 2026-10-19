@@ -168,7 +168,11 @@ class EditorContentSplitView: NSSplitView {
     // MARK: - NSSplitView Overrides
 
     override var dividerColor: NSColor {
-        shouldHideDivider ? .clear : super.dividerColor
+        shouldHideDivider ? .clear : Theme.splitDividerColor
+    }
+
+    override func drawDivider(in rect: NSRect) {
+        Theme.fillDivider(rect, color: dividerColor, appearance: window?.effectiveAppearance ?? effectiveAppearance)
     }
 
     override var dividerThickness: CGFloat {

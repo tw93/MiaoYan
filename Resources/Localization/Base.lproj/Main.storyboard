@@ -752,7 +752,6 @@ CA
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <size key="intercellSpacing" width="1" height="1"/>
                                                                     <color key="backgroundColor" name="mainBackground"/>
-                                                                    <tableViewGridLines key="gridStyleMask" horizontal="YES"/>
                                                                     <color key="gridColor" name="divider"/>
                                                                     <tableColumns>
                                                                         <tableColumn editable="NO" width="235" maxWidth="1000" id="aKf-mj-22P">

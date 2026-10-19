@@ -13,25 +13,13 @@ class NoteRowView: ThemedTableRowView {
         )
     }
 
+    // Rows are parted by space alone, as in the shell's list: a line under
+    // each row had to be hidden next to the selection plate and flickered as
+    // the selection moved (maintainer, 2026-10-19).
     override func draw(_ dirtyRect: NSRect) {
         if isSelected {
             drawSelection(in: dirtyRect)
-            return
         }
-
-        if shouldHideSeparator() {
-            return
-        }
-
-        drawSeparator(in: dirtyRect)
-    }
-
-    private func shouldHideSeparator() -> Bool {
-        if let tableView = enclosingNotesTableView() {
-            return tableView.shouldHideNoteSeparator(for: self)
-        }
-
-        return false
     }
 
     private func visibleRowBounds() -> NSRect {
@@ -55,29 +43,5 @@ class NoteRowView: ThemedTableRowView {
             parentView = view.superview
         }
         return nil
-    }
-
-    override func drawSeparator(in dirtyRect: NSRect) {
-        let separatorHeight: CGFloat = 1.0
-        let rowBounds = visibleRowBounds()
-        let separatorRect = NSRect(
-            x: rowBounds.minX + 20,
-            y: bounds.height - separatorHeight,
-            width: max(0, rowBounds.width - 40),
-            height: separatorHeight
-        )
-
-        var dividerColor = Theme.noteSeparatorColor
-        let app = self.effectiveAppearance
-        var cg: CGColor?
-        app.performAsCurrentDrawingAppearance {
-            cg = dividerColor.cgColor
-        }
-        if let cg, let fixed = NSColor(cgColor: cg) {
-            dividerColor = fixed
-        }
-        dividerColor.setFill()
-
-        separatorRect.fill()
     }
 }
