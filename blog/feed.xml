@@ -97,5 +97,131 @@
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
       <description>How MiaoYan saves and restores note versions, where they live, their limits, and how Time Machine and git cover what it does not.</description>
     </item>
+    <item>
+      <title>Export Apple Notes as Markdown and open the files</title>
+      <link>https://miaoyan.app/blog/apple-notes-to-markdown/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/apple-notes-to-markdown/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>macOS Tahoe can export a Notes note as Markdown. Sequoia exports PDF only. Check the file, then open it in MiaoYan.</description>
+    </item>
+    <item>
+      <title>A Bear alternative for Mac: plain Markdown files</title>
+      <link>https://miaoyan.app/blog/bear-alternative-mac/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/bear-alternative-mac/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Export Bear notes to Markdown, move them into folders MiaoYan reads, and see what you lose without tags and gain with plain files.</description>
+    </item>
+    <item>
+      <title>Chinese-English spacing in Markdown notes</title>
+      <link>https://miaoyan.app/blog/chinese-english-spacing/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/chinese-english-spacing/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Why Chinese writers add a space around Latin text and digits, the exceptions, and how MiaoYan&#x27;s Clean Typography command applies it without touching code.</description>
+    </item>
+    <item>
+      <title>CommonMark vs GFM: which Markdown flavor to write</title>
+      <link>https://miaoyan.app/blog/commonmark-vs-gfm/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/commonmark-vs-gfm/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>What CommonMark and GitHub Flavored Markdown each define, what apps add on top, which layer MiaoYan renders, and a test file to check any editor.</description>
+    </item>
+    <item>
+      <title>Markdown code blocks: fences, language tags and nesting</title>
+      <link>https://miaoyan.app/blog/markdown-code-blocks/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-code-blocks/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Write fenced and inline code in Markdown, nest a fence inside a fence, tag languages and diff blocks, and see what MiaoYan&#x27;s preview highlights.</description>
+    </item>
+    <item>
+      <title>Markdown collapsible sections with details and summary</title>
+      <link>https://miaoyan.app/blog/markdown-collapsible-sections/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-collapsible-sections/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Write a collapsible section in Markdown with details and summary, keep Markdown working inside it, and see how MiaoYan previews and exports it.</description>
+    </item>
+    <item>
+      <title>Markdown escape characters: backslash, entities and code spans</title>
+      <link>https://miaoyan.app/blog/markdown-escape-characters/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-escape-characters/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Which characters a Markdown backslash escapes, when you need it, entities and code spans as alternatives, and the dollar-sign trap in MiaoYan.</description>
+    </item>
+    <item>
+      <title>Markdown footnotes: syntax, support and fallbacks</title>
+      <link>https://miaoyan.app/blog/markdown-footnotes/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-footnotes/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Write [^1] footnotes and definitions, see where GitHub, Pandoc and MiaoYan V4.5.0 render them, and fix footnotes that show as plain text.</description>
+    </item>
+    <item>
+      <title>Markdown front matter: YAML, TOML and MiaoYan</title>
+      <link>https://miaoyan.app/blog/markdown-front-matter/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-front-matter/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Write YAML or TOML front matter for Hugo, Jekyll and Astro, see how GitHub shows it, and what MiaoYan V4.5.0 hides in preview and export.</description>
+    </item>
+    <item>
+      <title>Markdown images: syntax, size and broken paths</title>
+      <link>https://miaoyan.app/blog/markdown-images/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-images/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Insert images, set width with HTML, keep paths from breaking, and see how MiaoYan V4.5.0 stores, previews and exports images.</description>
+    </item>
+    <item>
+      <title>Markdown line breaks: soft, hard and MiaoYan&#x27;s setting</title>
+      <link>https://miaoyan.app/blog/markdown-line-breaks/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-line-breaks/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Why a single newline vanishes in Markdown, how backslash, two spaces and &lt;br&gt; differ, and what MiaoYan&#x27;s Line Break setting changes in preview and export.</description>
+    </item>
+    <item>
+      <title>Markdown links and anchors: inline, reference, headings</title>
+      <link>https://miaoyan.app/blog/markdown-links-and-anchors/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-links-and-anchors/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Inline, reference and autolinks, spaces in URLs, heading anchors on GitHub, and how MiaoYan&#x27;s preview handles fragments and relative links.</description>
+    </item>
+    <item>
+      <title>Markdown on iPad: files, sync and editors</title>
+      <link>https://miaoyan.app/blog/markdown-on-ipad/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-on-ipad/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>What an iPad Markdown setup needs, how MiaoYan opens your Mac&#x27;s iCloud Drive folder, what to check when a note is missing, and other editors.</description>
+    </item>
+    <item>
+      <title>Markdown tables: alignment, pipes and line breaks</title>
+      <link>https://miaoyan.app/blog/markdown-tables/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-tables/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Write a Markdown table, align columns, escape pipes, break lines in cells, handle wide tables in MiaoYan, and fall back to HTML for merged cells.</description>
+    </item>
+    <item>
+      <title>Markdown task lists and checkboxes: syntax and pitfalls</title>
+      <link>https://miaoyan.app/blog/markdown-task-lists/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markdown-task-lists/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Write - [ ] and - [x] task lists, nest them, know where they render, how MiaoYan toggles a box in the source, and find open tasks with ripgrep.</description>
+    </item>
+    <item>
+      <title>Markmap mind maps from a Markdown outline</title>
+      <link>https://miaoyan.app/blog/markmap-mind-maps/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/markmap-mind-maps/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Turn headings and lists into a mind map with a markmap fence, what MiaoYan renders offline, which options apply, and how it differs from Mermaid.</description>
+    </item>
+    <item>
+      <title>PlantUML in Markdown: fences, server rendering and privacy</title>
+      <link>https://miaoyan.app/blog/plantuml-in-markdown/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/plantuml-in-markdown/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Write sequence, class and activity diagrams in a plantuml fence, how MiaoYan renders them with plantuml.com, the privacy cost, and local or Mermaid options.</description>
+    </item>
+    <item>
+      <title>What is Markdown? A plain-text way to format</title>
+      <link>https://miaoyan.app/blog/what-is-markdown/</link>
+      <guid isPermaLink="true">https://miaoyan.app/blog/what-is-markdown/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>What Markdown is, where it came from, the ten marks that cover most writing, how it becomes HTML, what it cannot do, and a first note in MiaoYan.</description>
+    </item>
   </channel>
 </rss>

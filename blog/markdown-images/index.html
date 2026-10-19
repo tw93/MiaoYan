@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown images: syntax, size and broken paths · MiaoYan Blog</title>
+<meta name="description" content="Insert images, set width with HTML, keep paths from breaking, and see how MiaoYan V4.5.0 stores, previews and exports images.">
+<link rel="canonical" href="https://miaoyan.app/blog/markdown-images/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-images/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-images/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-images/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/markdown-images/">
+<meta property="og:title" content="Markdown images: syntax, size and broken paths · MiaoYan Blog">
+<meta property="og:description" content="Insert images, set width with HTML, keep paths from breaking, and see how MiaoYan V4.5.0 stores, previews and exports images.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-images.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Writing in Markdown">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-images.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown images: syntax, size and broken paths", "item": "https://miaoyan.app/blog/markdown-images/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-images/#article", "headline": "Markdown images: syntax, size and broken paths", "description": "Insert images, set width with HTML, keep paths from breaking, and see how MiaoYan V4.5.0 stores, previews and exports images.", "url": "https://miaoyan.app/blog/markdown-images/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-images/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-images.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can I set an image size in plain Markdown?", "acceptedAnswer": {"@type": "Answer", "text": "No. The CommonMark spec defines only the description, path and title. Use an HTML <img> tag, or Pandoc's attribute syntax if Pandoc renders the file."}}, {"@type": "Question", "name": "Should I use relative or absolute paths?", "acceptedAnswer": {"@type": "Answer", "text": "Relative. An absolute path names one machine's disk. GitHub's documentation recommends relative links for images in a repository."}}, {"@type": "Question", "name": "Why does my image show Image Not Found?", "acceptedAnswer": {"@type": "Answer", "text": "The file is not where the path says, usually because the i/ folder was not moved with the note or the file was renamed."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-images/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/markdown-images/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Markdown images: syntax, size and broken paths</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>6 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-images.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Markdown has no syntax for image size. Write the image as <code>![alt text](path "optional title")</code>, and when you need a width, switch that one image to HTML: <code>&lt;img src="/i/photo.png" width="320" alt="alt text"&gt;</code>. In MiaoYan V4.5.0 the HTML form works in the preview because raw HTML is allowed, and the width you set is capped at the column width. Keep images next to the notes and refer to them by a relative path, because that is the part that breaks when a note moves.</p>
+<h2 id="image-syntax-alt-text-and-titles">Image syntax, alt text and titles</h2>
+<p>An image is the link syntax with a leading <code>!</code>. The CommonMark spec calls the bracketed part the image description and says it is standardly used as the <code>alt</code> attribute when the image is rendered to HTML. A title in quotes after the path becomes the <code>title</code> attribute, which browsers show as a tooltip.</p>
+<pre><code class="language-markdown">![Sunset over the harbor](/i/harbor.jpg &quot;Taken from the pier&quot;)
+</code></pre>
+<p>Write the description for someone who cannot see the picture: what it shows, not "image" or the file name. An empty description, <code>![](...)</code>, is valid and is what MiaoYan writes when you paste an image, so fill it in afterwards if the note will be published.</p>
+<h2 id="where-the-image-file-lives">Where the image file lives</h2>
+<p>When you paste an image into a note, or insert an image file through the file picker, MiaoYan V4.5.0 copies it into an <code>i/</code> folder inside the folder the note is in, creating it if needed, and writes <code>![](/i/&lt;filename&gt;)</code> into the text. The folder name <code>i</code> is fixed, and files that are not images go to a <code>files/</code> folder in the same way. Image files keep their name, with each run of characters other than letters, digits, <code>-</code> and <code>_</code> turned into one <code>-</code>. A pasted screenshot has no file name, so it is saved as JPEG under a lowercase UUID, and a name that is already taken also falls back to a UUID. The mobile editor writes into the same <code>i/</code> folder, so after sync a note opened in the other app finds its pictures.</p>
+<p>In the preview, MiaoYan resolves <code>/i/harbor.jpg</code> against the folder the note is in, not against the root of your disk. A leading slash therefore does not mean what it means on a web server. GitHub's syntax page lists <code>/assets/images/electrocat.png</code> as the relative link for a file on the same branch and tells you to prefer relative links over absolute ones for images in a repository.</p>
+<h2 id="how-the-preview-resolves-a-path">How the preview resolves a path</h2>
+<p>For each <code>&lt;img&gt;</code> the preview checks the <code>src</code> value. An <code>http://</code> or <code>https://</code> address is left alone. A path that starts with <code>/</code> but not <code>/i/</code> is treated as an absolute system path and used only if the file exists. Anything else, including <code>/i/...</code> and <code>images/fig.png</code>, is looked up relative to the note's folder and turned into a <code>file://</code> address. If the file is missing, MiaoYan replaces the whole image with a gray box that says <code>Image Not Found</code>. The first image loads straight away and later ones load lazily as you scroll, and a click zooms an image that sits in a paragraph.</p>
+<figure class="blog-figure"><picture><source media="(max-width: 640px)" srcset="/img/blog/markdown-images-mobile.webp" width="600" height="1204"><img src="/img/blog/markdown-images.webp" width="1000" height="484" loading="lazy" alt="Pasted images are copied into an i/ folder and referenced in the note text; the preview resolves the reference against the note&#x27;s folder, PDF export prints the preview, and HTML export cannot find local images."></picture><figcaption>Pasting copies the file into i/ and writes its path into the note, so the preview and PDF find it, while HTML export does not.</figcaption></figure>
+
+<p>The consequence is simple. A note that uses <code>/i/harbor.jpg</code> or <code>i/harbor.jpg</code> works on any Mac as long as the <code>i/</code> folder travels with the note. A note that uses <code>/Users/you/Pictures/harbor.jpg</code> works only on the Mac that has that file, and shows the placeholder everywhere else.</p>
+<h2 id="why-images-break-when-a-note-moves">Why images break when a note moves</h2>
+<ul>
+<li><strong>You moved only the <code>.md</code> file.</strong> The <code>i/</code> folder stayed behind, so every relative path now points at nothing. Move the folder and the notes together, or keep them in a notes folder that you sync as one unit.</li>
+<li><strong>You renamed the folder or the file.</strong> A path in the note is plain text; nothing updates it for you.</li>
+<li><strong>The path is absolute.</strong> It names a location on one machine.</li>
+<li><strong>The link is remote and the page moved or the site blocks hotlinks.</strong> The note then depends on someone else's server.</li>
+</ul>
+<p>Local files cost disk space and need to move with the note. Remote images keep the note small and need a network every time you open it. If you want remote links without hand-uploading, the Editor pane of MiaoYan's Settings has an <code>Upload Service:</code> menu with None, uPic, PicGo, Picsee and PicList. MiaoYan sends the pasted image over HTTP to PicGo or PicList, which must be running, and runs the uPic or Picsee app installed in <code>/Applications</code> to upload it. When an upload succeeds the remote URL goes into the note and the local copy is deleted; when it fails, the local <code>/i/</code> path stays and MiaoYan shows a failure message.</p>
+<h2 id="resizing-an-image">Resizing an image</h2>
+<p>CommonMark and GFM have no size syntax. The options are all outside the core:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Example</th>
+<th>Works in</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTML attribute</td>
+<td><code>&lt;img src="/i/photo.png" width="320"&gt;</code></td>
+<td>Anywhere that allows raw HTML</td>
+</tr>
+<tr>
+<td>Pandoc attributes</td>
+<td><code>![](photo.png){width=50%}</code></td>
+<td>Pandoc only</td>
+</tr>
+</tbody>
+</table>
+<p>In MiaoYan the preview adds <code>max-width: 100%</code> and <code>height: auto</code> to every image, so <code>width="320"</code> gives a 320-pixel image, a <code>width="2000"</code> is shrunk to the column, and a <code>height</code> attribute is overridden so the proportions stay. The Pandoc <code>{width=50%}</code> form is not parsed by MiaoYan, because the parser only has the table, footnotes, strikethrough and task list extensions, and the braces show up as text after the image. Pandoc's manual documents the attribute form, with units of <code>px</code>, <code>cm</code>, <code>mm</code>, <code>in</code>, <code>inch</code> and <code>%</code>. Write the <code>src</code> of an <code>&lt;img&gt;</code> tag in double quotes: MiaoYan only resolves local paths in that form.</p>
+<p>On GitHub, the syntax page documents the <code>![]()</code> form and the <code>&lt;picture&gt;</code> element, and says nothing about size, so check in a preview before relying on <code>width</code> in a README.</p>
+<p>One edge case is that if the file is missing, the <code>Image Not Found</code> replacement drops the tag, including its <code>width</code>.</p>
+<h2 id="images-in-pdf-and-html-export">Images in PDF and HTML export</h2>
+<p>PDF export prints the preview. It waits for images to have a width and swaps the lazy placeholders back to the real addresses, so local <code>/i/</code> images appear in the PDF. The details are in <a href="/blog/markdown-to-pdf-mac/">Markdown to PDF on Mac</a>.</p>
+<p>HTML export is different in V4.5.0. It renders the Markdown without the local-image step and adds a base address of <code>https://cdn.miaoyan.app/Resources/DownView.bundle/</code>, so a file opened from Downloads cannot find <code>/i/harbor.jpg</code> or <code>images/fig.png</code>. Remote images do load. For a shareable single file today, use remote image URLs in the note, or export to PDF.</p>
+<h2 id="checking-the-result">Checking the result</h2>
+<ol>
+<li>Open the preview and confirm every image shows, not the <code>Image Not Found</code> box.</li>
+<li>Move a copy of the note and its <code>i/</code> folder to another place and open it there.</li>
+<li>For web images, turn off the network and see what remains.</li>
+</ol>
+<p>More syntax that varies between apps is in the <a href="/blog/markdown-cheat-sheet/">Markdown cheat sheet</a>, and a note you share across Macs needs its folder synced as in <a href="/blog/sync-markdown-notes-across-devices/">Sync Markdown notes across devices without a sync service</a>.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="can-i-set-an-image-size-in-plain-markdown">Can I set an image size in plain Markdown?</h3>
+<p>No. The CommonMark spec defines only the description, path and title. Use an HTML <code>&lt;img&gt;</code> tag, or Pandoc's attribute syntax if Pandoc renders the file.</p>
+<h3 id="should-i-use-relative-or-absolute-paths">Should I use relative or absolute paths?</h3>
+<p>Relative. An absolute path names one machine's disk. GitHub's documentation recommends relative links for images in a repository.</p>
+<h3 id="why-does-my-image-show-image-not-found">Why does my image show <code>Image Not Found</code>?</h3>
+<p>The file is not where the path says, usually because the <code>i/</code> folder was not moved with the note or the file was renamed.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-front-matter/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown front matter: YAML, TOML and MiaoYan</span><span class="blog-related-meta">5 min read</span></a></li><li><a href="/blog/markdown-line-breaks/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown line breaks: soft, hard and MiaoYan&#x27;s setting</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

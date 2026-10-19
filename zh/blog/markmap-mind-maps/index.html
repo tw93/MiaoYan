@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>用 Markdown 大纲画 Markmap 思维导图 · 妙言博客</title>
+<meta name="description" content="用 markmap 围栏把标题和列表画成思维导图，妙言离线渲染的行为、选项限制，以及和 Mermaid mindmap 的区别。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/markmap-mind-maps/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markmap-mind-maps/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markmap-mind-maps/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markmap-mind-maps/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/markmap-mind-maps/">
+<meta property="og:title" content="用 Markdown 大纲画 Markmap 思维导图 · 妙言博客">
+<meta property="og:description" content="用 markmap 围栏把标题和列表画成思维导图，妙言离线渲染的行为、选项限制，以及和 Mermaid mindmap 的区别。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markmap-mind-maps.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Markdown 写作">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markmap-mind-maps.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "用 Markdown 大纲画 Markmap 思维导图", "item": "https://miaoyan.app/zh/blog/markmap-mind-maps/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markmap-mind-maps/#article", "headline": "用 Markdown 大纲画 Markmap 思维导图", "description": "用 markmap 围栏把标题和列表画成思维导图，妙言离线渲染的行为、选项限制，以及和 Mermaid mindmap 的区别。", "url": "https://miaoyan.app/zh/blog/markmap-mind-maps/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markmap-mind-maps/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markmap-mind-maps.webp", "timeRequired": "PT4M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "妙言里的 Markmap 需要联网吗？", "acceptedAnswer": {"@type": "Answer", "text": "普通大纲不需要，库文件随应用打包，和 PlantUML 不同，后者会把图发到公共服务器。节点里有公式是例外，它会从 CDN 加载 KaTeX。"}}, {"@type": "Question", "name": "能让导图默认折叠吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，V4.5.0 会忽略 front matter 里的选项，预览里的导图也不响应点击，所有层级都会显示，大纲太大就拆成几个块。"}}, {"@type": "Question", "name": "能直接编辑导图吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能，导图由文字画出来，改大纲，预览会随之更新。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markmap-mind-maps/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/markmap-mind-maps/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">用 Markdown 大纲画 Markmap 思维导图</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 4 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markmap-mind-maps.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>想把一份 Markdown 大纲变成思维导图，做法是把大纲放进语言名为 <code>markmap</code> 的围栏代码块，标题和嵌套的列表项会变成分支，预览里画成 SVG 树。妙言把 Markmap 库打包在应用里，所以普通大纲离线也能渲染，文字不会离开你的 Mac。代价是可控的东西少，V4.5.0 里颜色、间距和初始展开层级都由应用固定，普通预览里的导图不响应点击和滚轮，Markmap 官方文档里的那些选项在这里也不会生效。</p>
+<h2 id="markmap-是什么">Markmap 是什么</h2>
+<p>Markmap 官方文档把它描述成 Markdown 和思维导图的结合，它解析 Markdown，取出层级结构，再渲染成可以交互的导图，标题级别或列表缩进决定谁是谁的父节点。输入就是普通大纲，所以可以先把结构当笔记写下来，再看成导图，笔记在任何编辑器里仍然是可读的文字。</p>
+<h2 id="写法">写法</h2>
+<pre><code class="language-markdown">```markmap
+# 发布计划
+## 设计
+- 线框图
+- 图标
+## 构建
+- 编辑器
+  - 标签页
+  - 搜索
+- 预览
+## 发布
+- 公证
+- 更新 appcast
+```
+</code></pre>
+<p>第一个 <code>#</code> 标题是根节点，<code>##</code> 标题是它的分支，列表项挂在最近的标题下面。列表按缩进嵌套，这里习惯每级两个空格，层级可以混用，<code>##</code> 标题下的列表比标题深一层。</p>
+<p>围栏不用手打，在妙言里输入 <code>/markmap</code> 再按 <code>Tab</code>，或者在「格式」菜单的「Tab快捷输入」子菜单里选 <code>/markmap</code> 那一项，会插入一个带根节点、两个分支和三个条目的小模板，根节点标题处于选中状态，占位文字是中文。</p>
+<h2 id="妙言里是怎么渲染的">妙言里是怎么渲染的</h2>
+<p>带语言名的围栏块到达页面时是一个类名为 <code>language-markmap</code> 的 code 元素，预览加载完成以后，脚本（<code>diagram-handler.js</code>）找到这些元素，交给打包好的 Markmap 加载器（<code>markmap.min.js</code>，旁边是 <code>markmap-view.min.js</code> 和 <code>d3.min.js</code>）。加载器读取块里的文字，去掉公共缩进，把大纲转成树，再画成 SVG 替换原来的代码。这些文件都在预览资源包里（markmap-lib 0.14.1 和 markmap-view 0.14.0），用相对路径引用，普通大纲不会发出网络请求。例外是公式，节点里写了 <code>$x^2$</code> 这类公式，Markmap 库会去 jsDelivr 拉 KaTeX 的样式和字体，要保持离线的导图里别放公式。</p>
+<p>读 V4.5.0 的加载器代码，有几个行为是固定的：</p>
+<ul>
+<li>盒子高度由内容算出来，大约每个非空行 30 像素，再加上随深度增加的余量，最低 300 像素，大纲越长盒子越高，字号不会变小。</li>
+<li>节点颜色来自内置的十二色调色板，按深度循环使用，图的背景随浅色或深色外观由应用的 CSS 决定，你自己指定的分支配色不会被读取。</li>
+<li>默认全部展开，在普通预览里也一直保持展开，应用的处理脚本给这个块设了 <code>pointer-events: none</code>，点击到不了节点，也就折叠不了。</li>
+<li>导图创建时开了滚轮缩放、关了拖动平移，但指针事件被关掉以后滚轮同样不起作用，首次渲染时图会自动适配盒子。</li>
+</ul>
+<h2 id="选项别抱太大期望">选项：别抱太大期望</h2>
+<p>Markmap 上游允许在文档的 front matter 里用 <code>markmap</code> 键设置选项，选项页列出了 <code>color</code>、<code>colorFreezeLevel</code>、<code>maxWidth</code> 和 <code>initialExpandLevel</code>，比如用 <code>initialExpandLevel: 2</code> 让更深的层级首次渲染时折叠起来：</p>
+<pre><code class="language-markdown">---
+markmap:
+  initialExpandLevel: 2
+  colorFreezeLevel: 2
+---
+</code></pre>
+<p>妙言 V4.5.0 打包的 Markmap 库能识别围栏里的这段并把它从大纲中剥掉，但应用自己的加载器是用固定选项创建导图的，不会把解析出来的选项再传回去。用 V4.5.0 的预览文件加载带 <code>initialExpandLevel: 1</code> 的块，所有层级照样全部画出来。需要折叠层级或自定义颜色的话，可以用 Markmap 官方的网页工具或支持完整选项的编辑器画这一张，再把截图放进笔记。</p>
+<p>妙言里有一个选项，但只在演示模式下有效：块里写一行 <code>&lt;!--markmap-height=400--&gt;</code>，把笔记当幻灯片演示时，导图高度就按这个像素值来，普通预览里高度仍然是算出来的。</p>
+<h2 id="markmap-还是-mermaid-的-mindmap">Markmap 还是 Mermaid 的 mindmap</h2>
+<p>Mermaid 有自己的 <code>mindmap</code> 图表类型，以关键字 <code>mindmap</code> 开头，靠缩进表示层级，只有一个根节点，节点可以有多种形状，Mermaid 文档把它标为实验性功能。妙言 V4.5.0 打包的 Mermaid 是 11.14.0，能画出 <code>mindmap</code> 块，不过语法以后还可能变，留一个小例子，更新以后试一下。</p>
+<p>两者解决的问题不同。Markmap 读你已经写好的标题和列表，适合本身就是笔记的大纲，Mermaid mindmap 是另一套语法，适合希望导图和流程图、时序图用同一种图表语言写在一份文档里的情况。后一种可以看 <a href="/zh/blog/mermaid-diagrams-in-markdown/">Markdown 里画 Mermaid 图</a>，三种图表语言的围栏写法在 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a> 里也有。</p>
+<h2 id="导出与常见问题排查">导出与常见问题排查</h2>
+<ul>
+<li><strong>块显示成普通代码块。</strong> 语言名必须正好是 <code>markmap</code>，围栏也要闭合，先数一下反引号。</li>
+<li><strong>导图只有一个节点。</strong> 块里要有标题或列表项，只有一段正文的话，整句话会变成唯一的一个节点。</li>
+<li><strong>特别大的大纲。</strong> 每个节点都是 SVG 里的一个 HTML 标签，几百个节点即使装得下也很难读，按分支拆成几个块更好。</li>
+<li><strong>节点里的链接和格式。</strong> 粗体、行内代码和链接都能在节点里渲染出来，但普通预览里导图不接收指针事件，链接点不了，别拿导图当导航用。</li>
+<li><strong>导出。</strong> 导出 PDF 时，妙言会等所有 Markmap 块渲染完再打印，导出以后还是打开文件看一次，图是画好的快照，大图最可能被缩放。</li>
+</ul>
+<p>验证的办法是插入模板，切到预览（<code>⌘3</code>）或分栏模式（<code>⌘\</code>），确认出现带颜色分支的树。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="妙言里的-markmap-需要联网吗">妙言里的 Markmap 需要联网吗？</h3>
+<p>普通大纲不需要，库文件随应用打包，和 PlantUML 不同，后者会把图发到公共服务器。节点里有公式是例外，它会从 CDN 加载 KaTeX。</p>
+<h3 id="能让导图默认折叠吗">能让导图默认折叠吗？</h3>
+<p>不能，V4.5.0 会忽略 front matter 里的选项，预览里的导图也不响应点击，所有层级都会显示，大纲太大就拆成几个块。</p>
+<h3 id="能直接编辑导图吗">能直接编辑导图吗？</h3>
+<p>不能，导图由文字画出来，改大纲，预览会随之更新。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/markdown-task-lists/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 待办列表与复选框写法</span><span class="blog-related-meta">约 4 分钟</span></a></li><li><a href="/zh/blog/plantuml-in-markdown/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 里写 PlantUML：围栏、服务器渲染与隐私</span><span class="blog-related-meta">约 4 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

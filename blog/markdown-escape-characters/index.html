@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown escape characters: backslash, entities and code spans · MiaoYan Blog</title>
+<meta name="description" content="Which characters a Markdown backslash escapes, when you need it, entities and code spans as alternatives, and the dollar-sign trap in MiaoYan.">
+<link rel="canonical" href="https://miaoyan.app/blog/markdown-escape-characters/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-escape-characters/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-escape-characters/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-escape-characters/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/markdown-escape-characters/">
+<meta property="og:title" content="Markdown escape characters: backslash, entities and code spans · MiaoYan Blog">
+<meta property="og:description" content="Which characters a Markdown backslash escapes, when you need it, entities and code spans as alternatives, and the dollar-sign trap in MiaoYan.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-escape-characters.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Writing in Markdown">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-escape-characters.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown escape characters: backslash, entities and code spans", "item": "https://miaoyan.app/blog/markdown-escape-characters/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-escape-characters/#article", "headline": "Markdown escape characters: backslash, entities and code spans", "description": "Which characters a Markdown backslash escapes, when you need it, entities and code spans as alternatives, and the dollar-sign trap in MiaoYan.", "url": "https://miaoyan.app/blog/markdown-escape-characters/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-escape-characters/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-escape-characters.webp", "timeRequired": "PT5M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do I escape characters inside a code block?", "acceptedAnswer": {"@type": "Answer", "text": "No. Backslash escapes do not work in code spans or code blocks, so a backslash would print."}}, {"@type": "Question", "name": "How do I show a literal backslash?", "acceptedAnswer": {"@type": "Answer", "text": "Type two: \\\\."}}, {"@type": "Question", "name": "Why does my numbered line turn into a list?", "acceptedAnswer": {"@type": "Answer", "text": "A line that starts with digits and a dot is a list marker. Escape the dot, as in 2024\\.."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-escape-characters/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/markdown-escape-characters/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Markdown escape characters: backslash, entities and code spans</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>5 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-escape-characters.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Put a backslash in front of any ASCII punctuation character and Markdown treats it as plain text, so <code>\*not italic\*</code> shows asterisks and <code>\# not a heading</code> shows a hash. Inside code spans and code blocks you do not need it, because nothing is parsed there. The one place MiaoYan behaves differently from plain CommonMark is the dollar sign, which its math renderer also reads, so prices need extra care.</p>
+<h2 id="what-a-backslash-can-escape">What a backslash can escape</h2>
+<p>CommonMark allows a backslash before any of these 32 characters, and nothing else:</p>
+<pre><code class="language-text">! &quot; # $ % &amp; ' ( ) * + , - . / : ; &lt; = &gt; ? @ [ \ ] ^ _ ` { | } ~
+</code></pre>
+<p>A backslash before a letter, digit, space or non-ASCII character is just a backslash, so <code>\A</code> and <code>\3</code> print as typed. To print a backslash itself, double it: <code>\\</code>. A backslash at the very end of a line is not an escape at all, it is a <a href="/blog/markdown-line-breaks/">hard line break</a>. Escaped characters lose their Markdown meaning, which includes <code>\&lt;</code> (not a tag), <code>\[</code> (not a link), <code>\`</code> (not code) and <code>\&amp;</code> (not an entity).</p>
+<h2 id="when-you-actually-need-one">When you actually need one</h2>
+<p>Most punctuation is harmless in the middle of a sentence. The cases that bite are these.</p>
+<p><strong>Asterisks.</strong> <code>*</code> opens emphasis even inside a word, so <code>5*6*78</code> renders with an italic 6, per the spec. Write <code>5\*6\*78</code> for literal asterisks.</p>
+<p><strong>Underscores.</strong> CommonMark does not allow <code>_</code> emphasis inside words, so <code>snake_case_name</code> stays as typed. The spec itself says it is best to put such names in code spans. You need <code>\_</code> when two underscores sit at word edges on the same line, for example <code>_draft</code> and <code>final_</code> around other text, which can pair up as emphasis.</p>
+<p><strong>A number followed by a dot at the start of a line.</strong> <code>2024. was a good year</code> starts an ordered list, because a list marker is one to nine digits followed by <code>.</code> or <code>)</code>. Only a list starting with <code>1</code> can interrupt a paragraph, so this mostly bites at the start of a paragraph. Write <code>2024\. was a good year</code>.</p>
+<p><strong>Hash, plus, hyphen and greater-than at the start of a line.</strong> <code>\# not a heading</code>, <code>\- not a bullet</code>, <code>\+ not a bullet</code> and <code>\&gt; not a quote</code> keep the line as text. Only the first character needs the backslash.</p>
+<p><strong>Square brackets and angle brackets.</strong> <code>\[not a link](/foo)</code> stays literal. <code>&lt;div&gt;</code> is raw HTML, and MiaoYan's renderer lets raw HTML through, so a bare <code>&lt;div&gt;</code> in your prose can vanish into the page. Write <code>\&lt;div&gt;</code> or <code>&amp;lt;div&amp;gt;</code>.</p>
+<p><strong>Pipes in tables.</strong> In a GFM table a <code>|</code> ends the cell, even inside backticks. Write <code>\|</code>, and GFM's spec example shows it working in plain text, code spans and bold. The <a href="/blog/markdown-cheat-sheet/">cheat sheet</a> repeats this in its table section.</p>
+<p><strong>Tildes.</strong> <code>~~text~~</code> is strikethrough. For a literal double tilde, <code>\~\~</code>.</p>
+<h2 id="html-entities-as-an-alternative">HTML entities as an alternative</h2>
+<p>An entity such as <code>&amp;amp;</code>, <code>&amp;lt;</code> or <code>&amp;#35;</code> also prints a literal character. Numeric references take one to seven decimal digits, or <code>&amp;#x</code> plus one to six hex digits. The useful case is <code>&amp;nbsp;</code> for a non-breaking space, or <code>&amp;lt;</code> where you want to be sure a tag is not parsed.</p>
+<p>There is a limit. The spec says entities cannot stand in for structural symbols, so <code>&amp;#42;foo&amp;#42;</code> prints literal asterisks and is not emphasis, and <code>&amp;#42; foo</code> is not a list item. So an entity works as an escape for <code>*</code>. Inside code spans and code blocks entities are not recognized either, and <code>&amp;ouml;</code> stays as typed.</p>
+<h2 id="code-as-an-escape">Code as an escape</h2>
+<p>A code span is the simplest escape. Inside backticks, every character is literal, backslashes included: <code>`\*`</code> shows a backslash and an asterisk. Use it for filenames like <code>my_file_name.md</code>, regexes, shell globs and prices. To put a backtick inside a code span, use a longer run of backticks around it. Fenced blocks do the same for several lines.</p>
+<p>Escapes also do not work in autolinks (<code>&lt;https://example.com?find=\*&gt;</code>) or raw HTML attributes, but they do work in link destinations, link titles and the info string of a fenced block.</p>
+<h2 id="dollar-signs-in-miaoyan">Dollar signs in MiaoYan</h2>
+<p>MiaoYan renders math with KaTeX using <code>$...$</code> for inline and <code>$$...$$</code> for display, in every preview. A dollar sign in prose can therefore start a formula. Two layers protect ordinary prices. The Swift side treats <code>$</code> followed by digits, an optional decimal part, and then a character that is not a letter, digit or math operator as currency, and the preview script applies a similar rule. So <code>costs $5 or $10.</code> stays text.</p>
+<p>The guard stops at letters and operators. <code>$5M and $10M</code> is read as a formula between the two dollars, and <code>$5-10</code> is also treated as possible math. A backslash does not help here: <code>\$</code> is an ordinary Markdown escape, so the parser turns it into a bare <code>$</code> before the preview script and KaTeX scan for dollar signs, and <code>\$5M and \$10M</code> still becomes a formula. Two reliable options: put the amount in a code span, such as <code>$5M</code>, or reword it as "5M dollars". Code spans and fenced blocks are skipped by the math pass. See <a href="/blog/latex-math-in-markdown/">LaTeX math in Markdown</a> for how the formula side works.</p>
+<h2 id="differences-between-renderers">Differences between renderers</h2>
+<p>Escaping is defined by CommonMark, so the backslash rules above are the same in GitHub and any other conforming parser. The differences are in what counts as syntax. GFM adds tables and strikethrough, so <code>|</code> and <code>~</code> need escaping there but not in strict CommonMark. Math with dollar signs is not part of either standard: MiaoYan renders it, other tools may not, and a note that mentions <code>$</code> heavily may look different in each. Raw HTML is another split. MiaoYan passes it through, while some hosts strip it, so <code>\&lt;div&gt;</code> is the form that survives everywhere.</p>
+<h2 id="checking-the-result">Checking the result</h2>
+<p>Open the preview and look for backslashes you did not mean to show, and for syntax that disappeared. A missing word usually means an angle bracket was read as a tag; a stray list means a number and a dot. If a character still misbehaves, wrap it in a code span to confirm the parser is the cause.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="do-i-escape-characters-inside-a-code-block">Do I escape characters inside a code block?</h3>
+<p>No. Backslash escapes do not work in code spans or code blocks, so a backslash would print.</p>
+<h3 id="how-do-i-show-a-literal-backslash">How do I show a literal backslash?</h3>
+<p>Type two: <code>\\</code>.</p>
+<h3 id="why-does-my-numbered-line-turn-into-a-list">Why does my numbered line turn into a list?</h3>
+<p>A line that starts with digits and a dot is a list marker. Escape the dot, as in <code>2024\.</code>.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-collapsible-sections/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown collapsible sections with details and summary</span><span class="blog-related-meta">6 min read</span></a></li><li><a href="/blog/markdown-footnotes/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown footnotes: syntax, support and fallbacks</span><span class="blog-related-meta">5 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

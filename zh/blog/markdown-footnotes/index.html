@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown 脚注怎么写，哪里能渲染 · 妙言博客</title>
+<meta name="description" content="脚注的 [^1] 写法、命名与多段落脚注，以及 GitHub、Pandoc、妙言 V4.5.0 的支持情况和排错。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/markdown-footnotes/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-footnotes/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-footnotes/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-footnotes/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/markdown-footnotes/">
+<meta property="og:title" content="Markdown 脚注怎么写，哪里能渲染 · 妙言博客">
+<meta property="og:description" content="脚注的 [^1] 写法、命名与多段落脚注，以及 GitHub、Pandoc、妙言 V4.5.0 的支持情况和排错。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-footnotes.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Markdown 写作">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-footnotes.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 脚注怎么写，哪里能渲染", "item": "https://miaoyan.app/zh/blog/markdown-footnotes/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-footnotes/#article", "headline": "Markdown 脚注怎么写，哪里能渲染", "description": "脚注的 [^1] 写法、命名与多段落脚注，以及 GitHub、Pandoc、妙言 V4.5.0 的支持情况和排错。", "url": "https://miaoyan.app/zh/blog/markdown-footnotes/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-footnotes/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-footnotes.webp", "timeRequired": "PT3M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "GitHub 的 README 支持脚注吗？", "acceptedAnswer": {"@type": "Answer", "text": "支持。GitHub 语法页记录了 [^1] 标记加定义的写法，渲染在文件底部，同时写明 wiki 不支持脚注。"}}, {"@type": "Question", "name": "脚注能放进表格单元格或列表项里吗？", "acceptedAnswer": {"@type": "Answer", "text": "Pandoc 手册说脚注定义可以出现在任何地方，只是不能在列表、引用块、表格这类块元素内部。标记本身是行内文本，妙言 V4.5.0 里写在表格单元格中的标记会正常渲染成脚注，换别的渲染器要先看结果再依赖它。"}}, {"@type": "Question", "name": "一篇笔记的脚注数量有上限吗？", "acceptedAnswer": {"@type": "Answer", "text": "GitHub 和 Pandoc 的文档以及妙言的解析器配置里都没有写上限，条数多时用有含义的标签更好维护。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-footnotes/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/markdown-footnotes/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">Markdown 脚注怎么写，哪里能渲染</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 3 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-footnotes.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>脚注由两部分组成，正文里写标记 <code>[^1]</code>，另起一行写定义 <code>[^1]: 脚注内容</code>，渲染时定义会被收集到页面底部，并按标记出现的顺序编号。脚注不属于 CommonMark，能不能用要看具体的软件，妙言 V4.5.0、GitHub 和 Pandoc 都能渲染，有些 Markdown 处理器则会把方括号原样显示出来。</p>
+<h2 id="写法">写法</h2>
+<p>两部分用同一个标签对应起来。</p>
+<pre><code class="language-markdown">Markdown 没有官方的图片尺寸语法。[^size] 多数软件会接受 HTML。[^html]
+
+[^size]: CommonMark 规范把图片定义为带描述的链接。
+[^html]: `&lt;img width&gt;` 的写法见图片那篇。
+</code></pre>
+<p>标记 <code>[^size]</code> 紧跟在要解释的词或标点后面，定义可以放在任何独占一行的位置，常见的做法是放在段落下面或整篇笔记末尾。GitHub 的文档明确说过，定义写在哪里不会影响脚注渲染的位置，所以紧挨着引用写也会出现在页面底部。</p>
+<p>标签只是用来把两边连起来的键，数字可以，<code>[^size]</code> 这样的单词也可以。Pandoc 手册规定标识符里不能有空格、制表符、换行以及 <code>^</code>、<code>[</code>、<code>]</code>，输出时脚注一律按顺序编号，和你写的标签无关。脚注超过五六条以后，用有含义的标签会省事很多，中间插一条也不用重新排号。</p>
+<h2 id="比较长的脚注">比较长的脚注</h2>
+<p>脚注可以跨多行。GitHub 的语法页说，要在脚注里换行，行尾加两个空格；Pandoc 走得更远，脚注的后续段落要缩进，手册把它类比为多段落的列表项。</p>
+<pre><code class="language-markdown">[^longnote]: 脚注的第一段。
+
+    第二段，缩进四个空格。
+</code></pre>
+<p>多段落写法是 Pandoc 文档里的，GitHub 那页没有讲。妙言 V4.5.0 用的 cmark-gfm 会把缩进的第二段留在同一条脚注里，不缩进的段落回到正文。换别的渲染器时，在大篇幅依赖它之前先试一条长脚注。Pandoc 还有行内脚注 <code>^[脚注内容]</code>，不需要标签和单独的定义，但它是 Pandoc 的扩展，流程里没有 Pandoc 就用不上。</p>
+<h2 id="各处的支持情况">各处的支持情况</h2>
+<table>
+<thead>
+<tr>
+<th>位置</th>
+<th>脚注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CommonMark 规范</td>
+<td>没有定义，规范里只提到有些实现自己加了脚注</td>
+</tr>
+<tr>
+<td>GitHub 的 <code>.md</code> 文件、issue 和 PR</td>
+<td>支持，定义渲染在底部</td>
+</tr>
+<tr>
+<td>GitHub wiki</td>
+<td>按 GitHub 语法页的说法不支持</td>
+</tr>
+<tr>
+<td>Pandoc</td>
+<td>支持，含缩进的多段落脚注和行内脚注</td>
+</tr>
+<tr>
+<td>妙言 V4.5.0</td>
+<td>预览和基于预览渲染的导出里支持，见下文</td>
+</tr>
+</tbody>
+</table>
+<p>最常见的坑是把笔记在这些环境之间搬。为妙言或 Pandoc 写的笔记贴进 GitHub wiki，<code>[^1]</code> 会原样留在正文里。</p>
+<h2 id="妙言-v450-的做法">妙言 V4.5.0 的做法</h2>
+<p>妙言用 cmark-gfm 的 Swift 包渲染 Markdown。V4.5.0 的 <code>Business/Markdown.swift</code> 里，解析器创建时打开了脚注选项，然后按名字挂上四个语法扩展，<code>table</code>、<code>footnotes</code>、<code>strikethrough</code> 和 <code>tasklist</code>，所以脚注是默认开启的，没有设置项。解析结果以允许原始 HTML 的方式转成 HTML，再交给网页视图显示，HTML 导出和 PDF 导出也建立在同一套渲染上，预览里能用的脚注在导出里同样能用。cmark-gfm 会把每个标记变成指向脚注的上标数字，把定义收进文末 <code>footnotes</code> 区块里的编号列表，每条后面带一个返回正文的链接。在预览里点标记会滚动到对应的脚注。</p>
+<p>应用自带的语法指南里也有「Footnotes」一节，带五条定义，可以照着复制。预览资源包里没有脚注专用的样式，外观就是页面的默认样式。</p>
+<p>幻灯片模式是例外。这时妙言把笔记交给 reveal.js 的 Markdown 插件，插件用的是 <code>marked</code> 而不是 cmark-gfm，V4.5.0 的插件源码里没有脚注处理，所以不要指望脚注在幻灯片里渲染。要在幻灯片里放出处，可以把来源写成观点下面的小字，做法见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>。</p>
+<h2 id="脚注没有渲染时">脚注没有渲染时</h2>
+<ul>
+<li><strong>方括号原样显示。</strong> 处理器没有脚注扩展，或者你在 GitHub wiki 里，对照上面的表格。</li>
+<li><strong>定义被当成普通段落。</strong> 多半是定义没有从行首开始，或者标签和标记差了一个字符。Pandoc 把 <code>[^Size]</code> 和 <code>[^size]</code> 当成两个键，妙言用的 cmark-gfm 不分大小写，复制标签在两边都稳。</li>
+<li><strong>长脚注后面的正文被吞掉。</strong> Pandoc 里不缩进的段落会结束脚注，下一段前留一个空行，缩进保持一致。</li>
+<li><strong>编号和标签对不上。</strong> Pandoc 不管标签写什么都按顺序编号，<code>[^7]</code> 可能显示成 1，标签只是键，不是最终显示的数字。</li>
+</ul>
+<p>导出 PDF 时妙言打印的是预览，所以脚注会出现在文末的列表里；想换一种版式，可以改走 Pandoc，流程见 <a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。其他依赖具体软件的语法，比如提示块和公式，可以看 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="github-的-readme-支持脚注吗">GitHub 的 README 支持脚注吗？</h3>
+<p>支持。GitHub 语法页记录了 <code>[^1]</code> 标记加定义的写法，渲染在文件底部，同时写明 wiki 不支持脚注。</p>
+<h3 id="脚注能放进表格单元格或列表项里吗">脚注能放进表格单元格或列表项里吗？</h3>
+<p>Pandoc 手册说脚注定义可以出现在任何地方，只是不能在列表、引用块、表格这类块元素内部。标记本身是行内文本，妙言 V4.5.0 里写在表格单元格中的标记会正常渲染成脚注，换别的渲染器要先看结果再依赖它。</p>
+<h3 id="一篇笔记的脚注数量有上限吗">一篇笔记的脚注数量有上限吗？</h3>
+<p>GitHub 和 Pandoc 的文档以及妙言的解析器配置里都没有写上限，条数多时用有含义的标签更好维护。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/markdown-escape-characters/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 转义字符：反斜杠、实体与行内代码</span><span class="blog-related-meta">约 4 分钟</span></a></li><li><a href="/zh/blog/markdown-front-matter/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown front matter 写法与渲染</span><span class="blog-related-meta">约 3 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

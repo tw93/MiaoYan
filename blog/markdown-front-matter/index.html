@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown front matter: YAML, TOML and MiaoYan · MiaoYan Blog</title>
+<meta name="description" content="Write YAML or TOML front matter for Hugo, Jekyll and Astro, see how GitHub shows it, and what MiaoYan V4.5.0 hides in preview and export.">
+<link rel="canonical" href="https://miaoyan.app/blog/markdown-front-matter/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-front-matter/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-front-matter/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-front-matter/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/markdown-front-matter/">
+<meta property="og:title" content="Markdown front matter: YAML, TOML and MiaoYan · MiaoYan Blog">
+<meta property="og:description" content="Write YAML or TOML front matter for Hugo, Jekyll and Astro, see how GitHub shows it, and what MiaoYan V4.5.0 hides in preview and export.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-front-matter.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Writing in Markdown">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-front-matter.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown front matter: YAML, TOML and MiaoYan", "item": "https://miaoyan.app/blog/markdown-front-matter/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-front-matter/#article", "headline": "Markdown front matter: YAML, TOML and MiaoYan", "description": "Write YAML or TOML front matter for Hugo, Jekyll and Astro, see how GitHub shows it, and what MiaoYan V4.5.0 hides in preview and export.", "url": "https://miaoyan.app/blog/markdown-front-matter/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-front-matter/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-front-matter.webp", "timeRequired": "PT5M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is front matter part of Markdown?", "acceptedAnswer": {"@type": "Answer", "text": "No. CommonMark does not define it. It is a convention of static site generators and some editors, which strip it before they render the body."}}, {"@type": "Question", "name": "Can I use --- as a divider at the top of a note?", "acceptedAnswer": {"@type": "Answer", "text": "Use *** or put a title first. A note that starts with --- and has another --- line later is read as front matter in MiaoYan."}}, {"@type": "Question", "name": "Does GitHub show front matter in a README?", "acceptedAnswer": {"@type": "Answer", "text": "GitHub's 2013 announcement says YAML metadata at the top of a document is shown as a table. Its writing and formatting docs do not mention front matter."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-front-matter/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/markdown-front-matter/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Markdown front matter: YAML, TOML and MiaoYan</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>5 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-front-matter.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Front matter is a block of metadata at the very top of a Markdown file, fenced by two <code>---</code> lines and written in YAML, so a static site generator can read the title, date and tags before it renders the body. Put it on the first line with nothing above it, close it with a <code>---</code> line of its own, and quote values that contain a colon. MiaoYan V4.5.0 hides a block like this in the preview and in exports, but only when the file starts with <code>---</code> and ends the block with another <code>---</code>; TOML front matter written with <code>+++</code> is not recognized.</p>
+<h2 id="the-syntax">The syntax</h2>
+<pre><code class="language-markdown">---
+title: Markdown front matter
+date: 2026-10-19
+tags: [markdown, notes]
+draft: false
+---
+
+The note starts here.
+</code></pre>
+<p>The opening <code>---</code> must be the first line. The keys are plain YAML, so lists can be written inline as above or as <code>- item</code> lines, and a value with a colon, such as <code>title: "Note: a test"</code>, needs quotes. Jekyll's documentation describes the same shape, a set of valid YAML between triple-dashed lines, and notes that a file with an empty pair of dashes is still processed by Jekyll. It also warns that a UTF-8 byte order mark at the start of the file breaks things, which is one reason a file that looks correct can fail.</p>
+<p>Pandoc is slightly more flexible. Its manual says a YAML metadata block is delimited by <code>---</code> at the top and either <code>---</code> or <code>...</code> at the bottom, that the opening line must not be followed by a blank line, and that the block can appear later in the document if a blank line precedes it.</p>
+<h2 id="keys-that-generators-use">Keys that generators use</h2>
+<p>There is no universal key list, because each generator defines its own.</p>
+<table>
+<thead>
+<tr>
+<th>Generator</th>
+<th>Format</th>
+<th>Keys its docs name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hugo</td>
+<td>YAML with <code>---</code>, TOML with <code>+++</code>, or JSON</td>
+<td><code>title</code>, <code>date</code>, <code>draft</code>, <code>weight</code>, <code>description</code>, and taxonomies such as <code>tags</code></td>
+</tr>
+<tr>
+<td>Jekyll</td>
+<td>YAML between triple dashes</td>
+<td><code>layout</code>, <code>title</code>, <code>date</code>, <code>published</code></td>
+</tr>
+<tr>
+<td>Astro</td>
+<td>YAML, or TOML</td>
+<td>custom properties such as a title, description and tags</td>
+</tr>
+</tbody>
+</table>
+<p>Hugo's documentation says it determines the format by looking at the delimiters, so <code>+++</code> means TOML, and it lists <code>date</code>, <code>draft</code>, <code>title</code> and <code>weight</code> as the most common fields. Jekyll uses <code>layout</code> and <code>title</code> in its basic example, <code>date</code> as a post variable, and <code>published: false</code> to keep a post out of the generated site. Astro's Markdown guide says frontmatter defines custom properties such as a title, description and tags, which your own components then read.</p>
+<p>TOML front matter looks like this:</p>
+<pre><code class="language-markdown">+++
+title = &quot;Markdown front matter&quot;
+date = 2026-10-19
+tags = [&quot;markdown&quot;, &quot;notes&quot;]
++++
+</code></pre>
+<p>Hugo reads each file's delimiters to pick the parser. A tool that only knows the <code>---</code> form shows a <code>+++</code> block as ordinary text, and MiaoYan V4.5.0 is one of them.</p>
+<h2 id="how-github-shows-it">How GitHub shows it</h2>
+<p>GitHub announced on its blog in 2013 (the post was updated in 2019) that it renders the YAML metadata at the top of a document as a horizontal table, for easier reading, aimed at the metadata that Jekyll sites on GitHub Pages depend on. The post says this applies to every prose document GitHub supports, not only Markdown. GitHub's writing and formatting docs do not cover front matter, so that announcement is the reference.</p>
+<h2 id="how-miaoyan-v450-treats-it">How MiaoYan V4.5.0 treats it</h2>
+<p>The rule lives in <code>Note.cleanMetaData</code> in <code>Business/Note.swift</code>. The note is treated as having front matter only if its text begins with <code>---</code> followed by a newline, or <code>---</code> and a Windows line ending. The code then looks for the next line that starts with <code>---</code>, and if that line stands alone, everything up to and including it is dropped. The result is used for the preview, for HTML export and PDF export, which are built on the preview, and for the word count. The editor still shows the raw text, so you keep editing the metadata normally.</p>
+<p>The same function has tests in <code>NoteFrontmatterTests</code>, which pin the edge cases:</p>
+<ul>
+<li>Any leading block is hidden, with or without a <code>title:</code> key.</li>
+<li>A file with no closing fence is left untouched and shows everything.</li>
+<li>A closing line of <code>----</code> is not a fence, so the whole note is shown, metadata included.</li>
+<li>A file that is only front matter produces an empty preview.</li>
+<li>Three dashes in the middle of a note stay an ordinary horizontal rule.</li>
+</ul>
+<p>MiaoYan does not read the keys. The block is not parsed as YAML, which is why a file that merely has two <code>---</code> lines around some text also loses that text in the preview. There is no YAML validation either: a typo that breaks Jekyll will not show up in MiaoYan.</p>
+<h2 id="slide-mode-and-the-separator">Slide mode and the <code>---</code> separator</h2>
+<p>In slide mode <code>---</code> is also the slide separator. In V4.5.0 the front matter is removed before the text reaches the slide renderer, so a block at the top does not become a slide. The catch is a deck that opens with a <code>---</code> line meant as a separator, because if another <code>---</code> line follows, everything between the two is taken for front matter and vanishes. Start a deck with its title, and keep metadata in one clean block. The separators themselves are covered in <a href="/blog/markdown-to-slides/">Markdown to slides</a>.</p>
+<h2 id="when-it-does-not-work">When it does not work</h2>
+<ul>
+<li><strong>The metadata shows in the preview.</strong> There is a blank line or a space before the first <code>---</code>, the closing line is <code>----</code> or <code>...</code>, or the block uses <code>+++</code>.</li>
+<li><strong>A heading appears above the body.</strong> If the block is not recognized as front matter, a line of text directly followed by <code>---</code> is a setext heading in CommonMark, so one of your keys turns into a large heading.</li>
+<li><strong>A generator ignores the file.</strong> Check for a byte order mark at the start of the file and for an unquoted colon in a value.</li>
+<li><strong>Text vanished.</strong> Two <code>---</code> lines at the top of a note hide everything between them in MiaoYan, even a section that was meant to be body text.</li>
+</ul>
+<p>For notes that you also publish elsewhere, see <a href="/blog/markdown-cheat-sheet/">Markdown cheat sheet</a> for what each renderer adds beyond CommonMark.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="is-front-matter-part-of-markdown">Is front matter part of Markdown?</h3>
+<p>No. CommonMark does not define it. It is a convention of static site generators and some editors, which strip it before they render the body.</p>
+<h3 id="can-i-use-as-a-divider-at-the-top-of-a-note">Can I use <code>---</code> as a divider at the top of a note?</h3>
+<p>Use <code>***</code> or put a title first. A note that starts with <code>---</code> and has another <code>---</code> line later is read as front matter in MiaoYan.</p>
+<h3 id="does-github-show-front-matter-in-a-readme">Does GitHub show front matter in a README?</h3>
+<p>GitHub's 2013 announcement says YAML metadata at the top of a document is shown as a table. Its writing and formatting docs do not mention front matter.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-footnotes/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown footnotes: syntax, support and fallbacks</span><span class="blog-related-meta">5 min read</span></a></li><li><a href="/blog/markdown-images/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown images: syntax, size and broken paths</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

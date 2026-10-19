@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown collapsible sections with details and summary · MiaoYan Blog</title>
+<meta name="description" content="Write a collapsible section in Markdown with details and summary, keep Markdown working inside it, and see how MiaoYan previews and exports it.">
+<link rel="canonical" href="https://miaoyan.app/blog/markdown-collapsible-sections/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-collapsible-sections/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-collapsible-sections/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-collapsible-sections/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/markdown-collapsible-sections/">
+<meta property="og:title" content="Markdown collapsible sections with details and summary · MiaoYan Blog">
+<meta property="og:description" content="Write a collapsible section in Markdown with details and summary, keep Markdown working inside it, and see how MiaoYan previews and exports it.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-collapsible-sections.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Writing in Markdown">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-collapsible-sections.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown collapsible sections with details and summary", "item": "https://miaoyan.app/blog/markdown-collapsible-sections/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-collapsible-sections/#article", "headline": "Markdown collapsible sections with details and summary", "description": "Write a collapsible section in Markdown with details and summary, keep Markdown working inside it, and see how MiaoYan previews and exports it.", "url": "https://miaoyan.app/blog/markdown-collapsible-sections/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-collapsible-sections/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-collapsible-sections.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does GitHub support collapsible sections?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. GitHub's documentation describes the <details> and <summary> pattern, using an issue comment as the example, with open to start expanded."}}, {"@type": "Question", "name": "Can I put a heading in the summary?", "acceptedAnswer": {"@type": "Answer", "text": "Markdown heading syntax in the label will not convert, because the label line belongs to an HTML block. Use plain text or an HTML tag. Headings in the body are fine."}}, {"@type": "Question", "name": "Is there a Markdown-only way to fold text?", "acceptedAnswer": {"@type": "Answer", "text": "Not in CommonMark or GFM, which is why every renderer relies on the HTML element."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-collapsible-sections/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/markdown-collapsible-sections/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Markdown collapsible sections with details and summary</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>6 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-collapsible-sections.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Markdown has no syntax for a collapsible section, so you write it as raw HTML: a <code>&lt;details&gt;</code> element with a <code>&lt;summary&gt;</code> label, and a blank line after the label so the Markdown inside is still parsed. It works on GitHub and in MiaoYan's preview. The trade-off is that the source is half HTML, and any renderer that strips raw HTML shows only the text.</p>
+<h2 id="the-pattern">The pattern</h2>
+<pre><code class="language-markdown">&lt;details&gt;
+&lt;summary&gt;Build steps&lt;/summary&gt;
+
+1. Install the dependencies.
+2. Run `make build`.
+
+```bash
+make test
+```
+
+&lt;/details&gt;
+</code></pre>
+<p><code>&lt;details&gt;</code> is the container, <code>&lt;summary&gt;</code> is the label that stays visible, and everything after the label is hidden until the reader clicks. Add the <code>open</code> attribute, as in <code>&lt;details open&gt;</code>, to start expanded. MDN notes that <code>open</code> is a Boolean attribute, so <code>open="false"</code> still counts as open: remove the attribute entirely to close it.</p>
+<p>GitHub documents the same shape for collapsed sections, with a blank line after <code>&lt;/summary&gt;</code> and a code block inside. If you also write for GitHub, copy that form and it will behave the same in both places.</p>
+<h2 id="why-the-blank-lines-matter">Why the blank lines matter</h2>
+<p>The blank lines are not style. They come from how CommonMark treats HTML. A line that starts with <code>&lt;details</code> or <code>&lt;summary</code> begins an HTML block, and the spec lists both names among the tags that start one. That kind of block ends at the first blank line, and everything inside it is passed through as raw HTML, not parsed as Markdown.</p>
+<p>So this does not work:</p>
+<pre><code class="language-markdown">&lt;details&gt;
+&lt;summary&gt;More&lt;/summary&gt;
+**Not bold.** Shown as literal asterisks.
+&lt;/details&gt;
+</code></pre>
+<p>The bold text sits on lines that belong to the HTML block, so the asterisks are printed as they are. Add a blank line after <code>&lt;/summary&gt;</code> and the HTML block ends there; the next paragraph is parsed as Markdown again. Add another blank line before <code>&lt;/details&gt;</code> so the closing tag starts its own block instead of being glued to your last paragraph.</p>
+<p>The same logic applies to the label. The <code>&lt;summary&gt;</code> line is part of an HTML block, so Markdown in it is not converted. Write <code>&lt;b&gt;Build&lt;/b&gt;</code> or <code>&lt;code&gt;make&lt;/code&gt;</code> instead of <code>**Build**</code> or backticks.</p>
+<h2 id="nesting-and-what-can-go-inside">Nesting and what can go inside</h2>
+<p>You can nest one <code>&lt;details&gt;</code> in another. Keep a blank line between the outer content and the inner opening tag, and keep each level on its own lines:</p>
+<pre><code class="language-markdown">&lt;details&gt;
+&lt;summary&gt;Platform notes&lt;/summary&gt;
+
+Shared advice goes here.
+
+&lt;details&gt;
+&lt;summary&gt;macOS&lt;/summary&gt;
+
+Details for macOS.
+
+&lt;/details&gt;
+
+&lt;/details&gt;
+</code></pre>
+<p>Lists, tables, images and fenced code all work inside once the blank lines are right. Headings work too, with a caveat covered below. MDN also describes a <code>name</code> attribute that groups several <code>&lt;details&gt;</code> so only one is open at a time, which gives you an accordion without scripts. MiaoYan passes the attribute through to the system WebKit unchanged, and MDN's compatibility data lists Safari support from 17.2. GitHub's guide does not mention it, so keep the accordion to notes you read in MiaoYan.</p>
+<h2 id="how-miaoyan-renders-it">How MiaoYan renders it</h2>
+<p>MiaoYan parses Markdown with cmark-gfm and renders HTML with the option that allows raw HTML (<code>CMARK_OPT_UNSAFE</code>) in V4.5.0, so a <code>&lt;details&gt;</code> block reaches the preview unchanged and the WebKit view draws it as a native disclosure widget. The preview's stylesheet gives <code>summary</code> a pointer cursor and a small left padding, and nothing more elaborate than that.</p>
+<p>In the editor, type <code>/fold</code> and press <code>Tab</code> to insert the block. The template it inserts is the one above: <code>&lt;details&gt;</code>, a <code>&lt;summary&gt;</code> line with selected placeholder text, a blank line, a body line and the closing tag. The placeholder text is Chinese in the shipped template, so replace it before sharing. The <a href="/blog/markdown-cheat-sheet/">cheat sheet</a> lists this shortcut next to the other slash commands.</p>
+<p>Two things are easy to trip over. A heading inside a closed block is hidden, and the preview's table of contents is built with an option that skips hidden headings, so such a heading may be missing from the outline until you open the block. And when you paste a collapsible section copied from a web page, MiaoYan's HTML-to-Markdown conversion treats <code>details</code> and <code>summary</code> as plain containers, so you get the label and the contents as ordinary paragraphs, without the folding. Type the HTML yourself if you want to keep it.</p>
+<h2 id="export-and-printing">Export and printing</h2>
+<p>Export offers HTML, Image and PDF, and in V4.5.0 the image and PDF exports both start from the preview as it is at that moment: Image takes a snapshot of the preview page, and PDF copies the preview's current HTML into the print step. Nothing in that path opens <code>&lt;details&gt;</code> blocks. When you click a summary, the browser adds or removes the <code>open</code> attribute on that element, so a block you opened in the preview exports open, and a closed block exports as its label alone. If you export while only the editor is showing, MiaoYan turns on the preview first, and blocks start closed unless they carry <code>open</code>.</p>
+<p>If the content must appear on paper, write <code>&lt;details open&gt;</code> for those blocks. They then start expanded in the preview and in the export. <a href="/blog/markdown-to-pdf-mac/">Markdown to PDF on Mac</a> covers the rest of the PDF settings.</p>
+<h2 id="accessibility">Accessibility</h2>
+<p>A native <code>&lt;details&gt;</code> is a disclosure widget. According to MDN, the reader can toggle it by clicking, or by focusing it and pressing the space bar, and the contents of the element provide the accessible description for the <code>&lt;summary&gt;</code>. That is better than a hand-made toggle, but only if the label is useful. Write a summary that says what is inside, such as "Build steps for Linux", not "Click here" or "More". Keep the label short, since it is the only text visible when the section is closed.</p>
+<p>Do not hide information a reader must see to complete a task. A collapsed section is for optional detail, such as logs, long output or platform-specific notes.</p>
+<h2 id="what-goes-wrong">What goes wrong</h2>
+<ul>
+<li>Markdown shows as literal symbols inside the block. A blank line is missing after <code>&lt;/summary&gt;</code> or before <code>&lt;/details&gt;</code>.</li>
+<li>The section works in MiaoYan but is flat text elsewhere. The other renderer strips or escapes raw HTML. Test in the place where readers will see it.</li>
+<li>The PDF is missing content. The block was closed at export time; open it in the preview first, or use the <code>open</code> attribute.</li>
+<li>A fenced code block inside the section breaks. Put a blank line before the opening fence and keep the fence at the same indentation as the surrounding text.</li>
+</ul>
+<h2 id="faq">FAQ</h2>
+<h3 id="does-github-support-collapsible-sections">Does GitHub support collapsible sections?</h3>
+<p>Yes. GitHub's documentation describes the <code>&lt;details&gt;</code> and <code>&lt;summary&gt;</code> pattern, using an issue comment as the example, with <code>open</code> to start expanded.</p>
+<h3 id="can-i-put-a-heading-in-the-summary">Can I put a heading in the summary?</h3>
+<p>Markdown heading syntax in the label will not convert, because the label line belongs to an HTML block. Use plain text or an HTML tag. Headings in the body are fine.</p>
+<h3 id="is-there-a-markdown-only-way-to-fold-text">Is there a Markdown-only way to fold text?</h3>
+<p>Not in CommonMark or GFM, which is why every renderer relies on the HTML element.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-code-blocks/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown code blocks: fences, language tags and nesting</span><span class="blog-related-meta">6 min read</span></a></li><li><a href="/blog/markdown-escape-characters/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown escape characters: backslash, entities and code spans</span><span class="blog-related-meta">5 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

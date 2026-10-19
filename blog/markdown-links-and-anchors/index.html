@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown links and anchors: inline, reference, headings · MiaoYan Blog</title>
+<meta name="description" content="Inline, reference and autolinks, spaces in URLs, heading anchors on GitHub, and how MiaoYan&#x27;s preview handles fragments and relative links.">
+<link rel="canonical" href="https://miaoyan.app/blog/markdown-links-and-anchors/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-links-and-anchors/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-links-and-anchors/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-links-and-anchors/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/markdown-links-and-anchors/">
+<meta property="og:title" content="Markdown links and anchors: inline, reference, headings · MiaoYan Blog">
+<meta property="og:description" content="Inline, reference and autolinks, spaces in URLs, heading anchors on GitHub, and how MiaoYan&#x27;s preview handles fragments and relative links.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-links-and-anchors.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Writing in Markdown">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-links-and-anchors.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown links and anchors: inline, reference, headings", "item": "https://miaoyan.app/blog/markdown-links-and-anchors/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-links-and-anchors/#article", "headline": "Markdown links and anchors: inline, reference, headings", "description": "Inline, reference and autolinks, spaces in URLs, heading anchors on GitHub, and how MiaoYan's preview handles fragments and relative links.", "url": "https://miaoyan.app/blog/markdown-links-and-anchors/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-links-and-anchors/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-links-and-anchors.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I link to a heading in Markdown?", "acceptedAnswer": {"@type": "Answer", "text": "Use [text](#heading-slug). On GitHub the slug is the heading in lower case with hyphens for spaces and punctuation removed. Other tools differ, so check where the note is read."}}, {"@type": "Question", "name": "Why does my anchor link not work in MiaoYan?", "acceptedAnswer": {"@type": "Answer", "text": "The preview uses the heading text as its id, not a lower-case slug, and a fragment with a space cannot be selected. Link a one-word heading as written, or add <a id=\"name\"></a> above it."}}, {"@type": "Question", "name": "How do I put spaces in a Markdown link?", "acceptedAnswer": {"@type": "Answer", "text": "Wrap the destination in angle brackets, [text](<my file.md>), or write %20 for each space."}}, {"@type": "Question", "name": "Do bare URLs become links?", "acceptedAnswer": {"@type": "Answer", "text": "On GitHub yes. In MiaoYan's preview no. Wrap them in angle brackets."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-links-and-anchors/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/markdown-links-and-anchors/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Markdown links and anchors: inline, reference, headings</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>6 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-links-and-anchors.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>A Markdown link is <code>[text](destination)</code>. The destination can be a web address, a relative path to another file, or <code>#something</code> to jump inside the same document. The first two are standardized. The third is not: CommonMark says nothing about how a heading becomes an anchor, so <code>#my-heading</code> works on GitHub, depends on the tool elsewhere, and in MiaoYan's preview follows its own rule, covered below.</p>
+<h2 id="the-link-forms">The link forms</h2>
+<p>An inline link puts the destination right after the text, with an optional title in quotes:</p>
+<pre><code class="language-markdown">[MiaoYan on GitHub](https://github.com/tw93/MiaoYan &quot;Source and releases&quot;)
+</code></pre>
+<p>The title may be in double quotes, single quotes or parentheses, and it must be separated from the destination by a space. Most renderers show it as a tooltip, so do not put anything the reader needs only there.</p>
+<p>A reference link moves the destination out of the sentence, which keeps long URLs from cluttering a paragraph and lets several links share one address:</p>
+<pre><code class="language-markdown">Read the [spec][cm] and the [GFM spec][gfm].
+
+[cm]: https://spec.commonmark.org/
+[gfm]: https://github.github.com/gfm/ &quot;GitHub Flavored Markdown&quot;
+</code></pre>
+<p>Definitions are not rendered and may sit before or after the links that use them, so many writers collect them at the bottom of the note. An autolink wraps a URL in angle brackets, <code>&lt;https://example.com&gt;</code>, and uses the URL itself as the text.</p>
+<h2 id="bare-urls-are-not-the-same-as-links">Bare URLs are not the same as links</h2>
+<p>GitHub turns a plain <code>https://example.com</code> into a link, because GFM adds an autolink extension on top of CommonMark. Not every renderer includes it. MiaoYan's renderer attaches four GFM extensions, tables, footnotes, strikethrough and task lists, and no autolink extension, so in the preview and in HTML export a bare address is plain text. The editor pane does turn it into a clickable link, so a URL that works while you type can lose its link once rendered. If a URL must be clickable everywhere, write <code>&lt;https://example.com&gt;</code> or <code>[text](https://example.com)</code>.</p>
+<h2 id="spaces-and-parentheses-in-destinations">Spaces and parentheses in destinations</h2>
+<p>A destination cannot contain a space unless it is wrapped in angle brackets, and it may contain parentheses only if they are balanced or backslash-escaped. Three ways to write the same file name:</p>
+<pre><code class="language-markdown">[Report](&lt;Q3 report (final).md&gt;)
+[Report](Q3%20report%20%28final%29.md)
+[Report](Q3%20report%20\(final\).md)
+</code></pre>
+<p>The angle-bracket form is the most readable. Percent-encoding works in every renderer but hides the name. Prefer file names without spaces or brackets in notes you plan to link, and the problem disappears.</p>
+<h2 id="linking-to-a-heading">Linking to a heading</h2>
+<p>Headings have no anchor in the CommonMark spec; each tool decides. GitHub documents its rules: letters are converted to lower case, spaces become hyphens, other punctuation and whitespace are removed, markup is stripped, leading and trailing whitespace goes, and a repeated heading gets <code>-1</code>, <code>-2</code> and so on. Its own example links the heading "This'll be a <em>Helpful</em> Section About the Greek Letter Θ!" as <code>#thisll-be-a-helpful-section-about-the-greek-letter-Θ</code>. The example keeps the Greek letter Θ in the anchor, so non-ASCII letters are not stripped, and a Chinese heading such as 快速开始 should be linked as <code>#快速开始</code>.</p>
+<pre><code class="language-markdown">## Install on Mac
+
+[Jump to install](#install-on-mac)
+</code></pre>
+<p>To see the anchor GitHub generated, hover over the heading and click the link icon; the address bar then shows it. For a stable target that does not change when you reword a heading, GitHub also supports a custom anchor written as <code>&lt;a name="unique-name"&gt;&lt;/a&gt;</code>, which is linked with <code>#unique-name</code>. Custom anchors are not included in the generated table of contents.</p>
+<h2 id="how-miaoyans-preview-handles-anchors">How MiaoYan's preview handles anchors</h2>
+<p>The preview does not use GitHub's slug. In the preview script, each heading gets an <code>id</code> equal to its visible text with the outer whitespace trimmed, and a repeated heading gets <code>-1</code>, <code>-2</code> and so on. Clicks on links that begin with <code>#</code> are intercepted, the fragment is URL-decoded, and the page scrolls smoothly to the element it selects.</p>
+<p>Three consequences follow from that, read from the source at V4.5.0. A GitHub-style <code>#install-on-mac</code> does not match a heading whose id is <code>Install on Mac</code>. A fragment with a space in it, such as the decoded <code>#Install on Mac</code>, is read as a selector for nested elements and matches nothing, so a heading with several words has no reliable fragment link in the preview. A heading that is one word, or Chinese text with no spaces, works with the text exactly as written: <code>#Install</code> or <code>#快速开始</code>. If you need a multi-word target in MiaoYan's preview, write <code>&lt;a id="install"&gt;&lt;/a&gt;</code> above the heading and link to <code>#install</code>; raw HTML is passed through, and the id is what the preview selects. GitHub documents the <code>name</code> attribute for custom anchors, so write both attributes if the note must work in both places.</p>
+<p>This is the one place where a note can look right in MiaoYan and break on GitHub, or the reverse. Test the links where the note will be read.</p>
+<h2 id="relative-links-and-links-to-other-notes">Relative links and links to other notes</h2>
+<p>On GitHub a relative link such as <code>[Guide](docs/guide.md)</code> is resolved against the current file and rewritten for the branch you are viewing, and a path starting with <code>/</code> is relative to the repository root. That is why relative links are the right choice for files in a repository. The link text has to stay on one line.</p>
+<p>MiaoYan's preview is a web view loaded from a copy of the app's preview files in its cache folder, not from your note's folder, and any clicked link is handed to macOS to open. Web addresses open in your default browser. A relative path to another <code>.md</code> file is not resolved against the note's folder in the preview, so it is not a reliable way to jump between notes. Local images are different: the preview rewrites them against the note's project folder, as described in <a href="/blog/markdown-to-pdf-mac/">Markdown to PDF on Mac</a>.</p>
+<p>For jumping between notes, MiaoYan uses wikilinks: <code>[[Note title]]</code>. Clicking one in the editor pane opens the note with that exact title, and the preview rewrites each one into a <code>miaoyan://goto/</code> link before rendering, so it is clickable there too. They are not standard Markdown, so a viewer that does not know them shows the brackets. <a href="/blog/wikilinks-and-backlinks/">Wikilinks and backlinks</a> covers the trade-offs. If the notes also have to work as files on GitHub, use relative Markdown links there and accept that they are for GitHub, not for clicking inside MiaoYan.</p>
+<h2 id="checking-links">Checking links</h2>
+<p>Open the rendered page and click each one. In MiaoYan, click a heading link in the preview; if nothing scrolls, the fragment does not match an id. On GitHub, copy the anchor from the heading's link icon instead of guessing the slug. For links that mix punctuation, spaces and non-ASCII text, encode the destination or use angle brackets, and prefer short headings so the slug is predictable. The <a href="/blog/markdown-cheat-sheet/">Markdown cheat sheet</a> lists the other syntax MiaoYan renders.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="how-do-i-link-to-a-heading-in-markdown">How do I link to a heading in Markdown?</h3>
+<p>Use <code>[text](#heading-slug)</code>. On GitHub the slug is the heading in lower case with hyphens for spaces and punctuation removed. Other tools differ, so check where the note is read.</p>
+<h3 id="why-does-my-anchor-link-not-work-in-miaoyan">Why does my anchor link not work in MiaoYan?</h3>
+<p>The preview uses the heading text as its id, not a lower-case slug, and a fragment with a space cannot be selected. Link a one-word heading as written, or add <code>&lt;a id="name"&gt;&lt;/a&gt;</code> above it.</p>
+<h3 id="how-do-i-put-spaces-in-a-markdown-link">How do I put spaces in a Markdown link?</h3>
+<p>Wrap the destination in angle brackets, <code>[text](&lt;my file.md&gt;)</code>, or write <code>%20</code> for each space.</p>
+<h3 id="do-bare-urls-become-links">Do bare URLs become links?</h3>
+<p>On GitHub yes. In MiaoYan's preview no. Wrap them in angle brackets.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-line-breaks/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown line breaks: soft, hard and MiaoYan&#x27;s setting</span><span class="blog-related-meta">6 min read</span></a></li><li><a href="/blog/markdown-tables/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown tables: alignment, pipes and line breaks</span><span class="blog-related-meta">5 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

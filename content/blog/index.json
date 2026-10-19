@@ -181,6 +181,258 @@
         "title": "Markdown 笔记的版本历史怎么用",
         "description": "妙言如何保存和恢复笔记版本、存在哪里、有什么限制，以及 Time Machine 和 git 怎么补上它覆盖不到的部分。"
       }
+    },
+    {
+      "slug": "apple-notes-to-markdown",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "notes",
+      "en": {
+        "title": "Export Apple Notes as Markdown and open the files",
+        "description": "macOS Tahoe can export a Notes note as Markdown. Sequoia exports PDF only. Check the file, then open it in MiaoYan."
+      },
+      "zh": {
+        "title": "把备忘录导出为 Markdown 再交给妙言",
+        "description": "Tahoe 可把备忘录导出为 Markdown，Sequoia 只能导出 PDF。核对文件后放进妙言打开的文件夹。"
+      }
+    },
+    {
+      "slug": "bear-alternative-mac",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "notes",
+      "en": {
+        "title": "A Bear alternative for Mac: plain Markdown files",
+        "description": "Export Bear notes to Markdown, move them into folders MiaoYan reads, and see what you lose without tags and gain with plain files."
+      },
+      "zh": {
+        "title": "Mac 上的 Bear 替代品：纯 Markdown 文件",
+        "description": "把 Bear 笔记导出成 Markdown，搬进妙言读取的文件夹，说清没有标签的代价和纯文件的好处。"
+      }
+    },
+    {
+      "slug": "chinese-english-spacing",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Chinese-English spacing in Markdown notes",
+        "description": "Why Chinese writers add a space around Latin text and digits, the exceptions, and how MiaoYan's Clean Typography command applies it without touching code."
+      },
+      "zh": {
+        "title": "Markdown 里的中英文空格",
+        "description": "为什么中英文之间要加空格、有哪些例外，以及妙言的「排版净化」怎么处理又不碰代码。"
+      }
+    },
+    {
+      "slug": "commonmark-vs-gfm",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "CommonMark vs GFM: which Markdown flavor to write",
+        "description": "What CommonMark and GitHub Flavored Markdown each define, what apps add on top, which layer MiaoYan renders, and a test file to check any editor."
+      },
+      "zh": {
+        "title": "CommonMark 与 GFM 有什么区别",
+        "description": "CommonMark、GFM 与应用扩展各管什么，妙言实现到哪一层，以及检查任意应用的测试文件。"
+      }
+    },
+    {
+      "slug": "markdown-code-blocks",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Markdown code blocks: fences, language tags and nesting",
+        "description": "Write fenced and inline code in Markdown, nest a fence inside a fence, tag languages and diff blocks, and see what MiaoYan's preview highlights."
+      },
+      "zh": {
+        "title": "Markdown 代码块：围栏、语言标记与嵌套",
+        "description": "围栏与行内代码的写法、围栏嵌套、语言名与 diff，以及妙言预览实际能高亮什么。"
+      }
+    },
+    {
+      "slug": "markdown-collapsible-sections",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Markdown collapsible sections with details and summary",
+        "description": "Write a collapsible section in Markdown with details and summary, keep Markdown working inside it, and see how MiaoYan previews and exports it."
+      },
+      "zh": {
+        "title": "Markdown 折叠：details 与 summary 的写法",
+        "description": "用 details 和 summary 写折叠区，让里面的 Markdown 正常渲染，以及妙言的预览与导出表现。"
+      }
+    },
+    {
+      "slug": "markdown-escape-characters",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Markdown escape characters: backslash, entities and code spans",
+        "description": "Which characters a Markdown backslash escapes, when you need it, entities and code spans as alternatives, and the dollar-sign trap in MiaoYan."
+      },
+      "zh": {
+        "title": "Markdown 转义字符：反斜杠、实体与行内代码",
+        "description": "反斜杠能转义哪些字符、什么时候需要，实体和行内代码的替代做法，以及妙言里的美元符号。"
+      }
+    },
+    {
+      "slug": "markdown-footnotes",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Markdown footnotes: syntax, support and fallbacks",
+        "description": "Write [^1] footnotes and definitions, see where GitHub, Pandoc and MiaoYan V4.5.0 render them, and fix footnotes that show as plain text."
+      },
+      "zh": {
+        "title": "Markdown 脚注怎么写，哪里能渲染",
+        "description": "脚注的 [^1] 写法、命名与多段落脚注，以及 GitHub、Pandoc、妙言 V4.5.0 的支持情况和排错。"
+      }
+    },
+    {
+      "slug": "markdown-front-matter",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Markdown front matter: YAML, TOML and MiaoYan",
+        "description": "Write YAML or TOML front matter for Hugo, Jekyll and Astro, see how GitHub shows it, and what MiaoYan V4.5.0 hides in preview and export."
+      },
+      "zh": {
+        "title": "Markdown front matter 写法与渲染",
+        "description": "YAML 与 TOML front matter 的写法、各生成器常用键、GitHub 的显示，以及妙言 V4.5.0 的处理。"
+      }
+    },
+    {
+      "slug": "markdown-images",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Markdown images: syntax, size and broken paths",
+        "description": "Insert images, set width with HTML, keep paths from breaking, and see how MiaoYan V4.5.0 stores, previews and exports images."
+      },
+      "zh": {
+        "title": "Markdown 图片：插入、调整大小与路径",
+        "description": "图片语法、用 HTML 设宽度、路径为何会坏，以及妙言 V4.5.0 的图片存放、预览和导出行为。"
+      }
+    },
+    {
+      "slug": "markdown-line-breaks",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Markdown line breaks: soft, hard and MiaoYan's setting",
+        "description": "Why a single newline vanishes in Markdown, how backslash, two spaces and <br> differ, and what MiaoYan's Line Break setting changes in preview and export."
+      },
+      "zh": {
+        "title": "Markdown 换行：软换行、硬换行与妙言的设置",
+        "description": "单个回车为什么不换行，反斜杠、两个空格和 <br> 有何区别，以及妙言的换行方式如何影响预览和导出。"
+      }
+    },
+    {
+      "slug": "markdown-links-and-anchors",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Markdown links and anchors: inline, reference, headings",
+        "description": "Inline, reference and autolinks, spaces in URLs, heading anchors on GitHub, and how MiaoYan's preview handles fragments and relative links."
+      },
+      "zh": {
+        "title": "Markdown 链接与锚点：行内、引用和标题跳转",
+        "description": "行内、引用式与自动链接，网址里的空格和括号，GitHub 的标题锚点，以及妙言预览如何处理片段和相对链接。"
+      }
+    },
+    {
+      "slug": "markdown-on-ipad",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "notes",
+      "en": {
+        "title": "Markdown on iPad: files, sync and editors",
+        "description": "What an iPad Markdown setup needs, how MiaoYan opens your Mac's iCloud Drive folder, what to check when a note is missing, and other editors."
+      },
+      "zh": {
+        "title": "iPad 上写 Markdown：文件、同步和编辑器",
+        "description": "iPad 写 Markdown 需要什么，妙言怎么打开 Mac 的 iCloud 文件夹，笔记没出现时怎么查。"
+      }
+    },
+    {
+      "slug": "markdown-tables",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Markdown tables: alignment, pipes and line breaks",
+        "description": "Write a Markdown table, align columns, escape pipes, break lines in cells, handle wide tables in MiaoYan, and fall back to HTML for merged cells."
+      },
+      "zh": {
+        "title": "Markdown 表格：对齐、竖线与单元格换行",
+        "description": "表格写法、列对齐、转义竖线、单元格内换行，妙言里宽表格的表现，以及合并单元格时退回 HTML。"
+      }
+    },
+    {
+      "slug": "markdown-task-lists",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Markdown task lists and checkboxes: syntax and pitfalls",
+        "description": "Write - [ ] and - [x] task lists, nest them, know where they render, how MiaoYan toggles a box in the source, and find open tasks with ripgrep."
+      },
+      "zh": {
+        "title": "Markdown 待办列表与复选框写法",
+        "description": "- [ ] 与 - [x] 的写法、嵌套、各处渲染差异，妙言点击复选框如何改写原文，以及用 ripgrep 找未完成事项。"
+      }
+    },
+    {
+      "slug": "markmap-mind-maps",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "Markmap mind maps from a Markdown outline",
+        "description": "Turn headings and lists into a mind map with a markmap fence, what MiaoYan renders offline, which options apply, and how it differs from Mermaid."
+      },
+      "zh": {
+        "title": "用 Markdown 大纲画 Markmap 思维导图",
+        "description": "用 markmap 围栏把标题和列表画成思维导图，妙言离线渲染的行为、选项限制，以及和 Mermaid mindmap 的区别。"
+      }
+    },
+    {
+      "slug": "plantuml-in-markdown",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "PlantUML in Markdown: fences, server rendering and privacy",
+        "description": "Write sequence, class and activity diagrams in a plantuml fence, how MiaoYan renders them with plantuml.com, the privacy cost, and local or Mermaid options."
+      },
+      "zh": {
+        "title": "Markdown 里写 PlantUML：围栏、服务器渲染与隐私",
+        "description": "用 plantuml 围栏画时序图、类图和活动图，妙言如何经 plantuml.com 渲染、隐私代价，以及本地渲染和 Mermaid 的替代做法。"
+      }
+    },
+    {
+      "slug": "what-is-markdown",
+      "date": "2026-10-19",
+      "modified": "2026-10-19",
+      "category": "writing",
+      "en": {
+        "title": "What is Markdown? A plain-text way to format",
+        "description": "What Markdown is, where it came from, the ten marks that cover most writing, how it becomes HTML, what it cannot do, and a first note in MiaoYan."
+      },
+      "zh": {
+        "title": "Markdown 是什么",
+        "description": "Markdown 的来历、覆盖大多数写作的十个记号、怎么变成 HTML、不擅长什么，以及在妙言里写第一篇。"
+      }
     }
   ]
 }

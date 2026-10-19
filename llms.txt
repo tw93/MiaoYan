@@ -53,6 +53,24 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 - [Markdown notes from the terminal with the miao CLI](https://miaoyan.app/blog/markdown-notes-from-terminal/): Install the miao CLI, learn open, new, search, list and cat, script them, and use them with AI coding agents and the MiaoYan skill.
 - [A lighter Obsidian alternative for Mac](https://miaoyan.app/blog/obsidian-alternative-mac/): What MiaoYan has and leaves out compared with Obsidian, how to open a vault, and which syntax carries over.
 - [Markdown note version history: MiaoYan, Time Machine, git](https://miaoyan.app/blog/markdown-note-version-history/): How MiaoYan saves and restores note versions, where they live, their limits, and how Time Machine and git cover what it does not.
+- [Export Apple Notes as Markdown and open the files](https://miaoyan.app/blog/apple-notes-to-markdown/): macOS Tahoe can export a Notes note as Markdown. Sequoia exports PDF only. Check the file, then open it in MiaoYan.
+- [A Bear alternative for Mac: plain Markdown files](https://miaoyan.app/blog/bear-alternative-mac/): Export Bear notes to Markdown, move them into folders MiaoYan reads, and see what you lose without tags and gain with plain files.
+- [Chinese-English spacing in Markdown notes](https://miaoyan.app/blog/chinese-english-spacing/): Why Chinese writers add a space around Latin text and digits, the exceptions, and how MiaoYan's Clean Typography command applies it without touching code.
+- [CommonMark vs GFM: which Markdown flavor to write](https://miaoyan.app/blog/commonmark-vs-gfm/): What CommonMark and GitHub Flavored Markdown each define, what apps add on top, which layer MiaoYan renders, and a test file to check any editor.
+- [Markdown code blocks: fences, language tags and nesting](https://miaoyan.app/blog/markdown-code-blocks/): Write fenced and inline code in Markdown, nest a fence inside a fence, tag languages and diff blocks, and see what MiaoYan's preview highlights.
+- [Markdown collapsible sections with details and summary](https://miaoyan.app/blog/markdown-collapsible-sections/): Write a collapsible section in Markdown with details and summary, keep Markdown working inside it, and see how MiaoYan previews and exports it.
+- [Markdown escape characters: backslash, entities and code spans](https://miaoyan.app/blog/markdown-escape-characters/): Which characters a Markdown backslash escapes, when you need it, entities and code spans as alternatives, and the dollar-sign trap in MiaoYan.
+- [Markdown footnotes: syntax, support and fallbacks](https://miaoyan.app/blog/markdown-footnotes/): Write [^1] footnotes and definitions, see where GitHub, Pandoc and MiaoYan V4.5.0 render them, and fix footnotes that show as plain text.
+- [Markdown front matter: YAML, TOML and MiaoYan](https://miaoyan.app/blog/markdown-front-matter/): Write YAML or TOML front matter for Hugo, Jekyll and Astro, see how GitHub shows it, and what MiaoYan V4.5.0 hides in preview and export.
+- [Markdown images: syntax, size and broken paths](https://miaoyan.app/blog/markdown-images/): Insert images, set width with HTML, keep paths from breaking, and see how MiaoYan V4.5.0 stores, previews and exports images.
+- [Markdown line breaks: soft, hard and MiaoYan's setting](https://miaoyan.app/blog/markdown-line-breaks/): Why a single newline vanishes in Markdown, how backslash, two spaces and <br> differ, and what MiaoYan's Line Break setting changes in preview and export.
+- [Markdown links and anchors: inline, reference, headings](https://miaoyan.app/blog/markdown-links-and-anchors/): Inline, reference and autolinks, spaces in URLs, heading anchors on GitHub, and how MiaoYan's preview handles fragments and relative links.
+- [Markdown on iPad: files, sync and editors](https://miaoyan.app/blog/markdown-on-ipad/): What an iPad Markdown setup needs, how MiaoYan opens your Mac's iCloud Drive folder, what to check when a note is missing, and other editors.
+- [Markdown tables: alignment, pipes and line breaks](https://miaoyan.app/blog/markdown-tables/): Write a Markdown table, align columns, escape pipes, break lines in cells, handle wide tables in MiaoYan, and fall back to HTML for merged cells.
+- [Markdown task lists and checkboxes: syntax and pitfalls](https://miaoyan.app/blog/markdown-task-lists/): Write - [ ] and - [x] task lists, nest them, know where they render, how MiaoYan toggles a box in the source, and find open tasks with ripgrep.
+- [Markmap mind maps from a Markdown outline](https://miaoyan.app/blog/markmap-mind-maps/): Turn headings and lists into a mind map with a markmap fence, what MiaoYan renders offline, which options apply, and how it differs from Mermaid.
+- [PlantUML in Markdown: fences, server rendering and privacy](https://miaoyan.app/blog/plantuml-in-markdown/): Write sequence, class and activity diagrams in a plantuml fence, how MiaoYan renders them with plantuml.com, the privacy cost, and local or Mermaid options.
+- [What is Markdown? A plain-text way to format](https://miaoyan.app/blog/what-is-markdown/): What Markdown is, where it came from, the ten marks that cover most writing, how it becomes HTML, what it cannot do, and a first note in MiaoYan.
 
 - [Mac 上怎么选 Markdown 编辑器](https://miaoyan.app/zh/blog/markdown-editor-for-mac/): 从纯文件、所见即所得、公式图表、同步和性能几方面比较 Typora、Obsidian、VS Code 与妙言。
 - [Markdown 语法速查与 GFM 差异](https://miaoyan.app/zh/blog/markdown-cheat-sheet/): 常用 Markdown 语法加示例，区分 CommonMark、GFM 与应用扩展，并说明妙言实际能渲染什么。
@@ -67,4 +85,22 @@ English posts are at https://miaoyan.app/blog/ and Chinese ones at https://miaoy
 - [在终端里使用 Markdown 笔记：miao 命令行](https://miaoyan.app/zh/blog/markdown-notes-from-terminal/): 安装 miao，掌握 open、new、search、list、cat，写脚本，并配合 AI 编码 Agent 和妙言 skill 使用。
 - [Mac 上更轻的 Obsidian 替代品](https://miaoyan.app/zh/blog/obsidian-alternative-mac/): 妙言和 Obsidian 相比有什么、没有什么，怎么打开 vault，以及哪些语法能带过来。
 - [Markdown 笔记的版本历史怎么用](https://miaoyan.app/zh/blog/markdown-note-version-history/): 妙言如何保存和恢复笔记版本、存在哪里、有什么限制，以及 Time Machine 和 git 怎么补上它覆盖不到的部分。
+- [把备忘录导出为 Markdown 再交给妙言](https://miaoyan.app/zh/blog/apple-notes-to-markdown/): Tahoe 可把备忘录导出为 Markdown，Sequoia 只能导出 PDF。核对文件后放进妙言打开的文件夹。
+- [Mac 上的 Bear 替代品：纯 Markdown 文件](https://miaoyan.app/zh/blog/bear-alternative-mac/): 把 Bear 笔记导出成 Markdown，搬进妙言读取的文件夹，说清没有标签的代价和纯文件的好处。
+- [Markdown 里的中英文空格](https://miaoyan.app/zh/blog/chinese-english-spacing/): 为什么中英文之间要加空格、有哪些例外，以及妙言的「排版净化」怎么处理又不碰代码。
+- [CommonMark 与 GFM 有什么区别](https://miaoyan.app/zh/blog/commonmark-vs-gfm/): CommonMark、GFM 与应用扩展各管什么，妙言实现到哪一层，以及检查任意应用的测试文件。
+- [Markdown 代码块：围栏、语言标记与嵌套](https://miaoyan.app/zh/blog/markdown-code-blocks/): 围栏与行内代码的写法、围栏嵌套、语言名与 diff，以及妙言预览实际能高亮什么。
+- [Markdown 折叠：details 与 summary 的写法](https://miaoyan.app/zh/blog/markdown-collapsible-sections/): 用 details 和 summary 写折叠区，让里面的 Markdown 正常渲染，以及妙言的预览与导出表现。
+- [Markdown 转义字符：反斜杠、实体与行内代码](https://miaoyan.app/zh/blog/markdown-escape-characters/): 反斜杠能转义哪些字符、什么时候需要，实体和行内代码的替代做法，以及妙言里的美元符号。
+- [Markdown 脚注怎么写，哪里能渲染](https://miaoyan.app/zh/blog/markdown-footnotes/): 脚注的 [^1] 写法、命名与多段落脚注，以及 GitHub、Pandoc、妙言 V4.5.0 的支持情况和排错。
+- [Markdown front matter 写法与渲染](https://miaoyan.app/zh/blog/markdown-front-matter/): YAML 与 TOML front matter 的写法、各生成器常用键、GitHub 的显示，以及妙言 V4.5.0 的处理。
+- [Markdown 图片：插入、调整大小与路径](https://miaoyan.app/zh/blog/markdown-images/): 图片语法、用 HTML 设宽度、路径为何会坏，以及妙言 V4.5.0 的图片存放、预览和导出行为。
+- [Markdown 换行：软换行、硬换行与妙言的设置](https://miaoyan.app/zh/blog/markdown-line-breaks/): 单个回车为什么不换行，反斜杠、两个空格和 <br> 有何区别，以及妙言的换行方式如何影响预览和导出。
+- [Markdown 链接与锚点：行内、引用和标题跳转](https://miaoyan.app/zh/blog/markdown-links-and-anchors/): 行内、引用式与自动链接，网址里的空格和括号，GitHub 的标题锚点，以及妙言预览如何处理片段和相对链接。
+- [iPad 上写 Markdown：文件、同步和编辑器](https://miaoyan.app/zh/blog/markdown-on-ipad/): iPad 写 Markdown 需要什么，妙言怎么打开 Mac 的 iCloud 文件夹，笔记没出现时怎么查。
+- [Markdown 表格：对齐、竖线与单元格换行](https://miaoyan.app/zh/blog/markdown-tables/): 表格写法、列对齐、转义竖线、单元格内换行，妙言里宽表格的表现，以及合并单元格时退回 HTML。
+- [Markdown 待办列表与复选框写法](https://miaoyan.app/zh/blog/markdown-task-lists/): - [ ] 与 - [x] 的写法、嵌套、各处渲染差异，妙言点击复选框如何改写原文，以及用 ripgrep 找未完成事项。
+- [用 Markdown 大纲画 Markmap 思维导图](https://miaoyan.app/zh/blog/markmap-mind-maps/): 用 markmap 围栏把标题和列表画成思维导图，妙言离线渲染的行为、选项限制，以及和 Mermaid mindmap 的区别。
+- [Markdown 里写 PlantUML：围栏、服务器渲染与隐私](https://miaoyan.app/zh/blog/plantuml-in-markdown/): 用 plantuml 围栏画时序图、类图和活动图，妙言如何经 plantuml.com 渲染、隐私代价，以及本地渲染和 Mermaid 的替代做法。
+- [Markdown 是什么](https://miaoyan.app/zh/blog/what-is-markdown/): Markdown 的来历、覆盖大多数写作的十个记号、怎么变成 HTML、不擅长什么，以及在妙言里写第一篇。
 <!-- blog:end -->

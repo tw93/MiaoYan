@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown on iPad: files, sync and editors · MiaoYan Blog</title>
+<meta name="description" content="What an iPad Markdown setup needs, how MiaoYan opens your Mac&#x27;s iCloud Drive folder, what to check when a note is missing, and other editors.">
+<link rel="canonical" href="https://miaoyan.app/blog/markdown-on-ipad/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-on-ipad/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-on-ipad/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-on-ipad/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/markdown-on-ipad/">
+<meta property="og:title" content="Markdown on iPad: files, sync and editors · MiaoYan Blog">
+<meta property="og:description" content="What an iPad Markdown setup needs, how MiaoYan opens your Mac&#x27;s iCloud Drive folder, what to check when a note is missing, and other editors.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-on-ipad.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Managing notes">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-on-ipad.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown on iPad: files, sync and editors", "item": "https://miaoyan.app/blog/markdown-on-ipad/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-on-ipad/#article", "headline": "Markdown on iPad: files, sync and editors", "description": "What an iPad Markdown setup needs, how MiaoYan opens your Mac's iCloud Drive folder, what to check when a note is missing, and other editors.", "url": "https://miaoyan.app/blog/markdown-on-ipad/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-on-ipad/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-on-ipad.webp", "timeRequired": "PT6M", "articleSection": "Managing notes", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can I edit the same Markdown files on a Mac and an iPad?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, as long as both open the same iCloud Drive folder. Let the sync finish before you switch devices, and avoid editing one note on both at once."}}, {"@type": "Question", "name": "Does MiaoYan on iPad have a keyboard shortcut for bold?", "acceptedAnswer": {"@type": "Answer", "text": "Version 4.5.0 of the iPad app has no shortcuts of its own, so type the Markdown markers yourself."}}, {"@type": "Question", "name": "Does the iPad app need a subscription?", "acceptedAnswer": {"@type": "Answer", "text": "The site says it is a one-time purchase with no subscriptions or in-app purchases, and the same purchase covers Mac, iPhone and iPad."}}, {"@type": "Question", "name": "Are my notes stored in the app?", "acceptedAnswer": {"@type": "Answer", "text": "No. They are .md files in the folder you chose, visible in the Files app."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-on-ipad/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/markdown-on-ipad/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Markdown on iPad: files, sync and editors</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-notes">Managing notes</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>6 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-on-ipad.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>For Markdown on an iPad, pick an app that edits real <code>.md</code> files in a folder the Files app can see, and keep that folder in iCloud Drive so your Mac sees the same notes. MiaoYan's iPad app does exactly that: it opens the folder your Mac uses, shows a three-column library, and reads a note first and edits it when you tap the edit button. It is a reader with an editor, not a full writing environment, so check the limits below against how you write.</p>
+<h2 id="what-an-ipad-markdown-setup-needs">What an iPad Markdown setup needs</h2>
+<p>Four things decide whether it works day to day.</p>
+<ul>
+<li><strong>Where the files live.</strong> Notes should be ordinary files in a folder, not rows in an app database. Then Files, backups and any other editor can reach them.</li>
+<li><strong>How you edit.</strong> A hardware keyboard, or the on-screen one with formatting help. Apps differ a lot here.</li>
+<li><strong>Preview.</strong> Some apps show a styled preview beside the text, some switch between the two.</li>
+<li><strong>Sync.</strong> Whatever moves the folder to your other devices. For Apple-only setups that is usually iCloud Drive.</li>
+</ul>
+<p>The first and last are the ones that bite later. A note stuck in an app's private storage is hard to leave, and a folder that has not finished syncing looks like a missing note.</p>
+<h2 id="miaoyan-on-ipad">MiaoYan on iPad</h2>
+<p>MiaoYan's site says the same App Store purchase runs on iPhone and iPad and opens the same iCloud Drive folder as your Mac. It is a one-time payment with no subscription or in-app purchases, and the iPhone and iPad apps require iOS or iPadOS 18 or later.</p>
+<p>What the iPad app does in version 4.5.0:</p>
+<ul>
+<li>On a wide screen it uses a three-column layout: a sidebar with Notes (recent ones), All Notes, your folders and Trash, a note list, and the note itself.</li>
+<li>A note opens in a reading view. Tap the edit button to type in a Markdown editor and tap "Done" to finish. The editor shows a save state, "Saving" then "Saved".</li>
+<li>Notes, folders, rename, move to folder, pin, share and Trash are in the app. Search looks through titles and note bodies locally.</li>
+<li>Settings has an Appearance section for font and size, and a Library section with "Choose Folder…". Its text says MiaoYan reads and writes Markdown files in the folder and that iCloud Drive or your cloud drive app keeps it in sync with Mac.</li>
+<li>The reader renders tables, footnotes, strikethrough and task lists, highlights code with highlight.js, and draws Mermaid diagrams. <code>[[Title]]</code> wikilinks open the target note.</li>
+</ul>
+<p>What it does not do in 4.5.0: the iPad app has no keyboard shortcuts of its own, and it has no step that renders LaTeX math, PlantUML or Markmap, so those show as source text in the iPad reader even though the Mac app renders them. If you write formulas on the iPad, check a sample note first. The syntax is covered in the <a href="/blog/markdown-cheat-sheet/">Markdown cheat sheet</a> and <a href="/blog/latex-math-in-markdown/">LaTeX math in Markdown</a>.</p>
+<h2 id="how-the-ipad-finds-your-notes">How the iPad finds your notes</h2>
+<p>The Mac app reads a folder you choose in Preferences. The iPad app finds the library in one of two ways. On first launch it checks iCloud Drive and, when it is available, uses the app's own iCloud Drive folder, which the app declares as public so it shows in the Files app under the name MiaoYan. Otherwise, or if you want a different folder, you pick one with "Choose folder". The app then reads and writes plain files there.</p>
+<p>So the sync path is: the Mac saves a <code>.md</code> file in iCloud Drive, iCloud uploads it, the iPad sees the file appear and lists it. MiaoYan has no sync of its own. That is why the folder on the Mac must be the same iCloud Drive folder the iPad opens. The details are in <a href="/blog/sync-markdown-notes-across-devices/">Sync Markdown notes across devices</a>.</p>
+<p>One more detail: the iPad app first reads the catalog of notes iCloud reports and then their contents. During a first launch it shows "Found N notes…", and until the files arrive search says how many "iCloud notes still downloading; results will improve as they sync." A list that looks short right after install is usually this, not data loss.</p>
+<h2 id="when-a-note-does-not-show-up-on-the-other-device">When a note does not show up on the other device</h2>
+<p>Work down this list.</p>
+<ol>
+<li><strong>Check the Mac saved it.</strong> The Mac app writes the file about a second and a half after you stop typing. Open the folder in Finder and confirm the <code>.md</code> file is there.</li>
+<li><strong>Check both devices point at the same folder.</strong> On the Mac, Preferences &gt; "Note Location". On the iPad, Settings &gt; Library. A different folder on either side means two separate libraries.</li>
+<li><strong>Look for a sync status.</strong> In Settings &gt; Library the iPad app shows Syncing, Synced, Offline or "Sync issue". Offline means the app could not reach its iCloud container, so check that iCloud Drive is on for the iPad.</li>
+<li><strong>Wait for the first launch to finish.</strong> The app says "Downloading your iCloud notes. Next launch will be instant." on a large library.</li>
+<li><strong>Pull down on the note list</strong> to reload it if a note exists on disk but not in the list.</li>
+<li><strong>Open Files.</strong> If the note is in iCloud Drive in Files, the problem is the app. If it is not, the problem is iCloud.</li>
+</ol>
+<p>When the same note is edited on two devices, the iPad shows "This note changed elsewhere" with "Reload" and "Keep Mine". Choosing "Keep Mine" saves your text over the other version, so read the other one first if you are unsure. The Mac keeps unsaved text in a hidden <code>.miaoyan-conflicts</code> folder when an external change arrives.</p>
+<h2 id="other-ipad-markdown-editors">Other iPad Markdown editors</h2>
+<p>MiaoYan is one choice. These are worth knowing about, from their own pages.</p>
+<ul>
+<li><strong>iA Writer</strong> writes in plain text with Markdown and lets you switch to a styled Preview. The iPad and iPhone version is a one-time payment, and Mac and Windows have free trials.</li>
+<li><strong>1Writer</strong> has inline Markdown preview and a full preview, a customizable extra keyboard row, multiple windows and drag and drop, and syncs Dropbox and WebDAV folders and iCloud Drive.</li>
+<li><strong>Obsidian</strong> on mobile adds an editing toolbar at the bottom and a Quick Action gesture, and its help page says it works similarly to the desktop app.</li>
+</ul>
+<p>1Writer is the one of these three that lists Dropbox and WebDAV folders, and Obsidian is the choice if your notes already live in an Obsidian vault. MiaoYan fits when your notes are a folder you share with a Mac and you mostly read and make short edits on the iPad. If you want an overview of the Mac side, see <a href="/blog/markdown-editor-for-mac/">Choosing a Markdown editor for Mac</a>.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="can-i-edit-the-same-markdown-files-on-a-mac-and-an-ipad">Can I edit the same Markdown files on a Mac and an iPad?</h3>
+<p>Yes, as long as both open the same iCloud Drive folder. Let the sync finish before you switch devices, and avoid editing one note on both at once.</p>
+<h3 id="does-miaoyan-on-ipad-have-a-keyboard-shortcut-for-bold">Does MiaoYan on iPad have a keyboard shortcut for bold?</h3>
+<p>Version 4.5.0 of the iPad app has no shortcuts of its own, so type the Markdown markers yourself.</p>
+<h3 id="does-the-ipad-app-need-a-subscription">Does the iPad app need a subscription?</h3>
+<p>The site says it is a one-time purchase with no subscriptions or in-app purchases, and the same purchase covers Mac, iPhone and iPad.</p>
+<h3 id="are-my-notes-stored-in-the-app">Are my notes stored in the app?</h3>
+<p>No. They are <code>.md</code> files in the folder you chose, visible in the Files app.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/local-first-markdown-notes/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Local-first Markdown notes: keep them as plain files</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/bear-alternative-mac/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">A Bear alternative for Mac: plain Markdown files</span><span class="blog-related-meta">6 min read</span></a></li><li><a href="/blog/apple-notes-to-markdown/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Export Apple Notes as Markdown and open the files</span><span class="blog-related-meta">11 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

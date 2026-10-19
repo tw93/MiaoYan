@@ -97,5 +97,131 @@
       <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
       <description>妙言如何保存和恢复笔记版本、存在哪里、有什么限制，以及 Time Machine 和 git 怎么补上它覆盖不到的部分。</description>
     </item>
+    <item>
+      <title>把备忘录导出为 Markdown 再交给妙言</title>
+      <link>https://miaoyan.app/zh/blog/apple-notes-to-markdown/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/apple-notes-to-markdown/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Tahoe 可把备忘录导出为 Markdown，Sequoia 只能导出 PDF。核对文件后放进妙言打开的文件夹。</description>
+    </item>
+    <item>
+      <title>Mac 上的 Bear 替代品：纯 Markdown 文件</title>
+      <link>https://miaoyan.app/zh/blog/bear-alternative-mac/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/bear-alternative-mac/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>把 Bear 笔记导出成 Markdown，搬进妙言读取的文件夹，说清没有标签的代价和纯文件的好处。</description>
+    </item>
+    <item>
+      <title>Markdown 里的中英文空格</title>
+      <link>https://miaoyan.app/zh/blog/chinese-english-spacing/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/chinese-english-spacing/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>为什么中英文之间要加空格、有哪些例外，以及妙言的「排版净化」怎么处理又不碰代码。</description>
+    </item>
+    <item>
+      <title>CommonMark 与 GFM 有什么区别</title>
+      <link>https://miaoyan.app/zh/blog/commonmark-vs-gfm/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/commonmark-vs-gfm/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>CommonMark、GFM 与应用扩展各管什么，妙言实现到哪一层，以及检查任意应用的测试文件。</description>
+    </item>
+    <item>
+      <title>Markdown 代码块：围栏、语言标记与嵌套</title>
+      <link>https://miaoyan.app/zh/blog/markdown-code-blocks/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-code-blocks/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>围栏与行内代码的写法、围栏嵌套、语言名与 diff，以及妙言预览实际能高亮什么。</description>
+    </item>
+    <item>
+      <title>Markdown 折叠：details 与 summary 的写法</title>
+      <link>https://miaoyan.app/zh/blog/markdown-collapsible-sections/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-collapsible-sections/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>用 details 和 summary 写折叠区，让里面的 Markdown 正常渲染，以及妙言的预览与导出表现。</description>
+    </item>
+    <item>
+      <title>Markdown 转义字符：反斜杠、实体与行内代码</title>
+      <link>https://miaoyan.app/zh/blog/markdown-escape-characters/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-escape-characters/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>反斜杠能转义哪些字符、什么时候需要，实体和行内代码的替代做法，以及妙言里的美元符号。</description>
+    </item>
+    <item>
+      <title>Markdown 脚注怎么写，哪里能渲染</title>
+      <link>https://miaoyan.app/zh/blog/markdown-footnotes/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-footnotes/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>脚注的 [^1] 写法、命名与多段落脚注，以及 GitHub、Pandoc、妙言 V4.5.0 的支持情况和排错。</description>
+    </item>
+    <item>
+      <title>Markdown front matter 写法与渲染</title>
+      <link>https://miaoyan.app/zh/blog/markdown-front-matter/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-front-matter/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>YAML 与 TOML front matter 的写法、各生成器常用键、GitHub 的显示，以及妙言 V4.5.0 的处理。</description>
+    </item>
+    <item>
+      <title>Markdown 图片：插入、调整大小与路径</title>
+      <link>https://miaoyan.app/zh/blog/markdown-images/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-images/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>图片语法、用 HTML 设宽度、路径为何会坏，以及妙言 V4.5.0 的图片存放、预览和导出行为。</description>
+    </item>
+    <item>
+      <title>Markdown 换行：软换行、硬换行与妙言的设置</title>
+      <link>https://miaoyan.app/zh/blog/markdown-line-breaks/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-line-breaks/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>单个回车为什么不换行，反斜杠、两个空格和 &lt;br&gt; 有何区别，以及妙言的换行方式如何影响预览和导出。</description>
+    </item>
+    <item>
+      <title>Markdown 链接与锚点：行内、引用和标题跳转</title>
+      <link>https://miaoyan.app/zh/blog/markdown-links-and-anchors/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-links-and-anchors/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>行内、引用式与自动链接，网址里的空格和括号，GitHub 的标题锚点，以及妙言预览如何处理片段和相对链接。</description>
+    </item>
+    <item>
+      <title>iPad 上写 Markdown：文件、同步和编辑器</title>
+      <link>https://miaoyan.app/zh/blog/markdown-on-ipad/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-on-ipad/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>iPad 写 Markdown 需要什么，妙言怎么打开 Mac 的 iCloud 文件夹，笔记没出现时怎么查。</description>
+    </item>
+    <item>
+      <title>Markdown 表格：对齐、竖线与单元格换行</title>
+      <link>https://miaoyan.app/zh/blog/markdown-tables/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-tables/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>表格写法、列对齐、转义竖线、单元格内换行，妙言里宽表格的表现，以及合并单元格时退回 HTML。</description>
+    </item>
+    <item>
+      <title>Markdown 待办列表与复选框写法</title>
+      <link>https://miaoyan.app/zh/blog/markdown-task-lists/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markdown-task-lists/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>- [ ] 与 - [x] 的写法、嵌套、各处渲染差异，妙言点击复选框如何改写原文，以及用 ripgrep 找未完成事项。</description>
+    </item>
+    <item>
+      <title>用 Markdown 大纲画 Markmap 思维导图</title>
+      <link>https://miaoyan.app/zh/blog/markmap-mind-maps/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/markmap-mind-maps/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>用 markmap 围栏把标题和列表画成思维导图，妙言离线渲染的行为、选项限制，以及和 Mermaid mindmap 的区别。</description>
+    </item>
+    <item>
+      <title>Markdown 里写 PlantUML：围栏、服务器渲染与隐私</title>
+      <link>https://miaoyan.app/zh/blog/plantuml-in-markdown/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/plantuml-in-markdown/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>用 plantuml 围栏画时序图、类图和活动图，妙言如何经 plantuml.com 渲染、隐私代价，以及本地渲染和 Mermaid 的替代做法。</description>
+    </item>
+    <item>
+      <title>Markdown 是什么</title>
+      <link>https://miaoyan.app/zh/blog/what-is-markdown/</link>
+      <guid isPermaLink="true">https://miaoyan.app/zh/blog/what-is-markdown/</guid>
+      <pubDate>Mon, 19 Oct 2026 01:00:00 +0000</pubDate>
+      <description>Markdown 的来历、覆盖大多数写作的十个记号、怎么变成 HTML、不擅长什么，以及在妙言里写第一篇。</description>
+    </item>
   </channel>
 </rss>

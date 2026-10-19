@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>A Bear alternative for Mac: plain Markdown files · MiaoYan Blog</title>
+<meta name="description" content="Export Bear notes to Markdown, move them into folders MiaoYan reads, and see what you lose without tags and gain with plain files.">
+<link rel="canonical" href="https://miaoyan.app/blog/bear-alternative-mac/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/bear-alternative-mac/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/bear-alternative-mac/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/bear-alternative-mac/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/bear-alternative-mac/">
+<meta property="og:title" content="A Bear alternative for Mac: plain Markdown files · MiaoYan Blog">
+<meta property="og:description" content="Export Bear notes to Markdown, move them into folders MiaoYan reads, and see what you lose without tags and gain with plain files.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/bear-alternative-mac.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Managing notes">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/bear-alternative-mac.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "A Bear alternative for Mac: plain Markdown files", "item": "https://miaoyan.app/blog/bear-alternative-mac/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/bear-alternative-mac/#article", "headline": "A Bear alternative for Mac: plain Markdown files", "description": "Export Bear notes to Markdown, move them into folders MiaoYan reads, and see what you lose without tags and gain with plain files.", "url": "https://miaoyan.app/blog/bear-alternative-mac/", "mainEntityOfPage": "https://miaoyan.app/blog/bear-alternative-mac/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/bear-alternative-mac.webp", "timeRequired": "PT6M", "articleSection": "Managing notes", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can Bear export all notes to Markdown for free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The free version exports to Markdown, plain text, Text Bundle, Bear Note and RTF. Select all notes and use File > Export notes… (⇧⌘S)."}}, {"@type": "Question", "name": "Does MiaoYan support Bear's #tags?", "acceptedAnswer": {"@type": "Answer", "text": "No. A #tag in a note stays as text. Folders are the only organization, so turn your main tags into folders before or after the move."}}, {"@type": "Question", "name": "Can I read Bear's database directly?", "acceptedAnswer": {"@type": "Answer", "text": "On a Mac you can open the SQLite file read-only, which Bear says is safe. Export is the supported route, and iOS does not expose the database."}}, {"@type": "Question", "name": "Will my notes sync to iPhone and iPad after the move?", "acceptedAnswer": {"@type": "Answer", "text": "If the library folder is in iCloud Drive, yes. The MiaoYan apps for iPhone and iPad open the same folder, and iCloud does the syncing."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/bear-alternative-mac/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/bear-alternative-mac/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">A Bear alternative for Mac: plain Markdown files</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-notes">Managing notes</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>6 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/bear-alternative-mac.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>If you want to leave Bear but keep writing Markdown on a Mac, the move is to export your notes as <code>.md</code> files and open the folder in an editor that reads plain files. MiaoYan does this: folders are your categories, every note is a file, and an iCloud Drive folder carries the notes to iPhone and iPad. The trade-off is real. Bear organizes with tags across the whole library, and MiaoYan has no tags at all, so a library that lives on <code>#tags</code> needs a plan before you move.</p>
+<h2 id="what-bear-does-well">What Bear does well</h2>
+<p>Bear's own FAQ describes tags as working like hashtags: type <code>#tag</code> anywhere in a note, put as many tags on a note as you like, wrap a phrase in pound signs for a multi-word tag (<code>#vacation plans#</code>), and nest them with a slash (<code>#recipes/italian</code>). Click a tag in the sidebar and you see every note that contains it. That is a different model from folders, because one note can sit under several tags at once.</p>
+<p>The editor is built on the CommonMark specification, and its Markdown guide says formatting is displayed while the note stays plain text, with a "Hide Markdown" setting under Settings &gt; General. It runs on Mac and iOS, and Bear Web works in any major browser with the same iCloud credentials.</p>
+<p>Sync is a Pro feature. Bear's Pro page lists iCloud sync, note encryption, export to PDF, HTML, DOCX and JPG, themes and OCR search, at $2.99 a month or $29.99 a year with a 7-day trial (page checked on 2026-10-19; prices change, so confirm on Bear's page). The sync page says Bear syncs through CloudKit, not through files in iCloud Drive.</p>
+<h2 id="how-bear-stores-your-notes">How Bear stores your notes</h2>
+<p>Bear keeps notes in a SQLite database on iOS and macOS. On a Mac it sits at <code>~/Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear/Application Data/database.sqlite</code>. Bear's own page says it is safe to access the database for reading only, advises most users not to edit it, and asks anyone who does to make a copy and quit Bear first.</p>
+<p>That is the main difference from a folder of files. A Bear note is not a file you can see in Finder or search with <code>grep</code>. The notes are still yours, but you get them out through Bear's export, not by copying a file.</p>
+<h2 id="get-your-notes-out-of-bear">Get your notes out of Bear</h2>
+<p>The free version of Bear exports to Plain Text, Markdown (<code>.md</code>), Text Bundle, Bear Note and RTF. HTML, DOCX, PDF, JPEG and ePub need Pro, but you do not need them for this move.</p>
+<ol>
+<li>In Bear for Mac, click "Notes" in the sidebar and press ⌘A.</li>
+<li>Choose File &gt; Export notes… (⇧⌘S) and pick Markdown.</li>
+<li>Save into a new, empty folder, for example <code>~/Documents/BearExport</code>.</li>
+<li>In Bear &gt; Preferences &gt; General, check "Keep tags during export" before you export if you want tags kept in the files.</li>
+</ol>
+<p>Bear's export page does not say how attachments are laid out for each format, so open the folder and check a note with an image before you trust it. If images are missing, export a second time in Text Bundle and compare the two.</p>
+<h2 id="move-them-into-miaoyan">Move them into MiaoYan</h2>
+<p>MiaoYan reads a folder of <code>.md</code>, <code>.markdown</code> or <code>.txt</code> files, so the import is a folder choice.</p>
+<ol>
+<li>Copy the export folder to where you want the library, for example a <code>MiaoYan</code> folder in iCloud Drive.</li>
+<li>Open Preferences with ⌘, and find "Note Location".</li>
+<li>Click "Change", choose the folder, and confirm the restart prompt. MiaoYan loads the library at launch, and cancelling the prompt keeps the old folder.</li>
+</ol>
+<p>Sub-folders become sidebar folders. Bear had no folders, so your export is probably one flat list. Make a handful of folders by hand and drag notes in, sorted by the thing that used to be your top-level tag. MiaoYan reads relative image paths from the note's folder and saves its own pasted images as <code>![name](/i/name.png)</code> in an <code>i/</code> folder there, so open a few notes with images after the move and fix any links that do not resolve. The <a href="/blog/obsidian-alternative-mac/">Obsidian migration post</a> shows the same kind of cleanup with <code>rg</code>.</p>
+<h2 id="how-miaoyans-model-differs">How MiaoYan's model differs</h2>
+<p>MiaoYan treats the folder tree as the only structure. A note lives in exactly one folder, its title is the file name, and nothing is stored outside the files except version snapshots in the app's support folder. Links between notes use <code>[[Title]]</code> wikilinks with backlinks, covered in <a href="/blog/wikilinks-and-backlinks/">Wikilinks and backlinks</a>. Bear can link notes too, and its export page mentions an "HTML Links" option that turns wiki links into HTML links, so these are worth checking after export.</p>
+<p>For the iPhone and iPad, MiaoYan has no account and no sync service of its own. The apps open the same iCloud Drive folder as the Mac, and iCloud moves the files. <a href="/blog/sync-markdown-notes-across-devices/">Sync Markdown notes across devices</a> covers the failure cases.</p>
+<h2 id="what-bear-does-better-and-what-you-lose">What Bear does better, and what you lose</h2>
+<ul>
+<li><strong>Tags across folders.</strong> MiaoYan has none. You can type <code>#recipes</code> as text and search for it, but it is only text.</li>
+<li><strong>A mobile app built for writing.</strong> Bear has native iPhone and iPad apps, and its FAQ documents iPadOS keyboard shortcuts. MiaoYan's iPhone and iPad app opens a note in a reader first, switches to an editor when you tap the edit button, and has no keyboard shortcuts of its own.</li>
+<li><strong>Widgets, Apple Watch and Shortcuts.</strong> Bear's FAQ lists these. MiaoYan's pages do not mention them.</li>
+<li><strong>Export to PDF, DOCX and JPG as Pro features.</strong> MiaoYan has its own PDF route, described in <a href="/blog/markdown-to-pdf-mac/">Markdown to PDF on Mac</a>, without DOCX.</li>
+<li><strong>One note, several places.</strong> A note lives in one folder, so it cannot also sit under a second heading.</li>
+</ul>
+<p>What you gain is a library that survives any app. Files open in any editor, a backup is a copy of a folder, and there is no Pro tier gating sync, because the sync is whatever you already use for the folder. MiaoYan also renders LaTeX, Mermaid, PlantUML and Markmap on the Mac, which Bear's Markdown guide does not mention.</p>
+<h2 id="when-to-stay-with-bear">When to stay with Bear</h2>
+<p>Stay if tags are how you find things, if you capture mostly on an iPhone, or if you like the styled single-pane editor. If you want a folder-based Mac editor, or want to try plain files before deciding, <a href="/blog/markdown-editor-for-mac/">Choosing a Markdown editor for Mac</a> compares the main options, and <a href="/blog/local-first-markdown-notes/">Local-first Markdown notes</a> explains why a plain folder is worth the trade.</p>
+<p>You can test the move safely: export is non-destructive, so keep Bear installed, export once, open the copy in MiaoYan and use both for a week.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="can-bear-export-all-notes-to-markdown-for-free">Can Bear export all notes to Markdown for free?</h3>
+<p>Yes. The free version exports to Markdown, plain text, Text Bundle, Bear Note and RTF. Select all notes and use File &gt; Export notes… (⇧⌘S).</p>
+<h3 id="does-miaoyan-support-bears-tags">Does MiaoYan support Bear's #tags?</h3>
+<p>No. A <code>#tag</code> in a note stays as text. Folders are the only organization, so turn your main tags into folders before or after the move.</p>
+<h3 id="can-i-read-bears-database-directly">Can I read Bear's database directly?</h3>
+<p>On a Mac you can open the SQLite file read-only, which Bear says is safe. Export is the supported route, and iOS does not expose the database.</p>
+<h3 id="will-my-notes-sync-to-iphone-and-ipad-after-the-move">Will my notes sync to iPhone and iPad after the move?</h3>
+<p>If the library folder is in iCloud Drive, yes. The MiaoYan apps for iPhone and iPad open the same folder, and iCloud does the syncing.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/local-first-markdown-notes/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Local-first Markdown notes: keep them as plain files</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/apple-notes-to-markdown/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Export Apple Notes as Markdown and open the files</span><span class="blog-related-meta">11 min read</span></a></li><li><a href="/blog/markdown-on-ipad/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Markdown on iPad: files, sync and editors</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

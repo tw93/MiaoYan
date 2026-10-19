@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Mac 上的 Bear 替代品：纯 Markdown 文件 · 妙言博客</title>
+<meta name="description" content="把 Bear 笔记导出成 Markdown，搬进妙言读取的文件夹，说清没有标签的代价和纯文件的好处。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/bear-alternative-mac/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/bear-alternative-mac/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/bear-alternative-mac/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/bear-alternative-mac/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/bear-alternative-mac/">
+<meta property="og:title" content="Mac 上的 Bear 替代品：纯 Markdown 文件 · 妙言博客">
+<meta property="og:description" content="把 Bear 笔记导出成 Markdown，搬进妙言读取的文件夹，说清没有标签的代价和纯文件的好处。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/bear-alternative-mac.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="笔记管理">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/bear-alternative-mac.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Mac 上的 Bear 替代品：纯 Markdown 文件", "item": "https://miaoyan.app/zh/blog/bear-alternative-mac/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/bear-alternative-mac/#article", "headline": "Mac 上的 Bear 替代品：纯 Markdown 文件", "description": "把 Bear 笔记导出成 Markdown，搬进妙言读取的文件夹，说清没有标签的代价和纯文件的好处。", "url": "https://miaoyan.app/zh/blog/bear-alternative-mac/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/bear-alternative-mac/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/bear-alternative-mac.webp", "timeRequired": "PT4M", "articleSection": "笔记管理", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Bear 免费版能把全部笔记导出成 Markdown 吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以。免费版支持导出 Markdown、纯文本、Text Bundle、Bear Note 和 RTF，全选笔记后用 File > Export notes…（⇧⌘S）。"}}, {"@type": "Question", "name": "妙言支持 Bear 的 #标签吗？", "acceptedAnswer": {"@type": "Answer", "text": "不支持。笔记里的 #tag 只是文字，文件夹是唯一的组织方式，搬之前或之后把主要的标签改成文件夹。"}}, {"@type": "Question", "name": "能直接读 Bear 的数据库吗？", "acceptedAnswer": {"@type": "Answer", "text": "Mac 上可以只读打开那个 SQLite 文件，Bear 说只读是安全的，不过官方支持的路径是导出，iOS 上数据库不对外开放。"}}, {"@type": "Question", "name": "搬完以后笔记会同步到 iPhone 和 iPad 吗？", "acceptedAnswer": {"@type": "Answer", "text": "资料库文件夹在 iCloud Drive 里就会，妙言的 iPhone 和 iPad 版打开的是同一个文件夹，同步由 iCloud 完成。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/bear-alternative-mac/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/bear-alternative-mac/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">Mac 上的 Bear 替代品：纯 Markdown 文件</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-notes">笔记管理</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 4 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/bear-alternative-mac.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>想离开 Bear 又继续在 Mac 上写 Markdown，做法是先把笔记导出成 <code>.md</code> 文件，再用一个直接读普通文件的编辑器打开那个文件夹，妙言就是这样一个选择。文件夹就是分类，每篇笔记就是一个文件，把文件夹放在 iCloud Drive 里，iPhone 和 iPad 上也能打开同一份。代价也要说在前面，Bear 靠标签跨整个资料库组织笔记，妙言没有标签功能，如果你的笔记主要靠 <code>#标签</code> 找，搬之前先想好怎么改成文件夹。</p>
+<h2 id="bear-擅长什么">Bear 擅长什么</h2>
+<p>Bear 官方 FAQ 把标签比作话题标签，在笔记任何位置输入 <code>#tag</code> 就行，一篇笔记可以带任意多个标签，多个词的标签用一对井号包起来（<code>#vacation plans#</code>），用斜杠做嵌套（<code>#recipes/italian</code>），在侧边栏点一个标签，就能看到所有包含它的笔记。这和文件夹不是一个模型，因为一篇笔记可以同时挂在好几个标签下。</p>
+<p>编辑器基于 CommonMark 规范，Markdown 指南里说格式会在笔记里显示出来而内容仍是纯文本，「Hide Markdown」在 Settings &gt; General 里。它有 Mac 和 iOS 版本，Bear Web 用同一个 iCloud 账号，在主流浏览器里就能打开。</p>
+<p>同步属于 Pro 功能。Bear 的 Pro 页面列出了 iCloud 同步、笔记加密、导出 PDF、HTML、DOCX 和 JPG、主题和 OCR 搜索。价格是每月 $2.99 或每年 $29.99，带 7 天试用（页面查看于 2026-10-19，价格会变，以官网为准）。同步页写明 Bear 用的是 CloudKit，而不是 iCloud Drive 里的文件。</p>
+<h2 id="bear-怎么存你的笔记">Bear 怎么存你的笔记</h2>
+<p>Bear 在 iOS 和 macOS 上都把笔记放在一个 SQLite 数据库里，Mac 上的位置是 <code>~/Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear/Application Data/database.sqlite</code>。官方页面说只读访问数据库是安全的，建议多数用户不要改它，真要改就先复制一份并退出 Bear。</p>
+<p>这是它和「一堆文件」最大的区别，Bear 里的笔记不是访达里看得见、也不是能直接用 <code>grep</code> 搜的文件。笔记还是你的，只是要走 Bear 的导出拿出来，而不是复制文件。</p>
+<h2 id="先把笔记导出来">先把笔记导出来</h2>
+<p>免费版的 Bear 可以导出为纯文本、Markdown（<code>.md</code>）、Text Bundle、Bear Note 和 RTF，HTML、DOCX、PDF、JPEG 和 ePub 要 Pro，这次迁移用不上。</p>
+<ol>
+<li>在 Mac 版 Bear 里点侧边栏的「Notes」，按 ⌘A 全选。</li>
+<li>选 File &gt; Export notes…（⇧⌘S），格式选 Markdown。</li>
+<li>保存到一个新建的空文件夹，比如 <code>~/Documents/BearExport</code>。</li>
+<li>想把标签留在文件里的话，导出前先在 Bear &gt; Preferences &gt; General 里勾上「Keep tags during export」。</li>
+</ol>
+<p>Bear 的导出页没有说每种格式下附件怎么放，所以导出后挑一篇带图的笔记打开看看再放心，图丢了就再用 Text Bundle 导一次对比。</p>
+<h2 id="搬进妙言">搬进妙言</h2>
+<p>妙言读的是一个装着 <code>.md</code>、<code>.markdown</code> 或 <code>.txt</code> 的文件夹，所以导入就是选文件夹。</p>
+<ol>
+<li>把导出的文件夹复制到你想放资料库的地方，比如 iCloud Drive 里的 <code>MiaoYan</code> 文件夹。</li>
+<li>按 ⌘, 打开偏好设置，找到「笔记位置」。</li>
+<li>点「更改」，选中那个文件夹，在重启提示里点「确定」，妙言启动时才加载资料库，取消提示则保留原来的文件夹。</li>
+</ol>
+<p>子文件夹会变成侧边栏里的文件夹。Bear 没有文件夹，导出的多半是一个平铺列表，所以要自己建几个文件夹，再按原来最上层的标签把笔记拖进去。妙言按笔记所在文件夹解析相对图片路径，自己粘贴的图片会存成 <code>![name](/i/name.png)</code>，放在那个文件夹的 <code>i/</code> 目录里，搬完后打开几篇带图的笔记，把打不开的链接改掉，<a href="/zh/blog/obsidian-alternative-mac/">Mac 上更轻的 Obsidian 替代品</a>那篇用 <code>rg</code> 做过同类清理。</p>
+<h2 id="妙言的模型有什么不同">妙言的模型有什么不同</h2>
+<p>妙言只把文件夹树当作结构，一篇笔记只在一个文件夹里，标题就是文件名，除了版本快照放在应用自己的支持目录，其余内容都在文件里。笔记之间用 <code>[[标题]]</code> 链接并带反向链接，见<a href="/zh/blog/wikilinks-and-backlinks/">Markdown 笔记里的 Wikilink 与反向链接</a>。Bear 的导出页提到有一个「HTML Links」选项，会把笔记之间的 wiki 链接转成 HTML 链接，导出后可以检查一下链接还在不在。</p>
+<p>iPhone 和 iPad 上，妙言没有账号也没有自己的同步服务，App 打开的是和 Mac 同一个 iCloud Drive 文件夹，文件由 iCloud 来搬。出问题时看<a href="/zh/blog/sync-markdown-notes-across-devices/">跨设备同步 Markdown 笔记的几种做法</a>。</p>
+<h2 id="bear-更好的地方以及你会失去什么">Bear 更好的地方，以及你会失去什么</h2>
+<ul>
+<li><strong>跨文件夹的标签。</strong> 妙言没有，<code>#recipes</code> 你可以照样打在正文里并去搜，但它只是文字。</li>
+<li><strong>为写作做的移动端。</strong> Bear 有原生的 iPhone 和 iPad 版，FAQ 里写了 iPadOS 键盘快捷键，妙言的 iPhone 和 iPad 版是先进入阅读，点编辑按钮才切到编辑器，也没有自己的键盘快捷键。</li>
+<li><strong>小组件、Apple Watch 和快捷指令。</strong> Bear 的 FAQ 列了这些，妙言的页面没有提到。</li>
+<li><strong>PDF、DOCX、JPG 导出。</strong> 在 Bear 里属于 Pro，妙言有自己的 PDF 路径，见 <a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>，没有 DOCX。</li>
+<li><strong>一篇笔记放在多个位置。</strong> 妙言里一篇笔记只在一个文件夹里。</li>
+</ul>
+<p>得到的是一个不依赖任何 App 的资料库，文件能被任何编辑器打开，备份就是复制文件夹，同步也不用 Pro，用你本来就在用的网盘就行。妙言在 Mac 上还能渲染 LaTeX、Mermaid、PlantUML 和 Markmap，Bear 的 Markdown 指南没有提到这些。</p>
+<h2 id="什么时候留在-bear">什么时候留在 Bear</h2>
+<p>标签是你找笔记的主要方式，主要在 iPhone 上随手记，或者喜欢那种带样式的单栏编辑器，就留在 Bear。想要基于文件夹的 Mac 编辑器，或者想先试试纯文件再决定，可以读<a href="/zh/blog/markdown-editor-for-mac/">Mac 上怎么选 Markdown 编辑器</a>，里面比较了几个主流选择，<a href="/zh/blog/local-first-markdown-notes/">本地优先的 Markdown 笔记怎么管</a>讲了为什么一个普通文件夹值得这点取舍。</p>
+<p>迁移可以放心试，导出不会改动 Bear 里的任何内容，保留 Bear，导出一次，在妙言里打开副本，两边用上一周再决定。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="bear-免费版能把全部笔记导出成-markdown-吗">Bear 免费版能把全部笔记导出成 Markdown 吗？</h3>
+<p>可以。免费版支持导出 Markdown、纯文本、Text Bundle、Bear Note 和 RTF，全选笔记后用 File &gt; Export notes…（⇧⌘S）。</p>
+<h3 id="妙言支持-bear-的-标签吗">妙言支持 Bear 的 #标签吗？</h3>
+<p>不支持。笔记里的 <code>#tag</code> 只是文字，文件夹是唯一的组织方式，搬之前或之后把主要的标签改成文件夹。</p>
+<h3 id="能直接读-bear-的数据库吗">能直接读 Bear 的数据库吗？</h3>
+<p>Mac 上可以只读打开那个 SQLite 文件，Bear 说只读是安全的，不过官方支持的路径是导出，iOS 上数据库不对外开放。</p>
+<h3 id="搬完以后笔记会同步到-iphone-和-ipad-吗">搬完以后笔记会同步到 iPhone 和 iPad 吗？</h3>
+<p>资料库文件夹在 iCloud Drive 里就会，妙言的 iPhone 和 iPad 版打开的是同一个文件夹，同步由 iCloud 完成。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/local-first-markdown-notes/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">本地优先的 Markdown 笔记怎么管</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/apple-notes-to-markdown/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">把备忘录导出为 Markdown 再交给妙言</span><span class="blog-related-meta">约 8 分钟</span></a></li><li><a href="/zh/blog/markdown-on-ipad/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">iPad 上写 Markdown：文件、同步和编辑器</span><span class="blog-related-meta">约 4 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

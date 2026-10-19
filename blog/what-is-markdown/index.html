@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>What is Markdown? A plain-text way to format · MiaoYan Blog</title>
+<meta name="description" content="What Markdown is, where it came from, the ten marks that cover most writing, how it becomes HTML, what it cannot do, and a first note in MiaoYan.">
+<link rel="canonical" href="https://miaoyan.app/blog/what-is-markdown/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/what-is-markdown/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/what-is-markdown/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/what-is-markdown/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/what-is-markdown/">
+<meta property="og:title" content="What is Markdown? A plain-text way to format · MiaoYan Blog">
+<meta property="og:description" content="What Markdown is, where it came from, the ten marks that cover most writing, how it becomes HTML, what it cannot do, and a first note in MiaoYan.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/what-is-markdown.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Writing in Markdown">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/what-is-markdown.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "What is Markdown? A plain-text way to format", "item": "https://miaoyan.app/blog/what-is-markdown/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/what-is-markdown/#article", "headline": "What is Markdown? A plain-text way to format", "description": "What Markdown is, where it came from, the ten marks that cover most writing, how it becomes HTML, what it cannot do, and a first note in MiaoYan.", "url": "https://miaoyan.app/blog/what-is-markdown/", "mainEntityOfPage": "https://miaoyan.app/blog/what-is-markdown/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/what-is-markdown.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is Markdown a programming language?", "acceptedAnswer": {"@type": "Answer", "text": "No. It is a markup syntax for text. It has no variables or logic, only marks that a parser converts to HTML."}}, {"@type": "Question", "name": "Do I need to learn HTML first?", "acceptedAnswer": {"@type": "Answer", "text": "No. You only meet HTML if you want something Markdown cannot express, and most notes never need it."}}, {"@type": "Question", "name": "Which file extension should I use?", "acceptedAnswer": {"@type": "Answer", "text": ".md is the common one, and it is what MiaoYan creates for new notes."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/what-is-markdown/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/what-is-markdown/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">What is Markdown? A plain-text way to format</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>6 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/what-is-markdown.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Markdown is a way of writing formatted text in a plain text file, using a few ordinary characters as marks: <code>#</code> for a heading, <code>*</code> around a word for emphasis, <code>-</code> for a list item. A program reads those marks and turns them into HTML, but the file itself stays readable without any program, which is the main reason people use it. It is good for notes, documentation and articles, and poor for anything that depends on precise page layout. You can learn the ten marks that cover most writing in about ten minutes.</p>
+<h2 id="where-it-came-from">Where it came from</h2>
+<p>John Gruber released Markdown in 2004, and his <a href="https://daringfireball.net/projects/markdown/" target="_blank" rel="noopener">project page</a> describes it as two things: a plain text formatting syntax, and a Perl tool that converts that syntax to HTML. The marks were chosen from conventions people already used in email and Usenet posts, so the source looks like what you would have typed in a plain message anyway.</p>
+<p>The original description was loose in places, and implementations disagreed. Around 2014 the <a href="https://commonmark.org/" target="_blank" rel="noopener">CommonMark project</a> wrote an unambiguous specification, and GitHub later published GitHub Flavored Markdown (GFM), a superset of it with tables and task lists. The <a href="https://spec.commonmark.org/0.31.2/" target="_blank" rel="noopener">CommonMark spec</a> notes that Reddit, StackOverflow and GitHub had millions of people using Markdown, which is a fair summary of where you will meet it. Because of that history, "Markdown" today means a core that is well defined plus extensions that vary by app, as <a href="/blog/commonmark-vs-gfm/">CommonMark vs GFM</a> explains.</p>
+<h2 id="the-ten-marks-that-cover-most-writing">The ten marks that cover most writing</h2>
+<pre><code class="language-markdown"># Heading
+## Subheading
+
+A paragraph with *italic* and **bold** text and `inline code`.
+
+- A bullet item
+- Another item
+
+1. A numbered item
+2. The next one
+
+[Link text](https://example.com)
+![Alt text](photo.png)
+
+&gt; A quoted line.
+
+```python
+print(&quot;a code block&quot;)
+```
+</code></pre>
+<p>Reading it top to bottom: <code>#</code> characters start a heading, and the number of them sets the level, up to six. A blank line separates paragraphs. Single asterisks or underscores make italic, double make bold, and backticks mark code. A hyphen at the start of a line makes a bullet; a number and a period make a numbered list. A link is square brackets for the text followed by parentheses for the address, and an image is the same with a leading <code>!</code>. A line starting with <code>&gt;</code> is a quote. Three backticks open and close a code block, and a word after the opening three names the language so the code can be colored.</p>
+<p>Two more you will use soon are tables, written with <code>|</code> between columns and a row of hyphens under the header, and task lists, written <code>- [ ]</code> and <code>- [x]</code>. Both come from GFM, not from the original Markdown. The <a href="/blog/markdown-cheat-sheet/">Markdown cheat sheet</a> lists them all with the details that trip people up.</p>
+<h2 id="how-a-renderer-turns-it-into-html">How a renderer turns it into HTML</h2>
+<p>A Markdown file does nothing by itself. A program called a parser reads it, finds the marks and builds a structure of headings, paragraphs and lists, and a renderer writes that structure out, usually as HTML. The line <code># Heading</code> becomes <code>&lt;h1&gt;Heading&lt;/h1&gt;</code>, and <code>**bold**</code> becomes <code>&lt;strong&gt;bold&lt;/strong&gt;</code>. A browser or web view then draws the HTML with a stylesheet, which decides the fonts, spacing and colors.</p>
+<figure class="blog-figure"><picture><source media="(max-width: 640px)" srcset="/img/blog/what-is-markdown-mobile.webp" width="600" height="1022"><img src="/img/blog/what-is-markdown.webp" width="1000" height="310" loading="lazy" alt="A Markdown file is read by a parser, a renderer writes the resulting structure out as HTML, and a browser draws that HTML with a stylesheet to produce the rendered page."></picture><figcaption>The file never changes; the parser decides what your marks mean and the stylesheet decides how the result looks.</figcaption></figure>
+
+<p>This split explains two things beginners notice. First, the same file can look different in different apps, because the parser, the extensions it supports and the stylesheet are all the app's choice. Second, formatting problems are almost always one of two kinds: the parser did not understand your mark, which you can see as literal asterisks or hash signs on the page, or the stylesheet made it look the way it does, which you can change without touching the file.</p>
+<h2 id="why-the-file-stays-readable">Why the file stays readable</h2>
+<p>Compare <code>**Important:** back up first</code> with the same sentence in a word processor's file format. The Markdown version is plain text you can open in any editor, search with any tool, keep in a git repository and read in ten years even if the app is gone. A word processor document is a packaged format that needs the right program. Because a Markdown file is only text, it is also small, easy to diff, and easy to copy into an email or a chat when you do not care about rendering.</p>
+<p>That is also the case for keeping notes as ordinary files in a folder you own, covered in <a href="/blog/local-first-markdown-notes/">Local-first Markdown notes</a>.</p>
+<h2 id="where-you-will-use-it">Where you will use it</h2>
+<p>GitHub renders Markdown in READMEs, issues and comments, and for many people that is the first place they meet it. Documentation sites, notes apps and other tools also read it. Check each tool's own documentation for which extensions it supports, because the core is shared and the extras are not.</p>
+<h2 id="what-it-is-bad-at">What it is bad at</h2>
+<p>Markdown describes structure, not appearance. It has no way to say that a figure should sit 2 cm from the margin, to make a column layout, to set an exact font size, or to place text on a specific page. Tables are limited to simple rows and columns, and merged cells need HTML. If you need precise page layout, use a layout tool and export, or write Markdown and convert it through a program that handles the styling. For a printable file from a note, see <a href="/blog/markdown-to-pdf-mac/">Markdown to PDF on Mac</a>.</p>
+<p>Markdown can also embed raw HTML in many apps, which is a way out for the odd case but makes the file less portable.</p>
+<h2 id="getting-started-in-miaoyan">Getting started in MiaoYan</h2>
+<p>MiaoYan is a Mac Markdown editor that stores each note as a plain <code>.md</code> file. Three steps get you a first rendered note.</p>
+<ol>
+<li>Choose File &gt; New, or press <code>⌘N</code>, to create a note, and type a title and a few lines using the marks above.</li>
+<li>Choose View &gt; Toggle Preview, or press <code>⌘3</code>, to switch the editor to the rendered view. Press it again to go back to the source. View &gt; Toggle Split View (<code>⌘\</code>) shows source and preview side by side.</li>
+<li>Look for leftover marks such as stray <code>**</code> or <code>#</code> on the preview page. They show where the parser did not understand the syntax.</li>
+</ol>
+<p>MiaoYan 4.5.0 renders CommonMark plus tables, task lists, strikethrough and footnotes through the cmark-gfm parser, and adds math, callouts and diagrams in the preview. When the library is empty on first launch it also creates sample notes, including a MiaoYan Markdown Syntax Guide, that you can read as examples. To pick an editor, compare options in <a href="/blog/markdown-editor-for-mac/">Choosing a Markdown editor for Mac</a>.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="is-markdown-a-programming-language">Is Markdown a programming language?</h3>
+<p>No. It is a markup syntax for text. It has no variables or logic, only marks that a parser converts to HTML.</p>
+<h3 id="do-i-need-to-learn-html-first">Do I need to learn HTML first?</h3>
+<p>No. You only meet HTML if you want something Markdown cannot express, and most notes never need it.</p>
+<h3 id="which-file-extension-should-i-use">Which file extension should I use?</h3>
+<p><code>.md</code> is the common one, and it is what MiaoYan creates for new notes.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/plantuml-in-markdown/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">PlantUML in Markdown: fences, server rendering and privacy</span><span class="blog-related-meta">6 min read</span></a></li><li><a href="/blog/markmap-mind-maps/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markmap mind maps from a Markdown outline</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

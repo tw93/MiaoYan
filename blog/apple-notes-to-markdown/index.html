@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Export Apple Notes as Markdown and open the files · MiaoYan Blog</title>
+<meta name="description" content="macOS Tahoe can export a Notes note as Markdown. Sequoia exports PDF only. Check the file, then open it in MiaoYan.">
+<link rel="canonical" href="https://miaoyan.app/blog/apple-notes-to-markdown/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/apple-notes-to-markdown/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/apple-notes-to-markdown/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/apple-notes-to-markdown/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/apple-notes-to-markdown/">
+<meta property="og:title" content="Export Apple Notes as Markdown and open the files · MiaoYan Blog">
+<meta property="og:description" content="macOS Tahoe can export a Notes note as Markdown. Sequoia exports PDF only. Check the file, then open it in MiaoYan.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/apple-notes-to-markdown.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Managing notes">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/apple-notes-to-markdown.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Export Apple Notes as Markdown and open the files", "item": "https://miaoyan.app/blog/apple-notes-to-markdown/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/apple-notes-to-markdown/#article", "headline": "Export Apple Notes as Markdown and open the files", "description": "macOS Tahoe can export a Notes note as Markdown. Sequoia exports PDF only. Check the file, then open it in MiaoYan.", "url": "https://miaoyan.app/blog/apple-notes-to-markdown/", "mainEntityOfPage": "https://miaoyan.app/blog/apple-notes-to-markdown/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/apple-notes-to-markdown.webp", "timeRequired": "PT11M", "articleSection": "Managing notes", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can one command export a whole Notes folder?", "acceptedAnswer": {"@type": "Answer", "text": "The Mac user guide describes clicking one note and choosing File > Export To. Import is the command that can take a folder and keep its structure. A library-wide conversion on the Mac is what Obsidian's Importer documents, by reading the Notes data folder."}}, {"@type": "Question", "name": "Does a checked item stay checked?", "acceptedAnswer": {"@type": "Answer", "text": "It stays checked when the exported line is - [x]. An open item is - [ ]. A circle character or a plain sentence stays that text in the preview. The cheat sheet covers how a click in MiaoYan's preview writes the checkbox back into the file."}}, {"@type": "Question", "name": "Why does the same image link work in one app and miss in the other?", "acceptedAnswer": {"@type": "Answer", "text": "/i/photo.png points at the i folder beside the note in MiaoYan. On GitHub, a link that starts with / points at the repository root, which is a different directory unless the notes folder is the root of the repo. A relative path such as i/photo.png or attachments/photo.png names the same file in both when the image sits at that path next to the note."}}, {"@type": "Question", "name": "Does copying files in require a restart?", "acceptedAnswer": {"@type": "Answer", "text": "Copying into the folder that is already the note location does not. The file watcher imports the new note. Restart belongs to a change of Note Location, and Cancel on that prompt leaves the old folder in place."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/apple-notes-to-markdown/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/apple-notes-to-markdown/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Export Apple Notes as Markdown and open the files</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-notes">Managing notes</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>11 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/apple-notes-to-markdown.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>On macOS Tahoe and later, Apple Notes can save a note as a Markdown file. Open the note, choose File, then Export To, and pick Markdown. Apple's archive article for iCloud data, published 14 September 2026, says that menu may read Export To or Export as, and that on macOS Sequoia and earlier the File menu only offers Export as PDF. The <code>.md</code> file is plain text. MiaoYan does not open the Notes database. It lists <code>.md</code>, <code>.markdown</code> and <code>.txt</code> files in a folder you pick, and the preview shows only the syntax that is actually in those files.</p>
+<h2 id="export-a-note-on-macos-tahoe">Export a note on macOS Tahoe</h2>
+<p>Apple announced this with macOS Tahoe 26. The June 2025 newsroom post says Notes adds the ability to import and export a note into a markdown file, and the September 2025 feature list describes it as saving notes as Markdown files, or importing Markdown formatted files.</p>
+<p>The current Notes User Guide on the Mac gives the steps.</p>
+<ol>
+<li>Open Notes.</li>
+<li>Click the note you want to export.</li>
+<li>Choose File &gt; Export To, then choose Markdown. If the menu reads Export as instead, that is the other label in Apple's archive article. Choose Markdown there.</li>
+<li>Type a name if you want a different file name, and add Finder tags if you want them searchable in Finder.</li>
+<li>Click Save.</li>
+</ol>
+<p>The same guide has a second path for a fragment of the note. Select the text in the note body, then choose Edit &gt; Copy as Markdown, and paste it into a new <code>.md</code> file. Pasting Markdown back into Notes turns it into formatted headings, lists, and similar rich text. That direction is useful when you are checking a file you already wrote.</p>
+<p>On iPhone, the current user guide says to open the note, tap the share button, then tap Export as Markdown. If that option is missing, tap the View More button first, then choose how to send or save the note. The iOS 18 edition of that page has PDF, Pages, and print, and it stops there. Importing a <code>.md</code> file into Notes, the other direction, is documented for macOS Tahoe 26, iOS 26, and iPadOS 26 and later. On the Mac the menu is File &gt; Import Markdown, and the notes land in a folder named Imported Notes.</p>
+<p>The export steps describe one note. They do not describe a command that exports a Notes folder. Import is the place Apple documents a folder: File &gt; Import to Notes can take a folder, and Preserve folder structure on import keeps that layout. The checkbox sits behind Options, or Show Options, when it is hidden. For export, you pick the destination yourself, so the folder the <code>.md</code> file lands in is the one you chose in the save dialog.</p>
+<h2 id="what-sequoia-and-earlier-can-do">What Sequoia and earlier can do</h2>
+<p>The Notes User Guide for macOS 15 says you can export a note as a PDF with File &gt; Export as PDF, or open it in Pages with File &gt; Open in Pages. The Pages document keeps formatting such as bullets, indentation, and bold text, and it is a separate copy. Changes in Notes do not flow back to that Pages file. That guide's export page has PDF and Pages, and no Markdown command.</p>
+<p>A short note is often faster to write again in Markdown than to push through a converter. When you want the drawings, scans, tables, and photos as files, Obsidian's Importer plugin documents a different route, and it does not use Apple's Markdown menu. It reads the Notes data on macOS. In Obsidian, open Settings, install Importer from Community Plugins, enable it, open it, set File format to Apple Notes, and choose Import. The open panel is titled Select the "group.com.apple.notes" folder to allow Obsidian to read Apple Notes data. Review the generated template and the preview, then select Import again. Obsidian's help says this covers tables, images, drawings, scans, PDFs, and links introduced in iOS 17. Locked notes are skipped until you unlock them, because Apple encrypts them. Scans come out as uncropped images, cropped images, or PDFs, depending on which system created or edited them. The plugin runs on macOS, and the iOS app does not have it yet. The folder it writes is ordinary Markdown, which is what you then point MiaoYan at. What happens to Obsidian-only syntax after that is covered in <a href="/blog/obsidian-alternative-mac/">an Obsidian alternative for Mac</a>.</p>
+<p>On iPhone, Open in Pages shows which objects are fragile even when Markdown is available. The current iPhone guide says you cannot edit drawings in Pages, scans and PDFs show up as thumbnails, and tags, mentions, checklists, and links to other notes are not active items there. A PDF export uses the note's current attachment view, and a multipage PDF or scan contributes only its first page. That is a description of Pages and PDF, not a Markdown specification. It is still the reason a text export has to flatten or drop some of those objects.</p>
+<h2 id="why-the-preview-follows-the-file">Why the preview follows the file</h2>
+<p>Notes stores a rich-text note. Markdown is a text file whose meaning comes from characters such as <code>#</code>, <code>-</code>, and <code>|</code>. Apple's export pages name the command and the file type. They do not publish a map of what a checklist, a table, an attachment, or a drawing becomes. Open the <code>.md</code> file as text and read it.</p>
+<p>MiaoYan, at the V4.5.0 release this article is based on, parses that text with cmark-gfm. The extensions it turns on are <code>table</code>, <code>footnotes</code>, <code>strikethrough</code>, and <code>tasklist</code>. A checklist displays as a checkbox when the line is a task item, written <code>- [ ]</code> for an open item or <code>- [x]</code> for a done one. A grid displays as a table when the file contains a GFM table, with a header row and a divider row. The syntax, including the divider mistakes that leave a table as plain text, is in the <a href="/blog/markdown-cheat-sheet/">Markdown cheat sheet</a>. A drawing, a scan, or a PDF shows up when the export wrote a file and the note links to it. If the <code>.md</code> file has a sentence where the drawing was, the preview has nothing else to draw.</p>
+<p>Images are the part that usually needs a path fix. When MiaoYan saves an image you paste, it writes the file into an <code>i</code> directory in the folder that contains the note, and inserts a link of the form <code>![](/i/filename)</code>. Other files go under <code>files</code> and use a <code>/files/</code> prefix. The preview resolves <code>/i/...</code> against that same folder. A relative path with no leading slash, such as <code>attachments/photo.png</code>, is resolved against that folder too. A path that starts with <code>/</code> and is not <code>/i/</code> is treated as an absolute path on disk, so an image link <code>/files/photo.png</code> looks for a file at <code>/files/photo.png</code> in the preview, rather than inside your notes folder.</p>
+<p>GitHub reads the same characters differently. Its documentation says a link is relative to the current file, and a link that starts with <code>/</code> is relative to the repository root. A MiaoYan <code>/i/photo.png</code> link finds the image beside the note in MiaoYan. On GitHub it looks for <code>i/photo.png</code> at the root of the repository. If these notes will also be read on GitHub, a relative link such as <code>i/photo.png</code> or <code>attachments/photo.png</code> points at the same file in both, as long as the image sits where that path says, next to the note.</p>
+<h2 id="put-the-files-in-a-folder-miaoyan-opens">Put the files in a folder MiaoYan opens</h2>
+<p>If you already keep notes in a folder, as described in <a href="/blog/local-first-markdown-notes/">local-first Markdown notes</a>, copy the exported <code>.md</code> files into it, and copy the image files so each link still names a real file. MiaoYan watches the folder with macOS file system events and adds a new <code>.md</code>, <code>.markdown</code>, or <code>.txt</code> file to the list. That copy does not need a restart.</p>
+<p>If this export should be the library, set it as the note location. Choose MiaoYan &gt; Preferences… (Command-,), stay on General, and click Change next to Note Location. Pick the folder. MiaoYan checks that it is a writable directory. When the check fails, the alert title is "Could not use this folder", and the old location stays. The message under that title says whether the folder could not be read or written, and for a cloud drive it suggests opening the provider app to make sure the folder is exposed in Finder, or enabling offline access. After a valid choice, MiaoYan asks you to restart with "Restart to MiaoYan to take effect". Confirm restarts the app. Cancel puts the previous location back. Syncing that folder with iCloud Drive or another service is a separate decision, covered in <a href="/blog/sync-markdown-notes-across-devices/">syncing Markdown notes across devices</a>.</p>
+<p>A layout that matches the images MiaoYan writes itself looks like this:</p>
+<pre><code class="language-text">Inbox/
+  Meeting notes.md
+  i/
+    photo.png
+</code></pre>
+<p>The note then contains <code>![photo](/i/photo.png)</code>. The sidebar skips folders named <code>i</code>, <code>files</code>, <code>assets</code>, <code>.cache</code>, and <code>.Trash</code>. It also hides a folder that holds only attachment files, with no notes and no subfolders. Those files stay on disk. If the export arrived as a Markdown file plus a folder of pictures, and the pictures are absent from the sidebar, that rule is what hid the folder.</p>
+<p>The title in the list is the file name without the extension. Rename the file in Finder when the save dialog left a name you do not want. The note you open is that file.</p>
+<h2 id="check-what-came-across">Check what came across</h2>
+<p>Open the <code>.md</code> file in any text editor before you judge the preview. Search for <code>![</code> to see image links, for <code>- [</code> to see whether a checklist became a task list, and for a row of pipes and dashes to see whether a table became a GFM table. When those strings are absent, the preview has no checkbox, table, or picture to build.</p>
+<p>Then confirm the files. In MiaoYan, Reveal in Finder (Option-Command-R) shows the note file. In Finder, the image named in the link should sit at that path relative to the note's folder, or under <code>i</code> if you rewrote the link to <code>/i/</code>. Toggle Preview with Command-3. A missing local image is replaced in the preview by a small box whose text reads "Image Not Found". Toggle Split View with Command-backslash when you want the source and the preview together.</p>
+<p>A note missing from the list is usually a file the app did not treat as a note. The extension has to be <code>md</code>, <code>markdown</code>, or <code>txt</code>, matched in that lowercase form, so <code>.MD</code> is outside the list. The file has to be under 100,000,000 bytes, and its type has to be text or Markdown. Hidden files are skipped, and so are files inside <code>i</code>, <code>files</code>, or <code>assets</code>. If you changed Note Location and then clicked Cancel, the app is still reading the previous folder.</p>
+<h2 id="when-a-text-file-is-the-wrong-copy">When a text file is the wrong copy</h2>
+<p>A sketch, a marked-up PDF, or a scan you still need as a document fits a PDF better than a text file. Apple's PDF export is the documented visual copy, with the first-page limit on iPhone for a multipage PDF or scan. Obsidian's importer is the documented way, on a Mac, to pull tables, images, drawings, scans, and PDFs out of the Notes store in one pass. MiaoYan is where you open the resulting folder when you want to keep editing those files as Markdown. A drawing that the <code>.md</code> file does not link to an image stays absent in the preview.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="can-one-command-export-a-whole-notes-folder">Can one command export a whole Notes folder?</h3>
+<p>The Mac user guide describes clicking one note and choosing File &gt; Export To. Import is the command that can take a folder and keep its structure. A library-wide conversion on the Mac is what Obsidian's Importer documents, by reading the Notes data folder.</p>
+<h3 id="does-a-checked-item-stay-checked">Does a checked item stay checked?</h3>
+<p>It stays checked when the exported line is <code>- [x]</code>. An open item is <code>- [ ]</code>. A circle character or a plain sentence stays that text in the preview. The cheat sheet covers how a click in MiaoYan's preview writes the checkbox back into the file.</p>
+<h3 id="why-does-the-same-image-link-work-in-one-app-and-miss-in-the-other">Why does the same image link work in one app and miss in the other?</h3>
+<p><code>/i/photo.png</code> points at the <code>i</code> folder beside the note in MiaoYan. On GitHub, a link that starts with <code>/</code> points at the repository root, which is a different directory unless the notes folder is the root of the repo. A relative path such as <code>i/photo.png</code> or <code>attachments/photo.png</code> names the same file in both when the image sits at that path next to the note.</p>
+<h3 id="does-copying-files-in-require-a-restart">Does copying files in require a restart?</h3>
+<p>Copying into the folder that is already the note location does not. The file watcher imports the new note. Restart belongs to a change of Note Location, and Cancel on that prompt leaves the old folder in place.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/local-first-markdown-notes/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Local-first Markdown notes: keep them as plain files</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-note-version-history/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">Markdown note version history: MiaoYan, Time Machine, git</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/bear-alternative-mac/"><span class="blog-related-cat">Managing notes</span><span class="blog-related-name">A Bear alternative for Mac: plain Markdown files</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown code blocks: fences, language tags and nesting · MiaoYan Blog</title>
+<meta name="description" content="Write fenced and inline code in Markdown, nest a fence inside a fence, tag languages and diff blocks, and see what MiaoYan&#x27;s preview highlights.">
+<link rel="canonical" href="https://miaoyan.app/blog/markdown-code-blocks/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-code-blocks/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-code-blocks/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-code-blocks/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/markdown-code-blocks/">
+<meta property="og:title" content="Markdown code blocks: fences, language tags and nesting · MiaoYan Blog">
+<meta property="og:description" content="Write fenced and inline code in Markdown, nest a fence inside a fence, tag languages and diff blocks, and see what MiaoYan&#x27;s preview highlights.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-code-blocks.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Writing in Markdown">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-code-blocks.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown code blocks: fences, language tags and nesting", "item": "https://miaoyan.app/blog/markdown-code-blocks/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-code-blocks/#article", "headline": "Markdown code blocks: fences, language tags and nesting", "description": "Write fenced and inline code in Markdown, nest a fence inside a fence, tag languages and diff blocks, and see what MiaoYan's preview highlights.", "url": "https://miaoyan.app/blog/markdown-code-blocks/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-code-blocks/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-code-blocks.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do I need a language word?", "acceptedAnswer": {"@type": "Answer", "text": "No. The block still renders as code without one. Add it when you want predictable colors, since MiaoYan otherwise guesses from the content."}}, {"@type": "Question", "name": "Can I use tildes instead of backticks?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, as long as the closing fence uses tildes too. Tildes are useful when the code contains backtick fences."}}, {"@type": "Question", "name": "Why does my code show without colors?", "acceptedAnswer": {"@type": "Answer", "text": "Either there is no language word and the guess failed, or the word is not one the highlighter knows. MiaoYan's bundle registers 34 languages, so a less common one such as Dockerfile shows as plain monospace."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-code-blocks/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/markdown-code-blocks/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Markdown code blocks: fences, language tags and nesting</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>6 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-code-blocks.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Wrap code in a fence of three backticks (or three tildes), put the language name after the opening fence, and close with a fence of the same character that is at least as long. Use a longer outer fence when the code itself contains a fence. The language word is the only thing that tells a highlighter what to color, so the main trade-off is between a block that is portable everywhere and one that depends on what your preview happens to support.</p>
+<h2 id="fenced-and-indented-blocks">Fenced and indented blocks</h2>
+<p>A fenced block starts with a line of three or more backticks or tildes and ends with a matching line:</p>
+<pre><code class="language-markdown">```python
+def greet(name):
+    return f&quot;hello {name}&quot;
+```
+</code></pre>
+<p>The text after the opening fence is the info string. Its first word is conventionally the language, and the CommonMark spec renders it as a <code>language-python</code> class on the <code>&lt;code&gt;</code> element, which is what highlighters key on. With backtick fences the info string may not itself contain a backtick. With tildes it can, which is one of the few reasons to prefer <code>~~~</code>.</p>
+<p>An indented block is any run of lines indented by four spaces after a blank line:</p>
+<pre><code class="language-markdown">    make build
+    make test
+</code></pre>
+<p>It works in every parser, but it has no info string, so no language can be named, and it is easy to trigger by accident, for example by indenting a continuation paragraph under a list item. Fences are the safer habit. The two styles also differ in how they end: an indented block stops at the first non-blank line that is not indented, while an unclosed fence runs to the end of the document, so a missing closing fence swallows everything below it.</p>
+<p>Backtick and tilde fences behave the same, with one rule. The closing fence must use the same character as the opening one and be at least as long. A line of <code>~~~</code> does not close a backtick fence, and <code>```</code> does not close a tilde fence. Both CommonMark and GFM define both. Backticks are far more common, so they are the better default for notes other people will read in other tools.</p>
+<h2 id="putting-a-fence-inside-a-fence">Putting a fence inside a fence</h2>
+<p>To show Markdown that contains a code block, make the outer fence longer than any fence inside it. The examples in this post use four backticks outside and three inside:</p>
+<pre><code class="language-markdown">````markdown
+```js
+console.log(&quot;inner&quot;);
+```
+````
+</code></pre>
+<p>The inner fence is shorter than the outer one, so it cannot close it. If you need to show the four-backtick version too, go to five on the outside. A tilde fence is another way out: <code>~~~</code> outside and backticks inside never conflict, because the closing character has to match.</p>
+<h2 id="inline-code-with-backticks-inside">Inline code with backticks inside</h2>
+<p>A code span is a run of backticks around the text. If the text contains a backtick, use a longer run to open and close it, and pad with a space on each side so the delimiters do not touch the content:</p>
+<pre><code class="language-markdown">Use `` `git log` `` to show history.
+</code></pre>
+<p>Per the CommonMark spec, when the content both begins and ends with a space and is not all spaces, one space is removed from each end. That is why the padding does not show up in the rendered output. Backslash escapes do not work inside a code span, so a backslash followed by an asterisk shows both exactly as typed.</p>
+<h2 id="diff-blocks">Diff blocks</h2>
+<p>Name the language <code>diff</code> and lines that start with <code>+</code> and <code>-</code> get added and removed colors:</p>
+<pre><code class="language-markdown">```diff
+- timeout: 30
++ timeout: 60
+```
+</code></pre>
+<p>This is highlighting of a text convention, not a Markdown feature, so it works wherever the highlighter includes a diff definition. <code>patch</code> is accepted as an alias in MiaoYan's bundled highlighter.</p>
+<h2 id="how-miaoyan-renders-code-blocks">How MiaoYan renders code blocks</h2>
+<p>MiaoYan parses Markdown with cmark-gfm, which turns a fenced block into <code>&lt;pre&gt;&lt;code class="language-..."&gt;</code>. The preview then loads highlight.js 11.5.1, the version recorded in the bundle's vendor manifest at V4.5.0, and colors every <code>pre code</code> element. Three behaviors follow from how that library works.</p>
+<p>First, the bundle is a trimmed build, not the full highlight.js catalog. It registers 34 language definitions: Bash, C, C++, C#, CSS, Diff, Go, HTML and XML, INI and TOML, Java, JavaScript, JSON, Kotlin, Less, Lua, Makefile, Markdown, Objective-C, Perl, PHP, PHP template, plain text, Python, Python REPL, R, Ruby, Rust, SCSS, Shell Session, SQL, Swift, TypeScript, Visual Basic .NET and YAML. Common short names such as <code>js</code>, <code>ts</code>, <code>py</code>, <code>sh</code>, <code>yml</code>, <code>md</code>, <code>rs</code> and <code>rb</code> are aliases. There is no Dockerfile or GraphQL definition, for example.</p>
+<p>Second, a language word the bundle does not know turns highlighting off for that block, and the code shows in plain monospace. A block with no language word is the opposite case: highlight.js guesses from the content, which is convenient for a quick snippet and unreliable for short ones. If colors look wrong, add the word.</p>
+<p>Third, long lines wrap instead of scrolling. The stylesheet sets <code>white-space: pre-wrap</code> on code blocks, so a long shell command stays readable without a horizontal scroll bar, at the cost of wrapped lines being harder to tell from separate lines.</p>
+<p>The editor pane colors code separately, using its own highlighter, and only for fences written with backticks. Tilde fences and nested four-backtick fences render correctly in the preview, but the editor's coloring may not match them. It also skips coloring for a block longer than 3000 characters, and for the whole note once it has more than 20 fenced blocks. The preview is the authority on how the note will export.</p>
+<h2 id="mermaid-plantuml-markmap-and-math">Mermaid, PlantUML, Markmap and math</h2>
+<p>Some language words do more than color text. <code>mermaid</code>, <code>plantuml</code> and <code>markmap</code> are picked up by MiaoYan's diagram script and replaced with a drawing. Mermaid and Markmap run from bundled JavaScript. PlantUML builds a link to the public plantuml.com service, so it needs a network and the diagram text leaves your Mac. If Mermaid fails to parse, the preview keeps the source in the block instead of showing an error page. The details are in <a href="/blog/mermaid-diagrams-in-markdown/">Mermaid diagrams in Markdown</a>.</p>
+<p>Math is different: it is not a fence. Dollar-delimited math is handled outside code, and MiaoYan's math pass skips code spans and fenced blocks, so a literal <code>$</code> inside a block is safe. See <a href="/blog/latex-math-in-markdown/">LaTeX math in Markdown</a> for the syntax.</p>
+<h2 id="copying-and-exporting">Copying and exporting</h2>
+<p>The V4.5.0 preview has no copy button on code blocks, so you select the text and copy it as usual. In the other direction, when you paste structured HTML copied from a web page, MiaoYan converts it to Markdown, and a code block becomes a fence carrying the language class it found, with a longer fence if the code itself contains three backticks.</p>
+<p>The Export submenu offers HTML, Image and PDF. PDF export is covered in <a href="/blog/markdown-to-pdf-mac/">Markdown to PDF on Mac</a>. An exported HTML file points at MiaoYan's CDN for the highlighter and diagram scripts, so colors and diagrams in that file need a network connection when it is opened.</p>
+<h2 id="what-goes-wrong">What goes wrong</h2>
+<ul>
+<li>A missing closing fence turns the rest of the note into code. Look for text that suddenly appears in monospace.</li>
+<li>A fence inside a list item has to line up with the item text, or it ends the list.</li>
+<li>A language word the highlighter does not know gives no colors. Try the short alias, or check the list above.</li>
+<li>Colors differ between apps because each ships a different highlighter and theme. The Markdown is portable; the colors are not.</li>
+</ul>
+<p>For the rest of the syntax, <a href="/blog/markdown-cheat-sheet/">the cheat sheet</a> has short sections on each element.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="do-i-need-a-language-word">Do I need a language word?</h3>
+<p>No. The block still renders as code without one. Add it when you want predictable colors, since MiaoYan otherwise guesses from the content.</p>
+<h3 id="can-i-use-tildes-instead-of-backticks">Can I use tildes instead of backticks?</h3>
+<p>Yes, as long as the closing fence uses tildes too. Tildes are useful when the code contains backtick fences.</p>
+<h3 id="why-does-my-code-show-without-colors">Why does my code show without colors?</h3>
+<p>Either there is no language word and the guess failed, or the word is not one the highlighter knows. MiaoYan's bundle registers 34 languages, so a less common one such as Dockerfile shows as plain monospace.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/commonmark-vs-gfm/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">CommonMark vs GFM: which Markdown flavor to write</span><span class="blog-related-meta">6 min read</span></a></li><li><a href="/blog/markdown-collapsible-sections/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown collapsible sections with details and summary</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

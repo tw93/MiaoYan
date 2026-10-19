@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Chinese-English spacing in Markdown notes · MiaoYan Blog</title>
+<meta name="description" content="Why Chinese writers add a space around Latin text and digits, the exceptions, and how MiaoYan&#x27;s Clean Typography command applies it without touching code.">
+<link rel="canonical" href="https://miaoyan.app/blog/chinese-english-spacing/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/chinese-english-spacing/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/chinese-english-spacing/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/chinese-english-spacing/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/chinese-english-spacing/">
+<meta property="og:title" content="Chinese-English spacing in Markdown notes · MiaoYan Blog">
+<meta property="og:description" content="Why Chinese writers add a space around Latin text and digits, the exceptions, and how MiaoYan&#x27;s Clean Typography command applies it without touching code.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/chinese-english-spacing.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Writing in Markdown">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/chinese-english-spacing.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Chinese-English spacing in Markdown notes", "item": "https://miaoyan.app/blog/chinese-english-spacing/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/chinese-english-spacing/#article", "headline": "Chinese-English spacing in Markdown notes", "description": "Why Chinese writers add a space around Latin text and digits, the exceptions, and how MiaoYan's Clean Typography command applies it without touching code.", "url": "https://miaoyan.app/blog/chinese-english-spacing/", "mainEntityOfPage": "https://miaoyan.app/blog/chinese-english-spacing/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/chinese-english-spacing.webp", "timeRequired": "PT7M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do I need the space in headings and filenames?", "acceptedAnswer": {"@type": "Answer", "text": "Headings follow the same convention. Filenames and wikilink titles are your call, but be consistent, because a wikilink has to match the note title, spaces included."}}, {"@type": "Question", "name": "Is a space before a full-width comma ever correct?", "acceptedAnswer": {"@type": "Answer", "text": "No. The guide treats it as wrong, and Clean Typography removes it. Format leaves it in place."}}, {"@type": "Question", "name": "Is the space part of Markdown?", "acceptedAnswer": {"@type": "Answer", "text": "No. Markdown parsers keep the characters you typed, so the spacing has to be in the file or come from the renderer's typography, as in the preview described above."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/chinese-english-spacing/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/chinese-english-spacing/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Chinese-English spacing in Markdown notes</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>7 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/chinese-english-spacing.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Chinese writers usually put one ordinary space between Han characters and Latin letters or digits, so it is written <code>使用 Swift 开发</code> and <code>第 3 章</code>, not <code>使用Swift开发</code>. Chinese has no spaces between words, so the space is not a grammar rule; it is a readability convention from the Chinese copywriting guide, and it is not part of Markdown. Markdown passes the characters through unchanged. In MiaoYan two commands in the Edit menu add the spaces: Clean Typography, which has no shortcut and also fixes Chinese punctuation, and Format on <code>⌘⇧L</code>, which adds them as a side effect of its bundled Prettier formatter.</p>
+<h2 id="why-the-space-exists">Why the space exists</h2>
+<p>Han characters are square and evenly spaced, Latin letters are narrow and proportional, and when the two touch the text looks cramped. Typesetters have long solved this with a small gap, not a full space. The W3C requirements document for Chinese layout, <a href="https://www.w3.org/TR/clreq/" target="_blank" rel="noopener">clreq</a>, says that for horizontal text there is, in principle, tracking or spacing of up to a quarter of a Han character's width between a Han character and an adjacent Western letter or numeral, except at the start or end of a line.</p>
+<p>Plain text has no such gap, so writers type a real space instead. The best-known statement of the habit is the <a href="https://github.com/sparanoid/chinese-copywriting-guidelines" target="_blank" rel="noopener">Chinese Copywriting Guidelines</a> (中文文案排版指北), which asks for a space between Chinese and English, between Chinese and digits, and between digits and units. Its own example is 在 LeanCloud 上，数据存储是围绕 <code>AVObject</code> 进行的。, where the inline code gets the same treatment as a Latin word.</p>
+<p>The guide is a style convention, not a standard, and plenty of published Chinese text ignores it. What matters for a note is consistency. A mixed archive, with some notes spaced and some not, is the thing that hurts search and diff, because <code>Swift开发</code> and <code>Swift 开发</code> are different strings.</p>
+<h2 id="the-exceptions-that-matter">The exceptions that matter</h2>
+<p>Three cases from the guide come up constantly.</p>
+<ul>
+<li>Full-width punctuation takes no space on either side. Write <code>刚刚买了一部 iPhone，好开心！</code>, not <code>iPhone ，好开心</code>. The comma, period and question mark already have their own built-in whitespace.</li>
+<li>Degrees and percent signs attach to the number: <code>90°</code>, <code>15%</code>. A space before <code>%</code> is wrong in the guide. Other units do get a space: <code>10 Gbps</code>, <code>20 TB</code>.</li>
+<li>Product names are written as the owner writes them. The guide's example is 豆瓣FM, which is officially written without a space.</li>
+</ul>
+<p>Two more cases come from Markdown itself rather than from the guide. Inside code spans and fenced code blocks you must not change anything, because a space is data there. And inside URLs, file paths, link targets and wikilink titles a stray space breaks the link.</p>
+<h2 id="what-miaoyan-does">What MiaoYan does</h2>
+<p>MiaoYan 4.5.0 has two commands in the Edit menu that both change spacing, and they do different amounts of work.</p>
+<p><strong>Format</strong> (<code>⌘⇧L</code>, Chinese UI: 文档排版) runs a bundled Prettier Markdown formatter over the note and tidies Markdown structure such as list markers and table alignment. The Prettier it bundles is from the 2.x line, which still inserts a space between Chinese and Latin letters or digits, so <code>使用Swift开发</code> comes out as <code>使用 Swift 开发</code> here too; Prettier 3.0 dropped that behavior. Format does nothing else for Chinese text: <code>你好,世界</code> keeps its half-width comma, a space before a full-width comma stays, and inline code gets no space around it.</p>
+<p><strong>Clean Typography</strong> (Chinese UI: 排版净化) is the command built for Chinese text. It has no keyboard shortcut. It rewrites the whole open note in one step, and the rewrite lands in the undo stack, so <code>⌘Z</code> reverts it. If nothing needs changing, it shows a message that the typography is already clean. Like Format, it refuses to run in preview mode, so leave preview first.</p>
+<p>The rules in the source are these:</p>
+<ul>
+<li>A space is inserted between a Han or kana character and an ASCII letter or digit, in either order. <code>使用Swift开发</code> becomes <code>使用 Swift 开发</code> and <code>第3章共10节</code> becomes <code>第 3 章共 10 节</code>. Existing spacing is left alone.</li>
+<li>Half-width <code>, ; : ! ? .</code> directly after a Han character becomes the full-width form when it ends a clause, so <code>你好,世界</code> becomes <code>你好，世界</code>. Decimal points and times such as <code>3.5</code> and <code>10:00</code> are untouched.</li>
+<li>Spaces next to full-width punctuation are removed.</li>
+<li>Full-width letters and digits become ASCII, <code>等等...</code> becomes <code>等等……</code>, and a single em dash between Han characters becomes a comma. A doubled em dash, the proper Chinese dash, is kept.</li>
+<li>Runs of blank lines collapse to one.</li>
+</ul>
+<p>It does not insert a space between a digit and a Latin unit, so <code>10Gbps</code> stays as it is, and <code>90°</code> and <code>15%</code> are untouched because those symbols are not letters or digits. It also does not know product names such as 豆瓣FM, so review the result.</p>
+<h2 id="what-it-leaves-alone">What it leaves alone</h2>
+<p>The cleaner splits each line into protected and plain segments before touching anything. Protected: fenced code (backticks or tildes, including inside block quotes), indented code, inline code, <code>$...$</code> math and <code>$$</code> blocks, link and image targets, <code>[[wikilinks]]</code>, bare <code>http</code> and <code>https</code> URLs, reference definitions such as <code>[ref]: target</code> and <code>[^1]: note</code>, and front matter. Trailing double spaces, which Markdown reads as a hard line break, are kept.</p>
+<p>Inline code is a special case. The text inside is untouched, but the boundary gets a space, so <code>使用`git status`命令</code> becomes <code>使用 `git status` 命令</code>, matching the guide. The link text is cleaned while the link target is not: <code>看[文档3](path/图3.png)吧</code> becomes <code>看[文档 3](path/图3.png)吧</code>.</p>
+<p>One quirk: a dollar amount like <code>$100和$200</code> is not treated as math, so it is spaced like normal text.</p>
+<h2 id="the-preview-adds-its-own-spacing">The preview adds its own spacing</h2>
+<p>Separately from the edit, MiaoYan's preview page uses a typography stylesheet based on Heti, a Chinese typesetting project. Its <code>.heti</code> container sets <code>text-autospace: normal</code>. That CSS property asks the browser engine to add a small gap between Han characters and Latin letters or digits itself, without any space in the file. MDN lists support from Safari 18.4, so whether you see it depends on the system's web engine. Either way it affects only the preview; your file still contains whatever you typed.</p>
+<p>This is why a note without spaces can look fine in the preview and wrong in GitHub, a chat paste or another editor. Putting the real spaces in the file is the portable choice.</p>
+<h2 id="applying-it-to-many-notes">Applying it to many notes</h2>
+<p>At 4.5.0 both commands work on the open note only. There is no batch command in the menu. For a folder of existing notes you can run it note by note, or use a script outside the app. The guide links <a href="https://github.com/vinta/pangu.js" target="_blank" rel="noopener">pangu.js</a>, the library behind the same idea, so test whichever tool you pick on a copy first and check how it treats code blocks. Because notes are plain <code>.md</code> files, a copy of the folder is an easy backup.</p>
+<p>After any bulk pass, diff the result and look at code fences, URLs and product names first.</p>
+<h2 id="checking-the-result">Checking the result</h2>
+<ul>
+<li>In any editor with regular expression search, look for a Han character directly next to a letter or digit with <code>[一-鿿][A-Za-z0-9]|[A-Za-z0-9][一-鿿]</code>; an empty result means the spacing is consistent.</li>
+<li>Run Clean Typography a second time. The "already clean" message tells you the note is stable.</li>
+<li>Look at one code fence and one link with Chinese text near it.</li>
+</ul>
+<p>For the rest of the syntax and what MiaoYan renders, see the <a href="/blog/markdown-cheat-sheet/">Markdown cheat sheet</a>; plain files also make a bulk pass safer, as <a href="/blog/local-first-markdown-notes/">local-first Markdown notes</a> explains.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="do-i-need-the-space-in-headings-and-filenames">Do I need the space in headings and filenames?</h3>
+<p>Headings follow the same convention. Filenames and wikilink titles are your call, but be consistent, because a wikilink has to match the note title, spaces included.</p>
+<h3 id="is-a-space-before-a-full-width-comma-ever-correct">Is a space before a full-width comma ever correct?</h3>
+<p>No. The guide treats it as wrong, and Clean Typography removes it. Format leaves it in place.</p>
+<h3 id="is-the-space-part-of-markdown">Is the space part of Markdown?</h3>
+<p>No. Markdown parsers keep the characters you typed, so the spacing has to be in the file or come from the renderer's typography, as in the preview described above.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/typora-alternative-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Typora alternative for Mac: split preview with MiaoYan</span><span class="blog-related-meta">6 min read</span></a></li><li><a href="/blog/commonmark-vs-gfm/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">CommonMark vs GFM: which Markdown flavor to write</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

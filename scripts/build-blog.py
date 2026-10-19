@@ -206,10 +206,15 @@ def figure_html(m, where):
     if not path.exists():
         raise BuildError(f"{where}: figure img/blog/{name}.webp is missing")
     w, h = webp_size(path)
-    return (
-        f'<figure class="blog-figure"><img src="/img/blog/{name}.webp" width="{math.ceil(w / 2)}" '
-        f'height="{math.ceil(h / 2)}" loading="lazy" alt="{esc(alt)}"><figcaption>{esc(caption)}</figcaption></figure>'
-    )
+    img = (f'<img src="/img/blog/{name}.webp" width="{math.ceil(w / 2)}" height="{math.ceil(h / 2)}" '
+           f'loading="lazy" alt="{esc(alt)}">')
+    # A stacked <name>-mobile.webp, when present, replaces the wide layout on phones.
+    mobile = ROOT / "img" / "blog" / f"{name}-mobile.webp"
+    if mobile.exists():
+        mw, mh = webp_size(mobile)
+        img = (f'<picture><source media="(max-width: 640px)" srcset="/img/blog/{name}-mobile.webp" '
+               f'width="{math.ceil(mw / 2)}" height="{math.ceil(mh / 2)}">{img}</picture>')
+    return f'<figure class="blog-figure">{img}<figcaption>{esc(caption)}</figcaption></figure>'
 
 
 def render_body(slug, lang):
@@ -553,6 +558,8 @@ def broken_links(files):
     for path, text in files.items():
         if path.suffix != ".html":
             continue
+        # Code samples keep their quotes unescaped, so an example tag is not a link.
+        text = re.sub(r"<code[^>]*>.*?</code>", "", text, flags=re.S)
         for ref in re.findall(r'(?:href|src)="(/[^"/][^"]*|/)"', text):
             target = ref.split("#")[0].split("?")[0]
             rel = target.strip("/")

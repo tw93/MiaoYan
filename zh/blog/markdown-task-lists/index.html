@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown 待办列表与复选框写法 · 妙言博客</title>
+<meta name="description" content="- [ ] 与 - [x] 的写法、嵌套、各处渲染差异，妙言点击复选框如何改写原文，以及用 ripgrep 找未完成事项。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/markdown-task-lists/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-task-lists/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-task-lists/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-task-lists/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/markdown-task-lists/">
+<meta property="og:title" content="Markdown 待办列表与复选框写法 · 妙言博客">
+<meta property="og:description" content="- [ ] 与 - [x] 的写法、嵌套、各处渲染差异，妙言点击复选框如何改写原文，以及用 ripgrep 找未完成事项。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-task-lists.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Markdown 写作">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-task-lists.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 待办列表与复选框写法", "item": "https://miaoyan.app/zh/blog/markdown-task-lists/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-task-lists/#article", "headline": "Markdown 待办列表与复选框写法", "description": "- [ ] 与 - [x] 的写法、嵌套、各处渲染差异，妙言点击复选框如何改写原文，以及用 ripgrep 找未完成事项。", "url": "https://miaoyan.app/zh/blog/markdown-task-lists/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-task-lists/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-task-lists.webp", "timeRequired": "PT4M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "为什么我的复选框显示成 [ ] 文字？", "acceptedAnswer": {"@type": "Answer", "text": "渲染器没有 GFM 的待办扩展，或者写法有一点偏差。检查连字符后和右括号后是否有空格，以及括号之间是否正好一个字符。"}}, {"@type": "Question", "name": "不点击能直接在文件里勾选吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以，把括号里的空格改成 x 就行，任何编辑器里的点击做的也只是这件事。"}}, {"@type": "Question", "name": "大写的 [X] 有效吗？", "acceptedAnswer": {"@type": "Answer", "text": "GFM 规范两种大小写都接受，妙言预览也会画成已勾选的框，但妙言的点击切换只匹配小写 x，所以小写更稳妥。"}}, {"@type": "Question", "name": "导出的 PDF 或 HTML 里待办还在吗？", "acceptedAnswer": {"@type": "Answer", "text": "导出是从预览生成的，所以重要的话可以检查一次导出文件。导出文件里的复选框只是笔记当时的快照，不能用来修改笔记。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-task-lists/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/markdown-task-lists/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">Markdown 待办列表与复选框写法</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 4 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-task-lists.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Markdown 的待办列表就是一个普通列表项，开头写 <code>[ ]</code> 表示未完成，写 <code>[x]</code> 表示已完成，写法是 <code>- [ ] 买牛奶</code>。这个语法来自 GitHub 风格 Markdown（GFM），不在核心 CommonMark 里，所以不带 GFM 扩展的解析器会把方括号原样显示出来。文件里除了这几个字符以外不存任何状态，好处是容易搜索和比对差异，也说明所谓「点复选框」永远是编辑器在背后改写了一行文字。</p>
+<h2 id="基本写法">基本写法</h2>
+<pre><code class="language-markdown">- [ ] 写初稿
+- [x] 想好标题
+- [ ] 补截图
+  - [ ] 裁剪第二张
+  - [x] 压缩第一张
+</code></pre>
+<p>GFM 规范里，待办项是第一个块为段落、且段落以标记开头的列表项，标记之后至少要有一个空白字符才能接正文。标记由左方括号、一个空白字符或者大小写的 <code>x</code>、右方括号组成，括号里是空白就是未勾选，否则就是已勾选。规范还特别写明它不定义复选框怎么交互，所以不同软件的点击行为并不一样。</p>
+<p>出问题的多半是两处。右括号后面的空格不能省，<code>- [ ]买牛奶</code> 不是待办。另外括号里什么都没有的 <code>[]</code> 也不算标记，未完成要写且只写一个空格。</p>
+<p>嵌套和普通列表一样，子项在连字符下缩进两个空格即可，规范自带的示例也是这样。子项全部勾完以后父项不会自动勾上，在文件里每个框彼此独立。</p>
+<h2 id="无序有序和数字待办">无序、有序和数字待办</h2>
+<p>列表符号可以是 <code>-</code>、<code>*</code> 或 <code>+</code>，规范对列表项的描述也适用于 <code>1. [ ] 第一步</code> 这样的有序项，妙言预览背后的 cmark-gfm 会把它画成带复选框的编号列表，适合步骤有先后的清单。</p>
+<p>这是标准层面的说法，具体编辑器写回文件时可以更严格，所以连字符在这里有分量。妙言自己的点击逻辑（下面会讲）只认 <code>- [ ]</code> 和 <code>- [x]</code>，想让点击稳定，就用连字符加小写 <code>x</code>。GFM 的其他补充可以看 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>。</p>
+<h2 id="各处渲染差异">各处渲染差异</h2>
+<ul>
+<li><strong>GitHub。</strong> GitHub 的格式指南用的就是这套写法，在 issue 和评论里，官方文档说待办会渲染成可以点击的复选框。这个点击是 GitHub 的功能，不属于 Markdown 本身。</li>
+<li><strong>不带 GFM 扩展的 CommonMark。</strong> 它就是一个普通的无序列表项，文字以 <code>[ ]</code> 开头，你看到的是方括号。</li>
+<li><strong>其他编辑器。</strong> 渲染出来的框能不能点击不在规范里，各家自己决定，依赖点击之前先试一次。</li>
+</ul>
+<p>妙言的预览用的是 Swift 版 cmark-gfm，开启了表格、脚注、删除线和待办四个扩展（V4.5.0 的 <code>Business/Markdown.swift</code>），所以待办列表在预览里是真正的 <code>input</code> 复选框。</p>
+<h2 id="在妙言里点击复选框发生了什么">在妙言里点击复选框发生了什么</h2>
+<p>V4.5.0 的预览页脚本（<code>common.js</code>）会启用所有复选框，并按文档顺序编号。点击时把编号发给应用，应用（<code>MPreviewHandlers.swift</code> 里的 <code>HandlerCheckbox</code>）遍历笔记正文，找到对应顺位的 <code>- [ ]</code> 或 <code>- [x]</code>，换成另一种写法并保存笔记。</p>
+<p>边界情况都由这个机制决定。应用是按位置匹配的，预览里第 N 个复选框，被当成源文本里第 N 个 <code>- [ ]</code> 或 <code>- [x]</code>。笔记里如果有正则不统计的写法，比如 <code>* [ ]</code>、<code>+ [ ]</code>、<code>1. [ ]</code> 或大写 <code>X</code>，预览照样画出框，编号就会错位，点一下可能改到另一行。如果 <code>- [ ]</code> 出现在不会被渲染成待办的地方，比如围栏代码块或引用块里，也会错位，因为文本匹配不认识代码围栏和引用。点击改错了行时，先查这两种原因。</p>
+<p>编辑时可以用「格式」菜单里的「待办」（<code>⌘T</code>），当前行不是待办就插入 <code>- [ ]</code>，已经是待办就在 <code>- [ ]</code> 和 <code>- [x]</code> 之间切换。它改写的是这一行开头的六个字符，用在缩进的子任务上会把标记弄坏，子任务在预览里点框更稳。输入 <code>/task</code> 再按 <code>Tab</code> 会插入三行模板，两条未完成、一条已完成，占位文字是中文，「Tab快捷输入」菜单里也列着这一项。</p>
+<h2 id="引用块里的待办">引用块里的待办</h2>
+<pre><code class="language-markdown">&gt; - [ ] 问清截止时间
+&gt; - [x] 发出初稿
+</code></pre>
+<p>妙言 V4.5.0 用的 cmark-gfm 不会把这里画成复选框，引用块里是一个普通的无序列表，每项文字以 <code>[ ]</code> 和 <code>[x]</code> 开头，每行都带 <code>&gt;</code>、列表前再加一行空的 <code>&gt;</code> 也一样。别的渲染器可能处理得不同，笔记最终在哪里看，就在哪里试一下。在妙言里还有一层代价，点击切换照样会把引用块里的 <code>- [ ]</code> 算进去，于是笔记里排在它后面的复选框都会改错行。待办最好放在引用块外面，需要引用的背景写成列表上方的一段。</p>
+<h2 id="在多篇笔记里找未完成事项">在多篇笔记里找未完成事项</h2>
+<p>待办是纯文本，所以搜索工具就能列出还剩什么。笔记文件夹里用 ripgrep 可以带着文件名和行号列出所有未完成项：</p>
+<pre><code class="language-bash">rg -n -F -- '- [ ]' ~/Notes
+</code></pre>
+<p><code>-F</code> 把模式当固定字符串，方括号不会被当成正则字符类，<code>--</code> 防止开头的连字符被当成选项。缩进的子任务同样能匹配，因为这个字符串可以出现在一行的任何位置，已完成的换成 <code>'- [x]'</code>。用 <code>grep</code> 的话是：</p>
+<pre><code class="language-bash">grep -rn --include='*.md' -F -- '- [ ]' ~/Notes
+</code></pre>
+<p>想按文件统计未完成数量就加 <code>-c</code>。这也是坚持一种写法的最大理由，如果有些笔记写的是 <code>* [ ]</code>，一次搜索就会漏掉它们。更多在命令行里处理笔记的办法见 <a href="/zh/blog/markdown-notes-from-terminal/">在终端里处理 Markdown 笔记</a>。</p>
+<h2 id="局限与更合适的工具">局限与更合适的工具</h2>
+<p>待办列表只是清单，不是任务管理器，没有截止日期、提醒和重复，状态只有未完成和已完成两种。购物清单、发布检查表和笔记里的当日计划，用它刚好。需要截止日期和提醒时，换专门的工具，笔记留作参考。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="为什么我的复选框显示成-文字">为什么我的复选框显示成 <code>[ ]</code> 文字？</h3>
+<p>渲染器没有 GFM 的待办扩展，或者写法有一点偏差。检查连字符后和右括号后是否有空格，以及括号之间是否正好一个字符。</p>
+<h3 id="不点击能直接在文件里勾选吗">不点击能直接在文件里勾选吗？</h3>
+<p>可以，把括号里的空格改成 <code>x</code> 就行，任何编辑器里的点击做的也只是这件事。</p>
+<h3 id="大写的-x-有效吗">大写的 <code>[X]</code> 有效吗？</h3>
+<p>GFM 规范两种大小写都接受，妙言预览也会画成已勾选的框，但妙言的点击切换只匹配小写 <code>x</code>，所以小写更稳妥。</p>
+<h3 id="导出的-pdf-或-html-里待办还在吗">导出的 PDF 或 HTML 里待办还在吗？</h3>
+<p>导出是从预览生成的，所以重要的话可以检查一次导出文件。导出文件里的复选框只是笔记当时的快照，不能用来修改笔记。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/markdown-tables/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 表格：对齐、竖线与单元格换行</span><span class="blog-related-meta">约 3 分钟</span></a></li><li><a href="/zh/blog/markmap-mind-maps/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">用 Markdown 大纲画 Markmap 思维导图</span><span class="blog-related-meta">约 4 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

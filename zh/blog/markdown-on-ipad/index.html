@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>iPad 上写 Markdown：文件、同步和编辑器 · 妙言博客</title>
+<meta name="description" content="iPad 写 Markdown 需要什么，妙言怎么打开 Mac 的 iCloud 文件夹，笔记没出现时怎么查。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/markdown-on-ipad/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-on-ipad/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-on-ipad/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-on-ipad/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/markdown-on-ipad/">
+<meta property="og:title" content="iPad 上写 Markdown：文件、同步和编辑器 · 妙言博客">
+<meta property="og:description" content="iPad 写 Markdown 需要什么，妙言怎么打开 Mac 的 iCloud 文件夹，笔记没出现时怎么查。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-on-ipad.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="笔记管理">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-on-ipad.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "iPad 上写 Markdown：文件、同步和编辑器", "item": "https://miaoyan.app/zh/blog/markdown-on-ipad/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-on-ipad/#article", "headline": "iPad 上写 Markdown：文件、同步和编辑器", "description": "iPad 写 Markdown 需要什么，妙言怎么打开 Mac 的 iCloud 文件夹，笔记没出现时怎么查。", "url": "https://miaoyan.app/zh/blog/markdown-on-ipad/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-on-ipad/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-on-ipad.webp", "timeRequired": "PT4M", "articleSection": "笔记管理", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Mac 和 iPad 能编辑同一批 Markdown 文件吗？", "acceptedAnswer": {"@type": "Answer", "text": "可以，前提是两边打开同一个 iCloud Drive 文件夹，换设备前让同步先跑完，也不要在两台设备上同时改同一篇。"}}, {"@type": "Question", "name": "妙言 iPad 版有加粗的快捷键吗？", "acceptedAnswer": {"@type": "Answer", "text": "4.5.0 版的 iPad 版没有自己的快捷键，Markdown 符号需要自己输入。"}}, {"@type": "Question", "name": "iPad 版要订阅吗？", "acceptedAnswer": {"@type": "Answer", "text": "官网写的是买断一次，没有订阅和内购，同一次购买覆盖 Mac、iPhone 和 iPad。"}}, {"@type": "Question", "name": "笔记存在应用里吗？", "acceptedAnswer": {"@type": "Answer", "text": "不在，它们是你选的文件夹里的 .md 文件，在「文件」App 里看得到。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-on-ipad/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/markdown-on-ipad/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">iPad 上写 Markdown：文件、同步和编辑器</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-notes">笔记管理</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 4 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-on-ipad.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>在 iPad 上写 Markdown，选一个能直接编辑 <code>.md</code> 文件、而且文件放在「文件」App 看得见的文件夹里的应用，再把这个文件夹放进 iCloud Drive，Mac 上就能看到同一批笔记。妙言的 iPad 版就是这个思路，它打开的是 Mac 在用的那个文件夹，三栏显示资料库，笔记先以阅读方式打开，点编辑按钮才进入编辑。它更像带编辑器的阅读器而不是完整的写作环境，下面几条限制要对照你的写法看一下。</p>
+<h2 id="ipad-上的-markdown-工作流需要什么">iPad 上的 Markdown 工作流需要什么</h2>
+<p>日常用起来是否顺手，取决于四件事。</p>
+<ul>
+<li><strong>文件放在哪。</strong> 笔记应该是文件夹里的普通文件，而不是应用数据库里的记录，这样「文件」App、备份和别的编辑器都够得着。</li>
+<li><strong>怎么输入。</strong> 外接键盘，或者屏幕键盘加格式辅助，各家差别很大。</li>
+<li><strong>预览。</strong> 有的并排显示，有的在编辑和预览之间切换。</li>
+<li><strong>同步。</strong> 把文件夹送到其他设备的那个东西，只用苹果设备的话通常是 iCloud Drive。</li>
+</ul>
+<p>第一条和最后一条是以后最容易踩的，困在某个应用私有存储里的笔记很难带走，没同步完的文件夹看起来就像笔记丢了。</p>
+<h2 id="妙言在-ipad-上">妙言在 iPad 上</h2>
+<p>妙言官网写的是同一次 App Store 购买可以用在 iPhone 和 iPad 上，打开和 Mac 相同的 iCloud Drive 文件夹。买断一次，没有订阅和内购，iPhone 和 iPad 版要求 iOS 或 iPadOS 18 及以上。</p>
+<p>4.5.0 版的 iPad 版是这样的：</p>
+<ul>
+<li>宽屏下是三栏布局，侧边栏有「笔记」（最近的笔记）、「全部笔记」、你的文件夹和「回收站」，中间是笔记列表，右边是笔记本身。</li>
+<li>笔记先以阅读视图打开，点编辑按钮进入 Markdown 编辑器，点「完成」结束，编辑器会显示保存状态，先是「保存中」再是「已保存」。</li>
+<li>新建、重命名、移动到文件夹、置顶、分享和回收站都有，搜索在本地查标题和正文。</li>
+<li>设置里有「外观」（字体和字号）和「笔记库」两部分，笔记库里有「选择文件夹…」，说明文字写的是妙言读写这个文件夹里的 Markdown 文件，由 iCloud Drive 或你的网盘 App 与 Mac 保持同步。</li>
+<li>阅读视图能渲染表格、脚注、删除线和任务列表，用 highlight.js 高亮代码，能画 Mermaid 图，<code>[[标题]]</code> 双链会打开对应笔记。</li>
+</ul>
+<p>4.5.0 版没有的部分，iPad 版没有自己的键盘快捷键，也没有渲染 LaTeX 公式、PlantUML 或 Markmap 的步骤，所以这些内容在 iPad 阅读视图里会显示成源码，虽然 Mac 版能渲染。需要在 iPad 上写公式的话，先拿一篇样例笔记试试。语法部分见 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>和 <a href="/zh/blog/latex-math-in-markdown/">Markdown 里写 LaTeX 公式</a>。</p>
+<h2 id="ipad-怎么找到你的笔记">iPad 怎么找到你的笔记</h2>
+<p>Mac 版读的是你在偏好设置里选的文件夹，iPad 版找资料库有两种方式。首次启动会检查 iCloud Drive，可用时就用应用自己的 iCloud Drive 文件夹，这个文件夹声明了对外可见，所以会以 MiaoYan 的名字出现在「文件」App 里。iCloud Drive 不可用，或者你想换一个，就点「选择文件夹」自己选，之后应用在那里读写普通文件。</p>
+<p>同步链路因此很简单，Mac 把 <code>.md</code> 文件存进 iCloud Drive，iCloud 上传，iPad 看到文件出现就列出来。妙言自己不做同步，所以 Mac 上选的必须是 iPad 打开的同一个 iCloud Drive 文件夹，具体情况见<a href="/zh/blog/sync-markdown-notes-across-devices/">跨设备同步 Markdown 笔记的几种做法</a>。</p>
+<p>还有一个细节，iPad 版会先读取 iCloud 报告的笔记目录，再读内容，首次启动时会显示「已找到 N 篇笔记…」，文件到齐之前，搜索里也会提示「还有 N 篇 iCloud 笔记在下载，同步完成后结果会更完整」。刚装完列表偏短，多半是这个原因，不是数据丢了。</p>
+<h2 id="另一台设备上看不到笔记时">另一台设备上看不到笔记时</h2>
+<p>按这个顺序排查。</p>
+<ol>
+<li><strong>确认 Mac 已经保存。</strong> Mac 版在你停止输入大约一秒半后写文件，在访达里打开文件夹，确认 <code>.md</code> 文件在。</li>
+<li><strong>确认两边指向同一个文件夹。</strong> Mac 上是偏好设置里的「笔记位置」，iPad 上是设置里的「笔记库」。任何一边选了别的文件夹，就是两个互不相干的资料库。</li>
+<li><strong>看同步状态。</strong> iPad 版在设置的「笔记库」里会显示「同步中」「已同步」「离线」或「同步异常」，「离线」表示应用没连上它的 iCloud 容器，检查 iPad 上 iCloud Drive 是否开着。</li>
+<li><strong>等首次加载结束。</strong> 资料库大的时候，应用会写「正在从 iCloud 下载笔记，下次启动就会瞬间打开。」</li>
+<li><strong>在笔记列表上下拉刷新。</strong> 磁盘上有文件但列表里没有时用。</li>
+<li><strong>打开「文件」App。</strong> 笔记在 iCloud Drive 里能看到，问题在应用；看不到，问题在 iCloud。</li>
+</ol>
+<p>同一篇笔记在两台设备上都改过，iPad 会弹出「这篇笔记已在别处更改」，选项是「重新加载」和「保留我的修改」，选「保留我的修改」会用你的文本覆盖另一个版本，拿不准就先看一眼另一个版本。Mac 版在收到外部改动时，会把未保存的文本备份到隐藏的 <code>.miaoyan-conflicts</code> 文件夹。</p>
+<h2 id="其他-ipad-markdown-编辑器">其他 iPad Markdown 编辑器</h2>
+<p>妙言只是其中一个选择，下面几个按它们自己的页面来说。</p>
+<ul>
+<li><strong>iA Writer</strong> 用纯文本加 Markdown 写作，可以切到带样式的预览，iPad 和 iPhone 版是买断，Mac 和 Windows 版有试用。</li>
+<li><strong>1Writer</strong> 有行内预览和完整预览，可自定义额外键盘行，支持多窗口和拖放，能同步 Dropbox 和 WebDAV 文件夹以及 iCloud Drive。</li>
+<li><strong>Obsidian</strong> 移动端在编辑时底部有工具栏，下拉有快捷操作，它的帮助页说用法与桌面版相近。</li>
+</ul>
+<p>这三个里，列出 Dropbox 和 WebDAV 文件夹的是 1Writer，笔记本来就放在 Obsidian 库里的话就选 Obsidian。笔记是和 Mac 共用的一个文件夹，在 iPad 上主要阅读和做短编辑，妙言比较合适。Mac 这一侧的选择见 <a href="/zh/blog/markdown-editor-for-mac/">Mac 上怎么选 Markdown 编辑器</a>。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="mac-和-ipad-能编辑同一批-markdown-文件吗">Mac 和 iPad 能编辑同一批 Markdown 文件吗？</h3>
+<p>可以，前提是两边打开同一个 iCloud Drive 文件夹，换设备前让同步先跑完，也不要在两台设备上同时改同一篇。</p>
+<h3 id="妙言-ipad-版有加粗的快捷键吗">妙言 iPad 版有加粗的快捷键吗？</h3>
+<p>4.5.0 版的 iPad 版没有自己的快捷键，Markdown 符号需要自己输入。</p>
+<h3 id="ipad-版要订阅吗">iPad 版要订阅吗？</h3>
+<p>官网写的是买断一次，没有订阅和内购，同一次购买覆盖 Mac、iPhone 和 iPad。</p>
+<h3 id="笔记存在应用里吗">笔记存在应用里吗？</h3>
+<p>不在，它们是你选的文件夹里的 <code>.md</code> 文件，在「文件」App 里看得到。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/local-first-markdown-notes/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">本地优先的 Markdown 笔记怎么管</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/bear-alternative-mac/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">Mac 上的 Bear 替代品：纯 Markdown 文件</span><span class="blog-related-meta">约 4 分钟</span></a></li><li><a href="/zh/blog/apple-notes-to-markdown/"><span class="blog-related-cat">笔记管理</span><span class="blog-related-name">把备忘录导出为 Markdown 再交给妙言</span><span class="blog-related-meta">约 8 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown 折叠：details 与 summary 的写法 · 妙言博客</title>
+<meta name="description" content="用 details 和 summary 写折叠区，让里面的 Markdown 正常渲染，以及妙言的预览与导出表现。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/markdown-collapsible-sections/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-collapsible-sections/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-collapsible-sections/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-collapsible-sections/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/markdown-collapsible-sections/">
+<meta property="og:title" content="Markdown 折叠：details 与 summary 的写法 · 妙言博客">
+<meta property="og:description" content="用 details 和 summary 写折叠区，让里面的 Markdown 正常渲染，以及妙言的预览与导出表现。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-collapsible-sections.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Markdown 写作">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-collapsible-sections.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown 折叠：details 与 summary 的写法", "item": "https://miaoyan.app/zh/blog/markdown-collapsible-sections/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-collapsible-sections/#article", "headline": "Markdown 折叠：details 与 summary 的写法", "description": "用 details 和 summary 写折叠区，让里面的 Markdown 正常渲染，以及妙言的预览与导出表现。", "url": "https://miaoyan.app/zh/blog/markdown-collapsible-sections/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-collapsible-sections/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-collapsible-sections.webp", "timeRequired": "PT3M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "GitHub 支持折叠吗？", "acceptedAnswer": {"@type": "Answer", "text": "支持，GitHub 文档以 issue 评论为例描述了 <details> 和 <summary> 的写法，用 open 默认展开。"}}, {"@type": "Question", "name": "标题行里能写 Markdown 标题吗？", "acceptedAnswer": {"@type": "Answer", "text": "不能转换，标题行属于 HTML 块，改用纯文字或 HTML 标签，正文里的标题没有问题。"}}, {"@type": "Question", "name": "有没有纯 Markdown 的折叠写法？", "acceptedAnswer": {"@type": "Answer", "text": "CommonMark 和 GFM 都没有，所以各个渲染器都靠这个 HTML 元素。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-collapsible-sections/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/markdown-collapsible-sections/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">Markdown 折叠：details 与 summary 的写法</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 3 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-collapsible-sections.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Markdown 本身没有折叠语法，要靠原始 HTML 来写，也就是一个 <code>&lt;details&gt;</code> 容器加一行 <code>&lt;summary&gt;</code> 标题，并且在标题后面留一个空行，里面的 Markdown 才会继续被解析。GitHub 和妙言的预览都能用，代价是源码有一半是 HTML，遇到会去掉原始 HTML 的渲染器，就只剩下文字。</p>
+<h2 id="基本写法">基本写法</h2>
+<pre><code class="language-markdown">&lt;details&gt;
+&lt;summary&gt;构建步骤&lt;/summary&gt;
+
+1. 安装依赖。
+2. 运行 `make build`。
+
+```bash
+make test
+```
+
+&lt;/details&gt;
+</code></pre>
+<p><code>&lt;details&gt;</code> 是容器，<code>&lt;summary&gt;</code> 是一直可见的标题，标题之后的内容在点击前都是隐藏的。想默认展开就加 <code>open</code> 属性，写成 <code>&lt;details open&gt;</code>；MDN 说明 <code>open</code> 是布尔属性，所以 <code>open="false"</code> 依然是展开，要收起必须把整个属性删掉。</p>
+<p>GitHub 文档给出的也是同样的结构，<code>&lt;/summary&gt;</code> 后面留空行，里面可以放代码块，如果同一篇内容也要发到 GitHub，照这个写法两边表现一致。</p>
+<h2 id="为什么要留空行">为什么要留空行</h2>
+<p>空行不是排版习惯，而是由 CommonMark 处理 HTML 的方式决定的。以 <code>&lt;details</code> 或 <code>&lt;summary</code> 开头的行会开启一个 HTML 块，规范把这两个名字都列在会开启 HTML 块的标签里，这种块到第一个空行才结束，块里的内容原样输出，不再按 Markdown 解析。</p>
+<p>所以下面这样写是不行的。</p>
+<pre><code class="language-markdown">&lt;details&gt;
+&lt;summary&gt;更多&lt;/summary&gt;
+**这不是粗体**，星号会原样显示。
+&lt;/details&gt;
+</code></pre>
+<p>粗体那一行仍属于 HTML 块，星号就被原样打印出来；在 <code>&lt;/summary&gt;</code> 后面加一个空行，HTML 块就在那里结束，下一段重新按 Markdown 解析，<code>&lt;/details&gt;</code> 前面也要再留一个空行，免得闭合标签和最后一段粘在一起。</p>
+<p>标题行也是同样的道理，<code>&lt;summary&gt;</code> 那一行属于 HTML 块，里面的 Markdown 不会转换，要加粗就写 <code>&lt;b&gt;构建&lt;/b&gt;</code>，要写代码就用 <code>&lt;code&gt;make&lt;/code&gt;</code>，不要写 <code>**构建**</code> 或反引号。</p>
+<h2 id="嵌套和能放什么">嵌套和能放什么</h2>
+<p><code>&lt;details&gt;</code> 可以嵌套，外层内容和内层开始标签之间留一个空行，每一层的标签各占一行。</p>
+<pre><code class="language-markdown">&lt;details&gt;
+&lt;summary&gt;各平台说明&lt;/summary&gt;
+
+通用的建议写在这里。
+
+&lt;details&gt;
+&lt;summary&gt;macOS&lt;/summary&gt;
+
+macOS 的细节。
+
+&lt;/details&gt;
+
+&lt;/details&gt;
+</code></pre>
+<p>空行留对之后，列表、表格、图片和围栏代码都能放进去，标题也可以，只是后面有个注意点。MDN 还提到 <code>name</code> 属性，相同 <code>name</code> 的多个 <code>&lt;details&gt;</code> 同一时刻只能展开一个，不用脚本就能做手风琴。妙言会把这个属性原样交给系统的 WebKit，MDN 的兼容数据显示 Safari 从 17.2 开始支持，GitHub 的文档没有提到它，所以手风琴只适合在妙言里看的笔记。</p>
+<h2 id="妙言怎么渲染">妙言怎么渲染</h2>
+<p>V4.5.0 里妙言用 cmark-gfm 解析 Markdown，输出 HTML 时打开了允许原始 HTML 的选项（<code>CMARK_OPT_UNSAFE</code>），所以 <code>&lt;details&gt;</code> 块原样到达预览，由 WebKit 画成系统自带的折叠控件，预览样式只给 <code>summary</code> 加了手型光标和一点左内边距。</p>
+<p>在编辑器里输入 <code>/fold</code> 再按 <code>Tab</code> 就会插入这段结构，内容就是上面那个模板，包含 <code>&lt;details&gt;</code>、带选中占位文字的 <code>&lt;summary&gt;</code>、一个空行、一行正文和结束标签。<a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>里把这个快捷输入和其他斜杠命令放在一起列了。</p>
+<p>有两处容易踩坑。一是折叠状态下的标题是隐藏的，预览的目录用的是会跳过隐藏标题的选项，所以这样的标题在展开之前可能不会出现在目录里；二是从网页复制折叠区块再粘贴时，妙言的 HTML 转 Markdown 会把 <code>details</code> 和 <code>summary</code> 当成普通容器，标题和内容变成普通段落，折叠效果没有了，想保留就自己敲 HTML。</p>
+<h2 id="导出和打印">导出和打印</h2>
+<p>「导出」子菜单有 HTML、图片和 PDF，V4.5.0 里图片和 PDF 都从预览当下的样子出发。图片是给预览页面截一张快照，PDF 是把预览当前的 HTML 拷进打印流程，中间没有任何展开 <code>&lt;details&gt;</code> 的处理。点击标题时浏览器会给这个元素加上或去掉 <code>open</code> 属性，所以在预览里点开的块导出时是展开的，收起的块导出后只剩标题那一行。如果导出时只开着编辑区，妙言会先打开预览，这时没写 <code>open</code> 的块都是收起的。</p>
+<p>内容必须出现在纸面上时，这些块就写成 <code>&lt;details open&gt;</code>，预览和导出里都会默认展开，PDF 的其他设置见<a href="/zh/blog/markdown-to-pdf-mac/">在 Mac 上把 Markdown 转成 PDF</a>。</p>
+<h2 id="可访问性">可访问性</h2>
+<p>原生 <code>&lt;details&gt;</code> 是一个展开控件，按 MDN 的说明，读者可以点击它，或聚焦后按空格键切换，元素里的内容会成为 <code>&lt;summary&gt;</code> 的可访问描述，比自己拼的开关要好，前提是标题写得有用。标题写清里面是什么，比如「Linux 构建步骤」，不要写「点击这里」或「更多」，也要写短，因为收起时只有这行文字可见。</p>
+<p>读者完成任务必须看到的信息不要折叠，折叠适合可选的细节，比如日志、很长的输出或某个平台的补充说明。</p>
+<h2 id="容易出错的地方">容易出错的地方</h2>
+<ul>
+<li>块里的 Markdown 显示成原始符号，多半是 <code>&lt;/summary&gt;</code> 后面或 <code>&lt;/details&gt;</code> 前面少了空行。</li>
+<li>在妙言里正常，换个地方变成一堆平铺文字，是那个渲染器会去掉或转义原始 HTML，要在读者实际看的地方测试。</li>
+<li>PDF 里少了内容，是导出时块处于收起状态，先在预览里点开，或者加 <code>open</code> 属性。</li>
+<li>折叠区里的围栏代码块乱了，在开头围栏前留一个空行，并让围栏和周围文字缩进一致。</li>
+</ul>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="github-支持折叠吗">GitHub 支持折叠吗？</h3>
+<p>支持，GitHub 文档以 issue 评论为例描述了 <code>&lt;details&gt;</code> 和 <code>&lt;summary&gt;</code> 的写法，用 <code>open</code> 默认展开。</p>
+<h3 id="标题行里能写-markdown-标题吗">标题行里能写 Markdown 标题吗？</h3>
+<p>不能转换，标题行属于 HTML 块，改用纯文字或 HTML 标签，正文里的标题没有问题。</p>
+<h3 id="有没有纯-markdown-的折叠写法">有没有纯 Markdown 的折叠写法？</h3>
+<p>CommonMark 和 GFM 都没有，所以各个渲染器都靠这个 HTML 元素。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/markdown-code-blocks/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 代码块：围栏、语言标记与嵌套</span><span class="blog-related-meta">约 4 分钟</span></a></li><li><a href="/zh/blog/markdown-escape-characters/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 转义字符：反斜杠、实体与行内代码</span><span class="blog-related-meta">约 4 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

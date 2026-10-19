@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown front matter 写法与渲染 · 妙言博客</title>
+<meta name="description" content="YAML 与 TOML front matter 的写法、各生成器常用键、GitHub 的显示，以及妙言 V4.5.0 的处理。">
+<link rel="canonical" href="https://miaoyan.app/zh/blog/markdown-front-matter/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-front-matter/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-front-matter/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-front-matter/">
+<link rel="alternate" type="application/rss+xml" title="妙言博客" href="https://miaoyan.app/zh/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/zh/blog/markdown-front-matter/">
+<meta property="og:title" content="Markdown front matter 写法与渲染 · 妙言博客">
+<meta property="og:description" content="YAML 与 TOML front matter 的写法、各生成器常用键、GitHub 的显示，以及妙言 V4.5.0 的处理。">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-front-matter.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Markdown 写作">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-front-matter.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="preload" as="font" type="font/woff2" href="/fonts/miaoyan-serif-sc-regular.woff2" crossorigin>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "妙言", "item": "https://miaoyan.app/zh/"}, {"@type": "ListItem", "position": 2, "name": "博客", "item": "https://miaoyan.app/zh/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown front matter 写法与渲染", "item": "https://miaoyan.app/zh/blog/markdown-front-matter/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/zh/blog/markdown-front-matter/#article", "headline": "Markdown front matter 写法与渲染", "description": "YAML 与 TOML front matter 的写法、各生成器常用键、GitHub 的显示，以及妙言 V4.5.0 的处理。", "url": "https://miaoyan.app/zh/blog/markdown-front-matter/", "mainEntityOfPage": "https://miaoyan.app/zh/blog/markdown-front-matter/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "zh-CN", "image": "https://miaoyan.app/img/blog/cards/markdown-front-matter.webp", "timeRequired": "PT3M", "articleSection": "Markdown 写作", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/zh/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Front matter 算 Markdown 的一部分吗？", "acceptedAnswer": {"@type": "Answer", "text": "不算。CommonMark 没有定义它，这是静态站点生成器和部分编辑器的约定，它们会在渲染正文之前把它剥掉。"}}, {"@type": "Question", "name": "能在笔记开头用 --- 当分隔线吗？", "acceptedAnswer": {"@type": "Answer", "text": "用 ***，或者先写一个标题。在妙言里，以 --- 开头且后面还有另一行 --- 的笔记会被当成 front matter。"}}, {"@type": "Question", "name": "GitHub 的 README 会显示 front matter 吗？", "acceptedAnswer": {"@type": "Answer", "text": "GitHub 2013 年的公告说，文档顶部的 YAML 元数据会显示成表格，它的写作与格式文档里没有提到 front matter。"}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/zh/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/zh/#features">功能</a><a href="/zh/#devices">多端体验</a><a href="/zh/#faq">常见问题</a><a href="/zh/blog/" aria-current="page">博客</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="语言"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">简体中文</span><span class="lang-code">中</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-front-matter/" hreflang="en" lang="en" data-lang="en">English</a><a href="/zh/blog/markdown-front-matter/" hreflang="zh-CN" lang="zh-CN" data-lang="zh" class="active" aria-current="page">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/zh/blog/">博客</a></nav>
+    <h1 class="blog-title">Markdown front matter 写法与渲染</h1>
+    <p class="blog-meta"><span><a href="/zh/blog/#topic-writing">Markdown 写作</a></span><span><time datetime="2026-10-19">2026年10月19日</time></span><span>约 3 分钟</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-front-matter.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>Front matter 是 Markdown 文件最顶部的一段元数据，用两行 <code>---</code> 围起来，内容写成 YAML，这样静态站点生成器在渲染正文之前就能读到标题、日期和标签。它必须放在第一行，上面不能有任何东西，结尾要有独占一行的 <code>---</code>，值里带冒号时要加引号。妙言 V4.5.0 会在预览和导出里隐藏这样的一段，前提是文件以 <code>---</code> 开头并用另一行 <code>---</code> 收尾，用 <code>+++</code> 写的 TOML front matter 不会被识别。</p>
+<h2 id="写法">写法</h2>
+<pre><code class="language-markdown">---
+title: Markdown front matter
+date: 2026-10-19
+tags: [markdown, notes]
+draft: false
+---
+
+正文从这里开始。
+</code></pre>
+<p>开头的 <code>---</code> 必须是第一行。键值就是普通 YAML，列表可以像上面这样写在一行里，也可以逐行写 <code>- item</code>，值里有冒号时，比如 <code>title: "Note: a test"</code>，要加引号。Jekyll 的文档描述的也是同一种形状，也就是夹在三条短横线之间的合法 YAML，还说明只写一对空的短横线 Jekyll 同样会处理这个文件。它也提醒文件开头的 UTF-8 字节顺序标记会让它出问题，这是一个看起来没错的文件有时会失效的原因。</p>
+<p>Pandoc 稍微宽松一些。它的手册说 YAML 元数据块以顶部的 <code>---</code> 开始，以底部的 <code>---</code> 或 <code>...</code> 结束，开头那行后面不能紧跟空行，块也可以出现在文档后面，只要前面有一个空行。</p>
+<h2 id="各个生成器用哪些键">各个生成器用哪些键</h2>
+<p>没有通用的键列表，每个生成器各定各的。</p>
+<table>
+<thead>
+<tr>
+<th>生成器</th>
+<th>格式</th>
+<th>文档里提到的键</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hugo</td>
+<td><code>---</code> 的 YAML、<code>+++</code> 的 TOML，或 JSON</td>
+<td><code>title</code>、<code>date</code>、<code>draft</code>、<code>weight</code>、<code>description</code>，以及 <code>tags</code> 这类分类法</td>
+</tr>
+<tr>
+<td>Jekyll</td>
+<td>三条短横线之间的 YAML</td>
+<td><code>layout</code>、<code>title</code>、<code>date</code>、<code>published</code></td>
+</tr>
+<tr>
+<td>Astro</td>
+<td>YAML 或 TOML</td>
+<td>标题、描述、标签这类自定义属性</td>
+</tr>
+</tbody>
+</table>
+<p>Hugo 的文档说它通过分隔符判断格式，<code>+++</code> 就是 TOML，并把 <code>date</code>、<code>draft</code>、<code>title</code>、<code>weight</code> 列为最常见的字段。Jekyll 的基础示例里是 <code>layout</code> 和 <code>title</code>，<code>date</code> 是文章变量，用 <code>published: false</code> 让文章不出现在生成的站点里。Astro 的 Markdown 指南说 frontmatter 用来定义标题、描述、标签这类自定义属性，再由你自己的组件读取。</p>
+<p>TOML 的写法是这样：</p>
+<pre><code class="language-markdown">+++
+title = &quot;Markdown front matter&quot;
+date = 2026-10-19
+tags = [&quot;markdown&quot;, &quot;notes&quot;]
++++
+</code></pre>
+<p>Hugo 按每个文件的分隔符选解析器，只认 <code>---</code> 写法的工具会把 <code>+++</code> 块当普通文字显示，妙言 V4.5.0 就是这样。</p>
+<h2 id="github-怎么显示">GitHub 怎么显示</h2>
+<p>GitHub 在 2013 年的博客里宣布（文章 2019 年更新过），会把文档顶部的 YAML 元数据渲染成横向的表格，读起来更方便，针对的正是 GitHub Pages 上 Jekyll 站点依赖的那段元数据。这对所有 GitHub 支持的文档格式都适用，不只是 Markdown。GitHub 的写作与格式文档里没有讲 front matter，能参考的就是这篇公告。</p>
+<h2 id="妙言-v450-怎么处理">妙言 V4.5.0 怎么处理</h2>
+<p>规则写在 <code>Business/Note.swift</code> 的 <code>Note.cleanMetaData</code> 里。只有文本以 <code>---</code> 加换行开头，或者 <code>---</code> 加 Windows 换行开头，才会当作有 front matter。之后代码找下一行以 <code>---</code> 开头的位置，这一行必须独占一行，才会把到它为止的内容全部去掉。结果用于预览、HTML 导出和 PDF 导出（二者建立在预览之上），也用于字数统计。编辑器里仍然显示原文，所以元数据照常编辑。</p>
+<p>这个函数在 <code>NoteFrontmatterTests</code> 里有测试，固定了几种边界情况：</p>
+<ul>
+<li>开头的块不管有没有 <code>title:</code> 键都会隐藏。</li>
+<li>没有结尾分隔线的文件原样保留，全部显示。</li>
+<li>结尾行写成 <code>----</code> 不算分隔线，整篇笔记连元数据一起显示。</li>
+<li>只有 front matter 的文件，预览是空的。</li>
+<li>笔记中间的三条短横线仍然是普通水平线。</li>
+</ul>
+<p>妙言不会读这些键，那一段也不会按 YAML 解析，所以一篇笔记只要顶部恰好有两行 <code>---</code> 夹着一些文字，预览里这些文字也会消失。同样没有 YAML 校验，能让 Jekyll 报错的笔误在妙言里看不出来。</p>
+<h2 id="幻灯片模式和-分隔符">幻灯片模式和 <code>---</code> 分隔符</h2>
+<p>幻灯片模式里 <code>---</code> 同时是分页符。V4.5.0 在文本交给幻灯片渲染之前就去掉了 front matter，所以顶部的元数据块不会变成一页。要留意以 <code>---</code> 当分隔符开头的幻灯片，如果后面还有一行 <code>---</code>，两行之间的内容会被当成 front matter 而消失。幻灯片从标题开始写，元数据放进一个干净的块里。分隔符本身的用法见 <a href="/zh/blog/markdown-to-slides/">Markdown 转幻灯片</a>。</p>
+<h2 id="没有生效时">没有生效时</h2>
+<ul>
+<li><strong>预览里显示出元数据。</strong> 第一个 <code>---</code> 前面有空行或空格，结尾行是 <code>----</code> 或 <code>...</code>，或者这个块用的是 <code>+++</code>。</li>
+<li><strong>正文上方出现标题。</strong> 块没有被识别为 front matter 时，紧跟着 <code>---</code> 的一行文字在 CommonMark 里是 setext 标题，某个键就会变成一个大标题。</li>
+<li><strong>生成器忽略了文件。</strong> 检查文件开头有没有字节顺序标记，值里有没有没加引号的冒号。</li>
+<li><strong>文字不见了。</strong> 笔记顶部的两行 <code>---</code> 在妙言里会隐藏它们之间的所有内容，即使那是想写的正文。</li>
+</ul>
+<p>笔记还要发布到别处的话，可以看 <a href="/zh/blog/markdown-cheat-sheet/">Markdown 语法速查与 GFM 差异</a>，了解各家渲染器在 CommonMark 之外加了什么。</p>
+<h2 id="常见问题">常见问题</h2>
+<h3 id="front-matter-算-markdown-的一部分吗">Front matter 算 Markdown 的一部分吗？</h3>
+<p>不算。CommonMark 没有定义它，这是静态站点生成器和部分编辑器的约定，它们会在渲染正文之前把它剥掉。</p>
+<h3 id="能在笔记开头用-当分隔线吗">能在笔记开头用 <code>---</code> 当分隔线吗？</h3>
+<p>用 <code>***</code>，或者先写一个标题。在妙言里，以 <code>---</code> 开头且后面还有另一行 <code>---</code> 的笔记会被当成 front matter。</p>
+<h3 id="github-的-readme-会显示-front-matter-吗">GitHub 的 README 会显示 front matter 吗？</h3>
+<p>GitHub 2013 年的公告说，文档顶部的 YAML 元数据会显示成表格，它的写作与格式文档里没有提到 front matter。</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">继续阅读</h2>
+    <ul class="blog-related-list"><li><a href="/zh/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Mac 上怎么选 Markdown 编辑器</span><span class="blog-related-meta">约 5 分钟</span></a></li><li><a href="/zh/blog/markdown-footnotes/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 脚注怎么写，哪里能渲染</span><span class="blog-related-meta">约 3 分钟</span></a></li><li><a href="/zh/blog/markdown-images/"><span class="blog-related-cat">Markdown 写作</span><span class="blog-related-name">Markdown 图片：插入、调整大小与路径</span><span class="blog-related-meta">约 4 分钟</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Mac、iPhone 和 iPad 上的本地 Markdown 笔记</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">获取</p><a href="https://apps.apple.com/cn/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">帮助</p><a href="/zh/#faq">常见问题</a><a href="/zh/blog/">博客</a><a href="/privacy.html">隐私政策</a></div><div class="foot-col"><p class="foot-col-title">联系</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>

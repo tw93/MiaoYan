@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f4ed">
+<script>document.documentElement.classList.add('js')</script>
+<title>Markdown task lists and checkboxes: syntax and pitfalls · MiaoYan Blog</title>
+<meta name="description" content="Write - [ ] and - [x] task lists, nest them, know where they render, how MiaoYan toggles a box in the source, and find open tasks with ripgrep.">
+<link rel="canonical" href="https://miaoyan.app/blog/markdown-task-lists/">
+<link rel="alternate" hreflang="en" href="https://miaoyan.app/blog/markdown-task-lists/">
+<link rel="alternate" hreflang="zh-CN" href="https://miaoyan.app/zh/blog/markdown-task-lists/">
+<link rel="alternate" hreflang="x-default" href="https://miaoyan.app/blog/markdown-task-lists/">
+<link rel="alternate" type="application/rss+xml" title="MiaoYan Blog" href="https://miaoyan.app/blog/feed.xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://miaoyan.app/blog/markdown-task-lists/">
+<meta property="og:title" content="Markdown task lists and checkboxes: syntax and pitfalls · MiaoYan Blog">
+<meta property="og:description" content="Write - [ ] and - [x] task lists, nest them, know where they render, how MiaoYan toggles a box in the source, and find open tasks with ripgrep.">
+<meta property="og:image" content="https://miaoyan.app/img/blog/cards/markdown-task-lists.webp">
+<meta property="article:published_time" content="2026-10-19">
+<meta property="article:modified_time" content="2026-10-19">
+<meta property="article:section" content="Writing in Markdown">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@HiTw93">
+<meta name="twitter:image" content="https://miaoyan.app/img/blog/cards/markdown-task-lists.webp">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/assets/icon-64.png" type="image/png" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/icon-180.png">
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "MiaoYan", "item": "https://miaoyan.app/"}, {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://miaoyan.app/blog/"}, {"@type": "ListItem", "position": 3, "name": "Markdown task lists and checkboxes: syntax and pitfalls", "item": "https://miaoyan.app/blog/markdown-task-lists/"}]}, {"@type": "BlogPosting", "@id": "https://miaoyan.app/blog/markdown-task-lists/#article", "headline": "Markdown task lists and checkboxes: syntax and pitfalls", "description": "Write - [ ] and - [x] task lists, nest them, know where they render, how MiaoYan toggles a box in the source, and find open tasks with ripgrep.", "url": "https://miaoyan.app/blog/markdown-task-lists/", "mainEntityOfPage": "https://miaoyan.app/blog/markdown-task-lists/", "datePublished": "2026-10-19", "dateModified": "2026-10-19", "inLanguage": "en", "image": "https://miaoyan.app/img/blog/cards/markdown-task-lists.webp", "timeRequired": "PT6M", "articleSection": "Writing in Markdown", "author": {"@type": "Person", "name": "Tw93", "url": "https://tw93.fun/"}, "isPartOf": {"@id": "https://miaoyan.app/blog/#blog"}, "about": {"@type": "SoftwareApplication", "name": "MiaoYan", "url": "https://miaoyan.app/"}}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why does my checkbox show as [ ] text?", "acceptedAnswer": {"@type": "Answer", "text": "The renderer does not have the GFM tasklist extension, or the syntax is slightly off. Check for a space after the hyphen and after the closing bracket, and for exactly one character between the brackets."}}, {"@type": "Question", "name": "Can I check a box in the file without clicking?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Change the space between the brackets to x. That is all a click does in any editor."}}, {"@type": "Question", "name": "Is [X] with a capital letter valid?", "acceptedAnswer": {"@type": "Answer", "text": "The GFM spec accepts both cases, and MiaoYan's preview draws a checked box for it. MiaoYan's click toggle only matches a lowercase x, so lowercase is safer."}}, {"@type": "Question", "name": "Do task lists work in exported PDF or HTML?", "acceptedAnswer": {"@type": "Answer", "text": "Exports are made from the preview, so check one exported file if it matters. A checkbox in an exported file is a snapshot of the note, not a way to change it."}}]}]}</script>
+</head>
+<body>
+<div class="wrap">
+<header class="nav">
+  <nav class="nav-bar" aria-label="Main">
+    <a class="brand" href="/"><img src="/assets/bird.svg" alt="" width="24" height="24"><b>MiaoYan</b></a>
+    <div class="nav-links"><a href="/#features">Features</a><a href="/#devices">iPhone &amp; iPad</a><a href="/#faq">FAQ</a><a href="/blog/" aria-current="page">Blog</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div>
+    <div class="nav-end">
+      <div class="lang-switch">
+        <button class="lang-trigger" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="language-menu" aria-label="Language"><svg class="lang-globe" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg><span class="lang-name">English</span><span class="lang-code">EN</span></button>
+        <div class="lang-menu" id="language-menu"><a href="/blog/markdown-task-lists/" hreflang="en" lang="en" data-lang="en" class="active" aria-current="page">English</a><a href="/zh/blog/markdown-task-lists/" hreflang="zh-CN" lang="zh-CN" data-lang="zh">简体中文</a></div>
+      </div>
+      <a class="nav-cta" href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M11.18 8.5c-.02-1.6 1.31-2.37 1.37-2.41-.75-1.09-1.91-1.24-2.32-1.26-.99-.1-1.93.58-2.43.58-.5 0-1.27-.57-2.09-.55-1.08.02-2.07.62-2.62 1.58-1.12 1.94-.29 4.81.8 6.38.53.77 1.17 1.63 2 1.6.8-.03 1.11-.52 2.08-.52.97 0 1.25.52 2.1.5.87-.01 1.42-.78 1.95-1.55.61-.89.86-1.75.88-1.8-.02-.01-1.69-.65-1.72-2.55zM9.6 3.81c.44-.54.74-1.29.66-2.03-.64.03-1.41.43-1.87.96-.41.47-.77 1.23-.67 1.96.71.05 1.44-.36 1.88-.89z"/></svg>App Store</a>
+    </div>
+  </nav>
+</header>
+<main class="blog-post">
+  <article class="blog-article">
+    <nav class="blog-crumb" aria-label="Breadcrumb"><a href="/blog/">Blog</a></nav>
+    <h1 class="blog-title">Markdown task lists and checkboxes: syntax and pitfalls</h1>
+    <p class="blog-meta"><span><a href="/blog/#topic-writing">Writing in Markdown</a></span><span><time datetime="2026-10-19">Oct 19, 2026</time></span><span>6 min read</span></p>
+    <figure class="blog-cover" aria-hidden="true"><img src="/img/blog/cards/markdown-task-lists.webp" width="1600" height="900" alt="" fetchpriority="high"></figure>
+    <div class="blog-body">
+<p>A Markdown task list is an ordinary list item that starts with <code>[ ]</code> for an open task or <code>[x]</code> for a done one, written as <code>- [ ] Buy milk</code>. The syntax comes from GitHub Flavored Markdown (GFM), not from core CommonMark, so a parser without the GFM extension prints the brackets as literal text. Nothing in the format stores state apart from the characters in the file, which makes the list easy to search and diff, and also means that "clicking a checkbox" is always an editor feature that rewrites a line of text.</p>
+<h2 id="the-syntax">The syntax</h2>
+<pre><code class="language-markdown">- [ ] Draft the post
+- [x] Pick a title
+- [ ] Add screenshots
+  - [ ] Crop the second one
+  - [x] Compress the first one
+</code></pre>
+<p>The GFM specification defines a task list item as a list item whose first block is a paragraph that begins with the marker and at least one whitespace character before any other content. The marker is a left bracket, either a whitespace character or the letter <code>x</code> in lowercase or uppercase, and a right bracket. If the character between the brackets is whitespace the box is unchecked, otherwise it is checked. The spec also states that it does not define how the checkbox is interacted with, which is why behavior differs between apps.</p>
+<p>Two details cause most failures. The space after the closing bracket is required, so <code>- [ ]Buy milk</code> is not a task. And <code>[]</code> with nothing inside is not the marker either, so write exactly one space for an open task.</p>
+<p>Nesting works as it does for any list: indent the child by two spaces under a hyphen, as in the spec's own nested example. A parent task does not check itself when its children are done; in the file, each box is independent.</p>
+<h2 id="bullets-numbers-and-ordered-tasks">Bullets, numbers and ordered tasks</h2>
+<p>The list marker can be <code>-</code>, <code>*</code> or <code>+</code>, and the spec's wording about a list item also covers an ordered item such as <code>1. [ ] Step one</code>. cmark-gfm, the parser behind MiaoYan's preview, draws that as a numbered list with checkboxes, which suits a runbook where order matters.</p>
+<p>That is the standard. A specific editor can be stricter about what it writes back, and this is where hyphens matter. MiaoYan's own toggle logic, described below, only recognises <code>- [ ]</code> and <code>- [x]</code>, so use a hyphen and a lowercase <code>x</code> if you want clicking to be reliable. The <a href="/blog/markdown-cheat-sheet/">Markdown cheat sheet</a> lists the other GFM additions.</p>
+<h2 id="what-renders-where">What renders where</h2>
+<ul>
+<li><strong>GitHub.</strong> GitHub's formatting guide uses this exact syntax. In issues and comments, GitHub's docs say the tasks render with a clickable checkbox. Treat that click as a GitHub feature, not as part of Markdown.</li>
+<li><strong>CommonMark without the GFM extension.</strong> The item is a normal bullet whose text begins with <code>[ ]</code>. You see the brackets.</li>
+<li><strong>Other editors.</strong> Whether a rendered box can be clicked is not part of the spec, so each editor decides for itself. Test a click once before relying on it.</li>
+</ul>
+<p>MiaoYan's preview uses a Swift build of cmark-gfm with four extensions turned on: table, footnotes, strikethrough and tasklist (<code>Business/Markdown.swift</code> at the V4.5.0 tag). So task lists render as real <code>input</code> checkboxes in the preview.</p>
+<h2 id="how-clicking-a-checkbox-works-in-miaoyan">How clicking a checkbox works in MiaoYan</h2>
+<p>In the V4.5.0 preview, the page script (<code>common.js</code>) enables every checkbox and numbers them in document order. A click sends that number to the app, and the app (<code>HandlerCheckbox</code> in <code>MPreviewHandlers.swift</code>) walks through the note's text, finds the matching occurrence of <code>- [ ]</code> or <code>- [x]</code>, swaps it for the other form and saves the note.</p>
+<p>This mechanism explains the edge cases. The app matches by position: the Nth checkbox in the preview is assumed to be the Nth <code>- [ ]</code> or <code>- [x]</code> in the source text. If your note contains task syntax the regex does not count, such as <code>* [ ]</code>, <code>+ [ ]</code>, <code>1. [ ]</code> or a capital <code>X</code>, the preview still draws a box, but the numbering drifts and a click may change a different line. The same thing can happen if <code>- [ ]</code> appears in a place that is not rendered as a task, for example inside a fenced code block or a blockquote, because the text match does not know about code fences or quotes. If a click toggles the wrong line, look for those two causes first.</p>
+<p>In the editor, the Format menu has a "Todo" item (<code>⌘T</code>, labeled 「待办」 in the Chinese interface). On a line that is not a task it inserts <code>- [ ]</code>, and on a task it switches between <code>- [ ]</code> and <code>- [x]</code>. It rewrites the first six characters of the line, so on an indented sub-task it breaks the marker; click the box in the preview for those. Typing <code>/task</code> and pressing <code>Tab</code> inserts a three-line template, two open tasks and one done, with Chinese placeholder text; the Tab Quick Input menu lists it as "/task - Task List".</p>
+<h2 id="tasks-inside-blockquotes">Tasks inside blockquotes</h2>
+<pre><code class="language-markdown">&gt; - [ ] Ask about the deadline
+&gt; - [x] Send the draft
+</code></pre>
+<p>The cmark-gfm version in MiaoYan V4.5.0 does not turn these into checkboxes. The quote holds a normal bulleted list whose items start with the text <code>[ ]</code> and <code>[x]</code>, and that stays the same with <code>&gt;</code> on every line and a blank <code>&gt;</code> line before the list. Other renderers may treat this differently, so test the one your notes end up in. In MiaoYan there is a second cost: the click toggle still counts <code>- [ ]</code> inside the quote, so every checkbox after it in the note changes the wrong line. Keep tasks outside blockquotes, and put the quoted context in a paragraph above the list.</p>
+<h2 id="finding-open-tasks-across-notes">Finding open tasks across notes</h2>
+<p>Because a task is plain text, a search tool can list what is left. In a folder of Markdown notes, ripgrep shows every open item with its file and line:</p>
+<pre><code class="language-bash">rg -n -F -- '- [ ]' ~/Notes
+</code></pre>
+<p><code>-F</code> treats the pattern as a fixed string, so the brackets are not read as a regex character class, and <code>--</code> stops the leading hyphen being read as an option. Indented sub-tasks match too, since the string can appear anywhere on a line. For done items use <code>'- [x]'</code>. With plain <code>grep</code>:</p>
+<pre><code class="language-bash">grep -rn --include='*.md' -F -- '- [ ]' ~/Notes
+</code></pre>
+<p>To count open tasks per file, add <code>-c</code>, which prints a number per file. This is also the best argument for sticking to one spelling: if some notes use <code>* [ ]</code>, one search will miss them. More ways to work with notes from the shell are in <a href="/blog/markdown-notes-from-terminal/">Markdown notes from the terminal</a>.</p>
+<h2 id="limits-and-when-to-use-something-else">Limits and when to use something else</h2>
+<p>A task list is a checklist, not a task manager. It has no due dates, no reminders and no recurrence, and the only state is open or done. For a shopping list, a release checklist or a daily plan inside a note, it is the right size. For deadlines and reminders, use a dedicated tool and keep the note as the reference.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="why-does-my-checkbox-show-as-text">Why does my checkbox show as <code>[ ]</code> text?</h3>
+<p>The renderer does not have the GFM tasklist extension, or the syntax is slightly off. Check for a space after the hyphen and after the closing bracket, and for exactly one character between the brackets.</p>
+<h3 id="can-i-check-a-box-in-the-file-without-clicking">Can I check a box in the file without clicking?</h3>
+<p>Yes. Change the space between the brackets to <code>x</code>. That is all a click does in any editor.</p>
+<h3 id="is-x-with-a-capital-letter-valid">Is <code>[X]</code> with a capital letter valid?</h3>
+<p>The GFM spec accepts both cases, and MiaoYan's preview draws a checked box for it. MiaoYan's click toggle only matches a lowercase <code>x</code>, so lowercase is safer.</p>
+<h3 id="do-task-lists-work-in-exported-pdf-or-html">Do task lists work in exported PDF or HTML?</h3>
+<p>Exports are made from the preview, so check one exported file if it matters. A checkbox in an exported file is a snapshot of the note, not a way to change it.</p>
+    </div>
+  </article>
+  <nav class="blog-related" aria-labelledby="blog-related-title">
+    <h2 class="blog-related-title" id="blog-related-title">Keep reading</h2>
+    <ul class="blog-related-list"><li><a href="/blog/markdown-editor-for-mac/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Choosing a Markdown editor for Mac</span><span class="blog-related-meta">7 min read</span></a></li><li><a href="/blog/markdown-tables/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markdown tables: alignment, pipes and line breaks</span><span class="blog-related-meta">5 min read</span></a></li><li><a href="/blog/markmap-mind-maps/"><span class="blog-related-cat">Writing in Markdown</span><span class="blog-related-name">Markmap mind maps from a Markdown outline</span><span class="blog-related-meta">6 min read</span></a></li></ul>
+  </nav>
+</main>
+</div>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-mark">
+        <p class="foot-name">MiaoYan · <span class="cn" lang="zh-Hant">語</span></p>
+        <p class="foot-about">Local Markdown notes on Mac, iPhone and iPad</p>
+      </div>
+      <nav class="foot-cols" aria-label="Footer"><div class="foot-col"><p class="foot-col-title">Get</p><a href="https://apps.apple.com/app/id6759252269" target="_blank" rel="noopener" data-store>App Store</a><a href="https://github.com/tw93/MiaoYan" target="_blank" rel="noopener">GitHub</a></div><div class="foot-col"><p class="foot-col-title">Help</p><a href="/#faq">FAQ</a><a href="/blog/">Blog</a><a href="/privacy.html">Privacy</a></div><div class="foot-col"><p class="foot-col-title">Connect</p><a href="https://x.com/HiTw93" target="_blank" rel="noopener">X</a><a href="https://t.me/+9f9gf4ZrFSQ2OWVl" target="_blank" rel="noopener">Telegram</a></div></nav>
+    </div>
+  </div>
+</footer>
+<script>
+(function () {
+  // iPhone and iPad open the App Store app from the region-less link, and the
+  // Mac opens the Mac App Store directly; iPadOS reports itself as a Mac.
+  var ua = navigator.userAgent;
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var storeLink = ios ? 'https://apps.apple.com/app/id6759252269' : /Macintosh/.test(ua) ? 'macappstore://apps.apple.com/app/id6759252269' : '';
+  if (storeLink) document.querySelectorAll('[data-store]').forEach(function (a) {
+    a.href = storeLink;
+    a.removeAttribute('target');
+  });
+  var sw = document.querySelector('.lang-switch');
+  var trigger = sw.querySelector('.lang-trigger');
+  function setOpen(open) {
+    sw.classList.toggle('is-open', open);
+    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  trigger.addEventListener('click', function (e) { e.stopPropagation(); setOpen(!sw.classList.contains('is-open')); });
+  document.addEventListener('click', function (e) { if (!sw.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+  sw.querySelectorAll('[data-lang]').forEach(function (a) {
+    a.addEventListener('click', function () { try { localStorage.setItem('miaoyanLang', a.dataset.lang); } catch (e) {} });
+  });
+})();
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5M47BM3L9Y"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});gtag('js',new Date());gtag('config','G-5M47BM3L9Y');</script>
+</body>
+</html>
