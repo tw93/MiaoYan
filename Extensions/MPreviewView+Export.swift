@@ -324,14 +324,24 @@ extension MPreviewView {
             objc_setAssociatedObject(self, &AssociatedKeys.pdfExportController, controller, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 
             controller.run { [weak self] success in
-                vc.toastDismiss()
-                vc.toastExport(status: success)
-                Self.isExporting = false
+                Self.finishPrintExport(success: success, viewController: vc)
                 if let self {
                     objc_setAssociatedObject(self, &AssociatedKeys.pdfExportController, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
                 }
             }
         }
+    }
+
+    /// On success the PDF was handed to `saveToDownloadsWithFilename`, which
+    /// shows the result toast once its background write has finished (or
+    /// falls back to the save panel). Toasting here too said "Saved" before
+    /// the file existed and showed it twice.
+    static func finishPrintExport(success: Bool, viewController vc: ExportHost) {
+        vc.toastDismiss()
+        if !success {
+            vc.toastExport(status: false)
+        }
+        isExporting = false
     }
 
     /// Drop every piece of state exportPdfViaSnapshot might have toggled on

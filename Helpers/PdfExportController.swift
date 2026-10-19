@@ -283,8 +283,10 @@ final class PdfExportController: NSObject {
         }
     }
 
+    /// `completion(true)` means the PDF was handed to the Downloads save,
+    /// which reports the result itself once the write finishes.
     private func handlePrintCompletion(success: Bool) {
-        guard success, let url = tempURL, let data = try? Data(contentsOf: url), data.count > 1024 else {
+        guard success, let vc = viewController, let url = tempURL, let data = try? Data(contentsOf: url), data.count > 1024 else {
             fail()
             return
         }
@@ -297,13 +299,11 @@ final class PdfExportController: NSObject {
             pdfData: outlinedData,
             title: note.getExportTitle())
 
-        if let vc = viewController {
-            MPreviewView.saveToDownloadsWithFilename(
-                data: finalData,
-                extension: "pdf",
-                filename: note.getExportTitle(),
-                viewController: vc)
-        }
+        MPreviewView.saveToDownloadsWithFilename(
+            data: finalData,
+            extension: "pdf",
+            filename: note.getExportTitle(),
+            viewController: vc)
 
         try? FileManager.default.removeItem(at: url)
         tempURL = nil
