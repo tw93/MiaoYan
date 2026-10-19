@@ -292,7 +292,14 @@ html:is([lang="zh-CN"], [lang="zh-Hant"]) :is(.section-lede, .card p, .faq p) { 
 .faq summary::-webkit-details-marker { display: none; }
 .faq summary::after { content: "+"; color: var(--stone); }
 .faq details[open] summary::after { content: "−"; }
-.faq p { margin: 10px 0 0; color: var(--dark-warm); }
+.faq p { margin: 0; padding-top: 10px; color: var(--dark-warm); }
+/* Open and close like the sibling sites' FAQ: the answer's height and opacity
+   ease in, where it used to snap open. The answer's gap is padding, not margin,
+   because margins sit outside the animated height and would jump. Browsers
+   without ::details-content (before Safari 18.4, Chrome 129) still open instantly. */
+.faq { interpolate-size: allow-keywords; }
+.faq details::details-content { height: 0; overflow: clip; opacity: 0; transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.26s ease, content-visibility 0.3s allow-discrete; }
+.faq details[open]::details-content { height: auto; opacity: 1; }
 
 /* Blog (scripts/build-blog.py): mole.fit's blog in this site's tokens. The
    index groups cards by category; an article is one centered reading column. */
@@ -429,4 +436,5 @@ footer { background: var(--night); color: color-mix(in srgb, var(--night-ink) 62
     scroll-behavior: auto !important;
   }
   .hero h1 .cn-orbit::after { animation: none; }
+  .faq details::details-content { transition: none; }
 }
