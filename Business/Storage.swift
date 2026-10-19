@@ -155,10 +155,6 @@ class Storage {
                     continue
                 }
 
-                if projects.count > 100 {
-                    return added
-                }
-
                 let subUrl = subFolder as URL
 
                 guard !projectExist(url: subUrl),

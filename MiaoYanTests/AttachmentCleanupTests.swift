@@ -81,6 +81,25 @@ final class AttachmentCleanupTests: XCTestCase {
         XCTAssertEqual(storage.getSubFolders(url: siteFolder.url)?.count, 0)
     }
 
+    /// The launch scan stopped registering folders once 100 were known, so
+    /// a library with more top-level folders lost the rest of their notes.
+    @MainActor
+    func testEveryTopLevelFolderIsRegistered() throws {
+        let manager = FileManager.default
+        let library = tempDir.appendingPathComponent("Library", isDirectory: true)
+        for index in 0..<130 {
+            let folder = library.appendingPathComponent(String(format: "Folder %03d", index), isDirectory: true)
+            try manager.createDirectory(at: folder, withIntermediateDirectories: true)
+            try "note".write(to: folder.appendingPathComponent("note.md"), atomically: true, encoding: .utf8)
+        }
+
+        let storage = Storage(loadsLibrary: false)
+        let root = Project(url: library, isRoot: true)
+        _ = storage.add(project: root)
+
+        XCTAssertEqual(storage.getChildProjects(project: root).count, 130)
+    }
+
     // MARK: - Moving a note carries its images
 
     private struct Folders {
