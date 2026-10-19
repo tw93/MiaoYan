@@ -134,7 +134,7 @@ extension ShellModel {
     /// Moves the folder and everything in it to the Trash after the same
     /// confirmation the storyboard sidebar asks for.
     func confirmDeleteFolder(_ project: Project) {
-        guard !project.isDefault, !project.isRoot, let window = host?.view.window else { return }
+        guard !project.isDefault, !project.isRoot, !isExporting, let window = host?.view.window else { return }
         MiaoYanAlert.confirm(
             message: String(format: I18n.str("Are you sure you want to remove project \"%@\" and all files inside?"), project.label),
             informativeText: I18n.str("This action cannot be undone."),
@@ -163,7 +163,7 @@ extension ShellModel {
     /// Notes that leave the list open their neighbour, as the storyboard's
     /// `move(notes:project:)` reselects the row at the same index.
     func move(_ moving: [Note], to project: Project) {
-        guard !isPresenting else { return }
+        guard !isPresenting, !isExporting else { return }
         let listed = notes.map(\.url)
         let open = selectedNoteURL
         let (projects, type) = scopeProjects()

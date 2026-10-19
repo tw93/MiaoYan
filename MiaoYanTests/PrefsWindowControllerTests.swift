@@ -1,4 +1,5 @@
 import AppKit
+import SwiftUI
 import XCTest
 
 @testable import MiaoYan
@@ -205,5 +206,102 @@ final class PrefsWindowControllerTests: XCTestCase {
         NotificationCenter.default.post(name: .alwaysOnTopChanged, object: nil)
 
         XCTAssertEqual(controller.window?.level, .normal)
+    }
+
+    /// ⌘W then reopening the storyboard window used to leave Always on Top
+    /// and live appearance changes without an observer: windowWillClose
+    /// removed both and makeNew() never added them back.
+    func testClosingTheStoryboardWindowKeepsItsObservers() throws {
+        let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+        let source = try String(contentsOf: root.appendingPathComponent("Controllers/MainWindowController.swift"), encoding: .utf8)
+        let start = try XCTUnwrap(source.range(of: "func windowWillClose("))
+        let end = try XCTUnwrap(source.range(of: "\n    func ", range: start.upperBound..<source.endIndex))
+        let close = String(source[start.upperBound..<end.lowerBound])
+        XCTAssertFalse(close.contains("removeObserver"))
+    }
+
+    @MainActor
+    func testFirstShellLaunchTakesTheStoryboardColumns() throws {
+        guard #available(macOS 14, *) else { throw XCTSkip("The shell needs macOS 14") }
+        let folders = ["0.000000, 0.000000, 200.000000, 680.000000, NO, NO", "201.000000, 0.000000, 1079.000000, 680.000000, NO, NO"]
+        let notes = ["0.000000, 0.000000, 300.000000, 680.000000, NO, NO", "301.000000, 0.000000, 778.000000, 680.000000, NO, NO"]
+        let shown = try XCTUnwrap(ShellWindowController.storyboardColumns(sidebar: folders, list: notes))
+        XCTAssertEqual(shown.layout, .all)
+        XCTAssertEqual(shown.frames.map { $0.components(separatedBy: ", ")[2] }, ["200.000000", "300.000000", "778.000000"])
+        XCTAssertEqual(shown.frames.map { $0.components(separatedBy: ", ")[0] }, ["0.000000", "201.000000", "502.000000"])
+
+        // Hidden folders keep the shell's default width for when they open.
+        let noFolders = ["0.000000, 0.000000, 0.000000, 680.000000, NO, NO", "1.000000, 0.000000, 1279.000000, 680.000000, NO, NO"]
+        let listAndNote = try XCTUnwrap(ShellWindowController.storyboardColumns(sidebar: noFolders, list: notes))
+        XCTAssertEqual(listAndNote.layout, .listAndNote)
+        XCTAssertEqual(listAndNote.frames.first?.components(separatedBy: ", ")[2], "180.000000")
+
+        let noNotes = ["0.000000, 0.000000, 0.000000, 680.000000, YES, NO", "1.000000, 0.000000, 1279.000000, 680.000000, NO, NO"]
+        XCTAssertEqual(ShellWindowController.storyboardColumns(sidebar: noFolders, list: noNotes)?.layout, .noteOnly)
+        XCTAssertNil(ShellWindowController.storyboardColumns(sidebar: nil, list: notes))
+    }
+
+    @MainActor
+    func testStoryboardColumnsAreAdoptedOnlyOnce() throws {
+        guard #available(macOS 14, *) else { throw XCTSkip("The shell needs macOS 14") }
+        let suite = "miaoyan-shell-columns-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        defaults.set(["0.000000, 0.000000, 0.000000, 680.000000, NO, NO", "1.000000, 0.000000, 1279.000000, 680.000000, NO, NO"], forKey: "NSSplitView Subview Frames SidebarSplitView")
+        defaults.set(["0.000000, 0.000000, 300.000000, 680.000000, NO, NO", "301.000000, 0.000000, 978.000000, 680.000000, NO, NO"], forKey: "NSSplitView Subview Frames EditorSplitView")
+
+        ShellWindowController.adoptStoryboardColumns(defaults)
+        XCTAssertEqual(defaults.stringArray(forKey: "NSSplitView Subview Frames MiaoYanShellSplit")?.count, 3)
+        XCTAssertEqual(defaults.string(forKey: "ShellLayout"), "listAndNote")
+
+        // The shell's own layout wins from then on.
+        defaults.set(["0, 0, 150, 680, NO, NO"], forKey: "NSSplitView Subview Frames MiaoYanShellSplit")
+        defaults.set("all", forKey: "ShellLayout")
+        ShellWindowController.adoptStoryboardColumns(defaults)
+        XCTAssertEqual(defaults.stringArray(forKey: "NSSplitView Subview Frames MiaoYanShellSplit"), ["0, 0, 150, 680, NO, NO"])
+        XCTAssertEqual(defaults.string(forKey: "ShellLayout"), "all")
+    }
+
+    @MainActor
+    func testTitleBarDoubleClickFollowsTheSystemSetting() throws {
+        guard #available(macOS 14, *) else { throw XCTSkip("The shell needs macOS 14") }
+        XCTAssertEqual(ShellTitleBarArea.doubleClick(action: nil, legacyMinimize: false), .zoom)
+        XCTAssertEqual(ShellTitleBarArea.doubleClick(action: "Maximize", legacyMinimize: true), .zoom)
+        XCTAssertEqual(ShellTitleBarArea.doubleClick(action: "Fill", legacyMinimize: false), .zoom)
+        XCTAssertEqual(ShellTitleBarArea.doubleClick(action: "Minimize", legacyMinimize: false), .minimize)
+        XCTAssertEqual(ShellTitleBarArea.doubleClick(action: "None", legacyMinimize: false), .none)
+        XCTAssertEqual(ShellTitleBarArea.doubleClick(action: nil, legacyMinimize: true), .minimize)
+    }
+
+    /// The SwiftUI pane takes every click in the title band unless something
+    /// AppKit sits under the header: empty space must reach the title bar
+    /// area, while a header button and a field keep their clicks.
+    @MainActor
+    func testHeaderEmptySpaceReachesTheTitleBarArea() throws {
+        guard #available(macOS 14, *) else { throw XCTSkip("The shell needs macOS 14") }
+        let view = NSHostingView(
+            rootView: VStack(spacing: 0) {
+                HStack(spacing: 8) {
+                    Spacer()
+                    Button("Format") {}.buttonStyle(.plain)
+                    TextField("Search", text: .constant("")).frame(width: 60)
+                }
+                .frame(height: 52)
+                .background(ShellTitleBarArea())
+                .background(SwiftUI.Color.white)
+                SwiftUI.Color.white
+            }
+            .frame(width: 400, height: 200)
+            .ignoresSafeArea(.container, edges: .top))
+        let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 400, height: 200), styleMask: [.titled, .fullSizeContentView], backing: .buffered, defer: false)
+        window.titlebarAppearsTransparent = true
+        window.contentView = view
+        view.layoutSubtreeIfNeeded()
+
+        XCTAssertTrue(view.hitTest(NSPoint(x: 100, y: 174)) is ShellTitleBarArea.AreaView)
+        XCTAssertFalse(view.hitTest(NSPoint(x: 100, y: 100)) is ShellTitleBarArea.AreaView)
+        XCTAssertFalse(view.hitTest(NSPoint(x: 370, y: 174)) is ShellTitleBarArea.AreaView)
+        let button = try XCTUnwrap((0..<340).map { CGFloat($0) }.first { view.hitTest(NSPoint(x: $0, y: 174)) === view })
+        XCTAssertGreaterThan(button, 250)
     }
 }

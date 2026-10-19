@@ -151,6 +151,7 @@ struct ShellSidebar: View {
             .frame(height: ShellStyle.headerHeight)
             // Scrolled rows draw past the scroll view's top; an opaque header
             // above them keeps them from showing through the title line.
+            .background(ShellTitleBarArea())
             .background(ShellStyle.background)
             .zIndex(1)
 
@@ -422,6 +423,7 @@ struct ShellNoteList: View {
                 .padding(.leading, 16)
                 .padding(.trailing, 10)
                 .frame(height: ShellStyle.headerHeight)
+                .background(ShellTitleBarArea())
                 .background(ShellStyle.background)
                 .zIndex(1)
 
@@ -823,13 +825,17 @@ struct ShellDetail: View {
         .padding(.leading, ShellStyle.noteTextInset)
         .padding(.trailing, 12)
         .frame(height: ShellStyle.headerHeight)
+        .background(ShellTitleBarArea())
         .background(ShellHoverTracker { isHoveringHeader = $0 })
     }
 
     @State private var isHoveringHeader = false
+    /// UserDefaultsManagement.buttonShow, observed so a change in Settings
+    /// shows or hides the buttons at once.
+    @AppStorage("buttonShow") private var buttonShow = "Always"
 
     private var isButtonDisplayOnHover: Bool {
-        UserDefaultsManagement.buttonShow == "Hover"
+        buttonShow == "Hover"
     }
 }
 

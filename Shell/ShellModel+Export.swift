@@ -79,7 +79,9 @@ extension ShellModel {
         leavePPTAfterExport = !wasPPT
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { [weak self] in
             guard let self else { return }
-            guard let preview = self.preview else {
+            // Leaving full screen ends the slides; the preview then left is
+            // not the deck, so it is not printed as one.
+            guard let preview = self.preview, self.isPPT else {
                 UserDefaultsManagement.isOnExportPPT = false
                 self.host?.toast(message: I18n.str("Export failed"), style: .failure)
                 self.finishPPTExport()

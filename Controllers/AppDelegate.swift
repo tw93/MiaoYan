@@ -92,6 +92,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
             userDriverDelegate: nil)
 
         NSApp.mainMenu?.applyMenuIcons()
+        Self.applyMenuShortcuts(to: NSApp.mainMenu)
 
         NSApp.mainMenu?.update()
 
@@ -380,11 +381,27 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         prefsWindowController?.show()
     }
     @IBAction func new(_ sender: Any?) {
+        if #available(macOS 14, *), let shell = shellWindowController as? ShellWindowController {
+            shell.showWindow(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            shell.fileMenuNewNote(sender)
+            return
+        }
         mainWindowController?.makeNew()
         NSApp.activate(ignoringOtherApps: true)
         resolveViewController()?.fileMenuNewNote(self)
     }
+    /// File ▸ New Note with the shell window closed: the item targets the
+    /// first responder there, so with no window it reaches this delegate,
+    /// which brings the window back first as the storyboard window does.
+    @IBAction func fileMenuNewNote(_ sender: Any?) { new(sender) }
     @IBAction func searchAndCreate(_ sender: Any?) {
+        if #available(macOS 14, *), let shell = shellWindowController as? ShellWindowController {
+            shell.showWindow(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            shell.searchAndCreate(sender)
+            return
+        }
         mainWindowController?.makeNew()
         NSApp.activate(ignoringOtherApps: true)
         guard let vc = resolveViewController() else { return }
@@ -407,6 +424,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
         guard let event = NSApp.currentEvent else { return }
         if event.type == NSEvent.EventType.leftMouseDown {
             mainWindowController?.makeNew()
+        }
+    }
+
+    /// Clean Unused Attachments is Shift-Option-Command-Delete. The storyboard
+    /// stores Control-Option-Command, which only the storyboard window
+    /// rewrote, while validating its menu; set once here, both windows show
+    /// and take the same keys.
+    static func applyMenuShortcuts(to menu: NSMenu?) {
+        for item in menu?.items ?? [] {
+            if item.identifier?.rawValue == "cleanAttachmentsMenu" {
+                item.keyEquivalentModifierMask = [.command, .option, .shift]
+            }
+            applyMenuShortcuts(to: item.submenu)
         }
     }
 
@@ -491,7 +521,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSMenuItemVa
                 }
                 if #available(macOS 14, *), let shell = self.shellWindowController as? ShellWindowController {
                     let model = shell.model
-                    model.setPresenting(!(model.isPresenting && model.isPPT), ppt: true)
+                    // An export keeps the mode it captures until it is written.
+                    if !model.isExporting {
+                        model.setPresenting(!(model.isPresenting && model.isPPT), ppt: true)
+                    }
                     return nil
                 }
             }

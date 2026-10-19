@@ -967,7 +967,8 @@ final class ShellModel {
     /// and opens their neighbour. Inside the Trash it moves them on to the
     /// system Trash after the storyboard window's confirmation.
     func deleteSelectedNote() {
-        guard !isPresenting, let note = selectedNote else { return }
+        // The note being exported stays until its file is written.
+        guard !isPresenting, !isExporting, let note = selectedNote else { return }
         let removing = selectedNotes
         guard note.isTrash() else {
             remove(removing.filter { !$0.isTrash() }, undoable: true)
@@ -986,7 +987,7 @@ final class ShellModel {
 
     /// Notes dropped on the Trash row.
     func moveToTrash(_ moving: [Note]) {
-        guard !isPresenting else { return }
+        guard !isPresenting, !isExporting else { return }
         remove(moving.filter { !$0.isTrash() })
     }
 

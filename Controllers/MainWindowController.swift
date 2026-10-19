@@ -261,12 +261,10 @@ class MainWindowController: NSWindowController, NSWindowDelegate, NSWindowRestor
         activeNote.flushPendingSave()
     }
 
+    /// The appearance and Always on Top observers stay: the window is only
+    /// hidden, and makeNew() brings the same window back without adding them
+    /// again, so removing them here left a reopened window deaf to both.
     func windowWillClose(_ notification: Notification) {
-        if isObservingAppearance, let contentView = window?.contentView {
-            contentView.removeObserver(self, forKeyPath: "effectiveAppearance")
-            isObservingAppearance = false
-        }
-        NotificationCenter.default.removeObserver(self, name: .alwaysOnTopChanged, object: nil)
         if let vc = AppContext.shared.viewController {
             vc.persistCurrentViewState()
             if let activeNote = EditTextView.note {

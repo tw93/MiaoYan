@@ -34,4 +34,23 @@ final class EditorMenuRoutingTests: XCTestCase {
         XCTAssertEqual(editor.string, "**word**")
         XCTAssertEqual(standIn.string, "")
     }
+
+    /// The storyboard stores Control-Option-Command-Delete for Clean Unused
+    /// Attachments and only the storyboard window rewrote it, so the shell
+    /// showed and took the old keys. The app now rewrites it once.
+    @MainActor
+    func testCleanUnusedAttachmentsIsShiftOptionCommandDelete() {
+        let main = NSMenu()
+        let app = NSMenuItem(title: "MiaoYan", action: nil, keyEquivalent: "")
+        app.submenu = NSMenu()
+        let clean = NSMenuItem(title: "Clean Unused Attachments", action: nil, keyEquivalent: "\u{8}")
+        clean.identifier = NSUserInterfaceItemIdentifier("cleanAttachmentsMenu")
+        clean.keyEquivalentModifierMask = [.control, .option, .command]
+        app.submenu?.addItem(clean)
+        main.addItem(app)
+
+        AppDelegate.applyMenuShortcuts(to: main)
+
+        XCTAssertEqual(clean.keyEquivalentModifierMask, [.command, .option, .shift])
+    }
 }

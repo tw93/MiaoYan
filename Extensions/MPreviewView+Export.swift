@@ -28,6 +28,26 @@ enum ExportHosts {
     /// Set by the SwiftUI shell, which has no ViewController.
     static weak var shell: ExportHost?
     static var current: ExportHost? { shell ?? ViewController.shared() }
+
+    /// The host and the note to export. A note removed while the export
+    /// waited for the preview leaves none; the export then fails here and
+    /// ends, or the host stayed busy until relaunch. A deck export also
+    /// drops its print layout and leaves the slides it opened.
+    static func target(deck: Bool = false) -> (host: ExportHost, note: Note)? {
+        guard let host = current else {
+            if deck { UserDefaultsManagement.isOnExportPPT = false }
+            return nil
+        }
+        guard let note = host.exportNote else {
+            if deck {
+                UserDefaultsManagement.isOnExportPPT = false
+                host.finishPPTExport()
+            }
+            host.toastExport(status: false)
+            return nil
+        }
+        return (host, note)
+    }
 }
 
 // MARK: - Export Extensions
@@ -280,9 +300,7 @@ extension MPreviewView {
     }
     // MARK: - Export Methods
     public func exportPdf() {
-        guard let vc = ExportHosts.current,
-            let note = vc.exportNote
-        else { return }
+        guard let (vc, note) = ExportHosts.target() else { return }
 
         // Reveal.js-backed PPT export stays on createPDF: slide pagination is provided by reveal,
         // and the snapshot API is exactly what captures each slide page.
@@ -433,7 +451,12 @@ extension MPreviewView {
                             """, completionHandler: nil)
 
                         self.evaluateJavaScript(Self.pdfHeadingExtractionScript) { [weak self] extractResult, _ in
-                            guard let self else { return }
+                            guard let self else {
+                                Self.isExporting = false
+                                vc.toastDismiss()
+                                vc.toastExport(status: false)
+                                return
+                            }
                             let extracted = Self.parseHeadingExtractResult(extractResult)
 
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -442,7 +465,12 @@ extension MPreviewView {
                                 vc.toastUpdate(message: "\(I18n.str("Exporting...")) 95%")
 
                                 self.createPDF(configuration: pdfConfig) { [weak self] result in
-                                    guard let self else { return }
+                                    guard let self else {
+                                        Self.isExporting = false
+                                        vc.toastDismiss()
+                                        vc.toastExport(status: false)
+                                        return
+                                    }
                                     self.cleanupAfterPPTExport()
                                     vc.toastDismiss()
 
@@ -466,9 +494,7 @@ extension MPreviewView {
     }
 
     public func exportImage() {
-        guard let vc = ExportHosts.current,
-            let note = vc.exportNote
-        else { return }
+        guard let (vc, note) = ExportHosts.target() else { return }
 
         performExport(viewController: vc) { [weak self] cleanup in
             guard let self else {
@@ -540,9 +566,7 @@ extension MPreviewView {
     }
 
     public func exportPPTOptimized() {
-        guard let vc = ExportHosts.current,
-            let note = vc.exportNote
-        else { return }
+        guard let (vc, note) = ExportHosts.target(deck: true) else { return }
 
         // Show progress toast immediately
         vc.toastPersistent(message: "\(I18n.str("Exporting...")) 0%")
@@ -555,9 +579,10 @@ extension MPreviewView {
         // Wait for Reveal.js layout to stabilize
         self.waitForWebViewReady { [weak self] ready in
             guard ready, let self = self else {
+                UserDefaultsManagement.isOnExportPPT = false
                 vc.toastDismiss()
-                vc.toastExport(status: false)
                 vc.finishPPTExport()
+                vc.toastExport(status: false)
                 return
             }
 
@@ -569,7 +594,13 @@ extension MPreviewView {
             vc.toastUpdate(message: "\(I18n.str("Exporting...")) 80%")
 
             self.createPDF(configuration: pdfConfig) { [weak self] result in
-                guard let self = self else { return }
+                guard let self = self else {
+                    UserDefaultsManagement.isOnExportPPT = false
+                    vc.toastDismiss()
+                    vc.finishPPTExport()
+                    vc.toastExport(status: false)
+                    return
+                }
 
                 // Cleanup state
                 UserDefaultsManagement.isOnExportPPT = false
@@ -598,9 +629,7 @@ extension MPreviewView {
     /// HTML export renders the note directly and needs no preview view, so
     /// it works right after a new note is created, before any preview exists.
     public static func exportHtml() {
-        guard let vc = ExportHosts.current,
-            let note = vc.exportNote
-        else { return }
+        guard let (vc, note) = ExportHosts.target() else { return }
 
         if isExporting {
             // Check if previous export is stuck

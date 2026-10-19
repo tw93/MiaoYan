@@ -14,15 +14,21 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         UserDefaults.standard.bool(forKey: "MiaoYanShell")
     }
 
-    let model = ShellModel()
+    let model: ShellModel
 
     init() {
+        // Before the model reads its stored layout and the split its widths.
+        Self.adoptStoryboardColumns()
+        model = ShellModel()
         let window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 1100, height: 700),
             styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
             backing: .buffered,
             defer: false
         )
+        // The storyboard window's localized title, for the Window menu,
+        // Mission Control and VoiceOver; the title bar still draws none.
+        window.title = Bundle.main.localizedString(forKey: "IQv-IB-iLA.title", value: "MiaoYan", table: "Main")
         window.titleVisibility = .hidden
         window.titlebarAppearsTransparent = true
         window.isMovableByWindowBackground = true
@@ -54,7 +60,11 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         if !window.setFrameUsingName("MiaoYanShellWindow"), !window.setFrameUsingName("myMainWindow") {
             window.center()
         }
-        Self.recentreIfLost(window)
+        // A first launch opens centred at the preferred size, as
+        // AppDelegate.normalizeMainWindowFrame does for the storyboard window,
+        // whose ViewController then clears the flag.
+        Self.recentreIfLost(window, force: UserDefaultsManagement.isFirstLaunch)
+        UserDefaultsManagement.isFirstLaunch = false
         window.setFrameAutosaveName("MiaoYanShellWindow")
         applyWindowLevel()
         windowLevelObserver = NotificationCenter.default.addObserver(
@@ -66,6 +76,7 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             self?.toggleFrontmost()
         }
         observePresentation()
+        observeOpenNote()
         retargetMainMenu()
         model.onFoldersChanged = { [weak self] in self?.fsManager?.restart() }
         settingsObserver = NotificationCenter.default.addObserver(
@@ -113,13 +124,13 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
     private var terminateObserver: NSObjectProtocol?
 
     /// The storyboard window's launch guard: a saved frame that is off every
-    /// screen or smaller than the layout needs comes back centred at the
-    /// preferred size.
-    private static func recentreIfLost(_ window: NSWindow) {
+    /// screen or smaller than the layout needs, or any frame when `force`,
+    /// comes back centred at the preferred size.
+    private static func recentreIfLost(_ window: NSWindow, force: Bool) {
         let saved = window.frame
         let isOffScreen = NSScreen.screens.allSatisfy { !$0.visibleFrame.intersects(saved) }
         let isTooSmall = saved.width < 1100 || saved.height < 680
-        guard isOffScreen || isTooSmall,
+        guard force || isOffScreen || isTooSmall,
             let visible = (isOffScreen ? nil : window.screen)?.visibleFrame ?? NSScreen.main?.visibleFrame
         else { return }
         let size = NSSize(
@@ -128,6 +139,57 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
         window.setFrame(
             NSRect(x: visible.midX - size.width / 2, y: visible.midY - size.height / 2, width: size.width, height: size.height),
             display: true)
+    }
+
+    /// First shell launch: the storyboard window's column widths and hidden
+    /// columns, so switching windows keeps the layout. Written once, as the
+    /// split's autosave and the model's stored layout, while the shell has
+    /// neither of its own.
+    static func adoptStoryboardColumns(_ defaults: UserDefaults = .standard) {
+        let shellSplitKey = "NSSplitView Subview Frames MiaoYanShellSplit"
+        guard defaults.object(forKey: shellSplitKey) == nil,
+            let columns = storyboardColumns(
+                sidebar: defaults.stringArray(forKey: "NSSplitView Subview Frames SidebarSplitView"),
+                list: defaults.stringArray(forKey: "NSSplitView Subview Frames EditorSplitView"))
+        else { return }
+        defaults.set(columns.frames, forKey: shellSplitKey)
+        // ShellModel's layoutKey.
+        if defaults.object(forKey: "ShellLayout") == nil {
+            defaults.set(columns.layout.rawValue, forKey: "ShellLayout")
+        }
+    }
+
+    /// The shell's three column frames and its layout from the storyboard's
+    /// two splits: folders against the rest, then notes against the editor.
+    /// A hidden column keeps the shell's default width for when it opens.
+    static func storyboardColumns(sidebar: [String]?, list: [String]?) -> (frames: [String], layout: ShellModel.Layout)? {
+        guard let folders = sidebar?.first.flatMap(splitFrame), let notes = list?.first.flatMap(splitFrame) else { return nil }
+        let total = sidebar?.last.flatMap(splitFrame).map { $0.x + $0.width } ?? 1100
+        let folderWidth = folders.isShown ? min(max(folders.width, 150), 280) : 180
+        let noteWidth = notes.isShown ? min(max(notes.width, Theme.Metrics.noteListMinimumWidth), 420) : 280
+        let detailWidth = max(320, total - folderWidth - noteWidth - 2)
+        let frames = [(0, folderWidth), (folderWidth + 1, noteWidth), (folderWidth + noteWidth + 2, detailWidth)].map {
+            String(format: "%f, %f, %f, %f, NO, NO", Double($0.0), 0.0, Double($0.1), Double(folders.height))
+        }
+        // The storyboard hides the folders with the notes, and shows the notes
+        // again when only they were hidden (ensurePanelsVisibleAtStartup).
+        let layout: ShellModel.Layout = !notes.isShown && !folders.isShown ? .noteOnly : folders.isShown ? .all : .listAndNote
+        return (frames, layout)
+    }
+
+    private struct SplitFrame {
+        let x: CGFloat
+        let width: CGFloat
+        let height: CGFloat
+        let isShown: Bool
+    }
+
+    /// One NSSplitView autosave entry: "x, y, width, height, hidden, collapsed".
+    private static func splitFrame(_ entry: String) -> SplitFrame? {
+        let fields = entry.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+        guard fields.count >= 4, let x = Double(fields[0]), let width = Double(fields[2]), let height = Double(fields[3]) else { return nil }
+        let isShown = !fields.dropFirst(4).contains("YES") && width > Theme.Metrics.collapsedSplitWidthEpsilon
+        return SplitFrame(x: x, width: width, height: height, isShown: isShown)
     }
 
     @available(*, unavailable)
@@ -501,26 +563,29 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             let descending = menuItem.identifier?.rawValue == "Descending"
             menuItem.state = descending == UserDefaultsManagement.sortDirection ? .on : .off
             return true
+        // An export captures the preview or the deck it opened, so the mode
+        // stays put until the file is written.
         case #selector(togglePreview(_:)):
             menuItem.state = model.editorMode == .preview ? .on : .off
-            return hasNote && !model.isPresenting
+            return hasNote && !model.isPresenting && !model.isExporting
         case #selector(toggleSplitMode(_:)):
             menuItem.state = model.editorMode == .split ? .on : .off
-            return hasNote && !model.isPresenting
+            return hasNote && !model.isPresenting && !model.isExporting
         case #selector(togglePresentation(_:)):
             // Command-4 also leaves a PPT deck, as in the storyboard window.
             menuItem.state = model.isPresenting && !model.isPPT ? .on : .off
-            return hasNote
+            return hasNote && !model.isExporting
         case #selector(toggleMagicPPT(_:)):
             menuItem.state = model.isPPT ? .on : .off
-            return hasNote && (!model.isPresenting || model.isPPT)
+            return hasNote && (!model.isPresenting || model.isPPT) && !model.isExporting
         case #selector(toggleTOC(_:)):
             // Reveal's deck has no table of contents.
             return hasNote && model.editorMode != .edit && !model.isPPT
         case #selector(formatText(_:)), #selector(cleanTypography(_:)):
             return hasNote && model.editorMode != .preview && !model.isPresenting
+        // Removing the note being exported would leave the export nothing to write.
         case #selector(deleteNote(_:)):
-            return hasNote && !model.isPresenting
+            return hasNote && !model.isPresenting && !model.isExporting
         case #selector(duplicate(_:)):
             return hasNote && model.selectedNote?.isTrash() == false && !model.isPresenting
         case #selector(noteCopy(_:)):
@@ -541,6 +606,7 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             return sidebarFolderURL != nil && !model.isPresenting
         case #selector(deleteFolderMenu(_:)):
             return (model.selectedFolder.map { !$0.isDefault && !$0.isRoot } ?? false) && !model.isPresenting
+                && !model.isExporting
         // The storyboard window's canUseMenu: nothing that changes the
         // library or the open note while presenting.
         case #selector(fileMenuNewNote(_:)), #selector(searchAndCreate(_:)), #selector(singleOpen(_:)),
@@ -548,7 +614,7 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             return !model.isPresenting
         case #selector(moveMenu(_:)):
             // Notes in the Trash can move back out by this menu too.
-            return hasNote && !model.isPresenting
+            return hasNote && !model.isPresenting && !model.isExporting
         case #selector(exportPdf(_:)), #selector(exportImage(_:)), #selector(exportHtml(_:)), #selector(exportMenu(_:)):
             return hasNote && !model.isExporting
         case #selector(finderMenu(_:)):
@@ -694,7 +760,10 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             return nil
         case kVK_Return, kVK_ANSI_KeypadEnter:
             if model.isPPT {
-                model.preview?.evaluateJavaScript("Reveal.toggleOverview();", completionHandler: nil)
+                // The overview would be printed in place of the slides.
+                if !model.isExporting {
+                    model.preview?.evaluateJavaScript("Reveal.toggleOverview();", completionHandler: nil)
+                }
                 return nil
             }
             // Fields submit on Return; the editor types it.
@@ -1023,7 +1092,34 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
             return
         }
         NSApp.activate(ignoringOtherApps: true)
-        window.makeKeyAndOrderFront(nil)
+        showWindow(nil)
+    }
+
+    /// Closed while full screen, the window comes back full screen, as the
+    /// storyboard window does from `sessionFullScreenMode`. Full screen that
+    /// a presentation entered ends with it and is not restored.
+    private var reopensInFullScreen = false
+
+    override func showWindow(_ sender: Any?) {
+        super.showWindow(sender)
+        guard reopensInFullScreen, let window else { return }
+        reopensInFullScreen = false
+        if !window.styleMask.contains(.fullScreen) { window.toggleFullScreen(nil) }
+    }
+
+    /// Trackers such as Hina read AXDocument to see which note is open. The
+    /// storyboard window sets it from `EditTextView.note`, which in preview
+    /// may not follow the list here, so the shell uses its own open note and
+    /// clears it when none is open. No representedURL: that adds a title
+    /// bar icon.
+    private func observeOpenNote() {
+        let url = withObservationTracking {
+            model.selectedNote?.url
+        } onChange: { [weak self] in
+            Task { @MainActor in self?.observeOpenNote() }
+        }
+        let document = url?.absoluteString
+        if window?.accessibilityDocument() != document { window?.setAccessibilityDocument(document) }
     }
 
     // MARK: - Presentation
@@ -1046,7 +1142,8 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
                 escapeMonitor
                 ?? NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
                     guard event.keyCode == 53, let self, self.model.isPresenting else { return event }
-                    self.model.setPresenting(false)
+                    // A deck being exported stays up until it is printed.
+                    if !self.model.isExporting { self.model.setPresenting(false) }
                     return nil
                 }
         } else {
@@ -1082,6 +1179,7 @@ final class ShellWindowController: NSWindowController, NSWindowDelegate, NSMenuI
     }
 
     func windowWillClose(_ notification: Notification) {
+        reopensInFullScreen = window?.styleMask.contains(.fullScreen) == true && !didEnterFullScreenForPresentation
         model.setPresenting(false)
         flushEdits()
     }
@@ -1292,6 +1390,58 @@ final class ShellSplitView: NSSplitView {
         ShellPalette.hairline.setFill()
         rect.fill(using: .sourceOver)
     }
+}
+
+/// The empty part of a column's header, which is the title bar's band: a
+/// drag moves the window and a double-click does what System Settings asks of
+/// a title bar, as the storyboard window's `MainWindow.mouseUp` does. Placed
+/// behind a header's content, so its buttons, title and fields keep their own
+/// clicks; the SwiftUI pane above it would otherwise take every click there.
+@available(macOS 14, *)
+struct ShellTitleBarArea: NSViewRepresentable {
+    enum DoubleClick: Equatable {
+        case zoom
+        case minimize
+        case none
+    }
+
+    /// "Double-click a window's title bar to" in Desktop & Dock: Zoom (and
+    /// Fill, which has no public call) when unset, or the older Minimize
+    /// switch when only that is set.
+    static func doubleClick(action: String?, legacyMinimize: Bool) -> DoubleClick {
+        switch action {
+        case "Minimize": return .minimize
+        case "None": return .none
+        case nil: return legacyMinimize ? .minimize : .zoom
+        default: return .zoom
+        }
+    }
+
+    final class AreaView: NSView {
+        override var mouseDownCanMoveWindow: Bool { false }
+
+        override func mouseDown(with event: NSEvent) {
+            // The second click acts on mouse up and must not start a drag.
+            guard event.clickCount < 2 else { return }
+            window?.performDrag(with: event)
+        }
+
+        override func mouseUp(with event: NSEvent) {
+            guard event.clickCount >= 2, let window, !window.styleMask.contains(.fullScreen) else { return }
+            let defaults = UserDefaults.standard
+            switch ShellTitleBarArea.doubleClick(
+                action: defaults.string(forKey: "AppleActionOnDoubleClick"),
+                legacyMinimize: defaults.bool(forKey: "AppleMiniaturizeOnDoubleClick"))
+            {
+            case .zoom: window.performZoom(nil)
+            case .minimize: window.performMiniaturize(nil)
+            case .none: break
+            }
+        }
+    }
+
+    func makeNSView(context: Context) -> AreaView { AreaView() }
+    func updateNSView(_ nsView: AreaView, context: Context) {}
 }
 
 /// Exports report here: the open note, its title, progress toasts, and the

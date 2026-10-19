@@ -32,6 +32,8 @@ extension AppDelegate {
         switch scheme {
         case HandledSchemes.file.rawValue:
             if #available(macOS 14, *), let shell = shellWindowController as? ShellWindowController {
+                // A closed window comes back for the file, as openNotes does.
+                if shell.window?.isVisible != true { shell.showWindow(nil) }
                 shell.model.openSingle(urls[0], siblingFiles: Self.siblingNoteFiles(of: urls[0]))
             } else if ViewController.shared() != nil {
                 openNotes(urls: urls)
