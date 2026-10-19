@@ -664,6 +664,12 @@ final class ShellModel {
 
     /// Called once a preview has started loading its note.
     func previewDidLoad(_ view: MPreviewView) {
+        if let line = previewLineBeforeReload {
+            previewLineBeforeReload = nil
+            if view === preview, editorMode == .preview {
+                view.runWhenPreviewReady { [weak view] in view?.scrollToLine(line) }
+            }
+        }
         guard let entry = pendingPreviewEntry, view === preview, editorMode == .preview else { return }
         pendingPreviewEntry = nil
         let scrolls = UserDefaultsManagement.previewLocation == "Editing" && !isExporting
@@ -1318,6 +1324,28 @@ final class ShellModel {
     /// Bumped when the preview's stylesheet changes (font size, font face),
     /// so the preview reloads instead of patching its content.
     var previewStyleRevision = 0
+    /// The source line the preview showed before a stylesheet reload.
+    @ObservationIgnored private var previewLineBeforeReload: CGFloat?
+
+    /// A stylesheet change reloads the preview page, which opens at the top.
+    /// In preview mode the reader's line is read first and put back once the
+    /// page is ready; the split preview follows the editor instead.
+    private func reloadPreviewKeepingPlace() {
+        guard editorMode == .preview, !isPresenting, let preview else {
+            previewStyleRevision &+= 1
+            return
+        }
+        let script = "window.__miaoyanSync ? window.__miaoyanSync.lineForScroll(window.pageYOffset || 0) : -1"
+        preview.evaluateJavaScript(script) { [weak self] result, _ in
+            MainActor.assumeIsolated {
+                guard let self else { return }
+                if let line = (result as? NSNumber)?.doubleValue, line > 0 {
+                    self.previewLineBeforeReload = CGFloat(line)
+                }
+                self.previewStyleRevision &+= 1
+            }
+        }
+    }
 
     /// Editor and preview fonts changed: re-render both with the new sizes.
     /// Bumped when the interface font changes, which the sidebar and list
@@ -1330,7 +1358,7 @@ final class ShellModel {
         if let note = EditTextView.note, editor.textView.storageNote === note {
             editor.reload(note)
         }
-        previewStyleRevision &+= 1
+        reloadPreviewKeepingPlace()
         if UserDefaultsManagement.windowFontName != interfaceFont {
             interfaceFont = UserDefaultsManagement.windowFontName
             interfaceRevision &+= 1

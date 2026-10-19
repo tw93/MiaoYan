@@ -360,6 +360,17 @@ final class ShellEditorController: NSObject, NSTextViewDelegate {
         }
     }
 
+    /// A full reload (a zoom, a font change, another note) brings the split
+    /// preview back at the top; once the new page is ready it follows the
+    /// editor again instead of waiting for the next editor scroll.
+    func splitPreviewDidLoad(_ preview: MPreviewView) {
+        guard preview === splitPreview else { return }
+        preview.runWhenPreviewReady { [weak self, weak preview] in
+            guard let self, let preview, preview === self.splitPreview else { return }
+            self.syncPreviewToEditor(force: true)
+        }
+    }
+
     /// Re-renders the split preview after `delay`, unless an input method is
     /// still composing when it fires; its commit re-schedules.
     private func schedulePreviewUpdate() {

@@ -778,7 +778,7 @@ struct ShellDetail: View {
                         controller: model.editor, note: note,
                         preview: ShellPreview(
                             note: note, revision: model.contentRevision, styleRevision: model.previewStyleRevision,
-                            onMake: { model.preview = $0 }))
+                            onMake: { model.preview = $0 }, onLoad: { model.editor.splitPreviewDidLoad($0) }))
                 }
             } else {
                 SwiftUI.Color.clear
